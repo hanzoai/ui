@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.luxdefi.com/schema.json",
   "style": "default",
   "tailwind": {
     "config": "tailwind.config.js",
