@@ -49,7 +49,7 @@ export default function InputForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="luxdefi" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.
