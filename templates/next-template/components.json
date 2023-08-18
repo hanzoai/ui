@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.hanzo.ai/schema.json",
   "style": "default",
   "tailwind": {
     "config": "tailwind.config.js",

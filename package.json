@@ -1,12 +1,12 @@
 {
-  "name": "ui",
+  "name": "@hanzo/ui",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
   "type": "module",
   "author": {
-    "name": "shadcn",
-    "url": "https://twitter.com/shadcn"
+    "name": "hanzo",
+    "url": "https://twitter.com/hanzoai"
   },
   "workspaces": [
     "apps/*",
@@ -15,11 +15,11 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:cli": "turbo --filter=shadcn-ui build",
+    "build:cli": "turbo --filter=hanzo-ui build",
     "build:registry": "pnpm --filter=www build:registry",
     "dev": "turbo run dev --parallel",
-    "dev:cli": "turbo --filter=shadcn-ui dev",
-    "start:cli": "pnpm --filter=shadcn-ui start:dev",
+    "dev:cli": "turbo --filter=hanzo-ui dev",
+    "start:cli": "pnpm --filter=hanzo-ui start:dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "preview": "turbo run preview",

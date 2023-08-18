@@ -28,11 +28,11 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "shadcn",
-      url: "https://shadcn.com",
+      name: "hanzo",
+      url: "https://hanzo.ai",
     },
   ],
-  creator: "shadcn",
+  creator: "hanzo",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@shadcn",
+    creator: "@hanzo",
   },
   icons: {
     icon: "/favicon.ico",
