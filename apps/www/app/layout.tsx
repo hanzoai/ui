@@ -25,10 +25,11 @@ export const metadata: Metadata = {
     "Tailwind CSS",
     "Server Components",
     "Radix UI",
+    "Hanzo AI"
   ],
   authors: [
     {
-      name: "hanzo",
+      name: "Hanzo",
       url: "https://hanzo.ai",
     },
   ],
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@hanzo",
+    creator: "@hanzoai",
   },
   icons: {
     icon: "/favicon.ico",

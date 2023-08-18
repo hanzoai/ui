@@ -5,7 +5,7 @@ export const siteConfig = {
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
   links: {
-    twitter: "https://twitter.com/hanzo",
+    twitter: "https://twitter.com/hanzoai",
     github: "https://github.com/hanzoai/ui",
   },
 }

@@ -6,7 +6,7 @@
   "type": "module",
   "author": {
     "name": "hanzo",
-    "url": "https://twitter.com/hanzoai"
+    "url": "https://twitter.com/hanzoaiai"
   },
   "workspaces": [
     "apps/*",

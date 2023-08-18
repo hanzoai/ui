@@ -58,7 +58,7 @@ const defaultValues: Partial<ProfileFormValues> = {
   bio: "I own a computer.",
   urls: [
     { value: "https://hanzo.ai" },
-    { value: "http://twitter.com/hanzo" },
+    { value: "http://twitter.com/hanzoai" },
   ],
 }
 

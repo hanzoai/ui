@@ -34,7 +34,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Twitter",
-      href: "https://twitter.com/hanzo",
+      href: "https://twitter.com/hanzoai",
       external: true,
     },
   ],

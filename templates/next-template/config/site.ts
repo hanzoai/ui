@@ -11,7 +11,7 @@ export const siteConfig = {
     },
   ],
   links: {
-    twitter: "https://twitter.com/hanzo",
+    twitter: "https://twitter.com/hanzoai",
     github: "https://github.com/hanzoai/ui",
     docs: "https://ui.hanzo.ai",
   },
