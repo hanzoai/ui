@@ -1,5 +1,5 @@
 ---
-"shadcn-ui": patch
+"hanzo-ui": patch
 ---
 
 remove duplicate vi call
