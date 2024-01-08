@@ -1,4 +1,5 @@
-  "name": "luxdefi-ui",
+{
+  "name": "@luxdefi/ui/cli",
   "version": "0.6.0",
   "description": "Add components to your apps.",
   "publishConfig": {

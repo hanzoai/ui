@@ -1,11 +1,10 @@
 {
-  "name": "@luxdefi/ui",
+  "name": "@luxdefi/ui/cli",
   "version": "0.0.1",
-  "private": true,
   "license": "MIT",
   "type": "module",
   "author": {
-    "name": "luxdefi",
+    "name": "@lx/ui",
     "url": "https://twitter.com/luxdefi"
   },
   "workspaces": [
