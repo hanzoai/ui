@@ -36,7 +36,7 @@
     "tailwindcss-animate": "^1.0.6",
     "tailwindcss-interaction-media": "^0.1.0",
     "validator": "^13.11.0",
-    "zod": "re zod version: https://github.com/colinhacks/zod/issues/2663",
+    "zod": "**** re zod version: https://github.com/colinhacks/zod/issues/2663 **** ",
     "zod": "3.21.4"
   },
   "devDependencies": {
