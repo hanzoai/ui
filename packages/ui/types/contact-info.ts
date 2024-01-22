@@ -1,6 +1,6 @@
 interface ContactInfo {
   email: string
-  phone: string
+  phone?: string
 }
 
 type ContactInfoFields = keyof ContactInfo

@@ -6,13 +6,13 @@ import { cn } from '../util'
 import { Icons  } from '../common'
 
 const Logo: React.FC<{
-  size: TShirtSize
+  size?: TShirtSize
   logoOnly?: boolean
   href?: string
   className?: string
 }> = ({
   size,
-  href='/',
+  href, // no default please
   className='',
   logoOnly=false
 }) => {
@@ -38,14 +38,28 @@ const Logo: React.FC<{
     classes.span = 'text-lg' + toAdd.span
   }
 
-  const spanClasses = 'inline-block font-bold font-heading ' + classes.span 
-  const linkClasses = 'flex items-center text-primary hover:text-primary-hover ' + className
+  const outerClasses = 'flex items-center ' + className
+  const spanClasses = 'inline-block font-bold font-heading text-foreground ' 
+    + (href ? 'hover:text-accent ' : 'cursor-default ') 
+    + classes.span 
 
-  return (
-    <Link href={href} className={linkClasses} >
+  const Inner: React.FC = () => (<>
       <Icons.logo className={classes.icon} />
       <span className={cn(spanClasses, ' text-inherit')}>LUX</span>
-    </Link>
+  </>)
+
+
+  return (
+    href ? (
+      <Link href={href} className={outerClasses} >
+        <Inner />
+      </Link>
+  
+    ) : (
+      <span className={outerClasses} >
+        <Inner />
+      </span>
+    )
   )
 }
 
