@@ -26,7 +26,8 @@
     "release": "changeset version",
     "pub:beta": "cd packages/cli && pnpm pub:beta",
     "pub:release": "cd packages/cli && pnpm pub:release",
-    "test": "turbo run test --force"
+    "test": "turbo run test --force",
+    "clean:all": "rm -rf node_modules && pnpm -r clean"
   },
   "packageManager": "pnpm@8.14.1",
   "dependencies": {
