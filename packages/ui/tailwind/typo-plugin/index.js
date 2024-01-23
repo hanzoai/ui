@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin')
 const merge = require('lodash.merge')
 const castArray = require('lodash.castarray')
-const getStyles = require('../get-plugin-styles')
+const getStyles = require('./get-plugin-styles')
 const { commonTrailingPseudos } = require('./utils')
 
 let baseFontSize = 16 

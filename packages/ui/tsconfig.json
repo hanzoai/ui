@@ -14,6 +14,7 @@
     }
   ],
   // re emit settings: https://www.simonboisset.com/en/blog/publish-npm-library-with-esbuild
+  // https://esbuild.github.io/content-types/#tsconfig-json
   "compilerOptions": {
     "target": "es2020",
     "declaration": true,
@@ -22,7 +23,7 @@
     "skipLibCheck": true,
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "outDir": "./dist",
+    "outDir": "./dist/types",
     "jsx": "preserve",
     "lib": [
       "dom",

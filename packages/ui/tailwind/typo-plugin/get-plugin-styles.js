@@ -2,7 +2,7 @@ const {
   round,  
   pxToRem,
   pxToEm,
-} = require('../util')
+} = require('../../util')
 
 const typographyColorTheme = {
     // vars are defined in global.css
@@ -80,7 +80,6 @@ const defaultCSS = {
   },
   'ul > li::before': {
   },
-  hr: {},
   hr: {
     borderColor: 'var(--tw-prose-hr)',
     borderTopWidth: 1,
