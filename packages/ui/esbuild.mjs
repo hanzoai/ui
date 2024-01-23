@@ -14,16 +14,7 @@ const css = [
 esbuild
   .build({
     entryPoints: [
-      // These should not be bundled with the frontend
-      // {in: './next-fonts/index', out: 'next-fonts'},
-      // {in: './next/index', out: 'next'},
-      {in: './blocks/index', out: 'blocks'},
-      {in: './common/index', out: 'common'},
-      {in: './context-providers/index', out: 'context-providers'},
-      {in: './primitives/index', out: 'primitives'},
-      {in: './tailwind/index', out: 'tailwind'},
-      {in: './types/index', out: 'types'},
-      {in: './util/index', out: 'util'},
+      {in: './index', 'out': './index'},
       ...css
     ],
     outdir: 'dist',
