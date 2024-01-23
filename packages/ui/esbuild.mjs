@@ -21,6 +21,7 @@ esbuild
     ],
     logOverride: {
       "unsupported-css-nesting": "silent",
+      "import-is-undefined" : "silent", // warning: Import "Inter" will always be undefined <== not actually true in host context
     },
   })
   .catch((error) => {
