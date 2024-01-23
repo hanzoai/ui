@@ -38,8 +38,10 @@ esbuild
       postCssPlugin({
         plugins: [tailwindcss, autoprefixer],
       }),
-
     ],
+    logOverride: {
+      "unsupported-css-nesting": "silent",
+    },
   })
   .catch((error) => {
     console.error(`esbuild build error: ${error}`)
