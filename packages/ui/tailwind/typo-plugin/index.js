@@ -70,7 +70,7 @@ function configToCss(config = {}, { target, className, modifier, prefix }) {
   )
 }
 
-module.exports = plugin.withOptions(
+export default plugin.withOptions(
   ({ className = 'prose', target = 'modern', base = 16 } = {}) => {
     baseFontSize = base
     return function ({ addVariant, addComponents, theme, prefix }) {
