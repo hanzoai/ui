@@ -38,48 +38,6 @@
     "radix-ui",
     "luxdefi"
   ],
-  "exports": {
-    "./primitives": {
-      "types": "./dist/types/primitives/index.d.ts",
-      "default": "./dist/esm/primitives.js"
-    },
-    "./util": {
-      "types": "./dist/types/util/index.d.ts",
-      "default": "./dist/esm/util.js"
-    },
-    "./common": {
-      "types": "./dist/types/common/index.d.ts",
-      "default": "./dist/esm/common.js"
-    },
-    "./types": {
-      "types": "./dist/types/types/index.d.ts",
-      "default": "./dist/esm/types.js"
-    },
-    "./next": {
-      "types": "./dist/types/next/index.d.ts",
-      "default": "./dist/esm/next.js"
-    },
-    "./next-fonts": {
-      "types": "./dist/types/next-fonts/index.d.ts",
-      "default": "./dist/esm/next-fonts.js"
-    },
-    "./context-providers": {
-      "types": "./dist/types/context-providers/index.d.ts",
-      "default": "./dist/esm/context-providers.js"
-    },
-    "./blocks": {
-      "types": "./dist/types/blocks/index.d.ts",
-      "default": "./dist/esm/blocks.js"
-    },
-    "./tailwind": {
-      "types": "./dist/types/tailwind/index.d.ts",
-      "default": "./dist/esm/tailwind.js"
-    },
-    "./style/globals":  "./dist/esm/globals.css",
-    "./style/lux-tw-base-layer.css": "./dist/esm/lux-tw-base-layer.css",
-    "./style/social-svg": "./dist/esm/social-svg.css",
-    "./package.json": "./package.json"
-  },
   "scripts": {
     "build": "rm -rf dist && node ./esbuild.mjs && tsc",
     "tc": "tsc --noEmit --emitDeclarationOnly false",
