@@ -1,10 +1,10 @@
-const plugin = require('tailwindcss/plugin')
-const merge = require('lodash.merge')
-const castArray = require('lodash.castarray')
-const getStyles = require('./get-plugin-styles')
-const { commonTrailingPseudos } = require('./utils')
+import plugin from 'tailwindcss/plugin'
+import merge from 'lodash.merge'
+import castArray from 'lodash.castarray'
+import getStyles from './get-plugin-styles'
+import { commonTrailingPseudos } from './utils'
 
-let baseFontSize = 16 
+let baseFontSize = 16
 
 const computed = {
   // Reserved for future "magic properties", for example:

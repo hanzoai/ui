@@ -1,8 +1,8 @@
-const {
-  round,  
+import {
+  round,
   pxToRem,
   pxToEm,
-} = require('../../util')
+} from '../../util'
 
 const typographyColorTheme = {
     // vars are defined in global.css
@@ -110,7 +110,7 @@ const defaultCSS = {
   h6: {
     color: 'var(--tw-prose-headings)',
   },
-  img: {}, 
+  img: {},
   'img:first-child': {
   },
   'img:last-child': {
@@ -610,6 +610,6 @@ const getStyles = (baseFontSize) => ({
   },
   sm: defaultModifiers(baseFontSize).sm,
   lg: defaultModifiers(baseFontSize).lg,
-}) 
+})
 
 module.exports = getStyles

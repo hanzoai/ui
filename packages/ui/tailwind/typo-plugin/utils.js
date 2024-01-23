@@ -1,9 +1,9 @@
-const isPlainObject = require('lodash.isplainobject')
+import isPlainObject from 'lodash.isplainobject'
+import parser from 'postcss-selector-parser'
 
-const parser = require('postcss-selector-parser')
 const parseSelector = parser()
 
-module.exports = {
+export default {
   isUsableColor(color, values) {
     return isPlainObject(values) && color !== 'gray' && values[600]
   },
