@@ -24,7 +24,6 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "outDir": "./dist/types",
-    "jsx": "preserve",
     "lib": [
       "dom",
       "es2015"

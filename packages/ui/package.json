@@ -1,6 +1,6 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.1.17",
+  "version": "0.1.26",
   "description": "Library that contains shared UI primitives, styles, and core types",
   "license": "MIT",
   "publishConfig": {
@@ -27,42 +27,45 @@
     "luxdefi"
   ],
   "exports": {
-    "./primitives" : {
+    "./primitives": {
       "types": "./dist/types/primitives/index.d.ts",
       "default": "./dist/esm/primitives.js"
     },
-    "./util" : {
+    "./util": {
       "types": "./dist/types/util/index.d.ts",
       "default": "./dist/esm/util.js"
     },
-    "./common" : {
+    "./common": {
       "types": "./dist/types/common/index.d.ts",
       "default": "./dist/esm/common.js"
     },
-    "./types" : {
+    "./types": {
       "types": "./dist/types/types/index.d.ts",
       "default": "./dist/esm/types.js"
     },
-    "./next" : {
+    "./next": {
       "types": "./dist/types/next/index.d.ts",
       "default": "./dist/esm/next.js"
     },
-    "./next-fonts" : {
+    "./next-fonts": {
       "types": "./dist/types/next-fonts/index.d.ts",
       "default": "./dist/esm/next-fonts.js"
     },
-    "./context-providers" : {
+    "./context-providers": {
       "types": "./dist/types/context-providers/index.d.ts",
       "default": "./dist/esm/context-providers.js"
     },
-    "./blocks" : {
+    "./blocks": {
       "types": "./dist/types/blocks/index.d.ts",
       "default": "./dist/esm/blocks.js"
     },
-    "./tailwind" : {
+    "./tailwind": {
       "types": "./dist/types/tailwind/index.d.ts",
       "default": "./dist/esm/tailwind.js"
     },
+    "./style/globals":  "./dist/esm/globals.css",
+    "./style/lux-tw-base-layer.css": "./dist/esm/lux-tw-base-layer.css",
+    "./style/social-svg": "./dist/esm/social-svg.css",
     "./package.json": "./package.json"
   },
   "scripts": {
@@ -81,6 +84,7 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "esbuild-style-plugin": "^1.6.3",
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.merge": "^4.6.2",
@@ -94,10 +98,10 @@
     "zod": "3.21.4"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "next": "^14.0.4",
     "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss": "^3.4.1",
     "tailwindcss-animate": "^1.0.6",
