@@ -1,6 +1,6 @@
 import esbuild from 'esbuild'
 import mdx from '@mdx-js/esbuild'
-import { nodeExternalsPlugin } from 'esbuild-node-externals'
+//import { nodeExternalsPlugin } from 'esbuild-node-externals'
 import autoprefixer from "autoprefixer"
 import tailwindcss from "autoprefixer"
 import postCssPlugin from "esbuild-style-plugin"
@@ -14,15 +14,16 @@ const css = [
 esbuild
   .build({
     entryPoints: [
-      {in: './primitives/index', out: 'primitives'},
-      {in: './util/index', out: 'util'},
-      {in: './common/index', out: 'common'},
-      {in: './types/index', out: 'types'},
-      {in: './next/index', out: 'next'},
-      {in: './next-fonts/index', out: 'next-fonts'},
-      {in: './context-providers/index', out: 'context-providers'},
+      // These should not be bundled with the frontend
+      // {in: './next-fonts/index', out: 'next-fonts'},
+      // {in: './next/index', out: 'next'},
       {in: './blocks/index', out: 'blocks'},
+      {in: './common/index', out: 'common'},
+      {in: './context-providers/index', out: 'context-providers'},
+      {in: './primitives/index', out: 'primitives'},
       {in: './tailwind/index', out: 'tailwind'},
+      {in: './types/index', out: 'types'},
+      {in: './util/index', out: 'util'},
       ...css
     ],
     outdir: 'dist',
@@ -32,7 +33,7 @@ esbuild
     format: 'esm',
     target: ['chrome90', 'firefox74', 'safari14', 'edge90'],
     plugins: [
-      nodeExternalsPlugin(),
+      //nodeExternalsPlugin(),
       mdx(),
       postCssPlugin({
         plugins: [tailwindcss, autoprefixer],
