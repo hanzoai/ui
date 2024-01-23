@@ -42,6 +42,7 @@ const ContactForm: React.FC<{
 }) => {
 
   const form = useForm<ContactInfo>({
+      // @ts-ignore (pnpm linking / tsc bug )
     resolver: zodResolver(ValidationSchema),
     defaultValues: {
       email: '',
