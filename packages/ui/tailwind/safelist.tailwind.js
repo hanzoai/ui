@@ -2,7 +2,7 @@
   // https://tailwindcss.com/docs/content-configuration#safelisting-classes
 
   // these cannot be dynamically generated either. grr
-module.exports = [
+export default [
   'sm:grid-cols-2',
   'sm:grid-cols-3',
   'sm:grid-cols-4',

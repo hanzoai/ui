@@ -612,4 +612,4 @@ const getStyles = (baseFontSize) => ({
   lg: defaultModifiers(baseFontSize).lg,
 })
 
-module.exports = getStyles
+export default getStyles
