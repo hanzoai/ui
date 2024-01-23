@@ -8,17 +8,29 @@
     "access": "public",
     "scope": "@luxdefi"
   },
-  "author": {
-    "name": "luxdefi",
-    "url": "https://twitter.com/luxdefi"
-  },
+  "author": "Lux Partners Limited <dev@lux.partners> (https://lux.partners)",
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luxdefi/ui.git",
     "directory": "packages/ui"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "files": [
-    "dist"
+    "assets",
+    "blocks",
+    "common",
+    "conf",
+    "context-providers",
+    "dist",
+    "next",
+    "next-fonts",
+    "primitives",
+    "style",
+    "tailwind",
+    "types",
+    "util"
   ],
   "keywords": [
     "components",
