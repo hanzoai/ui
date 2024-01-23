@@ -15,7 +15,6 @@
     "url": "git+https://github.com/luxdefi/ui.git",
     "directory": "packages/ui"
   },
-  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "files": [
     "assets",
