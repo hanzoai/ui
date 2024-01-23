@@ -25,14 +25,14 @@ esbuild
       {in: './tailwind/index', out: 'tailwind'},
       ...css
     ],
-    outdir: 'dist/esm',
+    outdir: 'dist',
     bundle: true,
     minify: false,
     treeShaking: true,
     format: 'esm',
     target: ['chrome90', 'firefox74', 'safari14', 'edge90'],
     plugins: [
-      nodeExternalsPlugin(), 
+      nodeExternalsPlugin(),
       mdx(),
       postCssPlugin({
         plugins: [tailwindcss, autoprefixer],
