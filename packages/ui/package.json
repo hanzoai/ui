@@ -1,6 +1,6 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Library that contains shared UI primitives, styles, and core types",
   "license": "MIT",
   "publishConfig": {
