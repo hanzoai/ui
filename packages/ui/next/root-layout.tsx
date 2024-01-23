@@ -1,7 +1,7 @@
 import React, { type PropsWithChildren } from 'react'
 import { Metadata } from 'next'
 
-import { inter, drukTextWide } from '../style/nextFonts'
+import { inter, drukTextWide } from '../next-fonts'
 import Header from '../common/header'
 import SiteConf from '../types/site-conf'
 

@@ -1,17 +1,29 @@
-import mdx from '@mdx-js/esbuild'
 import esbuild from 'esbuild'
-import { nodeExternalsPlugin } from 'esbuild-node-externals'
+import mdx from '@mdx-js/esbuild'
+import autoprefixer from "autoprefixer"
+import tailwindcss from "autoprefixer"
+import postCssPlugin from "esbuild-style-plugin"
 
 esbuild
   .build({
-    entryPoints: ['./index.ts'],
-    outfile: 'dist/index.js',
+    entryPoints: ['./index'],
+    outdir: 'dist',
     bundle: true,
-    minify: true,
+    minify: false,
     treeShaking: true,
-    platform: 'node',
-    format: 'cjs',
-    target: 'node14',
-    plugins: [nodeExternalsPlugin(), mdx()],
+    format: 'esm',
+    target: ['chrome90', 'firefox74', 'safari14', 'edge90'],
+    plugins: [
+      mdx(),
+      postCssPlugin({
+        plugins: [tailwindcss, autoprefixer],
+      }),
+    ],
+    logOverride: {
+      "unsupported-css-nesting": "silent",
+    },
   })
-  .catch(() => process.exit(1))
+  .catch((error) => {
+    console.error(`esbuild build error: ${error}`)
+    process.exit(1)
+  })

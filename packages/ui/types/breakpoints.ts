@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import bps from '../style/screens.tailwind'
+import bps from '../tailwind/screens.tailwind'
 
 type Breakpoint = keyof typeof bps
 const Breakpoints = Object.keys(bps)
