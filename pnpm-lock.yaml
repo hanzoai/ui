@@ -202,7 +202,7 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(@types/react-dom@18.2.4)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       zod:
-        specifier: ^3.21.4
+        specifier: 3.21.4
         version: 3.21.4
     devDependencies:
       '@types/lodash.template':
