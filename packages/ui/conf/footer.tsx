@@ -1,5 +1,5 @@
 import { Icons } from '../common'
-import { LinkDef } from '../types'
+import type { LinkDef } from '../types'
 
 const SOC_ICON_SIZE = 18
 

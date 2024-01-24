@@ -5,7 +5,7 @@ import Footer from '../common/footer'
 import { ApplyTypography } from '../primitives'
 
 import NotFoundMDX from './not-found-content.mdx'
-import { SiteConf } from '../types'
+import type { SiteConf } from '../types'
 
 const NotFound: React.FC<{
   conf: SiteConf

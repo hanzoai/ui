@@ -4,7 +4,6 @@ import Image from 'next/image'
 
 import { constrain } from '../../util'
 import type { Dimensions } from '../../types'
-
 import type { Block, ImageBlock } from '../def'
 
 const ImageBlockComponent: React.FC<{

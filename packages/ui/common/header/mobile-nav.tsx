@@ -2,8 +2,8 @@
 import React from 'react'
 
 import { LinkElement }  from '../../common'
-import { ButtonVariants }  from '../../primitives'
-import { SiteConf } from '../../types'
+import type { ButtonVariants }  from '../../primitives'
+import type { SiteConf } from '../../types'
 
 const MobileNav: React.FC<{
   conf: SiteConf

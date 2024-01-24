@@ -19,6 +19,7 @@
     "target": "es2020",
     "declaration": true,
     "declarationMap": true,
+    "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "./dist",
