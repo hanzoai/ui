@@ -14,7 +14,7 @@ export default ({ colors }) => ({
     '3': "var(--lx-bg-3)",
   },
   accent: "var(--lx-fg-0)",      // full contrast (darkTheme:white) : heading and links hover
-  foreground: "var(--lx-fg-body)", // body off-white (bright enough to contrast to bg-level-1)
+  foreground: "var(--lx-fg-body)", // body text off-white (bright enough to contrast to bg-level-1)
   muted: {
     DEFAULT: "var(--lx-fg-2)",   // de-emphasized: fine print
     '1': "var(--lx-fg-2)",       // synonymous ^^^
