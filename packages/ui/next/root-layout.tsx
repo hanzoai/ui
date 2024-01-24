@@ -1,57 +1,8 @@
 import React, { type PropsWithChildren } from 'react'
-import { Metadata } from 'next'
 
 import { inter, drukTextWide } from '../next-fonts'
 import Header from '../common/header'
-import SiteConf from '../types/site-conf'
-
-const getMetadata = (conf: SiteConf): Metadata => ({
-
-  title: {
-    default: conf.title,
-    template: conf.template,
-  },
-  description: conf.desc,
-
-    // Generated from a 512 original create in GIMP
-    // at https://favicon.io/favicon-converter/
-
-    // Next API is poorly documented.
-    // cf: Next.js repo: packages/next/src/lib/metadata/types/metadata-interface.ts
-    // and metadata-types.ts 
-  icons: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '16x16',
-      url: '/assets/icon/favicon-16x16.png'   
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      url: '/assets/icon/favicon-32x32.png'   
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '192x192',
-      url: '/assets/icon/android-chrome-192x192.png'   
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '512x512',
-      url: '/assets/icon/android-chrome-512x512.png'   
-    },
-    {
-      rel: 'apple-touch-icon',
-      type: 'image/png',
-      sizes: '180x180',
-      url: '/assets/icon/apple-touch-icon.png'   
-    },
-  ]
-})
+import type SiteConf from '../types/site-conf'
 
 // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
@@ -95,6 +46,5 @@ const RootLayout: React.FC<
 
 export {
   RootLayout as default,
-  getMetadata,
   viewport
 }

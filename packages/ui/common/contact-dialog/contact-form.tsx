@@ -3,7 +3,7 @@
 import React, { useTransition } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, SubmitHandler, type ControllerRenderProps } from 'react-hook-form'
+import { useForm, type SubmitHandler, type ControllerRenderProps } from 'react-hook-form'
 import * as z from 'zod'
   // @ts-ignore
 import validator from 'validator'

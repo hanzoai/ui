@@ -1,4 +1,4 @@
-import { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 
   // https://www.typescriptlang.org/docs/handbook/enums.html#enums-at-runtime
 const enum MiniChartDateRangesValues {

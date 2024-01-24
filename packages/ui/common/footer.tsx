@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ButtonVariants } from '../primitives'
+import type { ButtonVariants } from '../primitives'
 import type { LinkDef, SiteConf } from '../types'
 import { Copyright, NavItems } from '../common'
 

@@ -21,7 +21,7 @@ const getLayoutInfo = (s: string): {
     switch (layout) {
       case 'grid': {
         const columns = parseInt(subtokens[2], 10)
-        const starting = subtokens[4] as Breakpoint
+        const starting = subtokens[4]
         if (Number.isNaN(columns) || columns < 2 || columns > 6 || !Breakpoints.includes(starting)) {
           return undefined
         }

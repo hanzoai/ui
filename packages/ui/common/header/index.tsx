@@ -3,7 +3,7 @@ import React from 'react'
 import type SiteConf from '../../types/site-conf'
 
 import Logo from '../logo'
-import { ButtonVariants } from '../../primitives'
+import type { ButtonVariants } from '../../primitives'
 import { NavItems, LinkElement, DrawerMenu } from '../../common'
 import MobileNav from './mobile-nav'
 

@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Icon } from '../../types'
+import { type Icon } from '../../types'
 
 import type CTABlock from './cta-block'
 import type Block from './block'
 import type ImageBlock from './image-block'
-import VideoBlock from './video-block'
+import type VideoBlock from './video-block'
 
 interface CardBlock extends Block {
   blockType: 'card'
