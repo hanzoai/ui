@@ -39,7 +39,7 @@ const Logo: React.FC<{
   }
 
   const outerClasses = 'flex items-center ' + className
-  const spanClasses = 'inline-block font-bold font-heading text-foreground ' 
+  const spanClasses = 'inline-block font-bold font-heading ' 
     + (href ? 'hover:text-accent ' : 'cursor-default ') 
     + classes.span 
 

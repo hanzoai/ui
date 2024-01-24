@@ -23,7 +23,7 @@ const viewport = {
 
 // overflow-y-hidden overflow-x-hidden ,-- cannot have these on body tag for scroll-snap on iOS
 const bodyClasses = 
-  'bg-background fg-foreground  ' + 
+  'bg-background text-foreground ' + 
   `${inter.variable} ${drukTextWide.variable} font-sans` 
 
     // re <base />: https://stackoverflow.com/a/75716588/11645689 
