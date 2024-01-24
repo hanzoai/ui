@@ -33,7 +33,7 @@ const RootLayout: React.FC<
   conf,
   children,
 }) =>  (
-  <html lang='en' suppressHydrationWarning className='dark'>
+  <html lang='en' suppressHydrationWarning className='lux-dark-theme'>
     <head >
       <base target='_blank' />
     </head>
