@@ -9,11 +9,8 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "build:cli": "turbo --filter=@luxdefi/uicli build",
     "build:registry": "pnpm --filter=www build:registry",
     "dev": "turbo run dev --parallel",
-    "dev:cli": "turbo --filter=@luxdefi/uicli dev",
-    "start:cli": "pnpm --filter=@luxdefi/uicli start:dev",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "preview": "turbo run preview",
@@ -24,8 +21,6 @@
     "prepare": "husky install",
     "check": "turbo lint typecheck format:check",
     "release": "changeset version",
-    "pub:beta": "cd packages/cli && pnpm pub:beta",
-    "pub:release": "cd packages/cli && pnpm pub:release",
     "test": "turbo run test --force",
     "clean:all": "rm -rf node_modules && pnpm -r clean"
   },
