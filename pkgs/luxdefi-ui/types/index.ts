@@ -12,7 +12,7 @@ import { type Breakpoint, Breakpoints } from './breakpoints'
 import type TShirtSize from './t-shirt-size' 
 import type { TShirtDimensions, Dimensions } from './dimensions' 
 import type Icon from './icon'
-import type SiteConf from './site-conf'
+import type SiteDef from './site-def'
 
 import {
   type ContactInfo,
@@ -33,6 +33,6 @@ export {
   Breakpoints,
   type ContactInfo,
   type ContactInfoFields,
-  type SiteConf,
+  type SiteDef,
 }
 

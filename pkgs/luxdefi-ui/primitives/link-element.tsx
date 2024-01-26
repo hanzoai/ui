@@ -2,25 +2,26 @@ import React from 'react'
 import Link from 'next/link'
 
 import type { LinkDef, Icon }  from '../types'
-import { buttonVariants, type ButtonSizes, type ButtonVariants } from '../primitives/button'
+import { buttonVariants, type ButtonSizes, type ButtonVariants } from './button'
 import { cn } from '../util'
 
 const LinkElement: React.FC<{
   def: LinkDef,
-  variant? : ButtonVariants
-  size?: ButtonSizes 
-  onClick?: () => void // for UI changes in addition to link (eg, close menu)
+  variant? : ButtonVariants // overrides def
+  size?: ButtonSizes    // overrides def
+  onClick?: () => void  // for UI changes in addition to link (eg, close menu)
   className?: string,
-  icon?: Icon // for title area
-  iconAfter?: boolean
+  icon?: Icon           // overrides def (eg, for title area)
+  iconAfter?: boolean   // overrides def
 }> = ({ 
   def,
-  size, // no default
+  className = '',
+    // DO NOT provide a default to any of the props that also appear in def!
+  size, 
   onClick,
   variant,
-  className = '',
-  icon,     // override
-  iconAfter // override
+  icon,     
+  iconAfter 
 } ) => {
 
   const {

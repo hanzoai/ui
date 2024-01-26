@@ -24,4 +24,5 @@ export default [
   'lg:columns-5',
   'lg:columns-6',
   'lg:columns-7',
+  'font-sans'
 ]

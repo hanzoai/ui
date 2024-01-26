@@ -1,8 +1,7 @@
 import React from 'react'
 
 import type { LinkDef, ButtonDef} from '../../types'
-import type { ButtonSizes } from '../../primitives'
-import { ActionButton, LinkElement } from '../../common'
+import  { type ButtonSizes, ActionButton, LinkElement } from '../../primitives'
 import type { Block, CTABlock } from '../def'
 
 const CtaBlockComponent: React.FC<{

@@ -12,7 +12,7 @@ const Logo: React.FC<{
   className?: string
 }> = ({
   size,
-  href, // no default please
+  href, // no default please!
   className='',
   logoOnly=false
 }) => {
