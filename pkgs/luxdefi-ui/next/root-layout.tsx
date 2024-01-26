@@ -1,8 +1,8 @@
 import React, { type PropsWithChildren } from 'react'
 
-import { inter, drukTextWide } from '../next-fonts'
 import Header from '../common/header'
-import type SiteConf from '../types/site-conf'
+import type { SiteDef } from '../types'
+import getAppRouterBodyFontClasses from './get-app-router-font-classes'
 
 // Next 14: https://nextjs.org/docs/app/building-your-application/upgrading/codemods#use-viewport-export
 const viewport = {
@@ -14,31 +14,32 @@ const viewport = {
 
 /*
   These '.variable' fields are actually autogenerate css classnames that *define* the actual
-  css variables ('--foo-var') that one asks for in the utility functions.
-  They are what make them available in their scope, so this MUST
+  css variables ('--<ugly-name>') that one asks for in the tailwind classes. 
+  They are what make them available in the global scope. So this MUST
   be done like this for the tailwind font classes to work.
   
-  (not to be confused with the css var itself.  This field should be named something else!)
+  (...not to be confused with the css var itself.  This field should be named something else!)
 */
 
-// overflow-y-hidden overflow-x-hidden ,-- cannot have these on body tag for scroll-snap on iOS
-const bodyClasses = 
-  'bg-background text-foreground ' + 
-  `${inter.variable} ${drukTextWide.variable} font-sans` 
+/*
+  re overflow-y-hidden overflow-x-hidden ,
+  We cannot have these on body tag for scroll-snap to work on iOS!
+*/
 
-    // re <base />: https://stackoverflow.com/a/75716588/11645689 
-const RootLayout: React.FC<
-  PropsWithChildren & { conf: SiteConf }
-> = ({ 
-  conf,
+
+const bodyClasses = 'bg-background text-foreground ' + getAppRouterBodyFontClasses() 
+    
+const RootLayout: React.FC<PropsWithChildren & { siteDef: SiteDef }> = ({ 
+  siteDef,
   children,
 }) =>  (
   <html lang='en' suppressHydrationWarning className='lux-dark-theme'>
     <head >
+      {/* https://stackoverflow.com/a/75716588/11645689 */ }
       <base target='_blank' />
     </head>
     <body className={bodyClasses}>
-      <Header conf={conf}/>
+      <Header siteDef={siteDef}/>
       {children}
     </body>
   </html>

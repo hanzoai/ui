@@ -1,16 +1,14 @@
 'use client'
-import React, { type PropsWithChildren } from 'react'
+import React, { type ComponentType, type ForwardRefExoticComponent, type PropsWithChildren, type ReactNode } from 'react'
 
-import { Sheet, SheetContent, SheetTrigger } from '../primitives/sheet'
-import * as Icons from './icons'
+import { Sheet, SheetContent, SheetTrigger } from './sheet'
+import type { LucideProps, LucideIcon } from 'lucide-react'
 
 const DrawerMenu: React.FC<PropsWithChildren & {
-  triggerIcon: keyof typeof Icons
-  triggerProps?: any
+  triggerIcon: ReactNode
   className?: string
 }> = ({
   triggerIcon,
-  triggerProps,
   children,
   className=''
 }) => {
@@ -18,7 +16,6 @@ const DrawerMenu: React.FC<PropsWithChildren & {
   const [open, setOpen] = React.useState(false)
 
   const onAction = () => { setOpen(false) }
-  const Icon = Icons[triggerIcon]
 
     // https://stackoverflow.com/a/49052730/11645689
   const updatedChildren = React.Children.map(
@@ -31,7 +28,7 @@ const DrawerMenu: React.FC<PropsWithChildren & {
   return (
     <Sheet open={open} onOpenChange={setOpen} >
       <SheetTrigger>
-        <Icon {...triggerProps} />
+        {triggerIcon}
       </SheetTrigger>
       <SheetContent side="right" className={className} closeButtonClass='text-inherit opacity-90' onClick={onAction}>
         {updatedChildren}

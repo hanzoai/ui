@@ -13,6 +13,11 @@ import type {
 import type { OpenGraph, OGImage } from './from-next/opengraph-types'
 import type { Twitter, TwitterImage } from './from-next/twitter-types'
 
+/*
+  NOTE: This is ONLY for sites that use the pages router in next.  
+  The app router does this automatically
+*/
+
 const getURLasString = (url: string | URL) => {
   return (
     (typeof url === 'string') ? (url as string) : (url.href)  
@@ -170,10 +175,7 @@ export const TwitterComponent: React.FC<{
   {tw.site && (<meta name="twitter:site" content={tw.site} />)}
 </Head>))
 
-
-  // For use with pages router only.
-  // App router does this automatically if you export the metadata object
-
+  /* See NOTE at top of file! */
   // https://stackoverflow.com/questions/68746228/next-head-wont-render-meta-tags-inside-of-fragment
 const HeadMetadataComponent: React.FC<{
   metadata: Metadata
@@ -185,7 +187,6 @@ const HeadMetadataComponent: React.FC<{
   return (<>
     <Head>
       {mainTitle && (<title>{mainTitle}</title>) /* must be here, directly under Head component */}
-
       {metadata.description && (      
         <meta name="description" content={metadata.description} />
       )}

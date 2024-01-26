@@ -1,36 +1,35 @@
 'use client'
 import React from 'react'
 
-import { LinkElement }  from '../../common'
-import type { ButtonVariants }  from '../../primitives'
-import type { SiteConf } from '../../types'
+import { type ButtonVariants, LinkElement }  from '../../primitives'
+import type { SiteDef } from '../../types'
 
 const MobileNav: React.FC<{
-  conf: SiteConf
+  siteDef: SiteDef
   itemVariant?: ButtonVariants
   className?: string
   itemClassName?: string
-  onAction?: () => void // for close functionality
+  onAction?: () => void // eg, for close functionality
 }> = ({
-  conf,
+  siteDef,
   onAction,
   className='',
   itemClassName='',
   itemVariant
 }) => (
-  conf.mainNav.full.length ? (
+  siteDef.mainNav.full.length ? (
     <nav className={className} >
-      {conf.mainNav.full.map((el, index) => (
-        <LinkElement 
-          def={el}
-          key={index}
-          size='lg'
-          className={itemClassName}
-          variant={itemVariant}
-          onClick = {onAction} 
-        />
-      ))}
-      </nav>
+    {siteDef.mainNav.full.map((el, index) => (
+      <LinkElement 
+        def={el}
+        key={index}
+        size='lg'
+        className={itemClassName}
+        variant={itemVariant}
+        onClick = {onAction}  // in adition to the link action itself
+      />
+    ))}
+    </nav>
   ) 
   : null
 )

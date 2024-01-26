@@ -10,13 +10,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  LinkElement,
   type TypographySize
 } from '../../primitives'
 
-import {
-  Icons,
-  LinkElement
-} from '../../common'
+import { Icons } from '../../common'
 
 import {
   getSpecifierData, 
