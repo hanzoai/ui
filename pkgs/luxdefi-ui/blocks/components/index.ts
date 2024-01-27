@@ -1,5 +1,4 @@
 import AccordianBlock from './accordian-block'
-import BannerBlock from  './banner-block'
 import BlockFactory from './block-factory'
 import CardBlock from './card-block'
 import CTABlock from './cta-block'
@@ -11,7 +10,6 @@ import SpaceBlock from './space-block'
 
 export { 
    AccordianBlock as AccordianBlockComponent, 
-   BannerBlock as BannerBlockComponent, 
    BlockFactory,
    CardBlock as CardBlockComponent,
    CTABlock as CTABlockComponent,

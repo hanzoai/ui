@@ -1,19 +1,15 @@
 'use client'
 import React from 'react'
 
-import type { Dimensions } from '../types'
-
 interface VideoProps extends React.ComponentPropsWithoutRef<"video"> {
   sources: string[]
   className?: string
-  constrainTo?: Dimensions
 }
 
 const VideoPlayer = React.forwardRef<HTMLVideoElement, VideoProps>(
 ({
   sources, 
   className='', 
-  constrainTo,
   ...rest
 }, ref) => {
   

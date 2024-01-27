@@ -1,5 +1,5 @@
 
-import nextFonts from './lux-next-fonts'
+import nextFonts from './load-and-return-lux-next-fonts-on-import'
 import type NextFontDesc from './next-font-desc'
 
 const PagesRouterFontVars: React.FC = () => {
