@@ -1,5 +1,4 @@
 import type AccordianBlock from './accordian-block'
-import type BannerBlock from  './banner-block'
 import type Block from './block'
 import type CardBlock from './card-block'
 import type CTABlock from './cta-block'
@@ -13,7 +12,6 @@ import type SpecialBlock from './special-block'
 
 export { 
    type AccordianBlock, 
-   type BannerBlock, 
    type Block,
    type CardBlock,
    type CTABlock,

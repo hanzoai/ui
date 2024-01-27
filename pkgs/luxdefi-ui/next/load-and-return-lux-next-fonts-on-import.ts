@@ -6,6 +6,15 @@ import type TwFontDesc from '../tailwind/tw-font-desc'
 
 import twFonts from '../tailwind/lux-tw-fonts'
 
+/*
+  Creating NextFontDesc's and TwFontDesc's has to be seperated because they are needed 
+  at different times during the next compile / build.  Otherwise a nasty 
+  race condition happens! 
+
+  Also, requires that "Font loaders must be called and assigned to a const in the module scope"
+
+*/
+
 const drukTextWide = localFont({
   src: [
     {
@@ -32,14 +41,7 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
 })
-
-
-/*
-  NextFontDesc and TwFontDesc have to be seperate because they are needed 
-  at different times during the next compile / build.  Otherwise a nasty 
-  race condition happens! That's why they are in different files.
-*/
-
+  
 export default [
   {
     font: inter,
@@ -62,3 +64,5 @@ export default [
     })
   }
 ) as NextFontDesc[]
+
+

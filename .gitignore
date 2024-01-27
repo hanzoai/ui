@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules
+**/node_modules
 .pnp
 .pnp.js
 
@@ -10,8 +11,6 @@ coverage
 
 # next.js
 .next/
-out/
-build
 
 # misc
 .DS_Store
@@ -24,17 +23,16 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+**/.env
+**/.env.*
 
 # turbo
 .turbo
 
 .contentlayer
-tsconfig.tsbuildinfo
+**/tsconfig.tsbuildinfo
 
+# build
 **/dist
 
 **/.npmrc
