@@ -6,12 +6,16 @@ import { type ButtonVariants, LinkElement, DrawerMenu } from '../../primitives'
 import { NavItems, Icons } from '../../common'
 import MobileNav from './mobile-nav'
 
+import { cn } from '../../util'
+
 const Header: React.FC<{
   siteDef: SiteDef
+  className?: string
 }> = ({
-  siteDef
+  siteDef,
+  className = ''
 }) => (
-  <header className="bg-background sticky z-10 top-0">
+  <header className={cn('bg-background sticky z-10 top-0 ', className)} >
     <div className="hidden md:flex flex-row md:h-[80px] items-center justify-between px-[32px] 2xl:mx-auto max-w-screen-2xl">
       <Logo size='md' className='hidden lg:flex' key='two'/>
       <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>

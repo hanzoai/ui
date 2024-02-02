@@ -1,6 +1,6 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Library that contains shared UI primitives, styles, and core types",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

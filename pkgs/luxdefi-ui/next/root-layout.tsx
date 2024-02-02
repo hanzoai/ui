@@ -29,7 +29,11 @@ const viewport = {
 
 const bodyClasses = 'bg-background text-foreground ' + getAppRouterBodyFontClasses() 
     
-const RootLayout: React.FC<PropsWithChildren & { siteDef: SiteDef }> = ({ 
+const RootLayout: React.FC<PropsWithChildren & { 
+  siteDef: SiteDef 
+  header?: boolean
+}> = ({ 
+  header = true,
   siteDef,
   children,
 }) =>  (
@@ -39,7 +43,7 @@ const RootLayout: React.FC<PropsWithChildren & { siteDef: SiteDef }> = ({
       <base target='_blank' />
     </head>
     <body className={bodyClasses}>
-      <Header siteDef={siteDef}/>
+      {header && <Header siteDef={siteDef}/>}
       {children}
     </body>
   </html>
