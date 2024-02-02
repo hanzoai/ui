@@ -1,4 +1,3 @@
-import React from 'react'
 import type Block from './block'
 
 interface HeadingBlock extends Block {
