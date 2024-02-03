@@ -25,12 +25,9 @@ const VideoBlockComponent: React.FC<{
   const [_dim, setDim] = useState<Dimensions | undefined>(undefined)
 
   const onResize = () => { 
-    const height = window.innerHeight 
-    const width = window.innerWidth 
- 
     setDim({
-      w: width,
-      h: height
+      w: window.innerWidth,
+      h: window.innerHeight
     }) 
   } 
 
@@ -39,7 +36,7 @@ const VideoBlockComponent: React.FC<{
       window.addEventListener('resize', onResize) 
       return () => window.removeEventListener('resize', onResize) 
     }
-  }, []) 
+  }, [window]) 
 
   useLayoutEffect(() => { 
     onResize() 
@@ -52,13 +49,14 @@ const VideoBlockComponent: React.FC<{
 
   const b = block as VideoBlock
   if (b.sizing?.vh) {
-    const H = `${b.sizing.vh}vh`
     const ar = asNum(b.dim.md.w) / asNum(b.dim.md.h)
       // serverside, generate the css for the correctly sized poster image
     if (!_dim) {
+      const height = `${b.sizing.vh}vh`
       return <div className='dummy-div' style={{
-        height: H,
-        width: `calc(${H}*${ar})`,
+        maxWidth: '100%',
+        height: height,
+        width: `calc(${height}*${ar})`,
         backgroundImage: `url(${b.poster!})`,
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat', 
