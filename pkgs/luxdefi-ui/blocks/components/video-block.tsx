@@ -31,12 +31,14 @@ const VideoBlockComponent: React.FC<{
     }) 
   } 
 
+  const windowDefined = typeof window !== 'undefined'
+
   useEffect(() => { 
     if (window) {
       window.addEventListener('resize', onResize) 
       return () => window.removeEventListener('resize', onResize) 
     }
-  }, [window]) 
+  }, [windowDefined]) 
 
   useLayoutEffect(() => { 
     onResize() 
@@ -55,10 +57,11 @@ const VideoBlockComponent: React.FC<{
       const height = `${b.sizing.vh}vh`
       return <div className='dummy-div' style={{
         maxWidth: '100%',
+        maxHeight: '100%',
         height: height,
         width: `calc(${height}*${ar})`,
         backgroundImage: `url(${b.poster!})`,
-        backgroundSize: 'cover',
+        backgroundSize: 'contain',
         backgroundRepeat: 'no-repeat', 
       }} />
     }
