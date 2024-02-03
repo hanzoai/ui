@@ -31,7 +31,9 @@ const defaultCSS = {
 
   color: 'var(--tw-prose-body)',
 // YUCK  maxWidth: '65ch',
-  p: {}, // Required to maintain correct order when merging
+  p: {
+    textAlign: 'inherit'
+  }, // Required to maintain correct order when merging
   'p:first-child': {},
   'p:last-child': {},
   a: {
@@ -87,25 +89,31 @@ const defaultCSS = {
   h1: {
     color: 'var(--tw-prose-headings)',
     fontWeight: '800',
+    textAlign: 'inherit'
   },
   h2: {
     color: 'var(--tw-prose-headings)',
     fontWeight: '700',
+    textAlign: 'inherit'
   },
   h3: {
     color: 'var(--tw-prose-headings)',
     fontWeight: '600',
+    textAlign: 'inherit'
   },
   h4: {
     color: 'var(--tw-prose-headings)',
     fontWeight: '600',
+    textAlign: 'inherit'
   },
   h5: {
     color: 'var(--tw-prose-headings)',
     fontWeight: '600',
+    textAlign: 'inherit'
   },
   h6: {
     color: 'var(--tw-prose-headings)',
+    textAlign: 'inherit'
   },
   img: {},
   'img:first-child': {
