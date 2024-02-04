@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { Block, SpaceBlock } from '../def'
+import { ApplyTypography } from '../../primitives'
 
 const SpaceBlockComponent: React.FC<{
   block?: Block
@@ -40,7 +41,9 @@ const SpaceBlockComponent: React.FC<{
   }
 
   return (
-    <Tag className={`invisible m-0 ${Tag === 'div' ? 'h-[1px]' : ''} ${className}`} >&nbsp;</Tag> 
+    <ApplyTypography>
+      <Tag className={`invisible m-0 ${Tag === 'div' ? 'h-[1px]' : ''} ${className}`} >&nbsp;</Tag> 
+    </ApplyTypography>
   )
 }
 

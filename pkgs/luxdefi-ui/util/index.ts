@@ -64,3 +64,5 @@ export const constrain = (dim: Dimensions, constraint: Dimensions): Dimensions =
     h: Math.round(d.h * ratio)
   }
 }
+
+export const containsToken = (s: string | undefined, toFind: string): boolean => (s ? s.split(' ').includes(toFind) : false)

@@ -5,6 +5,9 @@ interface HeadingBlock extends Block {
   heading: string
   byline?: string
   level?: number
+  bylineLevel?: number
+  spaceBetween?: number 
+  spaceAfter?: number 
 }
 
 export {

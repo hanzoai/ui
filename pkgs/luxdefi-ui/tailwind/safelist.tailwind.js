@@ -24,5 +24,18 @@ export default [
   'lg:columns-5',
   'lg:columns-6',
   'lg:columns-7',
-  'font-sans'
+  'font-sans',
+    // for headling block spacing
+  'h-1',
+  'h-2',
+  'h-3',
+  'h-4',
+  'h-5',
+  'h-6',
+  'h-7',
+  'h-9',
+  'h-10',
+  'h-11',
+  'h-12',
+
 ]
