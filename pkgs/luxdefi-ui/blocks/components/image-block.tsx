@@ -1,10 +1,9 @@
 import React from 'react'
-
 import Image from 'next/image'
 
-import { constrain } from '../../util'
 import type { Dimensions } from '../../types'
 import type { Block, ImageBlock } from '../def'
+import { cn, constrain, containsToken } from '../../util'
 
 const ImageBlockComponent: React.FC<{
   block: Block
@@ -17,16 +16,23 @@ const ImageBlockComponent: React.FC<{
 }) => {
   
   if (block.blockType !== 'image') {
-    return <>iamge block required</>
+    return <>image block required</>
   }
 
-  const b = block as ImageBlock
+  const {src, dim, props} = block as ImageBlock
+  const toSpread: any = {}
+  if (dim) {
+    const dimCon = (constraint ? constrain(dim, constraint) : dim)
+    toSpread.width = dimCon.w
+    toSpread.height = dimCon.h
+  }  
 
-  const dim = b.dim as Dimensions
-  const conDim = (constraint ? constrain(dim, constraint) : dim) 
-
-  return (
-    <Image src={b.image!} alt='image' width={conDim.w} height={conDim.h}  className={className}/>
+  return (props?.fill) ? (
+    <div className='relative w-full h-full'>
+      <Image src={src} {...toSpread} {...props} className={className}/>
+    </div>
+  ) : (
+    <Image src={src} {...toSpread} {...props} className={className}/>   
   )
 }
 
