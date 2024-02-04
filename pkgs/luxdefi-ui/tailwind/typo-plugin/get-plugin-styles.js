@@ -433,15 +433,7 @@ const defaultModifiers = (base) => ({
         'tbody td:last-child, tfoot td:last-child': {
           paddingRight: '0',
         },
-      },
-      {
-        '> :first-child': {
-          marginTop: '0',
-        },
-        '> :last-child': {
-          marginBottom: '0',
-        },
-      },
+      }
     ],
   },
   sm: {
@@ -510,11 +502,7 @@ const defaultModifiers = (base) => ({
         'tbody td, tfoot td': {},
         'tbody td:first-child, tfoot td:first-child': {},
         'tbody td:last-child, tfoot td:last-child': {},
-      },
-      {
-        '> :first-child': {},
-        '> :last-child': {},
-      },
+      }
     ],
   },
   lg: {
@@ -596,11 +584,7 @@ const defaultModifiers = (base) => ({
         'tbody td, tfoot td': {},
         'tbody td:first-child, tfoot td:first-child': {},
         'tbody td:last-child, tfoot td:last-child': {},
-      },
-      {
-        '> :first-child': {},
-        '> :last-child': {},
-      },
+      }
     ],
   },
 })

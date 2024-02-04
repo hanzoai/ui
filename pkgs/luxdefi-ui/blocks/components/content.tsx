@@ -49,4 +49,22 @@ const BlockFactory: React.FC<{
   return <>unknown block type</>
 }
 
-export default BlockFactory
+const ContentComponent: React.FC<{
+  blocks: B.Block | B.Block[] | undefined
+}> = ({
+  blocks
+}) => {
+  if (!blocks) return null
+  if (Array.isArray(blocks)) {
+    return (<>
+      {blocks.map((block, index) => {
+        return (<BlockFactory block={block} key={`content-block-${index}`}/>)
+      })}
+    </>)
+  }
+  return (
+    (<BlockFactory block={blocks}/>)   
+  )
+}
+
+export default ContentComponent

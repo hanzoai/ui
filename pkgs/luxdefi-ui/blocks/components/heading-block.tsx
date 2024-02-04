@@ -1,6 +1,8 @@
 import React from 'react'
 
 import type { Block, HeadingBlock } from '../def'
+import { cn } from '../../util'
+import { ApplyTypography } from '../../primitives'
 
 const HeadingBlockComponent: React.FC<{
   block: Block,
@@ -15,41 +17,73 @@ const HeadingBlockComponent: React.FC<{
   }
   const heading = block as HeadingBlock
 
-  let Tag: React.ElementType = 'h3' // default 
-  let BylineTag: React.ElementType = 'h5' // default: two levels below main
-
-  switch (heading.level) {
+  let Tag: React.ElementType  
+  let BylineTag: React.ElementType | undefined = undefined 
+  
+  switch (heading.bylineLevel) {
     case 0: {
-      Tag = 'p'
       BylineTag = 'p'
     } break
     case 1: {
-      Tag = 'h1'
+      BylineTag = 'h1'
+    } break
+    case 2: {
+      BylineTag = 'h2'
+    } break
+    case 3: {
       BylineTag = 'h3'
+    } break
+    case 4: {
+      BylineTag = 'h4'
+    } break
+    case 5: {
+      BylineTag = 'h5'
+    } break
+    case 6: {
+      BylineTag = 'h6'
+    } break
+  }
+    // bylineLevel default is two levels below the main heading
+  switch (heading.level) {
+    case 0: {
+      Tag = 'p'
+      BylineTag = BylineTag ?? 'p'
+    } break
+    case 1: {
+      Tag = 'h1'
+      BylineTag = BylineTag ?? 'h3'
     } break
     case 2: {
       Tag = 'h2'
-      BylineTag = 'h4'
+      BylineTag = BylineTag ?? 'h4'
     } break
-
+    // 3 is default
     case 4: {
       Tag = 'h4'
-      BylineTag = 'h6'
+      BylineTag = BylineTag ?? 'h6'
     } break
     case 5: {
       Tag = 'h5'
-      BylineTag = 'p'
+      BylineTag = BylineTag ?? 'p'
     } break
     case 6: {
       Tag = 'h6'
-      BylineTag = 'p'
+      BylineTag = BylineTag ?? 'p'
     } break
+    default: {
+      Tag = 'h3'
+      BylineTag = BylineTag ?? 'h5'
+    }
   }
-
-  return (<>
-    <Tag className={className}>{heading.heading}</Tag>
-    {heading.byline && (<BylineTag >{heading.byline}</BylineTag>)}
-  </>)
+    // Had to do this way, since tw typo plugin does support overrding typo styling wiithout .not-typography
+  return (
+    <ApplyTypography>
+      <Tag className={className}>{heading.heading}</Tag>
+      {heading.spaceBetween && <div className={'w-[1px] ' + `h-${heading.spaceBetween}`} />}
+      {heading.byline && (<BylineTag>{heading.byline}</BylineTag>)}
+      {heading.spaceAfter && <div className={'w-[1px] ' + `h-${heading.spaceAfter}`} />}
+    </ApplyTypography>
+  )
 }
 
 export default HeadingBlockComponent

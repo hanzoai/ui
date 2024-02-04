@@ -1,5 +1,6 @@
 import AccordianBlock from './accordian-block'
-import BlockFactory from './block-factory'
+import Content from './content'
+import Blocks from './content'
 import CardBlock from './card-block'
 import CTABlock from './cta-block'
 import GroupBlock from './group-block'
@@ -10,7 +11,8 @@ import SpaceBlock from './space-block'
 
 export { 
    AccordianBlock as AccordianBlockComponent, 
-   BlockFactory,
+   Content as ContentComponent,
+   Blocks as BlocksComponent,
    CardBlock as CardBlockComponent,
    CTABlock as CTABlockComponent,
    GroupBlock as GroupBlockComponent,

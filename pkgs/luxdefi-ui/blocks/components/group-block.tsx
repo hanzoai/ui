@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { type Breakpoint, Breakpoints} from '../../types'
+import { Breakpoints} from '../../types'
 import { cn } from '../../util'
 
 import type { Block, GroupBlock } from '../def'
-import BlockFactory from './block-factory'
+import Content from './content'
 
-// eg: 'layout-grid-2-starting-md'
-// see comments below regarding dynamic classes and the safelist
+  // eg: 'layout-grid-2-starting-md'
+  // see comments below regarding dynamic classes and the safelist
 const getLayoutInfo = (s: string): {
   layout: string
   spec: any
@@ -72,14 +72,12 @@ const GroupBlockComponent: React.FC<{
         className)
       return (
         <div className={clazzName}>
-        {elements.map((block, index) => (
-          <BlockFactory block={block} key={index} />
-        ))}
+          <Content blocks={elements} />
         </div>
       )
     }
   }
-  return <></>
+  return null
 }
 
 export default GroupBlockComponent

@@ -3,11 +3,12 @@ import React from 'react'
 import type { LinkDef, ButtonDef} from '../../types'
 import  { type ButtonSizes, ActionButton, LinkElement } from '../../primitives'
 import type { Block, CTABlock } from '../def'
+import { cn, containsToken } from '../../util'
 
 const CtaBlockComponent: React.FC<{
   block: Block,
   itemClassName?: string,
-  itemSize?: ButtonSizes
+  itemSize?: ButtonSizes,
   renderLink?: (def: LinkDef, key: any) => JSX.Element
   renderButton?: (def: ButtonDef, key: any) => JSX.Element
 }> = ({
@@ -22,10 +23,25 @@ const CtaBlockComponent: React.FC<{
     return <>cta block required</>
   }
 
-  const { elements } = block as CTABlock
+  const { elements, specifiers } = block as CTABlock
+  let wrapperClasses = ''
+  let itemClasses = ''
+  if (containsToken(specifiers, 'fill')) {
+    wrapperClasses += 'w-full '
+    itemClasses += 'grow ' 
+  }
+  else if (containsToken(specifiers, 'left')) {
+    wrapperClasses += 'sm:justify-start '
+  }
+  else if (containsToken(specifiers, 'right')) {
+    wrapperClasses += 'sm:justify-end '
+  }
 
   return (
-    <>
+    <div className={cn(
+      'flex flex-col items-stretch gap-2 self-stretch sm:flex-row sm:justify-center ', 
+      wrapperClasses
+    )}>
     {elements.map((element, index) => {
       if ((element as any).title) {
         const def = element as LinkDef
@@ -50,7 +66,7 @@ const CtaBlockComponent: React.FC<{
         ) 
       }
     })}
-    </>
+    </div>
   )
 }
 
