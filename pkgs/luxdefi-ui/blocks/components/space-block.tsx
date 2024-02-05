@@ -2,11 +2,9 @@ import React from 'react'
 
 import type { Block, SpaceBlock } from '../def'
 import { ApplyTypography } from '../../primitives'
+import type BlockComponentProps from './block-component-props'
 
-const SpaceBlockComponent: React.FC<{
-  block?: Block
-  className?: string
-}> = ({
+const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
   block,
   className=''
 }) => {
@@ -15,7 +13,7 @@ const SpaceBlockComponent: React.FC<{
     return <>space block required</>
   }
 
-  const size = (block) ? ((block as SpaceBlock).level ?? 0) : 0
+  const size = (block as SpaceBlock).level ?? 0
 
   let Tag: React.ElementType = 'div' // corresponds to 0
 

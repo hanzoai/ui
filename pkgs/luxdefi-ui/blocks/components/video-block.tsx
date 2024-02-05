@@ -5,12 +5,12 @@ import Image from 'next/image'
 
 import type { Dimensions, TShirtSize, TShirtDimensions } from '../../types'
 import { constrain, asNum } from '../../util'
-import type { Block, VideoBlock } from '../def'
+import type { VideoBlock } from '../def'
 import { VideoPlayer } from '../../primitives'
 
-const VideoBlockComponent: React.FC<{
-  block: Block
-  className?: string
+import type BlockComponentProps from './block-component-props'
+
+const VideoBlockComponent: React.FC<BlockComponentProps & {
   usePoster?: boolean
   size?: TShirtSize
   constraint?: Dimensions

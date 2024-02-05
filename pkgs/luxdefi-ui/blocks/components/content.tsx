@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type ComponentType, type ReactNode} from 'react'
 
 import type * as B from '../def'
 
@@ -11,45 +11,29 @@ import VideoBlockComponent from './video-block'
 import AccordianBlockComponent from './accordian-block'
 import GroupBlockComponent from './group-block'
 
-const BlockFactory: React.FC<{
-  block: B.Block
-  className?: string
-}> = ({
-  block,
-  className=''
-}) => {
+import type BlockComponentProps from './block-component-props'
 
-  switch (block.blockType) {
-    case 'group': {
-      return <GroupBlockComponent block={block} className={className} />
-    }
-    case 'card': {
-      return <CardBlockComponent block={block} className={className} />
-    }
-    case 'cta': {
-      return <CTABlockComponent block={block} itemClassName={className}/>
-    }
-    case 'heading': {
-      return <HeadingBlockComponent block={block} className={className}/>
-    }
-    case 'space': {
-      return <SpaceBlockComponent block={block} className={className} />
-    }
-    case 'video': {
-      return <VideoBlockComponent block={block} className={className} />
-    }
-    case 'image':  {
-      return <ImageBlockComponent block={block} className={className} />
-    }
-    case 'accordian': {
-      return <AccordianBlockComponent block={block} className={className} />
-    }
-    case 'element': {
-      return (block as B.ElementBlock).element
-    }
+const map = new Map<string, ComponentType<BlockComponentProps>>()
+map.set('card', CardBlockComponent)
+map.set('heading', HeadingBlockComponent)
+map.set('cta', CTABlockComponent)
+map.set('space', SpaceBlockComponent)
+map.set('image', ImageBlockComponent)
+map.set('video', VideoBlockComponent)
+map.set('accordian', AccordianBlockComponent)
+map.set('group', GroupBlockComponent)
+
+const registerBlockType = (key: string, type: ComponentType<BlockComponentProps>): void => {
+  map.set(key, type)
+}
+
+const renderBlock = (block: B.Block, keyStr?: string): ReactNode => {
+  if (block.blockType === 'element') {
+    return (block as B.ElementBlock).element
   }
-
-  return <>unknown block type</>
+  const CompType = map.get(block.blockType)
+  if (!CompType) return null
+  return <CompType block={block} key={keyStr ?? ''} /> 
 }
 
 const ContentComponent: React.FC<{
@@ -59,15 +43,16 @@ const ContentComponent: React.FC<{
 }) => {
   if (!blocks) return null
   if (Array.isArray(blocks)) {
-    return (<>
-      {blocks.map((block, index) => {
-        return (<BlockFactory block={block} key={`content-block-${index}`}/>)
-      })}
-    </>)
+    return (
+      blocks.map((block, index) => (
+        renderBlock(block, `content-block-${block.blockType}-${index}`)
+      ))
+    )
   }
-  return (
-    (<BlockFactory block={blocks}/>)   
-  )
+  return renderBlock(blocks)
 }
 
-export default ContentComponent
+export {
+  ContentComponent as default,
+  registerBlockType
+}

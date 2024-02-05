@@ -10,12 +10,10 @@ import {
 
 import { cn } from '../../util'
 
-import type { Block, AccordianBlock } from '../def'
+import type { AccordianBlock } from '../def'
+import type BlockComponentProps from './block-component-props'
 
-const AccordianBlockComponent: React.FC<{
-  block: Block
-  className?: string
-}> = ({
+const AccordianBlockComponent: React.FC<BlockComponentProps> = ({
   block,
   className=''
 }) => {
