@@ -44,6 +44,9 @@ const BlockFactory: React.FC<{
     case 'accordian': {
       return <AccordianBlockComponent block={block} className={className} />
     }
+    case 'element': {
+      return (block as B.ElementBlock).element
+    }
   }
 
   return <>unknown block type</>
