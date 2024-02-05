@@ -28,6 +28,7 @@ import type { Block, CardBlock } from '../def'
 import ImageBlockComponent from './image-block'
 import VideoBlockComponent from './video-block'
 import CTABlockComponent from './cta-block'
+import type BlockComponentProps from './block-component-props'
 
 const ArrowLinkElement: React.FC<{
   def: LinkDef,
@@ -63,9 +64,8 @@ const getSmallIconDim = (s: string): Dimensions | undefined => (
   ) 
 )
 
-const CardBlockComponent: React.FC<{
-  block: Block
-  className?: string
+const CardBlockComponent: React.FC<
+  BlockComponentProps & {
   contentClassName?: string
 }> = ({
   block,

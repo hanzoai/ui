@@ -1,13 +1,11 @@
 import React from 'react'
 
-import type { Block, HeadingBlock } from '../def'
-import { cn } from '../../util'
+import type { HeadingBlock } from '../def'
 import { ApplyTypography } from '../../primitives'
 
-const HeadingBlockComponent: React.FC<{
-  block: Block,
-  className?: string
-}> = ({
+import type BlockComponentProps from './block-component-props'
+
+const HeadingBlockComponent: React.FC<BlockComponentProps> = ({
   block,
   className=''
 }) => {

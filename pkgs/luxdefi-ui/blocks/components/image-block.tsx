@@ -2,12 +2,13 @@ import React from 'react'
 import Image from 'next/image'
 
 import type { Dimensions } from '../../types'
-import type { Block, ImageBlock } from '../def'
-import { cn, constrain, containsToken } from '../../util'
+import type { ImageBlock } from '../def'
+import { constrain } from '../../util'
 
-const ImageBlockComponent: React.FC<{
-  block: Block
-  className?: string
+import type BlockComponentProps from './block-component-props'
+
+
+const ImageBlockComponent: React.FC<BlockComponentProps & {
   constraint?: Dimensions
 }> = ({
   block,

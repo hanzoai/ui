@@ -2,18 +2,18 @@ import React from 'react'
 
 import type { LinkDef, ButtonDef} from '../../types'
 import  { type ButtonSizes, ActionButton, LinkElement } from '../../primitives'
-import type { Block, CTABlock } from '../def'
+import type { CTABlock } from '../def'
 import { cn, containsToken } from '../../util'
 
-const CtaBlockComponent: React.FC<{
-  block: Block,
-  itemClassName?: string,
+import type BlockComponentProps from './block-component-props'
+
+const CtaBlockComponent: React.FC<BlockComponentProps & {
   itemSize?: ButtonSizes,
   renderLink?: (def: LinkDef, key: any) => JSX.Element
   renderButton?: (def: ButtonDef, key: any) => JSX.Element
 }> = ({
   block,
-  itemClassName='',
+  className='', // assigned to each item
   itemSize, // do not provide default.  this is an override to the def
   renderLink,
   renderButton
@@ -50,7 +50,7 @@ const CtaBlockComponent: React.FC<{
             def={def}
             key={index}
             size={itemSize}
-            className={itemClassName}
+            className={className}
           />
         )
       } 
@@ -61,7 +61,7 @@ const CtaBlockComponent: React.FC<{
             def={def}
             key={index}
             size={itemSize}
-            className={itemClassName}
+            className={className}
           />
         ) 
       }
