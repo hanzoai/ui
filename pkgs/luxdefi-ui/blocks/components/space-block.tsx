@@ -13,7 +13,7 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
     return <>space block required</>
   }
 
-  const size = (block as SpaceBlock).level ?? 0
+  const size = (block as SpaceBlock).level ?? 3
 
   let Tag: React.ElementType = 'div' // corresponds to 0
 

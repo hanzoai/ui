@@ -24,7 +24,7 @@ const Logo: React.FC<{
     span: '',
     icon: ''
   }
-  if (size === 'lg') {
+  if (size === 'lg' || size === 'xl' ) { // for safety
     classes.icon = 'h-10 w-10 mr-4 color-inherit' + toAdd.icon
     classes.span = 'text-3xl' + toAdd.span
   }
@@ -33,12 +33,17 @@ const Logo: React.FC<{
     classes.icon = 'h-[32px] w-[32px] mr-[12px] color-inherit' + toAdd.icon
     classes.span = 'text-[26px]/[26px] tracking-tighter' + toAdd.span
   }
-  else {
+  else if (size === 'sm' ) {
     classes.icon = 'h-6 w-6 mr-2 color-inherit' + toAdd.icon
     classes.span = 'text-lg' + toAdd.span
   }
+    // xs
+  else {
+    classes.icon = 'h-4 w-4 mr-1 color-inherit' + toAdd.icon
+    classes.span = 'text-base' + toAdd.span
+  }
 
-  const outerClasses = 'flex items-center ' + className
+  const outerClasses = 'flex flex-row items-center ' + className
   const spanClasses = 'inline-block font-bold font-heading ' 
     + (href ? 'hover:text-accent ' : 'cursor-default ') 
     + classes.span 

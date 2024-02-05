@@ -1,6 +1,6 @@
 import type { LinkDef } from '../types'
 
-const short = [
+export default [
   {
     title: "AI",
     href: "https://lux.chat",
@@ -38,21 +38,3 @@ const short = [
     newTab: false,
   },
 ] as LinkDef[]
-
-const aux = [
-  {
-    title: "Enter App",
-    href: "https://app.lux.market",
-    newTab: false,
-    external: true,
-    variant: 'primary',
-  },
-] as LinkDef[]
-
-const full = [...short, ...aux]
-
-export {
-  short,
-  aux,
-  full
-}
