@@ -4,10 +4,12 @@ type Dimensions = {
   h: number | `${number}`
 }
 
-type TShirtDimensions = {               
-  sm?: Dimensions, 
-  md: Dimensions, 
+type TShirtDimensions = { 
+  xs?: Dimensions            
+  sm?: Dimensions 
+  md:  Dimensions 
   lg?: Dimensions 
+  xl?: Dimensions
 }
 
 export {

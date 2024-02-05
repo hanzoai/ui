@@ -5,7 +5,6 @@
 import * as React from 'react'
 import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { ChevronRight } from 'lucide-react'
 
 import { cn } from '../util'
 
@@ -37,9 +36,8 @@ const sheetVariants = cva(
   {
     variants: {
       side: {
-        top: 'inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
-        bottom:
-          'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
+        //top: 'inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top',
+        //bottom: 'inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom',
         left: 'inset-y-0 left-0 h-full w-2/3 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm',
         right:
           'inset-y-0 right-0 h-full w-2/3  border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm',
@@ -51,34 +49,64 @@ const sheetVariants = cva(
   }
 )
 
-interface SheetContentProps
+interface SheetContentProps 
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {}
+  VariantProps<typeof sheetVariants> {}
 
 const closeUIclx = 'rounded-sm opacity-70 ring-offset-background ' + 
   'transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary'
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
-  SheetContentProps & { closeButtonClass? : string}
->(({ side = 'right', className, children, closeButtonClass, ...props }, ref) => (
-  <SheetPortal>
-    <SheetOverlay />
-    <SheetPrimitive.Content
-      ref={ref}
-      className={cn(sheetVariants({ side }), className)}
-      {...props}
-    >
-      {children}
-      <SheetPrimitive.Close className={cn(closeUIclx, 'absolute right-2 top-3 ', closeButtonClass)}>
-        <ChevronRight className='h-7 w-7 text-inherit' />
-      </SheetPrimitive.Close>
-      <SheetPrimitive.Close className={cn(closeUIclx, 'absolute right-2 bottom-3 ', closeButtonClass)}>
-        <ChevronRight className='h-7 w-7 text-inherit' />
-      </SheetPrimitive.Close>
-    </SheetPrimitive.Content>
-  </SheetPortal>
-))
+  SheetContentProps & 
+  { 
+    closeButtonClass? : string
+    closeElement: ReactNode
+    centerElement?: ReactNode
+    duplicateCloseOnBottom?: boolean
+  }
+>(({ 
+    side = 'right', 
+    className, 
+    children, 
+    closeElement,
+    centerElement,
+    duplicateCloseOnBottom=false,
+    closeButtonClass, 
+    ...props 
+  }, ref ) => {
+
+    const xOfCloseUIClass = (side === 'right') ? 'left-2' : 'right-2'
+    
+    return (
+      <SheetPortal>
+        <SheetOverlay />
+        <SheetPrimitive.Content
+          ref={ref}
+          className={cn(sheetVariants({ side }), className)}
+          {...props}
+        >
+          {children}
+
+          <SheetPrimitive.Close className={cn(closeUIclx, 'absolute z-10 top-3', xOfCloseUIClass, closeButtonClass)}>
+            {closeElement}
+          </SheetPrimitive.Close>
+          {duplicateCloseOnBottom && (
+            <SheetPrimitive.Close className={cn(closeUIclx, 'absolute z-10 bottom-3', xOfCloseUIClass, closeButtonClass)}>
+            {closeElement}
+            </SheetPrimitive.Close>
+          )}
+          {centerElement && (
+            <div className={'absolute z-0 top-3 left-0 right-0 flex flex-row justify-center align-start'} >
+              {centerElement}
+            </div>
+          )}
+        </SheetPrimitive.Content>
+      </SheetPortal>
+    )
+  }
+)
+
 SheetContent.displayName = SheetPrimitive.Content.displayName
 
 const SheetHeader = ({

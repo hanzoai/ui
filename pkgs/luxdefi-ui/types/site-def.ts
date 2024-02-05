@@ -2,10 +2,9 @@ import type LinkDef from './link-def'
 
 interface SiteDef {
   currentAs?: string
-  mainNav: {
-    short?: LinkDef[]
-    aux?: LinkDef[]
-    full: LinkDef[]
+  nav: {
+    elements: LinkDef[]
+    featuredCTA?: LinkDef
   }
   footer: LinkDef[][]  // columns of links (on desktop)
 }
