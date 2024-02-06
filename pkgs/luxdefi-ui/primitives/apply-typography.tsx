@@ -2,7 +2,7 @@ import React, { type PropsWithChildren } from 'react'
 
 import { cn } from '../util'
 
-type TypographySize = 'responsive' | 'sm' | 'base' | 'lg' // if t-shirt size, do *not* be responsive
+type TypographySize = 'responsive' | 'sm' | 'base' | 'lg' | 'xl' // if t-shirt size, do *not* be responsive
 
 const ApplyTypography: React.FC<
   PropsWithChildren & {
@@ -19,11 +19,12 @@ const ApplyTypography: React.FC<
 
     // responsive version by default
   let typoClasses = 
-  'typography gap-3 ' +
-  'xs:typography-sm ' + 
-  'sm:typography sm:gap-4 ' +
-  'lg:typography-lg lg:gap-5 ' + 
-  'typography-headings:font-heading ' // only effects h1-h3 (in plugin)
+    'typography gap-3 ' +
+    'xs:typography-sm ' + 
+    'sm:typography sm:gap-4 ' +
+    'lg:typography-lg lg:gap-5 ' + 
+    'xl:typography-xl xl:gap-6 ' + 
+    'typography-headings:font-heading ' // only effects h1-h3 (in plugin)
 
   switch (size) {
     case 'sm': {
@@ -34,6 +35,9 @@ const ApplyTypography: React.FC<
     } break
     case 'lg': {
       typoClasses = 'typography typography-lg gap-5 typography-headings:font-heading typography-p:text-lg '
+    } break
+    case 'xl': {
+      typoClasses = 'typography typography-xl gap-6 typography-headings:font-heading typography-p:text-lg '
     } break
   }
   

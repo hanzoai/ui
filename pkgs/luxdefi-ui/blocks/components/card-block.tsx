@@ -29,6 +29,7 @@ import ImageBlockComponent from './image-block'
 import VideoBlockComponent from './video-block'
 import CTABlockComponent from './cta-block'
 import type BlockComponentProps from './block-component-props'
+import { cn } from '../../util'
 
 const ArrowLinkElement: React.FC<{
   def: LinkDef,
@@ -190,15 +191,15 @@ const CardBlockComponent: React.FC<
   )))
 
   return (
-    <Card className={
+    <Card className={cn(
       'flex flex-col self-stretch ' + 
       (contentOnHover ? 'group relative' : '') + 
       disabledBorder + 
       outerBorder + 
       bgclx + 
-      mainGap + 
+      mainGap, 
       className
-    }>
+    )}>
       <Header className={(contentOnHover ? ' absolute top-[0px] left-[0px] w-full hidden ' : '')}/>
       <MediaAndContent className={(contentOnHover ? 
         ' bg-gradient-to-t from-secondary to-65%' + 

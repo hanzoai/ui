@@ -73,10 +73,11 @@ const HeadingBlockComponent: React.FC<BlockComponentProps> = ({
       BylineTag = BylineTag ?? 'h5'
     }
   }
+
     // Had to do this way, since tw typo plugin does support overrding typo styling wiithout .not-typography
   return (
-    <ApplyTypography>
-      <Tag className={className}>{heading.heading}</Tag>
+    <ApplyTypography className={className}>
+      <Tag >{heading.heading}</Tag>
       {heading.spaceBetween && <div className={'w-[1px] ' + `h-${heading.spaceBetween}`} />}
       {heading.byline && (<BylineTag>{heading.byline}</BylineTag>)}
       {heading.spaceAfter && <div className={'w-[1px] ' + `h-${heading.spaceAfter}`} />}

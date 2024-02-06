@@ -13,6 +13,7 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 }> = ({
   block,
   className='',
+  agent,
   constraint
 }) => {
   
@@ -20,9 +21,9 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     return <>image block required</>
   }
 
-  const {src, dim, props} = block as ImageBlock
+  const {src, alt, dim, props, fullWidthOnMobile} = block as ImageBlock
   const toSpread: any = {}
-  if (dim) {
+  if (dim && !!!props?.fill) {
     const dimCon = (constraint ? constrain(dim, constraint) : dim)
     toSpread.width = dimCon.w
     toSpread.height = dimCon.h
@@ -48,12 +49,34 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     delete props.objectPosition
   }
 
+    // https://nextjs.org/docs/app/building-your-application/optimizing/images#responsive
+  if (agent === 'phone' && fullWidthOnMobile) {
+    const toSpread: any =  {
+      style: {
+        width: '100%',
+        height: 'auto'
+      },
+      sizes: '100vw',
+    }
+
+    if (dim) {
+      toSpread.width = dim.w
+      toSpread.height = dim.h
+    } 
+  
+    return (
+      <div className='flex flex-col items-center w-full'>
+        <Image src={src} alt={alt} {...toSpread} className={className}/>
+      </div>
+    )
+  }
+
   return (props?.fill) ? (
     <div className='relative w-full h-full'>
-      <Image src={src} {...toSpread} {...props} className={className}/>
+      <Image src={src} alt={alt} {...toSpread} {...props} className={className}/>
     </div>
   ) : (
-    <Image src={src} {...toSpread} {...props} className={className}/>   
+    <Image src={src} alt={alt} {...toSpread} {...props} className={className}/>   
   )
 }
 
