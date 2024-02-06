@@ -199,8 +199,6 @@ const defaultCSS = {
     width: '100%',
     tableLayout: 'auto',
     textAlign: 'left',
-    marginTop: pxToEm(32, 16),
-    marginBottom: pxToEm(32, 16),
   },
   thead: {
     borderBottomWidth: '1px',
@@ -212,11 +210,8 @@ const defaultCSS = {
     verticalAlign: 'bottom',
   },
   'tbody tr': {
-    borderBottomWidth: '1px',
-    borderBottomColor: 'var(--tw-prose-td-borders)',
   },
   'tbody tr:last-child': {
-    borderBottomWidth: '0',
   },
   'tbody td': {
     verticalAlign: 'baseline',
@@ -528,11 +523,11 @@ const defaultModifiers = (base) => ({
         '> ul > li p': {},
         hr: {},
         h1: {
-          fontSize: pxToRem(55, base),
+          fontSize: pxToRem(45, base),
           lineHeight: 1.1,
         },
         h2: {
-          fontSize: pxToRem(45, base),
+          fontSize: pxToRem(40, base),
           lineHeight: 1.1,
         },
         h3: {
@@ -541,6 +536,88 @@ const defaultModifiers = (base) => ({
         },
         h4: {
           fontSize: pxToRem(26, base),
+          marginTop: pxToRem(13, base),
+          marginBottom: pxToRem(13, base),
+          fontWeight: 500
+        },
+        h5: {
+          fontSize: pxToRem(22, base),
+          marginTop: pxToRem(11, base),
+          marginBottom: pxToRem(11, base),
+          fontWeight: 400
+        },
+        h6: {},
+        'hr + *': {},
+        'h2 + *': {},
+        'h3 + *': {},
+        'h4 + *': {},
+        img: {},
+        'img:first-child': {},
+        'img:last-child': {},
+        picture: {},
+        'picture > img': {},
+        video: {},
+        kbd: {},
+        code: {},
+        'h2 code': {},
+        'h3 code': {},
+        pre: {},
+                /*
+        '> ul > li > *:first-child': {},
+        '> ul > li > *:last-child': {},
+        '> ol > li > *:first-child': {},
+        '> ol > li > *:last-child': {},
+        */
+        'ul ul, ul ol, ol ul, ol ol': {},
+        dl: {},
+        dt:{},
+        dd:{},
+        table: {},
+        'thead th': {},
+        'thead th:first-child': {},
+        'thead th:last-child': {},
+        'tbody td, tfoot td': {},
+        'tbody td:first-child, tfoot td:first-child': {},
+        'tbody td:last-child, tfoot td:last-child': {},
+      }
+    ],
+  },
+  xl: {
+    css: [
+      {
+        p: {},
+        'p:first-child': {},
+        'p:last-child': {},
+        a: {},
+        'a:hover': {},
+        blockquote: {},
+          //'blockquote::before': {},
+          //'blockquote::after': {},
+        'blockquote p:first-of-type::before': {},
+        'blockquote p:last-of-type::after': {},
+        cite: {},
+        ol: {},
+        ul: {},
+        li: {},
+        'ol > li': {},
+        'ul > li': {},
+        'ul > li:last-child': {},
+        '> ul > li p': {},
+        hr: {},
+        h1: {
+          fontSize: pxToRem(52, base),
+          lineHeight: 1.1,
+        },
+        h2: {
+          fontSize: pxToRem(45, base),
+          lineHeight: 1.1,
+        },
+        h3: {
+          fontSize: pxToRem(40, base),
+          lineHeight: 1.1,
+        },
+        h4: {
+          fontSize: pxToRem(28, base),
           marginTop: pxToRem(13, base),
           marginBottom: pxToRem(13, base),
           fontWeight: 500
@@ -599,6 +676,7 @@ const getStyles = (baseFontSize) => ({
   },
   sm: defaultModifiers(baseFontSize).sm,
   lg: defaultModifiers(baseFontSize).lg,
+  xl: defaultModifiers(baseFontSize).xl,
 })
 
 export default getStyles

@@ -27,29 +27,33 @@ const registerBlockType = (key: string, type: ComponentType<BlockComponentProps>
   map.set(key, type)
 }
 
-const renderBlock = (block: B.Block, keyStr?: string): ReactNode => {
+const renderBlock = (block: B.Block, className: string, agent: string, keyStr?: string): ReactNode => {
   if (block.blockType === 'element') {
     return (block as B.ElementBlock).element
   }
   const CompType = map.get(block.blockType)
   if (!CompType) return null
-  return <CompType block={block} key={keyStr ?? ''} /> 
+  return <CompType block={block} className={className} agent={agent} key={keyStr ?? ''} /> 
 }
 
 const ContentComponent: React.FC<{
   blocks: B.Block | B.Block[] | undefined
+  className?: string
+  agent?: string
 }> = ({
-  blocks
+  blocks,
+  className='',
+  agent=''
 }) => {
   if (!blocks) return null
   if (Array.isArray(blocks)) {
     return (
       blocks.map((block, index) => (
-        renderBlock(block, `content-block-${block.blockType}-${index}`)
+        renderBlock(block, className, agent, `content-block-${block.blockType}-${index}`)
       ))
     )
   }
-  return renderBlock(blocks)
+  return renderBlock(blocks, className, agent)
 }
 
 export {
