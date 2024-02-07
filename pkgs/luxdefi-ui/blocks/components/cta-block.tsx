@@ -40,8 +40,14 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
     wrapperClasses += 'sm:justify-end '
   }
 
-  const twoColsOnMobile = containsToken(specifiers, '2-cols-on-mobile') && elements.length === 2
-  const containerclx = (twoColsOnMobile && agent === 'phone') ? 
+  const containerclx = (
+    agent === 'phone'
+    &&
+    containsToken(specifiers, 'mobile-2-columns') 
+    && 
+    elements.length > 1 
+  ) 
+    ? 
     'grid grid-cols-2 gap-2 self-stretch'
     :
     'flex flex-col items-stretch gap-2 self-stretch sm:flex-row sm:justify-center '

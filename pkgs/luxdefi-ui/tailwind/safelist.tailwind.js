@@ -1,8 +1,11 @@
   // https://tailwindcss.com/docs/content-configuration#dynamic-class-names
   // https://tailwindcss.com/docs/content-configuration#safelisting-classes
-
-  // these cannot be dynamically generated either. grr
 export default [
+  'grid-cols-2',
+  'grid-cols-3',
+  'grid-cols-4',
+  'grid-cols-5',
+  'grid-cols-6',
   'sm:grid-cols-2',
   'sm:grid-cols-3',
   'sm:grid-cols-4',
@@ -37,5 +40,12 @@ export default [
   'h-10',
   'h-11',
   'h-12',
+  'order-0',
+  'order-1',
+  'order-2',
+  'order-3',
+  'order-4',
+  'order-5',
+  'order-6',
 
 ]

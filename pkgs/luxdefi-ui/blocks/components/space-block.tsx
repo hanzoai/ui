@@ -40,7 +40,7 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
 
   return (
     <ApplyTypography>
-      <Tag className={`invisible m-0 ${Tag === 'div' ? 'h-[1px]' : ''} ${className}`} >&nbsp;</Tag> 
+      <Tag className={`invisible m-0 ${Tag === 'div' ? 'h-4' : ''} ${className}`} >&nbsp;</Tag> 
     </ApplyTypography>
   )
 }

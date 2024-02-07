@@ -8,6 +8,7 @@ import HeadingBlock from './heading-block'
 import ImageBlock from './image-block'
 import VideoBlock from './video-block'
 import SpaceBlock from './space-block'
+import ScreenfulBlock from './screenful-block'
 import type BlockComponentProps from './block-component-props'
 
 export { 
@@ -22,5 +23,6 @@ export {
    ImageBlock as ImageBlockComponent,
    VideoBlock as VideoBlockComponent,
    SpaceBlock as SpaceBlockComponent,
+   ScreenfulBlock as ScreenfulBlockComponent,
    type BlockComponentProps
 }
