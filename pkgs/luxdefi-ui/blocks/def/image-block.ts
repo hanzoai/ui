@@ -12,8 +12,12 @@ interface ImageBlock extends Block {
   props?: {
     sizes?: string
     fill?: boolean 
-    objectFit?: string
-    objectPosition?: string
+    style?: {
+      objectFit?: string
+      objectPosition?: string
+      width?: number | string
+      height?: number | string
+    }
   }
 }
 

@@ -8,6 +8,7 @@ import type HeadingBlock from './heading-block'
 import type ImageBlock from './image-block'
 import type VideoBlock from './video-block'
 import type SpaceBlock from './space-block'
+import type ScreenfulBlock from './screenful-block'
 
 export { 
    type AccordianBlock, 
@@ -20,4 +21,5 @@ export {
    type ImageBlock,
    type VideoBlock,
    type SpaceBlock,
+   type ScreenfulBlock,
 }
