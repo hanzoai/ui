@@ -4,7 +4,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Image from 'next/image'
 
 import type { Dimensions, TShirtSize, TShirtDimensions } from '../../types'
-import { constrain, asNum } from '../../util'
+import { constrain, asNum, cn } from '../../util'
 import type { VideoBlock } from '../def'
 import { VideoPlayer } from '../../primitives'
 
@@ -17,6 +17,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
 }> = ({
   block,
   className='',
+  agent,
   usePoster=false,
   size='md',
   constraint
@@ -34,7 +35,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
   const windowDefined = typeof window !== 'undefined'
 
   useEffect(() => { 
-    if (window) {
+    if (window && agent === 'desktop') {
       window.addEventListener('resize', onResize) 
       return () => window.removeEventListener('resize', onResize) 
     }
@@ -50,8 +51,42 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
   }
 
   const b = block as VideoBlock
-  if (b.sizing?.vh) {
-    const ar = asNum(b.dim.md.w) / asNum(b.dim.md.h)
+  const ar = asNum(b.dim.md.w) / asNum(b.dim.md.h)
+  if (agent === 'phone') {
+    if (b.sizing?.mobile?.vw) {
+      // serverside, or at least while the video is loading,
+      // generate the css for the correctly sized poster image
+      if (!_dim) {
+        const width = `${b.sizing.mobile.vw}vw`
+        return <div className='dummy-div' style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          width,
+          height: `calc(${width}/${ar})`,
+          backgroundImage: `url(${b.poster!})`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat', 
+        }} />
+      }
+      else {
+        const width = ((b.sizing.mobile.vw / 100) * asNum(_dim.w))
+        const dim  = {
+          h: width / ar,
+          w: width
+        }
+        return ((
+          <VideoPlayer 
+            className={cn('mx-auto', className)} 
+            sources={b.sources} 
+            width={dim.w} 
+            height={dim.h} 
+            {...b.videoProps} 
+          />
+        ))
+      }
+    }
+  }
+  else if (b.sizing?.vh) {
       // serverside, generate the css for the correctly sized poster image
     if (!_dim) {
       const height = `${b.sizing.vh}vh`

@@ -137,7 +137,7 @@ const defaultCSS = {
   },
   code: {
     color: 'var(--tw-prose-code)',
-    fontWeight: '600',
+    fontWeight: '500',
   },
   'code::before': {
     content: '"`"',
@@ -309,14 +309,12 @@ const defaultModifiers = (base) => ({
           marginBottom: '0.5rem',
           fontSize: '1.2rem',
           lineHeight: 1.4,
-          fontWeight: 400
         },
         h6: {
           marginTop: '0.5rem',
           marginBottom: '0.5rem',
           fontSize: '1.15rem',
           lineHeight: 1.3,
-          fontWeight: 400
         },
         'hr + *': {
           marginTop: '0',
@@ -538,13 +536,11 @@ const defaultModifiers = (base) => ({
           fontSize: pxToRem(26, base),
           marginTop: pxToRem(13, base),
           marginBottom: pxToRem(13, base),
-          fontWeight: 500
         },
         h5: {
           fontSize: pxToRem(22, base),
           marginTop: pxToRem(11, base),
           marginBottom: pxToRem(11, base),
-          fontWeight: 400
         },
         h6: {},
         'hr + *': {},
@@ -620,13 +616,11 @@ const defaultModifiers = (base) => ({
           fontSize: pxToRem(28, base),
           marginTop: pxToRem(13, base),
           marginBottom: pxToRem(13, base),
-          fontWeight: 500
         },
         h5: {
           fontSize: pxToRem(22, base),
           marginTop: pxToRem(11, base),
           marginBottom: pxToRem(11, base),
-          fontWeight: 400
         },
         h6: {},
         'hr + *': {},

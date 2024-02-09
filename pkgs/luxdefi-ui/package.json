@@ -1,7 +1,7 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.3.2",
-  "description": "Library that contains shared UI primitives, styles, and core types",
+  "version": "0.4.0",
+  "description": "Library that contains shared UI primitives, common design system components, and boilerplate.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -14,7 +14,6 @@
     "url": "git+https://github.com/luxdefi/ui.git",
     "directory": "pkgs/luxdefi-ui"
   },
-  "module": "./dist/index.js",
   "files": [
     "assets",
     "blocks",
@@ -36,8 +35,8 @@
     "luxdefi"
   ],
   "scripts": {
-    "build": "rm -rf dist && node ./esbuild.mjs",
-    "tc": "tsc --noEmit --emitDeclarationOnly false",
+    "build": "tsc",
+    "tc": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
@@ -82,8 +81,6 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
-    "esbuild": "^0.17.19",
-    "esbuild-style-plugin": "^1.6.3",
     "path": "^0.12.7",
     "postcss": "^8.4.33",
     "postcss-import": "^16.0.0",
