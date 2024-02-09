@@ -25,7 +25,7 @@ const Poster: React.FC<{
       {children}
     </div>
   ) : (
-    <div className={cn('bg-transparent h-full v-full relative', className)}>
+    <div className={cn('bg-transparent h-full w-full relative', className)}>
       {children}  
     </div>
   )

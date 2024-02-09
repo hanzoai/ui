@@ -1,15 +1,17 @@
 { // https://esbuild.github.io/content-types/#tsconfig-json
   "compilerOptions": {
+    "target": "es2020",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "incremental": true,
-    "esModuleInterop": true,
+    "incremental": false,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
   }

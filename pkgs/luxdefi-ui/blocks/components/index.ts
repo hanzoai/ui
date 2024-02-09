@@ -1,28 +1,32 @@
 import AccordianBlock from './accordian-block'
-import { default as ContentComponent, registerBlockType} from './content'
+import type BlockComponentProps from './block-component-props'
 import Blocks from './content'
 import CardBlock from './card-block'
+import { default as ContentComponent, registerBlockType} from './content'
 import CTABlock from './cta-block'
+import EnhHeadingBlock from './enh-heading-block'
 import GroupBlock from './group-block'
 import HeadingBlock from './heading-block'
 import ImageBlock from './image-block'
-import VideoBlock from './video-block'
+import InlineIcon from './inline-icon'
 import SpaceBlock from './space-block'
 import ScreenfulBlock from './screenful-block'
-import type BlockComponentProps from './block-component-props'
+import VideoBlock from './video-block'
 
 export { 
    AccordianBlock as AccordianBlockComponent, 
-   ContentComponent,
-   registerBlockType,
+   type BlockComponentProps,
    Blocks as BlocksComponent,
    CardBlock as CardBlockComponent,
+   ContentComponent,
    CTABlock as CTABlockComponent,
+   EnhHeadingBlock as EnhHeadingBlockComponent,
    GroupBlock as GroupBlockComponent,
    HeadingBlock as HeadingBlockComponent,
    ImageBlock as ImageBlockComponent,
-   VideoBlock as VideoBlockComponent,
+   InlineIcon,
+   registerBlockType,
    SpaceBlock as SpaceBlockComponent,
    ScreenfulBlock as ScreenfulBlockComponent,
-   type BlockComponentProps
+   VideoBlock as VideoBlockComponent,
 }

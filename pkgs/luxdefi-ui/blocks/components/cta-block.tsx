@@ -31,26 +31,41 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
   let itemclx = ''
   if (containsToken(specifiers, 'fill')) {
     wrapperClasses += 'w-full '
-    itemclx += 'grow ' 
+    itemclx += 'grow shrink !min-w-0' 
   }
   else if (containsToken(specifiers, 'left')) {
-    wrapperClasses += 'sm:justify-start '
+    wrapperClasses += 'md:justify-start '
   }
   else if (containsToken(specifiers, 'right')) {
-    wrapperClasses += 'sm:justify-end '
+    wrapperClasses += 'md:justify-end '
+  }
+  else {
+    wrapperClasses += 'md:justify-center '
   }
 
+  const mobile2Columns = containsToken(specifiers, 'mobile-2-columns')
+  const mobileCenterFirstIfOdd = containsToken(specifiers, 'mobile-center-first-if-odd')
+  const mobileOddFullWidth = containsToken(specifiers, 'mobile-odd-full-width')
+  
   const containerclx = (
     agent === 'phone'
     &&
-    containsToken(specifiers, 'mobile-2-columns') 
+    mobile2Columns
     && 
     elements.length > 1 
   ) 
     ? 
     'grid grid-cols-2 gap-2 self-stretch'
     :
-    'flex flex-col items-stretch gap-2 self-stretch sm:flex-row sm:justify-center '
+    'flex flex-col items-stretch gap-2 self-stretch md:flex-row sm:justify-center '
+
+  const getMobileColSpanClx = (index: number, total: number) => {
+    const indexToCenter = (mobileCenterFirstIfOdd) ? 0 : total - 1
+    const widthclx = mobileOddFullWidth ? 'w-full ' : 'w-3/5 mx-auto '
+    return (
+      (agent === 'phone' && mobile2Columns && (index === indexToCenter)) ? ('col-span-2 ' + widthclx) : ''  
+    )
+  } 
 
   return (
     <div className={cn(
@@ -59,6 +74,7 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
       className
     )}>
     {elements.map((element, index) => {
+      const twoColClx = getMobileColSpanClx(index, elements.length)
       if ((element as any).title) {
         const def = element as LinkDef
         return renderLink ? renderLink(def, index) : (
@@ -66,7 +82,7 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
             def={def}
             key={index}
             size={itemSize}
-            className={cn(itemclx, itemClasses)}
+            className={cn(itemclx, itemClasses, twoColClx)}
           />
         )
       } 
@@ -77,7 +93,7 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
             def={def}
             key={index}
             size={itemSize}
-            className={cn(itemclx, itemClasses)}
+            className={cn(itemclx, itemClasses, twoColClx)}
           />
         ) 
       }
