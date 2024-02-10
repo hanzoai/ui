@@ -6,7 +6,7 @@ import type CardBlock from './card-block'
 import type CarteBlancheBlock from './carte-blanche-block'
 import type CTABlock from './cta-block'
 import type ElementBlock from './element-block'
-import type GridDef from './grid-def'
+import type {default as GridDef, GridColumnSpec} from './grid-def'
 import type GridBlock from './grid-block'
 import type GroupBlock from './group-block'
 import type EnhHeadingBlock from './enh-heading-block'
@@ -25,6 +25,7 @@ export {
    type BulletItem,
    type CardBlock,
    type CarteBlancheBlock,
+   type GridColumnSpec,
    type CTABlock,
    type ElementBlock,
    type GridDef,
