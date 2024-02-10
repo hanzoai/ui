@@ -31,5 +31,10 @@
   "devDependencies": {
     "typescript": "^5.3.3",
     "ts-node": "^10.9.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "^18.2.48"
+    }
   }
 }
