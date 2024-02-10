@@ -68,8 +68,63 @@ export {
   ToastAction,
 } from './toast'
 
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from './select'
+
+export { 
+  Popover, 
+  PopoverTrigger, 
+  PopoverContent, 
+  PopoverAnchor 
+} from './popover'
+
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from './command'
+
+export { 
+  Tabs, 
+  TabsList, 
+  TabsTrigger, 
+  TabsContent 
+} from './tabs'
+
+export { 
+  Avatar, 
+  AvatarImage, 
+  AvatarFallback 
+} from './avatar'
+
+export { ScrollArea, ScrollBar } from './scroll-area' 
+
 export { Toaster } from './toaster'
 export { useToast, toast } from './use-toast'
 
 export { default as VideoPlayer } from './video-player'
 export { default as YouTubeEmbed } from './youtube-embed'
+export { default as Switch } from './switch' 
+export { default as TextArea } from './text-area' 
+export { default as Calendar } from './calendar' 
+export { default as Checkbox } from './checkbox' 
+export { default as Progress } from './progress' 
+export { default as Separator } from './separator' 
+export { default as Skeleton } from './skeleton' 
+
