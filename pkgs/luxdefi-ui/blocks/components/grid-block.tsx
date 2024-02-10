@@ -2,12 +2,12 @@ import React, { type PropsWithChildren } from 'react'
 
 import { cn, containsToken } from '../../util'
 
-import type { GridBlock } from '../def'
+import type { GridBlock, GridColumnSpec } from '../def'
 import Content from './content'
 
 import type BlockComponentProps from './block-component-props'
 
-const gridClx = (d: number | { columns: number, gap: number}, prefix?: string ): string => (
+const gridClx = (d: GridColumnSpec, prefix?: string ): string => (
   (typeof d === 'number') ? 
     `${(prefix ?? '')}grid-cols-${d} ` 
     : 
@@ -35,18 +35,20 @@ const GridBlockComponent: React.FC<
     // All variants in use MUST be in style/safelist.tailwind.js
   let clx = 'grid '
   if (agent === 'phone') {
-    const d = (grid.mobile) ? grid.mobile : (grid.at.xs ? grid.at.xs : grid.at.sm ?? 1);
+    const d = (grid.mobile) ? grid.mobile : (grid.at.xs ? grid.at.xs : (grid.at.sm ?? 1))
     clx += gridClx(d)
   }
   else {
     let defaultSet = false
     for (const [key, value] of Object.entries(grid.at)) {
       if (!defaultSet) {
-        clx += gridClx(value)
+          // ts brain fart!
+        clx += gridClx(value as GridColumnSpec)
         defaultSet = true
       }
       else {
-        clx += gridClx(value, `${key}:`)
+          // ts brain fart!
+        clx += gridClx(value  as GridColumnSpec, `${key}:`)
       }
     }   
   }

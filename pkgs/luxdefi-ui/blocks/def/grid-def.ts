@@ -1,11 +1,13 @@
 import type { Breakpoint } from '../../types'
 
+type GridColumnSpec = number | { columns: number, gap: number}
+
 interface GridDef {
     // Please define in ACCENDING order.
   at: {
-    [key in (Breakpoint)]?: number | { columns: number, gap: number}
+    [key in (Breakpoint)]?: GridColumnSpec
   },
-  mobile?: number | { columns: number, gap: number} 
+  mobile?: GridColumnSpec
 }
 
 const COMMON_GRID_2_COL = { 
@@ -29,6 +31,7 @@ const COMMON_GRID_3_COL = {
 
 export {
   type GridDef as default,
+  type GridColumnSpec,
   COMMON_GRID_2_COL,
   COMMON_GRID_3_COL
 }
