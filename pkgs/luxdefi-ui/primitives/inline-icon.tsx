@@ -1,9 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { Icon } from '../../types'
-import { cn } from '../../util'
-
+import type { Icon } from '../types'
 
 const InlineIcon: React.FC<{
   icon: Icon | string
@@ -19,13 +17,15 @@ const InlineIcon: React.FC<{
   if (!icon) return null
 
   const phone = agent === 'phone'
-
   if (typeof icon === 'string') {
-    const sz = (phone && size) ? (size * .75) : size
-    const mclx = phone ? 'mr-2' : 'mr-4'
-    return <Image src={icon} width={sz} height={sz} alt='icon' className={cn(mclx, className)}/>
+    const _size = (phone && size) ? (size * .75) : size
+    return (<Image src={icon} width={_size} height={_size} alt='icon' className={className}/>)
   }
-  return icon as Icon
+  return (
+    <div className={className}>
+      {icon as Icon}
+    </div>
+  )
 }
 
 export default InlineIcon

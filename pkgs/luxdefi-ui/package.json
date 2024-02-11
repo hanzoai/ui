@@ -1,6 +1,6 @@
 {
   "name": "@luxdefi/ui",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Library that contains shared UI primitives, common design system components, and boilerplate.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -35,6 +35,8 @@
     "luxdefi"
   ],
   "scripts": {
+    "latest": "npm show @luxdefi/ui version",
+    "pub": "npm publish",
     "build": "tsc",
     "tc": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules"

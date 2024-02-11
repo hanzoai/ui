@@ -127,4 +127,5 @@ export { default as Checkbox } from './checkbox'
 export { default as Progress } from './progress' 
 export { default as Separator } from './separator' 
 export { default as Skeleton } from './skeleton' 
+export { default as InlineIcon } from './inline-icon' 
 

@@ -47,15 +47,8 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
   const mobileCenterFirstIfOdd = containsToken(specifiers, 'mobile-center-first-if-odd')
   const mobileOddFullWidth = containsToken(specifiers, 'mobile-odd-full-width')
   
-  const containerclx = (
-    agent === 'phone'
-    &&
-    mobile2Columns
-    && 
-    elements.length > 1 
-  ) 
-    ? 
-    'grid grid-cols-2 gap-2 self-stretch'
+  const layoutclx = (mobile2Columns && elements.length > 1) ? 
+    'grid grid-cols-2 gap-2 self-stretch md:flex md:flex-sm md:justify-center '
     :
     'flex flex-col items-stretch gap-2 self-stretch md:flex-row sm:justify-center '
 
@@ -69,7 +62,7 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
 
   return (
     <div className={cn(
-      containerclx, 
+      layoutclx, 
       wrapperClasses,
       className
     )}>
