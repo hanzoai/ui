@@ -8,7 +8,6 @@ import EnhHeadingBlock from './enh-heading-block'
 import GroupBlock from './group-block'
 import HeadingBlock from './heading-block'
 import ImageBlock from './image-block'
-import InlineIcon from './inline-icon'
 import SpaceBlock from './space-block'
 import ScreenfulBlock from './screenful-block'
 import VideoBlock from './video-block'
@@ -24,7 +23,6 @@ export {
    GroupBlock as GroupBlockComponent,
    HeadingBlock as HeadingBlockComponent,
    ImageBlock as ImageBlockComponent,
-   InlineIcon,
    registerBlockType,
    SpaceBlock as SpaceBlockComponent,
    ScreenfulBlock as ScreenfulBlockComponent,

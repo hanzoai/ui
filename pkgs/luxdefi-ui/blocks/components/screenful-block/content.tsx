@@ -83,15 +83,11 @@ const Content: React.FC<{
 }) => {
 
 
-  const multiColumnLayoutClx = (agent === 'phone') ? 
-    'flex flex-col gap-6'
-    :
-    `grid grid-cols-${b.contentColumns.length} gap-8`
+  const layoutClx = 'flex flex-col gap-6 ' + (agent !== 'phone') ? 'md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} ` : ''
 
   const orderclx = (columnIndex: number): string => {
-    if ((agent !== 'phone') || !b.mobileOrder || !b.mobileOrder.includes(columnIndex)) return ''
-    const orderIndex = b.mobileOrder.indexOf(columnIndex)
-    return (orderIndex >= 0) ? `order-${orderIndex}` : '' // one-based in flexbox slec
+    const orderIndex = b.mobileOrder?.indexOf(columnIndex)
+    return (orderIndex && orderIndex >= 0) ? `order-${orderIndex} md:order-none` : '' // one-based in flexbox slec
   }
 
   return  b.contentColumns.length == 1 ? (
@@ -102,7 +98,7 @@ const Content: React.FC<{
       className={cn(className)}
     />
   ) : (
-    <div className={cn(multiColumnLayoutClx, className)}>
+    <div className={cn(layoutClx, className)}>
     {b.contentColumns.map((column, index) => (
       <ContentColumn 
         blocks={column} 

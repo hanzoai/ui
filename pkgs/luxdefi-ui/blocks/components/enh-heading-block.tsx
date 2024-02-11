@@ -6,7 +6,7 @@ import { ApplyTypography } from '../../primitives'
 import { cn, containsToken } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
-import InlineIcon from './inline-icon'
+import InlineIcon from '../../primitives/inline-icon'
 
 const DEFAULTS = {
   preheading: {
