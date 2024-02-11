@@ -8,7 +8,6 @@ export default [
     {
       title: 'Market',
       href: "https://app.lux.market/",
-      external: true,
       newTab: false,
       variant: 'linkFG'
     },
@@ -27,7 +26,7 @@ export default [
     /*{
       title: 'Lux Uranium',
       href: '/uranium',
-    }*/,
+    },*/
     {
       title: 'Lux Credit',
       href: '/credit',
@@ -50,7 +49,6 @@ export default [
     {
       title: 'Apply for Beta',
       href: 'https://apply.lux.network/',
-      external: true,
       newTab: false
     },
     {
@@ -67,45 +65,39 @@ export default [
       title: 'Partners',
       href: "https://lux.partners/",
       variant: 'linkFG',
-      external: true
     },
     {
       title: 'About',
       href: 'https://lux.partners',
-      external: true,
       newTab: false,
     },
     {
       title: 'Partner with Lux',
       href: 'https://apply.lux.partners/',
-      external: true
     },
     {
       title: 'Lux Fund',
       href: 'https://lux.fund',
       newTab: false,
-      external: true
     },
     {
       title: 'Lux Support',
       href: 'mailto:support@lux.partners?subject=%E2%96%BC%20Lux%20Support',
-      external: true
     },
     {
       title: 'Careers',
       href: 'https://docs.lux.network/about/v/lux-job-listings/',
       newTab: false,
-      external: true
     },
     {
       title: 'Press Kit',
       href: 'https://drive.google.com/drive/folders/14OJtKLVakGY6883XO9yGbiHtlFxQUUm5?usp=share_link',
-      external: true
     },
   ],  
   [
     {
       title: 'Community',
+      href: '',
       variant: 'linkFG',
     },
     {
@@ -148,6 +140,7 @@ export default [
   [
     {
       title: 'Legal',
+      href: '',
       variant: 'linkFG',
     },
     {
@@ -161,4 +154,5 @@ export default [
       newTab: true,
     },
   ],
-] as LinkDef[][]
+] satisfies LinkDef[][] 
+

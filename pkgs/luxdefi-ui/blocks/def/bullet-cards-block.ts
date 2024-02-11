@@ -1,10 +1,13 @@
-import type { Block, BulletItem, GridDef } from '.'
+import type Block from './block'
+
+import type { BulletItem, GridDef } from '../../types'
 
 interface BulletCardsBlock extends Block {
   blockType: 'bullet-cards'
   grid: GridDef
   cards: BulletItem[]
-  iconSize?: number // px
+    /** in px */
+  iconSize?: number 
 }
 
 export {

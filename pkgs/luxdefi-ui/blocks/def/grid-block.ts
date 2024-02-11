@@ -1,11 +1,14 @@
 import type Block from "./block"
-import type GridDef from "./grid-def"
+import type GridDef from "../../types/grid-def"
 
 interface GridBlock {
   blockType: 'grid'
   specifiers?: string
   grid: GridDef
-  cells?: Block[] // if no cells, contents will be children
+    /**
+     * Ignored if children are supplied to the GridBlockComp
+     */ 
+  cells?: Block[] 
 }
 
 export {

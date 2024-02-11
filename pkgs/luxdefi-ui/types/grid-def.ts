@@ -1,4 +1,4 @@
-import type { Breakpoint } from '../../types'
+import type { Breakpoint } from '.'
 
 type GridColumnSpec = number | { columns: number, gap: number}
 

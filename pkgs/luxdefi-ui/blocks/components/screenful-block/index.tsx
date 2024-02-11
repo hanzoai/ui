@@ -2,7 +2,7 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 
 import type { Block, ScreenfulBlock, VideoBlock } from '../../def'
-import { cn } from '../../../util'
+import { containsToken, cn } from '../../../util'
 import { ApplyTypography } from '../../../primitives'
 
 import Poster from './poster-background'
@@ -30,8 +30,30 @@ const ScreenfulComponent: React.FC<{
 
   const hasBannerVideo = (): boolean => (!!b.banner && (typeof b.banner === 'object'))
 
-  const contentclx = 'z-10 absolute left-0 right-0  top-0 bottom-0 xl:mx-auto max-w-screen-xl'
   const tileHeight = (agent === 'desktop') ? 'h-full ' : 'h-[100svh] '
+
+  const specified = (s: string) => (containsToken(b.specifiers, s))
+  const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
+
+    // content wrapper clx:
+    // [
+    //    positioning, 
+    //    p&m, 
+    //    p&m-modifiers
+    // ]
+
+    // desktop header: 80, desktop pt: 32 
+    // mobile header: 44, mobile pt: 24
+  const cwclx = [
+    'z-10 absolute left-0 right-0  top-0 bottom-0 xl:mx-auto max-w-screen-xl ',
+    
+    narrowGutters ? 
+      'px-6 lg:px-8 2xl:px-2 pb-6 pt-[68px] md:pt-[104px] lg:pt-[112px] ' 
+      : 
+      'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+8vh)] md:pt-[calc(80px+8vh)] ',
+
+    (agent && agent !== 'desktop') ? 'pt-[64px] pb-0 px-4 sm:px-8' : '' 
+  ]
 
   return (
     <section className={cn('h-[100vh]', (snapTile ? 'snap-start snap-always' : ''), className)}>
@@ -44,7 +66,10 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <Content block={b} agent={agent} className={contentclx} />
+        <div className={cn(...cwclx)} >
+          <Content block={b} agent={agent}  className='w-full'/>
+          {b.footer}
+        </div>
       </Poster>
       </ApplyTypography>
     </section>
