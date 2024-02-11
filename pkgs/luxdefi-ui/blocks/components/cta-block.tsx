@@ -60,7 +60,7 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
     'flex flex-col items-stretch gap-2 self-stretch md:flex-row sm:justify-center '
 
   const getMobileColSpanClx = (index: number, total: number) => {
-    const indexToCenter = (mobileCenterFirstIfOdd) ? 0 : total - 1
+    const indexToCenter = (total % 2 === 0) ? -1 : (mobileCenterFirstIfOdd) ? 0 : total - 1
     const widthclx = mobileOddFullWidth ? 'w-full ' : 'w-3/5 mx-auto '
     return (
       (agent === 'phone' && mobile2Columns && (index === indexToCenter)) ? ('col-span-2 ' + widthclx) : ''  

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type PropsWithChildren } from 'react'
 
 import type { Block, ScreenfulBlock} from '../../def'
 import { containsToken, cn } from '../../../util'
@@ -13,7 +13,7 @@ const ContentColumn: React.FC<{
   blocks,
   specifiers,
   agent,
-  className=''
+  className='',
 }) => {
 
   const specified = (s: string) => (containsToken(specifiers, s))
@@ -79,25 +79,9 @@ const Content: React.FC<{
 }> = ({
   block: b,
   agent,
-  className=''
+  className='',
 }) => {
 
-  const specified = (s: string) => (containsToken(b.specifiers, s))
-  const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
-
-  let outerClasses =  (narrowGutters ? 
-      // 44 + 24 = 68, 80 + 32 = 104
-    'px-6 lg:px-8 2xl:px-2 pb-6 pt-[68px] md:pt-[104px] lg:pt-[112px] ' 
-    : 
-    'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+8vh)] md:pt-[calc(80px+8vh)] ') 
-    // + 'border border-accent ' // debug
-    + ' overflow-y-hidden' // safety valve
-
-  let moreModifiers = ''
-    // 40px + 24px
-  if (agent && agent !== 'desktop') {
-    moreModifiers += 'pt-[64px] pb-0 px-4 ' 
-  }
 
   const multiColumnLayoutClx = (agent === 'phone') ? 
     'flex flex-col gap-6'
@@ -110,16 +94,15 @@ const Content: React.FC<{
     return (orderIndex >= 0) ? `order-${orderIndex}` : '' // one-based in flexbox slec
   }
 
-
   return  b.contentColumns.length == 1 ? (
     <ContentColumn 
       blocks={b.contentColumns[0]} 
       specifiers={b.columnSpecifiers?.[0]} 
       agent={agent} 
-      className={cn(outerClasses, moreModifiers, className)}
+      className={cn(className)}
     />
   ) : (
-    <div className={cn(multiColumnLayoutClx, outerClasses, moreModifiers, className)}>
+    <div className={cn(multiColumnLayoutClx, className)}>
     {b.contentColumns.map((column, index) => (
       <ContentColumn 
         blocks={column} 

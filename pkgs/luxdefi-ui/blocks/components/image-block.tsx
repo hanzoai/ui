@@ -21,37 +21,59 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     return <>image block required</>
   }
 
-  const {src, alt, dim, props, fullWidthOnMobile, specifiers} = block as ImageBlock
+  const {
+    src, 
+    alt, 
+    dim, 
+    props, 
+    fullWidthOnMobile, 
+    svgFillClass,
+    specifiers
+  } = block as ImageBlock
+
+  const specified = (s: string): boolean => (containsToken(specifiers, s)) 
+
   const toSpread: any = {}
-  if (dim && !!!props?.fill) {
+  if (props?.fill === undefined) {
     const dimCon = (constraint ? constrain(dim, constraint) : dim)
     toSpread.width = dimCon.w
     toSpread.height = dimCon.h
   } 
 
+  let _alt: string
+  if (alt) {
+    _alt = alt
+  }
+  else {
+    const tokens = src.split('/')
+      // Something remotely meaningful
+    _alt = (tokens.length > 0) ? tokens[tokens.length] : src
+  }
+
+  const _svgFillClass = svgFillClass ?? ''
+
     // https://nextjs.org/docs/app/building-your-application/optimizing/images#responsive
   if (agent === 'phone' ) {
-    if (fullWidthOnMobile) {
+    if (specified('mobile-full-width') || fullWidthOnMobile) {
       const toSpread: any =  {
         style: {
           width: '100%',
-          height: 'auto'
+          height: 'auto',
+          maxWidth: '420px'
         },
         sizes: '100vw',
       }
         // only for aspect ratio and to satisfy parser
-      if (dim) {
-        toSpread.width = dim.w
-        toSpread.height = dim.h
-      } 
+      toSpread.width = dim.w
+      toSpread.height = dim.h
     
       return (
         <div className='flex flex-col items-center w-full'>
-          <Image src={src} alt={alt} {...toSpread} className={className}/>
+          <Image src={src} alt={_alt} {...toSpread} className={cn(_svgFillClass, className)}/>
         </div>
       )
     }
-    else if (!containsToken(specifiers, 'mobile-no-scale')) {
+    else if (!specified('mobile-no-scale')) {
       if (props?.style?.width === 'auto' && typeof props.style.height === 'number' ) {
         props.style.height = props.style.height *.75 
       }
@@ -74,10 +96,10 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   return (props?.fill) ? (
     <div className='relative w-full h-full'>
-      <Image src={src} alt={alt} {...toSpread} {...props} className={className}/>
+      <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(_svgFillClass, className)}/>
     </div>
   ) : (
-    <Image src={src} alt={alt} {...toSpread} {...props} className={cn(alignSelfClx, className)}/>   
+    <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(alignSelfClx, _svgFillClass, className)}/>   
   )
 }
 

@@ -1,20 +1,27 @@
-import type { Dimensions } from '../../types'
+import type { ImageDef } from '../../types'
 import type Block from './block'
 
-// https://nextjs.org/docs/app/api-reference/components/image
-interface ImageBlock extends Block {
+  /**
+   * See {@link ImageDef}
+   * see https://nextjs.org/docs/app/api-reference/components/image
+   * as well as React.ImgHTMLAttributes. 
+   */
+interface ImageBlock extends Block, ImageDef {
   blockType: 'image'
-    // left (def) / right / center (must be in flex-col parent)
-    // mobile-no-scale: default scales to 3/4 height on mobile and < md
+
+  /**
+   * Alignement: 'left' (default) / 'right' / 'center' (must be in flex-col parent)
+   * 'mobile-no-scale': By default, scales to 3/4 height (mobile and w < 'md')
+   * 'mobile-full-width': Overrides dim, etc. and renders full width (maintaining aspect ratio)
+   */
   specifiers?: string
-  src: string      
-  alt: string
-  dim?:  Dimensions 
+    /** @deprecated Please use 'mobile-full-width' in specifiers  */
   fullWidthOnMobile?: boolean
-  // cf: next/Image documentation, and type, as well as React.ImgHTMLAttributes
+    /** Next props */
   props?: {
     sizes?: string
-    fill?: boolean  // if true, alignement specifiers are ignored
+      /** if true, any alignement specifiers are ignored */
+    fill?: boolean  
     style?: {
       objectFit?: string
       objectPosition?: string
