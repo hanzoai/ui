@@ -6,6 +6,8 @@ import { Copyright, NavItems } from '../common'
 
 import Logo from './logo'
 
+
+
 const Footer: React.FC<{
   siteDef: SiteDef,
   className?: string,

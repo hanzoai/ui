@@ -52,6 +52,7 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   const _svgFillClass = svgFillClass ?? ''
 
+    // TODO: use two elements with 'md:hidden' for 3/4 size
     // https://nextjs.org/docs/app/building-your-application/optimizing/images#responsive
   if (agent === 'phone' ) {
     if (specified('mobile-full-width') || fullWidthOnMobile) {
@@ -96,10 +97,10 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   return (props?.fill) ? (
     <div className='relative w-full h-full'>
-      <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(_svgFillClass, className)}/>
+      <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(_svgFillClass, 'max-w-[70vw] mx-auto', className)}/>
     </div>
   ) : (
-    <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(alignSelfClx, _svgFillClass, className)}/>   
+    <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(alignSelfClx, _svgFillClass, 'max-w-[70vw] mx-auto', className)}/>   
   )
 }
 

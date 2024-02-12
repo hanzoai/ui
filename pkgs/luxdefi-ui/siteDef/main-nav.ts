@@ -27,8 +27,8 @@ export default [
     newTab: false,
   },
   {
-    title: "Team",
-    href: "https://lux.partners",
+    title: "Exchange",
+    href: "https://lux.exchange",
     newTab: false,
   },
 ] satisfies LinkDef[]

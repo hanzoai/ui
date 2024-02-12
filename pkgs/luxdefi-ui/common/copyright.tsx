@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FIRST = 2023
+const FIRST = 2020
 
 const Copyright: React.FC = () => {
 
