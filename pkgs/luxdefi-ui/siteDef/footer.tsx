@@ -1,14 +1,16 @@
 import { Icons } from '../common'
 import type { LinkDef } from '../types'
 
+  // @ts-ignore (will build in project that has @svgr support)
+import SVG_warp_logo from './svg/warpcast-logo.svg'
+
 const SOC_ICON_SIZE = 18
 
 export default [
   [
     {
-      title: 'Market',
-      href: "https://app.lux.market/",
-      newTab: false,
+      title: 'Products',
+      href: '',
       variant: 'linkFG'
     },
     {
@@ -47,13 +49,20 @@ export default [
       variant: 'linkFG'
     },
     {
-      title: 'Apply for Beta',
-      href: 'https://apply.lux.network/',
-      newTab: false
+      title: 'Bridge',
+      href: "https://bridge.lux.network/",
     },
     {
-      title: 'Whitepapers',
-      href: 'https://docs.lux.network/intro/about',
+      title: 'Explore',
+      href: "https://explore.lux.network/",
+    },
+    {
+      title: 'Wallet',
+      href: "https://wallet.lux.network/",
+    },
+    {
+      title: 'Safe',
+      href: "https://wafe.lux.network/",
     },
     {
       title: 'Github',
@@ -62,7 +71,7 @@ export default [
   ],
   [
     {
-      title: 'Partners',
+      title: 'Company',
       href: "https://lux.partners/",
       variant: 'linkFG',
     },
@@ -101,6 +110,13 @@ export default [
       variant: 'linkFG',
     },
     {
+      title: 'luxdefi Discussions',
+      href: 'https://github.com/orgs/luxdefi/discussions',
+      icon: <Icons.SocialIcon network='github' size={SOC_ICON_SIZE} />
+    },
+
+    /*
+    {
       title: 'Discord',
       href: 'https://discord.gg/luxdefi',
       external: true,
@@ -112,30 +128,33 @@ export default [
       external: true,
       icon: <Icons.SocialIcon network='telegram' size={SOC_ICON_SIZE} />
     },
+    */
     {
-      title: 'X (Twitter)',
+      title: '@luxdefi',
       href: 'https://twitter.com/luxdefi',
-      external: true,
       icon: <Icons.SocialIcon network='x' size={SOC_ICON_SIZE} />
     },
     {
-      title: 'Facebook',
+      title: 'lux',
+      href: 'https://warpcast.com/~/channel/lux',
+      icon: <SVG_warp_logo width={SOC_ICON_SIZE} height={SOC_ICON_SIZE} /> //<Icons.SocialIcon network='warpcast' size={SOC_ICON_SIZE} />
+    },
+    {
+      title: 'luxdefi',
       href: 'https://facebook.com/luxdefi',
-      external: true,
       icon: <Icons.SocialIcon network='facebook' size={SOC_ICON_SIZE + 2} />
     },
     {
-      title: 'LinkedIn',
+      title: 'company/luxdefi',
       href: 'https://linkedin.com/company/luxdefi',
-      external: true,
       icon: <Icons.SocialIcon network='linkedin' size={SOC_ICON_SIZE + 2} />
     },
     {
-      title: 'Instagram',
+      title: '@luxdefi',
       href: 'https://instagram.com/luxdefi',
-      external: true,
       icon: <Icons.SocialIcon network='instagram' size={SOC_ICON_SIZE + 2} />
     },
+
   ],
   [
     {
