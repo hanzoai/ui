@@ -29,23 +29,22 @@ const NavItems: React.FC<{
         // will not get assigned these classes,
         // and will remain styles is 'foreground' (hence the name)
       if (variant === 'link') {
-        extraClasses+= ' text-nav hover:text-nav-hover'
+        extraClasses+= 'text-nav hover:text-nav-hover '
         if (currentAs && currentAs === item.href) {
-          extraClasses += ' text-nav-current'
+          extraClasses += 'text-nav-current '
         }
       } 
       else {
-        extraClasses+= ' min-w-0'   
+        extraClasses+= 'min-w-0 lg:min-w-0 '   
       }
       if (currentAs && currentAs === item.href) {
-        extraClasses += ' pointer-events-none'
+        extraClasses += 'pointer-events-none '
       }
 
       return (
         <LinkElement 
           def={item}
           key={index}
-          size='default'
           className={cn(
             extraClasses,
             itemClassName,  

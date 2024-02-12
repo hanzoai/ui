@@ -29,9 +29,8 @@ const Header: React.FC<{
         <NavItems 
           currentAs={siteDef.currentAs}
           items={allElements} 
-          className='hidden lg:flex justify-between gap-[24px] text-[13px]/[13px] min-w-[690px]' 
+          className='hidden lg:flex justify-between gap-7 text-[13px]/[13px] ' 
           itemClassName='font-heading h-[32px] tracking-[-0.3px]' 
-          itemClassNameFromVariant={(variant: ButtonVariants) => (variant === 'primary' ? 'min-w-[174px]' : '')}
           key='three'
         />
         {/* md exactly */}
