@@ -110,7 +110,7 @@ export default [
       variant: 'linkFG',
     },
     {
-      title: 'luxdefi Discussions',
+      title: 'Discussion',
       href: 'https://github.com/orgs/luxdefi/discussions',
       icon: <Icons.SocialIcon network='github' size={SOC_ICON_SIZE} />
     },
@@ -135,14 +135,14 @@ export default [
       icon: <Icons.SocialIcon network='x' size={SOC_ICON_SIZE} />
     },
     {
-      title: 'lux',
-      href: 'https://warpcast.com/~/channel/lux',
-      icon: <SVG_warp_logo width={SOC_ICON_SIZE} height={SOC_ICON_SIZE} /> //<Icons.SocialIcon network='warpcast' size={SOC_ICON_SIZE} />
-    },
-    {
-      title: 'luxdefi',
+      title: '@luxdefi',
       href: 'https://facebook.com/luxdefi',
       icon: <Icons.SocialIcon network='facebook' size={SOC_ICON_SIZE + 2} />
+    },
+    {
+      title: '@luxdefi',
+      href: 'https://instagram.com/luxdefi',
+      icon: <Icons.SocialIcon network='instagram' size={SOC_ICON_SIZE + 2} />
     },
     {
       title: 'company/luxdefi',
@@ -151,10 +151,14 @@ export default [
     },
     {
       title: '@luxdefi',
-      href: 'https://instagram.com/luxdefi',
-      icon: <Icons.SocialIcon network='instagram' size={SOC_ICON_SIZE + 2} />
+      href: 'https://www.youtube.com/@luxdefi',
+      icon: <Icons.SocialIcon network='youtube' size={SOC_ICON_SIZE + 2} />
     },
-
+    {
+      title: 'lux',
+      href: 'https://warpcast.com/~/channel/lux',
+      icon: <SVG_warp_logo width={SOC_ICON_SIZE} height={SOC_ICON_SIZE} /> //<Icons.SocialIcon network='warpcast' size={SOC_ICON_SIZE} />
+    },
   ],
   [
     {
