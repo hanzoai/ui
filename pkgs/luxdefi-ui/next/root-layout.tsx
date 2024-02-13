@@ -22,12 +22,10 @@ const viewport = {
 */
 
 /*
-  re overflow-y-hidden overflow-x-hidden ,
+  re body: overflow-y-hidden overflow-x-hidden, h-full
   We cannot have these on body tag for scroll-snap to work on iOS!
 */
-
-
-const bodyClasses = 'bg-background text-foreground flex flex-col h-full ' + getAppRouterBodyFontClasses() 
+const bodyClasses = 'bg-background text-foreground flex flex-col min-h-full ' + getAppRouterBodyFontClasses() 
     
 const RootLayout: React.FC<PropsWithChildren & { 
   siteDef: SiteDef 
