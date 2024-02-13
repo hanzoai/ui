@@ -54,6 +54,17 @@ export {
   SheetDescription,
 } from './sheet'
 
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from './table'
+
 export { default as TailwindIndicator } from './tailwind-indicator'
 
 export {
@@ -128,4 +139,6 @@ export { default as Progress } from './progress'
 export { default as Separator } from './separator' 
 export { default as Skeleton } from './skeleton' 
 export { default as InlineIcon } from './inline-icon' 
+export { default as NavItems} from './nav-items'
+export { default as Main } from './main'
 

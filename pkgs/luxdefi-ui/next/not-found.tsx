@@ -1,6 +1,6 @@
 import React  from 'react'
 
-import Main from '../common/main'
+import Main from '../primitives/main'
 import Footer from '../common/footer'
 import { ApplyTypography } from '../primitives'
 

@@ -27,7 +27,7 @@ const viewport = {
 */
 
 
-const bodyClasses = 'bg-background text-foreground ' + getAppRouterBodyFontClasses() 
+const bodyClasses = 'bg-background text-foreground flex flex-col h-full ' + getAppRouterBodyFontClasses() 
     
 const RootLayout: React.FC<PropsWithChildren & { 
   siteDef: SiteDef 
