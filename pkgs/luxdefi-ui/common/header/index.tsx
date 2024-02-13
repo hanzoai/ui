@@ -1,12 +1,11 @@
 import React from 'react'
 
 import type { SiteDef } from '../../types'
-import Logo from '../logo'
-import { type ButtonVariants } from '../../primitives'
-import { NavItems, Icons, DrawerMenu } from '../../common'
-import MobileNav from './mobile-nav'
-
+import { NavItems } from '../../primitives'
+import { Icons, DrawerMenu, Logo } from '../../common'
 import { cn } from '../../util'
+
+import MobileNav from './mobile-nav'
 
 const Header: React.FC<{
   siteDef: SiteDef
@@ -16,8 +15,11 @@ const Header: React.FC<{
   className = ''
 }) => {
 
-  const { nav: {elements, featuredCTA}} = siteDef
-  const allElements = (featuredCTA) ? [...elements, featuredCTA] : elements
+  const { nav: { common, featured }} = siteDef
+  const allElements = (featured) ? [...common, ...featured] : common
+    // TODO move 13px into a size class and configure twMerge to recognize say, 'text-size-nav' 
+    // (vs be beat out by 'text-color-nav')
+  const navItemClx = 'font-heading h-8 tracking-[-0.3px] !text-[13px]/[13px]'
 
   return (
     <header className={cn('bg-background sticky z-10 top-0 ', className)} >
@@ -25,22 +27,13 @@ const Header: React.FC<{
       <div className="hidden md:flex flex-row md:h-[80px] items-center justify-between px-[32px] 2xl:mx-auto max-w-screen-2xl">
         <Logo size='md' className='hidden lg:flex' key='two'/>
         <Logo size='sm' className='hidden md:flex lg:hidden' key='one'/>
-        {/* lg or larger */}
+        {/* md or larger */}
         <NavItems 
           currentAs={siteDef.currentAs}
           items={allElements} 
-          className='hidden lg:flex justify-between gap-7 text-[13px]/[13px] ' 
-          itemClassName='font-heading h-[32px] tracking-[-0.3px]' 
+          className='hidden md:flex md:gap-4 lg:justify-between lg:gap-7 ' 
+          itemClx={navItemClx} 
           key='three'
-        />
-        {/* md exactly */}
-        <NavItems 
-          currentAs={siteDef.currentAs}
-          items={allElements} 
-          className='hidden md:flex lg:hidden gap-4 text-[13px]/[13px] ' 
-          itemClassName='font-heading h-[32px] tracking-[-0.3px]'  
-          itemClassNameFromVariant={(variant: ButtonVariants) => (variant === 'primary' ? 'min-w-0 text-[13px]/[13px]' : '')}
-          key='four'
         />
       </div>
       {/* smaller than md: mobile style drawer menu */}
@@ -53,7 +46,7 @@ const Header: React.FC<{
           <MobileNav 
             siteDef={siteDef}
             className='pt-12' 
-            navElementClasses='px-10 text-l h-10 justify-start border-b rounded-none' 
+            commonItemClx='px-10 text-l h-10 justify-start border-b rounded-none' 
           />
         </DrawerMenu>
       </div>

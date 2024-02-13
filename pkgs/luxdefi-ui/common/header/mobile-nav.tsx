@@ -2,64 +2,68 @@
 import React from 'react'
 
 import { type ButtonVariants, LinkElement }  from '../../primitives'
-import type { SiteDef } from '../../types'
+import type { LinkDef, SiteDef } from '../../types'
 import { cn } from '../../util'
 
-// onAction is *in addition* to the link's navigation 
-  // action itself.  eg, for also closing the modal menu
 const MobileNav: React.FC<{
   siteDef: SiteDef
   className?: string
-  navElementClasses?: string
+  commonItemClx?: string | ((def: LinkDef) => string),
+  /**
+   * This is called *in addition* to the link's actual navigation 
+   * action.  eg, I link is clicked, and the modal menu is closes
+   */
   onAction?: () => void 
 }> = ({
   siteDef,
   onAction,
   className='',
-  navElementClasses='',
+  commonItemClx,
 }) => {
 
-  const {nav: {elements, featuredCTA}} = siteDef
+  const { nav: { common, featured }} = siteDef
 
-  return (elements.length || featuredCTA) ? (
+  return (common.length || featured?.length) ? (
     <nav className={className} >
-    {elements.map((el, index) => {
+    {common.map((el, index) => {
       const variant = el.variant ?? 'link'
-      let extraClasses = '' 
+      let internalClx = '' 
         // note that linkFG (or any other variant of 'link') 
         // will not get assigned these classes,
         // and will remain styles is 'foreground' (hence the name)
       if (variant === 'link') {
-        extraClasses+= ' text-nav hover:text-nav-hover active:text-nav-hover '
+        internalClx+= ' text-nav hover:text-nav-hover active:text-nav-hover '
         if (siteDef.currentAs && siteDef.currentAs === el.href) {
-          extraClasses += ' text-nav-current'
+          internalClx += ' text-nav-current'
         }
       } 
       else {
-        extraClasses+= ' min-w-0'   
+        internalClx+= ' min-w-0'   
       }
       if (siteDef.currentAs && siteDef.currentAs === el.href) {
-        extraClasses += ' pointer-events-none'
+        internalClx += ' pointer-events-none'
       }
+      const itemClx = (commonItemClx) ? (typeof commonItemClx === 'string' ? commonItemClx : commonItemClx(el)) : '' 
+
       return (
         <LinkElement 
           def={el}
-          key={index}
+          key={`common-${index}`}
           size='lg'
-          className={cn(navElementClasses, extraClasses)}
+          className={cn(internalClx, itemClx)}
           onClick = {onAction}  
         />
       )
     })}
-    {featuredCTA && (
+    {featured?.length && (featured.map((el, index) => (
       <LinkElement 
-        def={featuredCTA}
-        key='featuredCTA'
+        def={el}
+        key={`featured-${index}`}
         size='lg'
         className='mt-6 w-4/5 mx-auto'
-        onClick = {onAction}  
+        onClick={onAction}  
       />
-    )}
+    )))}
     </nav>
   ) 
   : null

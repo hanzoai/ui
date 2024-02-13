@@ -2,13 +2,19 @@ import React from 'react'
 
 const FIRST = 2020
 
-const Copyright: React.FC = () => {
+const Copyright: React.FC<{
+  className?: string
+}> = ({
+  className='' 
+}) => {
 
   const year = new Date().getFullYear()
   const yearString = (year > FIRST) ? `${FIRST} - ${year}` : FIRST.toString()
 
   return (
-    <>{`Copyright © ${yearString} Lux Partners Ltd. `} <br className='sm:hidden'/> All rights reserved.</> 
+    <div className={className}>
+      {`Copyright © ${yearString}`}&nbsp;<br className='sm:hidden'/>Lux Partners Ltd.&nbsp;<br className='md:hidden'/>&nbsp;All rights reserved.
+    </div> 
   )
 }
 

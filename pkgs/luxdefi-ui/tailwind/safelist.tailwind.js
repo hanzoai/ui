@@ -43,12 +43,6 @@ export default [
   '2xl:grid-cols-4',
   '2xl:grid-cols-5',
   '2xl:grid-cols-6',
-  'lg:columns-2',
-  'lg:columns-3',
-  'lg:columns-4',
-  'lg:columns-5',
-  'lg:columns-6',
-  'lg:columns-7',
   'font-sans',
     // for headling block spacing
   'h-1',

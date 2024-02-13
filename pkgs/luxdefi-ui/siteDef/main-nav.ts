@@ -1,4 +1,4 @@
-import type LinkDef from '../types/link-def'
+import type { LinkDef }  from '../types'
 
 export default [
   {

@@ -5,8 +5,8 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../util"
 
 const variant = {
-  primary: "bg-primary-lux text-primary-fg hover:bg-primary-hover font-heading whitespace-nowrap not-typography",
-  secondary: "bg-secondary-lux text-secondary-fg hover:bg-secondary/80 font-heading whitespace-nowrap not-typography",
+  primary: "bg-primary text-primary-fg hover:bg-primary-hover font-heading whitespace-nowrap not-typography",
+  secondary: "bg-secondary text-secondary-fg hover:bg-secondary/80 font-heading whitespace-nowrap not-typography",
   outline: "text-foreground bg-background border border-muted-4 hover:bg-level-1 hover:text-accent hover:border-accent font-heading whitespace-nowrap not-typography",
   destructive: "bg-destructive text-destructive-fg font-sans whitespace-nowrap hover:bg-destructive-hover",
   ghost: "text-foreground hover:bg-level-1 hover:text-accent whitespace-nowrap font-sans ",
@@ -19,7 +19,7 @@ const size = {
   sm: "h-9 px-3 text-xs ",
   square: 'h-10 py-2 px-2 text-sm aspect-square',
   default: "h-10 py-2 px-4 text-sm lg:min-w-[220px]",
-  lg: "h-10 px-8 text-base rounded-lg min-w-[260px] lg:min-w-[300px] xs:min-w-0 xs:text-sm",
+  lg: "h-10 px-8 rounded-lg text-sm md:text-base min-w-0 md:min-w-[260px] lg:min-w-[300px]",
   icon: "h-10 w-10",
 }
 
