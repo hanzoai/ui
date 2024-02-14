@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { LinkDef, SiteDef } from '../types'
-import { Copyright } from '../common'
+import { Copyright } from '.'
 import { NavItems } from '../primitives'
 import { legal } from '../siteDef/footer/legal'
 

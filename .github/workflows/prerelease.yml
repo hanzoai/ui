@@ -10,7 +10,7 @@ on:
 jobs:
   prerelease:
     if: |
-      github.repository_owner == 'luxdefi' &&
+      github.repository_owner == 'hanzoai' &&
       contains(github.event.pull_request.labels.*.name, '🚀 autorelease')
     name: Build & Publish a beta release to NPM
     runs-on: ubuntu-latest
@@ -56,5 +56,5 @@ jobs:
       - name: Upload packaged artifact
         uses: actions/upload-artifact@v2
         with:
-          name: npm-package-luxdefi-ui@${{ steps.package-version.outputs.current-version }}-pr-${{ github.event.number }} # encode the PR number into the artifact name
+          name: npm-package-hanzoai-ui@${{ steps.package-version.outputs.current-version }}-pr-${{ github.event.number }} # encode the PR number into the artifact name
           path: packages/cli/dist/index.js

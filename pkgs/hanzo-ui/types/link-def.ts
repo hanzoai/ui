@@ -1,5 +1,5 @@
 import type { ButtonVariants, ButtonSizes } from '../primitives/button'
-import type { Icon }  from '../types'
+import type { Icon }  from '.'
 
 /**
  * A Conf object for the LinkElement primitive.

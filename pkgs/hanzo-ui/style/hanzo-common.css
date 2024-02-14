@@ -1,15 +1,8 @@
-@import "tailwindcss/base";
+@tailwind base;
 /* see https://stackoverflow.com/questions/69746121/using-nextjs-how-can-you-import-in-css-using-tailwind-css */
-@import "lux-tw-base-layer";
-
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-/* Preflight is applied first: 
-https://unpkg.com/tailwindcss@3.3.5/src/css/preflight.css
-*/
 
 @layer base {
+  
   * {
     @apply border-muted-3;
     box-sizing: inherit;
@@ -33,7 +26,6 @@ https://unpkg.com/tailwindcss@3.3.5/src/css/preflight.css
 
   body {
     font-feature-settings: "rlig" 1, "calt" 1;
-      /* Match text on cards from old site */ 
     font-size: 16px; 
     letter-spacing: 0.15px;
   }

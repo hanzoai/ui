@@ -1,11 +1,11 @@
 {
-  "name": "@luxdefi/ui-mono",
+  "name": "@hanzo/ui-mono",
   "version": "0.0.1",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "type": "module",
   "author": {
-    "name": "@lx/ui",
-    "url": "https://twitter.com/luxdefi"
+    "name": "hanzoai dev dudes",
+    "url": "https://twitter.com/hanzoai"
   },
   "scripts": {
     "build": "turbo run build",

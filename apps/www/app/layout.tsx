@@ -30,11 +30,11 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "luxdefi",
-      url: "https://ui.lux.network",
+      name: "hanzoai",
+      url: "https://ui.hanzo.ai",
     },
   ],
-  creator: "luxdefi",
+  creator: "hanzoai",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: "@luxdefi",
+    creator: "@hanzoai",
   },
   icons: {
     icon: "/favicon.ico",

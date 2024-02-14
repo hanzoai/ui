@@ -2,7 +2,7 @@ import React from 'react'
 
 import type { SiteDef } from '../../types'
 import { NavItems } from '../../primitives'
-import { Icons, DrawerMenu, Logo } from '../../common'
+import { Icons, DrawerMenu, Logo } from '..'
 import { cn } from '../../util'
 
 import MobileNav from './mobile-nav'
