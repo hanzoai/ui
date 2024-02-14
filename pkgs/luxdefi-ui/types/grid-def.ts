@@ -1,9 +1,9 @@
-import type { Breakpoint } from '.'
+import type { Breakpoint } from './breakpoints'
 
 type GridColumnSpec = number | { columns: number, gap: number}
 
 interface GridDef {
-    // Please define in ACCENDING order.
+    /** Must define in ACCENDING order. */
   at: {
     [key in (Breakpoint)]?: GridColumnSpec
   },
