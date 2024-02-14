@@ -1,4 +1,4 @@
-# @hanzoai/ui
+# @hanzo/ui
 
 Accessible and customizable components that you can copy and paste into your DeFi apps.
 
