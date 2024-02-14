@@ -1,6 +1,6 @@
 import React from 'react'
 
-import merge from 'lodash.merge'
+import { ldMerge } from '../../util'
 
 import type { Breakpoint } from '../../types'
 import { SPACE_DEFAULTS , type TWSpaceUnit, type HeadingLevel} from '../def/space-block'
@@ -38,7 +38,7 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
     const _sizes: {
       [key in (Breakpoint)]?: TWSpaceUnit
     } = {}
-    merge(_sizes, SPACE_DEFAULTS, b.sizes)
+    ldMerge(_sizes, SPACE_DEFAULTS, b.sizes)
 
     let clx = ''
     for (const [key, value] of Object.entries(_sizes)) {

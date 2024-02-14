@@ -4,6 +4,9 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import type { Dimensions } from '../types'
 
+  // @ts-ignore
+import _merge from 'lodash.merge'
+
 export const cn = (...inputs: ClassValue[]) => (
   twMerge(clsx(inputs))  
 ) 
@@ -66,3 +69,8 @@ export const constrain = (dim: Dimensions, constraint: Dimensions): Dimensions =
 }
 
 export const containsToken = (s: string | undefined, toFind: string): boolean => (s ? s.split(' ').includes(toFind) : false)
+
+export const ldMerge = (
+  result: any,
+  ...sources: any[]
+): any => (_merge(result, ...sources))
