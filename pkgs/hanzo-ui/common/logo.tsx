@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { type TShirtSize  } from '../types'
 import { cn } from '../util'
-import { Icons  } from '../common'
+import { Icons  } from '.'
 
 const Logo: React.FC<{
   size?: TShirtSize

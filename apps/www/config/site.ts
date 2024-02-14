@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "luxdefi/ui",
-  url: "https://ui.luxdefi.com",
-  ogImage: "https://ui.luxdefi.com/og.jpg",
+  url: "https://ui.hanzo.ai",
+  ogImage: "https://ui.hanzo.ai/og.jpg",
   description:
     "Beautifully designed components that you can copy and paste into your apps. Accessible. Customizable. Open Source.",
   links: {

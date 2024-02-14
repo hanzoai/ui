@@ -13,6 +13,6 @@ export const siteConfig = {
   links: {
     twitter: "https://twitter.com/luxdefi",
     github: "https://github.com/luxdefi/ui",
-    docs: "https://ui.luxdefi.com",
+    docs: "https://ui.hanzo.ai",
   },
 }

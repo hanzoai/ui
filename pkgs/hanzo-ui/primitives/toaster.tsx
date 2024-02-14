@@ -10,7 +10,7 @@ import {
   ToastViewport,
 } from "./toast"
 
-import { useToast } from "../primitives/use-toast"
+import { useToast } from "./use-toast"
 
 export const Toaster: React.FC = () => {
   const { toasts } = useToast()

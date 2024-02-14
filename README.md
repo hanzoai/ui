@@ -1,4 +1,4 @@
-# @luxdefi/ui
+# @hanzoai/ui
 
 Accessible and customizable components that you can copy and paste into your DeFi apps.
 
@@ -6,7 +6,7 @@ Accessible and customizable components that you can copy and paste into your DeF
 
 ## Documentation
 
-Visit http://ui.lux.finance to view the documentation.
+Visit http://ui.hanzo.ai to view the documentation.
 
 ## Contributing
 
@@ -14,4 +14,4 @@ Please read the [contributing guide](/CONTRIBUTING.md).
 
 ## License
 
-Licensed under the [MIT license](https://github.com/luxdefi/ui/blob/main/LICENSE.md).
+Licensed under the [BSD 3 Clause](./LICENSE.md) License.
