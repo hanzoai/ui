@@ -388,6 +388,9 @@ importers:
       tailwind-merge:
         specifier: ^2.2.0
         version: 2.2.0
+      tailwindcss-animate:
+        specifier: ^1.0.6
+        version: 1.0.6(tailwindcss@3.4.1)
       tailwindcss-interaction-media:
         specifier: ^0.1.0
         version: 0.1.0
@@ -434,9 +437,6 @@ importers:
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1(ts-node@10.9.2)
-      tailwindcss-animate:
-        specifier: ^1.0.6
-        version: 1.0.6(tailwindcss@3.4.1)
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -10204,7 +10204,7 @@ packages:
       tailwindcss: '>=3.0.0 || insiders'
     dependencies:
       tailwindcss: 3.4.1(ts-node@10.9.2)
-    dev: true
+    dev: false
 
   /tailwindcss-interaction-media@0.1.0:
     resolution: {integrity: sha512-3/o9Gc8sXqrUHp/7w4T+Zt46GubrO7BRmxJpB6BogJt0B33K5G1lOVe2q0Ro43Zkk51Tp2ED0zQ/wL5weO+yUw==}
