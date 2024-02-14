@@ -1,6 +1,6 @@
 # @hanzo/ui
 
-Accessible and customizable components that you can copy and paste into your DeFi apps.
+Accessible and customizable components that you can copy and paste into your AI apps.
 
 ![hero](apps/www/public/og.jpg)
 
