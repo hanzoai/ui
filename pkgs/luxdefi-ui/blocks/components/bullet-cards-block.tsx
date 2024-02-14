@@ -28,12 +28,12 @@ const BulletCardsBlockComponent: React.FC<BlockComponentProps> = ({
   return (
     <GridBlockComponent block={{blockType: 'grid', grid: b.grid} as Block} className={className} agent={agent}>
     {b.cards.map((card, index) => (
-      <div key={index} className={cn('md:border rounded px-6 py-1 md:py-4 ' + 
+      <div key={index} className={cn('px-0 sm:px-4 py-1 md:py-4 md:border rounded ' + 
         'flex flex-row justify-start items-center not-typography text-foreground',
         borderclx
       )}>
-        <InlineIcon icon={card.icon} size={b.iconSize ?? 28} agent={agent} className='mr-2 md:mr-4'/>
-        <p className='m-0'>{card.text}</p>
+        <InlineIcon icon={card.icon} size={b.iconSize ?? 28} agent={agent} className='shrink-0 mr-2 w-6 md:mr-4 md:w-7 '/>
+        <p className='m-0 text-sm sm:text-base'>{card.text}</p>
       </div>
     ))}
     </GridBlockComponent>

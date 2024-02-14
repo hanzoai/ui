@@ -41,7 +41,7 @@ const Header: React.FC<{
         <Logo size='sm' />
         <DrawerMenu 
           className='p-0 text-primary' // ui has 'text-inherit', so need this for close buttons to appear.
-          trigger={<Icons.burger className='h-7 w-7 text-inherit'/>}
+          trigger={<Icons.burger className='h-7 w-7'/>}
         >
           <MobileNav 
             siteDef={siteDef}

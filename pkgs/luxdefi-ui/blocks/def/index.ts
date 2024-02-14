@@ -12,6 +12,7 @@ import type HeadingBlock from './heading-block'
 import type ImageBlock from './image-block'
 import type VideoBlock from './video-block'
 import type SpaceBlock from './space-block'
+import { SPACE_DEFAULTS } from './space-block'
 import type ScreenfulBlock from './screenful-block'
 
 export { 
@@ -30,4 +31,5 @@ export {
    type VideoBlock,
    type SpaceBlock,
    type ScreenfulBlock,
+   SPACE_DEFAULTS
 }
