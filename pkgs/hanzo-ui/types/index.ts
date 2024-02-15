@@ -6,7 +6,7 @@ export {
   type ButtonModalDef,
 } from './button-def'
 
-export { COMMON_GRID_2_COL, COMMON_GRID_3_COL } from './grid-def'
+export { COMMON_GRID_1_COL, COMMON_GRID_2_COL, COMMON_GRID_3_COL, COMMON_GRID_4_COL } from './grid-def'
 export type {default as GridDef, GridColumnSpec} from './grid-def'
 export type { TShirtDimensions, Dimensions } from './dimensions' 
 export type { ContactInfo, ContactInfoFields } from './contact-info'

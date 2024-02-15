@@ -39,7 +39,7 @@ const getCellClx = (
   return clx
 } 
 
-const gapClx = 'gap-0 md:gap-0 xl:gap-9'
+const gapClx = 'gap-0 md:gap-0 xl:gap-0'
 
 export default {
   getCellClx,

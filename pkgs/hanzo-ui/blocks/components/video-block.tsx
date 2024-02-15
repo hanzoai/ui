@@ -108,7 +108,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
       }
       return ((
         <VideoPlayer 
-          className={className} 
+          className={cn('mx-auto', className)} 
           sources={b.sources} 
           width={dim.w} 
           height={dim.h} 
@@ -125,7 +125,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
     <Image src={b.poster!} alt='image' width={conDim.w} height={conDim.h} className={className}/>
   ) : (
     <VideoPlayer 
-      className={className} 
+      className={cn('mx-auto', className)} 
       sources={b.sources} 
       width={conDim.w} 
       height={conDim.h} 
