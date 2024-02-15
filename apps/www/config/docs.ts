@@ -29,12 +29,12 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "GitHub",
-      href: "https://github.com/luxdefi/ui",
+      href: "https://github.com/hanzo/ui",
       external: true,
     },
     {
       title: "Twitter",
-      href: "https://twitter.com/luxdefi",
+      href: "https://twitter.com/hanzo",
       external: true,
     },
   ],
