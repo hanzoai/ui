@@ -48,15 +48,13 @@ const GridBlockComponent: React.FC<
   }
   else {
     let defaultSet = false
-    for (const [key, value] of Object.entries(grid.at)) {
+    for (const [key, value] of Object.entries(grid.at as typeof grid.at)) {
       if (!defaultSet) {
-          // ts brain fart!
-        clx += gridClx(value as GridColumnSpec)
+        clx += gridClx(value)
         defaultSet = true
       }
       else {
-          // ts brain fart!
-        clx += gridClx(value  as GridColumnSpec, `${key}:`)
+        clx += gridClx(value, `${key}:`)
       }
     }   
   }

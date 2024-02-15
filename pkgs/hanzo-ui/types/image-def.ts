@@ -1,3 +1,4 @@
+import type { Constraints } from './constraints'
 import type { Dimensions } from './dimensions'
 
   /**
@@ -21,6 +22,9 @@ interface ImageDef {
      * can determine the aspect ratio
     */
   dim:  Dimensions 
+
+    /** See Constraints */
+  constraints?: Constraints
 }
 
 export {

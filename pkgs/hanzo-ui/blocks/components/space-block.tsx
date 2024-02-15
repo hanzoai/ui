@@ -41,9 +41,8 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
     ldMerge(_sizes, SPACE_DEFAULTS, b.sizes)
 
     let clx = ''
-    for (const [key, value] of Object.entries(_sizes)) {
-          // ts brain fart!
-        clx += `${key}:h-${value as TWSpaceUnit} `
+    for (const [key, value] of Object.entries(_sizes as typeof _sizes)) {
+        clx += `${key}:h-${value} `
     }   
 
     if (b.test) {

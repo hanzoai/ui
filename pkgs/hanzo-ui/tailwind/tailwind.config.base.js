@@ -9,6 +9,8 @@ import spacing from './spacing.tailwind'
 import { fontFamily, fontSize} from './fonts.tailwind'
 import typographyPlugin from './typo-plugin'
 
+
+
 export default {
   presets: [],
   darkMode: ["class"],
@@ -589,6 +591,7 @@ export default {
       fit: 'fit-content',
     },
     maxWidth: ({ theme, breakpoints }) => ({
+      ...spacing,
       none: 'none',
       0: '0rem',
       xs: '20rem',

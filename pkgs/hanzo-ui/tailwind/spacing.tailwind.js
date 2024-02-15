@@ -1,4 +1,14 @@
-export default {
+/*
+  if rem = 16px
+  256 tw units is enough to specify up to
+  1024px in 4px (0.25rem) increments.
+  If one needs more than that, one can
+  use screen sizes to define constraints.
+  eg, 'max-w-screen-lg'
+*/
+const MAX = 256 
+
+const sp = {
   px: '1px',
   0: '0px',
   0.5: '0.125rem',
@@ -7,51 +17,19 @@ export default {
   2: '0.5rem',
   2.5: '0.625rem',
   3: '0.75rem',
-  3.5: '0.875rem',
-  4: '1rem',
-  5: '1.25rem',
-  6: '1.5rem',
-  7: '1.75rem',
-  8: '2rem',
-  9: '2.25rem',
-  10: '2.5rem',
-  11: '2.75rem',
-  12: '3rem',
-  13: '3.25rem',
-  14: '3.5rem',
-  15: '3.75rem',
-  16: '4rem',
-  17: '4.25rem',
-  18: '4.5rem',
-  19: '4.75rem',
-  20: '5rem',
-  21: '5.25rem',
-  22: '5.5rem',
-  23: '5.75rem',
-  24: '6rem',
-  25: '5.25rem',
-  26: '5.5rem',
-  27: '5.75rem',
-  28: '7rem',
-  29: '7.25rem',
-  30: '7.5rem',
-  31: '7.75rem',
-  32: '8rem',
-  33: '8.25rem',
-  34: '8.5rem',
-  35: '8.75rem',
-  36: '9rem',
-  37: '9.25rem',
-  38: '9.5rem',
-  39: '9.75rem',
-  40: '10rem',
-  44: '11rem',
-  48: '12rem',
-  52: '13rem',
-  56: '14rem',
-  60: '15rem',
-  64: '16rem',
-  72: '18rem',
-  80: '20rem',
-  96: '24rem',
+  3.5: '0.875rem'
 }
+
+for (let i = 4; i <= MAX; i++) {
+
+  const twoPlaces = Math.round(((i * 0.25) + Number.EPSILON) * 100) / 100
+
+  if (Number.isSafeInteger(twoPlaces)) {
+    sp[i] = `${Math.round(twoPlaces)}rem`
+  }
+  else {
+    sp[i] = `${parseFloat(twoPlaces).toFixed(2)}rem`
+  }
+}
+
+export default sp

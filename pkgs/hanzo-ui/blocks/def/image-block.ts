@@ -22,7 +22,12 @@ interface ImageBlock extends Block, ImageDef {
     sizes?: string
       /** if true, any alignement specifiers are ignored */
     fill?: boolean  
-    style?: any
+    style?: {
+      objectFit?: string
+      objectPosition?: string
+      width?: number | string
+      height?: number | string
+    }
   }
 }
 

@@ -10,6 +10,7 @@ export { COMMON_GRID_2_COL, COMMON_GRID_3_COL } from './grid-def'
 export type {default as GridDef, GridColumnSpec} from './grid-def'
 export type { TShirtDimensions, Dimensions } from './dimensions' 
 export type { ContactInfo, ContactInfoFields } from './contact-info'
+export type { Constraint, Constraints, ResponsiveConstraints } from './constraints'
 
 import type BulletItem from './bullet-item'
 import type Icon from './icon'

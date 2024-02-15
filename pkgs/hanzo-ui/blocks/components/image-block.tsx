@@ -1,20 +1,15 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { Dimensions } from '../../types'
 import type { ImageBlock } from '../def'
-import { constrain, containsToken, cn } from '../../util'
+import { getConstaintsClx, containsToken, cn } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
 
-
-const ImageBlockComponent: React.FC<BlockComponentProps & {
-  constraint?: Dimensions
-}> = ({
+const ImageBlockComponent: React.FC<BlockComponentProps> = ({
   block,
   className='',
-  agent,
-  constraint
+  agent
 }) => {
   
   if (block.blockType !== 'image') {
@@ -25,6 +20,7 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     src, 
     alt, 
     dim, 
+    constraints,
     props, 
     fullWidthOnMobile, 
     svgFillClass,
@@ -35,9 +31,8 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   const toSpread: any = {}
   if (props?.fill === undefined) {
-    const dimCon = (constraint ? constrain(dim, constraint) : dim)
-    toSpread.width = dimCon.w
-    toSpread.height = dimCon.h
+    toSpread.width = dim.w
+    toSpread.height = dim.h
   } 
 
   let _alt: string
@@ -52,6 +47,8 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   const _svgFillClass = svgFillClass ?? ''
 
+  let constraintsClx = ''
+
     // TODO: use two elements with 'md:hidden' for 3/4 size
     // https://nextjs.org/docs/app/building-your-application/optimizing/images#responsive
   if (agent === 'phone' ) {
@@ -60,7 +57,6 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
         style: {
           width: '100%',
           height: 'auto',
-          maxWidth: '420px'
         },
         sizes: '100vw',
       }
@@ -74,6 +70,10 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
         </div>
       )
     }
+    else if (constraints && ('xs' in constraints || 'w' in constraints)) {
+      constraintsClx = getConstaintsClx(constraints, 'xs')
+    }
+      // last stop-gap
     else if (!specified('mobile-no-scale')) {
       if (props?.style?.width === 'auto' && typeof props.style.height === 'number' ) {
         props.style.height = props.style.height *.75 
@@ -89,6 +89,11 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
       }
     }
   }
+  else {
+    constraintsClx = getConstaintsClx(constraints)
+  }
+
+  const stopGapClx = constraintsClx ? 'mx-auto ' : '' 
 
   const right = containsToken(specifiers, 'right')
   const center = containsToken(specifiers, 'center')
@@ -97,10 +102,22 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   return (props?.fill) ? (
     <div className='relative w-full h-full'>
-      <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(_svgFillClass, 'max-w-[70vw] mx-auto', className)}/>
+      <Image 
+        src={src} 
+        alt={_alt} 
+        {...toSpread} 
+        {...props} 
+        className={cn(_svgFillClass, stopGapClx, constraintsClx, className)}
+      />
     </div>
   ) : (
-    <Image src={src} alt={_alt} {...toSpread} {...props} className={cn(alignSelfClx, _svgFillClass, 'max-w-[70vw] mx-auto', className)}/>   
+    <Image 
+      src={src} 
+      alt={_alt} 
+      {...toSpread} 
+      {...props} 
+      className={cn(alignSelfClx, _svgFillClass, stopGapClx, constraintsClx, className)}
+    />   
   )
 }
 

@@ -48,7 +48,7 @@ const ScreenfulComponent: React.FC<{
     narrowGutters ? 
       'px-6 lg:px-8 2xl:px-2 pb-6 pt-15 md:pt-26 lg:pt-28 ' 
       : 
-      'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)] ',
+      'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+3vh)] md:pt-[calc(80px+6vh)] ',
 
     (agent && agent !== 'desktop') ? 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8' : '' 
   ]
