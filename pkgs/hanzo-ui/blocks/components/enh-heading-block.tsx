@@ -124,6 +124,7 @@ const EnhHeadingBlockComponent: React.FC<
   const specified = (s: string) => (containsToken(b.specifiers + extraSpecifiers, s))
   const preheadingHeadingFont = specified('preheading-heading-font')
   const phFontClx = preheadingHeadingFont ? 'font-heading' : ''
+  const alignMiddleClx = specified('align-middle') ? 'my-auto' : ''
 
   const positionclx = getPositionClx(specified, agent)
 
@@ -167,7 +168,7 @@ const EnhHeadingBlockComponent: React.FC<
         if (b.icon && !iconRendered) {
           iconRendered = true
           return (
-            <div className={cn('flex flex-row items-center', clx)} key={`div-${index}`}>
+            <div className={cn('flex flex-row items-center gap-2 sm:gap-4', clx)} key={`div-${index}`}>
               <InlineIcon icon={b.icon} size={b.iconSize ?? 32} agent={agent}/>
               <Element asTag={tag} text={text} />
             </div>
@@ -181,11 +182,11 @@ const EnhHeadingBlockComponent: React.FC<
   }
 
   return applyTypography ? (
-    <ApplyTypography className={cn('flex flex-col w-full !gap-0', className)}>
+    <ApplyTypography className={cn('flex flex-col w-full !gap-0', className, alignMiddleClx)}>
       <Inner />
     </ApplyTypography>
   ) : (
-    <div className={cn('flex flex-col w-full gap-0', className)}>
+    <div className={cn('flex flex-col w-full gap-0', className, alignMiddleClx)}>
       <Inner />  
     </div>
   )

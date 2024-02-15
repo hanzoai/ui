@@ -83,7 +83,7 @@ const CardBlockComponent: React.FC<
 
   const ghost = has('ghost') // no outer padding, no borders, larger title, all left-aligned bg is same (default)
 
-  const contentclx = (has('content-left') ? 'items-start ' : 'items-center ') + contentClassName
+  const contentclx = (has('content-left') ? 'items-start ' : ' items-center ') + (has('content-top') ? '!justify-start' : '') + contentClassName
   const disabledBorder = (has('appear-disabled' ) ? ' border-muted-4' : ' border-muted-3')
   const outerBorder = ((has('no-outer-border') || ghost) ? ' border-0' : '')
   const innerBorder = (ghost ? ' border-0' : '')
