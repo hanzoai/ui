@@ -12,6 +12,11 @@ export default [
     newTab: false,
   },
   {
+    title: "Exchange",
+    href: "https://lux.exchange",
+    newTab: false,
+  },
+  {
     title: "Finance",
     href: "https://lux.finance",
     newTab: false,
@@ -24,11 +29,6 @@ export default [
   {
     title: "Network",
     href: "https://lux.network",
-    newTab: false,
-  },
-  {
-    title: "Exchange",
-    href: "https://lux.exchange",
     newTab: false,
   },
 ] satisfies LinkDef[]
