@@ -3,6 +3,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.js" // Conf files etc.
   ],
   "exclude": [
     "node_modules",
