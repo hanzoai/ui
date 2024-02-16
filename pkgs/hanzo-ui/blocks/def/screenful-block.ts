@@ -44,6 +44,9 @@ interface ScreenfulBlock extends Block {
 
     /** optional footer element below the grid */
   footer?: ReactNode
+
+    /** optional id for linking to this slide / screenful */
+  anchorId?: string  
 }
 
 export {

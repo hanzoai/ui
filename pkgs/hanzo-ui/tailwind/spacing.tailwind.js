@@ -1,4 +1,11 @@
+const percentages = {}
+for (let i = 0; i <= 100; i++) {
+  percentages[`pr-${i}`] = `${i}%` 
+}
+
+
 export default {
+  ...percentages,
   px: '1px',
   0: '0px',
   0.5: '0.125rem',
@@ -55,3 +62,4 @@ export default {
   80: '20rem',
   96: '24rem',
 }
+

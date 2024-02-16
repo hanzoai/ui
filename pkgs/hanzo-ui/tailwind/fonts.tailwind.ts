@@ -17,7 +17,7 @@ export const fontFamily = (ignoreTheme: any): {
 }
 
 export const fontSize = {
-  xxs: ['0.7rem', { lineHeight: '0.9rem' }],    // very fine print               
+  xxs: ['0.6.5rem', { lineHeight: '0.8rem' }],    // very fine print               
   xs: ['0.8rem', { lineHeight: '1rem' }],       // fine print               
   sm: ['0.9rem', { lineHeight: '1.2rem' }],     // 'standard' some news article cards  (set manually when using typography-sm)
   base: ['1rem', { lineHeight: 1.4 }],     

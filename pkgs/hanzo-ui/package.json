@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -36,7 +36,7 @@
     "hanzo"
   ],
   "scripts": {
-    "latest": "npm show @hanzo/ui version",
+    "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
     "build": "tsc",
     "tc": "tsc",

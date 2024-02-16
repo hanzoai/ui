@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ldMerge } from '../../util'
+import { ldMerge, cn } from '../../util'
 
 import type { Breakpoint } from '../../types'
 import { SPACE_DEFAULTS , type TWSpaceUnit, type HeadingLevel} from '../def/space-block'
@@ -33,7 +33,7 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
     // This code path should handle a undefined or empty sizes field.
   if (!b.level) {
     if (typeof b.sizes == 'number') {
-      return <div className={`invisible w-[1px] h-${b.sizes}` } /> 
+      return <div className={cn(`invisible w-[1px] h-${b.sizes}`, className) } /> 
     }
     const _sizes: {
       [key in (Breakpoint)]?: TWSpaceUnit
@@ -50,14 +50,14 @@ const SpaceBlockComponent: React.FC<BlockComponentProps> = ({
       console.log(clx)
     }
 
-    return <div className={'invisible w-[1px] ' +  clx} />
+    return <div className={cn('invisible w-[1px] ' +  clx, className)} />
   }
 
   const Tag = TAGS[b.level]
   const heightClx = (b.level === (0 satisfies HeadingLevel as HeadingLevel)) ? 'h-4' : ''
 
   return (
-    <ApplyTypography>
+    <ApplyTypography className={className}>
       <Tag className={'invisible m-0 ' + heightClx} >&nbsp;</Tag> 
     </ApplyTypography>
   )
