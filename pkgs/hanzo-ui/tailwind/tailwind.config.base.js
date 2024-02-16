@@ -589,6 +589,7 @@ export default {
       fit: 'fit-content',
     },
     maxWidth: ({ theme, breakpoints }) => ({
+      ...spacing,
       none: 'none',
       0: '0rem',
       xs: '20rem',
