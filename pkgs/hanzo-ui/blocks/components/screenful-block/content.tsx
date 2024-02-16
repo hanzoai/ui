@@ -58,7 +58,12 @@ const ContentColumn: React.FC<{
     }
   }
   else {
-    modifiers += 'justify-start ' 
+    if (specified('mobile-vert-center')) {
+      modifiers += 'justify-center ' 
+    }
+    else {
+      modifiers += 'justify-start ' 
+    }
   }
 
   if (agent === 'phone' && specified('mobile-center-headings')) {

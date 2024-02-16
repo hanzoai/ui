@@ -42,7 +42,7 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'z-10 absolute left-0 right-0  top-0 bottom-0 xl:mx-auto max-w-screen-xl overflow-y-hidden ',
+    'z-10 xl:mx-auto max-w-screen-xl overflow-y-hidden ',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
@@ -56,8 +56,8 @@ const ScreenfulComponent: React.FC<{
   const spreadId = (b.anchorId) ? {id: b.anchorId} : {}
 
   return (
-    <section {...spreadId} className={cn('h-[100vh]', (snapTile ? 'snap-start snap-always' : ''), className)}>
-      <ApplyTypography className={tileHeight + 'w-full flex flex-row justify-center self-stretch'} >
+    <section {...spreadId} className={cn((snapTile ? 'snap-start snap-always h-[100vh]' : 'min-h-screen'), className)}>
+      <ApplyTypography className={cn('w-full flex flex-row justify-center self-stretch', snapTile ? tileHeight : '')} >
         <Poster banner={b.banner}>
         {hasBannerVideo() && (
           <Video 
@@ -66,7 +66,7 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <div className={cn(...cwclx)} >
+        <div className={cn(...cwclx, snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full')} >
           <Content block={b} agent={agent}  className='w-full'/>
           {b.footer}
         </div>
