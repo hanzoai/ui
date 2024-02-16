@@ -53,8 +53,10 @@ const ScreenfulComponent: React.FC<{
     (agent && agent !== 'desktop') ? 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8' : '' 
   ]
 
+  const spreadId = (b.anchorId) ? {id: b.anchorId} : {}
+
   return (
-    <section className={cn('h-[100vh]', (snapTile ? 'snap-start snap-always' : ''), className)}>
+    <section {...spreadId} className={cn('h-[100vh]', (snapTile ? 'snap-start snap-always' : ''), className)}>
       <ApplyTypography className={tileHeight + 'w-full flex flex-row justify-center self-stretch'} >
         <Poster banner={b.banner}>
         {hasBannerVideo() && (

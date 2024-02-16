@@ -26,6 +26,9 @@ interface SiteDef {
     /** default (undefined or absent): @ui/sideDef/footer/legal are rendered */
     /** [] renders nothing above the copyright */
   aboveCopyright?: LinkDef[] 
+
+      /** any site-specific stuff we'd like access to (link urls, etc) */
+  ext?: any 
 }
 
 export { type SiteDef as default }
