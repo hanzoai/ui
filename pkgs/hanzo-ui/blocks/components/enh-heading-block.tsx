@@ -73,15 +73,28 @@ const getPositionClx = (
 } => {
 
   const mobileHeadingCentered = specified('mobile-heading-centered')
+  const mobileHeadingLeft = specified('mobile-heading-left')
   const headingCentered = specified('center')
   const headingRight = specified('right')
   const bylineCentered = specified('byline-center')
   const bylineRight = specified('byline-right')
+  const mobileBylineLeft = specified('mobile-byline-left')
 
   let headerclx = ''
+  let bylineclx = (bylineCentered) ? 
+    'self-center !text-center' : (bylineRight ? 'self-end !text-right' : 'self-start !text-left')
+
   if (agent === 'phone') {
-    headerclx = (mobileHeadingCentered || headingCentered) ? 
-      'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+    if (mobileHeadingLeft) {
+      headerclx = 'self-start text-left'
+    } else {
+      headerclx = (mobileHeadingCentered || headingCentered) ? 
+        'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+    }
+
+    if (mobileBylineLeft) {
+      bylineclx = 'self-start !text-left'
+    }
   }
   else {
     const largerclx = (headingCentered) ? 
@@ -94,9 +107,6 @@ const getPositionClx = (
       headerclx = largerclx 
     }
   }
-
-  const bylineclx = (bylineCentered) ? 
-    'self-center' : (bylineRight ? 'self-end' : 'self-start')
 
   return {
     preheading: headerclx,
