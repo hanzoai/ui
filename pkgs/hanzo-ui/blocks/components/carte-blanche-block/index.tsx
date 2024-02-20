@@ -47,6 +47,9 @@ const _getClx = (specifier: string, section: CardSection): string => {
       case 'header': {
         result = 'border-none'
       } break
+      case 'footer': {
+        result = 'border-t-0'
+      } break
     }
   }
 
@@ -83,6 +86,10 @@ const CarteBlancheBlockComponent: React.FC<
     getClx('big-padding-content', 'content'),
   ].join(' ')
 
+  const footerclx = [
+    getClx('no-inner-borders', 'footer'),
+  ].join(' ')
+
   const noOuterBorders = specified('no-outer-borders')
   const contentLeft = specified('variant-content-left')
   const mobileContentLeft = specified('variant-mobile-content-left')
@@ -90,7 +97,7 @@ const CarteBlancheBlockComponent: React.FC<
   return (
     <Card className={cn('flex flex-col', className, noOuterBorders ? 'border-none' : '')} >
       {contentLeft || (mobileContentLeft && agent === 'phone') ? (
-        <VariantContentLeft block={b} agent={agent} className={className} contentclx={contentclx} headingclx={headingclx}/>
+        <VariantContentLeft block={b} agent={agent} className={className} headingclx={headingclx} contentclx={contentclx} footerclx={footerclx}/>
       ) : (<>
         {(b.heading || b.topContent) && (
           <CardHeader className={cn('typography-img:m-0', headingclx)} >
@@ -108,7 +115,7 @@ const CarteBlancheBlockComponent: React.FC<
           </CardContent>
         )}
         {b.cta && (
-          <CardFooter className={'grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center ' /*+ paddingclx*/} >
+          <CardFooter className={cn('grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center', footerclx)} >
             <CTABlockComponent block={b.cta} agent={agent}/>
           </CardFooter>
         )}
