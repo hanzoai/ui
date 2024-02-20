@@ -1,4 +1,4 @@
-import { EnhHeadingBlockComponent, type Block, type BlockComponentProps, type CarteBlancheBlock, CTABlockComponent } from '../..'
+import { EnhHeadingBlockComponent, type CarteBlancheBlock, CTABlockComponent } from '../..'
 import {
   CardContent,
   CardFooter,
@@ -13,16 +13,18 @@ const VariantContentLeft: React.FC<{
   className?: string
   headingclx?: string
   contentclx?: string
+  footerclx?: string
 }> = ({
   block,
   agent,
   className,
   headingclx,
   contentclx,
+  footerclx,
 }) => {
-  return (
+  return (<>
     <div className='flex gap-2'>
-      {block.topContent && <Content blocks={block.topContent} agent={agent} className='self-start ml-6 mt-6'/>}
+      {block.topContent && <Content blocks={block.topContent} agent={agent} className='self-center ml-6 mt-6'/>}
       <div className='flex flex-col'>
         {block.heading && (
           <CardHeader className={cn('typography-img:m-0', headingclx)} >
@@ -34,14 +36,14 @@ const VariantContentLeft: React.FC<{
             <Content blocks={block.content} agent={agent}/>
           </CardContent>
         )}
-        {block.cta && (
-          <CardFooter className={'grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center ' /*+ paddingclx*/} >
-            <CTABlockComponent block={block.cta} agent={agent}/>
-          </CardFooter>
-        )}
       </div>
     </div>
-  )
+    {block.cta && (
+      <CardFooter className={cn('grid grid-cols-1 gap-2 md:flex md:flex-row md:justify-center mx-auto', footerclx)}>
+        <CTABlockComponent block={block.cta} agent={agent}/>
+      </CardFooter>
+    )}
+  </>)
 }
 
 export default VariantContentLeft
