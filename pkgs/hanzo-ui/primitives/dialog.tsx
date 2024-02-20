@@ -50,7 +50,7 @@ const DialogClose = React.forwardRef<
     <DialogPrimitive.Close
         ref={ref}
         className={cn(
-            "absolute right-4 top-3 p-1 justify-self-start hover:brightness-105 hover:scale-110 duration-100 ring-1 ring-secondary-400 transition bg-secondary-500 hover:text-primary-text focus:outline-none rounded-full items-center",
+            "absolute right-4 top-3 p-1 justify-self-start hover:brightness-105 hover:scale-110 duration-100 ring-1 ring-muted transition bg-secondary-500 hover:text-primary-text focus:outline-none rounded-full items-center",
             className
         )}
         {...props}
