@@ -3,12 +3,12 @@ import type { LinkDef } from '../../types'
 const legal: LinkDef[] = [
   {
     title: 'Terms and Conditions',
-    href: '/assets/standard-docs/LUX-NFT-Terms-and-Conditions.pdf',
+    href: '/terms',
     newTab: true,
   },
   {
     title: 'Privacy Policy',
-    href: '/assets/standard-docs/LUX-Privacy-Policy.pdf',
+    href: '/privacy',
     newTab: true,
   },
 ] 
