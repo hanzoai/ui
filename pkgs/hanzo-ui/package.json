@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "0.5.17",
+  "version": "0.5.19",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -91,6 +91,8 @@
     "@mdx-js/esbuild": "^3.0.0",
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/react": "^3.0.0",
+    "@types/facebook-pixel": "^0.0.30",
+    "@types/gtag.js": "^0.0.19",
     "@types/lodash.merge": "^4.6.9",
     "@types/mdx": "^2.0.9",
     "@types/react": "^18.2.48",
