@@ -6,14 +6,14 @@ import React, {
   type PropsWithChildren
 } from 'react'
 
-type AuthContextType = {
+export type AuthService = {
   user: {email: string} | null,
   setUser: React.Dispatch<React.SetStateAction<{email: string} | null>>
 }
 
-const AuthServiceContext = React.createContext<AuthContextType | undefined>(undefined)
+const AuthServiceContext = React.createContext<AuthService | undefined>(undefined)
 
-export const useCurrentUser = (): AuthContextType => {
+export const useCurrentUser = (): AuthService => {
   const context = useContext(AuthServiceContext)
   if (!context) {
     throw new Error('useCurrentUser must be used within an AuthServiceProvider')
