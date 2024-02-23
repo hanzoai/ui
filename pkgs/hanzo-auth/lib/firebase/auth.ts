@@ -1,8 +1,7 @@
 import { FacebookAuthProvider, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
 
 import { auth } from './firebase'
-
-export type APIResponse<T = object> = { success: true; data: T } | { success: false; error: string };
+import type APIResponse from './api-response'
 
 export async function signInWithProvider(provider: string): Promise<{success: boolean, email?: string | null}> {
 
