@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+  ],
+  "exclude": [
+    "node_modules",
+  ],
+  "plugins": [{ "name": "next"}],
+  "compilerOptions": {
+    "declaration": false,
+    "noEmit": true
+  }
+}
