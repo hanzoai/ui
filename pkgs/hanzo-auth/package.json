@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/auth",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "Library with Firebase authentication.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -19,6 +19,7 @@
     "hanzoai",
     "hanzo"
   ],
+  "main": "index.ts",
   "scripts": {
     "lat": "npm show @hanzo/auth version",
     "pub": "npm publish",
