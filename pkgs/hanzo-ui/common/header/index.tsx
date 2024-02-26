@@ -19,7 +19,7 @@ const Header: React.FC<{
   const allElements = (featured) ? [...common, ...featured] : common
     // TODO move 13px into a size class and configure twMerge to recognize say, 'text-size-nav' 
     // (vs be beat out by 'text-color-nav')
-  const navItemClx = 'font-heading h-8 tracking-[-0.3px] !text-[13px]/[13px]'
+  const navItemClx = 'font-nav h-8 tracking-[-0.3px] !text-[13px]/[13px]'
 
   return (
     <header className={cn('bg-background sticky z-10 top-0 ', className)} >

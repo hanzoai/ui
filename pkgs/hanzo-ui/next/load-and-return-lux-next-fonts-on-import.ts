@@ -37,6 +37,28 @@ const drukTextWide = localFont({
   variable: '--font-druk-text-wide' ,
 })
 
+const drukWide = localFont({
+  src: [
+    {
+      path: './fonts/DrukWide-Medium-Trial.otf',
+      weight: '500',
+      style: 'normal'
+    },
+    {
+      path: './fonts/DrukWide-Bold-Trial.otf',
+      weight: '700',
+      style: 'normal'
+    },
+    {
+      path: './fonts/DrukWide-Heavy-Trial.otf',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+  variable: '--font-druk-wide' ,
+})
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -46,9 +68,13 @@ export default [
   {
     font: inter,
     twName: 'sans'
-  }, 
+  },
   {
     font: drukTextWide,
+    twName: 'nav'
+  },
+  {
+    font: drukWide,
     twName: 'heading'
   } 
 ].map (
