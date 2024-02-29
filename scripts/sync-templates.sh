@@ -16,6 +16,7 @@ for folder in $GLOB; do
     git push origin main
   fi
 
+    # this is a super stupid way to do that as people often rename the root of repo locally
   NAME=${folder##*/}
   CLONE_DIR="__${NAME}__clone__"
 
@@ -23,7 +24,7 @@ for folder in $GLOB; do
   # clone, delete files in the clone, and copy (new) files over
   # this handles file deletions, additions, and changes seamlessly
   # note: redirect output to dev/null to avoid any possibility of leaking token
-  git clone --quiet --depth 1 git@github.com:luxdefi/${NAME}.git $CLONE_DIR > /dev/null
+  git clone --quiet --depth 1 git@github.com:hanzo/${NAME}.git $CLONE_DIR > /dev/null
   cd $CLONE_DIR
   find . | grep -v ".git" | grep -v "^\.*$" | xargs rm -rf # delete all files (to handle deletions in monorepo)
   cp -r $BASE/$folder/. .
