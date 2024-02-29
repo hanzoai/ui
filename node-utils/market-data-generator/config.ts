@@ -9,8 +9,8 @@ export const IMG = {
   AG_B: 'silver-bar-700x700.png',
   AU_C: 'gold-coin-700x700.png',
   AG_C: 'silver-coin-700x700.png',
-  AU_MB: 'gold-multibar-700x700.png',
-  AG_MB: 'silver-multibar-700x700.png',
+  AU_CB: 'gold-bar-700x700.png',
+  AG_CB: 'silver-bar-700x700.png',
 }
 
 export const IMG_LEVEL_3 = {
@@ -22,5 +22,33 @@ export const IMG_LEVEL_3 = {
 
 
   // must have last '/'
-export const OUT_DIR = '../../apps/market/src/store-conf/data/'
+export const OUT_DIR = './out/'
 export const OUT_FN = 'bullion-products-by-category.json'
+
+const globalAGPoz = 22.65
+const globalAUPoz = 2048.00
+
+const gPoz = 28.3495
+
+const AUoz = (amount: number) => (
+  globalAUPoz * amount * 0.99
+)
+
+const AUg = (amount: number) => (
+  AUoz(amount) / gPoz
+)
+
+const AGoz = (amount: number) => (
+  globalAGPoz * amount * 0.9
+)
+
+const AGg = (amount: number) => (
+  AGoz(amount) / gPoz
+)
+
+export {
+  AUoz,
+  AUg, 
+  AGoz, 
+  AGg
+}
