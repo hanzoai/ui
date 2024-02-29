@@ -7,7 +7,9 @@ interface SiteDef {
       /** common elements (will auto-select currentAs if it's provide) */
       /** optional feature element. right-most after 'elements' (any min-w is ignored) */
     common: LinkDef[]       
-    featured?: LinkDef[]     
+    featured?: LinkDef[]
+    auth?: boolean
+    cart?: React.ReactNode
   }
 
     /** 

@@ -29,9 +29,14 @@
   },
   "dependencies": {
     "@hanzo/ui": "^0.5.21",
+    "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",
     "firebase-admin": "^12.0.0",
-    "lucide-react": "^0.336.0"
+    "lucide-react": "^0.336.0",
+    "mobx": "^6.12.0",
+    "mobx-react-lite": "^4.0.5",
+    "react-hook-form": "^7.50.1",
+    "zod": "3.21.4"
   },
   "peerDependencies": {
     "next": "^14.1.0",

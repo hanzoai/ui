@@ -50,7 +50,7 @@ const DialogClose = React.forwardRef<
     <DialogPrimitive.Close
         ref={ref}
         className={cn(
-            "absolute right-4 top-3 p-1 justify-self-start hover:brightness-105 hover:scale-110 duration-100 ring-1 ring-muted transition bg-secondary-500 hover:text-primary-text focus:outline-none rounded-full items-center",
+            "absolute right-4 top-3 p-1 justify-self-start hover:brightness-105 hover:scale-110 duration-100 ring-1 ring-muted transition hover:text- focus:outline-none rounded-full items-center",
             className
         )}
         {...props}
@@ -71,7 +71,7 @@ const DialogContent = React.forwardRef<
         <DialogPrimitive.Content
             ref={ref}
             className={cn(
-                "fixed z-50 grid w-full gap-4 rounded-t-lg bg-secondary-800 p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-sm sm:rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0",
+                "fixed z-50 grid w-full gap-4 rounded-t-lg bg-level-1 p-4 shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:max-w-sm sm:rounded-lg sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0",
                 className
             )}
             {...props}
@@ -118,7 +118,7 @@ const DialogTitle = React.forwardRef<
     <DialogPrimitive.Title
         ref={ref}
         className={cn(
-            "text-lg font-semibold leading-none tracking-tight text-primary-text",
+            "text-lg font-semibold leading-none tracking-tight text-foreground",
             className
         )}
         {...props}
@@ -132,7 +132,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <DialogPrimitive.Description
         ref={ref}
-        className={cn("text-sm text-secondary-text", className)}
+        className={cn("text-sm text-muted", className)}
         {...props}
     />
 ))
