@@ -1,5 +1,7 @@
 import AU_B from './AU-B'
 import AG_B from './AG-B'
+import AU_CB from './AU-CB'
+import AG_CB from './AG-CB'
 
 export default {
   tok: 'LXB',
@@ -30,26 +32,9 @@ export default {
           ]
         },
         {
-          tok: 'MB',
-          label: 'Multibar',
-          img: 'AU_MB',
-          ch: [
-            {
-              tok: '100x1-G',
-              price: 6221.39
-            }
-          ]
-        },
-        {
-          tok: 'GD',
-          label: 'Good Delivery Bar',
-          ch: [
-            {
-              tok: '400-OZ',
-              price: 800000,
-              shortTitle: 'GD Bar',
-            }
-          ]
+          tok: 'CB',
+          label: 'Cast Bar',
+          ch: AU_CB
         }
       ]
     },
@@ -77,26 +62,9 @@ export default {
           ]
         },
         {
-          tok: 'MB',
-          label: 'Multibar',
-          img: 'AG_MB',
-          ch: [
-            {
-              tok: '100x1-G',
-              price: 74.15,
-            }
-          ]
-        },
-        {
-          tok: 'GD',
-          label: 'Good Delivery Bar',
-          ch: [
-            {
-              tok: '1000-OZ',
-              price: 22000,
-              shortTitle: 'GD Bar',
-            }
-          ]
+          tok: 'CB',
+          label: 'Cast Bar',
+          ch: AG_CB
         }
       ]
     }
