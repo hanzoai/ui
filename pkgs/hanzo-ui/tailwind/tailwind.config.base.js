@@ -611,6 +611,7 @@ export default {
       ...breakpoints(theme('screens')),
     }),
     minHeight: {
+      ...spacing,
       0: '0px',
       full: '100%',
       screen: '100vh',
@@ -618,13 +619,15 @@ export default {
       max: 'max-content',
       fit: 'fit-content',
     },
-    minWidth: {
+    minWidth: ({ theme, breakpoints }) => ({
+      ...spacing,
       0: '0px',
       full: '100%',
       min: 'min-content',
       max: 'max-content',
       fit: 'fit-content',
-    },
+      ...breakpoints(theme('screens')),
+    }),
     objectPosition: {
       bottom: 'bottom',
       center: 'center',
@@ -769,7 +772,10 @@ export default {
       2: '2',
     },
     supports: {},
-    data: {},
+    data: {
+      on: 'state~="on"',
+      off: 'state~="off"',
+    },
     textColor: ({ theme }) => theme('colors'),
     textDecorationColor: ({ theme }) => theme('colors'),
     textDecorationThickness: {

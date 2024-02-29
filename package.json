@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/ui-mono",
+  "name": "@hanzo/shared-modules-mono",
   "version": "0.0.1",
   "license": "BSD-3-Clause",
   "type": "module",
@@ -7,30 +7,16 @@
     "name": "hanzoai dev dudes",
     "url": "https://twitter.com/hanzoai"
   },
+  "workspaces": [
+    "node-utils/*", "apps/*", "pkgs/*"
+  ],
   "scripts": {
-    "build": "turbo run build",
-    "build:registry": "pnpm --filter=www build:registry",
-    "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix",
-    "preview": "turbo run preview",
-    "typecheck": "turbo run typecheck",
-    "format:write": "turbo run format:write",
-    "format:check": "turbo run format:check",
-    "sync:templates": "./scripts/sync-templates.sh \"templates/*\"",
-    "prepare": "husky install",
-    "check": "turbo lint typecheck format:check",
-    "release": "changeset version",
-    "test": "turbo run test --force",
-    "clean:all": "rm -rf node_modules && pnpm -r clean"
+    "clean:all": "rm -rf node_modules && pnpm -r clean",
+    "clean:all:b": "rm -rf node_modules && bun -r clean"
   },
   "packageManager": "pnpm@8.14.1",
   "dependencies": {
     "husky": "^8.0.3"
-  },
-  "devDependencies": {
-    "typescript": "^5.3.3",
-    "ts-node": "^10.9.1"
   },
   "pnpm": {
     "overrides": {

@@ -1,73 +1,101 @@
 'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { observer } from 'mobx-react-lite'
 
 import { ArrowLeft } from 'lucide-react'
 
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
+import { useToast } from '@hanzo/ui/primitives/use-toast'
+
 import type { LinkDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
-import { useCurrentUser } from '../service/AuthContext'
-import { signInWithProvider, signOut } from '../lib/firebase/auth'
+import { useAuth } from '../service'
 import { Facebook, Google, GitHub } from '../icons'
+import EmailPasswordForm from './email-password-form'
 
 const Login: React.FC<{
   redirectUrl?: string,
   getStartedUrl?: string,
   returnToUrl?: string,
   className?: string
-}> = ({
+}> = observer(({
   redirectUrl,
   getStartedUrl,
   returnToUrl,
   className
 }) => {
   const router = useRouter()
-  const {user, setUser} = useCurrentUser()
-  const [isLoading, setIsLoading] = useState(false)
+  
+  const auth = useAuth()
 
-  const elements: LinkDef[] = [{title: 'Sign Out', variant: 'outline', href: '/'}];
-  if (getStartedUrl) {
-    elements.push({title: 'GET STARTED', variant: 'primary', href: getStartedUrl});
+  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
+
+  const loginWithEmailPassword = async (email: string, password: string) => {
+    setIsLoading(true)
+    try {
+      const res = await auth.loginEmailAndPassword(email, password)
+      if (res.success ) {
+        if (redirectUrl) {
+          router.push(redirectUrl)
+        }
+      }
+    } 
+    catch (e) {
+      toast({title: "User with this email already signed up using a different provider"})
+    }
+    setIsLoading(false)
   }
 
-  const login = async (provider: string) => {
+  // const loginWithEthereum = async () => {
+  //   setIsLoading(true)
+  //   try {
+  //     const res = await signInWithEthereum()
+  //     if (res.success && res.user) {
+  //       setUser({email: res.user?.email, displayName: res.user?.displayName, walletAddress: res.user?.walletAddress})
+  //       if (redirectUrl) {
+  //         router.push(redirectUrl)
+  //       }
+  //     }
+  //   } catch (e) {
+  //     toast({title: "No Ethereum provider found"})
+  //   }
+  //   setIsLoading(false)
+  // }
+
+  const loginWithProvider = async (provider: 'google' | 'facebook' | 'github') => {
     setIsLoading(true)
-    const res = await signInWithProvider(provider)
-    if (res.success && res.email) {
-      setUser({email: res.email})
-      if (redirectUrl) {
-        router.push(redirectUrl)
-      }
+    const res = await auth.loginWithProvider(provider)
+    if (res.success && redirectUrl) {
+      router.push(redirectUrl)
     }
     setIsLoading(false)
   }
 
   const logout = async () => {
     setIsLoading(true)
-    const res = await signOut()
-    if (res.success) {
-      setUser(null)
-      if (redirectUrl) {
-        router.push(redirectUrl)
-      }
+    const res = await auth.logout()
+    if (res.success && redirectUrl) {
+      router.push(redirectUrl)
     }
     setIsLoading(false)
   }
 
   return (
     <ApplyTypography className={cn('w-full', className)}>
-      <div className='w-full max-w-[20rem] mx-auto'>
-      {user ? (
+      <div className='w-full mx-auto'>
+      {auth.loggedIn && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
           <h3>Welcome!</h3>
-          <p>You are signed in as {user.email}</p>
-          <div className='flex gap-4 items-center justify-center'>
-            <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
-            {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
-          </div>
+          {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
+            <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
+            <div className='flex flex-col gap-4 items-center justify-center'>
+              {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)}>GET STARTED</Button>}
+              <Button onClick={() => logout()} variant='outline' disabled={isLoading}>Sign Out</Button>
+            </div>
+          </>)}
         </div>
       ) : (
         <div className='flex flex-col gap-4 text-center'>
@@ -79,20 +107,26 @@ const Login: React.FC<{
             )}
             <h2 className='mx-auto'>Login</h2>
           </div>
-          <Button onClick={() => login('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Google height={20}/>Sign in with Google
+          {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
+          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4'/>
+          <p>- <span className='font-normal font-nav'>or</span> -</p>
+          {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+            <Ethereum height={20}/>Login with your wallet
+          </Button> */}
+          <Button onClick={() => loginWithProvider('google')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+            <Google height={20}/>Login with Google
           </Button>
-          <Button onClick={() => login('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <Facebook height={20}/>Sign in with Facebook
+          <Button onClick={() => loginWithProvider('facebook')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+            <Facebook height={20}/>Login with Facebook
           </Button>
-          <Button onClick={() => login('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
-            <GitHub height={20}/>Sign in with Github
+          <Button onClick={() => loginWithProvider('github')} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
+            <GitHub height={20}/>Login with Github
           </Button>
         </div>
       )}
       </div>
     </ApplyTypography>
   )
-}
+})
 
 export default Login

@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.hanzo-modules.base.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+  ],
+  "exclude": [
+    "node_modules",
+    "service/impl/hanzo-adapter/commerceJs/Commerce.test.ts"
+  ]
+}

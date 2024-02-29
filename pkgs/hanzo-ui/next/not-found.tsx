@@ -12,7 +12,7 @@ const NotFound: React.FC<{
 }>  = ({
   siteDef
 }) => (<>
-  <Main className='h-[700px]'>
+  <Main className='xs:h-[100svh] xs:px-8 sm:px-10 sm:h-[700px]'>
     <ApplyTypography className='mt-[200px] flex flex-col md:gap-8 '>
       <NotFoundMDX />
     </ApplyTypography>
