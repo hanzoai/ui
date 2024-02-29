@@ -13,9 +13,6 @@ const AuthServiceContext = React.createContext<AuthService | undefined>(undefine
 
 const useAuth = (): AuthService => {
   const context = useContext(AuthServiceContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthServiceProvider')
-  }
   return context
 }
 
