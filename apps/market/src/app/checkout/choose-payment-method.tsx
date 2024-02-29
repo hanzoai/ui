@@ -5,8 +5,6 @@ import { Button } from '@hanzo/ui/primitives'
 import { type EnhHeadingBlock, EnhHeadingBlockComponent } from '@hanzo/ui/blocks'
 import { cn } from '@hanzo/ui/util'
 
-import { useCommerce } from '@hanzo/cart/service'
-import { formatPrice } from '@hanzo/cart/util'
 import { Cart } from '@hanzo/cart/components'
 
 
@@ -19,15 +17,6 @@ const ChoosePaymentMethod: React.FC<{
   setPaymentMethod, 
   setStep
 }) => {
-
-  const c = useCommerce()
-
-  const cart = (
-    <div className='border p-6 rounded-lg w-full max-w-[70rem] mx-auto'>
-      <Cart className=''></Cart>
-    </div>
-  )
-
   return (<>
     <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
       specifiers: 'center',
@@ -49,7 +38,7 @@ const ChoosePaymentMethod: React.FC<{
         BANK TRANSFER
       </Button>
     </div>
-    {cart}
+    <Cart hideCheckout/>
     <Button onClick={() => setStep(1)} disabled={!paymentMethod} className='mx-auto rounded-full w-full max-w-[15rem]'>Continue</Button>
   </>)
 }
