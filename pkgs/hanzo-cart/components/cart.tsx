@@ -10,7 +10,7 @@ import { formatPrice } from '../util'
 
 import CartLineItem from './cart-line-item'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '../../hanzo-auth/service'
+import { useAuth } from '@hanzo/auth/service'
 
 
 const Cart: React.FC<PropsWithChildren & {
