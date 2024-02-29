@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/cart",
-  "version": "0.5.4",
+  "version": "0.5.6",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -33,8 +33,8 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@hanzo/ui": "workspace:*",
-    "@hanzo/auth": "workspace:*",
+    "@hanzo/ui": "^1.0.8",
+    "@hanzo/auth": "^1.0.9",
     "@hookform/resolvers": "^3.3.2",
     "akasha": "^0.1.13",
     "firebase": "^10.8.0",
