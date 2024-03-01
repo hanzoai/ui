@@ -18,17 +18,17 @@ export const useCommerce = (): CommerceService => {
 }
 
 export const CommerceServiceProvider: React.FC<PropsWithChildren & {
-  categories: Category[]
+  productsByCategory: Category[]
   facets: FacetsDesc
   options?: any
 }> = ({ 
   children,
-  categories,
+  productsByCategory,
   facets,
   options
 }) => {
 
-  const serviceRef = useRef<CommerceService>(getServiceSingleton(categories, facets, options))
+  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, facets, options))
   return (
     <CommerceServiceContext.Provider
       value={serviceRef.current}

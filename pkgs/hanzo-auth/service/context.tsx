@@ -12,8 +12,7 @@ import getSingleton from './get-singleton'
 const AuthServiceContext = React.createContext<AuthService | undefined>(undefined)
 
 const useAuth = (): AuthService => {
-  const context = useContext(AuthServiceContext)
-  return context
+  return useContext(AuthServiceContext) as AuthService
 }
 
 const AuthServiceProvider: React.FC<
