@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -33,7 +33,7 @@
     "react-mobile-picker": "^1.0.0"
   },
   "peerDependencies": {
-    "@hanzo/auth": "^1.0.9",
+    "@hanzo/auth": "^1.0.12",
     "@hanzo/ui": "^1.0.8",
     "firebase": "^10.8.0",
     "mobx": "^6.12.0",
