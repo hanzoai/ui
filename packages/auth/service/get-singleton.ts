@@ -1,25 +1,27 @@
 import type AuthService from './auth-service'
-import type { AuthServiceConf, HanzoUserInfo, HanzoUserInfoValue } from '../types'
+import type { AuthServiceConf, HanzoUserInfoValue } from '../types'
 import AuthServiceImpl from './impl'
 
   // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 let instance: AuthServiceImpl | undefined =  undefined
 
-const getSingleton = (conf: AuthServiceConf, serverSideUser: HanzoUserInfoValue | null): AuthService => {
-
-  const _instance = instance ?? 
-    new AuthServiceImpl(conf, serverSideUser)
+const getSingleton = (
+  conf: AuthServiceConf, 
+  serverSideUser: HanzoUserInfoValue | null
+): AuthService => {
 
     // For server side rendering always create a new store
   if (typeof window === "undefined") {
-    return _instance
+    return new AuthServiceImpl(conf, serverSideUser)
   }
 
-    // Create the store once in the client
+    // Client side, create the store only once in the client
   if (!instance) {
-    instance = _instance
+    instance = new AuthServiceImpl(conf, serverSideUser)
   }  
-  instance.setServerSideUser(serverSideUser) 
+  else {
+    instance.setServerSideUser(serverSideUser) 
+  }
 
   return instance
 }

@@ -83,13 +83,13 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
       <Skeleton className={'min-h-[120px] w-pr-60 mx-auto ' + className} />
     ) : (
       <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
-        'w-full md:w-auto flex flex-col justify-start items-center',
+        'sm:w-pr-80 sm:mx-auto md:w-full  flex flex-col justify-start items-center',
         (soleOption ? 'gap-2' : mobilePicker ? 'gap-4' : 'gap-8'),
         className
       )}>
         <div className='w-full flex flex-col justify-start items-center'>
           <h6 className='text-center font-semibold'>{`Available size${soleOption ? '' : 's'}`}</h6>
-          <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-70') } />
+          <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-80') } />
         </div>
         {soleOption ? (
           <p>{category.products[0].titleAsOption}</p>
@@ -107,8 +107,8 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
               products={category.products}
               selectedSku={lineItemRef.item?.sku ?? undefined}  
               onValueChange={handleItemSelected}
-              groupClx='block xs:columns-2 xs:px-3 columns-3 gap-2 lg:columns-2 lg:gap-6 w-full lg:auto'
-              itemClx='flex flex-row gap-2 items-center mb-3 xs:mb-5'
+              groupClx='grid grid-cols-2 gap-0 gap-y-3 gap-x-8 '
+              itemClx='flex flex-row gap-2 items-center'
             />
           )
         )}
@@ -128,11 +128,11 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
     waiting() ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
 
       <div className={cn('flex flex-col justify-start items-center mb-6', className)}>
-        <h3 className='text-lg lg:text-xl font-heading text-center'>
-          <span className='xs:inline sm:hidden md:inline lg:hidden'>
+        <h3 className='text-base md:text-lg lg:text-2xl md:mt-[2vw] font-nav text-center'>
+          <span className='xs:inline md:hidden'>
             {category.title.split(', ').map((s, i) => (<p key={i}>{s}</p>))}
           </span>
-          <span className='xs:hidden sm:inline md:hidden lg:inline'>
+          <span className='xs:hidden md:inline '>
             {category.title}
           </span>
         </h3>
@@ -174,12 +174,17 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
   ) : (
     <div /* id='CV_OUTERMOST' */>
       <div /* id='CV_OUTER' */ className={cn('w-full flex flex-row justify-between items-stretch gap-6 sm:gap-4', className)} {...props}>
-        <div /* id='CV_IMAGE_COL' */ className={'relative ' + (!isLoading ? 'w-pr-33' : '')}>
-          <CategoryImage className='' />
+        <div /* id='CV_IMAGE_COL_SEP' */ className={'relative ' + (!isLoading ? 'md:hidden sm:min-w-[185px] xl:flex xl:w-pr-40' : '')}>
+          <CategoryImage className='w-full' />
         </div>
-        <div /* id='CV_CONTENT_COL */ className='w-pr-66'>
+        <div /* id='CV_CONTENT_COL */ className='flex flex-col gap-y-6 xl:w-pr-60'>
+          <div /* id='CV_MD_IMAGE_AND_TITLE */ className='hidden md:flex xl:hidden flex-row gap-x-3'>
+            <CategoryImage className='min-w-pr-30' />
+            <TitleArea className='grow' />
+          </div>
+          
           <div /*  id='CV_CONTENT' */ className={'flex flex-col gap-2.5 ' + (isLoading ? 'justify-between h-full' : '')}>
-            <TitleArea className='' />
+            <TitleArea className='md:hidden xl:flex' />
             <Desc className='' />
           </div>
           <div /* id='CV_CTA_AREA_BIG' */ className='hidden lg:flex p-4 flex-col justify-start items-center gap-6'>
