@@ -4,22 +4,12 @@ import React, { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValueDesc } from '../../types'
+import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'
 import FacetImage from './facet-image'
-
-interface FacetMutatorSingle {
-  val: string | null
-  set(v: string | null): void
-}
-
-interface FacetMutatorMultiple {
-  val: string[] | null
-  set(v: string[] | null): void
-}
 
 const FacetTogglesWidget: React.FC<{
   facetValues: FacetValueDesc[]
-  mutator: FacetMutatorSingle | FacetMutatorMultiple
+  mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
   isMobile?: boolean
@@ -34,20 +24,13 @@ const FacetTogglesWidget: React.FC<{
   const [last, setLast] = useState<string | undefined>(undefined)
 
   const handleChangeMultiple = (selected: string[]) => {
-    (mutator as FacetMutatorMultiple).set(selected)
-    if (selected.length === 1) {
-      setLast(selected[0])
-    }
-    else {
-      setLast(undefined)   
-    }
+    (mutator as StringArrayMutator).set(selected)
+    setLast(selected.length === 1 ? selected[0] : undefined)
   }
 
   const handleChangeSingle = (selected: string) => {
-    (mutator as FacetMutatorSingle).set(selected)
-    if (selected) {
-      setLast(selected)
-    }
+    (mutator as StringMutator).set(selected)
+    if (selected) { setLast(selected) }
   }
 
   const roundedToSpread: any = {}
@@ -55,10 +38,15 @@ const FacetTogglesWidget: React.FC<{
     roundedToSpread.rounded = 'xl'   
   }
 
+  const val = multiple ? 
+    (mutator as StringArrayMutator).get() 
+    : 
+    (mutator as StringMutator).get()
+
   return (
     <ToggleGroup 
       type={multiple ? 'multiple' : 'single'} 
-      value={multiple ? mutator.val as string[] : mutator.val as string}
+      value={val}
       variant='default'
       size={isMobile ? 'sm' : 'default'}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
@@ -76,7 +64,7 @@ const FacetTogglesWidget: React.FC<{
         <ToggleGroupItem 
           key={fv.value}
           value={fv.value} 
-          disabled={(last && last === fv.value || fv.value === mutator.val)} 
+          disabled={(last && last === fv.value || fv.value === mutator.get())} 
           aria-label={`Select ${fv.label}`}
           {...roundedToSpread}
         >
@@ -91,8 +79,4 @@ const FacetTogglesWidget: React.FC<{
   )
 }
 
-export {
-  FacetTogglesWidget as default,
-  type FacetMutatorSingle,
-  type FacetMutatorMultiple
-}
+export default FacetTogglesWidget
