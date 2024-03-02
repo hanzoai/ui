@@ -72,13 +72,31 @@ interface LineItem extends Product {
   decrement(): void
 }
 
+interface ObsLineItemRef {
+  get item(): LineItem | undefined
+}
+
+
+interface StringMutator {
+  get(): string | null
+  set(v: string | null): void
+}
+
+interface StringArrayMutator {
+  get(): string[] | null
+  set(v: string[] | null): void
+}
+
 export {
   type Product,
   type Category,
   type LineItem,
+  type ObsLineItemRef,
   type FacetsDesc,
   type FacetsValue,
   type FacetValueDesc,
+  type StringMutator,
+  type StringArrayMutator
 }
 
 

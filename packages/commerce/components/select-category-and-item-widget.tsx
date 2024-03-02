@@ -16,7 +16,7 @@ const formatItem = (item: LineItem, withQuantity: boolean = false): string => (
   `${item.titleAsOption}, ${formatPrice(item.price)}${(withQuantity && item.quantity > 0) ? `  (${item.quantity})` : ''}`
 )
 
-const CategoryAndItemWidget: React.FC<{
+const SelectCategoryAndItemWidget: React.FC<{
   categoryLevel: number
   parentLevelToken: string
   categoryLevelValues: FacetValueDesc[]
@@ -56,7 +56,7 @@ const CategoryAndItemWidget: React.FC<{
       <FacetTogglesWidget 
         facetValues={categoryLevelValues} 
         mutator={{
-          val: currentFacetToken.get(),
+          get: currentFacetToken.get, // computed's are accessed through their get()
           set: onFacetTokenChanged
         }} 
       />
@@ -81,4 +81,4 @@ const CategoryAndItemWidget: React.FC<{
   )
 })
 
-export default CategoryAndItemWidget
+export default SelectCategoryAndItemWidget

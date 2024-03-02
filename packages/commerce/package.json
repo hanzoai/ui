@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/cart",
-  "version": "0.5.9",
+  "name": "@hanzo/commerce",
+  "version": "1.0.9",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -20,25 +20,24 @@
     "hanzo"
   ],
   "scripts": {
-    "lat": "npm show @hanzo/cart version",
+    "lat": "npm show @hanzo/commerce version",
     "pub": "npm publish",
     "build": "tsc",
     "tc": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@hanzo/ui": "^1.0.8",
-    "@hanzo/auth": "^1.0.9",
     "@hookform/resolvers": "^3.3.2",
-    "akasha": "^0.1.13",
-    "firebase": "^10.8.0",
     "lucide-react": "^0.307.0",
-    "midstream": "^2.0.2",
-    "mobx": "^6.12.0",
-    "mobx-react-lite": "^4.0.5",
+    "next-usequerystate": "^1.17.0",
     "react-mobile-picker": "^1.0.0"
   },
   "peerDependencies": {
+    "@hanzo/auth": "^1.0.9",
+    "@hanzo/ui": "^1.0.8",
+    "firebase": "^10.8.0",
+    "mobx": "^6.12.0",
+    "mobx-react-lite": "^4.0.5",
     "next": "^14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -47,7 +46,6 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "cross-fetch": "^4.0.0",
-    "hanzo.js": "^2.5.13",
     "typescript": "^5.3.3"
   }
 }

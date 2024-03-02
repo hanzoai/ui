@@ -1,3 +1,4 @@
+
 export function toTitleCase(str: string) {
   return str.replace(
     /\w\S*/g,
@@ -23,3 +24,5 @@ export function formatPrice(price: number): string {
     currency: 'USD',
   });
 }
+
+export { default as useSkuAndFacetParams } from './use-sku-and-facet-params'

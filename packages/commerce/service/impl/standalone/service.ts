@@ -62,7 +62,9 @@ class StandaloneCommerceService
       specifiedItems: computed,
       setCurrentItem: action,
       currentItem: computed,
-      specifiedCategories: computed 
+      item: computed,
+      specifiedCategories: computed, 
+      facetsValue: computed
       /* NOT setFacets. It implements it's action mechanism */
     })
 
@@ -87,6 +89,11 @@ class StandaloneCommerceService
     this._currentItemSku = sku
   }
 
+  /* ObsLineItemRef */
+  get item(): LineItem | undefined {
+    return this.currentItem
+  }
+
   get currentItem(): LineItem | undefined {
     if (!this._currentItemSku) return undefined
 
@@ -103,15 +110,14 @@ class StandaloneCommerceService
       }
     }
     
-    for (let category of this.specifiedCategories) {
-      if (categoriesTried.includes(category.id)) continue
-      const foundItem = 
-         (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
-      if (foundItem) {
-        return foundItem
-      }
-    }
-    return undefined
+    let foundItem: LineItem | undefined = undefined
+    this._categoryMap.forEach((category, categoryId) => {
+      if (foundItem) return
+      if (categoriesTried.includes(categoryId)) return
+      foundItem = (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
+    }) 
+
+    return foundItem
   }
 
   setFacets(sel: FacetsValue): Category[] {
@@ -122,6 +128,14 @@ class StandaloneCommerceService
       }
     })
     return this.specifiedCategories
+  }
+
+  get facetsValue(): FacetsValue {
+    const result: FacetsValue = {}
+    for( let level in this._selectedFacets ) {
+      result[level] = [...this._selectedFacets[level]]
+    }
+    return result
   }
 
   get specifiedCategories(): Category[] {
