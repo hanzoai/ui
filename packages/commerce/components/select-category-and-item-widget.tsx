@@ -44,19 +44,19 @@ const SelectCategoryAndItemWidget: React.FC<{
     comm.setFacets(facets)
   }
 
-  const currentFacetToken = computed((): string | null => {
+  const currentFacetToken = (): string | null => {
     if (comm.specifiedCategories.length === 0) return null
     const skuPath = comm.specifiedCategories[0].id
     const skuPathTokens = skuPath.split('-')
     return skuPathTokens.length > 0 ? skuPathTokens[skuPathTokens.length - 1] : null
-  })
+  }
 
   return (
     <div className={cn('flex flex-col justify-start gap-4 items-start pt-3', className)}>
       <FacetTogglesWidget 
         facetValues={categoryLevelValues} 
         mutator={{
-          get: currentFacetToken.get, // computed's are accessed through their get()
+          get: currentFacetToken, // computed's are accessed through their get()
           set: onFacetTokenChanged
         }} 
       />
