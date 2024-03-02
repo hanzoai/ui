@@ -28,23 +28,21 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "peerDependencies": {
     "@hanzo/ui": "^1.0.8",
     "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",
-    "firebase-admin": "^12.0.0",
     "lucide-react": "^0.336.0",
+    "react-hook-form": "^7.50.1",
     "mobx": "^6.12.0",
     "mobx-react-lite": "^4.0.5",
-    "react-hook-form": "^7.50.1",
+    "next": "^14.1.0",
+    "react": "^18.2.0",
     "zod": "3.21.4"
   },
-  "peerDependencies": {
-    "next": "^14.1.0",
-    "react": "^18.2.0"
-  },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.1",
     "@types/react": "^18.2.48",
     "cross-fetch": "^4.0.0",
     "typescript": "^5.3.3"

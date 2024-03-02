@@ -1,10 +1,11 @@
 import type {  
   Category, 
   FacetsValue,
-  LineItem 
+  LineItem ,
+  ObsLineItemRef
 } from '../types'
 
-interface CommerceService {
+interface CommerceService extends ObsLineItemRef {
 
   get cartItems(): LineItem[]
   get cartTotal(): number
@@ -20,6 +21,7 @@ interface CommerceService {
      * An empty value object specifies all Category's and all LineItem's,
      * */ 
   setFacets(value: FacetsValue): Category[]
+  get facetsValue(): FacetsValue // returns a copy
   get specifiedItems(): LineItem[]
   get specifiedCategories(): Category[] 
 
@@ -33,8 +35,13 @@ interface CommerceService {
      * For convenience, so widgets can share state.
      * "current" is unrelated to what is "specified",
      * ie, facets' values 
+     * 
+     * note: for ObsLineItemRef, there is also
+     *  get item(): LineItem | undefined
+     * which simply delegates to this function
      *  */ 
   get currentItem(): LineItem | undefined
+
 }
 
 export {
