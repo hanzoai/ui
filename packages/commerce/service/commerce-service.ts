@@ -30,7 +30,7 @@ interface CommerceService extends ObsLineItemRef {
      * "current" is unrelated to what is "specified",
      * ie, facets' values 
      *  */ 
-  setCurrentItem(sku: string | undefined): void
+  setCurrentItem(sku: string | undefined): boolean // was valid sku and was set.
     /**
      * For convenience, so widgets can share state.
      * "current" is unrelated to what is "specified",

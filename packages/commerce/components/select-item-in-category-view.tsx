@@ -31,15 +31,15 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
   ...props
 }) => {
 
-  const waiting = (): boolean => (isLoading || !category)
+  const waiting = (): boolean => (isLoading) // keep for convenience for now
 
   const CategoryImage: React.FC<{ className?: string }> = ({ className = '' }) => {
 
     if (waiting()) {
       // deliberately not Skeleton to have a better overall pulse effect.
       return <div className={cn(
-        'bg-level-1 rounded-xl aspect-square ' +
-        ' min-h-[100px] sm:min-h-[200px] lg:aspect-auto lg:h-[300px] lg:w-[200px] 2xl:w-auto 2xl:aspect-square',
+        'bg-level-1 rounded-xl aspect-square w-full min-h-1 ', // +
+        //' min-h-[100px] sm:min-h-[200px] lg:aspect-auto  2xl:w-auto 2xl:aspect-square',
         className)} />
     }
 
@@ -49,7 +49,7 @@ const SelectItemInCategoryView: React.FC<React.HTMLAttributes<HTMLDivElement> & 
           aria-label='Placeholder'
           role='img'
           aria-roledescription='placeholder'
-          className={cn('h-60 flex items-center justify-center', className)}
+          className={cn('w-full flex items-center justify-center aspect-square' , className)}
         >
           <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
         </div>
