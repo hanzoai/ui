@@ -31,7 +31,7 @@ class StandaloneCommerceService
 
   private _options : StandaloneServiceOptions
 
-  private _currentItemSku: string | undefined = undefined
+  private _currentItem: LineItem | undefined = undefined
 
   constructor(
     categories: Category[],
@@ -50,20 +50,20 @@ class StandaloneCommerceService
     makeObservable<
       StandaloneCommerceService, 
         '_selectedFacets' | 
-        '_currentItemSku' 
+        '_currentItem' 
     >(this, {
       _selectedFacets :  observable.deep,
-      _currentItemSku: observable,
+      _currentItem: observable,
     })
 
     makeObservable(this, {
       cartItems: computed,
       cartTotal: computed, 
       specifiedItems: computed,
+      specifiedCategories: computed, 
       setCurrentItem: action,
       currentItem: computed,
       item: computed,
-      specifiedCategories: computed, 
       facetsValue: computed
       /* NOT setFacets. It implements it's action mechanism */
     })
@@ -85,9 +85,38 @@ class StandaloneCommerceService
     )
   }
 
-  setCurrentItem(sku: string | undefined): void {
-    this._currentItemSku = sku
+  setCurrentItem(skuToFind: string | undefined): boolean {
+
+    if (skuToFind === undefined || skuToFind.length === 0) {
+      this._currentItem = undefined
+      return true
+    }
+    
+    this._currentItem = ((): LineItem | undefined  => {
+      const categoriesTried: string[] = []
+      if (this.specifiedCategories && this.specifiedCategories.length > 0) {
+  
+        for (let category of this.specifiedCategories) {
+          categoriesTried.push(category.id)
+          const foundItem = 
+            (category.products as LineItem[]).find((item) => (item.sku === skuToFind))
+          if (foundItem) {
+            return foundItem
+          }
+        }
+      }
+      
+      let foundItem: LineItem | undefined = undefined
+      this._categoryMap.forEach((category, categoryId) => {
+        if (foundItem) return
+        if (categoriesTried.includes(categoryId)) return
+        foundItem = (category.products as LineItem[]).find((item) => (item.sku === skuToFind))
+      }) 
+    })();
+
+    return !!this._currentItem
   }
+
 
   /* ObsLineItemRef */
   get item(): LineItem | undefined {
@@ -95,29 +124,7 @@ class StandaloneCommerceService
   }
 
   get currentItem(): LineItem | undefined {
-    if (!this._currentItemSku) return undefined
-
-    const categoriesTried: string[] = []
-    if (this.specifiedCategories && this.specifiedCategories.length > 0) {
-
-      for (let category of this.specifiedCategories) {
-        categoriesTried.push(category.id)
-        const foundItem = 
-          (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
-        if (foundItem) {
-          return foundItem
-        }
-      }
-    }
-    
-    let foundItem: LineItem | undefined = undefined
-    this._categoryMap.forEach((category, categoryId) => {
-      if (foundItem) return
-      if (categoriesTried.includes(categoryId)) return
-      foundItem = (category.products as LineItem[]).find((item) => (item.sku === this._currentItemSku))
-    }) 
-
-    return foundItem
+    return this._currentItem
   }
 
   setFacets(sel: FacetsValue): Category[] {
