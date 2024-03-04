@@ -8,7 +8,8 @@ interface CommerceService extends ObsLineItemRef {
   get cartTotal(): number
   getCartCategorySubtotal(categoryId: string): number
 
-  createOrder(email: string): Promise<void>
+  createOrder(email: string, paymentMethod: string): Promise<string | undefined>
+  updateOrder(orderId: string, email: string, paymentMethod: string): Promise<void>
 
     /** 
      * Sets the tokens at each level supplied.
@@ -29,7 +30,7 @@ interface CommerceService extends ObsLineItemRef {
      * "current" is unrelated to what is "specified",
      * ie, facets' values 
      *  */ 
-  setCurrentItem(sku: string | undefined): boolean // was valid sku and was set.
+  setCurrentItem(sku: string | undefined): boolean // valid sku and was set.
     /**
      * For convenience, so widgets can share state.
      * "current" is unrelated to what is "specified",
