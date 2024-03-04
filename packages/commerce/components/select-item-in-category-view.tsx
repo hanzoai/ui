@@ -1,13 +1,12 @@
 'use client'
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../service'
-import type { Category, LineItem, ObsLineItemRef } from '../types'
+import type { Category, ObsLineItemRef } from '../types'
 import { formatPrice } from '../util'
 import { Icons } from './Icons'
 

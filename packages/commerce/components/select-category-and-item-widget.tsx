@@ -1,13 +1,12 @@
 'use client'
 import React, { useEffect } from 'react'
-import { computed } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { ApplyTypography, ListBox } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import type { FacetValueDesc, FacetsValue, LineItem } from '../types'
-import { useCommerce } from '../service'
+import { useCommerce } from '../service/context'
 import { formatPrice } from '../util'
 
 import FacetTogglesWidget from './facet-toggles-widget'

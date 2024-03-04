@@ -7,22 +7,29 @@ import {
   toJS
 } from 'mobx'
 
-import type { 
+import type {
+  CommerceService, 
   Category, 
   LineItem,
   FacetsValue, 
   FacetsDesc
 } from '../../../types'
 
-import type CommerceService from '../../commerce-service'
+import { createOrder as createOrderHelper } from './orders'
 
-import ObservableLineItem from './obs-line-item'
+import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
 
-export type StandaloneServiceOptions = {
+type StandaloneServiceOptions = {
   levelZeroPrefix?: string
+  dbName: string
+  ordersTable: string
 }
 
-class StandaloneCommerceService 
+interface StandaloneServiceSnapshot {
+  items: ActualLineItemSnapshot[]  
+}
+
+class StandaloneService 
   implements CommerceService
 {
   private _categoryMap = new Map<string, Category>()
@@ -30,25 +37,33 @@ class StandaloneCommerceService
   private _selectedFacets: FacetsValue = {}
 
   private _options : StandaloneServiceOptions
-
-  private _currentItem: LineItem | undefined = undefined
+  private _currentItem: ActualLineItem | undefined = undefined
 
   constructor(
     categories: Category[],
     facets: FacetsDesc,
-    options: StandaloneServiceOptions={}
+    options: StandaloneServiceOptions,
+    serviceSnapshot?: StandaloneServiceSnapshot,
   ) {
 
     this._facetsDesc = facets
     this._options = options
 
     categories.forEach((c) => {
-      c.products = c.products.map((p) => (new ObservableLineItem(p)))
+      c.products = c.products.map((p) => { 
+        if (serviceSnapshot) {
+          const itemSnapshot = serviceSnapshot.items.find((is) => (is.sku === p.sku))
+          if (itemSnapshot) {
+            return new ActualLineItem(p, itemSnapshot)
+          }
+        }
+        return new ActualLineItem(p)
+      })
       this._categoryMap.set(c.id, c)
     })
 
     makeObservable<
-      StandaloneCommerceService, 
+      StandaloneService, 
         '_selectedFacets' | 
         '_currentItem' 
     >(this, {
@@ -67,15 +82,23 @@ class StandaloneCommerceService
       facetsValue: computed
       /* NOT setFacets. It implements it's action mechanism */
     })
-
   }
+
+  async createOrder(email: string): Promise<void> {
+    const snapshot = this.takeSnapshot()
+    createOrderHelper(email, snapshot.items, this._options) // didn't want to have two levels of 'items'
+  }
+
+  takeSnapshot = (): StandaloneServiceSnapshot => ({
+    items : (this.cartItems as ActualLineItem[]).map((it) => (it.takeSnapshot()))
+  })
 
   get cartItems(): LineItem[] {
     let result: LineItem[] = []
     this._categoryMap.forEach((cat) => {
       result = [...result, ...(cat.products as LineItem[]).filter((item) => (item.isInCart))]
     })
-    return result
+    return result.sort((it1, it2) => ((it1 as ActualLineItem).timeAdded - (it2 as ActualLineItem).timeAdded))
   }
   
   get cartTotal(): number {
@@ -91,26 +114,25 @@ class StandaloneCommerceService
       this._currentItem = undefined
       return true
     }
-    
-    this._currentItem = ((): LineItem | undefined  => {
+      // self calling function
+    this._currentItem = ((): ActualLineItem | undefined  => {
+
       const categoriesTried: string[] = []
       if (this.specifiedCategories && this.specifiedCategories.length > 0) {
-  
-        for (let category of this.specifiedCategories) {
+          for (let category of this.specifiedCategories) {
           categoriesTried.push(category.id)
-          const foundItem = 
-            (category.products as LineItem[]).find((item) => (item.sku === skuToFind))
+          const foundItem = category.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
-            return foundItem
+            return foundItem as ActualLineItem
           }
         }
       }
       
-      let foundItem: LineItem | undefined = undefined
+      let foundItem: ActualLineItem | undefined = undefined
       this._categoryMap.forEach((category, categoryId) => {
         if (foundItem) return
         if (categoriesTried.includes(categoryId)) return
-        foundItem = (category.products as LineItem[]).find((item) => (item.sku === skuToFind))
+        foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
       }) 
     })();
 
@@ -120,7 +142,7 @@ class StandaloneCommerceService
 
   /* ObsLineItemRef */
   get item(): LineItem | undefined {
-    return this.currentItem
+    return this._currentItem
   }
 
   get currentItem(): LineItem | undefined {
@@ -154,7 +176,7 @@ class StandaloneCommerceService
       // 1-base, visiting two per iteration
     let current: string[] = this._selectedFacets[1] 
     for (let i = 2; i <= keysStr.length; i++) {
-      current = StandaloneCommerceService._visit(current, this._selectedFacets[i])
+      current = StandaloneService._visit(current, this._selectedFacets[i])
     }
     const prefix = this._options.levelZeroPrefix ?? ''
     return current.map((almostTheCatId) => (this._categoryMap.get(prefix + almostTheCatId)!))
@@ -206,4 +228,8 @@ class StandaloneCommerceService
   }
 }
 
-export default StandaloneCommerceService
+export {
+  type StandaloneServiceOptions, 
+  type StandaloneServiceSnapshot,
+  StandaloneService as default
+} 

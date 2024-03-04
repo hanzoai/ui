@@ -7,7 +7,18 @@ import {
 
 import type { Product, LineItem } from '../../../types'
 
-class ObsLineItem implements LineItem {
+interface ActualLineItemSnapshot {
+  sku: string  
+  categoryId: string  // helps impl of restoreFromSnapshot
+  title: string
+  price: number
+  quantity: number
+  timeAdded: number   // helps to sort view of order and cart
+}
+
+class ActualLineItem 
+  implements LineItem  
+{
 
   qu: number = 0
 
@@ -18,9 +29,10 @@ class ObsLineItem implements LineItem {
   categoryId: string  
   desc?: string
   price: number
-  img?: string  
+  img?: string 
+  timeAdded: number = 0 // timeAdded of being added to cart
 
-  constructor(prod: Product) {
+  constructor(prod: Product, snap?: ActualLineItemSnapshot) {
     this.id = prod.id
     this.sku = prod.sku
     this.title = prod.title
@@ -30,8 +42,14 @@ class ObsLineItem implements LineItem {
     this.price = prod.price
     this.img = prod.img
 
+    if (snap) {
+      this.qu = snap.quantity
+      this.timeAdded = snap.quantity
+    }
+
     makeObservable(this, {
       qu: observable,
+      timeAdded: observable,
       canDecrement: computed,  
       isInCart: computed,
       
@@ -40,15 +58,32 @@ class ObsLineItem implements LineItem {
     })
   }
 
+  takeSnapshot = (): ActualLineItemSnapshot => ({
+    sku: this.sku,
+    categoryId: this.categoryId,
+    title: this.title,
+    price: this.price,
+    quantity: this.qu,
+    timeAdded: this.timeAdded
+  } satisfies ActualLineItemSnapshot)
+ 
   get canDecrement(): boolean { return this.qu > 0 }
   get quantity(): number {return this.qu}
   get isInCart(): boolean {return this.qu > 0}
 
-  increment(): void { this.qu++ }
+  increment(): void { 
+    if (this.qu === 0) {
+      this.timeAdded = new Date().getTime()
+    }
+    this.qu++ 
+  }
 
   decrement(): void {
     if (this.canDecrement) {
       this.qu--
+      if (this.qu === 0) {
+        this.timeAdded = 0  
+      }
     }
   }
 
@@ -59,4 +94,7 @@ class ObsLineItem implements LineItem {
 
 }
 
-export default ObsLineItem
+export {
+  type ActualLineItemSnapshot,
+  ActualLineItem as default
+}
