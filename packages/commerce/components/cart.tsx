@@ -1,5 +1,5 @@
 'use client'
-import React, { type PropsWithChildren, useState } from 'react'
+import React, { type PropsWithChildren } from 'react'
 import { useRouter } from 'next/navigation'
 import { observer } from 'mobx-react-lite'
 
@@ -23,18 +23,9 @@ const Cart: React.FC<PropsWithChildren & {
   isMobile=false,
   hideCheckout=false
 }) => {
-  const [loadingCheckout, setLoadingCheckout] = useState(false)
   const cmmc = useCommerce()
   const router = useRouter()
   const auth = useAuth()
-
-  const checkout = async () => {
-    setLoadingCheckout(true)
-    if (auth.user) {
-      await cmmc.createOrder(auth.user.email)
-    }
-    router.push('/checkout')
-  }
   
   return (
     <div className={cn('border p-6 rounded-lg', className)}>
@@ -50,10 +41,10 @@ const Cart: React.FC<PropsWithChildren & {
       </div>
       {cmmc.cartItems.length > 0 && !hideCheckout && (
         <>
-          {!auth.loggedIn ? (
+          {!(auth && auth.loggedIn) ? (
             <Button size='sm' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/login?redirectUrl=checkout')}>Login to checkout</Button>
           ) : (
-            <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={checkout} disabled={loadingCheckout}>Checkout</Button>
+            <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => router.push('/checkout')}>Checkout</Button>
           )}
         </>
       )}

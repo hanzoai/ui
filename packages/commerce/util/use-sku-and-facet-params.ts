@@ -22,6 +22,7 @@ interface GetMutator {
 }
 
 const useSkuAndFacetParams = (
+  setMessage: (m: string | undefined) => void,
   setLoading?: (l: boolean) => void
 ) => {
 
@@ -49,8 +50,6 @@ const useSkuAndFacetParams = (
   const [addParam, setAddParam] = useQueryState('add', 
     parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true })
   )
-
-  const [message, setMessage] = useState<string | undefined>(undefined)
 
   const directMutator: GetMutator = (level: 1 | 2): StringMutator => {
 
@@ -84,6 +83,8 @@ const useSkuAndFacetParams = (
     }
   }
 
+  let message: string | undefined = undefined
+
   useEffect(() => {
     
     const setCurrentCategoryFromSku = (sku: string) => {
@@ -111,14 +112,14 @@ const useSkuAndFacetParams = (
             }
           })
         }
-        setMessage(undefined)
         encRef.current.usingSkuMode = true
       }
       else {
+
         setSkuParam('')
           // if sent here w an invalid sku, 
           // it will effectively put us in facet params mode
-        setMessage('Invalid sku. ' + PLEASE_SELECT_FACETS)
+        message = 'Invalid sku. ' + PLEASE_SELECT_FACETS
       }
     }
 
@@ -148,7 +149,6 @@ const useSkuAndFacetParams = (
       const categories = cmmc.setFacets(facets)
       if (categories && categories.length > 0) {
         cmmc.setCurrentItem(categories[0].products[0].sku)
-        setMessage(undefined)
       }
       else {
         cmmc.setCurrentItem(undefined)
@@ -156,17 +156,15 @@ const useSkuAndFacetParams = (
       }
     }
     else {
-      setMessage(PLEASE_SELECT_FACETS)
+      setMessage(message ?? PLEASE_SELECT_FACETS)
     }
     setLoading && setLoading(false)
   }, [level1 , level2])
 
   return {
-    message,
     getMutator: encRef.current.usingSkuMode ?
       directMutator : paramsMutator
   }
-
 }
 
 export default useSkuAndFacetParams
