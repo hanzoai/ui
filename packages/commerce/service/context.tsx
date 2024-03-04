@@ -6,21 +6,22 @@ import { enableStaticRendering } from 'mobx-react-lite'
 enableStaticRendering(typeof window === "undefined")
 
 
-import type CommerceService from './commerce-service'
-
-import getServiceSingleton from './impl'
+import type CommerceService from '../types/commerce-service'
+import type { ServiceOptions } from '..'
+import getServiceSingleton from './impls'
 import type { Category, FacetsDesc } from '../types'
 
 const CommerceServiceContext = createContext<CommerceService | undefined>(undefined)
 
-export const useCommerce = (): CommerceService => {
+
+const useCommerce = (): CommerceService => {
   return useContext(CommerceServiceContext) as CommerceService
 }
 
-export const CommerceServiceProvider: React.FC<PropsWithChildren & {
+const CommerceServiceProvider: React.FC<PropsWithChildren & {
   productsByCategory: Category[]
   facets: FacetsDesc
-  options?: any
+  options?: ServiceOptions
 }> = ({ 
   children,
   productsByCategory,
@@ -30,10 +31,12 @@ export const CommerceServiceProvider: React.FC<PropsWithChildren & {
 
   const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, facets, options))
   return (
-    <CommerceServiceContext.Provider
-      value={serviceRef.current}
-    >
+    <CommerceServiceContext.Provider value={serviceRef.current}>
       {children}
     </CommerceServiceContext.Provider>
   )
+}
+
+export {
+  useCommerce, CommerceServiceProvider
 }

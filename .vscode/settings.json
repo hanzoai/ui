@@ -1,4 +1,5 @@
 {
   "typescript.tsdk": "node_modules/.pnpm/typescript@5.3.3/node_modules/typescript/lib",
-  "editor.gotoLocation.multipleDefinitions": "goto"
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "typescript.preferences.quoteStyle": "single"
 }
