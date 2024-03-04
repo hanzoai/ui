@@ -1,3 +1,4 @@
+"use client"
 import { 
   useEffect, 
   useRef,
@@ -11,8 +12,8 @@ import {
   parseAsBoolean,
 } from 'next-usequerystate'
 
-import type { Category, FacetsValue, StringMutator } from '../types'
-import { useCommerce } from '../service'
+import type { FacetsValue, StringMutator } from '../types'
+import { useCommerce } from '../service/context'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group above.'
 
@@ -146,7 +147,7 @@ const useSkuAndFacetParams = (
     if (level1 && level2) {
       const categories = cmmc.setFacets(facets)
       if (categories && categories.length > 0) {
-        cmmc.setCurrentItem(categories?.[0].products[0].sku)
+        cmmc.setCurrentItem(categories[0].products[0].sku)
         setMessage(undefined)
       }
       else {

@@ -1,15 +1,14 @@
-import type {  
-  Category, 
-  FacetsValue,
-  LineItem ,
-  ObsLineItemRef
-} from '../types'
+import type { LineItem, ObsLineItemRef } from './line-item'
+import type { FacetsValue } from './facet'
+import type Category from './category'
 
 interface CommerceService extends ObsLineItemRef {
 
   get cartItems(): LineItem[]
   get cartTotal(): number
   getCartCategorySubtotal(categoryId: string): number
+
+  createOrder(email: string): Promise<void>
 
     /** 
      * Sets the tokens at each level supplied.
