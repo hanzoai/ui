@@ -15,7 +15,10 @@ import type {
   FacetsDesc
 } from '../../../types'
 
-import { createOrder as createOrderHelper } from './orders'
+import {
+  createOrder as createOrderHelper,
+  updateOrder as updateOrderHelper
+} from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
 
@@ -84,9 +87,15 @@ class StandaloneService
     })
   }
 
-  async createOrder(email: string): Promise<void> {
+  async createOrder(email: string, paymentMethod: string): Promise<string | undefined> {
     const snapshot = this.takeSnapshot()
-    createOrderHelper(email, snapshot.items, this._options) // didn't want to have two levels of 'items'
+    const order = await createOrderHelper(email, paymentMethod, snapshot.items, this._options) // didn't want to have two levels of 'items'
+    return order.id
+  }
+
+  async updateOrder(orderId: string, email: string, paymentMethod: string): Promise<void> {
+    const snapshot = this.takeSnapshot()
+    updateOrderHelper(orderId, email, paymentMethod, snapshot.items, this._options) // didn't want to have two levels of 'items'
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
@@ -127,13 +136,14 @@ class StandaloneService
           }
         }
       }
-      
-      let foundItem: ActualLineItem | undefined = undefined
-      this._categoryMap.forEach((category, categoryId) => {
-        if (foundItem) return
-        if (categoriesTried.includes(categoryId)) return
-        foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
-      }) 
+      for( const [categoryId, category] of this._categoryMap.entries()) {
+        if (categoriesTried.includes(categoryId)) continue
+        const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
+        if (foundItem) {
+          return foundItem as ActualLineItem
+        }
+      }
+      return undefined
     })();
 
     return !!this._currentItem
