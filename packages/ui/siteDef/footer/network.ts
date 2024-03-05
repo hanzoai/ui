@@ -30,4 +30,8 @@ export default [
     title: 'Open Source',
     href: 'https://github.com/luxdefi',
   },
+  {
+    title: 'Launch Subnet',
+    href: 'https://docs.lux.network/build/subnet/hello-subnet',
+  },
 ] satisfies LinkDef[]
