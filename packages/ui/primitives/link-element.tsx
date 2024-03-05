@@ -50,11 +50,11 @@ const LinkElement: React.FC<PropsWithChildren & {
       // As per LinkDef docs
   if (href.startsWith('http') || href.startsWith('mailto')) { 
     linkProps.rel = 'noreferrer noopener'
-    if (newTab !== undefined || newTab === true) {
+    if (newTab ?? true) {
       linkProps.target = '_blank'
     }
   } 
-  else if (newTab !== undefined && newTab === true) {
+  else if (newTab) {
     linkProps.target = '_blank'
   }
 
