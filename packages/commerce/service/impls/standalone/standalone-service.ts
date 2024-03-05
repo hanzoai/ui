@@ -207,13 +207,15 @@ class StandaloneService
     const keysStr = Object.keys(this._facetsDesc)
     const keysNum = keysStr.map((key) => (parseInt(key)))
     keysNum.forEach((key) => {
+      if (partial[key]) {
+          // If present, filter out the bad values (the one's that don't exist in the Desc)
+        const filtered = partial[key].filter((fv) => (this._facetsDesc[key].find((fvDesc) => (fvDesc.value === fv))))
+        result[key] = filtered
+      }
         // if not present, assume the facet is "off" and allow all (include all in the set).
-      if (!partial[key]) {
+      else {
         result[key] = this._facetsDesc[key].map((fv) => (fv.value))
       }
-        // If present, filter out the bad values if any
-      const filtered = partial[key].filter((fv) => this._facetsDesc[key].find((fvDesc) => (fvDesc.value === fv)))
-      result[key] = filtered
     })
     return result
   }
