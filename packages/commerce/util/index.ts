@@ -25,4 +25,4 @@ export function formatPrice(price: number): string {
   });
 }
 
-export { default as useSkuAndFacetParams } from './use-sku-and-facet-params'
+export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
