@@ -20,6 +20,7 @@ const BulletCardsBlockComponent: React.FC<BlockComponentProps> = ({
   const specified = (s: string) => (containsToken(b.specifiers, s))
   
   const noBorder = specified('no-card-border') ? 'border-0' : 'md:border'
+  const mobileTextXs = specified('mobile-small-text') ? 'text-xs' : 'text-sm'
 
   const borderclx = specified('border-muted-3') ? 
     'md:border-muted-3' 
@@ -35,7 +36,7 @@ const BulletCardsBlockComponent: React.FC<BlockComponentProps> = ({
         borderclx
       )}>
         <InlineIcon icon={card.icon} size={b.iconSize ?? 28} agent={agent} className='shrink-0 mr-2 md:mr-4 '/>
-        <p className='m-0 text-sm sm:text-base'>{card.text}</p>
+        <p className={cn('m-0 sm:text-base', mobileTextXs)}>{card.text}</p>
       </div>
     ))}
     </GridBlockComponent>

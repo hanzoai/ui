@@ -24,7 +24,7 @@ const Footer: React.FC<{
   const _aboveCopyright = (typeof aboveCopyright === 'undefined') ? legal : aboveCopyright
 
   return (
-    <footer className={cn('grow flex flex-col justify-between gap-6 pb-[2vh]', className)}> 
+    <footer className={cn('grow flex flex-col justify-end gap-6 pb-[2vh]', className)}> 
       <div className={
         (noHorizPadding ? '' : 'px-5 md:px-8 ') +
         'grid grid-cols-2 gap-4 gap-y-6 md:gap-x-6 lg:gap-8 ' + smGridColsClx +  
