@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -14,20 +14,6 @@
     "url": "git+https://github.com/hanzoai/react-sdk.git",
     "directory": "packages/ui"
   },
-  "files": [
-    "assets",
-    "blocks",
-    "common",
-    "context-providers",
-    "dist",
-    "next",
-    "primitives",
-    "siteDef",
-    "style",
-    "tailwind",
-    "types",
-    "util"
-  ],
   "keywords": [
     "components",
     "ui",
@@ -71,7 +57,7 @@
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.merge": "^4.6.2",
-    "lucide-react": "^0.307.0",
+    "lucide-react": "^0.344.0",
     "markdown-to-jsx": "^7.3.2",
     "postcss-selector-parser": "^6.0.13",
     "react-day-picker": "^8.7.1",
