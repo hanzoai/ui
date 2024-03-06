@@ -15,6 +15,7 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   isMobile?: boolean
   id?: string
   className?: string
+  tabSize?: string 
 }> = ({
   children,
   facets,
@@ -23,6 +24,7 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   facetClassNames,
   isMobile=false,
   className='',
+  tabSize,
   id='FacetsWidget'
 }) => {
   const horiz = className.includes('flex-row')
@@ -36,6 +38,7 @@ const FacetsWidget: React.FC<PropsWithChildren & {
         isMobile={isMobile}
         facetValues={facets[parseInt(key)]} 
         className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
+        tabSize={tabSize}
       />
     ))}
       {children}
