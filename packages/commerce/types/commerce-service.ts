@@ -9,7 +9,8 @@ interface CommerceService extends ObsLineItemRef {
   getCartCategorySubtotal(categoryId: string): number
 
   createOrder(email: string, paymentMethod: string): Promise<string | undefined>
-  updateOrder(orderId: string, email: string, paymentMethod: string): Promise<void>
+  // TODO: add shippingInfo type
+  updateOrder(orderId: string, email: string, paymentMethod: string, shippingInfo?: any): Promise<void>
 
     /** 
      * Sets the tokens at each level supplied.
