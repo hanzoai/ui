@@ -9,8 +9,9 @@ import FacetTogglesWidget from './facet-toggles-widget'
 
 const FacetsWidget: React.FC<PropsWithChildren & {
   facets: FacetsDesc
-  facetClassNames?: string[]
   mutators:  StringMutator[] | StringArrayMutator[]
+  facetClx?: string[]
+  facetItemClx?: string
   multiple?: boolean
   isMobile?: boolean
   id?: string
@@ -21,7 +22,8 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   facets,
   mutators,
   multiple=false,
-  facetClassNames,
+  facetClx,
+  facetItemClx='',
   isMobile=false,
   className='',
   tabSize,
@@ -37,7 +39,8 @@ const FacetsWidget: React.FC<PropsWithChildren & {
         mutator={mutators[i]} 
         isMobile={isMobile}
         facetValues={facets[parseInt(key)]} 
-        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClassNames?.[i]) ?? '')} 
+        className={cn((horiz ? '' : 'mb-2'), (i !== 0 && !horiz) ? 'mt-2' : '', (facetClx?.[i]) ?? '')}
+        buttonClx={facetItemClx} 
         tabSize={tabSize}
       />
     ))}

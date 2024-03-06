@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 interface FacetValueDesc {
   value: string             // a token in the sku
   label: string
-  img : string | ReactNode  // icon is required 
+  img? : string | ReactNode  // icon is required 
   imgAR? : number           // helps with svgs
 }
 
