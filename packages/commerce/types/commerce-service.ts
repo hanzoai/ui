@@ -4,8 +4,13 @@ import type Category from './category'
 
 interface CommerceService extends ObsLineItemRef {
 
+    /** Items in cart */
   get cartItems(): LineItem[]
+    /** Total of all quantities of items in cart */
+  get cartQuantity(): number
+    /** Total of all prices X quantities of items in cart */
   get cartTotal(): number
+   
   getCartCategorySubtotal(categoryId: string): number
 
   createOrder(email: string, paymentMethod: string): Promise<string | undefined>

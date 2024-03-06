@@ -12,12 +12,14 @@ const FacetTogglesWidget: React.FC<{
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
+  buttonClx?: string
   isMobile?: boolean
   tabSize?: string
 }> = ({
   facetValues,
   mutator,
   multiple='',
+  buttonClx='',
   className='',
   isMobile=false,
   tabSize
@@ -50,7 +52,7 @@ const FacetTogglesWidget: React.FC<{
       type={multiple ? 'multiple' : 'single'} 
       value={val}
       variant='default'
-      size={isMobile ? 'sm' : tabSize ? tabSize : 'default'}
+      size={tabSize ? tabSize : (isMobile ? 'sm' : 'default')}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
       {...roundedToSpread}
@@ -69,10 +71,11 @@ const FacetTogglesWidget: React.FC<{
           disabled={(last && last === fv.value || fv.value === mutator.get())} 
           aria-label={`Select ${fv.label}`}
           {...roundedToSpread}
+          className={buttonClx}
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
             <FacetImage facetValueDesc={fv} />
-            <span className='hidden md:block whitespace-nowrap'>{fv.label}</span>
+            <span className='whitespace-nowrap'>{fv.label}</span>
           </span>
         </ToggleGroupItem>
       )
@@ -80,5 +83,6 @@ const FacetTogglesWidget: React.FC<{
     </ToggleGroup>  
   )
 }
+// hidden md:block 
 
 export default FacetTogglesWidget

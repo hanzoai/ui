@@ -76,6 +76,7 @@ class StandaloneService
 
     makeObservable(this, {
       cartItems: computed,
+      cartQuantity: computed,
       cartTotal: computed, 
       specifiedItems: computed,
       specifiedCategories: computed, 
@@ -114,6 +115,13 @@ class StandaloneService
   get cartTotal(): number {
     return this.cartItems.reduce(
       (total, item) => (total + item.price * item.quantity), 
+      0
+    )
+  }
+
+  get cartQuantity(): number {
+    return this.cartItems.reduce(
+      (total, item) => (total + item.quantity), 
       0
     )
   }
