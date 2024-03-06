@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 
-import { ToggleGroup, ToggleGroupItem,} from "@hanzo/ui/primitives"
+import { ToggleGroup, ToggleGroupItem, type toggleVariants} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
 import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'
@@ -13,12 +13,14 @@ const FacetTogglesWidget: React.FC<{
   multiple?: boolean
   className?: string
   isMobile?: boolean
+  tabSize?: string
 }> = ({
   facetValues,
   mutator,
   multiple='',
   className='',
-  isMobile=false
+  isMobile=false,
+  tabSize
 }) => {
 
   const [last, setLast] = useState<string | undefined>(undefined)
@@ -48,7 +50,7 @@ const FacetTogglesWidget: React.FC<{
       type={multiple ? 'multiple' : 'single'} 
       value={val}
       variant='default'
-      size={isMobile ? 'sm' : 'default'}
+      size={isMobile ? 'sm' : tabSize ? tabSize : 'default'}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
       {...roundedToSpread}
