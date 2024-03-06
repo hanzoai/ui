@@ -24,6 +24,8 @@ const getDBInstance = (name: string): Firestore => {
 interface SavedOrder {
   email: string
   paymentMethod: string
+  // TODO: add shippingInfo type
+  shippingInfo?: any
   status: string
   timestamp: FieldValue
   items: ActualLineItemSnapshot[]
@@ -69,11 +71,13 @@ const updateOrder = async (
   orderId: string,
   email: string,
   paymentMethod: string,
+  // TODO: add shippingInfo type
   items: ActualLineItemSnapshot[],
   options: {
     dbName: string
     ordersTable: string
-  }
+  },
+  shippingInfo?: any
 ): Promise<{
   success: boolean,
   error: any
@@ -86,6 +90,7 @@ const updateOrder = async (
     await setDoc(doc(ordersRef, orderId), {
       email,
       paymentMethod,
+      shippingInfo,
       status: 'open',
       timestamp: serverTimestamp(),
       items,
