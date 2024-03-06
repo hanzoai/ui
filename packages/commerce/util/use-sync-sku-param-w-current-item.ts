@@ -9,10 +9,12 @@ import {
 } from 'next-usequerystate'
 
 import { useCommerce } from '../service/context'
+import type { FacetsValue } from '../types'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group above.'
 
 const useSyncSkuParamWithCurrentItem = (
+  categoryLevel: number,
   setMessage: (m: string | undefined) => void,
   setLoading?: (l: boolean) => void
 ) => {
@@ -53,10 +55,11 @@ const useSyncSkuParamWithCurrentItem = (
     
     const setCurrentCategoryFromSku = (sku: string) => {
       const toks: string[] = sku.split('-')
-      cmmc.setFacets({
-        1: [toks[1]],
-        2: [toks[2]]
-      })
+      const fv: FacetsValue = {}
+      for (let i = 1; i < categoryLevel; i++) {
+        fv[i] = [toks[i]]
+      } 
+      cmmc.setFacets(fv)
     }
 
       // setCI returns true if it's a recognized sku
