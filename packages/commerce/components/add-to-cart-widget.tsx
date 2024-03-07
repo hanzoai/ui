@@ -13,6 +13,7 @@ const AddToCartWidget: React.FC<{
   ghost?: boolean
   disabled?: boolean
   className?: string
+  buttonClx?: string
   isMobile?: boolean
   wide?: boolean
   size?: ButtonSizes
@@ -21,11 +22,12 @@ const AddToCartWidget: React.FC<{
   ghost=false,
   disabled=false,
   className='',
+  buttonClx='',
   size='xs'
 }) => {
 
-  const iconClx = ghost ? 'h-3 w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
-  const digitClx = ghost ? 'px-1' : 'px-2 font-bold '
+  const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-5 mr-1'
+  const digitClx = ghost ? 'px-2 md:px-0.5' : 'sm:px-2 font-bold '
 
   if (disabled) {
     return (
@@ -42,7 +44,7 @@ const AddToCartWidget: React.FC<{
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-end'
+        className={cn('px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-end', buttonClx)}
         key='left'
         onClick={item.decrement.bind(item)}
       >
@@ -58,7 +60,7 @@ const AddToCartWidget: React.FC<{
         size={size}
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
-        className='px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-start'
+        className={cn('px-1 lg:min-w-0 lg:px-2 xs:grow xs:justify-start', buttonClx)}
         onClick={item.increment.bind(item)}
         key='right'
       >
@@ -71,7 +73,7 @@ const AddToCartWidget: React.FC<{
       size={size}
       variant='secondary'
       rounded='xl'
-      className={className}
+      className={cn(buttonClx, className)}
       onClick={item.increment.bind(item)}
     >
       <Icons.plus className='h-5 w-5 mr-1' aria-hidden='true'/>
