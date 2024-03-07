@@ -11,29 +11,42 @@ const FacetImage: React.FC<{
 }> = ({
   facetValueDesc
 }) => {
-  if (!facetValueDesc.img) {
+  const {
+    img,
+    imgAR: ar,
+    label
+  } = facetValueDesc
+
+
+  if (!img) {
     return null
   }
-  const isURL = typeof facetValueDesc.img === 'string'
+  const isURL = typeof img === 'string'
   if (isURL) {
     return (
       <Image 
-        src={facetValueDesc.img as string} 
-        alt={`Toggle ${facetValueDesc.label}`} 
-        className={'block mr-1 aspect-square rounded border border-muted-2'}
-        width={ICON_SIZE}
+        src={img as string} 
+        alt={`Toggle ${label}`} 
+        className={'block mr-1 rounded border border-muted-2 ' + (ar ? '' : 'aspect-square')} 
+        width={ar ?  ar * ICON_SIZE : ICON_SIZE}
         height={ICON_SIZE}
       />
     )
   }
+
+    // Otherwise, assume it's a ReactNode of an imported SVG
+
+    // If it's not square, center it in the appropriate dimension
   const svgStyle: any = { position: 'relative' }
-  if (facetValueDesc.imgAR && facetValueDesc.imgAR < 1) {
-    const w = ICON_SIZE * SVG_MULT
-    svgStyle.top = (( 1 / facetValueDesc.imgAR - 1) * w) / 2
-  }
-  else if (facetValueDesc.imgAR && facetValueDesc.imgAR > 1) {
-    const h = ICON_SIZE * SVG_MULT
-    svgStyle.left = (((1 - facetValueDesc.imgAR) * h) / 2)
+  if (ar) {
+    if (ar < 1) {
+      const w = ICON_SIZE * SVG_MULT
+      svgStyle.top = (( 1 / ar - 1) * w) / 2
+    }
+    else if (ar > 1) {
+      const h = ICON_SIZE * SVG_MULT
+      svgStyle.left = (((1 - ar) * h) / 2)
+    }
   }
 
   return (

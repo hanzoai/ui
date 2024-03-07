@@ -75,7 +75,7 @@ const FacetTogglesWidget: React.FC<{
         >
           <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
             <FacetImage facetValueDesc={fv} />
-            <span className='whitespace-nowrap'>{fv.label}</span>
+            {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>
         </ToggleGroupItem>
       )
