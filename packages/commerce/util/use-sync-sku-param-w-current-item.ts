@@ -11,7 +11,7 @@ import {
 import { useCommerce } from '../service/context'
 import type { FacetsValue } from '../types'
 
-const PLEASE_SELECT_FACETS = 'Please select an option from each group above.'
+const PLEASE_SELECT_FACETS = 'Please select an option from each group.'
 
 const useSyncSkuParamWithCurrentItem = (
   categoryLevel: number,

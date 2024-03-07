@@ -18,11 +18,14 @@ export function unslugify(str: string) {
   return str.replace(/-/g, ' ')
 }
 
+
 export function formatPrice(price: number): string {
-  return price.toLocaleString('en-US', {
+  const str = price.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   });
+  return (str.endsWith('.00')) ? str.replace('.00', '') : str 
 }
+
 
 export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
