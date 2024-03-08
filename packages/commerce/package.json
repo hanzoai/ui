@@ -28,9 +28,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
+    "ethers": "^6.11.1",
     "lucide-react": "^0.307.0",
     "next-usequerystate": "^1.17.0",
-    "react-mobile-picker": "^1.0.0"
+    "react-hook-form": "^7.51.0",
+    "react-mobile-picker": "^1.0.0",
+    "zod": "3.21.4"
   },
   "peerDependencies": {
     "@hanzo/auth": "^1.0.12",

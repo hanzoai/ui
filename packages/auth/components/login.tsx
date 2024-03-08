@@ -19,12 +19,14 @@ const Login: React.FC<{
   redirectUrl?: string,
   getStartedUrl?: string,
   returnToUrl?: string,
-  className?: string
+  className?: string,
+  hideHeader?: boolean
 }> = observer(({
   redirectUrl,
   getStartedUrl,
   returnToUrl,
-  className
+  className,
+  hideHeader
 }) => {
   const router = useRouter()
   
@@ -105,7 +107,7 @@ const Login: React.FC<{
                 <ArrowLeft/>
               </Button>
             )}
-            <h2 className='mx-auto'>Login</h2>
+            {!hideHeader && <h2 className='mx-auto'>Login</h2>}
           </div>
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4'/>
