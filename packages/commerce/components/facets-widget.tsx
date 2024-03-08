@@ -17,6 +17,7 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   id?: string
   className?: string
   tabSize?: string 
+  childrenAfter?: boolean
 }> = ({
   children,
   facets,
@@ -27,11 +28,13 @@ const FacetsWidget: React.FC<PropsWithChildren & {
   isMobile=false,
   className='',
   tabSize,
-  id='FacetsWidget'
+  id='FacetsWidget',
+  childrenAfter=true
 }) => {
   const horiz = className.includes('flex-row')
   return (
     <div id={id} className={className} >
+    {!childrenAfter && children}
     {Object.keys(facets).map((key, i) => (
       <FacetTogglesWidget 
         key={i}
@@ -44,7 +47,7 @@ const FacetsWidget: React.FC<PropsWithChildren & {
         tabSize={tabSize}
       />
     ))}
-      {children}
+      {childrenAfter && children}
     </div>
   )
 }
