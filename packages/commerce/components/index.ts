@@ -8,4 +8,5 @@ export { default as ProductSelectionMobilePicker } from './product-selection-mob
 export { default as ProductSelectionRadioGroup } from './product-selection-radio-group'
 export { default as SelectCategoryAndItemWidget } from './select-category-and-item-widget'
 export { default as SelectItemInCategoryView } from './select-item-in-category-view'
+export { default as Checkout } from './checkout'
 export { Icons } from './Icons'
