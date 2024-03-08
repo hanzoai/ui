@@ -15,12 +15,14 @@ const ScreenfulComponent: React.FC<{
   initialInView?: boolean
   snapTile?: boolean
   className?: string
+  contentClx?: string
 }> = ({
   block,
   agent,
   initialInView=false,
   snapTile=false,
-  className=''
+  className='',
+  contentClx=''
 }) => {
 
   if (block.blockType !== 'screenful') {
@@ -46,7 +48,7 @@ const ScreenfulComponent: React.FC<{
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
-      'px-6 lg:px-8 2xl:px-2 pb-6 pt-15 md:pt-26 lg:pt-28 ' 
+      'px-6 lg:px-8 2xl:px-2 pb-6 ' + (snapTile  ? 'pt-15 md:pt-26 lg:pt-28 ' : '') // otherwise assume there is a Main
       : 
       'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)] ',
 
@@ -66,7 +68,7 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <div className={cn(...cwclx, snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full')} >
+        <div className={cn(...cwclx, snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full', contentClx)} >
           <Content block={b} agent={agent}  className='w-full'/>
           {b.footer}
         </div>
