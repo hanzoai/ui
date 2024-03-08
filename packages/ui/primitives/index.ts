@@ -124,6 +124,13 @@ export {
   AvatarFallback 
 } from './avatar'
 
+export { 
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from './input-otp'
+
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 
