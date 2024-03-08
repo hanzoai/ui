@@ -91,7 +91,7 @@ const Content: React.FC<{
 }) => {
 
 
-  const layoutClx = 'flex flex-col gap-6 ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
+  const layoutClx = 'flex flex-col gap-2 sm:gap-4 ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
 
   const orderclx = (columnIndex: number): string => {
     const orderIndex = b.mobileOrder?.indexOf(columnIndex)

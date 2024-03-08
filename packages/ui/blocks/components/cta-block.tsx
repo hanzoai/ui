@@ -44,13 +44,30 @@ const CtaBlockComponent: React.FC<BlockComponentProps & {
   }
 
   const mobile2Columns = containsToken(specifiers, 'mobile-2-columns')
+    // normally 'default' buttons have a min width only at > lg.
+    // generally if more than one we don't want this and override it,
+    // but this specifier asks to observe the default behavior.
+  const fillEvenly = !containsToken(specifiers, 'desktop-dont-fill')
   const mobileCenterFirstIfOdd = containsToken(specifiers, 'mobile-center-first-if-odd')
   const mobileOddFullWidth = containsToken(specifiers, 'mobile-odd-full-width')
   
-  const layoutclx = (mobile2Columns && elements.length > 1) ? 
-    'grid grid-cols-2 gap-2 self-stretch md:flex md:flex-sm md:justify-center '
-    :
-    'flex flex-col items-stretch gap-2 self-stretch md:flex-row sm:justify-center '
+  let layoutclx: string | undefined = undefined
+  if (elements.length > 1) {
+    let resetMinWidth = false
+    if (mobile2Columns) {
+      layoutclx = 'grid grid-cols-2 gap-2 self-stretch '   
+      resetMinWidth = true 
+    }
+    if (fillEvenly) {
+      layoutclx = (layoutclx ?? 'grid grid-cols-2 gap-2 self-stretch') 
+      resetMinWidth = true 
+    }
+    else {
+      layoutclx = layoutclx ? (layoutclx + 'md:flex md:flex-row md:justify-center ') : 'flex flex-row justify-center '    
+    }
+    itemclx += resetMinWidth ? '!min-w-0 ' : ''
+  }
+  layoutclx = layoutclx ?? 'flex flex-col items-stretch gap-2 self-stretch md:flex-row sm:justify-center '  
 
   const getMobileColSpanClx = (index: number, total: number) => {
     const indexToCenter = (total % 2 === 0) ? -1 : (mobileCenterFirstIfOdd) ? 0 : total - 1
