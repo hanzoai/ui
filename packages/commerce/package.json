@@ -27,11 +27,11 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.2",
+    "@hookform/resolvers": "^3.3.4",
     "ethers": "^6.11.1",
     "lucide-react": "^0.307.0",
     "next-usequerystate": "^1.17.0",
-    "react-hook-form": "^7.51.0",
+    "react-hook-form": "7.50.1",
     "react-mobile-picker": "^1.0.0",
     "zod": "3.21.4"
   },

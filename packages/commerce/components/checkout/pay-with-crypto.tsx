@@ -28,6 +28,12 @@ import Usdt from './icons/usdt'
 import { useCommerce } from '../..'
 import { formatPrice } from '../../util'
 
+declare global {
+  interface Window{
+    ethereum?: any
+  }
+}
+
 const PayWithCrypto: React.FC<{
   setCurrentStep: (currentStep: number) => void
 }> = observer(({
