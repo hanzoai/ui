@@ -47,10 +47,12 @@ const PayWithCrypto: React.FC<{
   const [amount, setAmount] = useState<number>()
   const [availableAmount, setAvailableAmount] = useState<number>()
   const [provider, setProvider] = useState<ethers.BrowserProvider>()
+  const [transactionStatus, setTransactionStatus] = useState<'unpaid' | 'paid' | 'confirmed' | 'error'>('unpaid')
 
   //const selectedToken = 'eth'
 
   useEffect(() => {
+    setTransactionStatus('unpaid')
       // responding to changes in user.walletAddress
     return autorun(() => {
       const newProvider = new ethers.BrowserProvider(window.ethereum)
@@ -121,7 +123,17 @@ const PayWithCrypto: React.FC<{
       })
       console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
       console.log('tx', tx)
-      setCurrentStep(3)
+      setTransactionStatus('paid')
+
+      provider.waitForTransaction(tx.hash)
+        .then((receipt) => {
+          console.log(receipt)
+          setTransactionStatus('confirmed')
+        })
+        .catch((error) => {
+          console.log(error)
+          setTransactionStatus('error')
+        })
     } catch (err) {
       console.log(err)
       // :aa TODO string table
@@ -155,12 +167,18 @@ const PayWithCrypto: React.FC<{
         <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
         <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'><Eth height={10}/>ETH</div>
       </div>
-      <Button
-        onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
-        disabled={!amount || loadingPrice}
-      >
-        Pay now
-      </Button>
+      {transactionStatus === 'unpaid' || transactionStatus === 'error' ? (
+        <Button
+          onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
+          disabled={!amount || loadingPrice}
+        >
+          Pay now
+        </Button>
+      ) : transactionStatus === 'paid' ? (
+        <h4>Waiting for transaction to be confirmed on chain.</h4>
+      ) : (
+        <h4>Transaction confirmed!</h4>
+      )}
     </div>
   )
 
@@ -169,7 +187,7 @@ const PayWithCrypto: React.FC<{
       {payWidget}
       <div className='flex gap-4 items-center mt-6'>
         <Button variant='outline' onClick={() => setCurrentStep(1)} className='mx-auto w-full'>Back</Button>
-        <Button onClick={() => setCurrentStep(3)} className='mx-auto w-full'>Continue (Pay later)</Button>
+        <Button onClick={() => setCurrentStep(3)} disabled={transactionStatus !== 'confirmed'} className='mx-auto w-full'>Continue</Button>
       </div>
     </div>
   )
