@@ -66,12 +66,6 @@ const ShippingInfo: React.FC<{
     <Form {...shippingForm}>
       <form onSubmit={shippingForm.handleSubmit(onSubmit)} className='text-left'>
         <div className='flex flex-col gap-4'>
-          <div className='flex gap-4 items-center'>
-            <BookUser />
-            <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
-              heading: { text: `Shipping address`, level: 4 },
-            } as EnhHeadingBlock}/>
-          </div>
           <div className='flex gap-4 items-end'>
             <FormField
               control={shippingForm.control}
