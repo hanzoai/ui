@@ -36,7 +36,7 @@
     "zod": "3.21.4"
   },
   "peerDependencies": {
-    "@hanzo/auth": "^1.0.12",
+    "@hanzo/auth": "^1.0.14",
     "@hanzo/ui": "^1.0.12",
     "firebase": "^10.8.0",
     "mobx": "^6.12.0",
