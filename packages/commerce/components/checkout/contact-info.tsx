@@ -30,12 +30,6 @@ const ContactInfo: React.FC<{
     <Form {...form}>
       <form className='text-left'>
         <div className='flex flex-col gap-4'>
-          <div className='flex gap-4 items-center'>
-            <User />
-            <EnhHeadingBlockComponent block={{blockType: 'enh-heading',
-              heading: { text: `Contact Info`, level: 4 },
-            } as EnhHeadingBlock}/>
-          </div>
           <div className='flex flex-col sm:flex-row gap-4'>
             <FormField
               control={form.control}

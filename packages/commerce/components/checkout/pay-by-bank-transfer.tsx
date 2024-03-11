@@ -27,13 +27,6 @@ const InfoField: React.FC<{label: string, value: ReactNode, copyValue: string}> 
 
 const PayByBankTransfer: React.FC<{setCurrentStep: (step: number) => void}> = ({setCurrentStep}) => {
   return (<>
-    <EnhHeadingBlockComponent 
-      block={{blockType: 'enh-heading',
-        specifiers: 'center byline-center',
-        heading: { text: `WIRE INFO`, level: 3 },
-        byline: { text: 'Click the copy icon to copy text to your clipboard.', level: 6}
-      } satisfies EnhHeadingBlock as Block}
-    />
     <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
       <TabsList className="grid w-full grid-cols-2 max-w-[15rem] mx-auto bg-level-2">
         <TabsTrigger value="usd">USD</TabsTrigger>
