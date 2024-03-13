@@ -1,16 +1,21 @@
+import { enableStaticRendering } from 'mobx-react-lite'
+
 import type AuthService from './auth-service'
 import type { AuthServiceConf, HanzoUserInfoValue } from '../types'
 import AuthServiceImpl from './impl'
 
+enableStaticRendering(typeof window === "undefined")
+
   // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 let instance: AuthServiceImpl | undefined =  undefined
 
+/* PLEASE LEAVE
 const _log = (s: string) => {
   const d = new Date()
   console.log(`TIMESTAMPED: ${d.getUTCMinutes()}:${d.getUTCSeconds()}:${d.getUTCMilliseconds()}`)
   console.log(s)
 }
-
+*/
 
 const getSingleton = (
   conf: AuthServiceConf, 

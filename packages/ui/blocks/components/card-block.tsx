@@ -14,7 +14,7 @@ import {
   type TypographySize
 } from '../../primitives'
 
-import { Icons } from '../../common'
+import { Icons } from '../../primitives'
 
 import {
   getSpecifierData, 

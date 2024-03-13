@@ -6,14 +6,16 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
  
 import {
+  Button,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@hanzo/ui/primitives/form'
-import { Input, Button } from '@hanzo/ui/primitives'
+  Input
+} from '@hanzo/ui/primitives'
+
 import { cn } from '@hanzo/ui/util'
  
 const formSchema = z.object({

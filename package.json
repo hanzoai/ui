@@ -1,18 +1,14 @@
 {
-  "name": "@hanzo/shared-modules-mono",
-  "version": "0.0.1",
+  "name": "@hanzo/react-sdk",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
   "type": "module",
   "author": {
     "name": "hanzoai dev dudes",
     "url": "https://twitter.com/hanzoai"
   },
-  "workspaces": [
-    "node-utils/*", "apps/*", "pkgs/*"
-  ],
   "scripts": {
-    "clean:all": "rm -rf node_modules && pnpm -r clean",
-    "clean:all:b": "rm -rf node_modules && bun -r clean"
+    "clean:all": "rm -rf node_modules && pnpm -r clean"
   },
   "packageManager": "pnpm@8.14.1",
   "dependencies": {
@@ -20,7 +16,7 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "^18.2.48"
+      "@types/react": "^18.2.64"
     }
   }
 }

@@ -3,7 +3,7 @@
 
 @layer base {
 
-  :root, .lux-light-theme {
+  :root, .hanzo-ui-light-theme {
     --hz-ui-fg-0: hsl(0 0% 0%);
     --hz-ui-fg-body: hsl(0 0% 10%);
     --hz-ui-fg-1: hsl(0 0% 20%);
@@ -49,7 +49,7 @@
     --hz-ui-radius: 0.5rem;
   }
  
-  .lux-dark-theme {
+  .hanzo-ui-dark-theme {
 
     --hz-ui-fg-0: hsl(0 0% 100%);
     --hz-ui-fg-body: hsl(0, 0%, 97%);

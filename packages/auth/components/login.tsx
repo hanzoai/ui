@@ -5,10 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import { ArrowLeft } from 'lucide-react'
 
-import { ApplyTypography, Button } from '@hanzo/ui/primitives'
-import { useToast } from '@hanzo/ui/primitives/use-toast'
-
-import type { LinkDef } from '@hanzo/ui/types'
+import { ApplyTypography, Button, useToast } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useAuth } from '../service'
