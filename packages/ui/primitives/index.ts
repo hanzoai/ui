@@ -132,11 +132,13 @@ export {
 } from './input-otp'
 
 export {
+  type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  CarouselAutoplayPlugin,
 } from './carousel'
 
 export { Toggle, toggleVariants } from './toggle'
