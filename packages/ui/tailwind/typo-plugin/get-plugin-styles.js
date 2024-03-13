@@ -7,29 +7,29 @@ import {
 const typographyColorTheme = {
     // vars are defined in global.css
     // and dark mode is handled at that level.
-  '--tw-prose-body': "var(--hz-ui-fg-body)",
-  '--tw-prose-headings': "var(--hz-ui-fg-0)",
-  '--tw-prose-links': "var(--hz-ui-fg-0)",
-  '--tw-prose-links-hover': "var(--hz-ui-fg-2)",
-  '--tw-prose-bold': "var(--hz-ui-fg-0)",
-  '--tw-prose-counters': "var(--hz-ui-fg-4)",
-  '--tw-prose-bullets': "var(--hz-ui-fg-2)",
-  '--tw-prose-hr': "var(--hz-ui-fg-2)",
-  '--tw-prose-quotes': "var(--hz-ui-fg-body)",
-  '--tw-prose-quote-borders': "var(--hz-ui-fg-3)",
-  '--tw-prose-captions': "var(--hz-ui-fg-2)",
-  '--tw-prose-kbd': "var(--hz-ui-fg-0)",
-  '--tw-prose-kbd-shadows': "var(--hz-ui-fg-1)",
-  '--tw-prose-code': "var(--hz-ui-fg-0)",
-  '--tw-prose-pre-code': "var(--hz-ui-fg-1)",
-  '--tw-prose-pre-bg': "var(--hz-ui-bg-1)",
-  '--tw-prose-th-borders': "var(--hz-ui-fg-2)",
-  '--tw-prose-td-borders': "var(--hz-ui-fg-3)",
+  '--tw-typo-plugin-body': "var(--hz-ui-fg-body)",
+  '--tw-typo-plugin-headings': "var(--hz-ui-fg-0)",
+  '--tw-typo-plugin-links': "var(--hz-ui-fg-0)",
+  '--tw-typo-plugin-links-hover': "var(--hz-ui-fg-2)",
+  '--tw-typo-plugin-bold': "var(--hz-ui-fg-0)",
+  '--tw-typo-plugin-counters': "var(--hz-ui-fg-4)",
+  '--tw-typo-plugin-bullets': "var(--hz-ui-fg-2)",
+  '--tw-typo-plugin-hr': "var(--hz-ui-fg-2)",
+  '--tw-typo-plugin-quotes': "var(--hz-ui-fg-body)",
+  '--tw-typo-plugin-quote-borders': "var(--hz-ui-fg-3)",
+  '--tw-typo-plugin-captions': "var(--hz-ui-fg-2)",
+  '--tw-typo-plugin-kbd': "var(--hz-ui-fg-0)",
+  '--tw-typo-plugin-kbd-shadows': "var(--hz-ui-fg-1)",
+  '--tw-typo-plugin-code': "var(--hz-ui-fg-0)",
+  '--tw-typo-plugin-pre-code': "var(--hz-ui-fg-1)",
+  '--tw-typo-plugin-pre-bg': "var(--hz-ui-bg-1)",
+  '--tw-typo-plugin-th-borders': "var(--hz-ui-fg-2)",
+  '--tw-typo-plugin-td-borders': "var(--hz-ui-fg-3)",
 }
 
 const defaultCSS = {
 
-  color: 'var(--tw-prose-body)',
+  color: 'var(--tw-typo-plugin-body)',
 // YUCK  maxWidth: '65ch',
   p: {
     textAlign: 'inherit'
@@ -37,17 +37,17 @@ const defaultCSS = {
   'p:first-child': {},
   'p:last-child': {},
   a: {
-    color: 'var(--tw-prose-links)',
+    color: 'var(--tw-typo-plugin-links)',
     textDecoration: 'underline',
     fontWeight: '400',
   },
   'a:hover': {
-    color: 'var(--tw-prose-links-hover)',
+    color: 'var(--tw-typo-plugin-links-hover)',
   },
   blockquote: {
     fontWeight: '400',
     fontStyle: 'italic',
-    color: 'var(--tw-prose-quotes)',
+    color: 'var(--tw-typo-plugin-quotes)',
     quotes: '"\\201C""\\201D""\\2018""\\2019"',
   },
   //'blockquote::before': {},
@@ -65,7 +65,7 @@ const defaultCSS = {
     display: 'block',
     fontStyle: 'normal',
     textAlign: 'right',
-    color: 'var(--tw-prose-quotes)',
+    color: 'var(--tw-typo-plugin-quotes)',
   },
   ol: {
     listStyleType: 'decimal',
@@ -75,44 +75,44 @@ const defaultCSS = {
   },
   'ol > li::marker': {
     fontWeight: '400',
-    color: 'var(--tw-prose-counters)',
+    color: 'var(--tw-typo-plugin-counters)',
   },
   'ul > li::marker': {
-    color: 'var(--tw-prose-bullets)',
+    color: 'var(--tw-typo-plugin-bullets)',
   },
   'ul > li::before': {
   },
   hr: {
-    borderColor: 'var(--tw-prose-hr)',
+    borderColor: 'var(--tw-typo-plugin-hr)',
     borderTopWidth: 1,
   },
   h1: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '800',
     textAlign: 'inherit'
   },
   h2: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '700',
     textAlign: 'inherit'
   },
   h3: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '600',
     textAlign: 'inherit'
   },
   h4: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '600',
     textAlign: 'inherit'
   },
   h5: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '600',
     textAlign: 'inherit'
   },
   h6: {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     textAlign: 'inherit'
   },
   img: {},
@@ -124,19 +124,19 @@ const defaultCSS = {
     display: 'block',
   },
   strong: {
-    color: 'var(--tw-prose-bold)',
+    color: 'var(--tw-typo-plugin-bold)',
     fontWeight: '600',
   },
   video: {},
   kbd: {
     fontWeight: '500',
     fontFamily: 'inherit',
-    color: 'var(--tw-prose-kbd)',
+    color: 'var(--tw-typo-plugin-kbd)',
     boxShadow:
-      '0 0 0 1px rgb(var(--tw-prose-kbd-shadows) / 10%), 0 3px 0 rgb(var(--tw-prose-kbd-shadows) / 10%)',
+      '0 0 0 1px rgb(var(--tw-typo-plugin-kbd-shadows) / 10%), 0 3px 0 rgb(var(--tw-typo-plugin-kbd-shadows) / 10%)',
   },
   code: {
-    color: 'var(--tw-prose-code)',
+    color: 'var(--tw-typo-plugin-code)',
     fontWeight: '500',
   },
   'code::before': {
@@ -173,8 +173,8 @@ const defaultCSS = {
     color: 'inherit',
   },
   pre: {
-    color: 'var(--tw-prose-pre-code)',
-    backgroundColor: 'var(--tw-prose-pre-bg)',
+    color: 'var(--tw-typo-plugin-pre-code)',
+    backgroundColor: 'var(--tw-typo-plugin-pre-bg)',
     overflowX: 'auto',
     fontWeight: '400',
   },
@@ -202,10 +202,10 @@ const defaultCSS = {
   },
   thead: {
     borderBottomWidth: '1px',
-    borderBottomColor: 'var(--tw-prose-th-borders)',
+    borderBottomColor: 'var(--tw-typo-plugin-th-borders)',
   },
   'thead th': {
-    color: 'var(--tw-prose-headings)',
+    color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '600',
     verticalAlign: 'bottom',
   },
@@ -218,7 +218,7 @@ const defaultCSS = {
   },
   tfoot: {
     borderTopWidth: '1px',
-    borderTopColor: 'var(--tw-prose-th-borders)',
+    borderTopColor: 'var(--tw-typo-plugin-th-borders)',
   },
   'tfoot td': {
     verticalAlign: 'top',
@@ -244,7 +244,7 @@ const defaultModifiers = (base) => ({
         a: {},
         'a:hover': {},
         blockquote: {
-          //color: 'blue', //var(--tw-prose-quotes)',
+          //color: 'blue', //var(--tw-typo-plugin-quotes)',
           //marginTop: pxToEm(32, 20),
           //marginBottom: pxToEm(32, 20),
           //paddingLeft: pxToEm(20, 20),
