@@ -29,7 +29,6 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.2",
     "@next/third-parties": "^14.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -59,24 +58,24 @@
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.merge": "^4.6.2",
-    "lucide-react": "^0.344.0",
     "markdown-to-jsx": "^7.3.2",
     "postcss-selector-parser": "^6.0.13",
     "react-day-picker": "^8.7.1",
-    "react-device-detect": "^2.2.3",
-    "react-hook-form": "^7.47.0",
     "react-intersection-observer": "^9.7.0",
-    "react-social-icons": "^6.14.0",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss-interaction-media": "^0.1.0",
-    "validator": "^13.11.0",
-    "zod": "3.21.4"
+    "tailwindcss-animate": "^1.0.6",
+    "tailwindcss-interaction-media": "^0.1.0"
   },
   "peerDependencies": {
+    "@hookform/resolvers": "^3.3.2",
+    "lucide-react": "^0.344.0",
     "next": "^14.1.0",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.47.0",
+    "validator": "^13.11.0",
+    "zod": "3.21.4"
   },
   "devDependencies": {
     "@mdx-js/loader": "^3.0.0",
@@ -85,7 +84,7 @@
     "@types/gtag.js": "^0.0.19",
     "@types/lodash.merge": "^4.6.9",
     "@types/mdx": "^2.0.9",
-    "@types/react": "^18.2.48",
+    "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.18",
     "tailwindcss": "^3.4.1",
     "typescript": "5.3.3"

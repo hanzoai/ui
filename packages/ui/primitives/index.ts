@@ -165,3 +165,4 @@ export { default as NavItems} from './nav-items'
 export { default as Main } from './main'
 export { default as ListBox } from './list-box'
 
+export * as Icons from './icons'

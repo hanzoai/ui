@@ -11,19 +11,9 @@ export type {default as GridDef, GridColumnSpec} from './grid-def'
 export type { TShirtDimensions, Dimensions } from './dimensions' 
 export type { ContactInfo, ContactInfoFields } from './contact-info'
 
-import type BulletItem from './bullet-item'
-import type Icon from './icon'
-import type ImageDef from './image-def'
-import type LinkDef from './link-def'
-import type SiteDef from './site-def'
-import type TShirtSize from './t-shirt-size' 
-
-export {
-  type BulletItem,
-  type Icon,
-  type ImageDef,
-  type LinkDef,
-  type SiteDef,
-  type TShirtSize,
-}
+export type { default as BulletItem } from './bullet-item'
+export type { default as Icon } from './icon'
+export type { default as ImageDef } from './image-def'
+export type { default as LinkDef } from './link-def'
+export type { default as TShirtSize } from './t-shirt-size' 
 
