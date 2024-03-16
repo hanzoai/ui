@@ -9,7 +9,7 @@ enableStaticRendering(typeof window === "undefined")
 import type CommerceService from '../types/commerce-service'
 import type { ServiceOptions } from '..'
 import getServiceSingleton from './impls'
-import type { Category, FacetsDesc } from '../types'
+import type { Category, FacetValueDesc } from '../types'
 
 const CommerceServiceContext = createContext<CommerceService | undefined>(undefined)
 
@@ -20,16 +20,16 @@ const useCommerce = (): CommerceService => {
 
 const CommerceServiceProvider: React.FC<PropsWithChildren & {
   productsByCategory: Category[]
-  facets: FacetsDesc
+  rootFacet: FacetValueDesc
   options?: ServiceOptions
 }> = ({ 
   children,
   productsByCategory,
-  facets,
+  rootFacet,
   options
 }) => {
 
-  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, facets, options))
+  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, rootFacet, options))
   return (
     <CommerceServiceContext.Provider value={serviceRef.current}>
       {children}

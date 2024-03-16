@@ -1,6 +1,6 @@
 import { enableStaticRendering } from 'mobx-react-lite'
 
-import type { CommerceService, Category, FacetsDesc } from '../../../types'
+import type { CommerceService, Category, FacetValueDesc } from '../../../types'
 import StandaloneService, {type StandaloneServiceOptions} from './standalone-service'
 
 import { readSnapshot, listenAndWriteSnapshots } from './localStorage'
@@ -19,7 +19,7 @@ let instance: StandaloneService | undefined =  undefined
 
 export const getInstance = (
   categories: Category[], 
-  facets: FacetsDesc, 
+  rootFacet: FacetValueDesc, 
   options?: StandaloneServiceOptions
 ): CommerceService => {
 
@@ -31,7 +31,7 @@ export const getInstance = (
     //_log("NEW INSTANCE FOR SERVER")
     return new StandaloneService(
       categories, 
-      facets, 
+      rootFacet, 
       options
     )
   }
@@ -42,7 +42,7 @@ export const getInstance = (
     const snapShot = readSnapshot()
     instance = new StandaloneService(
       categories, 
-      facets, 
+      rootFacet, 
       options,
       snapShot
     )

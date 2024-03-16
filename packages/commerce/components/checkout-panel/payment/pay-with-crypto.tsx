@@ -1,7 +1,5 @@
 'use client'
-
 import React, { useEffect, useState } from 'react'
-
 import { autorun } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
@@ -23,7 +21,8 @@ import { useAuth } from '@hanzo/auth/service'
 import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 
 import Eth from '../icons/eth'
-import { useCommerce, type TransactionStatus } from '../../..'
+import { useCommerce } from '../../../service/context'
+import type { TransactionStatus } from '../../../types'
 import { formatPrice } from '../../../util'
 
 declare global {

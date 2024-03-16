@@ -1,3 +1,4 @@
+import type { StringMutator, CommerceService } from '../types'
 
 export function toTitleCase(str: string) {
   return str.replace(
@@ -25,6 +26,34 @@ export function formatPrice(price: number): string {
     currency: 'USD',
   });
   return (str.endsWith('.00')) ? str.replace('.00', '') : str 
+}
+
+export const getFacetValuesMutator = (level: number, cmmc: CommerceService): StringMutator => {
+
+  const setLevel = (value: string, level: number ): void  => {
+    const facets = cmmc.facetsValue
+    facets[level] = [value]
+    cmmc.setFacets(facets)
+    const subFacets = cmmc.getFacetValuesSpecified(level)
+    if (subFacets) {
+      const facets = cmmc.facetsValue
+      facets[level + 1] = [subFacets[0].value]
+      cmmc.setFacets(facets)
+    }
+  }
+
+  const getLevelValueSafe = (level: number): string | null => {
+    const facets = cmmc.facetsValue
+    if (!(level in facets) || facets[level].length === 0 ) {
+      return null
+    }
+    return facets[level][0]
+  }
+
+  return {
+    get: () => (getLevelValueSafe(level)),
+    set: (v: string) => {setLevel(v, level)}
+  } satisfies StringMutator
 }
 
 
