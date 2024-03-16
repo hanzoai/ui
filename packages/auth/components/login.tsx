@@ -98,14 +98,16 @@ const Login: React.FC<{
         </div>
       ) : (
         <div className='flex flex-col gap-4 text-center'>
-          <div className='mb-4 items-center flex'>
-            {returnToUrl && (
-              <Button size='icon' variant='ghost' className='absolute' onClick={() => router.push(returnToUrl)}>
-                <ArrowLeft/>
-              </Button>
-            )}
-            {!hideHeader && <h2 className='mx-auto'>Login</h2>}
-          </div>
+          {!hideHeader && (
+            <div className='mb-4 items-center flex'>
+              {returnToUrl && (
+                <Button size='icon' variant='ghost' className='absolute' onClick={() => router.push(returnToUrl)}>
+                  <ArrowLeft/>
+                </Button>
+              )}
+              <h2 className='mx-auto'>Login</h2>
+            </div>
+          )}
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4'/>
           <p>- <span className='font-normal font-nav'>or</span> -</p>
