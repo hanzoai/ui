@@ -23,9 +23,10 @@ const getDBInstance = (name: string): Firestore => {
  
 interface SavedOrder {
   email: string
-  paymentMethod: string
+  name: string
   // TODO: add shippingInfo type
   shippingInfo?: any
+  paymentInfo?: any
   status: string
   timestamp: FieldValue
   items: ActualLineItemSnapshot[]
@@ -33,16 +34,16 @@ interface SavedOrder {
 
 const createOrder = async (
   email: string,
-  paymentMethod: string,
   items: ActualLineItemSnapshot[],
   options: {
     dbName: string
     ordersTable: string
-  }
+  },
+  name?: string
 ): Promise<{
   success: boolean,
   error: any,
-  id?: string
+  id?: string,
 }> => {  
 
   let error: any | null = null
@@ -52,7 +53,7 @@ const createOrder = async (
   try {
     await setDoc(doc(ordersRef, orderId), {
       email,
-      paymentMethod,
+      name: name ?? '',
       status: 'open',
       timestamp: serverTimestamp(),
       items,
@@ -67,17 +68,13 @@ const createOrder = async (
   return { success: !error, error }  
 }
 
-const updateOrder = async (
+const updateOrderShippingInfo = async (
   orderId: string,
-  email: string,
-  paymentMethod: string,
-  // TODO: add shippingInfo type
-  items: ActualLineItemSnapshot[],
+  shippingInfo: any,
   options: {
     dbName: string
     ordersTable: string
-  },
-  shippingInfo?: any
+  }
 ): Promise<{
   success: boolean,
   error: any
@@ -88,20 +85,45 @@ const updateOrder = async (
 
   try {
     await setDoc(doc(ordersRef, orderId), {
-      email,
-      paymentMethod,
       shippingInfo,
-      status: 'open',
       timestamp: serverTimestamp(),
-      items,
-    } satisfies SavedOrder)
+    }, { merge: true })
   } 
   catch (e) {  
-      console.error('Error writing item document: ', e)
-      error = e  
+    console.error('Error writing item document: ', e)
+    error = e  
   }  
   
   return { success: !error, error }  
 }
 
-export { createOrder, updateOrder }
+const updateOrderPaymentInfo = async (
+  orderId: string,
+  paymentInfo: any,
+  options: {
+    dbName: string
+    ordersTable: string
+  }
+): Promise<{
+  success: boolean,
+  error: any
+}> => {  
+
+  let error: any | null = null
+  const ordersRef = collection(getDBInstance(options.dbName), options.ordersTable)
+
+  try {
+    await setDoc(doc(ordersRef, orderId), {
+      paymentInfo,
+      timestamp: serverTimestamp(),
+    }, { merge: true })
+  } 
+  catch (e) {  
+    console.error('Error writing item document: ', e)
+    error = e  
+  }  
+  
+  return { success: !error, error }  
+}
+
+export { createOrder, updateOrderShippingInfo, updateOrderPaymentInfo }

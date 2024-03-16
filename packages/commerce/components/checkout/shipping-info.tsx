@@ -40,11 +40,9 @@ const shippingFormSchema = z.object({
 
 const ShippingInfo: React.FC<{
   orderId?: string,
-  paymentMethod?: string,
   setCurrentStep: (currentStep: number) => void
 }> = ({
   orderId,
-  paymentMethod,
   setCurrentStep
 }) => { 
   const auth = useAuth()
@@ -65,10 +63,10 @@ const ShippingInfo: React.FC<{
   })
 
   const onSubmit = async (values: z.infer<typeof shippingFormSchema>) => {
-    if (auth.user && orderId && paymentMethod) {
-      await cmmc.updateOrder(orderId, auth.user.email, paymentMethod, values)
+    if (auth.user && orderId) {
+      await cmmc.updateOrderShippingInfo(orderId, values)
     }
-    setCurrentStep(4)
+    setCurrentStep(3)
   }
 
   return (
@@ -198,11 +196,7 @@ const ShippingInfo: React.FC<{
             />
           </div>
         </div>
-
-        <div className='flex gap-4 items-center mt-6'>
-          <Button variant='outline' onClick={() => setCurrentStep(2)} className='mx-auto w-full'>Back</Button>
-          <Button type='submit' className='mx-auto w-full'>Confirm order</Button>
-        </div>
+        <Button type='submit' className='mx-auto w-full mt-4'>Confirm order</Button>
       </form>
     </Form>
   )

@@ -29,3 +29,4 @@ export function formatPrice(price: number): string {
 
 
 export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
+export { default as processSquareCardPayment } from './square-payment'
