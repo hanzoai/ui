@@ -94,9 +94,11 @@ export {
 
 export { 
   Popover, 
-  PopoverTrigger, 
+  PopoverAnchor, 
+  PopoverArrow, 
+  PopoverClose, 
   PopoverContent, 
-  PopoverAnchor 
+  PopoverTrigger, 
 } from './popover'
 
 export {

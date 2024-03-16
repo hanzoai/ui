@@ -1,12 +1,17 @@
 'use client'
+import React from 'react'
 
+import type { UseFormReturn } from 'react-hook-form'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
-import type { UseFormReturn } from 'react-hook-form'
+
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
-import { useCommerce, type TransactionStatus } from '../../..'
-import PaymentMethods from './payment-methods'
+
 import { processSquareCardPayment } from '../../../util'
+import { useCommerce } from '../../../service/context'
+import type { TransactionStatus } from '../../../types'
+
+import PaymentMethods from './payment-methods'
 import ContactInfo from './contact-info'
 
 const PayWithCard: React.FC<{

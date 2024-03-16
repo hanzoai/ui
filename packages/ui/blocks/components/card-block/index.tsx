@@ -1,6 +1,6 @@
 import React from 'react'
 
-import type { Dimensions, LinkDef, TShirtDimensions  } from  '../../types'
+import type { LinkDef, TShirtDimensions  } from  '../../../types'
 
 import {
   ApplyTypography,  
@@ -10,63 +10,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  LinkElement,
   type TypographySize
-} from '../../primitives'
+} from '../../../primitives'
 
-import { Icons } from '../../primitives'
+import type { CardBlock } from '../../def'
 
-import {
-  getSpecifierData, 
-  getPrimaryStartingWith, 
-  getDim, 
-} from '../../util/specifier'
+import ImageBlockComponent from '../image-block'
+import VideoBlockComponent from '../video-block'
+import CTABlockComponent from '../cta-block'
+import type BlockComponentProps from '../block-component-props'
+import { cn } from '../../../util'
 
-import type { Block, CardBlock } from '../def'
+import { getTypographySize } from './util'
+import LinkOutButton from './link-out-button'
 
-
-import ImageBlockComponent from './image-block'
-import VideoBlockComponent from './video-block'
-import CTABlockComponent from './cta-block'
-import type BlockComponentProps from './block-component-props'
-import { cn } from '../../util'
-
-const ArrowLinkElement: React.FC<{
-  def: LinkDef,
-}> = ({
-  def
-}) => (
-  <LinkElement
-    def={def}
-    className='justify-between'
-    variant='link'
-    icon={<Icons.linkOut className='w-[18px] h-[18px]' />}
-    iconAfter
-  />
-) 
-
-const getTypographySize = (s: string): TypographySize => (
-  getSpecifierData<TypographySize>(
-    s,
-    (s: string) => (getPrimaryStartingWith(s, 'typography')),
-    (s: string): TypographySize | undefined => {
-      const subTokenArray = s.split('-')
-      return subTokenArray[subTokenArray.length - 1] as TypographySize
-    },
-    'responsive'
-  ) as TypographySize
-)
-
-const getSmallIconDim = (s: string): Dimensions | undefined => (
-  getSpecifierData<Dimensions>(
-    s,
-    (s: string) => (getPrimaryStartingWith(s, 'small-icon')),
-    getDim,
-  ) 
-)
-
-const CardBlockComponent: React.FC<
-  BlockComponentProps & {
+const CardBlockComponent: React.FC<BlockComponentProps & {
   contentClassName?: string
 }> = ({
   block,
@@ -181,7 +139,7 @@ const CardBlockComponent: React.FC<
     }>
       <CTABlockComponent 
         block={card.cta} 
-        renderLink={(def: LinkDef, key: any) => (<ArrowLinkElement def={def} key={key} />)}
+        renderLink={(def: LinkDef, key: any) => (<LinkOutButton def={def} key={key} />)}
       />
     </CardFooter>
   ) : ( // default 

@@ -1,25 +1,27 @@
 'use client'
 import React, { useState } from 'react'
 
-import { ToggleGroup, ToggleGroupItem, type toggleVariants} from "@hanzo/ui/primitives"
+import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
 import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'
 import FacetImage from './facet-image'
 
-const FacetTogglesWidget: React.FC<{
+const FacetValuesWidget: React.FC<{
   facetValues: FacetValueDesc[]
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
   buttonClx?: string
+  itemClx?: string
   isMobile?: boolean
   tabSize?: string
 }> = ({
   facetValues,
   mutator,
-  multiple='',
+  multiple=false,
   buttonClx='',
+  itemClx='',
   className='',
   isMobile=false,
   tabSize
@@ -73,7 +75,7 @@ const FacetTogglesWidget: React.FC<{
           {...roundedToSpread}
           className={buttonClx}
         >
-          <span className={cn('flex flex-row justify-center gap-1 h-4 items-center')} >
+          <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
             <FacetImage facetValueDesc={fv} />
             {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>
@@ -85,4 +87,4 @@ const FacetTogglesWidget: React.FC<{
 }
 // hidden md:block 
 
-export default FacetTogglesWidget
+export default FacetValuesWidget

@@ -12,7 +12,8 @@ import { useAuth } from '@hanzo/auth/service'
 import PayWithCrypto from './pay-with-crypto'
 import PayWithBankTransfer from './pay-with-bank-transfer'
 import PayWithCard from './pay-with-card'
-import { useCommerce, type TransactionStatus } from '../../..'
+import { useCommerce } from '../../../service/context'
+import type { TransactionStatus } from '../../../types'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, 'Enter your full name.'),

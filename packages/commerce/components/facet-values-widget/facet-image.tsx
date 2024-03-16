@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import type { FacetValueDesc } from '../../types'
 
-const ICON_SIZE = 16
+const ICON_SIZE = 20
 const SVG_MULT = 1.5
 
 const FacetImage: React.FC<{
@@ -27,16 +27,19 @@ const FacetImage: React.FC<{
       <Image 
         src={img as string} 
         alt={`Toggle ${label}`} 
-        className={'block mr-1 rounded border border-muted-2 ' + (ar ? '' : 'aspect-square')} 
+        className={'block mr-1 '} 
         width={ar ?  ar * ICON_SIZE : ICON_SIZE}
         height={ICON_SIZE}
       />
     )
   }
 
+  return img as React.ReactNode
+
     // Otherwise, assume it's a ReactNode of an imported SVG
 
     // If it's not square, center it in the appropriate dimension
+    /*
   const svgStyle: any = { position: 'relative' }
   if (ar) {
     if (ar < 1) {
@@ -51,7 +54,7 @@ const FacetImage: React.FC<{
 
   return (
     <span 
-      className='block overflow-hidden ' 
+      className='flex justify-center items-center overflow-hidden ' 
       style={{
         color: 'inherit',
         width: ICON_SIZE * SVG_MULT, 
@@ -65,6 +68,7 @@ const FacetImage: React.FC<{
       })}
     </span>
   )
+  */
 } 
 
 export default FacetImage
