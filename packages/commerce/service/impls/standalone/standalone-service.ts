@@ -17,7 +17,8 @@ import type {
 
 import {
   createOrder as createOrderHelper,
-  updateOrder as updateOrderHelper
+  updateOrderShippingInfo as updateOrderShippingInfoHelper,
+  updateOrderPaymentInfo as updateOrderPaymentInfoHelper
 } from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
@@ -88,16 +89,20 @@ class StandaloneService
     })
   }
 
-  async createOrder(email: string, paymentMethod: string): Promise<string | undefined> {
+  async createOrder(email: string, name?: string): Promise<string | undefined> {
     const snapshot = this.takeSnapshot()
-    const order = await createOrderHelper(email, paymentMethod, snapshot.items, this._options) // didn't want to have two levels of 'items'
+    const order = await createOrderHelper(email, snapshot.items, this._options, name) // didn't want to have two levels of 'items'
     return order.id
   }
 
   // TODO: add shippingInfo type
-  async updateOrder(orderId: string, email: string, paymentMethod: string, shippingInfo?: any): Promise<void> {
-    const snapshot = this.takeSnapshot()
-    updateOrderHelper(orderId, email, paymentMethod, snapshot.items, this._options, shippingInfo) // didn't want to have two levels of 'items'
+  async updateOrderShippingInfo(orderId: string, shippingInfo: any): Promise<void> {
+    updateOrderShippingInfoHelper(orderId, shippingInfo, this._options)
+  }
+
+  // TODO: add paymentInfo type
+  async updateOrderPaymentInfo(orderId: string, paymentInfo: any): Promise<void> {
+    updateOrderPaymentInfoHelper(orderId, paymentInfo, this._options)
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
