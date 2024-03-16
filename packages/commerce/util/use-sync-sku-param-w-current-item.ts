@@ -56,8 +56,11 @@ const useSyncSkuParamWithCurrentItem = (
     const setCurrentCategoryFromSku = (sku: string) => {
       const toks: string[] = sku.split('-')
       const fv: FacetsValue = {}
+        // TODO: confirm that extra trailing nonsense tokens won't break setFacets()
       for (let i = 1; i < categoryLevel; i++) {
-        fv[i] = [toks[i]]
+        if (i in toks) {
+          fv[i] = [toks[i]]
+        } 
       } 
       cmmc.setFacets(fv)
     }

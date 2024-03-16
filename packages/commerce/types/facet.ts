@@ -5,6 +5,7 @@ interface FacetValueDesc {
   label: string
   img? : string | ReactNode  // icon is required 
   imgAR? : number           // helps with svgs
+  sub?: FacetValueDesc[]
 }
 
 /* *** FOR EXAMPLE **
@@ -25,13 +26,10 @@ interface FacetValueDesc {
   ]
 }
 */
-type FacetsDesc = Record<number, FacetValueDesc[]>
-
   // Which facets tokens are on at each level
 type FacetsValue = Record<number, string[]>
 
 export type {
   FacetValueDesc,
-  FacetsDesc,
   FacetsValue
 }

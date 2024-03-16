@@ -1,8 +1,9 @@
 import type Product from './product'
 
 interface Category {
-  id: string      // LXB-AU-B
-  title: string   // Lux Gold, Minted Bar
+  id: string          // LXB-AU-B
+  title: string       // Minted Bar
+  parentTitle?: string // Lux Gold
   desc?: string
   img?: string 
     // inbound they're Products and then interally they become LineItems

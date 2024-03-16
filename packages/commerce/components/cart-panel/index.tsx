@@ -5,24 +5,25 @@ import { observer } from 'mobx-react-lite'
 import { Button } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import { useCommerce } from '../service/context'
-import { formatPrice } from '../util'
+import { useCommerce } from '../../service/context'
+import { formatPrice } from '../../util'
 
 import CartLineItem from './cart-line-item'
-import { Checkout } from '.'
+import CheckoutPanel from '../checkout-panel'
 
-const Cart: React.FC<PropsWithChildren & {
+const CartPanel: React.FC<PropsWithChildren & {
   className?: string
   isMobile?: boolean,
-  hideCheckout?: boolean
+  noCheckout?: boolean
 }> = observer(({
     /** Children is the heading area. */
   children,
   className='',
   isMobile=false,
-  hideCheckout=false
+  noCheckout=false
 }) => {
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+
+  const [checkoutOpen, setCheckoutOpen] = useState<boolean>(false)
   const cmmc = useCommerce()
 
   return (
@@ -30,7 +31,7 @@ const Cart: React.FC<PropsWithChildren & {
       {children}
       <div className='mt-2 w-full'>
         {!!children && <div className='h-[1px] w-pr-80 mb-4 mx-auto bg-muted-3'/>}
-        {cmmc.cartItems.length === 0 ? (
+        {cmmc.cartEmpty ? (
           <p className='text-center mt-4'>No items in cart</p>
         ) : (<>
           {cmmc.cartItems.map((item, i) => (
@@ -39,16 +40,22 @@ const Cart: React.FC<PropsWithChildren & {
           <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
         </>)}
       </div>
-      {!hideCheckout && (
-        <>
-          {cmmc.cartItems.length > 0 && (
-            <Button size='lg' variant='secondary' rounded='lg' className='mt-12 mx-auto' onClick={() => setIsCheckoutOpen(!isCheckoutOpen)}>Checkout</Button>
-          )}
-          {isCheckoutOpen && <Checkout toggleCheckout={() => setIsCheckoutOpen(!isCheckoutOpen)}/>}
-        </>
-      )}
+      {!noCheckout && (<>
+        {!cmmc.cartEmpty && (
+          <Button 
+            size='lg' 
+            variant='secondary' 
+            rounded='lg' 
+            className='mt-12 mx-auto' 
+            onClick={() => setCheckoutOpen(!checkoutOpen)}
+          >
+            Checkout
+          </Button>
+        )}
+        {checkoutOpen && <CheckoutPanel close={() => {setCheckoutOpen(false)}}/>}
+      </>)}
     </div>
   )
 })
 
-export default Cart
+export default CartPanel

@@ -11,7 +11,6 @@ import fontFamily from './fontFamily.tailwind'
 import typographyPlugin from './typo-plugin'
 
 export default {
-  presets: [],
   darkMode: ["class"],
   content: [],
   safelist,

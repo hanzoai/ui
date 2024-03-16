@@ -1,9 +1,10 @@
 'use client'
+import React from 'react'
+import type { UseFormReturn } from 'react-hook-form'
+import { BookUser, Lock, User } from 'lucide-react'
 
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
-import { BookUser, Lock, User } from 'lucide-react'
 import { EnhHeadingBlockComponent, type EnhHeadingBlock } from '@hanzo/ui/blocks'
-import type { UseFormReturn } from 'react-hook-form'
  
 const ConfirmOrder: React.FC<{
   paymentForm: UseFormReturn<{
