@@ -30,7 +30,6 @@ const CartPanel: React.FC<PropsWithChildren & {
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
       <div className='mt-2 w-full'>
-        {!!children && <div className='h-[1px] w-pr-80 mb-4 mx-auto bg-muted-3'/>}
         {cmmc.cartEmpty ? (
           <p className='text-center mt-4'>No items in cart</p>
         ) : (<>
