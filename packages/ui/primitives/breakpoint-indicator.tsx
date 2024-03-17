@@ -1,6 +1,6 @@
 import React from 'react'
 
-const TailwindIndicator: React.FC = () => {
+const BreakpointIndicator: React.FC = () => {
   
   if (process.env.NODE_ENV === "production") return null
 
@@ -16,4 +16,4 @@ const TailwindIndicator: React.FC = () => {
   )
 }
 
-export default TailwindIndicator
+export default BreakpointIndicator

@@ -6,9 +6,9 @@ interface CommerceService extends ObsLineItemRef {
 
     /** Items in cart */
   get cartItems(): LineItem[]
-    /** Total of all quantities of all products in cart */
+    /** Total of all quantities of all items in cart */
   get cartQuantity(): number
-    /** Total of all prices * quantities of products in cart */
+    /** Total of all prices * quantities of items in cart */
   get cartTotal(): number
 
   get cartEmpty(): boolean
