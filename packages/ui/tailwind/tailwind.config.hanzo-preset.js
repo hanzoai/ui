@@ -34,6 +34,7 @@ export default {
       bounce: 'bounce 1s infinite',
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
+      "mobile-menu-open": "opacity-in 300ms ease-in",
     },
     aria: {
       checked: 'checked="true"',
@@ -534,6 +535,10 @@ export default {
       "accordion-up": {
         from: { height: "var(--radix-accordion-content-height)" },
         to: { height: 0 },
+      },
+      "opacity-in": {
+        from: { opacity: '0' },
+        to: { opacity: '1' }
       },
     },
     letterSpacing: {
