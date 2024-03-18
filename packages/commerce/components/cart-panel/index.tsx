@@ -25,6 +25,9 @@ const CartPanel: React.FC<PropsWithChildren & {
 
   const [checkoutOpen, setCheckoutOpen] = useState<boolean>(false)
   const cmmc = useCommerce()
+  if (!cmmc) {
+    return <div />
+  }
 
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
