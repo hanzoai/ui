@@ -32,7 +32,7 @@ const CheckoutPanel: React.FC<{
       setCurrentStep={setCurrentStep}
     />
   ) : (
-    <LoginComponent hideHeader className='max-w-[20rem] mx-auto'/>
+    <LoginComponent hideHeader className='max-w-[20rem] mx-auto' inputClassName='border-muted-4'/>
   )
 
   const step2 = (
@@ -46,27 +46,28 @@ const CheckoutPanel: React.FC<{
   return (
     <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-50">  
       <Toaster/>  
-      <Main className='flex flex-col gap-1 h-full'>
-        <div className='flex justify-between items-center'>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={() => {
-              setCurrentStep(0)
-              close()
-            }}
-          >
-            <ChevronLeft/>
-          </Button>
-          <AuthWidget/>
-        </div>    
+      <div className='absolute flex w-full justify-between pt-2 md:pt-5 px-2 md:px-5'>
+        <Button
+          variant='ghost'
+          size='icon'
+          onClick={() => {
+            setCurrentStep(0)
+            close()
+          }}
+          className='w-auto h-auto rounded-full bg-level-1 p-2 md:p-4'
+        >
+          <ChevronLeft className='w-5 h-5'/>
+        </Button>    
+        <AuthWidget/>
+      </div>
 
-        <div className='grid grid-cols-5 justify-center gap-8 h-full'>
-          <div className='col-span-2 hidden md:flex'>
-            <CartPanel noCheckout className='fixed justify-center border-none mt-10 w-1/3 max-w-[40rem]'/>
-          </div>
+      <div className='grid grid-cols-1 md:grid-cols-2 justify-center h-full overflow-y-auto md:overflow-y-hidden'>
+        <div className='flex items-center justify-center py-2'>
+          <CartPanel noCheckout className='border-none mt-10 w-full lg:w-1/2'/>
+        </div>
 
-          <div className='flex flex-col gap-8 sm:gap-14 col-span-5 md:col-span-3 max-w-[30rem] w-full mx-auto overflow-y-auto h-[calc(100%-40px)] sm:h-[calc(100%-48px)] py-4 px-1'>
+        <div className='bg-level-1'>
+          <Main className='flex flex-col h-full md:h-[calc(100vh-48px)] gap-8 sm:gap-14 max-w-[30rem] w-full mx-auto md:overflow-y-auto px-2 pb-6 md:mt-12'>
             <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
               <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
                 <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Payment</div>
@@ -81,9 +82,9 @@ const CheckoutPanel: React.FC<{
               </div>
             </div>
             {steps[currentStep - 1]}
-          </div>
+          </Main>
         </div>
-      </Main>
+      </div>
     </div>
   )
 })

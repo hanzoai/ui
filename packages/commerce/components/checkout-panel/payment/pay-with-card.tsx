@@ -110,17 +110,15 @@ const PayWithCard: React.FC<{
        */
       locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID}
     >
-      <div className='flex flex-col gap-2 mt-6'>
-        {transactionStatus === 'confirmed' ? (
-          <ApplyTypography className='flex flex-col gap-4'>
+      <ApplyTypography className='flex flex-col gap-2 mt-6'>
+        {transactionStatus === 'paid' ? (
+          <div className='flex flex-col gap-4'>
             <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
             <Button onClick={() => setCurrentStep(2)}>Continue</Button>
-          </ApplyTypography>
-        ) : transactionStatus === 'paid' ? (
-          <ApplyTypography className='flex flex-col gap-4'>
-            <h5 className='mx-auto font-nav'>Processing your payment...</h5>
-          </ApplyTypography>
+          </div>
+        ) : transactionStatus === 'confirmed' ? (
+            <h6 className='mx-auto font-nav'>Processing your payment...</h6>
         ) : (
           <>
             <GooglePay/>
@@ -139,7 +137,7 @@ const PayWithCard: React.FC<{
             <CreditCard
               style={{
                 '.input-container': {
-                  borderColor: '#2D2D2D',
+                  borderColor: '#404040',
                   borderRadius: '6px',
                 },
                 '.input-container.is-focus': {
@@ -161,7 +159,7 @@ const PayWithCard: React.FC<{
                   color: '#ff1600',
                 },
                 input: {
-                  backgroundColor: '#000000',
+                  backgroundColor: '#1f1f1f',
                   color: '#FFFFFF',
                 },
                 'input::placeholder': {
@@ -184,13 +182,11 @@ const PayWithCard: React.FC<{
               }}
             />
             {transactionStatus === 'error' && (
-              <ApplyTypography>
-                <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
-              </ApplyTypography>
+              <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
             )}
           </>
         )}
-      </div>
+      </ApplyTypography>
     </PaymentForm>
   )
 }
