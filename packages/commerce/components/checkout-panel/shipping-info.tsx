@@ -81,7 +81,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>First name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,7 +94,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,7 +109,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>Address line 1</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +122,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>Address line 2 (optional)</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,7 +137,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>Zip code</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -150,7 +150,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,7 +165,7 @@ const ShippingInfo: React.FC<{
                 <FormItem className='space-y-1 w-full'>
                   <FormLabel>State (Optional)</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} className='border-muted-4'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

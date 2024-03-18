@@ -27,10 +27,12 @@ const EmailPasswordForm: React.FC<{
   onSubmit: (email: string, password: string) => void 
   isLoading: boolean
   className?: string
+  inputClassName?: string
 }> = ({
   onSubmit, 
   isLoading, 
-  className
+  className,
+  inputClassName
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +53,7 @@ const EmailPasswordForm: React.FC<{
             <FormItem className='space-y-1'>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} className={inputClassName}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,7 +66,7 @@ const EmailPasswordForm: React.FC<{
             <FormItem  className='space-y-1'>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type='password' {...field} />
+                <Input type='password' {...field} className={inputClassName}/>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -17,12 +17,14 @@ const Login: React.FC<{
   getStartedUrl?: string,
   returnToUrl?: string,
   className?: string,
+  inputClassName?: string,
   hideHeader?: boolean
 }> = observer(({
   redirectUrl,
   getStartedUrl,
   returnToUrl,
   className,
+  inputClassName,
   hideHeader
 }) => {
   const router = useRouter()
@@ -109,7 +111,7 @@ const Login: React.FC<{
             </div>
           )}
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
-          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4'/>
+          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
           <p>- <span className='font-normal font-nav'>or</span> -</p>
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
             <Ethereum height={20}/>Login with your wallet

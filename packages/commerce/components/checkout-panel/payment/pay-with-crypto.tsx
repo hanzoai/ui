@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import { autorun } from 'mobx'
 import { observer } from 'mobx-react-lite'
@@ -23,7 +24,6 @@ import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 import Eth from '../icons/eth'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
-import { formatPrice } from '../../../util'
 
 declare global {
   interface Window{
@@ -165,28 +165,34 @@ const PayWithCrypto: React.FC<{
       </Button>
     </div>
   ) : (
-    <div className='flex flex-col gap-2 w-full mx-auto max-w-[20rem]'>
-      <div>Cart value: {formatPrice(c.cartTotal)}</div>
-      <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
-        <SelectTrigger>
-          <SelectValue defaultValue='eth' />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
-            {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
-            <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <div>Available funds in your wallet: {availableAmount} ETH</div>
-      <div>
-        <Input value={amount ? amount/(10**18) : amount} contentEditable={false}/>
-        <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
-          <Eth height={10}/>
-          ETH
+    <div className='flex flex-col gap-2 w-full'>
+      <div className='flex gap-2 grid grid-cols-3'>
+        <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
+          <SelectTrigger>
+            <SelectValue defaultValue='eth' className='border-muted-4'/>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
+              {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
+              <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <div className='col-span-2'>
+          <Input
+            value={amount ? amount/(10**18) : amount}
+            contentEditable={false}
+            className='border-muted-4'
+          />
+          <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
+            <Eth height={10}/>
+            ETH
+          </div>
         </div>
       </div>
+      <div>Available funds in your wallet: {availableAmount} ETH</div>
+      
       {transactionStatus === 'error' ? (
         <h4 className='text-destructive'>There was an error while confirming the transaction.</h4>
       ) : transactionStatus === 'paid' ? (
