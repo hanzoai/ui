@@ -4,14 +4,14 @@ import { type LucideProps } from 'lucide-react'
 const Jcb: React.FC<LucideProps> = (props: LucideProps) => (
   <svg viewBox="0 0 750 471" xmlns="http://www.w3.org/2000/svg" {...props}>
     <linearGradient id="a" x1=".031608%" x2="99.974315%" y1="49.999857%" y2="49.999857%">
-      <stop offset="0" stop-color="#007b40"/>
-      <stop offset="1" stop-color="#55b330"/>
+      <stop offset="0" stopColor="#007b40"/>
+      <stop offset="1" stopColor="#55b330"/>
     </linearGradient>
     <linearGradient id="b" x1=".471693%" x2="99.986009%" y1="49.999826%" y2="49.999826%">
-      <stop offset="0" stop-color="#1d2970"/><stop offset="1" stop-color="#006dba"/>
+      <stop offset="0" stopColor="#1d2970"/><stop offset="1" stopColor="#006dba"/>
     </linearGradient>
     <linearGradient id="c" x1=".113881%" x2="99.986%" y1="50.000896%" y2="50.000896%">
-      <stop offset="0" stop-color="#6e2b2f"/><stop offset="1" stop-color="#e30138"/>
+      <stop offset="0" stopColor="#6e2b2f"/><stop offset="1" stopColor="#e30138"/>
     </linearGradient>
     <g fill="none">
       <rect fill="#0e4c96" height="471" rx="40" width="750"/>
