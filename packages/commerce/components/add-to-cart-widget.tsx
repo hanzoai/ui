@@ -15,15 +15,16 @@ const AddToCartWidget: React.FC<{
   className?: string
   buttonClx?: string
   isMobile?: boolean
-  wide?: boolean
   size?: ButtonSizes
+  onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   item,
   ghost=false,
   disabled=false,
   className='',
   buttonClx='',
-  size='xs'
+  size='xs',
+  onQuantityChanged
 }) => {
 
   const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-7 px-1'
@@ -37,6 +38,22 @@ const AddToCartWidget: React.FC<{
     )
   }
 
+  const inc = () => {
+    const old = item.quantity
+    item.increment()
+    if (onQuantityChanged) {
+      onQuantityChanged(item.sku, old, old + 1) 
+    }
+  }
+
+  const dec = () => {
+    const old = item.quantity
+    item.decrement()
+    if (onQuantityChanged) {
+      onQuantityChanged(item.sku, old, old - 1) 
+    }
+  }
+
   return ( item.isInCart ? (
     <div className={cn('flex flex-row items-stretch justify-center ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
       <Button
@@ -46,7 +63,7 @@ const AddToCartWidget: React.FC<{
         rounded={ghost ? 'full' : 'xl'}
         className={cn('px-1 lg:min-w-0 lg:px-2  xs:justify-end', buttonClx)}
         key='left'
-        onClick={item.decrement.bind(item)}
+        onClick={dec}
       >
       {(item.quantity > 1) ? (
         <Icons.minus className={iconClx} aria-hidden='true'/>
@@ -61,7 +78,7 @@ const AddToCartWidget: React.FC<{
         variant={ghost ? 'ghost' : 'secondary'}
         rounded={ghost ? 'full' : 'xl'}
         className={cn('px-1 lg:min-w-0 lg:px-2 xs:justify-start', buttonClx)}
-        onClick={item.increment.bind(item)}
+        onClick={inc}
         key='right'
       >
         <Icons.plus className={iconClx} aria-hidden='true'/>
@@ -74,7 +91,7 @@ const AddToCartWidget: React.FC<{
       variant='secondary'
       rounded='xl'
       className={cn(buttonClx, className)}
-      onClick={item.increment.bind(item)}
+      onClick={inc}
     >
       <Icons.plus className='h-5 w-5 mr-1' aria-hidden='true'/>
       <span className='mr-1'>Add</span>

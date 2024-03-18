@@ -4,6 +4,8 @@ import React, {type PropsWithChildren} from 'react'
 import { type ButtonVariants, type ButtonSizes, Button } from '@hanzo/ui/primitives'
 
 import BuyItemPopup from './buy-item-popup'
+import BuyItemMobileDrawer from './buy-item-mobile-drawer'
+import { cn } from '@hanzo/ui/util'
 
 const BuyItemButton: React.FC<PropsWithChildren & {
   skuPath: string
@@ -19,10 +21,14 @@ const BuyItemButton: React.FC<PropsWithChildren & {
   children,
   className='',
   popupClx=''
-}) => (
+}) => (<>
   <BuyItemPopup skuPath={skuPath} popupClx={popupClx}>
-    <Button size={size} variant={variant} className={className}>{children}</Button>
+    <Button size={size} variant={variant} className={cn(className, 'hidden md:flex')}>{children}</Button>
   </BuyItemPopup>
+  <BuyItemMobileDrawer skuPath={skuPath} trigger={<Button size={size} variant={variant} className={cn(className, 'md:hidden')}>{children}</Button>} />
+</>
 )
+
+
 
 export default BuyItemButton
