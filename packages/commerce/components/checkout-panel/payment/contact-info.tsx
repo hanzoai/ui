@@ -31,7 +31,7 @@ const ContactInfo: React.FC<{
               <FormItem className='space-y-1 w-full'>
                 <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} className='border-muted-4'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -44,7 +44,7 @@ const ContactInfo: React.FC<{
               <FormItem className='space-y-1 w-full'>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input {...field} className='border-muted-4'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
