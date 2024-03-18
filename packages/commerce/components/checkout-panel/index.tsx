@@ -4,7 +4,7 @@ import { useState }  from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { observer } from 'mobx-react-lite'
 
-import { Button, Main, Separator, Toaster } from '@hanzo/ui/primitives'
+import { Button, Dialog, DialogPortal, Main, Separator, Toaster } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 import { useAuth } from '@hanzo/auth/service'
 import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
@@ -15,9 +15,11 @@ import CartPanel from '../cart-panel'
 import Payment from './payment'
 
 const CheckoutPanel: React.FC<{
-  close: () => void
+  open: boolean
+  setOpen: (open: boolean) => void
 }> = observer(({
-  close
+  open,
+  setOpen
 }) => {
 
   const auth = useAuth()
@@ -44,48 +46,57 @@ const CheckoutPanel: React.FC<{
   const steps = [step1, step2, step3]
 
   return (
-    <div className="fixed top-0 left-0 !max-w-none w-full h-full min-h-screen bg-background z-50">  
-      <Toaster/>  
-      <div className='absolute flex w-full justify-between pt-2 md:pt-5 px-2 md:px-5'>
-        <Button
-          variant='ghost'
-          size='icon'
-          onClick={() => {
-            setCurrentStep(0)
-            close()
-          }}
-          className='w-auto h-auto rounded-full bg-level-1 p-2 md:p-4'
+    <Dialog open={open}>
+      <DialogPortal>
+        <div
+          className={cn(
+            'fixed grid shadow-lg animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10 sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
+            '!max-w-none w-full h-full min-h-screen bg-background z-50'
+          )}
         >
-          <ChevronLeft className='w-5 h-5'/>
-        </Button>    
-        <AuthWidget/>
-      </div>
+          <Toaster/>  
+          <div className='absolute flex w-full justify-between pt-2 md:pt-5 px-5'>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => {
+                setCurrentStep(1)
+                setOpen(false)
+              }}
+              className='w-auto h-auto rounded-full bg-level-1 p-2 md:p-4'
+            >
+              <ChevronLeft className='w-5 h-5'/>
+            </Button>    
+            <AuthWidget/>
+          </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 justify-center h-full overflow-y-auto md:overflow-y-hidden'>
-        <div className='flex items-center justify-center py-2'>
-          <CartPanel noCheckout className='border-none mt-10 w-full lg:w-1/2'/>
-        </div>
-
-        <div className='bg-level-1'>
-          <Main className='flex flex-col h-full md:h-[calc(100vh-48px)] gap-8 sm:gap-14 max-w-[30rem] w-full mx-auto md:overflow-y-auto px-2 pb-6 md:mt-12'>
-            <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
-                <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Payment</div>
-              </div>
-              <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
-                <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Delivery</div>
-              </div>
-              <Separator className='w-[4rem] sm:w-[6rem]'/>
-              <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
-                <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Done!</div>
-              </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 justify-center h-full overflow-y-auto md:overflow-y-hidden'>
+            <div className='flex items-center justify-center py-2'>
+              <CartPanel noCheckout className='border-none mt-10 w-full lg:w-1/2'/>
             </div>
-            {steps[currentStep - 1]}
-          </Main>
+
+            <div className='bg-level-1'>
+              <Main className='flex flex-col h-full md:h-[calc(100vh-48px)] gap-8 sm:gap-14 max-w-[30rem] w-full mx-auto md:overflow-y-auto px-2 pb-6 md:mt-12'>
+                <div className='flex gap-2 mx-auto items-center text-xxs sm:text-base'>
+                  <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 1 ? 'bg-foreground text-muted-4' : '')}>
+                    <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Payment</div>
+                  </div>
+                  <Separator className='w-[4rem] sm:w-[6rem]'/>
+                  <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 2 ? 'bg-foreground text-muted-4' : '')}>
+                    <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Delivery</div>
+                  </div>
+                  <Separator className='w-[4rem] sm:w-[6rem]'/>
+                  <div className={cn('w-6 h-6 rounded-full border border-foreground flex flex-col justify-center items-center', currentStep === 3 ? 'bg-foreground text-muted-4' : '')}>
+                    <div className='relative text-foreground top-4 h-0 whitespace-nowrap'>Done!</div>
+                  </div>
+                </div>
+                {steps[currentStep - 1]}
+              </Main>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </DialogPortal>
+    </Dialog>
   )
 })
 
