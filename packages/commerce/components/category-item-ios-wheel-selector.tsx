@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import Picker from 'react-mobile-picker'
+import { observer } from 'mobx-react-lite'
 
 import type { ItemSelector } from '../types'
 import { formatPrice } from '../util'
@@ -16,7 +17,7 @@ const CategoryItemIOSWheelSelector: React.FC<ItemSelector & {
   itemHeight?: number
   outerClx?: string
   itemClx?: string
-}> = ({
+}> = observer(({
   category,
   selectedItemRef: iRef,
   selectSku,
@@ -28,6 +29,7 @@ const CategoryItemIOSWheelSelector: React.FC<ItemSelector & {
 
     // @ts-ignore
   const onChange = (val, ignore) => {
+    console.log("WHEEL: ", val.item)
     selectSku(val.item)
   }
 
@@ -55,6 +57,6 @@ const CategoryItemIOSWheelSelector: React.FC<ItemSelector & {
       </Picker>
     </div>
   )
-}
+})
 
 export default CategoryItemIOSWheelSelector

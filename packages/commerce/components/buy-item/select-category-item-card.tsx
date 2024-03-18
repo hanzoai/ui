@@ -16,6 +16,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   isLoading?: boolean
   mobile?: boolean
   noTitle?: boolean
+  onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = /* NOT observer */({
   category,
   selectedItemRef: selItemRef,
@@ -24,20 +25,25 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   isLoading = false, 
   mobile = false, 
   noTitle = false,
+  onQuantityChanged,
   ...props
 }) => {
 
   const soleOption = category.products.length === 1
 
-  const SelectProductComp: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const SelectProductComp: React.FC<{ className?: string }> = ({ 
+    className = '' 
+  }) => {
 
+    const mobilePicker = (mobile || category.products.length > 6) 
     if (soleOption) {
       const item = category.products[0] as LineItem
       return (
-        <p >{item.titleAsOption + ', ' + formatPrice(item.price) + (item.quantity > 0 ? `(${item.quantity})` : '')}</p>
+        <div className={cn('flex flex-col justify-center items-center ' + (mobilePicker ? 'h-[180px] ' : 'h-auto min-h-24'), className)}>
+          <p className='text-lg font-semibold'>{item.titleAsOption + ', ' + formatPrice(item.price)}</p>
+        </div>
       )
     }
-    const mobilePicker = (mobile && category.products.length > 6) 
 
     return (
       <div /* id='CV_AVAIL_AMOUNTS' */ className={cn(
@@ -52,7 +58,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
             selectSku={selectSku}
             height={180}
             itemHeight={30}
-            outerClx='mb-4'
+            outerClx='w-full'
           />
         ) : (
           <CategoryItemRadioSelector 
@@ -60,6 +66,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
             groupClx='mt-2'
+            showQuantity={false}
             itemClx='flex flex-row gap-2.5 items-center'
           />
         )}
@@ -70,7 +77,12 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   const AddToCartComp: React.FC<{ className?: string }> = observer(({ className = '' }) => (
       // TODO disable if nothing selected
     (selItemRef.item && !isLoading) && (
-      <AddToCartWidget size='default' item={selItemRef.item} className={cn('lg:min-w-[160px] lg:mx-auto', className)}/>
+      <AddToCartWidget 
+        size='default' 
+        item={selItemRef.item}
+        onQuantityChanged={onQuantityChanged} 
+        className={cn('lg:min-w-[160px] lg:mx-auto', className)}
+      />
     ) 
   ))
 
@@ -87,15 +99,14 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
   return mobile ? (
     <div /* id='CV_OUTER' */ 
       className={cn(
-        'w-full h-[calc(100svh-96px)] max-h-[700px] flex flex-col justify-between ' + 
-        'items-stretch gap-[4vh] mt-[2vh] pb-[6vh]', 
+        'w-full flex flex-col justify-between items-center gap-5 py-pr-6', 
         className
       )} 
       {...props}
     >
       {!noTitle && (<TitleArea className='grow pt-3 mb-0' />)}
-      <SelectProductComp className='mb-[3vh]' />
-      <AddToCartComp className='w-pr-70 mx-auto' />
+      <SelectProductComp className='w-pr-65' />
+      <AddToCartComp className='w-pr-65' />
     </div>
   ) : (
     <div className={cn('', className)} {...props}>
