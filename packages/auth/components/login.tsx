@@ -19,13 +19,15 @@ const Login: React.FC<{
   className?: string,
   inputClassName?: string,
   hideHeader?: boolean
+  onLoginChanged?: (loggedIn: boolean) => void
 }> = observer(({
   redirectUrl,
   getStartedUrl,
   returnToUrl,
   className,
   inputClassName,
-  hideHeader
+  hideHeader,
+  onLoginChanged
 }) => {
   const router = useRouter()
   
@@ -34,14 +36,23 @@ const Login: React.FC<{
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
+  const succeed = (loggedOut = false) => {
+      // If a callback is provide, don't redirect.
+      // Assume host code is handling (eg, mobile menu)
+    if (onLoginChanged) {
+      onLoginChanged(!loggedOut)
+    }
+    else if (redirectUrl) {
+      router.push(redirectUrl)
+    }
+  }
+
   const loginWithEmailPassword = async (email: string, password: string) => {
     setIsLoading(true)
     try {
       const res = await auth.loginEmailAndPassword(email, password)
-      if (res.success ) {
-        if (redirectUrl) {
-          router.push(redirectUrl)
-        }
+      if (res.success) {
+        succeed()
       }
     } 
     catch (e) {
@@ -69,8 +80,8 @@ const Login: React.FC<{
   const loginWithProvider = async (provider: 'google' | 'facebook' | 'github') => {
     setIsLoading(true)
     const res = await auth.loginWithProvider(provider)
-    if (res.success && redirectUrl) {
-      router.push(redirectUrl)
+    if (res.success ) {
+      succeed()
     }
     setIsLoading(false)
   }
@@ -78,14 +89,14 @@ const Login: React.FC<{
   const logout = async () => {
     setIsLoading(true)
     const res = await auth.logout()
-    if (res.success && redirectUrl) {
-      router.push(redirectUrl)
+    if (res.success) {
+      succeed(false)
     }
     setIsLoading(false)
   }
 
   return (
-    <ApplyTypography className={cn('w-full', className)}>
+    <ApplyTypography className={cn('w-full LOGIN_OUTER', className)}>
       <div className='w-full mx-auto'>
       {auth.loggedIn && !redirectUrl ? (
         <div className='flex flex-col text-center gap-4'>
