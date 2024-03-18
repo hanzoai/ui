@@ -61,7 +61,7 @@ const SheetContent = React.forwardRef<
   SheetContentProps & 
   { 
     closeButtonClass? : string
-    closeElement: ReactNode
+    closeElement?: ReactNode
     centerElement?: ReactNode
     duplicateCloseOnBottom?: boolean
   }
@@ -88,10 +88,12 @@ const SheetContent = React.forwardRef<
         >
           {children}
 
-          <SheetPrimitive.Close className={cn(closeUIclx, 'absolute z-10 top-3', xOfCloseUIClass, closeButtonClass)}>
-            {closeElement}
-          </SheetPrimitive.Close>
-          {duplicateCloseOnBottom && (
+          {closeElement && (
+            <SheetPrimitive.Close className={cn(closeUIclx, 'absolute z-10 top-3', xOfCloseUIClass, closeButtonClass)}>
+              {closeElement}
+            </SheetPrimitive.Close>
+          )}
+          {closeElement && duplicateCloseOnBottom && (
             <SheetPrimitive.Close className={cn(closeUIclx, 'absolute z-10 bottom-3', xOfCloseUIClass, closeButtonClass)}>
             {closeElement}
             </SheetPrimitive.Close>

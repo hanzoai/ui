@@ -1,5 +1,5 @@
 'use client'
-import React, {type PropsWithChildren} from 'react'
+import React, {useState, type PropsWithChildren} from 'react'
 
 import { X } from 'lucide-react'
 
@@ -16,23 +16,36 @@ import BuyItemCard from './buy-item-card'
 
 const BuyItemPopup: React.FC<PropsWithChildren & {
   skuPath: string
+  triggerClx?: string  
   popupClx?: string
   cardClx?: string
 }> = ({
   skuPath,
   children,
+  triggerClx='',
   popupClx='',
   cardClx='',
-}) => (
-  <Popover>
-    <PopoverTrigger asChild>
-      {children}
-    </PopoverTrigger>
-    <PopoverContent className={cn('relative flex flex-col p-0 px-4 pb-4 pt-2', popupClx)}>
-      <PopoverClose className='absolute z-20 right-2 top-2 self-end hover:bg-level-3 text-muted hover:text-accent p-1 rounded-full'><X className='w-5 h-5'/></PopoverClose>
-      <BuyItemCard skuPath={skuPath} className={cn("w-full relative ", cardClx)}/>
-    </PopoverContent>
-  </Popover>
-)
+}) => {
+  
+  const [open, setOpen] = useState<boolean>(false)
+
+  const onQuantityChanged = (sku: string, oldV: number, newV: number) => {
+    if (oldV === 0 && newV === 1) {
+      setTimeout(() => {setOpen(false)}, 150)
+    }
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild className={triggerClx}>
+        {children}
+      </PopoverTrigger>
+      <PopoverContent className={cn('relative flex flex-col p-0 px-4 pb-4 pt-2', popupClx)}>
+        <PopoverClose className='absolute z-20 right-2 top-2 self-end hover:bg-level-3 text-muted hover:text-accent p-1 rounded-full'><X className='w-5 h-5'/></PopoverClose>
+        <BuyItemCard skuPath={skuPath} onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
+      </PopoverContent>
+    </Popover>
+  )
+}
 
 export default BuyItemPopup
