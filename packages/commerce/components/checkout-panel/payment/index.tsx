@@ -49,16 +49,14 @@ const Payment: React.FC<{
   }, [auth.loggedIn])
 
   const storePaymentInfo = async (paymentInfo: any) => {
-    if (auth.user) {
-      const {name, email} = contactForm.getValues()
-      let id
-      if (!orderId) {
-        id = await cmmc.createOrder(email ? email : auth.user.email, name)
-        setOrderId(id)
-      }
-      if (id) {
-        await cmmc.updateOrderPaymentInfo(id, paymentInfo)
-      }
+    const {name, email} = contactForm.getValues()
+    let id
+    if (!orderId) {
+      id = await cmmc.createOrder(email, name)
+      setOrderId(id)
+    }
+    if (id) {
+      await cmmc.updateOrderPaymentInfo(id, paymentInfo)
     }
   }
 
@@ -67,21 +65,21 @@ const Payment: React.FC<{
       <TabsList className='grid w-full grid-cols-3 mx-auto bg-level-2 h-auto'>
         <TabsTrigger
           value='card'
-          className='font-nav whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-sm sm:text-base'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
           PAY WITH CARD
         </TabsTrigger>
         <TabsTrigger
           value='crypto'
-          className='font-nav whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-sm sm:text-base'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
           PAY WITH CRYPTO
         </TabsTrigger>
         <TabsTrigger
           value='bank'
-          className='font-nav whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-sm sm:text-base'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
           BANK TRANSFER
@@ -102,6 +100,7 @@ const Payment: React.FC<{
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
+          contactForm={contactForm}
         />
       </TabsContent>
       <TabsContent value='bank'>

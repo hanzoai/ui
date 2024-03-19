@@ -24,6 +24,9 @@ import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 import Eth from '../icons/eth'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
+import ContactInfo from './contact-info'
+import type { UseFormReturn } from 'react-hook-form'
+import { LoginComponent } from '@hanzo/auth/components'
 
 declare global {
   interface Window{
@@ -36,11 +39,19 @@ const PayWithCrypto: React.FC<{
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
+  contactForm: UseFormReturn<{
+    name: string
+    email: string
+  }, any, {
+    name: string
+    email: string
+  }>
 }> = observer(({
   setStep,
   transactionStatus,
   setTransactionStatus,
-  storePaymentInfo
+  storePaymentInfo,
+  contactForm
 }) => {
   const c = useCommerce()
   const auth = useAuth()
@@ -90,61 +101,69 @@ const PayWithCrypto: React.FC<{
   }, [c.cartTotal])
 
   const sendPayment = async (ether: number) => {
-    // Check that we are on ethereum network
-    try {
-      await window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: "0x1"}],
-      })
-      const newProvider = new ethers.BrowserProvider(window.ethereum)
-      setProvider(newProvider)
-      if (auth.user?.walletAddress) {
-        newProvider.getBalance(auth.user?.walletAddress).then((balance: any) => {
-          setAvailableAmount(Number(balance)/(10**18))
+    contactForm.handleSubmit(async () => {
+      // Check that we are on ethereum network
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: "0x1"}],
         })
-      }
-    } catch (err) {
-      toast({title: 'Please switch your wallet to the Ethereum network.'})
-      return
-    }
-
-    try {
-      if (!provider) {
-        // :aa TODO string table
-        throw new Error('No crypto wallet found. Please install it.')
-      }
-  
-      await window.ethereum.send('eth_requestAccounts')
-
-      const signer = await provider.getSigner()
-      ethers.getAddress(process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS ?? '')
-      const tx = await signer.sendTransaction({
-        to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
-        value: ethers.parseEther(ether.toString())
-      })
-      console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
-      console.log('tx', tx)
-      setTransactionStatus('paid')
-
-      provider.waitForTransaction(tx.hash)
-        .then(async (receipt) => {
-          console.log(receipt)
-          await storePaymentInfo({
-            ether,
-            addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
-            receipt
+        const newProvider = new ethers.BrowserProvider(window.ethereum)
+        setProvider(newProvider)
+        if (auth.user?.walletAddress) {
+          newProvider.getBalance(auth.user?.walletAddress).then((balance: any) => {
+            setAvailableAmount(Number(balance)/(10**18))
           })
-          setTransactionStatus('confirmed')
+        }
+      } catch (err) {
+        toast({title: 'Please switch your wallet to the Ethereum network.'})
+        return
+      }
+
+      try {
+        if (!provider) {
+          // :aa TODO string table
+          throw new Error('No crypto wallet found. Please install it.')
+        }
+    
+        await window.ethereum.send('eth_requestAccounts')
+
+        const signer = await provider.getSigner()
+        ethers.getAddress(process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS ?? '')
+        const tx = await signer.sendTransaction({
+          to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
+          value: ethers.parseEther(ether.toString())
         })
-        .catch((error) => {
-          console.error(error)
-          setTransactionStatus('error')
+        console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
+        console.log('tx', tx)
+        setTransactionStatus('paid')
+        await storePaymentInfo({
+          ether,
+          transactionHash: tx.hash,
+          to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
+          paymentMethod: 'crypto'
         })
-    } catch (err) {
-      console.log(err)
-      // :aa TODO string table
-      toast({title: 'Not enough funds in your wallet'})
-    }
+
+        provider.waitForTransaction(tx.hash)
+          .then(async (receipt) => {
+            console.log(receipt)
+            await storePaymentInfo({
+              ether,
+              addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
+              receipt
+            })
+            setTransactionStatus('confirmed')
+          })
+          .catch((error) => {
+            console.error(error)
+            setTransactionStatus('error')
+          })
+      } catch (err) {
+        console.log(err)
+        // :aa TODO string table
+        toast({title: 'Not enough funds in your wallet'})
+      }
+    })()
   }
 
   const nextStep = async () => {
@@ -154,69 +173,57 @@ const PayWithCrypto: React.FC<{
     setStep(2)
   }
 
-  const cryptoPriceWidget = !!!(auth.user?.walletAddress) ? (
-    <div className='w-full mx-auto max-w-[20rem]'>
-      <Button
-        variant='outline'
-        className='w-full flex items-center gap-2'
-        onClick={auth.associateWallet.bind(auth)}
-      >
-        <EthIconFromAuth height={20}/>Connect your wallet
-      </Button>
-    </div>
-  ) : (
-    <div className='flex flex-col gap-2 w-full'>
-      <div className='flex gap-2 grid grid-cols-3'>
-        <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
-          <SelectTrigger>
-            <SelectValue defaultValue='eth' className='border-muted-4'/>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
-              {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
-              <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <div className='col-span-2'>
-          <Input
-            value={amount ? amount/(10**18) : amount}
-            contentEditable={false}
-            className='border-muted-4'
-          />
-          <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
-            <Eth height={10}/>
-            ETH
-          </div>
-        </div>
-      </div>
-      <div>Available funds in your wallet: {availableAmount} ETH</div>
-      
-      {transactionStatus === 'error' ? (
-        <h4 className='text-destructive'>There was an error while confirming the transaction.</h4>
-      ) : transactionStatus === 'paid' ? (
-        <h4>Waiting for transaction to be confirmed on chain.</h4>
-      ) : transactionStatus === 'confirmed' ? (
-        <h4>Transaction confirmed!</h4>
-      ) : null}
-    </div>
-  )
-
   return (
     <div className='flex flex-col gap-6 mt-6'>
-      {cryptoPriceWidget}
-      {transactionStatus === 'unpaid' ? (
-        <Button
-          onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
-          className='mx-auto w-full'
-          disabled={loadingPrice}
-        >
-          Pay
-        </Button>
-      ) : (
-        <Button onClick={nextStep} className='mx-auto w-full'>Continue</Button>
-      )}
+      <div className='flex flex-col gap-2 w-full'>
+        <ContactInfo form={contactForm}/>
+        <div className='flex gap-2 grid grid-cols-3'>
+          <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
+            <SelectTrigger>
+              <SelectValue defaultValue='eth' className='border-muted-4'/>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value='eth'><div className='flex items-center gap-2'><Eth height={14}/>ETH</div></SelectItem>
+                {/* <SelectItem value='btc' ><div className='flex items-center gap-2'><Btc height={14}/>BTC</div></SelectItem>
+                <SelectItem value='usdt' ><div className='flex items-center gap-2'><Usdt height={14}/>USDT</div></SelectItem> */}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <div className='col-span-2'>
+            <Input
+              value={amount ? amount/(10**18) : amount}
+              contentEditable={false}
+              className='border-muted-4'
+            />
+            <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
+              <Eth height={10}/>
+              ETH
+            </div>
+          </div>
+        </div>
+        <div>Available funds in your wallet: {availableAmount} ETH</div>
+        
+        {transactionStatus === 'error' ? (
+          <h4 className='text-destructive'>There was an error while confirming the transaction.</h4>
+        ) : transactionStatus === 'paid' ? (
+          <h4>Waiting for transaction to be confirmed on chain.</h4>
+        ) : transactionStatus === 'confirmed' ? (
+          <h4>Transaction confirmed!</h4>
+        ) : null}
+
+        {transactionStatus === 'unpaid' ? (
+          <Button
+            onClick={() => sendPayment(amount ? amount/(10**18) : 0)}
+            className='mx-auto w-full'
+            disabled={loadingPrice}
+          >
+            Pay
+          </Button>
+        ) : (
+          <Button onClick={nextStep} className='mx-auto w-full'>Continue</Button>
+        )}
+      </div>
     </div>
   )
 })
