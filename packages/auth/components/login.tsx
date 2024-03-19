@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 
 import { ArrowLeft } from 'lucide-react'
 
-import { ApplyTypography, Button, useToast } from '@hanzo/ui/primitives'
+import { ApplyTypography, Button, toast } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { useAuth } from '../service'
@@ -35,7 +35,6 @@ const Login: React.FC<PropsWithChildren & {
   const auth = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
 
   const succeed = (loggedOut = false) => {
       // If a callback is provide, don't redirect.
@@ -57,7 +56,7 @@ const Login: React.FC<PropsWithChildren & {
       }
     } 
     catch (e) {
-      toast({title: "User with this email already signed up using a different provider"})
+      toast("User with this email already signed up using a different provider")
     }
     setIsLoading(false)
   }
