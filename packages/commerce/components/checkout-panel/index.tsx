@@ -3,7 +3,15 @@
 import { useState }  from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Dialog, DialogPortal, Separator, Toaster } from '@hanzo/ui/primitives'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Dialog,
+  DialogPortal,
+  Toaster
+} from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 import { useAuth } from '@hanzo/auth/service'
 import { LoginComponent, AuthWidget } from '@hanzo/auth/components'
@@ -14,6 +22,8 @@ import CartPanel from '../cart-panel'
 import Payment from './payment'
 import CloseButton from './close-button'
 import StepIndicator from './step-indicator'
+import BagIcon from './icons/bag-icon'
+import { formatPrice, useCommerce } from '../..'
 
 const CheckoutPanel: React.FC<{
   open: boolean
@@ -24,6 +34,7 @@ const CheckoutPanel: React.FC<{
 }) => {
 
   const auth = useAuth()
+  const cmmc = useCommerce()
   
   const [step, setStep] = useState<number>(1)
   const [orderId, setOrderId] = useState<string>()
@@ -75,10 +86,24 @@ const CheckoutPanel: React.FC<{
         >
           <div id='GRID' className='grid  grid-cols-1 md:grid-cols-2 justify-center h-full overflow-y-auto md:overflow-y-hidden'>
             <div className='bg-background flex flex-row items-start justify-end'>
-              <div className='h-full w-full max-w-[750px] relative flex flex-col items-center justify-start px-6 py-8 sm:py-20 '>
-                <CloseButton onClose={onClose} className='absolute top-2 left-4 w-auto h-auto rounded-full bg-level-1 hover:bg-level-2 hover:border-muted p-2' />
-                <AuthWidget hideLogin className='flex md:hidden absolute top-4 right-4 '/>
-                <CartPanel noCheckout className='md:border md:border-muted-2 mt-10 w-full max-w-[550px]'/>
+              <div className='h-full w-full max-w-[750px] relative flex flex-col items-center justify-start px-6 pt-10 pb-0 md:pb-9'>
+                <CloseButton onClose={onClose} className='absolute top-3 left-3 w-auto h-auto rounded-full bg-level-1 hover:bg-level-2 hover:border-muted p-2' />
+                <AuthWidget hideLogin className='flex md:hidden absolute top-3 right-3'/>
+                <CartPanel noCheckout className='border border-muted-2 mt-10 w-full max-w-[550px] hidden md:flex'/>
+
+                <Accordion type="single" collapsible className='flex items-center justify-center py-2 w-full md:hidden'>
+                  <AccordionItem value="cart" className='w-full border-b-0'>
+                    <AccordionTrigger className='!no-underline'>
+                      <div className='flex gap-4 items-center'>
+                        <BagIcon className='w-4 h-4 sm:w-6 sm:h-6'/>
+                        <h5 className='text-sm sm:text-xl truncate'>Order Summary {formatPrice(cmmc.cartTotal)}</h5>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <CartPanel noCheckout className='border-none w-full'/>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
             </div>
             <div className='bg-level-1 flex flex-row items-start justify-start'>
