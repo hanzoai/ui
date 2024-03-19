@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, type PropsWithChildren } from 'react'
+import React, { type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { Button } from '@hanzo/ui/primitives'
@@ -9,21 +9,23 @@ import { useCommerce } from '../../service/context'
 import { formatPrice } from '../../util'
 
 import CartLineItem from './cart-line-item'
-import CheckoutPanel from '../checkout-panel'
 
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
   isMobile?: boolean,
   noCheckout?: boolean
+  onCheckoutOpen?: () => void
 }> = observer(({
     /** Children is the heading area. */
   children,
   className='',
   isMobile=false,
-  noCheckout=false
+  noCheckout=false,
+  onCheckoutOpen,
 }) => {
-
-  const [checkoutOpen, setCheckoutOpen] = useState<boolean>(false)
+  /* TODO: onCheckoutOpen is a hackish way fix a bug with multiple dialog opened at the same time.
+  *  Needs refactor with context or so.
+  **/
   const cmmc = useCommerce()
   if (!cmmc) {
     return <div />
@@ -48,12 +50,11 @@ const CartPanel: React.FC<PropsWithChildren & {
             variant='primary' 
             rounded='lg' 
             className='mt-12 mx-auto w-full' 
-            onClick={() => setCheckoutOpen(true)}
+            onClick={onCheckoutOpen}
           >
             Checkout
           </Button>
         )}
-        {checkoutOpen && <CheckoutPanel open={checkoutOpen} setOpen={setCheckoutOpen}/>}
       </>)}
     </div>
   )

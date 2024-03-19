@@ -18,7 +18,7 @@ const InfoField: React.FC<{
 }) => {
   const copyToClipboard = (label: string, text: string) => {
     navigator.clipboard.writeText(text)
-    toast({title: `${label} copied to clipboard`})
+    toast(`${label} copied to clipboard`)
   }
 
   return (
