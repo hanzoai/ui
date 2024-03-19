@@ -32,12 +32,12 @@ declare global {
 }
 
 const PayWithCrypto: React.FC<{
-  setCurrentStep: (currentStep: number) => void
+  setStep: (currentStep: number) => void
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
 }> = observer(({
-  setCurrentStep,
+  setStep,
   transactionStatus,
   setTransactionStatus,
   storePaymentInfo
@@ -151,7 +151,7 @@ const PayWithCrypto: React.FC<{
     await storePaymentInfo({
       paymentMethod: 'crypto'
     })
-    setCurrentStep(2)
+    setStep(2)
   }
 
   const cryptoPriceWidget = !!!(auth.user?.walletAddress) ? (

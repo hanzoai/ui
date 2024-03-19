@@ -40,10 +40,10 @@ const shippingFormSchema = z.object({
 
 const ShippingInfo: React.FC<{
   orderId?: string,
-  setCurrentStep: (currentStep: number) => void
+  setStep: (currentStep: number) => void
 }> = ({
   orderId,
-  setCurrentStep
+  setStep
 }) => { 
   const auth = useAuth()
   const cmmc = useCommerce()
@@ -66,7 +66,7 @@ const ShippingInfo: React.FC<{
     if (auth.user && orderId) {
       await cmmc.updateOrderShippingInfo(orderId, values)
     }
-    setCurrentStep(3)
+    setStep(3)
   }
 
   return (

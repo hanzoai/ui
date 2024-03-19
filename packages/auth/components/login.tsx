@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/navigation'
 import { observer } from 'mobx-react-lite'
 
@@ -12,7 +12,7 @@ import { useAuth } from '../service'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
 
-const Login: React.FC<{
+const Login: React.FC<PropsWithChildren & {
   redirectUrl?: string,
   getStartedUrl?: string,
   returnToUrl?: string,
@@ -21,6 +21,7 @@ const Login: React.FC<{
   hideHeader?: boolean
   onLoginChanged?: (loggedIn: boolean) => void
 }> = observer(({
+  children,
   redirectUrl,
   getStartedUrl,
   returnToUrl,
@@ -122,6 +123,7 @@ const Login: React.FC<{
             </div>
           )}
           {redirectUrl === 'checkout' && <p>You will be redirected to checkout after login.</p>}
+          {children}
           <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClassName={inputClassName}/>
           <p>- <span className='font-normal font-nav'>or</span> -</p>
           {/* <Button onClick={loginWithEthereum} className='w-full mx-auto flex items-center gap-2' disabled={isLoading}>
