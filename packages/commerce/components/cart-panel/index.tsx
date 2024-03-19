@@ -45,7 +45,7 @@ const CartPanel: React.FC<PropsWithChildren & {
       {!noCheckout && (<>
         {!cmmc.cartEmpty && (
           <Button 
-            variant='secondary' 
+            variant='primary' 
             rounded='lg' 
             className='mt-12 mx-auto w-full' 
             onClick={() => setCheckoutOpen(true)}

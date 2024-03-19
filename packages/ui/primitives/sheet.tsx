@@ -54,7 +54,7 @@ interface SheetContentProps
   VariantProps<typeof sheetVariants> {}
 
 const closeUIclx = 'rounded-sm opacity-70 ring-offset-background ' + 
-  'transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-secondary'
+  'transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-primary'
 
 const SheetContent = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Content>,
