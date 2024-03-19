@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "4.1.1",
+  "version": "4.3.0",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -38,7 +38,7 @@
     "square": "^35.0.0"
   },
   "peerDependencies": {
-    "@hanzo/auth": "^2.0.2",
+    "@hanzo/auth": "^2.2.0",
     "@hanzo/ui": "^3.0.2",
     "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",

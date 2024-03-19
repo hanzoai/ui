@@ -21,11 +21,11 @@ const contactFormSchema = z.object({
 })
 
 const Payment: React.FC<{
-  setCurrentStep: (currentStep: number) => void
+  setStep: (s: number) => void
   orderId?: string
   setOrderId: (orderId?: string) => void
 }> = observer(({
-  setCurrentStep,
+  setStep,
   orderId,
   setOrderId
 }) => {
@@ -89,7 +89,7 @@ const Payment: React.FC<{
       </TabsList>
       <TabsContent value='card'>
         <PayWithCard
-          setCurrentStep={setCurrentStep}
+          setStep={setStep}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -98,7 +98,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='crypto'>
         <PayWithCrypto
-          setCurrentStep={setCurrentStep}
+          setStep={setStep}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -106,7 +106,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='bank'>
         <PayWithBankTransfer
-          setCurrentStep={setCurrentStep}
+          setStep={setStep}
           storePaymentInfo={storePaymentInfo}
           contactForm={contactForm}
         />
