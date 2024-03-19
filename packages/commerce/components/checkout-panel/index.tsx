@@ -26,10 +26,10 @@ import { formatPrice, useCommerce } from '../..'
 
 const CheckoutPanel: React.FC<{
   open: boolean
-  setOpen: (open: boolean) => void
+  onCheckoutClose: () => void
 }> = observer(({
   open,
-  setOpen
+  onCheckoutClose
 }) => {
 
   const cmmc = useCommerce()
@@ -62,7 +62,7 @@ const CheckoutPanel: React.FC<{
 
   const onClose = () => {
     setStep(1)
-    setOpen(false)
+    onCheckoutClose()
   }
 
   return (
@@ -98,8 +98,8 @@ const CheckoutPanel: React.FC<{
                 </Accordion>
               </div>
             </div>
-            <div className='bg-level-1 flex flex-row items-start justify-start'>
-              <div className='h-full w-full max-w-[750px] relative flex flex-col gap-8 sm:gap-14 md:overflow-y-auto px-6 pb-6'>
+            <div className='bg-level-1 flex flex-row items-start justify-start md:overflow-y-auto'>
+              <div className='h-full w-full max-w-[750px] relative flex flex-col gap-8 sm:gap-14 px-8 pb-6 pt-6 md:pt-14'>
                 <Toaster/>  
                 <AuthWidget hideLogin className='hidden md:flex absolute top-4 right-4 '/>
                 <StepIndicator steps={steps} currentStep={step} className='flex gap-2 mx-auto items-center text-xxs sm:text-base' />
