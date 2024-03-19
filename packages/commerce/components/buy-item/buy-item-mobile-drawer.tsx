@@ -1,8 +1,14 @@
 'use client'
 import React, { useState, type ReactNode } from 'react'
 
-import { X as LucideX} from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger } from '@hanzo/ui/primitives'
+//import { X as LucideX} from 'lucide-react'
+//import { Sheet, SheetContent, SheetTrigger } from '@hanzo/ui/primitives'
+
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+} from '@hanzo/ui/primitives'
 
 import { cn } from '@hanzo/ui/util'
 
@@ -31,17 +37,17 @@ const BuyItemMobileDrawer: React.FC<{
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen} >
-      <SheetTrigger asChild className={triggerClx}>
+    <Drawer open={open} onOpenChange={setOpen} >
+      <DrawerTrigger asChild className={triggerClx}>
         {trigger}
-      </SheetTrigger>
-      <SheetContent 
-        className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden border-none', drawerClx)}
-        side="bottom" 
+      </DrawerTrigger>
+      <DrawerContent 
+        className={cn('rounded-tl-xl rounded-tr-xl p-0 overflow-hidden', drawerClx)}
+       // side="bottom" 
       >
         <BuyItemCard skuPath={skuPath} mobile onQuantityChanged={onQuantityChanged} className={cn("w-full relative ", cardClx)}/>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

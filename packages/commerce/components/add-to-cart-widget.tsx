@@ -71,7 +71,7 @@ const AddToCartWidget: React.FC<{
         <Icons.trash className={iconClx} aria-hidden='true'/>
       )}
       </Button>
-        <div className={'text-sm flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}</div>
+        <div className={'text-sm flex items-center cursor-default xs:px-2 text-primary-fg ' + digitClx} >{item.quantity}</div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}

@@ -81,7 +81,7 @@ const BuyItemCard: React.FC<{
         category={cmmc.specifiedCategories[0]}
         selectedItemRef={cmmc /* ...conveniently. :) */ }
         selectSku={cmmc.setCurrentItem.bind(cmmc)}
-        className={!renderFacetTabs && mobile ? 'border-t-2 ' : ''}
+        className=''
         onQuantityChanged={onQuantityChanged}
       />  
     )}
