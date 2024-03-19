@@ -40,7 +40,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       const item = category.products[0] as LineItem
       return (
         <div className={cn('flex flex-col justify-center items-center ' + (mobilePicker ? 'h-[180px] ' : 'h-auto min-h-24'), className)}>
-          <p className='text-lg font-semibold'>{item.titleAsOption + ', ' + formatPrice(item.price)}</p>
+          <p className='text-lg text-center font-semibold'>{item.titleAsOption + ', ' + formatPrice(item.price)}</p>
         </div>
       )
     }

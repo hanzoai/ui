@@ -78,7 +78,7 @@ const CheckoutPanel: React.FC<{
       <DialogPortal>
         <div id='PORTAL_OUTER'
           className={cn(
-            'fixed top-0 pt-[44px] md:pt-[80px] shadow-lg ',
+            'fixed top-0 shadow-lg ',
             'animate-in data-[state=open]:fade-in-90 data-[state=open]:slide-in-from-bottom-10',
             'sm:zoom-in-90 data-[state=open]:sm:slide-in-from-bottom-0',
             '!max-w-none w-full h-full min-h-screen bg-transparent backdrop-blur-sm z-50'

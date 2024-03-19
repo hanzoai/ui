@@ -1,4 +1,5 @@
 export { default as AddToCartWidget } from './add-to-cart-widget'
+export { default as BuyItemButtonWrapper } from './buy-item/buy-item-button-wrapper'
 export { default as BuyItemButton } from './buy-item/buy-item-button'
 export { default as BuyItemCard } from './buy-item/buy-item-card'
 export { default as BuyItemPopup } from './buy-item/buy-item-popup'

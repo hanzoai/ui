@@ -33,6 +33,10 @@ export default ({ colors }) => ({
     lux: "var(--hz-ui-secondary)", // in case there are two configs
     hover: "var(--hz-ui-secondary-hover)",
     fg: "var(--hz-ui-secondary-fg)",
+    '0': 'var(--hz-ui-secondary-0)', 
+    '1': 'var(--hz-ui-secondary-1)', 
+    '2': 'var(--hz-ui-secondary-2)', 
+    '3': 'var(--hz-ui-secondary-3)', 
   },
   destructive: {
     DEFAULT: "var(--hz-ui-destructive)",
