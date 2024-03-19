@@ -112,13 +112,13 @@ const PayWithCard: React.FC<{
     >
       <ApplyTypography className='flex flex-col gap-2 mt-6'>
         {transactionStatus === 'paid' ? (
+          <h6 className='mx-auto font-nav'>Processing your payment...</h6>
+        ) : transactionStatus === 'confirmed' ? (
           <div className='flex flex-col gap-4'>
             <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
             <Button onClick={() => setStep(2)}>Continue</Button>
           </div>
-        ) : transactionStatus === 'confirmed' ? (
-            <h6 className='mx-auto font-nav'>Processing your payment...</h6>
         ) : (
           <>
             <GooglePay/>
