@@ -15,7 +15,7 @@ import PaymentMethods from './payment-methods'
 import ContactInfo from './contact-info'
 
 const PayWithCard: React.FC<{
-  setCurrentStep: (currentStep: number) => void
+  setStep: (currentStep: number) => void
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
@@ -27,7 +27,7 @@ const PayWithCard: React.FC<{
     email: string
   }>
 }> = ({
-  setCurrentStep,
+  setStep,
   transactionStatus,
   setTransactionStatus,
   storePaymentInfo,
@@ -115,7 +115,7 @@ const PayWithCard: React.FC<{
           <div className='flex flex-col gap-4'>
             <h5 className='mx-auto font-nav'>Payment confirmed!</h5>
             <p className='mx-auto'>Thank you for your purchase.</p>
-            <Button onClick={() => setCurrentStep(2)}>Continue</Button>
+            <Button onClick={() => setStep(2)}>Continue</Button>
           </div>
         ) : transactionStatus === 'confirmed' ? (
             <h6 className='mx-auto font-nav'>Processing your payment...</h6>
