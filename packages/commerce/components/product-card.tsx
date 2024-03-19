@@ -57,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             aria-label='Placeholder'
             role='img'
             aria-roledescription='placeholder'
-            className='flex h-full items-center justify-center bg-secondary'
+            className='flex h-full items-center justify-center bg-background'
           >
             <Icons.barcode className='h-9 w-9 text-muted' aria-hidden='true' />
           </div>

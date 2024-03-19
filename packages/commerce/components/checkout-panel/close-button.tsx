@@ -15,9 +15,9 @@ const CloseButton: React.FC<{
       variant='ghost'
       size='icon'
       onClick={onClose}
-      className={className}
+      className={'group ' + className}
     >
-      <ChevronLeft className='w-5 h-5'/>
+      <ChevronLeft className='w-5 h-5 group-hover:scale-110 transition-scale transition-duration-300'/>
     </Button>    
 )
 

@@ -32,7 +32,7 @@ const AddToCartWidget: React.FC<{
 
   if (disabled) {
     return (
-      <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
+      <div className={cn('flex flex-row items-stretch ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-primary rounded-xl'), className)}>
         <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
       </div>
     )
@@ -55,11 +55,11 @@ const AddToCartWidget: React.FC<{
   }
 
   return ( item.isInCart ? (
-    <div className={cn('flex flex-row items-stretch justify-center ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-secondary rounded-xl'), className)}>
+    <div className={cn('flex flex-row items-stretch justify-center ' + (ghost ? 'bg-transparent  rounded-xl' : 'bg-primary rounded-xl'), className)}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
         size={size}
-        variant={ghost ? 'ghost' : 'secondary'}
+        variant={ghost ? 'ghost' : 'primary'}
         rounded={ghost ? 'full' : 'xl'}
         className={cn('px-1 lg:min-w-0 lg:px-2  xs:justify-end', buttonClx)}
         key='left'
@@ -75,7 +75,7 @@ const AddToCartWidget: React.FC<{
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
-        variant={ghost ? 'ghost' : 'secondary'}
+        variant={ghost ? 'ghost' : 'primary'}
         rounded={ghost ? 'full' : 'xl'}
         className={cn('px-1 lg:min-w-0 lg:px-2 xs:justify-start', buttonClx)}
         onClick={inc}
@@ -88,7 +88,7 @@ const AddToCartWidget: React.FC<{
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
       size={size}
-      variant='secondary'
+      variant='primary'
       rounded='xl'
       className={cn(buttonClx, className)}
       onClick={inc}
