@@ -2,7 +2,7 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { Button, type ButtonSizes } from '@hanzo/ui/primitives'
+import { Button, toast, type ButtonSizes } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import { Icons } from './Icons'
@@ -44,6 +44,13 @@ const AddToCartWidget: React.FC<{
     if (onQuantityChanged) {
       onQuantityChanged(item.sku, old, old + 1) 
     }
+    if (old === 0) {
+      toast(`Added ${item.title} to your bag.`)
+    }
+    else {
+      toast(`Changed quantity to ${old + 1} for ${item.title}.`)
+    }
+
   }
 
   const dec = () => {
@@ -51,6 +58,12 @@ const AddToCartWidget: React.FC<{
     item.decrement()
     if (onQuantityChanged) {
       onQuantityChanged(item.sku, old, old - 1) 
+    }
+    if (old === 1) {
+      toast(`Removed ${item.title} from your bag.`)
+    }
+    else {
+      toast(`Changed quantity to ${old - 1} for ${item.title}.`)
     }
   }
 
