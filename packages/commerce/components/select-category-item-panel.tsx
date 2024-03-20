@@ -12,7 +12,7 @@ import { Icons } from './Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
 import CategoryItemRadioSelector from './category-item-radio-selector'
-import CategoryItemIOSWheelSelector from './category-item-ios-wheel-selector'
+import CategoryItemScrollSelector from './category-item-scroll-selector'
 
 const SelectCategoryItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> & ItemSelector &   
@@ -89,14 +89,13 @@ const SelectCategoryItemPanel: React.FC<
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
         {mobilePicker ? (
-          <CategoryItemIOSWheelSelector
+          <CategoryItemScrollSelector
             category={category}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
-            height={180}
-            itemHeight={30}
-            outerClx='mb-4'
+            itemClx='h-10 border-b px-4'
+            outerClx='mb-4 h-[180px]'
           />
         ) : (
           <CategoryItemRadioSelector 

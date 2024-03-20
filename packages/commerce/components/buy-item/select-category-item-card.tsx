@@ -9,7 +9,7 @@ import type { ItemSelector, LineItem } from '../../types'
 
 import AddToCartWidget from '../add-to-cart-widget'
 import CategoryItemRadioSelector from '../category-item-radio-selector'
-import CategoryItemIOSWheelSelector from '../category-item-ios-wheel-selector'
+import CategoryItemScrollSelector from '../category-item-scroll-selector'
 import { formatPrice } from '../../util'
 
 const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & ItemSelector & {
@@ -52,13 +52,12 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       )}>
         {!noTitle && (<div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } /> )}
         {mobilePicker ? (
-          <CategoryItemIOSWheelSelector
+          <CategoryItemScrollSelector
             category={category}
             selectedItemRef={selItemRef}  
             selectSku={selectSku}
-            height={180}
-            itemHeight={30}
-            outerClx='w-full'
+            itemClx='h-10 border-b px-4'
+            outerClx='min-w-pr-80 h-[180px]' // 80% of 65% parent
           />
         ) : (
           <CategoryItemRadioSelector 
