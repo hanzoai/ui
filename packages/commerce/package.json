@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "4.4.2",
+  "version": "4.5.0",
   "description": "Library with shopping cart components.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -33,13 +33,12 @@
   "dependencies": {
     "ethers": "^6.11.1",
     "next-usequerystate": "^1.17.0",
-    "react-mobile-picker": "^1.0.0",
     "react-square-web-payments-sdk": "^3.2.1",
     "square": "^35.0.0"
   },
   "peerDependencies": {
     "@hanzo/auth": "^2.2.1",
-    "@hanzo/ui": "^3.0.6",
+    "@hanzo/ui": "^3.0.7",
     "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",
     "lucide-react": "^0.307.0",

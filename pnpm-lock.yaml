@@ -320,7 +320,7 @@ importers:
         specifier: ^2.2.1
         version: link:../auth
       '@hanzo/ui':
-        specifier: ^3.0.6
+        specifier: ^3.0.7
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4
@@ -358,9 +358,6 @@ importers:
       react-hook-form:
         specifier: 7.50.1
         version: 7.50.1(react@18.2.0)
-      react-mobile-picker:
-        specifier: ^1.0.0
-        version: 1.0.0(react-dom@18.2.0)(react@18.2.0)
       react-square-web-payments-sdk:
         specifier: ^3.2.1
         version: 3.2.1(react@18.2.0)
@@ -9584,16 +9581,6 @@ packages:
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-
-  /react-mobile-picker@1.0.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-6xaEBdy4YzgCULRqKcYCa/T34OFRrxXQz8TYrTeRPjq8UEsuH023OpcajnxWbU4X9+kk0nbarorvMFsiaBmXHg==}
-    peerDependencies:
-      react: ^16 || ^17 || ^18
-      react-dom: ^16 || ^17 || ^18
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
 
   /react-remove-scroll-bar@2.3.5(@types/react@18.2.65)(react@18.2.0):
     resolution: {integrity: sha512-3cqjOqg6s0XbOjWvmasmqHch+RLxIEk2r/70rzGXuz3iIGQsQheEQyqYCBb5EECoD01Vo2SIbDqW4paLeLTASw==}
