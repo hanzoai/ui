@@ -6,6 +6,7 @@ import type { UseFormReturn } from 'react-hook-form'
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 
 import { ApplyTypography, Button } from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
 
 import { processSquareCardPayment } from '../../../util'
 import { useCommerce } from '../../../service/context'
@@ -133,7 +134,7 @@ const PayWithCard: React.FC<{
        */
       locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID}
     >
-      <ApplyTypography className='flex flex-col gap-2 mt-6'>
+      <ApplyTypography className='flex flex-col mt-6'>
         {transactionStatus === 'paid' ? (
           <h6 className='mx-auto font-nav'>Processing your payment...</h6>
         ) : transactionStatus === 'confirmed' ? (
@@ -147,13 +148,11 @@ const PayWithCard: React.FC<{
             <GooglePay/>
             <ApplePay/>
             
-            <div className='flex gap-2 whitespace-nowrap items-center my-6 sm:my-10 text-sm text-foreground/60'>
+            <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-2 text-xs text-foreground/60'>
               <hr className='bg-foreground/60 w-full border'/> or pay with card <hr className='bg-foreground/60 w-full border'/>
             </div>
 
             <ContactInfo form={contactForm}/>
-            
-            <PaymentMethods/>
 
             {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
               hanzo/ui button outright and keeping the submit form functionality*/}
@@ -184,6 +183,8 @@ const PayWithCard: React.FC<{
                 input: {
                   backgroundColor: '#1f1f1f',
                   color: '#FFFFFF',
+                  fontSize: '15px',
+                  fontFamily: 'helvetica neue, sans-serif',
                 },
                 'input::placeholder': {
                   color: '#999999',
@@ -192,18 +193,22 @@ const PayWithCard: React.FC<{
                   color: '#ff1600',
                 },
               }}
-              buttonProps={{
-                className: 'font-nav h-10',
-                css: {
-                  backgroundColor: '#fff',
-                  color: '#000',
-                  padding: 0,
-                  '&:hover': {
-                    backgroundColor: '#ffffffd9',
-                  },
-                },
-              }}
-            />
+              render={(Button: any) => (<>
+                <PaymentMethods/>
+                <Button className={cn(
+                    'items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+                    'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+                    '!bg-primary !text-primary-fg hover:!bg-primary-hover font-nav whitespace-nowrap not-typography h-10 py-2 px-4',
+                    '!text-sm rounded-md lg:min-w-[220px] sm:min-w-[220px] flex'
+                  )}
+                >
+                  Pay
+                </Button>
+              </>)}
+            >
+              
+            </CreditCard>
+            
             {transactionStatus === 'error' && (
               <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
             )}

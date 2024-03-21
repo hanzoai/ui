@@ -86,24 +86,24 @@ const Payment: React.FC<{
       <TabsList className='grid w-full grid-cols-3 mx-auto bg-level-2 h-auto'>
         <TabsTrigger
           value='card'
-          className='whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-xs sm:text-base px-1'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          PAY WITH CARD
+          Pay with card
         </TabsTrigger>
         <TabsTrigger
           value='crypto'
-          className='whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-xs sm:text-base px-1'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          PAY WITH CRYPTO
+          Pay with Wallet
         </TabsTrigger>
         <TabsTrigger
           value='bank'
-          className='whitespace-normal h-full text-sm sm:text-base'
+          className='whitespace-normal h-full text-xs sm:text-base px-1'
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          BANK TRANSFER
+          Pay with Wire
         </TabsTrigger>
       </TabsList>
       <TabsContent value='card'>

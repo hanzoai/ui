@@ -84,9 +84,8 @@ const ShippingInfo: React.FC<{
             name='addressLine1'
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
-                <FormLabel>Address line 1</FormLabel>
                 <FormControl>
-                  <Input {...field} className='border-muted-4'/>
+                  <Input {...field} className='border-muted-4' placeholder='Address line 1'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,9 +96,8 @@ const ShippingInfo: React.FC<{
             name='addressLine2'
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
-                <FormLabel>Address line 2 (optional)</FormLabel>
                 <FormControl>
-                  <Input {...field} className='border-muted-4'/>
+                  <Input {...field} className='border-muted-4' placeholder='Address line 2 (optional)'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -111,9 +109,8 @@ const ShippingInfo: React.FC<{
               name='zipCode'
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
-                  <FormLabel>Zip code</FormLabel>
                   <FormControl>
-                    <Input {...field} className='border-muted-4'/>
+                    <Input {...field} className='border-muted-4' placeholder='Zip code'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,9 +121,8 @@ const ShippingInfo: React.FC<{
               name='city'
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
-                  <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input {...field} className='border-muted-4'/>
+                    <Input {...field} className='border-muted-4' placeholder='City'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -139,9 +135,8 @@ const ShippingInfo: React.FC<{
               name='state'
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
-                  <FormLabel>State (Optional)</FormLabel>
                   <FormControl>
-                    <Input {...field} className='border-muted-4'/>
+                    <Input {...field} className='border-muted-4' placeholder='State (optional)'/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,11 +147,10 @@ const ShippingInfo: React.FC<{
               name='country'
               render={({ field }) => (
                 <FormItem className='space-y-1 w-full'>
-                  <FormLabel>Country</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Select a country' />
+                      <SelectTrigger className='bg-level-1 border-muted-4'>
+                        <SelectValue placeholder='Country' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>

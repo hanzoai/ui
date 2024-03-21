@@ -13,7 +13,7 @@ import {
   type TypographySize
 } from '../../../primitives'
 
-import type { CardBlock } from '../../def'
+import type { CardBlock, VideoBlock } from '../../def'
 
 import ImageBlockComponent from '../image-block'
 import VideoBlockComponent from '../video-block'
@@ -93,8 +93,8 @@ const CardBlockComponent: React.FC<BlockComponentProps & {
     <CardContent className={'flex flex-row justify-start items-stretch p-0 grow ' + disabledBorder + bgclx + contentclx + className}>
     {card.media && (
       <div className={'box-content grow-0 not-typography' + paddingclx} style={{
-          // If this layout has been specified, assume video, and that the 'sm' variant is there.
-        width: (card.media.dim as TShirtDimensions).sm!.w 
+          // If this layout has been specified, assume media is video, and that the 'sm' dim exists.
+        width: (card.media as VideoBlock).dim.sm!.w 
       }}>
         <VideoBlockComponent 
           block={card.media} 

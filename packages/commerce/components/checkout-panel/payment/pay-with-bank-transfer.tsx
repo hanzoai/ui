@@ -18,13 +18,13 @@ const InfoField: React.FC<{
 }) => {
   const copyToClipboard = (label: string, text: string) => {
     navigator.clipboard.writeText(text)
-    toast(`${label} copied to clipboard`)
+    toast(`${label} copied to clipboard.`)
   }
 
   return (
     <div className='flex flex-col gap-1'>
       <p className='text-xs'>{label}</p>
-      <div className='flex items-center justify-between text-lg border rounded-lg py-2 px-4'>
+      <div className='flex items-center justify-between sm:text-lg border rounded-lg py-2 px-4'>
         {value}
         <Button variant='ghost' size='icon' onClick={() => copyToClipboard(label, copyValue)}>
           <Copy className='h-4 w-4'/>
@@ -57,7 +57,7 @@ const PayWithBankTransfer: React.FC<{
   }
 
   return (
-    <div className='flex flex-col gap-6 mt-6'>
+    <div className='flex flex-col gap-2 mt-6'>
       <ContactInfo form={contactForm}/>
       <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
         <TabsList className="grid w-full grid-cols-2 max-w-[15rem] mx-auto bg-level-2">

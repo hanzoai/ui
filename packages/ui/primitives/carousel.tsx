@@ -1,14 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from 'embla-carousel-react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
 import Autoplay from "embla-carousel-autoplay"
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 import { cn } from '../util'
-import { Button } from '.'
+import Button from './button'
 
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>

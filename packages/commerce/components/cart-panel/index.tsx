@@ -10,11 +10,13 @@ import { formatPrice } from '../../util'
 
 import CartLineItem from './cart-line-item'
 import { sendFBEvent, sendGAEvent } from '../../util/analytics'
+import ProductsCarousel from './products-carousel'
 
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
   isMobile?: boolean,
   noCheckout?: boolean
+  showProductsCarousel?: boolean
   onCheckoutOpen?: () => void
 }> = observer(({
     /** Children is the heading area. */
@@ -22,6 +24,7 @@ const CartPanel: React.FC<PropsWithChildren & {
   className='',
   isMobile=false,
   noCheckout=false,
+  showProductsCarousel=false,
   onCheckoutOpen,
 }) => {
   /* TODO: onCheckoutOpen is a hackish way fix a bug with multiple dialog opened at the same time.
@@ -60,6 +63,7 @@ const CartPanel: React.FC<PropsWithChildren & {
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
+      {showProductsCarousel && <ProductsCarousel items={cmmc.cartItems}/>}
       <div className='mt-2 w-full'>
         {cmmc.cartEmpty ? (
           <p className='text-center mt-4'>No items in cart</p>

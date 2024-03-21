@@ -23,15 +23,14 @@ const ContactInfo: React.FC<{
   return (
     <Form {...form}>
       <form className='text-left'>
-        <div className='flex flex-col sm:flex-row gap-2'>
+        <div className='flex gap-1 sm:gap-2'>
           <FormField
             control={form.control}
             name='name'
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
-                <FormLabel>Full name</FormLabel>
                 <FormControl>
-                  <Input {...field} className='border-muted-4'/>
+                  <Input {...field} className='border-muted-4' placeholder='Full name'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -42,9 +41,8 @@ const ContactInfo: React.FC<{
             name='email'
             render={({ field }) => (
               <FormItem className='space-y-1 w-full'>
-                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} className='border-muted-4'/>
+                  <Input {...field} className='border-muted-4' placeholder='Email'/>
                 </FormControl>
                 <FormMessage />
               </FormItem>

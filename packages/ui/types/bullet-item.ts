@@ -1,4 +1,4 @@
-import type { Icon } from '.'
+import type Icon from './icon'
 
 interface BulletItem {
   text: string,

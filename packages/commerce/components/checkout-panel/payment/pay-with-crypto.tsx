@@ -57,7 +57,6 @@ const PayWithCrypto: React.FC<{
   const [loadingPrice, setLoadingPrice] = useState(false)
   //const [selectedToken, setSelectedToken] = useState('eth')
   const [amount, setAmount] = useState<number>()
-  const [availableAmount, setAvailableAmount] = useState<number>()
   const [provider, setProvider] = useState<ethers.BrowserProvider>()
 
   //const selectedToken = 'eth'
@@ -68,11 +67,6 @@ const PayWithCrypto: React.FC<{
     return autorun(() => {
       const newProvider = new ethers.BrowserProvider(window.ethereum)
       setProvider(newProvider)
-      if (auth.user?.walletAddress) {
-        newProvider.getBalance(auth.user?.walletAddress).then((balance: any) => {
-          setAvailableAmount(Number(balance)/(10**18))
-        })
-      }
     })
   }, [])
 
@@ -109,11 +103,6 @@ const PayWithCrypto: React.FC<{
         })
         const newProvider = new ethers.BrowserProvider(window.ethereum)
         setProvider(newProvider)
-        if (auth.user?.walletAddress) {
-          newProvider.getBalance(auth.user?.walletAddress).then((balance: any) => {
-            setAvailableAmount(Number(balance)/(10**18))
-          })
-        }
       } catch (err) {
         toast('Please switch your wallet to the Ethereum network.')
         return
@@ -225,7 +214,6 @@ const PayWithCrypto: React.FC<{
             </div>
           </div>
         </div>
-        <div>Available funds in your wallet: {availableAmount} ETH</div>
         
         {transactionStatus === 'error' ? (
           <h4 className='text-destructive'>There was an error while confirming the transaction.</h4>
