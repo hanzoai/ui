@@ -8,7 +8,7 @@ import Jcb from './jcb'
 
 const PaymentMethods: React.FC = () => {
   return (
-    <div className='flex gap-1 items-center'>
+    <div className='flex gap-1 items-center text-muted-1'>
       <LockKeyhole className='w-4 h-4'/>
       <span className='hidden sm:flex text-sm'>Secure payments with</span>
       <Amex className='w-9 h-5'/>
