@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-
 import { observer } from 'mobx-react-lite'
 
 import { 
@@ -45,26 +44,22 @@ const AuthWidget: React.FC<{
     // button regardless of status.
   if (!auth.loggedIn) {
 
-    return (
-      !hideLogin ? (
-        (triggerLogin) ? (
-          <Button 
-            variant='primary' 
-            className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
-            onClick={triggerLogin} 
-          >
-            Login
-          </Button>
-        ) : (
-          <LinkElement
-            def={{href: '/login', title: 'Login', variant: 'primary'} satisfies LinkDef}
-            className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
-          />
-        )
+    return (hideLogin ? null : (
+      (triggerLogin) ? (
+        <Button 
+          variant='primary' 
+          className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
+          onClick={triggerLogin} 
+        >
+          Login
+        </Button>
       ) : (
-        <div/>
+        <LinkElement
+          def={{href: '/login', title: 'Login', variant: 'primary'} satisfies LinkDef}
+          className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
+        />
       )
-    )
+    ))
   }
 
   return (
