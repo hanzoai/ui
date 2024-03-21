@@ -11,6 +11,7 @@ import { cn } from '@hanzo/ui/util'
 import { useAuth } from '../service'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
+import { sendGAEvent } from '../util/analytics'
 
 const Login: React.FC<PropsWithChildren & {
   redirectUrl?: string,
@@ -52,6 +53,9 @@ const Login: React.FC<PropsWithChildren & {
     try {
       const res = await auth.loginEmailAndPassword(email, password)
       if (res.success) {
+        sendGAEvent('login', {
+          method: 'email'
+        })
         succeed()
       }
     } 
@@ -81,6 +85,9 @@ const Login: React.FC<PropsWithChildren & {
     setIsLoading(true)
     const res = await auth.loginWithProvider(provider)
     if (res.success ) {
+      sendGAEvent('login', {
+        method: provider
+      })
       succeed()
     }
     setIsLoading(false)

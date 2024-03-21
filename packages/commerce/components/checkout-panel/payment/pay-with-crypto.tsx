@@ -19,14 +19,13 @@ import {
 } from '@hanzo/ui/primitives'
 
 import { useAuth } from '@hanzo/auth/service'
-import { Ethereum as EthIconFromAuth }  from '@hanzo/auth/icons'
 
 import Eth from '../icons/eth'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
 import ContactInfo from './contact-info'
 import type { UseFormReturn } from 'react-hook-form'
-import { LoginComponent } from '@hanzo/auth/components'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 declare global {
   interface Window{
@@ -53,7 +52,7 @@ const PayWithCrypto: React.FC<{
   storePaymentInfo,
   contactForm
 }) => {
-  const c = useCommerce()
+  const cmmc = useCommerce()
   const auth = useAuth()
   const [loadingPrice, setLoadingPrice] = useState(false)
   //const [selectedToken, setSelectedToken] = useState('eth')
@@ -85,7 +84,7 @@ const PayWithCrypto: React.FC<{
         .then(res => res.json())
         .then((exchangeRate) => {
           const oneUsdInWei = (10**18) / exchangeRate.data.amount
-          const usdAmountInWei = oneUsdInWei * c.cartTotal 
+          const usdAmountInWei = oneUsdInWei * cmmc.cartTotal 
           setAmount(usdAmountInWei)
           setLoadingPrice(false)
         })
@@ -98,7 +97,7 @@ const PayWithCrypto: React.FC<{
     const interval = setInterval(fetchPrice, 30000)
 
     return () => clearInterval(interval)
-  }, [c.cartTotal])
+  }, [cmmc.cartTotal])
 
   const sendPayment = async (ether: number) => {
     contactForm.handleSubmit(async () => {
@@ -130,9 +129,10 @@ const PayWithCrypto: React.FC<{
 
         const signer = await provider.getSigner()
         ethers.getAddress(process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS ?? '')
+        const price = ethers.parseEther(ether.toString())
         const tx = await signer.sendTransaction({
           to: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
-          value: ethers.parseEther(ether.toString())
+          value: price
         })
         console.log({ ether, addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS })
         console.log('tx', tx)
@@ -150,7 +150,30 @@ const PayWithCrypto: React.FC<{
             await storePaymentInfo({
               ether,
               addr: process.env.NEXT_PUBLIC_ETH_PAYMENT_ADDRESS,
-              receipt
+              receipt,
+              paymentMethod: 'crypto'
+            })
+            sendGAEvent('purchase', {
+              transaction_id: tx.hash,
+              value: price,
+              currency: 'ETH',
+              items: cmmc.cartItems.map((item) => ({
+                item_id: item.sku,
+                item_name: item.title,
+                item_category: item.categoryId,
+                price: item.price,
+                quantity: item.quantity
+              })),
+            })
+            sendFBEvent('Purchase', {
+              content_ids: cmmc.cartItems.map((item) => item.sku),
+              contents: cmmc.cartItems.map(item => ({
+                id: item.sku,
+                quantity: item.quantity
+              })),
+              num_items: cmmc.cartItems.length,
+              value: price,
+              currency: 'ETH',
             })
             setTransactionStatus('confirmed')
           })

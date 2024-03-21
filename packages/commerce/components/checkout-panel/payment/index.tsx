@@ -14,6 +14,7 @@ import PayWithBankTransfer from './pay-with-bank-transfer'
 import PayWithCard from './pay-with-card'
 import { useCommerce } from '../../../service/context'
 import type { TransactionStatus } from '../../../types'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, 'Enter your full name.'),
@@ -56,6 +57,26 @@ const Payment: React.FC<{
       setOrderId(id)
     }
     if (id) {
+      sendGAEvent('add_payment_info', {
+        items: cmmc.cartItems.map((item) => ({
+          item_id: item.sku,
+          item_name: item.title,
+          item_category: item.categoryId,
+          price: item.price,
+          quantity: item.quantity
+        })),
+        value: cmmc.cartTotal,
+        currency: 'USD',
+        payment_type: paymentInfo.paymentMethod ?? ''
+      })
+      sendFBEvent('AddPaymentInfo', {
+        contents: cmmc.cartItems.map(item => ({
+          id: item.sku,
+          quantity: item.quantity
+        })),
+        value: cmmc.cartTotal,
+        currency: 'USD'
+      })
       await cmmc.updateOrderPaymentInfo(id, paymentInfo)
     }
   }
