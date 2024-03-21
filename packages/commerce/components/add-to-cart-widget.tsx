@@ -7,6 +7,7 @@ import { cn } from '@hanzo/ui/util'
 
 import { Icons } from './Icons'
 import type { LineItem } from '../types'
+import { sendFBEvent, sendGAEvent } from '../util/analytics'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem
@@ -50,7 +51,27 @@ const AddToCartWidget: React.FC<{
     else {
       toast(`Changed quantity to ${old + 1} for ${item.title}.`)
     }
-
+    sendGAEvent('add_to_cart', {
+      items: [{
+        item_id: item.sku,
+        item_name: item.title,
+        item_category: item.categoryId,
+        price: item.price,
+        quantity: item.quantity
+      }],
+      value: item.price,
+      currency: 'USD',
+    })
+    sendFBEvent('AddToCart', {
+      content_ids: [item.sku],
+      contents: [{
+        id: item.sku,
+        quantity: item.quantity
+      }],
+      content_name: item.title,
+      value: item.price,
+      currency: 'USD',
+    })
   }
 
   const dec = () => {
@@ -65,6 +86,17 @@ const AddToCartWidget: React.FC<{
     else {
       toast(`Changed quantity to ${old - 1} for ${item.title}.`)
     }
+    sendGAEvent('remove_from_cart', {
+      items: [{
+        item_id: item.sku,
+        item_name: item.title,
+        item_category: item.categoryId,
+        price: item.price,
+        quantity: item.quantity
+      }],
+      value: item.price,
+      currency: 'USD',
+    })
   }
 
   return ( item.isInCart ? (

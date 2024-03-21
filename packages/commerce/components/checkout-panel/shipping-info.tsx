@@ -21,11 +21,10 @@ import {
   SelectValue 
 } from '@hanzo/ui/primitives'
 
-import { useAuth } from '@hanzo/auth/service'
-
 import { useCommerce } from '../..'
 
 import { countries } from './countries'
+import { sendGAEvent } from '../../util/analytics'
 
 const shippingFormSchema = z.object({
   addressLine1: z.string().min(2, 'Address must be at least 2 characters.'),
@@ -43,7 +42,6 @@ const ShippingInfo: React.FC<{
   orderId,
   setStep
 }) => { 
-  const auth = useAuth()
   const cmmc = useCommerce()
   
   const shippingForm = useForm<z.infer<typeof shippingFormSchema>>({
@@ -62,6 +60,18 @@ const ShippingInfo: React.FC<{
     if (orderId) {
       await cmmc.updateOrderShippingInfo(orderId, values)
     }
+    sendGAEvent('add_shipping_info', {
+      items: cmmc.cartItems.map((item) => ({
+        item_id: item.sku,
+        item_name: item.title,
+        item_category: item.categoryId,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      num_items: cmmc.cartItems.length,
+      value: cmmc.cartTotal,
+      currency: 'USD',
+    })
     setStep(3)
   }
 

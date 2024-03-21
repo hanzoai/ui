@@ -13,6 +13,7 @@ import type { TransactionStatus } from '../../../types'
 
 import PaymentMethods from './payment-methods'
 import ContactInfo from './contact-info'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 const PayWithCard: React.FC<{
   setStep: (currentStep: number) => void
@@ -46,6 +47,28 @@ const PayWithCard: React.FC<{
         console.log(token)
         await storePaymentInfo({paymentMethod: token.details.method ?? null, processed: res})
         setTransactionStatus('confirmed')
+        sendGAEvent('purchase', {
+          transaction_id: res.payment?.id,
+          value: res.payment?.amountMoney?.amount,
+          currency: res.payment?.amountMoney?.currency,
+          items: cmmc.cartItems.map((item) => ({
+            item_id: item.sku,
+            item_name: item.title,
+            item_category: item.categoryId,
+            price: item.price,
+            quantity: item.quantity
+          })),
+        })
+        sendFBEvent('Purchase', {
+          content_ids: cmmc.cartItems.map((item) => item.sku),
+          contents: cmmc.cartItems.map(item => ({
+            id: item.sku,
+            quantity: item.quantity
+          })),
+          num_items: cmmc.cartItems.length,
+          value: cmmc.cartTotal,
+          currency: 'USD',
+        })
       } else {
         setTransactionStatus('error')
       }  

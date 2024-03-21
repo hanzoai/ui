@@ -9,6 +9,7 @@ import { useCommerce } from '../../service/context'
 import { formatPrice } from '../../util'
 
 import CartLineItem from './cart-line-item'
+import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
@@ -31,6 +32,31 @@ const CartPanel: React.FC<PropsWithChildren & {
     return <div />
   }
 
+  const showCheckout = () => {
+    sendGAEvent('begin_checkout', {
+      currency: 'USD',
+      value: cmmc.cartTotal,
+      items: cmmc.cartItems.map((item) => ({
+        item_id: item.sku,
+        item_name: item.title,
+        item_category: item.categoryId,
+        price: item.price,
+        quantity: item.quantity
+      })),
+    })
+    sendFBEvent('InitiateCheckout', {
+      content_ids: cmmc.cartItems.map((item) => item.sku),
+      contents: cmmc.cartItems.map(item => ({
+        id: item.sku,
+        quantity: item.quantity
+      })),
+      num_items: cmmc.cartItems.length,
+      value: cmmc.cartTotal,
+      currency: 'USD',
+    })
+    onCheckoutOpen && onCheckoutOpen()
+  }
+
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
@@ -50,7 +76,7 @@ const CartPanel: React.FC<PropsWithChildren & {
             variant='primary' 
             rounded='lg' 
             className='mt-12 mx-auto w-full' 
-            onClick={onCheckoutOpen}
+            onClick={showCheckout}
           >
             Checkout
           </Button>
