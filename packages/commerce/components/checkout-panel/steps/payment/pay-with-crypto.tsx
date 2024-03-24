@@ -20,12 +20,12 @@ import {
 
 import { useAuth } from '@hanzo/auth/service'
 
-import Eth from '../icons/eth'
-import { useCommerce } from '../../../service/context'
-import type { TransactionStatus } from '../../../types'
+import Eth from '../../icons/eth'
+import { useCommerce } from '../../../../service/context'
+import type { TransactionStatus } from '../../../../types'
 import ContactInfo from './contact-info'
 import type { UseFormReturn } from 'react-hook-form'
-import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
+import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
 
 declare global {
   interface Window{
@@ -34,7 +34,7 @@ declare global {
 }
 
 const PayWithCrypto: React.FC<{
-  setStep: (currentStep: number) => void
+  onDone: () => void
   transactionStatus: TransactionStatus
   setTransactionStatus: (status: TransactionStatus) => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
@@ -46,7 +46,7 @@ const PayWithCrypto: React.FC<{
     email: string
   }>
 }> = observer(({
-  setStep,
+  onDone,
   transactionStatus,
   setTransactionStatus,
   storePaymentInfo,
@@ -182,7 +182,7 @@ const PayWithCrypto: React.FC<{
     await storePaymentInfo({
       paymentMethod: 'crypto'
     })
-    setStep(2)
+    onDone()
   }
 
   return (
