@@ -12,21 +12,20 @@ import { useAuth } from '@hanzo/auth/service'
 import PayWithCrypto from './pay-with-crypto'
 import PayWithBankTransfer from './pay-with-bank-transfer'
 import PayWithCard from './pay-with-card'
-import { useCommerce } from '../../../service/context'
-import type { TransactionStatus } from '../../../types'
-import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
+
+import { useCommerce } from '../../../../service/context'
+import type { TransactionStatus } from '../../../../types'
+import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
+
+import type { StepComponentProps } from '../types'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, 'Enter your full name.'),
   email: z.string().email(),
 })
 
-const Payment: React.FC<{
-  setStep: (s: number) => void
-  orderId?: string
-  setOrderId: (orderId?: string) => void
-}> = observer(({
-  setStep,
+const Payment: React.FC<StepComponentProps> = observer(({
+  onDone,
   orderId,
   setOrderId
 }) => {
@@ -51,7 +50,7 @@ const Payment: React.FC<{
 
   const storePaymentInfo = async (paymentInfo: any) => {
     const {name, email} = contactForm.getValues()
-    let id
+    let id: string | undefined = undefined
     if (!orderId) {
       id = await cmmc.createOrder(email, name)
       setOrderId(id)
@@ -81,34 +80,41 @@ const Payment: React.FC<{
     }
   }
 
+  const groupClx = 'grid w-full grid-cols-3 mx-auto ' + 
+    'p-0 h-auto overflow-hidden ' + 
+    'border-2 bg-background border-level-2 md:bg-level-1 md:border-level-3 ' 
+
+  const tabClx = 'whitespace-normal h-full text-xs sm:text-base px-1 text-muted ' + 
+    'data-[state=active]:text-accent data-[state=active]:bg-level-2 md:data-[state=active]:bg-level-3'
+
   return (
-    <Tabs defaultValue='card' className='w-full mx-auto max-w-[50rem]'>
-      <TabsList className='grid w-full grid-cols-3 mx-auto bg-level-2 h-auto'>
+    <Tabs defaultValue='card' className='w-full sm:max-w-[500px] sm:mx-auto'>
+      <TabsList className={groupClx}>
         <TabsTrigger
           value='card'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with card
+          Card
         </TabsTrigger>
         <TabsTrigger
           value='crypto'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with Wallet
+          Wallet
         </TabsTrigger>
         <TabsTrigger
           value='bank'
-          className='whitespace-normal h-full text-xs sm:text-base px-1'
+          className={tabClx}
           disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
         >
-          Pay with Wire
+          Bank Wire
         </TabsTrigger>
       </TabsList>
       <TabsContent value='card'>
         <PayWithCard
-          setStep={setStep}
+          onDone={onDone}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -117,7 +123,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='crypto'>
         <PayWithCrypto
-          setStep={setStep}
+          onDone={onDone}
           transactionStatus={transactionStatus}
           setTransactionStatus={setTransactionStatus}
           storePaymentInfo={storePaymentInfo}
@@ -126,7 +132,7 @@ const Payment: React.FC<{
       </TabsContent>
       <TabsContent value='bank'>
         <PayWithBankTransfer
-          setStep={setStep}
+          onDone={onDone}
           storePaymentInfo={storePaymentInfo}
           contactForm={contactForm}
         />

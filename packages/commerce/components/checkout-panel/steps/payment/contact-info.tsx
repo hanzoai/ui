@@ -3,7 +3,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@hanzo/ui/primitives/form'
 import { Input } from '@hanzo/ui/primitives'
@@ -23,16 +22,16 @@ const ContactInfo: React.FC<{
   return (
     <Form {...form}>
       <form className='text-left'>
-        <div className='flex gap-1 sm:gap-2'>
+        <div className='flex flex-col gap-1 sm:gap-2'>
           <FormField
             control={form.control}
             name='name'
             render={({ field }) => (
-              <FormItem className='space-y-1 w-full'>
+              <FormItem className='w-full'>
                 <FormControl>
                   <Input {...field} className='border-muted-4' placeholder='Full name'/>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className='py-0 space-y-0 !m-0'/>
               </FormItem>
             )}
           />
@@ -40,11 +39,11 @@ const ContactInfo: React.FC<{
             control={form.control}
             name='email'
             render={({ field }) => (
-              <FormItem className='space-y-1 w-full'>
+              <FormItem className='w-full'>
                 <FormControl>
                   <Input {...field} className='border-muted-4' placeholder='Email'/>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className='py-0 space-y-0 !m-0'/>
               </FormItem>
             )}
           />

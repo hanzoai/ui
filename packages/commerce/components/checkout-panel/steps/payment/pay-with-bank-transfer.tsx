@@ -35,7 +35,7 @@ const InfoField: React.FC<{
 }
 
 const PayWithBankTransfer: React.FC<{
-  setStep: (step: number) => void
+  onDone: () => void
   storePaymentInfo: (paymentInfo: any) => Promise<void>
   contactForm: UseFormReturn<{
     name: string
@@ -45,24 +45,28 @@ const PayWithBankTransfer: React.FC<{
     email: string
   }>
 }> = ({
-  setStep,
+  onDone,
   storePaymentInfo,
   contactForm
 }) => {
+
   const payByBankTransfer = async () => {
-    contactForm.handleSubmit(async () => {
+    contactForm.handleSubmit( async () => {
       await storePaymentInfo({paymentMethod: 'bank-transfer'})
-      setStep(2)
+      onDone()
     })()
   }
+
+  const groupClx = 'border-2 bg-background border-level-2 md:bg-level-1 md:border-level-3 p-0 h-auto overflow-hidden rounded-md'
+  const tabClx = 'text-muted data-[state=active]:text-accent data-[state=active]:bg-level-2 md:data-[state=active]:bg-level-3'
 
   return (
     <div className='flex flex-col gap-2 mt-6'>
       <ContactInfo form={contactForm}/>
       <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
-        <TabsList className="grid w-full grid-cols-2 max-w-[15rem] mx-auto bg-level-2">
-          <TabsTrigger value="usd">USD</TabsTrigger>
-          <TabsTrigger value="eur">EUR/GBP</TabsTrigger>
+        <TabsList className={"grid w-full grid-cols-2 max-w-[15rem] mx-auto " + groupClx}>
+          <TabsTrigger className={tabClx} value="usd">USD</TabsTrigger>
+          <TabsTrigger className={tabClx} value="eur">EUR/GBP</TabsTrigger>
         </TabsList>
         <TabsContent value="usd">
           <div className='flex flex-col gap-4 w-full'>

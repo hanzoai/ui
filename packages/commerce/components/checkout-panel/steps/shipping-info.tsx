@@ -21,10 +21,12 @@ import {
   SelectValue 
 } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../..'
+import { useCommerce } from '../../..'
 
-import { countries } from './countries'
-import { sendGAEvent } from '../../util/analytics'
+import countries from '../../../util/countries'
+import { sendGAEvent } from '../../../util/analytics'
+
+import type { StepComponentProps } from './types'
 
 const shippingFormSchema = z.object({
   addressLine1: z.string().min(2, 'Address must be at least 2 characters.'),
@@ -35,12 +37,9 @@ const shippingFormSchema = z.object({
   country: z.string().min(2, 'Country is invalid.'),
 })
 
-const ShippingInfo: React.FC<{
-  orderId?: string,
-  setStep: (currentStep: number) => void
-}> = ({
+const ShippingInfo: React.FC<StepComponentProps> = ({
   orderId,
-  setStep
+  onDone
 }) => { 
   const cmmc = useCommerce()
   
@@ -72,7 +71,7 @@ const ShippingInfo: React.FC<{
       value: cmmc.cartTotal,
       currency: 'USD',
     })
-    setStep(3)
+    onDone()
   }
 
   return (

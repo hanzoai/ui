@@ -169,5 +169,6 @@ export { default as InlineIcon } from './inline-icon'
 export { default as NavItems} from './nav-items'
 export { default as Main } from './main'
 export { default as ListBox } from './list-box'
+export { default as StepIndicator } from './step-indicator'
 
 export * as Icons from './icons'

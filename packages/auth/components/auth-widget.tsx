@@ -19,12 +19,18 @@ import { useAuth } from '../service'
 import Ethereum from '../icons/ethereum'
 
 const AuthWidget: React.FC<{
-  hideLogin?: boolean
+    /** Does not show the 'login' button when no auth user. 
+     * ie, Only shows the profile widget (when there's an auth user)
+     */
+  noLogin?: boolean
   className?: string
-  triggerLogin?: () => void
+    /** Overrides default of navigating to '/login' route. 
+     * eg, if client code provides it's own ogin form
+     *  */
+  handleLogin?: () => void
 }> = observer(({
-  hideLogin=false,
-  triggerLogin,
+  noLogin=false,
+  handleLogin,
   className
 }) => {
 
@@ -35,21 +41,21 @@ const AuthWidget: React.FC<{
     // We safegaurd agains this in the by loading peer Deps from
     // the root in host mono repos, but this is another layer.
     // Also, this allows sites to opt-in to showing an auth widget without
-    // configuration, by just providing the context/
+    // configuration, by just providing the context.
   if (!auth) {
     return null
   }
   
-    // If that is the case, the widget will always show the login 
+    // If that is the case, the widget will always show the 'login' 
     // button regardless of status.
   if (!auth.loggedIn) {
 
-    return (hideLogin ? null : (
-      (triggerLogin) ? (
+    return (noLogin ? null : (
+      (handleLogin) ? (
         <Button 
           variant='primary' 
           className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
-          onClick={triggerLogin} 
+          onClick={handleLogin} 
         >
           Login
         </Button>

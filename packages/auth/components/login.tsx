@@ -19,7 +19,7 @@ const Login: React.FC<PropsWithChildren & {
   returnToUrl?: string,
   className?: string,
   inputClassName?: string,
-  hideHeader?: boolean
+  noHeading?: boolean
   onLoginChanged?: (loggedIn: boolean) => void
 }> = observer(({
   children,
@@ -28,7 +28,7 @@ const Login: React.FC<PropsWithChildren & {
   returnToUrl,
   className,
   inputClassName,
-  hideHeader,
+  noHeading,
   onLoginChanged
 }) => {
   const router = useRouter()
@@ -118,7 +118,7 @@ const Login: React.FC<PropsWithChildren & {
         </div>
       ) : (
         <div className='flex flex-col gap-4 text-center'>
-          {!hideHeader && (
+          {!noHeading && (
             <div className='mb-4 items-center flex'>
               {returnToUrl && (
                 <Button size='icon' variant='ghost' className='absolute' onClick={() => router.push(returnToUrl)}>

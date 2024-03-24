@@ -5,16 +5,16 @@ import { ChevronLeft } from 'lucide-react'
 import { Button } from '@hanzo/ui/primitives'
 
 const CloseButton: React.FC<{
-  onClose: () => void
+  close: () => void
   className?: string
 }> = ({
-  onClose,
+  close,
   className=''
 }) => (
     <Button
       variant='ghost'
       size='icon'
-      onClick={onClose}
+      onClick={close}
       className={'group ' + className}
     >
       <ChevronLeft className='w-5 h-5 group-hover:scale-110 transition-scale transition-duration-300'/>

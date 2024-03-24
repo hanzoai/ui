@@ -15,27 +15,24 @@ import ProductsCarousel from './products-carousel'
 const CartPanel: React.FC<PropsWithChildren & {
   className?: string
   isMobile?: boolean,
-  noCheckout?: boolean
-  showProductsCarousel?: boolean
-  onCheckoutOpen?: () => void
+  showCarousel?: boolean
+    /** if not provided, checkout button will not be shown */
+  handleCheckout?: () => void
 }> = observer(({
     /** Children is the heading area. */
   children,
   className='',
   isMobile=false,
-  noCheckout=false,
-  showProductsCarousel=false,
-  onCheckoutOpen,
+  showCarousel=false,
+  handleCheckout,
 }) => {
-  /* TODO: onCheckoutOpen is a hackish way fix a bug with multiple dialog opened at the same time.
-  *  Needs refactor with context or so.
-  **/
+
   const cmmc = useCommerce()
   if (!cmmc) {
     return <div />
   }
 
-  const showCheckout = () => {
+  const _handleCheckout = () => {
     sendGAEvent('begin_checkout', {
       currency: 'USD',
       value: cmmc.cartTotal,
@@ -57,13 +54,13 @@ const CartPanel: React.FC<PropsWithChildren & {
       value: cmmc.cartTotal,
       currency: 'USD',
     })
-    onCheckoutOpen && onCheckoutOpen()
+    handleCheckout && handleCheckout()
   }
 
   return (
     <div className={cn('border p-4 rounded-lg', className)}>
       {children}
-      {showProductsCarousel && <ProductsCarousel items={cmmc.cartItems}/>}
+      {showCarousel && <ProductsCarousel items={cmmc.cartItems}/>}
       <div className='mt-2 w-full'>
         {cmmc.cartEmpty ? (
           <p className='text-center mt-4'>No items in cart</p>
@@ -74,13 +71,13 @@ const CartPanel: React.FC<PropsWithChildren & {
           <p className='mt-6 text-right border-t pt-1'>TOTAL: <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatPrice(cmmc.cartTotal)}</span></p>
         </>)}
       </div>
-      {!noCheckout && (<>
+      {handleCheckout && (<>
         {!cmmc.cartEmpty && (
           <Button 
             variant='primary' 
             rounded='lg' 
-            className='mt-12 mx-auto w-full' 
-            onClick={showCheckout}
+            className='mt-12 mx-auto w-full sm:max-w-[220px]' 
+            onClick={_handleCheckout}
           >
             Checkout
           </Button>

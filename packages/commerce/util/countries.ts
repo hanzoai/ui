@@ -1,5 +1,5 @@
 //https://stefangabos.github.io/world_countries/
-export const countries = [ 
+export default [ 
   {"id":4,"alpha2":"af","alpha3":"afg","name":"Afghanistan"},
   {"id":8,"alpha2":"al","alpha3":"alb","name":"Albania"},
   {"id":12,"alpha2":"dz","alpha3":"dza","name":"Algeria"},
