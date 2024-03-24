@@ -1,8 +1,11 @@
 import React from 'react'
 import Link from 'next/link'
+
 import { ApplyTypography } from '@hanzo/ui/primitives'
 
-const ThankYou: React.FC = () =>  (
+import type { StepComponentProps } from './types'
+
+const ThankYou: React.FC<StepComponentProps> = ({}) =>  (
   <ApplyTypography className='flex flex-col gap-4 text-center mt-10'>
     <h3>Thank you for your order!</h3>
     <h6>Once your payment has been confirmed we will send additional information to your email.</h6>

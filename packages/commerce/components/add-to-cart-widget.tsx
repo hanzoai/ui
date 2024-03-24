@@ -29,7 +29,7 @@ const AddToCartWidget: React.FC<{
 }) => {
 
   const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-7 px-1'
-  const digitClx = ghost ? 'px-2 md:px-0.5' : 'sm:px-2 font-bold '
+  const digitClx = ghost ? 'px-2 md:px-0.5 text-foreground ' : 'sm:px-2 font-bold text-primary-fg '
 
   if (disabled) {
     return (
@@ -116,7 +116,7 @@ const AddToCartWidget: React.FC<{
         <Icons.trash className={iconClx} aria-hidden='true'/>
       )}
       </Button>
-        <div className={'text-sm flex items-center cursor-default xs:px-2 text-primary-fg ' + digitClx} >{item.quantity}</div>
+        <div className={'text-sm flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}</div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
