@@ -206,7 +206,7 @@ const PayWithCard: React.FC<{
                         color: '#ff1600',
                       },
                       input: {
-                        backgroundColor: '#1f1f1f',
+                        backgroundColor: 'transparent',
                         color: '#FFFFFF',
                         fontSize: '15px',
                         fontFamily: 'helvetica neue, sans-serif',

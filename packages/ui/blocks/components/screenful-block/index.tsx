@@ -46,7 +46,7 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'z-10 xl:mx-auto max-w-screen-xl overflow-y-hidden ',
+    'xl:mx-auto max-w-screen-xl overflow-y-hidden ',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
@@ -68,13 +68,13 @@ const ScreenfulComponent: React.FC<{
         {hasBannerVideo() && (
           <Video 
             block={b.banner! as VideoBlock} 
-            className='z-0 absolute top-0 left-0 bottom-0 right-0' 
+            className='absolute top-0 left-0 bottom-0 right-0' 
             initialInView={initialInView}
           />
         )}
         <div className={cn(
             ...cwclx,
-            snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full',
+            snapTile ? 'absolute left-0 right-0 top-0 bottom-0 ' : 'flex min-h-screen w-full',
             contentClx,
             vertCenter ? '!py-0 self-center' : ''
           )}
