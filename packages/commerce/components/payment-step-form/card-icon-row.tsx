@@ -1,10 +1,10 @@
 import { LockKeyhole } from 'lucide-react'
-import Amex from './amex'
-import Discover from './discover'
-import Mastercard from './mastercard'
-import Visa from './visa'
-import DinersClub from './diners-club'
-import Jcb from './jcb'
+import Amex from './card-icons/amex'
+import Discover from './card-icons/discover'
+import Mastercard from './card-icons/mastercard'
+import Visa from './card-icons/visa'
+import DinersClub from './card-icons/diners-club'
+import Jcb from './card-icons/jcb'
 
 //       <span className='hidden sm:flex text-sm'>Secure payments with</span>
 

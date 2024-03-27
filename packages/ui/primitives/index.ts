@@ -137,6 +137,7 @@ export {
 
 export {
   type CarouselApi,
+  type CarouselOptionsType,
   Carousel,
   CarouselContent,
   CarouselItem,

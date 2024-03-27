@@ -1,21 +1,31 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import React from 'react'
 import { Copy } from 'lucide-react'
-import type { UseFormReturn } from 'react-hook-form'
 
-import { Button, Tabs, TabsContent, TabsList, TabsTrigger, toast } from '@hanzo/ui/primitives'
-import ContactInfo from './contact-info'
+import { 
+  Button, 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger, 
+  toast 
+} from '@hanzo/ui/primitives'
+
+import type { PaymentMethodComponentProps } from '../../../types'
+
+import ContactForm from '../contact-form'
 
 const InfoField: React.FC<{
   label: string,
-  value: ReactNode,
+  value: React.ReactNode,
   copyValue: string
 }> = ({
   label,
   value,
   copyValue
 }) => {
+
   const copyToClipboard = (label: string, text: string) => {
     navigator.clipboard.writeText(text)
     toast(`${label} copied to clipboard.`)
@@ -34,17 +44,7 @@ const InfoField: React.FC<{
   )
 }
 
-const PayWithBankTransfer: React.FC<{
-  onDone: () => void
-  storePaymentInfo: (paymentInfo: any) => Promise<void>
-  contactForm: UseFormReturn<{
-    name: string
-    email: string
-  }, any, {
-    name: string
-    email: string
-  }>
-}> = ({
+const PayWithBankTransfer: React.FC<PaymentMethodComponentProps> = ({
   onDone,
   storePaymentInfo,
   contactForm
@@ -62,7 +62,7 @@ const PayWithBankTransfer: React.FC<{
 
   return (
     <div className='flex flex-col gap-2 mt-6'>
-      <ContactInfo form={contactForm}/>
+      <ContactForm form={contactForm}/>
       <Tabs defaultValue="usd" className='w-full mx-auto max-w-[50rem]'>
         <TabsList className={"grid w-full grid-cols-2 max-w-[15rem] mx-auto " + groupClx}>
           <TabsTrigger className={tabClx} value="usd">USD</TabsTrigger>

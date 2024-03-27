@@ -18,14 +18,12 @@ import {
   toast 
 } from '@hanzo/ui/primitives'
 
-import { useAuth } from '@hanzo/auth/service'
+import Eth from '../crypto-icons/eth'
+import { useCommerce } from '../../../service/context'
+import type { PaymentMethodComponentProps } from '../../../types'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
-import Eth from '../../icons/eth'
-import { useCommerce } from '../../../../service/context'
-import type { TransactionStatus } from '../../../../types'
-import ContactInfo from './contact-info'
-import type { UseFormReturn } from 'react-hook-form'
-import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
+import ContactForm from '../contact-form'
 
 declare global {
   interface Window{
@@ -33,19 +31,7 @@ declare global {
   }
 }
 
-const PayWithCrypto: React.FC<{
-  onDone: () => void
-  transactionStatus: TransactionStatus
-  setTransactionStatus: (status: TransactionStatus) => void
-  storePaymentInfo: (paymentInfo: any) => Promise<void>
-  contactForm: UseFormReturn<{
-    name: string
-    email: string
-  }, any, {
-    name: string
-    email: string
-  }>
-}> = observer(({
+const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
   onDone,
   transactionStatus,
   setTransactionStatus,
@@ -53,7 +39,7 @@ const PayWithCrypto: React.FC<{
   contactForm
 }) => {
   const cmmc = useCommerce()
-  const auth = useAuth()
+
   const [loadingPrice, setLoadingPrice] = useState(false)
   //const [selectedToken, setSelectedToken] = useState('eth')
   const [amount, setAmount] = useState<number>()
@@ -188,7 +174,7 @@ const PayWithCrypto: React.FC<{
   return (
     <div className='flex flex-col gap-6 mt-6'>
       <div className='flex flex-col gap-2 w-full'>
-        <ContactInfo form={contactForm}/>
+        <ContactForm form={contactForm}/>
         <div className='flex gap-2 grid grid-cols-3'>
           <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
             <SelectTrigger>
