@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import useEmblaCarousel, { type UseEmblaCarouselType } from 'embla-carousel-react'
-import Autoplay from "embla-carousel-autoplay"
+import useEmblaCarousel, { type UseEmblaCarouselType, type EmblaOptionsType } from 'embla-carousel-react'
+import Autoplay from 'embla-carousel-autoplay'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 import { cn } from '../util'
@@ -254,6 +254,7 @@ CarouselNext.displayName = 'CarouselNext'
 
 export {
   type CarouselApi,
+  type EmblaOptionsType as CarouselOptionsType,
   Carousel,
   CarouselContent,
   CarouselItem,

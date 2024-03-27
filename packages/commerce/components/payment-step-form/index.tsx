@@ -1,6 +1,5 @@
 'use client'
-
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,22 +8,19 @@ import { useForm } from 'react-hook-form'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hanzo/ui/primitives'
 import { useAuth } from '@hanzo/auth/service'
-import PayWithCrypto from './pay-with-crypto'
-import PayWithBankTransfer from './pay-with-bank-transfer'
-import PayWithCard from './pay-with-card'
 
-import { useCommerce } from '../../../../service/context'
-import type { TransactionStatus } from '../../../../types'
-import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
+import { useCommerce } from '../../service/context'
+import { sendFBEvent, sendGAEvent } from '../../util/analytics'
+import type { CheckoutStepComponentProps, TransactionStatus } from '../../types'
 
-import type { StepComponentProps } from '../types'
+import METHODS from './methods'
 
 const contactFormSchema = z.object({
   name: z.string().min(1, 'Enter your full name.'),
   email: z.string().email(),
 })
 
-const Payment: React.FC<StepComponentProps> = observer(({
+const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   onDone,
   orderId,
   setOrderId
@@ -87,58 +83,35 @@ const Payment: React.FC<StepComponentProps> = observer(({
   const tabClx = 'whitespace-normal h-full text-xs sm:text-base px-1 text-muted ' + 
     'data-[state=active]:text-accent data-[state=active]:bg-level-2 md:data-[state=active]:bg-level-3'
 
+  const disabled = transactionStatus === 'paid' || transactionStatus === 'confirmed'
+
   return (
-    <Tabs defaultValue='card' className='w-full sm:max-w-[500px] sm:mx-auto'>
+    <Tabs defaultValue='card' className='w-full'>
       <TabsList className={groupClx}>
+      {METHODS.map(({ label, value }) => (
         <TabsTrigger
-          value='card'
+          value={value}
           className={tabClx}
-          disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
+          disabled={disabled}
+          key={`tabs-${value}`}
         >
-          Card
+          {label}
         </TabsTrigger>
-        <TabsTrigger
-          value='crypto'
-          className={tabClx}
-          disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
-        >
-          Wallet
-        </TabsTrigger>
-        <TabsTrigger
-          value='bank'
-          className={tabClx}
-          disabled={transactionStatus === 'paid' || transactionStatus === 'confirmed'}
-        >
-          Bank Wire
-        </TabsTrigger>
+      ))}
       </TabsList>
-      <TabsContent value='card'>
-        <PayWithCard
-          onDone={onDone}
-          transactionStatus={transactionStatus}
-          setTransactionStatus={setTransactionStatus}
-          storePaymentInfo={storePaymentInfo}
-          contactForm={contactForm}
-        />
-      </TabsContent>
-      <TabsContent value='crypto'>
-        <PayWithCrypto
-          onDone={onDone}
-          transactionStatus={transactionStatus}
-          setTransactionStatus={setTransactionStatus}
-          storePaymentInfo={storePaymentInfo}
-          contactForm={contactForm}
-        />
-      </TabsContent>
-      <TabsContent value='bank'>
-        <PayWithBankTransfer
-          onDone={onDone}
-          storePaymentInfo={storePaymentInfo}
-          contactForm={contactForm}
-        />
-      </TabsContent>
+      {METHODS.map(({Comp: PaymentMethodComp, value}) => (
+        <TabsContent value={value} key={`content-${value}`}>
+          <PaymentMethodComp 
+            onDone={onDone}
+            transactionStatus={transactionStatus}
+            setTransactionStatus={setTransactionStatus}
+            storePaymentInfo={storePaymentInfo}
+            contactForm={contactForm}
+          />
+        </TabsContent>
+      ))}
     </Tabs>
   )
 })
 
-export default Payment
+export default PaymentStepForm
