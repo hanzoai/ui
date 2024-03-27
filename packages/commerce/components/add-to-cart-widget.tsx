@@ -15,7 +15,6 @@ const AddToCartWidget: React.FC<{
   disabled?: boolean
   className?: string
   buttonClx?: string
-  isMobile?: boolean
   size?: ButtonSizes
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({

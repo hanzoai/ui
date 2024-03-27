@@ -19,27 +19,15 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { processSquareCardPayment } from '../../../../util'
-import { useCommerce } from '../../../../service/context'
-import type { TransactionStatus } from '../../../../types'
+import { useCommerce } from '../../../service/context'
+import { processSquareCardPayment } from '../../../util'
+import type { PaymentMethodComponentProps } from '../../../types'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
-import ContactInfo from './contact-info'
-import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
-import PaymentMethods from './cards'
+import ContactInfo from '../contact-form'
+import PaymentMethods from '../card-icon-row'
 
-const PayWithCard: React.FC<{
-  onDone: () => void
-  transactionStatus: TransactionStatus
-  setTransactionStatus: (status: TransactionStatus) => void
-  storePaymentInfo: (paymentInfo: any) => Promise<void>
-  contactForm: UseFormReturn<{
-    name: string
-    email: string
-  }, any, {
-    name: string
-    email: string
-  }>
-}> = ({
+const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
   onDone,
   transactionStatus,
   setTransactionStatus,

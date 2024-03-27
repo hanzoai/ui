@@ -1,6 +1,6 @@
 import { Button } from '@hanzo/ui/primitives'
 
-import PaymentMethods from './cards'
+import PaymentMethods from './card-icon-row'
 import type { PropsWithChildren } from 'react'
 
 const CCButton: React.FC<PropsWithChildren> = ({

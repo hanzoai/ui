@@ -1,6 +1,5 @@
 'use client'
 
-
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,7 +11,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
   Select, 
   SelectContent, 
@@ -21,12 +19,12 @@ import {
   SelectValue 
 } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../../..'
+import { useCommerce } from '../service/context'
 
-import countries from '../../../util/countries'
-import { sendGAEvent } from '../../../util/analytics'
+import countries from '../util/countries'
+import { sendGAEvent } from '../util/analytics'
 
-import type { StepComponentProps } from './types'
+import type { CheckoutStepComponentProps } from '../types'
 
 const shippingFormSchema = z.object({
   addressLine1: z.string().min(2, 'Address must be at least 2 characters.'),
@@ -37,7 +35,7 @@ const shippingFormSchema = z.object({
   country: z.string().min(2, 'Country is invalid.'),
 })
 
-const ShippingInfo: React.FC<StepComponentProps> = ({
+const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
   orderId,
   onDone
 }) => { 
@@ -171,4 +169,4 @@ const ShippingInfo: React.FC<StepComponentProps> = ({
   )
 }
 
-export default ShippingInfo
+export default ShippingStepForm
