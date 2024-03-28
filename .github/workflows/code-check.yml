@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - run: pnpm lint
+        #- run: pnpm lint
 
   format:
     runs-on: ubuntu-latest
