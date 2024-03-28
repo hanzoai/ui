@@ -60,7 +60,7 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
           price: item.price,
           quantity: item.quantity
         })),
-        value: cmmc.cartTotal,
+        value: cmmc.cartTotalWithPromo,
         currency: 'USD',
         payment_type: paymentInfo.paymentMethod ?? ''
       })
@@ -69,7 +69,7 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
           id: item.sku,
           quantity: item.quantity
         })),
-        value: cmmc.cartTotal,
+        value: cmmc.cartTotalWithPromo,
         currency: 'USD'
       })
       await cmmc.updateOrderPaymentInfo(id, paymentInfo)

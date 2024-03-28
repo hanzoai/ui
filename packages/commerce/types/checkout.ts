@@ -37,6 +37,12 @@ interface PaymentMethodDesc {
   Comp: ComponentType<PaymentMethodComponentProps>
 }
 
+type Promo = {
+  type: 'percent' | 'amount'
+  code: string
+  value: number,
+  skus?: string[]
+}
 
 export {
   type TransactionStatus,
@@ -44,5 +50,6 @@ export {
   type CheckoutStep,
   type PaymentMethodComponentProps,
   type PaymentMethodDesc,
-  type ContactFormType
+  type ContactFormType,
+  type Promo
 }

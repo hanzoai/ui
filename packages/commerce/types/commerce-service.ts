@@ -1,6 +1,7 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
 import type { FacetValueDesc, FacetsValue } from './facet'
 import type Category from './category'
+import type { Promo } from './checkout'
 
 interface CommerceService extends ObsLineItemRef {
 
@@ -11,7 +12,13 @@ interface CommerceService extends ObsLineItemRef {
     /** Total of all prices * quantities of items in cart */
   get cartTotal(): number
 
+  get cartTotalWithPromo(): number
+
   get cartEmpty(): boolean
+
+  get promo(): Promo | null
+
+  setPromo(promo: Promo | null): void
    
   getCartCategorySubtotal(categoryId: string): number
 
