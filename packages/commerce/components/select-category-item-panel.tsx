@@ -7,7 +7,7 @@ import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
 import type { ItemSelector } from '../types'
-import { formatPrice } from '../util'
+import { formatCurrencyValue } from '../util'
 import { Icons } from './Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
@@ -132,7 +132,7 @@ const SelectCategoryItemPanel: React.FC<
         </h3>
         {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
-            {(soleOption ? '' : (selectedItemRef.item.titleAsOption + ': ')) + formatPrice(selectedItemRef.item.price)}
+            {(soleOption ? '' : (selectedItemRef.item.titleAsOption + ': ')) + formatCurrencyValue(selectedItemRef.item.price)}
           </h6>
         ) : ''}
       </div>

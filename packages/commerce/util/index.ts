@@ -1,4 +1,4 @@
-import type { StringMutator, CommerceService } from '../types'
+import type { StringMutator, CommerceService, Promo } from '../types'
 
 export function toTitleCase(str: string) {
   return str.replace(
@@ -20,13 +20,14 @@ export function unslugify(str: string) {
 }
 
 
-export function formatPrice(price: number): string {
+export function formatCurrencyValue(price: number): string {
   const str = price.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
   });
   return (str.endsWith('.00')) ? str.replace('.00', '') : str 
 }
+
 
 export const getFacetValuesMutator = (level: number, cmmc: CommerceService): StringMutator => {
 

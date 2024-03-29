@@ -29,6 +29,7 @@ const CommerceServiceProvider: React.FC<PropsWithChildren & {
   options
 }) => {
 
+    // TODO: Inject Promo fixture here
   const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, rootFacet, options))
   return (
     <CommerceServiceContext.Provider value={serviceRef.current}>

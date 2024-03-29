@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 
 import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
 import type { ItemSelector, LineItem, Product } from '../types'
-import { formatPrice } from '../util'
+import { formatCurrencyValue } from '../util'
 import { cn } from '@hanzo/ui/util'
 
 const CategoryItemRadioSelector: React.FC<ItemSelector & {
@@ -29,7 +29,7 @@ const CategoryItemRadioSelector: React.FC<ItemSelector & {
   }) => (
     <div className={cn(className, itemClx)}>
       <RadioGroupItem value={item.sku} id={item.sku} />
-      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatPrice(item.price)) : '')}</Label>
+      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}</Label>
     </div>
   )
 
