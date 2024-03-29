@@ -13,7 +13,7 @@ import {
 import type { ImageDef } from '@hanzo/ui/types'
 import { cn } from '@hanzo/ui/util'
 
-import { formatPrice } from '../util'
+import { formatCurrencyValue } from '../util'
 import type { LineItem } from '../types'
 import { Icons } from './Icons'
 
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <CardContent className='grid gap-2.5 p-4'>
         <CardTitle className='text-sm sm:text-base flex flex-col justify-start items-center line-clap-3'>
           {item.title.split(', ').map((e, i) => (<p key={i}>{e}</p>))}
-          <p className='mt-1 font-semibold'>{formatPrice(item.price)}</p>
+          <p className='mt-1 font-semibold'>{formatCurrencyValue(item.price)}</p>
         </CardTitle>
       </CardContent>
       <CardFooter className='p-4 flex flex-row justify-center'>

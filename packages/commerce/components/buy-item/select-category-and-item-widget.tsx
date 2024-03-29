@@ -7,12 +7,12 @@ import { cn } from '@hanzo/ui/util'
 
 import type { FacetValueDesc, FacetsValue, LineItem } from '../../types'
 import { useCommerce } from '../../service/context'
-import { formatPrice } from '../../util'
+import { formatCurrencyValue } from '../../util'
 
 import FacetTogglesWidget from '../facet-values-widget'
 
 const formatItem = (item: LineItem, withQuantity: boolean = false): string => (
-  `${item.titleAsOption}, ${formatPrice(item.price)}${(withQuantity && item.quantity > 0) ? `  (${item.quantity})` : ''}`
+  `${item.titleAsOption}, ${formatCurrencyValue(item.price)}${(withQuantity && item.quantity > 0) ? `  (${item.quantity})` : ''}`
 )
 
 const SelectCategoryAndItemWidget: React.FC<{

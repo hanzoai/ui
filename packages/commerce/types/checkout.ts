@@ -37,12 +37,11 @@ interface PaymentMethodDesc {
   Comp: ComponentType<PaymentMethodComponentProps>
 }
 
-
 export {
   type TransactionStatus,
   type CheckoutStepComponentProps,
   type CheckoutStep,
   type PaymentMethodComponentProps,
   type PaymentMethodDesc,
-  type ContactFormType
+  type ContactFormType,
 }

@@ -64,7 +64,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
         .then(res => res.json())
         .then((exchangeRate) => {
           const oneUsdInWei = (10**18) / exchangeRate.data.amount
-          const usdAmountInWei = oneUsdInWei * cmmc.cartTotal 
+          const usdAmountInWei = oneUsdInWei * cmmc.promoAppliedCartTotal 
           setAmount(usdAmountInWei)
           setLoadingPrice(false)
         })
@@ -77,7 +77,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
     const interval = setInterval(fetchPrice, 30000)
 
     return () => clearInterval(interval)
-  }, [cmmc.cartTotal])
+  }, [cmmc.promoAppliedCartTotal])
 
   const sendPayment = async (ether: number) => {
     contactForm.handleSubmit(async () => {

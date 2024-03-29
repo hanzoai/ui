@@ -1,11 +1,11 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-import type { UseFormReturn } from 'react-hook-form'
 // @ts-ignore
 import { ApplePay, GooglePay, CreditCard, PaymentForm } from 'react-square-web-payments-sdk'
 
 import { ChevronRight } from 'lucide-react'
+import { observer } from 'mobx-react-lite'
 
 import {
   Accordion,
@@ -14,6 +14,7 @@ import {
   AccordionTrigger,
   ApplyTypography, 
   Button, 
+  Skeleton, 
   buttonVariants
 } from '@hanzo/ui/primitives'
 
@@ -27,7 +28,7 @@ import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 import ContactInfo from '../contact-form'
 import PaymentMethods from '../card-icon-row'
 
-const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
+const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
   onDone,
   transactionStatus,
   setTransactionStatus,
@@ -42,9 +43,8 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
   ) => {
     contactForm.handleSubmit(async () => {
       setTransactionStatus('paid')
-      const res = await processSquareCardPayment(token.token, cmmc.cartTotal, verifiedBuyer.token)
+      const res = await processSquareCardPayment(token.token, cmmc.promoAppliedCartTotal, verifiedBuyer.token)
       if (res) {
-        console.log(token)
         await storePaymentInfo({paymentMethod: token.details.method ?? null, processed: res})
         setTransactionStatus('confirmed')
         sendGAEvent('purchase', {
@@ -66,7 +66,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
             quantity: item.quantity
           })),
           num_items: cmmc.cartItems.length,
-          value: cmmc.cartTotal,
+          value: cmmc.promoAppliedCartTotal,
           currency: 'USD',
         })
       } else {
@@ -78,7 +78,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
   const createVerificationDetails = () => {
     const {name, email} = contactForm.getValues()
     return {
-      amount: cmmc.cartTotal.toFixed(2),
+      amount: cmmc.promoAppliedCartTotal.toFixed(2),
       billingContact: {
         givenName: name,
         email,
@@ -88,7 +88,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
     }
   }
 
-  const createPaymentRequest= () => ({
+  const createPaymentRequest = () => ({
     countryCode: "US",
     currencyCode: "USD",
     lineItems: cmmc.cartItems.map(item => ({
@@ -99,10 +99,30 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
     requestBillingContact: false,
     requestShippingContact: false,
     total: {
-      amount: cmmc.cartTotal.toFixed(2),
+      amount: cmmc.promoAppliedCartTotal.toFixed(2),
       label: "Total",
     },
   })
+
+  /**
+   * Reload payment form after checkout value changes (promo code applied, etc.)
+   * Reloading is required so that Apple Pay and Google Pay buttons are updated for new cart total.
+   */
+  const [loadingPaymentForm, setLoadingPaymentForm] = useState<boolean>(false)
+  useEffect(() => {
+    setLoadingPaymentForm(true)
+    const timeout = setTimeout(() => setLoadingPaymentForm(false), 1000)
+    return () => clearTimeout(timeout)
+  }, [cmmc.promoAppliedCartTotal])
+
+  if (loadingPaymentForm) {
+    return (
+      <div className='flex flex-col gap-2'>
+        <Skeleton className='w-full h-10' />
+        <Skeleton className='w-full h-10' />
+      </div>
+    )
+  }
 
   return (
     <PaymentForm
@@ -143,92 +163,75 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = ({
             <Button onClick={onDone}>Continue</Button>
           </div>
         ) : (
-          <>
+          <div className='flex flex-col gap-1'>
             <GooglePay/>
             <ApplePay/>
             
-            <div className='flex gap-2 whitespace-nowrap items-center my-0.5 sm:my-1 text-xs text-muted'>
+            <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
               <hr className='grow border'/><div className='shrink-0 mx-1'>or</div><hr className='grow border'/>
             </div>
 
-            <Accordion type="single" collapsible className={''}>
-              <AccordionItem value="cart" className='w-full border-b-0 data-[state=open]:border data-[state=open]:px-3 rounded '>
-                <AccordionTrigger className={cn(
-                  buttonVariants({variant: 'outline', size: 'lg'}),
-                  '!no-underline group flex justify-between ',
-                  'bg-transparent hover:bg-transparent border-muted-2 hover:border-muted-2',
-                  'data-[state=open]:border-none data-[state=open]:py-0 px-4 data-[state=open]:px-1'
-                )}>
-                  <div className='font-sans text-base mr-2 text-muted'>CC</div>
-                  <PaymentMethods />
-                  <div>
-                    <ChevronRight className="h-5 w-5 -mr-2 text-muted shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-90 hidden group-data-[state=open]:block" />
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className='data-[state=open]:mb-4 data-[state=open]:mt-1'>
-                  <ContactInfo form={contactForm}/>
-                  {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
-                    hanzo/ui button outright and keeping the submit form functionality*/}
-                  <CreditCard
-                    style={{
-                      '.input-container': {
-                        borderColor: '#404040',
-                        borderRadius: '6px',
-                      },
-                      '.input-container.is-focus': {
-                        borderColor: '#ffffff',
-                      },
-                      '.input-container.is-error': {
-                        borderColor: '#ff1600',
-                      },
-                      '.message-text': {
-                        color: '#999999',
-                      },
-                      '.message-icon': {
-                        color: '#999999',
-                      },
-                      '.message-text.is-error': {
-                        color: '#ff1600',
-                      },
-                      '.message-icon.is-error': {
-                        color: '#ff1600',
-                      },
-                      input: {
-                        backgroundColor: 'transparent',
-                        color: '#FFFFFF',
-                        fontSize: '15px',
-                        fontFamily: 'helvetica neue, sans-serif',
-                      },
-                      'input::placeholder': {
-                        color: '#999999',
-                      },
-                      'input.is-error': {
-                        color: '#ff1600',
-                      },
-                    }}
-                    render={(Button: any) => (
-                      <Button className={cn(
-                        'items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
-                        'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
-                        '!bg-primary !text-primary-fg hover:!bg-primary-hover font-nav whitespace-nowrap not-typography h-10 py-2 px-4',
-                        '!text-sm rounded-md lg:min-w-[220px] sm:min-w-[220px] flex'
-                      )}>
-                        Pay
-                      </Button>
-                    )}
-                  />
-                  {transactionStatus === 'error' && (
-                    <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
-                  )}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+            <PaymentMethods />
 
-          </>
+            <ContactInfo form={contactForm}/>
+            {/* Imitates hanzo/ui Button and Input styles, I was unable to render the
+              hanzo/ui button outright and keeping the submit form functionality*/}
+            <CreditCard
+              style={{
+                '.input-container': {
+                  borderColor: '#404040',
+                  borderRadius: '6px',
+                },
+                '.input-container.is-focus': {
+                  borderColor: '#ffffff',
+                },
+                '.input-container.is-error': {
+                  borderColor: '#ff1600',
+                },
+                '.message-text': {
+                  color: '#999999',
+                },
+                '.message-icon': {
+                  color: '#999999',
+                },
+                '.message-text.is-error': {
+                  color: '#ff1600',
+                },
+                '.message-icon.is-error': {
+                  color: '#ff1600',
+                },
+                input: {
+                  backgroundColor: 'transparent',
+                  color: '#FFFFFF',
+                  fontSize: '15px',
+                  fontFamily: 'helvetica neue, sans-serif',
+                },
+                'input::placeholder': {
+                  color: '#999999',
+                },
+                'input.is-error': {
+                  color: '#ff1600',
+                },
+              }}
+              render={(Button: any) => (
+                <Button className={cn(
+                  'items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2',
+                  'focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
+                  '!bg-primary !text-primary-fg hover:!bg-primary-hover font-nav whitespace-nowrap not-typography h-10 py-2 px-4',
+                  '!text-sm rounded-md lg:min-w-[220px] sm:min-w-[220px] flex'
+                )}>
+                  Pay
+                </Button>
+              )}
+            />
+            {transactionStatus === 'error' && (
+              <p className='mx-auto text-destructive'>There was an error processing your payment.</p>
+            )}
+          </div>
         )}
       </ApplyTypography>
     </PaymentForm>
   )
-}
+})
 
 export default PayWithCard

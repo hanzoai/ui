@@ -14,7 +14,8 @@ import type {
   Category, 
   LineItem,
   FacetsValue, 
-  FacetValueDesc
+  FacetValueDesc,
+  Promo
 } from '../../../types'
 
 import {
@@ -43,6 +44,7 @@ class StandaloneService
   private _categoryMap = new Map<string, Category>()
   private _rootFacet: FacetValueDesc 
   private _selectedFacets: FacetsValue = {}
+  private _promo: Promo | null = null
 
   private _options : StandaloneServiceOptions
   private _currentItem: ActualLineItem | undefined = undefined
@@ -73,23 +75,28 @@ class StandaloneService
     makeObservable<
       StandaloneService, 
         '_selectedFacets' | 
-        '_currentItem' 
+        '_currentItem' |
+        '_promo'
     >(this, {
       _selectedFacets :  observable.deep,
       _currentItem: observable,
+      _promo: observable,
     })
 
     makeObservable(this, {
       cartItems: computed,
       cartQuantity: computed,
-      cartTotal: computed, 
+      cartTotal: computed,
+      promoAppliedCartTotal: computed,
       cartEmpty: computed,
       specifiedItems: computed,
       specifiedCategories: computed, 
       setCurrentItem: action,
       currentItem: computed,
       item: computed,
-      facetsValue: computed
+      facetsValue: computed,
+      appliedPromo: computed,
+      setAppliedPromo: action,
       /* NOT setFacets. It implements it's action mechanism */
     })
   }
@@ -181,11 +188,56 @@ class StandaloneService
     )
   }
 
+  _promoValue_unsafe(value: number): number {
+    if (this._promo!.type === 'percent') {
+      return value * (1 - this._promo!.value / 100)
+    }
+    return value - this._promo!.value
+  }
+
+  get promoAppliedCartTotal(): number {   
+    if (!this._promo) {
+      return this.cartTotal
+    }
+
+    if (!this._promo.skus) {
+      return this._promoValue_unsafe(this.cartTotal)
+    }
+
+    let total = this.cartItems.reduce(
+      (total, item) => {
+        const itemPrice = this._promo!.skus!.includes(item.sku) ? 
+          this._promoValue_unsafe(item.price)
+          :
+          item.price
+        return total + itemPrice * item.quantity
+      }, 
+      0
+    )
+      
+    return total
+  }
+
+  itemPromoPrice(item: LineItem): number | undefined {
+    if (this._promo && (!this._promo.skus || this._promo.skus.includes(item.sku) )) {
+      return this._promoValue_unsafe(item.price)
+    }
+    return undefined 
+  }
+
   get cartQuantity(): number {
     return this.cartItems.reduce(
       (total, item) => (total + item.quantity), 
       0
     )
+  }
+
+  get appliedPromo(): Promo | null {
+    return this._promo
+  }
+
+  setAppliedPromo(promo: Promo | null): void {
+    this._promo = promo
   }
 
   setCurrentItem(skuToFind: string | undefined): boolean {

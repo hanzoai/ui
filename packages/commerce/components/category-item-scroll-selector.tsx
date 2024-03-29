@@ -6,7 +6,7 @@ import { cn } from '@hanzo/ui/util'
 import { ScrollArea } from '@hanzo/ui/primitives'
 
 import type { ItemSelector } from '../types'
-import { formatPrice } from '../util'
+import { formatCurrencyValue } from '../util'
 
 
 const CategoryItemScrollSelector: React.FC<ItemSelector & {
@@ -29,7 +29,7 @@ const CategoryItemScrollSelector: React.FC<ItemSelector & {
             (iRef.item?.sku === prod.sku) ? 'font-semibold text-accent' : 'text-muted', 
             itemClx
           )}>
-            {prod.titleAsOption + ', ' + formatPrice(prod.price)}
+            {prod.titleAsOption + ', ' + formatCurrencyValue(prod.price)}
           </div>
         </div>
       ))}
