@@ -173,7 +173,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
 
   return (
     <div className='flex flex-col gap-6 mt-6'>
-      <div className='flex flex-col gap-2 w-full'>
+      <div className='flex flex-col w-full'>
         <ContactForm form={contactForm}/>
         <div className='flex gap-2 grid grid-cols-3'>
           <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
