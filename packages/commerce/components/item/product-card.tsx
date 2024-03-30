@@ -2,22 +2,20 @@ import React from 'react'
 import Image from 'next/image'
 
 import { 
-  AspectRatio, 
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@hanzo/ui/primitives'
-import type { ImageDef } from '@hanzo/ui/types'
+
 import { cn } from '@hanzo/ui/util'
 
-import { formatCurrencyValue } from '../util'
-import type { LineItem } from '../types'
-import { Icons } from './Icons'
+import { formatCurrencyValue } from '../../util'
+import type { LineItem } from '../../types'
+import { Icons } from '../Icons'
 
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../buy/add-to-cart-widget'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem

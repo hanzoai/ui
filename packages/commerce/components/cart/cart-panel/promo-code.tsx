@@ -10,9 +10,9 @@ import { observer } from 'mobx-react-lite'
 
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../..'
-import type { Promo } from '../../types'
-import getPromoFromApi from '../../util/promo-codes'
+import { useCommerce } from '../../../service/context'
+import type { Promo } from '../../../types'
+import getPromoFromApi from '../../../util/promo-codes'
 
 const formSchema = z.object({
   code: z.string().min(1, 'Invalid code'),

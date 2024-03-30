@@ -1,5 +1,5 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { FacetValueDesc, FacetsValue } from './facet'
+import type { ProductTreeNode, SelectedPaths } from './tree-node'
 import type Category from './category'
 import type Promo from './promo'
 
@@ -29,36 +29,40 @@ interface CommerceService extends ObsLineItemRef {
 
     /** 
      * Sets the tokens at each level supplied.
-     * If a level is specifed as [], nothing will be specified.
-     * If a level is missing (undefined), everything at that level is included
+     * If a level is selected as [], nothing will be selected.
+     * If a level is missing (undefined), everything at that level is selected
      * 
-     * This specifies one or more Category's, and all the LineItem's in them
+     * This selects one or more Category's, and all the LineItem's in them.
      * 
-     * An empty value object specifies all Category's and all LineItem's,
+     * An empty value object selects all Category's and all LineItem's,
      * */ 
-  setFacets(value: FacetsValue): Category[]
-  get facetsValue(): FacetsValue // returns a copy
-  get specifiedItems(): LineItem[]
-  get specifiedCategories(): Category[] 
+  selectPaths(value: SelectedPaths): Category[]
+  selectPath(skuPath: string): Category[] 
+
+  get selectedPaths(): SelectedPaths // returns a copy
+  
+  get selectedItems(): LineItem[]
+  get selectedCategories(): Category[] 
 
     /** Whether this path defines a Category, or if it has further levels */
-  getFacetValuesAtSkuPath(skuPath: string): FacetValueDesc[] | undefined 
+  getNodeAtPath(skuPath: string): ProductTreeNode | undefined 
 
-    /** Based on current value of 'level', what are the available subfacets? 
-     *  If more than one value is specified at 'level' returned FacetValueDesc[]
-     * may represent multiple sets. 
+    /** 
+     * Who are the subnodes selected at 'level'? 
+     * If more than one value is selected at 'level', 
+     * the returned ProductTreeNode[] may represent multiple sets. 
      * */ 
-  getFacetValuesSpecified(level: number): FacetValueDesc[] | undefined 
+  getSelectedNodesAtLevel(level: number): ProductTreeNode[] | undefined 
 
       /**
      * For convenience, so widgets can share state.
-     * "current" is unrelated to what is "specified",
+     * "current" is unrelated to what is "selected",
      * ie, facets' values 
      *  */ 
   setCurrentItem(sku: string | undefined): boolean // valid sku and was set.
     /**
      * For convenience, so widgets can share state.
-     * "current" is unrelated to what is "specified",
+     * "current" is unrelated to what is "selected",
      * ie, facets' values 
      * 
      * note: for ObsLineItemRef, there is also

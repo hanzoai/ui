@@ -5,7 +5,7 @@ import { Copy } from 'lucide-react'
 
 import { Button, toast } from '@hanzo/ui/primitives'
 
-import type { PaymentMethodComponentProps } from '../../../types'
+import type { PaymentMethodComponentProps } from '../../../../types'
 
 import ContactForm from '../contact-form'
 

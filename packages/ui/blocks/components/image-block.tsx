@@ -25,6 +25,7 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     src, 
     alt, 
     dim, 
+    ar,
     props, 
     fullWidthOnMobile, 
     svgFillClass,

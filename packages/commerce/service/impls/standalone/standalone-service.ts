@@ -13,8 +13,8 @@ import type {
   CommerceService, 
   Category, 
   LineItem,
-  FacetsValue, 
-  FacetValueDesc,
+  SelectedPaths, 
+  ProductTreeNode,
   Promo
 } from '../../../types'
 
@@ -42,8 +42,8 @@ class StandaloneService
   implements CommerceService
 {
   private _categoryMap = new Map<string, Category>()
-  private _rootFacet: FacetValueDesc 
-  private _selectedFacets: FacetsValue = {}
+  private _rootNode: ProductTreeNode 
+  private _selectedPaths: SelectedPaths = {}
   private _promo: Promo | null = null
 
   private _options : StandaloneServiceOptions
@@ -51,12 +51,12 @@ class StandaloneService
 
   constructor(
     categories: Category[],
-    rootFacet: FacetValueDesc,
+    rootNode: ProductTreeNode,
     options: StandaloneServiceOptions,
     serviceSnapshot?: StandaloneServiceSnapshot,
   ) {
 
-    this._rootFacet = rootFacet
+    this._rootNode = rootNode
     this._options = options
 
     categories.forEach((c) => {
@@ -74,11 +74,11 @@ class StandaloneService
 
     makeObservable<
       StandaloneService, 
-        '_selectedFacets' | 
+        '_selectedPaths' | 
         '_currentItem' |
         '_promo'
     >(this, {
-      _selectedFacets :  observable.deep,
+      _selectedPaths :  observable.deep,
       _currentItem: observable,
       _promo: observable,
     })
@@ -89,54 +89,52 @@ class StandaloneService
       cartTotal: computed,
       promoAppliedCartTotal: computed,
       cartEmpty: computed,
-      specifiedItems: computed,
-      specifiedCategories: computed, 
+      selectedItems: computed,
+      selectedCategories: computed, 
       setCurrentItem: action,
       currentItem: computed,
       item: computed,
-      facetsValue: computed,
+      selectedPaths: computed,
       appliedPromo: computed,
       setAppliedPromo: action,
-      /* NOT setFacets. It implements it's action mechanism */
+      /* NOT selectPaths. It implements it's action mechanism */
     })
   }
-
 
   getCategory(id: string): Category | undefined {
     return this._categoryMap.get(id)
   }
 
-  getFacetValuesAtSkuPath(skuPath: string): FacetValueDesc[] | undefined {
+  getNodeAtPath(skuPath: string): ProductTreeNode | undefined {
     const toks = skuPath.split(SEP)
     let level = 1
-    let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub
+    let desc: ProductTreeNode | undefined = this._rootNode
     do {
-      const fvalue = valuesAtLevel!.find((vf) => (vf.value === toks[level])) 
-      valuesAtLevel = fvalue ? fvalue.sub : undefined
+      desc = desc!.subNodes?.find((vf) => (vf.skuToken === toks[level])) 
       level++
     }
-    while (valuesAtLevel && (level < toks.length))
-    return level === toks.length ? valuesAtLevel : undefined 
+    while (desc && (level < toks.length))
+    return level === toks.length ? desc : undefined 
   } 
 
-  getFacetValuesSpecified = computedFn((level: number): FacetValueDesc[] | undefined => {
+  getSelectedNodesAtLevel = computedFn((level: number): ProductTreeNode[] | undefined => {
 
     let lvl = 1
-    let valuesAtLevel: FacetValueDesc[] | undefined  = this._rootFacet.sub
+    let valuesAtLevel: ProductTreeNode[] | undefined  = this._rootNode.subNodes
 
     do {
-      let selectedAtLevel: FacetValueDesc[] | undefined = undefined
+      let selectedAtLevel: ProductTreeNode[] | undefined = undefined
         // If not specified, assume all
-      if (lvl in this._selectedFacets) {
-        selectedAtLevel = valuesAtLevel!.filter((fv) => (this._selectedFacets[lvl].includes(fv.value))) 
+      if (lvl in this._selectedPaths) {
+        selectedAtLevel = valuesAtLevel!.filter((fv) => (this._selectedPaths[lvl].includes(fv.skuToken))) 
       }
       else {
         selectedAtLevel = valuesAtLevel 
       }
-      let allSubsOfSelected: FacetValueDesc[] = []
-      selectedAtLevel?.forEach((fvd: FacetValueDesc) => {
-        if (fvd.sub) {
-          allSubsOfSelected = [...allSubsOfSelected, ...fvd.sub] 
+      let allSubsOfSelected: ProductTreeNode[] = []
+      selectedAtLevel?.forEach((fvd: ProductTreeNode) => {
+        if (fvd.subNodes) {
+          allSubsOfSelected = [...allSubsOfSelected, ...fvd.subNodes] 
         }  
       })
 
@@ -199,11 +197,9 @@ class StandaloneService
     if (!this._promo) {
       return this.cartTotal
     }
-
     if (!this._promo.skus) {
       return this._promoValue_unsafe(this.cartTotal)
     }
-
     let total = this.cartItems.reduce(
       (total, item) => {
         const itemPrice = this._promo!.skus!.includes(item.sku) ? 
@@ -214,7 +210,6 @@ class StandaloneService
       }, 
       0
     )
-      
     return total
   }
 
@@ -250,8 +245,8 @@ class StandaloneService
     this._currentItem = ((): ActualLineItem | undefined  => {
 
       const categoriesTried: string[] = []
-      if (this.specifiedCategories && this.specifiedCategories.length > 0) {
-          for (let category of this.specifiedCategories) {
+      if (this.selectedCategories && this.selectedCategories.length > 0) {
+          for (let category of this.selectedCategories) {
           categoriesTried.push(category.id)
           const foundItem = category.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
@@ -281,52 +276,61 @@ class StandaloneService
     return this._currentItem
   }
 
-  setFacets(sel: FacetsValue): Category[] {
+  selectPaths(sel: SelectedPaths): Category[] {
     runInAction (() => {
-      this._selectedFacets = this._processAndValidate(sel) 
+      this._selectedPaths = this._processAndValidate(sel) 
     })
-    return this.specifiedCategories
+    return this.selectedCategories
   }
 
-  get facetsValue(): FacetsValue {
-    const result: FacetsValue = {}
-    for( let level in this._selectedFacets ) {
-      result[level] = [...this._selectedFacets[level]]
+  selectPath(skuPath: string): Category[] {
+    const toks = skuPath.split(SEP)
+    const highestLevel = toks.length - 1
+    const fsv: SelectedPaths = {}
+    for (let level = 1; level <= highestLevel; level++ ) {
+      fsv[level] = [toks[level]]   
+    } 
+    return this.selectPaths(fsv)
+  }
+
+  get selectedPaths(): SelectedPaths {
+    const result: SelectedPaths = {}
+    for( let level in this._selectedPaths ) {
+      result[level] = [...this._selectedPaths[level]]
     }
     return result
   }
 
-
-  get specifiedCategories(): Category[] {
-    if (Object.keys(toJS(this._selectedFacets)).length === 0) {
+  get selectedCategories(): Category[] {
+    if (Object.keys(toJS(this._selectedPaths)).length === 0) {
       // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
 
-    return this._rootFacet.sub!.reduce(
-      (acc: Category[], subFacet: FacetValueDesc) => (
+    return this._rootNode.subNodes!.reduce(
+      (acc: Category[], subFacet: ProductTreeNode) => (
           // Pass the root token as a one member array
-        this._reduceNode([this._rootFacet.value], acc, subFacet)   
+        this._reduceNode([this._rootNode.skuToken], acc, subFacet)   
       ), 
       []
     )
   }
 
-  private _reduceNode(parentPath: string[], acc: Category[], node: FacetValueDesc): Category[] {
-    const path = [...parentPath, node.value] // Don't mutate original please :) 
+  private _reduceNode(parentPath: string[], acc: Category[], node: ProductTreeNode): Category[] {
+    const path = [...parentPath, node.skuToken] // Don't mutate original please :) 
     const level = path.length - 1
       // If there is no token array supplied for this level,
       // assume all are specified.  Otherwise, see if the 
       // current node is in the array
     const specified = (
-      !this._selectedFacets[level] 
+      !this._selectedPaths[level] 
       || 
-      this._selectedFacets[level].includes(node.value)
+      this._selectedPaths[level].includes(node.skuToken)
     ) 
     if (specified) {
         // Process subnodes
-      if (node.sub && node.sub.length > 0) {
-        return node.sub.reduce((acc, n) => (
+      if (node.subNodes && node.subNodes.length > 0) {
+        return node.subNodes.reduce((acc, n) => (
           this._reduceNode(path, acc, n)
         ) 
         , acc)
@@ -334,30 +338,30 @@ class StandaloneService
         // Process leaf
       const cat = this._categoryMap.get(path.join(SEP))
       if (!cat) {
-        throw new Error("specifiedCategories WTF?!" + path.join(SEP))
+        throw new Error("selectedCategories WTF?!" + path.join(SEP))
       }
       acc.push(cat)    
     }
     return acc
   }
 
-  private _processAndValidate(partial: FacetsValue): FacetsValue  {
+  private _processAndValidate(partial: SelectedPaths): SelectedPaths  {
 
-    const result: FacetsValue = {}
+    const result: SelectedPaths = {}
 
     let level = 1
-    let currentSet = this._rootFacet.sub!
+    let currentSet = this._rootNode.subNodes!
     
     while (true) {
-      let possibleCurrent = currentSet.map((el) => (el.value))
+      let possibleCurrent = currentSet.map((el) => (el.skuToken))
       const validTokens = !partial[level] ? undefined : partial[level].filter((tok) => possibleCurrent.includes(tok))
       if (!validTokens) {
         break
       }
       result[level] = validTokens
       currentSet = validTokens.map((tok) => {
-        const fd = currentSet.find((node) => ( node.value === tok ))
-        return (fd && fd.sub && fd.sub.length > 0) ? fd.sub : []
+        const fd = currentSet.find((node) => ( node.skuToken === tok ))
+        return (fd && fd.subNodes && fd.subNodes.length > 0) ? fd.subNodes : []
       }).flat()
       level++
     }
@@ -365,13 +369,13 @@ class StandaloneService
     return result
   }
 
-  get specifiedItems(): LineItem[] {
-    if (Object.keys(toJS(this._selectedFacets)).length === 0) {
+  get selectedItems(): LineItem[] {
+    if (Object.keys(toJS(this._selectedPaths)).length === 0) {
       // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
 
-    return this.specifiedCategories.reduce(
+    return this.selectedCategories.reduce(
       (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
   }
 
@@ -382,6 +386,14 @@ class StandaloneService
       (total, item) => (item.quantity > 0 ? total + item.price * item.quantity : total),
       0
     )
+  }
+
+  debug_getSelectedCategories = () => {
+    const spec = this.selectedCategories
+    console.log('NUM SPEC CATS: ', spec.length) 
+    if (spec.length > 0) {
+      console.log('IDS: ', (spec.map((c) => (c.id))).join(', ')) 
+    }
   }
 }
 

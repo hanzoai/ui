@@ -9,7 +9,7 @@ enableStaticRendering(typeof window === "undefined")
 import type CommerceService from '../types/commerce-service'
 import type { ServiceOptions } from '..'
 import getServiceSingleton from './impls'
-import type { Category, FacetValueDesc } from '../types'
+import type { Category, ProductTreeNode } from '../types'
 
 const CommerceServiceContext = createContext<CommerceService | undefined>(undefined)
 
@@ -20,17 +20,17 @@ const useCommerce = (): CommerceService => {
 
 const CommerceServiceProvider: React.FC<PropsWithChildren & {
   productsByCategory: Category[]
-  rootFacet: FacetValueDesc
+  rootNode: ProductTreeNode
   options?: ServiceOptions
 }> = ({ 
   children,
   productsByCategory,
-  rootFacet,
+  rootNode,
   options
 }) => {
 
     // TODO: Inject Promo fixture here
-  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, rootFacet, options))
+  const serviceRef = useRef<CommerceService>(getServiceSingleton(productsByCategory, rootNode, options))
   return (
     <CommerceServiceContext.Provider value={serviceRef.current}>
       {children}
