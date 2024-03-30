@@ -56,6 +56,16 @@ export { default as LinkElement } from './link-element'
 export { default as MDXLink } from './mdx-link'
 
 export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from './breadcrumb'
+
+export {
   Sheet,
   SheetPortal,
   SheetOverlay,
