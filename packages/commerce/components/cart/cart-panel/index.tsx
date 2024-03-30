@@ -5,9 +5,9 @@ import { observer } from 'mobx-react-lite'
 import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import { useCommerce } from '../../service/context'
-import { formatCurrencyValue } from '../../util'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
+import { useCommerce } from '../../../service/context'
+import { formatCurrencyValue } from '../../../util'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 import CartLineItem from './cart-line-item'
 import PromoCode from './promo-code'

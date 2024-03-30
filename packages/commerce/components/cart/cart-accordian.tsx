@@ -11,7 +11,8 @@ import {
   AccordionTrigger,
 } from '@hanzo/ui/primitives'
 
-import { formatCurrencyValue, useCommerce } from '..'
+import { formatCurrencyValue } from '../../util'
+import { useCommerce } from '../../service/context'
 
 import CartPanel from './cart-panel'
 

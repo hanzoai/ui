@@ -1,12 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { FacetValueDesc } from '../../types'
+import type { ProductTreeNode } from '../../types'
 
 const ICON_SIZE = 20
 
 const FacetImage: React.FC<{
-  facetValueDesc: FacetValueDesc
+  facetValueDesc: ProductTreeNode
 }> = ({
   facetValueDesc
 }) => {

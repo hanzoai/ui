@@ -4,18 +4,19 @@ import React, { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { FacetValueDesc, StringMutator, StringArrayMutator } from '../../types'
+import type { ProductTreeNode, StringMutator, StringArrayMutator } from '../../types'
 import FacetImage from './facet-image'
 
 const FacetValuesWidget: React.FC<{
-  facetValues: FacetValueDesc[]
+  facetValues: ProductTreeNode[]
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
   buttonClx?: string
   itemClx?: string
-  isMobile?: boolean
+  mobile?: boolean
   tabSize?: string
+  show?: 'image' | 'label' | 'image-and-label'
 }> = ({
   facetValues,
   mutator,
@@ -23,8 +24,9 @@ const FacetValuesWidget: React.FC<{
   buttonClx='',
   itemClx='',
   className='',
-  isMobile=false,
-  tabSize
+  mobile=false,
+  tabSize,
+  show='image-and-label'
 }) => {
 
   const [last, setLast] = useState<string | undefined>(undefined)
@@ -54,7 +56,7 @@ const FacetValuesWidget: React.FC<{
       type={multiple ? 'multiple' : 'single'} 
       value={val}
       variant='default'
-      size={tabSize ? tabSize : (isMobile ? 'sm' : 'default')}
+      size={tabSize ? tabSize : (mobile ? 'sm' : 'default')}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
       {...roundedToSpread}
@@ -68,16 +70,16 @@ const FacetValuesWidget: React.FC<{
       }
       return (
         <ToggleGroupItem 
-          key={fv.value}
-          value={fv.value} 
-          disabled={(last && last === fv.value || fv.value === mutator.get())} 
+          key={fv.skuToken}
+          value={fv.skuToken} 
+          disabled={(last && last === fv.skuToken || fv.skuToken === mutator.get())} 
           aria-label={`Select ${fv.label}`}
           {...roundedToSpread}
           className={buttonClx}
         >
           <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
-            <FacetImage facetValueDesc={fv} />
-            {(!isMobile || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
+            {!(show === 'label') && (<FacetImage facetValueDesc={fv} />) }
+            {(!(show === 'image') || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
           </span>
         </ToggleGroupItem>
       )
@@ -85,6 +87,5 @@ const FacetValuesWidget: React.FC<{
     </ToggleGroup>  
   )
 }
-// hidden md:block 
 
 export default FacetValuesWidget

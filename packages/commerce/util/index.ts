@@ -32,19 +32,19 @@ export function formatCurrencyValue(price: number): string {
 export const getFacetValuesMutator = (level: number, cmmc: CommerceService): StringMutator => {
 
   const setLevel = (value: string, level: number ): void  => {
-    const facets = cmmc.facetsValue
+    const facets = cmmc.selectedPaths
     facets[level] = [value]
-    cmmc.setFacets(facets)
-    const subFacets = cmmc.getFacetValuesSpecified(level)
+    cmmc.selectPaths(facets)
+    const subFacets = cmmc.getSelectedNodesAtLevel(level)
     if (subFacets) {
-      const facets = cmmc.facetsValue
-      facets[level + 1] = [subFacets[0].value]
-      cmmc.setFacets(facets)
+      const facets = cmmc.selectedPaths
+      facets[level + 1] = [subFacets[0].skuToken]
+      cmmc.selectPaths(facets)
     }
   }
 
   const getLevelValueSafe = (level: number): string | null => {
-    const facets = cmmc.facetsValue
+    const facets = cmmc.selectedPaths
     if (!(level in facets) || facets[level].length === 0 ) {
       return null
     }
@@ -52,8 +52,8 @@ export const getFacetValuesMutator = (level: number, cmmc: CommerceService): Str
   }
 
   return {
-    get: () => (getLevelValueSafe(level)),
-    set: (v: string) => {setLevel(v, level)}
+    get: (): string | null => (getLevelValueSafe(level)),
+    set: (v: string): void => {setLevel(v, level)}
   } satisfies StringMutator
 }
 

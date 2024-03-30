@@ -19,12 +19,12 @@ import {
   SelectValue 
 } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../service/context'
+import { useCommerce } from '../../service/context'
 
-import countries from '../util/countries'
-import { sendGAEvent } from '../util/analytics'
+import countries from '../../util/countries'
+import { sendGAEvent } from '../../util/analytics'
 
-import type { CheckoutStepComponentProps } from '../types'
+import type { CheckoutStepComponentProps } from '../../types'
 
 const shippingFormSchema = z.object({
   addressLine1: z.string().min(2, 'Address must be at least 2 characters.'),

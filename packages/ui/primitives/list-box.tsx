@@ -41,7 +41,7 @@ function ListBox<T>({
   onValueChange,
   value,
   isEqual,
-  outClx = '',
+  clx = '',
   itemClx = '' 
 }:{
   values: T[]
@@ -49,12 +49,12 @@ function ListBox<T>({
   onValueChange: (val: T) => void
   value: T | undefined
   isEqual: (v1: T, v2: T) => boolean
-  outClx?: string
+  clx?: string
   itemClx?: string 
 }): JSX.Element {
 
   return (
-    <div className={cn('border rounded-md select-none', outClx)} >
+    <div className={cn('border rounded-md select-none', clx)} >
     {values.map((val, i) => (
       <Item<T> 
         value={val} 

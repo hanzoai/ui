@@ -7,7 +7,7 @@ import {
 } from '@hanzo/ui/primitives/form'
 import { Input } from '@hanzo/ui/primitives'
 
-import type { ContactFormType } from '../../types'
+import type { ContactFormType } from '../../../types'
  
 const ContactForm: React.FC<{
   form: ContactFormType,

@@ -9,7 +9,7 @@ import {
 } from 'next-usequerystate'
 
 import { useCommerce } from '../service/context'
-import type { FacetsValue } from '../types'
+import type { SelectedPaths } from '../types'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group.'
 
@@ -32,7 +32,7 @@ const useSyncSkuParamWithCurrentItem = (
   useEffect(() => {
 
     return reaction(() => ({
-      specifiedCat: cmmc.specifiedCategories.length === 1 ? cmmc.specifiedCategories[0] : undefined, 
+      specifiedCat: cmmc.selectedCategories.length === 1 ? cmmc.selectedCategories[0] : undefined, 
       currentItem: cmmc.currentItem
     }),
     ({specifiedCat, currentItem}) => {
@@ -55,14 +55,14 @@ const useSyncSkuParamWithCurrentItem = (
     
     const setCurrentCategoryFromSku = (sku: string) => {
       const toks: string[] = sku.split('-')
-      const fv: FacetsValue = {}
-        // TODO: confirm that extra trailing nonsense tokens won't break setFacets()
+      const fv: SelectedPaths = {}
+        // TODO: confirm that extra trailing nonsense tokens won't break selectPaths()
       for (let i = 1; i < categoryLevel; i++) {
         if (i in toks) {
           fv[i] = [toks[i]]
         } 
       } 
-      cmmc.setFacets(fv)
+      cmmc.selectPaths(fv)
     }
 
       // setCI returns true if it's a recognized sku

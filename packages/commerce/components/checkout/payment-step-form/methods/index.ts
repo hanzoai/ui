@@ -1,4 +1,4 @@
-import type { PaymentMethodDesc } from '../../../types'
+import type { PaymentMethodDesc } from '../../../../types'
 
 import Card from './card'
 import Crypto from './crypto'
