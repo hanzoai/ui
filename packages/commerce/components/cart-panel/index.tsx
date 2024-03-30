@@ -1,5 +1,5 @@
 'use client'
-import React, { type PropsWithChildren } from 'react'
+import React, { Suspense, type PropsWithChildren } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { Button, ScrollArea } from '@hanzo/ui/primitives'
@@ -88,7 +88,11 @@ const CartPanel: React.FC<PropsWithChildren & {
       />
     ))}
     </>)}
-    {showPromoCode && <PromoCode/>}
+    {showPromoCode && (
+      <Suspense>
+        <PromoCode/>
+      </Suspense>
+    )}
     {(showShipping || showPromoCode) && (
       <div className='flex flex-col gap-1 py-2 border-t'>
         <p className='flex justify-between'>
