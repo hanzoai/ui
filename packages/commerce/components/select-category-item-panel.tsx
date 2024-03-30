@@ -124,7 +124,7 @@ const SelectCategoryItemPanel: React.FC<
     isLoading ? (<Skeleton className={'h-12 w-pr-80 mx-auto ' + className} />) : (
 
       <div className={cn('flex flex-col justify-start items-center', className)}>
-        <h3 className='text-base md:text-lg lg:text-2xl font-nav text-center'>
+        <h3 className='text-base md:text-lg lg:text-2xl font-heading text-center'>
         {category.parentTitle && (
           <span>{category.parentTitle}<br className='md:hidden' /><span className='xs:hidden md:inline '>,&nbsp;</span></span>
         )}
