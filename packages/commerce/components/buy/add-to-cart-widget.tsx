@@ -5,9 +5,9 @@ import { observer } from 'mobx-react-lite'
 import { Button, toast, type ButtonSizes } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import { Icons } from './Icons'
-import type { LineItem } from '../types'
-import { sendFBEvent, sendGAEvent } from '../util/analytics'
+import { Icons } from '../Icons'
+import type { LineItem } from '../../types'
+import { sendFBEvent, sendGAEvent } from '../../util/analytics'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem
@@ -44,12 +44,14 @@ const AddToCartWidget: React.FC<{
     if (onQuantityChanged) {
       onQuantityChanged(item.sku, old, old + 1) 
     }
+    /*
     if (old === 0) {
       toast(`Added ${item.title} to your bag.`)
     }
     else {
       toast(`Changed quantity to ${old + 1} for ${item.title}.`)
     }
+    */
     sendGAEvent('add_to_cart', {
       items: [{
         item_id: item.sku,

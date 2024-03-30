@@ -34,11 +34,13 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
+    overlayClx?: string
+  }
+>(({ className, children, overlayClx='', ...props }, ref) => (
   <DrawerPortal>
     {/* If no or same z index, overlay should precede content */}
-    <DrawerOverlay />
+    <DrawerOverlay className={overlayClx}/>
     <DrawerPrimitive.Content
       ref={ref}
       className={cn('fixed left-0 right-0 bottom-0 ',

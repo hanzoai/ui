@@ -21,6 +21,7 @@ interface ImageDef {
      * can determine the aspect ratio
     */
   dim:  Dimensions 
+  ar?: number
 }
 
 export {

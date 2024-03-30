@@ -9,9 +9,9 @@ import { useForm } from 'react-hook-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hanzo/ui/primitives'
 import { useAuth } from '@hanzo/auth/service'
 
-import { useCommerce } from '../../service/context'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
-import type { CheckoutStepComponentProps, TransactionStatus } from '../../types'
+import { useCommerce } from '../../../service/context'
+import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
+import type { CheckoutStepComponentProps, TransactionStatus } from '../../../types'
 
 import METHODS from './methods'
 
