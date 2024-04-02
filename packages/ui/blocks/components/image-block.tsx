@@ -3,18 +3,18 @@ import Image from 'next/image'
 
 import type { Dimensions } from '../../types'
 import type { ImageBlock } from '../def'
-import { constrain, containsToken, cn } from '../../util'
+import { resolveDimensions, containsToken, cn } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
 
 
 const ImageBlockComponent: React.FC<BlockComponentProps & {
-  constraint?: Dimensions
+  constraintTo?: {w: number, h: number}
 }> = ({
   block,
   className='',
   agent,
-  constraint
+  constraintTo
 }) => {
   
   if (block.blockType !== 'image') {
@@ -25,8 +25,8 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
     src, 
     alt, 
     dim, 
-    ar,
     props, 
+    sizes,
     fullWidthOnMobile, 
     svgFillClass,
     specifiers
@@ -36,9 +36,9 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
 
   const toSpread: any = {}
   if (props?.fill === undefined) {
-    const dimCon = (constraint ? constrain(dim, constraint) : dim)
-    toSpread.width = dimCon.w
-    toSpread.height = dimCon.h
+    const resolved = resolveDimensions(dim, constraintTo)
+    toSpread.width = resolved.w
+    toSpread.height = resolved.h
   } 
 
   let _alt: string
@@ -66,9 +66,10 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
         sizes: '100vw',
       }
         // only for aspect ratio and to satisfy parser
-      toSpread.width = dim.w
-      toSpread.height = dim.h
-    
+      const resolved = resolveDimensions(dim)
+      toSpread.width = resolved.w
+      toSpread.height = resolved.h
+
       return (
         <div className='flex flex-col items-center w-full'>
           <Image src={src} alt={_alt} {...toSpread} className={cn(_svgFillClass, className)}/>
@@ -83,12 +84,14 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
         props.style.width = props.style.width *.75 
       }
       else if (props?.style && !props?.style.width) {
-        if (dim) {
-          toSpread.width = +dim.w * .75
-          toSpread.height = +dim.h * .75
-        } 
+        const resolved = resolveDimensions(dim)
+        toSpread.width = resolved.w * .75
+        toSpread.height = resolved.w * .75
       }
     }
+  }
+  if (sizes) {
+    toSpread.sizes = sizes
   }
 
   const right = containsToken(specifiers, 'right')

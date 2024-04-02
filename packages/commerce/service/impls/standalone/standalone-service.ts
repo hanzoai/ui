@@ -78,8 +78,8 @@ class StandaloneService
         '_currentItem' |
         '_promo'
     >(this, {
-      _selectedPaths :  observable.deep,
-      _currentItem: observable,
+      _selectedPaths : observable.deep,
+      _currentItem: observable.shallow,
       _promo: observable,
     })
 
@@ -91,6 +91,7 @@ class StandaloneService
       cartEmpty: computed,
       selectedItems: computed,
       selectedCategories: computed, 
+      hasSelection: computed, 
       setCurrentItem: action,
       currentItem: computed,
       item: computed,
@@ -164,7 +165,7 @@ class StandaloneService
   }
 
   takeSnapshot = (): StandaloneServiceSnapshot => ({
-    items : (this.cartItems as ActualLineItem[]).map((it) => (it.takeSnapshot()))
+    items : (this.cartItems as ActualLineItem[]).map((it) => (it.takeSnapshot(this)))
   })
 
   get cartItems(): LineItem[] {
@@ -237,10 +238,19 @@ class StandaloneService
 
   setCurrentItem(skuToFind: string | undefined): boolean {
 
+    const logMe = (s: string) => {
+      //if (skuToFind?.startsWith('LXM-CR-E')) {
+        //console.log(s)
+      //}
+    }
+
     if (skuToFind === undefined || skuToFind.length === 0) {
       this._currentItem = undefined
       return true
     }
+
+    logMe("SETTING ITEM: " + skuToFind)
+
       // self calling function
     this._currentItem = ((): ActualLineItem | undefined  => {
 
@@ -250,6 +260,7 @@ class StandaloneService
           categoriesTried.push(category.id)
           const foundItem = category.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
+            logMe("FOUND 1st LOOP")
             return foundItem as ActualLineItem
           }
         }
@@ -258,12 +269,15 @@ class StandaloneService
         if (categoriesTried.includes(categoryId)) continue
         const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
         if (foundItem) {
+          logMe("FOUND 2nd LOOP")
           return foundItem as ActualLineItem
         }
       }
+      logMe("NOT FOUND")
       return undefined
     })();
 
+    logMe("CURRENT ITEM SET TO: " + this._currentItem?.sku)
     return !!this._currentItem
   }
 
@@ -377,6 +391,10 @@ class StandaloneService
 
     return this.selectedCategories.reduce(
       (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
+  }
+
+  get hasSelection(): boolean {
+    return this.selectedCategories.length > 0
   }
 
   getCartCategorySubtotal(categoryId: string): number {

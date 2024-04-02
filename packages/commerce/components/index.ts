@@ -7,7 +7,7 @@ export { default as BuyDrawer } from './buy/buy-drawer'
 export { default as CartAccordian } from './cart/cart-accordian'
 export { default as CartPanel } from './cart/cart-panel'
 
-export { default as FacetValuesWidget } from './facet-values-widget'
+export { default as LevelNodesWidget } from './level-nodes-widget'
 
 export { default as PaymentStepForm } from './checkout/payment-step-form'
 export { default as ShippingStepForm } from './checkout/shipping-step-form'

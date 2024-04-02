@@ -5,9 +5,9 @@ import {
   observable, 
 } from 'mobx'
 
-import type { VideoDef } from '@hanzo/ui/types'
+import type { ImageDef, VideoDef } from '@hanzo/ui/types'
 
-import type { Product, LineItem } from '../../../types'
+import type { Product, LineItem, CommerceService } from '../../../types'
 
 interface ActualLineItemSnapshot {
   sku: string  
@@ -26,12 +26,13 @@ class ActualLineItem
 
   id: string    
   sku: string   
-  title: string
-  titleAsOption: string
+  fullTitle?: string
+  optionLabel: string
+  categoryTitle: string
   categoryId: string  
   desc?: string
   price: number
-  img?: string 
+  img?: ImageDef 
   video?: VideoDef 
   animation?: string 
   timeAdded: number = 0 // timeAdded of being added to cart
@@ -39,8 +40,9 @@ class ActualLineItem
   constructor(prod: Product, snap?: ActualLineItemSnapshot) {
     this.id = prod.id
     this.sku = prod.sku
-    this.title = prod.title
-    this.titleAsOption = prod.titleAsOption
+    this.fullTitle = prod.fullTitle
+    this.optionLabel = prod.optionLabel
+    this.categoryTitle = prod.categoryTitle
     this.categoryId = prod.categoryId
     this.desc = prod.desc
     this.price = prod.price
@@ -58,20 +60,32 @@ class ActualLineItem
       timeAdded: observable,
       canDecrement: computed,  
       isInCart: computed,
-      
+      title: computed,
       increment: action,
       decrement: action,
     })
   }
 
-  takeSnapshot = (): ActualLineItemSnapshot => ({
-    sku: this.sku,
-    categoryId: this.categoryId,
-    title: this.title,
-    price: this.price,
-    quantity: this.qu,
-    timeAdded: this.timeAdded
-  } satisfies ActualLineItemSnapshot)
+  get title(): string {
+    return this.fullTitle ? this.fullTitle : (this.categoryTitle + ', ' + this.optionLabel)
+  }
+
+  takeSnapshot = (cmmc: CommerceService): ActualLineItemSnapshot => {
+
+    const title = this.fullTitle ? 
+      this.fullTitle 
+      : 
+      ((cmmc.getCategory(this.categoryId)?.title ?? this.categoryTitle) + ', ' + this.optionLabel)
+
+    return({
+      sku: this.sku,
+      categoryId: this.categoryId,
+      title,
+      price: this.price,
+      quantity: this.qu,
+      timeAdded: this.timeAdded
+    } satisfies ActualLineItemSnapshot)
+  }
  
   get canDecrement(): boolean { return this.qu > 0 }
   get quantity(): number {return this.qu}

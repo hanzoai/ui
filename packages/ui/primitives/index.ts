@@ -173,6 +173,7 @@ export { default as Switch } from './switch'
 export { default as TextArea } from './text-area' 
 export { default as Calendar } from './calendar' 
 export { default as Checkbox } from './checkbox' 
+export { default as Image } from './image'
 export { default as Progress } from './progress' 
 export { default as Separator } from './separator' 
 export { default as Skeleton } from './skeleton' 
@@ -183,3 +184,5 @@ export { default as ListBox } from './list-box'
 export { default as StepIndicator } from './step-indicator'
 
 export * as Icons from './icons'
+
+

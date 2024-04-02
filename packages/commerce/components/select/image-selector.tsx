@@ -1,49 +1,32 @@
 'use client'
 import React from 'react'
-import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { Label, RadioGroup, RadioGroupItem } from '@hanzo/ui/primitives'
+
+import { 
+  Image, 
+  Label, 
+  RadioGroup, 
+  ScrollArea 
+} from '@hanzo/ui/primitives'
+import { cn } from '@hanzo/ui/util'
+
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
-import { cn } from '@hanzo/ui/util'
-import type { Dimensions } from '@hanzo/ui/types'
 
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'value' | 'id'> & {
     item: LineItem,
-    imgSizePx: number  
+    constrainTo: {w: number, h: number}  
   }
 >(({ 
   item,
-  imgSizePx,
+  constrainTo,
   className, 
   ...props 
 }, ref) => {
-
-  let dim: Dimensions 
-  if (item.imgAR) {
-    if (item.imgAR >= 1) {
-      dim = {
-        w: imgSizePx,
-        h: imgSizePx / item.imgAR
-      }
-    }
-    else {
-      dim = {
-        w: imgSizePx * item.imgAR,
-        h: imgSizePx
-      }
-    }
-  }
-  else {
-    dim = {
-      w: imgSizePx,
-      h: imgSizePx
-    }
-  }
 
   return (
     <RadioGroupPrimitive.Item
@@ -56,10 +39,10 @@ const ImageRadioGroupItem = React.forwardRef<
       id={item.sku}
       value={item.sku}
     >
-      {!!item.img ? (
-        <Image src={item.img} alt={item.title + ' image'} height={dim.h} width={dim.w} className=''/>
+      {item.img ? (
+        <Image def={item.img} constrainTo={constrainTo} preload className=''/>
       ) : ( // placeholder so things align
-        <div style={{height: dim.h, width: dim.w}}/>
+        <div style={{height: constrainTo.h, width: constrainTo.w}}/>
       )}
     </RadioGroupPrimitive.Item>
   )
@@ -73,52 +56,106 @@ const ImageItemSelector: React.FC<ItemSelectorProps> = observer(({
   clx='',
   itemClx='',
   soleItemClx='',
-  showPrice=true,
-  showQuantity=true
+  showCategory=false,
+  showQuantity=false,
+  scrollList=false
 }) => {
 
-  const Choice: React.FC<{
-    item: LineItem
-    className?: string
-  }> = ({
-    item,
-    className=''
-  }) => (
-    <div className={cn('flex items-center mb-1', className, itemClx)}>
-      <ImageRadioGroupItem item={item} imgSizePx={40} className='mr-2 border-2 border-transparent rounded-sm data-[state=checked]:border-foreground'/>
-      <Label htmlFor={item.sku}>{item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}</Label>
-    </div>
+  const LabelText: React.FC<{item: LineItem}> = ({item}) => (
+    (showCategory ? (item.categoryTitle + ', ' + item.optionLabel) : item.optionLabel) + 
+    (showCategory ? ': ' : ', ') + formatCurrencyValue(item.price)
   )
 
-  const SoleChoice: React.FC<{
+  const ItemAndPrice: React.FC<{
     item: LineItem
+    listBoxMode: boolean
+    selected: boolean
     className?: string
   }> = ({
     item,
+    listBoxMode,
+    selected,
     className=''
   }) => (
-    <div className={cn(className, soleItemClx)}>
-      {item.titleAsOption + (showPrice ? (', ' + formatCurrencyValue(item.price)) : '')}
+    <div className={cn(
+      'flex items-center', 
+      className, 
+      itemClx,
+    )}>
+      <ImageRadioGroupItem 
+        item={item} 
+        constrainTo={{h: 36, w: 72}} // Apple suggest 42px 
+        className={
+          'mr-2 ' +  (listBoxMode ?  '' : 
+          'border-transparent border-2 rounded-sm data-[state=checked]:border-foreground')
+        }
+      />
+      <Label htmlFor={item.sku} className={selected && listBoxMode ? 'text-accent' : ''}>
+        <LabelText item={item} />
+      </Label>
     </div>
   )
+ 
+  const Item: React.FC<{
+    item: LineItem
+    selected: boolean
+    listBoxMode: boolean
+    clx?: string
+  }> = ({
+    item,
+    selected,
+    listBoxMode,
+    clx=''
+  }) => {
+
+    const outClx = [
+      (listBoxMode ? 'border-b border-muted-3 py-1' : 'mb-3'),
+      (selected && listBoxMode ? 'border border-foreground rounded-sm' : ''),
+    ]
+
+    return (showQuantity ? (
+      <div key={item.sku} className={cn('flex flex-row items-center', ...outClx, clx )}>
+        <ItemAndPrice item={item} selected={selected} listBoxMode={listBoxMode} className='grow'/>
+        <div className='grow-0 shrink-0 font-semibold text-sm leading-none px-2'>{ item.quantity > 0 ? `(${item.quantity})` : ' '}</div>
+      </div>
+    ) : (
+      <ItemAndPrice 
+        key={item.sku} 
+        item={item} 
+        selected={selected} 
+        listBoxMode={listBoxMode} 
+        className={cn(...outClx, 
+        listBoxMode ? '' : 'mb-1',
+        clx)} 
+      />
+    ))
+  }
 
   return items.length > 1 ? (
     <RadioGroup
-      className={cn('gap-0', showQuantity ? 'table' : '', clx)}
+      className={cn('flex flex-col gap-0', 
+        (scrollList ? 'shrink min-h-0' : ''), 
+        clx,
+      )}
       onValueChange={selectSku}
       value={itemRef.item ? itemRef.item.sku : ''}
     >
-    {items.map((item) => (showQuantity ? (
-      <div className='table-row' key={item.sku}>
-        <Choice item={item} className='table-cell pr-2 align-text-top pb-3'/>
-        <div className='table-cell font-semibold text-sm leading-none align-text-top pb-3'>{ item.quantity > 0 ? `(${item.quantity})` : ' '}</div>
-      </div>
-    ) : (
-      <Choice item={item} className='mb-3'  key={item.sku}/>
-    )))}
+      {scrollList ? (
+        <ScrollArea className='mt-2 w-full h-full py-0 border border-muted-2 rounded-sm '>
+          {items.map((item) => (
+            <Item item={item} listBoxMode={true} selected={itemRef.item?.sku === item.sku}/>
+          ))}
+        </ScrollArea>
+      ) : (<>
+        {items.map((item) => (
+          <Item item={item} listBoxMode={false} selected={itemRef.item?.sku === item.sku}/>
+        ))}
+      </>)}
     </RadioGroup>
   ) : (
-    <SoleChoice item={items[0]} className=''/>
+    <div className={soleItemClx}>
+      <LabelText item={items[0]} />
+    </div>
   )
 })
 
