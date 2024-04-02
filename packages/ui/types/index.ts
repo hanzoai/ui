@@ -8,7 +8,8 @@ export {
 
 export { COMMON_GRID_1_COL, COMMON_GRID_2_COL, COMMON_GRID_3_COL, COMMON_GRID_4_COL } from './grid-def'
 export type {default as GridDef, GridColumnSpec} from './grid-def'
-export type { TShirtDimensions, Dimensions } from './dimensions' 
+export type { default as Dimensions } from './dimensions' 
+export type { default as TShirtDimensions } from './tshirt-dimensions' 
 export type { ContactInfo, ContactInfoFields } from './contact-info'
 
 export type { default as BulletItem } from './bullet-item'

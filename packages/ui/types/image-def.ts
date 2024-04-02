@@ -1,4 +1,4 @@
-import type { Dimensions } from './dimensions'
+import type Dimensions from './dimensions'
 
   /**
    * Defines a in image to render.
@@ -9,6 +9,8 @@ interface ImageDef {
   src: string     
     /** defaults to short filename */ 
   alt?: string
+    /** See next js docs */
+  sizes?: string
     /** 
      * Tailwind class for svg files (usually a text-<color>).  
      * All affect 'fill' props in the svg file 
@@ -21,7 +23,6 @@ interface ImageDef {
      * can determine the aspect ratio
     */
   dim:  Dimensions 
-  ar?: number
 }
 
 export {

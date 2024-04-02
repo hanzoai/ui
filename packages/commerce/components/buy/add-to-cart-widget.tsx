@@ -27,8 +27,8 @@ const AddToCartWidget: React.FC<{
   onQuantityChanged
 }) => {
 
-  const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-7 px-1'
-  const digitClx = ghost ? 'px-2 md:px-0.5 text-foreground ' : 'sm:px-2 font-bold text-primary-fg '
+  const iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 hover:text-foreground' : 'h-5 w-7 px-1 opacity-50'
+  const digitClx = ghost ? 'px-2 md:px-0.5 text-foreground ' : 'sm:px-2 font-semibold text-primary-fg '
 
   if (disabled) {
     return (
@@ -81,12 +81,14 @@ const AddToCartWidget: React.FC<{
     if (onQuantityChanged) {
       onQuantityChanged(item.sku, old, old - 1) 
     }
+    /*
     if (old === 1) {
       toast(`Removed ${item.title} from your bag.`)
     }
     else {
       toast(`Changed quantity to ${old - 1} for ${item.title}.`)
     }
+    */
     sendGAEvent('remove_from_cart', {
       items: [{
         item_id: item.sku,
@@ -117,7 +119,7 @@ const AddToCartWidget: React.FC<{
         <Icons.trash className={iconClx} aria-hidden='true'/>
       )}
       </Button>
-        <div className={'text-sm flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}</div>
+        <div className={'text-sm flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}{ghost ? '' : ' in Bag'}</div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
         size={size}
