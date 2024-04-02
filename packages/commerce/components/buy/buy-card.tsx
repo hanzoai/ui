@@ -209,8 +209,8 @@ const BuyCard: React.FC<{
       </ApplyTypography>
       <LevelNodesWidget
         className={cn(
-          'grid gap-0 ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
-          'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px]',
+          'grid gap-0 align-stretch justify-normal ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
+          'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px] h-10', // height is needed for iPhone bug
           (scroll ? 'shrink-0' : ''),
           catWidgetClx  
         )} 
