@@ -1,16 +1,15 @@
 'use client'
 
 import React from 'react'
-import Image from 'next/image'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
+import { Image } from '@hanzo/ui/primitives'
 
 import type { LineItem } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
 import AddToCartWidget from '../../buy/add-to-cart-widget'
 import { useCommerce } from '../../../service/context'
-import type { Dimensions } from '@hanzo/ui/types'
 
 const DEF_IMG_SIZE=40
 
@@ -27,47 +26,38 @@ const CartLineItem: React.FC<{
   className?: string
   imgSizePx?: number
   showPromoCode?: boolean
+  itemClicked?: (item: LineItem) => void
+  selected?: boolean
 }> = observer(({
   item,
   className='',
   imgSizePx=DEF_IMG_SIZE,
-  showPromoCode
+  showPromoCode=false,
+  itemClicked,
+  selected=false
 }) => {
 
   const cmmc = useCommerce()
   const promoPrice = showPromoCode ? cmmc.itemPromoPrice(item) : undefined
-  
-  let dim: Dimensions 
-  if (item.imgAR) {
-    if (item.imgAR >= 1) {
-      dim = {
-        w: imgSizePx,
-        h: imgSizePx / item.imgAR
-      }
-    }
-    else {
-      dim = {
-        w: imgSizePx * item.imgAR,
-        h: imgSizePx
-      }
-    }
-  }
-  else {
-    dim = {
-      w: imgSizePx,
-      h: imgSizePx
-    }
-  }
 
   return (
     <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
-      <div className='flex flex-row justify-between items-center gap-2'>
-      {!!item.img ? (
-        <Image src={item.img} alt={item.title + ' image'} height={dim.h} width={dim.w} className=''/>
-      ) : ( // placeholder so things align
-        <div style={{height: imgSizePx, width: imgSizePx}}/>
-      )}
-        <div className='grow leading-tight'>{renderTitle(item.title)}</div>
+      <div 
+        className={
+          'flex flex-row justify-between items-center gap-1 ' + 
+          (itemClicked && !selected ? 'cursor-pointer ' : 'cursor-default ') 
+        } 
+        onClick={() => {itemClicked && itemClicked(item)}}
+      >
+        {/* 1px gap between image and border for better emphasis w small images */}
+        <div className={selected ? 'border-foreground p-[1px] border rounded-sm' : 'p-[2px]'}>
+        {item.img ? (
+          <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} />
+        ) : ( // placeholder so things align
+          <div style={{height: imgSizePx, width: imgSizePx}} className='bg-level-3'/>
+        )}
+        </div>
+        <div className='grow leading-tight ml-1'>{renderTitle(item.title)}</div>
       </div>
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='flex flex-row items-center'>

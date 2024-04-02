@@ -320,7 +320,7 @@ importers:
         specifier: ^2.3.3
         version: link:../auth
       '@hanzo/ui':
-        specifier: ^3.1.0
+        specifier: ^3.2.0
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4

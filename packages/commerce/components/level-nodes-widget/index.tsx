@@ -5,10 +5,10 @@ import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
 import type { ProductTreeNode, StringMutator, StringArrayMutator } from '../../types'
-import FacetImage from './facet-image'
+import NodeImage from './node-image'
 
-const FacetValuesWidget: React.FC<{
-  facetValues: ProductTreeNode[]
+const LevelNodesWidget: React.FC<{
+  levelNodes: ProductTreeNode[]
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
@@ -18,7 +18,7 @@ const FacetValuesWidget: React.FC<{
   tabSize?: string
   show?: 'image' | 'label' | 'image-and-label'
 }> = ({
-  facetValues,
+  levelNodes,
   mutator,
   multiple=false,
   buttonClx='',
@@ -61,25 +61,25 @@ const FacetValuesWidget: React.FC<{
       className={className}
       {...roundedToSpread}
     >
-    {facetValues.map((fv, index) => {
+    {levelNodes.map((treeNode, index) => {
       const roundedToSpread: any = {}
       if (!multiple) {
         roundedToSpread.rounded = 'none'   
         if (index === 0) { roundedToSpread.rounded = 'llg' }
-        else if (index === facetValues.length - 1) { roundedToSpread.rounded = 'rlg' } 
+        else if (index === levelNodes.length - 1) { roundedToSpread.rounded = 'rlg' } 
       }
       return (
         <ToggleGroupItem 
-          key={fv.skuToken}
-          value={fv.skuToken} 
-          disabled={(last && last === fv.skuToken || fv.skuToken === mutator.get())} 
-          aria-label={`Select ${fv.label}`}
+          key={treeNode.skuToken}
+          value={treeNode.skuToken} 
+          disabled={(last && last === treeNode.skuToken || treeNode.skuToken === mutator.get())} 
+          aria-label={`Select ${treeNode.label}`}
           {...roundedToSpread}
           className={buttonClx}
         >
           <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
-            {!(show === 'label') && (<FacetImage facetValueDesc={fv} />) }
-            {(!(show === 'image') || !fv.img) && (<span className='whitespace-nowrap'>{fv.label}</span>)}
+            {!(show === 'label') && (<NodeImage treeNode={treeNode} />) }
+            {(!(show === 'image') || !treeNode.img) && (<span className='whitespace-nowrap'>{treeNode.label}</span>)}
           </span>
         </ToggleGroupItem>
       )
@@ -88,4 +88,4 @@ const FacetValuesWidget: React.FC<{
   )
 }
 
-export default FacetValuesWidget
+export default LevelNodesWidget

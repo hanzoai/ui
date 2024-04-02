@@ -12,9 +12,12 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
+import { getUISpecFromPath } from '../../util'
+
 import BuyCard from './buy-card'
 import RadioItemSelector from '../select/radio-selector'
 import ImageItemSelector from '../select/image-selector'
+import CarouselItemSelector from '../select/carousel-selector'
 
 const BuyDrawer: React.FC<{
   skuPath: string
@@ -40,6 +43,14 @@ const BuyDrawer: React.FC<{
     //}
   }
 
+  const spec = getUISpecFromPath(skuPath) ?? {
+    selector: 'radio',
+    allVariants: false
+  }
+
+  const selector = spec.selector === 'radio' ? RadioItemSelector :
+    (spec.selector === 'image' ? ImageItemSelector : CarouselItemSelector)
+
   return (
     <Drawer open={open} onOpenChange={setOpen} >
       <DrawerTrigger asChild className={triggerClx}>
@@ -51,15 +62,15 @@ const BuyDrawer: React.FC<{
       >
         <BuyCard 
           skuPath={skuPath} 
+          scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
           mobile={mobile} 
           onQuantityChanged={onQuantityChanged} 
-          className={cn('w-full', cardClx)}
-          selector={ImageItemSelector}
-          selClx=''
-          selItemClx=''
-          selSoleItemClx='mb-3'
-          addWidgetClx=''
-          facetsAs='label'
+          clx={cn('w-full', cardClx)}
+          selector={selector}
+          selectorProps={{soleItemClx:'mb-3'}}
+          showItemMedia={spec.selector !== 'carousel'}
+          categoryTabAs='label'
+          allVariants={spec.allVariants}
         />
         <Button
           variant='ghost'

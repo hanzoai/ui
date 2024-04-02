@@ -18,6 +18,8 @@ interface LineItem extends Product {
 
   increment(): void
   decrement(): void
+
+  get title(): string
 }
 
 interface ObsLineItemRef {

@@ -11,6 +11,7 @@ import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 import CartLineItem from './cart-line-item'
 import PromoCode from './promo-code'
+import type { LineItem } from '../../../types'
 
 const CartPanel: React.FC<PropsWithChildren & {
     /** fix size and scroll after 'scrollAfter items in teh cart. */
@@ -25,6 +26,7 @@ const CartPanel: React.FC<PropsWithChildren & {
   buttonClx?: string
   showPromoCode?: boolean
   showShipping?: boolean
+  selectItems?: boolean
     /** if not provided, 'checkout' button will be rendered */
   handleCheckout?: () => void
 }> = observer(({
@@ -41,6 +43,7 @@ const CartPanel: React.FC<PropsWithChildren & {
   buttonClx='',
   showPromoCode=false,
   showShipping=false,
+  selectItems=false,
   handleCheckout,
 }) => {
 
@@ -74,6 +77,10 @@ const CartPanel: React.FC<PropsWithChildren & {
     handleCheckout && handleCheckout()
   }
 
+  const itemClicked = (item: LineItem) => { 
+    cmmc.setCurrentItem(item.sku) 
+  }
+
   const Main: React.FC = observer(() => (<>
     {cmmc.cartEmpty ? (
       <p className={cn('text-center mt-4', noItemsClx)}>No items in cart</p>
@@ -85,6 +92,8 @@ const CartPanel: React.FC<PropsWithChildren & {
         item={item}
         className={cn('mb-2', itemClx)}
         showPromoCode={showPromoCode}
+        itemClicked={selectItems ? itemClicked : undefined}
+        selected={selectItems ? cmmc.currentItem?.sku === item.sku : false}
       />
     ))}
     </>)}

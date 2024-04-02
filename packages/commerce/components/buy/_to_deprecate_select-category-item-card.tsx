@@ -39,7 +39,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
       const item = items[0] as LineItem
       return (
         <div className={cn('flex flex-col justify-center items-center ' + (mobilePicker ? 'h-[180px] ' : 'h-auto min-h-24'), className)}>
-          <p className='text-lg text-center font-semibold'>{item.titleAsOption + ', ' + formatCurrencyValue(item.price)}</p>
+          <p className='text-lg text-center font-semibold'>{item.optionLabel + ', ' + formatCurrencyValue(item.price)}</p>
         </div>
       )
     }
@@ -56,6 +56,7 @@ const SelectCategoryItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & It
           selectSku={selectSku}
           clx='mt-2'
           showQuantity={false}
+          scrollList={false}
           itemClx='flex flex-row gap-2.5 items-center'
         />
       </div>

@@ -52,7 +52,7 @@ const SelectCategoryItemPanel: React.FC<
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image
-              src={category.img}
+              src={category.img.src}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
               alt={category.title}
@@ -96,6 +96,8 @@ const SelectCategoryItemPanel: React.FC<
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
             showQuantity={showQuantity}
+                      scrollList={false}
+
             clx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
@@ -124,7 +126,7 @@ const SelectCategoryItemPanel: React.FC<
         </h3>
         {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
-            {(soleOption ? '' : (selectedItemRef.item.titleAsOption + ': ')) + formatCurrencyValue(selectedItemRef.item.price)}
+            {(soleOption ? '' : (selectedItemRef.item.optionLabel + ': ')) + formatCurrencyValue(selectedItemRef.item.price)}
           </h6>
         ) : ''}
       </div>

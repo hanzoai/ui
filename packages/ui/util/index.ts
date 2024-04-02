@@ -50,16 +50,16 @@ export const asNum = (n: number | `${number}`): number => (
   (typeof n === 'number') ? n : parseInt(n, 10)  
 )
 
+export const resolveDimensions = (dim: Dimensions, constraint?: {w: number, h: number}): {w: number, h: number} => {
+
+  const resolved = ('w' in dim) ? 
+    (('h' in dim) ? {w: dim.w, h: dim.h} : { w: dim.w, h: dim.w / dim.ar }) : { w: dim.h * dim.ar, h: dim.h }
+
+  return constraint ? constrain(resolved, constraint) : resolved
+}
+
   // https://stackoverflow.com/questions/3971841/how-to-resize-images-proportionally-keeping-the-aspect-ratio
-export const constrain = (dim: Dimensions, constraint: Dimensions): Dimensions => {
-  const c = {
-    w: asNum(constraint.w),
-    h: asNum(constraint.h)
-  }
-  const d = {
-    w: asNum(dim.w),
-    h: asNum(dim.h)
-  }
+export const constrain = (d: {w: number, h: number}, c: {w: number, h: number}): {w: number, h: number} => {
 
   const ratio = Math.min(c.w / d.w, c.h / d.h)
   return {

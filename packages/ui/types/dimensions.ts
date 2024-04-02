@@ -1,20 +1,14 @@
-// From Next Image Dim
 type Dimensions = {
-  w: number | `${number}`
-  h: number | `${number}`
-}
-
-type TShirtDimensions = { 
-  xs?: Dimensions            
-  sm?: Dimensions 
-  md:  Dimensions 
-  lg?: Dimensions 
-  xl?: Dimensions
+  w: number
+  ar: number
+} | {
+  h: number
+  ar: number
+} | {
+  w: number
+  h: number
 }
 
 export {
-  type Dimensions,
-  type TShirtDimensions
+  type Dimensions as default
 }
-
-  

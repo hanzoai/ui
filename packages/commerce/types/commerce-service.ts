@@ -43,6 +43,7 @@ interface CommerceService extends ObsLineItemRef {
   
   get selectedItems(): LineItem[]
   get selectedCategories(): Category[] 
+  get hasSelection(): boolean
 
     /** Whether this path defines a Category, or if it has further levels */
   getNodeAtPath(skuPath: string): ProductTreeNode | undefined 
