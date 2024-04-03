@@ -1,7 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import useEmblaCarousel, { type EmblaOptionsType, type EmblaCarouselType } from 'embla-carousel-react'
+import useEmblaCarousel from 'embla-carousel-react'
+import type { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 import { cn } from '../util'
@@ -17,7 +18,7 @@ type CarouselProps = {
   plugins?: CarouselPlugins
   orientation?: 'horizontal' | 'vertical'
   setApi?: (api: CarouselApi) => void
-  onSelect?: (api: CarouselApi) => void 
+  onCarouselSelect?: (api: CarouselApi) => void 
 }
 
 type CarouselContextProps = {
@@ -56,7 +57,7 @@ const Carousel = React.forwardRef<
       plugins,
       className,
       children,
-      onSelect: _onSelect,
+      onCarouselSelect,
       ...props
     },
     ref
@@ -78,8 +79,8 @@ const Carousel = React.forwardRef<
 
       setCanScrollPrev(api.canScrollPrev())
       setCanScrollNext(api.canScrollNext())
-      if (_onSelect) {
-        _onSelect(api)
+      if (onCarouselSelect) {
+        onCarouselSelect(api)
       }
     }, [])
 
