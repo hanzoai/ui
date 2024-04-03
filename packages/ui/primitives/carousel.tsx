@@ -42,6 +42,9 @@ function useCarousel(): CarouselContextProps {
   return context
 }
 
+// https://github.com/emilkowalski/vaul/pull/250
+// See data-vaul-no-drag throughout
+
 const Carousel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & CarouselProps
@@ -145,6 +148,7 @@ const Carousel = React.forwardRef<
           className={cn('relative', className)}
           role='region'
           aria-roledescription='carousel'
+          data-vaul-no-drag 
           {...props}
         >
           {children}
@@ -162,7 +166,7 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel()
 
   return (
-    <div ref={carouselRef} className='overflow-hidden'>
+    <div ref={carouselRef} className='overflow-hidden' data-vaul-no-drag >
       <div
         ref={ref}
         className={cn(
@@ -188,6 +192,7 @@ const CarouselItem = React.forwardRef<
       ref={ref}
       role='group'
       aria-roledescription='slide'
+      data-vaul-no-drag 
       className={cn(
         'min-w-0 shrink-0 grow-0 basis-full',
         orientation === 'horizontal' ? 'pl-4' : 'pt-4',
