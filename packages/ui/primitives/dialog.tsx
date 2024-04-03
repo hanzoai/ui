@@ -17,7 +17,7 @@ const DialogPortal = React.forwardRef<
     DialogPortalProps
 >(({ className, children, ...props }, ref) => (
     <DialogPrimitive.Portal {...props}>
-        <div className={cn("fixed inset-0 z-50 flex items-end justify-center sm:items-center", className)}>
+        <div className={cn("fixed inset-0 z-modal flex items-end justify-center sm:items-center", className)}>
             {children}
         </div>
     </DialogPrimitive.Portal>
@@ -32,7 +32,7 @@ const DialogOverlay = React.forwardRef<
     React.ElementRef<typeof DialogPrimitive.Overlay>,
     DialogOverlayProps
 >(({ className, ...props }, ref) => (
-    <div className={cn("fixed inset-0 z-50 flex items-end justify-center sm:items-center", className)}>
+    <div className={cn("bg-overlay  backdrop-blur-sm fixed inset-0 z-below-modal flex items-end justify-center sm:items-center", className)}>
       <DialogPrimitive.Overlay ref={ref} {...props} />
     </div>
 ))

@@ -5,6 +5,10 @@ export default ({ colors }) => ({
   input: "var(--hz-ui-input)",
   ring: "var(--hz-ui-ring)",
   background: 'var(--hz-ui-bg-0)',
+    // Should be partially transparent,
+    // so opacity animations in 'vaul' module and other 3rd party stuff work
+  overlay: 'var(--hz-ui-bg-overlay)', 
+  
     // levels forward in z-index (a la Material Design)
   level: {
     DEFAULT: "var(--hz-ui-bg-0)",

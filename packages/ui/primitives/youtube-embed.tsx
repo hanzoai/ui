@@ -60,7 +60,7 @@ const YouTubeEmbed: React.FC<{
           />
           <div 
             className={  //https://stackoverflow.com/a/23384995/11645689
-              'absolute z-50 left-[50%] top-[50%] -translate-y-2/4 -translate-x-2/4 ' + 
+              'absolute z-above-content-2 left-[50%] top-[50%] -translate-y-2/4 -translate-x-2/4 ' + 
               'grid place-items-center ' + 
               'text-xl text-white opacity-90'
             }
@@ -73,7 +73,7 @@ const YouTubeEmbed: React.FC<{
               {...{'aria-hidden': true}} 
             />
           </div>
-          {caption && <p className='hidden md:block whitespace-nowrap typography absolute z-50 left-[50%] top-[20px] -translate-x-2/4 '>{caption}</p>}
+          {caption && <p className='hidden md:block whitespace-nowrap typography absolute z-above-content left-[50%] top-[20px] -translate-x-2/4 '>{caption}</p>}
         </button>
       )}
     </div>
