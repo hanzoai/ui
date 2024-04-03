@@ -8,6 +8,7 @@ import screens from './screens.tailwind'
 import spacing from './spacing.tailwind'
 import fontSize from './fontSize.tailwind'
 import fontFamily from './fontFamily.tailwind'
+import zIndex from './z-index.tailwind'
 import typographyPlugin from './typo-plugin'
 
 export default {
@@ -905,14 +906,6 @@ export default {
       contents: 'contents',
       transform: 'transform',
     },
-    zIndex: {
-      auto: 'auto',
-      0: '0',
-      10: '10',
-      20: '20',
-      30: '30',
-      40: '40',
-      50: '50',
-    },
+    zIndex,
   },
 }
