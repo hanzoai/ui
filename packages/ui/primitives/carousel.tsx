@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import useEmblaCarousel, { type EmblaOptionsType, type EmblaCarouselType } from 'embla-carousel-react'
-import Autoplay from 'embla-carousel-autoplay'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 import { cn } from '../util'
@@ -270,5 +269,4 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-  Autoplay as CarouselAutoplayPlugin
 }

@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -53,8 +53,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
-    "embla-carousel-autoplay": "8.0.0-rc15",
-    "embla-carousel-react": "8.0.0-rc15",
+    "embla-carousel-react": "8.0.1",
     "input-otp": "^1.0.1",
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
