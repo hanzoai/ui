@@ -4,7 +4,6 @@ import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import ItemMedia from '../item/item-media'
 
 import {
   type CarouselOptionsType,
@@ -17,6 +16,7 @@ import {
   ApplyTypography
 } from '@hanzo/ui/primitives'
 
+import ItemMedia from '../item/item-media'
 import type { ItemSelectorProps, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 
@@ -91,7 +91,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
   )
 
   return ( 
-    <Carousel options={options} className={cn('w-full px-2', clx)} onSelect={onSelect} setApi={setApi}>
+    <Carousel options={options} className={cn('w-full px-2', clx)} onCarouselSelect={onSelect} setApi={setApi}>
       <CarouselContent>
       {items.map((item, index) => (
         <CarouselItem key={index} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>
