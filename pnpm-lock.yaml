@@ -341,8 +341,8 @@ importers:
         specifier: ^10.8.0
         version: 10.8.1
       lucide-react:
-        specifier: ^0.307.0
-        version: 0.307.0(react@18.2.0)
+        specifier: ^0.344.0
+        version: 0.344.0(react@18.2.0)
       mobx:
         specifier: ^6.12.0
         version: 6.12.0
@@ -1048,10 +1048,6 @@ packages:
     peerDependencies:
       '@effect-ts/otel-node': '*'
     peerDependenciesMeta:
-      '@effect-ts/core':
-        optional: true
-      '@effect-ts/otel':
-        optional: true
       '@effect-ts/otel-node':
         optional: true
     dependencies:
@@ -7855,14 +7851,6 @@ packages:
 
   /lucide-react@0.288.0(react@18.2.0):
     resolution: {integrity: sha512-ikhb/9LOkq9orPoLV9lLC4UYyoXQycBhIgH7H59ahOkk0mkcAqkD52m84RXedE/qVqZHW8rEJquInT4xGmsNqw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 18.2.0
-    dev: false
-
-  /lucide-react@0.307.0(react@18.2.0):
-    resolution: {integrity: sha512-+vZ+vUiWPZTMnLHURg4aoIaz6NHOWXVVcVd8iLROu1k4LbyjcnHIKmbjXHCmulz7XAYLWRVXzhJJgIr+Aq3vOg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
     dependencies:
