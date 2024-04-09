@@ -4,11 +4,11 @@ import React, { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
 import { cn } from '@hanzo/ui/util'
 
-import type { ProductTreeNode, StringMutator, StringArrayMutator } from '../../types'
+import type { CategoryNode, StringMutator, StringArrayMutator } from '../../../types'
 import NodeImage from './node-image'
 
 const LevelNodesWidget: React.FC<{
-  levelNodes: ProductTreeNode[]
+  levelNodes: CategoryNode[]
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string

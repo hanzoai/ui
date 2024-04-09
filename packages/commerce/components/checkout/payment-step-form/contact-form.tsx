@@ -23,7 +23,7 @@ const ContactForm: React.FC<{
           render={({ field }) => (
             <FormItem className='w-full'>
               <FormControl>
-                <Input {...field} className='border-muted-4' placeholder='Full name'/>
+                <Input {...field} placeholder='Full name'/>
               </FormControl>
               <FormMessage className='py-0 space-y-0 !m-0'/>
             </FormItem>
@@ -35,7 +35,7 @@ const ContactForm: React.FC<{
           render={({ field }) => (
             <FormItem className='w-full'>
               <FormControl>
-                <Input {...field} className='border-muted-4' placeholder='Email'/>
+                <Input {...field} placeholder='Email'/>
               </FormControl>
               <FormMessage className='py-0 space-y-0 !m-0'/>
             </FormItem>

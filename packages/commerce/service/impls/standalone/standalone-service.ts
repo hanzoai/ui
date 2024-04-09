@@ -11,10 +11,11 @@ import { computedFn } from 'mobx-utils'
 
 import type {
   CommerceService, 
-  Category, 
+  Family, 
   LineItem,
   SelectedPaths, 
-  ProductTreeNode,
+  CategoryNode,
+  CategoryNodeRole,
   Promo
 } from '../../../types'
 
@@ -25,11 +26,11 @@ import {
 } from './orders'
 
 import ActualLineItem, { type ActualLineItemSnapshot } from './actual-line-item'
-
-const SEP = '-'
+import { getParentPath } from '../../../service/path-utils'
+import { getErrorMessage } from '../../../util'
+import sep from '../../sep'
 
 type StandaloneServiceOptions = {
-  levelZeroPrefix?: string
   dbName: string
   ordersTable: string
 }
@@ -38,11 +39,12 @@ interface StandaloneServiceSnapshot {
   items: ActualLineItemSnapshot[]  
 }
 
+
 class StandaloneService 
   implements CommerceService
 {
-  private _categoryMap = new Map<string, Category>()
-  private _rootNode: ProductTreeNode 
+  private _familyMap = new Map<string, Family>()
+  private _rootNode: CategoryNode 
   private _selectedPaths: SelectedPaths = {}
   private _promo: Promo | null = null
 
@@ -50,8 +52,8 @@ class StandaloneService
   private _currentItem: ActualLineItem | undefined = undefined
 
   constructor(
-    categories: Category[],
-    rootNode: ProductTreeNode,
+    families: Family[],
+    rootNode: CategoryNode,
     options: StandaloneServiceOptions,
     serviceSnapshot?: StandaloneServiceSnapshot,
   ) {
@@ -59,8 +61,8 @@ class StandaloneService
     this._rootNode = rootNode
     this._options = options
 
-    categories.forEach((c) => {
-      c.products = c.products.map((p) => { 
+    families.forEach((fam) => {
+      fam.products = fam.products.map((p) => { 
         if (serviceSnapshot) {
           const itemSnapshot = serviceSnapshot.items.find((is) => (is.sku === p.sku))
           if (itemSnapshot) {
@@ -69,7 +71,7 @@ class StandaloneService
         }
         return new ActualLineItem(p)
       })
-      this._categoryMap.set(c.id, c)
+      this._familyMap.set(fam.id, fam)
     })
 
     makeObservable<
@@ -90,7 +92,7 @@ class StandaloneService
       promoAppliedCartTotal: computed,
       cartEmpty: computed,
       selectedItems: computed,
-      selectedCategories: computed, 
+      selectedFamilies: computed, 
       hasSelection: computed, 
       setCurrentItem: action,
       currentItem: computed,
@@ -102,48 +104,147 @@ class StandaloneService
     })
   }
 
-  getCategory(id: string): Category | undefined {
-    return this._categoryMap.get(id)
+  getFamily(id: string): Family | undefined {
+    return this._familyMap.get(id)
   }
 
-  getNodeAtPath(skuPath: string): ProductTreeNode | undefined {
-    const toks = skuPath.split(SEP)
+  getNodeAtPath(skuPath: string): CategoryNode | undefined {
+    const toks = skuPath.split(sep.tok)
     let level = 1
-    let desc: ProductTreeNode | undefined = this._rootNode
+    let node: CategoryNode | undefined = this._rootNode
     do {
-      desc = desc!.subNodes?.find((vf) => (vf.skuToken === toks[level])) 
+      node = node!.subNodes?.find((sn) => (sn.skuToken === toks[level])) 
       level++
     }
-    while (desc && (level < toks.length))
-    return level === toks.length ? desc : undefined 
+    while (node && (level < toks.length))
+    return level === toks.length ? node : undefined 
   } 
 
-  getSelectedNodesAtLevel = computedFn((level: number): ProductTreeNode[] | undefined => {
+  peek(skuPath: string): {
+    role: CategoryNodeRole
+    family: Family | undefined
+    families: Family[] | undefined
+    node: CategoryNode | undefined
+    item: LineItem | undefined
+  } | string /* OR error string */ {
+
+    const toks = skuPath.split(sep.tok)
+    let level: number
+    let node: CategoryNode | undefined = this._rootNode
+    let parent: CategoryNode | undefined = undefined
+
+    for (level = 1; level < toks.length && node && node.subNodes; level++) {
+        // https://stackoverflow.com/questions/62367492/inference-problem-referenced-directly-or-indirectly-in-its-own-initializer
+      const _node: CategoryNode | undefined = 
+        node!.subNodes.find((sn) => (sn.skuToken === toks[level])) 
+      if (!_node) {
+        return `service.peekAtNode: traversing '${skuPath}'... no CategoryNode at '${toks[level]}'!`
+      }
+      parent = node
+      node = _node
+    }
+
+    const atEnd = level === toks.length
+    const possibleSKU = level === toks.length - 1
+
+    let role: CategoryNodeRole = 'non-outermost'
+    let families: Family[] | undefined = undefined
+    let family: Family | undefined = undefined
+    let item: LineItem | undefined = undefined
+    let error: string | undefined = undefined
+
+    try {
+      if (node.subNodes && atEnd && node.terminal) {
+        role = 'multi-family'
+        families = node.subNodes.map((sub) => {
+          const familyId = skuPath + sep.tok + sub.skuToken
+          const fam = this._familyMap.get(familyId)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: No Family under for CategoryNode '${skuPath}' with id ${familyId}!`)
+          }
+          return fam
+        })
+      }
+      else if (!node.subNodes && (atEnd || possibleSKU)) {
+        const _skuPath = (possibleSKU) ? getParentPath(skuPath) : skuPath
+        if (parent?.terminal) {
+          role = 'family-in-multi-family'  
+          const fam = this._familyMap.get(_skuPath)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: '${_skuPath}' graphs as a Family under a multi-family node, but no such family exists!`)
+          }
+          family = fam
+          const parentPath = getParentPath(_skuPath)
+            // get all siblings (subnodes of parent)
+          families = parent.subNodes!.map((sn) => {
+            const familyId = parentPath + sep.tok + sn.skuToken
+            const fam = this._familyMap.get(familyId)
+            if (!fam) {
+              throw new Error(`service.peekAtNode: No sibling Family for '${_skuPath}' with id '${familyId}'!`)
+            }
+            return fam
+          })
+          node = parent
+        }
+        else {
+          role = 'single-family'  
+          const fam = this._familyMap.get(_skuPath)
+          if (!fam) {
+            throw new Error(`service.peekAtNode: '${_skuPath}' graphs as a single Family, but no such family exists!`)
+          }
+          family = fam
+        }
+        if (possibleSKU) {
+          const skuToTry = family.id + sep.tok + toks[toks.length - 1]
+          const _item = family.products.find((p) => (p.sku === skuToTry)) 
+          if (_item) {
+            item = _item as LineItem  
+          }
+          else {
+            throw new Error(`service.peekAtNode: '${skuPath}' graphs as LineItem in Family '${family.id}', but no such sku exists there!`)
+          }
+        }
+      }
+    }
+    catch (e) {
+      error = getErrorMessage(e)
+    }
+
+    return error ?? {
+      role,
+      family,
+      families,
+      node,
+      item
+    }
+  } 
+
+  getSelectedNodesAtLevel = computedFn((level: number): CategoryNode[] | undefined => {
 
     let lvl = 1
-    let valuesAtLevel: ProductTreeNode[] | undefined  = this._rootNode.subNodes
+    let nodesAtLevel: CategoryNode[] | undefined  = this._rootNode.subNodes
 
     do {
-      let selectedAtLevel: ProductTreeNode[] | undefined = undefined
+      let selectedAtLevel: CategoryNode[] | undefined = undefined
         // If not specified, assume all
       if (lvl in this._selectedPaths) {
-        selectedAtLevel = valuesAtLevel!.filter((fv) => (this._selectedPaths[lvl].includes(fv.skuToken))) 
+        selectedAtLevel = nodesAtLevel!.filter((n) => (this._selectedPaths[lvl].includes(n.skuToken))) 
       }
       else {
-        selectedAtLevel = valuesAtLevel 
+        selectedAtLevel = nodesAtLevel 
       }
-      let allSubsOfSelected: ProductTreeNode[] = []
-      selectedAtLevel?.forEach((fvd: ProductTreeNode) => {
-        if (fvd.subNodes) {
-          allSubsOfSelected = [...allSubsOfSelected, ...fvd.subNodes] 
+      let allSubsOfSelected: CategoryNode[] = []
+      selectedAtLevel?.forEach((n: CategoryNode) => {
+        if (n.subNodes) {
+          allSubsOfSelected = [...allSubsOfSelected, ...n.subNodes] 
         }  
       })
 
-      valuesAtLevel = allSubsOfSelected
+      nodesAtLevel = allSubsOfSelected
       lvl++
-    } while (valuesAtLevel.length > 0 && lvl <= level)
+    } while (nodesAtLevel.length > 0 && lvl <= level)
 
-    return (valuesAtLevel.length > 0 && ((lvl - 1) === level)) ? valuesAtLevel : undefined
+    return (nodesAtLevel.length > 0 && ((lvl - 1) === level)) ? nodesAtLevel : undefined
   })
 
 
@@ -170,8 +271,8 @@ class StandaloneService
 
   get cartItems(): LineItem[] {
     let result: LineItem[] = []
-    this._categoryMap.forEach((cat) => {
-      result = [...result, ...(cat.products as LineItem[]).filter((item) => (item.isInCart))]
+    this._familyMap.forEach((fam) => {
+      result = [...result, ...(fam.products as LineItem[]).filter((item) => (item.isInCart))]
     })
     return result.sort((it1, it2) => ((it1 as ActualLineItem).timeAdded - (it2 as ActualLineItem).timeAdded))
   }
@@ -238,46 +339,33 @@ class StandaloneService
 
   setCurrentItem(skuToFind: string | undefined): boolean {
 
-    const logMe = (s: string) => {
-      //if (skuToFind?.startsWith('LXM-CR-E')) {
-        //console.log(s)
-      //}
-    }
-
     if (skuToFind === undefined || skuToFind.length === 0) {
       this._currentItem = undefined
       return true
     }
-
-    logMe("SETTING ITEM: " + skuToFind)
-
       // self calling function
     this._currentItem = ((): ActualLineItem | undefined  => {
 
-      const categoriesTried: string[] = []
-      if (this.selectedCategories && this.selectedCategories.length > 0) {
-          for (let category of this.selectedCategories) {
-          categoriesTried.push(category.id)
-          const foundItem = category.products.find((p) => (p.sku === skuToFind))
+      const familiesTried: string[] = []
+      if (this.selectedFamilies && this.selectedFamilies.length > 0) {
+          for (let family of this.selectedFamilies) {
+          familiesTried.push(family.id)
+          const foundItem = family.products.find((p) => (p.sku === skuToFind))
           if (foundItem) {
-            logMe("FOUND 1st LOOP")
             return foundItem as ActualLineItem
           }
         }
       }
-      for( const [categoryId, category] of this._categoryMap.entries()) {
-        if (categoriesTried.includes(categoryId)) continue
-        const foundItem = category.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
+      for( const [familyId, family] of this._familyMap.entries()) {
+        if (familiesTried.includes(familyId)) continue
+        const foundItem = family.products.find((p) => (p.sku === skuToFind)) as ActualLineItem | undefined
         if (foundItem) {
-          logMe("FOUND 2nd LOOP")
           return foundItem as ActualLineItem
         }
       }
-      logMe("NOT FOUND")
       return undefined
     })();
 
-    logMe("CURRENT ITEM SET TO: " + this._currentItem?.sku)
     return !!this._currentItem
   }
 
@@ -290,15 +378,15 @@ class StandaloneService
     return this._currentItem
   }
 
-  selectPaths(sel: SelectedPaths): Category[] {
+  selectPaths(sel: SelectedPaths): Family[] {
     runInAction (() => {
       this._selectedPaths = this._processAndValidate(sel) 
     })
-    return this.selectedCategories
+    return this.selectedFamilies
   }
 
-  selectPath(skuPath: string): Category[] {
-    const toks = skuPath.split(SEP)
+  selectPath(skuPath: string): Family[] {
+    const toks = skuPath.split(sep.tok)
     const highestLevel = toks.length - 1
     const fsv: SelectedPaths = {}
     for (let level = 1; level <= highestLevel; level++ ) {
@@ -315,14 +403,14 @@ class StandaloneService
     return result
   }
 
-  get selectedCategories(): Category[] {
+  get selectedFamilies(): Family[] {
     if (Object.keys(toJS(this._selectedPaths)).length === 0) {
       // FacetsDesc have never been set or unset, so cannot evaluate them
       return []
     }
 
     return this._rootNode.subNodes!.reduce(
-      (acc: Category[], subFacet: ProductTreeNode) => (
+      (acc: Family[], subFacet: CategoryNode) => (
           // Pass the root token as a one member array
         this._reduceNode([this._rootNode.skuToken], acc, subFacet)   
       ), 
@@ -330,7 +418,7 @@ class StandaloneService
     )
   }
 
-  private _reduceNode(parentPath: string[], acc: Category[], node: ProductTreeNode): Category[] {
+  private _reduceNode(parentPath: string[], acc: Family[], node: CategoryNode): Family[] {
     const path = [...parentPath, node.skuToken] // Don't mutate original please :) 
     const level = path.length - 1
       // If there is no token array supplied for this level,
@@ -350,11 +438,11 @@ class StandaloneService
         , acc)
       }
         // Process leaf
-      const cat = this._categoryMap.get(path.join(SEP))
-      if (!cat) {
-        throw new Error("selectedCategories WTF?!" + path.join(SEP))
+      const fam = this._familyMap.get(path.join(sep.tok))
+      if (!fam) {
+        throw new Error("selectedFamilies WTF?!" + path.join(sep.tok))
       }
-      acc.push(cat)    
+      acc.push(fam)    
     }
     return acc
   }
@@ -389,16 +477,16 @@ class StandaloneService
       return []
     }
 
-    return this.selectedCategories.reduce(
-      (allProducts, cat) => ([...allProducts, ...(cat.products as LineItem[])]), [] as LineItem[])
+    return this.selectedFamilies.reduce(
+      (allProducts, fam) => ([...allProducts, ...(fam.products as LineItem[])]), [] as LineItem[])
   }
 
   get hasSelection(): boolean {
-    return this.selectedCategories.length > 0
+    return this.selectedFamilies.length > 0
   }
 
-  getCartCategorySubtotal(categoryId: string): number {
-    const c = this._categoryMap.get(categoryId)!
+  getFamilySubtotal(familyId: string): number {
+    const c = this._familyMap.get(familyId)!
     return (c.products as LineItem[]).reduce(
         // avoid floating point bs around zero
       (total, item) => (item.quantity > 0 ? total + item.price * item.quantity : total),
@@ -406,13 +494,6 @@ class StandaloneService
     )
   }
 
-  debug_getSelectedCategories = () => {
-    const spec = this.selectedCategories
-    console.log('NUM SPEC CATS: ', spec.length) 
-    if (spec.length > 0) {
-      console.log('IDS: ', (spec.map((c) => (c.id))).join(', ')) 
-    }
-  }
 }
 
 export {

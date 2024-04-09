@@ -10,7 +10,7 @@ const BuyButton: React.FC<PropsWithChildren & {
   skuPath: string
   variant? : ButtonVariants 
   size?: ButtonSizes  
-  /* rounded?: ButtonRounded // TODO: wait for version bump*/
+  /* rounded?: ButtonRoundedValue // TODO: wait for version bump*/
   className?: string 
   mobile?: boolean
 }> = ({

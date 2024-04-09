@@ -135,7 +135,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
               items: cmmc.cartItems.map((item) => ({
                 item_id: item.sku,
                 item_name: item.title,
-                item_category: item.categoryId,
+                item_category: item.familyId,
                 price: item.price,
                 quantity: item.quantity
               })),
@@ -178,7 +178,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
         <div className='flex gap-2 grid grid-cols-3'>
           <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
             <SelectTrigger>
-              <SelectValue defaultValue='eth' className='border-muted-4'/>
+              <SelectValue defaultValue='eth' />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -192,7 +192,6 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
             <Input
               value={amount ? amount/(10**18) : amount}
               contentEditable={false}
-              className='border-muted-4'
             />
             <div className='relative flex items-center gap-2 -top-[32px] justify-end px-2 py-1 rounded-lg bg-muted-4 w-fit text-xs float-right mr-3'>
               <Eth height={10}/>

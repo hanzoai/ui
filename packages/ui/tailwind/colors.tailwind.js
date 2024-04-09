@@ -2,7 +2,6 @@ export default ({ colors }) => ({
   inherit: colors.inherit,
   current: colors.current,
   transparent: colors.transparent,
-  input: "var(--hz-ui-input)",
   ring: "var(--hz-ui-ring)",
   background: 'var(--hz-ui-bg-0)',
     // Should be partially transparent,
