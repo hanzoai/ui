@@ -37,6 +37,7 @@ const ScreenfulComponent: React.FC<{
   const specified = (s: string) => (containsToken(b.specifiers, s))
   const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
   const noGutters = specified('no-gutters')
+  const fullScreenWidth = specified('full-screen-width')
   const vertCenter = specified('vert-center')
 
     // content wrapper clx:
@@ -46,7 +47,8 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'xl:mx-auto max-w-screen-xl overflow-y-hidden ',
+    'xl:mx-auto overflow-y-hidden ',
+    fullScreenWidth ? '' : 'max-w-screen-xl',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
