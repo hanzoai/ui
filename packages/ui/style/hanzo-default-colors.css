@@ -45,8 +45,7 @@
     --hz-ui-destructive-hover: hsl(0 62.8% 25%);
     --hz-ui-destructive-fg: hsl(0 0% 100%);
 
-    --hz-ui-input: var(--hz-ui-bg-1);
-    --hz-ui-ring: var(--hz-ui-fg-1);
+    --hz-ui-ring: var(--hz-ui-fg-2);
 
     --hz-ui-radius: 0.5rem;
   }
@@ -54,7 +53,7 @@
   .hanzo-ui-dark-theme {
 
     --hz-ui-fg-0: hsl(0 0% 100%);
-    --hz-ui-fg-body: hsl(0, 100%, 0%);
+    --hz-ui-fg-body: hsl(0, 0%, 97%);
     --hz-ui-fg-1: hsl(0 0% 85%);
     --hz-ui-fg-2: hsl(0 0% 70%);
     --hz-ui-fg-3: hsl(0 0% 55%);

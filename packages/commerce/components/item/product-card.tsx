@@ -6,6 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  MediaStack
 } from '@hanzo/ui/primitives'
 
 import { cn } from '@hanzo/ui/util'
@@ -14,7 +15,6 @@ import { formatCurrencyValue } from '../../util'
 import type { LineItem } from '../../types'
 
 import AddToCartWidget from '../buy/add-to-cart-widget'
-import ItemMedia from './item-media'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   item: LineItem
@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     {...props}
   >
     <CardHeader className='w-full border-b p-6 min-h-[180px] max-h-[240px] relative'>
-      <ItemMedia item={item} constrainTo={{w: 700, h:700}} clx='p-6' />
+      <MediaStack media={item} constrainTo={{w: 700, h:700}} clx='p-6' />
     </CardHeader>
     <CardContent className='grid gap-2.5 p-4'>
       <CardTitle className='text-sm sm:text-base flex flex-col justify-start items-center line-clap-3'>

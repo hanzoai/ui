@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { X as LucideX} from 'lucide-react'
 
@@ -12,12 +13,9 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { getUISpecFromPath } from '../../util'
+//import BuyCard from './buy-card'
 
-import BuyCard from './buy-card'
-import RadioItemSelector from '../select/radio-selector'
-import ImageItemSelector from '../select/image-selector'
-import CarouselItemSelector from '../select/carousel-selector'
+import CarouselBuyCard from './carousel-buy-card'
 
 const BuyDrawer: React.FC<{
   skuPath: string
@@ -36,20 +34,7 @@ const BuyDrawer: React.FC<{
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
-
-  const onQuantityChanged = (sku: string, oldV: number, newV: number) => {
-    //if (oldV === 0 && newV === 1) {
-    //  setTimeout(() => {setOpen(false)}, 150)
-    //}
-  }
-
-  const spec = getUISpecFromPath(skuPath) ?? {
-    selector: 'radio',
-    allVariants: false
-  }
-
-  const selector = spec.selector === 'radio' ? RadioItemSelector :
-    (spec.selector === 'image' ? ImageItemSelector : CarouselItemSelector)
+  const router = useRouter()
 
   return (
     <Drawer open={open} onOpenChange={setOpen} >
@@ -57,20 +42,15 @@ const BuyDrawer: React.FC<{
         {trigger}
       </DrawerTrigger>
       <DrawerContent 
-        className={cn('rounded-t-xl mt-6 pb-12 h-auto min-h-[35vh] pt-6 md:max-w-[550px] md:mx-auto', drawerClx)}
+        className={cn('rounded-t-xl mt-6 pb-12 h-auto min-h-[35vh] pt-6 md:max-w-[550px] md:mx-auto lg:max-w-[50vw]', drawerClx)}
       >
-        <BuyCard 
+        <CarouselBuyCard 
           skuPath={skuPath} 
-          scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
+          handleCheckout={() => {router.push('/checkout')}} 
           mobile={mobile} 
-          onQuantityChanged={onQuantityChanged} 
           clx={cn('w-full', cardClx)}
-          selector={selector}
-          selectorProps={{soleItemClx:'mb-3'}}
-          showItemMedia={spec.selector !== 'carousel'}
-          categoryTabAs='label'
-          allVariants={spec.allVariants}
         />
+
         <Button
           variant='ghost'
           size='icon'
@@ -86,3 +66,18 @@ const BuyDrawer: React.FC<{
 }
 
 export default BuyDrawer
+
+/*
+  <BuyCard 
+    skuPath={skuPath} 
+    scrollAfter={spec.selector === 'carousel' ? 999 : undefined}
+    mobile={mobile} 
+    onQuantityChanged={onQuantityChanged} 
+    clx={cn('w-full', cardClx)}
+    selector={selector}
+    selectorProps={{soleItemClx:'mb-3'}}
+    showItemMedia={spec.selector !== 'carousel'}
+    familyTabAs='label'
+    allVariants={spec.allVariants}
+  />
+*/

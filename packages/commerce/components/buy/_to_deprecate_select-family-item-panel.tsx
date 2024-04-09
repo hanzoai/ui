@@ -6,17 +6,17 @@ import { observer } from 'mobx-react-lite'
 import { cn } from '@hanzo/ui/util'
 import { Skeleton } from '@hanzo/ui/primitives'
 
-import type { Category, ObsLineItemRef, LineItem } from '../../types'
+import type { Family, ObsLineItemRef, LineItem } from '../../types'
 import { formatCurrencyValue } from '../../util'
 import { Icons } from '../Icons'
 
 import AddToCartWidget from './add-to-cart-widget'
-import RadioItemSelector from '../select/radio-selector'
+import { ButtonItemSelector } from '../item-selector'
 
-const SelectCategoryItemPanel: React.FC<
+const SelectFamilyItemPanel: React.FC<
   React.HTMLAttributes<HTMLDivElement> &   
   {
-    category: Category
+    family: Family
     selectedItemRef: ObsLineItemRef
     selectSku: (sku: string) => void 
     showQuantity?: boolean
@@ -24,7 +24,7 @@ const SelectCategoryItemPanel: React.FC<
     mobile?: boolean
   }
 > = /* NOT observer */ ({
-  category,
+  family,
   selectedItemRef,
   selectSku, 
   className, 
@@ -34,9 +34,9 @@ const SelectCategoryItemPanel: React.FC<
   ...props
 }) => {
 
-  const soleOption = category.products.length === 1
+  const soleOption = family.products.length === 1
 
-  const CategoryImage: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const FamilyImage: React.FC<{ className?: string }> = ({ className = '' }) => {
 
     if (isLoading) {
       // deliberately not Skeleton to have a better overall pulse effect.
@@ -46,16 +46,16 @@ const SelectCategoryItemPanel: React.FC<
         className)} />
     }
 
-    return category.img ? (
+    return family.img ? (
       // TODO: Why so many div's?
       <div className={cn('flex flex-col justify-start', className)}>
         <div className={cn('w-full border rounded-xl p-6 ')}>
           <div className={cn('w-full aspect-square  relative')}>
             <Image
-              src={category.img.src}
+              src={family.img.src}
               fill
               sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 50vw, 20vw"
-              alt={category.title}
+              alt={family.title}
               className=''
               loading='lazy'
               style={{ objectFit: 'contain' }} />
@@ -77,7 +77,7 @@ const SelectCategoryItemPanel: React.FC<
   const AvailableAmounts: React.FC<{ className?: string }> = observer(({ className = '' }) => {
 
     if (soleOption) return null
-    const mobilePicker = (mobile && category.products.length > 8) 
+    const mobilePicker = (mobile && family.products.length > 8) 
 
     return isLoading ? (
       <Skeleton className={'min-h-[120px] w-pr-60 mx-auto ' + className} />
@@ -91,13 +91,12 @@ const SelectCategoryItemPanel: React.FC<
           <h6 className='text-center font-semibold'>Available options</h6>
           <div className={'h-[1px] bg-muted-3 ' + (mobilePicker ?  'w-pr-55' :  'w-pr-60') } />
         </div>
-          <RadioItemSelector 
-            items={category.products as LineItem[]}
+          <ButtonItemSelector 
+            items={family.products as LineItem[]}
             selectedItemRef={selectedItemRef}  
             selectSku={selectSku}
-            showQuantity={showQuantity}
-                      scrollList={false}
-
+            options={{ showQuantity }}
+            scrollable={false}
             clx='block columns-2 gap-4'
             itemClx='flex flex-row gap-2 items-center mb-2.5'
           />
@@ -119,10 +118,10 @@ const SelectCategoryItemPanel: React.FC<
 
       <div className={cn('flex flex-col justify-start items-center', className)}>
         <h3 className='text-base md:text-lg lg:text-2xl font-heading text-center'>
-        {category.parentTitle && (
-          <span>{category.parentTitle}<br className='md:hidden' /><span className='xs:hidden md:inline '>,&nbsp;</span></span>
+        {family.parentTitle && (
+          <span>{family.parentTitle}<br className='md:hidden' /><span className='xs:hidden md:inline '>,&nbsp;</span></span>
         )}
-          <span>{category.title}</span>
+          <span>{family.title}</span>
         </h3>
         {selectedItemRef.item?.sku ? (
           <h6 className='text-center font-semibold'>
@@ -136,7 +135,7 @@ const SelectCategoryItemPanel: React.FC<
     isLoading ? (
       <Skeleton className={'min-h-20 w-full grow mx-auto ' + className} />
     ) : (
-      <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{category.desc}</p>
+      <p className={cn('text-base lg:text-lg mb-6 xs:mb-0', className)}>{family.desc}</p>
     )
   )
 
@@ -151,7 +150,7 @@ const SelectCategoryItemPanel: React.FC<
     >
       <div /* id='CV_TITLE_AND_IMAGE_ROW' */ className='flex flex-row justify-between items-start w-full'>
       {isLoading ? ( <Skeleton className={'min-h-30 w-full '} /> ) : (<>
-        <CategoryImage className='w-pr-33' />
+        <FamilyImage className='w-pr-33' />
         <TitleArea className='grow pt-3 mb-0' />
       </>)}
       </div> 
@@ -163,11 +162,11 @@ const SelectCategoryItemPanel: React.FC<
     <div /* id='CV_OUTERMOST' */>
       <div /* id='CV_OUTER' */ className={cn('w-full flex flex-row justify-between items-stretch gap-6 sm:gap-4', className)} {...props}>
         <div /* id='CV_IMAGE_COL_SEP' */ className={'relative ' + (!isLoading ? 'md:hidden sm:min-w-[185px] xl:flex xl:w-pr-40' : '')}>
-          <CategoryImage className='w-full' />
+          <FamilyImage className='w-full' />
         </div>
         <div /* id='CV_CONTENT_COL */ className={'flex flex-col xl:w-pr-60 justify-center ' + (soleOption ? '' : 'gap-6') }>
           <div /* id='CV_MD_IMAGE_AND_TITLE */ className='hidden md:flex xl:hidden flex-row gap-x-3'>
-            <CategoryImage className='min-w-pr-30' />
+            <FamilyImage className='min-w-pr-30' />
             <TitleArea className='grow' />
           </div>
          
@@ -190,4 +189,4 @@ const SelectCategoryItemPanel: React.FC<
 }
 
 
-export default SelectCategoryItemPanel
+export default SelectFamilyItemPanel

@@ -34,7 +34,7 @@ const InputOTPSlot = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'relative flex h-10 w-10 items-center justify-center border-y border-r border-muted-2 text-sm ',
+        'relative flex h-10 w-10 items-center justify-center border-y border-r border-muted-3 text-sm ',
         'transition-all first:rounded-l-md first:border-l last:rounded-r-md',
         isActive && 'z-above-content ring-2 ring-muted', // TODO: couldn't find: 'ring-offset-background' 
         className

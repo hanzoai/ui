@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.4.4",
+  "version": "3.5.0",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -49,6 +49,8 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
+    "@splinetool/react-spline": "^2.2.6",
+    "@splinetool/runtime": "^1.0.75",
     "@tailwindcss/container-queries": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

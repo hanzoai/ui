@@ -1,12 +1,12 @@
 import React from 'react'
 import NextImage from 'next/image'
 
-import type { ImageDef } from '../types'
-import { resolveDimensions, cn } from '../util'
+import type { ImageDef, Dimensions } from '../types'
+import { constrain, cn } from '../util'
 
 const Image: React.FC<{
   def: ImageDef
-  constrainTo?: {w: number, h: number}
+  constrainTo?: Dimensions
   fullWidth?: boolean
   className?: string
   preload?: boolean
@@ -38,7 +38,7 @@ const Image: React.FC<{
     }
   }
   else {
-    const resolved = resolveDimensions(dim, constrainTo)
+    const resolved = constrainTo ? constrain(dim, constrainTo) : dim
     toSpread.width = resolved.w
     toSpread.height = resolved.h
   } 

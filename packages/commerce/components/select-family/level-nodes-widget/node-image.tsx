@@ -1,12 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { ProductTreeNode } from '../../types'
+import type { CategoryNode } from '../../../types'
 
 const ICON_SIZE = 20
 
 const NodeImage: React.FC<{
-  treeNode: ProductTreeNode
+  treeNode: CategoryNode
 }> = ({
   treeNode: {
     img,

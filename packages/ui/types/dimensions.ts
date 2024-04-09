@@ -1,10 +1,4 @@
-type Dimensions = {
-  w: number
-  ar: number
-} | {
-  h: number
-  ar: number
-} | {
+interface Dimensions {
   w: number
   h: number
 }

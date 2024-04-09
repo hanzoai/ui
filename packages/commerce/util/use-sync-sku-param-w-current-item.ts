@@ -10,11 +10,12 @@ import {
 
 import { useCommerce } from '../service/context'
 import type { SelectedPaths } from '../types'
+import sep from '../service/sep'
 
 const PLEASE_SELECT_FACETS = 'Please select an option from each group.'
 
 const useSyncSkuParamWithCurrentItem = (
-  categoryLevel: number,
+  familyLevel: number,
   setMessage: (m: string | undefined) => void,
   setLoading?: (l: boolean) => void
 ) => {
@@ -32,14 +33,14 @@ const useSyncSkuParamWithCurrentItem = (
   useEffect(() => {
 
     return reaction(() => ({
-      specifiedCat: cmmc.selectedCategories.length === 1 ? cmmc.selectedCategories[0] : undefined, 
+      specifiedCat: cmmc.selectedFamilies.length === 1 ? cmmc.selectedFamilies[0] : undefined, 
       currentItem: cmmc.currentItem
     }),
     ({specifiedCat, currentItem}) => {
-      //console.log("REACTION: " + `CAT ID: ${category?.id} SKU: ${item?.sku}`)
+      //console.log("REACTION: " + `CAT ID: ${family?.id} SKU: ${item?.sku}`)
       if (currentItem) {
           // if we set the currentItem w sku, then user selects other facets
-        if (specifiedCat && currentItem.categoryId != specifiedCat.id ) {
+        if (specifiedCat && currentItem.familyId != specifiedCat.id ) {
           cmmc.setCurrentItem(specifiedCat.products[0].sku)
         }
         setSkuParam(cmmc.currentItem!.sku)
@@ -53,11 +54,11 @@ const useSyncSkuParamWithCurrentItem = (
 
   useEffect(() => {
     
-    const setCurrentCategoryFromSku = (sku: string) => {
-      const toks: string[] = sku.split('-')
+    const setCurrentFamilyFromSku = (sku: string) => {
+      const toks: string[] = sku.split(sep.tok)
       const fv: SelectedPaths = {}
         // TODO: confirm that extra trailing nonsense tokens won't break selectPaths()
-      for (let i = 1; i < categoryLevel; i++) {
+      for (let i = 1; i < familyLevel; i++) {
         if (i in toks) {
           fv[i] = [toks[i]]
         } 
@@ -73,7 +74,7 @@ const useSyncSkuParamWithCurrentItem = (
         }
         setAddParam(false)
       }
-      setCurrentCategoryFromSku(skuParam)
+      setCurrentFamilyFromSku(skuParam)
       setMessage(undefined)
     }
     else {

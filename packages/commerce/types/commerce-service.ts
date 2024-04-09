@@ -1,7 +1,8 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
-import type { ProductTreeNode, SelectedPaths } from './tree-node'
-import type Category from './category'
+import type { CategoryNode, SelectedPaths, CategoryNodeRole } from './category-node'
+import type Family from './family'
 import type Promo from './promo'
+
 
 interface CommerceService extends ObsLineItemRef {
 
@@ -21,7 +22,7 @@ interface CommerceService extends ObsLineItemRef {
     /** returns the price with promo applied, of undefined if no promo or promo does not apply */
   itemPromoPrice(item: LineItem): number | undefined
    
-  getCartCategorySubtotal(categoryId: string): number
+  getFamilySubtotal(familyId: string): number
 
   createOrder(email: string, name?: string): Promise<string | undefined>
   updateOrderShippingInfo(orderId: string, shippingInfo: any): Promise<void>
@@ -32,28 +33,67 @@ interface CommerceService extends ObsLineItemRef {
      * If a level is selected as [], nothing will be selected.
      * If a level is missing (undefined), everything at that level is selected
      * 
-     * This selects one or more Category's, and all the LineItem's in them.
+     * This selects one or more Family's, and all the LineItem's in them.
      * 
-     * An empty value object selects all Category's and all LineItem's,
+     * An empty value object selects all Family's and all LineItem's,
      * */ 
-  selectPaths(value: SelectedPaths): Category[]
-  selectPath(skuPath: string): Category[] 
+  selectPaths(value: SelectedPaths): Family[]
+  selectPath(skuPath: string): Family[] 
+
+    /**
+     * With role as ...
+     *  
+     * 'single-family': 
+     *    item: item with skuPath as SKU, otherwise undefined
+     *    node: node at path (or item's parent node),
+     *    family: node at path as family (or item's parent node as family), 
+     *    families: undefined 
+     * 
+     * 'family-in-multi-family': 
+     *    item: item with skuPath as SKU, otherwise undefined
+     *    node: parent node of this family (or parent node of item's family)
+     *    family: this family (or item's family)
+     *    families: this family (or item's family) and siblings
+     * 
+     * 'multi-family': 
+     *    item: undefined
+     *    node: node at path 
+     *    family: undefined
+     *    families: subnodes / families of this node
+     *    
+     * 'non-outermost': 
+     *    item: undefined
+     *    node: node at path
+     *    family: undefined
+     *    families: undefined
+     * 
+    */
+  peek(skuPath: string): {
+    role: CategoryNodeRole
+    family: Family | undefined
+    families: Family[] | undefined
+    node: CategoryNode | undefined
+    item: LineItem | undefined
+  } | string // or error string
+
+    /** @deprecated
+     *  Whether this path defines a Family, or if it has further levels 
+     * */
+  getNodeAtPath(skuPath: string): CategoryNode | undefined 
 
   get selectedPaths(): SelectedPaths // returns a copy
   
   get selectedItems(): LineItem[]
-  get selectedCategories(): Category[] 
+  get selectedFamilies(): Family[] 
   get hasSelection(): boolean
 
-    /** Whether this path defines a Category, or if it has further levels */
-  getNodeAtPath(skuPath: string): ProductTreeNode | undefined 
 
     /** 
      * Who are the subnodes selected at 'level'? 
      * If more than one value is selected at 'level', 
-     * the returned ProductTreeNode[] may represent multiple sets. 
+     * the returned CategoryNode[] may represent multiple sets. 
      * */ 
-  getSelectedNodesAtLevel(level: number): ProductTreeNode[] | undefined 
+  getSelectedNodesAtLevel(level: number): CategoryNode[] | undefined 
 
       /**
      * For convenience, so widgets can share state.
@@ -72,9 +112,10 @@ interface CommerceService extends ObsLineItemRef {
      *  */ 
   get currentItem(): LineItem | undefined
 
-  getCategory(id: string): Category | undefined
+  getFamily(id: string): Family | undefined
 
 }
+
 
 export {
   type CommerceService as default

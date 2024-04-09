@@ -1,3 +1,4 @@
+import type { ButtonRoundedValue } from '../primitives/button'
 import type Dimensions from './dimensions'
 
   /**
@@ -23,6 +24,8 @@ interface ImageDef {
      * can determine the aspect ratio
     */
   dim:  Dimensions 
+
+  rounded?: ButtonRoundedValue
 }
 
 export {

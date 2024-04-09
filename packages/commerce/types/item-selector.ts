@@ -6,6 +6,29 @@ interface ItemSelector {
   selectSku: (sku: string) => void 
 }
 
+type ItemSelectorOptions = {
+    /** 
+     * Whether the item label includes the Family name.
+     * eg, 'Minted Bar, 1oz' vs '1oz'
+     * default: false.
+     */
+  showFamily?: boolean
+    /**
+     * Show the current item quantity along with title and price.
+     * default: false
+     */
+  showQuantity?: boolean   
+
+    /** default: true */
+  showPrice?: boolean
+
+    /** default: false */
+  imageButtons?: boolean  
+
+    /** default: false */
+  horizButtons?: boolean  
+}
+
 interface _ItemSelectorCompProps {
   clx?: string
   itemClx?: string
@@ -15,22 +38,13 @@ interface _ItemSelectorCompProps {
      */
   ext?: any
     /** List selectors will scroll.  Used internally */
-  scrollList: boolean
-    /** 
-     * Whether the item label includes the Category name.
-     * eg, 'Minted Bar, 1oz' vs '1oz'
-     * default: true in 'allVariants' mode and false otherwise.
-     * This overrides
-     */
-  showCategory?: boolean
-    /**
-     * Show the current item quantity along with title and price.
-     * default: false
-     */
-  showQuantity?: boolean    
+  scrollable: boolean
+  options?: ItemSelectorOptions
+
+  mobile?: boolean 
 }
 
-type ItemSelectorCompProps = Omit<_ItemSelectorCompProps, 'scrollList'>
+type ItemSelectorCompProps = Omit<_ItemSelectorCompProps, 'scrollable'>
 
 interface ItemSelectorProps extends 
   ItemSelector, _ItemSelectorCompProps {}
@@ -38,5 +52,6 @@ interface ItemSelectorProps extends
 export {
   type ItemSelector,
   type ItemSelectorCompProps,
+  type ItemSelectorOptions,
   type ItemSelectorProps
 }
