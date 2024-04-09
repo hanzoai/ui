@@ -147,7 +147,7 @@ export {
 
 export {
   type CarouselApi,
-  type CarouselOptionsType,
+  type CarouselOptions,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -174,6 +174,7 @@ export { default as Calendar } from './calendar'
 export { default as Checkbox } from './checkbox' 
 export { default as Image } from './image'
 export { default as Progress } from './progress' 
+export { default as MediaStack } from './media-stack' 
 export { default as Separator } from './separator' 
 export { default as Skeleton } from './skeleton' 
 export { default as InlineIcon } from './inline-icon' 

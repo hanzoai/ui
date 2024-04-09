@@ -13,7 +13,7 @@ import type BlockComponentProps from './block-component-props'
 const VideoBlockComponent: React.FC<BlockComponentProps & {
   usePoster?: boolean
   size?: TShirtSize
-  constrainTo?: {w: number, h: number}
+  constrainTo?: Dimensions
 }> = ({
   block,
   className='',
@@ -23,7 +23,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
   constrainTo
 }) => {
 
-  const [_dim, setDim] = useState<{w: number, h: number} | undefined>(undefined)
+  const [_dim, setDim] = useState<Dimensions | undefined>(undefined)
 
   const onResize = () => { 
     setDim({
@@ -120,7 +120,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
   }
   
   const videoDims = b.dim as TShirtDimensions
-  const dim = ((size && size in videoDims) ? videoDims[size] : videoDims.md) as {w: number, h: number}
+  const dim = ((size && size in videoDims) ? videoDims[size] : videoDims.md) as Dimensions
   const conDim = (constrainTo ? constrain(dim, constrainTo) : dim) 
   return usePoster ? (
     <Image src={b.poster!} alt='image' width={conDim.w} height={conDim.h} className={className}/>

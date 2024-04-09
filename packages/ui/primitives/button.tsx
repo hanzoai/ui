@@ -7,7 +7,7 @@ import { cn } from "../util"
 const variant = {
   primary: "bg-primary text-primary-fg hover:bg-primary-hover font-nav whitespace-nowrap not-typography",
   secondary: "bg-secondary text-secondary-fg hover:bg-secondary-hover font-nav whitespace-nowrap not-typography",
-  outline: "text-foreground bg-background border border-muted-4 hover:bg-level-1 hover:text-accent hover:border-accent font-nav whitespace-nowrap not-typography",
+  outline: "text-foreground bg-background border border-muted-1 hover:bg-level-1 hover:text-accent hover:border-accent font-nav whitespace-nowrap not-typography",
   destructive: "bg-destructive text-destructive-fg font-sans whitespace-nowrap hover:bg-destructive-hover",
   ghost: "text-foreground hover:bg-level-1 hover:text-accent whitespace-nowrap font-sans ",
   link: "text-foreground hover:text-muted-1 font-sans ",
@@ -19,7 +19,7 @@ const size = {
   xs: "h-8 px-2 text-xs",
   sm: "h-9 px-3 text-xs",
   square: 'h-10 py-2 px-2 text-sm aspect-square',
-  default: "h-10 py-2 px-4 text-sm lg:min-w-[220px]",
+  default: "h-10 py-2 px-4 text-sm min-w-0",
   lg: "h-10 px-8 text-sm md:text-base min-w-0 md:min-w-[260px] lg:min-w-[300px]",
   icon: "h-10 w-10",
 }
@@ -54,7 +54,7 @@ const buttonVariants = cva(
 
 type ButtonVariants = keyof typeof variant
 type ButtonSizes = keyof typeof size
-type ButtonRounded = keyof typeof rounded
+type ButtonRoundedValue = keyof typeof rounded
 
 interface ButtonProps extends
   React.ButtonHTMLAttributes<HTMLButtonElement>, 
@@ -83,6 +83,6 @@ export {
   type ButtonProps,
   type ButtonVariants,
   type ButtonSizes, 
-  type ButtonRounded,
+  type ButtonRoundedValue,
   buttonVariants,
 }

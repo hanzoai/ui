@@ -4,23 +4,22 @@ import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
+import { ApplyTypography, MediaStack } from '@hanzo/ui/primitives'
 
 import type { 
-  SelectedPaths, 
   ItemSelectorProps, 
   ItemSelectorCompProps,
   LineItem, 
-  Category, 
-  ProductTreeNode, 
+  Family, 
+  CategoryNode, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
+import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
-import LevelNodesWidget from '../level-nodes-widget'
+import LevelNodesWidget from '../select-family/level-nodes-widget'
 import AddToCartWidget from './add-to-cart-widget'
-import ItemMedia from '../item/item-media'
-import { ApplyTypography } from '@hanzo/ui/primitives'
 
 const BuyCard: React.FC<{
   skuPath: string
@@ -36,20 +35,20 @@ const BuyCard: React.FC<{
   scrollHeightClx?: string
 
   clx?: string
-  catWidgetClx?: string
+  famWidgetClx?: string
   addWidgetClx?: string
 
   selector: ComponentType<ItemSelectorProps>
   selectorProps?: ItemSelectorCompProps 
 
-    /** Show all items from all sibling categories
-     * If skuPath defines a Category, the first of it's items will 
+    /** Show all items from all sibling families
+     * If skuPath defines a Family, the first of it's items will 
      * be selected. The facet widget will just select a the first 
-     * item in the chosen Category without changings the overall set
+     * item in the chosen Family without changings the overall set
      * of choices. */
   allVariants?: boolean
 
-  categoryTabAs?: 'image' | 'label' | 'image-and-label'
+  familyTabAs?: 'image' | 'label' | 'image-and-label'
   showItemMedia?: boolean
 
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
@@ -59,7 +58,7 @@ const BuyCard: React.FC<{
   scrollAfter=5,
   scrollHeightClx='h-[80vh]',
   clx='',
-  catWidgetClx='',
+  famWidgetClx='',
   addWidgetClx='',
   selector: Selector,
   selectorProps={
@@ -68,7 +67,7 @@ const BuyCard: React.FC<{
     itemClx: '',
     ext: {}
   },
-  categoryTabAs='image-and-label', 
+  familyTabAs='image-and-label', 
   showItemMedia=true,
   allVariants=false,
   mobile=false,
@@ -78,35 +77,32 @@ const BuyCard: React.FC<{
   const cmmc = useCommerce()
   const inst = useRef<{
     level: number,
-    requestedCat : Category | undefined
-    requestedNode: ProductTreeNode | undefined
-    currentCat: ObsStringMutator
+    requestedFamily : Family | undefined
+    requestedNode: CategoryNode | undefined
+    currentFamTokenMutator: ObsStringMutator
     disposers: IReactionDisposer[]
   } | undefined>(undefined)
 
 
   useEffect(() => {
 
-    let requestedCat = cmmc.getCategory(skuPath) 
-    let requestedNode = requestedCat ? undefined : cmmc.getNodeAtPath(skuPath)
-    let initialCat = undefined
-    const toks = skuPath.split('-')
-    const level = toks.length - 1
+    let requestedFamily = cmmc.getFamily(skuPath) 
+    let requestedNode = requestedFamily ? undefined : cmmc.getNodeAtPath(skuPath)
+    let initialFamily = undefined
+
+    const { paths, level } = pathUtils.getSelectedPaths(skuPath)
+
     if (level === 0) {
       throw new Error('BuyCard.useEffect(): must specify at least at least one Level in skuPath!') 
     }
-    const paths: SelectedPaths = {}
-    for (let l = 1; l <= level; l++ ) {
-      paths[l] = [toks[l]]   
-    } 
-    if (requestedCat) { 
+    if (requestedFamily) { 
       if (allVariants && level >= 2) {
-          // select all siblings of requestedCat.
+          // select all siblings of requestedFamily.
           // ie, go one level back
         delete paths[level]
-        initialCat = requestedCat
-        requestedCat = undefined
-        requestedNode = cmmc.getNodeAtPath(toks.slice(0, -1).join('-'))
+        initialFamily = requestedFamily
+        requestedFamily = undefined
+        requestedNode = cmmc.getNodeAtPath(pathUtils.getParentPath(skuPath))
       }
     }
     else {
@@ -114,35 +110,37 @@ const BuyCard: React.FC<{
       if (allVariants) {
         paths[level + 1] = [...requestedNode!.subNodes!.map((node) => (node.skuToken))]
       }
-        // Actually select the the first cat at the cat level, 
+        // Actually select the the first fam at the fam level, 
       else {
         paths[level + 1] = [requestedNode!.subNodes![0].skuToken]
       }
     }
 
-    const selectedCats = cmmc.selectPaths(paths)
-    initialCat = initialCat ? initialCat : (requestedCat ? requestedCat : selectedCats[0])
-    cmmc.setCurrentItem(initialCat.products[0].sku)
-    const currentCat = new ObsStringMutator(initialCat!.id.split('-').pop()!)
+    const selectedFams = cmmc.selectPaths(paths)
+    initialFamily = initialFamily ? initialFamily : (requestedFamily ? requestedFamily : selectedFams[0])
+    cmmc.setCurrentItem(initialFamily.products[0].sku)
+    const currentFamTokenMutator = new ObsStringMutator(pathUtils.lastToken(initialFamily!.id))
 
     inst.current = {
       level,
-      requestedCat,
+      requestedFamily,
       requestedNode,
-      currentCat,
+      currentFamTokenMutator,
       disposers: []
     }
 
     if (!allVariants) {
       inst.current?.disposers.push(reaction(
         () => {
-          const cats = cmmc.selectedCategories
-          return (cats.length > 0) ? cats[0].id : undefined
+          const fams = cmmc.selectedFamilies
+          return (fams.length > 0) ? fams[0].id : undefined
         },
-        (catId) => {
-          if (catId && catId !== cmmc.currentItem?.categoryId) {
-            const cat = cmmc.getCategory(catId)
-            cmmc.setCurrentItem(cat?.products[0].sku)
+        (famId) => {
+          if (famId && famId !== cmmc.currentItem?.familyId) {
+            const fam = cmmc.getFamily(famId)
+            if (fam) { 
+              cmmc.setCurrentItem(fam.products[0].sku) 
+            }
           }
         }
       ))
@@ -154,11 +152,11 @@ const BuyCard: React.FC<{
 
   }, [])
 
-  const setCatPath = (pathValue: string | null) => {
-    if (inst.current?.currentCat.get() !== pathValue) {
-      inst.current?.currentCat.set(pathValue) 
+  const setFamilyPath = (pathValue: string | null) => {
+    if (inst.current?.currentFamTokenMutator.get() !== pathValue) {
+      inst.current?.currentFamTokenMutator.set(pathValue) 
     }
-    const found = cmmc.selectedItems.find((item) => (item.categoryId.endsWith(pathValue!)))
+    const found = cmmc.selectedItems.find((item) => (item.familyId.endsWith(pathValue!)))
     if (found) { 
       cmmc.setCurrentItem(found.sku) 
     }
@@ -166,16 +164,16 @@ const BuyCard: React.FC<{
 
   const selectSku = (sku: string) => {
     cmmc.setCurrentItem(sku)
-    const pathValue = cmmc.currentItem?.categoryId.split('-').pop()!
-    if (pathValue !== inst.current?.currentCat.get()) {
-      inst.current?.currentCat.set(pathValue) 
+    const pathValue = pathUtils.lastToken(cmmc.currentItem!.familyId)
+    if (pathValue !== inst.current?.currentFamTokenMutator.get()) {
+      inst.current?.currentFamTokenMutator.set(pathValue) 
     }
   }
 
-  const catTitle = inst.current?.requestedCat ? inst.current.requestedCat.title : cmmc.selectedCategories?.[0]?.title
+  const famTitle = inst.current?.requestedFamily ? inst.current.requestedFamily.title : cmmc.selectedFamilies?.[0]?.title
 
   const itemsToShow = (!cmmc.hasSelection) ? undefined : 
-    allVariants ? cmmc.selectedItems : cmmc.selectedCategories[0].products as LineItem[]
+    allVariants ? cmmc.selectedItems : cmmc.selectedFamilies[0].products as LineItem[]
 
 
   const TitleArea: React.FC<{
@@ -212,13 +210,13 @@ const BuyCard: React.FC<{
           'grid gap-0 align-stretch justify-normal ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px] h-10', // height is needed for iPhone bug
           (scroll ? 'shrink-0' : ''),
-          catWidgetClx  
+          famWidgetClx  
         )} 
         mobile={mobile}
         mutator={allVariants ? 
           {
-            get: () => (inst.current!.currentCat.s),
-            set: setCatPath
+            get: () => (inst.current!.currentFamTokenMutator.s),
+            set: setFamilyPath
           }
           : 
           getFacetValuesMutator(inst.current.level + 1, cmmc)
@@ -229,14 +227,14 @@ const BuyCard: React.FC<{
           '!border-level-3'
         }
         levelNodes={inst.current.requestedNode.subNodes!}
-        show={categoryTabAs}
+        show={familyTabAs}
       />
     </>)} 
-    {!inst.current?.requestedNode && catTitle && (
-      <TitleArea title={catTitle} clx=''/>
+    {!inst.current?.requestedNode && famTitle && (
+      <TitleArea title={famTitle} clx=''/>
     )}
     {(cmmc.currentItem && showItemMedia) && (
-      <ItemMedia item={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>
+      <MediaStack media={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>
     )} 
     {itemsToShow && (
       <Selector 
@@ -244,12 +242,7 @@ const BuyCard: React.FC<{
         selectedItemRef={cmmc}
         selectSku={selectSku}
         {...selectorProps}
-        scrollList={scroll}
-        showCategory={selectorProps.showCategory ? 
-          selectorProps.showCategory
-          :
-          (allVariants && !inst.current?.requestedCat)
-        }
+        scrollable={scroll}
       />  
     )}
     {(cmmc.currentItem) && (
