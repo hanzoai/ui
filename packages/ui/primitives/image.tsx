@@ -62,10 +62,10 @@ const Image: React.FC<{
 
   return (fullWidth) ? (
     <div className='relative flex flex-col items-center w-full'>
-      <NextImage src={src} alt={alt} {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>
+      <NextImage src={src} alt={alt} data-vaul-no-drag {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>
     </div>
   ) : (
-    <NextImage src={src} alt={alt} {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>   
+    <NextImage src={src} alt={alt} data-vaul-no-drag {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>   
   )
 }
 

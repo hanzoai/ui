@@ -12,7 +12,7 @@ const VideoPlayer = React.forwardRef<HTMLVideoElement, VideoProps>(
 }, ref) => {
   
   return (
-    <video ref={ref} {...rest}>
+    <video ref={ref} {...rest}  data-vaul-no-drag >
     {sources.map((source, index) => (  
       <source key={index} src={source} />
     ))} 

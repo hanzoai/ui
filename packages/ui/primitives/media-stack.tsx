@@ -27,6 +27,7 @@ const MediaStack: React.FC<{
       <Spline
         scene={animation}
         className={cn(clx, 'pointer-events-none')} 
+        data-vaul-no-drag 
         style={{
             // // !aspect-[12/10] 
           width: (6/5 * (typeof cnst.h === 'number' ? cnst.h as number : parseInt(cnst.h as string)) ),

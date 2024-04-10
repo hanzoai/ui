@@ -56,9 +56,9 @@ const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
   */
 
   return (
-    <div className={cn('flex flex-col items-center gap-4', clx)}>
+    <div className={cn('flex flex-col items-center gap-4', clx)}  data-vaul-no-drag >
       {title && (
-        <ApplyTypography className='flex flex-col items-center !gap-1 [&>*]:!m-0'>
+        <ApplyTypography className='flex flex-col items-center !gap-1 [&>*]:!m-0' data-vaul-no-drag >
           <h6 className='font-bold text-lg'>{title}</h6>
           {byline && (<p className={''}>{byline}</p>)}
         </ApplyTypography>

@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "e-commerce framework.",
   "type": "module",  
   "publishConfig": {
