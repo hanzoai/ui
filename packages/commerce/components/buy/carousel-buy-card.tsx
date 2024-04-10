@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useEffect, type ComponentType } from 'react'
+import React, { useRef, useEffect, type ComponentType, useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
@@ -16,8 +16,7 @@ import type {
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
-import * as pathUtils from '../../service/path-utils'
-import { ObsStringMutator, getSelectionUISpecifier } from '../../util'
+import { getSelectionUISpecifier } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
 import FamilyCarousel from '../select-family/family-carousel'
@@ -63,6 +62,8 @@ const CarouselBuyCard: React.FC<{
     } 
   } | undefined>(undefined)
 
+  const [changeMeToRerender, setChangeMeToRerender] = useState<boolean>(false)
+
   useEffect(() => {
 
     const peek = cmmc.peek(skuPath)
@@ -83,18 +84,17 @@ const CarouselBuyCard: React.FC<{
 
     if (peek.role === 'single-family') {
 
-      const singleSpec = uiSpec.singleFamily 
-      const Selector: ComponentType<ItemSelectorProps> = 
-        (singleSpec?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
-      const selOptions = singleSpec?.options
       const items = peek.family!.products as LineItem[]
+      const Selector: ComponentType<ItemSelectorProps> = 
+        (uiSpec.singleFamily?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
+      const selOptions = uiSpec.singleFamily?.options
 
       r.current.single = {
         items,
         Selector,
         selOptions,
         scrollable: !!(items.length > SCROLL.scrollAfter),
-        showItemMedia: singleSpec?.type !== 'carousel'
+        showItemMedia: uiSpec.singleFamily?.type !== 'carousel'
       }
 
       const currItem = peek.item ?? peek.family!.products[0]
@@ -106,7 +106,11 @@ const CarouselBuyCard: React.FC<{
       cmmc.setCurrentItem(currItem.sku)
     }
 
-  }, [])
+      // Must do this since Dialog code takes this comp out of the React shadow DOM
+      // (only in prod apparently.)
+    setChangeMeToRerender(!changeMeToRerender)
+
+  }, [skuPath])
 
   const TitleArea: React.FC<{
     title: string
@@ -199,14 +203,5 @@ const CarouselBuyCard: React.FC<{
     </div >
   )
 })
-
-/* Above family carousel
-      <TitleArea 
-        title={r.current?.node.label ?? ''} 
-        byline={r.current?.node.subNodesLabel} 
-        clx={'mb-2 '}
-        bylineClx='!text-center font-bold text-muted mt-3'
-      />
-*/
 
 export default CarouselBuyCard
