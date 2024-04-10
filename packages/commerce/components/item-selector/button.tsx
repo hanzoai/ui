@@ -38,6 +38,7 @@ const ImageRadioGroupItem = React.forwardRef<
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
+      data-vaul-no-drag 
       className={cn(
         'ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         'focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
@@ -108,7 +109,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     const outerClx = ['h-10 py-2 flex items-center', justifyClx, paddingClx, bgClx, borderClx]
 
     return (
-      <div className={cn(...outerClx, itemClx )}>
+      <div className={cn(...outerClx, itemClx )}  data-vaul-no-drag >
         <ImageRadioGroupItem 
           item={item} 
           constrainTo={DEFAULT_CONSTRAINT} 
@@ -147,6 +148,7 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
       )}
       onValueChange={selectSku}
       value={itemRef.item ? itemRef.item.sku : ''}
+      data-vaul-no-drag 
     >
     {scrollable ? (
       <ScrollArea className='mt-2 w-full h-full py-0 border border-muted-2' data-vaul-no-drag>
