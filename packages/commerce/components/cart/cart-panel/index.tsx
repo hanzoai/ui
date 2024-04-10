@@ -83,7 +83,7 @@ const CartPanel: React.FC<PropsWithChildren & {
 
   const Main: React.FC = observer(() => (<>
     {cmmc.cartEmpty ? (
-      <p className={cn('text-center mt-4', noItemsClx)}>No items in cart</p>
+      <p className={cn('text-center my-3', noItemsClx)}>No items</p>
     ) : (<>
     {cmmc.cartItems.map((item) => (
       <CartLineItem
