@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 
 import type { Block, ScreenfulBlock, VideoBlock } from '../../def'
 import { containsToken, cn } from '../../../util'
-import { ApplyTypography } from '../../../primitives'
+import { ApplyTypography, Main } from '../../../primitives'
 
 import Poster from './poster-background'
 import Content from './content'
@@ -38,6 +38,7 @@ const ScreenfulComponent: React.FC<{
   const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
   const noGutters = specified('no-gutters')
   const fullScreenWidth = specified('full-screen-width')
+  const fullScreenHeight = specified('full-screen-height')
   const vertCenter = specified('vert-center')
 
     // content wrapper clx:
@@ -49,6 +50,7 @@ const ScreenfulComponent: React.FC<{
   const cwclx = [
     'xl:mx-auto overflow-y-hidden ',
     fullScreenWidth ? '' : 'max-w-screen-xl',
+    fullScreenHeight ? 'h-full' : '',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
@@ -74,7 +76,7 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <div className={cn(
+        <Main className={cn(
             ...cwclx,
             snapTile ? 'absolute left-0 right-0 top-0 bottom-0 ' : 'flex min-h-screen w-full',
             contentClx,
@@ -83,7 +85,7 @@ const ScreenfulComponent: React.FC<{
         >
           <Content block={b} agent={agent}  className='w-full'/>
           {b.footer}
-        </div>
+        </Main>
       </Poster>
       </ApplyTypography>
     </section>
