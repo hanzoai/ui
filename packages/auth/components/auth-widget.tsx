@@ -54,7 +54,7 @@ const AuthWidget: React.FC<{
       (handleLogin) ? (
         <Button 
           variant='primary' 
-          className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
+          className='h-8 w-fit !min-w-0'
           onClick={handleLogin} 
         >
           Login
@@ -62,7 +62,7 @@ const AuthWidget: React.FC<{
       ) : (
         <LinkElement
           def={{href: '/login', title: 'Login', variant: 'primary'} satisfies LinkDef}
-          className='h-8 !text-[13px]/[13px] w-fit !min-w-0'
+          className='h-8 w-fit !min-w-0'
         />
       )
     ))

@@ -33,10 +33,7 @@ const NavItems: React.FC<{
       }
     } 
     else {
-      internalClx+= 'min-w-0 lg:min-w-0 '   
-    }
-    if (currentAs && currentAs === item.href) {
-      internalClx += 'pointer-events-none '
+      internalClx += 'min-w-0 lg:min-w-0 '   
     }
 
     const _itemClx = (itemClx) ? (typeof itemClx === 'string' ? itemClx : itemClx(item)) : '' 
