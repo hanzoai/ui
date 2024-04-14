@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
@@ -14,7 +14,7 @@ import { cn } from '@hanzo/ui/util'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorProps, LineItem } from '../../types'
-import { formatCurrencyValue } from '../../util'
+import { accessItemOptions, formatCurrencyValue } from '../../util'
 
 import QuantityIndicator from '../quantity-indicator'
 
@@ -72,15 +72,21 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
   options={}
 }) => {
 
-  const imageButtons = 'imageButtons' in options ? options.imageButtons : false
-  const showFamily = 'showFamily' in options ? options.showFamily : false
-  const showPrice = 'showPrice' in options ? options.showPrice : true
-  const showQuantity = 'showQuantity' in options ? options.showQuantity : false
-  const horizButtons = 'horizButtons' in options ? options.horizButtons : false
+  const {
+    showPrice, 
+    showQuantity,
+    showFamilyInOption,
+    buttonType,
+    horizButtons,
+  } = accessItemOptions(options)
+
+  const showImage = buttonType !== 'text'
+  const showText = buttonType !== 'image' 
+  const showBoth = buttonType === 'image-and-text' 
 
   const labelAndPrice = (item : LineItem) => (
-    (showFamily ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
-    (showPrice ? ((showFamily ? ': ' : ', ') + formatCurrencyValue(item.price)) : '')
+    (showFamilyInOption ? (item.familyTitle + ', ' + item.optionLabel) : item.optionLabel) + 
+    (showPrice ? ((showFamilyInOption ? ': ' : ', ') + formatCurrencyValue(item.price)) : '')
   )
 
   const Item: React.FC<{ 
@@ -91,22 +97,24 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
     selected
   }) => {
     
-    const textClx = (selected) ? 'text-accent ' : 'text-muted'
+    const textClx = (selected) ? 'text-accent' : 'text-muted'
     const cursorClx = (selected) ? 'hover:cursor-default' : 'hover:cursor-pointer' 
-    const justifyClx = (!imageButtons) ? 'justify-center ' : ''
-    const paddingClx = (imageButtons) ? (scrollable ? 'px-4' : 'px-2' ) : ''
+    const justifyClx = (showBoth) ?  '' : 'justify-center'
+      // If no image, the Label must fill the entire button since it has to be
+      // clickable all the way to the border
+    const paddingClx = (showImage) ? (scrollable ? 'px-4 py-2' : 'px-2 py-2' ) : '' 
     let bgClx = '' 
     let borderClx = ''
     if (scrollable) {
       borderClx += (selected) ? 'border-foreground border ' : 'border-b border-muted-2 '
     }
-    else if (!imageButtons) {
+    else if (!showImage) {
       borderClx += 'border rounded-lg ' 
       borderClx += (selected) ? 'border-foreground ' : 'border-muted-2 ' 
       bgClx += 'hover:bg-level-2' 
     }
 
-    const outerClx = ['h-10 py-2 flex items-center', justifyClx, paddingClx, bgClx, borderClx]
+    const outerClx = ['h-10 flex items-center', justifyClx, paddingClx, bgClx, borderClx]
 
     return (
       <div className={cn(...outerClx, itemClx )}  data-vaul-no-drag >
@@ -116,13 +124,15 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
           className={cn(
             cursorClx,
             (scrollable ?  '' : 'border-transparent border-2 data-[state=checked]:border-foreground'),
-            imageButtons ? 'mr-2' : 'hidden'
+            showBoth ? 'mr-2' : (showImage ? '' : 'hidden') 
           )}
         />
         <Label htmlFor={item.sku} className={cn(
           showQuantity ? 'flex items-center' : 'block',
           textClx, 
           cursorClx,
+          (showImage ? '' : 'self-stretch w-full flex items-center justify-center px-3 py-2'),
+          (showText ? '' : 'hidden') 
         )}>
           <div className={showQuantity ? 'grow' : ''}>{labelAndPrice(item)}</div>
           {showQuantity && (
@@ -140,10 +150,10 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
  
   return items.length > 1 ? (
     <RadioGroup
-      className={cn('flex', 
+      className={cn( 
         (scrollable ? 'shrink min-h-0 gap-0' : (mobile ? 'gap-3' : 'gap-1')), 
-        (horizButtons ? 'flex-row gap-0' : 'flex-col'),
-        (mobile && !imageButtons) ? 'min-w-pr-50' : '',
+        (horizButtons ? `grid grid-cols-${items.length} gap-1` : 'flex flex-col'),
+        (mobile && showText) ? 'min-w-pr-50' : '',
         clx,
       )}
       onValueChange={selectSku}

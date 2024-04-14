@@ -1,10 +1,10 @@
 import type { LineItem, ObsLineItemRef } from './line-item'
 import type { CategoryNode, SelectedPaths, CategoryNodeRole } from './category-node'
-import type Family from './family'
+import type { Family, ObsFamilyRef} from './family'
 import type Promo from './promo'
 
 
-interface CommerceService extends ObsLineItemRef {
+interface CommerceService extends ObsLineItemRef, ObsFamilyRef {
 
     /** Items in cart */
   get cartItems(): LineItem[]
@@ -97,23 +97,22 @@ interface CommerceService extends ObsLineItemRef {
 
       /**
      * For convenience, so widgets can share state.
-     * "current" is unrelated to what is "selected",
-     * ie, facets' values 
+     * "current" is unrelated to what branches and items are 
+     * "selected" (with CategoryNode's and paths)
+     * 
+     *  SEE ALSO: from ObsLineItemRef and ObsFamilyRef, there are also
+     *  get item(): LineItem | undefined
+     *  get family(): Family | undefined
+     * 
+     *  These simply delegate to these functions
      *  */ 
   setCurrentItem(sku: string | undefined): boolean // valid sku and was set.
-    /**
-     * For convenience, so widgets can share state.
-     * "current" is unrelated to what is "selected",
-     * ie, facets' values 
-     * 
-     * note: for ObsLineItemRef, there is also
-     *  get item(): LineItem | undefined
-     * which simply delegates to this function
-     *  */ 
   get currentItem(): LineItem | undefined
+  setCurrentFamily(id: string | undefined): boolean // valid id and was set.
+  get currentFamily(): Family | undefined
 
+    // utility
   getFamily(id: string): Family | undefined
-
 }
 
 

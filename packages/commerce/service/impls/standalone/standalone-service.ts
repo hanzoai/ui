@@ -49,6 +49,7 @@ class StandaloneService
   private _promo: Promo | null = null
 
   private _options : StandaloneServiceOptions
+  private _currentFamily: Family | undefined = undefined
   private _currentItem: ActualLineItem | undefined = undefined
 
   constructor(
@@ -78,10 +79,12 @@ class StandaloneService
       StandaloneService, 
         '_selectedPaths' | 
         '_currentItem' |
+        '_currentFamily' |
         '_promo'
     >(this, {
       _selectedPaths : observable.deep,
       _currentItem: observable.shallow,
+      _currentFamily: observable.shallow,
       _promo: observable,
     })
 
@@ -95,8 +98,11 @@ class StandaloneService
       selectedFamilies: computed, 
       hasSelection: computed, 
       setCurrentItem: action,
+      setCurrentFamily: action,
       currentItem: computed,
+      currentFamily: computed,
       item: computed,
+      family: computed,
       selectedPaths: computed,
       appliedPromo: computed,
       setAppliedPromo: action,
@@ -154,7 +160,7 @@ class StandaloneService
     let error: string | undefined = undefined
 
     try {
-      if (node.subNodes && atEnd && node.terminal) {
+      if (node.subNodes && atEnd && node.outermost) {
         role = 'multi-family'
         families = node.subNodes.map((sub) => {
           const familyId = skuPath + sep.tok + sub.skuToken
@@ -167,7 +173,7 @@ class StandaloneService
       }
       else if (!node.subNodes && (atEnd || possibleSKU)) {
         const _skuPath = (possibleSKU) ? getParentPath(skuPath) : skuPath
-        if (parent?.terminal) {
+        if (parent?.outermost) {
           role = 'family-in-multi-family'  
           const fam = this._familyMap.get(_skuPath)
           if (!fam) {
@@ -364,18 +370,49 @@ class StandaloneService
         }
       }
       return undefined
-    })();
+    })(); // necessary semi
 
+    this.setCurrentFamily(this._currentItem ? this._currentItem.familyId : undefined)
     return !!this._currentItem
   }
 
-  /* ObsLineItemRef */
+  /* for ObsLineItemRef */
   get item(): LineItem | undefined {
     return this._currentItem
   }
 
   get currentItem(): LineItem | undefined {
     return this._currentItem
+  }
+
+  setCurrentFamily(id: string | undefined): boolean {
+
+    if (id === undefined || id.length === 0) {
+      this._currentFamily = undefined
+      return true
+    }
+
+    const fam = this._familyMap.get(id)
+    this._currentFamily = fam // undef ok
+
+    if (
+      this._currentFamily && 
+      this._currentItem && 
+      this._currentItem.familyId !== this._currentFamily.id
+    ) {
+      this._currentItem = undefined
+    }
+
+    return !!this._currentFamily
+  }
+
+  get currentFamily(): Family | undefined {
+    return this._currentFamily
+  }
+
+    /* for ObsFamilyRef */
+  get family(): Family | undefined {
+    return this._currentFamily
   }
 
   selectPaths(sel: SelectedPaths): Family[] {

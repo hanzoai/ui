@@ -70,3 +70,5 @@ export const ldMerge = (
 export const capitalize = (str: string): string => (
   str.charAt(0).toUpperCase() + str.slice(1)
 )
+
+export { default as spreadToTransform } from './spread-to-transform'

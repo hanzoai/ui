@@ -14,7 +14,6 @@ const AddToCartWidget: React.FC<{
   disabled?: boolean
   className?: string
   buttonClx?: string
-  size?: ButtonSizes
   variant?: 'minimal' | 'primary' | 'outline'
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
@@ -23,7 +22,6 @@ const AddToCartWidget: React.FC<{
   disabled=false,
   className='',
   buttonClx='',
-  size='xs',
   onQuantityChanged
 }) => {
 
@@ -100,6 +98,8 @@ const AddToCartWidget: React.FC<{
   return ( item.isInCart ? (
     <div className={cn(
       'flex flex-row items-stretch justify-between ',
+        // should match 'xs' and 'default' button heights
+      (ghost ? 'h-8' : 'h-10'),
       ROUNDED_CLX,
       (primary ? 'bg-primary' : 'bg-transparent'), 
       (outline ? 'border border-muted' : ''),
@@ -107,14 +107,15 @@ const AddToCartWidget: React.FC<{
     )}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
-        size={size}
+        size={ghost ? 'xs' : 'default'}
         variant={primary ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-start group', 
           (ghost ? 'px-1' : 'px-2'), 
           (outline ? 'hover:bg-transparent' : ''),
-          buttonClx
+          buttonClx,
+          'h-auto self-stretch' // must be smaller than normal
         )}
         key='left'
         onClick={dec}
@@ -128,14 +129,15 @@ const AddToCartWidget: React.FC<{
         <div className={'text-sm grow-0 shrink-0 flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}{ghost ? '' : ' in Bag'}</div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
-        size={size}
+        size={ghost ? 'xs' : 'default'}
         variant={primary ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-end group', 
           (ghost ? 'px-1' : 'px-2'), 
           (outline ? 'hover:bg-transparent' : ''),
-          buttonClx
+          buttonClx,
+          'h-auto self-stretch' // must be smaller than normal
         )}
         onClick={inc}
         key='right'
@@ -146,7 +148,7 @@ const AddToCartWidget: React.FC<{
   ) : (
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
-      size={size}
+      size={ghost ? 'xs' : 'default'}
       variant={variant as ButtonVariants}
       rounded={ROUNDED_VAL}
       className={cn(buttonClx, className)}

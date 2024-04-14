@@ -7,8 +7,8 @@ import {
 } from '@hanzo/ui/primitives'
 import type { Dimensions } from '@hanzo/ui/types'
 
-import type { FamilyCarouselSlideOptions, Family, LineItem, ItemSelector } from '../../../types'
-import { ButtonItemSelector } from '../..'
+import type { ItemSelectorOptions, Family, LineItem, ItemSelector } from '../../../../types'
+import { ButtonItemSelector } from '../../..'
 import { cn } from '@hanzo/ui/util'
 
 const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
@@ -16,7 +16,7 @@ const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
   mediaConstraint: Dimensions
   clx?: string
   mobile?: boolean,
-  options?: FamilyCarouselSlideOptions
+  options?: ItemSelectorOptions
 }> = ({
   family,
   selectedItemRef,

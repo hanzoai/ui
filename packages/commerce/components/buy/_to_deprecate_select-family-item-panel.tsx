@@ -106,7 +106,7 @@ const SelectFamilyItemPanel: React.FC<
 
   const AddToCartArea: React.FC<{ className?: string }> = observer(({ className = '' }) => (
     (selectedItemRef.item && !isLoading) ? (
-      <AddToCartWidget size='default' item={selectedItemRef.item} className={className}/>
+      <AddToCartWidget item={selectedItemRef.item} className={className}/>
     ) : (
       <div className={cn('h-6 w-12 invisible', className)} />
     )

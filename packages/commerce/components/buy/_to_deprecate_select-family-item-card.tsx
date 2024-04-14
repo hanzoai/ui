@@ -66,7 +66,6 @@ const SelectFamilyItemCard: React.FC<React.HTMLAttributes<HTMLDivElement> & Item
       // TODO disable if nothing selected
     (selItemRef.item && !isLoading) && (
       <AddToCartWidget 
-        size='default' 
         item={selItemRef.item}
         onQuantityChanged={onQuantityChanged} 
         className={cn('lg:min-w-[160px] lg:mx-auto', className)}
