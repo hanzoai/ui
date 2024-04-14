@@ -1,36 +1,52 @@
 import type { ItemSelectorOptions } from './item-selector'
-type SelectorType = 'buttons' | 'carousel' 
 
-interface FamilyCarouselSlideOptions extends ItemSelectorOptions {
-    /** 
-     * default: short
-     * 'short': product.shortTitle if defined
-     * 'long': always us product.title, even if .shortTitle is defined
-     * 'none': do not show title AND BYLINE
-     */
-  title?: 'none' | 'long' | 'short'
-    /** default: true */ 
-  showByline?: boolean
+type SingleFamilySelector = 'buttons' | 'carousel' 
+type MultiFamilySelector = 'family-carousel' | 'all-variants-carousel'
+
+type MultiFamilySelectorOptions = {
+      /** 
+       * Show title of parent node of families.
+       * eg,
+       *   Lux Credit
+       *   Black Card
+       * 
+       * vs just Black Card
+       * 
+       * ( parent CategoryNode.label)
+       * 
+       * (goes to one line if only one family)
+       * default: true 
+       * */ 
+    showParentTitle?: boolean   
+
+      /** parent CategoryNode.subNodesLabel 
+       * 
+       * default: 'none'
+      */
+    parentByline?: 'none' | 'own-line' | 'comma-sep' | 'colon-sep'  
+
+      /** show horiz image buttons of
+       * all sibling items below item info
+       * default: true*/
+    showItemSwatches?: boolean
 }
 
 interface SelectionUISpecifier {
   multiFamily?: {
-    familySelector: 'carousel'
-      /** default: true */ 
-    showParentTitle: boolean 
-    slide: {
-      type: 'buttons'
-      options?: FamilyCarouselSlideOptions
-    }
+    type: MultiFamilySelector
+    selectorOptions?: MultiFamilySelectorOptions
+    itemOptions?: ItemSelectorOptions
   }
   singleFamily?: {
-    type: SelectorType
+    type: SingleFamilySelector
     options?: ItemSelectorOptions
   } 
 }
 
 export {
   type SelectionUISpecifier,
-  type FamilyCarouselSlideOptions,
-  type SelectorType
+  type ItemSelectorOptions,
+  type SingleFamilySelector,
+  type MultiFamilySelector,
+  type MultiFamilySelectorOptions
 }

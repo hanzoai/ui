@@ -1,4 +1,4 @@
-import type { Family, LineItem, ObsLineItemRef, Product } from '../../../types'
+import type { Family, LineItem, ObsLineItemRef, Product } from '../../../../types'
 import { observable, action, computed, makeObservable } from 'mobx'
 
 class SlideState implements ObsLineItemRef {
@@ -49,7 +49,11 @@ class FamilyCarouselState {
   _map = new Map<string, SlideState>()
   _syncSku: (sku: string) => void
 
-  constructor(fams: Family[], syncSkuToCurrentSlide: (sku: string) => void) {
+  constructor(
+    fams: Family[], 
+//    initialFamilyId: string,
+    syncSkuToCurrentSlide: (sku: string) => void
+  ) {
 
     fams.forEach((f, index) => {this._map.set(f.id, new SlideState(
       f,

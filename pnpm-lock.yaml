@@ -317,10 +317,10 @@ importers:
   packages/commerce:
     dependencies:
       '@hanzo/auth':
-        specifier: ^2.3.4
+        specifier: ^2.3.5
         version: link:../auth
       '@hanzo/ui':
-        specifier: ^3.5.0
+        specifier: ^3.6.0
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.3.4
@@ -431,6 +431,9 @@ importers:
       '@radix-ui/react-separator':
         specifier: ^1.0.3
         version: 1.0.3(@types/react-dom@18.2.19)(@types/react@18.2.65)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-slider':
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@18.2.19)(@types/react@18.2.65)(react-dom@18.2.0)(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.65)(react@18.2.0)

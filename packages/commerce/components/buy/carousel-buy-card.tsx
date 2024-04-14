@@ -1,9 +1,14 @@
 'use client'
-import React, { useRef, useEffect, type ComponentType, useState } from 'react'
+import React, { 
+  useRef, 
+  useEffect, 
+  type ComponentType, 
+  useState 
+} from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { ApplyTypography, Button, MediaStack, Skeleton } from '@hanzo/ui/primitives'
+import { Button } from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -12,14 +17,17 @@ import type {
   CategoryNode,
   CategoryNodeRole,
   SelectionUISpecifier,
-  ItemSelectorOptions, 
+  ItemSelectorOptions,
+  MultiFamilySelectorProps,
+  MultiFamilySelectorOptions, 
 } from '../../types'
 
 import { useCommerce } from '../../service/context'
 import { getSelectionUISpecifier } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
-import FamilyCarousel from '../select-family/family-carousel'
+import SingleFamilySelector from './single-family-selector'
+import { FamilyCarousel, AllVariantsCarousel } from './multi-family'
 
 import AddToCartWidget from './add-to-cart-widget'
 
@@ -30,13 +38,25 @@ const SCROLL = {
 
 const MEDIA_CONSTRAINT = {w: 200, h: 200}
 
+const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[] => (
+  ((sort === 'asc') ? 
+    items.sort((a: LineItem, b: LineItem): number => (a.price - b.price))
+    :
+    ((sort === 'desc') ?   
+      items.sort((a: LineItem, b: LineItem): number => (b.price - a.price ))
+      :
+      items
+    )
+  )
+)
+
 const CarouselBuyCard: React.FC<{
   skuPath: string
   clx?: string
   mobile?: boolean
   handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
-}> = observer(({
+}> = ({
   skuPath,
   clx='',
   mobile=false,
@@ -59,7 +79,13 @@ const CarouselBuyCard: React.FC<{
       selOptions: ItemSelectorOptions | undefined
       scrollable: boolean
       showItemMedia: boolean
-    } 
+    }
+    multi?: {
+      Selector: ComponentType<MultiFamilySelectorProps>
+      selectorOptions: MultiFamilySelectorOptions | undefined
+      itemOptions: ItemSelectorOptions | undefined
+      initialFamilyId: string
+    }  
   } | undefined>(undefined)
 
   const [changeMeToRerender, setChangeMeToRerender] = useState<boolean>(false)
@@ -84,124 +110,133 @@ const CarouselBuyCard: React.FC<{
 
     if (peek.role === 'single-family') {
 
+      const sort = (): 'none' | 'asc' | 'desc' => {
+        if (!uiSpec.singleFamily?.options) {
+          return 'none'
+        }
+        const options = uiSpec.singleFamily.options
+        const showSlider = 'showSlider' in options ? options.showSlider! : true
+        return ('sort' in options) ? 
+          options.sort!
+          :
+          (showSlider ? 'asc' : 'none')
+      }
+
       const items = peek.family!.products as LineItem[]
       const Selector: ComponentType<ItemSelectorProps> = 
         (uiSpec.singleFamily?.type === 'buttons') ? ButtonItemSelector : CarouselItemSelector
       const selOptions = uiSpec.singleFamily?.options
 
       r.current.single = {
-        items,
+        items: sortItems(items, sort()),
         Selector,
         selOptions,
         scrollable: !!(items.length > SCROLL.scrollAfter),
         showItemMedia: uiSpec.singleFamily?.type !== 'carousel'
       }
 
-      const currItem = peek.item ?? peek.family!.products[0]
+      const currItem = peek.item ?? r.current.single.items[0]
       cmmc.setCurrentItem(currItem.sku)
     }
     else {
       const initialFamily = peek.family ? peek.family : peek.families![0]
+        // TODO: Does this ever need to be sorted??
       const currItem = peek.item ?? initialFamily.products[0]
+
+          // sets currentFamily as well
       cmmc.setCurrentItem(currItem.sku)
+
+      r.current.multi = {
+        Selector:  (uiSpec.multiFamily?.type === 'family-carousel') ? 
+          FamilyCarousel 
+          : 
+          AllVariantsCarousel,
+        itemOptions: uiSpec.multiFamily?.itemOptions,
+        selectorOptions: uiSpec.multiFamily?.selectorOptions,
+        initialFamilyId: initialFamily.id
+      }
     }
 
       // Must do this since Dialog code takes this comp out of the React shadow DOM
       // (only in prod apparently.)
     setChangeMeToRerender(!changeMeToRerender)
-
   }, [skuPath])
 
-  const TitleArea: React.FC<{
-    title: string
-    byline?: string
+  const MultiFamilyUI: React.FC<{      
+    Selector: ComponentType<MultiFamilySelectorProps>
+    selectorOptions: MultiFamilySelectorOptions | undefined
+    itemOptions: ItemSelectorOptions | undefined
+    families: Family[]
+    parent: CategoryNode
     clx?: string
-    bylineClx?: string
   }> = ({
-    title,
-    byline,
-    clx='',
-    bylineClx='' 
+    Selector,
+    itemOptions,
+    selectorOptions,
+    families,
+    parent,
+    clx=''
   }) => (
-    <ApplyTypography className={clx}>
-      <h3>{title}</h3>
-      {byline && (<h6 className={bylineClx}>{byline}</h6>)}
-    </ApplyTypography>
+    <Selector 
+      families={families}
+      parent={parent}
+      clx={clx}
+      itemOptions={itemOptions}
+      selectorOptions={selectorOptions}
+      mediaConstraint={MEDIA_CONSTRAINT}
+      mobile={mobile}
+    />
   )
+
+  const Buttons: React.FC<{clx?: string}> = observer(({
+    clx=''
+  }) => (cmmc.currentItem ? (
+    <div className={clx}>
+      <AddToCartWidget 
+        item={cmmc.currentItem}
+        onQuantityChanged={onQuantityChanged} 
+        variant={cmmc.cartEmpty ? 'primary' : 'outline'}
+        className='min-w-[160px] w-full sm:max-w-[320px]' 
+      />
+      {!cmmc.cartEmpty && (
+        <Button 
+          onClick={handleCheckout} 
+          variant='primary' 
+          rounded='lg' 
+          className='min-w-[160px] w-full sm:max-w-[320px]'
+        >
+          Checkout
+        </Button>
+      )}
+    </div>
+  ) : null))
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-4 items-center min-h-[40vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center min-h-[40vh]', 
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
-    {r.current?.single ? (<>
-      <TitleArea title={r.current?.family?.title ?? ''} clx=''/>
-      {(r.current.single.showItemMedia && cmmc.currentItem ) && (
-        <MediaStack 
-          media={cmmc.currentItem} 
-          constrainTo={MEDIA_CONSTRAINT} 
-          clx={(r.current.single.scrollable ? 'shrink-0' : '')}
-        />
-      )}
-      {(r.current.single.showItemMedia && !cmmc.currentItem ) && (
-        <Skeleton className={'w-[200px] h-[200px] my-4 ' + (r.current.single.scrollable ? 'shrink-0' : '')}/>
-      )}
-      {r.current.single.items && (
-        <r.current.single.Selector 
-          items={r.current.single.items}
-          selectedItemRef={cmmc}
-          selectSku={cmmc.setCurrentItem.bind(cmmc)}
-          scrollable={r.current.single.scrollable}
-          mobile={mobile}
-          options={r.current.single.selOptions}
-        />  
-      )}
-    </>) : (<>
-      {r.current?.uiSpec.multiFamily?.showParentTitle && (
-        <TitleArea 
-          title={r.current?.node.label ?? ''} 
-          byline={r.current?.node.subNodesLabel} 
-          clx={'mb-2 '}
-          bylineClx='!text-center font-bold text-muted mt-3'
-        />
-      )}
-      {r.current?.families && ( // safegaurd for first render etc.
-        <FamilyCarousel 
-          families={r.current?.families}
-          clx='w-full'
-          slideOptions={r.current?.uiSpec.multiFamily?.slide.options}
+      {r.current?.single ? ( 
+        <SingleFamilySelector 
+          {...r.current.single} 
           mediaConstraint={MEDIA_CONSTRAINT}
-          mobile={mobile}
+          mobile={mobile} 
+        /> 
+      ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
+        <MultiFamilyUI 
+          {...r.current.multi} 
+          families={r.current.families} 
+          parent={r.current.node}
+          clx='max-w-[475px]'
         />
-      )}
-    </>)}
-    {(cmmc.currentItem) && (
-      <div className={cn(
-        'self-stretch mt-4 flex flex-col items-center gap-3',
+      ))}
+      <Buttons clx={cn(
+        'self-stretch mt-8 flex flex-col items-center gap-3',
         (r.current?.single?.scrollable ? 'shrink-0' : '')
-      )}>
-        <AddToCartWidget 
-          size='default' 
-          item={cmmc.currentItem}
-          onQuantityChanged={onQuantityChanged} 
-          variant={cmmc.cartEmpty ? 'primary' : 'outline'}
-          className='min-w-[160px] w-full sm:max-w-[320px]' 
-        />
-        {!cmmc.cartEmpty && (
-          <Button 
-            onClick={handleCheckout} 
-            variant='primary' 
-            rounded='lg' 
-            className='min-w-[160px] w-full sm:max-w-[320px]'
-          >
-            Checkout
-          </Button>
-        )}
-      </div>
-    )} 
+      )}/>
     </div >
   )
-})
+}
 
 export default CarouselBuyCard
