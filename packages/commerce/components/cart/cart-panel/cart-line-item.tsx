@@ -61,7 +61,7 @@ const CartLineItem: React.FC<{
       </div>
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='flex flex-row items-center'>
-          <AddToCartWidget className='' item={item} size='xs' buttonClx='h-8 md:h-6' variant='minimal'/>
+          <AddToCartWidget variant='minimal' item={item} buttonClx='!h-8 md:!h-6' />
           {item.quantity > 1 && (<span className='pl-2.5'>{'@' + formatCurrencyValue(item.price)}</span>)}
         </div>
         <div className='flex flex-row gap-1 items-center justify-end'>

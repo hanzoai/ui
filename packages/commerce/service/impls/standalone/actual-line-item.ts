@@ -5,7 +5,7 @@ import {
   observable, 
 } from 'mobx'
 
-import type { ImageDef, VideoDef } from '@hanzo/ui/types'
+import type { ImageDef, MediaTransform, VideoDef } from '@hanzo/ui/types'
 
 import type { Product, LineItem, CommerceService } from '../../../types'
 
@@ -36,6 +36,7 @@ class ActualLineItem
   img?: ImageDef 
   video?: VideoDef 
   animation?: string
+  mediaTransform?: MediaTransform 
   optionImg?: ImageDef
   timeAdded: number = 0 // timeAdded of being added to cart
 
@@ -53,6 +54,7 @@ class ActualLineItem
     this.video = prod.video
     this.animation = prod.animation
     this.optionImg = prod.optionImg
+    this.mediaTransform = prod.mediaTransform
 
     if (snap) {
       this.qu = snap.quantity

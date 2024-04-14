@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { CategoryNode } from '../../../types'
+import type { CategoryNode } from '../../types'
 
 const ICON_SIZE = 20
 

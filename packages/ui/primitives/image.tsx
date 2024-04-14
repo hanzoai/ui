@@ -1,18 +1,20 @@
 import React from 'react'
 import NextImage from 'next/image'
 
-import type { ImageDef, Dimensions } from '../types'
-import { constrain, cn } from '../util'
+import type { ImageDef, Dimensions, MediaTransform } from '../types'
+import { constrain, cn, spreadToTransform } from '../util'
 
 const Image: React.FC<{
   def: ImageDef
   constrainTo?: Dimensions
+  transform?: MediaTransform
   fullWidth?: boolean
   className?: string
   preload?: boolean
 }> = ({
   def,
   constrainTo,
+  transform={},
   fullWidth=false,
   className='',
   preload=false
@@ -31,6 +33,7 @@ const Image: React.FC<{
     toSpread.style = {
       width: '100%',
       height: 'auto',
+      ...spreadToTransform(transform)
     }
     if (constrainTo) {
       toSpread.style.maxWidth = constrainTo.w  
@@ -41,6 +44,7 @@ const Image: React.FC<{
     const resolved = constrainTo ? constrain(dim, constrainTo) : dim
     toSpread.width = resolved.w
     toSpread.height = resolved.h
+    toSpread.style = {...spreadToTransform(transform)}
   } 
 
   if (sizes) {
@@ -61,13 +65,28 @@ const Image: React.FC<{
   const svgFillClass = _svgFillClass ?? ''
 
   return (fullWidth) ? (
-    <div className='relative flex flex-col items-center w-full'>
-      <NextImage src={src} alt={alt} data-vaul-no-drag {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>
+    <div className='relative flex flex-col items-center justify-center w-full'>
+      <NextImage 
+        data-vaul-no-drag 
+        src={src} 
+        alt={alt} 
+        {...toSpread} 
+        priority={preload} 
+        loading={preload ? 'eager' : 'lazy'} 
+        className={cn(svgFillClass, className)}
+      />
     </div>
   ) : (
-    <NextImage src={src} alt={alt} data-vaul-no-drag {...toSpread} priority={preload} loading={preload ? 'eager' : 'lazy'} className={cn(svgFillClass, className)}/>   
+    <NextImage 
+      src={src} 
+      alt={alt} 
+      data-vaul-no-drag 
+      {...toSpread} 
+      priority={preload} 
+      loading={preload ? 'eager' : 'lazy'} 
+      className={cn(svgFillClass, className)}
+    />   
   )
 }
 
 export default Image
-

@@ -15,6 +15,12 @@ interface Family {
   products: Product[] 
 }
 
+
+interface ObsFamilyRef {
+  get family(): Family | undefined
+}
+
 export {
-  type Family as default
+  type Family, 
+  type ObsFamilyRef
 }

@@ -18,7 +18,7 @@ import { useCommerce } from '../../service/context'
 import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
-import LevelNodesWidget from '../select-family/level-nodes-widget'
+import NodeTabs from '../node-tabs'
 import AddToCartWidget from './add-to-cart-widget'
 
 const BuyCard: React.FC<{
@@ -170,7 +170,7 @@ const BuyCard: React.FC<{
     }
   }
 
-  const famTitle = inst.current?.requestedFamily ? inst.current.requestedFamily.title : cmmc.selectedFamilies?.[0]?.title
+  const famTitle = inst.current?.requestedFamily ? inst.current.requestedFamily.title : cmmc.selectedFamilies[0].title
 
   const itemsToShow = (!cmmc.hasSelection) ? undefined : 
     allVariants ? cmmc.selectedItems : cmmc.selectedFamilies[0].products as LineItem[]
@@ -205,7 +205,7 @@ const BuyCard: React.FC<{
           <h6 className='!text-center font-bold text-muted mt-3'>{inst.current!.requestedNode.subNodesLabel}</h6>
         )}
       </ApplyTypography>
-      <LevelNodesWidget
+      <NodeTabs
         className={cn(
           'grid gap-0 align-stretch justify-normal ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px] h-10', // height is needed for iPhone bug
@@ -247,7 +247,6 @@ const BuyCard: React.FC<{
     )}
     {(cmmc.currentItem) && (
       <AddToCartWidget 
-        size='default' 
         item={cmmc.currentItem}
         onQuantityChanged={onQuantityChanged} 
         className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : ''), addWidgetClx)}
