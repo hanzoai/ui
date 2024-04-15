@@ -10,7 +10,6 @@ export type {
   ButtonModalDef,
 } from './button-def'
 
-export type { ContactInfo, ContactInfoFields } from './contact-info'
 export type { default as Dimensions } from './dimensions' 
 
 export type { default as GridDef, GridColumnSpec } from './grid-def'
