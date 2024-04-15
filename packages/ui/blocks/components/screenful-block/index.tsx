@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 
 import type { Block, ScreenfulBlock, VideoBlock } from '../../def'
 import { containsToken, cn } from '../../../util'
-import { ApplyTypography, Main } from '../../../primitives'
+import { ApplyTypography } from '../../../primitives'
 
 import Poster from './poster-background'
 import Content from './content'
@@ -76,7 +76,7 @@ const ScreenfulComponent: React.FC<{
             initialInView={initialInView}
           />
         )}
-        <Main className={cn(
+        <div className={cn(
             ...cwclx,
             snapTile ? 'absolute left-0 right-0 top-0 bottom-0 ' : 'flex min-h-screen w-full',
             contentClx,
@@ -85,7 +85,7 @@ const ScreenfulComponent: React.FC<{
         >
           <Content block={b} agent={agent}  className='w-full'/>
           {b.footer}
-        </Main>
+        </div>
       </Poster>
       </ApplyTypography>
     </section>
