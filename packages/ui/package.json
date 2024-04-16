@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.6.2",
+  "version": "3.6.3",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -16,10 +16,17 @@
   },
   "keywords": [
     "components",
-    "ui",
-    "radix-ui",
+    "ecommerce",
+    "analytics",
+    "ai",
+    "chat",
+    "hanzo",
+    "hanzo-ai",
     "hanzoai",
-    "hanzo"
+    "radix-ui",
+    "react",
+    "sdk",
+    "ui"
   ],
   "scripts": {
     "lat": "npm show @hanzo/ui version",
