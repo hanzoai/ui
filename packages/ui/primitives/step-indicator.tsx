@@ -27,20 +27,37 @@ const StepIndicator: React.FC<{
         style={{ paddingLeft: pX, paddingRight: pX }}
       >
         {steps.map((ignore, index) => (<>
-          {index !== 0 && (<div key={`sep-${index}`} className={'h-[1px] grow ' + (muted ? 'bg-muted' : 'bg-foreground')}/>)}
+          {index !== 0 && (
+            <div
+              key={`sep-${index}`}
+              className={cn(
+                'h-[1px] grow',
+                currentStep >= index ? (muted ? 'bg-muted' : 'bg-foreground') : (muted ? 'bg-muted-3' : 'bg-level-3'),
+              )}
+            />
+          )}
           <div 
             key={`circle-${index}`} 
             style={{width: `${dotSizeRem}rem`, height: `${dotSizeRem}rem`}} 
             className={cn(
-              'shrink-0 rounded-full border-[1.5px] ' + (muted ? 'border-muted' : 'border-foreground') , 
-              currentStep === index ? (muted ? 'bg-muted' : 'bg-foreground') : ''
+              'shrink-0 rounded-full border-[1.5px]', 
+              currentStep === index ? (muted ? 'bg-muted-3 border-muted' : 'bg-level-3 border-foreground') : '',
+              currentStep > index || currentStep === steps.length - 1 ? (muted ? 'bg-muted border-muted' : 'bg-foreground border-foreground') : ''
             )} 
           />
         </>))}
       </div>
       <div key='two' className={'grid ' + `grid-cols-${steps.length}` /* These are white listed already */} >
         {steps.map((label, index) => (
-          <div key={index} className={'text-center whitespace-nowrap ' + (muted ? 'text-muted' : 'text-foreground')} >{label}</div>
+          <div
+            key={index}
+            className={cn(
+              'text-center whitespace-nowrap',
+              (muted ? 'text-muted' : 'text-foreground')
+            )}
+          >
+            {label}
+          </div>
         ))}
       </div>
     </div>
