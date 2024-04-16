@@ -522,7 +522,7 @@ importers:
         specifier: ^2.2.0
         version: 2.2.1
       tailwindcss-animate:
-        specifier: ^1.0.6
+        specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.1)
       tailwindcss-interaction-media:
         specifier: ^0.1.0
