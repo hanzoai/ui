@@ -163,7 +163,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
           <ProviderLoginButton provider='github' isLoading={isLoading} loginWithProvider={loginWithProvider}>
             <GitHub height={20}/>Github
           </ProviderLoginButton>
-          <p className='text-sm text-muted-2'>By logging in, you agree to our <Link href={termsOfServiceUrl ?? ''}>Terms of Service</Link> and <Link href={privacyPolicyUrl ?? ''}>Privacy Policy</Link>.</p>
+          <p className='text-sm text-muted-2'>By logging in, you agree to our <Link href={termsOfServiceUrl ?? ''} target='_blank'>Terms of Service</Link> and <Link href={privacyPolicyUrl ?? ''} target='_blank'>Privacy Policy</Link>.</p>
         </>
       )}
     </ApplyTypography>
