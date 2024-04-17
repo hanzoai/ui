@@ -174,8 +174,8 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
             <CreditCard
               style={{
                 '.input-container': {
-                  borderColor: '#404040',
-                  borderRadius: '6px',
+                  borderColor: '#666666',
+                  borderRadius: '8px',
                 },
                 '.input-container.is-focus': {
                   borderColor: '#ffffff',
