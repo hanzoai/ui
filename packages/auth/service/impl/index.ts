@@ -5,6 +5,7 @@ import type { AuthServiceConf, HanzoUserInfo, HanzoUserInfoValue } from '../../t
 
 import { 
   auth as fbAuth, 
+  loginWithCustomToken, 
   loginWithEmailAndPassword,
   loginWithProvider,
   logoutBackend 
@@ -109,6 +110,37 @@ class AuthServiceImpl implements AuthService {
     try {
       this._hzUser.clear()
       const res = await loginWithProvider(provider)
+      if (res.success && res.user) {
+        const walletAddress = res.user.email ? await getAssociatedWalletAddress(res.user.email) : undefined
+        this._hzUser.set({
+          email: res.user.email ?? '',
+          displayName : res.user.displayName ?? null,
+          walletAddress : walletAddress?.result ?? null
+        })
+
+        return {
+          success: true,
+          userInfo: this._hzUser
+        }
+      }
+      return {
+        success: false,
+        userInfo: null
+      }
+    }
+    catch (e) {
+      console.error('Error signing in with Firebase auth', e)
+      return {success: false, userInfo: null}
+    }
+  }
+
+  loginWithCustomToken = async (
+    token: string
+   ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null}> => {
+
+    try {
+      this._hzUser.clear()
+      const res = await loginWithCustomToken(token)
       if (res.success && res.user) {
         const walletAddress = res.user.email ? await getAssociatedWalletAddress(res.user.email) : undefined
         this._hzUser.set({
