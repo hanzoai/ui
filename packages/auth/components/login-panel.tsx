@@ -69,9 +69,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
         '/api/auth/generate-custom-token',
         { method: 'POST' }
       ).then(res => res.json())
-      if (res.success) {
-        onLoginChanged(res.token.token)
-      }
+      onLoginChanged(res.token?.token ?? null)
     }
     else if (redirectUrl) {
       router.push(redirectUrl)
@@ -127,7 +125,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
     setIsLoading(true)
     const res = await auth.logout()
     if (res.success) {
-      succeed(false)
+      succeed()
     }
     setIsLoading(false)
   }
