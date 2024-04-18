@@ -317,7 +317,7 @@ importers:
   packages/commerce:
     dependencies:
       '@hanzo/auth':
-        specifier: ^2.4.1
+        specifier: ^2.4.4
         version: link:../auth
       '@hanzo/ui':
         specifier: ^3.6.3
