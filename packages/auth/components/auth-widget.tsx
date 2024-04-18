@@ -62,7 +62,7 @@ const AuthWidget: React.FC<{
       ) : (
         <LinkElement
           def={{
-            href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window.location.href}`,
+            href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window ? window.location.href : ''}`,
             title: 'Login',
             variant: 'primary',
             newTab: false
