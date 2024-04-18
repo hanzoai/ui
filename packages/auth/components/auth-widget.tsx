@@ -48,7 +48,7 @@ const AuthWidget: React.FC<{
   
     // If that is the case, the widget will always show the 'login' 
     // button regardless of status.
-  if (!auth.loggedIn && window) {
+  if (!auth.loggedIn && typeof window !== 'undefined') {
 
     return (noLogin ? null : (
       (handleLogin) ? (
