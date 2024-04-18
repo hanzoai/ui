@@ -14,6 +14,10 @@ interface AuthService {
     provider: 'google' | 'facebook' | 'github'
   ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}> 
 
+  loginWithCustomToken: (
+    token: string
+  ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}>
+  
   associateWallet: () => Promise<void>
 
   logout: () => Promise<{success: boolean}>

@@ -69,6 +69,25 @@ async function getSession() {
   }
 }
 
+export const generateCustomToken = async (): Promise<{success: boolean, token: string | null}> => {
+  const session = await getSession()
+
+  if (!(await isUserAuthenticated(session))) {
+    return {success: false, token: null}
+  }
+
+  const decodedIdToken = await auth.verifySessionCookie(session!)
+  const currentUser = await auth.getUser(decodedIdToken.uid)
+
+  try {
+    const token = await auth.createCustomToken(currentUser.uid)
+    return {success: true, token}
+  } catch (e) {
+    console.error('Error generating custom token', e)
+    return {success: false, token: null}
+  }
+}
+
 export async function createSessionCookie(idToken: string, sessionCookieOptions: SessionCookieOptions) {
   return auth.createSessionCookie(idToken, sessionCookieOptions)
 }
