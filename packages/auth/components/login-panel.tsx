@@ -41,7 +41,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
   className?: string,
   inputClx?: string,
   noHeading?: boolean
-  onLoginChanged?: (loggedIn: boolean) => void
+  onLoginChanged?: (token: string) => void
   termsOfServiceUrl?: string
   privacyPolicyUrl?: string
 }> = observer(({
@@ -61,11 +61,17 @@ const LoginPanel: React.FC<PropsWithChildren & {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const succeed = (loggedOut = false) => {
-      // If a callback is provide, don't redirect.
-      // Assume host code is handling (eg, mobile menu)
+  const succeed = async () => {
+    // If a callback is provide, don't redirect.
+    // Assume host code is handling (eg, mobile menu)
     if (onLoginChanged) {
-      onLoginChanged(!loggedOut)
+      const res = await fetch(
+        '/api/auth/generate-custom-token',
+        { method: 'POST' }
+      ).then(res => res.json())
+      if (res.success) {
+        onLoginChanged(res.token.token)
+      }
     }
     else if (redirectUrl) {
       router.push(redirectUrl)
