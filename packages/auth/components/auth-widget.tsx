@@ -48,7 +48,7 @@ const AuthWidget: React.FC<{
   
     // If that is the case, the widget will always show the 'login' 
     // button regardless of status.
-  if (!auth.loggedIn) {
+  if (!auth.loggedIn && window) {
 
     return (noLogin ? null : (
       (handleLogin) ? (
@@ -62,7 +62,7 @@ const AuthWidget: React.FC<{
       ) : (
         <LinkElement
           def={{
-            href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window ? window.location.href : ''}`,
+            href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window.location.href}`,
             title: 'Login',
             variant: 'primary',
             newTab: false
