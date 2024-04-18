@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   type User,
   signInWithEmailAndPassword,
+  signInWithCustomToken,
 } from 'firebase/auth'
 
 import { initializeApp, getApps } from "firebase/app"
@@ -116,6 +117,37 @@ export async function loginWithEmailAndPassword(
       throw e
     }
   }
+
+  try {
+    const idToken = await user.getIdToken()
+
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ idToken }),
+    })
+    const resBody = (await response.json()) as unknown as APIResponse<string>
+
+    if (response.ok && resBody.success) {
+      return { success: true, user }
+    } 
+    else {
+      return {success: false}
+    }
+  } 
+  catch (error) {
+    console.error('Error signing in with Firebase auth', error)
+    return {success: false}
+  }
+}
+
+export async function loginWithCustomToken(
+  token: string, 
+): Promise<{success: boolean, user?: User }> {
+
+  let user: User | undefined = undefined
+  const userCredential = await signInWithCustomToken(auth, token)
+  user = userCredential.user
 
   try {
     const idToken = await user.getIdToken()

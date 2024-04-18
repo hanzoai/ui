@@ -61,7 +61,7 @@ const AuthWidget: React.FC<{
         </Button>
       ) : (
         <LinkElement
-          def={{href: '/login', title: 'Login', variant: 'primary'} satisfies LinkDef}
+          def={{href: `${process.env.NEXT_PUBLIC_AUTH_ORIGIN}/login`, title: 'Login', variant: 'primary'} satisfies LinkDef}
           className='h-8 w-fit !min-w-0'
         />
       )
