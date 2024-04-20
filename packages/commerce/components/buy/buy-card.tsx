@@ -14,7 +14,7 @@ import type {
   CategoryNode, 
 } from '../../types'
 
-import { useCommerce } from '../../service/context'
+import { useCommerce } from '../../context'
 import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
