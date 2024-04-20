@@ -12,7 +12,7 @@ import {
 } from '@hanzo/ui/primitives'
 
 import { formatCurrencyValue } from '../../util'
-import { useCommerce } from '../../service/context'
+import { useCommerce } from '../../context'
 
 import CartPanel from './cart-panel'
 

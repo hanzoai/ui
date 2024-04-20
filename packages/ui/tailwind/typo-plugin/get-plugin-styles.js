@@ -89,17 +89,20 @@ const defaultCSS = {
   h1: {
     color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '800',
-    textAlign: 'inherit'
+    textAlign: 'inherit',
+    textTransform: 'uppercase'
   },
   h2: {
     color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '700',
-    textAlign: 'inherit'
+    textAlign: 'inherit',
+    textTransform: 'uppercase'
   },
   h3: {
     color: 'var(--tw-typo-plugin-headings)',
     fontWeight: '600',
-    textAlign: 'inherit'
+    textAlign: 'inherit',
+    textTransform: 'uppercase'
   },
   h4: {
     color: 'var(--tw-typo-plugin-headings)',
