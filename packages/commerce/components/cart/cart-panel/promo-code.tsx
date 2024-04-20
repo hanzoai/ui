@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite'
 
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../../../service/context'
+import { useCommerce } from '../../../context'
 import type { Promo } from '../../../types'
 import getPromoFromApi from '../../../util/promo-codes'
 

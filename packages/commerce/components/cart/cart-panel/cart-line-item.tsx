@@ -9,7 +9,7 @@ import { Image } from '@hanzo/ui/primitives'
 import type { LineItem } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
 import AddToCartWidget from '../../buy/add-to-cart-widget'
-import { useCommerce } from '../../../service/context'
+import { useCommerce } from '../../../context'
 
 const DEF_IMG_SIZE=40
 

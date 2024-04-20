@@ -8,7 +8,7 @@ import {
   parseAsBoolean,
 } from 'next-usequerystate'
 
-import { useCommerce } from '../service/context'
+import { useCommerce } from '../context'
 import type { SelectedPaths } from '../types'
 import sep from '../service/sep'
 
