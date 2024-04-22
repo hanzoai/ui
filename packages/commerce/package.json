@@ -34,10 +34,10 @@
     "./debug": "./service/debug.ts"
   },
   "dependencies": {
-    "ethers": "^6.11.1",
-    "next-usequerystate": "^1.17.0",
+    "ethers": "^6.12.0",
+    "next-usequerystate": "^1.17.1",
     "react-square-web-payments-sdk": "^3.2.1",
-    "square": "^35.0.0"
+    "square": "^35.1.0"
   },
   "peerDependencies": {
     "@hanzo/auth": "^2.4.5",
@@ -56,9 +56,9 @@
     "zod": "3.21.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.64",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "cross-fetch": "^4.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   }
 }
