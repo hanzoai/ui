@@ -28,7 +28,7 @@
     "clean": "rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "firebase-admin": "^12.0.0"
+    "firebase-admin": "^12.1.0"
   },
   "peerDependencies": {
     "@hanzo/ui": "^3.6.5",
@@ -43,8 +43,8 @@
     "zod": "3.21.4"
   },
   "devDependencies": {
-    "@types/react": "^18.2.64",
+    "@types/react": "^18.2.79",
     "cross-fetch": "^4.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   }
 }
