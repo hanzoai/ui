@@ -2,7 +2,7 @@
 
 Accessible and customizable components that you can use to build your AI apps.
 
-![hero](apps/www/public/og.jpg)
+![hero](apps/web/public/og.jpg)
 
 ## Documentation
 
