@@ -6,7 +6,7 @@ import { Drawer as DrawerPrimitive } from 'vaul'
 import { cn } from '../util'
 
 const Drawer = ({
-  shouldScaleBackground = true,
+  shouldScaleBackground = false,
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
@@ -36,24 +36,35 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     overlayClx?: string
+      // Redundancy of 'modal' sent to Root, since we have no access to that.
+      // Hack that avoids forking their code.
+    modal?: boolean 
   }
->(({ className, children, overlayClx='', ...props }, ref) => (
-  <DrawerPortal>
-    {/* If no or same z index, overlay should precede content */}
-    <DrawerOverlay className={cn('z-below-modal', overlayClx)}/>
-    <DrawerPrimitive.Content
-      ref={ref}
-      className={cn('fixed left-0 right-0 bottom-0 z-modal',
-        'mt-24 flex flex-col h-[80%] rounded-t-[10px] pt-6 border bg-background',
-        className
-      )}
-      {...props}
-    >
-      <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
-      {children}
-    </DrawerPrimitive.Content>
-  </DrawerPortal>
-))
+>(({ className, children, overlayClx='', modal=true, ...props }, ref) => {
+  
+  return (
+    <DrawerPortal>
+      {/* If no or same z index, overlay should precede content */}
+      <DrawerOverlay className={cn('z-below-modal', overlayClx)}/>
+      <DrawerPrimitive.Content
+        ref={ref}
+        className={cn('fixed left-0 right-0 bottom-0 z-modal',
+          'mt-24 flex flex-col rounded-t-[10px] pt-6 border bg-background',
+          // 'h-[80%]' 
+          className
+        )}
+          // A bug / omission in Vaul
+        onFocusOutside={(e) => { if (!modal) { e.preventDefault(); return } }}
+        onEscapeKeyDown={(e) => { if (!modal) { e.preventDefault(); return } }}
+        {...props}
+      >
+        <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
+        {children}
+      </DrawerPrimitive.Content>
+    </DrawerPortal>
+  )
+})
+
 DrawerContent.displayName = 'DrawerContent'
 
 const DrawerHeader = ({
@@ -105,7 +116,10 @@ const DrawerDescription = React.forwardRef<
 ))
 DrawerDescription.displayName = DrawerPrimitive.Description.displayName
 
+type DrawerProps = React.ComponentProps<typeof DrawerPrimitive.Root>
+
 export {
+  type DrawerProps,
   Drawer,
   DrawerPortal,
   DrawerOverlay,

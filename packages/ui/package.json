@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.6.5",
+  "version": "3.7.0",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -31,9 +31,15 @@
   "scripts": {
     "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
-    "build": "tsc",
-    "tc": "tsc",
-    "clean": "rm -rf dist && rm -rf node_modules"
+    "tc": "tsc"
+  },
+  "exports": {
+    "./blocks": "./blocks/index.ts",
+    "./primitives": "./primitives/index.ts",
+    "./style/": "./style/*",
+    "./tailwind": "./tailwind/index.ts",
+    "./types": "./types/index.ts",
+    "./util": "./util/index.ts"
   },
   "dependencies": {
     "@next/third-parties": "^14.1.0",
@@ -86,7 +92,7 @@
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.47.0",
+    "react-hook-form": "^7.51.3",
     "validator": "^13.11.0",
     "zod": "3.21.4"
   },

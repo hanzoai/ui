@@ -2,6 +2,8 @@ import { compiler as mdCompiler } from 'markdown-to-jsx'
 
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+export { cva, type VariantProps } from 'class-variance-authority'
+
 import type { Dimensions } from '../types'
 
   // @ts-ignore
@@ -72,3 +74,4 @@ export const capitalize = (str: string): string => (
 )
 
 export { default as spreadToTransform } from './spread-to-transform'
+

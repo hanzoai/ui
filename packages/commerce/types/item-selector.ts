@@ -55,6 +55,9 @@ type ItemSelectorOptions = {
      * default: false */
   showSlider?: boolean
 
+    /** default true */
+  showButtonIfOnlyOne?: boolean
+
     /** 
      * Sort by cost. 
      * If it's a carousel selector and 'showSlider' is true, 
