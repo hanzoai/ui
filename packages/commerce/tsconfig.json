@@ -2,7 +2,7 @@
   "extends": "../tsconfig.hanzo-modules.base.json",
   "include": [
     "**/*.ts",
-    "**/*.tsx",
+    "**/*.tsx", "types/string-mutator.ts",
   ],
   "exclude": [
     "node_modules",

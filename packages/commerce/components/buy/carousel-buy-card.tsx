@@ -8,7 +8,6 @@ import React, {
 import { observer } from 'mobx-react-lite'
 
 import { cn } from '@hanzo/ui/util'
-import { Button } from '@hanzo/ui/primitives'
 
 import type { 
   ItemSelectorProps, 
@@ -29,7 +28,7 @@ import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
 import SingleFamilySelector from './single-family-selector'
 import { FamilyCarousel, AllVariantsCarousel } from './multi-family'
 
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../add-to-cart-widget'
 
 const SCROLL = {
   scrollAfter: 5,
@@ -52,15 +51,19 @@ const sortItems = (items: LineItem[], sort: 'asc' | 'desc' | 'none'): LineItem[]
 
 const CarouselBuyCard: React.FC<{
   skuPath: string
+  checkoutButton: React.ReactNode
   clx?: string
+  selectorClx?: string
+  addBtnClx?: string
   mobile?: boolean
-  handleCheckout: () => void
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = ({
   skuPath,
+  checkoutButton,
   clx='',
+  selectorClx='',
+  addBtnClx='',
   mobile=false,
-  handleCheckout,
   onQuantityChanged,
 }) => {
 
@@ -91,6 +94,12 @@ const CarouselBuyCard: React.FC<{
   const [changeMeToRerender, setChangeMeToRerender] = useState<boolean>(false)
 
   useEffect(() => {
+
+    if (!skuPath || skuPath.length === 0 ) {
+      // The component is being hidden (w an amination)
+      // keep things the same so no layout jump
+      return 
+    }
 
     const peek = cmmc.peek(skuPath)
     if (typeof peek === 'string') {
@@ -194,26 +203,18 @@ const CarouselBuyCard: React.FC<{
     <div className={clx}>
       <AddToCartWidget 
         item={cmmc.currentItem}
+        registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         variant={cmmc.cartEmpty ? 'primary' : 'outline'}
-        className='min-w-[160px] w-full sm:max-w-[320px]' 
+        className={addBtnClx} 
       />
-      {!cmmc.cartEmpty && (
-        <Button 
-          onClick={handleCheckout} 
-          variant='primary' 
-          rounded='lg' 
-          className='min-w-[160px] w-full sm:max-w-[320px]'
-        >
-          Checkout
-        </Button>
-      )}
+      {!cmmc.cartEmpty && checkoutButton}
     </div>
   ) : null))
 
   return (
     <div className={cn(
-      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center min-h-[40vh]', 
+      'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center', 
       clx,
       r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
@@ -222,13 +223,14 @@ const CarouselBuyCard: React.FC<{
           {...r.current.single} 
           mediaConstraint={MEDIA_CONSTRAINT}
           mobile={mobile} 
+          clx={selectorClx}
         /> 
       ) : (r.current?.multi && r.current.families && /* safegaurd for first render, etc. */ (
         <MultiFamilyUI 
           {...r.current.multi} 
           families={r.current.families} 
           parent={r.current.node}
-          clx='max-w-[475px]'
+          clx={selectorClx}
         />
       ))}
       <Buttons clx={cn(

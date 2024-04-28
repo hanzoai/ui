@@ -1,15 +1,15 @@
 import React from 'react'
 
 import type { LinkDef, ButtonDef} from '../../types'
-import  { type ButtonSizes, ActionButton, LinkElement } from '../../primitives'
+import  { buttonVariants, ActionButton, LinkElement } from '../../primitives'
 import type { CTABlock } from '../def'
-import { cn, containsToken } from '../../util'
+import { cn, containsToken, type VariantProps } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
 
 const CtaBlockComponent: React.FC<BlockComponentProps & {
   itemClasses?: string
-  itemSize?: ButtonSizes,
+  itemSize?: VariantProps<typeof buttonVariants>['size'],
   renderLink?: (def: LinkDef, key: any) => JSX.Element
   renderButton?: (def: ButtonDef, key: any) => JSX.Element
 }> = ({

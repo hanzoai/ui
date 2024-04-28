@@ -1,4 +1,3 @@
-import type { ButtonRoundedValue } from '../primitives/button'
 import type Dimensions from './dimensions'
 
   /**
@@ -25,7 +24,7 @@ interface ImageDef {
     */
   dim:  Dimensions 
 
-  rounded?: ButtonRoundedValue
+  rounded?: string // any key from tailwind.config.borderRadius
 }
 
 export {
