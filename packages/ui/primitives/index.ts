@@ -24,8 +24,6 @@ export {
 export {
   default as Button,
   type ButtonProps,
-  type ButtonVariants,
-  type ButtonSizes,
   buttonVariants,
 } from './button'
 
@@ -61,6 +59,7 @@ export {
 } from './command'
 
 export {
+  type DrawerProps,
   Drawer,
   DrawerPortal,
   DrawerOverlay,

@@ -23,7 +23,7 @@ import {
   accessMultiSelectorOptions 
 } from '../../../util'
 
-import QuantityIndicator from '../../quantity-indicator'
+import QuantityIndicator from '../../item-selector/quantity-indicator'
 import { ButtonItemSelector, useCommerce } from '../../..'
 
 const debugBorder = (c: 'r' | 'g' | 'b', disable: boolean = true): string => {
@@ -208,8 +208,8 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
     const { showItemSwatches } = accessMultiSelectorOptions(selectorOptions)
     if (
       !showItemSwatches || 
-      !cmmc.currentFamily || 
-      cmmc.currentFamily.products.length === 1
+      !cmmc.currentFamily 
+      //|| cmmc.currentFamily.products.length === 1
     ) {
       return null
     }

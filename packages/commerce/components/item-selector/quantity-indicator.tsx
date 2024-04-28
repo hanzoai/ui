@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite'
 import { type LucideProps } from 'lucide-react'
 
 import { cn } from '@hanzo/ui/util'
-import type { LineItem } from '../types'
+import type { LineItem } from '../../types'
 
   // Generalize this.
 const BagIcon: React.FC<LucideProps> = (props: LucideProps) => (

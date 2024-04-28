@@ -4,8 +4,8 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@hanzo/ui/primitives/form'
-import { Input } from '@hanzo/ui/primitives'
+  Input
+} from '@hanzo/ui/primitives'
 
 import type { ContactFormType } from '../../../types'
  

@@ -28,7 +28,6 @@ export function formatCurrencyValue(price: number): string {
   return (str.endsWith('.00')) ? str.replace('.00', '') : str 
 }
 
-
 export const getFacetValuesMutator = (level: number, cmmc: CommerceService): StringMutator => {
 
   const setLevel = (value: string, level: number ): void  => {
@@ -57,7 +56,6 @@ export const getFacetValuesMutator = (level: number, cmmc: CommerceService): Str
   } satisfies StringMutator
 }
 
-
 export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
 export { default as processSquareCardPayment } from './square-payment'
 export { default as ObsStringMutator } from './obs-string-mutator'
@@ -69,3 +67,5 @@ export { getErrorMessage } from './error'
 
 export { default as accessItemOptions } from './item-selector-options-accessor'
 export { default as accessMultiSelectorOptions } from './multi-family-selector-options-accessor'
+
+export { default as LineItemRef} from './line-item-ref'

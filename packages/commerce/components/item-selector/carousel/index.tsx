@@ -21,7 +21,7 @@ import {
 import type { ItemSelectorProps, LineItem } from '../../../types'
 import { formatCurrencyValue, accessItemOptions } from '../../../util'
 
-import QuantityIndicator from '../../quantity-indicator'
+import QuantityIndicator from '../quantity-indicator'
 import ItemCarouselSlider from './slider'
 
 const DEFAULT_CONSTRAINT = {w: 250, h: 250}

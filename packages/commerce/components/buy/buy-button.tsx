@@ -1,31 +1,35 @@
 'use client'
 import React, {type PropsWithChildren} from 'react'
 
-import { type ButtonVariants, type ButtonSizes, Button } from '@hanzo/ui/primitives'
+import { Button, buttonVariants } from '@hanzo/ui/primitives'
+import { type VariantProps } from '@hanzo/ui/util'
 
-import BuyTriggerWrapper from './buy-trigger-wrapper'
 import { cn } from '@hanzo/ui/util'
+import { useCommerceUI } from '../..'
 
-const BuyButton: React.FC<PropsWithChildren & {
-  skuPath: string
-  variant? : ButtonVariants 
-  size?: ButtonSizes  
-  /* rounded?: ButtonRoundedValue // TODO: wait for version bump*/
-  className?: string 
-  mobile?: boolean
-}> = ({
+const BuyButton: React.FC<
+  PropsWithChildren & 
+  VariantProps<typeof buttonVariants> & 
+  {
+    skuPath: string
+    className?: string 
+  }
+> = ({
   skuPath,
-  variant,
-  size,
   children,
   className='',
-  mobile=false
-}) => (
-  <BuyTriggerWrapper skuPath={skuPath} mobile={mobile}
-    trigger={  <Button size={size} variant={variant} className={cn(className, '')}>{children}</Button> }
-  />
-)
+  ...rest
+}) => {
 
+  const ui = useCommerceUI()
+  const handleClick = () => { ui.showBuyOptions(skuPath) }
+  
+  return (
+    <Button onClick={handleClick} {...rest} className={cn(className, '')}>
+      {children}
+    </Button>
+  )
+}
 
 
 export default BuyButton

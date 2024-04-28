@@ -1,16 +1,19 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
+import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { Button, toast, type ButtonSizes, type ButtonVariants } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
+import { Button, buttonVariants } from '@hanzo/ui/primitives'
+import { cn, type VariantProps } from '@hanzo/ui/util'
 
-import { Icons } from '../Icons'
-import type { LineItem } from '../../types'
-import { sendFBEvent, sendGAEvent } from '../../util/analytics'
+import Icons from './Icons'
+import type { LineItem } from '../types'
+import { sendFBEvent, sendGAEvent } from '../util/analytics'
+import { useCommerceUI } from '..'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem
+  registerAdd?: boolean
   disabled?: boolean
   className?: string
   buttonClx?: string
@@ -19,11 +22,35 @@ const AddToCartWidget: React.FC<{
 }> = observer(({
   item,
   variant='primary',
+  registerAdd=true,
   disabled=false,
   className='',
   buttonClx='',
   onQuantityChanged
 }) => {
+
+  const ui = useCommerceUI()
+
+  const reactionDisposer = useRef<IReactionDisposer | undefined>(undefined)
+
+  useEffect(() => {
+      // Only tell the micro-drawer 
+      // if we're not part of the cart ui,
+      // or part of the main drawer.
+    if (registerAdd && variant !== 'minimal') {
+      reactionDisposer.current = reaction(
+        () => (item.quantity),
+        (quantity: number, previous: number) => {
+          ui.itemQuantityChanged(item, quantity, previous)
+        }  
+      )
+    }
+    return () => {
+      if (reactionDisposer.current) {
+        reactionDisposer.current()
+      }  
+    }
+  }, [])
 
   const ROUNDED_VAL = 'lg'
     // no need to safelist, since its used widely
@@ -149,7 +176,7 @@ const AddToCartWidget: React.FC<{
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
       size={ghost ? 'xs' : 'default'}
-      variant={variant as ButtonVariants}
+      variant={variant === 'minimal' ? 'ghost' : (variant as VariantProps<typeof buttonVariants>['variant'])}
       rounded={ROUNDED_VAL}
       className={cn(buttonClx, className)}
       onClick={inc}

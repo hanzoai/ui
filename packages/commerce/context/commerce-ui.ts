@@ -4,54 +4,96 @@ import {
   makeObservable, 
   observable, 
 } from 'mobx'
+import type { CommerceService, LineItem } from '../types'
+
+
 
 interface CommerceUI {
   showBuyOptions: (skuPath: string) => void
   hideBuyOptions: () => void
+  get buyOptionsSkuPath(): string | undefined
 
-  get buyOptionsShowing(): boolean
-
-  get skuPath(): string | undefined
-  clearSkuPath: () => void
+  itemQuantityChanged(item: LineItem, val: number, prevVal: number): void 
+  get activeItem(): LineItem | undefined
 }
 
 class CommerceUIStore implements CommerceUI {
 
-  _skuPath: string | undefined = undefined
-  _optionsShowing: boolean = false
+  static readonly TIMEOUT = 2500
+  _buyOptionsSkuPath: string | undefined = undefined
+  _paused: boolean = false
+  _activeItem: LineItem | undefined = undefined
+  _lastActivity: number | undefined = undefined
+  _service: CommerceService
 
-  constructor() {
+  constructor(s: CommerceService) {
+    this._service = s
     makeObservable(this, {
-      _skuPath: observable, 
-      _optionsShowing: observable,
+      _buyOptionsSkuPath: observable,
+      _activeItem: observable.shallow, 
       showBuyOptions: action,
       hideBuyOptions: action,
-      buyOptionsShowing: computed,
-      skuPath: computed,
-      clearSkuPath: action
+      buyOptionsSkuPath: computed,
+      itemQuantityChanged: action,
+      tick: action,
+      activeItem: computed
     })
   }
 
   showBuyOptions = (skuPath: string): void => {
-    this._skuPath = skuPath
-    this._optionsShowing = true
+    this._service.setCurrentItem(undefined)
+    this._buyOptionsSkuPath = skuPath
+    this._paused = true
   } 
 
   hideBuyOptions = (): void => {
-    this._optionsShowing = false
+    this._buyOptionsSkuPath = undefined
+    this._paused = false
+    if (this._lastActivity) {
+      this._lastActivity = Date.now()
+    }
   }
 
-  get buyOptionsShowing(): boolean {
-    return this._optionsShowing
+  get buyOptionsSkuPath(): string | undefined {
+    return this._buyOptionsSkuPath
   } 
 
-  get skuPath(): string | undefined {
-    return this._skuPath
+  tick = () => {
+    if (
+      !this._paused
+      &&
+      this._lastActivity 
+      && 
+      (Date.now() - this._lastActivity >= CommerceUIStore.TIMEOUT)
+    ) {
+      this._activeItem = undefined
+      this._lastActivity = undefined
+    }
+  }
+
+  itemQuantityChanged = (item: LineItem, val: number, oldVal: number, ): void  => {
+
+    if (val === 0) {
+      if (this._activeItem?.sku === item.sku) {
+        this._activeItem = undefined
+        this._lastActivity = undefined
+      }
+      // otherwise ignore
+    }
+    else if (val < oldVal) {
+      if (this._activeItem?.sku === item.sku) {
+        this._lastActivity = Date.now()
+      }
+      // otherwise ignore
+    }
+    else {
+        this._activeItem = item
+        this._lastActivity = Date.now()
+    }
   } 
 
-  clearSkuPath = (): void => {
-    this._skuPath = undefined
-    this._optionsShowing = false
+  get activeItem(): LineItem | undefined {
+    return this._activeItem
   }
 }
 

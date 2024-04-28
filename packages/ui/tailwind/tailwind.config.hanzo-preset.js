@@ -107,11 +107,6 @@ export default {
     }),
     borderOpacity: ({ theme }) => theme('opacity'),
     borderRadius: {
-      /*  shadcn's:  
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
-        sm: "calc(var(--radius) - 4px)",
-      */ 
       none: '0px',
       sm: '0.25rem',
       DEFAULT: '0.5rem',

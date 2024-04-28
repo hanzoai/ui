@@ -2,24 +2,26 @@ import React, { type PropsWithChildren } from 'react'
 import Link from 'next/link'
 
 import type { LinkDef, Icon }  from '../types'
-import { buttonVariants, type ButtonSizes, type ButtonVariants } from './button'
-import { cn } from '../util'
+import { buttonVariants } from './button'
+import { cn, type VariantProps } from '../util'
 
   /**
    * If this is rendered directly (and not auto generated in a Block)
    * and it has any children, title, icon, and iconAfter
    * are ignore.
    */
-const LinkElement: React.FC<PropsWithChildren & {
+const LinkElement: React.FC<
+  PropsWithChildren & 
+  VariantProps<typeof buttonVariants> & 
+{
   def: LinkDef,
-    /** overrides def */
-  variant? : ButtonVariants 
-    /** overrides def */
-  size?: ButtonSizes  
-    /** To trigger other events in addition to the 
-     * link action itself. (eg, to also close a drawer menu)  
+
+    /** 
+     * Use to trigger other events in addition to the 
+     * link action itself. For example, to also close a drawer menu.  
      */  
   onClick?: () => void  
+
     /** overrides def (eg, for title area)*/
   icon?: Icon          
     /** overrides def */
@@ -28,9 +30,10 @@ const LinkElement: React.FC<PropsWithChildren & {
 }> = ({ 
   def,
     // DO NOT provide a default to any of the props that also appear in def!
-  size, 
   onClick,
+  size, 
   variant,
+  rounded,
   icon,     
   iconAfter, 
   className = '',
@@ -42,6 +45,7 @@ const LinkElement: React.FC<PropsWithChildren & {
     newTab,
     variant: defVariant,
     size: defSize, 
+    rounded: defRounded, 
     title
   } = def
 
@@ -88,7 +92,8 @@ const LinkElement: React.FC<PropsWithChildren & {
           size: (!defVariant || defVariant.includes('link') || variant?.includes('link'))  ? 
             'link' 
             : 
-            (size ? size : defSize)
+            (size ? size : defSize),
+          rounded: rounded ?  rounded : (defRounded ? defRounded : 'md'), 
         }), 
           // This is a "label only" LinkDef.  cf: footer"
         ((href.length > 0 || onClick) ? '' : 'pointer-events-none'),

@@ -15,6 +15,8 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
   const horizButtons = 'horizButtons' in options ? options.horizButtons! : false
   const showSlider = 'showSlider' in options ? options.showSlider! : true
 
+  const showButtonIfOnlyOne = 'showButtonIfOnlyOne' in options ? options.showButtonIfOnlyOne! : true
+
   const sort = 'sort' in options ? options.sort! : 'none'
 
   return {
@@ -27,6 +29,7 @@ export default (options: ItemSelectorOptions | undefined = {}): Required<ItemSel
     buttonType,
     horizButtons,
     showSlider,
+    showButtonIfOnlyOne,
     sort,
   }
 }

@@ -19,7 +19,7 @@ import * as pathUtils from '../../service/path-utils'
 import { getFacetValuesMutator, ObsStringMutator } from '../../util'
 
 import NodeTabs from '../node-tabs'
-import AddToCartWidget from './add-to-cart-widget'
+import AddToCartWidget from '../add-to-cart-widget'
 
 const BuyCard: React.FC<{
   skuPath: string
@@ -215,7 +215,7 @@ const BuyCard: React.FC<{
         mobile={mobile}
         mutator={allVariants ? 
           {
-            get: () => (inst.current!.currentFamTokenMutator.s),
+            get: () => (inst.current!.currentFamTokenMutator.get()),
             set: setFamilyPath
           }
           : 
@@ -248,6 +248,7 @@ const BuyCard: React.FC<{
     {(cmmc.currentItem) && (
       <AddToCartWidget 
         item={cmmc.currentItem}
+        registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : ''), addWidgetClx)}
       />

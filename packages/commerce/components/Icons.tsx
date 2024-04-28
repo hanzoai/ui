@@ -16,7 +16,7 @@ import {
   Barcode
 } from "lucide-react"
 
-export const Icons = {
+export default {
   shoppingCart: ShoppingCart,
   menu: Menu,
   chevronLeft: ChevronLeft,

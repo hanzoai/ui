@@ -1,4 +1,5 @@
-import type { ButtonVariants, ButtonSizes } from '../primitives/button'
+import type { VariantProps } from 'class-variance-authority'
+import type { buttonVariants } from '../primitives/button'
 import type Icon  from './icon'
 
 /**
@@ -6,7 +7,7 @@ import type Icon  from './icon'
  * 
  * 
  */
-interface LinkDef {
+interface LinkDef extends VariantProps<typeof buttonVariants> {
     /**
      * If the LinkElement is rendered directly and has children, 
      * the title, icon, iconAfter fields in the supplied LinkDef 
@@ -49,9 +50,6 @@ interface LinkDef {
      * rendered as a disabled link, shows default cursor, and eats pointer events.
      */
   disabled?: boolean
-
-  variant?: ButtonVariants
-  size?: ButtonSizes
 }
 
 export {

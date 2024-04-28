@@ -1,10 +1,10 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
 
-import { cn } from '../util'
+import { cn, type VariantProps } from '../util'
 
 import type { ButtonDef, ButtonModalDef } from '../types'
-import type { ButtonSizes } from './button'
+import type { buttonVariants } from './button'
 
   // The DVC must be rendered client-side since it accesses the DOM directly.
   // There is no need for a loading UI since the dialog only opens
@@ -12,26 +12,27 @@ import type { ButtonSizes } from './button'
   // https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading
 const DynamicDVC = dynamic(() => (import('./dialog-video-controller')), {ssr: false})
 
-const ActionButton: React.FC<{
-  def: ButtonDef
-  size?: ButtonSizes
-  className?: string
-}> = ({
+const ActionButton: React.FC<
+  VariantProps<typeof buttonVariants> &
+  {
+    def: ButtonDef
+    className?: string
+  }
+> = ({
   def,
-  size, // no default.  overrides!
-  className=''
+  className='',
+  ...rest
 }) => {
   if (def.action.type === 'modal') {
     const m = def.action.def as ButtonModalDef
     const Modal = m.Comp
-    const sizeToSpread = size ? {size} : {}
     return (
       <DynamicDVC>
         <Modal 
           title={m.title}
           byline={m.byline}
           buttonText={def.text}
-          buttonProps={{...def.props, ...sizeToSpread, className: cn((def.props?.className ?? ''), className)}}
+          buttonProps={{...def.props, ...rest, className: cn((def.props?.className ?? ''), className)}}
           action={m.action}
           actionEnclosure={m.actionEnclosure}
           {...m.props}

@@ -5,7 +5,8 @@ export {
   useSyncSkuParamWithCurrentItem, 
   getFacetValuesMutator, 
   formatCurrencyValue,
-  ProductMediaAccessor 
+  ProductMediaAccessor,
+  LineItemRef 
 } from './util'
 
 export * from './util/selection-ui-specifiers'

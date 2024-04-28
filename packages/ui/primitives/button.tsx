@@ -52,10 +52,6 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonVariants = keyof typeof variant
-type ButtonSizes = keyof typeof size
-type ButtonRoundedValue = keyof typeof rounded
-
 interface ButtonProps extends
   React.ButtonHTMLAttributes<HTMLButtonElement>, 
   VariantProps<typeof buttonVariants> 
@@ -81,8 +77,5 @@ Button.displayName = "Button"
 export { 
   Button as default, 
   type ButtonProps,
-  type ButtonVariants,
-  type ButtonSizes, 
-  type ButtonRoundedValue,
   buttonVariants,
 }
