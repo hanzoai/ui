@@ -1,5 +1,6 @@
 export * from './context'
 export * from './components'
+  // Impl-dependent, so leave w impl
 export type { StandaloneServiceOptions as ServiceOptions } from './service/impls/standalone/standalone-service'
 export { 
   useSyncSkuParamWithCurrentItem, 

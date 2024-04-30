@@ -16,6 +16,7 @@ class LineItemRef implements ObsLineItemRef {
   }
 
   get item(): LineItem | undefined { return this._item  }
+  
   set = (v: LineItem | undefined): void => { this._item = v  }
 }
 

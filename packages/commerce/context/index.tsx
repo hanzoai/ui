@@ -37,19 +37,22 @@ const CommerceProvider: React.FC<PropsWithChildren & {
   rootNode: CategoryNode
   options?: ServiceOptions
   uiSpecs?: Record<string, SelectionUISpecifier>
+  DEBUG_NO_TICK?: boolean
 }> = ({ 
   children,
   families,
   rootNode,
   options,
-  uiSpecs
+  uiSpecs,
+  DEBUG_NO_TICK=false
 }) => {
 
   useEffect(() => {
+    if (DEBUG_NO_TICK) return
     const intervalId = setInterval(() => {
       (valueRef.current.ui as CommerceUIStore).tick()   
     }, 250)  
-    return () => {clearInterval(intervalId)}
+    return () => { clearInterval(intervalId) }
   }, [])
 
     // TODO: Inject Promo fixture here from siteDef
