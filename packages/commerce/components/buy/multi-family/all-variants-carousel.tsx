@@ -242,8 +242,10 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
             </CarouselItem>
           ))}
           </CarouselContent>
-          <CarouselPrevious className='left-1'/>
-          <CarouselNext className='right-1'/>
+          {r.current.items.length > 1 && (<>
+            <CarouselPrevious className='left-1'/>
+            <CarouselNext className='right-1'/>
+          </>)}
         </Carousel>
       )}
       <ItemInfo labelClx='!text-base font-medium'/>
