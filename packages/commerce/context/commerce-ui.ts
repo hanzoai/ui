@@ -4,22 +4,20 @@ import {
   makeObservable, 
   observable, 
 } from 'mobx'
-import type { CommerceService, LineItem } from '../types'
+import type { CommerceService, LineItem, ObsLineItemRef } from '../types'
 
 
-
-interface CommerceUI {
+interface CommerceUI extends ObsLineItemRef {
   showBuyOptions: (skuPath: string) => void
   hideBuyOptions: () => void
   get buyOptionsSkuPath(): string | undefined
 
-  itemQuantityChanged(item: LineItem, val: number, prevVal: number): void 
-  get activeItem(): LineItem | undefined
+  itemQuantityChanged(item: LineItem, val: number, prevVal: number): void
 }
 
 class CommerceUIStore implements CommerceUI {
 
-  static readonly TIMEOUT = 2500
+  static readonly TIMEOUT = 1500
   _buyOptionsSkuPath: string | undefined = undefined
   _paused: boolean = false
   _activeItem: LineItem | undefined = undefined
@@ -36,7 +34,7 @@ class CommerceUIStore implements CommerceUI {
       buyOptionsSkuPath: computed,
       itemQuantityChanged: action,
       tick: action,
-      activeItem: computed
+      item: computed
     })
   }
 
@@ -92,7 +90,7 @@ class CommerceUIStore implements CommerceUI {
     }
   } 
 
-  get activeItem(): LineItem | undefined {
+  get item(): LineItem | undefined {
     return this._activeItem
   }
 }

@@ -203,7 +203,7 @@ const CarouselBuyCard: React.FC<{
     <div className={clx}>
       <AddToCartWidget 
         item={cmmc.currentItem}
-        registerAdd={false}
+        registerAdd={true}
         onQuantityChanged={onQuantityChanged} 
         variant={cmmc.cartEmpty ? 'primary' : 'outline'}
         className={addBtnClx} 
