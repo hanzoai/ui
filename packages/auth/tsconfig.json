@@ -1,15 +1,10 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../tsconfig.hanzo.base.json",
   "include": [
     "**/*.ts",
     "**/*.tsx",
   ],
   "exclude": [
     "node_modules",
-  ],
-  "plugins": [{ "name": "next"}],
-  "compilerOptions": {
-    "declaration": false,
-    "noEmit": true
-  }
+  ]
 }
