@@ -50,7 +50,14 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
     return <>video block required</>
   }
 
+
   const b = block as VideoBlock
+  const animateValidator = b.specifiers?.includes('animate-validator')
+
+  if (animateValidator) {
+    // add something to somebody's classname
+  }
+
   const ar = asNum(b.dim.md.w) / asNum(b.dim.md.h)
   if (agent === 'phone') {
     if (b.sizing?.mobile?.vw) {
