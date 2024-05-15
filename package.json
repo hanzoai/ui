@@ -4,8 +4,8 @@
   "license": "BSD-3-Clause",
   "type": "module",
   "author": {
-    "name": "hanzoai dev dudes",
-    "url": "https://twitter.com/hanzoai"
+    "name": "Hanzo AI, Inc",
+    "url": "https://hanzo.ai"
   },
   "scripts": {
     "clean:nm": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
