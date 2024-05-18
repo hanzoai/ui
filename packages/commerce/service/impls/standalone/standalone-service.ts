@@ -110,7 +110,7 @@ class StandaloneService
     })
   }
 
-  getFamily(id: string): Family | undefined {
+  getFamilyById(id: string): Family | undefined {
     return this._familyMap.get(id)
   }
 
@@ -343,14 +343,13 @@ class StandaloneService
     this._promo = promo
   }
 
-  setCurrentItem(skuToFind: string | undefined): boolean {
+  getItemBySku = (skuToFind: string | undefined): LineItem | undefined => {
 
     if (skuToFind === undefined || skuToFind.length === 0) {
-      this._currentItem = undefined
-      return true
+      return undefined
     }
-      // self calling function
-    this._currentItem = ((): ActualLineItem | undefined  => {
+      // Self-calling
+    const found = ((): ActualLineItem | undefined  => {
 
       const familiesTried: string[] = []
       if (this.selectedFamilies && this.selectedFamilies.length > 0) {
@@ -370,8 +369,19 @@ class StandaloneService
         }
       }
       return undefined
-    })(); // necessary semi
+    })(); // Self-calling, necessary semi
 
+    return found
+  }
+
+  setCurrentItem = (skuToFind: string | undefined): boolean  => {
+
+    if (skuToFind === undefined || skuToFind.length === 0) {
+      this._currentItem = undefined
+      return true
+    }
+      // self calling function
+    this._currentItem = this.getItemBySku(skuToFind) as ActualLineItem | undefined
     this.setCurrentFamily(this._currentItem ? this._currentItem.familyId : undefined)
     return !!this._currentItem
   }

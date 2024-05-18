@@ -112,7 +112,8 @@ interface CommerceService extends ObsLineItemRef, ObsFamilyRef {
   get currentFamily(): Family | undefined
 
     // utility
-  getFamily(id: string): Family | undefined
+  getFamilyById(id: string): Family | undefined
+  getItemBySku(sku: string): LineItem | undefined
 }
 
 

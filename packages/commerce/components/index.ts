@@ -1,5 +1,4 @@
 export { default as AddToCartWidget } from './add-to-cart-widget'
-export { default as BuyButton } from './buy/buy-button'
 export { default as CarouselBuyCard } from './buy/carousel-buy-card'
 
 export { default as CartAccordian } from './cart/cart-accordian'

@@ -86,7 +86,7 @@ const BuyCard: React.FC<{
 
   useEffect(() => {
 
-    let requestedFamily = cmmc.getFamily(skuPath) 
+    let requestedFamily = cmmc.getFamilyById(skuPath) 
     let requestedNode = requestedFamily ? undefined : cmmc.getNodeAtPath(skuPath)
     let initialFamily = undefined
 
@@ -137,7 +137,7 @@ const BuyCard: React.FC<{
         },
         (famId) => {
           if (famId && famId !== cmmc.currentItem?.familyId) {
-            const fam = cmmc.getFamily(famId)
+            const fam = cmmc.getFamilyById(famId)
             if (fam) { 
               cmmc.setCurrentItem(fam.products[0].sku) 
             }
@@ -248,7 +248,6 @@ const BuyCard: React.FC<{
     {(cmmc.currentItem) && (
       <AddToCartWidget 
         item={cmmc.currentItem}
-        registerAdd={false}
         onQuantityChanged={onQuantityChanged} 
         className={cn('min-w-[160px] mx-auto mt-4', (scroll ? 'shrink-0' : ''), addWidgetClx)}
       />

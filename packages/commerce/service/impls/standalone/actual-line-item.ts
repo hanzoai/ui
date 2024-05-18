@@ -81,7 +81,7 @@ class ActualLineItem
     const title = this.fullTitle ? 
       this.fullTitle 
       : 
-      ((cmmc.getFamily(this.familyId)?.title ?? this.familyTitle) + ', ' + this.optionLabel)
+      ((cmmc.getFamilyById(this.familyId)?.title ?? this.familyTitle) + ', ' + this.optionLabel)
 
     return({
       sku: this.sku,
