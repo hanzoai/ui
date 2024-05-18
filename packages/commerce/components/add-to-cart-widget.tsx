@@ -9,11 +9,9 @@ import { cn, type VariantProps } from '@hanzo/ui/util'
 import Icons from './Icons'
 import type { LineItem } from '../types'
 import { sendFBEvent, sendGAEvent } from '../util/analytics'
-import { useCommerceUI } from '..'
 
 const AddToCartWidget: React.FC<{ 
   item: LineItem
-  registerAdd?: boolean
   disabled?: boolean
   className?: string
   buttonClx?: string
@@ -22,26 +20,19 @@ const AddToCartWidget: React.FC<{
 }> = observer(({
   item,
   variant='primary',
-  registerAdd=true,
   disabled=false,
   className='',
   buttonClx='',
   onQuantityChanged
 }) => {
 
-  const ui = useCommerceUI()
-
   const reactionDisposer = useRef<IReactionDisposer | undefined>(undefined)
-
   useEffect(() => {
-      // Only tell the micro-drawer 
-      // if we're not part of the cart ui,
-      // or part of the main drawer.
-    if (registerAdd && variant !== 'minimal') {
+    if (onQuantityChanged) {
       reactionDisposer.current = reaction(
         () => (item.quantity),
         (quantity: number, previous: number) => {
-          ui.itemQuantityChanged(item, quantity, previous)
+          onQuantityChanged(item.sku, quantity, previous)
         }  
       )
     }
@@ -75,11 +66,7 @@ const AddToCartWidget: React.FC<{
   }
 
   const inc = () => {
-    const old = item.quantity
     item.increment()
-    if (onQuantityChanged) {
-      onQuantityChanged(item.sku, old, old + 1) 
-    }
     sendGAEvent('add_to_cart', {
       items: [{
         item_id: item.sku,
@@ -104,11 +91,7 @@ const AddToCartWidget: React.FC<{
   }
 
   const dec = () => {
-    const old = item.quantity
     item.decrement()
-    if (onQuantityChanged) {
-      onQuantityChanged(item.sku, old, old - 1) 
-    }
     sendGAEvent('remove_from_cart', {
       items: [{
         item_id: item.sku,

@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Drawer as DrawerPrimitive } from 'vaul'
+import { Drawer as DrawerPrimitive } from '@hanzo/react-drawer'
 
 import { cn } from '../util'
 
@@ -18,6 +18,7 @@ Drawer.displayName = 'Drawer'
 
 const DrawerTrigger = DrawerPrimitive.Trigger
 const DrawerPortal = DrawerPrimitive.Portal
+const DrawerHandle = DrawerPrimitive.Handle
 const DrawerClose = DrawerPrimitive.Close
 
 const DrawerOverlay = React.forwardRef<
@@ -36,11 +37,15 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     overlayClx?: string
-      // Redundancy of 'modal' sent to Root, since we have no access to that.
-      // Hack that avoids forking their code.
-    modal?: boolean 
+    defaultHandle?: boolean
   }
->(({ className, children, overlayClx='', modal=true, ...props }, ref) => {
+>(({ 
+  className, 
+  children, 
+  overlayClx='', 
+  defaultHandle=true,
+  ...props 
+ }, ref) => {
   
   return (
     <DrawerPortal>
@@ -53,12 +58,11 @@ const DrawerContent = React.forwardRef<
           // 'h-[80%]' 
           className
         )}
-          // A bug / omission in Vaul
-        onFocusOutside={(e) => { if (!modal) { e.preventDefault(); return } }}
-        onEscapeKeyDown={(e) => { if (!modal) { e.preventDefault(); return } }}
         {...props}
       >
-        <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
+        {defaultHandle && (
+          <div className='absolute left-0 right-0 mx-auto top-2 h-2 w-[100px] rounded-full bg-level-3 shrink-0' />
+        )}
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -126,8 +130,9 @@ export {
   DrawerTrigger,
   DrawerClose,
   DrawerContent,
+  DrawerHandle,
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
-  DrawerDescription,
+  DrawerDescription
 }
