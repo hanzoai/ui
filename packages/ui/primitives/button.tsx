@@ -5,13 +5,13 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "../util"
 
 const variant = {
-  primary: "bg-primary text-primary-fg md:hover:bg-primary-hover font-nav whitespace-nowrap not-typography",
-  secondary: "bg-secondary text-secondary-fg md:hover:bg-secondary-hover font-nav whitespace-nowrap not-typography",
-  outline: "text-foreground bg-background border border-muted-4 md:hover:bg-level-1 md:hover:text-accent md:hover:border-accent font-nav whitespace-nowrap not-typography",
-  destructive: "bg-destructive text-destructive-fg font-sans whitespace-nowrap md:hover:bg-destructive-hover",
-  ghost: "text-foreground md:hover:bg-level-1 md:hover:text-accent whitespace-nowrap font-sans ",
-  link: "text-foreground md:hover:text-muted-1 font-sans ",
-  linkFG: "text-foreground md:hover:text-muted-1 font-sans ", // marker to style nav as regular link
+  primary: "bg-primary text-primary-fg sm:hover:bg-primary-hover font-nav whitespace-nowrap not-typography",
+  secondary: "bg-secondary text-secondary-fg sm:hover:bg-secondary-hover font-nav whitespace-nowrap not-typography",
+  outline: "text-foreground bg-background border border-muted-4 sm:hover:bg-level-1 sm:hover:text-accent sm:hover:border-accent font-nav whitespace-nowrap not-typography",
+  destructive: "bg-destructive text-destructive-fg font-sans whitespace-nowrap sm:hover:bg-destructive-hover",
+  ghost: "text-foreground sm:hover:bg-level-1 sm:hover:text-accent whitespace-nowrap font-sans ",
+  link: "text-foreground sm:hover:text-muted-1 font-sans ",
+  linkFG: "text-foreground sm:hover:text-muted-1 font-sans ", // marker to style nav as regular link
 }
 
 const size = {
