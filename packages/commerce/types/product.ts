@@ -5,6 +5,7 @@ interface Product extends MediaStackDef {
   sku: string   // human visible on orders etc.
   fullTitle?: string
   optionLabel: string
+  optionLabelShort?: string
   familyId: string  // skuPath, eg LXB-AU-B
   familyTitle: string
   byline?: string

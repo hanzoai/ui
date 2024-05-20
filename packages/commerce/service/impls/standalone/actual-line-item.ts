@@ -28,6 +28,7 @@ class ActualLineItem
   sku: string   
   fullTitle?: string
   optionLabel: string
+  optionLabelShort?: string  
   familyTitle: string
   familyId: string  
   byline?: string
@@ -45,6 +46,7 @@ class ActualLineItem
     this.sku = prod.sku
     this.fullTitle = prod.fullTitle
     this.optionLabel = prod.optionLabel
+    this.optionLabelShort = prod.optionLabelShort
     this.familyTitle = prod.familyTitle
     this.familyId = prod.familyId
     this.byline = prod.byline
