@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.0.6",
+  "version": "7.0.7",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
