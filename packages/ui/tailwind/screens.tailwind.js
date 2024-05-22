@@ -4,5 +4,5 @@ export default {
   md: '768px', // sm tablets / narrow -->
   lg: '1024px',
   xl: '1280px',
-  '2xl': '1500px', // to match other sites
+  '2xl': '1500px', 
 }
