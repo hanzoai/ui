@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.8.5",
+  "version": "3.8.10",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -84,7 +84,7 @@
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-interaction-media": "^0.1.0",
-    "@hanzo/react-drawer": "0.1.0"
+    "@hanzo/react-drawer": "0.1.2"
   },
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.2",
