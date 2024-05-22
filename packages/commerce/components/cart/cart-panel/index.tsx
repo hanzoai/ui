@@ -81,7 +81,7 @@ const CartPanel: React.FC<PropsWithChildren & {
     cmmc.setCurrentItem(item.sku) 
   }
 
-  const Main: React.FC = observer(() => (<>
+  const MainStuff: React.FC = observer(() => (<>
     {cmmc.cartEmpty ? (
       <p className={cn('text-center my-3', noItemsClx)}>No items</p>
     ) : (<>
@@ -135,11 +135,11 @@ const CartPanel: React.FC<PropsWithChildren & {
       {children}
       {scrolling() ? (
         <ScrollArea className={cn('mt-2 w-full shrink py-0', listClx)}>
-          <Main />
+          <MainStuff />
         </ScrollArea>
       ) : (
         <div className={cn('mt-2 w-full', listClx)}>
-          <Main />
+          <MainStuff />
         </div>
       )}
       {handleCheckout && !cmmc.cartEmpty && (

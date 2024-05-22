@@ -842,6 +842,8 @@ export default {
       opacity: 'opacity',
       shadow: 'box-shadow',
       transform: 'transform',
+      height: 'height',
+      spacing: 'margin, padding',
     },
     transitionTimingFunction: {
       DEFAULT: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -860,7 +862,7 @@ export default {
       '3/4': '75%',
       full: '100%',
     },
-    width: {
+    width: ({ theme, breakpoints }) => ({
       auto: 'auto',
       ...spacing,
       '1/2': '50%',
@@ -894,7 +896,8 @@ export default {
       min: 'min-content',
       max: 'max-content',
       fit: 'fit-content',
-    },
+      ...breakpoints(theme('screens')),
+    }),
     willChange: {
       auto: 'auto',
       scroll: 'scroll-position',
