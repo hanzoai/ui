@@ -406,8 +406,8 @@ importers:
   packages/ui:
     dependencies:
       '@hanzo/react-drawer':
-        specifier: 0.1.2
-        version: 0.1.2(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.1.5
+        version: 0.1.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.4.0(react-hook-form@7.51.4(react@18.3.1))
@@ -1307,6 +1307,12 @@ packages:
 
   '@hanzo/react-drawer@0.1.2':
     resolution: {integrity: sha512-cHKgF24dXHCt4I74C5KXRjx3BzZHGU80tilamLkSJHTwFmAjQ7G5IVBpTeUv9DRO/+l53ZEg6ND9ZoPBQm/yuw==}
+    peerDependencies:
+      react: ^18.3.1
+      react-dom: ^18.3.1
+
+  '@hanzo/react-drawer@0.1.5':
+    resolution: {integrity: sha512-Ymyv3he8qkZCxEgJUBVF1nzdCoILuDjGFYfMGqlu6vM2RlxjWZr06QJpBSdUGq5+GpUJevlekSYu95lvHrtuJQ==}
     peerDependencies:
       react: ^18.3.1
       react-dom: ^18.3.1
@@ -6958,6 +6964,16 @@ snapshots:
       - supports-color
 
   '@hanzo/react-drawer@0.1.2(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      usehooks-ts: 3.1.0(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+
+  '@hanzo/react-drawer@0.1.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
