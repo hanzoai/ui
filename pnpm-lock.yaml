@@ -333,6 +333,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
 
+  packages/chat: {}
+
   packages/commerce:
     dependencies:
       '@hanzo/auth':
@@ -406,8 +408,8 @@ importers:
   packages/ui:
     dependencies:
       '@hanzo/react-drawer':
-        specifier: 0.1.5
-        version: 0.1.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.1.6
+        version: 0.1.6(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.3.2
         version: 3.4.0(react-hook-form@7.51.4(react@18.3.1))
@@ -1311,8 +1313,8 @@ packages:
       react: ^18.3.1
       react-dom: ^18.3.1
 
-  '@hanzo/react-drawer@0.1.5':
-    resolution: {integrity: sha512-Ymyv3he8qkZCxEgJUBVF1nzdCoILuDjGFYfMGqlu6vM2RlxjWZr06QJpBSdUGq5+GpUJevlekSYu95lvHrtuJQ==}
+  '@hanzo/react-drawer@0.1.6':
+    resolution: {integrity: sha512-eoCq4UU8K+zUsvZEYHXvWpIgQ8LV2xhbhYu1b/r4r8Xb5zTRNaHGAQFXtLmYEmCv00wJ8vqwTgfa/wJUm4TG2g==}
     peerDependencies:
       react: ^18.3.1
       react-dom: ^18.3.1
@@ -6973,7 +6975,7 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
 
-  '@hanzo/react-drawer@0.1.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@hanzo/react-drawer@0.1.6(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
