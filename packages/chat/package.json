@@ -1,12 +1,58 @@
 {
-  "name": "@hanzo/chat",
+  "name": "@hanzo/chatbot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Library with chatbot widget.",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Hanzo AI, Inc.",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/react-sdk.git",
+    "directory": "packages/chat"
+  },
+  "keywords": [
+    "chatbot",
+    "hanzoai",
+    "hanzo"
+  ],
+  "main": "index.ts",
+  "scripts": {
+    "lat": "npm show @hanzo/chatbot version",
+    "pub": "npm publish",
+    "tc": "tsc"
+  },
+  "dependencies": {
+    "@hanzo/ui": "^3.8.14",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "ai": "2.1.6",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "nanoid": "^5.0.7",
+    "next": "^14.2.3",
+    "react": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-intersection-observer": "^9.8.2",
+    "react-markdown": "8.0.7",
+    "react-syntax-highlighter": "^15.5.0",
+    "react-textarea-autosize": "^8.5.3",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^6.0.0",
+    "tailwind-merge": "^2.3.0"
+  },
+  "exports": {
+    ".": "./components/index.ts"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "typescript": "^5.4.5"
+  }
 }
