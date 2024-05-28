@@ -7,6 +7,7 @@ settings:
 overrides:
   react: ^18.3.1
   '@types/react': ^18.3.2
+  react-hook-form: 7.51.4
 
 importers:
 
@@ -184,7 +185,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       react-hook-form:
-        specifier: ^7.44.2
+        specifier: 7.51.4
         version: 7.51.4(react@18.3.1)
       react-resizable-panels:
         specifier: ^0.0.55
@@ -317,7 +318,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1
       react-hook-form:
-        specifier: ^7.51.4
+        specifier: 7.51.4
         version: 7.51.4(react@18.3.1)
       zod:
         specifier: 3.23.8
@@ -332,8 +333,6 @@ importers:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
-
-  packages/chat: {}
 
   packages/commerce:
     dependencies:
@@ -380,7 +379,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-hook-form:
-        specifier: ^7.51.4
+        specifier: 7.51.4
         version: 7.51.4(react@18.3.1)
       react-square-web-payments-sdk:
         specifier: ^3.2.1
@@ -540,7 +539,7 @@ importers:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-hook-form:
-        specifier: ^7.51.4
+        specifier: 7.51.4
         version: 7.51.4(react@18.3.1)
       react-intersection-observer:
         specifier: ^9.8.2
@@ -1304,7 +1303,7 @@ packages:
       mobx-react-lite: ^4.0.7
       next: 14.2.3
       react: ^18.3.1
-      react-hook-form: ^7.51.4
+      react-hook-form: 7.51.4
       zod: 3.23.8
 
   '@hanzo/react-drawer@0.1.2':
@@ -1330,14 +1329,14 @@ packages:
       next-themes: ^0.2.1
       react: ^18.3.1
       react-dom: ^18.3.1
-      react-hook-form: ^7.51.4
+      react-hook-form: 7.51.4
       validator: ^13.11.0
       zod: 3.23.8
 
   '@hookform/resolvers@3.4.0':
     resolution: {integrity: sha512-+oAqK3okmoEDnvUkJ3N/mvNMeeMv5Apgy1jkoRmlaaAF4vBgcJs9tHvtXU7VE4DvPosvAUUkPOaNFunzt1dbgA==}
     peerDependencies:
-      react-hook-form: ^7.0.0
+      react-hook-form: 7.51.4
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}

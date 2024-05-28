@@ -214,8 +214,8 @@ const CarouselBuyCard: React.FC<{
   return (
     <div className={cn(
       'px-4 md:px-6 pt-3 pb-4 flex flex-col gap-1 items-center', 
+      r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto',
       clx,
-      r.current?.single?.scrollable ? SCROLL.scrollHeightClx : 'h-auto'
     )}>
       {r.current?.single ? ( 
         <SingleFamilySelector 
