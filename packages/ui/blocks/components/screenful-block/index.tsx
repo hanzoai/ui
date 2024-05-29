@@ -14,15 +14,17 @@ const ScreenfulComponent: React.FC<{
   agent?: string
   initialInView?: boolean
   snapTile?: boolean
-  className?: string
+  clx?: string
   contentClx?: string
+  bottom?: React.ReactNode
 }> = ({
   block,
   agent,
   initialInView=false,
   snapTile=false,
-  className='',
-  contentClx=''
+  clx='',
+  contentClx='',
+  bottom
 }) => {
 
   if (block.blockType !== 'screenful') {
@@ -38,8 +40,8 @@ const ScreenfulComponent: React.FC<{
   const narrowGutters = specified('narrow-gutters') // eg, for a table object that is large
   const noGutters = specified('no-gutters')
   const fullScreenWidth = specified('full-screen-width')
-  const fullScreenHeight = specified('full-screen-height')
-  const vertCenter = specified('vert-center')
+  const vertCenter = specified('vert-center') // at the main level, it seems only useful w one column
+  const oneColumn = b.contentColumns.length === 1
 
     // content wrapper clx:
     // [
@@ -48,26 +50,32 @@ const ScreenfulComponent: React.FC<{
     //    p&m-modifiers
     // ]
   const cwclx = [
-    'xl:mx-auto overflow-y-hidden ',
+    'xl:mx-auto overflow-y-hidden h-full',
     fullScreenWidth ? '' : 'max-w-screen-xl',
-    fullScreenHeight ? 'h-full' : '',
       // desktop header: 80px / pt-20
       // mobile header: 44px / pt-11  
     narrowGutters ? 
-      'px-6 lg:px-8 2xl:px-2 pb-6 ' + (snapTile  ? 'pt-15 md:pt-26 lg:pt-28 ' : '') // otherwise assume there is a Main
-    : noGutters ? 
-      'px-0 pb-0 ' + (snapTile  ? 'pt-11 lg:pt-20 ' : '') // otherwise assume there is a Main
+      'px-6 lg:px-8 2xl:px-2 pb-4 lg:pb-6 xl:pb-8 ' + (snapTile  ? 'pt-15 md:pt-26 lg:pt-28 ' : '') // otherwise assume there is a Main
       : 
-      'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)] ',
+      noGutters ? 
+        'px-0 pb-0 ' + (snapTile  ? 'pt-11 lg:pt-20 ' : '') // otherwise assume there is a Main
+        : 
+        'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)] ',
 
     (agent && agent !== 'desktop') ? 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8' : '' 
   ]
 
-  const spreadId = (b.anchorId) ? {id: b.anchorId} : {}
-
   return (
-    <section {...spreadId} className={cn((snapTile ? 'snap-start snap-always h-[100vh]' : 'min-h-screen'), className)}>
-      <ApplyTypography className={cn('w-full flex flex-row justify-center self-stretch', snapTile ? tileHeight : '')} >
+    <section {...((b.anchorId) ? {id: b.anchorId} : {})} className={cn(
+      snapTile ? 'snap-start snap-always h-[100vh]' : 'min-h-screen', 
+      bottom ? 'flex flex-col' : '',
+      clx
+    )}>
+      <ApplyTypography className={cn(
+        'w-full flex flex-row justify-center self-stretch', 
+        snapTile ? tileHeight : '',
+        bottom ? 'grow' : ''
+      )}>
         <Poster banner={b.banner}>
         {hasBannerVideo() && (
           <Video 
@@ -80,7 +88,7 @@ const ScreenfulComponent: React.FC<{
             ...cwclx,
             snapTile ? 'absolute left-0 right-0 top-0 bottom-0 ' : 'flex min-h-screen w-full',
             contentClx,
-            vertCenter ? '!py-0 self-center' : ''
+            vertCenter ? 'self-center ' + (oneColumn ? '!py-0' : '' ) : ''
           )}
         >
           <Content block={b} agent={agent}  className='w-full'/>
@@ -88,6 +96,7 @@ const ScreenfulComponent: React.FC<{
         </div>
       </Poster>
       </ApplyTypography>
+      {bottom}
     </section>
   )
 }
