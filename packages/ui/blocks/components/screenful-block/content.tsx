@@ -91,7 +91,7 @@ const Content: React.FC<{
 }) => {
 
   // We need to set h-full when we have more than 1 column too, so the grid takes full height - Firefox and Safari fix.
-  const layoutClx = 'flex flex-col gap-2 sm:gap-4 h-full pt-11 lg:pt-20 ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
+  const layoutClx = 'flex flex-col gap-2 sm:gap-4 h-full ' + ((agent !== 'phone') ? ('md:grid md:gap-8 ' + `md:grid-cols-${b.contentColumns.length} `) : '')
 
   const orderclx = (columnIndex: number): string => {
     const orderIndex = b.mobileOrder?.indexOf(columnIndex)
