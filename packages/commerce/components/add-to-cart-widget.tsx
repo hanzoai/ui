@@ -15,7 +15,7 @@ const AddToCartWidget: React.FC<{
   disabled?: boolean
   className?: string
   buttonClx?: string
-  variant?: 'minimal' | 'primary' | 'outline'
+  variant?: 'minimal' | 'primary' | 'primary-smaller' | 'outline'
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = observer(({
   item,
@@ -50,8 +50,9 @@ const AddToCartWidget: React.FC<{
   const ghost = variant === 'minimal'
   const outline = variant === 'outline'
   const primary = variant === 'primary'
+  const priSmaller = variant === 'primary-smaller'
 
-  let iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 ' : 'h-5 w-7 px-1 opacity-70 '
+  let iconClx = ghost ? 'h-4 w-4 md:h-3 md:w-3 text-muted-3 ' : (priSmaller ? 'h-4 w-6 px-0.5 opacity-70' : 'h-5 w-7 px-1 opacity-70 ')
   iconClx += ghost ? 'group-hover:text-foreground' : 'group-hover:opacity-100'
 
   let digitClx = ghost ? 'px-2 md:px-0.5 ' : 'sm:px-2 font-semibold '
@@ -59,7 +60,7 @@ const AddToCartWidget: React.FC<{
 
   if (disabled) {
     return (
-      <div className={cn('flex flex-row items-stretch' + ROUNDED_CLX +  (!primary ? 'bg-transparent' : 'bg-primary'), className)}>
+      <div className={cn('flex flex-row items-stretch' + ROUNDED_CLX +  (!(primary || priSmaller) ? 'bg-transparent' : 'bg-primary'), className)}>
         <div className={'text-sm flex items-center cursor-default ' + digitClx} >{item.quantity}</div>
       </div>
     )
@@ -109,20 +110,20 @@ const AddToCartWidget: React.FC<{
     <div className={cn(
       'flex flex-row items-stretch justify-between ',
         // should match 'xs' and 'default' button heights
-      (ghost ? 'h-8' : 'h-10'),
+      (ghost || priSmaller ? 'h-8' : 'h-9'),
       ROUNDED_CLX,
-      (primary ? 'bg-primary' : 'bg-transparent'), 
+      (primary || priSmaller ? 'bg-primary' : 'bg-transparent'), 
       (outline ? 'border border-muted' : ''),
       className
     )}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
-        size={ghost ? 'xs' : 'default'}
-        variant={primary ? 'primary' : 'ghost'}
+        size={ghost || priSmaller ? 'xs' : 'default'}
+        variant={primary || priSmaller ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-start group', 
-          (ghost ? 'px-1' : 'px-2'), 
+          (ghost || priSmaller ? 'px-1' : 'px-2'), 
           (outline ? 'hover:bg-transparent' : ''),
           buttonClx,
           'h-auto self-stretch' // must be smaller than normal
@@ -136,15 +137,22 @@ const AddToCartWidget: React.FC<{
         <Icons.trash className={iconClx} aria-hidden='true'/>
       )}
       </Button>
-        <div className={'text-sm grow-0 shrink-0 flex items-center cursor-default xs:px-2 ' + digitClx} >{item.quantity}{ghost ? '' : ' in Bag'}</div>
+        <div className={cn(
+          'grow-0 shrink-0 flex items-center cursor-default xs:px-2',
+          priSmaller ? 'text-xs' : 'text-sm',
+          digitClx
+        )}>
+          {item.quantity}{ghost ? '' : ' in Bag'}
+        </div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
-        size={ghost ? 'xs' : 'default'}
-        variant={primary ? 'primary' : 'ghost'}
+        size={ghost || priSmaller ? 'xs' : 'default'}
+
+        variant={primary || priSmaller ? 'primary' : 'ghost'}
         rounded={ghost ? 'full' : ROUNDED_VAL}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-end group', 
-          (ghost ? 'px-1' : 'px-2'), 
+          (ghost || priSmaller ? 'px-1' : 'px-2'), 
           (outline ? 'hover:bg-transparent' : ''),
           buttonClx,
           'h-auto self-stretch' // must be smaller than normal
@@ -158,8 +166,8 @@ const AddToCartWidget: React.FC<{
   ) : (
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
-      size={ghost ? 'xs' : 'default'}
-      variant={variant === 'minimal' ? 'ghost' : (variant as VariantProps<typeof buttonVariants>['variant'])}
+      size={ghost || priSmaller ? 'xs' : 'default'}
+      variant={ghost ? 'ghost' : (primary || priSmaller ? 'primary' : 'outline')}
       rounded={ROUNDED_VAL}
       className={cn(buttonClx, className)}
       onClick={inc}
