@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.0.11",
+  "version": "7.0.13",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -26,7 +26,8 @@
   },
   "exports": {
     ".": "./index.ts",
-    "./types": "./types/index.ts"
+    "./types": "./types/index.ts",
+    "./debug": "./service/debug.ts"
   },
   "dependencies": {
     "ethers": "^6.12.0",
