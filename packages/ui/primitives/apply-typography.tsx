@@ -5,8 +5,7 @@ import { cn } from '../util'
 type TypographySize = 'responsive' | 'sm' | 'base' | 'lg' | 'xl' // if t-shirt size, do *not* be responsive
 
 const ApplyTypography: React.FC<
-  PropsWithChildren & {
-    className?: string,
+  React.ComponentProps<'div'> & {
     asTag?: 'div' | 'section' | 'nav' | 'main' | 'article',
     size?: TypographySize
   }
@@ -14,7 +13,8 @@ const ApplyTypography: React.FC<
   children,
   className='',
   asTag='div',
-  size='responsive'
+  size='responsive',
+  ...rest
 }) => {
 
     // responsive version by default
@@ -43,7 +43,7 @@ const ApplyTypography: React.FC<
   
   const Tag = asTag
   return (
-    <Tag className={cn(typoClasses, className)}>
+    <Tag {...rest} className={cn(typoClasses, className)}>
       {children}
     </Tag>
   )
