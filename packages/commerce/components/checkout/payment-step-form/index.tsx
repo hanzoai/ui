@@ -26,23 +26,28 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   setOrderId
 }) => {
   const cmmc = useCommerce()
-  const auth = useAuth()
+  const auth = useAuth() // may be null in some cases
+
   const [transactionStatus, setTransactionStatus] = useState<TransactionStatus>('unpaid')
+
+  if (!auth) {
+    console.log("PAYMENT STEP FORM:  auth service is null! ")
+  }
 
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
     resolver: zodResolver(contactFormSchema),  
     defaultValues: {
-      name: auth.user?.displayName ?? '',
-      email: auth.user?.email ?? '',
+      name: auth?.user?.displayName ?? '',
+      email: auth?.user?.email ?? '',
     },
   })
 
   useEffect(() => {
-    if (auth.loggedIn) {
-      contactForm.setValue('name', auth.user?.displayName ?? '')
-      contactForm.setValue('email', auth.user?.email ?? '')
+    if (auth?.loggedIn) {
+      contactForm.setValue('name', auth!.user?.displayName ?? '')
+      contactForm.setValue('email', auth!.user?.email ?? '')
     }
-  }, [auth.loggedIn])
+  }, [auth?.loggedIn])
 
   const storePaymentInfo = async (paymentInfo: any) => {
     const {name, email} = contactForm.getValues()

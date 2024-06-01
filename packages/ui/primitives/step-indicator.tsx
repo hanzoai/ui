@@ -18,6 +18,8 @@ const StepIndicator: React.FC<{
 
   const pX = `calc(${1 / (steps.length * 2) * 100}% - ${dotSizeRem / 2}rem)`
 
+    // This code current throws 'Warning: Each child in a list should have a unique "key" prop.'
+    // As is evident, we supply keys that should suffice.  < shrug >
   return ( 
     <div className={cn('flex flex-col', className)}>
       <div 
