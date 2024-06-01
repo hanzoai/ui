@@ -1,28 +1,20 @@
 import type { HanzoUserInfo } from "../types"
 
+type AuthProvider = 'google' | 'facebook' | 'github'
+
 interface AuthService {
 
   get loggedIn(): boolean 
   get user(): HanzoUserInfo | null // returns current info obj // all fields observable :)
 
-  loginEmailAndPassword: (
-    email: string, 
-    password: string 
-   ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}>
-
-  loginWithProvider: (
-    provider: 'google' | 'facebook' | 'github'
-  ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}> 
-
-  loginWithCustomToken: (
-    token: string
-  ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}>
-  
+  loginEmailAndPassword: ( email: string,  password: string ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}>
+  loginWithProvider: ( provider: AuthProvider ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}> 
+  loginWithCustomToken: ( token: string ) => Promise<{success: boolean, userInfo: HanzoUserInfo | null}>
   associateWallet: () => Promise<void>
-
   logout: () => Promise<{success: boolean}>
 }
 
 export {
-  type AuthService as default
+  type AuthService as default,
+  type AuthProvider
 }
