@@ -7,14 +7,15 @@ import Link from 'next/link'
 import { ApplyTypography, Button, Separator, toast } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
-import { useAuth } from '../service'
+import { useAuth, type AuthProvider } from '../service'
 import { Facebook, Google, GitHub } from '../icons'
 import EmailPasswordForm from './email-password-form'
 import { sendGAEvent } from '../util/analytics'
 
+
 const ProviderLoginButton: React.FC<PropsWithChildren & {
-  provider: 'google' | 'facebook' | 'github',
-  loginWithProvider: (provider: 'google' | 'facebook' | 'github') => Promise<void>,
+  provider: AuthProvider,
+  loginWithProvider: (provider: AuthProvider) => Promise<void>,
   isLoading: boolean
 }> = ({
   provider,
@@ -55,15 +56,19 @@ const LoginPanel: React.FC<PropsWithChildren & {
   termsOfServiceUrl,
   privacyPolicyUrl
 }) => {
-  const router = useRouter()
-  
-  const auth = useAuth()
 
+  const router = useRouter()
+  const auth = useAuth()
   const [isLoading, setIsLoading] = useState(false)
 
-  const succeed = async () => {
-    // If a callback is provide, don't redirect.
-    // Assume host code is handling (eg, mobile menu)
+  const succeed = async (loginMethod: AuthProvider | 'email' | null ) => {
+
+    if (loginMethod) {
+      sendGAEvent('login', { method: loginMethod })
+    }
+
+      // If a callback is provided, don't redirect.
+      // Assume host code is handling (eg, mobile menu)
     if (onLoginChanged) {
       const res = await fetch(
         '/api/auth/generate-custom-token',
@@ -72,6 +77,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
       onLoginChanged(res.token?.token ?? null)
     }
     else if (redirectUrl) {
+        // TODO :aa shouldn't the token thing happen in this case too??
       router.push(redirectUrl)
     }
   }
@@ -80,12 +86,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
     setIsLoading(true)
     try {
       const res = await auth.loginEmailAndPassword(email, password)
-      if (res.success) {
-        sendGAEvent('login', {
-          method: 'email'
-        })
-        succeed()
-      }
+      if (res.success) { succeed('email') }
     } 
     catch (e) {
       toast('User with this email already signed up using a different provider')
@@ -109,24 +110,17 @@ const LoginPanel: React.FC<PropsWithChildren & {
   //   setIsLoading(false)
   // }
 
-  const loginWithProvider = async (provider: 'google' | 'facebook' | 'github') => {
+  const loginWithProvider = async (provider: AuthProvider) => {
     setIsLoading(true)
     const res = await auth.loginWithProvider(provider)
-    if (res.success ) {
-      sendGAEvent('login', {
-        method: provider
-      })
-      succeed()
-    }
+    if (res.success) { succeed(provider) }
     setIsLoading(false)
   }
 
   const logout = async () => {
     setIsLoading(true)
     const res = await auth.logout()
-    if (res.success) {
-      succeed()
-    }
+    if (res.success) { succeed(null) }
     setIsLoading(false)
   }
 
