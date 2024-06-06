@@ -248,8 +248,10 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
           </>)}
         </Carousel>
       )}
-      <ItemInfo labelClx='!text-base font-medium'/>
-      <Swatches clx='mt-2'/> 
+      <div className='flex flex-col items-center justify-start'>
+        <ItemInfo labelClx='!text-base font-medium'/>
+        <Swatches clx='mt-2'/> 
+      </div>
     </div>
   )
 }

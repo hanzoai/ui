@@ -55,6 +55,7 @@ const CarouselBuyCard: React.FC<{
   clx?: string
   selectorClx?: string
   addBtnClx?: string
+  buttonsAreaClx?: string
   mobile?: boolean
   onQuantityChanged?: (sku: string, oldV: number, newV: number) => void
 }> = ({
@@ -63,6 +64,7 @@ const CarouselBuyCard: React.FC<{
   clx='',
   selectorClx='',
   addBtnClx='',
+  buttonsAreaClx='',
   mobile=false,
   onQuantityChanged,
 }) => {
@@ -233,8 +235,8 @@ const CarouselBuyCard: React.FC<{
         />
       ))}
       <Buttons clx={cn(
-        'self-stretch mt-8 flex flex-col items-center gap-3',
-        (r.current?.single?.scrollable ? 'shrink-0' : '')
+        'self-stretch mt-8 flex flex-col items-center gap-3 shrink-0 grow-0',
+        buttonsAreaClx
       )}/>
     </div >
   )
