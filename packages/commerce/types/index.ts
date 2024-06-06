@@ -1,5 +1,6 @@
 
 export type { default as CommerceService } from './commerce-service'
+export type { default as CommerceConfig } from './commerce-config'
 export type { default as MultiFamilySelectorProps } from './multi-family-selector-props'
 export type { default as Product } from './product'
 export type { default as Promo } from './promo'
