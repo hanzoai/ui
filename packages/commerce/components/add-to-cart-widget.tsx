@@ -172,8 +172,8 @@ const AddToCartWidget: React.FC<{
       className={cn(buttonClx, className)}
       onClick={inc}
     >
-      <Icons.plus className='h-5 w-5 mr-1' aria-hidden='true'/>
-      <span className='mr-1'>Add</span>
+      <span className='m1-1'>Add</span>
+      <Icons.plus className='h-5 w-5 ml-1' aria-hidden='true'/>
     </Button>
   ))
 })
