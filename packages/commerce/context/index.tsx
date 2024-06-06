@@ -10,10 +10,9 @@ import React, {
 import { enableStaticRendering } from 'mobx-react-lite'
 enableStaticRendering(typeof window === "undefined")
 
-import type { ServiceOptions } from '..'
 import type CommerceService from '../types/commerce-service'
 import getInstance from '../service/get-instance'
-import type { Family, CategoryNode, SelectionUISpecifier } from '../types'
+import type { CommerceConfig } from '../types'
 
 const CommerceContext = createContext<CommerceService | undefined>(undefined)
 
@@ -22,20 +21,14 @@ const useCommerce = (): CommerceService => {
 }
 
 const CommerceProvider: React.FC<PropsWithChildren & {
-  families: Family[]
-  rootNode: CategoryNode
-  options?: ServiceOptions
-  uiSpecs?: Record<string, SelectionUISpecifier>
+  config: CommerceConfig
 }> = ({ 
   children,
-  families,
-  rootNode,
-  options,
-  uiSpecs
+  config
 }) => {
 
     // TODO: Inject Promo fixture here from siteDef
-  const service = getInstance(families, rootNode, options, uiSpecs)
+  const service = getInstance(config)
   const valueRef = useRef<CommerceService>(service)
 
   return (
