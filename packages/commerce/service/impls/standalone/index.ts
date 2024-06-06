@@ -1,6 +1,6 @@
 import { enableStaticRendering } from 'mobx-react-lite'
 
-import type { CommerceService, Family, CategoryNode, SelectionUISpecifier } from '../../../types'
+import type { CommerceService, Family, CategoryNode, SelectionUISpecifier, CommerceConfig } from '../../../types'
 import StandaloneService, {type StandaloneServiceOptions} from './standalone-service'
 import { initSelectionUI } from '../../../util'
 
@@ -18,20 +18,20 @@ const _log = (s: string) => {
 
 let instance: StandaloneService | undefined =  undefined
 
-export const getInstance = (
-  families: Family[], 
-  rootNode: CategoryNode, 
-  options?: StandaloneServiceOptions,
-  uiSpecs?: Record<string, SelectionUISpecifier>
-): CommerceService => {
+export const getInstance = ({
+  families, 
+  rootNode, 
+  options, 
+  uiSpecifiers 
+}: CommerceConfig) : CommerceService => {
 
   if (!options) {
     throw new Error('cmmc getInstance(): Standalone Commerce Service requires config options!')
   }
 
    if (typeof window === "undefined") {
-    if (uiSpecs) {
-      initSelectionUI(uiSpecs)
+    if (uiSpecifiers) {
+      initSelectionUI(uiSpecifiers)
     }
     //_log("NEW INSTANCE FOR SERVER")
     return new StandaloneService(
@@ -43,8 +43,8 @@ export const getInstance = (
 
     // Client side, create the store only once in the client
   if (!instance) {
-    if (uiSpecs) {
-      initSelectionUI(uiSpecs)
+    if (uiSpecifiers) {
+      initSelectionUI(uiSpecifiers)
     }
     //_log("NEW INSTANCE FOR CLIENT")
     const snapShot = readSnapshot()
