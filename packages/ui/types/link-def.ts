@@ -50,6 +50,11 @@ interface LinkDef extends VariantProps<typeof buttonVariants> {
      * rendered as a disabled link, shows default cursor, and eats pointer events.
      */
   disabled?: boolean
+    /**
+     *contents for description link.
+     */
+  contents?: string
+
 }
 
 export {
