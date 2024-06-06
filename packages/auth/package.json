@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/auth",
-  "version": "2.4.11",
+  "version": "2.4.12",
   "description": "Library with Firebase authentication.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -29,7 +29,7 @@
     "firebase-admin": "^12.1.0"
   },
   "peerDependencies": {
-    "@hanzo/ui": "^3.8.7",
+    "@hanzo/ui": "^3.8.21",
     "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",
     "lucide-react": "^0.344.0",
