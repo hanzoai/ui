@@ -41,27 +41,27 @@ const CartLineItem: React.FC<{
   const promoPrice = showPromoCode ? cmmc.itemPromoPrice(item) : undefined
 
   return (
-    <div className={cn('flex flex-col justify-start items-start text-sm font-sans', className)}>
-      <div 
-        className={
-          'flex flex-row justify-between items-center gap-1 ' + 
-          (itemClicked && !selected ? 'cursor-pointer ' : 'cursor-default ') 
-        } 
-        onClick={() => {itemClicked && itemClicked(item)}}
-      >
-        {/* 1px gap between image and border for better emphasis w small images */}
-        <div className={selected ? 'border-foreground p-[1px] border rounded-sm' : 'p-[2px]'}>
+    <div 
+      className={cn(
+        'flex flex-col justify-start items-start text-sm font-sans',
+        'border border-background rounded-sm p-1', 
+        selected ? 'border-foreground' : '',
+        (itemClicked && !selected ? 'cursor-pointer hover:!border-muted-4' : 'cursor-default '), 
+        className
+      )}
+      onClick={() => {itemClicked && itemClicked(item)}}
+    >
+      <div className='flex flex-row justify-between items-center gap-1' >
         {item.img ? (
           <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} />
         ) : ( // placeholder so things align
           <div style={{height: imgSizePx, width: imgSizePx}} className='bg-level-3'/>
         )}
-        </div>
         <div className='grow leading-tight ml-1'>{renderTitle(item.title)}</div>
       </div>
       <div className='flex flex-row items-center justify-between w-full'>
         <div className='flex flex-row items-center'>
-          <AddToCartWidget variant='minimal' item={item} buttonClx='!h-8 md:!h-6' />
+          <AddToCartWidget variant='minimal' item={item} />
           {item.quantity > 1 && (<span className='pl-2.5'>{'@' + formatCurrencyValue(item.price)}</span>)}
         </div>
         <div className='flex flex-row gap-1 items-center justify-end'>
