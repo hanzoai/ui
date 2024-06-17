@@ -169,6 +169,9 @@ export {
   TabsContent 
 } from './tabs'
 
+export * from './tooltip' 
+
+
 export { default as ActionButton } from './action-button'
 export { default as ApplyTypography, type TypographySize} from './apply-typography'
 export { default as AspectRatio } from './aspect-ratio'

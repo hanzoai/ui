@@ -122,10 +122,7 @@ const CarouselBuyCard: React.FC<{
     if (peek.role === 'single-family') {
 
       const sort = (): 'none' | 'asc' | 'desc' => {
-        if (!uiSpec.singleFamily?.options) {
-          return 'none'
-        }
-        const options = uiSpec.singleFamily.options
+        const options = uiSpec.singleFamily?.options ?? {}
         const showSlider = 'showSlider' in options ? options.showSlider! : true
         return ('sort' in options) ? 
           options.sort!

@@ -139,7 +139,7 @@ const AddToCartWidget: React.FC<{
       </Button>
         <div className={cn(
           'grow-0 shrink-0 flex items-center cursor-default xs:px-2',
-          priSmaller ? 'text-xs' : 'text-sm',
+          priSmaller || ghost ? 'text-xs' : 'text-sm',
           digitClx
         )}>
           {item.quantity}{ghost ? '' : ' in Bag'}

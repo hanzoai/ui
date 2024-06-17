@@ -97,13 +97,14 @@ const CartPanel: React.FC<PropsWithChildren & {
       />
     ))}
     </>)}
+    <div className={totalClx}> 
     {showPromoCode && (
       <Suspense>
         <PromoCode/>
       </Suspense>
     )}
     {(showShipping || showPromoCode) && (
-      <div className='flex flex-col gap-1 py-2 border-t'>
+      <div className={'flex flex-col gap-0.5 pb-1.5 text-sm ' + (!showPromoCode ? 'border-t pt-1.5' : '')} >
         <p className='flex justify-between'>
           <span className='text-muted-1'>Subtotal</span>
           <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatCurrencyValue(cmmc.cartTotal)}</span>
@@ -122,10 +123,11 @@ const CartPanel: React.FC<PropsWithChildren & {
         )}
       </div>
     )}
-    <p className={cn('border-t py-2 flex justify-between', totalClx)}>
+    <p className={cn('border-t py-2 flex justify-between')}>
       TOTAL
       <span className='font-semibold'>{formatCurrencyValue(showPromoCode ? cmmc.promoAppliedCartTotal : cmmc.cartTotal)}</span>
     </p>
+    </div>
   </>))
 
   const scrolling = (): boolean => (cmmc.cartItems.length > scrollAfter)

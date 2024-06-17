@@ -68,7 +68,7 @@ const PromoCode = observer(() => {
   }
 
   return (
-    <div className='flex flex-col gap-2 border-t py-2'>
+    <div className='flex flex-col gap-2 border-t py-1'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(applyPromoCode)}>
           <div className='flex gap-2 items-center'>
@@ -78,7 +78,7 @@ const PromoCode = observer(() => {
               render={({ field }) => (
                 <FormItem className='w-full'>
                   <FormControl>
-                    <Input {...field} placeholder='Discount or invite code' onInput={removePromoCode}/>
+                    <Input {...field} className='h-9' placeholder='Discount or invite code' onInput={removePromoCode}/>
                   </FormControl>
                 </FormItem>
               )}
@@ -86,7 +86,7 @@ const PromoCode = observer(() => {
             {codeAccepted ? (
               <Check/>
             ) : (
-              <Button variant='outline' className='!w-fit !min-w-0 font-inter'>Apply</Button>
+              <Button variant='outline' className='!w-fit !min-w-0 font-inter text-muted text-sm'>Apply</Button>
             )}
           </div>
         </form>
