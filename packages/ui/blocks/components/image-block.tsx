@@ -75,6 +75,7 @@ const ImageBlockComponent: React.FC<BlockComponentProps & {
         </div>
       )
     }
+      // TODO use constraint
     else if (!specified('mobile-no-scale')) {
       if (props?.style?.width === 'auto' && typeof props.style.height === 'number' ) {
         props.style.height = props.style.height *.75 

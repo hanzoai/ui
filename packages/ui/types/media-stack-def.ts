@@ -18,6 +18,11 @@ interface MediaStackDef {
   video?: VideoDef
   animation?: AnimationDef
   mediaTransform?: MediaTransform
+    /** prefered order of precedence.  
+     * If an type is missing, it will not be used.
+     * default (inMediaStack component): ['a', 'v', 'i']
+     * */ 
+  order?: ('a' | 'v' | 'i')[]  
 }
 
 export type { 
