@@ -43,8 +43,8 @@ const StepIndicator: React.FC<{
             style={{width: `${dotSizeRem}rem`, height: `${dotSizeRem}rem`}} 
             className={cn(
               'shrink-0 rounded-full border-[1.5px]', 
-              currentStep === index ? (muted ? 'bg-muted-3 border-muted' : 'bg-level-3 border-foreground') : '',
-              currentStep > index || currentStep === steps.length - 1 ? (muted ? 'bg-muted border-muted' : 'bg-foreground border-foreground') : ''
+              currentStep >= index ? (muted ? 'bg-muted border-muted' : 'bg-foreground border-foreground') : '',
+              //currentStep > index || currentStep === steps.length - 1 ? (muted ? 'bg-muted border-muted' : 'bg-foreground border-foreground') : ''
             )} 
           />
         </>))}

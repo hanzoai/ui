@@ -66,8 +66,9 @@ const AddToCartWidget: React.FC<{
     )
   }
 
-  const inc = () => {
+  const inc = (event: React.MouseEvent<HTMLElement>) => {
     item.increment()
+    event.stopPropagation() // in case we're part of a larger selection UI
     sendGAEvent('add_to_cart', {
       items: [{
         item_id: item.sku,
@@ -91,8 +92,9 @@ const AddToCartWidget: React.FC<{
     })
   }
 
-  const dec = () => {
+  const dec = (event: React.MouseEvent<HTMLElement>) => {
     item.decrement()
+    event.stopPropagation() // in case we're part of a larger selection UI
     sendGAEvent('remove_from_cart', {
       items: [{
         item_id: item.sku,

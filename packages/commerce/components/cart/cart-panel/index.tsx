@@ -1,17 +1,17 @@
 'use client'
-import React, { Suspense, type PropsWithChildren } from 'react'
+import React, { useLayoutEffect, type PropsWithChildren } from 'react'
+import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
 import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
+import type { LineItem } from '../../../types'
 import { useCommerce } from '../../../context'
-import { formatCurrencyValue } from '../../../util'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 import CartLineItem from './cart-line-item'
-import PromoCode from './promo-code'
-import type { LineItem } from '../../../types'
+import TotalArea from './total-area'
 
 const CartPanel: React.FC<PropsWithChildren & {
     /** fix size and scroll after 'scrollAfter items in teh cart. */
@@ -48,6 +48,25 @@ const CartPanel: React.FC<PropsWithChildren & {
 }) => {
 
   const cmmc = useCommerce()
+
+  useLayoutEffect(() => {
+    if (!cmmc) {
+      return
+    }
+    if (!cmmc.cartEmpty && !cmmc.currentItem) {
+      cmmc.setCurrentItem(cmmc.cartItems[0].sku)  
+    }
+      // return mobx disposer
+    return reaction(() => (
+      cmmc.cartItems.length  
+    ), 
+    (itemCount) => {
+      if (itemCount > 0) {
+        cmmc.setCurrentItem(cmmc.cartItems[0].sku)  
+      }
+    })
+  }, [])
+  
   if (!cmmc) {
     return <div />
   }
@@ -97,45 +116,19 @@ const CartPanel: React.FC<PropsWithChildren & {
       />
     ))}
     </>)}
-    <div className={totalClx}> 
-    {showPromoCode && (
-      <Suspense>
-        <PromoCode/>
-      </Suspense>
-    )}
-    {(showShipping || showPromoCode) && (
-      <div className={'flex flex-col gap-0.5 pb-1.5 text-sm ' + (!showPromoCode ? 'border-t pt-1.5' : '')} >
-        <p className='flex justify-between'>
-          <span className='text-muted-1'>Subtotal</span>
-          <span className='font-semibold'>{cmmc.cartTotal === 0 ? '0' : formatCurrencyValue(cmmc.cartTotal)}</span>
-        </p>
-        {cmmc.promoAppliedCartTotal !== cmmc.cartTotal && (
-          <p className='flex justify-between'>
-            <span className='text-muted-1'>Promo Discount</span>
-            <span className='font-semibold'>-{formatCurrencyValue(cmmc.cartTotal - cmmc.promoAppliedCartTotal)}</span>
-          </p>
-        )}
-        {showShipping && (
-          <p className='flex justify-between'>
-            <span className='text-muted-1'>Shipping</span>
-            <span className='font-semibold'>Free Global Shipping</span>
-          </p>
-        )}
-      </div>
-    )}
-    <p className={cn('border-t py-2 flex justify-between')}>
-      TOTAL
-      <span className='font-semibold'>{formatCurrencyValue(showPromoCode ? cmmc.promoAppliedCartTotal : cmmc.cartTotal)}</span>
-    </p>
-    </div>
+    <TotalArea clx={totalClx} showPromoCode={showPromoCode} showShipping={showShipping}/>
   </>))
 
-  const scrolling = (): boolean => (cmmc.cartItems.length > scrollAfter)
+  const scrolling = (cmmc.cartItems.length > scrollAfter)
 
   return (
-    <div className={cn('border p-4 rounded-lg flex flex-col', className, scrolling() ? scrollHeightClx : 'h-auto')}>
+    <div className={cn(
+      'border p-4 rounded-lg flex flex-col', 
+      className, 
+      scrolling ? scrollHeightClx : 'h-auto'
+    )}>
       {children}
-      {scrolling() ? (
+      {scrolling ? (
         <ScrollArea className={cn('mt-2 w-full shrink py-0', listClx)}>
           <MainStuff />
         </ScrollArea>

@@ -67,7 +67,6 @@ const Image: React.FC<{
   return (fullWidth) ? (
     <div className='relative flex flex-col items-center justify-center w-full'>
       <NextImage 
-        data-vaul-no-drag 
         src={src} 
         alt={alt} 
         {...toSpread} 
@@ -80,7 +79,6 @@ const Image: React.FC<{
     <NextImage 
       src={src} 
       alt={alt} 
-      data-vaul-no-drag 
       {...toSpread} 
       priority={preload} 
       loading={preload ? 'eager' : 'lazy'} 
