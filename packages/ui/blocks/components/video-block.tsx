@@ -51,7 +51,7 @@ const VideoBlockComponent: React.FC<BlockComponentProps & {
   }
 
   const b = block as VideoBlock
-  const ar = asNum(b.dim.md.w) / asNum(b.dim.md.h)
+  const ar = b.dim.md.w / b.dim.md.h
   if (agent === 'phone') {
     if (b.sizing?.mobile?.vw) {
       // serverside, or at least while the video is loading,

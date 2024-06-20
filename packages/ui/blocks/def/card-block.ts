@@ -14,7 +14,7 @@ interface CardBlock extends Block {
   byline?: string
   icon?: Icon // for title area
   iconAfter?: boolean
-  media?: ImageBlock | VideoBlock
+  media?: ImageBlock | VideoBlock // TODO: Media Stack
   content?: React.ReactNode
   cta?: CTABlock
 }

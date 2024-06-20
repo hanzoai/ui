@@ -12,6 +12,7 @@ const variant = {
   ghost: "text-foreground sm:hover:bg-level-1 sm:hover:text-accent whitespace-nowrap font-sans ",
   link: "text-foreground sm:hover:text-muted-1 font-sans ",
   linkFG: "text-foreground sm:hover:text-muted-1 font-sans ", // marker to style nav as regular link
+  linkMuted: "text-muted-1 sm:hover:text-foreground font-sans ",
 }
 
 const size = {
