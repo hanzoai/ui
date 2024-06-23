@@ -19,7 +19,7 @@ import {
 } from '@hanzo/ui/primitives'
 
 import Eth from '../crypto-icons/eth'
-import { useCommerce } from '../../../../context'
+import { useCommerce } from '../../../../service/context'
 import type { PaymentMethodComponentProps } from '../../../../types'
 import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'
 

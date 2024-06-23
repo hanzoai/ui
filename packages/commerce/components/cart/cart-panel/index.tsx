@@ -7,7 +7,7 @@ import { Button, ScrollArea } from '@hanzo/ui/primitives'
 import { cn } from '@hanzo/ui/util'
 
 import type { LineItem } from '../../../types'
-import { useCommerce } from '../../../context'
+import { useCommerce } from '../../../service/context'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 
 import CartLineItem from './cart-line-item'

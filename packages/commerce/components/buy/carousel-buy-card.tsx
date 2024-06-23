@@ -21,7 +21,7 @@ import type {
   MultiFamilySelectorOptions, 
 } from '../../types'
 
-import { useCommerce } from '../../context'
+import { useCommerce } from '../../service/context'
 import { getSelectionUISpecifier } from '../../util'
 
 import { CarouselItemSelector, ButtonItemSelector } from '../item-selector'
