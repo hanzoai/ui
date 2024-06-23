@@ -11,8 +11,8 @@ import { enableStaticRendering } from 'mobx-react-lite'
 enableStaticRendering(typeof window === "undefined")
 
 import type CommerceService from '../types/commerce-service'
-import getInstance from '../service/get-instance'
 import type { CommerceConfig } from '../types'
+import { getInstance } from './impls/standalone'
 
 const CommerceContext = createContext<CommerceService | undefined>(undefined)
 
