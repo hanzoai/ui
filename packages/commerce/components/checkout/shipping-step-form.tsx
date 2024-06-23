@@ -19,7 +19,7 @@ import {
   SelectValue 
 } from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../../context'
+import { useCommerce } from '../../service/context'
 
 import countries from '../../util/countries'
 import { sendGAEvent } from '../../util/analytics'

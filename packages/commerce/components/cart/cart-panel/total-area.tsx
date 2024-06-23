@@ -6,7 +6,7 @@ import { cn } from '@hanzo/ui/util'
 
 import { formatCurrencyValue } from '../../../util'
 import PromoCode from './promo-code'
-import { useCommerce } from '../../../context'
+import { useCommerce } from '../../../service/context'
 
 const TotalArea: React.FC<{
   showPromoCode?: boolean

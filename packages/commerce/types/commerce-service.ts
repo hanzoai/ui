@@ -13,6 +13,12 @@ interface CommerceService extends ObsLineItemRef, ObsFamilyRef {
     /** Total of all prices x quantities of items in cart */
   get cartTotal(): number
 
+    /** cartItem whose quantity was modified most recently 
+     * item: LineItem
+     * modified: number (timestamp)
+     * (undefined if cartEmpty)
+     */
+  get recentItem(): { item: LineItem, modified: number }  | undefined 
   get promoAppliedCartTotal(): number
 
   get cartEmpty(): boolean

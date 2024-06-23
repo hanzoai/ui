@@ -2,15 +2,23 @@
 
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { observer } from 'mobx-react-lite'
+
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check } from 'lucide-react'
-import { observer } from 'mobx-react-lite'
 
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@hanzo/ui/primitives'
+import { 
+  Button, 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  Input 
+} from '@hanzo/ui/primitives'
 
-import { useCommerce } from '../../../context'
+import { useCommerce } from '../../../service/context'
 import type { Promo } from '../../../types'
 import getPromoFromApi from '../../../util/promo-codes'
 

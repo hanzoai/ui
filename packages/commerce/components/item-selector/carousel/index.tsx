@@ -178,7 +178,7 @@ const CarouselItemSelector: React.FC<ItemSelectorProps> = observer(({
           </div>
           {showByline && itemRef.item.byline && (<p>{itemRef.item.byline}</p>)}
         </ApplyTypography>
-        {showSlider && (
+        {showSlider && items.length > 1 && (
           <ItemCarouselSlider 
             clx='mt-5 w-[320px]' 
             numStops={items.length}  

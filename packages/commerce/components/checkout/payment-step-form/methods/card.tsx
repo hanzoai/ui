@@ -15,7 +15,7 @@ import {
 
 import { cn } from '@hanzo/ui/util'
 
-import { useCommerce } from '../../../../context'
+import { useCommerce } from '../../../../service/context'
 import { processSquareCardPayment } from '../../../../util'
 import type { PaymentMethodComponentProps } from '../../../../types'
 import { sendFBEvent, sendGAEvent } from '../../../../util/analytics'

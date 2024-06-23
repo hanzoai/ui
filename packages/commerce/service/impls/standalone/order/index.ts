@@ -1,5 +1,3 @@
-import firebaseApp from './firebase-app' 
-
 import { 
   getFirestore, 
   collection, 
@@ -11,6 +9,8 @@ import {
 } from 'firebase/firestore'  
 
 import type { ActualLineItemSnapshot } from '../actual-line-item'
+
+import firebaseApp from './firebase' 
 
 let dbInstance: Firestore | undefined = undefined
 

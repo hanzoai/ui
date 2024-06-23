@@ -15,13 +15,13 @@ interface ActualLineItemSnapshot {
   title: string
   price: number
   quantity: number
-  timeAdded: number   // helps to sort view of order and cart
+  timeAdded: number     
+  timeModified: number  
 }
 
 class ActualLineItem 
   implements LineItem  
 {
-
   qu: number = 0
 
   id: string    
@@ -39,7 +39,9 @@ class ActualLineItem
   animation?: string
   mediaTransform?: MediaTransform 
   optionImg?: ImageDef
-  timeAdded: number = 0 // timeAdded of being added to cart
+
+  timeAdded: number = 0       // Timestamp when added
+  timeModified: number = 0    // Timestamp quantity last modified (0 if not in cart)
 
   constructor(prod: Product, snap?: ActualLineItemSnapshot) {
     this.id = prod.id
@@ -61,11 +63,13 @@ class ActualLineItem
     if (snap) {
       this.qu = snap.quantity
       this.timeAdded = snap.timeAdded
+      this.timeModified = snap.timeModified
     }
 
     makeObservable(this, {
       qu: observable,
       timeAdded: observable,
+      timeModified: observable,
       canDecrement: computed,  
       isInCart: computed,
       title: computed,
@@ -74,6 +78,7 @@ class ActualLineItem
     })
   }
 
+    // TODO: create a way to pass template strings to the ui conf per sku path!
   get title(): string {
     return this.fullTitle ? this.fullTitle : (this.familyTitle + ', ' + this.optionLabel)
   }
@@ -91,7 +96,8 @@ class ActualLineItem
       title,
       price: this.price,
       quantity: this.qu,
-      timeAdded: this.timeAdded
+      timeAdded: this.timeAdded,
+      timeModified: this.timeModified
     } satisfies ActualLineItemSnapshot)
   }
  
@@ -102,6 +108,10 @@ class ActualLineItem
   increment(): void { 
     if (this.qu === 0) {
       this.timeAdded = new Date().getTime()
+      this.timeModified = this.timeAdded
+    }
+    else {
+      this.timeModified = new Date().getTime()
     }
     this.qu++ 
   }
@@ -111,6 +121,10 @@ class ActualLineItem
       this.qu--
       if (this.qu === 0) {
         this.timeAdded = 0  
+        this.timeModified = 0  
+      }
+      else {
+        this.timeModified = new Date().getTime()
       }
     }
   }
