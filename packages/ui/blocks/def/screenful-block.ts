@@ -20,7 +20,7 @@ interface ScreenfulBlock extends Block {
      * 
      * If in a scrolling situation, the video will autoplay when 75% in view
      */
-  banner?: string | VideoBlock 
+  banner?: string | VideoBlock // TODO: should be VideoDef 
     
     /** Specifies rendering and layout hints and variants for block as a whole */ 
   specifiers?: string
