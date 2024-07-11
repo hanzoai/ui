@@ -36,7 +36,7 @@ const ProviderLoginButton: React.FC<PropsWithChildren & {
     )
   }
 
-const LoginPanel: React.FC<PropsWithChildren & {
+const SignupPanel: React.FC<PropsWithChildren & {
   redirectUrl?: string,
   getStartedUrl?: string,
   className?: string,
@@ -84,15 +84,15 @@ const LoginPanel: React.FC<PropsWithChildren & {
     }
   }
 
-  const loginWithEmailPassword = async (email: string, password: string) => {
+  const signupWithEmailPassword = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      const res = await auth.loginEmailAndPassword(email, password)
+      const res = await auth.signupEmailAndPassword(email, password)
       if (res.success) { succeed('email'); toast.success(res.message) }
       else { toast.error(res.message) }
     }
     catch (e) {
-      toast('User with this email already signed up using a different provider')
+      toast.success('User with this email already signed up')
     }
     setIsLoading(false)
   }
@@ -128,7 +128,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
   }
 
   const handleOnClick = () => {
-    if (setIsLogin) setIsLogin(false)
+    if (setIsLogin) setIsLogin(true)
   }
 
   return (
@@ -147,14 +147,14 @@ const LoginPanel: React.FC<PropsWithChildren & {
       ) : (
         <>
           {!noHeading && (
-            <h4 className='text-center'>Login</h4>
+            <h4 className='text-center'>SignUp</h4>
           )}
           {children}
-          <EmailPasswordForm onSubmit={loginWithEmailPassword} isLoading={isLoading} className='mb-4' inputClx={inputClx} />
+          <EmailPasswordForm onSubmit={signupWithEmailPassword} isLoading={isLoading} className='mb-4' inputClx={inputClx} content='SignUp' />
 
           <div className='flex flex-row gap-4 justify-center'>
-            <div className='text-muted-2 text-sm'>Don't have an account?</div>
-            <button className='bg-transparent text-foreground text-sm' onClick={handleOnClick}>Sign Up</button>
+            <div className='text-muted-2 text-sm'>Already have account?</div>
+            <button className='bg-transparent text-foreground text-sm' onClick={handleOnClick}>Log In</button>
           </div>
 
           <div className='flex gap-2 whitespace-nowrap items-center my-1 sm:my-3 text-xs text-muted'>
@@ -181,4 +181,4 @@ const LoginPanel: React.FC<PropsWithChildren & {
   )
 })
 
-export default LoginPanel
+export default SignupPanel
