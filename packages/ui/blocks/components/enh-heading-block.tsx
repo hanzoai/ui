@@ -86,10 +86,10 @@ const getPositionClx = (
 
   if (agent === 'phone') {
     if (mobileHeadingLeft) {
-      headerclx = 'self-start text-left'
+      headerclx = 'self-start !text-left'
     } else {
       headerclx = (mobileHeadingCentered || headingCentered) ? 
-        'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+        'self-center !text-center' : (headingRight ? 'self-end !text-right' : 'self-start !text-left')
     }
 
     if (mobileBylineLeft) {
@@ -98,10 +98,10 @@ const getPositionClx = (
   }
   else {
     const largerclx = (headingCentered) ? 
-      'self-center text-center' : (headingRight ? 'self-end text-right' : 'self-start text-left')
+      'self-center !text-center' : (headingRight ? 'self-end !text-right' : 'self-start !text-left')
 
     if (mobileHeadingCentered) {
-      headerclx = 'self-center text-center md:' + largerclx.split(' ').join(' md:')
+      headerclx = 'self-center !text-center md:' + largerclx.split(' ').join(' md:')
     }
     else {
       headerclx = largerclx 
@@ -135,6 +135,7 @@ const EnhHeadingBlockComponent: React.FC<
   const preheadingHeadingFont = specified('preheading-heading-font')
   const phFontClx = preheadingHeadingFont ? 'font-heading' : ''
   const alignMiddleClx = specified('align-middle') ? 'my-auto' : ''
+  const respectCaseClx = specified('respect-case') ? '!normal-case' : ''
 
   const positionclx = getPositionClx(specified, agent)
 
@@ -147,14 +148,14 @@ const EnhHeadingBlockComponent: React.FC<
           undefined, 
         clx: (b.preheading) ? 
           (b.preheading.mb !== undefined ? 
-            `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) + ' ' + positionclx.preheading + ' ' + phFontClx
+            `mb-${b.preheading.mb}` : `mb-${DEFAULTS.preheading.mb}`) + ' ' + positionclx.preheading + ' ' + phFontClx + ' ' + respectCaseClx
           : 
-          positionclx.preheading + ' ' + phFontClx,
+          positionclx.preheading + ' ' + phFontClx  + ' ' + respectCaseClx,
         text: (b.preheading) ? (b.preheading.text ) : undefined,
       },
       {
         tag: (b.heading.level !== undefined ? tagFromLevel(b.heading.level) : DEFAULTS.heading.tag), 
-        clx: (b.heading.mb !== undefined ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading,
+        clx: (b.heading.mb !== undefined ? `mb-${b.heading.mb}` : `mb-${DEFAULTS.heading.mb}`) + ' ' + positionclx.heading  + ' ' + respectCaseClx,
         text: b.heading.text,
       },
       {
@@ -162,7 +163,7 @@ const EnhHeadingBlockComponent: React.FC<
           (b.byline.level !== undefined ? tagFromLevel(b.byline.level) : DEFAULTS.byline.tag) 
           : 
           undefined, 
-        clx: positionclx.byline,
+        clx: positionclx.byline  + ' ' + respectCaseClx,
         text: (b.byline) ? (b.byline.text ) : undefined,
       },
     ] as {

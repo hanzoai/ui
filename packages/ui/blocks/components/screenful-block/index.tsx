@@ -88,8 +88,7 @@ const ScreenfulComponent: React.FC<{
             ...cwclx,
             snapTile ? 'absolute left-0 right-0 top-0 bottom-0 ' : 'flex min-h-screen w-full',
             contentClx,
-              // TODO :aa py-0 breaks padding for header!  Investigate why I would have done this!
-            vertCenter ? 'self-center ' + (oneColumn ? '!py-0' : '' ) : ''
+            vertCenter ? 'self-center ' : ''
           )}
         >
           <Content block={b} agent={agent}  className='w-full'/>
