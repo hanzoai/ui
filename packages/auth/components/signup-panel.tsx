@@ -69,8 +69,8 @@ const SignupPanel: React.FC<PropsWithChildren & {
       sendGAEvent('login', { method: loginMethod })
     }
 
-    // If a callback is provided, don't redirect.
-    // Assume host code is handling (eg, mobile menu)
+      // If a callback is provided, don't redirect.
+      // Assume host code is handling (eg, mobile menu)
     if (onLoginChanged) {
       const res = await fetch(
         '/api/auth/generate-custom-token',
@@ -79,7 +79,7 @@ const SignupPanel: React.FC<PropsWithChildren & {
       onLoginChanged(res.token?.token ?? null)
     }
     else if (redirectUrl) {
-      // TODO :aa shouldn't the token thing happen in this case too??
+        // TODO :aa shouldn't the token thing happen in this case too??
       router.push(redirectUrl)
     }
   }
@@ -88,8 +88,13 @@ const SignupPanel: React.FC<PropsWithChildren & {
     setIsLoading(true)
     try {
       const res = await auth.signupEmailAndPassword(email, password)
-      if (res.success) { succeed('email'); toast.success(res.message) }
-      else { toast.error(res.message) }
+      if (res.success) { 
+        succeed('email') 
+        toast.success(res.message) 
+      }
+      else { 
+        toast.error(res.message) 
+      }
     }
     catch (e) {
       toast.success('User with this email already signed up')
@@ -116,44 +121,55 @@ const SignupPanel: React.FC<PropsWithChildren & {
   const loginWithProvider = async (provider: AuthProvider) => {
     setIsLoading(true)
     const res = await auth.loginWithProvider(provider)
-    if (res.success) { succeed(provider) }
+    if (res.success) { 
+      succeed(provider) 
+    }
     setIsLoading(false)
   }
 
   const logout = async () => {
     setIsLoading(true)
     const res = await auth.logout()
-    if (res.success) { succeed(null) }
+    if (res.success) { 
+      succeed(null) 
+    }
     setIsLoading(false)
   }
 
   const handleOnClick = () => {
-    if (setIsLogin) setIsLogin(true)
+    if (setIsLogin) {
+      setIsLogin(true)
+    }
   }
 
   return (
-    <ApplyTypography className={cn('w-full flex flex-col text-center !gap-3 LOGIN_OUTER', className)}>
+    <ApplyTypography className={cn('w-full flex flex-col text-center !gap-3', className)}>
       {auth.loggedIn && !redirectUrl ? (
         <>
           <h4>Welcome!</h4>
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
             <div className='flex flex-col md:flex-row gap-3 items-center justify-center'>
-              {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)} className='w-full'>GET STARTED</Button>}
-              <Button onClick={() => logout()} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
+              {getStartedUrl && <Button variant='primary' onClick={() => {router.push(getStartedUrl)}} className='w-full'>GET STARTED</Button>}
+              <Button onClick={logout} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
             </div>
           </>)}
         </>
       ) : (
         <>
           {!noHeading && (
-            <h4 className='text-center'>SignUp</h4>
+            <h4 className='text-center'>Sign Up</h4>
           )}
           {children}
-          <EmailPasswordForm onSubmit={signupWithEmailPassword} isLoading={isLoading} className='mb-4' inputClx={inputClx} content='SignUp' />
-
+          <EmailPasswordForm 
+            onSubmit={signupWithEmailPassword} 
+            isLoading={isLoading} 
+            className='mb-4' 
+            inputClx={inputClx}
+            prompt='SignUp' 
+          />
           <div className='flex flex-row gap-4 justify-center'>
-            <div className='text-muted-2 text-sm'>Already have account?</div>
+            <div className='text-muted-2 text-sm'>Already have an account?</div>
             <button className='bg-transparent text-foreground text-sm' onClick={handleOnClick}>Log In</button>
           </div>
 
