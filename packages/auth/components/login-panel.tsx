@@ -174,7 +174,6 @@ const LoginPanel: React.FC<PropsWithChildren & {
             <GitHub height={20} />Github
           </ProviderLoginButton>
           <p className='text-sm text-muted-2'>By logging in, you agree to our <Link href={termsOfServiceUrl ?? ''} target='_blank'>Terms of Service</Link> and <Link href={privacyPolicyUrl ?? ''} target='_blank'>Privacy Policy</Link>.</p>
-          <Toaster></Toaster>
         </>
       )}
     </ApplyTypography>
