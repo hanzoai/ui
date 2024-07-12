@@ -19,6 +19,7 @@ interface EnhHeadingBlock extends Block {
     // left / right / center for preheading and heading (byline stays left)
     // byline-left / byline-right / byline-center
     // preheading-heading-font
+    // respect-case: no all caps for h1, h2, 
   specifiers?: string  
     // By default, appears inline to left of first element (preheading or heading) 
     // unless indicated otherwise in specifiers 
