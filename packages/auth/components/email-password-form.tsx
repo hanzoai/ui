@@ -27,13 +27,13 @@ const EmailPasswordForm: React.FC<{
   isLoading: boolean
   className?: string
   inputClx?: string
-  content?: string
+  prompt?: string
 }> = ({
   onSubmit, 
   isLoading, 
   className,
   inputClx,
-  content='Login'
+  prompt='Login'
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,7 +84,7 @@ const EmailPasswordForm: React.FC<{
             </FormItem>
           )}
         />
-        <Button type='submit' className='w-full' disabled={isLoading}>{content}</Button>
+        <Button type='submit' className='w-full' disabled={isLoading}>{prompt}</Button>
       </form>
     </Form>
   )

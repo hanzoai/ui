@@ -26,7 +26,7 @@ const ProviderLoginButton: React.FC<PropsWithChildren & {
 
     return (
       <Button
-        onClick={() => loginWithProvider(provider)}
+        onClick={() => {loginWithProvider(provider)}}
         className='w-full mx-auto flex items-center gap-2'
         disabled={isLoading}
         variant='outline'
@@ -69,8 +69,8 @@ const LoginPanel: React.FC<PropsWithChildren & {
       sendGAEvent('login', { method: loginMethod })
     }
 
-    // If a callback is provided, don't redirect.
-    // Assume host code is handling (eg, mobile menu)
+      // If a callback is provided, don't redirect.
+      // Assume host code is handling (eg, mobile menu)
     if (onLoginChanged) {
       const res = await fetch(
         '/api/auth/generate-custom-token',
@@ -79,7 +79,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
       onLoginChanged(res.token?.token ?? null)
     }
     else if (redirectUrl) {
-      // TODO :aa shouldn't the token thing happen in this case too??
+        // TODO :aa shouldn't the token thing happen in this case too??
       router.push(redirectUrl)
     }
   }
@@ -88,8 +88,12 @@ const LoginPanel: React.FC<PropsWithChildren & {
     setIsLoading(true)
     try {
       const res = await auth.loginEmailAndPassword(email, password)
-      if (res.success) { succeed('email'); toast.success(res.message) }
-      else { toast.error(res.message) }
+      if (res.success) { 
+        succeed('email'); toast.success(res.message) 
+      }
+      else { 
+        toast.error(res.message) 
+      }
     }
     catch (e) {
       toast('User with this email already signed up using a different provider')
@@ -116,19 +120,25 @@ const LoginPanel: React.FC<PropsWithChildren & {
   const loginWithProvider = async (provider: AuthProvider) => {
     setIsLoading(true)
     const res = await auth.loginWithProvider(provider)
-    if (res.success) { succeed(provider) }
+    if (res.success) { 
+      succeed(provider) 
+    }
     setIsLoading(false)
   }
 
   const logout = async () => {
     setIsLoading(true)
     const res = await auth.logout()
-    if (res.success) { succeed(null) }
+    if (res.success) { 
+      succeed(null) 
+    }
     setIsLoading(false)
   }
 
   const handleOnClick = () => {
-    if (setIsLogin) setIsLogin(false)
+    if (setIsLogin) {
+      setIsLogin(false)
+    }
   }
 
   return (
@@ -140,7 +150,7 @@ const LoginPanel: React.FC<PropsWithChildren & {
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
             <div className='flex flex-col md:flex-row gap-3 items-center justify-center'>
               {getStartedUrl && <Button variant='primary' onClick={() => router.push(getStartedUrl)} className='w-full'>GET STARTED</Button>}
-              <Button onClick={() => logout()} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
+              <Button onClick={logout} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
             </div>
           </>)}
         </>
