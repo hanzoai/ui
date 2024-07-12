@@ -5,6 +5,7 @@ import type { AuthServiceConf, HanzoUserInfo, HanzoUserInfoValue } from '../../t
 
 import { 
   auth as fbAuth, 
+  signupWithEmailAndPassword,
   loginWithCustomToken, 
   loginWithEmailAndPassword,
   loginWithProvider,
@@ -71,10 +72,44 @@ class AuthServiceImpl implements AuthService {
     )
   }
 
+  signupEmailAndPassword = async (
+    email: string, 
+    password: string
+   ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null, message?: string}> => {
+
+    try {
+      this._hzUser.clear()
+      const res = await signupWithEmailAndPassword(email, password)
+      if (res.success && res.user) {
+        const walletAddress = res.user.email ? await getAssociatedWalletAddress(res.user.email) : undefined
+        this._hzUser.set({
+          email: res.user.email ?? '',
+          displayName : res.user.displayName ?? null,
+          walletAddress : walletAddress?.result ?? null
+        })
+
+        return {
+          success: true,
+          userInfo: this._hzUser,
+          message: res.message
+        }
+      }
+      return {
+        success: false,
+        userInfo: null,
+        message: res.message
+      }
+    }
+    catch (e) {
+      console.error('Error signing in with Firebase auth', e)
+      return {success: false, userInfo: null, message: 'Error signing in with Firebase auth'}
+    }
+  }
+
   loginEmailAndPassword = async (
     email: string, 
     password: string
-   ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null}> => {
+   ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null, message?: string}> => {
 
     try {
       this._hzUser.clear()
@@ -89,17 +124,19 @@ class AuthServiceImpl implements AuthService {
 
         return {
           success: true,
-          userInfo: this._hzUser
+          userInfo: this._hzUser,
+          message: res.message
         }
       }
       return {
         success: false,
-        userInfo: null
+        userInfo: null,
+        message: res.message
       }
     }
     catch (e) {
       console.error('Error signing in with Firebase auth', e)
-      return {success: false, userInfo: null}
+      return {success: false, userInfo: null, message: 'Error signing in with Firebase auth'}
     }
   }
 
