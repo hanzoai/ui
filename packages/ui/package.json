@@ -73,7 +73,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
-    "embla-carousel-react": "8.1.1",
+    "embla-carousel-react": "8.1.6",
     "input-otp": "^1.0.1",
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
