@@ -19,7 +19,7 @@ This repository is a monorepo.
 This repository is structured as follows:
 
 ```
-apps
+app
 └── web
     ├── app
     ├── components
@@ -31,17 +31,17 @@ apps
         └── new-york
             ├── example
             └── ui
-packages
-└── cli
+pkg
+└── ui
 ```
 
 | Path                  | Description                              |
 | --------------------- | ---------------------------------------- |
-| `apps/web/app`        | The Next.js application for the website. |
-| `apps/web/components` | The React components for the website.    |
-| `apps/web/content`    | The content for the website.             |
-| `apps/web/registry`   | The registry for the components.         |
-| `packages/ui`        | The `@hanzo/ui` package.                 |
+| `app/web/app`        | The Next.js application for the website. |
+| `app/web/components` | The React components for the website.    |
+| `app/web/content`    | The content for the website.             |
+| `app/web/registry`   | The registry for the components.         |
+| `pkg/ui`        | The `@hanzo/ui` package.                 |
 
 ## Development
 
@@ -93,14 +93,14 @@ The documentation for this project is located in the `web` workspace. You can ru
 pnpm --filter=web dev
 ```
 
-Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `apps/web/content/docs` directory.
+Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `app/web/content/docs` directory.
 
 ## Components
 
-We use a registry system for developing components. You can find the source code for the components under `apps/web/registry`. The components are organized by styles.
+We use a registry system for developing components. You can find the source code for the components under `app/web/registry`. The components are organized by styles.
 
 ```bash
-apps
+app
 └── web
     └── registry
         ├── default
