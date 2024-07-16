@@ -24,10 +24,10 @@ const firebaseApp =
     'firebase-admin-app'
   )
 
-const USER_INFO_COLLECTION = 'HZ_USER_INFO'
+const USER_INFO_COLLECTION = 'USER_INFO'
 
 const auth = getAuth(firebaseApp)
-const db = getFirestore(firebaseApp, 'lux-accounts')  
+const db = getFirestore(firebaseApp, 'accounts')  
 
 async function isUserAuthenticated(session: string | undefined = undefined) {
   const _session = session ?? (await getSession())

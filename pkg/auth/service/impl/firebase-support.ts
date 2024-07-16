@@ -28,7 +28,7 @@ export const firebaseConfig = {
 const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
 export const auth = getAuth(firebaseApp)
 // :aa TODO should be in module conf in host app
-export const db = getFirestore(firebaseApp, 'lux-accounts')
+export const db = getFirestore(firebaseApp, 'accounts')
 
 export async function loginWithProvider(provider: string): Promise<{ success: boolean, user: User | null }> {
   const authProvider = (() => {

@@ -1,5 +1,5 @@
 'use client'
-import { useState, type PropsWithChildren } from 'react'
+import { useState, useEffect, type PropsWithChildren } from 'react'
 import { useRouter } from 'next/navigation'
 import { observer } from 'mobx-react-lite'
 import Link from 'next/link'
@@ -62,6 +62,7 @@ const SignupPanel: React.FC<PropsWithChildren & {
   const router = useRouter()
   const auth = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [getStartUrl, setGetStartUrl] = useState('')
 
   const succeed = async (loginMethod: AuthProvider | 'email' | null) => {
 
@@ -142,6 +143,19 @@ const SignupPanel: React.FC<PropsWithChildren & {
     }
   }
 
+  const generateUsernameFromEmail = (email: string) => {
+    const emailPrefix = email.split('@')[0]; // Get the part before the @ symbol
+    const randomSuffix = Math.random().toString(36).substring(2, 8); // Generate a random string
+    return `${emailPrefix}_${randomSuffix}`;
+}
+
+  useEffect(() => {
+    if (auth.loggedIn) {
+      const username = auth.user?.email
+      if (username) setGetStartUrl('https://' + generateUsernameFromEmail(username) + '.' + getStartedUrl)
+    }
+  }, [auth])
+
   return (
     <ApplyTypography className={cn('w-full flex flex-col text-center !gap-3', className)}>
       {auth.loggedIn && !redirectUrl ? (
@@ -150,7 +164,7 @@ const SignupPanel: React.FC<PropsWithChildren & {
           {auth.user && (<> {/*  this means the hanzo user isn't loaded yet ...*/}
             <p>You are signed in as {auth.user?.displayName ?? auth.user?.email}</p>
             <div className='flex flex-col md:flex-row gap-3 items-center justify-center'>
-              {getStartedUrl && <Button variant='primary' onClick={() => {router.push(getStartedUrl)}} className='w-full'>GET STARTED</Button>}
+              <Button variant='primary' onClick={() => {router.push(getStartUrl)}} className='w-full'>GET STARTED</Button>
               <Button onClick={logout} variant='outline' disabled={isLoading} className='w-full'>Sign Out</Button>
             </div>
           </>)}
