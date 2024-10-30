@@ -7,27 +7,36 @@ import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { getFirestore } from 'firebase-admin/firestore'
 import type { HanzoUserInfo, HanzoUserInfoValue } from '../types'
 
+// Initialize Firebase only if credentials are present and valid
+let firebaseApp;
+try {
+  const hasValidCredentials = process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY;
 
-
-const firebaseApp =
-  getApps().find((it) => it.name === 'firebase-admin-app') ||
-  initializeApp(
-    {
-      credential: cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY, 
-          //? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-          //: undefined,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      }),
-    },
-    'firebase-admin-app'
-  )
+  if (hasValidCredentials) {
+    firebaseApp =
+      getApps().find((it) => it.name === 'firebase-admin-app') ||
+      initializeApp(
+        {
+          credential: cert({
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+          }),
+        },
+        'firebase-admin-app'
+      );
+  } else {
+    console.warn('Firebase credentials are missing or invalid. Firebase Admin SDK not initialized.');
+  }
+} catch (error) {
+  console.error('Failed to initialize Firebase Admin SDK:', error);
+  firebaseApp = null;
+}
 
 const USER_INFO_COLLECTION = 'USER_INFO'
 
 const auth = getAuth(firebaseApp)
-const db = getFirestore(firebaseApp, 'accounts')  
+const db = getFirestore(firebaseApp, 'accounts')
 
 async function isUserAuthenticated(session: string | undefined = undefined) {
   const _session = session ?? (await getSession())
@@ -63,7 +72,7 @@ export async function getUserServerSide(): Promise<HanzoUserInfoValue | null> {
 async function getSession() {
   try {
     return cookies().get('__session')?.value
-  } 
+  }
   catch (error) {
     return undefined
   }
