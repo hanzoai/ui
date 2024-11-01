@@ -11,18 +11,21 @@ export async function handleLogin(request: NextRequest) {
 
   const sessionCookie = await createSessionCookie(idToken, { expiresIn })
 
-  cookies().set('__session', sessionCookie, { maxAge: expiresIn, httpOnly: true, secure: true })
+  const c = await cookies()
+  c.set('__session', sessionCookie, { maxAge: expiresIn, httpOnly: true, secure: true })
 
   return NextResponse.json<APIResponse<string>>({ success: true, data: 'Signed in successfully.' })
 }
 
 export async function handleLogout() {
-  const sessionCookie = cookies().get('__session')?.value
+  const c = await cookies()
+  const sessionCookie = c.get('__session')?.value
 
-  if (!sessionCookie)
+  if (!sessionCookie) {
     return NextResponse.json<APIResponse<string>>({ success: false, error: 'Session not found.' }, { status: 400 })
+  }
 
-  cookies().delete('__session')
+  c.delete('__session')
 
   await revokeAllSessions(sessionCookie)
 

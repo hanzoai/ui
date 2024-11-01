@@ -61,8 +61,9 @@ export async function getUserServerSide(): Promise<HanzoUserInfoValue | null> {
 }
 
 async function getSession() {
+  const c = await cookies()
   try {
-    return cookies().get('__session')?.value
+    return c.get('__session')?.value
   } 
   catch (error) {
     return undefined
