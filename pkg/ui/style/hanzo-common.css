@@ -4,7 +4,6 @@
 @layer base {
   
   * {
-    @apply border-muted-3;
     box-sizing: inherit;
   }
 
