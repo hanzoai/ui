@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "3.8.36",
+  "version": "4.0.4",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@hanzo/react-drawer": "0.1.7",
-    "@next/third-parties": "^14.1.0",
+    "@next/third-parties": "^15.0.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.3",
@@ -67,13 +67,13 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.6",
-    "@splinetool/react-spline": "^2.2.6",
-    "@splinetool/runtime": "^1.0.75",
+    "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/runtime": "^1.9.35",
     "@tailwindcss/container-queries": "^0.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
-    "embla-carousel-react": "8.1.6",
+    "embla-carousel-react": "8.3.0",
     "input-otp": "^1.0.1",
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
@@ -92,7 +92,7 @@
     "embla-carousel": "^8.1.6",
     "lucide-react": "^0.344.0",
     "mobx": "^6.12.3",
-    "next": "14.2.3",
+    "next": "^14.2.16",
     "next-themes": "^0.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -107,9 +107,10 @@
     "@types/gtag.js": "^0.0.19",
     "@types/lodash.merge": "^4.6.9",
     "@types/mdx": "^2.0.13",
+    "@types/node": "^17.0.45",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "tailwindcss": "^3.4.3",
-    "typescript": "5.4.5"
+    "typescript": "5.6.3"
   }
 }

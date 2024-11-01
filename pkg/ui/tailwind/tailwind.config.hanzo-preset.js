@@ -103,7 +103,7 @@ export default {
     },
     borderColor: ({ theme }) => ({
       ...theme('colors'),
-      DEFAULT: theme('colors.gray.200', 'currentColor'),
+      DEFAULT: theme('colors.muted.3'),
     }),
     borderOpacity: ({ theme }) => theme('opacity'),
     borderRadius: {
