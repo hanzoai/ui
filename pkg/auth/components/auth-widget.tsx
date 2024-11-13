@@ -42,7 +42,7 @@ const AuthWidget: React.FC<{
     // the root in host mono repos, but this is another layer.
     // Also, this allows sites to opt-in to showing an auth widget without
     // configuration, by just providing the context.
-  if (!auth) {
+  if (!auth || noLogin) {
     return null
   }
   
@@ -50,26 +50,24 @@ const AuthWidget: React.FC<{
     // button regardless of status.
   if (!auth.loggedIn && typeof window !== 'undefined') {
 
-    return (noLogin ? null : (
-      (handleLogin) ? (
-        <Button 
-          variant='primary' 
-          className='h-8 w-fit !min-w-0'
-          onClick={handleLogin} 
-        >
-          Login
-        </Button>
-      ) : (
-        <LinkElement
-          def={{
-            href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window.location.href}`,
-            title: 'Login',
-            variant: 'primary',
-            newTab: false
-          } satisfies LinkDef}
-          className='h-8 w-fit !min-w-0'
-        />
-      )
+    return (handleLogin ? (
+      <Button 
+        variant='primary' 
+        className='h-8 w-fit !min-w-0'
+        onClick={handleLogin} 
+      >
+        Login
+      </Button>
+    ) : (
+      <LinkElement
+        def={{
+          href: `${process.env.NEXT_PUBLIC_LOGIN_SITE_URL}?redirectUrl=${window.location.href}`,
+          title: 'Login',
+          variant: 'primary',
+          newTab: false
+        } satisfies LinkDef}
+        className='h-8 w-fit !min-w-0'
+      />
     ))
   }
 

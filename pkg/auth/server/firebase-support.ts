@@ -1,14 +1,14 @@
 import 'server-only'
 
 import { cookies } from 'next/headers'
-import { initializeApp, getApps, cert } from 'firebase-admin/app'
+import { initializeApp, getApps, cert, type App } from 'firebase-admin/app'
 import { type SessionCookieOptions, type UserRecord, getAuth } from 'firebase-admin/auth'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { getFirestore } from 'firebase-admin/firestore'
 import type { HanzoUserInfo, HanzoUserInfoValue } from '../types'
 
 // Initialize Firebase only if credentials are present and valid
-let firebaseApp;
+let firebaseApp: App | undefined;
 try {
   const hasValidCredentials = process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY;
 
@@ -30,13 +30,13 @@ try {
   }
 } catch (error) {
   console.error('Failed to initialize Firebase Admin SDK:', error);
-  firebaseApp = null;
+  firebaseApp = undefined;
 }
 
 const USER_INFO_COLLECTION = 'USER_INFO'
 
 const auth = getAuth(firebaseApp)
-const db = getFirestore(firebaseApp, 'accounts')
+const db = getFirestore(firebaseApp as App, 'accounts')
 
 async function isUserAuthenticated(session: string | undefined = undefined) {
   const _session = session ?? (await getSession())
