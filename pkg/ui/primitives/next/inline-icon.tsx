@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { Icon } from '../types'
+import type { Icon } from '../../types'
 
 const InlineIcon: React.FC<{
     /**

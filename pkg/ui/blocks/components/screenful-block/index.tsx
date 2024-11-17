@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 
 import type { Block, ScreenfulBlock, VideoBlock } from '../../def'
 import { containsToken, cn } from '../../../util'
-import { ApplyTypography } from '../../../primitives'
+import { ApplyTypography } from '../../../primitives/index-common'
 
 import Poster from './poster-background'
 import Content from './content'

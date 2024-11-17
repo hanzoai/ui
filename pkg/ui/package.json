@@ -35,7 +35,8 @@
   },
   "exports": {
     "./blocks": "./blocks/index.ts",
-    "./primitives": "./primitives/index.ts",
+    "./primitives": "./primitives/index-next.ts",
+    "./primitives-common": "./primitives/index-common.ts",
     "./style/": "./style/*",
     "./tailwind": "./tailwind/index.ts",
     "./types": "./types/index.ts",

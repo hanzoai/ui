@@ -5,7 +5,7 @@ import { ldMerge, cn } from '../../util'
 import type { Breakpoint } from '../../types'
 import { SPACE_DEFAULTS , type TWSpaceUnit, type HeadingLevel} from '../def/space-block'
 import type SpaceBlock from  '../def/space-block' 
-import { ApplyTypography } from '../../primitives'
+import { ApplyTypography } from '../../primitives/index-common'
 
 import type BlockComponentProps from './block-component-props'
 
