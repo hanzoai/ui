@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
   type TypographySize
-} from '../../../primitives'
+} from '../../../primitives/index-common'
 
 import type { CardBlock, VideoBlock } from '../../def'
 

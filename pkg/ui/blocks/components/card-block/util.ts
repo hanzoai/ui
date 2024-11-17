@@ -1,5 +1,5 @@
 import type { Dimensions } from  '../../../types'
-import type {TypographySize } from '../../../primitives'
+import type {TypographySize } from '../../../primitives/index-common'
 import {
   getSpecifierData, 
   getPrimaryStartingWith, 

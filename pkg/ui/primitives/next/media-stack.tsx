@@ -3,11 +3,11 @@ import React from 'react'
 
 import Spline from '@splinetool/react-spline'
 
-import { cn, constrain, spreadToTransform } from '../util'
-import type { MediaStackDef, Dimensions } from '../types'
+import { cn, constrain, spreadToTransform } from '../../util'
+import type { MediaStackDef, Dimensions } from '../../types'
 
 import Image from './image'
-import VideoPlayer from './video-player'
+import VideoPlayer from '../video-player'
 
 const MediaStack: React.FC<{
   media: MediaStackDef
