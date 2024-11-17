@@ -5,7 +5,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from '../../../primitives'
+} from '../../../primitives/index-common'
 
 import { cn, containsToken } from '../../../util'
 

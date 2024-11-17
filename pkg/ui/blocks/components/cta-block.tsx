@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { LinkDef, ButtonDef} from '../../types'
-import  { buttonVariants, ActionButton, LinkElement } from '../../primitives'
+import  { buttonVariants, ActionButton, LinkElement } from '../../primitives/index-next'
 import type { CTABlock } from '../def'
 import { cn, containsToken, type VariantProps } from '../../util'
 

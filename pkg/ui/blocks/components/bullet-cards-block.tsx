@@ -2,7 +2,7 @@ import React from 'react'
 
 import { containsToken, cn } from '../../util'
 import type { Block, BulletCardsBlock } from '../def'
-import InlineIcon from '../../primitives/inline-icon'
+import InlineIcon from '../../primitives/next/inline-icon'
 
 import type BlockComponentProps from './block-component-props'
 import GridBlockComponent from './grid-block'

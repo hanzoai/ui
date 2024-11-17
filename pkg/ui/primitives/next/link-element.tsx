@@ -1,9 +1,9 @@
 import React, { type PropsWithChildren } from 'react'
 import Link from 'next/link'
 
-import type { LinkDef, Icon }  from '../types'
-import { buttonVariants } from './button'
-import { cn, type VariantProps } from '../util'
+import type { LinkDef, Icon }  from '../../types'
+import { buttonVariants } from '../button'
+import { cn, type VariantProps } from '../../util'
 
   /**
    * If this is rendered directly (and not auto generated in a Block)

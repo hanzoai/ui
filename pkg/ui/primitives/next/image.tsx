@@ -1,8 +1,8 @@
 import React from 'react'
 import NextImage from 'next/image'
 
-import type { ImageDef, Dimensions, MediaTransform } from '../types'
-import { constrain, cn, spreadToTransform } from '../util'
+import type { ImageDef, Dimensions, MediaTransform } from '../../types'
+import { constrain, cn, spreadToTransform } from '../../util'
 
 const Image: React.FC<{
   def: ImageDef

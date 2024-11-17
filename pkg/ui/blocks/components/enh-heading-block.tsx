@@ -2,11 +2,11 @@ import React, {type ElementType} from 'react'
 
 import type { Icon } from '../../types'
 import type { EnhHeadingBlock } from '../def'
-import { ApplyTypography } from '../../primitives'
+import { ApplyTypography } from '../../primitives/index-common'
 import { cn, containsToken } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
-import InlineIcon from '../../primitives/inline-icon'
+import InlineIcon from '../../primitives/next/inline-icon'
 
 const DEFAULTS = {
   preheading: {

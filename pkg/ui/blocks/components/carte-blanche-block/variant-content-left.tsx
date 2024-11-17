@@ -3,7 +3,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from '../../../primitives'
+} from '../../../primitives/index-common'
 import { cn } from '../../../util'
 import Content from '../content'
 
