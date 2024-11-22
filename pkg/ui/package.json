@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "4.0.5",
+  "version": "4.1.1",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -44,7 +44,7 @@
     "./util-client": "./util/index-client.ts"
   },
   "dependencies": {
-    "@hanzo/react-drawer": "0.1.7",
+    "@hanzo/react-drawer": "^0.1.8",
     "@next/third-parties": "^15.0.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
