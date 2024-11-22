@@ -19,64 +19,68 @@ import {
   PopoverTrigger,
 } from './popover'
 
-interface SelectElement {
-  value: string,
-  label?: string,
-  imageUrl?: string
-}
-
-const IMAGE_SIZE = 32
+import type ListAdaptor from './list-adaptor'
 
 const ElementImage: React.FC<{
   url: string | undefined
   alt?: string
   w: number
   h: number
+  className?: string
 }> = ({
   url,
   alt,
   w,
-  h
-}) => (url &&
-  <img
-    src={url}
-    alt={alt ?? 'image'}
-    height={h}
-    width={w}
-    loading="eager"
-    className="rounded-sm object-contain"
-  />
+  h,
+  className=''
+}) => (url ? (
+    <img
+      src={url}
+      alt={alt ?? 'image'}
+      height={h}
+      width={w}
+      loading="eager"
+      className={className}
+    />
+  ) : null
 )
+// "rounded-sm object-contain"
 
-
-const Combobox: React.FC<{
-  elements: SelectElement[]
-  buttonClx?: string 
-  popoverClx?: string
-  buttonPlaceholder?: string
-  searchPlaceholder?: string
-  initial?: SelectElement,
-  elementSelected: (e: SelectElement) => void
-  disabled?: boolean
-}> = ({
-  elements,
-  buttonClx='',
-  popoverClx='',
-  initial,
-  searchPlaceholder='Search...',
-  buttonPlaceholder='Select...',
-  elementSelected,
-  disabled=false
+const Combobox = <T,>(
+  {
+    elements,
+    adaptor,
+    buttonClx='',
+    popoverClx='',
+    imageClx='',
+    initial,
+    searchPlaceholder='Search...',
+    buttonPlaceholder='Select...',
+    noneFoundMessage='None found.',
+    elementSelected,
+    disabled=false,
+    imageSize=32
+  }: {
+    elements: T[]
+    adaptor: ListAdaptor<T>
+    elementSelected: (e: T) => void
+    buttonClx?: string 
+    popoverClx?: string
+    imageClx?: string
+    buttonPlaceholder?: string
+    searchPlaceholder?: string
+    noneFoundMessage?: string
+    initial?: T,
+    disabled?: boolean
+    imageSize?: number
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
-  const [current, setCurrent] = useState<SelectElement | null>(initial ?? null)
+  const [current, setCurrent] = useState<T | null>(initial ?? null)
 
-  const handleSelect = (selectedValue: string) => {
+  const handleSelect = (selString: string) => {
 
-      // some issue w case... I know, right??
-    const found = elements.find((el: SelectElement) => (el.value.toUpperCase() === selectedValue.toUpperCase()) )
-
+    const found = elements.find((el: T) => (adaptor.valueEquals(el, selString)))
     if (found) {
       setCurrent(found)
       elementSelected(found)
@@ -84,9 +88,17 @@ const Combobox: React.FC<{
     setOpen(false)
   }
 
-  const isCurrent = (el: SelectElement): boolean => (
-    !!current && (el.value.toUpperCase() === current.value.toUpperCase())
-  )  
+  const isCurrent = (el: T): boolean => (!!current && (adaptor.equals(el, current)))  
+
+  let currentValue: string | undefined
+  let currentLabel: string | undefined
+  let currentImageUrl: string | undefined
+
+  if (current) {
+    currentValue = adaptor.getValue(current)
+    currentLabel = adaptor.getLabel ? adaptor.getLabel(current) : undefined
+    currentImageUrl = adaptor.getImageUrl ? adaptor.getImageUrl(current) : undefined
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -100,9 +112,9 @@ const Combobox: React.FC<{
         >
           <div className='flex justify-start items-center gap-2'>
             {current && (
-              <ElementImage url={current.imageUrl} w={IMAGE_SIZE} h={IMAGE_SIZE} alt={current.value + ' image'}/>
+              <ElementImage url={currentImageUrl} w={imageSize} h={imageSize} className={imageClx} alt={currentValue + ' image'}/>
             )}
-            <span>{ current ? (current.label ?? current.value) : buttonPlaceholder }</span>
+            <span>{ current ? (currentLabel ?? currentValue) : buttonPlaceholder }</span>
           </div>
           <ChevronDown className={open ? '' : 'opacity-50'} />
         </Button>
@@ -111,21 +123,27 @@ const Combobox: React.FC<{
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList>
-            <CommandEmpty>No element found.</CommandEmpty>
+            <CommandEmpty>{noneFoundMessage}</CommandEmpty>
             <CommandGroup>
-            {elements.map((element) => (
+            {elements.map((el) => (
               <CommandItem
-                key={element.value}
-                value={element.value}
+                key={adaptor.getValue(el)}
+                value={adaptor.getValue(el)}
                 onSelect={handleSelect}
                 className='flex justify-between'
               >
                 <div className='flex justify-start items-center gap-2'>
-                  <ElementImage url={element.imageUrl} w={IMAGE_SIZE} h={IMAGE_SIZE} alt={element.value + ' image'}/>
-                  <span>{ element.label ?? element.value }</span>
+                  <ElementImage 
+                    url={adaptor.getImageUrl ? adaptor.getImageUrl(el) : undefined} 
+                    w={imageSize} 
+                    h={imageSize}  
+                    className={imageClx} 
+                    alt={adaptor.getValue(el) + ' image'}
+                  />
+                  <span>{ adaptor.getLabel ? adaptor.getLabel(el) : adaptor.getValue(el) }</span>
                 </div>
                 <div>
-                  <Check className={cn('ml-auto', (isCurrent(element)) ? '' : 'invisible' )} />
+                  <Check className={cn('ml-auto', (isCurrent(el)) ? '' : 'invisible' )} />
                 </div>
               </CommandItem>
             ))}
@@ -137,7 +155,4 @@ const Combobox: React.FC<{
   )
 }
 
-export {
-  type SelectElement,
-  Combobox as default
-} 
+export default Combobox
