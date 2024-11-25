@@ -14,13 +14,5 @@
   "packageManager": "pnpm@9.0.6",
   "dependencies": {
     "husky": "^8.0.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "react": "^18.3.1",
-      "@types/react": "^18.3.2",
-      "react-hook-form": "7.51.4"
-
-    }
   }
 }
