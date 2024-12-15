@@ -6,8 +6,7 @@ export { cva, type VariantProps } from 'class-variance-authority'
 
 import type { Dimensions } from '../types'
 
-  // @ts-ignore
-import _merge from 'lodash.merge'
+import { default as _merge }  from 'lodash.merge'
 
 export const cn = (...inputs: ClassValue[]) => (
   twMerge(clsx(inputs))  
