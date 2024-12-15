@@ -37,18 +37,6 @@ interface ComboboxTriggerProps<T> {
   open: boolean
 }
 
-/*
-function createTrigger<T, P extends ComboboxTriggerProps<T>>(
-  func: (
-    props: P,
-    ref: React.ForwardedRef<HTMLButtonElement>
-  ) => React.ReactNode
-) : 
-  <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
-{
-  return React.forwardRef(func) as <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
-}
-*/
 const DefaultTriggerInner = <T,>(
   {
     current,
@@ -97,25 +85,22 @@ const DefaultTriggerInner = <T,>(
   </Button>
 )
 
-
-//type CBTrigger = <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
-
-// const DefaultTrigger = <T,>(props: (ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement>})) =>(createTrigger<T>(DefaultTriggerInner(props, ref)))
 const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
-
 
 const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   elements,
+  initial,
+  current,
+  setCurrent,
+  closeOnSelect=true,
   adaptor,
   popoverClx='',
   listItemClx='',
   listItemSelectedClx='',
   noCheckmark=false,
   listItemImageClx='',
-  initial,
   searchPlaceholder='Search...',
   noneFoundMessage='None found.',
-  elementSelected,
   listItemImageSize=DEFAULT_IMAGE_SIZE,
   noSearch=false,
   popoverAlign = 'center', 
@@ -124,17 +109,19 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   triggerProps
 }: {
   elements: T[]
+  initial?: T | null
+  current?: T | null
+  setCurrent: (c: T | null) => void 
+  closeOnSelect?: boolean
   adaptor: ListAdaptor<T>
-  elementSelected: (e: T) => void
   popoverClx?: string
   listItemClx?: string
   listItemSelectedClx?: string
-  noCheckmark?: boolean
   listItemImageClx?: string
+  listItemImageSize?: number
+  noCheckmark?: boolean
   searchPlaceholder?: string
   noneFoundMessage?: string
-  initial?: T
-  listItemImageSize?: number
   noSearch?: boolean
   popoverAlign?: "center" | "end" | "start"
   popoverSideOffset?: number
@@ -150,30 +137,43 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
-  const [current, setCurrent] = useState<T | null>(initial ?? null)
+    // for non-controlled base (must declare the hook either way)
+  const [_current, _setCurrent] = useState<T | null>(initial ?? null)
 
   const handleSelect = (selString: string) => {
 
     const found = elements.find((el: T) => (adaptor.valueEquals(el, selString)))
     if (found) {
+        // non-controlled ('initial' supplied (may have been null))
+      if (initial !== undefined) {
+        _setCurrent(found)
+      }
       setCurrent(found)
-      elementSelected(found)
     }
-    setOpen(false)
+    if (closeOnSelect) {
+      setOpen(false)
+    }
   }
 
-  const isCurrent = (el: T): boolean => (!!current && (adaptor.equals(el, current)))  
+  const isCurrent = (el: T): boolean => {
+
+      // non-controlled
+    const curr = (current === undefined) ? _current : current 
+    return !!curr && adaptor.equals(el, curr)
+  }  
 
   const toSpread = current ? {
     ...triggerProps,
     current,
     currentLabel: adaptor.getLabel ? adaptor.getLabel(current) : adaptor.getValue(current),
-    imageUrl: adaptor.getImageUrl ? adaptor.getImageUrl(current) : null
+    imageUrl: adaptor.getImageUrl ? adaptor.getImageUrl(current) : null,
+    open
   } : {
     ...triggerProps,
     current: null,
     currentLabel: null,
-    imageUrl: null 
+    imageUrl: null,
+    open 
   }
 
   return (
