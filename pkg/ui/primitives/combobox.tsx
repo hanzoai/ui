@@ -37,17 +37,18 @@ interface ComboboxTriggerProps<T> {
   open: boolean
 }
 
-function createTrigger<T>(
+/*
+function createTrigger<T, P extends ComboboxTriggerProps<T>>(
   func: (
-    props: ComboboxTriggerProps<T>,
+    props: P,
     ref: React.ForwardedRef<HTMLButtonElement>
   ) => React.ReactNode
 ) : 
-  <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+  <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 {
-  return React.forwardRef(func) as <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+  return React.forwardRef(func) as <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }
-
+*/
 const DefaultTriggerInner = <T,>(
   {
     current,
@@ -96,10 +97,14 @@ const DefaultTriggerInner = <T,>(
   </Button>
 )
 
-// const DefaultTrigger = <T,>(props: (ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement>})) =>(createTrigger<T>(DefaultTriggerInner(props, ref)))
-const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 
-const Combobox = <T,>({
+//type CBTrigger = <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+
+// const DefaultTrigger = <T,>(props: (ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement>})) =>(createTrigger<T>(DefaultTriggerInner(props, ref)))
+const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+
+
+const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   elements,
   adaptor,
   popoverClx='',
@@ -136,12 +141,12 @@ const Combobox = <T,>({
     /** 
      * If (custom) Trigger is not supplied, 
      * passed to default trigger */
-  triggerProps: ComboboxTriggerProps<T>
+  triggerProps: P
     /**
      * should be result of calling createTrigger
      */
   Trigger?: 
-    <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+    <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
@@ -175,9 +180,9 @@ const Combobox = <T,>({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {Trigger ? (
-          <Trigger<T> {...toSpread} />
+          <Trigger<T, P> {...toSpread} />
         ) : (
-          <DefaultTrigger<T> {...toSpread} />
+          <DefaultTrigger<T, P> {...toSpread} />
         )}
       </PopoverTrigger>
       <PopoverContent className={cn('p-0', popoverClx)} align={popoverAlign} sideOffset={popoverSideOffset}>
@@ -230,6 +235,6 @@ const Combobox = <T,>({
 
 export {
   Combobox as default,
-  createTrigger,
+//  createTrigger,
   type ComboboxTriggerProps
 } 
