@@ -105,6 +105,7 @@
   "devDependencies": {
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/react": "^3.0.0",
+    "@radix-ui/react-primitive": "^2.0.1",
     "@types/facebook-pixel": "^0.0.30",
     "@types/gtag.js": "^0.0.19",
     "@types/lodash.merge": "^4.6.9",
