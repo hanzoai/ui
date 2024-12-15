@@ -1,19 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 
-// cf: https://fettblog.eu/typescript-react-generic-forward-refs/
-// Redecalare forwardRef
-///declare module "react" {
-  function newForwardRef<T, P = {}>(
-    render: (props: P, ref: React.Ref<T>) => React.ReactNode | null
-  ): (props: P & React.RefAttributes<T>) => React.ReactNode | null {
-    return React.forwardRef(render as React.ForwardRefRenderFunction<T, React.PropsWithoutRef<P>>) as any;  
-  }
-//}
-
-
 import { Check, ChevronDown } from 'lucide-react'
-//import { type Primitive as RadixPrimitive } from '@radix-ui/react-primitive'
 
 import { cn } from '../util'
 import Button from './button'
@@ -36,8 +24,6 @@ import type ListAdaptor from './list-adaptor'
 
 const DEFAULT_IMAGE_SIZE = 32
 
-
-
 interface ComboboxTriggerProps<T> {
   current: T | null
   currentLabel: string | null
@@ -51,20 +37,16 @@ interface ComboboxTriggerProps<T> {
   open: boolean
 }
 
-/*
 function createTrigger<T>(
   func: (
     props: ComboboxTriggerProps<T>,
     ref: React.ForwardedRef<HTMLButtonElement>
   ) => React.ReactNode
 ) : 
-  React.ForwardRefExoticComponent<React.PropsWithoutRef<ComboboxTriggerProps<T>> 
-  & 
-  React.RefAttributes<HTMLButtonElement>>
+  <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 {
-  return React.newForwardRef<HTMLButtonElement, ComboboxTriggerProps<T>>(func)
+  return React.forwardRef(func) as <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }
-*/
 
 const DefaultTriggerInner = <T,>(
   {
@@ -82,39 +64,40 @@ const DefaultTriggerInner = <T,>(
   }: ComboboxTriggerProps<T>,
   ref: React.ForwardedRef<HTMLButtonElement>
 ) => (
-    <Button
-      ref={ref}
-      {...rest}
-      variant='outline'
-      role='combobox'
-      aria-expanded={open}
-      className={cn(
-        'flex',
-        noChevron ? 'justify-start' : 'justify-between',
-        buttonClx
-      )}
-      disabled={disabled}
-    >
-      <div className='flex justify-start items-center gap-2'>
-      {current ? (
-        <img
-          src={imageUrl!}
-          alt={currentLabel + ' image'}
-          height={imageSize}
-          width={imageSize}
-          loading="eager"
-          className={imageClx}
-        />
-      ) : (
-        <div style={{width: imageSize, height: imageSize}} />
-      )}
-        <span>{currentLabel}</span>
-      </div>
-      {!noChevron && (<ChevronDown className={open ? '' : 'opacity-50'} />)}
-    </Button>
-  )
+  <Button
+    ref={ref}
+    {...rest}
+    variant='outline'
+    role='combobox'
+    aria-expanded={open}
+    className={cn(
+      'flex',
+      noChevron ? 'justify-start' : 'justify-between',
+      buttonClx
+    )}
+    disabled={disabled}
+  >
+    <div className='flex justify-start items-center gap-2'>
+    {current ? (
+      <img
+        src={imageUrl!}
+        alt={currentLabel + ' image'}
+        height={imageSize}
+        width={imageSize}
+        loading="eager"
+        className={imageClx}
+      />
+    ) : (
+      <div style={{width: imageSize, height: imageSize}} />
+    )}
+      <span>{currentLabel}</span>
+    </div>
+    {!noChevron && (<ChevronDown className={open ? '' : 'opacity-50'} />)}
+  </Button>
+)
 
-const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => ReturnType<typeof DefaultTriggerInner>
+// const DefaultTrigger = <T,>(props: (ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement>})) =>(createTrigger<T>(DefaultTriggerInner(props, ref)))
+const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 
 const Combobox = <T,>({
   elements,
@@ -132,7 +115,7 @@ const Combobox = <T,>({
   noSearch=false,
   popoverAlign = 'center', 
   popoverSideOffset = 4,
-  Trigger, // = newForwardRef<HTMLButtonElement, ComboboxTriggerProps<T>>(DefaultTriggerInner),
+  Trigger, 
   triggerProps
 }: {
   elements: T[]
@@ -151,25 +134,18 @@ const Combobox = <T,>({
   popoverAlign?: "center" | "end" | "start"
   popoverSideOffset?: number
     /** 
-     * If Trigger is not supplied, 
-     * passed to default button */
+     * If (custom) Trigger is not supplied, 
+     * passed to default trigger */
   triggerProps: ComboboxTriggerProps<T>
     /**
      * should be result of calling createTrigger
      */
-  Trigger?: //React.ReactNode
-    <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => ReturnType<typeof DefaultTriggerInner>
-
-    //(props: ComboboxTriggerProps<T> & React.RefAttributes<HTMLButtonElement>) => React.ReactNode | null
-    //(React.ForwardRefExoticComponent<React.PropsWithoutRef<ComboboxTriggerProps<T>> 
-    //& 
-    //React.RefAttributes<HTMLButtonElement>>)
+  Trigger?: 
+    <T>(props: ComboboxTriggerProps<T> & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }) => {
 
   const [open, setOpen] = useState<boolean>(false)
   const [current, setCurrent] = useState<T | null>(initial ?? null)
-
-
 
   const handleSelect = (selString: string) => {
 
@@ -184,55 +160,25 @@ const Combobox = <T,>({
   const isCurrent = (el: T): boolean => (!!current && (adaptor.equals(el, current)))  
 
   const toSpread = current ? {
+    ...triggerProps,
     current,
     currentLabel: adaptor.getLabel ? adaptor.getLabel(current) : adaptor.getValue(current),
     imageUrl: adaptor.getImageUrl ? adaptor.getImageUrl(current) : null
   } : {
+    ...triggerProps,
     current: null,
     currentLabel: null,
     imageUrl: null 
   }
 
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {Trigger ? (
-          <Trigger<T> {...{...triggerProps, ...toSpread}} />
+          <Trigger<T> {...toSpread} />
         ) : (
-          <DefaultTrigger<T> {...{...triggerProps, ...toSpread}} />
-          /*
-          <Button
-      
-      variant='outline'
-      role='combobox'
-      aria-expanded={open}
-      className={cn(
-        'flex',
-        triggerProps.noChevron ? 'justify-start' : 'justify-between',
-        triggerProps.buttonClx
-      )}
-      disabled={triggerProps.disabled}
-    >
-      <div className='flex justify-start items-center gap-2'>
-      {current ? (
-        <img
-          src={toSpread.imageUrl!}
-          alt={toSpread.currentLabel + ' image'}
-          height={triggerProps.imageSize}
-          width={triggerProps.imageSize}
-          loading="eager"
-          className={triggerProps.imageClx}
-        />
-      ) : (
-        <div style={{width: triggerProps.imageSize, height: triggerProps.imageSize}} />
-      )}
-        <span>{triggerProps.currentLabel}</span>
-      </div>
-      {!triggerProps.noChevron && (<ChevronDown className={triggerProps.open ? '' : 'opacity-50'} />)}
-    </Button>
-        */
-       )}
+          <DefaultTrigger<T> {...toSpread} />
+        )}
       </PopoverTrigger>
       <PopoverContent className={cn('p-0', popoverClx)} align={popoverAlign} sideOffset={popoverSideOffset}>
         <Command>
@@ -284,5 +230,6 @@ const Combobox = <T,>({
 
 export {
   Combobox as default,
+  createTrigger,
   type ComboboxTriggerProps
 } 
