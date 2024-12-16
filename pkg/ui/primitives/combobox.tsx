@@ -74,14 +74,14 @@ const DefaultTriggerInner = <T,>(
         height={imageSize}
         width={imageSize}
         loading="eager"
-        className={imageClx}
+        className={cn('block', imageClx)}
       />
     ) : (
       <div style={{width: imageSize, height: imageSize}} />
     )}
-      <span>{currentLabel}</span>
+      <span className='block'>{currentLabel}</span>
     </div>
-    {!noChevron && (<ChevronDown className={open ? '' : 'opacity-50'} />)}
+    {!noChevron && (<ChevronDown className={cn('block', open ? '' : 'opacity-50')} />)}
   </Button>
 )
 
@@ -125,18 +125,14 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   noSearch?: boolean
   popoverAlign?: "center" | "end" | "start"
   popoverSideOffset?: number
-    /** 
-     * If (custom) Trigger is not supplied, 
+    /** If (custom) Trigger is not supplied, 
      * passed to default trigger */
   triggerProps: P
-    /**
-     * should be result of calling createTrigger
-     */
   Trigger?: 
     <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }) => {
 
-  const [open, setOpen] = useState<boolean>(false)
+  const [_open, _setOpen] = useState<boolean>(false)
     // for non-controlled base (must declare the hook either way)
   const [_current, _setCurrent] = useState<T | null>(initial ?? null)
 
@@ -151,14 +147,14 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
       setCurrent(found)
     }
     if (closeOnSelect) {
-      setOpen(false)
+      _setOpen(false)
     }
   }
 
   const isCurrent = (el: T): boolean => {
 
-      // non-controlled
-    const curr = (current === undefined) ? _current : current 
+      // non-controlled?
+    const curr = (current === undefined) ? _current : current
     return !!curr && adaptor.equals(el, curr)
   }  
 
@@ -167,17 +163,17 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
     current,
     currentLabel: adaptor.getLabel ? adaptor.getLabel(current) : adaptor.getValue(current),
     imageUrl: adaptor.getImageUrl ? adaptor.getImageUrl(current) : null,
-    open
+    open: _open
   } : {
     ...triggerProps,
     current: null,
     currentLabel: null,
     imageUrl: null,
-    open 
+    open: _open 
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={_open} onOpenChange={_setOpen}>
       <PopoverTrigger asChild>
         {Trigger ? (
           <Trigger<T, P> {...toSpread} />
@@ -235,6 +231,5 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
 
 export {
   Combobox as default,
-//  createTrigger,
   type ComboboxTriggerProps
 } 
