@@ -2,7 +2,7 @@ import React from 'react'
 
 const BreakpointIndicator: React.FC = () => {
   
-  if (process.env.NODE_ENV === "production") return null
+  if (process?.env?.NODE_ENV !== undefined && process.env.NODE_ENV === "production") return null
 
   return (
     <div className="fixed bottom-1 left-1 z-floating flex h-6 w-6 items-center justify-center rounded-full bg-gray-800 p-3 font-mono text-xs text-primary">

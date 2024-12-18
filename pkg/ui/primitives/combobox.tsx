@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react'
+
 import { Check, ChevronDown } from 'lucide-react'
 
 import { cn } from '../util'
@@ -21,107 +22,168 @@ import {
 
 import type ListAdaptor from './list-adaptor'
 
-const ElementImage: React.FC<{
-  url: string | undefined
-  alt?: string
-  w: number
-  h: number
-  className?: string
-}> = ({
-  url,
-  alt,
-  w,
-  h,
-  className=''
-}) => (url ? (
-    <img
-      src={url}
-      alt={alt ?? 'image'}
-      height={h}
-      width={w}
-      loading="eager"
-      className={className}
-    />
-  ) : null
-)
-// "rounded-sm object-contain"
+const DEFAULT_IMAGE_SIZE = 32
 
-const Combobox = <T,>(
+interface ComboboxTriggerProps<T> {
+  current: T | null
+  currentLabel: string | null
+  imageUrl: string | null
+  placeholder?: string 
+  buttonClx?: string
+  imageClx?: string
+  disabled?: boolean
+  imageSize?: number  
+  noChevron?: boolean
+  open: boolean
+}
+
+const DefaultTriggerInner = <T,>(
   {
-    elements,
-    adaptor,
+    current,
+    currentLabel,
+    imageUrl,
     buttonClx='',
-    popoverClx='',
     imageClx='',
-    initial,
-    searchPlaceholder='Search...',
-    buttonPlaceholder='Select...',
-    noneFoundMessage='None found.',
-    elementSelected,
+    placeholder='(select)',
     disabled=false,
-    imageSize=32
-  }: {
-    elements: T[]
-    adaptor: ListAdaptor<T>
-    elementSelected: (e: T) => void
-    buttonClx?: string 
-    popoverClx?: string
-    imageClx?: string
-    buttonPlaceholder?: string
-    searchPlaceholder?: string
-    noneFoundMessage?: string
-    initial?: T,
-    disabled?: boolean
-    imageSize?: number
+    imageSize=DEFAULT_IMAGE_SIZE,  
+    noChevron=false,
+    open,
+    ...rest
+  }: ComboboxTriggerProps<T>,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) => (
+  <Button
+    ref={ref}
+    {...rest}
+    variant='outline'
+    role='combobox'
+    aria-expanded={open}
+    className={cn(
+      'flex',
+      noChevron ? 'justify-start' : 'justify-between',
+      buttonClx
+    )}
+    disabled={disabled}
+  >
+    <div className='flex justify-start items-center gap-2'>
+    {current ? (
+      <img
+        src={imageUrl!}
+        alt={currentLabel + ' image'}
+        height={imageSize}
+        width={imageSize}
+        loading="eager"
+        className={cn('block', imageClx)}
+      />
+    ) : (
+      <div style={{width: imageSize, height: imageSize}} />
+    )}
+      <span className='block'>{currentLabel}</span>
+    </div>
+    {!noChevron && (<ChevronDown className={cn('block', open ? '' : 'opacity-50')} />)}
+  </Button>
+)
+
+const DefaultTrigger = React.forwardRef(DefaultTriggerInner) as <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
+
+const Combobox = <T, P extends ComboboxTriggerProps<T>>({
+  elements,
+  initial,
+  current,
+  setCurrent,
+  closeOnSelect=true,
+  adaptor,
+  popoverClx='',
+  listItemClx='',
+  listItemSelectedClx='',
+  noCheckmark=false,
+  listItemImageClx='',
+  searchPlaceholder='Search...',
+  noneFoundMessage='None found.',
+  listItemImageSize=DEFAULT_IMAGE_SIZE,
+  noSearch=false,
+  popoverAlign = 'center', 
+  popoverSideOffset = 4,
+  Trigger, 
+  triggerProps
+}: {
+  elements: T[]
+  initial?: T | null
+  current?: T | null
+  setCurrent: (c: T | null) => void 
+  closeOnSelect?: boolean
+  adaptor: ListAdaptor<T>
+  popoverClx?: string
+  listItemClx?: string
+  listItemSelectedClx?: string
+  listItemImageClx?: string
+  listItemImageSize?: number
+  noCheckmark?: boolean
+  searchPlaceholder?: string
+  noneFoundMessage?: string
+  noSearch?: boolean
+  popoverAlign?: "center" | "end" | "start"
+  popoverSideOffset?: number
+    /** If (custom) Trigger is not supplied, 
+     * passed to default trigger */
+  triggerProps: P
+  Trigger?: 
+    <T, P>(props: P & { ref?: React.ForwardedRef<HTMLButtonElement> }) => React.ReactNode
 }) => {
 
-  const [open, setOpen] = useState<boolean>(false)
-  const [current, setCurrent] = useState<T | null>(initial ?? null)
+  const [_open, _setOpen] = useState<boolean>(false)
+    // for non-controlled base (must declare the hook either way)
+  const [_current, _setCurrent] = useState<T | null>(initial ?? null)
 
   const handleSelect = (selString: string) => {
 
     const found = elements.find((el: T) => (adaptor.valueEquals(el, selString)))
     if (found) {
+        // non-controlled ('initial' supplied (may have been null))
+      if (initial !== undefined) {
+        _setCurrent(found)
+      }
       setCurrent(found)
-      elementSelected(found)
     }
-    setOpen(false)
+    if (closeOnSelect) {
+      _setOpen(false)
+    }
   }
 
-  const isCurrent = (el: T): boolean => (!!current && (adaptor.equals(el, current)))  
+  const isCurrent = (el: T): boolean => {
 
-  let currentValue: string | undefined
-  let currentLabel: string | undefined
-  let currentImageUrl: string | undefined
+      // non-controlled?
+    const curr = (current === undefined) ? _current : current
+    return !!curr && adaptor.equals(el, curr)
+  }  
 
-  if (current) {
-    currentValue = adaptor.getValue(current)
-    currentLabel = adaptor.getLabel ? adaptor.getLabel(current) : undefined
-    currentImageUrl = adaptor.getImageUrl ? adaptor.getImageUrl(current) : undefined
+  const toSpread = current ? {
+    ...triggerProps,
+    current,
+    currentLabel: adaptor.getLabel ? adaptor.getLabel(current) : adaptor.getValue(current),
+    imageUrl: adaptor.getImageUrl ? adaptor.getImageUrl(current) : null,
+    open: _open
+  } : {
+    ...triggerProps,
+    current: null,
+    currentLabel: null,
+    imageUrl: null,
+    open: _open 
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={_open} onOpenChange={_setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant='outline'
-          role='combobox'
-          aria-expanded={open}
-          className={'flex justify-between ' + buttonClx}
-          disabled={disabled}
-        >
-          <div className='flex justify-start items-center gap-2'>
-            {current && (
-              <ElementImage url={currentImageUrl} w={imageSize} h={imageSize} className={imageClx} alt={currentValue + ' image'}/>
-            )}
-            <span>{ current ? (currentLabel ?? currentValue) : buttonPlaceholder }</span>
-          </div>
-          <ChevronDown className={open ? '' : 'opacity-50'} />
-        </Button>
+        {Trigger ? (
+          <Trigger<T, P> {...toSpread} />
+        ) : (
+          <DefaultTrigger<T, P> {...toSpread} />
+        )}
       </PopoverTrigger>
-      <PopoverContent className={'p-0 ' + popoverClx}>
+      <PopoverContent className={cn('p-0', popoverClx)} align={popoverAlign} sideOffset={popoverSideOffset}>
         <Command>
-          <CommandInput placeholder={searchPlaceholder} />
+          {!noSearch && (<CommandInput placeholder={searchPlaceholder} />)}
           <CommandList>
             <CommandEmpty>{noneFoundMessage}</CommandEmpty>
             <CommandGroup>
@@ -130,21 +192,33 @@ const Combobox = <T,>(
                 key={adaptor.getValue(el)}
                 value={adaptor.getValue(el)}
                 onSelect={handleSelect}
-                className='flex justify-between'
+                className={cn(
+                  'flex', 
+                  noCheckmark ? 'justify-start' : 'justify-between', 
+                  listItemClx, 
+                  (isCurrent(el) ? listItemSelectedClx : '')
+                )}
               >
                 <div className='flex justify-start items-center gap-2'>
-                  <ElementImage 
-                    url={adaptor.getImageUrl ? adaptor.getImageUrl(el) : undefined} 
-                    w={imageSize} 
-                    h={imageSize}  
-                    className={imageClx} 
+                { (adaptor.getImageUrl && adaptor.getImageUrl(el)) ? (
+                  <img
+                    src={adaptor.getImageUrl(el)}
                     alt={adaptor.getValue(el) + ' image'}
+                    height={listItemImageSize}
+                    width={listItemImageSize}
+                    loading="eager"
+                    className={listItemImageClx}
                   />
+                ) : (
+                  <div style={{width: listItemImageSize, height: listItemImageSize}} />
+                )}
                   <span>{ adaptor.getLabel ? adaptor.getLabel(el) : adaptor.getValue(el) }</span>
                 </div>
+                {!noCheckmark && (
                 <div>
                   <Check className={cn('ml-auto', (isCurrent(el)) ? '' : 'invisible' )} />
                 </div>
+                )}
               </CommandItem>
             ))}
             </CommandGroup>
@@ -155,4 +229,7 @@ const Combobox = <T,>(
   )
 }
 
-export default Combobox
+export {
+  Combobox as default,
+  type ComboboxTriggerProps
+} 
