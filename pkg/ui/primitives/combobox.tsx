@@ -67,9 +67,9 @@ const DefaultTriggerInner = <T,>(
     disabled={disabled}
   >
     <div className='flex justify-start items-center gap-2'>
-    {current ? (
+    {(current && imageUrl) ? (
       <img
-        src={imageUrl!}
+        src={imageUrl}
         alt={currentLabel + ' image'}
         height={imageSize}
         width={imageSize}
@@ -158,7 +158,7 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
     return !!curr && adaptor.equals(el, curr)
   }  
 
-  const toSpread = current ? {
+  const _triggerProps = current ? {
     ...triggerProps,
     current,
     currentLabel: adaptor.getLabel ? adaptor.getLabel(current) : adaptor.getValue(current),
@@ -176,9 +176,9 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
     <Popover open={_open} onOpenChange={_setOpen}>
       <PopoverTrigger asChild>
         {Trigger ? (
-          <Trigger<T, P> {...toSpread} />
+          <Trigger<T, P> {..._triggerProps} />
         ) : (
-          <DefaultTrigger<T, P> {...toSpread} />
+          <DefaultTrigger<T, P> {..._triggerProps} />
         )}
       </PopoverTrigger>
       <PopoverContent className={cn('p-0', popoverClx)} align={popoverAlign} sideOffset={popoverSideOffset}>
@@ -202,7 +202,7 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
                 <div className='flex justify-start items-center gap-2'>
                 { (adaptor.getImageUrl && adaptor.getImageUrl(el)) ? (
                   <img
-                    src={adaptor.getImageUrl(el)}
+                    src={adaptor.getImageUrl(el)!}
                     alt={adaptor.getValue(el) + ' image'}
                     height={listItemImageSize}
                     width={listItemImageSize}
