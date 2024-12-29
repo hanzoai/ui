@@ -4,6 +4,7 @@ interface ListAdaptor<T> {
   valueEquals: (el: T, v: string) => boolean
   getLabel?:  (el: T) => string 
   getImageUrl?:  (el: T) => string | null
+  isDisabled?: (el: T) => boolean
 }
 
 export {
