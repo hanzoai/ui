@@ -97,6 +97,7 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   popoverClx='',
   listItemClx='',
   listItemSelectedClx='',
+  listItemDisabledClx='',
   noCheckmark=false,
   listItemImageClx='',
   searchPlaceholder='Search...',
@@ -117,6 +118,7 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
   popoverClx?: string
   listItemClx?: string
   listItemSelectedClx?: string
+  listItemDisabledClx?: string
   listItemImageClx?: string
   listItemImageSize?: number
   noCheckmark?: boolean
@@ -192,11 +194,13 @@ const Combobox = <T, P extends ComboboxTriggerProps<T>>({
                 key={adaptor.getValue(el)}
                 value={adaptor.getValue(el)}
                 onSelect={handleSelect}
+                disabled={adaptor.isDisabled ? adaptor.isDisabled(el) : false}
                 className={cn(
                   'flex', 
                   noCheckmark ? 'justify-start' : 'justify-between', 
                   listItemClx, 
-                  (isCurrent(el) ? listItemSelectedClx : '')
+                  (isCurrent(el) ? listItemSelectedClx : ''),
+                  ((adaptor.isDisabled && adaptor.isDisabled(el)) ? listItemDisabledClx : '')
                 )}
               >
                 <div className='flex justify-start items-center gap-2'>
