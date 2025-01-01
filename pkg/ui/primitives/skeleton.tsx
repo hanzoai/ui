@@ -1,15 +1,20 @@
 import { cn } from '../util'
 
-function Skeleton({
+const Skeleton: React.FC<{
+  reverse?: boolean  
+} & React.HTMLAttributes<HTMLDivElement>> = ({
+  reverse=false,
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('animate-pulse rounded-md bg-level-2', className)}
-      {...props}
-    />
-  )
-}
+}) => (
+  <div
+    className={cn(
+      'rounded-md bg-level-2', 
+      reverse ? 'animate-pulsereverse' : 'animate-pulse',  
+      className
+    )}
+    {...props}
+  />
+)
 
 export default Skeleton
