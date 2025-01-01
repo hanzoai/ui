@@ -31,7 +31,8 @@ export default {
       none: 'none',
       spin: 'spin 1s linear infinite',
       ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
-      pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      pulse: 'pulse 2s linear(0, 1) infinite', // cubic-bezier(0.4, 0, 0.6, 1)
+      pulsereverse: 'pulse 2s linear(1, 0) infinite',
       bounce: 'bounce 1s infinite',
       "accordion-down": "accordion-down 0.2s ease-out",
       "accordion-up": "accordion-up 0.2s ease-out",
