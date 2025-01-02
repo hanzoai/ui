@@ -2,29 +2,14 @@ import Abbr from './number-abbreviate'
 
 const abbr = new Abbr(['K', 'M', 'B', 'T'])
 
-const isPowerOf10 = (n: number) => {
-  if (n <= 0) {
-    return false
-  }
-
-  while (n > 1) {
-    if (n % 10 !== 0) {
-      return false
-    }
-    n /= 10
-  }
-
-  return true
-}
-
 const formatToMaxChar = (
   n: number | null, 
   maxChars: number, 
-  /** 
-   * Chars that will be added by ui if the number is rounded.  
-   * For example, if the desired output for 10.15 is "~10.1", 
-   * the tilda counts as 1 char.  
-   */
+    /** 
+     * Chars that will be added by ui if the number is rounded.  
+     * For example, if the desired output for 10.15 is "~10.1", 
+     * the tilda counts as 1 char.  
+     */
   roundingAdds: number = 1 
 ): {
   result: string 
