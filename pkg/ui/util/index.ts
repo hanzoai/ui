@@ -67,6 +67,12 @@ export const capitalize = (str: string): string => (
 
 export { default as spreadToTransform } from './spread-to-transform'
 export { default as formatToMaxChar } from './format-to-max-char'
-// Must be imported from 'use client'
+export { 
+  default as formatAndAbbreviateAsCurrency, 
+  type FormatThreshold,   
+  type QuantityAbbrSymbol
+} from './format-and-abbreviate-as-currency'
+
+// Must be imported from 'use client', so can't include this...
 // export * from './step-animation'
 
