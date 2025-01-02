@@ -5,6 +5,17 @@ interface FormatThreshold {
   use: QuantityAbbrSymbol
 }
 
+const usdFormatter = Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,  
+})
+
+const formatAsUSCurrency = (n: number) => {
+  let result = usdFormatter.format(n)
+  return result.endsWith('.00') ? result.slice(0, -3) : result
+}
+
 const formatAndAbbreviateAsCurrency = (
   n: number | null,
   thresholds: FormatThreshold[] = [{
@@ -31,12 +42,7 @@ const formatAndAbbreviateAsCurrency = (
     }
   }
 
-  const usdFormatter = Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0    
-  })
-  const formatted = usdFormatter.format(n)
+  const formatted = formatAsUSCurrency(n)
 
   if (n < thresholds[0].from) {
     return {
@@ -49,9 +55,9 @@ const formatAndAbbreviateAsCurrency = (
     // Get operative FormatThreshold pair...
   let threshold: FormatThreshold 
   for (
-    let i = 0, threshold = thresholds[0]; 
-    i < thresholds.length, n >= thresholds[i].from; 
-    i++
+    let i = 0; 
+    i < thresholds.length && n >= thresholds[i].from; 
+    threshold = thresholds[i], i++ 
   ) {}
 
     // Build up units array to all units
@@ -67,18 +73,18 @@ const formatAndAbbreviateAsCurrency = (
 
   const abbreviator = new Abbr(units)
 
-    // Use thresholdFrom as a guide to how many chars are available
+    // Use threshold.from as a guide to how many chars are available:
     // first digit + comma = 2
     // Possible trailing cents: '.xx'.length = 3
     // 3 - 2 = 1
-  const charsAvail = usdFormatter.format(threshold!.from).length + 1 
+  const charsAvail = formatAsUSCurrency(threshold!.from).length + 1 
   const abbr = abbreviator.abbreviate(n, charsAvail) // arbitrary, but good approx
   const numStr = abbr.slice(0, -1)
   const abbreviation = abbr.slice(-1)
   const numerical = parseFloat(numStr)
 
   const integral = Math.floor(numerical)
-  const integralString = usdFormatter.format(integral)
+  const integralString = formatAsUSCurrency(integral)
   const commas = integralString.split(',').length - 1
 
     // minus abbr, dec point, dollar sign, and roundingAdds / tilda,  
@@ -89,7 +95,7 @@ const formatAndAbbreviateAsCurrency = (
     // remove trailing zeros, if any
   const roundedNumerical = parseFloat(roundedString)
   const roundedIntegral = Math.trunc(roundedNumerical)
-  const roundedIntegralString = usdFormatter.format(roundedIntegral)
+  const roundedIntegralString = formatAsUSCurrency(roundedIntegral)
 
   let decimalPortion = roundedNumerical - roundedIntegral
   let result
