@@ -1,8 +1,8 @@
-import type Icon from './icon'
+import React from 'react'
 
 interface BulletItem {
   text: string,
-  icon?: Icon | string // Icon = ReactNode; ReactNode can be a string
+  icon?: React.ReactNode // Icon = ReactNode; ReactNode can be a string
 }
 
 export {

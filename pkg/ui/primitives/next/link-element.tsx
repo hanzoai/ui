@@ -1,7 +1,7 @@
 import React, { type PropsWithChildren } from 'react'
 import Link from 'next/link'
 
-import type { LinkDef, Icon }  from '../../types'
+import type { LinkDef }  from '../../types'
 import { buttonVariants } from '../button'
 import { cn, type VariantProps } from '../../util'
 
@@ -23,7 +23,7 @@ const LinkElement: React.FC<
   onClick?: () => void  
 
     /** overrides def (eg, for title area)*/
-  icon?: Icon          
+  icon?: React.ReactNode          
     /** overrides def */
   iconAfter?: boolean   
   className?: string,

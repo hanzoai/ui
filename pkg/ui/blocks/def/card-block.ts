@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { type Icon } from '../../types'
-
 import type CTABlock from './cta-block'
 import type Block from './block'
 import type ImageBlock from './image-block'
@@ -12,7 +10,7 @@ interface CardBlock extends Block {
   specifiers?: string // 'media-left' or 'appear-disabled' or 'no-borders', etc... can be combined
   title?: string
   byline?: string
-  icon?: Icon // for title area
+  icon?: React.ReactNode // for title area
   iconAfter?: boolean
   media?: ImageBlock | VideoBlock // TODO: Media Stack
   content?: React.ReactNode
