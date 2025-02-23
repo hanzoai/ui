@@ -92,13 +92,13 @@
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.2",
     "embla-carousel": "^8.1.6",
-    "lucide-react": "catalog:",
+    "lucide-react": "0.456.0",
     "mobx": "^6.12.3",
-    "next": "catalog:",
+    "next": "14.2.16",
     "next-themes": "^0.2.1",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-hook-form": "catalog:",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hook-form": "7.51.4",
     "validator": "^13.11.0",
     "zod": "3.23.8"
   },
@@ -110,10 +110,10 @@
     "@types/gtag.js": "^0.0.19",
     "@types/lodash.merge": "^4.6.9",
     "@types/mdx": "^2.0.13",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "tailwindcss": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
+    "tailwindcss": "3.4.14",
+    "typescript": "5.6.3"
   }
 }
