@@ -1,12 +1,10 @@
 import type { VariantProps } from 'class-variance-authority'
 import type { buttonVariants } from '../primitives/button'
-import type Icon  from './icon'
 
-/**
- * A Conf object for the LinkElement primitive.
- * 
- * 
- */
+
+  /**
+   * A Conf object for the LinkElement primitive.
+   */
 interface LinkDef extends VariantProps<typeof buttonVariants> {
     /**
      * If the LinkElement is rendered directly and has children, 
@@ -20,7 +18,7 @@ interface LinkDef extends VariantProps<typeof buttonVariants> {
      * the title, icon, iconAfter fields in the supplied LinkDef 
      * will be ignored. 
      */ 
-  icon?: Icon
+  icon?: React.ReactNode
 
     /**
      * If the LinkElement is rendered directly and has children, 
@@ -30,13 +28,6 @@ interface LinkDef extends VariantProps<typeof buttonVariants> {
   iconAfter?: boolean
 
   href: string
-
-    /**
-     * @deprecated This field no longer has an effect as
-     * the related logic just checks for the presence of 'http' 
-     * at the start of the URL string
-     */
-  external?: boolean 
 
     /**
      * External links will open in a new tab (via target='_blank') by default, 
@@ -55,7 +46,10 @@ interface LinkDef extends VariantProps<typeof buttonVariants> {
      */
   contents?: string
 
+  childMenu?: LinkDef[]
+  groupName?: string
 }
+
 
 export {
   type LinkDef as default

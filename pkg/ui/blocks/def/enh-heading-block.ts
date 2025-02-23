@@ -1,4 +1,3 @@
-import type Icon from '../../types/icon'
 import type Block from './block'
 
   // level is heading tag level. 1 renders as <h1>, etc... 0 renders as <p>
@@ -22,7 +21,7 @@ interface EnhHeadingBlock extends Block {
   specifiers?: string  
     // By default, appears inline to left of first element (preheading or heading) 
     // unless indicated otherwise in specifiers 
-  icon?: Icon | string  // ReactNode or url string to asset
+  icon?: React.ReactNode  // ReactNode or url string to asset
   iconSize?: number     // if url string, this sets the size
   preheading?: {
     text: string

@@ -20,7 +20,6 @@ export {
   COMMON_GRID_4_COL 
 } from './grid-def'
 
-export type { default as Icon } from './icon'
 export type { default as ImageDef } from './image-def'
 export type { default as LinkDef } from './link-def'
 export type { default as TShirtDimensions } from './tshirt-dimensions' 

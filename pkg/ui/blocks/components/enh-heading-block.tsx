@@ -1,6 +1,5 @@
 import React, {type ElementType} from 'react'
 
-import type { Icon } from '../../types'
 import type { EnhHeadingBlock } from '../def'
 import { ApplyTypography } from '../../primitives/index-common'
 import { cn, containsToken } from '../../util'
@@ -50,7 +49,7 @@ const tagFromLevel = (level: number): ElementType => {
 const Element: React.FC<{
   asTag: ElementType 
   text: string
-  icon?: Icon
+  icon?: React.ReactNode
   iconLeft?: boolean
   className?: string
 }> = ({
