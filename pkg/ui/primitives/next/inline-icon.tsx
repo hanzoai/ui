@@ -1,14 +1,13 @@
 import React from 'react'
 import Image from 'next/image'
 
-import type { Icon } from '../../types'
 
 const InlineIcon: React.FC<{
     /**
      * If a ReactNode is passed in, it should be set to 'w-full h-auto' so that it can be sized
      * according to width of parent. 
      */
-  icon: Icon | string
+  icon: React.ReactNode
     /** default should be handled by calling code. */
   size?: number
 
@@ -29,7 +28,7 @@ const InlineIcon: React.FC<{
   }
   return (
     <div className={className}>
-      {icon as Icon}
+      {icon}
     </div>
   )
 }
