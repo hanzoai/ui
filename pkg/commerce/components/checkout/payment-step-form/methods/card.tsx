@@ -70,7 +70,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
     })()
   }
 
-  const createVerificationDetails = () => {
+  const createVerificationDetails = (): { amount: string; billingContact: { givenName: string; email: string }; currencyCode: string; intent: 'CHARGE' | 'CHARGE_AND_STORE' } => {
     const {name, email} = contactForm.getValues()
     return {
       amount: cmmc.promoAppliedCartTotal.toFixed(2),
@@ -79,7 +79,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
         email,
       },
       currencyCode: 'USD',
-      intent: 'CHARGE',
+      intent: 'CHARGE' as 'CHARGE',
     }
   }
 

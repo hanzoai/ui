@@ -22,7 +22,8 @@
   "scripts": {
     "lat": "npm show @hanzo/commerce version",
     "pub": "npm publish",
-    "tc": "tsc"
+    "tc": "tsc",
+    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
   "exports": {
     ".": "./index.ts",
