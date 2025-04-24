@@ -6,7 +6,7 @@ packages:
 
 # "re 'supports-color': https://stackoverflow.com/questions/76591038/module-not-found-esm-packages-supports-color-need-to-be-imported-use-import",
 catalog:
-  '@hanzo/auth': 2.5.3
+  '@hanzo/auth': 2.5.4
   '@hanzo/ui': 4.5.0
   '@types/node': 20.14.15
   '@types/react': 18.3.12
