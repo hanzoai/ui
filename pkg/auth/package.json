@@ -23,7 +23,8 @@
   "scripts": {
     "lat": "npm show @hanzo/auth version",
     "pub": "npm publish",
-    "tc": "tsc"
+    "tc": "tsc",
+    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
   "dependencies": {
     "firebase-admin": "^12.1.0"
