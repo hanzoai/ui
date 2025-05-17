@@ -1,10 +1,6 @@
-# The Hanzo react-sdk
-- `@hanzo/ui`
-- `@hanzo/auth`
-- `@hanzo/commerce`
+# @hanzo/ui
 
 Accessible and customizable components that you can use to build your AI apps.
-
 
 ## `@hanzo/ui` 
 Visit http://ui.hanzo.ai for general documentation on `@hanzo/ui/primitives` which is an enhanced superset of [`@shadcn/ui`](https://ui.shadcn.com/).  
