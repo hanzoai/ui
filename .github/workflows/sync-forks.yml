@@ -1,0 +1,100 @@
+name: Sync Forks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      fork:
+        description: 'Fork to sync (luxfi or zoo or all)'
+        required: false
+        default: 'all'
+
+jobs:
+  sync-luxfi:
+    if: github.event.inputs.fork == 'luxfi' || github.event.inputs.fork == 'all' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Hanzo UI
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Git
+        run: |
+          git config --global user.name "Hanzo Bot"
+          git config --global user.email "bot@hanzo.ai"
+          
+      - name: Clone Luxfi Fork
+        run: |
+          git clone https://github.com/luxfi/ui.git luxfi-ui
+          cd luxfi-ui
+          git remote add upstream https://github.com/hanzoai/ui.git
+          git fetch upstream
+          
+      - name: Sync and Rebrand
+        run: |
+          cd luxfi-ui
+          # Merge upstream changes
+          git checkout main
+          git merge upstream/main --no-edit || true
+          
+          # Run rebrand script
+          cp ../scripts/rebrand.sh ./
+          chmod +x rebrand.sh
+          ./rebrand.sh luxfi
+          
+          # Commit changes
+          git add -A
+          git commit -m "sync: Update from hanzoai/ui and rebrand for Luxfi" || true
+          
+      - name: Push to Luxfi
+        env:
+          GITHUB_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
+        run: |
+          cd luxfi-ui
+          git push https://$GITHUB_TOKEN@github.com/luxfi/ui.git main || true
+
+  sync-zoo:
+    if: github.event.inputs.fork == 'zoo' || github.event.inputs.fork == 'all' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Hanzo UI
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Git
+        run: |
+          git config --global user.name "Hanzo Bot"
+          git config --global user.email "bot@hanzo.ai"
+          
+      - name: Clone Zoo Fork
+        run: |
+          git clone https://github.com/zooai/ui.git zoo-ui
+          cd zoo-ui
+          git remote add upstream https://github.com/hanzoai/ui.git
+          git fetch upstream
+          
+      - name: Sync and Rebrand
+        run: |
+          cd zoo-ui
+          # Merge upstream changes
+          git checkout main
+          git merge upstream/main --no-edit || true
+          
+          # Run rebrand script
+          cp ../scripts/rebrand.sh ./
+          chmod +x rebrand.sh
+          ./rebrand.sh zoo
+          
+          # Commit changes
+          git add -A
+          git commit -m "sync: Update from hanzoai/ui and rebrand for Zoo" || true
+          
+      - name: Push to Zoo
+        env:
+          GITHUB_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
+        run: |
+          cd zoo-ui
+          git push https://$GITHUB_TOKEN@github.com/zooai/ui.git main || true
