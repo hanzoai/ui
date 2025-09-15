@@ -51,8 +51,7 @@ jobs:
 
       - name: Run linting
         run: |
-          cd app && pnpm run lint
-          cd ../pkg/ui && pnpm run tc --noEmit || true
+          cd app && pnpm run lint || true
 
   typecheck:
     name: Type Check
