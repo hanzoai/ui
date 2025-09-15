@@ -1,0 +1,10 @@
+{
+  "name": "@hanzo/ui-mcp",
+  "private": true,
+  "type": "module",
+  "main": "../dist/mcp/index.js",
+  "types": "../dist/mcp/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  }
+}

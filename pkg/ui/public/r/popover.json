@@ -1,0 +1,11 @@
+{
+  "name": "popover",
+  "type": "registry:component",
+  "description": "A popover component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/popover/popover.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

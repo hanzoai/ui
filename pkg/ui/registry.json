@@ -1,0 +1,184 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "hanzo",
+  "homepage": "https://ui.hanzo.ai",
+  "items": [
+    {
+      "name": "default",
+      "type": "registry:style",
+      "description": "The default style for Hanzo UI components.",
+      "files": []
+    },
+    {
+      "name": "new-york",
+      "type": "registry:style",
+      "description": "The new-york style for Hanzo UI components.",
+      "files": []
+    },
+    {
+      "name": "accordion",
+      "type": "registry:component",
+      "description": "A accordion component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/accordion/accordion.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:component",
+      "description": "A alert component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/alert/alert.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:component",
+      "description": "A avatar component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/avatar/avatar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "registry:component",
+      "description": "A badge component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/badge/badge.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:component",
+      "description": "A button component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/button/button.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:component",
+      "description": "A card component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/card/card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:component",
+      "description": "A checkbox component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/checkbox/checkbox.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:component",
+      "description": "A dialog component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/dialog/dialog.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:component",
+      "description": "A input component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/input/input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:component",
+      "description": "A label component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/label/label.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:component",
+      "description": "A popover component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/popover/popover.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:component",
+      "description": "A select component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/select/select.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:component",
+      "description": "A table component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/table/table.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:component",
+      "description": "A tabs component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/tabs/tabs.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:component",
+      "description": "A toast component for your UI.",
+      "files": [
+        {
+          "path": "default/ui/toast/toast.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

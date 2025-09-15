@@ -1,0 +1,11 @@
+{
+  "name": "card",
+  "type": "registry:component",
+  "description": "A card component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/card/card.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

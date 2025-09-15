@@ -1,0 +1,11 @@
+{
+  "name": "alert",
+  "type": "registry:component",
+  "description": "A alert component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/alert/alert.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "tabs",
+  "type": "registry:component",
+  "description": "A tabs component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/tabs/tabs.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

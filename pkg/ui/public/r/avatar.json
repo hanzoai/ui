@@ -1,0 +1,11 @@
+{
+  "name": "avatar",
+  "type": "registry:component",
+  "description": "A avatar component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/avatar/avatar.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

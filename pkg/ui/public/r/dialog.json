@@ -1,0 +1,11 @@
+{
+  "name": "dialog",
+  "type": "registry:component",
+  "description": "A dialog component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/dialog/dialog.tsx",
+      "type": "registry:component"
+    }
+  ]
+}
