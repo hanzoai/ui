@@ -54,8 +54,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         
-      - name: Build
-        run: pnpm build
+      - name: Build packages
+        run: pnpm run build
+        
+      - name: Build app
+        run: pnpm run build
         working-directory: ./app
         env:
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
