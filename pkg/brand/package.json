@@ -1,0 +1,32 @@
+{
+  "name": "@hanzo/brand",
+  "version": "1.0.0",
+  "description": "Brand assets and configuration for Hanzo UI",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "assets"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "hanzo",
+    "brand",
+    "ui",
+    "design-system"
+  ],
+  "author": "Hanzo AI",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
