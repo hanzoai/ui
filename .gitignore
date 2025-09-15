@@ -44,5 +44,5 @@ etc
 # lock files
 bun.lockb
 package-lock.json
-pnpm-lock.yaml
+# pnpm-lock.yaml - needed for CI/CD, do not ignore
 yarn.lock
