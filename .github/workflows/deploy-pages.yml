@@ -52,7 +52,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
             
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --frozen-lockfile
+          cd app && pnpm install --frozen-lockfile
         
       - name: Build packages
         run: pnpm run build
@@ -60,7 +62,6 @@ jobs:
       - name: Build app
         run: |
           cd app
-          pnpm install --frozen-lockfile
           pnpm run build
         env:
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
