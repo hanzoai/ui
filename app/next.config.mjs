@@ -1,9 +1,23 @@
-import { createContentlayerPlugin } from "next-contentlayer"
+import { createMDX } from "fumadocs-mdx/next"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
+  // Enable static export for GitHub Pages deployment
+  output: process.env.GITHUB_ACTIONS ? "export" : undefined,
+  
+  // Base path for GitHub Pages (when deployed to github.io subdirectory)
+  basePath: process.env.GITHUB_PAGES ? "/react-sdk" : "",
+  
+  // Asset prefix for proper loading on custom domain
+  assetPrefix: process.env.NEXT_PUBLIC_APP_URL || "",
+  
+  devIndicators: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  outputFileTracingIncludes: {
+    "/*": ["./registry/**/*"],
+  },
   images: {
     remotePatterns: [
       {
@@ -53,12 +67,48 @@ const nextConfig = {
         destination: "/docs/components/form",
         permanent: false,
       },
+      {
+        source: "/sidebar",
+        destination: "/docs/components/sidebar",
+        permanent: true,
+      },
+      {
+        source: "/react-19",
+        destination: "/docs/react-19",
+        permanent: true,
+      },
+      {
+        source: "/charts",
+        destination: "/charts/area",
+        permanent: true,
+      },
+      {
+        source: "/view/styles/:style/:name",
+        destination: "/view/:name",
+        permanent: true,
+      },
+      {
+        source: "/docs/:path*.mdx",
+        destination: "/docs/:path*.md",
+        permanent: true,
+      },
+      {
+        source: "/mcp",
+        destination: "/docs/mcp",
+        permanent: false,
+      },
+    ]
+  },
+  rewrites() {
+    return [
+      {
+        source: "/docs/:path*.md",
+        destination: "/llm/:path*",
+      },
     ]
   },
 }
 
-const withContentlayer = createContentlayerPlugin({
-  // Additional Contentlayer config options
-})
+const withMDX = createMDX({})
 
-export default withContentlayer(nextConfig)
+export default withMDX(nextConfig)

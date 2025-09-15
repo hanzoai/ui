@@ -1,0 +1,11 @@
+{
+  "name": "badge",
+  "type": "registry:component",
+  "description": "A badge component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/badge/badge.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

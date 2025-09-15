@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["@hanzo/ui@latest", "mcp"],
+      "env": {
+        "REGISTRY_URL": "https://ui.hanzo.ai/registry/registry.json"
+      }
+    }
+  }
+}

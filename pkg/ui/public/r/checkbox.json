@@ -1,0 +1,11 @@
+{
+  "name": "checkbox",
+  "type": "registry:component",
+  "description": "A checkbox component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/checkbox/checkbox.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

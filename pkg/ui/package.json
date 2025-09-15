@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "4.5.0",
+  "version": "4.5.3",
   "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -31,20 +31,37 @@
   "scripts": {
     "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
-    "tc": "tsc"
+    "tc": "tsc",
+    "build": "tsc -p tsconfig.json",
+    "update-registry": "node ./bin/update-registry.js",
+    "registry:mcp": "node ./bin/cli.js registry:mcp",
+    "registry:mcp:http": "node ./bin/cli.js registry:mcp --http"
+  },
+  "bin": {
+    "@hanzo/ui": "./bin/cli.js",
+    "hanzo-ui": "./bin/cli.js"
   },
   "exports": {
     "./blocks": "./blocks/index.ts",
     "./primitives": "./primitives/index-next.ts",
     "./primitives-common": "./primitives/index-common.ts",
+    "./registry": {
+      "types": "./dist/registry/index.d.ts",
+      "default": "./dist/registry/index.js"
+    },
     "./style/": "./style/*",
     "./tailwind": "./tailwind/index.ts",
     "./types": "./types/index.ts",
     "./util": "./util/index.ts",
-    "./util-client": "./util/index-client.ts"
+    "./util-client": "./util/index-client.ts",
+    "./mcp": {
+      "types": "./dist/mcp/index.d.ts",
+      "default": "./dist/mcp/index.js"
+    }
   },
   "dependencies": {
     "@hanzo/react-drawer": "^0.1.8",
+    "@modelcontextprotocol/sdk": "^1.10.2",
     "@next/third-parties": "^15.0.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -75,6 +92,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
+    "commander": "^12.1.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "^1.0.1",
     "lodash.castarray": "^4.4.0",
@@ -87,7 +105,9 @@
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "tailwindcss-interaction-media": "^0.1.0"
+    "tailwindcss-interaction-media": "^0.1.0",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.2"
   },
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -99,8 +119,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "7.51.4",
-    "validator": "^13.11.0",
-    "zod": "3.23.8"
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@mdx-js/loader": "^3.0.0",
@@ -113,6 +132,7 @@
     "@types/node": "20.14.15",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1",
+    "glob": "^11.0.2",
     "tailwindcss": "3.4.14",
     "typescript": "5.6.3"
   }

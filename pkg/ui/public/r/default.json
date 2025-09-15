@@ -1,0 +1,6 @@
+{
+  "name": "default",
+  "type": "registry:style",
+  "description": "The default style for Hanzo UI components.",
+  "files": []
+}

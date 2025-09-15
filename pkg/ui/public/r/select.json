@@ -1,0 +1,11 @@
+{
+  "name": "select",
+  "type": "registry:component",
+  "description": "A select component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/select/select.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

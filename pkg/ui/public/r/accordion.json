@@ -1,0 +1,11 @@
+{
+  "name": "accordion",
+  "type": "registry:component",
+  "description": "A accordion component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/accordion/accordion.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

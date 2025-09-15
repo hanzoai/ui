@@ -4,7 +4,6 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useMDXComponent } from "next-contentlayer/hooks"
 import { NpmCommands } from "types/unist"
 
 import { Event } from "@/lib/events"
@@ -315,19 +314,4 @@ const components = {
   ),
 }
 
-interface MdxProps {
-  code: string
-}
-
-export function Mdx({ code }: MdxProps) {
-  const [config] = useConfig()
-  const Component = useMDXComponent(code, {
-    style: config.style,
-  })
-
-  return (
-    <div className="mdx">
-      <Component components={components} />
-    </div>
-  )
-}
+export const mdxComponents = components

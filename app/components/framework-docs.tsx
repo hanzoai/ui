@@ -1,22 +1,17 @@
-"use client"
-
 import * as React from "react"
-import { allDocs } from "contentlayer/generated"
-
-import { Mdx } from "./mdx-components"
 
 interface FrameworkDocsProps extends React.HTMLAttributes<HTMLDivElement> {
   data: string
 }
 
 export function FrameworkDocs({ ...props }: FrameworkDocsProps) {
-  const frameworkDoc = allDocs.find(
-    (doc) => doc.slug === `/docs/installation/${props.data}`
+  // TODO: Implement framework docs with Fumadocs
+  // This component needs to be refactored to work with the new documentation system
+  return (
+    <div>
+      <p className="text-muted-foreground">
+        Framework documentation for {props.data} will be available soon.
+      </p>
+    </div>
   )
-
-  if (!frameworkDoc) {
-    return null
-  }
-
-  return <Mdx code={frameworkDoc.body.code} />
 }
