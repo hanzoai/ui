@@ -1,0 +1,11 @@
+{
+  "name": "label",
+  "type": "registry:component",
+  "description": "A label component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/label/label.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

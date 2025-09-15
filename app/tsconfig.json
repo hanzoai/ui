@@ -1,8 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -12,13 +11,13 @@
     "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "contentlayer/generated": ["./.contentlayer/generated"]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
@@ -30,8 +29,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".contentlayer/generated"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", "./scripts/build-registry.mts"]
 }

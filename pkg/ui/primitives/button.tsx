@@ -4,6 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "../util"
 
+// Define all variants
 const variant = {
   primary: "bg-primary text-primary-fg sm:hover:bg-primary-hover font-nav whitespace-nowrap not-typography",
   secondary: "bg-secondary text-secondary-fg sm:hover:bg-secondary-hover font-nav whitespace-nowrap not-typography",
@@ -15,6 +16,7 @@ const variant = {
   linkMuted: "text-muted-1 sm:hover:text-foreground font-sans ",
 }
 
+// Define all sizes
 const size = {
   link: '',
   xs: "h-8 px-2 text-xs",
@@ -25,6 +27,7 @@ const size = {
   icon: "h-10 w-10",
 }
 
+// Define rounded options
 const rounded = {
   full: 'rounded-full',
   sm: 'rounded-sm',
@@ -34,11 +37,11 @@ const rounded = {
   none: ''
 }
 
-
+// Updated buttonVariants with the latest Shadcn patterns
 const buttonVariants = cva(
-  "flex items-center justify-center font-medium transition-colors " +
+  "inline-flex items-center justify-center font-medium ring-offset-background transition-colors " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 " +
-  "disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+  "disabled:opacity-50 disabled:pointer-events-none",
   {
     variants: {
       variant,

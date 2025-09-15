@@ -1,15 +1,22 @@
 {
   "extends": "../tsconfig.hanzo.base.json",
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "bin",
+    "test"
   ],
   "compilerOptions": {
     "noEmit": false,
-    "declaration": true
+    "declaration": true,
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "rootDir": "./src",
+    "types": ["node"],
+    "verbatimModuleSyntax": false
   }
 }
