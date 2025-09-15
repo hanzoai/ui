@@ -62,8 +62,7 @@ jobs:
       - name: Build app
         run: |
           cd app
-          npx tsx --version || npm install -g tsx
-          pnpm run build
+          npx next build
         env:
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
           GITHUB_ACTIONS: true
