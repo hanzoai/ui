@@ -1,5 +1,4 @@
-"use server"
-
+// Removed "use server" for static export compatibility
 import { promises as fs } from "fs"
 import path from "path"
 import { getHighlighter } from "shiki"
