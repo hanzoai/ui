@@ -62,7 +62,7 @@ jobs:
       - name: Build app
         run: |
           cd app
-          pnpm exec next build
+          ./build-ci.sh
         env:
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
           GITHUB_ACTIONS: true
