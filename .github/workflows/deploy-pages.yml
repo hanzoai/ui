@@ -58,8 +58,10 @@ jobs:
         run: pnpm run build
         
       - name: Build app
-        run: pnpm run build
-        working-directory: ./app
+        run: |
+          cd app
+          pnpm install --frozen-lockfile
+          pnpm run build
         env:
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
           GITHUB_ACTIONS: true
