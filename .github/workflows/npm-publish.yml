@@ -1,0 +1,96 @@
+name: NPM Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        type: choice
+        options:
+          - ui
+          - ui-mcp
+          - auth
+          - commerce
+          - all
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: |
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "ui" ]; then
+            cd pkg/ui && npm run build || true
+          fi
+
+      - name: Bump version and publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          
+          publish_package() {
+            local pkg_dir=$1
+            cd $pkg_dir
+            npm version ${{ github.event.inputs.version_bump }}
+            npm publish --access public
+            cd -
+          }
+          
+          case "${{ github.event.inputs.package }}" in
+            ui)
+              publish_package "pkg/ui"
+              ;;
+            ui-mcp)
+              publish_package "pkg/ui-mcp"
+              ;;
+            auth)
+              publish_package "pkg/auth"
+              ;;
+            commerce)
+              publish_package "pkg/commerce"
+              ;;
+            all)
+              publish_package "pkg/ui"
+              publish_package "pkg/ui-mcp"
+              publish_package "pkg/auth"
+              publish_package "pkg/commerce"
+              ;;
+          esac
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: bump ${{ github.event.inputs.package }} version to ${{ github.event.inputs.version_bump }}'
+          title: 'chore: bump ${{ github.event.inputs.package }} version'
+          body: |
+            Automated version bump for ${{ github.event.inputs.package }} package(s).
+            
+            Version bump type: ${{ github.event.inputs.version_bump }}
+          branch: version-bump-${{ github.event.inputs.package }}-${{ github.run_number }}

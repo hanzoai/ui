@@ -1,0 +1,11 @@
+{
+  "name": "button",
+  "type": "registry:component",
+  "description": "A button component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/button/button.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

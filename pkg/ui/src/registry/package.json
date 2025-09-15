@@ -1,0 +1,10 @@
+{
+  "name": "@hanzo/ui-registry",
+  "private": true,
+  "type": "module",
+  "main": "../dist/registry/index.js",
+  "types": "../dist/registry/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  }
+}

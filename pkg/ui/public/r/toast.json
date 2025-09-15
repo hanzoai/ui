@@ -1,0 +1,11 @@
+{
+  "name": "toast",
+  "type": "registry:component",
+  "description": "A toast component for your UI.",
+  "files": [
+    {
+      "path": "default/ui/toast/toast.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

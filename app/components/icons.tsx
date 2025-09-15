@@ -2,29 +2,35 @@ type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
   logo: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {...props}>
-      <rect width="256" height="256" fill="none" />
-      <line
-        x1="208"
-        y1="128"
-        x2="128"
-        y2="208"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
+    <svg viewBox="0 0 67 67" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <rect width="67" height="67" fill="#000000" />
+      <path 
+        d="M22.21 67V44.6369H0V67H22.21Z" 
+        fill="#ffffff"
       />
-      <line
-        x1="192"
-        y1="40"
-        x2="40"
-        y2="192"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
+      <path 
+        d="M0 44.6369L22.21 46.8285V44.6369H0Z" 
+        fill="#DDDDDD"
+      />
+      <path 
+        d="M66.7038 22.3184H22.2534L0.0878906 44.6367H44.4634L66.7038 22.3184Z" 
+        fill="#ffffff"
+      />
+      <path 
+        d="M22.21 0H0V22.3184H22.21V0Z" 
+        fill="#ffffff"
+      />
+      <path 
+        d="M66.7198 0H44.5098V22.3184H66.7198V0Z" 
+        fill="#ffffff"
+      />
+      <path 
+        d="M66.6753 22.3185L44.5098 20.0822V22.3185H66.6753Z" 
+        fill="#DDDDDD"
+      />
+      <path 
+        d="M66.7198 67V44.6369H44.5098V67H66.7198Z" 
+        fill="#ffffff"
       />
     </svg>
   ),

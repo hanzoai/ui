@@ -3,7 +3,7 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { ChevronUp } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 
 import { cn } from "../util"
 
@@ -29,18 +29,18 @@ type AccordionTriggerProps = React.ComponentPropsWithoutRef<typeof AccordionPrim
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   AccordionTriggerProps
->(({ showChevron, headerClx, className, children, ...props }, ref) => (
+>(({ showChevron = true, headerClx, className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className={cn('flex', headerClx)}>
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:-rotate-180",
+        "flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180",
         className
       )}
       {...props}
     >
       {children}
-      {showChevron && <ChevronUp className="shrink-0 transition-transform duration-200" />}
+      {showChevron && <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />}
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))
@@ -58,7 +58,7 @@ const AccordionContent = React.forwardRef<
     )}
     {...props}
   >
-    {children}
+    <div className="pb-4 pt-0">{children}</div>
   </AccordionPrimitive.Content>
 ))
 AccordionContent.displayName = AccordionPrimitive.Content.displayName

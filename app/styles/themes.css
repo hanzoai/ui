@@ -1,0 +1,144 @@
+/* Hanzo UI Theme System - Extended from shadcn/ui v4 */
+
+/* Base theme utilities */
+@layer utilities {
+  .theme-default {
+    /* Default theme inherits from root */
+  }
+
+  .theme-purple {
+    /* Hanzo signature purple theme */
+    --primary: oklch(0.488 0.243 264.376);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.95 0.05 264);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.488 0.243 264.376);
+  }
+
+  .theme-purple.dark {
+    --primary: oklch(0.65 0.25 264.376);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.371 0.15 264);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.65 0.25 264.376);
+  }
+
+  .theme-blue {
+    /* Blue theme variant */
+    --primary: oklch(0.5 0.2 250);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.1 250);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.5 0.2 250);
+  }
+
+  .theme-blue.dark {
+    --primary: oklch(0.6 0.25 250);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.35 0.15 250);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.6 0.25 250);
+  }
+
+  .theme-green {
+    /* Green theme variant */
+    --primary: oklch(0.5 0.2 145);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.1 145);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.5 0.2 145);
+  }
+
+  .theme-green.dark {
+    --primary: oklch(0.6 0.25 145);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.35 0.15 145);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.6 0.25 145);
+  }
+
+  .theme-red {
+    /* Red theme variant */
+    --primary: oklch(0.5 0.25 25);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.1 25);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.5 0.25 25);
+  }
+
+  .theme-red.dark {
+    --primary: oklch(0.65 0.3 25);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.4 0.2 25);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.65 0.3 25);
+  }
+
+  .theme-orange {
+    /* Orange theme variant */
+    --primary: oklch(0.6 0.2 50);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.1 50);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.6 0.2 50);
+  }
+
+  .theme-orange.dark {
+    --primary: oklch(0.7 0.25 50);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.45 0.15 50);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.7 0.25 50);
+  }
+
+  .theme-violet {
+    /* Violet theme variant */
+    --primary: oklch(0.45 0.25 285);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.08 285);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.45 0.25 285);
+  }
+
+  .theme-violet.dark {
+    --primary: oklch(0.6 0.3 285);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.35 0.18 285);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.6 0.3 285);
+  }
+
+  .theme-pink {
+    /* Pink theme variant */
+    --primary: oklch(0.55 0.25 350);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0.12 350);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.55 0.25 350);
+  }
+
+  .theme-pink.dark {
+    --primary: oklch(0.65 0.3 350);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.4 0.2 350);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.65 0.3 350);
+  }
+
+  .theme-gray {
+    /* Gray/neutral theme variant */
+    --primary: oklch(0.3 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --accent: oklch(0.9 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --ring: oklch(0.5 0 0);
+  }
+
+  .theme-gray.dark {
+    --primary: oklch(0.8 0 0);
+    --primary-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.35 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --ring: oklch(0.6 0 0);
+  }
+}

@@ -38,6 +38,29 @@ export function DashboardTableOfContents({ toc }: TocProps) {
   )
 }
 
+// DocsTableOfContents for Fumadocs MDX pages
+export function DocsTableOfContents({ toc }: { toc: any[] }) {
+  const mounted = useMounted()
+
+  if (!toc || toc.length === 0 || !mounted) {
+    return null
+  }
+
+  // Convert Fumadocs TOC format to our format if needed
+  const tocItems = toc.map(item => ({
+    title: item.title,
+    url: `#${item.url || item.id || ''}`,
+    items: item.children?.map((child: any) => ({
+      title: child.title,
+      url: `#${child.url || child.id || ''}`
+    }))
+  }))
+
+  const tocData = { items: tocItems }
+
+  return <DashboardTableOfContents toc={tocData} />
+}
+
 function useActiveItem(itemIds: string[]) {
   const [activeId, setActiveId] = React.useState(null)
 
