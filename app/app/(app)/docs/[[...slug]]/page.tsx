@@ -11,8 +11,8 @@ import { Button } from "@/registry/new-york/ui/button"
 import { mdxComponents } from "@/mdx-components"
 
 export const revalidate = false
-export const dynamic = "force-dynamic"
-export const dynamicParams = true
+// For static export, we cannot use dynamicParams
+export const dynamicParams = false
 
 export function generateStaticParams() {
   try {
