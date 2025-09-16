@@ -1,0 +1,1 @@
+export * from '../../../app/registry/new-york/ui/button'
