@@ -43,6 +43,7 @@
   },
   "exports": {
     "./blocks": "./blocks/index.ts",
+    "./components": "./components/index.ts",
     "./primitives": "./primitives/index-next.ts",
     "./primitives-common": "./primitives/index-common.ts",
     "./registry": {
@@ -54,6 +55,7 @@
     "./types": "./types/index.ts",
     "./util": "./util/index.ts",
     "./util-client": "./util/index-client.ts",
+    "./lib/utils": "../../app/lib/utils.ts",
     "./mcp": {
       "types": "./dist/mcp/index.d.ts",
       "default": "./dist/mcp/index.js"
