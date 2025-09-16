@@ -2,7 +2,7 @@ import "@/styles/globals.css"
 import { Metadata, Viewport } from "next"
 
 import { siteConfig } from "@/config/site"
-import { fontSans } from "@/lib/fonts"
+import { fontSans, fontMono } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Analytics } from "@/components/analytics"
 import { ThemeProvider } from "@/components/providers"
@@ -82,8 +82,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <head />
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable
+            "min-h-svh bg-background font-sans antialiased",
+            fontSans.variable,
+            fontMono.variable
           )}
         >
           <ThemeProvider
@@ -93,7 +94,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             disableTransitionOnChange
           >
             <div vaul-drawer-wrapper="">
-              <div className="relative flex min-h-screen flex-col bg-background">
+              <div className="relative flex min-h-svh flex-col bg-background">
                 {children}
               </div>
             </div>
