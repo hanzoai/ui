@@ -1,10 +1,10 @@
 # Contributing
 
-Thanks for your interest in contributing to ui.hanzo.ai. We're happy to have you here.
+Thanks for your interest in contributing to ui.shadcn.com. We're happy to have you here.
 
 Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
-If you need any help, feel free to reach out to [@hanzoai](https://twitter.com/hanzoai).
+If you need any help, feel free to reach out to [@shadcn](https://twitter.com/shadcn).
 
 ## About this repository
 
@@ -19,8 +19,8 @@ This repository is a monorepo.
 This repository is structured as follows:
 
 ```
-app
-└── web
+apps
+└── www
     ├── app
     ├── components
     ├── content
@@ -31,17 +31,17 @@ app
         └── new-york
             ├── example
             └── ui
-pkg
-└── ui
+packages
+└── cli
 ```
 
 | Path                  | Description                              |
 | --------------------- | ---------------------------------------- |
-| `app/web/app`        | The Next.js application for the website. |
-| `app/web/components` | The React components for the website.    |
-| `app/web/content`    | The content for the website.             |
-| `app/web/registry`   | The registry for the components.         |
-| `pkg/ui`        | The `@hanzo/ui` package.                 |
+| `apps/www/app`        | The Next.js application for the website. |
+| `apps/www/components` | The React components for the website.    |
+| `apps/www/content`    | The content for the website.             |
+| `apps/www/registry`   | The registry for the components.         |
+| `packages/cli`        | The `shadcn-ui` package.                 |
 
 ## Development
 
@@ -79,29 +79,71 @@ You can use the `pnpm --filter=[WORKSPACE]` command to start the development pro
 
 #### Examples
 
-1. To run the `ui.hanzo.ai` website:
+1. To run the `ui.shadcn.com` website:
 
 ```bash
-pnpm --filter=web dev
+pnpm --filter=www dev
 ```
+
+2. To run the `shadcn-ui` package:
+
+```bash
+pnpm --filter=shadcn-ui dev
+```
+
+## Running the CLI Locally
+
+To run the CLI locally, you can follow the workflow:
+
+1. Start by running the registry (main site) to make sure the components are up to date:
+
+   ```bash
+   pnpm v4:dev
+   ```
+
+2. Run the development script for the CLI:
+
+   ```bash
+   pnpm shadcn:dev
+   ```
+
+3. In another terminal tab, test the CLI by running:
+
+   ```bash
+   pnpm shadcn
+   ```
+
+   To test the CLI in a specific app, use a command like:
+
+   ```bash
+   pnpm shadcn <init | add | ...> -c ~/Desktop/my-app
+   ```
+
+4. To run the tests for the CLI:
+
+   ```bash
+   pnpm --filter=shadcn test
+   ```
+
+This workflow ensures that you are running the most recent version of the registry and testing the CLI properly in your local environment.
 
 ## Documentation
 
-The documentation for this project is located in the `web` workspace. You can run the documentation locally by running the following command:
+The documentation for this project is located in the `www` workspace. You can run the documentation locally by running the following command:
 
 ```bash
-pnpm --filter=web dev
+pnpm --filter=www dev
 ```
 
-Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `app/web/content/docs` directory.
+Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `apps/www/content/docs` directory.
 
 ## Components
 
-We use a registry system for developing components. You can find the source code for the components under `app/web/registry`. The components are organized by styles.
+We use a registry system for developing components. You can find the source code for the components under `apps/www/registry`. The components are organized by styles.
 
 ```bash
-app
-└── web
+apps
+└── www
     └── registry
         ├── default
         │   ├── example
@@ -132,7 +174,7 @@ the following categories:
   issue if present)
 - `refactor`: any code related change that is not a fix nor a feature
 - `docs`: changing existing or creating new documentation (i.e. README, docs for
-  usage of a lib)
+  usage of a lib or cli usage)
 - `build`: all changes regarding the build of the software, changes to
   dependencies or the addition of new dependencies
 - `test`: all changes regarding tests (adding new tests or changing existing
@@ -145,12 +187,18 @@ the following categories:
   e.g. `feat(components): add new prop to the avatar component`
 
 If you are interested in the detailed specification you can visit
-https://web.conventionalcommits.org/ or check out the
+https://www.conventionalcommits.org/ or check out the
 [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines).
 
 ## Requests for new components
 
 If you have a request for a new component, please open a discussion on GitHub. We'll be happy to help you out.
+
+## CLI
+
+The `shadcn-ui` package is a CLI for adding components to your project. You can find the documentation for the CLI [here](https://ui.shadcn.com/docs/cli).
+
+Any changes to the CLI should be made in the `packages/cli` directory. If you can, it would be great if you could add tests for your changes.
 
 ## Testing
 
