@@ -1,6 +1,9 @@
 // Auto-generated component exports
 // This file provides a central import point for all UI components
-// Usage: import { Button, Card } from '@hanzo/ui/components'
+// Usage: import { Button, Card, cn } from '@hanzo/ui/components'
+
+// Export commonly used utilities
+export { cn } from '../../../app/lib/utils'
 
 export * from '../../../app/registry/new-york/ui/accordion'
 export * from '../../../app/registry/new-york/ui/alert-dialog'
