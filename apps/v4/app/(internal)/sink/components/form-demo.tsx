@@ -130,7 +130,7 @@ export function FormDemo() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="hanzo" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name.

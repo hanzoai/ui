@@ -2,7 +2,7 @@ import { promises as fs } from "fs"
 import { tmpdir } from "os"
 import path from "path"
 import { Index } from "@/__registry__"
-import { registryItemFileSchema, registryItemSchema } from "shadcn/schema"
+import { registryItemFileSchema, registryItemSchema } from "hanzo/schema"
 import { Project, ScriptKind, SourceFile, SyntaxKind } from "ts-morph"
 import { z } from "zod"
 
@@ -97,7 +97,7 @@ async function getFileContent(file: z.infer<typeof registryItemFileSchema>) {
 
   // Some registry items uses default export.
   // We want to use named export instead.
-  // TODO: do we really need this? - @shadcn.
+  // TODO: do we really need this? - @hanzo.
   if (file.type !== "registry:page") {
     code = code.replaceAll("export default", "export")
   }
@@ -161,7 +161,7 @@ function getFileTarget(file: z.infer<typeof registryItemFileSchema>) {
 }
 
 async function createTempSourceFile(filename: string) {
-  const dir = await fs.mkdtemp(path.join(tmpdir(), "shadcn-"))
+  const dir = await fs.mkdtemp(path.join(tmpdir(), "hanzo-"))
   return path.join(dir, filename)
 }
 

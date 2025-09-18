@@ -5,7 +5,7 @@ function getInvoker() {
   const args = process.argv.slice(2)
   const env = process.env
   const npmExecPath = env.npm_execpath || ""
-  const packageName = "shadcn@latest"
+  const packageName = "hanzo@latest"
 
   if (npmExecPath.includes("pnpm")) {
     return `pnpm dlx ${packageName}${args.length ? ` ${args.join(" ")}` : ""}`
@@ -21,14 +21,14 @@ function getInvoker() {
 const main = async () => {
   console.log(
     chalk.yellow(
-      "The 'shadcn-ui' package is deprecated. Please use the 'shadcn' package instead:"
+      "The 'hanzo-ui' package is deprecated. Please use the 'hanzo' package instead:"
     )
   )
   console.log("")
   console.log(chalk.green(`  ${getInvoker()}`))
   console.log("")
   console.log(
-    chalk.yellow("For more information, visit: https://ui.shadcn.com/docs/cli")
+    chalk.yellow("For more information, visit: https://ui.hanzo.com/docs/cli")
   )
   console.log("")
 }

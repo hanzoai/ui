@@ -1,6 +1,6 @@
 {
-  "name": "shadcn/ui",
-  "homepage": "https://ui.shadcn.com",
+  "name": "hanzo/ui",
+  "homepage": "https://ui.hanzo.com",
   "items": [
     {
       "name": "index",

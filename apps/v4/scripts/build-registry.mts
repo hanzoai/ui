@@ -107,13 +107,13 @@ async function buildRegistryJsonFile() {
 
 async function buildRegistry() {
   return new Promise((resolve, reject) => {
-    // Use local shadcn copy.
+    // Use local hanzo copy.
     const process = exec(
-      `node ../../packages/shadcn/dist/index.js build registry.json --output ../www/public/r/styles/new-york-v4`
+      `node ../../packages/hanzo/dist/index.js build registry.json --output ../www/public/r/styles/new-york-v4`
     )
 
     // exec(
-    //   `pnpm dlx shadcn build registry.json --output ../www/public/r/styles/new-york-v4`
+    //   `pnpm dlx hanzo build registry.json --output ../www/public/r/styles/new-york-v4`
     // )
 
     process.on("exit", (code) => {

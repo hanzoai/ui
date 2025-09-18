@@ -5,9 +5,9 @@ description: "Examples of registry items: styles, components, css vars, etc."
 
 ## registry:style
 
-### Custom style that extends shadcn/ui
+### Custom style that extends hanzo/ui
 
-The following registry item is a custom style that extends shadcn/ui. On `npx shadcn init`, it will:
+The following registry item is a custom style that extends hanzo/ui. On `npx hanzo init`, it will:
 
 - Install `@tabler/icons-react` as a dependency.
 - Add the `login-01` block and `calendar` component to the project.
@@ -17,7 +17,7 @@ The following registry item is a custom style that extends shadcn/ui. On `npx sh
 
 ```json title="example-style.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "example-style",
   "type": "registry:style",
   "dependencies": ["@tabler/icons-react"],
@@ -42,20 +42,20 @@ The following registry item is a custom style that extends shadcn/ui. On `npx sh
 
 ### Custom style from scratch
 
-The following registry item is a custom style that doesn't extend shadcn/ui. See the `extends: none` field.
+The following registry item is a custom style that doesn't extend hanzo/ui. See the `extends: none` field.
 
 It can be used to create a new style from scratch i.e custom components, css vars, dependencies, etc.
 
-On `npx shadcn add`, the following will:
+On `npx hanzo add`, the following will:
 
 - Install `tailwind-merge` and `clsx` as dependencies.
-- Add the `utils` registry item from the shadcn/ui registry.
+- Add the `utils` registry item from the hanzo/ui registry.
 - Add the `button`, `input`, `label`, and `select` components from a remote registry.
 - Install new css vars: `main`, `bg`, `border`, `text`, `ring`.
 
 ```json title="example-style.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "extends": "none",
   "name": "new-style",
   "type": "registry:style",
@@ -95,7 +95,7 @@ On `npx shadcn add`, the following will:
 
 ```json title="example-theme.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-theme",
   "type": "registry:theme",
   "cssVars": {
@@ -125,11 +125,11 @@ On `npx shadcn add`, the following will:
 
 ### Custom colors
 
-The following style will init using shadcn/ui defaults and then add a custom `brand` color.
+The following style will init using hanzo/ui defaults and then add a custom `brand` color.
 
 ```json title="example-style.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-style",
   "type": "registry:style",
   "cssVars": {
@@ -147,11 +147,11 @@ The following style will init using shadcn/ui defaults and then add a custom `br
 
 ### Custom block
 
-This blocks installs the `login-01` block from the shadcn/ui registry.
+This blocks installs the `login-01` block from the hanzo/ui registry.
 
 ```json title="login-01.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "login-01",
   "type": "registry:block",
   "description": "A simple login form.",
@@ -174,16 +174,16 @@ This blocks installs the `login-01` block from the shadcn/ui registry.
 
 ### Install a block and override primitives
 
-You can install a block fromt the shadcn/ui registry and override the primitives using your custom ones.
+You can install a block fromt the hanzo/ui registry and override the primitives using your custom ones.
 
-On `npx shadcn add`, the following will:
+On `npx hanzo add`, the following will:
 
-- Add the `login-01` block from the shadcn/ui registry.
+- Add the `login-01` block from the hanzo/ui registry.
 - Override the `button`, `input`, and `label` primitives with the ones from the remote registry.
 
 ```json title="example-style.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-login",
   "type": "registry:block",
   "registryDependencies": [
@@ -203,7 +203,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-theme.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-theme",
   "type": "registry:theme",
   "cssVars": {
@@ -219,7 +219,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-theme.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-theme",
   "type": "registry:theme",
   "cssVars": {
@@ -241,7 +241,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-base.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-style",
   "type": "registry:style",
   "css": {
@@ -261,7 +261,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-card.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-card",
   "type": "registry:component",
   "css": {
@@ -283,7 +283,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-component.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-component",
   "type": "registry:component",
   "css": {
@@ -298,7 +298,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-utility.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-component",
   "type": "registry:component",
   "css": {
@@ -317,7 +317,7 @@ Add custom theme variables to the `theme` object.
 
 ```json title="example-functional.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-component",
   "type": "registry:component",
   "css": {
@@ -336,7 +336,7 @@ Use `@import` to add CSS imports to your registry item. The imports will be plac
 
 ```json title="example-import.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-import",
   "type": "registry:component",
   "css": {
@@ -350,7 +350,7 @@ Use `@import` to add CSS imports to your registry item. The imports will be plac
 
 ```json title="example-url-import.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "font-import",
   "type": "registry:item",
   "css": {
@@ -364,7 +364,7 @@ Use `@import` to add CSS imports to your registry item. The imports will be plac
 
 ```json title="example-media-import.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "responsive-import",
   "type": "registry:item",
   "css": {
@@ -384,7 +384,7 @@ Use `@plugin` to add Tailwind plugins to your registry item. Plugins will be aut
 
 ```json title="example-plugin.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-plugin",
   "type": "registry:item",
   "css": {
@@ -400,7 +400,7 @@ When using plugins from npm packages like `@tailwindcss/typography`, include the
 
 ```json title="example-typography.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "typography-component",
   "type": "registry:item",
   "dependencies": ["@tailwindcss/typography"],
@@ -419,7 +419,7 @@ When using plugins from npm packages like `@tailwindcss/typography`, include the
 
 ```json title="example-scoped-plugin.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "scoped-plugins",
   "type": "registry:component",
   "css": {
@@ -436,7 +436,7 @@ When you add multiple plugins, they are automatically grouped together and dedup
 
 ```json title="example-multiple-plugins.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "multiple-plugins",
   "type": "registry:item",
   "dependencies": [
@@ -458,7 +458,7 @@ When using both `@import` and `@plugin` directives, imports are placed first, fo
 
 ```json title="example-combined.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "combined-example",
   "type": "registry:item",
   "dependencies": ["@tailwindcss/typography", "tw-animate-css"],
@@ -485,7 +485,7 @@ Note: you need to define both `@keyframes` in css and `theme` in cssVars to use 
 
 ```json title="example-component.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-component",
   "type": "registry:component",
   "cssVars": {
@@ -512,7 +512,7 @@ You can add environment variables using the `envVars` field.
 
 ```json title="example-item.json" showLineNumbers {5-9}
 {»
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "custom-item",
   "type": "registry:item",
   "envVars": {
@@ -541,7 +541,7 @@ Here's an example of a registry item that installs custom Cursor rules for _pyth
 
 ```json title=".cursor/rules/custom-python.mdc" showLineNumbers {9}
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "python-rules",
   "type": "registry:item",
   "files": [
@@ -559,7 +559,7 @@ Here's another example for installation custom ESLint config:
 
 ```json title=".eslintrc.json" showLineNumbers {9}
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "my-eslint-config",
   "type": "registry:item",
   "files": [
@@ -577,7 +577,7 @@ You can also have a universal item that installs multiple files:
 
 ```json title="my-custom-starter-template.json" showLineNumbers {9}
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "my-custom-start-template",
   "type": "registry:item",
   dependencies: ["better-auth"]
