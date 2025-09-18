@@ -41,8 +41,7 @@ npm install @hanzo/ui
 Import and use components:
 
 ```tsx
-// Import AI components
-// Example: import { AIChat } from "./components/ai-chat"
+import { AIChat } from "@hanzo/ui"
 
 export function MyApp() {
   return (
@@ -60,8 +59,7 @@ export function MyApp() {
 All AI components support configuration through props or a central config:
 
 ```tsx
-// Configure globally
-// Example: import { configureAI } from "./ai/config"
+import { configureAI } from "@hanzo/ui"
 
 configureAI({
   defaultProvider: "openai",
