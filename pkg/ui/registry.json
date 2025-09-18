@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://ui.hanzo.com/schema/registry.json",
   "name": "hanzo",
   "homepage": "https://ui.hanzo.ai",
   "items": [

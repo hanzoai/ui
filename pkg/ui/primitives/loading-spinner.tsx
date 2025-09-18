@@ -1,6 +1,6 @@
 import { cn } from '../util'
 
-// cf: https://github.com/shadcn-ui/ui/discussions/1694#discussioncomment-7851248
+// cf: https://github.com/hanzo-ui/ui/discussions/1694#discussioncomment-7851248
 const LoadingSpinner: React.FC<
   {
     size?: number

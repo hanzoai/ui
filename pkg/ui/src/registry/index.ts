@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-// Define the file schema to match shadcn/ui's format
+// Define the file schema to match hanzo/ui's format
 export const fileSchema = z.object({
   path: z.string(),
   content: z.string().optional(),
@@ -8,7 +8,7 @@ export const fileSchema = z.object({
   target: z.string().optional(),
 })
 
-// Registry item schema aligned with shadcn/ui format
+// Registry item schema aligned with hanzo/ui format
 export const registryItemSchema = z.object({
   name: z.string(),
   type: z.string(),
@@ -26,7 +26,7 @@ export const registryItemSchema = z.object({
   subcategory: z.string().optional(),
 })
 
-// Registry schema aligned with shadcn/ui format
+// Registry schema aligned with hanzo/ui format
 export const registrySchema = z.object({
   $schema: z.string().optional(),
   name: z.string(),
