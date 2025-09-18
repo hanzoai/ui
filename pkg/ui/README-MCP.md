@@ -1,6 +1,6 @@
 # Hanzo UI with MCP Support
 
-This implementation provides Model Context Protocol (MCP) support for the Hanzo UI library, enabling AI assistants to interact with the component registry based on shadcn/ui.
+This implementation provides Model Context Protocol (MCP) support for the Hanzo UI library, enabling AI assistants to interact with the component registry based on hanzo/ui.
 
 ## Quick Start
 
@@ -91,7 +91,7 @@ node ./bin/cli.js registry:mcp
 
 ### Creating a Registry
 
-The registry is compatible with shadcn/ui's registry format. To create a custom registry:
+The registry is compatible with hanzo/ui's registry format. To create a custom registry:
 
 1. Create a `registry.json` file using the schema from `/pkg/ui/registry/schema.ts`
 2. Build the registry using a build script
@@ -148,7 +148,7 @@ Which one would you like to add to your project?
 
 ### Registry Schema
 
-The registry schema is compatible with shadcn/ui and includes:
+The registry schema is compatible with hanzo/ui and includes:
 
 - Component metadata (name, description, type)
 - Dependencies (npm packages)

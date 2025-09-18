@@ -14,8 +14,8 @@ export function getRegistryUrl(registry: string): string {
     return registry
   }
 
-  // Default to Hanzo registry if REGISTRY_BASE_URL is defined, otherwise use shadcn
-  const baseUrl = process.env.REGISTRY_BASE_URL || "https://ui.shadcn.com/registry"
+  // Default to Hanzo registry if REGISTRY_BASE_URL is defined, otherwise use hanzo
+  const baseUrl = process.env.REGISTRY_BASE_URL || "https://ui.hanzo.com/registry"
   
   // Check if registry is a path to a JSON file
   if (registry.endsWith(".json")) {

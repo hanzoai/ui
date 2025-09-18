@@ -37,7 +37,7 @@ const rounded = {
   none: ''
 }
 
-// Updated buttonVariants with the latest Shadcn patterns
+// Updated buttonVariants with the latest Hanzo patterns
 const buttonVariants = cva(
   "inline-flex items-center justify-center font-medium ring-offset-background transition-colors " +
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 " +
