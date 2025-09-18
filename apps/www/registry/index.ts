@@ -1,4 +1,4 @@
-import { type Registry } from "shadcn/schema"
+import { type Registry } from "hanzo/schema"
 import { z } from "zod"
 
 import { blocks } from "@/registry/registry-blocks"
@@ -11,8 +11,8 @@ import { themes } from "@/registry/registry-themes"
 import { ui } from "@/registry/registry-ui"
 
 export const registry = {
-  name: "shadcn/ui",
-  homepage: "https://ui.shadcn.com",
+  name: "hanzo/ui",
+  homepage: "https://ui.hanzo.com",
   items: [
     {
       name: "index",

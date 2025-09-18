@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Hanzo UI is a comprehensive React component library built on top of shadcn/ui v4, featuring:
+Hanzo UI is a comprehensive React component library built on top of hanzo/ui v4, featuring:
 - 50+ primitive components with Hanzo branding
 - Full TypeScript support with React 19
 - Tailwind CSS 4.1 with OKLCH color system
@@ -11,8 +11,8 @@ Hanzo UI is a comprehensive React component library built on top of shadcn/ui v4
 
 ## Recent Updates (2025-09-13)
 
-### Migration to shadcn/ui v4
-Successfully synced with latest shadcn/ui v4 including:
+### Migration to hanzo/ui v4
+Successfully synced with latest hanzo/ui v4 including:
 - Next.js 15.3.1 with Turbopack
 - React 19.1.0 with server components
 - Fumadocs MDX for documentation (replaced Contentlayer)
@@ -46,7 +46,7 @@ Created comprehensive MCP (Model Context Protocol) server for AI assistants:
 - `accessibility_review` - Review accessibility
 - `theme_customization` - Generate themes
 
-### Migration from shadcn/ui v3 to v4
+### Migration from hanzo/ui v3 to v4
 - **Next.js 15.3.1**: Upgraded from Next.js 14 to 15 with Turbopack support
 - **React 19.1.0**: Updated to latest React version with server components
 - **Tailwind CSS 4.1**: Migrated from v3 to v4 with new CSS custom properties and OKLCH colors
@@ -170,7 +170,7 @@ app/app/
 
 ### Key App Features
 - **Multi-theme support**: Both default and new-york styles
-- **Component registry system**: Similar to shadcn/ui CLI
+- **Component registry system**: Similar to hanzo/ui CLI
 - **Interactive examples**: Music, mail, dashboard apps
 - **Documentation site**: MDX-based with contentlayer
 - **Theme switching**: Built-in dark/light mode
@@ -185,10 +185,10 @@ app/app/
 
 ### 1. Core UI Package (`/pkg/ui/`)
 **Version**: 4.5.3  
-**Purpose**: Main UI component library with enhanced shadcn/ui components
+**Purpose**: Main UI component library with enhanced hanzo/ui components
 
 #### Key Directories:
-- **`/primitives/`**: 52 core UI components (enhanced shadcn/ui)
+- **`/primitives/`**: 52 core UI components (enhanced hanzo/ui)
 - **`/blocks/`**: Higher-level component compositions
 - **`/tailwind/`**: Custom Tailwind configuration and plugins
 - **`/style/`**: CSS files including Hanzo-specific styling
@@ -239,7 +239,7 @@ app/app/
 ## Component Organization and Customizations
 
 ### Registry System
-The component registry mirrors shadcn/ui but with Hanzo enhancements:
+The component registry mirrors hanzo/ui but with Hanzo enhancements:
 - **Styles**: `default` and `new-york` variants
 - **Categories**: UI components, blocks, examples
 - **CLI integration**: `@hanzo/ui` and `hanzo-ui` commands
@@ -247,7 +247,7 @@ The component registry mirrors shadcn/ui but with Hanzo enhancements:
 ### Hanzo-Specific Enhancements
 
 #### 1. Enhanced Button Component
-**Standard shadcn/ui**:
+**Standard hanzo/ui**:
 ```tsx
 variants: {
   variant: { default, destructive, outline, secondary, ghost, link },
@@ -280,7 +280,7 @@ variants: {
 ### CSS Structure
 ```
 /app/styles/
-├── globals.css         # Shadcn-compatible base styles
+├── globals.css         # Hanzo-compatible base styles
 └── mdx.css            # MDX documentation styling
 
 /pkg/ui/style/
@@ -303,7 +303,7 @@ variants: {
 ## Documentation State
 
 ### Current Documentation
-- **README.md**: Basic overview and differences from shadcn/ui
+- **README.md**: Basic overview and differences from hanzo/ui
 - **LLM.md**: Build and registry information
 - **CONTRIBUTING.md**: Contribution guidelines
 - **Component docs**: Generated through contentlayer
@@ -311,9 +311,9 @@ variants: {
 ### Documentation Gaps
 - Missing detailed API documentation for Hanzo-specific features
 - Limited examples for auth and commerce packages
-- No migration guide from shadcn/ui to Hanzo UI
+- No migration guide from hanzo/ui to Hanzo UI
 
-## Key Differences from Standard shadcn/ui
+## Key Differences from Standard hanzo/ui
 
 ### 1. Enhanced Component Variants
 - More button variants (linkFG, linkMuted, primary vs default)

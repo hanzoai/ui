@@ -63,7 +63,7 @@ export async function editInV0({
       version: 2,
       payload: registryItem,
       source: {
-        title: "shadcn/ui",
+        title: "hanzo/ui",
         url,
       },
       meta: {

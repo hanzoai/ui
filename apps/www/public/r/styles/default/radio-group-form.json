@@ -1,8 +1,8 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "radio-group-form",
   "type": "registry:example",
-  "author": "shadcn (https://ui.shadcn.com)",
+  "author": "hanzo (https://ui.hanzo.com)",
   "registryDependencies": [
     "radio-group",
     "form"

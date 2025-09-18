@@ -112,7 +112,7 @@ import { hanzoUIPreset } from '@hanzo/ui/tailwind'
 
 ## Theming
 
-The library now uses the default shadcn/ui color system with proper light/dark mode support.
+The library now uses the default hanzo/ui color system with proper light/dark mode support.
 
 ### Available CSS Variables:
 - `--background` / `--foreground`
