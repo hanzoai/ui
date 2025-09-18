@@ -25,8 +25,7 @@ npx hanzo-ui@latest add ai-chat
 ## Usage
 
 ```tsx
-// Import the AIChat component
-// Example: import { AIChat } from "./components/ai-chat"
+import { AIChat } from "@hanzo/ui"
 
 export default function ChatPage() {
   return (
@@ -73,9 +72,7 @@ export default function ChatPage() {
 ### With Multiple Providers
 
 ```tsx
-// Import the AIChat component and providers
-// Example: import { AIChat } from "./components/ai-chat"
-// Example: import { OpenAIProvider, AnthropicProvider } from "./ai/providers"
+import { AIChat, OpenAIProvider, AnthropicProvider } from "@hanzo/ui"
 
 const providers = [
   new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
