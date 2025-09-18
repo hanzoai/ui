@@ -1,0 +1,271 @@
+---
+title: shadcn/ui Compatibility
+description: Complete interoperability with shadcn/ui ecosystem
+---
+
+hanzo/ui is built to be **100% compatible** with the shadcn/ui ecosystem. This means you can:
+
+- Use hanzo/ui components in any shadcn/ui project
+- Use shadcn/ui components alongside hanzo/ui components
+- Mix and match components from both registries
+- Share the same theming and configuration
+
+## Installation Methods
+
+### Package Installation
+
+Install the complete @hanzo/ui package:
+
+```bash
+npm install @hanzo/ui
+```
+
+Then import components directly:
+
+```tsx
+import { AIPlayground, Dock, CodeEditor } from "@hanzo/ui"
+```
+
+### CLI Installation (shadcn Compatible)
+
+Use our CLI to copy components into your project, just like shadcn/ui:
+
+```bash
+npx hanzo-ui@latest add ai-playground
+```
+
+This copies the component into your project at `@/components/ui/ai-playground.tsx`, maintaining full shadcn compatibility.
+
+## Import Patterns
+
+hanzo/ui supports both import patterns:
+
+### Package Imports (@hanzo/ui)
+
+Best for:
+- Quick prototyping
+- Consistent updates across projects
+- Smaller projects with fewer customizations
+
+```tsx
+import { Button, Card, AIChat } from "@hanzo/ui"
+```
+
+### Relative Imports (@/components)
+
+Best for:
+- Full customization control
+- shadcn/ui compatibility
+- Existing shadcn projects
+
+```tsx
+import { Button } from "@/components/ui/button"
+import { AIChat } from "@/components/ui/ai-chat"
+```
+
+## Registry Configuration
+
+Configure multiple registries in your `components.json`:
+
+```json
+{
+  "$schema": "https://ui.hanzo.ai/schema.json",
+  "registries": {
+    "@hanzo": "https://ui.hanzo.ai/r/{name}.json",
+    "@shadcn": "https://ui.shadcn.com/r/{name}.json"
+  }
+}
+```
+
+This allows you to install components from both registries:
+
+```bash
+# Install from hanzo/ui
+npx hanzo-ui@latest add ai-playground
+
+# Install from shadcn/ui
+npx shadcn@latest add button
+
+# They work together seamlessly
+```
+
+## MCP Server Support
+
+hanzo/ui includes native MCP (Model Context Protocol) support, allowing AI assistants to:
+
+- Browse and search all components
+- Install components with natural language
+- Generate code using our components
+- Access full component documentation
+
+### MCP Configuration
+
+For Claude Code:
+```json
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["hanzo-ui@latest", "mcp"]
+    }
+  }
+}
+```
+
+For Cursor:
+```json
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["hanzo-ui@latest", "mcp"]
+    }
+  }
+}
+```
+
+## Component Compatibility
+
+All hanzo/ui components:
+
+✅ Use the same CSS variables as shadcn/ui
+✅ Support the same theme configurations
+✅ Work with shadcn/ui's dark mode
+✅ Use Radix UI primitives where applicable
+✅ Follow the same component patterns
+✅ Support the same prop interfaces
+
+## Extended Component Library
+
+hanzo/ui extends shadcn/ui with:
+
+### AI Components
+- AI Playground
+- AI Chat
+- AI Assistant
+- AI Vision
+- AI Agents
+- AI Tools
+
+### Code Components
+- Code Editor
+- Code Block
+- Syntax Highlighter
+- Code Tabs
+- Sandbox
+
+### Advanced UI
+- 3D Card
+- Animated Cursor
+- Apple Cards Carousel
+- Interactive Grid Pattern
+- Particles Background
+
+### Device Mockups
+- iPhone 15 Pro
+- Android Device
+- Safari Browser
+
+### Dock Components
+- macOS Dock
+- Limelight Nav
+- Menu Dock
+- Message Dock
+
+### And 100+ More Components
+
+All maintaining full shadcn/ui compatibility!
+
+## Theming
+
+hanzo/ui uses the same theming system as shadcn/ui:
+
+```css
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    /* Same variables as shadcn/ui */
+  }
+}
+```
+
+## Migration Guide
+
+### From shadcn/ui to hanzo/ui
+
+1. Install hanzo/ui:
+```bash
+npm install @hanzo/ui
+```
+
+2. Update imports (optional):
+```tsx
+// Before
+import { Button } from "@/components/ui/button"
+
+// After (if using package imports)
+import { Button } from "@hanzo/ui"
+
+// Or keep relative imports - both work!
+import { Button } from "@/components/ui/button"
+```
+
+3. Add new components:
+```bash
+npx hanzo-ui@latest add ai-playground dock code-editor
+```
+
+### Using Both Together
+
+You can use both registries in the same project:
+
+```tsx
+// shadcn/ui components
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+
+// hanzo/ui components
+import { AIPlayground } from "@hanzo/ui"
+import { Dock } from "@hanzo/ui"
+
+// They work together perfectly!
+export function MyApp() {
+  return (
+    <Card>
+      <Button>shadcn/ui Button</Button>
+      <AIPlayground />
+      <Dock />
+    </Card>
+  )
+}
+```
+
+## TypeScript Support
+
+Full TypeScript support with proper type exports:
+
+```tsx
+import type {
+  AIChatProps,
+  DockProps,
+  CodeEditorProps
+} from "@hanzo/ui"
+```
+
+## Best Practices
+
+1. **Use CLI for customization**: When you need to customize a component, use the CLI to copy it into your project
+2. **Package imports for stability**: Use package imports when you want consistent behavior across projects
+3. **Mix and match**: Don't hesitate to use components from both registries
+4. **Keep components.json updated**: Ensure your registry configuration is up to date
+
+## Support
+
+- GitHub: [github.com/hanzoai/ui](https://github.com/hanzoai/ui)
+- Discord: [discord.gg/hanzo](https://discord.gg/hanzo)
+- Documentation: [ui.hanzo.ai](https://ui.hanzo.ai)
+
+## License
+
+MIT - Same as shadcn/ui

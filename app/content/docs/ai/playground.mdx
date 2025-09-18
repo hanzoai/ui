@@ -12,8 +12,7 @@ The AI Playground provides a comprehensive interface for interacting with variou
 ## Example Usage
 
 ```tsx
-// Import the AIPlayground component
-// Example: import { AIPlayground } from "./components/ai-playground"
+import { AIPlayground } from "@hanzo/ui"
 
 export function PlaygroundExample() {
   return (
@@ -52,8 +51,7 @@ npm install @hanzo/ui
 Then import the component:
 
 ```tsx
-// Import the AIPlayground component
-// Example: import { AIPlayground } from "./components/ai-playground"
+import { AIPlayground } from "@hanzo/ui"
 ```
 
 ## Usage
@@ -61,8 +59,7 @@ Then import the component:
 ### Basic Usage
 
 ```tsx
-// Import the AIPlayground component
-// Example: import { AIPlayground } from "./components/ai-playground"
+import { AIPlayground } from "@hanzo/ui"
 
 export default function Page() {
   return <AIPlayground />
@@ -72,8 +69,7 @@ export default function Page() {
 ### With Configuration
 
 ```tsx
-// Import the AIPlayground component
-// Example: import { AIPlayground } from "./components/ai-playground"
+import { AIPlayground } from "@hanzo/ui"
 
 export default function Page() {
   return (
@@ -106,9 +102,7 @@ export default function Page() {
 ### With Custom Providers
 
 ```tsx
-// Import the AIPlayground component and providers
-// Example: import { AIPlayground } from "./components/ai-playground"
-// Example: import { OpenAIProvider, AnthropicProvider } from "./ai/providers"
+import { AIPlayground, OpenAIProvider, AnthropicProvider } from "@hanzo/ui"
 
 const providers = [
   new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
