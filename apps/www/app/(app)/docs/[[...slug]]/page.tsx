@@ -68,7 +68,7 @@ export async function generateMetadata({
           )}&description=${encodeURIComponent(doc.description)}`,
         },
       ],
-      creator: "@shadcn",
+      creator: "@hanzo",
     },
   }
 }

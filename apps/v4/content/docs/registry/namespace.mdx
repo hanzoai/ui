@@ -30,7 +30,7 @@ Namespaced registries let you configure multiple resource sources in one project
 
 Registry namespaces are prefixed with `@` and provide a way to organize and reference resources from different sources. Resources can be any type of content: components, libraries, utilities, hooks, AI prompts, configuration files, themes, and more. For example:
 
-- `@shadcn/button` - UI component from the shadcn registry
+- `@hanzo/button` - UI component from the hanzo registry
 - `@v0/dashboard` - Dashboard component from the v0 registry
 - `@ai-elements/input` - AI prompt input from an AI elements registry
 - `@acme/auth-utils` - Authentication utilities from your company's private registry
@@ -114,13 +114,13 @@ This allows you to:
 Once configured, you can install resources using the namespace syntax:
 
 ```bash
-npx shadcn@latest add @v0/dashboard
+npx hanzo@latest add @v0/dashboard
 ```
 
 or multiple resources at once:
 
 ```bash
-npx shadcn@latest add @acme/header @lib/auth-utils @ai/chatbot-rules
+npx hanzo@latest add @acme/header @lib/auth-utils @ai/chatbot-rules
 ```
 
 ### Quick Configuration
@@ -139,7 +139,7 @@ Add registries to your `components.json`:
 Then start installing:
 
 ```bash
-npx shadcn@latest add @acme/button
+npx hanzo@latest add @acme/button
 ```
 
 ---
@@ -175,7 +175,7 @@ The simplest way to configure a registry is with a URL template string:
 }
 ```
 
-> **Note:** The `{name}` placeholder in the URL is automatically parsed and replaced with the resource name when you run `npx shadcn@latest add @namespace/resource-name`. For example, `@acme/button` becomes `https://registry.acme.com/resources/button.json`. See [URL Pattern System](#url-pattern-system) for more details.
+> **Note:** The `{name}` placeholder in the URL is automatically parsed and replaced with the resource name when you run `npx hanzo@latest add @namespace/resource-name`. For example, `@acme/button` becomes `https://registry.acme.com/resources/button.json`. See [URL Pattern System](#url-pattern-system) for more details.
 
 ### Advanced Configuration
 
@@ -441,7 +441,7 @@ Example secure registry setup:
 The CLI provides transparency about what's being installed. You can see the payload of a registry item using the following command:
 
 ```bash
-npx shadcn@latest view @acme/button
+npx hanzo@latest view @acme/button
 ```
 
 This will output the payload of the registry item to the console.
@@ -459,7 +459,7 @@ Resources can have dependencies across different registries:
   "name": "dashboard",
   "type": "registry:block",
   "registryDependencies": [
-    "@shadcn/card", // From default registry
+    "@hanzo/card", // From default registry
     "@v0/chart", // From v0 registry
     "@acme/data-table", // From acme registry
     "@lib/data-fetcher", // Utility library
@@ -476,7 +476,7 @@ Understanding how dependencies are resolved internally is important if you're de
 
 ### How Resolution Works
 
-When you run `npx shadcn@latest add @namespace/resource`, the CLI does the following:
+When you run `npx hanzo@latest add @namespace/resource`, the CLI does the following:
 
 1. **Clears registry context** to start fresh
 2. **Fetches the main resource** from the specified registry
@@ -488,7 +488,7 @@ When you run `npx shadcn@latest add @namespace/resource`, the CLI does the follo
 This means that if you run the following command:
 
 ```bash
-npx shadcn@latest add @acme/auth @custom/login-form
+npx hanzo@latest add @acme/auth @custom/login-form
 ```
 
 The `login-form.ts` from `@custom/login-form` will override the `login-form.ts` from `@acme/auth` because it's resolved last.
@@ -542,7 +542,7 @@ Let's say you want to customize a button from a vendor registry:
 **3. Install your custom version**:
 
 ```bash
-npx shadcn@latest add @my-company/custom-button
+npx hanzo@latest add @my-company/custom-button
 ```
 
 This installs the original button from `@vendor/button` and then overrides the `cssVars` with your own custom values.
@@ -596,16 +596,16 @@ When you install `@custom/dashboard` that depends on multiple resources:
 {
   "name": "dashboard",
   "registryDependencies": [
-    "@shadcn/card", // 1. Resolved first
+    "@hanzo/card", // 1. Resolved first
     "@vendor/chart", // 2. Resolved second
-    "@custom/card" // 3. Resolved last (overrides @shadcn/card)
+    "@custom/card" // 3. Resolved last (overrides @hanzo/card)
   ]
 }
 ```
 
 Resolution order:
 
-1. `@shadcn/card` - installs to `components/ui/card.tsx`
+1. `@hanzo/card` - installs to `components/ui/card.tsx`
 2. `@vendor/chart` - installs to `components/ui/chart.tsx`
 3. `@custom/card` - overwrites `components/ui/card.tsx` (if same target)
 
@@ -685,7 +685,7 @@ Implement semantic versioning with range support:
 
 ## CLI Commands
 
-The shadcn CLI provides several commands for working with namespaced registries:
+The hanzo CLI provides several commands for working with namespaced registries:
 
 ### Adding Resources
 
@@ -693,16 +693,16 @@ Install resources from any configured registry:
 
 ```bash
 # Install from a specific registry
-npx shadcn@latest add @v0/dashboard
+npx hanzo@latest add @v0/dashboard
 
 # Install multiple resources
-npx shadcn@latest add @acme/button @lib/utils @ai/prompt
+npx hanzo@latest add @acme/button @lib/utils @ai/prompt
 
 # Install from URL directly
-npx shadcn@latest add https://registry.example.com/button.json
+npx hanzo@latest add https://registry.example.com/button.json
 
 # Install from local file
-npx shadcn@latest add ./local-registry/button.json
+npx hanzo@latest add ./local-registry/button.json
 ```
 
 ### Viewing Resources
@@ -711,13 +711,13 @@ Inspect registry items before installation:
 
 ```bash
 # View a resource from a registry
-npx shadcn@latest view @acme/button
+npx hanzo@latest view @acme/button
 
 # View multiple resources
-npx shadcn@latest view @v0/dashboard @shadcn/card
+npx hanzo@latest view @v0/dashboard @hanzo/card
 
 # View from URL
-npx shadcn@latest view https://registry.example.com/button.json
+npx hanzo@latest view https://registry.example.com/button.json
 ```
 
 The `view` command displays:
@@ -734,19 +734,19 @@ Search for available resources in registries:
 
 ```bash
 # Search a specific registry
-npx shadcn@latest search @v0
+npx hanzo@latest search @v0
 
 # Search with query
-npx shadcn@latest search @acme --query "auth"
+npx hanzo@latest search @acme --query "auth"
 
 # Search multiple registries
-npx shadcn@latest search @v0 @acme @lib
+npx hanzo@latest search @v0 @acme @lib
 
 # Limit results
-npx shadcn@latest search @v0 --limit 10 --offset 20
+npx hanzo@latest search @v0 --limit 10 --offset 20
 
 # List all items (alias for search)
-npx shadcn@latest list @acme
+npx hanzo@latest list @acme
 ```
 
 Search results include:
@@ -764,7 +764,7 @@ Search results include:
 If you reference a registry that isn't configured:
 
 ```bash
-npx shadcn@latest add @non-existent/component
+npx hanzo@latest add @non-existent/component
 ```
 
 Error:

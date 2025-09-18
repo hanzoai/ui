@@ -320,12 +320,12 @@ curl -H "Authorization: Bearer your_token" \
   https://registry.company.com/button.json
 
 # Test with the CLI.
-REGISTRY_TOKEN=your_token npx shadcn@latest add @private/button
+REGISTRY_TOKEN=your_token npx hanzo@latest add @private/button
 ```
 
 ## Error Handling
 
-The shadcn CLI handles authentication errors gracefully:
+The hanzo CLI handles authentication errors gracefully:
 
 - **401 Unauthorized**: Token is invalid or missing
 - **403 Forbidden**: Token lacks permission for this resource

@@ -1,6 +1,6 @@
 ---
-title: shadcn
-description: Use the shadcn CLI to add components to your project.
+title: hanzo
+description: Use the hanzo CLI to add components to your project.
 ---
 
 ## init
@@ -10,13 +10,13 @@ Use the `init` command to initialize configuration and dependencies for a new pr
 The `init` command installs dependencies, adds the `cn` util and configures CSS variables for the project.
 
 ```bash
-npx shadcn@latest init
+npx hanzo@latest init
 ```
 
 ### Options
 
 ```txt
-Usage: shadcn init [options] [components...]
+Usage: hanzo init [options] [components...]
 
 initialize your project and install dependencies
 
@@ -27,7 +27,7 @@ Options:
   -y, --yes           skip confirmation prompt. (default: true)
   -d, --defaults,     use default configuration. (default: false)
   -f, --force         force overwrite of existing configuration. (default: false)
-  -c, --cwd <cwd>     the working directory. defaults to the current directory. (default: "/Users/shadcn/Desktop")
+  -c, --cwd <cwd>     the working directory. defaults to the current directory. (default: "/Users/hanzo/Desktop")
   -s, --silent        mute output. (default: false)
   --src-dir           use the src directory when creating a new project. (default: false)
   --no-src-dir        do not use the src directory when creating a new project.
@@ -41,13 +41,13 @@ Options:
 Use the `add` command to add components and dependencies to your project.
 
 ```bash
-npx shadcn@latest add [component]
+npx hanzo@latest add [component]
 ```
 
 ### Options
 
 ```txt
-Usage: shadcn add [options] [components...]
+Usage: hanzo add [options] [components...]
 
 add a component to your project
 
@@ -57,7 +57,7 @@ Arguments:
 Options:
   -y, --yes           skip confirmation prompt. (default: false)
   -o, --overwrite     overwrite existing files. (default: false)
-  -c, --cwd <cwd>     the working directory. defaults to the current directory. (default: "/Users/shadcn/Desktop")
+  -c, --cwd <cwd>     the working directory. defaults to the current directory. (default: "/Users/hanzo/Desktop")
   -a, --all           add all available components (default: false)
   -p, --path <path>   the path to add the component to.
   -s, --silent        mute output. (default: false)
@@ -73,7 +73,7 @@ Options:
 Use the `build` command to generate the registry JSON files.
 
 ```bash
-npx shadcn@latest build
+npx hanzo@latest build
 ```
 
 This command reads the `registry.json` file and generates the registry JSON files in the `public/r` directory.
@@ -81,9 +81,9 @@ This command reads the `registry.json` file and generates the registry JSON file
 ### Options
 
 ```txt
-Usage: shadcn build [options] [registry]
+Usage: hanzo build [options] [registry]
 
-build components for a shadcn registry
+build components for a hanzo registry
 
 Arguments:
   registry             path to registry.json file (default: "./registry.json")
@@ -91,12 +91,12 @@ Arguments:
 Options:
   -o, --output <path>  destination directory for json files (default: "./public/r")
   -c, --cwd <cwd>      the working directory. defaults to the current directory. (default:
-                       "/Users/shadcn/Code/shadcn/ui/packages/shadcn")
+                       "/Users/hanzo/Code/hanzo/ui/packages/hanzo")
   -h, --help           display help for command
 ```
 
 To customize the output directory, use the `--output` option.
 
 ```bash
-npx shadcn@latest build --output ./public/registry
+npx hanzo@latest build --output ./public/registry
 ```
