@@ -16,7 +16,7 @@ const REGISTRY_STYLES = ['default', 'new-york'];
 
 // Registry schema
 const registrySchema = {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://ui.hanzo.com/schema/registry.json",
   "name": "hanzo",
   "homepage": "https://ui.hanzo.ai",
   "items": []

@@ -3,7 +3,7 @@
 # Test script for verifying the Hanzo UI MCP functionality
 
 # Set a test registry URL
-export REGISTRY_URL="https://ui.shadcn.com/registry/registry.json"
+export REGISTRY_URL="https://ui.hanzo.com/registry/registry.json"
 
 echo "Testing Hanzo UI MCP Server"
 echo "============================"
