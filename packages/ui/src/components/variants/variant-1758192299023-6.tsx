@@ -1,0 +1,1 @@
+yarn shadcn@canary init

@@ -1,0 +1,1 @@
+pnpmnpmyarnbunbunx --bun shadcn@latest mcp init --client cursorCopy

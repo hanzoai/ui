@@ -1,0 +1,1 @@
+bunx --bun shadcn add @ai-elements/prompt-input
