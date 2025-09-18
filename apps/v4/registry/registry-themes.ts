@@ -1,4 +1,4 @@
-import { type Registry } from "shadcn/schema"
+import { type Registry } from "hanzo/schema"
 
 import { baseColorsV4 } from "@/registry/registry-base-colors"
 

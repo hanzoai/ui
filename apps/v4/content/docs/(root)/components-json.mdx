@@ -15,18 +15,18 @@ We use it to understand how your project is set up and how to generate component
 You can create a `components.json` file in your project by running the following command:
 
 ```bash
-npx shadcn@latest init
+npx hanzo@latest init
 ```
 
 See the <Link href="/docs/cli">CLI section</Link> for more information.
 
 ## $schema
 
-You can see the JSON Schema for `components.json` [here](https://ui.shadcn.com/schema.json).
+You can see the JSON Schema for `components.json` [here](https://ui.hanzo.com/schema.json).
 
 ```json title="components.json"
 {
-  "$schema": "https://ui.shadcn.com/schema.json"
+  "$schema": "https://ui.hanzo.com/schema.json"
 }
 ```
 
@@ -262,13 +262,13 @@ Once configured, install resources using the namespace syntax:
 
 ```bash
 # Install from a configured registry
-npx shadcn@latest add @v0/dashboard
+npx hanzo@latest add @v0/dashboard
 
 # Install from private registry
-npx shadcn@latest add @private/button
+npx hanzo@latest add @private/button
 
 # Install multiple resources
-npx shadcn@latest add @acme/header @internal/auth-utils
+npx hanzo@latest add @acme/header @internal/auth-utils
 ```
 
 ### Example: Multiple Registry Setup
@@ -276,7 +276,7 @@ npx shadcn@latest add @acme/header @internal/auth-utils
 ```json title="components.json"
 {
   "registries": {
-    "@shadcn": "https://ui.shadcn.com/r/{name}.json",
+    "@hanzo": "https://ui.hanzo.com/r/{name}.json",
     "@company-ui": {
       "url": "https://registry.company.com/ui/{name}.json",
       "headers": {
@@ -296,7 +296,7 @@ npx shadcn@latest add @acme/header @internal/auth-utils
 
 This configuration allows you to:
 
-- Install public components from shadcn/ui
+- Install public components from hanzo/ui
 - Access private company UI components with authentication
 - Use team-specific resources with versioning
 

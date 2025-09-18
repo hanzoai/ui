@@ -1,6 +1,6 @@
 "use server"
 
-import { registryItemSchema } from "shadcn/schema"
+import { registryItemSchema } from "hanzo/schema"
 import { z } from "zod"
 
 import { Style } from "@/registry/registry-styles"

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "chart-radar-grid-circle-no-lines",
   "type": "registry:block",
   "registryDependencies": [

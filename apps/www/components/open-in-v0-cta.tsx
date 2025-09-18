@@ -12,7 +12,7 @@ export function OpenInV0Cta({ className }: React.ComponentProps<"div">) {
       )}
     >
       <div className="text-balance text-lg font-semibold leading-tight group-hover:underline">
-        Deploy your shadcn/ui app on Vercel
+        Deploy your hanzo/ui app on Vercel
       </div>
       <div>Trusted by OpenAI, Sonos, Chick-fil-A, and more.</div>
       <div>
@@ -23,7 +23,7 @@ export function OpenInV0Cta({ className }: React.ComponentProps<"div">) {
         Deploy Now
       </Button>
       <Link
-        href="https://vercel.com/new?utm_source=shadcn_site&utm_medium=web&utm_campaign=docs_cta_deploy_now_callout"
+        href="https://vercel.com/new?utm_source=hanzo_site&utm_medium=web&utm_campaign=docs_cta_deploy_now_callout"
         target="_blank"
         rel="noreferrer"
         className="absolute inset-0"

@@ -1,8 +1,8 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "$schema": "https://ui.hanzo.com/schema/registry-item.json",
   "name": "toggle",
   "type": "registry:ui",
-  "author": "shadcn (https://ui.shadcn.com)",
+  "author": "hanzo (https://ui.hanzo.com)",
   "dependencies": [
     "@radix-ui/react-toggle"
   ],

@@ -14,7 +14,7 @@ We'd love to see all types of blocks: applications, marketing, products, and mor
 ### Fork the repository
 
 ```bash
-git clone https://github.com/shadcn-ui/ui.git
+git clone https://github.com/hanzo-ui/ui.git
 ```
 
 ### Create a new branch
@@ -94,14 +94,14 @@ dashboard-01
 
 To add your block to the registry, you need to add your block definition to `registry-blocks.ts`.
 
-This follows the registry schema at [https://ui.shadcn.com/schema/registry-item.json](https://ui.shadcn.com/schema/registry-item.json).
+This follows the registry schema at [https://ui.hanzo.com/schema/registry-item.json](https://ui.hanzo.com/schema/registry-item.json).
 
 ```tsx title="apps/www/registry/registry-blocks.tsx"
 export const blocks = [
   // ...
   {
     name: "dashboard-01",
-    author: "shadcn (https://ui.shadcn.com)",
+    author: "hanzo (https://ui.hanzo.com)",
     title: "Dashboard",
     description: "A simple dashboard with a hello world component.",
     type: "registry:block",

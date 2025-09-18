@@ -35,9 +35,9 @@ import { NavUser } from "@/app/(examples)/dashboard/components/nav-user"
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "hanzo",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/hanzo.jpg",
   },
   navMain: [
     {

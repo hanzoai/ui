@@ -5,13 +5,13 @@ description: Learn how to get setup and run your own component registry.
 
 This guide will walk you through the process of setting up your own component registry. It assumes you already have a project with components and would like to turn it into a registry.
 
-If you're starting a new registry project, you can use the [registry template](https://github.com/shadcn-ui/registry-template) as a starting point. We have already configured it for you.
+If you're starting a new registry project, you can use the [registry template](https://github.com/hanzo-ui/registry-template) as a starting point. We have already configured it for you.
 
 ## Requirements
 
 You are free to design and host your custom registry as you see fit. The only requirement is that your registry items must be valid JSON files that conform to the [registry-item schema specification](/docs/registry/registry-item-json).
 
-If you'd like to see an example of a registry, we have a [template project](https://github.com/shadcn-ui/registry-template) for you to use as a starting point.
+If you'd like to see an example of a registry, we have a [template project](https://github.com/hanzo-ui/registry-template) for you to use as a starting point.
 
 ## registry.json
 
@@ -19,7 +19,7 @@ The `registry.json` is the entry point for the registry. It contains the registr
 
 Your registry must have this file (or JSON payload) present at the root of the registry endpoint. The registry endpoint is the URL where your registry is hosted.
 
-The `shadcn` CLI will automatically generate this file for you when you run the `build` command.
+The `hanzo` CLI will automatically generate this file for you when you run the `build` command.
 
 ## Add a registry.json file
 
@@ -27,7 +27,7 @@ Create a `registry.json` file in the root of your project. Your project can be a
 
 ```json title="registry.json" showLineNumbers
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://ui.hanzo.com/schema/registry.json",
   "name": "acme",
   "homepage": "https://acme.com",
   "items": [
@@ -72,7 +72,7 @@ To add your component to the registry, you need to add your component definition
 
 ```json title="registry.json" showLineNumbers {6-17}
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://ui.hanzo.com/schema/registry.json",
   "name": "acme",
   "homepage": "https://acme.com",
   "items": [
@@ -100,10 +100,10 @@ You can read more about the registry item schema and file types in the [registry
 
 ## Build your registry
 
-### Install the shadcn CLI
+### Install the hanzo CLI
 
 ```bash
-npm install shadcn@canary
+npm install hanzo@canary
 ```
 
 ### Add a build script
@@ -113,7 +113,7 @@ Add a `registry:build` script to your `package.json` file.
 ```json title="package.json" showLineNumbers
 {
   "scripts": {
-    "registry:build": "shadcn build"
+    "registry:build": "hanzo build"
   }
 }
 ```
@@ -130,7 +130,7 @@ npm run registry:build
   **Note:** By default, the build script will generate the registry JSON files
   in `public/r` e.g `public/r/hello-world.json`.
 
-You can change the output directory by passing the `--output` option. See the [shadcn build command](/docs/cli#build) for more information.
+You can change the output directory by passing the `--output` option. See the [hanzo build command](/docs/cli#build) for more information.
 
 </Callout>
 
@@ -162,10 +162,10 @@ Here are some guidelines to follow when building components for a registry.
 
 ## Install using the CLI
 
-To install a registry item using the `shadcn` CLI, use the `add` command followed by the URL of the registry item.
+To install a registry item using the `hanzo` CLI, use the `add` command followed by the URL of the registry item.
 
 ```bash
-npx shadcn@latest add http://localhost:3000/r/hello-world.json
+npx hanzo@latest add http://localhost:3000/r/hello-world.json
 ```
 
 See the [Namespaced

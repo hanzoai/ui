@@ -1,6 +1,6 @@
 import { promises as fs } from "fs"
 import path from "path"
-import { registrySchema } from "shadcn/schema"
+import { registrySchema } from "hanzo/schema"
 import { z } from "zod"
 
 const registriesIndexSchema = z.record(

@@ -1,14 +1,14 @@
 ---
 title: Monorepo
-description: Using shadcn/ui components and CLI in a monorepo.
+description: Using hanzo/ui components and CLI in a monorepo.
 ---
 
-Until now, using shadcn/ui in a monorepo was a bit of a pain. You could add
+Until now, using hanzo/ui in a monorepo was a bit of a pain. You could add
 components using the CLI, but you had to manage where the components
 were installed and manually fix import paths.
 
 With the new monorepo support in the CLI, we've made it a lot easier to use
-shadcn/ui in a monorepo.
+hanzo/ui in a monorepo.
 
 The CLI now understands the monorepo structure and will install the components,
 dependencies and registry dependencies to the correct paths and handle imports
@@ -24,7 +24,7 @@ To create a new monorepo project, run the `init` command. You will be prompted
 to select the type of project you are creating.
 
 ```bash
-npx shadcn@canary init
+npx hanzo@canary init
 ```
 
 Select the `Next.js (Monorepo)` option.
@@ -51,15 +51,15 @@ cd apps/web
 ```
 
 ```bash
-npx shadcn@canary add [COMPONENT]
+npx hanzo@canary add [COMPONENT]
 ```
 
 The CLI will figure out what type of component you are adding and install the
 correct files to the correct path.
 
-For example, if you run `npx shadcn@canary add button`, the CLI will install the button component under `packages/ui` and update the import path for components in `apps/web`.
+For example, if you run `npx hanzo@canary add button`, the CLI will install the button component under `packages/ui` and update the import path for components in `apps/web`.
 
-If you run `npx shadcn@canary add login-01`, the CLI will install the `button`, `label`, `input` and `card` components under `packages/ui` and the `login-form` component under `apps/web/components`.
+If you run `npx hanzo@canary add login-01`, the CLI will install the `button`, `label`, `input` and `card` components under `packages/ui` and the `login-form` component under `apps/web/components`.
 
 ### Importing components
 
@@ -124,7 +124,7 @@ turbo.json
 
 ```json showLineNumbers title="apps/web/components.json"
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.hanzo.com/schema.json",
   "style": "new-york",
   "rsc": true,
   "tsx": true,
@@ -147,7 +147,7 @@ turbo.json
 
 ```json showLineNumbers title="packages/ui/components.json"
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.hanzo.com/schema.json",
   "style": "new-york",
   "rsc": true,
   "tsx": true,
@@ -174,7 +174,7 @@ turbo.json
 
 ```json showLineNumbers title="apps/web/components.json"
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.hanzo.com/schema.json",
   "style": "new-york",
   "rsc": true,
   "tsx": true,
@@ -197,7 +197,7 @@ turbo.json
 
 ```json showLineNumbers title="packages/ui/components.json"
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://ui.hanzo.com/schema.json",
   "style": "new-york",
   "rsc": true,
   "tsx": true,
