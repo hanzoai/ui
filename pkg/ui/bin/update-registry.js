@@ -2,7 +2,7 @@
 
 /**
  * This script updates the registry.json file based on components
- * found in the registry directory. It's similar to the approach used by shadcn/ui.
+ * found in the registry directory. It's similar to the approach used by hanzo/ui.
  */
 
 const fs = require('fs');
@@ -17,7 +17,7 @@ const REGISTRY_STYLES = ['default', 'new-york']; // Add other styles as needed
 
 // Schema for registry.json
 const registrySchema = {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "$schema": "https://ui.hanzo.com/schema/registry.json",
   "name": "hanzo",
   "homepage": "https://ui.hanzo.ai",
   "items": []

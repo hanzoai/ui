@@ -122,7 +122,7 @@ This will compile the TypeScript files and make the MCP server available.
 
 ## Registry Format
 
-The registry follows the same format as shadcn/ui registries, with items defined as:
+The registry follows the same format as hanzo/ui registries, with items defined as:
 
 ```json
 {
