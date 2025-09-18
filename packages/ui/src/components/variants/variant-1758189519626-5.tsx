@@ -1,0 +1,1 @@
+npx create-react-router@latest my-app

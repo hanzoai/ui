@@ -1,72 +1,62 @@
-'use client'
-import * as React from 'react'
-import * as SliderPrimitive from '@radix-ui/react-slider'
+'use client';
 
-import { cn } from '../util'
-import { useState } from 'react'
+import * as SliderPrimitive from '@radix-ui/react-slider';
+import * as React from 'react';
+import { cn } from '../src/utils';
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> & {
-    trackBgClx?: string
-    rangeBgClx?: string
-    thumbClx?: string
-    thumbSlidingClx?: string
-  }
->(({ 
+function Slider({
   className,
-  trackBgClx='bg-level-2',
-  rangeBgClx='bg-primary',
-  thumbClx='',
-  thumbSlidingClx='',
-  onValueChange,
-  onValueCommit,
-  ...rest 
-}, ref) => { 
-
-  const [sliding, setSliding] = useState<boolean>(false)
-
-  const _onChange = (value: number[]): void => {
-    if (!sliding) {
-      setSliding(true)
-    }
-    if (onValueChange) {
-      onValueChange(value)
-    }
-  }
-
-  const _onCommit = (value: number[]): void => {
-    setSliding(false)
-    if (onValueCommit) {
-      onValueCommit(value)
-    }
-  }
+  defaultValue,
+  value,
+  min = 0,
+  max = 100,
+  ...props
+}: React.ComponentProps<typeof SliderPrimitive.Root>) {
+  const _values = React.useMemo(
+    () =>
+      Array.isArray(value)
+        ? value
+        : Array.isArray(defaultValue)
+          ? defaultValue
+          : [min, max],
+    [value, defaultValue, min, max],
+  );
 
   return (
     <SliderPrimitive.Root
-      ref={ref}
+      data-slot="slider"
+      defaultValue={defaultValue}
+      value={value}
+      min={min}
+      max={max}
       className={cn(
-        'relative flex w-full touch-none select-none items-center',
-        className
+        'relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col',
+        className,
       )}
-      onValueChange={_onChange}
-      onValueCommit={_onCommit}
-      {...rest}
+      {...props}
     >
-      <SliderPrimitive.Track data-vaul-no-drag className={'relative h-2 w-full grow overflow-hidden rounded-full ' + trackBgClx}>
-        <SliderPrimitive.Range data-vaul-no-drag className={'absolute h-full ' + rangeBgClx} />
+      <SliderPrimitive.Track
+        data-slot="slider-track"
+        className={cn(
+          'bg-bg-quaternary relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5',
+        )}
+      >
+        <SliderPrimitive.Range
+          data-slot="slider-range"
+          className={cn(
+            'bg-brand absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full',
+          )}
+        />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb data-vaul-no-drag className={cn(
-        'block h-5 w-5 rounded-full border-2 border-primary bg-background ',
-        'ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-1 ', 
-        'focus-visible:ring-muted-2 focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50',
-        thumbClx,
-        (sliding ? thumbSlidingClx : '')
-      )}/>
+      {Array.from({ length: _values.length }, (_, index) => (
+        <SliderPrimitive.Thumb
+          data-slot="slider-thumb"
+          key={index}
+          className="border-brand-500 bg-brand ring-brand/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+        />
+      ))}
     </SliderPrimitive.Root>
-  )
-})
+  );
+}
 
-Slider.displayName = SliderPrimitive.Root.displayName
-
-export default Slider 
+export { Slider };

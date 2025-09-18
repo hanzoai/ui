@@ -1,0 +1,1 @@
+npx create-tsrouter-app@latest my-app --template file-router --tailwind --add-ons shadcn

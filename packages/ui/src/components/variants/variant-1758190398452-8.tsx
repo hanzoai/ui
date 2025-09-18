@@ -1,0 +1,1 @@
+pnpmnpmyarnbunbunx --bun shadcn@latest add hover-cardCopy

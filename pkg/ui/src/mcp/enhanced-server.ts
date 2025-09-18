@@ -339,7 +339,7 @@ module.exports = {
 ### 3. Add the cn() utility
 Create \`lib/utils.ts\`:
 \`\`\`typescript
-import { type ClassValue, clsx } from "clsx"
+import { ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -1132,7 +1132,7 @@ Add to your \`globals.css\`:
 Create \`lib/utils.ts\`:
 
 \`\`\`typescript
-import { type ClassValue, clsx } from "clsx"
+import { ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {

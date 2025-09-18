@@ -1,0 +1,1 @@
+npx shadcn add @ai-elements/prompt-input

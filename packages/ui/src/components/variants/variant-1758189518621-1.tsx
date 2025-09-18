@@ -1,0 +1,1 @@
+bunx --bun create-react-router@latest my-app
