@@ -17,16 +17,16 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL!),
+  metadataBase: process.env.NEXT_PUBLIC_APP_URL ? new URL(process.env.NEXT_PUBLIC_APP_URL) : new URL("https://ui.hanzo.ai"),
   description: siteConfig.description,
-  keywords: ["Next.js", "React", "Tailwind CSS", "Components", "shadcn"],
+  keywords: ["Next.js", "React", "Tailwind CSS", "Components", "hanzo"],
   authors: [
     {
-      name: "shadcn",
-      url: "https://shadcn.com",
+      name: "hanzo",
+      url: "https://hanzo.com",
     },
   ],
-  creator: "shadcn",
+  creator: "hanzo",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     images: [`${process.env.NEXT_PUBLIC_APP_URL}/opengraph-image.png`],
-    creator: "@shadcn",
+    creator: "@hanzo",
   },
   icons: {
     icon: "/favicon.ico",
