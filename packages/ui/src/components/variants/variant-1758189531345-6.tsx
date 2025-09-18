@@ -1,0 +1,1 @@
+yarn add tailwindcss @tailwindcss/postcss postcss

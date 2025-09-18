@@ -40,6 +40,17 @@ export function MainNav() {
           Components
         </Link>
         <Link
+          href="/docs/ai"
+          className={cn(
+            "transition-colors hover:text-foreground/80",
+            pathname?.startsWith("/docs/ai")
+              ? "text-foreground"
+              : "text-foreground/80"
+          )}
+        >
+          AI
+        </Link>
+        <Link
           href="/blocks"
           className={cn(
             "transition-colors hover:text-foreground/80",

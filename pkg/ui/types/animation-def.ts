@@ -1,3 +1,3 @@
 type AnimationDef = string
 
-export { type AnimationDef as default }
+export { AnimationDef as default }

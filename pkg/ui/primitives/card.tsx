@@ -1,83 +1,97 @@
-'use client'
-import * as React from "react"
+import * as React from 'react';
 
-import { cn } from "../util"
+import { cn } from '../src/utils';
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return(
-    <div
-      ref={ref}
-      className={cn(
-        "rounded-lg border overflow-hidden shadow-sm",
-        className
-      )}
-      {...props}
-    />
-  )
-})
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement>;
+};
 
-Card.displayName = "Card"
-
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+const Card = ({ className, ref, ...props }: CardProps) => (
   <div
-    ref={ref}
-    className={cn("flex flex-col p-4 lg:p-5 xl:px-6 xl:py-5 border-b", className)}
-    {...props}
-  />
-))
-CardHeader.displayName = "CardHeader"
-
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h5
-    ref={ref}
     className={cn(
-      "leading-none tracking-tight",
-      className
+      'bg-card text-card-foreground rounded-lg border shadow-xs',
+      className,
     )}
-    {...props}
-  />
-))
-CardTitle.displayName = "CardTitle"
-
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <h6
     ref={ref}
-    className={className}
     {...props}
   />
-))
-CardDescription.displayName = "CardDescription"
+);
+Card.displayName = 'Card';
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+type CardHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement>;
+};
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+const CardHeader = ({ className, ref, ...props }: CardHeaderProps) => (
   <div
+    className={cn('flex flex-col space-y-1.5 p-6', className)}
     ref={ref}
-    className={cn("flex items-center px-6 py-3 border-t", className)}
     {...props}
   />
-))
-CardFooter.displayName = "CardFooter"
+);
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+CardHeader.displayName = 'CardHeader';
+
+type CardTitleProps = React.HTMLAttributes<HTMLHeadingElement> & {
+  ref?: React.RefObject<HTMLHeadingElement>;
+};
+
+const CardTitle = ({ className, ref, ...props }: CardTitleProps) => (
+  <h3
+    className={cn(
+      'text-2xl leading-none font-semibold tracking-tight',
+      className,
+    )}
+    ref={ref}
+    {...props}
+  />
+);
+CardTitle.displayName = 'CardTitle';
+
+type CardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement> & {
+  ref?: React.RefObject<HTMLParagraphElement>;
+};
+
+const CardDescription = ({
+  className,
+  ref,
+  ...props
+}: CardDescriptionProps) => (
+  <p
+    className={cn('text-text-secondary text-sm', className)}
+    ref={ref}
+    {...props}
+  />
+);
+CardDescription.displayName = 'CardDescription';
+
+type CardContentProps = React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement>;
+};
+
+const CardContent = ({ className, ref, ...props }: CardContentProps) => (
+  <div className={cn('p-6 pt-0', className)} ref={ref} {...props} />
+);
+CardContent.displayName = 'CardContent';
+
+type CardFooterProps = React.HTMLAttributes<HTMLDivElement> & {
+  ref?: React.RefObject<HTMLDivElement>;
+};
+
+const CardFooter = ({ className, ref, ...props }: CardFooterProps) => (
+  <div
+    className={cn('flex items-center p-6 pt-0', className)}
+    ref={ref}
+    {...props}
+  />
+);
+CardFooter.displayName = 'CardFooter';
+
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+};

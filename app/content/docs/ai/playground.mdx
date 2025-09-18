@@ -1,0 +1,218 @@
+---
+title: AI Playground
+description: Interactive AI model testing environment with adjustable parameters
+---
+
+An interactive environment for testing AI models with real-time parameter adjustments.
+
+## Preview
+
+The AI Playground provides a comprehensive interface for interacting with various AI models, with real-time parameter adjustments and response streaming.
+
+## Example Usage
+
+```tsx
+// Import the AIPlayground component
+// Example: import { AIPlayground } from "./components/ai-playground"
+
+export function PlaygroundExample() {
+  return (
+    <AIPlayground
+      models={["gpt-4", "claude-3", "gemini-pro"]}
+      defaultModel="gpt-4"
+      onResponse={(response) => console.log(response)}
+    />
+  )
+}
+```
+
+## Features
+
+- **Model Selection** - Switch between different AI models
+- **Parameter Tuning** - Adjust temperature, max tokens, top-p, and more
+- **System Prompts** - Configure system messages
+- **Response Streaming** - Real-time response streaming
+- **History** - Keep track of conversations
+- **Export/Import** - Save and load sessions
+
+## Installation
+
+### CLI
+
+```bash
+npx hanzo-ui@latest add ai-playground
+```
+
+### Manual
+
+```bash
+npm install @hanzo/ui
+```
+
+Then import the component:
+
+```tsx
+// Import the AIPlayground component
+// Example: import { AIPlayground } from "./components/ai-playground"
+```
+
+## Usage
+
+### Basic Usage
+
+```tsx
+// Import the AIPlayground component
+// Example: import { AIPlayground } from "./components/ai-playground"
+
+export default function Page() {
+  return <AIPlayground />
+}
+```
+
+### With Configuration
+
+```tsx
+// Import the AIPlayground component
+// Example: import { AIPlayground } from "./components/ai-playground"
+
+export default function Page() {
+  return (
+    <AIPlayground
+      models={[
+        { id: "gpt-4", name: "GPT-4" },
+        { id: "claude-3", name: "Claude 3" },
+        { id: "gemini-pro", name: "Gemini Pro" }
+      ]}
+      defaultModel="gpt-4"
+      defaultParameters={{
+        temperature: 0.7,
+        maxTokens: 2048,
+        topP: 1,
+        frequencyPenalty: 0,
+        presencePenalty: 0
+      }}
+      systemPrompt="You are a helpful assistant."
+      onResponse={(response) => {
+        console.log("AI Response:", response)
+      }}
+      onError={(error) => {
+        console.error("AI Error:", error)
+      }}
+    />
+  )
+}
+```
+
+### With Custom Providers
+
+```tsx
+// Import the AIPlayground component and providers
+// Example: import { AIPlayground } from "./components/ai-playground"
+// Example: import { OpenAIProvider, AnthropicProvider } from "./ai/providers"
+
+const providers = [
+  new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
+  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY })
+]
+
+export default function Page() {
+  return (
+    <AIPlayground
+      providers={providers}
+      defaultProvider="openai"
+    />
+  )
+}
+```
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| models | `Model[]` | `[]` | Available AI models |
+| defaultModel | `string` | - | Default selected model |
+| providers | `Provider[]` | `[]` | AI providers |
+| defaultProvider | `string` | - | Default provider |
+| defaultParameters | `Parameters` | `{}` | Default model parameters |
+| systemPrompt | `string` | - | System prompt |
+| placeholder | `string` | `"Enter your prompt..."` | Input placeholder |
+| streaming | `boolean` | `true` | Enable response streaming |
+| history | `boolean` | `true` | Enable conversation history |
+| onResponse | `(response: Response) => void` | - | Response callback |
+| onError | `(error: Error) => void` | - | Error callback |
+| onParameterChange | `(params: Parameters) => void` | - | Parameter change callback |
+| className | `string` | - | Additional CSS classes |
+
+### Model Interface
+
+```tsx
+interface Model {
+  id: string
+  name: string
+  provider: string
+  description?: string
+  maxTokens?: number
+  capabilities?: string[]
+}
+```
+
+### Parameters Interface
+
+```tsx
+interface Parameters {
+  temperature?: number
+  maxTokens?: number
+  topP?: number
+  topK?: number
+  frequencyPenalty?: number
+  presencePenalty?: number
+  stopSequences?: string[]
+}
+```
+
+## Examples
+
+### With Dark Mode
+
+```tsx
+<div className="dark">
+  <AIPlayground theme="dark" />
+</div>
+```
+
+### Compact Mode
+
+```tsx
+<AIPlayground variant="compact" />
+```
+
+### Custom Styling
+
+```tsx
+<AIPlayground
+  className="custom-playground"
+  inputClassName="custom-input"
+  responseClassName="custom-response"
+/>
+```
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl/Cmd + Enter` | Send message |
+| `Ctrl/Cmd + K` | Clear chat |
+| `Ctrl/Cmd + /` | Toggle parameters |
+| `Ctrl/Cmd + S` | Save session |
+| `Ctrl/Cmd + O` | Load session |
+
+## Accessibility
+
+The AI Playground is fully accessible with:
+- Keyboard navigation
+- Screen reader support
+- ARIA labels
+- Focus management
+- High contrast mode support

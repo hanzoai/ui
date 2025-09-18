@@ -1,0 +1,1 @@
+pnpm dlx shadcn add @ai-elements/prompt-input

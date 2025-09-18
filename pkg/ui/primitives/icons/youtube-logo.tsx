@@ -1,5 +1,5 @@
 import React from 'react'
-import { type LucideProps } from 'lucide-react'
+import { LucideProps } from 'lucide-react'
 
 const YouTubeLogo: React.FC<LucideProps> = (props: LucideProps) => (
   <svg 

@@ -1,0 +1,104 @@
+---
+title: AI Chat
+description: Complete chat interface with streaming support
+---
+
+A complete chat interface component with support for streaming responses, message history, and multiple AI providers.
+
+## Features
+
+- 💬 Full chat interface with message bubbles
+- 🔄 Real-time streaming responses
+- 📝 Markdown support with syntax highlighting
+- 🎨 Customizable themes and styles
+- 💾 Conversation persistence
+- 🔍 Search through chat history
+- 📱 Mobile-responsive design
+- ♿ Fully accessible
+
+## Installation
+
+```bash
+npx hanzo-ui@latest add ai-chat
+```
+
+## Usage
+
+```tsx
+// Import the AIChat component
+// Example: import { AIChat } from "./components/ai-chat"
+
+export default function ChatPage() {
+  return (
+    <AIChat
+      provider="openai"
+      model="gpt-4"
+      apiKey={process.env.OPENAI_API_KEY}
+      welcomeMessage="Hello! How can I help you today?"
+      placeholder="Type your message..."
+      onMessage={(message) => console.log(message)}
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| provider | `string` | `"openai"` | AI provider |
+| model | `string` | `"gpt-3.5-turbo"` | Model to use |
+| apiKey | `string` | - | API key for provider |
+| welcomeMessage | `string` | - | Initial message |
+| placeholder | `string` | `"Type a message..."` | Input placeholder |
+| streaming | `boolean` | `true` | Enable streaming |
+| history | `Message[]` | `[]` | Initial chat history |
+| maxMessages | `number` | - | Maximum messages to keep |
+| onMessage | `(message: Message) => void` | - | Message callback |
+| onError | `(error: Error) => void` | - | Error callback |
+| className | `string` | - | Additional classes |
+
+## Examples
+
+### With Custom Styling
+
+```tsx
+<AIChat
+  className="h-[600px] border rounded-lg"
+  messageClassName="p-4"
+  inputClassName="border-t"
+/>
+```
+
+### With Multiple Providers
+
+```tsx
+// Import the AIChat component and providers
+// Example: import { AIChat } from "./components/ai-chat"
+// Example: import { OpenAIProvider, AnthropicProvider } from "./ai/providers"
+
+const providers = [
+  new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
+  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY })
+]
+
+export default function ChatPage() {
+  return (
+    <AIChat
+      providers={providers}
+      defaultProvider="openai"
+      showProviderSelector
+    />
+  )
+}
+```
+
+### With System Prompt
+
+```tsx
+<AIChat
+  systemPrompt="You are a helpful coding assistant. Provide clear, concise answers with code examples when appropriate."
+  provider="openai"
+  model="gpt-4"
+/>
+```

@@ -1,0 +1,1 @@
+bunx --bun shadcn@canary init

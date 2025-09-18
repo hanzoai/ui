@@ -1,0 +1,1 @@
+yarn shadcn@latest add switch
