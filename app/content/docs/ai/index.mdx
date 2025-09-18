@@ -1,0 +1,76 @@
+---
+title: AI Components
+description: Advanced AI-powered components for building intelligent interfaces
+---
+
+Build intelligent, interactive interfaces with our collection of AI-powered components. These components are designed to integrate seamlessly with popular AI providers and models.
+
+## Features
+
+- 🤖 **Multiple AI Providers** - Support for OpenAI, Anthropic, Google AI, and more
+- 🔄 **Real-time Streaming** - Stream responses for better user experience
+- 🎨 **Fully Customizable** - Style with Tailwind CSS to match your design
+- 🔌 **Easy Integration** - Drop-in components that work out of the box
+- 📱 **Responsive Design** - Works perfectly on all devices
+- ♿ **Accessible** - Built with accessibility in mind
+
+## Available Components
+
+### Core AI Components
+
+- **[AI Playground](/docs/ai/playground)** - Interactive AI model testing environment
+- **[AI Chat](/docs/ai/chat)** - Complete chat interface with streaming support
+- **[AI Assistant](/docs/ai/assistant)** - Full-featured AI assistant component
+
+### Specialized Components
+
+- **[AI Actions](/docs/ai/actions)** - Pre-built AI action components
+- **[AI Models](/docs/ai/models)** - Model selection and management
+- **[AI Vision](/docs/ai/vision)** - Image analysis and computer vision
+- **[AI Agents](/docs/ai/agents)** - Multi-agent system components
+- **[AI Tools](/docs/ai/tools)** - Tool use and function calling interfaces
+
+## Getting Started
+
+Install the AI components package:
+
+```bash
+npm install @hanzo/ui
+```
+
+Import and use components:
+
+```tsx
+// Import AI components
+// Example: import { AIChat } from "./components/ai-chat"
+
+export function MyApp() {
+  return (
+    <AIChat
+      provider="openai"
+      model="gpt-4"
+      apiKey={process.env.OPENAI_API_KEY}
+    />
+  )
+}
+```
+
+## Configuration
+
+All AI components support configuration through props or a central config:
+
+```tsx
+// Configure globally
+// Example: import { configureAI } from "./ai/config"
+
+configureAI({
+  defaultProvider: "openai",
+  defaultModel: "gpt-4",
+  streaming: true,
+  temperature: 0.7
+})
+```
+
+## Examples
+
+Check out our [examples](/examples/ai) to see the AI components in action.

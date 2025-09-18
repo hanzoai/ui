@@ -1,6 +1,6 @@
 'use client'
 
-import React, { type PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 
 const DialogVideoController: React.FC<PropsWithChildren> = ({
   children,

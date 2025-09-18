@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import { cn, containsToken } from '../../../util'
 import type { GridBlock } from '../../def'

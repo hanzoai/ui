@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 
 import type { Block, ScreenfulBlock} from '../../def'
 import { containsToken, cn } from '../../../util'

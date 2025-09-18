@@ -1,14 +1,32 @@
-export { 
-  Accordion, 
-  AccordionItem, 
-  AccordionTrigger, 
-  AccordionContent 
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent
 } from './accordion'
 
-export { 
-  Avatar, 
-  AvatarImage, 
-  AvatarFallback 
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './alert-dialog'
+
+export {
+  Alert,
+  AlertTitle,
+  AlertDescription
+} from './alert'
+
+export {
+  Avatar,
+  AvatarImage,
+  AvatarFallback
 } from './avatar'
 
 export {
@@ -27,13 +45,13 @@ export {
   buttonVariants,
 } from './button'
 
-export { 
-  Card, 
-  CardHeader, 
-  CardFooter, 
-  CardTitle, 
-  CardDescription, 
-  CardContent 
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent
 } from './card'
 
 export {
@@ -58,6 +76,11 @@ export {
   CommandSeparator,
 } from './command'
 
+export {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from './collapsible'
 
 export {
   ContextMenu,
@@ -76,7 +99,6 @@ export {
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
 } from './context-menu'
-
 
 export {
   type DrawerProps,
@@ -107,6 +129,24 @@ export {
 } from './dialog'
 
 export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+} from './dropdown-menu'
+
+export {
   useFormField,
   Form,
   FormItem,
@@ -117,7 +157,13 @@ export {
   FormField,
 } from './form'
 
-export { 
+export {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from './hover-card'
+
+export {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
@@ -136,14 +182,20 @@ export {
   NavigationMenuViewport,
 } from './navigation-menu'
 
-export { 
-  Popover, 
-  PopoverAnchor, 
-  PopoverArrow, 
-  PopoverClose, 
-  PopoverContent, 
-  PopoverTrigger, 
+export {
+  Popover,
+  PopoverAnchor,
+  PopoverArrow,
+  PopoverClose,
+  PopoverContent,
+  PopoverTrigger,
 } from './popover'
+
+export {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from './resizable'
 
 export {
   Select,
@@ -182,43 +234,70 @@ export {
   TableCaption,
 } from './table'
 
-export { 
-  Tabs, 
-  TabsList, 
-  TabsTrigger, 
-  TabsContent 
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent
 } from './tabs'
 
-export * from './tooltip' 
+export * from './tooltip'
 
 export { default as ActionButton } from './action-button'
 export { default as ApplyTypography, type TypographySize} from './apply-typography'
 export { default as AspectRatio } from './aspect-ratio'
 export { default as Badge } from './badge'
 export { default as BreakpointIndicator } from './breakpoint-indicator'
-export { default as Calendar } from './calendar' 
-export { default as Checkbox } from './checkbox' 
-export { default as Combobox, type ComboboxTriggerProps } from './combobox' 
+export { default as Calendar } from './calendar'
+export { default as Checkbox } from './checkbox'
+export { default as Combobox, type ComboboxTriggerProps } from './combobox'
 export { default as DialogVideoController } from './dialog-video-controller'
 export { default as Input } from './input'
 export { default as Label } from './label'
 export type { default as ListAdaptor } from './list-adaptor'
 export { default as ListBox } from './list-box'
 export { default as LoadingSpinner } from './loading-spinner'
-export { default as Progress } from './progress' 
+export { default as Progress } from './progress'
 export { RadioGroup, RadioGroupItem } from './radio-group'
-export { ScrollArea, ScrollBar } from './scroll-area' 
-export { default as Separator } from './separator' 
-export { default as Slider } from './slider' 
-export { default as Skeleton } from './skeleton' 
+export { ScrollArea, ScrollBar } from './scroll-area'
+export { SearchInput } from './search-input'
+export { default as Separator } from './separator'
+export { default as Slider } from './slider'
+export { default as Skeleton } from './skeleton'
 export { default as StepIndicator } from './step-indicator'
-export { default as Switch } from './switch' 
-export { default as TextArea } from './text-area' 
+export { default as Switch } from './switch'
+export { default as TextArea } from './textarea'
+export { default as TextField } from './textfield'
 export { Toaster, toast } from './sonner'
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 export { default as VideoPlayer } from './video-player'
 
+// Chat components
+export { ChatInput } from './chat/chat-input'
+export { ChatInputArea } from './chat/chat-input-area'
+export { FileList } from './chat/files-preview'
+
+// Additional components
+export { CopyToClipboardIcon } from './copy-to-clipboard-icon'
+export { DotsLoader } from './dots-loader'
+export { FileUploader } from './file-uploader'
+export { default as JsonForm } from './chat/json-form'
+export { MarkdownText, MarkdownPreview } from './markdown-preview'
+export { PrettyJsonPrint } from './pretty-json-print'
+
+// Re-export Tooltip components individually
+export {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipArrow,
+  TooltipPortal,
+} from './tooltip'
+
+// Export icons
 export * as Icons from './icons'
 
-
+// Re-export assets for compatibility
+export * from '../assets'

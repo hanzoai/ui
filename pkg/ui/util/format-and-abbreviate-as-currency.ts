@@ -1,4 +1,4 @@
-import Abbr, { type QuantityAbbrSymbol, ABBR_SYMBOLS_ARRAY } from './number-abbreviate'
+import Abbr, { QuantityAbbrSymbol, ABBR_SYMBOLS_ARRAY } from './number-abbreviate'
 
 interface FormatThreshold {
   from: number

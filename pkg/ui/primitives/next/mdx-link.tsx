@@ -1,4 +1,4 @@
-import React,  { type AnchorHTMLAttributes, type PropsWithChildren } from 'react'
+import React,  { AnchorHTMLAttributes, type PropsWithChildren } from 'react'
 import Link from 'next/link'
 
 const MDXLink: React.FC<AnchorHTMLAttributes<HTMLAnchorElement> > = ({

@@ -1,4 +1,4 @@
-import React, { type ComponentType, type ReactNode} from 'react'
+import React, { ComponentType, type ReactNode} from 'react'
 
 import type * as B from '../def'
 

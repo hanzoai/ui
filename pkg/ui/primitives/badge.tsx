@@ -1,36 +1,44 @@
-import React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
-import { cn } from "../util"
+import { cn } from '../src/utils';
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-ring ",
+  'focus:ring-ring border-divider inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-hidden',
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-fg shadow hover:bg-primary/80",
+          'bg-primary text-primary-foreground hover:bg-primary/80 border-transparent shadow',
         secondary:
-          "border-transparent bg-secondary text-secondary-fg hover:bg-secondary/80",
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 border-transparent',
         destructive:
-          "border-transparent bg-destructive text-destructive-fg shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+          'bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent shadow',
+        outline:
+          'hover:bg-bg-secondary text-text-secondary hover:text-text-default border border-gray-500 bg-transparent shadow-xs',
+
+        inputAdornment: 'bg-gray-600 px-2 font-medium text-white',
+        tags: 'text-text-secondary border-divider bg-bg-quaternary rounded-lg px-2 py-1 font-normal capitalize',
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: 'default',
     },
-  }
-)
+  },
+);
 
-interface BadgeProps
+export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  ref?: React.RefObject<HTMLDivElement | null>;
+}
 
-const Badge: React.FC<BadgeProps> = ({ 
-  className, variant, ...props 
-}) => (
-  <div className={cn(badgeVariants({ variant }), className)} {...props} />
-)
+const Badge = ({ className, variant, ...props }: BadgeProps) => {
+  return (
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  );
+};
 
-export { Badge as default, badgeVariants, type BadgeProps }
+Badge.displayName = 'Badge';
+
+export { Badge, badgeVariants };

@@ -1,0 +1,1 @@
+pnpm dlx shadcn@canary init

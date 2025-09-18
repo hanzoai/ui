@@ -1,73 +1,44 @@
-'use client'
+import * as TogglePrimitive from '@radix-ui/react-toggle';
+import { cva, type VariantProps } from 'class-variance-authority';
+import * as React from 'react';
 
-import * as React from 'react'
-import * as TogglePrimitive from '@radix-ui/react-toggle'
-import { cva, type VariantProps } from 'class-variance-authority'
-
-import { cn } from '../util'
+import { cn } from '../src/utils';
 
 const toggleVariants = cva(
-  'inline-flex items-center justify-center text-sm font-medium ' + 
-  'ring-offset-background ' + 
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ' + 
-  'focus-visible:ring-offset-2 disabled:pointer-events-none ' +
-  'active:bg-level-3 active:text-accent ',
+  'ring-offset-background hover:bg-muted hover:text-text-secondary focus-visible:ring-ring data-[state=on]:bg-bg-quaternary inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-[state=on]:text-white',
   {
     variants: {
       variant: {
-        default: 'text-muted-1 hover:text-accent ' + 
-          'data-[state=off]:bg-level-1 hover:data-[state=off]:text-foreground ' + 
-          'data-[state=on]:text-foreground data-[state=on]:bg-level-3  ' + 
-          'data-[state=on]:hover:bg-level-3 ',
-
-        outline: 'border border-muted-3 text-muted-1 ' +
-          'data-[state=off]:bg-level-1 hover:data-[state=off]:text-foreground ' + 
-          'data-[state=on]:bg-level-3 data-[state=on]:border-muted data-[state=on]:text-foreground',
+        default: 'bg-bg-tertiary',
+        outline:
+          'border-divider hover:bg-bg-tertiary border bg-transparent hover:text-white',
       },
       size: {
         default: 'h-10 px-3',
-        hfull: 'h-full px-3',
-        sm: 'h-9 px-2',
+        sm: 'h-9 px-2.5',
         lg: 'h-11 px-5',
       },
-      rounded: {
-        full: 'rounded-full',
-        sm: 'rounded-sm',
-        lsm: 'rounded-l-sm',
-        rsm: 'rounded-r-sm',
-        md: 'rounded-md',
-        lmd: 'rounded-l-md',
-        rmd: 'rounded-r-md',
-        lg: 'rounded-lg',
-        llg: 'rounded-l-lg',
-        rlg: 'rounded-r-lg',
-        xl: 'rounded-xl',
-        lxl: 'rounded-l-xl',
-        rxl: 'rounded-r-xl',
-        none: 'rounded-none'
-      }
-      
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
-      rounded: 'md'
     },
-  }
-)
+  },
+);
 
-const Toggle = React.forwardRef<
-  React.ElementRef<typeof TogglePrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root> &
-    VariantProps<typeof toggleVariants>
->(({ className, variant, size, rounded, ...props }, ref) => (
+const Toggle = ({
+  className,
+  variant,
+  size,
+  ...props
+}: React.ComponentProps<typeof TogglePrimitive.Root> &
+  VariantProps<typeof toggleVariants>) => (
   <TogglePrimitive.Root
-    ref={ref}
-    className={cn(toggleVariants({ variant, size, rounded} ), className  )}
+    className={cn(toggleVariants({ variant, size, className }))}
     {...props}
   />
-))
+);
 
-Toggle.displayName = TogglePrimitive.Root.displayName
+Toggle.displayName = TogglePrimitive.Root.displayName;
 
-export { Toggle, toggleVariants }
+export { Toggle, toggleVariants };

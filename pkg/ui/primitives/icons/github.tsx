@@ -1,5 +1,5 @@
 import React from 'react'
-import { type LucideProps } from 'lucide-react'
+import type { LucideProps } from 'lucide-react'
 
 
 const GitHub: React.FC<LucideProps> = (props: LucideProps) => (

@@ -1,0 +1,1 @@
+pnpmnpmyarnbunpnpm dlx shadcn@latest add chartCopy

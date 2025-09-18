@@ -1,0 +1,1 @@
+yarn add class-variance-authority clsx tailwind-merge lucide-react tw-animate-css

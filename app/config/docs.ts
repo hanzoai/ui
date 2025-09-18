@@ -16,16 +16,24 @@ export const docsConfig: DocsConfig = {
       href: "/docs/components",
     },
     {
-      title: "Themes",
-      href: "/themes",
-    },
-    {
-      title: "Examples",
-      href: "/examples",
+      title: "AI",
+      href: "/docs/ai",
     },
     {
       title: "Blocks",
       href: "/blocks",
+    },
+    {
+      title: "Charts",
+      href: "/charts",
+    },
+    {
+      title: "Themes",
+      href: "/themes",
+    },
+    {
+      title: "Colors",
+      href: "/colors",
     },
   ],
   sidebarNav: [
@@ -322,6 +330,114 @@ export const docsConfig: DocsConfig = {
         {
           title: "Tooltip",
           href: "/docs/components/tooltip",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "AI Components",
+      items: [
+        {
+          title: "AI Playground",
+          href: "/docs/ai/playground",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Actions",
+          href: "/docs/ai/actions",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Models",
+          href: "/docs/ai/models",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Chat",
+          href: "/docs/ai/chat",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Assistant",
+          href: "/docs/ai/assistant",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Vision",
+          href: "/docs/ai/vision",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Agents",
+          href: "/docs/ai/agents",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Tools",
+          href: "/docs/ai/tools",
+          items: [],
+          label: "New",
+        },
+      ],
+    },
+    {
+      title: "Blocks",
+      items: [
+        {
+          title: "Hero Sections",
+          href: "/docs/blocks/heroes",
+          items: [],
+        },
+        {
+          title: "Feature Sections",
+          href: "/docs/blocks/features",
+          items: [],
+        },
+        {
+          title: "CTA Sections",
+          href: "/docs/blocks/cta",
+          items: [],
+        },
+        {
+          title: "Pricing Tables",
+          href: "/docs/blocks/pricing",
+          items: [],
+        },
+        {
+          title: "Contact Forms",
+          href: "/docs/blocks/contact",
+          items: [],
+        },
+        {
+          title: "Testimonials",
+          href: "/docs/blocks/testimonials",
+          items: [],
+        },
+        {
+          title: "Team Sections",
+          href: "/docs/blocks/team",
+          items: [],
+        },
+        {
+          title: "Stats Sections",
+          href: "/docs/blocks/stats",
+          items: [],
+        },
+        {
+          title: "FAQ Sections",
+          href: "/docs/blocks/faq",
+          items: [],
+        },
+        {
+          title: "Newsletter Forms",
+          href: "/docs/blocks/newsletter",
           items: [],
         },
       ],
