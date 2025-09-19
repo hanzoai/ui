@@ -1,9 +1,6 @@
 import { createHash } from "crypto"
 import path from "path"
-import {
-  getRegistryBaseColor,
-  getHanzoRegistryIndex,
-} from "@/src/registry/api"
+import { getHanzoRegistryIndex, getRegistryBaseColor } from "@/src/registry/api"
 import {
   buildUrlAndHeadersForRegistryItem,
   resolveRegistryUrl,

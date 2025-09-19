@@ -1,0 +1,301 @@
+---
+title: Timeline
+description: Display a sequence of events or milestones in chronological order
+component: true
+---
+
+<ComponentPreview
+  name="timeline-demo"
+  description="Default timeline with various states"
+/>
+
+## Installation
+
+<Steps>
+
+<Step>Copy and paste the following code into your project:</Step>
+
+```tsx
+"use client"
+
+import * as React from "react"
+import { cn } from "@/lib/utils"
+import { Check, Circle, Clock } from "lucide-react"
+
+// Component code here...
+```
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+## Usage
+
+```tsx
+import { Timeline, type TimelineItem } from "@/registry/default/ui/timeline"
+
+const items: TimelineItem[] = [
+  {
+    id: "1",
+    title: "Project Started",
+    description: "Initial planning and setup",
+    date: "Jan 1, 2024",
+    status: "completed"
+  },
+  {
+    id: "2",
+    title: "Development Phase",
+    description: "Building core features",
+    date: "Feb 15, 2024",
+    status: "active"
+  },
+  {
+    id: "3",
+    title: "Testing",
+    description: "Quality assurance and bug fixes",
+    date: "Mar 1, 2024",
+    status: "pending"
+  }
+]
+
+export default function TimelineDemo() {
+  return <Timeline items={items} />
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview
+  name="timeline-default"
+  description="Basic vertical timeline"
+/>
+
+```tsx
+<Timeline items={items} />
+```
+
+### Horizontal
+
+<ComponentPreview
+  name="timeline-horizontal"
+  description="Horizontal timeline layout"
+/>
+
+```tsx
+<Timeline items={items} orientation="horizontal" />
+```
+
+### Alternate
+
+<ComponentPreview
+  name="timeline-alternate"
+  description="Alternating left and right layout"
+/>
+
+```tsx
+<Timeline items={items} variant="alternate" />
+```
+
+### Compact
+
+<ComponentPreview
+  name="timeline-compact"
+  description="Compact timeline for smaller spaces"
+/>
+
+```tsx
+<Timeline items={items} variant="compact" />
+```
+
+### Simple
+
+<ComponentPreview
+  name="timeline-simple"
+  description="Simple timeline with minimal styling"
+/>
+
+```tsx
+<Timeline items={items} variant="simple" />
+```
+
+### With Custom Icons
+
+<ComponentPreview
+  name="timeline-icons"
+  description="Timeline with custom icons"
+/>
+
+```tsx
+import { Rocket, Code, Trophy, Star } from "lucide-react"
+
+const items: TimelineItem[] = [
+  {
+    id: "1",
+    title: "Launch",
+    description: "Product launch",
+    date: "Jan 1, 2024",
+    icon: <Rocket className="h-4 w-4" />,
+    status: "completed"
+  },
+  {
+    id: "2",
+    title: "Development",
+    description: "Feature development",
+    date: "Feb 1, 2024",
+    icon: <Code className="h-4 w-4" />,
+    status: "active"
+  },
+  {
+    id: "3",
+    title: "Achievement",
+    description: "Milestone reached",
+    date: "Mar 1, 2024",
+    icon: <Trophy className="h-4 w-4" />,
+    status: "pending"
+  }
+]
+
+export default function TimelineWithIcons() {
+  return <Timeline items={items} />
+}
+```
+
+### With Custom Content
+
+<ComponentPreview
+  name="timeline-content"
+  description="Timeline with custom content in each item"
+/>
+
+```tsx
+const items: TimelineItem[] = [
+  {
+    id: "1",
+    title: "Version 1.0 Released",
+    description: "Initial release with core features",
+    date: "Jan 1, 2024",
+    status: "completed",
+    content: (
+      <div className="flex gap-2 mt-2">
+        <Badge>React</Badge>
+        <Badge>TypeScript</Badge>
+        <Badge>Tailwind</Badge>
+      </div>
+    )
+  },
+  {
+    id: "2",
+    title: "Version 2.0 Beta",
+    description: "Major update with new features",
+    date: "Feb 15, 2024",
+    status: "active",
+    content: (
+      <Progress value={75} className="mt-2" />
+    )
+  }
+]
+```
+
+### Without Animation
+
+<ComponentPreview
+  name="timeline-no-animation"
+  description="Timeline without scroll animations"
+/>
+
+```tsx
+<Timeline items={items} animated={false} />
+```
+
+## API
+
+### Timeline
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| items | `TimelineItem[]` | - | Array of timeline items to display |
+| orientation | `"vertical" \| "horizontal"` | `"vertical"` | Layout orientation |
+| variant | `"default" \| "alternate" \| "compact" \| "simple"` | `"default"` | Visual style variant |
+| animated | `boolean` | `true` | Enable scroll animations |
+| className | `string` | - | Additional CSS classes |
+
+### TimelineItem
+
+| Property | Type | Description |
+|----------|------|-------------|
+| id | `string` | Unique identifier for the item |
+| title | `string` | Title of the timeline item |
+| description | `string?` | Optional description text |
+| date | `string?` | Optional date string |
+| time | `string?` | Optional time string |
+| status | `"completed" \| "active" \| "pending"?` | Optional status indicator |
+| icon | `React.ReactNode?` | Optional custom icon |
+| content | `React.ReactNode?` | Optional custom content |
+
+## Features
+
+- **Multiple Layouts**: Vertical, horizontal, alternate, compact, and simple variants
+- **Status Indicators**: Visual indicators for completed, active, and pending items
+- **Scroll Animations**: Smooth reveal animations as items come into view
+- **Custom Icons**: Support for custom icons in milestone markers
+- **Custom Content**: Ability to add custom React components to timeline items
+- **Date/Time Display**: Flexible date and time display options
+- **Responsive Design**: Adapts to different screen sizes
+- **Dark Mode**: Full dark mode support
+- **TypeScript**: Complete type safety with TypeScript
+
+## Accessibility
+
+- Semantic HTML structure
+- Proper heading hierarchy
+- Screen reader friendly
+- Keyboard navigation support
+- Focus indicators
+- ARIA attributes where needed
+
+## Customization
+
+### Custom Status Colors
+
+You can customize status colors by modifying the `getStatusColor` function:
+
+```tsx
+const getStatusColor = (status?: TimelineItem['status']) => {
+  switch (status) {
+    case 'completed':
+      return 'bg-green-500 text-white'
+    case 'active':
+      return 'bg-blue-500 text-white'
+    case 'pending':
+      return 'bg-gray-300 dark:bg-gray-600'
+    default:
+      return 'bg-primary text-primary-foreground'
+  }
+}
+```
+
+### Custom Animation Duration
+
+Adjust the animation duration by modifying the transition classes:
+
+```tsx
+className={cn(
+  animated && !visibleItems.has(item.id) && "opacity-0 translate-x-8",
+  animated && visibleItems.has(item.id) && "opacity-100 translate-x-0",
+  "transition-all duration-700 ease-out" // Adjust duration here
+)}
+```
+
+### Custom Connector Styles
+
+Modify the connector line styles:
+
+```tsx
+// Vertical connector
+<div className="absolute left-5 top-10 bottom-0 w-[2px] bg-gradient-to-b from-blue-500 to-purple-500" />
+
+// Horizontal connector
+<div className="absolute top-5 left-[50%] w-[calc(100%+2rem)] h-[2px] bg-gradient-to-r from-blue-500 to-purple-500" />
+```

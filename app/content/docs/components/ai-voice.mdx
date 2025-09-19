@@ -1,0 +1,359 @@
+---
+title: AI Voice
+description: A comprehensive voice interaction interface with speech-to-text, text-to-speech, and real-time audio visualization.
+component: true
+---
+
+<ComponentPreview name="ai-voice-demo" />
+
+## About
+
+The AI Voice component provides a complete voice interaction interface that combines speech recognition, synthesis, and real-time audio visualization. It supports multiple languages, voice profiles, wake word detection, and voice commands.
+
+## Features
+
+- **Speech Recognition**: Real-time speech-to-text conversion
+- **Text-to-Speech**: Natural voice synthesis with customizable parameters
+- **Audio Visualization**: Real-time waveform display using Web Audio API
+- **Voice Commands**: Built-in command pattern recognition
+- **Wake Word Detection**: Configurable activation phrases
+- **Multi-language Support**: Support for multiple languages and accents
+- **Voice Profiles**: Customizable voice characteristics
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Real-time Feedback**: Visual indicators for listening, speaking, and audio levels
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn-ui@latest add ai-voice
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="ai-voice" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { AIVoice } from "@/components/ui/ai-voice"
+
+export function VoiceDemo() {
+  const handleTranscript = (text: string) => {
+    console.log("Transcript:", text)
+  }
+
+  const handleCommand = (command: VoiceCommand) => {
+    console.log("Voice command:", command)
+  }
+
+  return (
+    <AIVoice
+      onTranscript={handleTranscript}
+      onCommand={handleCommand}
+      language="en-US"
+      wakeWord="hey assistant"
+      autoStart={false}
+    />
+  )
+}
+```
+
+## Examples
+
+### Basic Voice Interface
+
+<ComponentPreview name="ai-voice-basic" />
+
+```tsx
+import { AIVoice } from "@/components/ui/ai-voice"
+
+export function BasicVoiceInterface() {
+  return (
+    <AIVoice
+      onTranscript={(text) => console.log(text)}
+      language="en-US"
+    />
+  )
+}
+```
+
+### With Voice Commands
+
+<ComponentPreview name="ai-voice-commands" />
+
+```tsx
+import { AIVoice, VoiceCommand } from "@/components/ui/ai-voice"
+import { useState } from "react"
+
+export function VoiceWithCommands() {
+  const [commands, setCommands] = useState<VoiceCommand[]>([])
+
+  const handleCommand = (command: VoiceCommand) => {
+    setCommands(prev => [command, ...prev.slice(0, 4)])
+
+    switch (command.command) {
+      case 'start':
+        console.log('Starting application...')
+        break
+      case 'stop':
+        console.log('Stopping application...')
+        break
+      case 'volume':
+        console.log(`Setting volume to ${command.parameters?.value}`)
+        break
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <AIVoice
+        onCommand={handleCommand}
+        wakeWord="computer"
+        language="en-US"
+      />
+
+      <div className="p-4 bg-muted rounded-lg">
+        <h3 className="font-semibold mb-2">Recent Commands:</h3>
+        {commands.map((cmd, i) => (
+          <div key={i} className="text-sm">
+            {cmd.command} - {cmd.confidence.toFixed(2)}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### Multi-language Support
+
+<ComponentPreview name="ai-voice-multilang" />
+
+```tsx
+import { AIVoice, VoiceProfile } from "@/components/ui/ai-voice"
+import { useState } from "react"
+
+const voices: VoiceProfile[] = [
+  { id: 'en-us', name: 'English (US)', language: 'en-US', gender: 'neutral' },
+  { id: 'es-es', name: 'Spanish (Spain)', language: 'es-ES', gender: 'neutral' },
+  { id: 'fr-fr', name: 'French (France)', language: 'fr-FR', gender: 'neutral' },
+]
+
+export function MultiLanguageVoice() {
+  const [selectedVoice, setSelectedVoice] = useState(voices[0])
+
+  return (
+    <div className="space-y-4">
+      <Select
+        value={selectedVoice.id}
+        onValueChange={(id) => {
+          const voice = voices.find(v => v.id === id)
+          if (voice) setSelectedVoice(voice)
+        }}
+      >
+        <SelectTrigger className="w-48">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {voices.map((voice) => (
+            <SelectItem key={voice.id} value={voice.id}>
+              {voice.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <AIVoice
+        language={selectedVoice.language}
+        voice={selectedVoice}
+      />
+    </div>
+  )
+}
+```
+
+### Custom Voice Profile
+
+<ComponentPreview name="ai-voice-custom" />
+
+```tsx
+import { AIVoice, VoiceProfile } from "@/components/ui/ai-voice"
+
+const customVoice: VoiceProfile = {
+  id: 'custom-voice',
+  name: 'Custom Assistant',
+  language: 'en-US',
+  gender: 'female',
+  speed: 1.2,
+  pitch: 1.1,
+  accent: 'american'
+}
+
+export function CustomVoiceInterface() {
+  return (
+    <AIVoice
+      voice={customVoice}
+      wakeWord="hello ai"
+      autoStart={true}
+      onTranscript={(text) => {
+        // Process transcript
+        console.log('Custom voice transcript:', text)
+      }}
+    />
+  )
+}
+```
+
+## API Reference
+
+### AIVoice
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onTranscript` | `(text: string) => void` | `undefined` | Called when speech is transcribed |
+| `onCommand` | `(command: VoiceCommand) => void` | `undefined` | Called when voice command is detected |
+| `language` | `string` | `"en-US"` | Language code for speech recognition |
+| `voice` | `VoiceProfile` | `undefined` | Voice profile for text-to-speech |
+| `wakeWord` | `string` | `"hey assistant"` | Wake word phrase for activation |
+| `autoStart` | `boolean` | `false` | Automatically start listening on mount |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+### VoiceProfile
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Unique identifier for the voice |
+| `name` | `string` | Display name for the voice |
+| `language` | `string` | Language code (e.g., "en-US") |
+| `gender` | `'male' \| 'female' \| 'neutral'` | Voice gender |
+| `accent` | `string` | Optional accent specification |
+| `speed` | `number` | Speech rate (0.5 - 2.0) |
+| `pitch` | `number` | Voice pitch (0.5 - 2.0) |
+
+### VoiceCommand
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `command` | `string` | Command name |
+| `confidence` | `number` | Recognition confidence (0-1) |
+| `timestamp` | `number` | When command was detected |
+| `parameters` | `Record<string, any>` | Optional command parameters |
+
+## Built-in Voice Commands
+
+The component recognizes these voice commands by default:
+
+- **"start", "begin", "go"** - Start command
+- **"stop", "end", "halt"** - Stop command
+- **"pause", "wait"** - Pause command
+- **"resume", "continue"** - Resume command
+- **"clear", "reset"** - Clear command
+- **"volume [number]"** - Set volume (0-100)
+- **"speak [text]"** - Speak the provided text
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `Space` | Toggle listening on/off |
+| `Escape` | Stop listening and speaking |
+| `Ctrl/Cmd + Enter` | Speak current transcript |
+
+## Audio Visualization
+
+The component uses the Web Audio API to provide real-time audio visualization:
+
+- **Waveform Display**: Shows frequency data as animated bars
+- **Audio Level Meter**: Displays current input volume
+- **Visual Feedback**: Pulsing animations during active states
+
+## Browser Compatibility
+
+| Feature | Chrome | Firefox | Safari | Edge |
+| --- | --- | --- | --- | --- |
+| Speech Recognition | ✅ | ⚠️ | ✅ | ✅ |
+| Speech Synthesis | ✅ | ✅ | ✅ | ✅ |
+| Web Audio API | ✅ | ✅ | ✅ | ✅ |
+| Media Devices API | ✅ | ✅ | ✅ | ✅ |
+
+⚠️ Firefox requires the `media.webspeech.recognition.enable` flag to be enabled.
+
+## Accessibility
+
+The component is fully accessible with:
+
+- **Screen Reader Support**: Proper ARIA labels and live regions
+- **Keyboard Navigation**: Complete keyboard control
+- **High Contrast**: Respects system color preferences
+- **Focus Management**: Clear focus indicators
+- **Voice Feedback**: Audio confirmation of actions
+
+## Security Considerations
+
+- **Microphone Permissions**: Requests user permission before accessing microphone
+- **Privacy**: No audio data is transmitted unless explicitly implemented
+- **HTTPS Required**: Speech recognition requires secure context
+- **Content Security Policy**: Ensure `microphone` permission in CSP
+
+## Troubleshooting
+
+### Common Issues
+
+**Speech recognition not working:**
+- Ensure HTTPS connection
+- Check browser compatibility
+- Verify microphone permissions
+
+**No audio visualization:**
+- Check Web Audio API support
+- Verify microphone access
+- Ensure canvas rendering context
+
+**Poor recognition accuracy:**
+- Check microphone quality
+- Reduce background noise
+- Use supported language codes
+
+**Text-to-speech not working:**
+- Verify browser speech synthesis support
+- Check volume settings
+- Ensure valid voice profiles
+
+### Error Handling
+
+The component provides error states for:
+- Microphone access denied
+- Speech recognition failures
+- Audio context initialization errors
+- Network connectivity issues
+
+## Examples Repository
+
+Find more examples and use cases in our [examples repository](https://github.com/hanzo-ai/ui-examples).
+
+## Contributing
+
+Contributions are welcome! Please read our [contributing guidelines](https://github.com/hanzo-ai/ui/blob/main/CONTRIBUTING.md) before submitting changes.

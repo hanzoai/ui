@@ -21,8 +21,8 @@ export async function GET(request: Request) {
               properties: {
                 category: {
                   type: "string",
-                  description: "Filter by category (ui, ai, extended, blocks)",
-                  enum: ["ui", "ai", "extended", "blocks", "all"]
+                  description: "Filter by category (ui, ai, 3d, animation, code, extended, blocks)",
+                  enum: ["ui", "ai", "3d", "animation", "code", "extended", "blocks", "all"]
                 }
               }
             }
@@ -44,6 +44,25 @@ export async function GET(request: Request) {
           {
             name: "get_component",
             description: "Get details and code for a specific component",
+            inputSchema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  description: "Component name"
+                },
+                includeCode: {
+                  type: "boolean",
+                  description: "Include component source code",
+                  default: false
+                }
+              },
+              required: ["name"]
+            }
+          },
+          {
+            name: "get_component_dependencies",
+            description: "Get all dependencies for a component including registry dependencies",
             inputSchema: {
               type: "object",
               properties: {
@@ -82,12 +101,24 @@ export async function GET(request: Request) {
             description: "Browse all AI components in the hanzo/ui registry"
           },
           {
+            name: "browse_3d_components",
+            description: "Browse all 3D components with three.js integration"
+          },
+          {
+            name: "browse_animation_components",
+            description: "Browse all animation components with framer-motion"
+          },
+          {
+            name: "browse_code_components",
+            description: "Browse all code-related components (editors, blocks, terminals)"
+          },
+          {
             name: "create_landing_page",
             description: "Create a landing page using hanzo/ui blocks and components"
           },
           {
-            name: "install_dock_component",
-            description: "Install the macOS-style dock component"
+            name: "setup_project",
+            description: "Set up a new project with hanzo/ui components"
           }
         ]
       }
@@ -125,6 +156,9 @@ export async function GET(request: Request) {
 function getCategory(type: string | undefined): string {
   if (!type) return "ui"
   if (type.includes("ai")) return "ai"
+  if (type.includes("3d")) return "3d"
+  if (type.includes("animation")) return "animation"
+  if (type.includes("code")) return "code"
   if (type.includes("block")) return "blocks"
   if (type.includes("extended")) return "extended"
   return "ui"
@@ -176,13 +210,58 @@ export async function POST(request: Request) {
         )
       }
 
-      return NextResponse.json({
+      const result: any = {
         name: component.name,
         description: component.description,
-        dependencies: component.dependencies,
-        registryDependencies: component.registryDependencies,
-        files: component.files,
-        category: getCategory(component.type)
+        dependencies: component.dependencies || [],
+        registryDependencies: component.registryDependencies || [],
+        files: component.files || [],
+        category: getCategory(component.type),
+        type: component.type,
+        tailwind: component.tailwind,
+        cssVars: component.cssVars
+      }
+
+      if (params.includeCode) {
+        // Note: In a real implementation, you would read the actual file content
+        result.code = `// Component code for ${component.name} would be loaded from ${component.files?.[0] || 'file'}`
+      }
+
+      return NextResponse.json(result)
+    }
+
+    case "get_component_dependencies": {
+      const component = registry.find(c => c.name === params.name)
+      if (!component) {
+        return NextResponse.json(
+          { error: `Component '${params.name}' not found` },
+          { status: 404 }
+        )
+      }
+
+      const allDeps = new Set<string>()
+      const collectDeps = (compName: string, visited = new Set<string>()) => {
+        if (visited.has(compName)) return
+        visited.add(compName)
+
+        const comp = registry.find(c => c.name === compName)
+        if (!comp) return
+
+        comp.dependencies?.forEach(dep => allDeps.add(dep))
+        comp.registryDependencies?.forEach(dep => {
+          allDeps.add(`@hanzo/ui/${dep}`)
+          collectDeps(dep, visited)
+        })
+      }
+
+      collectDeps(params.name)
+
+      return NextResponse.json({
+        name: component.name,
+        dependencies: component.dependencies || [],
+        registryDependencies: component.registryDependencies || [],
+        allDependencies: Array.from(allDeps).sort(),
+        installCommand: `npm install ${Array.from(allDeps).filter(dep => !dep.startsWith('@hanzo')).join(' ')}`
       })
     }
 

@@ -1,7 +1,7 @@
 import path from "path"
 import { runInit } from "@/src/commands/init"
 import { preFlightAdd } from "@/src/preflights/preflight-add"
-import { getRegistryItems, getHanzoRegistryIndex } from "@/src/registry/api"
+import { getHanzoRegistryIndex, getRegistryItems } from "@/src/registry/api"
 import { DEPRECATED_COMPONENTS } from "@/src/registry/constants"
 import { clearRegistryContext } from "@/src/registry/context"
 import { isUniversalRegistryItem } from "@/src/registry/utils"

@@ -1,0 +1,311 @@
+---
+title: Dock
+description: A macOS-style dock component with icon magnification and smooth animations
+component: true
+---
+
+<ComponentPreview name="dock-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx hanzo-ui@latest add dock
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="dock" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Dock, DockItem } from "@/registry/default/ui/dock"
+import { Home, Search, Settings, User, Mail, Calendar } from "lucide-react"
+
+export function DockDemo() {
+  return (
+    <Dock position="bottom" magnification={60} distance={140}>
+      <DockItem tooltip="Home" onClick={() => console.log("Home clicked")}>
+        <Home className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Search" onClick={() => console.log("Search clicked")}>
+        <Search className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Settings" onClick={() => console.log("Settings clicked")}>
+        <Settings className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Profile" onClick={() => console.log("Profile clicked")}>
+        <User className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Mail" onClick={() => console.log("Mail clicked")}>
+        <Mail className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Calendar" onClick={() => console.log("Calendar clicked")}>
+        <Calendar className="h-6 w-6" />
+      </DockItem>
+    </Dock>
+  )
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview name="dock-demo" />
+
+### Different Positions
+
+The dock can be positioned at the bottom, left, or right of the screen.
+
+<Tabs defaultValue="bottom">
+
+<TabsList>
+  <TabsTrigger value="bottom">Bottom</TabsTrigger>
+  <TabsTrigger value="left">Left</TabsTrigger>
+  <TabsTrigger value="right">Right</TabsTrigger>
+</TabsList>
+
+<TabsContent value="bottom">
+
+```tsx
+<Dock position="bottom">
+  <DockItem tooltip="Home">
+    <Home className="h-6 w-6" />
+  </DockItem>
+  <DockItem tooltip="Search">
+    <Search className="h-6 w-6" />
+  </DockItem>
+</Dock>
+```
+
+</TabsContent>
+
+<TabsContent value="left">
+
+```tsx
+<Dock position="left">
+  <DockItem tooltip="Home">
+    <Home className="h-6 w-6" />
+  </DockItem>
+  <DockItem tooltip="Search">
+    <Search className="h-6 w-6" />
+  </DockItem>
+</Dock>
+```
+
+</TabsContent>
+
+<TabsContent value="right">
+
+```tsx
+<Dock position="right">
+  <DockItem tooltip="Home">
+    <Home className="h-6 w-6" />
+  </DockItem>
+  <DockItem tooltip="Search">
+    <Search className="h-6 w-6" />
+  </DockItem>
+</Dock>
+```
+
+</TabsContent>
+
+</Tabs>
+
+### Custom Magnification
+
+Control the magnification effect by adjusting the `magnification` and `distance` props.
+
+<ComponentPreview name="dock-magnification" />
+
+```tsx
+// Higher magnification
+<Dock magnification={80} distance={160}>
+  {/* items */}
+</Dock>
+
+// Lower magnification
+<Dock magnification={40} distance={100}>
+  {/* items */}
+</Dock>
+
+// No magnification
+<Dock magnification={0} distance={0}>
+  {/* items */}
+</Dock>
+```
+
+### With Custom Icons
+
+You can use any icon component or custom SVG as dock items.
+
+<ComponentPreview name="dock-custom-icons" />
+
+```tsx
+import { Dock, DockItem } from "@/registry/default/ui/dock"
+
+export function CustomIconDock() {
+  return (
+    <Dock>
+      <DockItem tooltip="Custom App">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          {/* Your custom SVG path */}
+        </svg>
+      </DockItem>
+      <DockItem tooltip="Image">
+        <img src="/app-icon.png" alt="App" className="h-6 w-6 rounded" />
+      </DockItem>
+    </Dock>
+  )
+}
+```
+
+### With Separators
+
+Add visual separators between groups of icons.
+
+<ComponentPreview name="dock-with-separators" />
+
+```tsx
+import { Dock, DockItem } from "@/registry/default/ui/dock"
+import { Home, Search, Mail, Calendar, Settings, User } from "lucide-react"
+
+export function DockWithSeparators() {
+  return (
+    <Dock>
+      <DockItem tooltip="Finder">
+        <Home className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Safari">
+        <Search className="h-6 w-6" />
+      </DockItem>
+
+      <div className="mx-1 h-full w-px bg-white/20" />
+
+      <DockItem tooltip="Mail">
+        <Mail className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Calendar">
+        <Calendar className="h-6 w-6" />
+      </DockItem>
+
+      <div className="mx-1 h-full w-px bg-white/20" />
+
+      <DockItem tooltip="Settings">
+        <Settings className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Profile">
+        <User className="h-6 w-6" />
+      </DockItem>
+    </Dock>
+  )
+}
+```
+
+## API
+
+### Dock
+
+The main container component for the dock.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `"bottom" \| "left" \| "right"` | `"bottom"` | Position of the dock on the screen |
+| `magnification` | `number` | `60` | Maximum magnification amount in pixels |
+| `distance` | `number` | `140` | Distance from cursor where magnification starts |
+| `className` | `string` | - | Additional CSS classes |
+| `children` | `ReactNode` | - | Dock items to render |
+
+### DockItem
+
+Individual dock item component.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tooltip` | `string` | - | Tooltip text to show on hover |
+| `onClick` | `() => void` | - | Click handler |
+| `magnification` | `number` | - | Override magnification for this item |
+| `distance` | `number` | - | Override distance for this item |
+| `className` | `string` | - | Additional CSS classes |
+| `children` | `ReactNode` | - | Icon or content to render |
+
+## Features
+
+- **Smooth Animations**: Uses Framer Motion for fluid spring animations
+- **Icon Magnification**: Icons grow smoothly as the cursor approaches
+- **Tooltips**: Built-in tooltip support with smooth transitions
+- **Glass Morphism**: Beautiful frosted glass effect with backdrop blur
+- **Responsive**: Works on all screen sizes
+- **Accessible**: Keyboard navigation support
+- **Customizable**: Control magnification, position, and styling
+
+## Styling
+
+The dock component uses Tailwind CSS for styling with:
+- Glass morphism effect using `backdrop-blur` and semi-transparent backgrounds
+- Smooth hover transitions
+- Focus indicators for accessibility
+- Gradient overlays for depth
+
+You can customize the appearance by:
+- Passing custom `className` props
+- Modifying the default styles in the component
+- Using CSS variables for theming
+- Adjusting the magnification parameters
+
+## Accessibility
+
+The dock component includes:
+- Focus indicators for keyboard navigation
+- ARIA labels through tooltips
+- Keyboard event handlers
+- Proper button semantics
+- Screen reader support
+
+## Notes
+
+- The dock uses `position: fixed` and is positioned relative to the viewport
+- Icons should ideally be 24x24 pixels for best results
+- The magnification effect is calculated based on cursor distance
+- Spring animations provide natural, physics-based motion

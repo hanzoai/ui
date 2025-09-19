@@ -120,8 +120,7 @@ async function buildRegistry(opts: z.infer<typeof buildOptionsSchema>) {
       buildSpinner.start(`Building ${registryItem.name}...`)
 
       // Add the schema to the registry item.
-      registryItem["$schema"] =
-        "https://ui.hanzo.ai/schema/registry-item.json"
+      registryItem["$schema"] = "https://ui.hanzo.ai/schema/registry-item.json"
 
       for (const file of registryItem.files) {
         const absPath = path.resolve(resolvePaths.cwd, file.path)

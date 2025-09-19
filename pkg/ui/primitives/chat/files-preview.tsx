@@ -3,9 +3,9 @@ import {
   type Attachment,
   FileTypeSupported,
 } from '@hanzo_network/hanzo-node-state/v2/queries/getChatConversation/types';
-import { save } from '@tauri-apps/plugin-dialog';
-import * as fs from '@tauri-apps/plugin-fs';
-import { BaseDirectory } from '@tauri-apps/plugin-fs';
+// import { save } from '@tauri-apps/plugin-dialog'; // Not available in web environment
+// import * as fs from '@tauri-apps/plugin-fs'; // Not available in web environment
+// import { BaseDirectory } from '@tauri-apps/plugin-fs'; // Not available in web environment
 import { partial } from 'filesize';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CircleSlashIcon, XIcon } from 'lucide-react';
