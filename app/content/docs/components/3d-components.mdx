@@ -1,0 +1,490 @@
+---
+title: 3D Components
+description: Advanced 3D components with perspective animations, depth effects, and interactive features.
+---
+
+# 3D Components
+
+A comprehensive collection of 3D UI components that bring depth and perspective to your interfaces. These components use CSS transforms for simple 3D effects and can be extended with WebGL for complex scenes.
+
+## Features
+
+- **Performance Optimized**: Uses CSS transforms and requestAnimationFrame for smooth animations
+- **Touch Support**: Full touch/swipe support on mobile devices
+- **Keyboard Navigation**: Arrow keys and shortcuts for accessibility
+- **Customizable**: Extensive props for customization and theming
+- **TypeScript**: Full TypeScript support with proper type definitions
+
+## Components
+
+### 3D Carousel
+
+A perspective carousel that displays items in a 3D cylindrical arrangement with smooth rotation animations.
+
+```tsx
+import { Carousel3D, Carousel3DCard } from "@/components/ui/3d-carousel"
+
+const items = [
+  {
+    id: "1",
+    content: (
+      <Carousel3DCard>
+        <Carousel3DCardImage src="/image1.jpg" alt="Item 1" />
+        <Carousel3DCardContent>
+          <Carousel3DCardTitle>Item 1</Carousel3DCardTitle>
+          <Carousel3DCardDescription>Description for item 1</Carousel3DCardDescription>
+        </Carousel3DCardContent>
+      </Carousel3DCard>
+    )
+  },
+  // ... more items
+]
+
+export function Demo() {
+  return (
+    <Carousel3D
+      items={items}
+      itemWidth={300}
+      itemHeight={400}
+      autoRotate
+      autoRotateSpeed={3000}
+      perspective={1000}
+    />
+  )
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `Carousel3DItem[]` | `[]` | Array of items to display |
+| `itemWidth` | `number` | `300` | Width of each item in pixels |
+| `itemHeight` | `number` | `400` | Height of each item in pixels |
+| `spacing` | `number` | `80` | Spacing between items |
+| `perspective` | `number` | `1000` | CSS perspective value |
+| `autoRotate` | `boolean` | `false` | Enable auto rotation |
+| `autoRotateSpeed` | `number` | `3000` | Auto rotation speed in ms |
+| `showControls` | `boolean` | `true` | Show navigation controls |
+| `infinite` | `boolean` | `true` | Enable infinite scrolling |
+
+### 3D Button
+
+Enhanced buttons with depth effects, hover animations, and multiple variant styles.
+
+```tsx
+import { Button3D, Button3DPreset } from "@/components/ui/3d-button"
+
+export function Demo() {
+  return (
+    <div className="space-x-4">
+      <Button3D variant="default" depth="lg">
+        Default Button
+      </Button3D>
+
+      <Button3D variant="neon" tiltOnHover glowIntensity={2}>
+        Neon Button
+      </Button3D>
+
+      <Button3DPreset.Hero>
+        Hero Button
+      </Button3DPreset.Hero>
+
+      <Button3D variant="glass" depth="sm">
+        Glass Button
+      </Button3D>
+    </div>
+  )
+}
+```
+
+#### Variants
+
+- `default` - Standard button with depth
+- `destructive` - Red destructive style
+- `outline` - Outlined button
+- `secondary` - Secondary style
+- `ghost` - Minimal ghost style
+- `link` - Link style (no 3D effects)
+- `neon` - Neon glow effect
+- `glass` - Glassmorphism style
+- `gradient` - Multi-color gradient
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `ButtonVariant` | `"default"` | Button variant style |
+| `size` | `ButtonSize` | `"default"` | Button size |
+| `depth` | `DepthLevel` | `"default"` | 3D depth level |
+| `tiltOnHover` | `boolean` | `false` | Enable tilt effect on hover |
+| `glowIntensity` | `number` | `0` | Glow effect intensity |
+| `shadowColor` | `string` | - | Custom shadow color |
+| `pressAnimation` | `boolean` | `true` | Enable press animation |
+
+### 3D Text
+
+Text with extrusion effects, perspective transforms, and animated styles.
+
+```tsx
+import { Text3D, Text3DPreset, Text3DAnimated } from "@/components/ui/3d-text"
+
+export function Demo() {
+  return (
+    <div className="space-y-4">
+      <Text3D variant="extruded" size="4xl" depth="lg">
+        3D Extruded Text
+      </Text3D>
+
+      <Text3DPreset.Neon>
+        Neon Text Effect
+      </Text3DPreset.Neon>
+
+      <Text3DAnimated animationType="typewriter" duration={2000}>
+        Animated Typewriter Text
+      </Text3DAnimated>
+
+      <Text3D variant="metallic" rotateOnHover glowOnHover>
+        Interactive Text
+      </Text3D>
+    </div>
+  )
+}
+```
+
+#### Variants
+
+- `extruded` - Classic 3D extrusion
+- `neon` - Neon glow effect
+- `metallic` - Metallic gradient
+- `rainbow` - Rainbow gradient
+- `fire` - Fire gradient effect
+- `ice` - Ice/frost effect
+- `gold` - Golden metallic
+- `glass` - Glass/transparent
+
+#### Animation Types
+
+- `typewriter` - Types text character by character
+- `wave` - Wave animation across letters
+- `flip` - 3D flip animation
+- `slide` - Slide in animation
+
+### 3D Grid
+
+Isometric grid layout with hover elevation and tilt effects.
+
+```tsx
+import { Grid3D, Grid3DCard } from "@/components/ui/3d-grid"
+
+const items = [
+  {
+    id: "1",
+    content: (
+      <Grid3DCard title="Card 1" description="Description" elevation={10}>
+        Card content
+      </Grid3DCard>
+    ),
+    elevation: 20
+  },
+  // ... more items
+]
+
+export function Demo() {
+  return (
+    <Grid3D
+      items={items}
+      columns={4}
+      rows={3}
+      isometric
+      tiltOnHover
+      elevationOnHover
+      staggerAnimation
+    />
+  )
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `Grid3DItem[]` | `[]` | Grid items array |
+| `columns` | `number` | `4` | Number of columns |
+| `rows` | `number` | `3` | Number of rows |
+| `cellWidth` | `number` | `200` | Cell width in pixels |
+| `cellHeight` | `number` | `200` | Cell height in pixels |
+| `isometric` | `boolean` | `false` | Enable isometric view |
+| `tiltOnHover` | `boolean` | `true` | Tilt grid on mouse move |
+| `elevationOnHover` | `boolean` | `true` | Elevate items on hover |
+| `staggerAnimation` | `boolean` | `true` | Stagger item animations |
+
+### 3D Scene
+
+WebGL-style 3D scene with basic shapes, lighting, and orbit controls.
+
+```tsx
+import { Scene3D, Scene3DPreset, createBox, createSphere, createMaterial } from "@/components/ui/3d-scene"
+
+const meshes = [
+  {
+    id: "cube",
+    geometry: createBox(1, 1, 1),
+    material: createMaterial({ r: 0.5, g: 0.7, b: 1 }),
+    position: { x: -2, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+    visible: true
+  },
+  {
+    id: "sphere",
+    geometry: createSphere(0.5),
+    material: createMaterial({ r: 1, g: 0.3, b: 0.3 }),
+    position: { x: 2, y: 0, z: 0 },
+    rotation: { x: 0, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+    visible: true
+  }
+]
+
+export function Demo() {
+  return (
+    <Scene3D
+      meshes={meshes}
+      width={800}
+      height={600}
+      enableOrbitControls
+      enableAutoRotate
+    />
+  )
+}
+```
+
+#### Geometry Helpers
+
+- `createBox(width, height, depth)` - Creates box geometry
+- `createSphere(radius)` - Creates sphere geometry
+- `createPlane(width, height)` - Creates plane geometry
+- `createCylinder(radius, height)` - Creates cylinder geometry
+- `createTorus(radius, tube)` - Creates torus geometry
+
+#### Material Helpers
+
+- `createMaterial(color, options)` - Creates material with color and properties
+- `createDirectionalLight(direction, color, intensity)` - Creates directional light
+- `createPointLight(position, color, intensity)` - Creates point light
+- `createAmbientLight(color, intensity)` - Creates ambient light
+
+### 3D Model Viewer
+
+GLTF/GLB model viewer with orbit controls, annotations, and screenshot capability.
+
+```tsx
+import { ModelViewer3D, ModelViewer3DPreset } from "@/components/ui/3d-model-viewer"
+
+const annotations = [
+  {
+    id: "feature1",
+    position: { x: 1, y: 0.5, z: 0 },
+    title: "Feature 1",
+    description: "Description of this feature",
+    visible: true
+  }
+]
+
+export function Demo() {
+  return (
+    <ModelViewer3D
+      modelUrl="/models/example.glb"
+      width={800}
+      height={600}
+      autoRotate
+      showControls
+      showStats
+      annotations={annotations}
+      onModelLoad={(stats) => console.log("Model loaded:", stats)}
+      onAnnotationClick={(annotation) => console.log("Clicked:", annotation)}
+    />
+  )
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `modelUrl` | `string` | - | URL to GLTF/GLB model |
+| `width` | `number` | `800` | Viewer width |
+| `height` | `number` | `600` | Viewer height |
+| `autoRotate` | `boolean` | `false` | Enable auto rotation |
+| `enableZoom` | `boolean` | `true` | Enable zoom controls |
+| `enablePan` | `boolean` | `true` | Enable pan controls |
+| `enableRotate` | `boolean` | `true` | Enable rotation controls |
+| `showControls` | `boolean` | `true` | Show control buttons |
+| `showStats` | `boolean` | `false` | Show model statistics |
+| `annotations` | `Annotation[]` | `[]` | Model annotations |
+
+## Performance Considerations
+
+### CSS Transforms vs WebGL
+
+- **CSS Transforms**: Used for simple 3D effects (buttons, text, grid)
+  - Pros: Hardware accelerated, no dependencies, good performance
+  - Cons: Limited to basic transformations
+
+- **Canvas 2D**: Used for 3D scene and model viewer
+  - Pros: More control over rendering, no external dependencies
+  - Cons: Software rendering, limited 3D capabilities
+
+- **WebGL (Future Enhancement)**: For complex 3D scenes
+  - Pros: Full 3D rendering, excellent performance
+  - Cons: Requires Three.js or similar library
+
+### Optimization Tips
+
+1. **Use `transform-gpu`** class for hardware acceleration
+2. **Enable `will-change-transform`** for animated elements
+3. **Use `requestAnimationFrame`** for smooth animations
+4. **Limit concurrent animations** to maintain 60fps
+5. **Use CSS containment** for isolated 3D contexts
+
+### Browser Support
+
+- **CSS 3D Transforms**: Supported in all modern browsers
+- **Canvas 2D**: Universal browser support
+- **WebGL**: Requires WebGL-enabled browsers (95%+ coverage)
+
+## Accessibility
+
+All 3D components include:
+
+- **Keyboard Navigation**: Arrow keys, Enter, Space
+- **Screen Reader Support**: Proper ARIA labels and descriptions
+- **Reduced Motion**: Respects `prefers-reduced-motion` setting
+- **Focus Management**: Proper focus indicators and tab order
+- **High Contrast**: Works with high contrast themes
+
+## Examples
+
+### Interactive Dashboard
+
+```tsx
+import { Grid3D, Grid3DCard, Button3D } from "@/components/ui/3d-components"
+
+export function Dashboard() {
+  const dashboardItems = [
+    {
+      id: "analytics",
+      content: (
+        <Grid3DCard title="Analytics" badge="Live">
+          <div className="p-4">
+            <h3 className="text-2xl font-bold">1,234</h3>
+            <p className="text-sm text-muted-foreground">Active Users</p>
+          </div>
+        </Grid3DCard>
+      ),
+      elevation: 20
+    },
+    // ... more dashboard cards
+  ]
+
+  return (
+    <div className="space-y-8">
+      <Text3DPreset.Hero>Dashboard</Text3DPreset.Hero>
+
+      <Grid3D
+        items={dashboardItems}
+        columns={3}
+        rows={2}
+        isometric
+        tiltOnHover
+        elevationOnHover
+      />
+
+      <div className="flex justify-center">
+        <Button3DPreset.CTA>
+          View Full Report
+        </Button3DPreset.CTA>
+      </div>
+    </div>
+  )
+}
+```
+
+### Product Showcase
+
+```tsx
+import { Carousel3D, ModelViewer3D, Text3D } from "@/components/ui/3d-components"
+
+export function ProductShowcase() {
+  return (
+    <div className="space-y-12">
+      <Text3D variant="gradient" size="5xl" rotateOnHover>
+        Our Products
+      </Text3D>
+
+      <Carousel3D
+        items={products}
+        autoRotate
+        autoRotateSpeed={4000}
+        itemWidth={350}
+        itemHeight={450}
+      />
+
+      <ModelViewer3D
+        modelUrl="/models/featured-product.glb"
+        autoRotate
+        showControls
+        annotations={productAnnotations}
+      />
+    </div>
+  )
+}
+```
+
+## Customization
+
+### Theming
+
+All components respect your design system colors and can be customized with CSS variables:
+
+```css
+:root {
+  --3d-depth-color: hsl(var(--muted));
+  --3d-highlight-color: hsl(var(--accent));
+  --3d-shadow-color: hsl(var(--muted-foreground) / 0.2);
+}
+```
+
+### Custom Animations
+
+```tsx
+import { Text3D } from "@/components/ui/3d-text"
+
+export function CustomText() {
+  return (
+    <Text3D
+      variant="neon"
+      className="animate-pulse hover:animate-bounce"
+      style={{
+        animationDuration: "2s",
+        '--glow-color': '#ff00ff'
+      }}
+    >
+      Custom Animated Text
+    </Text3D>
+  )
+}
+```
+
+## Future Enhancements
+
+- **WebGL Integration**: Three.js integration for advanced 3D scenes
+- **Physics**: React-three-fiber integration for physics simulations
+- **VR/AR Support**: WebXR support for immersive experiences
+- **More Geometries**: Additional primitive shapes and complex meshes
+- **Animation Library**: Advanced animation sequences and timelines
+
+---
+
+These 3D components provide a solid foundation for creating engaging, interactive interfaces with depth and perspective. They're designed to be performant, accessible, and easy to customize while maintaining the visual appeal of modern 3D design.

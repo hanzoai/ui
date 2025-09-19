@@ -4,47 +4,69 @@ export const extended: Registry = [
   // Code Components
   {
     name: "code-block",
-    type: "components:ui",
+    type: "components:code",
     dependencies: ["shiki", "react-copy-to-clipboard"],
     files: ["ui/code-block.tsx"],
     description: "Syntax highlighted code block with copy functionality"
   },
   {
     name: "code-editor",
-    type: "components:ui",
+    type: "components:code",
     dependencies: ["@monaco-editor/react"],
     files: ["ui/code-editor.tsx"],
     description: "Full-featured code editor with syntax highlighting"
   },
   {
-    name: "code-tabs",
-    type: "components:ui",
-    dependencies: ["@radix-ui/react-tabs"],
-    files: ["ui/code-tabs.tsx"],
-    description: "Tabbed code blocks for multiple examples"
+    name: "code-compare",
+    type: "components:code",
+    dependencies: ["react-diff-viewer"],
+    files: ["ui/code-compare.tsx"],
+    description: "Side-by-side code comparison"
   },
   {
-    name: "sandbox",
-    type: "components:ui",
-    dependencies: ["@codesandbox/sandpack-react"],
-    files: ["ui/sandbox.tsx"],
-    description: "Interactive code sandbox"
+    name: "code-diff",
+    type: "components:code",
+    dependencies: ["diff"],
+    files: ["ui/code-diff.tsx"],
+    description: "Code difference viewer with highlighting"
   },
   {
-    name: "snippet",
-    type: "components:ui",
-    files: ["ui/snippet.tsx"],
-    description: "Inline code snippet with copy"
+    name: "code-explorer",
+    type: "components:code",
+    dependencies: ["@monaco-editor/react"],
+    files: ["ui/code-explorer.tsx"],
+    description: "File tree and code explorer interface"
+  },
+  {
+    name: "code-preview",
+    type: "components:code",
+    dependencies: ["react-live"],
+    files: ["ui/code-preview.tsx"],
+    description: "Live code preview with editing"
+  },
+  {
+    name: "code-snippet",
+    type: "components:code",
+    dependencies: ["prism-react-renderer"],
+    files: ["ui/code-snippet.tsx"],
+    description: "Inline code snippet with syntax highlighting"
+  },
+  {
+    name: "code-terminal",
+    type: "components:code",
+    dependencies: ["xterm", "xterm-addon-fit"],
+    files: ["ui/code-terminal.tsx"],
+    description: "Terminal-style code interface"
   },
 
   // Project Management Components
-  {
-    name: "gantt",
-    type: "components:ui",
-    dependencies: ["@frappe/gantt"],
-    files: ["ui/gantt.tsx"],
-    description: "Interactive Gantt chart component"
-  },
+  // {
+  //   name: "gantt",
+  //   type: "components:ui",
+  //   dependencies: ["@frappe/gantt"],
+  //   files: ["ui/gantt.tsx"],
+  //   description: "Interactive Gantt chart component"
+  // },
   {
     name: "kanban",
     type: "components:ui",
@@ -91,35 +113,35 @@ export const extended: Registry = [
   {
     name: "dock",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/dock.tsx"],
     description: "macOS-style dock with animations"
   },
   {
     name: "limelight-nav",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/limelight-nav.tsx"],
     description: "Animated navigation with limelight effect"
   },
   {
     name: "macos-dock",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/macos-dock.tsx"],
     description: "macOS dock with hover magnification"
   },
   {
     name: "menu-dock",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/menu-dock.tsx"],
     description: "Dock-style menu with icons"
   },
   {
     name: "message-dock",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/message-dock.tsx"],
     description: "Message app dock interface"
   },
@@ -200,110 +222,139 @@ export const extended: Registry = [
 
   // 3D Components
   {
+    name: "3d-button",
+    type: "components:3d",
+    dependencies: ["motion", "three"],
+    files: ["ui/3d-button.tsx"],
+    description: "Interactive 3D button with depth effects"
+  },
+  {
     name: "3d-card",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
+    type: "components:3d",
+    dependencies: ["motion"],
     files: ["ui/3d-card.tsx"],
     description: "Card with 3D tilt effect"
   },
   {
-    name: "3d-marquee",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/3d-marquee.tsx"],
-    description: "3D rotating marquee"
+    name: "3d-carousel",
+    type: "components:3d",
+    dependencies: ["motion", "three"],
+    files: ["ui/3d-carousel.tsx"],
+    description: "3D carousel with perspective rotation"
   },
   {
-    name: "3d-pin",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/3d-pin.tsx"],
-    description: "3D pin perspective effect"
+    name: "3d-grid",
+    type: "components:3d",
+    dependencies: ["motion", "three"],
+    files: ["ui/3d-grid.tsx"],
+    description: "Interactive 3D grid layout"
+  },
+  {
+    name: "3d-model-viewer",
+    type: "components:3d",
+    dependencies: ["three", "@react-three/fiber"],
+    files: ["ui/3d-model-viewer.tsx"],
+    description: "3D model viewer with controls"
+  },
+  {
+    name: "3d-scene",
+    type: "components:3d",
+    dependencies: ["three", "@react-three/fiber"],
+    files: ["ui/3d-scene.tsx"],
+    description: "Complete 3D scene component"
+  },
+  {
+    name: "3d-text",
+    type: "components:3d",
+    dependencies: ["motion", "three"],
+    files: ["ui/3d-text.tsx"],
+    description: "3D text with depth and lighting effects"
   },
 
   // Animation Components
   {
+    name: "animated-background",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/animated-background.tsx"],
+    description: "Animated background patterns and effects"
+  },
+  {
     name: "animated-cursor",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
+    type: "components:animation",
+    dependencies: ["motion"],
     files: ["ui/animated-cursor.tsx"],
     description: "Custom animated cursor"
   },
   {
-    name: "animated-testimonials",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/animated-testimonials.tsx"],
-    description: "Animated testimonial carousel"
+    name: "animated-icon",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/animated-icon.tsx"],
+    description: "Icons with animation effects"
   },
   {
-    name: "animated-tooltip",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/animated-tooltip.tsx"],
-    description: "Tooltip with animation effects"
+    name: "animated-list",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/animated-list.tsx"],
+    description: "List with staggered animations"
+  },
+  {
+    name: "animated-number",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/animated-number.tsx"],
+    description: "Number counter with animation"
+  },
+  {
+    name: "animated-text",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/animated-text.tsx"],
+    description: "Text with reveal animations"
   },
   {
     name: "apple-cards-carousel",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
+    type: "components:animation",
+    dependencies: ["motion"],
     files: ["ui/apple-cards-carousel.tsx"],
     description: "Apple-style cards carousel"
   },
   {
-    name: "apple-hello-effect",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/apple-hello-effect.tsx"],
-    description: "Apple's animated hello text effect"
+    name: "grid-pattern",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/grid-pattern.tsx"],
+    description: "Animated grid background pattern"
   },
   {
-    name: "glimpse",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/glimpse.tsx"],
-    description: "Glimpse animation effect"
-  },
-  {
-    name: "interactive-grid-pattern",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/interactive-grid-pattern.tsx"],
-    description: "Interactive grid background pattern"
-  },
-  {
-    name: "particles",
-    type: "components:ui",
+    name: "particles-background",
+    type: "components:animation",
     dependencies: ["tsparticles", "@tsparticles/react"],
-    files: ["ui/particles.tsx"],
+    files: ["ui/particles-background.tsx"],
     description: "Particle effects background"
   },
   {
-    name: "pin-list",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/pin-list.tsx"],
-    description: "Pinned list with animations"
+    name: "pulse-animation",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/pulse-animation.tsx"],
+    description: "Pulsing animation effects"
   },
   {
-    name: "spinner",
-    type: "components:ui",
-    files: ["ui/spinner.tsx"],
-    description: "Loading spinner variations"
+    name: "reveal-animation",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/reveal-animation.tsx"],
+    description: "Element reveal animations on scroll"
   },
   {
-    name: "stars-scrolling-wheel",
-    type: "components:ui",
-    dependencies: ["framer-motion"],
-    files: ["ui/stars-scrolling-wheel.tsx"],
-    description: "Scrolling star rating wheel"
-  },
-  {
-    name: "tabs",
-    type: "components:ui",
-    dependencies: ["@radix-ui/react-tabs"],
-    files: ["ui/tabs.tsx"],
-    description: "Enhanced tabs component"
+    name: "timeline",
+    type: "components:animation",
+    dependencies: ["motion"],
+    files: ["ui/timeline.tsx"],
+    description: "Animated timeline component"
   },
 
   // UI Elements
@@ -322,7 +373,7 @@ export const extended: Registry = [
   {
     name: "cursor",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/cursor.tsx"],
     description: "Custom cursor component"
   },
@@ -336,7 +387,7 @@ export const extended: Registry = [
   {
     name: "marquee",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/marquee.tsx"],
     description: "Scrolling marquee text"
   },
@@ -474,21 +525,21 @@ export const extended: Registry = [
   {
     name: "animated-beam",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/animated-beam.tsx"],
     description: "Animated beam connection effect"
   },
   {
     name: "magnetic",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/magnetic.tsx"],
     description: "Magnetic hover effect"
   },
   {
     name: "motion-highlight",
     type: "components:ui",
-    dependencies: ["framer-motion"],
+    dependencies: ["motion"],
     files: ["ui/motion-highlight.tsx"],
     description: "Motion-based text highlighting"
   },
@@ -560,5 +611,19 @@ export const extended: Registry = [
     dependencies: ["video.js", "videojs-react-enhanced"],
     files: ["ui/video-player.tsx"],
     description: "Advanced video player component"
+  },
+  {
+    name: "music-player",
+    type: "components:ui",
+    dependencies: ["react-h5-audio-player"],
+    files: ["ui/music-player.tsx"],
+    description: "Advanced music player with playlist support"
+  },
+  {
+    name: "dock",
+    type: "components:ui",
+    dependencies: ["motion"],
+    files: ["ui/dock.tsx"],
+    description: "macOS-style dock with animations"
   },
 ]

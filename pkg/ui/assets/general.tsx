@@ -167,7 +167,7 @@ export const ChatBubbleIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const PaperClipIcon = ({ className }: { className?: string }) => (
+export const AttachmentIcon = ({ className }: { className?: string }) => (
   <svg
     className={cn('shrink-0', className)}
     fill="none"

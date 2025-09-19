@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/ui",
-  "version": "4.6.0",
-  "description": "Library that contains shared UI primitives, support for a common design system, and other boilerplate support.",
+  "version": "4.7.0",
+  "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -9,6 +9,17 @@
   },
   "author": "Hanzo AI, Inc.",
   "license": "BSD-3-Clause",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "style",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/react-sdk.git",
@@ -31,11 +42,21 @@
   "scripts": {
     "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
-    "tc": "tsc",
-    "build": "tsc -p tsconfig.json",
+    "tc": "tsc --project tsconfig.build.json",
+    "build": "npm run clean && npm run build:tsup",
+    "build:tsup": "tsup --config tsup.config.minimal.ts",
+    "build:full": "tsup --config tsup.config.production.ts",
+    "build:frameworks": "npm run build",
+    "build:watch": "tsup --watch",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build",
     "update-registry": "node ./bin/update-registry.js",
     "registry:mcp": "node ./bin/cli.js registry:mcp",
-    "registry:mcp:http": "node ./bin/cli.js registry:mcp --http"
+    "registry:mcp:http": "node ./bin/cli.js registry:mcp --http",
+    "analyze:frameworks": "node analyze-frameworks.js",
+    "test": "jest test/multi-framework.test.js",
+    "test:frameworks": "jest test/multi-framework.test.js --verbose"
   },
   "bin": {
     "@hanzo/ui": "./bin/cli.js",
@@ -43,30 +64,133 @@
   },
   "exports": {
     ".": {
-      "import": "./primitives/index-next.ts",
-      "require": "./primitives/index-common.ts",
-      "default": "./primitives/index-next.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
     },
-    "./assets": "./assets/index.ts",
-    "./blocks": "./blocks/index.ts",
-    "./components": "./components/index.ts",
-    "./primitives": "./primitives/index-next.ts",
-    "./primitives-common": "./primitives/index-common.ts",
+    "./assets": {
+      "types": "./dist/assets/index.d.ts",
+      "import": "./dist/assets/index.mjs",
+      "require": "./dist/assets/index.js"
+    },
+    "./assets/*": {
+      "types": "./dist/assets/*.d.ts",
+      "import": "./dist/assets/*.mjs",
+      "require": "./dist/assets/*.js"
+    },
+    "./blocks": {
+      "types": "./dist/blocks/index.d.ts",
+      "import": "./dist/blocks/index.mjs",
+      "require": "./dist/blocks/index.js"
+    },
+    "./blocks/*": {
+      "types": "./dist/blocks/*.d.ts",
+      "import": "./dist/blocks/*.mjs",
+      "require": "./dist/blocks/*.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/components/*.d.ts",
+      "import": "./dist/components/*.mjs",
+      "require": "./dist/components/*.js"
+    },
+    "./primitives": {
+      "types": "./dist/primitives/index-next.d.ts",
+      "import": "./dist/primitives/index-next.mjs",
+      "require": "./dist/primitives/index-next.js"
+    },
+    "./primitives/*": {
+      "types": "./dist/primitives/*.d.ts",
+      "import": "./dist/primitives/*.mjs",
+      "require": "./dist/primitives/*.js"
+    },
+    "./primitives-common": {
+      "types": "./dist/primitives/index-common.d.ts",
+      "import": "./dist/primitives/index-common.mjs",
+      "require": "./dist/primitives/index-common.js"
+    },
     "./registry": {
-      "types": "./dist/registry/index.d.ts",
-      "default": "./dist/registry/index.js"
+      "types": "./dist/src/registry/index.d.ts",
+      "import": "./dist/src/registry/index.mjs",
+      "require": "./dist/src/registry/index.js"
     },
     "./style/*": "./style/*",
-    "./tailwind": "./tailwind/index.ts",
-    "./types": "./types/index.ts",
-    "./util": "./util/index.ts",
-    "./util-client": "./util/index-client.ts",
-    "./utils": "./src/utils.ts",
-    "./lib/utils": "./src/utils.ts",
+    "./tailwind": {
+      "types": "./dist/tailwind/index.d.ts",
+      "import": "./dist/tailwind/index.mjs",
+      "require": "./dist/tailwind/index.js"
+    },
+    "./tailwind/*": {
+      "types": "./dist/tailwind/*.d.ts",
+      "import": "./dist/tailwind/*.mjs",
+      "require": "./dist/tailwind/*.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    },
+    "./types/*": {
+      "types": "./dist/types/*.d.ts",
+      "import": "./dist/types/*.mjs",
+      "require": "./dist/types/*.js"
+    },
+    "./util": {
+      "types": "./dist/util/index.d.ts",
+      "import": "./dist/util/index.mjs",
+      "require": "./dist/util/index.js"
+    },
+    "./util/*": {
+      "types": "./dist/util/*.d.ts",
+      "import": "./dist/util/*.mjs",
+      "require": "./dist/util/*.js"
+    },
+    "./util-client": {
+      "types": "./dist/util/index-client.d.ts",
+      "import": "./dist/util/index-client.mjs",
+      "require": "./dist/util/index-client.js"
+    },
+    "./utils": {
+      "types": "./dist/src/utils.d.ts",
+      "import": "./dist/src/utils.mjs",
+      "require": "./dist/src/utils.js"
+    },
+    "./lib/utils": {
+      "types": "./dist/src/utils.d.ts",
+      "import": "./dist/src/utils.mjs",
+      "require": "./dist/src/utils.js"
+    },
     "./mcp": {
-      "types": "./dist/mcp/index.d.ts",
-      "default": "./dist/mcp/index.js"
-    }
+      "types": "./dist/src/mcp/index.d.ts",
+      "import": "./dist/src/mcp/index.mjs",
+      "require": "./dist/src/mcp/index.js"
+    },
+    "./react": {
+      "types": "./dist/frameworks/react/index.d.ts",
+      "import": "./dist/frameworks/react/index.mjs",
+      "require": "./dist/frameworks/react/index.js"
+    },
+    "./vue": {
+      "types": "./dist/frameworks/vue/index.d.ts",
+      "import": "./dist/frameworks/vue/index.mjs",
+      "require": "./dist/frameworks/vue/index.js"
+    },
+    "./svelte": {
+      "svelte": "./frameworks/svelte/index.ts",
+      "types": "./dist/frameworks/svelte/index.d.ts",
+      "import": "./dist/frameworks/svelte/index.mjs",
+      "require": "./dist/frameworks/svelte/index.js"
+    },
+    "./react-native": {
+      "types": "./dist/frameworks/react-native/index.d.ts",
+      "import": "./dist/frameworks/react-native/index.mjs",
+      "require": "./dist/frameworks/react-native/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "dependencies": {
     "@hanzo/react-drawer": "^0.1.8",
@@ -154,7 +278,9 @@
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.1",
     "glob": "^11.0.2",
+    "jest": "^30.1.3",
     "tailwindcss": "3.4.14",
+    "tsup": "^8.5.0",
     "typescript": "5.6.3"
   }
 }

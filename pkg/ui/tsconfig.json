@@ -2,20 +2,36 @@
   "extends": "../tsconfig.hanzo.base.json",
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "primitives/**/*.ts",
+    "primitives/**/*.tsx",
+    "assets/**/*.ts",
+    "assets/**/*.tsx",
+    "blocks/**/*.ts",
+    "blocks/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "tailwind/**/*.ts",
+    "types/**/*.ts",
+    "util/**/*.ts",
+    "util/**/*.tsx",
+    "style/**/*.tsx",
+    "helpers/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "bin",
-    "test"
+    "test",
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ],
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
     "outDir": "./dist",
     "skipLibCheck": true,
-    "rootDir": "./src",
+    "rootDir": "./",
     "types": ["node"],
     "verbatimModuleSyntax": false
   }

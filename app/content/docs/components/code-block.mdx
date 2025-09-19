@@ -1,0 +1,268 @@
+---
+title: Code Block
+description: A syntax-highlighted code display component with copy functionality, line numbers, diff view, and multiple themes.
+featured: true
+component: true
+---
+
+<ComponentPreview name="code-block-demo" description="A basic code block with syntax highlighting" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add code-block
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install shiki lucide-react class-variance-authority
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="code-block" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { CodeBlock } from "@/components/ui/code-block"
+```
+
+```tsx
+<CodeBlock
+  code={`function hello() {
+  console.log("Hello, world!")
+}`}
+  language="javascript"
+/>
+```
+
+## Examples
+
+### Basic Usage
+
+<ComponentPreview name="code-block-demo" description="A basic JavaScript code block" />
+
+### With Filename
+
+<ComponentPreview name="code-block-filename" description="A code block with filename display" />
+
+### Different Languages
+
+<ComponentPreview name="code-block-languages" description="Code blocks with different programming languages" />
+
+### Themes
+
+<ComponentPreview name="code-block-themes" description="Code blocks with different color themes" />
+
+### Line Highlighting
+
+<ComponentPreview name="code-block-highlight" description="A code block with highlighted lines" />
+
+### Diff View
+
+<ComponentPreview name="code-block-diff" description="A code block showing added and removed lines" />
+
+### Without Line Numbers
+
+<ComponentPreview name="code-block-no-lines" description="A code block without line numbers" />
+
+### Custom Height
+
+<ComponentPreview name="code-block-height" description="A code block with custom max height" />
+
+### Large Code Block
+
+<ComponentPreview name="code-block-large" description="A large code block with scrolling" />
+
+## API Reference
+
+### CodeBlock
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `code` | `string` | - | The code content to display |
+| `language` | `string` | `"text"` | Programming language for syntax highlighting |
+| `filename` | `string` | - | Optional filename to display in header |
+| `showLineNumbers` | `boolean` | `true` | Whether to show line numbers |
+| `highlightLines` | `number[]` | `[]` | Array of line numbers to highlight |
+| `showCopyButton` | `boolean` | `true` | Whether to show the copy button |
+| `maxHeight` | `string` | `"400px"` | Maximum height before scrolling |
+| `theme` | `ThemeVariant` | `"dark"` | Color theme variant |
+| `size` | `SizeVariant` | `"default"` | Text size variant |
+| `diff` | `DiffConfig` | - | Configuration for diff view |
+
+### Theme Variants
+
+- `dark` - Dark theme with GitHub Dark colors
+- `light` - Light theme with GitHub Light colors
+- `github` - GitHub light theme
+- `github-dark` - GitHub dark theme
+- `vs-dark` - Visual Studio dark theme
+- `monokai` - Monokai theme
+- `dracula` - Dracula theme
+- `nord` - Nord theme
+
+### Size Variants
+
+- `sm` - Small text size (12px)
+- `default` - Default text size (14px)
+- `lg` - Large text size (16px)
+
+### Diff Configuration
+
+```tsx
+interface DiffConfig {
+  added?: number[]    // Line numbers for added lines
+  removed?: number[]  // Line numbers for removed lines
+}
+```
+
+## Examples
+
+### Basic Code Block
+
+```tsx
+<CodeBlock
+  code={`const greeting = "Hello, World!"
+console.log(greeting)`}
+  language="javascript"
+/>
+```
+
+### With Filename and Theme
+
+```tsx
+<CodeBlock
+  code={`def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)`}
+  language="python"
+  filename="fibonacci.py"
+  theme="monokai"
+/>
+```
+
+### Highlighting Specific Lines
+
+```tsx
+<CodeBlock
+  code={`function calculateSum(a, b) {
+  // This line will be highlighted
+  const result = a + b
+  return result
+}`}
+  language="javascript"
+  highlightLines={[3]}
+/>
+```
+
+### Diff View
+
+```tsx
+<CodeBlock
+  code={`function greet(name) {
+  console.log("Hello " + name)
+  console.log("Welcome!")
+  return "Hello " + name
+}`}
+  language="javascript"
+  diff={{
+    added: [3],
+    removed: [2]
+  }}
+/>
+```
+
+### Custom Styling
+
+```tsx
+<CodeBlock
+  code={`SELECT * FROM users WHERE active = true`}
+  language="sql"
+  theme="github"
+  size="lg"
+  maxHeight="200px"
+  showLineNumbers={false}
+  className="border-2 border-blue-200"
+/>
+```
+
+### TypeScript Example
+
+```tsx
+<CodeBlock
+  code={`interface User {
+  id: number
+  name: string
+  email: string
+  isActive: boolean
+}
+
+const createUser = (userData: Omit<User, 'id'>): User => {
+  return {
+    id: Math.random(),
+    ...userData
+  }
+}`}
+  language="typescript"
+  filename="types.ts"
+  theme="vs-dark"
+  highlightLines={[7, 8, 9, 10, 11]}
+/>
+```
+
+## Features
+
+- **Syntax Highlighting**: Powered by Shiki with support for 100+ languages
+- **Multiple Themes**: 8 built-in color themes including popular options
+- **Line Numbers**: Optional line numbering with proper alignment
+- **Copy to Clipboard**: One-click code copying with visual feedback
+- **File Names**: Display source file names in the header
+- **Line Highlighting**: Highlight specific lines for emphasis
+- **Diff View**: Show added/removed lines with color coding
+- **Responsive Design**: Adapts to different screen sizes
+- **Scrollable Content**: Handle large code blocks with scrolling
+- **Loading States**: Smooth loading experience while syntax highlighting
+- **Accessibility**: Full keyboard navigation and screen reader support
+
+## Accessibility
+
+The CodeBlock component includes several accessibility features:
+
+- Proper ARIA labels for interactive elements
+- Keyboard navigation support for the copy button
+- Screen reader announcements for copy actions
+- High contrast support across all themes
+- Semantic HTML structure for code content
+
+## Performance
+
+- **Lazy Loading**: Syntax highlighting is performed asynchronously
+- **Memoization**: Line components are memoized to prevent unnecessary re-renders
+- **Efficient Updates**: Only re-highlights when code or language changes
+- **Small Bundle**: Uses Shiki's tree-shaking capabilities for minimal impact

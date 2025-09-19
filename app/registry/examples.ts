@@ -660,6 +660,12 @@ export const examples: Registry = [
     files: ["example/textarea-with-text.tsx"],
   },
   {
+    name: "terminal-demo",
+    type: "components:example",
+    registryDependencies: ["terminal"],
+    files: ["example/terminal-demo.tsx"],
+  },
+  {
     name: "toast-demo",
     type: "components:example",
     registryDependencies: ["toast"],

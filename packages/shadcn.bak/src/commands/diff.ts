@@ -2,9 +2,9 @@ import { existsSync, promises as fs } from "fs"
 import path from "path"
 import {
   fetchTree,
+  getHanzoRegistryIndex,
   getItemTargetPath,
   getRegistryBaseColor,
-  getHanzoRegistryIndex,
 } from "@/src/registry/api"
 import { registryIndexSchema } from "@/src/schema"
 import { Config, getConfig } from "@/src/utils/get-config"

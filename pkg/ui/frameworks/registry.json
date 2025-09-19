@@ -1,0 +1,371 @@
+{
+  "name": "@hanzo/ui",
+  "version": "5.0.0",
+  "frameworks": ["react", "svelte", "vue", "react-native"],
+  "defaultFramework": "react",
+  "components": [
+    {
+      "name": "accordion",
+      "category": "disclosure",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/accordion.tsx",
+          "dependencies": ["@radix-ui/react-accordion"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/accordion.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/accordion.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/accordion.tsx",
+          "dependencies": ["react-native-reanimated"]
+        }
+      }
+    },
+    {
+      "name": "alert",
+      "category": "feedback",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/alert.tsx",
+          "dependencies": []
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/alert.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/alert.vue",
+          "dependencies": []
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/alert.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "alert-dialog",
+      "category": "overlay",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/alert-dialog.tsx",
+          "dependencies": ["@radix-ui/react-alert-dialog"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/alert-dialog.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/alert-dialog.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/alert-dialog.tsx",
+          "dependencies": ["react-native-modal"]
+        }
+      }
+    },
+    {
+      "name": "avatar",
+      "category": "data-display",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/avatar.tsx",
+          "dependencies": ["@radix-ui/react-avatar"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/avatar.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/avatar.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/avatar.tsx",
+          "dependencies": ["react-native-fast-image"]
+        }
+      }
+    },
+    {
+      "name": "badge",
+      "category": "data-display",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/badge.tsx",
+          "dependencies": []
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/badge.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/badge.vue",
+          "dependencies": []
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/badge.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "button",
+      "category": "action",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/button.tsx",
+          "dependencies": ["@radix-ui/react-slot"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/button.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/button.vue",
+          "dependencies": []
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/button.tsx",
+          "dependencies": ["react-native-haptic-feedback"]
+        }
+      }
+    },
+    {
+      "name": "card",
+      "category": "layout",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/card.tsx",
+          "dependencies": []
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/card.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/card.vue",
+          "dependencies": []
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/card.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "checkbox",
+      "category": "input",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/checkbox.tsx",
+          "dependencies": ["@radix-ui/react-checkbox"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/checkbox.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/checkbox.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/checkbox.tsx",
+          "dependencies": ["react-native-svg"]
+        }
+      }
+    },
+    {
+      "name": "dialog",
+      "category": "overlay",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/dialog.tsx",
+          "dependencies": ["@radix-ui/react-dialog"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/dialog.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/dialog.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/dialog.tsx",
+          "dependencies": ["react-native-modal"]
+        }
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "category": "navigation",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/dropdown-menu.tsx",
+          "dependencies": ["@radix-ui/react-dropdown-menu"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/dropdown-menu.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/dropdown-menu.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/dropdown-menu.tsx",
+          "dependencies": ["react-native-modal-dropdown"]
+        }
+      }
+    },
+    {
+      "name": "input",
+      "category": "input",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/input.tsx",
+          "dependencies": []
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/input.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/input.vue",
+          "dependencies": []
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/input.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "label",
+      "category": "form",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/label.tsx",
+          "dependencies": ["@radix-ui/react-label"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/label.svelte",
+          "dependencies": []
+        },
+        "vue": {
+          "path": "frameworks/vue/components/label.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/label.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "select",
+      "category": "input",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/select.tsx",
+          "dependencies": ["@radix-ui/react-select"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/select.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/select.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/select.tsx",
+          "dependencies": ["react-native-picker-select"]
+        }
+      }
+    },
+    {
+      "name": "switch",
+      "category": "input",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/switch.tsx",
+          "dependencies": ["@radix-ui/react-switch"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/switch.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/switch.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/switch.tsx",
+          "dependencies": []
+        }
+      }
+    },
+    {
+      "name": "tabs",
+      "category": "navigation",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/tabs.tsx",
+          "dependencies": ["@radix-ui/react-tabs"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/tabs.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/tabs.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/tabs.tsx",
+          "dependencies": ["react-native-tab-view"]
+        }
+      }
+    },
+    {
+      "name": "tooltip",
+      "category": "overlay",
+      "implementations": {
+        "react": {
+          "path": "frameworks/react/components/tooltip.tsx",
+          "dependencies": ["@radix-ui/react-tooltip"]
+        },
+        "svelte": {
+          "path": "frameworks/svelte/components/tooltip.svelte",
+          "dependencies": ["@melt-ui/svelte"]
+        },
+        "vue": {
+          "path": "frameworks/vue/components/tooltip.vue",
+          "dependencies": ["radix-vue"]
+        },
+        "react-native": {
+          "path": "frameworks/react-native/components/tooltip.tsx",
+          "dependencies": ["react-native-tooltip"]
+        }
+      }
+    }
+  ],
+  "categories": [
+    "action",
+    "data-display",
+    "disclosure",
+    "feedback",
+    "form",
+    "input",
+    "layout",
+    "navigation",
+    "overlay"
+  ]
+}

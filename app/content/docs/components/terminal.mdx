@@ -1,0 +1,286 @@
+---
+title: Terminal
+description: A feature-rich terminal emulator component with syntax highlighting, command history, and auto-completion.
+component: true
+---
+
+<ComponentPreview name="terminal-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn-ui@latest add terminal
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="terminal" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Terminal } from "@/registry/default/ui/terminal"
+```
+
+```tsx
+export default function TerminalDemo() {
+  return (
+    <Terminal
+      prompt=">"
+      onCommand={async (command) => {
+        // Handle custom commands
+        if (command === "hello") {
+          return "Hello, World!"
+        }
+        return `Unknown command: ${command}`
+      }}
+    />
+  )
+}
+```
+
+## Examples
+
+### Basic Terminal
+
+<ComponentPreview name="terminal-demo" />
+
+### With Initial Commands
+
+```tsx
+export default function TerminalWithHistory() {
+  const initialCommands = [
+    {
+      id: "1",
+      input: "echo Welcome to Terminal",
+      output: "Welcome to Terminal",
+      timestamp: new Date(),
+      type: "success" as const,
+    },
+    {
+      id: "2",
+      input: "help",
+      output: "Available commands: help, clear, echo, date",
+      timestamp: new Date(),
+      type: "info" as const,
+    },
+  ]
+
+  return <Terminal initialCommands={initialCommands} />
+}
+```
+
+### Custom Theme
+
+```tsx
+export default function ThemedTerminal() {
+  return (
+    <div className="space-y-4">
+      <Terminal theme="dark" />
+      <Terminal theme="matrix" />
+      <Terminal theme="dracula" />
+      <Terminal theme="light" />
+    </div>
+  )
+}
+```
+
+### Custom Command Handler
+
+```tsx
+export default function CustomCommandTerminal() {
+  const handleCommand = async (command: string) => {
+    const [cmd, ...args] = command.split(" ")
+
+    switch (cmd) {
+      case "calc":
+        try {
+          // Simple calculator
+          const result = eval(args.join(""))
+          return `Result: ${result}`
+        } catch {
+          return "Invalid expression"
+        }
+
+      case "fetch":
+        try {
+          const response = await fetch(args[0])
+          const data = await response.json()
+          return JSON.stringify(data, null, 2)
+        } catch (error) {
+          return `Failed to fetch: ${error}`
+        }
+
+      case "time":
+        return new Date().toLocaleTimeString()
+
+      default:
+        return `Command not found: ${cmd}`
+    }
+  }
+
+  return (
+    <Terminal
+      prompt="$"
+      onCommand={handleCommand}
+      autoCompleteCommands={["calc", "fetch", "time", "help", "clear"]}
+    />
+  )
+}
+```
+
+### With Syntax Highlighting
+
+The terminal component automatically highlights common programming patterns:
+
+```tsx
+export default function SyntaxHighlightedTerminal() {
+  return (
+    <Terminal
+      initialCommands={[
+        {
+          id: "1",
+          input: 'echo "Hello World"',
+          output: "Hello World",
+          timestamp: new Date(),
+        },
+        {
+          id: "2",
+          input: "const x = 42; return true",
+          output: "42",
+          timestamp: new Date(),
+        },
+      ]}
+    />
+  )
+}
+```
+
+## API Reference
+
+### Terminal
+
+| Property | Type | Default | Description |
+| --- | --- | --- | --- |
+| prompt | `string` | `"$"` | The prompt string displayed before each command |
+| initialCommands | `Command[]` | `[]` | Initial commands to display in the terminal |
+| onCommand | `(command: string) => Promise<string \| ReactNode> \| string \| ReactNode` | `undefined` | Handler for processing commands |
+| theme | `"dark" \| "light" \| "matrix" \| "dracula"` | `"dark"` | Terminal color theme |
+| enableHistory | `boolean` | `true` | Enable command history navigation with arrow keys |
+| enableAutoComplete | `boolean` | `true` | Enable command auto-completion |
+| autoCompleteCommands | `string[]` | `["help", "clear", "exit", "ls", "cd", "pwd", "echo", "date", "whoami"]` | Commands available for auto-completion |
+| maxHistorySize | `number` | `50` | Maximum number of commands to store in history |
+
+### Command Type
+
+```tsx
+interface Command {
+  id: string
+  input: string
+  output: string | React.ReactNode
+  timestamp: Date
+  type?: "command" | "error" | "success" | "info"
+}
+```
+
+## Features
+
+### Built-in Commands
+
+The terminal comes with several built-in commands:
+
+- `clear` - Clear the terminal screen
+- `help` - Display available commands
+- `date` - Show current date and time
+- `echo [text]` - Print text to the terminal
+
+### Keyboard Shortcuts
+
+- **Enter** - Execute current command
+- **Arrow Up** - Navigate to previous command in history
+- **Arrow Down** - Navigate to next command in history
+- **Tab** - Auto-complete current command
+- **Escape** - Close auto-complete suggestions
+- **Ctrl+C / Cmd+C** - Copy selected text
+- **Ctrl+V / Cmd+V** - Paste text at cursor position
+
+### Themes
+
+The terminal supports multiple themes:
+
+- **dark** - Dark background with colored syntax
+- **light** - Light background with dark text
+- **matrix** - Matrix-inspired green on black
+- **dracula** - Dracula color scheme
+
+### Copy/Paste Support
+
+Each command in the history can be copied by hovering and clicking the copy icon. The terminal also supports standard paste operations.
+
+### Responsive Design
+
+The terminal automatically adjusts to its container width and maintains proper scrolling behavior.
+
+## Accessibility
+
+The terminal component follows accessibility best practices:
+
+- Proper ARIA labels for interactive elements
+- Keyboard navigation support
+- Focus management
+- Screen reader compatible
+
+## Customization
+
+### Custom Themes
+
+You can customize the terminal appearance by modifying the theme classes:
+
+```tsx
+const customTheme = {
+  background: "bg-slate-950",
+  text: "text-slate-100",
+  prompt: "text-emerald-400",
+  input: "text-white",
+  output: "text-slate-300",
+  error: "text-red-400",
+  success: "text-emerald-400",
+  info: "text-sky-400",
+  border: "border-slate-800",
+  selection: "selection:bg-slate-700",
+}
+```
+
+### Custom Syntax Highlighting
+
+Extend the syntax highlighting by modifying the `highlightSyntax` function to support additional patterns and languages.
+
+## Notes
+
+- The terminal maintains command history across the session
+- Auto-completion is case-insensitive
+- Commands are processed asynchronously to support API calls
+- The terminal automatically scrolls to show new output

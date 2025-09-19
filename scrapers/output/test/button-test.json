@@ -1,0 +1,20 @@
+{
+  "title": "Button",
+  "codeBlocks": [
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2 md:flex-row\">\n      <Button>Button</Button>\n    </div>\n...",
+    "pnpm dlx shadcn@latest add button...",
+    "import { Button } from \"@/components/ui/button\"...",
+    "<Button variant=\"outline\">Button</Button>...",
+    "import { Link } from \"next/link\"\n \nimport { Button } from \"@/components/ui/button\"\n \nexport function LinkAsButton() {\n  return (\n    <Button asChild>\n      <Link href=\"/login\">Login</Link>\n    </Butto...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonDemo() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2 md:flex-row\">\n      <Button>Button</Button>\n    </div>\n...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonSecondary() {\n  return <Button variant=\"secondary\">Secondary</Button>\n}...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonDestructive() {\n  return <Button variant=\"destructive\">Destructive</Button>\n}...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonOutline() {\n  return <Button variant=\"outline\">Outline</Button>\n}...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonGhost() {\n  return <Button variant=\"ghost\">Ghost</Button>\n}...",
+    "import { Button } from \"@/components/ui/button\"\n\nexport function ButtonLink() {\n  return <Button variant=\"link\">Link</Button>\n}...",
+    "import { ChevronRightIcon } from \"lucide-react\"\n\nimport { Button } from \"@/components/ui/button\"\n\nexport function ButtonIcon() {\n  return (\n    <Button variant=\"secondary\" size=\"icon\" className=\"size-...",
+    "import { IconGitBranch } from \"@tabler/icons-react\"\n\nimport { Button } from \"@/components/ui/button\"\n\nexport function ButtonWithIcon() {\n  return (\n    <Button variant=\"outline\" size=\"sm\">\n      <Icon...",
+    "import { Loader2Icon } from \"lucide-react\"\n\nimport { Button } from \"@/components/ui/button\"\n\nexport function ButtonLoading() {\n  return (\n    <Button size=\"sm\" disabled>\n      <Loader2Icon className=\"..."
+  ],
+  "installation": null
+}
