@@ -1,0 +1,339 @@
+---
+title: Grid Pattern
+description: Customizable grid background patterns with animations and effects
+component: true
+---
+
+<ComponentPreview name="grid-pattern-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn add grid-pattern
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="grid-pattern" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { GridPattern } from "@/registry/default/ui/grid-pattern"
+
+export default function GridPatternDemo() {
+  return (
+    <div className="relative h-96 w-full">
+      <GridPattern
+        variant="dots"
+        size={4}
+        gap={20}
+        opacity={0.4}
+      />
+      <div className="relative z-10 flex h-full items-center justify-center">
+        <h1 className="text-4xl font-bold">Content over grid</h1>
+      </div>
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Variants
+
+The grid pattern component supports multiple pattern variants:
+
+<Tabs defaultValue="dots">
+
+<TabsList>
+  <TabsTrigger value="dots">Dots</TabsTrigger>
+  <TabsTrigger value="lines">Lines</TabsTrigger>
+  <TabsTrigger value="crosses">Crosses</TabsTrigger>
+  <TabsTrigger value="plus">Plus</TabsTrigger>
+  <TabsTrigger value="squares">Squares</TabsTrigger>
+</TabsList>
+
+<TabsContent value="dots">
+
+```tsx
+<GridPattern variant="dots" size={3} gap={30} />
+```
+
+</TabsContent>
+
+<TabsContent value="lines">
+
+```tsx
+<GridPattern variant="lines" strokeWidth={1} gap={40} />
+```
+
+</TabsContent>
+
+<TabsContent value="crosses">
+
+```tsx
+<GridPattern variant="crosses" size={10} gap={20} />
+```
+
+</TabsContent>
+
+<TabsContent value="plus">
+
+```tsx
+<GridPattern variant="plus" size={8} gap={25} />
+```
+
+</TabsContent>
+
+<TabsContent value="squares">
+
+```tsx
+<GridPattern variant="squares" size={15} gap={30} />
+```
+
+</TabsContent>
+
+</Tabs>
+
+### Fade Effects
+
+Add fade effects to create smooth transitions:
+
+```tsx
+// Fade at edges
+<GridPattern fade="edges" />
+
+// Fade from center
+<GridPattern fade="center" />
+
+// Radial fade
+<GridPattern fade="radial" />
+```
+
+### Gradient Overlay
+
+Add gradient overlays for enhanced visual effects:
+
+```tsx
+<GridPattern
+  gradient={{
+    from: "#ff0080",
+    via: "#7928ca",
+    to: "#0070f3",
+    opacity: 0.3,
+  }}
+/>
+```
+
+### Animation
+
+Create animated grid patterns:
+
+```tsx
+<GridPattern
+  animation={{
+    duration: 20,
+    direction: "normal",
+    timing: "linear",
+  }}
+/>
+```
+
+### Custom Spacing
+
+Control horizontal and vertical spacing independently:
+
+```tsx
+<GridPattern
+  gap={{ x: 40, y: 20 }}
+  size={{ width: 10, height: 5 }}
+/>
+```
+
+### Presets
+
+Use built-in presets for common patterns:
+
+```tsx
+import { GridPattern, GridPatternPresets } from "@/registry/default/ui/grid-pattern"
+
+// Dot matrix preset
+<GridPattern {...GridPatternPresets.dotMatrix} />
+
+// Blueprint preset
+<GridPattern {...GridPatternPresets.blueprint} />
+
+// Graph paper preset
+<GridPattern {...GridPatternPresets.graph} />
+
+// Isometric preset
+<GridPattern {...GridPatternPresets.isometric} />
+```
+
+## Advanced Examples
+
+### Hero Section with Animated Grid
+
+```tsx
+export function HeroWithGrid() {
+  return (
+    <section className="relative min-h-screen">
+      <GridPattern
+        variant="dots"
+        size={2}
+        gap={30}
+        opacity={0.3}
+        fade="edges"
+        animation={{
+          duration: 30,
+          timing: "linear",
+        }}
+      />
+      <div className="relative z-10 flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold">Welcome</h1>
+          <p className="mt-4 text-xl text-muted-foreground">
+            Build with grid patterns
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+```
+
+### Card with Grid Background
+
+```tsx
+export function CardWithGrid() {
+  return (
+    <Card className="relative overflow-hidden">
+      <GridPattern
+        variant="lines"
+        gap={20}
+        strokeWidth={0.5}
+        opacity={0.1}
+        className="absolute inset-0"
+      />
+      <CardHeader className="relative z-10">
+        <CardTitle>Grid Card</CardTitle>
+        <CardDescription>Card with subtle grid pattern</CardDescription>
+      </CardHeader>
+      <CardContent className="relative z-10">
+        <p>Content goes here...</p>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Multi-Layer Grid
+
+```tsx
+export function MultiLayerGrid() {
+  return (
+    <div className="relative h-96">
+      {/* Base layer - large grid */}
+      <GridPattern
+        variant="lines"
+        gap={80}
+        strokeWidth={1}
+        opacity={0.1}
+      />
+
+      {/* Middle layer - medium grid */}
+      <GridPattern
+        variant="lines"
+        gap={40}
+        strokeWidth={0.5}
+        opacity={0.05}
+      />
+
+      {/* Top layer - fine dots */}
+      <GridPattern
+        variant="dots"
+        size={1}
+        gap={10}
+        opacity={0.02}
+      />
+
+      <div className="relative z-10 flex h-full items-center justify-center">
+        <span className="text-2xl font-semibold">Multi-layer depth</span>
+      </div>
+    </div>
+  )
+}
+```
+
+## API Reference
+
+### Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| variant | `"dots" \| "lines" \| "crosses" \| "plus" \| "squares"` | `"dots"` | Grid pattern style |
+| size | `number \| { width?: number; height?: number }` | `4` | Size of grid elements |
+| gap | `number \| { x?: number; y?: number }` | `20` | Spacing between elements |
+| color | `string` | `"currentColor"` | Color of grid elements |
+| opacity | `number` | `0.4` | Opacity of grid elements |
+| strokeWidth | `number` | `1` | Stroke width for line patterns |
+| fade | `boolean \| "edges" \| "center" \| "radial"` | `false` | Fade effect type |
+| gradient | `object` | - | Gradient overlay configuration |
+| animation | `object` | - | Animation configuration |
+| offset | `{ x?: number; y?: number }` | - | Position offset |
+| maxArea | `{ width?: number; height?: number }` | - | Maximum render area |
+
+### Gradient Configuration
+
+| Property | Type | Description |
+| --- | --- | --- |
+| from | `string` | Start color |
+| via | `string` | Middle color (optional) |
+| to | `string` | End color |
+| opacity | `number` | Gradient opacity |
+
+### Animation Configuration
+
+| Property | Type | Description |
+| --- | --- | --- |
+| duration | `number` | Animation duration in seconds |
+| direction | `"normal" \| "reverse" \| "alternate"` | Animation direction |
+| timing | `"linear" \| "ease" \| "ease-in" \| "ease-out" \| "ease-in-out"` | Timing function |
+
+## Accessibility
+
+- Grid patterns are purely decorative and use `pointer-events-none`
+- Ensure sufficient contrast between grid and content
+- Test with reduced motion preferences
+- Consider using lower opacity values for better readability
+
+## Performance
+
+- Use `maxArea` prop to limit rendering for large viewports
+- Reduce complexity when using animations
+- Consider using CSS-only solutions for simple patterns
+- Test performance on lower-end devices

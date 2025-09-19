@@ -1,0 +1,467 @@
+---
+title: AI Chat
+description: A complete chat interface component for AI conversations with message history, file attachments, and interactive features.
+featured: true
+component: true
+---
+
+<ComponentPreview name="ai-chat-demo" description="A complete AI chat interface" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add ai-chat
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @radix-ui/react-avatar @radix-ui/react-scroll-area @radix-ui/react-dropdown-menu date-fns lucide-react class-variance-authority
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="ai-chat" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { AIChat, type ChatMessage } from "@/components/ui/ai-chat"
+```
+
+```tsx
+const [messages, setMessages] = useState<ChatMessage[]>([])
+
+const handleSendMessage = (content: string, attachments?: ChatAttachment[]) => {
+  const newMessage: ChatMessage = {
+    id: Date.now().toString(),
+    content,
+    role: "user",
+    timestamp: new Date(),
+    attachments,
+  }
+  setMessages(prev => [...prev, newMessage])
+
+  // Simulate AI response
+  setTimeout(() => {
+    const aiResponse: ChatMessage = {
+      id: (Date.now() + 1).toString(),
+      content: "This is an AI response to your message.",
+      role: "assistant",
+      timestamp: new Date(),
+    }
+    setMessages(prev => [...prev, aiResponse])
+  }, 1000)
+}
+
+<AIChat
+  messages={messages}
+  onSendMessage={handleSendMessage}
+  placeholder="Ask me anything..."
+  showTimestamps
+  showAvatars
+  allowAttachments
+/>
+```
+
+## Examples
+
+### Basic Chat
+
+<ComponentPreview name="ai-chat-basic" description="Basic AI chat interface" />
+
+### With Custom Avatars
+
+<ComponentPreview name="ai-chat-avatars" description="AI chat with custom user and assistant avatars" />
+
+### File Attachments
+
+<ComponentPreview name="ai-chat-attachments" description="AI chat with file attachment support" />
+
+### Custom Styling
+
+<ComponentPreview name="ai-chat-custom" description="AI chat with custom styling and configuration" />
+
+### Conversation Flow
+
+<ComponentPreview name="ai-chat-conversation" description="AI chat showing a full conversation" />
+
+## API Reference
+
+### AIChat
+
+The main chat interface component.
+
+#### Props
+
+<PropsTable>
+  <PropRow name="messages" type="ChatMessage[]" default="[]">
+    Array of chat messages to display
+  </PropRow>
+  <PropRow name="onSendMessage" type="(content: string, attachments?: ChatAttachment[]) => void">
+    Callback when user sends a message
+  </PropRow>
+  <PropRow name="onRegenerateMessage" type="(messageId: string) => void">
+    Callback when user requests to regenerate an AI message
+  </PropRow>
+  <PropRow name="onCopyMessage" type="(content: string) => void">
+    Callback when user copies a message
+  </PropRow>
+  <PropRow name="isGenerating" type="boolean" default="false">
+    Whether AI is currently generating a response
+  </PropRow>
+  <PropRow name="placeholder" type="string" default="Type your message...">
+    Placeholder text for the input field
+  </PropRow>
+  <PropRow name="maxLength" type="number" default="4000">
+    Maximum character length for messages
+  </PropRow>
+  <PropRow name="disabled" type="boolean" default="false">
+    Whether the chat input is disabled
+  </PropRow>
+  <PropRow name="showTimestamps" type="boolean" default="true">
+    Whether to show message timestamps
+  </PropRow>
+  <PropRow name="showAvatars" type="boolean" default="true">
+    Whether to show user and assistant avatars
+  </PropRow>
+  <PropRow name="userAvatar" type="string">
+    URL for the user's avatar image
+  </PropRow>
+  <PropRow name="assistantAvatar" type="string">
+    URL for the assistant's avatar image
+  </PropRow>
+  <PropRow name="userName" type="string" default="You">
+    Display name for the user
+  </PropRow>
+  <PropRow name="assistantName" type="string" default="AI Assistant">
+    Display name for the assistant
+  </PropRow>
+  <PropRow name="allowAttachments" type="boolean" default="true">
+    Whether file attachments are allowed
+  </PropRow>
+  <PropRow name="maxAttachments" type="number" default="5">
+    Maximum number of file attachments per message
+  </PropRow>
+  <PropRow name="maxAttachmentSize" type="number" default="10485760">
+    Maximum file size in bytes (default: 10MB)
+  </PropRow>
+  <PropRow name="acceptedFileTypes" type="string[]" default="['image/*', '.pdf', '.txt', '.doc', '.docx']">
+    Array of accepted file types
+  </PropRow>
+</PropsTable>
+
+### ChatMessage
+
+Individual message component for rendering chat messages.
+
+#### Props
+
+<PropsTable>
+  <PropRow name="message" type="ChatMessage" required>
+    The message object to render
+  </PropRow>
+  <PropRow name="onCopy" type="(content: string) => void">
+    Callback when message is copied
+  </PropRow>
+  <PropRow name="onRegenerate" type="(messageId: string) => void">
+    Callback when message regeneration is requested
+  </PropRow>
+  <PropRow name="showTimestamp" type="boolean" default="true">
+    Whether to show the message timestamp
+  </PropRow>
+  <PropRow name="showAvatar" type="boolean" default="true">
+    Whether to show the sender's avatar
+  </PropRow>
+  <PropRow name="userAvatar" type="string">
+    URL for the user's avatar
+  </PropRow>
+  <PropRow name="assistantAvatar" type="string">
+    URL for the assistant's avatar
+  </PropRow>
+  <PropRow name="userName" type="string">
+    Display name for the user
+  </PropRow>
+  <PropRow name="assistantName" type="string">
+    Display name for the assistant
+  </PropRow>
+</PropsTable>
+
+### TypingIndicator
+
+Animated typing indicator component.
+
+```tsx
+<TypingIndicator />
+```
+
+### AttachmentPreview
+
+Component for previewing file attachments.
+
+#### Props
+
+<PropsTable>
+  <PropRow name="attachment" type="ChatAttachment" required>
+    The attachment object to preview
+  </PropRow>
+  <PropRow name="onRemove" type="(id: string) => void">
+    Callback when attachment is removed
+  </PropRow>
+</PropsTable>
+
+## Type Definitions
+
+### ChatMessage
+
+```tsx
+interface ChatMessage {
+  id: string
+  content: string
+  role: "user" | "assistant" | "system"
+  timestamp: Date
+  attachments?: ChatAttachment[]
+  isGenerating?: boolean
+}
+```
+
+### ChatAttachment
+
+```tsx
+interface ChatAttachment {
+  id: string
+  name: string
+  size: number
+  type: string
+  url?: string
+  file?: File
+}
+```
+
+## Features
+
+### Message History
+- Scrollable message list with auto-scroll to bottom
+- Support for user, assistant, and system messages
+- Message timestamps and sender names
+- Proper message spacing and layout
+
+### Interactive Elements
+- Copy message content to clipboard
+- Regenerate AI responses
+- Message action dropdown menu
+- Hover states and smooth animations
+
+### File Attachments
+- Drag and drop file upload
+- Multiple file selection
+- File type validation
+- File size limits
+- Attachment previews with remove functionality
+
+### Accessibility
+- Proper ARIA labels and roles
+- Keyboard navigation support
+- Screen reader friendly
+- Focus management
+
+### Responsive Design
+- Mobile-friendly layout
+- Flexible sizing options
+- Proper text wrapping
+- Touch-friendly interactions
+
+### Customization
+- Custom avatars and names
+- Configurable placeholders
+- Theme support via CSS variables
+- Extensible styling with className prop
+
+## Advanced Usage
+
+### Custom Message Rendering
+
+You can customize how messages are rendered by extending the component:
+
+```tsx
+const CustomChatMessage = ({ message, ...props }) => {
+  if (message.role === "system") {
+    return (
+      <div className="flex justify-center">
+        <Badge variant="outline">{message.content}</Badge>
+      </div>
+    )
+  }
+
+  return <ChatMessage message={message} {...props} />
+}
+```
+
+### Integration with AI APIs
+
+```tsx
+const ChatInterface = () => {
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  const handleSendMessage = async (content: string, attachments?: ChatAttachment[]) => {
+    const userMessage: ChatMessage = {
+      id: crypto.randomUUID(),
+      content,
+      role: "user",
+      timestamp: new Date(),
+      attachments,
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setIsGenerating(true)
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: content,
+          history: messages,
+          attachments: attachments?.map(att => ({
+            name: att.name,
+            type: att.type,
+            url: att.url
+          }))
+        }),
+      })
+
+      const data = await response.json()
+
+      const aiMessage: ChatMessage = {
+        id: crypto.randomUUID(),
+        content: data.response,
+        role: "assistant",
+        timestamp: new Date(),
+      }
+
+      setMessages(prev => [...prev, aiMessage])
+    } catch (error) {
+      console.error('Failed to get AI response:', error)
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  return (
+    <AIChat
+      messages={messages}
+      onSendMessage={handleSendMessage}
+      isGenerating={isGenerating}
+      allowAttachments
+    />
+  )
+}
+```
+
+### Real-time Streaming
+
+For streaming responses, you can update messages in real-time:
+
+```tsx
+const handleStreamingResponse = async (content: string) => {
+  const messageId = crypto.randomUUID()
+
+  // Add initial message
+  const initialMessage: ChatMessage = {
+    id: messageId,
+    content: "",
+    role: "assistant",
+    timestamp: new Date(),
+    isGenerating: true,
+  }
+
+  setMessages(prev => [...prev, initialMessage])
+
+  const response = await fetch('/api/chat/stream', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: content }),
+  })
+
+  const reader = response.body?.getReader()
+  if (!reader) return
+
+  let accumulatedContent = ""
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    const chunk = new TextDecoder().decode(value)
+    accumulatedContent += chunk
+
+    // Update message with accumulated content
+    setMessages(prev => prev.map(msg =>
+      msg.id === messageId
+        ? { ...msg, content: accumulatedContent }
+        : msg
+    ))
+  }
+
+  // Mark as complete
+  setMessages(prev => prev.map(msg =>
+    msg.id === messageId
+      ? { ...msg, isGenerating: false }
+      : msg
+  ))
+}
+```
+
+## Styling
+
+The AI Chat component uses CSS variables for theming and can be customized using Tailwind CSS classes:
+
+```css
+.ai-chat-custom {
+  --message-bg-user: hsl(210 40% 95%);
+  --message-bg-assistant: hsl(210 40% 98%);
+  --message-text-user: hsl(210 40% 10%);
+  --message-text-assistant: hsl(210 40% 20%);
+}
+```
+
+You can also extend the component variants:
+
+```tsx
+const customMessageVariants = cva(
+  "group relative flex gap-3 rounded-lg p-4 transition-colors",
+  {
+    variants: {
+      role: {
+        user: "ml-8 bg-blue-500 text-white",
+        assistant: "mr-8 bg-gray-100 dark:bg-gray-800",
+        system: "mx-4 bg-yellow-50 text-yellow-800 text-sm",
+        error: "mx-4 bg-red-50 text-red-800 text-sm",
+      },
+    },
+  }
+)
+```

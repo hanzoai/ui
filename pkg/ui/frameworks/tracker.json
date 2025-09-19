@@ -1,0 +1,1854 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-09-19T00:18:50.245Z",
+  "frameworks": [
+    "react",
+    "svelte",
+    "vue",
+    "react-native"
+  ],
+  "coverage": {
+    "react": {
+      "implemented": 45,
+      "total": 70,
+      "percentage": 64
+    },
+    "svelte": {
+      "implemented": 49,
+      "total": 70,
+      "percentage": 70
+    },
+    "vue": {
+      "implemented": 57,
+      "total": 70,
+      "percentage": 81
+    },
+    "react-native": {
+      "implemented": 30,
+      "total": 70,
+      "percentage": 43
+    }
+  },
+  "components": {
+    "accordion": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/accordion..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/accordion..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/accordion..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/accordion..tsx",
+        "native": true
+      }
+    },
+    "alert": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/alert..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/alert..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/alert..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/alert..tsx",
+        "native": true
+      }
+    },
+    "alert-dialog": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/alert-dialog..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/alert-dialog..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "aspect": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/aspect..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/aspect..tsx",
+        "native": true
+      }
+    },
+    "aspect-ratio": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/aspect-ratio..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/aspect-ratio..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "auto-form": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/auto-form..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "avatar": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/avatar..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/avatar..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/avatar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/avatar..tsx",
+        "native": true
+      }
+    },
+    "badge": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/badge..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/badge..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/badge..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/badge..tsx",
+        "native": true
+      }
+    },
+    "breadcrumb": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/breadcrumb..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/breadcrumb..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/breadcrumb..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "button": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/button..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/button..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/button..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/button..tsx",
+        "native": true
+      }
+    },
+    "calendar": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/calendar..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/calendar..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/calendar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "card": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/card..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/card..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/card..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/card..tsx",
+        "native": true
+      }
+    },
+    "carousel": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/carousel..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/carousel..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/carousel..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "chart": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/chart..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/chart..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/chart..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "chart-area": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/chart-area..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "chart-bar": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/chart-bar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "chart-donut": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/chart-donut..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "chart-line": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/chart-line..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "checkbox": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/checkbox..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/checkbox..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/checkbox..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/checkbox..tsx",
+        "native": true
+      }
+    },
+    "collapsible": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/collapsible..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/collapsible..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/collapsible..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/collapsible..tsx",
+        "native": true
+      }
+    },
+    "combobox": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/combobox..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "command": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/command..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/command..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/command..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "context": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/context..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/context..tsx",
+        "native": true
+      }
+    },
+    "context-menu": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/context-menu..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/context-menu..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "data-table": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/data-table..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "dialog": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/dialog..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/dialog..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/dialog..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/dialog..tsx",
+        "native": true
+      }
+    },
+    "drawer": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/drawer..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/drawer..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/drawer..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "dropdown": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/dropdown..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/dropdown..tsx",
+        "native": true
+      }
+    },
+    "dropdown-menu": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/dropdown-menu..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/dropdown-menu..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "form": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/form..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/form..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/form..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "hover": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/hover..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/hover..tsx",
+        "native": true
+      }
+    },
+    "hover-card": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/hover-card..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/hover-card..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "icon": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/icon..tsx",
+        "native": true
+      }
+    },
+    "input": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/input..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/input..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/input..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/input..tsx",
+        "native": true
+      }
+    },
+    "input-otp": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/input-otp..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "label": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/label..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/label..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/label..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/label..tsx",
+        "native": true
+      }
+    },
+    "menubar": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/menubar..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/menubar..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/menubar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/menubar..tsx",
+        "native": true
+      }
+    },
+    "native": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/native..tsx",
+        "native": true
+      }
+    },
+    "navigation": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/navigation..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "navigation-menu": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/navigation-menu..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/navigation-menu..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "number-field": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/number-field..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "pagination": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/pagination..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/pagination..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/pagination..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "pin-input": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/pin-input..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "popover": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/popover..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/popover..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/popover..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/popover..tsx",
+        "native": true
+      }
+    },
+    "progress": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/progress..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/progress..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/progress..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/progress..tsx",
+        "native": true
+      }
+    },
+    "radio": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/radio..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/radio..tsx",
+        "native": true
+      }
+    },
+    "radio-group": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/radio-group..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/radio-group..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "range-calendar": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/range-calendar..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/range-calendar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "resizable": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/resizable..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/resizable..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/resizable..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "scroll": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/scroll..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "scroll-area": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/scroll-area..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/scroll-area..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "select": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/select..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/select..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/select..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/select..tsx",
+        "native": true
+      }
+    },
+    "separator": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/separator..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/separator..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/separator..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/separator..tsx",
+        "native": true
+      }
+    },
+    "sheet": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/sheet..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/sheet..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/sheet..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "sidebar": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/sidebar..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/sidebar..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/sidebar..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "skeleton": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/skeleton..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/skeleton..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/skeleton..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/skeleton..tsx",
+        "native": true
+      }
+    },
+    "slider": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/slider..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/slider..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/slider..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "sonner": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/sonner..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/sonner..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/sonner..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "stepper": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/stepper..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/stepper..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "switch": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/switch..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/switch..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/switch..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/switch..tsx",
+        "native": true
+      }
+    },
+    "table": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/table..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/table..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/table..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "tabs": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/tabs..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/tabs..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/tabs..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/tabs..tsx",
+        "native": true
+      }
+    },
+    "tags-input": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/tags-input..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "text": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/text..tsx",
+        "native": true
+      }
+    },
+    "textarea": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/textarea..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/textarea..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/textarea..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/textarea..tsx",
+        "native": true
+      }
+    },
+    "toast": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/toast..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/toast..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "toaster": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/toaster..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "vue": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "toggle": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/toggle..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/toggle..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/toggle..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/toggle..tsx",
+        "native": true
+      }
+    },
+    "toggle-group": {
+      "react": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/toggle-group..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/toggle-group..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "missing",
+        "version": null,
+        "path": null,
+        "native": false
+      }
+    },
+    "tooltip": {
+      "react": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react/tooltip..tsx",
+        "native": true
+      },
+      "svelte": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/svelte/tooltip..svelte",
+        "native": true
+      },
+      "vue": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/vue/tooltip..vue",
+        "native": true
+      },
+      "react-native": {
+        "status": "complete",
+        "version": "1.0.0",
+        "path": "frameworks/react-native/tooltip..tsx",
+        "native": true
+      }
+    }
+  }
+}

@@ -1,0 +1,160 @@
+---
+title: Particles Background
+description: An animated particles background with connection lines and mouse interaction.
+component: true
+---
+
+<ComponentPreview name="particles-background-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn-ui@latest add particles-background
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="particles-background" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { ParticlesBackground } from "@/registry/default/ui/particles-background"
+
+export function App() {
+  return (
+    <div className="relative min-h-screen">
+      <ParticlesBackground />
+      <div className="relative z-10">
+        <h1>Your content here</h1>
+      </div>
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Basic Usage
+
+<ComponentPreview name="particles-background-basic" />
+
+### Custom Colors
+
+<ComponentPreview name="particles-background-colors" />
+
+### High Particle Count
+
+<ComponentPreview name="particles-background-dense" />
+
+### No Mouse Interaction
+
+<ComponentPreview name="particles-background-static" />
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | `undefined` | Additional CSS classes |
+| `particleCount` | `number` | `50` | Number of particles to render |
+| `particleColor` | `string` | `"rgba(255, 255, 255, 0.6)"` | Color of the particles |
+| `lineColor` | `string` | `"rgba(255, 255, 255, 0.2)"` | Color of connection lines |
+| `particleSize` | `number` | `2` | Maximum size of particles |
+| `speed` | `number` | `0.5` | Movement speed of particles |
+| `connectionDistance` | `number` | `100` | Distance threshold for drawing connections |
+| `opacity` | `number` | `1` | Overall opacity of the effect |
+| `enableMouseInteraction` | `boolean` | `true` | Enable mouse repulsion effect |
+| `mouseRadius` | `number` | `150` | Radius of mouse interaction |
+
+## Features
+
+- **Canvas Rendering**: High-performance canvas-based animation
+- **Mouse Interaction**: Particles react to mouse movement with repulsion
+- **Connection Lines**: Dynamic lines connect nearby particles
+- **Responsive**: Automatically adjusts to viewport changes
+- **Customizable**: Extensive props for visual customization
+- **Performance Optimized**: Uses requestAnimationFrame for smooth 60fps
+- **Edge Bouncing**: Particles bounce off screen edges
+- **Smooth Damping**: Velocity damping prevents chaotic movement
+
+## Performance Notes
+
+- Uses canvas for optimal rendering performance
+- RequestAnimationFrame ensures smooth 60fps animation
+- Particle interactions are optimized with distance calculations
+- Canvas is cleared and redrawn each frame for consistency
+- Mouse events are throttled to prevent performance issues
+
+## Accessibility
+
+The particles background is purely decorative and includes:
+
+- `pointer-events-none` to avoid interfering with content interaction
+- Fixed positioning behind content with negative z-index
+- No focus or keyboard interaction requirements
+
+## Examples in Context
+
+### Landing Page Hero
+
+```tsx
+export function Hero() {
+  return (
+    <section className="relative min-h-screen flex items-center justify-center bg-black">
+      <ParticlesBackground
+        particleColor="rgba(59, 130, 246, 0.6)"
+        lineColor="rgba(59, 130, 246, 0.2)"
+        particleCount={75}
+      />
+      <div className="relative z-10 text-center text-white">
+        <h1 className="text-6xl font-bold mb-4">Welcome</h1>
+        <p className="text-xl">Experience the future</p>
+      </div>
+    </section>
+  )
+}
+```
+
+### Dashboard Background
+
+```tsx
+export function Dashboard() {
+  return (
+    <div className="relative min-h-screen bg-slate-900">
+      <ParticlesBackground
+        particleColor="rgba(148, 163, 184, 0.4)"
+        lineColor="rgba(148, 163, 184, 0.1)"
+        particleCount={30}
+        speed={0.3}
+        enableMouseInteraction={false}
+      />
+      <div className="relative z-10 p-6">
+        {/* Dashboard content */}
+      </div>
+    </div>
+  )
+}
+```

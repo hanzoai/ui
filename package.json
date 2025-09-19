@@ -48,7 +48,16 @@
     "pub:release": "cd packages/shadcn && pnpm pub:release",
     "test:dev": "turbo run test --filter=!shadcn-ui --force",
     "test": "start-server-and-test v4:dev http://localhost:4000 test:dev",
-    "validate:registries": "pnpm --filter=v4 validate:registries"
+    "validate:registries": "pnpm --filter=v4 validate:registries",
+    "health-check": "tsx tests/component-health-check.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:visual": "playwright test tests/visual/",
+    "crawl": "tsx scrapers/example-usage.ts",
+    "crawl:shadcn": "tsx scrapers/example-usage.ts shadcn",
+    "crawl:mui": "tsx scrapers/example-usage.ts mui",
+    "crawl:antd": "tsx scrapers/example-usage.ts antd",
+    "crawl:test": "playwright test scrapers/playwright-crawler.test.ts"
   },
   "packageManager": "pnpm@9.0.6",
   "dependencies": {
@@ -83,11 +92,15 @@
     "vitest": "^2.1.9"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/hast": "^3.0.4",
     "@types/node": "^20.11.27",
     "@types/react": "^18.2.65",
     "@types/react-dom": "^18.2.22",
+    "chalk": "^5.6.2",
+    "playwright": "^1.55.0",
     "start-server-and-test": "^2.0.12",
+    "tsup": "^8.5.0",
     "typescript": "^5.5.3"
   }
 }

@@ -1,0 +1,225 @@
+---
+title: Code Editor
+description: A powerful code editor component with syntax highlighting, language selection, and theme support.
+component: true
+---
+
+<ComponentPreview
+  name="code-editor-demo"
+  description="A code editor with syntax highlighting"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx hanzo-ui@latest add code-editor
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the required dependencies:</Step>
+
+```bash
+npm install @monaco-editor/react monaco-editor
+```
+
+<Step>Copy and paste the following code into your project:</Step>
+
+<ComponentSource name="code-editor" />
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { CodeEditor } from "@/registry/default/ui/code-editor"
+```
+
+```tsx
+export default function CodeEditorDemo() {
+  return (
+    <CodeEditor
+      defaultValue={`function hello() {
+  console.log("Hello, World!")
+}`}
+      language="javascript"
+      height="300px"
+    />
+  )
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview
+  name="code-editor-demo"
+  description="Default code editor"
+/>
+
+### With Custom Language
+
+<ComponentPreview
+  name="code-editor-language"
+  description="Code editor with Python"
+/>
+
+### Read Only
+
+<ComponentPreview
+  name="code-editor-readonly"
+  description="Read-only code editor"
+/>
+
+### Without Controls
+
+<ComponentPreview
+  name="code-editor-minimal"
+  description="Minimal code editor without controls"
+/>
+
+### Custom Height
+
+<ComponentPreview
+  name="code-editor-height"
+  description="Code editor with custom height"
+/>
+
+### Dark Theme
+
+<ComponentPreview
+  name="code-editor-dark"
+  description="Code editor with dark theme"
+/>
+
+### Controlled
+
+<ComponentPreview
+  name="code-editor-controlled"
+  description="Controlled code editor with state management"
+/>
+
+## API Reference
+
+### CodeEditor
+
+The main code editor component.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | - | The controlled value of the editor |
+| `defaultValue` | `string` | `""` | The default value of the editor |
+| `language` | `string` | `"javascript"` | The programming language for syntax highlighting |
+| `height` | `string \| number` | `"400px"` | The height of the editor |
+| `theme` | `"light" \| "dark" \| "auto"` | `"auto"` | The color theme of the editor |
+| `onChange` | `(value: string \| undefined, ev: any) => void` | - | Callback when the content changes |
+| `onMount` | `(editor: any, monaco: any) => void` | - | Callback when the editor mounts |
+| `readOnly` | `boolean` | `false` | Whether the editor is read-only |
+| `lineNumbers` | `boolean` | `true` | Whether to show line numbers |
+| `minimap` | `boolean` | `false` | Whether to show the minimap |
+| `wordWrap` | `"on" \| "off" \| "wordWrapColumn" \| "bounded"` | `"on"` | Word wrap setting |
+| `fontSize` | `number` | `14` | The font size in pixels |
+| `className` | `string` | - | Additional CSS classes |
+| `showCopyButton` | `boolean` | `true` | Whether to show the copy button |
+| `showLanguageSelector` | `boolean` | `true` | Whether to show the language selector |
+| `availableLanguages` | `string[]` | See default list | Available languages in the selector |
+
+### Supported Languages
+
+The code editor supports the following languages by default:
+
+- JavaScript
+- TypeScript
+- Python
+- Java
+- C#
+- C++
+- C
+- Go
+- Rust
+- Ruby
+- PHP
+- Swift
+- Kotlin
+- Dart
+- HTML
+- CSS
+- SCSS
+- JSON
+- XML
+- YAML
+- SQL
+- Markdown
+- Shell
+- Plain Text
+
+## Features
+
+### Syntax Highlighting
+
+The editor provides syntax highlighting for all supported languages using Monaco Editor's built-in language support.
+
+### Theme Support
+
+The editor automatically adapts to your application's theme. You can also explicitly set it to light or dark.
+
+### Language Selection
+
+Users can dynamically change the language from the dropdown menu in the editor toolbar.
+
+### Copy to Clipboard
+
+A convenient copy button allows users to quickly copy the entire code content to their clipboard.
+
+### Responsive Design
+
+The editor is fully responsive and adapts to different screen sizes.
+
+### Customization
+
+The editor is highly customizable with options for:
+- Line numbers visibility
+- Minimap display
+- Word wrap settings
+- Font size
+- Read-only mode
+- Custom height and width
+
+## Accessibility
+
+The code editor component:
+- Supports keyboard navigation
+- Provides proper ARIA labels
+- Works with screen readers
+- Respects system theme preferences
+
+## Performance
+
+The Monaco Editor is loaded asynchronously to avoid blocking the main thread. The editor also includes:
+- Automatic layout adjustment on window resize
+- Optimized scrolling performance
+- Efficient syntax highlighting

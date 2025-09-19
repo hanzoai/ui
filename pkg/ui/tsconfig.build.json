@@ -1,0 +1,38 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "composite": false,
+    "incremental": false,
+    "paths": {
+      "@/*": ["./*"],
+      "@/app/*": ["../../app/*"],
+      "@/registry/*": ["../../app/registry/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "primitives/**/*",
+    "components/**/*",
+    "assets/**/*",
+    "blocks/**/*",
+    "types/**/*",
+    "util/**/*",
+    "tailwind/**/*",
+    "style/**/*",
+    "frameworks/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ]
+}

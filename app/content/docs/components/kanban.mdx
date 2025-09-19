@@ -1,0 +1,347 @@
+---
+title: Kanban Board
+description: A comprehensive drag-and-drop Kanban board component with cards, columns, labels, priorities, and search functionality.
+component: true
+---
+
+<ComponentPreview name="kanban-demo" description="A fully functional Kanban board with drag-and-drop" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add kanban
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the required dependencies:</Step>
+
+```bash
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="kanban" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { KanbanBoard } from "@/registry/default/ui/kanban"
+```
+
+```tsx
+const [board, setBoard] = useState({
+  id: "board-1",
+  title: "Project Board",
+  columns: [
+    {
+      id: "todo",
+      title: "To Do",
+      cards: [
+        {
+          id: "card-1",
+          title: "Setup project",
+          description: "Initialize the project structure",
+          priority: "high",
+          assignee: "John Doe",
+          dueDate: "2024-12-31",
+          labels: [{ id: "bug", name: "Bug", color: "#ef4444" }],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+      ],
+      limit: 5
+    },
+    {
+      id: "doing",
+      title: "In Progress",
+      cards: [],
+    },
+    {
+      id: "done",
+      title: "Done",
+      cards: [],
+    }
+  ],
+  labels: [
+    { id: "bug", name: "Bug", color: "#ef4444" },
+    { id: "feature", name: "Feature", color: "#22c55e" },
+    { id: "improvement", name: "Improvement", color: "#3b82f6" }
+  ]
+})
+
+<KanbanBoard
+  board={board}
+  onUpdateBoard={setBoard}
+  className="h-screen"
+/>
+```
+
+## Features
+
+### Drag and Drop
+- **Card Movement**: Drag cards between columns
+- **Card Reordering**: Reorder cards within columns
+- **Visual Feedback**: Smooth animations and drag overlay
+- **Column Limits**: Respect maximum card limits per column
+
+### Card Management
+- **Create Cards**: Add new cards to any column
+- **Edit Cards**: Update card details in-place
+- **Delete Cards**: Remove cards with confirmation
+- **Card Actions**: Dropdown menu for card operations
+
+### Card Properties
+- **Title & Description**: Basic card information
+- **Priority Levels**: Low, Medium, High, Urgent with color coding
+- **Labels**: Custom colored labels for categorization
+- **Assignee**: Assign cards to team members
+- **Due Dates**: Set and display due dates
+- **Timestamps**: Automatic creation and update timestamps
+
+### Search and Filtering
+- **Real-time Search**: Filter cards by title, description, or labels
+- **Preserved State**: Search doesn't affect board state
+- **Highlight Matches**: Visual indication of search results
+
+### Responsive Design
+- **Mobile Friendly**: Works on all screen sizes
+- **Horizontal Scroll**: Columns scroll horizontally on smaller screens
+- **Touch Support**: Full touch device support
+
+## Types
+
+```tsx
+interface KanbanCard {
+  id: string
+  title: string
+  description?: string
+  labels?: KanbanLabel[]
+  priority?: "low" | "medium" | "high" | "urgent"
+  assignee?: string
+  dueDate?: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface KanbanLabel {
+  id: string
+  name: string
+  color: string
+}
+
+interface KanbanColumn {
+  id: string
+  title: string
+  cards: KanbanCard[]
+  limit?: number
+}
+
+interface KanbanBoard {
+  id: string
+  title: string
+  columns: KanbanColumn[]
+  labels: KanbanLabel[]
+}
+```
+
+## Props
+
+### KanbanBoard
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| board | KanbanBoard | - | The board data structure |
+| onUpdateBoard | (board: KanbanBoard) => void | - | Callback when board state changes |
+| className | string | - | Additional CSS classes |
+
+## Examples
+
+### Basic Kanban Board
+
+<ComponentPreview name="kanban-basic" description="A simple Kanban board with basic functionality" />
+
+### Kanban with Labels
+
+<ComponentPreview name="kanban-labels" description="Kanban board showcasing label functionality" />
+
+### Project Management Board
+
+<ComponentPreview name="kanban-project" description="A project management Kanban board with all features" />
+
+## Customization
+
+### Custom Priority Colors
+
+```tsx
+// You can customize priority colors by extending the CSS
+const priorityVariants = cva(
+  "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold",
+  {
+    variants: {
+      priority: {
+        low: "border-blue-200 bg-blue-50 text-blue-700",
+        medium: "border-yellow-200 bg-yellow-50 text-yellow-700",
+        high: "border-orange-200 bg-orange-50 text-orange-700",
+        urgent: "border-red-200 bg-red-50 text-red-700",
+      },
+    },
+  }
+)
+```
+
+### Custom Card Template
+
+You can create custom card templates by extending the `KanbanCardComponent`:
+
+```tsx
+function CustomKanbanCard({ card, onEdit, onDelete }) {
+  return (
+    <Card className="mb-3 group hover:shadow-md transition-shadow">
+      {/* Your custom card layout */}
+    </Card>
+  )
+}
+```
+
+### Column Limits
+
+Set limits on the number of cards per column:
+
+```tsx
+const column = {
+  id: "todo",
+  title: "To Do",
+  cards: [],
+  limit: 5 // Maximum 5 cards
+}
+```
+
+## Integration Examples
+
+### With Local Storage
+
+```tsx
+const useKanbanBoard = (boardId: string) => {
+  const [board, setBoard] = useState(() => {
+    const saved = localStorage.getItem(`kanban-${boardId}`)
+    return saved ? JSON.parse(saved) : defaultBoard
+  })
+
+  const updateBoard = useCallback((newBoard: KanbanBoard) => {
+    setBoard(newBoard)
+    localStorage.setItem(`kanban-${boardId}`, JSON.stringify(newBoard))
+  }, [boardId])
+
+  return { board, updateBoard }
+}
+```
+
+### With API Integration
+
+```tsx
+const useKanbanAPI = (boardId: string) => {
+  const [board, setBoard] = useState<KanbanBoard | null>(null)
+
+  const updateBoard = useCallback(async (newBoard: KanbanBoard) => {
+    setBoard(newBoard)
+
+    try {
+      await fetch(`/api/boards/${boardId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBoard)
+      })
+    } catch (error) {
+      console.error('Failed to save board:', error)
+    }
+  }, [boardId])
+
+  return { board, updateBoard }
+}
+```
+
+### Real-time Collaboration
+
+```tsx
+const useRealtimeKanban = (boardId: string) => {
+  const [board, setBoard] = useState<KanbanBoard | null>(null)
+
+  useEffect(() => {
+    const socket = io()
+
+    socket.emit('join-board', boardId)
+
+    socket.on('board-updated', (updatedBoard: KanbanBoard) => {
+      setBoard(updatedBoard)
+    })
+
+    return () => {
+      socket.emit('leave-board', boardId)
+      socket.disconnect()
+    }
+  }, [boardId])
+
+  const updateBoard = useCallback((newBoard: KanbanBoard) => {
+    setBoard(newBoard)
+    socket.emit('update-board', { boardId, board: newBoard })
+  }, [boardId])
+
+  return { board, updateBoard }
+}
+```
+
+## Accessibility
+
+The Kanban board component includes comprehensive accessibility features:
+
+- **Keyboard Navigation**: Full keyboard support for drag and drop
+- **Screen Reader Support**: Proper ARIA labels and descriptions
+- **Focus Management**: Logical focus order and visible focus indicators
+- **Semantic HTML**: Proper heading hierarchy and landmarks
+
+## Performance
+
+- **Optimized Rendering**: Efficient re-rendering with React.memo
+- **Large Datasets**: Handles boards with hundreds of cards
+- **Smooth Animations**: Hardware-accelerated animations
+- **Memory Efficient**: Proper cleanup and garbage collection
+
+## Troubleshooting
+
+### Cards Not Dragging
+
+Make sure you have installed all required @dnd-kit dependencies:
+
+```bash
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
+```
+
+### Styling Issues
+
+Ensure you have the required CSS classes in your Tailwind configuration and that all UI components are properly installed.
+
+### Performance Issues
+
+For boards with many cards (100+), consider implementing virtualization or pagination for better performance.

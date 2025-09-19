@@ -18,3 +18,4 @@ const Label = ({
 Label.displayName = LabelPrimitive.Root.displayName;
 
 export { Label };
+export default Label;

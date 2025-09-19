@@ -24,3 +24,4 @@ const Progress = ({
 Progress.displayName = ProgressPrimitive.Root.displayName;
 
 export { Progress };
+export default Progress;

@@ -1,4 +1,4 @@
-import { debug } from '@tauri-apps/plugin-log';
+// import { debug } from '@tauri-apps/plugin-log'; // Not available in web environment
 import { useEffect, useState } from 'react';
 import * as sqljs from 'sql.js';
 
@@ -13,9 +13,9 @@ const loadTableData = async (
   db: sqljs.Database,
   tableName: string,
 ): Promise<{ values: sqljs.SqlValue[][] }> => {
-  void debug(`loading table data for ${tableName}`);
+  void console.log(`loading table data for ${tableName}`);
   const dataResult = db.exec(`SELECT * FROM ${tableName}`);
-  void debug(`found ${dataResult[0].values.length} rows for ${tableName}`);
+  void console.log(`found ${dataResult[0].values.length} rows for ${tableName}`);
   return { values: dataResult[0].values };
 };
 
@@ -25,7 +25,7 @@ const loadDatabase = async (
   db: sqljs.Database;
   tables: { name: string; columns: sqljs.SqlValue[]; count: number }[];
 }> => {
-  void debug(`loading database from ${url}`);
+  void console.log(`loading database from ${url}`);
   const SQL = await sqljs.default({
     locateFile: (file: string) => '/sqljs/sql-wasm.wasm',
   });
@@ -39,14 +39,14 @@ const loadDatabase = async (
     "SELECT name FROM sqlite_master WHERE type='table'",
   );
   const tableNames = tablesResult[0].values.map((v) => v[0] as string);
-  void debug(`found ${tableNames.length} tables`);
-  void debug(`tables: ${tableNames.join(', ')}`);
+  void console.log(`found ${tableNames.length} tables`);
+  void console.log(`tables: ${tableNames.join(', ')}`);
   const tables = tableNames.map((table) => {
     const columnsResult = db.exec(`PRAGMA table_info(${table})`);
     const columnNames = columnsResult[0].values.map((v) => v[1]);
     const countResult = db.exec(`SELECT COUNT(*) FROM ${table}`);
     const count = countResult[0].values[0][0] as number;
-    void debug(
+    void console.log(
       `found columns ${columnNames.join(', ')} and ${count} rows for ${table}`,
     );
     return {
@@ -128,7 +128,7 @@ export const SqlitePreview: React.FC<SqlitePreviewProps> = ({ url }) => {
   useEffect(() => {
     return () => {
       if (db) {
-        void debug('closing database connection');
+        void console.log('closing database connection');
         db.close();
       }
     };

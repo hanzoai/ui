@@ -1,0 +1,261 @@
+---
+title: Apple Cards Carousel
+description: A stunning carousel component inspired by Apple's design language with smooth animations, parallax effects, and swipe gestures.
+component: true
+---
+
+An elegant carousel component featuring Apple-style card stacking, parallax scrolling, smooth transitions, and touch/swipe support. Perfect for showcasing featured content, product highlights, or image galleries.
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add apple-cards-carousel
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion lucide-react
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="apple-cards-carousel" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { AppleCardsCarousel, gradientPresets } from "@/registry/default/ui/apple-cards-carousel"
+
+const cards = [
+  {
+    id: "1",
+    title: "Innovation",
+    subtitle: "Think Different",
+    description: "Pushing the boundaries of what's possible with cutting-edge technology.",
+    gradient: gradientPresets.sunset,
+  },
+  {
+    id: "2",
+    title: "Design",
+    subtitle: "Form Meets Function",
+    description: "Beautiful, intuitive interfaces that delight users at every interaction.",
+    gradient: gradientPresets.ocean,
+  },
+  {
+    id: "3",
+    title: "Performance",
+    subtitle: "Speed & Efficiency",
+    description: "Optimized for the best possible user experience across all devices.",
+    gradient: gradientPresets.galaxy,
+  },
+]
+
+export default function Example() {
+  return (
+    <AppleCardsCarousel
+      cards={cards}
+      autoPlay={true}
+      autoPlayInterval={5000}
+      showArrows={true}
+      showDots={true}
+    />
+  )
+}
+```
+
+## Examples
+
+### With Images
+
+```tsx
+const cards = [
+  {
+    id: "1",
+    title: "Mountain Vista",
+    subtitle: "Explore Nature",
+    description: "Discover breathtaking mountain landscapes",
+    image: "/images/mountain.jpg",
+  },
+  {
+    id: "2",
+    title: "Ocean Waves",
+    subtitle: "Feel the Freedom",
+    description: "Experience the calming rhythm of the sea",
+    image: "/images/ocean.jpg",
+  },
+]
+
+export default function ImageCarousel() {
+  return (
+    <AppleCardsCarousel
+      cards={cards}
+      parallaxOffset={100}
+      stackOffset={20}
+      stackScale={0.9}
+    />
+  )
+}
+```
+
+### Custom Content
+
+```tsx
+const cards = [
+  {
+    id: "1",
+    gradient: gradientPresets.aurora,
+    content: (
+      <div className="flex flex-col justify-center items-center h-full">
+        <h2 className="text-6xl font-bold text-white mb-4">Custom</h2>
+        <p className="text-2xl text-white/80">Any React content here</p>
+        <button className="mt-8 px-8 py-3 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition">
+          Learn More
+        </button>
+      </div>
+    ),
+  },
+  // ... more cards
+]
+
+export default function CustomContentCarousel() {
+  return <AppleCardsCarousel cards={cards} />
+}
+```
+
+### Minimal Configuration
+
+```tsx
+const cards = [
+  { id: "1", title: "First Card" },
+  { id: "2", title: "Second Card" },
+  { id: "3", title: "Third Card" },
+]
+
+export default function MinimalCarousel() {
+  return (
+    <AppleCardsCarousel
+      cards={cards}
+      showArrows={false}
+      showDots={false}
+      autoPlay={false}
+    />
+  )
+}
+```
+
+## API
+
+### AppleCardsCarousel
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| cards | `CarouselCard[]` | Required | Array of card objects to display |
+| autoPlay | `boolean` | `false` | Enable automatic card rotation |
+| autoPlayInterval | `number` | `5000` | Interval between auto-play transitions (ms) |
+| className | `string` | - | Additional CSS classes for the container |
+| cardClassName | `string` | - | Additional CSS classes for cards |
+| showArrows | `boolean` | `true` | Show navigation arrows |
+| showDots | `boolean` | `true` | Show dot indicators |
+| parallaxOffset | `number` | `50` | Parallax effect intensity |
+| stackOffset | `number` | `10` | Horizontal offset for stacked cards |
+| stackScale | `number` | `0.95` | Scale factor for stacked cards |
+| swipeThreshold | `number` | `50` | Minimum swipe distance to trigger navigation |
+
+### CarouselCard
+
+| Property | Type | Required | Description |
+| --- | --- | --- | --- |
+| id | `string` | Yes | Unique identifier for the card |
+| title | `string` | Yes | Main heading text |
+| subtitle | `string` | No | Secondary heading text |
+| description | `string` | No | Descriptive text |
+| image | `string` | No | Background image URL |
+| gradient | `string` | No | CSS gradient string |
+| content | `React.ReactNode` | No | Custom content (overrides title/subtitle/description) |
+
+## Features
+
+### Smooth Animations
+- Spring-based physics for natural movement
+- Hardware-accelerated transforms
+- 60fps performance
+
+### Touch & Gesture Support
+- Swipe to navigate on touch devices
+- Drag with mouse on desktop
+- Keyboard navigation (arrow keys)
+
+### Parallax Effects
+- Background images move at different speeds
+- Creates depth and immersion
+- Customizable intensity
+
+### Card Stacking
+- Cards stack behind the active card
+- Configurable offset and scale
+- Beautiful depth perception
+
+### Auto-play
+- Automatic rotation through cards
+- Pauses on hover
+- Customizable intervals
+
+### Responsive Design
+- Adapts to all screen sizes
+- Touch-optimized for mobile
+- Desktop-optimized controls
+
+## Gradient Presets
+
+The component includes several pre-defined gradients:
+
+```tsx
+import { gradientPresets } from "@/registry/default/ui/apple-cards-carousel"
+
+// Available presets:
+// - sunset: Purple to pink gradient
+// - ocean: Blue to teal gradient
+// - fire: Pink to red gradient
+// - forest: Light blue to cyan gradient
+// - galaxy: Purple to pink to white gradient
+// - aurora: Cyan to blue gradient
+// - peach: Peach to orange gradient
+// - lavender: Teal to pink gradient
+```
+
+## Accessibility
+
+- Keyboard navigation support (arrow keys)
+- Screen reader friendly with proper ARIA labels
+- Focus management for navigation controls
+- Reduced motion support for users with motion sensitivity
+
+## Performance
+
+- Only renders visible cards (max 3 at a time)
+- Uses GPU acceleration for smooth animations
+- Optimized re-renders with React.memo
+- Lazy loading support for images

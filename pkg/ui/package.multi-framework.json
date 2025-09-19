@@ -1,0 +1,185 @@
+{
+  "name": "@hanzo/ui",
+  "version": "5.0.0",
+  "description": "Multi-framework UI component library with React, Vue, Svelte, and React Native support",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI, Inc.",
+  "license": "BSD-3-Clause",
+  "files": [
+    "dist",
+    "frameworks",
+    "style",
+    "tailwind",
+    "*.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/ui"
+  },
+  "keywords": [
+    "components",
+    "ui",
+    "react",
+    "vue",
+    "svelte",
+    "react-native",
+    "shadcn",
+    "radix-ui",
+    "hanzo",
+    "hanzo-ai"
+  ],
+  "scripts": {
+    "build": "tsup --config tsup.config.multi-framework.ts",
+    "build:react": "tsup --config tsup.config.multi-framework.ts --filter react",
+    "build:vue": "tsup --config tsup.config.multi-framework.ts --filter vue",
+    "build:svelte": "tsup --config tsup.config.multi-framework.ts --filter svelte",
+    "build:react-native": "tsup --config tsup.config.multi-framework.ts --filter react-native",
+    "build:core": "tsup --config tsup.config.multi-framework.ts --filter core",
+    "build:adapters": "tsup --config tsup.config.multi-framework.ts --filter adapters",
+    "analyze": "node analyze-frameworks.js",
+    "sync:components": "node scripts/sync-components.js",
+    "convert:react-to-vue": "node scripts/convert-react-to-vue.js",
+    "convert:react-to-svelte": "node scripts/convert-react-to-svelte.js",
+    "prepublishOnly": "pnpm build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.js",
+      "default": "./dist/react/index.mjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.mjs",
+      "require": "./dist/react/index.js",
+      "default": "./dist/react/index.mjs"
+    },
+    "./react/*": {
+      "types": "./dist/react/*.d.ts",
+      "import": "./dist/react/*.mjs",
+      "require": "./dist/react/*.js",
+      "default": "./dist/react/*.mjs"
+    },
+    "./vue": {
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.mjs",
+      "default": "./dist/vue/index.mjs"
+    },
+    "./vue/*": {
+      "types": "./dist/vue/*.d.ts",
+      "import": "./dist/vue/*.mjs",
+      "default": "./dist/vue/*.mjs"
+    },
+    "./svelte": {
+      "svelte": "./frameworks/svelte/components/index.ts",
+      "import": "./dist/svelte/index.mjs",
+      "default": "./dist/svelte/index.mjs"
+    },
+    "./svelte/*": {
+      "svelte": "./frameworks/svelte/*.svelte",
+      "import": "./dist/svelte/*.mjs",
+      "default": "./dist/svelte/*.mjs"
+    },
+    "./react-native": {
+      "types": "./dist/react-native/index.d.ts",
+      "require": "./dist/react-native/index.js",
+      "default": "./dist/react-native/index.js"
+    },
+    "./react-native/*": {
+      "types": "./dist/react-native/*.d.ts",
+      "require": "./dist/react-native/*.js",
+      "default": "./dist/react-native/*.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.mjs",
+      "require": "./dist/core/index.js",
+      "default": "./dist/core/index.mjs"
+    },
+    "./adapters": {
+      "types": "./dist/adapters/index.d.ts",
+      "import": "./dist/adapters/index.mjs",
+      "default": "./dist/adapters/index.mjs"
+    },
+    "./style/*": "./style/*",
+    "./tailwind": {
+      "types": "./dist/core/styles/index.d.ts",
+      "import": "./dist/core/styles/index.mjs",
+      "require": "./dist/core/styles/index.js",
+      "default": "./dist/core/styles/index.mjs"
+    },
+    "./lib/utils": {
+      "types": "./dist/core/utils/index.d.ts",
+      "import": "./dist/core/utils/index.mjs",
+      "require": "./dist/core/utils/index.js",
+      "default": "./dist/core/utils/index.mjs"
+    }
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "@radix-ui/react-*": "^1.0.0",
+    "@melt-ui/svelte": "^0.76.0",
+    "lucide-react": "^0.456.0",
+    "radix-vue": "^1.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-native": ">=0.70.0",
+    "svelte": "^4.0.0 || ^5.0.0",
+    "vue": "^3.3.0"
+  },
+  "peerDependenciesMeta": {
+    "@radix-ui/react-*": {
+      "optional": true
+    },
+    "@melt-ui/svelte": {
+      "optional": true
+    },
+    "lucide-react": {
+      "optional": true
+    },
+    "radix-vue": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/generator": "^7.24.0",
+    "@babel/parser": "^7.24.0",
+    "@babel/traverse": "^7.24.0",
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.1",
+    "@types/react-native": "^0.73.0",
+    "prettier": "^3.2.5",
+    "svelte": "^5.0.0",
+    "tailwindcss": "3.4.14",
+    "tsup": "^8.5.0",
+    "typescript": "5.6.3",
+    "vue": "^3.4.0"
+  }
+}
