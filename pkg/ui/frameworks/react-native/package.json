@@ -1,0 +1,8 @@
+{
+  "name": "@hanzo/ui-react-native",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components/index.ts"
+  }
+}

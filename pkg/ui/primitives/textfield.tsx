@@ -73,3 +73,4 @@ const TextField = ({
 };
 
 export { TextField };
+export default TextField;

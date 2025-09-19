@@ -1,4 +1,4 @@
-import { registryItemSchema, RegistryItem, Registry } from "./schemas"
+import { registryItemSchema, RegistryItem, Registry } from "./index"
 import { z } from "zod"
 
 const registryCache = new Map<string, Promise<any>>()

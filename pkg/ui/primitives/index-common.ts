@@ -206,8 +206,8 @@ export {
   SelectLabel,
   SelectItem,
   SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
+  // SelectScrollUpButton, // Does not exist in select.tsx
+  // SelectScrollDownButton, // Does not exist in select.tsx
 } from './select'
 
 export {
@@ -266,7 +266,7 @@ export { default as Slider } from './slider'
 export { default as Skeleton } from './skeleton'
 export { default as StepIndicator } from './step-indicator'
 export { default as Switch } from './switch'
-export { default as TextArea } from './textarea'
+export { Textarea } from './textarea'
 export { default as TextField } from './textfield'
 export { Toaster, toast } from './sonner'
 export { Toggle, toggleVariants } from './toggle'
@@ -276,7 +276,7 @@ export { default as VideoPlayer } from './video-player'
 // Chat components
 export { ChatInput } from './chat/chat-input'
 export { ChatInputArea } from './chat/chat-input-area'
-export { FileList } from './chat/files-preview'
+// export { FileList } from './chat/files-preview' // Uses Tauri APIs not available in web
 
 // Additional components
 export { CopyToClipboardIcon } from './copy-to-clipboard-icon'

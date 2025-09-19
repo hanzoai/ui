@@ -1,0 +1,8 @@
+{
+  "name": "@hanzo/ui-vue",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components/index.ts"
+  }
+}

@@ -1,5 +1,5 @@
-import { save } from '@tauri-apps/plugin-dialog';
-import * as fs from '@tauri-apps/plugin-fs';
+// import { save } from '@tauri-apps/plugin-dialog'; // Not available in web environment
+// import * as fs from '@tauri-apps/plugin-fs'; // Not available in web environment
 import { RotateCcw, Download } from 'lucide-react';
 import mermaid from 'mermaid';
 import { FC, useEffect, useRef, useState, useCallback } from 'react';
@@ -29,23 +29,18 @@ mermaid.initialize({
 const generateId = () => `mermaid-${Math.random().toString(36).slice(2)}`;
 
 const downloadBlob = async (blob: Blob, filename: string) => {
-  const filePath = await save({
-    title: 'Save Mermaid Diagram',
-    filters: [
-      {
-        name: 'SVG Files',
-        extensions: ['svg'],
-      },
-    ],
-    defaultPath: filename,
-  });
-
-  if (filePath) {
-    const arrayBuffer = await blob.arrayBuffer();
-    await fs.writeFile(filePath, new Uint8Array(arrayBuffer), {
-      baseDir: fs.BaseDirectory.Download,
-    });
+  // Web-compatible download (instead of Tauri)
+  try {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
     toast.success('Mermaid diagram saved successfully');
+  } catch (error) {
+    toast.error('Failed to download diagram');
   }
 };
 

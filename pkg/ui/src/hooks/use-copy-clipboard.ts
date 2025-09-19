@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { copyToClipboard } from '../helpers';
+import { copyToClipboard } from '../../util/copy-to-clipboard';
 
 type UseCopyClipboardProps = {
   string?: string;

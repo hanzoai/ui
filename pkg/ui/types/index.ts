@@ -1,6 +1,7 @@
 
 export type { default as AnimationDef } from './animation-def'
-export { Breakpoint, Breakpoints } from './breakpoints'
+export type { Breakpoint } from './breakpoints'
+export { Breakpoints } from './breakpoints'
 export type { default as BulletItem } from './bullet-item'
 
 export type {

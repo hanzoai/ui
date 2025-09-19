@@ -1,0 +1,508 @@
+---
+title: AI Code
+description: An AI-powered code assistant interface with code generation, explanation, refactoring, debugging, testing, and security features.
+featured: true
+component: true
+---
+
+<ComponentPreview name="ai-code-demo" description="A complete AI-powered code assistant interface" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add ai-code
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @monaco-editor/react @radix-ui/react-scroll-area @radix-ui/react-tabs @radix-ui/react-tooltip @radix-ui/react-dropdown-menu react-resizable-panels next-themes lucide-react class-variance-authority
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="ai-code" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { AICode } from "@/components/ui/ai-code"
+
+export function CodeAssistantDemo() {
+  const handleGenerate = async (prompt: string) => {
+    // Your AI code generation logic
+    const response = await fetch('/api/generate-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    })
+    const { code } = await response.json()
+    return code
+  }
+
+  const handleExplain = async (code: string, line?: number) => {
+    // Your code explanation logic
+    const response = await fetch('/api/explain-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, line })
+    })
+    const { explanations } = await response.json()
+    return explanations
+  }
+
+  const handleRefactor = async (code: string) => {
+    // Your code refactoring logic
+    const response = await fetch('/api/refactor-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    })
+    const { refactoredCode } = await response.json()
+    return refactoredCode
+  }
+
+  return (
+    <AICode
+      defaultValue="// Start typing or ask AI to generate code..."
+      language="typescript"
+      height="600px"
+      onGenerate={handleGenerate}
+      onExplain={handleExplain}
+      onRefactor={handleRefactor}
+      features={['generate', 'explain', 'refactor', 'debug', 'test', 'document', 'review']}
+      placeholder="Ask AI to generate code, explain functions, or help with debugging..."
+    />
+  )
+}
+```
+
+## Features
+
+The AI Code component provides comprehensive AI-powered development assistance:
+
+### Core Features
+- **Code Generation**: Natural language to code conversion
+- **Code Explanation**: Inline annotations and hover explanations
+- **Refactoring**: Automated code improvement suggestions
+- **Debugging**: Bug detection and fix recommendations
+- **Test Generation**: Automated test case creation
+- **Documentation**: Auto-generated code documentation
+- **Code Review**: Comprehensive code analysis and suggestions
+
+### Advanced Features
+- **Security Scanning**: Vulnerability detection and fixes
+- **Multi-file Support**: Work with multiple files simultaneously
+- **Language Detection**: Automatic programming language detection
+- **Import Resolution**: Smart import and dependency management
+- **Performance Analysis**: Code performance suggestions
+- **Framework Detection**: Context-aware framework suggestions
+
+## Examples
+
+### Basic Code Editor
+
+```tsx
+<AICode
+  defaultValue="console.log('Hello, World!');"
+  language="javascript"
+  onGenerate={handleGenerate}
+  features={['generate', 'explain']}
+/>
+```
+
+### Multi-file Project
+
+```tsx
+<AICode
+  multiFileSupport
+  files={[
+    { name: 'index.ts', content: 'export * from "./utils"', language: 'typescript' },
+    { name: 'utils.ts', content: 'export const helper = () => {}', language: 'typescript' }
+  ]}
+  activeFile="index.ts"
+  onFileChange={(fileName) => console.log('Switched to:', fileName)}
+  onFileCreate={(fileName, content) => console.log('Created:', fileName)}
+  features={['generate', 'explain', 'refactor', 'test', 'document']}
+/>
+```
+
+### Security-focused Development
+
+```tsx
+<AICode
+  defaultValue={secureCodeExample}
+  language="typescript"
+  onSecurityScan={handleSecurityScan}
+  features={['debug', 'review']}
+  onRefactor={handleSecureRefactor}
+/>
+```
+
+### AI Chat Integration
+
+```tsx
+<AICode
+  defaultValue="// AI will help you write better code"
+  onGenerate={handleGenerate}
+  onExplain={handleExplain}
+  onDebug={handleDebug}
+  placeholder="Describe what you want to build, and I'll help you code it..."
+  features={['generate', 'explain', 'refactor', 'debug', 'test', 'document', 'review']}
+/>
+```
+
+## API Reference
+
+### AICode
+
+<TypeTable
+  type={{
+    value: {
+      description: "Current code content",
+      type: "string",
+      default: "undefined"
+    },
+    defaultValue: {
+      description: "Initial code content",
+      type: "string",
+      default: '""'
+    },
+    language: {
+      description: "Programming language for syntax highlighting",
+      type: "string",
+      default: '"typescript"'
+    },
+    theme: {
+      description: "Editor theme",
+      type: '"dark" | "light" | "auto"',
+      default: '"auto"'
+    },
+    height: {
+      description: "Editor height",
+      type: "string | number",
+      default: '"500px"'
+    },
+    onGenerate: {
+      description: "Callback for AI code generation",
+      type: "(prompt: string) => Promise<string>",
+      default: "undefined"
+    },
+    onExplain: {
+      description: "Callback for code explanation",
+      type: "(code: string, line?: number) => Promise<Explanation[]>",
+      default: "undefined"
+    },
+    onRefactor: {
+      description: "Callback for code refactoring",
+      type: "(code: string) => Promise<string>",
+      default: "undefined"
+    },
+    onDebug: {
+      description: "Callback for debugging assistance",
+      type: "(code: string) => Promise<CodeSuggestion[]>",
+      default: "undefined"
+    },
+    onTest: {
+      description: "Callback for test generation",
+      type: "(code: string) => Promise<string>",
+      default: "undefined"
+    },
+    onDocument: {
+      description: "Callback for documentation generation",
+      type: "(code: string) => Promise<string>",
+      default: "undefined"
+    },
+    onReview: {
+      description: "Callback for code review",
+      type: "(code: string) => Promise<CodeSuggestion[]>",
+      default: "undefined"
+    },
+    onSecurityScan: {
+      description: "Callback for security vulnerability scanning",
+      type: "(code: string) => Promise<SecurityIssue[]>",
+      default: "undefined"
+    },
+    onChange: {
+      description: "Callback when code changes",
+      type: "(value: string) => void",
+      default: "undefined"
+    },
+    features: {
+      description: "Available AI features",
+      type: "CodeFeature[]",
+      default: "['generate', 'explain', 'refactor', 'debug', 'test', 'document', 'review']"
+    },
+    showMinimap: {
+      description: "Show editor minimap",
+      type: "boolean",
+      default: "false"
+    },
+    showLineNumbers: {
+      description: "Show line numbers",
+      type: "boolean",
+      default: "true"
+    },
+    isGenerating: {
+      description: "Whether AI is currently generating",
+      type: "boolean",
+      default: "false"
+    },
+    multiFileSupport: {
+      description: "Enable multi-file editing",
+      type: "boolean",
+      default: "false"
+    },
+    files: {
+      description: "Files for multi-file mode",
+      type: "{ name: string; content: string; language?: string }[]",
+      default: "undefined"
+    },
+    activeFile: {
+      description: "Currently active file",
+      type: "string",
+      default: "undefined"
+    },
+    onFileChange: {
+      description: "Callback when active file changes",
+      type: "(fileName: string) => void",
+      default: "undefined"
+    },
+    onFileCreate: {
+      description: "Callback when new file is created",
+      type: "(fileName: string, content: string) => void",
+      default: "undefined"
+    },
+    placeholder: {
+      description: "Placeholder text for AI chat",
+      type: "string",
+      default: '"Ask AI to generate code or explain existing code..."'
+    }
+  }}
+/>
+
+### Types
+
+#### CodeFeature
+```tsx
+type CodeFeature =
+  | 'generate'
+  | 'explain'
+  | 'refactor'
+  | 'debug'
+  | 'test'
+  | 'document'
+  | 'review'
+```
+
+#### Explanation
+```tsx
+interface Explanation {
+  id: string
+  line: number
+  content: string
+  type: 'explanation' | 'suggestion' | 'warning' | 'error'
+}
+```
+
+#### CodeSuggestion
+```tsx
+interface CodeSuggestion {
+  id: string
+  type: CodeFeature
+  title: string
+  description: string
+  code?: string
+  startLine?: number
+  endLine?: number
+  severity?: 'info' | 'warning' | 'error'
+}
+```
+
+#### SecurityIssue
+```tsx
+interface SecurityIssue {
+  id: string
+  line: number
+  severity: 'low' | 'medium' | 'high' | 'critical'
+  message: string
+  fix?: string
+}
+```
+
+## Integration Guide
+
+### Backend API Integration
+
+Implement the following API endpoints to connect with your AI backend:
+
+```typescript
+// /api/generate-code
+export async function POST(request: Request) {
+  const { prompt } = await request.json()
+
+  // Call your AI service (OpenAI, Claude, etc.)
+  const code = await generateCode(prompt)
+
+  return Response.json({ code })
+}
+
+// /api/explain-code
+export async function POST(request: Request) {
+  const { code, line } = await request.json()
+
+  const explanations = await explainCode(code, line)
+
+  return Response.json({ explanations })
+}
+
+// /api/security-scan
+export async function POST(request: Request) {
+  const { code } = await request.json()
+
+  const issues = await scanForSecurityIssues(code)
+
+  return Response.json({ issues })
+}
+```
+
+### Language Server Integration
+
+For advanced features like auto-completion and error checking:
+
+```typescript
+import * as monaco from 'monaco-editor'
+
+// Configure TypeScript compiler options
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+  target: monaco.languages.typescript.ScriptTarget.Latest,
+  allowNonTsExtensions: true,
+  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+  module: monaco.languages.typescript.ModuleKind.CommonJS,
+  noEmit: true,
+  esModuleInterop: true,
+  jsx: monaco.languages.typescript.JsxEmit.React,
+  reactNamespace: "React",
+  allowJs: true,
+  typeRoots: ["node_modules/@types"]
+})
+```
+
+### Custom AI Providers
+
+Integrate with different AI providers:
+
+```typescript
+// OpenAI integration
+const openaiProvider = {
+  async generateCode(prompt: string) {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: `Generate code: ${prompt}` }]
+    })
+    return response.choices[0].message.content
+  }
+}
+
+// Claude integration
+const claudeProvider = {
+  async generateCode(prompt: string) {
+    const response = await anthropic.messages.create({
+      model: "claude-3-sonnet-20240229",
+      messages: [{ role: "user", content: `Generate code: ${prompt}` }]
+    })
+    return response.content[0].text
+  }
+}
+```
+
+## Best Practices
+
+### Security Considerations
+- Always validate and sanitize AI-generated code before execution
+- Implement rate limiting for AI API calls
+- Use proper authentication for AI endpoints
+- Review security scan results before applying fixes
+
+### Performance Optimization
+- Implement debouncing for real-time AI features
+- Cache common AI responses
+- Use progressive loading for large codebases
+- Optimize Monaco Editor configuration for your use case
+
+### User Experience
+- Provide clear loading states during AI operations
+- Implement proper error handling and fallbacks
+- Allow users to customize AI feature availability
+- Provide keyboard shortcuts for common actions
+
+### Accessibility
+- Ensure proper ARIA labels for all interactive elements
+- Support screen readers with meaningful descriptions
+- Provide keyboard navigation for all features
+- Implement proper focus management
+
+## Troubleshooting
+
+### Common Issues
+
+**Monaco Editor not loading**
+- Ensure Monaco Editor assets are properly loaded
+- Check for conflicting CSS or JavaScript
+- Verify import paths are correct
+
+**AI features not working**
+- Check API endpoint implementations
+- Verify authentication tokens
+- Review network requests in browser dev tools
+
+**Performance issues**
+- Reduce editor features for large files
+- Implement virtual scrolling for file lists
+- Use Web Workers for heavy computations
+
+**Theme not applying**
+- Verify theme provider is properly configured
+- Check CSS variable definitions
+- Ensure theme prop is correctly passed
+
+## Examples Repository
+
+Find complete working examples in our [GitHub repository](https://github.com/hanzo-ai/ui-examples), including:
+
+- Full-stack AI code assistant
+- Integration with popular AI providers
+- Custom language server setup
+- Advanced security scanning
+- Multi-file project management
+
+## Changelog
+
+### v1.0.0
+- Initial release with core AI features
+- Monaco Editor integration
+- Multi-file support
+- Security scanning
+- Comprehensive documentation

@@ -1,0 +1,884 @@
+---
+title: Animation Components
+description: Beautiful animation components for creating engaging user interfaces with smooth 60fps performance.
+featured: true
+component: true
+---
+
+A comprehensive collection of animation components built with Framer Motion, designed for smooth 60fps performance and beautiful user experiences.
+
+## Components Overview
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Animated Text</h3>
+    <p className="text-sm text-muted-foreground">Typewriter, word reveal, letter shuffle, gradient, and glitch effects</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Animated Number</h3>
+    <p className="text-sm text-muted-foreground">Count up/down with formatting, decimals, and easing options</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Animated List</h3>
+    <p className="text-sm text-muted-foreground">Stagger animations, reorderable items, virtualized for performance</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Animated Background</h3>
+    <p className="text-sm text-muted-foreground">Gradient shifts, blob animations, wave patterns, parallax layers</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Animated Icon</h3>
+    <p className="text-sm text-muted-foreground">Morph between icons, SVG path animations, hover effects</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Reveal Animation</h3>
+    <p className="text-sm text-muted-foreground">Scroll-triggered reveals, multiple directions, stagger children</p>
+  </div>
+  <div className="p-4 border rounded-lg">
+    <h3 className="font-semibold">Pulse Animation</h3>
+    <p className="text-sm text-muted-foreground">Attention-grabbing pulse with customizable intensity and patterns</p>
+  </div>
+</div>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx hanzo-ui@latest add animated-text
+npx hanzo-ui@latest add animated-number
+npx hanzo-ui@latest add animated-list
+npx hanzo-ui@latest add animated-background
+npx hanzo-ui@latest add animated-icon
+npx hanzo-ui@latest add reveal-animation
+npx hanzo-ui@latest add pulse-animation
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the animation components into your project.</Step>
+
+All components are located in the `/ui` directory and can be copied individually.
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Animated Text
+
+Create engaging text animations with multiple effects.
+
+### Basic Usage
+
+```tsx
+import { AnimatedText } from "@/components/ui/animated-text"
+
+export function TextDemo() {
+  return (
+    <AnimatedText
+      text="Hello, World!"
+      animation="typewriter"
+    />
+  )
+}
+```
+
+### Animation Types
+
+```tsx
+// Typewriter effect
+<AnimatedText text="Typing effect..." animation="typewriter" />
+
+// Word-by-word reveal
+<AnimatedText text="Word by word reveal" animation="wordReveal" />
+
+// Letter shuffle
+<AnimatedText text="Shuffling letters" animation="letterShuffle" />
+
+// Gradient animation
+<AnimatedText
+  text="Gradient text"
+  animation="gradient"
+  gradientColors={['#ff6b6b', '#4ecdc4', '#45b7d1']}
+/>
+
+// Glitch effect
+<AnimatedText
+  text="Glitch effect"
+  animation="glitch"
+  glitchIntensity={0.8}
+/>
+```
+
+### Advanced Options
+
+```tsx
+<AnimatedText
+  text="Advanced animation"
+  animation="typewriter"
+  duration={2000}
+  delay={50}
+  repeat={true}
+  repeatDelay={1000}
+  showCursor={true}
+  cursor="▋"
+  onComplete={() => console.log('Animation complete!')}
+/>
+```
+
+## Animated Number
+
+Animate numerical values with formatting options.
+
+### Basic Usage
+
+```tsx
+import { AnimatedNumber } from "@/components/ui/animated-number"
+
+export function NumberDemo() {
+  return (
+    <AnimatedNumber value={1234} />
+  )
+}
+```
+
+### Formatting Options
+
+```tsx
+// Currency formatting
+<AnimatedNumber
+  value={1234.56}
+  format="currency"
+  currency="USD"
+  decimals={2}
+/>
+
+// Percentage
+<AnimatedNumber
+  value={85}
+  format="percent"
+  decimals={1}
+/>
+
+// Custom formatting
+<AnimatedNumber
+  value={1000000}
+  prefix="$"
+  suffix=" USD"
+  separator="."
+/>
+```
+
+### Animation Options
+
+```tsx
+<AnimatedNumber
+  value={5000}
+  from={0}
+  duration={2000}
+  easing="easeOut"
+  useSpring={true}
+  springConfig={{ tension: 100, friction: 10 }}
+  onComplete={(value) => console.log('Final value:', value)}
+/>
+```
+
+### Counter Component
+
+```tsx
+import { AnimatedCounter } from "@/components/ui/animated-number"
+
+<AnimatedCounter
+  initialValue={0}
+  min={0}
+  max={100}
+  step={1}
+  showControls={true}
+  onChange={(value) => console.log('Value changed:', value)}
+/>
+```
+
+## Animated List
+
+Create smooth list animations with staggered effects.
+
+### Basic Usage
+
+```tsx
+import { AnimatedList } from "@/components/ui/animated-list"
+
+const items = [
+  { id: 1, content: <div>Item 1</div> },
+  { id: 2, content: <div>Item 2</div> },
+  { id: 3, content: <div>Item 3</div> }
+]
+
+export function ListDemo() {
+  return (
+    <AnimatedList
+      items={items}
+      animation="slideUp"
+      staggerDelay={150}
+    />
+  )
+}
+```
+
+### Animation Types
+
+```tsx
+// Slide animations
+<AnimatedList items={items} animation="slideUp" />
+<AnimatedList items={items} animation="slideDown" />
+<AnimatedList items={items} animation="slideLeft" />
+<AnimatedList items={items} animation="slideRight" />
+
+// Fade and scale
+<AnimatedList items={items} animation="fade" />
+<AnimatedList items={items} animation="scale" />
+```
+
+### Layout Options
+
+```tsx
+// Horizontal layout
+<AnimatedList
+  items={items}
+  layout="horizontal"
+  animation="slideLeft"
+/>
+
+// Grid layout
+<AnimatedList
+  items={items}
+  layout="grid"
+  gridColumns={3}
+  animation="scale"
+/>
+```
+
+### Reorderable Lists
+
+```tsx
+<AnimatedList
+  items={items}
+  reorderable={true}
+  onReorder={(newItems) => setItems(newItems)}
+  showHoverEffects={true}
+/>
+```
+
+### Virtualized Lists
+
+```tsx
+<AnimatedList
+  items={largeItemList}
+  virtualized={true}
+  itemHeight={60}
+  containerHeight={400}
+/>
+```
+
+### Presets
+
+```tsx
+import { AnimatedListPresets } from "@/components/ui/animated-list"
+
+// Pre-configured variations
+<AnimatedListPresets.FadeList items={items} />
+<AnimatedListPresets.ScaleList items={items} />
+<AnimatedListPresets.TaskList items={items} reorderable />
+<AnimatedListPresets.GridList items={items} gridColumns={4} />
+```
+
+## Animated Background
+
+Create immersive background animations.
+
+### Basic Usage
+
+```tsx
+import { AnimatedBackground } from "@/components/ui/animated-background"
+
+export function BackgroundDemo() {
+  return (
+    <AnimatedBackground animation="gradient">
+      <div className="p-8">
+        <h1>Content over animated background</h1>
+      </div>
+    </AnimatedBackground>
+  )
+}
+```
+
+### Animation Types
+
+```tsx
+// Gradient flow
+<AnimatedBackground
+  animation="gradient"
+  colors={['#667eea', '#764ba2', '#f093fb']}
+/>
+
+// Floating blobs
+<AnimatedBackground
+  animation="blob"
+  elementCount={5}
+  intensity={1.2}
+/>
+
+// Wave patterns
+<AnimatedBackground
+  animation="wave"
+  colors={['#0093E9', '#80D0C7']}
+/>
+
+// Mesh gradients
+<AnimatedBackground
+  animation="mesh"
+  colors={['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4']}
+/>
+
+// Parallax layers
+<AnimatedBackground
+  animation="parallax"
+  parallaxLayers={[
+    { speed: 0.5, color: '#ff6b6b50', opacity: 0.3 },
+    { speed: 1, color: '#4ecdc450', opacity: 0.4 }
+  ]}
+/>
+
+// Floating particles
+<AnimatedBackground
+  animation="particles"
+  elementCount={50}
+  colors={['#ffffff', '#f0f0f0']}
+/>
+```
+
+### Customization
+
+```tsx
+<AnimatedBackground
+  animation="blob"
+  speed={0.8}
+  intensity={1.5}
+  blur={true}
+  blurAmount={15}
+  opacity={0.7}
+  fullscreen={true}
+  paused={false}
+/>
+```
+
+### Presets
+
+```tsx
+import { AnimatedBackgroundPresets } from "@/components/ui/animated-background"
+
+<AnimatedBackgroundPresets.CalmGradient />
+<AnimatedBackgroundPresets.OceanWaves />
+<AnimatedBackgroundPresets.FloatingBubbles />
+<AnimatedBackgroundPresets.CosmicMesh />
+<AnimatedBackgroundPresets.Starfield />
+<AnimatedBackgroundPresets.Aurora />
+```
+
+## Animated Icon
+
+Bring icons to life with smooth animations.
+
+### Basic Usage
+
+```tsx
+import { AnimatedIcon } from "@/components/ui/animated-icon"
+
+export function IconDemo() {
+  return (
+    <AnimatedIcon
+      icon="loading"
+      animation="spin"
+      size={24}
+    />
+  )
+}
+```
+
+### Built-in Icons
+
+```tsx
+// Loading spinner
+<AnimatedIcon icon="loading" animation="spin" />
+
+// Pulsing heart
+<AnimatedIcon icon="heart" animation="pulse" color="#ef4444" />
+
+// Morphing hamburger menu
+<AnimatedIcon icon="hamburger" animation="morph" />
+
+// Drawing checkmark
+<AnimatedIcon icon="check" animation="draw" color="#10b981" />
+
+// Bouncing star
+<AnimatedIcon icon="star" animation="bounce" color="#fbbf24" />
+```
+
+### Custom Icons
+
+```tsx
+// Custom SVG path
+<AnimatedIcon
+  icon="custom"
+  paths="M12 2L2 7v10c0 5.55 3.84 10 9 11 5.16-1 9-5.45 9-11V7l-10-5z"
+  animation="draw"
+/>
+
+// Morphing between paths
+<AnimatedIcon
+  icon="custom"
+  paths={[
+    "M3 12h18M3 6h18M3 18h18", // Hamburger
+    "m6 6 12 12M6 18 18 6"     // X
+  ]}
+  animation="morph"
+/>
+```
+
+### Interactive Icons
+
+```tsx
+<AnimatedIcon
+  icon="heart"
+  interactive={true}
+  hoverAnimation="scale"
+  clickAnimation="ripple"
+  onClick={() => console.log('Icon clicked!')}
+/>
+```
+
+### Progress Animations
+
+```tsx
+<AnimatedIcon
+  icon="check"
+  animation="draw"
+  progress={0.5} // 0-1 for partial drawing
+  autoAnimate={false}
+/>
+```
+
+### Presets
+
+```tsx
+import { AnimatedIconPresets } from "@/components/ui/animated-icon"
+
+<AnimatedIconPresets.Spinner />
+<AnimatedIconPresets.HeartBeat />
+<AnimatedIconPresets.MenuToggle />
+<AnimatedIconPresets.CheckDraw />
+<AnimatedIconPresets.BounceStar />
+<AnimatedIconPresets.HoverArrow />
+```
+
+## Reveal Animation
+
+Create scroll-triggered reveal animations.
+
+### Basic Usage
+
+```tsx
+import { RevealAnimation } from "@/components/ui/reveal-animation"
+
+export function RevealDemo() {
+  return (
+    <RevealAnimation direction="up">
+      <div>Content to reveal</div>
+    </RevealAnimation>
+  )
+}
+```
+
+### Direction Options
+
+```tsx
+// Directional reveals
+<RevealAnimation direction="up">Slide up</RevealAnimation>
+<RevealAnimation direction="down">Slide down</RevealAnimation>
+<RevealAnimation direction="left">Slide from left</RevealAnimation>
+<RevealAnimation direction="right">Slide from right</RevealAnimation>
+
+// Other animations
+<RevealAnimation direction="fade">Fade in</RevealAnimation>
+<RevealAnimation direction="scale">Scale up</RevealAnimation>
+<RevealAnimation direction="rotate">Rotate reveal</RevealAnimation>
+```
+
+### Staggered Children
+
+```tsx
+<RevealAnimation
+  direction="up"
+  staggerChildren={true}
+  staggerDelay={150}
+>
+  <div>Child 1</div>
+  <div>Child 2</div>
+  <div>Child 3</div>
+</RevealAnimation>
+```
+
+### Scroll Configuration
+
+```tsx
+<RevealAnimation
+  direction="up"
+  threshold={0.3}
+  rootMargin="0px 0px -100px 0px"
+  triggerOnce={false}
+  distance={100}
+  duration={800}
+  easing="backOut"
+/>
+```
+
+### Manual Trigger
+
+```tsx
+const [trigger, setTrigger] = useState(false)
+
+<RevealAnimation
+  direction="scale"
+  useViewport={false}
+  trigger={trigger}
+>
+  <div>Manually triggered content</div>
+</RevealAnimation>
+```
+
+### Advanced Usage
+
+```tsx
+// Multiple reveal groups
+import { RevealGroup } from "@/components/ui/reveal-animation"
+
+<RevealGroup staggerDelay={200} direction="up">
+  <div>Group item 1</div>
+  <div>Group item 2</div>
+  <div>Group item 3</div>
+</RevealGroup>
+
+// Scroll-based progress
+import { ScrollReveal } from "@/components/ui/reveal-animation"
+
+<ScrollReveal startOffset={0.2} endOffset={0.8}>
+  <div>Scroll-based reveal</div>
+</ScrollReveal>
+```
+
+### Presets
+
+```tsx
+import { RevealPresets } from "@/components/ui/reveal-animation"
+
+<RevealPresets.FadeUp>Gentle fade up</RevealPresets.FadeUp>
+<RevealPresets.BounceScale>Bouncy scale</RevealPresets.BounceScale>
+<RevealPresets.StaggerList>Staggered list</RevealPresets.StaggerList>
+<RevealPresets.SlideLeft>Slide from left</RevealPresets.SlideLeft>
+<RevealPresets.RotateReveal>Rotate reveal</RevealPresets.RotateReveal>
+```
+
+## Pulse Animation
+
+Create attention-grabbing pulse effects.
+
+### Basic Usage
+
+```tsx
+import { PulseAnimation } from "@/components/ui/pulse-animation"
+
+export function PulseDemo() {
+  return (
+    <PulseAnimation>
+      <div className="w-12 h-12 bg-blue-500 rounded-full" />
+    </PulseAnimation>
+  )
+}
+```
+
+### Pulse Patterns
+
+```tsx
+// Steady pulse
+<PulseAnimation pattern="steady">
+  <div>Steady pulse</div>
+</PulseAnimation>
+
+// Heartbeat pattern
+<PulseAnimation pattern="heartbeat">
+  <div>Heartbeat</div>
+</PulseAnimation>
+
+// Notification pulse
+<PulseAnimation pattern="notification">
+  <div>Notification</div>
+</PulseAnimation>
+
+// Breathing effect
+<PulseAnimation pattern="breathing">
+  <div>Breathing</div>
+</PulseAnimation>
+
+// Rapid pulse
+<PulseAnimation pattern="rapid">
+  <div>Rapid</div>
+</PulseAnimation>
+```
+
+### Customization
+
+```tsx
+<PulseAnimation
+  intensity={1.5}
+  duration={1000}
+  color="#ef4444"
+  showRing={true}
+  ringLayers={3}
+  showGlow={true}
+  glowIntensity={1.2}
+  shape="circle"
+  repeat={5}
+/>
+```
+
+### Interactive Pulse
+
+```tsx
+<PulseAnimation
+  pulseOnHover={true}
+  pulseOnClick={true}
+  onClick={() => console.log('Pulsed!')}
+>
+  <button>Interactive button</button>
+</PulseAnimation>
+```
+
+### Specialized Components
+
+```tsx
+import {
+  PulseDot,
+  HeartbeatPulse,
+  BreathingPulse
+} from "@/components/ui/pulse-animation"
+
+// Notification dot
+<PulseDot color="#ef4444" size={12} />
+
+// Heartbeat indicator
+<HeartbeatPulse>
+  <Heart className="w-6 h-6" />
+</HeartbeatPulse>
+
+// Breathing effect
+<BreathingPulse color="#3b82f6">
+  <div>Calm breathing</div>
+</BreathingPulse>
+```
+
+### Presets
+
+```tsx
+import { PulsePresets } from "@/components/ui/pulse-animation"
+
+<PulsePresets.Notification />
+<PulsePresets.Loading />
+<PulsePresets.Alert />
+<PulsePresets.Success />
+<PulsePresets.Button>Click me</PulsePresets.Button>
+<PulsePresets.Status />
+```
+
+## Performance Tips
+
+### 60fps Smooth Animations
+
+All components are optimized for 60fps performance:
+
+- Use `transform` and `opacity` properties for animations
+- Leverage hardware acceleration with `will-change`
+- Batch DOM updates with `requestAnimationFrame`
+- Use Framer Motion's optimized animation engine
+
+### Best Practices
+
+```tsx
+// ✅ Good - Transform-based animations
+<motion.div
+  animate={{ x: 100, scale: 1.2 }}
+  transition={{ duration: 0.3 }}
+/>
+
+// ❌ Avoid - Layout-triggering animations
+<motion.div
+  animate={{ width: 200, height: 200 }}
+  transition={{ duration: 0.3 }}
+/>
+
+// ✅ Good - Use layout prop for layout animations
+<motion.div
+  layout
+  animate={{ width: 200 }}
+/>
+```
+
+### Virtualization
+
+For large lists, use virtualization:
+
+```tsx
+<AnimatedList
+  items={thousandsOfItems}
+  virtualized={true}
+  itemHeight={60}
+  containerHeight={400}
+/>
+```
+
+### Memory Management
+
+- Use `triggerOnce={true}` for one-time animations
+- Cleanup intervals and timeouts in useEffect
+- Use `AnimatePresence` for exit animations
+
+## Common Patterns
+
+### Loading States
+
+```tsx
+// Loading text
+<AnimatedText
+  text="Loading..."
+  animation="typewriter"
+  repeat={true}
+/>
+
+// Loading number
+<AnimatedNumber
+  value={progress}
+  suffix="%"
+  duration={500}
+/>
+
+// Loading icon
+<AnimatedIcon
+  icon="loading"
+  animation="spin"
+/>
+```
+
+### Page Transitions
+
+```tsx
+<RevealAnimation direction="fade" duration={300}>
+  <PageContent />
+</RevealAnimation>
+```
+
+### Notification Systems
+
+```tsx
+<PulseAnimation pattern="notification" color="#ef4444">
+  <Badge>New</Badge>
+</PulseAnimation>
+```
+
+### Data Visualization
+
+```tsx
+{data.map((item, i) => (
+  <RevealAnimation
+    key={item.id}
+    direction="up"
+    delay={i * 100}
+  >
+    <AnimatedNumber value={item.value} />
+  </RevealAnimation>
+))}
+```
+
+## Accessibility
+
+All animation components respect user preferences and accessibility standards:
+
+- **`prefers-reduced-motion`** is automatically detected and respected
+  - Animations are disabled when users prefer reduced motion
+  - Components show their final state immediately
+  - No performance impact from running animations
+- **Screen reader friendly** with proper ARIA attributes
+- **Keyboard navigation support** where applicable
+- **Focus management** for interactive components
+- **Performance optimized** to maintain 60fps with transform/opacity animations
+
+```tsx
+// Automatically respects prefers-reduced-motion
+<AnimatedText
+  text="Accessible animation"
+  animation="typewriter"
+/>
+
+// All components automatically detect and respect user preferences
+<PulseAnimation pattern="heartbeat">
+  <Heart /> {/* Will not animate if user prefers reduced motion */}
+</PulseAnimation>
+
+<RevealAnimation direction="up">
+  <Card /> {/* Shows immediately without animation if reduced motion is preferred */}
+</RevealAnimation>
+```
+
+### Manual Reduced Motion Handling
+
+You can also manually check for reduced motion preferences:
+
+```tsx
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
+
+function MyComponent() {
+  const prefersReducedMotion = usePrefersReducedMotion()
+
+  return (
+    <AnimatedNumber
+      value={1000}
+      duration={prefersReducedMotion ? 0 : 2000}
+    />
+  )
+}
+```
+
+## Browser Support
+
+- Modern browsers (Chrome 60+, Firefox 55+, Safari 12+)
+- Mobile browsers (iOS Safari 12+, Chrome Mobile 60+)
+- Uses Framer Motion's battle-tested animation engine
+- Graceful fallbacks for unsupported features

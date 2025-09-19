@@ -1,8 +1,8 @@
 import { useTranslation } from '@hanzo_network/hanzo-i18n';
 import * as React from 'react';
 
-import { useCombinedRefs } from '../../hooks/use-combined-refs';
-import { cn } from '../src/utils';
+import { useCombinedRefs } from '../../src/hooks/use-combined-refs';
+import { cn } from '../../src/utils';
 import { ChatInput } from './chat-input';
 
 type ChatInputAreaProps = {
