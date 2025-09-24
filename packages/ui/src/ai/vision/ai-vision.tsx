@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '../../lib/utils'
 
-export interface AIVisionProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIVisionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onError'> {
   provider?: string
   model?: string
   apiKey?: string
@@ -11,7 +11,7 @@ export interface AIVisionProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
-  ({ className, children, imageUrl, ...props }, ref) => {
+  ({ className, children, imageUrl, onAnalysis, onError, provider, model, apiKey, ...props }, ref) => {
     return (
       <div
         ref={ref}
