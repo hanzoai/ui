@@ -8,7 +8,7 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@hanzo/ui/components/toast"
+} from "./toast"
 
 export function Toaster() {
   const { toasts } = useToast()

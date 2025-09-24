@@ -182,6 +182,98 @@ const DropdownMenuShortcut = ({
 }
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut"
 
+// Additional DropdownMenu components for extended functionality
+const DropdownMenuHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("px-2 py-1.5 text-sm font-semibold", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuHeader.displayName = "DropdownMenuHeader"
+
+const DropdownMenuTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={cn("font-semibold leading-none tracking-tight", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuTitle.displayName = "DropdownMenuTitle"
+
+const DropdownMenuDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuDescription.displayName = "DropdownMenuDescription"
+
+const DropdownMenuFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("px-2 py-1.5", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuFooter.displayName = "DropdownMenuFooter"
+
+const DropdownMenuProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>
+DropdownMenuProvider.displayName = "DropdownMenuProvider"
+
+const DropdownMenuList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex flex-col", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuList.displayName = "DropdownMenuList"
+
+const DropdownMenuValue = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      className={cn("text-sm", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuValue.displayName = "DropdownMenuValue"
+
+const DropdownMenuImage = React.forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>(
+  ({ className, ...props }, ref) => (
+    <img
+      ref={ref}
+      className={cn("h-4 w-4", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuImage.displayName = "DropdownMenuImage"
+
+const DropdownMenuFallback = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+)
+DropdownMenuFallback.displayName = "DropdownMenuFallback"
+
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -198,4 +290,13 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
+  DropdownMenuHeader,
+  DropdownMenuTitle,
+  DropdownMenuDescription,
+  DropdownMenuFooter,
+  DropdownMenuProvider,
+  DropdownMenuList,
+  DropdownMenuValue,
+  DropdownMenuImage,
+  DropdownMenuFallback
 }

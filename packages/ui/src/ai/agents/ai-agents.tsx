@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { cn } from '../../lib/utils'
 
-export interface AIAgentsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIAgentsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onError'> {
   agents?: Array<{ id: string; name: string; role: string; capabilities: string[] }>
   onAgentSelect?: (agentId: string) => void
   onMessage?: (agentId: string, message: string) => void
 }
 
 export const AIAgents = React.forwardRef<HTMLDivElement, AIAgentsProps>(
-  ({ className, children, agents = [], ...props }, ref) => {
+  ({ className, children, agents = [], onAgentSelect, onTaskComplete, onError, provider, model, apiKey, maxAgents, ...props }, ref) => {
     return (
       <div
         ref={ref}
