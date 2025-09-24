@@ -116,6 +116,142 @@ type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>
 
+// Additional Toast components for extended functionality
+const ToastTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+  ({ className, ...props }, ref) => (
+    <button
+      ref={ref}
+      className={cn("inline-flex items-center justify-center", className)}
+      {...props}
+    />
+  )
+)
+ToastTrigger.displayName = "ToastTrigger"
+
+const ToastContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex flex-col gap-2", className)}
+      {...props}
+    />
+  )
+)
+ToastContent.displayName = "ToastContent"
+
+const ToastItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+ToastItem.displayName = "ToastItem"
+
+const ToastLabel = React.forwardRef<HTMLLabelElement, React.LabelHTMLAttributes<HTMLLabelElement>>(
+  ({ className, ...props }, ref) => (
+    <label
+      ref={ref}
+      className={cn("px-2 py-1.5 text-sm font-semibold", className)}
+      {...props}
+    />
+  )
+)
+ToastLabel.displayName = "ToastLabel"
+
+const ToastSeparator = React.forwardRef<HTMLHRElement, React.HTMLAttributes<HTMLHRElement>>(
+  ({ className, ...props }, ref) => (
+    <hr
+      ref={ref}
+      className={cn("-mx-1 my-1 h-px bg-border", className)}
+      {...props}
+    />
+  )
+)
+ToastSeparator.displayName = "ToastSeparator"
+
+const ToastGroup = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("p-1", className)}
+      {...props}
+    />
+  )
+)
+ToastGroup.displayName = "ToastGroup"
+
+const ToastHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("px-2 py-1.5 text-sm font-semibold", className)}
+      {...props}
+    />
+  )
+)
+ToastHeader.displayName = "ToastHeader"
+
+const ToastFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("px-2 py-1.5", className)}
+      {...props}
+    />
+  )
+)
+ToastFooter.displayName = "ToastFooter"
+
+const ToastList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex flex-col", className)}
+      {...props}
+    />
+  )
+)
+ToastList.displayName = "ToastList"
+
+const ToastValue = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
+    <span
+      ref={ref}
+      className={cn("text-sm", className)}
+      {...props}
+    />
+  )
+)
+ToastValue.displayName = "ToastValue"
+
+const ToastImage = React.forwardRef<HTMLImageElement, React.ImgHTMLAttributes<HTMLImageElement>>(
+  ({ className, ...props }, ref) => (
+    <img
+      ref={ref}
+      className={cn("h-4 w-4", className)}
+      {...props}
+    />
+  )
+)
+ToastImage.displayName = "ToastImage"
+
+const ToastFallback = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("text-sm text-muted-foreground", className)}
+      {...props}
+    />
+  )
+)
+ToastFallback.displayName = "ToastFallback"
+
 export {
   type ToastProps,
   type ToastActionElement,
@@ -126,4 +262,16 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  ToastTrigger,
+  ToastContent,
+  ToastItem,
+  ToastLabel,
+  ToastSeparator,
+  ToastGroup,
+  ToastHeader,
+  ToastFooter,
+  ToastList,
+  ToastValue,
+  ToastImage,
+  ToastFallback
 }
