@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '../../lib/utils'
 
-export interface AIToolsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIToolsProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onError'> {
   tools?: Array<{
     name: string
     description: string
@@ -13,7 +13,7 @@ export interface AIToolsProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
-  ({ className, children, tools = [], ...props }, ref) => {
+  ({ className, children, tools = [], onToolCall, onError, provider, model, apiKey, maxConcurrent, timeout, ...props }, ref) => {
     return (
       <div
         ref={ref}

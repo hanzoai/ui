@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '../../lib/utils'
 
-export interface AIAssistantProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIAssistantProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onError'> {
   provider?: string
   model?: string
   apiKey?: string
@@ -12,7 +12,7 @@ export interface AIAssistantProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const AIAssistant = React.forwardRef<HTMLDivElement, AIAssistantProps>(
-  ({ className, children, ...props }, ref) => {
+  ({ className, children, onError, onResponse, provider, model, apiKey, systemPrompt, tools, ...props }, ref) => {
     return (
       <div
         ref={ref}
