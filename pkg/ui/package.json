@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "4.7.1",
+  "version": "5.0.0",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -63,10 +63,52 @@
     "hanzo-ui": "./bin/cli.js"
   },
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./calendar": {
+      "types": "./dist/calendar.d.ts",
+      "import": "./dist/calendar.mjs",
+      "require": "./dist/calendar.js"
+    },
+    "./command": {
+      "types": "./dist/command.d.ts",
+      "import": "./dist/command.mjs",
+      "require": "./dist/command.js"
+    },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "import": "./dist/carousel.mjs",
+      "require": "./dist/carousel.js"
+    },
+    "./form": {
+      "types": "./dist/form.d.ts",
+      "import": "./dist/form.mjs",
+      "require": "./dist/form.js"
+    },
+
+    "./drawer": {
+      "types": "./dist/drawer.d.ts",
+      "import": "./dist/drawer.mjs",
+      "require": "./dist/drawer.js"
+    },
+    "./sonner": {
+      "types": "./dist/sonner.d.ts",
+      "import": "./dist/sonner.mjs",
+      "require": "./dist/sonner.js"
+    },
+    "./input-otp": {
+      "types": "./dist/input-otp.d.ts",
+      "import": "./dist/input-otp.mjs",
+      "require": "./dist/input-otp.js"
+    },
+    "./resizable": {
+      "types": "./dist/resizable.d.ts",
+      "import": "./dist/resizable.mjs",
+      "require": "./dist/resizable.js"
     },
     "./assets": {
       "types": "./dist/assets/index.d.ts",
@@ -189,21 +231,20 @@
       "types": "./dist/frameworks/react-native/index.d.ts",
       "import": "./dist/frameworks/react-native/index.mjs",
       "require": "./dist/frameworks/react-native/index.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "dependencies": {
     "@hanzo/react-drawer": "^0.1.8",
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@next/third-parties": "^15.0.1",
-    "@radix-ui/react-accordion": "^1.1.2",
+    "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-context-menu": "^2.2.2",
-    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-hover-card": "^1.1.15",
     "@radix-ui/react-icons": "^1.3.0",
@@ -216,7 +257,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
-    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.5",
@@ -224,47 +265,76 @@
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@radix-ui/react-use-callback-ref": "^1.1.1",
-    "@splinetool/react-spline": "^4.0.0",
-    "@splinetool/runtime": "^1.9.35",
     "@tailwindcss/container-queries": "^0.1.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^0.2.0",
     "commander": "^12.1.0",
-    "date-fns": "^4.1.0",
-    "embla-carousel-react": "8.5.1",
-    "input-otp": "^1.0.1",
+    "date-fns": "^3.0.0",
+    "embla-carousel-react": "^8.0.0",
+    "input-otp": "^1.2.4",
     "lodash.castarray": "^4.4.0",
     "lodash.isplainobject": "^4.0.6",
     "lodash.merge": "^4.6.2",
-    "markdown-to-jsx": "^7.7.13",
-    "mermaid": "^11.12.0",
     "postcss-selector-parser": "^6.0.16",
-    "qrcode.react": "^4.2.0",
-    "react-day-picker": "^8.10.1",
+    "react-day-picker": "^9.0.0",
+    "react-hook-form": "^7.49.0",
     "react-intersection-observer": "^9.8.2",
-    "react-resizable-panels": "^3.0.6",
-    "sonner": "^1.4.41",
-    "sql.js": "^1.13.0",
+    "react-resizable-panels": "^1.0.5",
+    "recharts": "^2.10.0",
+    "sonner": "^1.3.1",
     "svg-pan-zoom": "^3.6.2",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-interaction-media": "^0.1.0",
-    "vaul": "^1.1.2",
-    "zod": "^3.23.8",
+    "vaul": "^0.9.0",
+    "zod": "^3.25.76",
     "zod-to-json-schema": "^3.23.2"
   },
   "peerDependencies": {
     "@hookform/resolvers": "^3.3.2",
-    "embla-carousel": "^8.1.6",
     "lucide-react": "0.456.0",
     "mobx": "^6.12.3",
     "next": "14.2.16",
     "next-themes": "^0.2.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-hook-form": "7.51.4",
     "validator": "^13.11.0"
+  },
+  "peerDependenciesMeta": {
+    "cmdk": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "embla-carousel": {
+      "optional": true
+    },
+    "embla-carousel-react": {
+      "optional": true
+    },
+    "input-otp": {
+      "optional": true
+    },
+    "react-day-picker": {
+      "optional": true
+    },
+    "react-hook-form": {
+      "optional": true
+    },
+    "react-resizable-panels": {
+      "optional": true
+    },
+    "recharts": {
+      "optional": true
+    },
+    "sonner": {
+      "optional": true
+    },
+    "vaul": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@mdx-js/loader": "^3.0.0",
