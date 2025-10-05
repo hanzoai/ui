@@ -8,18 +8,12 @@ import {
   type SubscriptionPlan,
 } from "@hanzo/ui/billing"
 
-export const description = "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."
+export const description =
+  "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."
 
 export const iframeHeight = "1000px"
 
 export const containerClassName = "w-full"
-
-export const description = "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."
-
-export const iframeHeight = "1000px"
-
-export const containerClassName = "w-full"
-
 
 // Demo subscription plans
 const demoPlans: SubscriptionPlan[] = [
