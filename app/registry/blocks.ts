@@ -156,7 +156,14 @@ export const blocks: Registry = [
   {
     name: "payment-settings-01",
     type: "components:block",
-    registryDependencies: ["button", "card", "input", "label", "radio-group", "select"],
+    registryDependencies: [
+      "button",
+      "card",
+      "input",
+      "label",
+      "radio-group",
+      "select",
+    ],
     files: ["block/billing/payment-settings-01.tsx"],
     category: "Billing",
     subcategory: "Payment",

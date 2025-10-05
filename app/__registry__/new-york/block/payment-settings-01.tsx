@@ -2,8 +2,7 @@
 
 import { PaymentMethodManager, type PaymentMethod } from "@hanzo/ui/billing"
 
-export const description =
-  "Payment method management interface for adding, removing, and setting default payment methods."
+export const description = "Payment method management interface for adding, removing, and setting default payment methods."
 
 export const iframeHeight = "800px"
 
@@ -14,6 +13,12 @@ const demoPaymentMethods: PaymentMethod[] = [
   {
     id: "pm_1",
     type: "card",
+export const description = "Payment method management interface for adding, removing, and setting default payment methods."
+
+export const iframeHeight = "800px"
+
+export const containerClassName = "w-full"
+
     is_default: true,
     created_at: "2024-01-15T10:30:00Z",
     card: {
