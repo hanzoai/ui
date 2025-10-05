@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[98399],{98399:(e,s,r)=>{r.r(s),r.d(s,{default:()=>h});var a=r(70703);function h(){return(0,a.jsx)("p",{className:"leading-7 [&:not(:first-child)]:mt-6",children:"The king, seeing how much happier his subjects were, realized the error of his ways and repealed the joke tax."})}}}]);

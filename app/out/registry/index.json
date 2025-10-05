@@ -1,0 +1,1075 @@
+[
+  {
+    "name": "accordion",
+    "dependencies": [
+      "@radix-ui/react-accordion"
+    ],
+    "files": [
+      "ui/accordion.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "alert",
+    "files": [
+      "ui/alert.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "alert-dialog",
+    "dependencies": [
+      "@radix-ui/react-alert-dialog"
+    ],
+    "registryDependencies": [
+      "button"
+    ],
+    "files": [
+      "ui/alert-dialog.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "aspect-ratio",
+    "dependencies": [
+      "@radix-ui/react-aspect-ratio"
+    ],
+    "files": [
+      "ui/aspect-ratio.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "avatar",
+    "dependencies": [
+      "@radix-ui/react-avatar"
+    ],
+    "files": [
+      "ui/avatar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "badge",
+    "files": [
+      "ui/badge.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "breadcrumb",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "files": [
+      "ui/breadcrumb.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "button",
+    "dependencies": [
+      "@radix-ui/react-slot"
+    ],
+    "files": [
+      "ui/button.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "calendar",
+    "dependencies": [
+      "react-day-picker",
+      "date-fns"
+    ],
+    "registryDependencies": [
+      "button"
+    ],
+    "files": [
+      "ui/calendar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "card",
+    "files": [
+      "ui/card.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "carousel",
+    "dependencies": [
+      "embla-carousel-react",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "button"
+    ],
+    "files": [
+      "ui/carousel.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "checkbox",
+    "dependencies": [
+      "@radix-ui/react-checkbox"
+    ],
+    "files": [
+      "ui/checkbox.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "collapsible",
+    "dependencies": [
+      "@radix-ui/react-collapsible"
+    ],
+    "files": [
+      "ui/collapsible.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "command",
+    "dependencies": [
+      "cmdk"
+    ],
+    "registryDependencies": [
+      "dialog"
+    ],
+    "files": [
+      "ui/command.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "context-menu",
+    "dependencies": [
+      "@radix-ui/react-context-menu"
+    ],
+    "files": [
+      "ui/context-menu.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dialog",
+    "dependencies": [
+      "@radix-ui/react-dialog"
+    ],
+    "files": [
+      "ui/dialog.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "drawer",
+    "dependencies": [
+      "vaul",
+      "@radix-ui/react-dialog"
+    ],
+    "files": [
+      "ui/drawer.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dropdown-menu",
+    "dependencies": [
+      "@radix-ui/react-dropdown-menu"
+    ],
+    "files": [
+      "ui/dropdown-menu.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "form",
+    "dependencies": [
+      "@radix-ui/react-label",
+      "@radix-ui/react-slot",
+      "@hookform/resolvers",
+      "zod",
+      "react-hook-form"
+    ],
+    "registryDependencies": [
+      "button",
+      "label"
+    ],
+    "files": [
+      "ui/form.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "hover-card",
+    "dependencies": [
+      "@radix-ui/react-hover-card"
+    ],
+    "files": [
+      "ui/hover-card.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "input",
+    "files": [
+      "ui/input.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "input-otp",
+    "dependencies": [
+      "input-otp"
+    ],
+    "files": [
+      "ui/input-otp.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "label",
+    "dependencies": [
+      "@radix-ui/react-label"
+    ],
+    "files": [
+      "ui/label.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "menubar",
+    "dependencies": [
+      "@radix-ui/react-menubar"
+    ],
+    "files": [
+      "ui/menubar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "navigation-menu",
+    "dependencies": [
+      "@radix-ui/react-navigation-menu"
+    ],
+    "files": [
+      "ui/navigation-menu.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "pagination",
+    "registryDependencies": [
+      "button"
+    ],
+    "files": [
+      "ui/pagination.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "popover",
+    "dependencies": [
+      "@radix-ui/react-popover"
+    ],
+    "files": [
+      "ui/popover.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "progress",
+    "dependencies": [
+      "@radix-ui/react-progress"
+    ],
+    "files": [
+      "ui/progress.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "radio-group",
+    "dependencies": [
+      "@radix-ui/react-radio-group"
+    ],
+    "files": [
+      "ui/radio-group.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "resizable",
+    "dependencies": [
+      "react-resizable-panels"
+    ],
+    "files": [
+      "ui/resizable.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "scroll-area",
+    "dependencies": [
+      "@radix-ui/react-scroll-area"
+    ],
+    "files": [
+      "ui/scroll-area.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "select",
+    "dependencies": [
+      "@radix-ui/react-select"
+    ],
+    "files": [
+      "ui/select.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "separator",
+    "dependencies": [
+      "@radix-ui/react-separator"
+    ],
+    "files": [
+      "ui/separator.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "sheet",
+    "dependencies": [
+      "@radix-ui/react-dialog"
+    ],
+    "files": [
+      "ui/sheet.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "skeleton",
+    "files": [
+      "ui/skeleton.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "slider",
+    "dependencies": [
+      "@radix-ui/react-slider"
+    ],
+    "files": [
+      "ui/slider.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "sonner",
+    "dependencies": [
+      "sonner",
+      "next-themes"
+    ],
+    "files": [
+      "ui/sonner.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "switch",
+    "dependencies": [
+      "@radix-ui/react-switch"
+    ],
+    "files": [
+      "ui/switch.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "table",
+    "files": [
+      "ui/table.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "tabs",
+    "dependencies": [
+      "@radix-ui/react-tabs"
+    ],
+    "files": [
+      "ui/tabs.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "textarea",
+    "files": [
+      "ui/textarea.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "terminal",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "files": [
+      "ui/terminal.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "toast",
+    "dependencies": [
+      "@radix-ui/react-toast"
+    ],
+    "files": [
+      "ui/toast.tsx",
+      "ui/use-toast.ts",
+      "ui/toaster.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "toggle",
+    "dependencies": [
+      "@radix-ui/react-toggle"
+    ],
+    "files": [
+      "ui/toggle.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "toggle-group",
+    "dependencies": [
+      "@radix-ui/react-toggle-group"
+    ],
+    "registryDependencies": [
+      "toggle"
+    ],
+    "files": [
+      "ui/toggle-group.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "tooltip",
+    "dependencies": [
+      "@radix-ui/react-tooltip"
+    ],
+    "files": [
+      "ui/tooltip.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "kanban",
+    "description": "Drag and drop Kanban board",
+    "dependencies": [
+      "@dnd-kit/sortable",
+      "@dnd-kit/core"
+    ],
+    "files": [
+      "ui/kanban.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "list",
+    "description": "Enhanced list component with sorting and filtering",
+    "files": [
+      "ui/list.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "table",
+    "description": "Advanced data table with sorting, filtering, and pagination",
+    "dependencies": [
+      "@tanstack/react-table"
+    ],
+    "registryDependencies": [
+      "checkbox"
+    ],
+    "files": [
+      "ui/table.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "android",
+    "description": "Android device mockup frame",
+    "files": [
+      "ui/android.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "iphone-15-pro",
+    "description": "iPhone 15 Pro device mockup",
+    "files": [
+      "ui/iphone-15-pro.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "safari",
+    "description": "Safari browser window mockup",
+    "files": [
+      "ui/safari.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dock",
+    "description": "macOS-style dock with animations",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/dock.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "limelight-nav",
+    "description": "Animated navigation with limelight effect",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/limelight-nav.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "macos-dock",
+    "description": "macOS dock with hover magnification",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/macos-dock.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "menu-dock",
+    "description": "Dock-style menu with icons",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/menu-dock.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "message-dock",
+    "description": "Message app dock interface",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/message-dock.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "credit-card",
+    "description": "Interactive credit card component",
+    "dependencies": [
+      "react-credit-cards-2"
+    ],
+    "files": [
+      "ui/credit-card.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "ticker",
+    "description": "Stock ticker or news ticker component",
+    "dependencies": [
+      "react-ticker"
+    ],
+    "files": [
+      "ui/ticker.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "choicebox",
+    "description": "Enhanced choice selector",
+    "files": [
+      "ui/choicebox.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "color-picker",
+    "description": "Advanced color picker with presets",
+    "dependencies": [
+      "react-color"
+    ],
+    "files": [
+      "ui/color-picker.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "combobox",
+    "description": "Autocomplete combobox with search",
+    "dependencies": [
+      "@radix-ui/react-popover"
+    ],
+    "registryDependencies": [
+      "command"
+    ],
+    "files": [
+      "ui/combobox.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dropzone",
+    "description": "File upload dropzone",
+    "dependencies": [
+      "react-dropzone"
+    ],
+    "files": [
+      "ui/dropzone.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "editor",
+    "description": "Rich text editor",
+    "dependencies": [
+      "@tiptap/react",
+      "@tiptap/starter-kit"
+    ],
+    "files": [
+      "ui/editor.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "minimal-tiptap",
+    "description": "Minimal rich text editor",
+    "dependencies": [
+      "@tiptap/react",
+      "@tiptap/starter-kit"
+    ],
+    "files": [
+      "ui/minimal-tiptap.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "image-crop",
+    "description": "Image cropping component",
+    "dependencies": [
+      "react-image-crop"
+    ],
+    "files": [
+      "ui/image-crop.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "image-zoom",
+    "description": "Image zoom on click/hover",
+    "dependencies": [
+      "react-medium-image-zoom"
+    ],
+    "files": [
+      "ui/image-zoom.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "announcement",
+    "description": "Announcement banner component",
+    "files": [
+      "ui/announcement.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "banner",
+    "description": "Banner notification component",
+    "files": [
+      "ui/banner.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "cursor",
+    "description": "Custom cursor component",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/cursor.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dialog-stack",
+    "description": "Stacked dialog windows",
+    "dependencies": [
+      "@radix-ui/react-dialog"
+    ],
+    "files": [
+      "ui/dialog-stack.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "marquee",
+    "description": "Scrolling marquee text",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/marquee.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "avatar-group",
+    "description": "Grouped avatar display",
+    "registryDependencies": [
+      "avatar"
+    ],
+    "files": [
+      "ui/avatar-group.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "pill",
+    "description": "Pill-shaped badge component",
+    "files": [
+      "ui/pill.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "tags",
+    "description": "Tag input and display component",
+    "files": [
+      "ui/tags.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "simple-navigation-bar",
+    "description": "Simple navigation bar",
+    "files": [
+      "ui/navigation/simple-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "advanced-navigation-bar",
+    "description": "Advanced navigation with dropdowns",
+    "files": [
+      "ui/navigation/advanced-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "underline-navigation-bar",
+    "description": "Navigation with underline animation",
+    "files": [
+      "ui/navigation/underline-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "e-commerce-navigation-bar",
+    "description": "E-commerce site navigation",
+    "files": [
+      "ui/navigation/e-commerce-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dashboard-navigation-bar",
+    "description": "Dashboard navigation layout",
+    "files": [
+      "ui/navigation/dashboard-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "icon-navigation-bar",
+    "description": "Icon-based navigation",
+    "files": [
+      "ui/navigation/icon-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "breadcrumb-navigation-bar",
+    "description": "Breadcrumb navigation",
+    "files": [
+      "ui/navigation/breadcrumb-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "two-tier-navigation-bar",
+    "description": "Two-level navigation",
+    "files": [
+      "ui/navigation/two-tier-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "communication-navigation-bar",
+    "description": "Communication app navigation",
+    "files": [
+      "ui/navigation/communication-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "centered-logo-navigation-bar",
+    "description": "Navigation with centered logo",
+    "files": [
+      "ui/navigation/centered-logo-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "context-switcher-navigation-bar",
+    "description": "Navigation with context switcher",
+    "files": [
+      "ui/navigation/context-switcher-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "team-switcher-navigation-bar",
+    "description": "Navigation with team switcher",
+    "files": [
+      "ui/navigation/team-switcher-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "ai-model-selector-navigation-bar",
+    "description": "Navigation with AI model selector",
+    "files": [
+      "ui/navigation/ai-model-selector-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "search-and-toggle-navigation-bar",
+    "description": "Navigation with search and toggle",
+    "files": [
+      "ui/navigation/search-and-toggle-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "breadcrumb-and-filters-navigation-bar",
+    "description": "Navigation with breadcrumbs and filters",
+    "files": [
+      "ui/navigation/breadcrumb-and-filters-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "app-switcher-navigation-bar",
+    "description": "Navigation with app switcher",
+    "files": [
+      "ui/navigation/app-switcher-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "collaboration-navigation-bar",
+    "description": "Collaboration tools navigation",
+    "files": [
+      "ui/navigation/collaboration-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "status-dashboard-navigation-bar",
+    "description": "Status dashboard navigation",
+    "files": [
+      "ui/navigation/status-dashboard-navigation-bar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "animated-beam",
+    "description": "Animated beam connection effect",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/animated-beam.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "magnetic",
+    "description": "Magnetic hover effect",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/magnetic.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "motion-highlight",
+    "description": "Motion-based text highlighting",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/motion-highlight.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "pixel-image",
+    "description": "Pixelated image effect",
+    "files": [
+      "ui/pixel-image.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "calendar",
+    "description": "Full calendar component",
+    "dependencies": [
+      "react-day-picker",
+      "date-fns"
+    ],
+    "files": [
+      "ui/calendar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "mini-calendar",
+    "description": "Compact calendar widget",
+    "dependencies": [
+      "react-day-picker",
+      "date-fns"
+    ],
+    "files": [
+      "ui/mini-calendar.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "relative-time",
+    "description": "Relative time display (e.g., '2 hours ago')",
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      "ui/relative-time.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "comparison",
+    "description": "Before/after comparison slider",
+    "dependencies": [
+      "react-compare-slider"
+    ],
+    "files": [
+      "ui/comparison.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "kbd",
+    "description": "Keyboard key component",
+    "files": [
+      "ui/kbd.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "qr-code",
+    "description": "QR code generator",
+    "dependencies": [
+      "qrcode.react"
+    ],
+    "files": [
+      "ui/qr-code.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "status",
+    "description": "Status indicator component",
+    "files": [
+      "ui/status.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "terminal",
+    "description": "Terminal emulator component",
+    "dependencies": [
+      "xterm",
+      "xterm-addon-fit"
+    ],
+    "files": [
+      "ui/terminal.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "video-player",
+    "description": "Advanced video player component",
+    "dependencies": [
+      "video.js",
+      "videojs-react-enhanced"
+    ],
+    "files": [
+      "ui/video-player.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "music-player",
+    "description": "Advanced music player with playlist support",
+    "dependencies": [
+      "react-h5-audio-player"
+    ],
+    "files": [
+      "ui/music-player.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "dock",
+    "description": "macOS-style dock with animations",
+    "dependencies": [
+      "motion"
+    ],
+    "files": [
+      "ui/dock.tsx"
+    ],
+    "type": "components:ui"
+  }
+]
