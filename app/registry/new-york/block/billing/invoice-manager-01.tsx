@@ -7,6 +7,12 @@ export const description =
 
 export const iframeHeight = "900px"
 
+export const description = "export const description ="
+
+export const iframeHeight = "900px"
+
+export const containerClassName = "w-full"
+
 export const containerClassName = "w-full"
 
 export default function InvoiceManagerDemo() {
