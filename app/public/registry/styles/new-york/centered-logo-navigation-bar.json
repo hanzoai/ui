@@ -1,0 +1,11 @@
+{
+  "name": "centered-logo-navigation-bar",
+  "description": "Navigation with centered logo",
+  "files": [
+    {
+      "name": "centered-logo-navigation-bar.tsx",
+      "content": "export default function Component() {\n  return (\n    <div className=\"flex items-center justify-center p-8\">\n      <p className=\"text-muted-foreground\">Component coming soon</p>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:ui"
+}
