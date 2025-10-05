@@ -1,3 +1,7 @@
+export * from './subscription'
+export * from './payment'
+export * from './invoice'
+
 // Subscription types
 export interface SubscriptionPlan {
   id: string
@@ -42,12 +46,31 @@ export interface SubscriptionHistory {
 export interface PaymentMethod {
   id: string
   type: 'card' | 'paypal' | 'apple_pay' | 'google_pay'
-  last4?: string
-  brand?: string
-  expiryMonth?: number
-  expiryYear?: number
-  isDefault: boolean
-  billingAddress?: BillingAddress
+  is_default: boolean
+  created_at: string
+  card?: {
+    brand: string
+    last4: string
+    exp_month: number
+    exp_year: number
+    funding: string
+  }
+  paypal?: {
+    email: string
+  }
+  billing_details?: {
+    name?: string
+    email?: string
+    phone?: string
+    address?: {
+      line1?: string
+      line2?: string
+      city?: string
+      state?: string
+      postal_code?: string
+      country?: string
+    }
+  }
 }
 
 export interface BillingAddress {
