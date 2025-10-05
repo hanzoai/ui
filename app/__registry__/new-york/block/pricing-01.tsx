@@ -1,20 +1,11 @@
 "use client"
 
 import { Check } from "lucide-react"
+import { Button } from "@/registry/new-york/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/registry/new-york/ui/card"
+import { Badge } from "@/registry/new-york/ui/badge"
 
-import { Badge } from "@/registry/default/ui/badge"
-import { Button } from "@/registry/default/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/registry/default/ui/card"
-
-export const description =
-  "A pricing table with three tiers: Free, Pro, and Enterprise. Each tier displays features and a call-to-action button."
+export const description = "A pricing table with three tiers: Free, Pro, and Enterprise. Each tier displays features and a call-to-action button."
 
 export const iframeHeight = "800px"
 
@@ -89,7 +80,9 @@ export default function Component() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>{tier.name}</CardTitle>
-                  {tier.badge && <Badge variant="default">{tier.badge}</Badge>}
+                  {tier.badge && (
+                    <Badge variant="default">{tier.badge}</Badge>
+                  )}
                 </div>
                 <CardDescription>{tier.description}</CardDescription>
               </CardHeader>
