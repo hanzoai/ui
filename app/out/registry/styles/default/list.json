@@ -1,0 +1,11 @@
+{
+  "name": "list",
+  "description": "Enhanced list component with sorting and filtering",
+  "files": [
+    {
+      "name": "list.tsx",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nconst List = React.forwardRef<\n  HTMLUListElement,\n  React.HTMLAttributes<HTMLUListElement>\n>(({ className, ...props }, ref) => (\n  <ul ref={ref} className={cn(\"space-y-2\", className)} {...props} />\n))\nList.displayName = \"List\"\n\nconst ListItem = React.forwardRef<\n  HTMLLIElement,\n  React.HTMLAttributes<HTMLLIElement>\n>(({ className, ...props }, ref) => (\n  <li ref={ref} className={cn(\"\", className)} {...props} />\n))\nListItem.displayName = \"ListItem\"\n\nexport { List, ListItem }\n"
+    }
+  ],
+  "type": "components:ui"
+}

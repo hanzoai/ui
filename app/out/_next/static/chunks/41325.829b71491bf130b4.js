@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[41325],{41325:(e,r,s)=>{s.r(r),s.d(r,{default:()=>u});var t=s(70703);function u(){return(0,t.jsx)("p",{className:"text-sm text-muted-foreground",children:"Enter your email address."})}}}]);
