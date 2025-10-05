@@ -137,4 +137,12 @@ export const blocks: Registry = [
     category: "Authentication",
     subcategory: "Login",
   },
+  {
+    name: "pricing-01",
+    type: "components:block",
+    registryDependencies: ["badge", "button", "card"],
+    files: ["block/pricing-01.tsx"],
+    category: "Marketing",
+    subcategory: "Pricing",
+  },
 ]
