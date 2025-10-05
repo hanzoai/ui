@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+
+import { cn } from "@/lib/utils"
 
 interface Carousel3DItem {
   id: string
@@ -24,20 +25,23 @@ interface Carousel3DProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
-  ({
-    items,
-    itemWidth = 300,
-    itemHeight = 400,
-    spacing = 80,
-    perspective = 1000,
-    rotateY = 40,
-    autoRotate = false,
-    autoRotateSpeed = 3000,
-    showControls = true,
-    infinite = true,
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      items,
+      itemWidth = 300,
+      itemHeight = 400,
+      spacing = 80,
+      perspective = 1000,
+      rotateY = 40,
+      autoRotate = false,
+      autoRotateSpeed = 3000,
+      showControls = true,
+      infinite = true,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const [currentIndex, setCurrentIndex] = React.useState(0)
     const [isHovered, setIsHovered] = React.useState(false)
@@ -80,25 +84,34 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
       )
     }, [infinite, totalItems])
 
-    const goToIndex = React.useCallback((index: number) => {
-      setCurrentIndex(Math.max(0, Math.min(totalItems - 1, index)))
-    }, [totalItems])
+    const goToIndex = React.useCallback(
+      (index: number) => {
+        setCurrentIndex(Math.max(0, Math.min(totalItems - 1, index)))
+      },
+      [totalItems]
+    )
 
     // Touch and mouse drag handlers
-    const handleDragStart = React.useCallback((clientX: number, clientY: number) => {
-      setIsDragging(true)
-      setDragStart({ x: clientX, y: clientY })
-      setDragOffset(0)
-    }, [])
+    const handleDragStart = React.useCallback(
+      (clientX: number, clientY: number) => {
+        setIsDragging(true)
+        setDragStart({ x: clientX, y: clientY })
+        setDragOffset(0)
+      },
+      []
+    )
 
-    const handleDragMove = React.useCallback((clientX: number, clientY: number) => {
-      if (!isDragging) return
+    const handleDragMove = React.useCallback(
+      (clientX: number, clientY: number) => {
+        if (!isDragging) return
 
-      const deltaX = clientX - dragStart.x
-      const sensitivity = 0.5
-      const newOffset = deltaX * sensitivity
-      setDragOffset(newOffset)
-    }, [isDragging, dragStart.x])
+        const deltaX = clientX - dragStart.x
+        const sensitivity = 0.5
+        const newOffset = deltaX * sensitivity
+        setDragOffset(newOffset)
+      },
+      [isDragging, dragStart.x]
+    )
 
     const handleDragEnd = React.useCallback(() => {
       if (!isDragging) return
@@ -117,34 +130,46 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
     }, [isDragging, dragOffset, goToPrevious, goToNext])
 
     // Mouse events
-    const handleMouseDown = React.useCallback((e: React.MouseEvent) => {
-      e.preventDefault()
-      handleDragStart(e.clientX, e.clientY)
-    }, [handleDragStart])
+    const handleMouseDown = React.useCallback(
+      (e: React.MouseEvent) => {
+        e.preventDefault()
+        handleDragStart(e.clientX, e.clientY)
+      },
+      [handleDragStart]
+    )
 
-    const handleMouseMove = React.useCallback((e: React.MouseEvent) => {
-      handleDragMove(e.clientX, e.clientY)
-    }, [handleDragMove])
+    const handleMouseMove = React.useCallback(
+      (e: React.MouseEvent) => {
+        handleDragMove(e.clientX, e.clientY)
+      },
+      [handleDragMove]
+    )
 
     const handleMouseUp = React.useCallback(() => {
       handleDragEnd()
     }, [handleDragEnd])
 
     // Touch events
-    const handleTouchStart = React.useCallback((e: React.TouchEvent) => {
-      if (e.touches.length === 1) {
-        const touch = e.touches[0]
-        handleDragStart(touch.clientX, touch.clientY)
-      }
-    }, [handleDragStart])
+    const handleTouchStart = React.useCallback(
+      (e: React.TouchEvent) => {
+        if (e.touches.length === 1) {
+          const touch = e.touches[0]
+          handleDragStart(touch.clientX, touch.clientY)
+        }
+      },
+      [handleDragStart]
+    )
 
-    const handleTouchMove = React.useCallback((e: React.TouchEvent) => {
-      if (e.touches.length === 1) {
-        e.preventDefault()
-        const touch = e.touches[0]
-        handleDragMove(touch.clientX, touch.clientY)
-      }
-    }, [handleDragMove])
+    const handleTouchMove = React.useCallback(
+      (e: React.TouchEvent) => {
+        if (e.touches.length === 1) {
+          e.preventDefault()
+          const touch = e.touches[0]
+          handleDragMove(touch.clientX, touch.clientY)
+        }
+      },
+      [handleDragMove]
+    )
 
     const handleTouchEnd = React.useCallback(() => {
       handleDragEnd()
@@ -153,13 +178,13 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
     // Keyboard navigation
     React.useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'ArrowLeft') {
+        if (e.key === "ArrowLeft") {
           e.preventDefault()
           goToPrevious()
-        } else if (e.key === 'ArrowRight') {
+        } else if (e.key === "ArrowRight") {
           e.preventDefault()
           goToNext()
-        } else if (e.key >= '1' && e.key <= '9') {
+        } else if (e.key >= "1" && e.key <= "9") {
           const index = parseInt(e.key) - 1
           if (index < totalItems) {
             goToIndex(index)
@@ -168,9 +193,9 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
       }
 
       if (containerRef.current) {
-        containerRef.current.addEventListener('keydown', handleKeyDown)
+        containerRef.current.addEventListener("keydown", handleKeyDown)
         return () => {
-          containerRef.current?.removeEventListener('keydown', handleKeyDown)
+          containerRef.current?.removeEventListener("keydown", handleKeyDown)
         }
       }
     }, [goToPrevious, goToNext, goToIndex, totalItems])
@@ -184,8 +209,10 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
 
     const carouselStyle: React.CSSProperties = {
       transform: `translateZ(-${radius}px) rotateY(${-currentIndex * (360 / totalItems) + dragOffset / 5}deg)`,
-      transition: isDragging ? 'none' : 'transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)',
-      transformStyle: 'preserve-3d',
+      transition: isDragging
+        ? "none"
+        : "transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)",
+      transformStyle: "preserve-3d",
     }
 
     return (
@@ -213,13 +240,10 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
           style={{
             width: `${itemWidth}px`,
             height: `${itemHeight}px`,
-            transformStyle: 'preserve-3d',
+            transformStyle: "preserve-3d",
           }}
         >
-          <div
-            className="absolute inset-0"
-            style={carouselStyle}
-          >
+          <div className="absolute inset-0" style={carouselStyle}>
             {items.map((item, index) => {
               const angle = (index / totalItems) * 360
               const isCurrent = index === currentIndex
@@ -228,9 +252,9 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
                 transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
                 width: `${itemWidth}px`,
                 height: `${itemHeight}px`,
-                position: 'absolute',
-                backfaceVisibility: 'hidden',
-                transformStyle: 'preserve-3d',
+                position: "absolute",
+                backfaceVisibility: "hidden",
+                transformStyle: "preserve-3d",
               }
 
               return (
@@ -309,10 +333,14 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
         {autoRotate && (
           <div className="absolute top-4 right-4 z-10">
             <div className="flex items-center space-x-2 p-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-sm">
-              <div className={cn(
-                "w-2 h-2 rounded-full transition-all",
-                isHovered || isDragging ? "bg-orange-500" : "bg-green-500 animate-pulse"
-              )} />
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all",
+                  isHovered || isDragging
+                    ? "bg-orange-500"
+                    : "bg-green-500 animate-pulse"
+                )}
+              />
               <span className="text-xs text-muted-foreground">
                 {isHovered || isDragging ? "Paused" : "Auto"}
               </span>
@@ -411,5 +439,5 @@ export {
   Carousel3DCardTitle,
   Carousel3DCardDescription,
   type Carousel3DItem,
-  type Carousel3DProps
+  type Carousel3DProps,
 }

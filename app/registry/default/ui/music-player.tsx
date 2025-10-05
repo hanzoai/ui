@@ -1,28 +1,30 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
-import { Slider } from "./slider"
-import { Button } from "./button"
 import {
-  Play,
+  ChevronDown,
+  ChevronUp,
+  ListMusic,
   Pause,
+  Play,
+  Repeat,
+  Shuffle,
   SkipBack,
   SkipForward,
   Volume2,
   VolumeX,
-  Repeat,
-  Shuffle,
-  ListMusic,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+
+import { Button } from "./button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./collapsible"
 import { ScrollArea } from "./scroll-area"
+import { Slider } from "./slider"
 
 export interface Track {
   id: string
@@ -163,7 +165,10 @@ export function MusicPlayer({
 
       waveformData.forEach((height, i) => {
         const x = i * barWidth
-        const barHeight = height * canvas.height * (0.5 + Math.sin(Date.now() * 0.001 + i * 0.2) * 0.5)
+        const barHeight =
+          height *
+          canvas.height *
+          (0.5 + Math.sin(Date.now() * 0.001 + i * 0.2) * 0.5)
 
         ctx.fillStyle = gradient
         ctx.fillRect(x, canvas.height - barHeight, barWidth - 2, barHeight)
@@ -260,7 +265,9 @@ export function MusicPlayer({
             {currentTrack?.artist || "Unknown artist"}
           </p>
           {currentTrack?.album && (
-            <p className="text-xs text-muted-foreground">{currentTrack.album}</p>
+            <p className="text-xs text-muted-foreground">
+              {currentTrack.album}
+            </p>
           )}
         </div>
       </div>
@@ -305,11 +312,7 @@ export function MusicPlayer({
         <Button variant="ghost" size="icon" onClick={handlePrevious}>
           <SkipBack className="h-5 w-5" />
         </Button>
-        <Button
-          size="icon"
-          onClick={handlePlayPause}
-          className="h-10 w-10"
-        >
+        <Button size="icon" onClick={handlePlayPause} className="h-10 w-10">
           {isPlaying ? (
             <Pause className="h-5 w-5" />
           ) : (

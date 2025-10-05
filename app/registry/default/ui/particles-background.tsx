@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useEffect, useRef, useCallback } from 'react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useRef } from "react"
+
+import { cn } from "@/lib/utils"
 
 interface Particle {
   x: number
@@ -27,8 +28,8 @@ interface ParticlesBackgroundProps {
 export function ParticlesBackground({
   className,
   particleCount = 50,
-  particleColor = 'rgba(255, 255, 255, 0.6)',
-  lineColor = 'rgba(255, 255, 255, 0.2)',
+  particleColor = "rgba(255, 255, 255, 0.6)",
+  lineColor = "rgba(255, 255, 255, 0.2)",
   particleSize = 2,
   speed = 0.5,
   connectionDistance = 100,
@@ -41,85 +42,97 @@ export function ParticlesBackground({
   const mouseRef = useRef({ x: 0, y: 0 })
   const rafRef = useRef<number>()
 
-  const initializeParticles = useCallback((width: number, height: number) => {
-    particlesRef.current = Array.from({ length: particleCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * speed,
-      vy: (Math.random() - 0.5) * speed,
-      size: Math.random() * particleSize + 1,
-    }))
-  }, [particleCount, speed, particleSize])
+  const initializeParticles = useCallback(
+    (width: number, height: number) => {
+      particlesRef.current = Array.from({ length: particleCount }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed,
+        size: Math.random() * particleSize + 1,
+      }))
+    },
+    [particleCount, speed, particleSize]
+  )
 
-  const drawParticle = useCallback((ctx: CanvasRenderingContext2D, particle: Particle) => {
-    ctx.globalAlpha = opacity
-    ctx.fillStyle = particleColor
-    ctx.beginPath()
-    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-    ctx.fill()
-  }, [particleColor, opacity])
+  const drawParticle = useCallback(
+    (ctx: CanvasRenderingContext2D, particle: Particle) => {
+      ctx.globalAlpha = opacity
+      ctx.fillStyle = particleColor
+      ctx.beginPath()
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
+      ctx.fill()
+    },
+    [particleColor, opacity]
+  )
 
-  const drawConnection = useCallback((
-    ctx: CanvasRenderingContext2D,
-    p1: Particle,
-    p2: Particle,
-    distance: number
-  ) => {
-    const alpha = Math.max(0, 1 - distance / connectionDistance)
-    ctx.globalAlpha = alpha * opacity
-    ctx.strokeStyle = lineColor
-    ctx.lineWidth = 0.5
-    ctx.beginPath()
-    ctx.moveTo(p1.x, p1.y)
-    ctx.lineTo(p2.x, p2.y)
-    ctx.stroke()
-  }, [lineColor, connectionDistance, opacity])
+  const drawConnection = useCallback(
+    (
+      ctx: CanvasRenderingContext2D,
+      p1: Particle,
+      p2: Particle,
+      distance: number
+    ) => {
+      const alpha = Math.max(0, 1 - distance / connectionDistance)
+      ctx.globalAlpha = alpha * opacity
+      ctx.strokeStyle = lineColor
+      ctx.lineWidth = 0.5
+      ctx.beginPath()
+      ctx.moveTo(p1.x, p1.y)
+      ctx.lineTo(p2.x, p2.y)
+      ctx.stroke()
+    },
+    [lineColor, connectionDistance, opacity]
+  )
 
-  const updateParticle = useCallback((
-    particle: Particle,
-    width: number,
-    height: number,
-    mouseX: number,
-    mouseY: number
-  ) => {
-    // Update position
-    particle.x += particle.vx
-    particle.y += particle.vy
+  const updateParticle = useCallback(
+    (
+      particle: Particle,
+      width: number,
+      height: number,
+      mouseX: number,
+      mouseY: number
+    ) => {
+      // Update position
+      particle.x += particle.vx
+      particle.y += particle.vy
 
-    // Bounce off edges
-    if (particle.x < 0 || particle.x > width) {
-      particle.vx *= -1
-      particle.x = Math.max(0, Math.min(width, particle.x))
-    }
-    if (particle.y < 0 || particle.y > height) {
-      particle.vy *= -1
-      particle.y = Math.max(0, Math.min(height, particle.y))
-    }
-
-    // Mouse interaction
-    if (enableMouseInteraction) {
-      const dx = mouseX - particle.x
-      const dy = mouseY - particle.y
-      const distance = Math.sqrt(dx * dx + dy * dy)
-
-      if (distance < mouseRadius) {
-        const force = (mouseRadius - distance) / mouseRadius
-        const angle = Math.atan2(dy, dx)
-        particle.vx -= Math.cos(angle) * force * 0.2
-        particle.vy -= Math.sin(angle) * force * 0.2
+      // Bounce off edges
+      if (particle.x < 0 || particle.x > width) {
+        particle.vx *= -1
+        particle.x = Math.max(0, Math.min(width, particle.x))
       }
-    }
+      if (particle.y < 0 || particle.y > height) {
+        particle.vy *= -1
+        particle.y = Math.max(0, Math.min(height, particle.y))
+      }
 
-    // Damping to prevent excessive speeds
-    particle.vx *= 0.99
-    particle.vy *= 0.99
-  }, [enableMouseInteraction, mouseRadius])
+      // Mouse interaction
+      if (enableMouseInteraction) {
+        const dx = mouseX - particle.x
+        const dy = mouseY - particle.y
+        const distance = Math.sqrt(dx * dx + dy * dy)
+
+        if (distance < mouseRadius) {
+          const force = (mouseRadius - distance) / mouseRadius
+          const angle = Math.atan2(dy, dx)
+          particle.vx -= Math.cos(angle) * force * 0.2
+          particle.vy -= Math.sin(angle) * force * 0.2
+        }
+      }
+
+      // Damping to prevent excessive speeds
+      particle.vx *= 0.99
+      particle.vy *= 0.99
+    },
+    [enableMouseInteraction, mouseRadius]
+  )
 
   const animate = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext("2d")
     if (!ctx) return
 
     const { width, height } = canvas
@@ -130,7 +143,7 @@ export function ParticlesBackground({
     ctx.clearRect(0, 0, width, height)
 
     // Update and draw particles
-    particles.forEach(particle => {
+    particles.forEach((particle) => {
       updateParticle(particle, width, height, mouseX, mouseY)
       drawParticle(ctx, particle)
     })
@@ -184,18 +197,18 @@ export function ParticlesBackground({
     rafRef.current = requestAnimationFrame(animate)
 
     // Event listeners
-    window.addEventListener('resize', handleResize)
+    window.addEventListener("resize", handleResize)
     if (enableMouseInteraction) {
-      canvas.addEventListener('mousemove', handleMouseMove)
+      canvas.addEventListener("mousemove", handleMouseMove)
     }
 
     return () => {
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current)
       }
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener("resize", handleResize)
       if (enableMouseInteraction) {
-        canvas.removeEventListener('mousemove', handleMouseMove)
+        canvas.removeEventListener("mousemove", handleMouseMove)
       }
     }
   }, [animate, handleResize, handleMouseMove, enableMouseInteraction])
@@ -203,13 +216,10 @@ export function ParticlesBackground({
   return (
     <canvas
       ref={canvasRef}
-      className={cn(
-        'fixed inset-0 pointer-events-none',
-        className
-      )}
+      className={cn("fixed inset-0 pointer-events-none", className)}
       style={{ zIndex: -1 }}
     />
   )
 }
 
-ParticlesBackground.displayName = 'ParticlesBackground'
+ParticlesBackground.displayName = "ParticlesBackground"

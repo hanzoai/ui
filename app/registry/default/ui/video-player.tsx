@@ -2,7 +2,23 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import {
+  Captions,
+  Maximize,
+  Minimize,
+  Pause,
+  PictureInPicture,
+  Play,
+  RotateCcw,
+  Settings,
+  SkipBack,
+  SkipForward,
+  Volume2,
+  VolumeX,
+} from "lucide-react"
+
 import { cn } from "@/lib/utils"
+
 import { Button } from "./button"
 import {
   DropdownMenu,
@@ -11,20 +27,6 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu"
 import { Slider } from "./slider"
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Minimize,
-  Settings,
-  PictureInPicture,
-  SkipBack,
-  SkipForward,
-  RotateCcw,
-  Captions,
-} from "lucide-react"
 
 // Types
 export interface VideoSource {
@@ -77,7 +79,8 @@ const videoPlayerVariants = cva(
   }
 )
 
-export interface VideoPlayerVariantProps extends VariantProps<typeof videoPlayerVariants> {}
+export interface VideoPlayerVariantProps
+  extends VariantProps<typeof videoPlayerVariants> {}
 
 const VideoPlayer = React.forwardRef<
   HTMLDivElement,
@@ -123,7 +126,7 @@ const VideoPlayer = React.forwardRef<
     const [showControls, setShowControls] = React.useState(true)
     const [playbackSpeed, setPlaybackSpeed] = React.useState(1)
     const [currentQuality, setCurrentQuality] = React.useState(
-      sources.find(s => s.quality)?.quality || "auto"
+      sources.find((s) => s.quality)?.quality || "auto"
     )
     const [showSubtitles, setShowSubtitles] = React.useState(false)
     const [isBuffering, setIsBuffering] = React.useState(false)
@@ -135,8 +138,8 @@ const VideoPlayer = React.forwardRef<
     // Quality options
     const qualityOptions = React.useMemo(() => {
       const qualities = sources
-        .filter(s => s.quality)
-        .map(s => s.quality!)
+        .filter((s) => s.quality)
+        .map((s) => s.quality!)
         .filter((quality, index, arr) => arr.indexOf(quality) === index)
       return ["auto", ...qualities]
     }, [sources])
@@ -171,11 +174,14 @@ const VideoPlayer = React.forwardRef<
     }, [])
 
     // Skip forward/backward
-    const skip = React.useCallback((seconds: number) => {
-      if (!videoRef.current) return
-      const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
-      seekTo(newTime)
-    }, [currentTime, duration, seekTo])
+    const skip = React.useCallback(
+      (seconds: number) => {
+        if (!videoRef.current) return
+        const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
+        seekTo(newTime)
+      },
+      [currentTime, duration, seekTo]
+    )
 
     // Toggle mute
     const toggleMute = React.useCallback(() => {
@@ -191,15 +197,18 @@ const VideoPlayer = React.forwardRef<
     }, [isMuted, volume])
 
     // Change volume
-    const changeVolume = React.useCallback((newVolume: number) => {
-      if (!videoRef.current) return
+    const changeVolume = React.useCallback(
+      (newVolume: number) => {
+        if (!videoRef.current) return
 
-      const clampedVolume = Math.max(0, Math.min(1, newVolume))
-      videoRef.current.volume = clampedVolume
-      setVolume(clampedVolume)
-      setIsMuted(clampedVolume === 0)
-      onVolumeChange?.(clampedVolume)
-    }, [onVolumeChange])
+        const clampedVolume = Math.max(0, Math.min(1, newVolume))
+        videoRef.current.volume = clampedVolume
+        setVolume(clampedVolume)
+        setIsMuted(clampedVolume === 0)
+        onVolumeChange?.(clampedVolume)
+      },
+      [onVolumeChange]
+    )
 
     // Toggle fullscreen
     const toggleFullscreen = React.useCallback(async () => {
@@ -234,41 +243,51 @@ const VideoPlayer = React.forwardRef<
     }, [disablePictureInPicture])
 
     // Change playback speed
-    const changePlaybackSpeed = React.useCallback((speed: number) => {
-      if (!videoRef.current) return
+    const changePlaybackSpeed = React.useCallback(
+      (speed: number) => {
+        if (!videoRef.current) return
 
-      videoRef.current.playbackRate = speed
-      setPlaybackSpeed(speed)
-      onSpeedChange?.(speed)
-    }, [onSpeedChange])
+        videoRef.current.playbackRate = speed
+        setPlaybackSpeed(speed)
+        onSpeedChange?.(speed)
+      },
+      [onSpeedChange]
+    )
 
     // Change quality
-    const changeQuality = React.useCallback((quality: string) => {
-      if (!videoRef.current) return
+    const changeQuality = React.useCallback(
+      (quality: string) => {
+        if (!videoRef.current) return
 
-      const currentTimeBeforeChange = videoRef.current.currentTime
-      const wasPlaying = !videoRef.current.paused
+        const currentTimeBeforeChange = videoRef.current.currentTime
+        const wasPlaying = !videoRef.current.paused
 
-      if (quality === "auto") {
-        // Use first source for auto
-        videoRef.current.src = sources[0].src
-      } else {
-        const qualitySource = sources.find(s => s.quality === quality)
-        if (qualitySource) {
-          videoRef.current.src = qualitySource.src
+        if (quality === "auto") {
+          // Use first source for auto
+          videoRef.current.src = sources[0].src
+        } else {
+          const qualitySource = sources.find((s) => s.quality === quality)
+          if (qualitySource) {
+            videoRef.current.src = qualitySource.src
+          }
         }
-      }
 
-      videoRef.current.addEventListener("loadedmetadata", () => {
-        videoRef.current!.currentTime = currentTimeBeforeChange
-        if (wasPlaying) {
-          videoRef.current!.play()
-        }
-      }, { once: true })
+        videoRef.current.addEventListener(
+          "loadedmetadata",
+          () => {
+            videoRef.current!.currentTime = currentTimeBeforeChange
+            if (wasPlaying) {
+              videoRef.current!.play()
+            }
+          },
+          { once: true }
+        )
 
-      setCurrentQuality(quality)
-      onQualityChange?.(quality)
-    }, [sources, onQualityChange])
+        setCurrentQuality(quality)
+        onQualityChange?.(quality)
+      },
+      [sources, onQualityChange]
+    )
 
     // Hide controls after timeout
     const hideControlsAfterTimeout = React.useCallback(() => {
@@ -420,8 +439,14 @@ const VideoPlayer = React.forwardRef<
       video.addEventListener("canplay", handleCanPlay)
       video.addEventListener("ended", handleEnded)
       video.addEventListener("volumechange", handleVolumeChange)
-      video.addEventListener("enterpictureinpicture", handleEnterpictureinpicture)
-      video.addEventListener("leavepictureinpicture", handleLeavepictureinpicture)
+      video.addEventListener(
+        "enterpictureinpicture",
+        handleEnterpictureinpicture
+      )
+      video.addEventListener(
+        "leavepictureinpicture",
+        handleLeavepictureinpicture
+      )
 
       return () => {
         video.removeEventListener("play", handlePlay)
@@ -432,8 +457,14 @@ const VideoPlayer = React.forwardRef<
         video.removeEventListener("canplay", handleCanPlay)
         video.removeEventListener("ended", handleEnded)
         video.removeEventListener("volumechange", handleVolumeChange)
-        video.removeEventListener("enterpictureinpicture", handleEnterpictureinpicture)
-        video.removeEventListener("leavepictureinpicture", handleLeavepictureinpicture)
+        video.removeEventListener(
+          "enterpictureinpicture",
+          handleEnterpictureinpicture
+        )
+        video.removeEventListener(
+          "leavepictureinpicture",
+          handleLeavepictureinpicture
+        )
       }
     }, [onPlay, onPause, onTimeUpdate, onEnded, hideControlsAfterTimeout])
 
@@ -444,7 +475,8 @@ const VideoPlayer = React.forwardRef<
       }
 
       document.addEventListener("fullscreenchange", handleFullscreenChange)
-      return () => document.removeEventListener("fullscreenchange", handleFullscreenChange)
+      return () =>
+        document.removeEventListener("fullscreenchange", handleFullscreenChange)
     }, [])
 
     // Mouse movement handler for controls
@@ -639,9 +671,7 @@ const VideoPlayer = React.forwardRef<
                       <DropdownMenuItem
                         key={speed}
                         onClick={() => changePlaybackSpeed(speed)}
-                        className={cn(
-                          playbackSpeed === speed && "bg-accent"
-                        )}
+                        className={cn(playbackSpeed === speed && "bg-accent")}
                       >
                         {speed}x
                       </DropdownMenuItem>

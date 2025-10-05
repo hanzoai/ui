@@ -2,23 +2,37 @@
 
 import * as React from "react"
 import {
-  Copy,
+  AlertCircle,
   Check,
-  Trash2,
-  Send,
+  Copy,
   Loader2,
+  Send,
   Settings2,
   Sparkles,
-  AlertCircle
+  Trash2,
 } from "lucide-react"
+
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/registry/default/ui/card"
-import { Label } from "@/registry/default/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/default/ui/select"
-import { Textarea } from "@/registry/default/ui/textarea"
-import { Slider } from "@/registry/default/ui/slider"
 import { Alert, AlertDescription } from "@/registry/default/ui/alert"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import { Label } from "@/registry/default/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/default/ui/select"
+import { Slider } from "@/registry/default/ui/slider"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 // Available AI Models
 const AI_MODELS = [
@@ -34,7 +48,7 @@ const AI_MODELS = [
   { value: "gemini-pro", label: "Gemini Pro", provider: "Google" },
 ] as const
 
-type AIModel = typeof AI_MODELS[number]["value"]
+type AIModel = (typeof AI_MODELS)[number]["value"]
 
 interface Message {
   id: string
@@ -289,7 +303,10 @@ Your message: "${userMessage.content}"`
                 placeholder="Enter system prompt..."
                 value={config.systemPrompt}
                 onChange={(e) =>
-                  setConfig((prev) => ({ ...prev, systemPrompt: e.target.value }))
+                  setConfig((prev) => ({
+                    ...prev,
+                    systemPrompt: e.target.value,
+                  }))
                 }
                 className="min-h-[80px] resize-none"
               />
@@ -335,7 +352,10 @@ Your message: "${userMessage.content}"`
                   >
                     {message.role === "assistant" && message.model && (
                       <div className="text-xs opacity-70 mb-1">
-                        {AI_MODELS.find((m) => m.value === message.model)?.label}
+                        {
+                          AI_MODELS.find((m) => m.value === message.model)
+                            ?.label
+                        }
                       </div>
                     )}
                     <div className="whitespace-pre-wrap break-words">
@@ -403,8 +423,7 @@ Your message: "${userMessage.content}"`
       <CardFooter className="text-xs text-muted-foreground">
         <p>
           Model: {AI_MODELS.find((m) => m.value === config.model)?.label} •
-          Temperature: {config.temperature} •
-          Max Tokens: {config.maxTokens}
+          Temperature: {config.temperature} • Max Tokens: {config.maxTokens}
         </p>
       </CardFooter>
     </Card>

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion } from "motion"
+
 import { cn } from "@/lib/utils"
 
 interface Pin3DProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,10 +15,7 @@ const Pin3D = React.forwardRef<HTMLDivElement, Pin3DProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          "group/pin relative cursor-pointer",
-          className
-        )}
+        className={cn("group/pin relative cursor-pointer", className)}
         {...props}
       >
         <div className="pointer-events-none absolute inset-0 z-10 flex h-full w-full items-center justify-center opacity-0 transition duration-500 group-hover/pin:opacity-100">

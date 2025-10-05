@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { Check, Copy } from "lucide-react"
+
+import { cn } from "@/lib/utils"
 
 interface Command {
   id: string
@@ -15,7 +16,9 @@ interface Command {
 interface TerminalProps extends React.HTMLAttributes<HTMLDivElement> {
   prompt?: string
   initialCommands?: Command[]
-  onCommand?: (command: string) => Promise<string | React.ReactNode> | string | React.ReactNode
+  onCommand?: (
+    command: string
+  ) => Promise<string | React.ReactNode> | string | React.ReactNode
   theme?: "dark" | "light" | "matrix" | "dracula"
   enableHistory?: boolean
   enableAutoComplete?: boolean
@@ -80,13 +83,19 @@ const highlightSyntax = (text: string): React.ReactNode => {
     { regex: /(".*?"|'.*?')/g, className: "text-yellow-400" }, // strings
     { regex: /\b(true|false|null|undefined)\b/g, className: "text-orange-400" }, // keywords
     { regex: /\b(\d+)\b/g, className: "text-purple-400" }, // numbers
-    { regex: /\b(function|const|let|var|if|else|for|while|return)\b/g, className: "text-pink-400" }, // js keywords
+    {
+      regex: /\b(function|const|let|var|if|else|for|while|return)\b/g,
+      className: "text-pink-400",
+    }, // js keywords
     { regex: /(--?\w+)/g, className: "text-cyan-400" }, // flags
   ]
 
   let highlighted = text
   patterns.forEach(({ regex, className }) => {
-    highlighted = highlighted.replace(regex, `<span class="${className}">$1</span>`)
+    highlighted = highlighted.replace(
+      regex,
+      `<span class="${className}">$1</span>`
+    )
   })
 
   return <span dangerouslySetInnerHTML={{ __html: highlighted }} />
@@ -99,7 +108,17 @@ export function Terminal({
   theme = "dark",
   enableHistory = true,
   enableAutoComplete = true,
-  autoCompleteCommands = ["help", "clear", "exit", "ls", "cd", "pwd", "echo", "date", "whoami"],
+  autoCompleteCommands = [
+    "help",
+    "clear",
+    "exit",
+    "ls",
+    "cd",
+    "pwd",
+    "echo",
+    "date",
+    "whoami",
+  ],
   maxHistorySize = 50,
   className,
   ...props
@@ -124,7 +143,7 @@ export function Terminal({
 
   React.useEffect(() => {
     if (enableAutoComplete && currentInput) {
-      const matches = autoCompleteCommands.filter(cmd =>
+      const matches = autoCompleteCommands.filter((cmd) =>
         cmd.toLowerCase().startsWith(currentInput.toLowerCase())
       )
       setSuggestions(matches)
@@ -161,7 +180,7 @@ export function Terminal({
             <div>• help - Show this help message</div>
             <div>• date - Show current date and time</div>
             <div>• echo [text] - Print text to terminal</div>
-            {autoCompleteCommands.map(cmd => (
+            {autoCompleteCommands.map((cmd) => (
               <div key={cmd}>• {cmd}</div>
             ))}
           </div>
@@ -188,11 +207,11 @@ export function Terminal({
       newCommand.type = "error"
     }
 
-    setCommands(prev => [...prev, newCommand])
+    setCommands((prev) => [...prev, newCommand])
 
     if (enableHistory) {
-      setCommandHistory(prev => {
-        const updated = [input, ...prev.filter(cmd => cmd !== input)]
+      setCommandHistory((prev) => {
+        const updated = [input, ...prev.filter((cmd) => cmd !== input)]
         return updated.slice(0, maxHistorySize)
       })
     }
@@ -249,7 +268,7 @@ export function Terminal({
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText()
-      setCurrentInput(prev => prev + text)
+      setCurrentInput((prev) => prev + text)
       inputRef.current?.focus()
     } catch (err) {
       console.error("Failed to paste:", err)
@@ -310,7 +329,9 @@ export function Terminal({
                   (!cmd.type || cmd.type === "command") && currentTheme.output
                 )}
               >
-                {typeof cmd.output === "string" ? highlightSyntax(cmd.output) : cmd.output}
+                {typeof cmd.output === "string"
+                  ? highlightSyntax(cmd.output)
+                  : cmd.output}
               </div>
             )}
           </div>
@@ -339,17 +360,21 @@ export function Terminal({
 
         {/* Autocomplete suggestions */}
         {suggestions.length > 0 && (
-          <div className={cn(
-            "absolute left-0 top-full mt-1 rounded-md border p-1 shadow-lg z-10",
-            currentTheme.background,
-            currentTheme.border
-          )}>
+          <div
+            className={cn(
+              "absolute left-0 top-full mt-1 rounded-md border p-1 shadow-lg z-10",
+              currentTheme.background,
+              currentTheme.border
+            )}
+          >
             {suggestions.map((suggestion, index) => (
               <div
                 key={suggestion}
                 className={cn(
                   "rounded px-2 py-1 cursor-pointer",
-                  index === suggestionIndex ? "bg-gray-700" : "hover:bg-gray-800",
+                  index === suggestionIndex
+                    ? "bg-gray-700"
+                    : "hover:bg-gray-800",
                   currentTheme.text
                 )}
                 onClick={() => {

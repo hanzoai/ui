@@ -2,25 +2,30 @@
 
 import * as React from "react"
 import {
-  Wrench,
-  Play,
-  Code,
-  Search,
   Calculator,
-  Globe,
+  ChevronRight,
+  Code,
   FileText,
-  Zap,
+  Globe,
+  Play,
+  Search,
   Settings,
-  ChevronRight
+  Wrench,
+  Zap,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/default/ui/card"
 import { Badge } from "@/registry/default/ui/badge"
-import { Separator } from "@/registry/default/ui/separator"
-import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
 import { Input } from "@/registry/default/ui/input"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import { Separator } from "@/registry/default/ui/separator"
 import { Textarea } from "@/registry/default/ui/textarea"
 
 export interface AITool {
@@ -50,7 +55,7 @@ const defaultTools: AITool[] = [
     icon: Search,
     category: "Information",
     enabled: true,
-    parameters: { query: "" }
+    parameters: { query: "" },
   },
   {
     name: "code_execution",
@@ -58,7 +63,7 @@ const defaultTools: AITool[] = [
     icon: Code,
     category: "Development",
     enabled: true,
-    parameters: { code: "", language: "javascript" }
+    parameters: { code: "", language: "javascript" },
   },
   {
     name: "calculator",
@@ -66,7 +71,7 @@ const defaultTools: AITool[] = [
     icon: Calculator,
     category: "Utilities",
     enabled: true,
-    parameters: { expression: "" }
+    parameters: { expression: "" },
   },
   {
     name: "file_reader",
@@ -74,7 +79,7 @@ const defaultTools: AITool[] = [
     icon: FileText,
     category: "Files",
     enabled: true,
-    parameters: { file_path: "" }
+    parameters: { file_path: "" },
   },
   {
     name: "api_call",
@@ -82,8 +87,8 @@ const defaultTools: AITool[] = [
     icon: Globe,
     category: "Network",
     enabled: false,
-    parameters: { url: "", method: "GET", headers: {}, body: "" }
-  }
+    parameters: { url: "", method: "GET", headers: {}, body: "" },
+  },
 ]
 
 const categoryIcons = {
@@ -92,40 +97,46 @@ const categoryIcons = {
   Utilities: Calculator,
   Files: FileText,
   Network: Globe,
-  default: Wrench
+  default: Wrench,
 }
 
 const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
-  ({
-    className,
-    children,
-    tools = defaultTools,
-    onToolExecute,
-    onToolResult,
-    onToolToggle,
-    showCategories = true,
-    searchable = true,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      children,
+      tools = defaultTools,
+      onToolExecute,
+      onToolResult,
+      onToolToggle,
+      showCategories = true,
+      searchable = true,
+      ...props
+    },
+    ref
+  ) => {
     const [searchQuery, setSearchQuery] = React.useState("")
     const [selectedTool, setSelectedTool] = React.useState<string | null>(null)
-    const [toolParameters, setToolParameters] = React.useState<Record<string, any>>({})
+    const [toolParameters, setToolParameters] = React.useState<
+      Record<string, any>
+    >({})
     const [isExecuting, setIsExecuting] = React.useState(false)
 
     // Filter tools based on search query
     const filteredTools = React.useMemo(() => {
       if (!searchQuery) return tools
-      return tools.filter(tool =>
-        tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        tool.category?.toLowerCase().includes(searchQuery.toLowerCase())
+      return tools.filter(
+        (tool) =>
+          tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tool.category?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }, [tools, searchQuery])
 
     // Group tools by category
     const categorizedTools = React.useMemo(() => {
       const categories: Record<string, AITool[]> = {}
-      filteredTools.forEach(tool => {
+      filteredTools.forEach((tool) => {
         const category = tool.category || "Other"
         if (!categories[category]) categories[category] = []
         categories[category].push(tool)
@@ -153,13 +164,17 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
       }
     }
 
-    const handleParameterChange = (toolName: string, paramName: string, value: any) => {
-      setToolParameters(prev => ({
+    const handleParameterChange = (
+      toolName: string,
+      paramName: string,
+      value: any
+    ) => {
+      setToolParameters((prev) => ({
         ...prev,
         [toolName]: {
           ...prev[toolName],
-          [paramName]: value
-        }
+          [paramName]: value,
+        },
       }))
     }
 
@@ -180,14 +195,20 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className={cn(
-                  "flex h-8 w-8 items-center justify-center rounded-lg",
-                  tool.enabled ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
-                )}>
+                <div
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-lg",
+                    tool.enabled
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground"
+                  )}
+                >
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <CardTitle className="text-sm font-medium">{tool.name}</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    {tool.name}
+                  </CardTitle>
                   {tool.category && (
                     <Badge variant="outline" className="text-xs mt-1">
                       {tool.category}
@@ -208,10 +229,12 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
                     <Settings className="h-3 w-3" />
                   </Button>
                 )}
-                <ChevronRight className={cn(
-                  "h-4 w-4 transition-transform",
-                  isSelected && "rotate-90"
-                )} />
+                <ChevronRight
+                  className={cn(
+                    "h-4 w-4 transition-transform",
+                    isSelected && "rotate-90"
+                  )}
+                />
               </div>
             </div>
           </CardHeader>
@@ -228,10 +251,17 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
                     <label className="text-xs font-medium capitalize">
                       {paramName.replace(/_/g, " ")}
                     </label>
-                    {typeof paramValue === "string" && paramValue.length > 50 ? (
+                    {typeof paramValue === "string" &&
+                    paramValue.length > 50 ? (
                       <Textarea
                         value={params[paramName] || ""}
-                        onChange={(e) => handleParameterChange(tool.name, paramName, e.target.value)}
+                        onChange={(e) =>
+                          handleParameterChange(
+                            tool.name,
+                            paramName,
+                            e.target.value
+                          )
+                        }
                         placeholder={`Enter ${paramName}`}
                         className="text-xs"
                         rows={3}
@@ -239,7 +269,13 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
                     ) : (
                       <Input
                         value={params[paramName] || ""}
-                        onChange={(e) => handleParameterChange(tool.name, paramName, e.target.value)}
+                        onChange={(e) =>
+                          handleParameterChange(
+                            tool.name,
+                            paramName,
+                            e.target.value
+                          )
+                        }
                         placeholder={`Enter ${paramName}`}
                         className="text-xs"
                       />
@@ -275,17 +311,15 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn("space-y-4", className)}
-        {...props}
-      >
+      <div ref={ref} className={cn("space-y-4", className)} {...props}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Wrench className="h-5 w-5" />
             <h3 className="font-semibold">AI Tools</h3>
-            <Badge variant="secondary">{tools.filter(t => t.enabled).length} enabled</Badge>
+            <Badge variant="secondary">
+              {tools.filter((t) => t.enabled).length} enabled
+            </Badge>
           </div>
         </div>
 
@@ -304,34 +338,38 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
         {/* Tools */}
         <ScrollArea className="h-[400px]">
           <div className="space-y-4">
-            {showCategories ? (
-              Object.entries(categorizedTools).map(([category, categoryTools]) => {
-                const CategoryIcon = categoryIcons[category as keyof typeof categoryIcons] || categoryIcons.default
-                return (
-                  <div key={category} className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <CategoryIcon className="h-4 w-4 text-muted-foreground" />
-                      <h4 className="font-medium text-sm">{category}</h4>
-                      <Separator className="flex-1" />
-                    </div>
-                    <div className="space-y-2 pl-6">
-                      {categoryTools.map((tool) => (
-                        <ToolCard key={tool.name} tool={tool} />
-                      ))}
-                    </div>
-                  </div>
+            {showCategories
+              ? Object.entries(categorizedTools).map(
+                  ([category, categoryTools]) => {
+                    const CategoryIcon =
+                      categoryIcons[category as keyof typeof categoryIcons] ||
+                      categoryIcons.default
+                    return (
+                      <div key={category} className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <CategoryIcon className="h-4 w-4 text-muted-foreground" />
+                          <h4 className="font-medium text-sm">{category}</h4>
+                          <Separator className="flex-1" />
+                        </div>
+                        <div className="space-y-2 pl-6">
+                          {categoryTools.map((tool) => (
+                            <ToolCard key={tool.name} tool={tool} />
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  }
                 )
-              })
-            ) : (
-              filteredTools.map((tool) => (
-                <ToolCard key={tool.name} tool={tool} />
-              ))
-            )}
+              : filteredTools.map((tool) => (
+                  <ToolCard key={tool.name} tool={tool} />
+                ))}
 
             {filteredTools.length === 0 && (
               <div className="text-center py-8">
                 <Wrench className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <h4 className="font-medium text-muted-foreground">No tools found</h4>
+                <h4 className="font-medium text-muted-foreground">
+                  No tools found
+                </h4>
                 <p className="text-sm text-muted-foreground">
                   Try adjusting your search criteria
                 </p>

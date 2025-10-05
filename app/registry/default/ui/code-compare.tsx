@@ -19,10 +19,20 @@ import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import { CodeDiff } from "@/registry/default/ui/code-diff"
 import { CodeSnippet } from "@/registry/default/ui/code-snippet"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/registry/default/ui/dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/registry/default/ui/dropdown-menu"
 import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import { Separator } from "@/registry/default/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
 
 const codeCompareVariants = cva(
   "relative flex flex-col overflow-hidden rounded-lg border bg-background",
@@ -83,22 +93,25 @@ interface MergeState {
 }
 
 const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
-  ({
-    className,
-    layout,
-    size,
-    files,
-    defaultView = "side-by-side",
-    showLineNumbers = true,
-    showCopyButton = true,
-    allowMerge = false,
-    conflictMarkers = [],
-    onMergeConflict,
-    onFileSelect,
-    height = "600px",
-    syncScroll = true,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      layout,
+      size,
+      files,
+      defaultView = "side-by-side",
+      showLineNumbers = true,
+      showCopyButton = true,
+      allowMerge = false,
+      conflictMarkers = [],
+      onMergeConflict,
+      onFileSelect,
+      height = "600px",
+      syncScroll = true,
+      ...props
+    },
+    ref
+  ) => {
     const [view, setView] = React.useState(defaultView)
     const [selectedFiles, setSelectedFiles] = React.useState<string[]>(() => {
       if (files.length >= 2) {
@@ -108,78 +121,87 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
     })
     const [mergeState, setMergeState] = React.useState<MergeState>({
       resolved: {},
-      conflicts: conflictMarkers
+      conflicts: conflictMarkers,
     })
     const [copied, setCopied] = React.useState(false)
 
     const scrollRefs = React.useRef<Record<string, HTMLDivElement | null>>({})
 
     // Sync scroll between panes
-    const handleScroll = React.useCallback((sourceId: string, scrollTop: number) => {
-      if (!syncScroll) return
+    const handleScroll = React.useCallback(
+      (sourceId: string, scrollTop: number) => {
+        if (!syncScroll) return
 
-      Object.entries(scrollRefs.current).forEach(([id, ref]) => {
-        if (id !== sourceId && ref) {
-          ref.scrollTop = scrollTop
-        }
-      })
-    }, [syncScroll])
+        Object.entries(scrollRefs.current).forEach(([id, ref]) => {
+          if (id !== sourceId && ref) {
+            ref.scrollTop = scrollTop
+          }
+        })
+      },
+      [syncScroll]
+    )
 
     const copyComparison = React.useCallback(async () => {
       const comparison = selectedFiles
-        .map(fileId => {
-          const file = files.find(f => f.id === fileId)
+        .map((fileId) => {
+          const file = files.find((f) => f.id === fileId)
           return file ? `=== ${file.filename} ===\n${file.content}` : ""
         })
-        .join('\n\n')
+        .join("\n\n")
 
       try {
         await navigator.clipboard.writeText(comparison)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       } catch (error) {
-        console.error('Failed to copy comparison:', error)
+        console.error("Failed to copy comparison:", error)
       }
     }, [files, selectedFiles])
 
-    const resolveConflict = React.useCallback((conflictIndex: number, resolution: string) => {
-      setMergeState(prev => ({
-        ...prev,
-        resolved: {
-          ...prev.resolved,
-          [conflictIndex]: resolution
+    const resolveConflict = React.useCallback(
+      (conflictIndex: number, resolution: string) => {
+        setMergeState((prev) => ({
+          ...prev,
+          resolved: {
+            ...prev.resolved,
+            [conflictIndex]: resolution,
+          },
+        }))
+
+        onMergeConflict?.(resolution)
+      },
+      [onMergeConflict]
+    )
+
+    const getFileStats = React.useCallback(
+      (file1: CompareFile, file2: CompareFile) => {
+        const lines1 = file1.content.split("\n")
+        const lines2 = file2.content.split("\n")
+
+        // Simple line-by-line comparison
+        let added = 0
+        let removed = 0
+        let modified = 0
+
+        const maxLines = Math.max(lines1.length, lines2.length)
+
+        for (let i = 0; i < maxLines; i++) {
+          const line1 = lines1[i]
+          const line2 = lines2[i]
+
+          if (line1 === undefined) {
+            added++
+          } else if (line2 === undefined) {
+            removed++
+          } else if (line1 !== line2) {
+            modified++
+          }
         }
-      }))
 
-      onMergeConflict?.(resolution)
-    }, [onMergeConflict])
-
-    const getFileStats = React.useCallback((file1: CompareFile, file2: CompareFile) => {
-      const lines1 = file1.content.split('\n')
-      const lines2 = file2.content.split('\n')
-
-      // Simple line-by-line comparison
-      let added = 0
-      let removed = 0
-      let modified = 0
-
-      const maxLines = Math.max(lines1.length, lines2.length)
-
-      for (let i = 0; i < maxLines; i++) {
-        const line1 = lines1[i]
-        const line2 = lines2[i]
-
-        if (line1 === undefined) {
-          added++
-        } else if (line2 === undefined) {
-          removed++
-        } else if (line1 !== line2) {
-          modified++
-        }
-      }
-
-      return { added, removed, modified }
-    }, [])
+        return { added, removed, modified }
+      },
+      []
+    )
 
     const renderFileSelector = () => (
       <div className="flex items-center gap-2 flex-wrap">
@@ -191,19 +213,23 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
               onClick={() => {
                 if (view === "three-way") {
                   // For three-way, allow up to 3 files
-                  setSelectedFiles(prev => {
+                  setSelectedFiles((prev) => {
                     if (prev.includes(file.id)) {
-                      return prev.filter(id => id !== file.id)
+                      return prev.filter((id) => id !== file.id)
                     }
-                    return prev.length < 3 ? [...prev, file.id] : [prev[1], prev[2], file.id]
+                    return prev.length < 3
+                      ? [...prev, file.id]
+                      : [prev[1], prev[2], file.id]
                   })
                 } else {
                   // For side-by-side/unified, allow up to 2 files
-                  setSelectedFiles(prev => {
+                  setSelectedFiles((prev) => {
                     if (prev.includes(file.id)) {
-                      return prev.filter(id => id !== file.id)
+                      return prev.filter((id) => id !== file.id)
                     }
-                    return prev.length < 2 ? [...prev, file.id] : [prev[1], file.id]
+                    return prev.length < 2
+                      ? [...prev, file.id]
+                      : [prev[1], file.id]
                   })
                 }
                 onFileSelect?.(file.id)
@@ -227,7 +253,7 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
 
     const renderSideBySide = () => {
       const [file1, file2] = selectedFiles
-        .map(id => files.find(f => f.id === id))
+        .map((id) => files.find((f) => f.id === id))
         .filter(Boolean) as CompareFile[]
 
       if (!file1 || !file2) {
@@ -275,7 +301,7 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
 
     const renderUnified = () => {
       const [file1, file2] = selectedFiles
-        .map(id => files.find(f => f.id === id))
+        .map((id) => files.find((f) => f.id === id))
         .filter(Boolean) as CompareFile[]
 
       if (!file1 || !file2) {
@@ -303,7 +329,7 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
 
     const renderThreeWay = () => {
       const [base, current, incoming] = selectedFiles
-        .map(id => files.find(f => f.id === id))
+        .map((id) => files.find((f) => f.id === id))
         .filter(Boolean) as CompareFile[]
 
       if (!base || !current || !incoming) {
@@ -319,14 +345,16 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
           {/* Base */}
           <div className="border-r">
             <div className="border-b px-4 py-2 bg-muted/30">
-              <span className="text-sm font-medium">Base ({base.filename})</span>
+              <span className="text-sm font-medium">
+                Base ({base.filename})
+              </span>
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current['base'] = ref)}
+              ref={(ref) => (scrollRefs.current["base"] = ref)}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
-                handleScroll('base', target.scrollTop)
+                handleScroll("base", target.scrollTop)
               }}
             >
               <CodeSnippet
@@ -349,10 +377,10 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current['current'] = ref)}
+              ref={(ref) => (scrollRefs.current["current"] = ref)}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
-                handleScroll('current', target.scrollTop)
+                handleScroll("current", target.scrollTop)
               }}
             >
               <CodeSnippet
@@ -375,10 +403,10 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current['incoming'] = ref)}
+              ref={(ref) => (scrollRefs.current["incoming"] = ref)}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
-                handleScroll('incoming', target.scrollTop)
+                handleScroll("incoming", target.scrollTop)
               }}
             >
               <CodeSnippet
@@ -410,7 +438,9 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             <div className="mt-2 space-y-2">
               {mergeState.conflicts.map((conflict, index) => (
                 <div key={index} className="flex items-center gap-2 text-xs">
-                  <span>Lines {conflict.startLine}-{conflict.endLine}</span>
+                  <span>
+                    Lines {conflict.startLine}-{conflict.endLine}
+                  </span>
                   <div className="flex gap-1">
                     <Button
                       variant="outline"
@@ -446,9 +476,7 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-2">
-          <div className="flex items-center gap-4">
-            {renderFileSelector()}
-          </div>
+          <div className="flex items-center gap-4">{renderFileSelector()}</div>
 
           <div className="flex items-center gap-2">
             <Tabs value={view} onValueChange={(value) => setView(value as any)}>

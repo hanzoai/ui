@@ -1,8 +1,19 @@
 "use client"
 
 import * as React from "react"
+import {
+  Camera,
+  Download,
+  Eye,
+  Move3d,
+  Palette,
+  RotateCcw,
+  Sun,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react"
+
 import { cn } from "@/lib/utils"
-import { Camera, Download, RotateCcw, ZoomIn, ZoomOut, Move3d, Eye, Sun, Palette } from "lucide-react"
 import { Button } from "@/registry/default/ui/button"
 
 interface ModelViewerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -45,7 +56,11 @@ class ModelRenderer {
   private canvas: HTMLCanvasElement
   private ctx: CanvasRenderingContext2D
   private model: any = null
-  private camera = { rotation: { x: 0, y: 0 }, zoom: 1, position: { x: 0, y: 0 } }
+  private camera = {
+    rotation: { x: 0, y: 0 },
+    zoom: 1,
+    position: { x: 0, y: 0 },
+  }
   private autoRotate = false
   private autoRotateSpeed = 1
   private animationFrame: number | null = null
@@ -55,19 +70,19 @@ class ModelRenderer {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    const ctx = canvas.getContext('2d')
-    if (!ctx) throw new Error('Could not get 2D context')
+    const ctx = canvas.getContext("2d")
+    if (!ctx) throw new Error("Could not get 2D context")
     this.ctx = ctx
 
     this.setupEventListeners()
   }
 
   private setupEventListeners() {
-    this.canvas.addEventListener('mousedown', this.handleMouseDown.bind(this))
-    this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this))
-    this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this))
-    this.canvas.addEventListener('wheel', this.handleWheel.bind(this))
-    this.canvas.addEventListener('click', this.handleClick.bind(this))
+    this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this))
+    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
+    this.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this))
+    this.canvas.addEventListener("wheel", this.handleWheel.bind(this))
+    this.canvas.addEventListener("click", this.handleClick.bind(this))
   }
 
   private handleMouseDown(e: MouseEvent) {
@@ -93,7 +108,10 @@ class ModelRenderer {
 
   private handleWheel(e: WheelEvent) {
     e.preventDefault()
-    this.camera.zoom = Math.max(0.1, Math.min(5, this.camera.zoom + e.deltaY * -0.001))
+    this.camera.zoom = Math.max(
+      0.1,
+      Math.min(5, this.camera.zoom + e.deltaY * -0.001)
+    )
   }
 
   private handleClick(e: MouseEvent) {
@@ -103,13 +121,17 @@ class ModelRenderer {
     const y = e.clientY - rect.top
 
     // Simple hit detection for annotations
-    this.annotations.forEach(annotation => {
+    this.annotations.forEach((annotation) => {
       if (annotation.visible) {
         const screenPos = this.worldToScreen(annotation.position)
-        const distance = Math.sqrt((x - screenPos.x) ** 2 + (y - screenPos.y) ** 2)
+        const distance = Math.sqrt(
+          (x - screenPos.x) ** 2 + (y - screenPos.y) ** 2
+        )
         if (distance < 20) {
           // Annotation clicked
-          const event = new CustomEvent('annotationClick', { detail: annotation })
+          const event = new CustomEvent("annotationClick", {
+            detail: annotation,
+          })
           this.canvas.dispatchEvent(event)
         }
       }
@@ -120,8 +142,8 @@ class ModelRenderer {
     // Simple 3D to 2D projection
     const { width, height } = this.canvas
     return {
-      x: width / 2 + (worldPos.x * 100 * this.camera.zoom),
-      y: height / 2 - (worldPos.y * 100 * this.camera.zoom)
+      x: width / 2 + worldPos.x * 100 * this.camera.zoom,
+      y: height / 2 - worldPos.y * 100 * this.camera.zoom,
     }
   }
 
@@ -133,7 +155,10 @@ class ModelRenderer {
     const centerY = height / 2
 
     this.ctx.save()
-    this.ctx.translate(centerX + this.camera.position.x, centerY + this.camera.position.y)
+    this.ctx.translate(
+      centerX + this.camera.position.x,
+      centerY + this.camera.position.y
+    )
     this.ctx.scale(this.camera.zoom, this.camera.zoom)
 
     // Simulate 3D rotation by skewing
@@ -141,9 +166,12 @@ class ModelRenderer {
     const rotY = this.camera.rotation.y
 
     this.ctx.transform(
-      Math.cos(rotY), Math.sin(rotY) * Math.sin(rotX),
-      0, Math.cos(rotX),
-      0, 0
+      Math.cos(rotY),
+      Math.sin(rotY) * Math.sin(rotX),
+      0,
+      Math.cos(rotX),
+      0,
+      0
     )
 
     // Draw a simple 3D-ish model representation
@@ -156,49 +184,49 @@ class ModelRenderer {
     const size = 80
 
     // Front face
-    this.ctx.fillStyle = '#60a5fa'
-    this.ctx.fillRect(-size/2, -size/2, size, size)
-    this.ctx.strokeStyle = '#1e40af'
+    this.ctx.fillStyle = "#60a5fa"
+    this.ctx.fillRect(-size / 2, -size / 2, size, size)
+    this.ctx.strokeStyle = "#1e40af"
     this.ctx.lineWidth = 2
-    this.ctx.strokeRect(-size/2, -size/2, size, size)
+    this.ctx.strokeRect(-size / 2, -size / 2, size, size)
 
     // Top face (isometric)
-    this.ctx.fillStyle = '#93c5fd'
+    this.ctx.fillStyle = "#93c5fd"
     this.ctx.beginPath()
-    this.ctx.moveTo(-size/2, -size/2)
-    this.ctx.lineTo(-size/4, -size/2 - size/4)
-    this.ctx.lineTo(size/4, -size/2 - size/4)
-    this.ctx.lineTo(size/2, -size/2)
+    this.ctx.moveTo(-size / 2, -size / 2)
+    this.ctx.lineTo(-size / 4, -size / 2 - size / 4)
+    this.ctx.lineTo(size / 4, -size / 2 - size / 4)
+    this.ctx.lineTo(size / 2, -size / 2)
     this.ctx.closePath()
     this.ctx.fill()
     this.ctx.stroke()
 
     // Right face (isometric)
-    this.ctx.fillStyle = '#3b82f6'
+    this.ctx.fillStyle = "#3b82f6"
     this.ctx.beginPath()
-    this.ctx.moveTo(size/2, -size/2)
-    this.ctx.lineTo(size/4, -size/2 - size/4)
-    this.ctx.lineTo(size/4, size/2 - size/4)
-    this.ctx.lineTo(size/2, size/2)
+    this.ctx.moveTo(size / 2, -size / 2)
+    this.ctx.lineTo(size / 4, -size / 2 - size / 4)
+    this.ctx.lineTo(size / 4, size / 2 - size / 4)
+    this.ctx.lineTo(size / 2, size / 2)
     this.ctx.closePath()
     this.ctx.fill()
     this.ctx.stroke()
   }
 
   private drawAnnotations() {
-    this.annotations.forEach(annotation => {
+    this.annotations.forEach((annotation) => {
       if (!annotation.visible) return
 
       const screenPos = this.worldToScreen(annotation.position)
 
       // Draw annotation marker
-      this.ctx.fillStyle = '#ef4444'
+      this.ctx.fillStyle = "#ef4444"
       this.ctx.beginPath()
       this.ctx.arc(screenPos.x, screenPos.y, 8, 0, Math.PI * 2)
       this.ctx.fill()
 
       // Draw annotation line
-      this.ctx.strokeStyle = '#ef4444'
+      this.ctx.strokeStyle = "#ef4444"
       this.ctx.lineWidth = 2
       this.ctx.beginPath()
       this.ctx.moveTo(screenPos.x, screenPos.y)
@@ -206,10 +234,10 @@ class ModelRenderer {
       this.ctx.stroke()
 
       // Draw annotation label
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)"
       this.ctx.fillRect(screenPos.x + 22, screenPos.y - 35, 100, 20)
-      this.ctx.fillStyle = 'white'
-      this.ctx.font = '12px Arial'
+      this.ctx.fillStyle = "white"
+      this.ctx.font = "12px Arial"
       this.ctx.fillText(annotation.title, screenPos.x + 25, screenPos.y - 22)
     })
   }
@@ -218,7 +246,7 @@ class ModelRenderer {
     const { width, height } = this.canvas
 
     // Clear canvas
-    this.ctx.fillStyle = '#f8fafc'
+    this.ctx.fillStyle = "#f8fafc"
     this.ctx.fillRect(0, 0, width, height)
 
     if (this.autoRotate) {
@@ -240,10 +268,10 @@ class ModelRenderer {
             faces: 12,
             materials: 1,
             textures: 0,
-            size: '2.4 KB'
+            size: "2.4 KB",
           })
         } else {
-          reject('Invalid model URL')
+          reject("Invalid model URL")
         }
       }, 1000)
     })
@@ -259,7 +287,11 @@ class ModelRenderer {
   }
 
   resetCamera() {
-    this.camera = { rotation: { x: 0, y: 0 }, zoom: 1, position: { x: 0, y: 0 } }
+    this.camera = {
+      rotation: { x: 0, y: 0 },
+      zoom: 1,
+      position: { x: 0, y: 0 },
+    }
   }
 
   zoomIn() {
@@ -271,7 +303,7 @@ class ModelRenderer {
   }
 
   takeScreenshot(): string {
-    return this.canvas.toDataURL('image/png')
+    return this.canvas.toDataURL("image/png")
   }
 
   startAnimation() {
@@ -295,25 +327,28 @@ class ModelRenderer {
 }
 
 const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
-  ({
-    modelUrl,
-    width = 800,
-    height = 600,
-    autoRotate = false,
-    autoRotateSpeed = 1,
-    enableZoom = true,
-    enablePan = true,
-    enableRotate = true,
-    backgroundColor = '#f8fafc',
-    showControls = true,
-    showStats = false,
-    annotations = [],
-    onModelLoad,
-    onModelError,
-    onAnnotationClick,
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      modelUrl,
+      width = 800,
+      height = 600,
+      autoRotate = false,
+      autoRotateSpeed = 1,
+      enableZoom = true,
+      enablePan = true,
+      enableRotate = true,
+      backgroundColor = "#f8fafc",
+      showControls = true,
+      showStats = false,
+      annotations = [],
+      onModelLoad,
+      onModelError,
+      onAnnotationClick,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const containerRef = React.useRef<HTMLDivElement>(null)
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const rendererRef = React.useRef<ModelRenderer | null>(null)
@@ -332,7 +367,7 @@ const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
       renderer.startAnimation()
 
       // Listen for annotation clicks
-      canvasRef.current.addEventListener('annotationClick', (e: any) => {
+      canvasRef.current.addEventListener("annotationClick", (e: any) => {
         onAnnotationClick?.(e.detail)
       })
 
@@ -348,7 +383,8 @@ const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
       setIsLoading(true)
       setError(null)
 
-      rendererRef.current.loadModel(modelUrl)
+      rendererRef.current
+        .loadModel(modelUrl)
         .then((stats) => {
           setModelStats(stats)
           setIsLoading(false)
@@ -388,15 +424,15 @@ const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
     }
 
     const handleToggleAutoRotate = () => {
-      setCurrentAutoRotate(prev => !prev)
+      setCurrentAutoRotate((prev) => !prev)
     }
 
     const handleScreenshot = () => {
       if (!rendererRef.current) return
 
       const dataURL = rendererRef.current.takeScreenshot()
-      const link = document.createElement('a')
-      link.download = 'model-screenshot.png'
+      const link = document.createElement("a")
+      link.download = "model-screenshot.png"
       link.href = dataURL
       link.click()
     }
@@ -484,7 +520,9 @@ const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
               size="icon"
               onClick={handleToggleAutoRotate}
               title="Toggle auto rotate"
-              className={currentAutoRotate ? "bg-primary text-primary-foreground" : ""}
+              className={
+                currentAutoRotate ? "bg-primary text-primary-foreground" : ""
+              }
             >
               <Move3d className="w-4 h-4" />
             </Button>
@@ -546,9 +584,7 @@ const ModelViewer3D = React.forwardRef<HTMLDivElement, ModelViewerProps>(
               <div className="w-16 h-16 mx-auto rounded-full bg-muted flex items-center justify-center">
                 <Eye className="w-8 h-8 text-muted-foreground" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                No model loaded
-              </p>
+              <p className="text-sm text-muted-foreground">No model loaded</p>
               <p className="text-xs text-muted-foreground">
                 Provide a modelUrl to view a 3D model
               </p>
@@ -563,56 +599,60 @@ ModelViewer3D.displayName = "ModelViewer3D"
 
 // Preset configurations
 const ModelViewer3DPreset = {
-  Basic: React.forwardRef<HTMLDivElement, Omit<ModelViewerProps, 'showControls' | 'showStats'>>(
-    (props, ref) => (
-      <ModelViewer3D
-        ref={ref}
-        showControls
-        showStats={false}
-        autoRotate
-        autoRotateSpeed={0.5}
-        {...props}
-      />
-    )
-  ),
+  Basic: React.forwardRef<
+    HTMLDivElement,
+    Omit<ModelViewerProps, "showControls" | "showStats">
+  >((props, ref) => (
+    <ModelViewer3D
+      ref={ref}
+      showControls
+      showStats={false}
+      autoRotate
+      autoRotateSpeed={0.5}
+      {...props}
+    />
+  )),
 
-  Advanced: React.forwardRef<HTMLDivElement, Omit<ModelViewerProps, 'showControls' | 'showStats'>>(
-    (props, ref) => (
-      <ModelViewer3D
-        ref={ref}
-        showControls
-        showStats
-        enableZoom
-        enablePan
-        enableRotate
-        {...props}
-      />
-    )
-  ),
+  Advanced: React.forwardRef<
+    HTMLDivElement,
+    Omit<ModelViewerProps, "showControls" | "showStats">
+  >((props, ref) => (
+    <ModelViewer3D
+      ref={ref}
+      showControls
+      showStats
+      enableZoom
+      enablePan
+      enableRotate
+      {...props}
+    />
+  )),
 
-  Presentation: React.forwardRef<HTMLDivElement, Omit<ModelViewerProps, 'showControls' | 'autoRotate'>>(
-    (props, ref) => (
-      <ModelViewer3D
-        ref={ref}
-        showControls={false}
-        autoRotate
-        autoRotateSpeed={1}
-        backgroundColor="#000000"
-        {...props}
-      />
-    )
-  )
+  Presentation: React.forwardRef<
+    HTMLDivElement,
+    Omit<ModelViewerProps, "showControls" | "autoRotate">
+  >((props, ref) => (
+    <ModelViewer3D
+      ref={ref}
+      showControls={false}
+      autoRotate
+      autoRotateSpeed={1}
+      backgroundColor="#000000"
+      {...props}
+    />
+  )),
 }
 
 // Assign display names
 ModelViewer3DPreset.Basic.displayName = "ModelViewer3DPreset.Basic"
 ModelViewer3DPreset.Advanced.displayName = "ModelViewer3DPreset.Advanced"
-ModelViewer3DPreset.Presentation.displayName = "ModelViewer3DPreset.Presentation"
+ModelViewer3DPreset.Presentation.displayName =
+  "ModelViewer3DPreset.Presentation"
 
 export {
   ModelViewer3D,
   ModelViewer3DPreset,
   type ModelViewerProps,
   type Annotation,
-  type ModelStats
+  type ModelStats,
 }

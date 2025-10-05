@@ -1,9 +1,17 @@
 "use client"
 
 import * as React from "react"
-import { motion, useMotionValue, useTransform, AnimatePresence, PanInfo } from "framer-motion"
+import {
+  AnimatePresence,
+  motion,
+  PanInfo,
+  useMotionValue,
+  useTransform,
+} from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+
 import { cn } from "@/lib/utils"
+
 import { Button } from "./button"
 import { Card } from "./card"
 
@@ -152,10 +160,7 @@ export function AppleCardsCarousel({
   return (
     <div
       ref={containerRef}
-      className={cn(
-        "relative w-full max-w-6xl mx-auto px-4 py-8",
-        className
-      )}
+      className={cn("relative w-full max-w-6xl mx-auto px-4 py-8", className)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -2,34 +2,40 @@
 
 import * as React from "react"
 import {
+  closestCorners,
   DndContext,
   DragEndEvent,
   DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
+  UniqueIdentifier,
   useSensor,
   useSensors,
-  closestCorners,
-  UniqueIdentifier,
 } from "@dnd-kit/core"
 import {
-  SortableContext,
   arrayMove,
+  SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Search, Plus, X, Edit3, Calendar, User, MoreHorizontal } from "lucide-react"
+import {
+  Calendar,
+  Edit3,
+  MoreHorizontal,
+  Plus,
+  Search,
+  User,
+  X,
+} from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "./button"
+
 import { Badge } from "./badge"
+import { Button } from "./button"
 import { Card, CardContent, CardHeader } from "./card"
-import { Input } from "./input"
-import { Label } from "./label"
-import { Textarea } from "./textarea"
 import {
   Dialog,
   DialogContent,
@@ -45,6 +51,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu"
+import { Input } from "./input"
+import { Label } from "./label"
 import {
   Select,
   SelectContent,
@@ -52,6 +60,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select"
+import { Textarea } from "./textarea"
 
 // Types
 export interface KanbanCard {
@@ -93,9 +102,11 @@ const priorityVariants = cva(
     variants: {
       priority: {
         low: "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400",
-        medium: "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
+        medium:
+          "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400",
         high: "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-800 dark:bg-orange-900/20 dark:text-orange-400",
-        urgent: "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400",
+        urgent:
+          "border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400",
       },
     },
     defaultVariants: {
@@ -105,7 +116,11 @@ const priorityVariants = cva(
 )
 
 // Sortable Card Component
-function SortableCard({ card, onEdit, onDelete }: {
+function SortableCard({
+  card,
+  onEdit,
+  onDelete,
+}: {
   card: KanbanCard
   onEdit: (card: KanbanCard) => void
   onDelete: (cardId: string) => void
@@ -135,11 +150,7 @@ function SortableCard({ card, onEdit, onDelete }: {
         isDragging && "opacity-50"
       )}
     >
-      <KanbanCardComponent
-        card={card}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+      <KanbanCardComponent card={card} onEdit={onEdit} onDelete={onDelete} />
     </div>
   )
 }
@@ -148,7 +159,7 @@ function SortableCard({ card, onEdit, onDelete }: {
 function KanbanCardComponent({
   card,
   onEdit,
-  onDelete
+  onDelete,
 }: {
   card: KanbanCard
   onEdit: (card: KanbanCard) => void
@@ -179,7 +190,7 @@ function KanbanCardComponent({
                     style={{
                       backgroundColor: `${label.color}20`,
                       borderColor: label.color,
-                      color: label.color
+                      color: label.color,
                     }}
                   >
                     {label.name}
@@ -192,7 +203,11 @@ function KanbanCardComponent({
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 {card.priority && (
-                  <span className={cn(priorityVariants({ priority: card.priority }))}>
+                  <span
+                    className={cn(
+                      priorityVariants({ priority: card.priority })
+                    )}
+                  >
                     {card.priority}
                   </span>
                 )}
@@ -284,7 +299,10 @@ function KanbanColumnComponent({
       </div>
 
       {/* Cards Container */}
-      <SortableContext items={column.cards.map(card => card.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={column.cards.map((card) => card.id)}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="flex-1 min-h-[200px]">
           {column.cards.map((card) => (
             <SortableCard
@@ -320,7 +338,7 @@ function CardFormDialog({
     priority: card?.priority || "low",
     assignee: card?.assignee || "",
     dueDate: card?.dueDate || "",
-    labels: card?.labels?.map(l => l.id) || [],
+    labels: card?.labels?.map((l) => l.id) || [],
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -330,7 +348,7 @@ function CardFormDialog({
     onSave({
       ...card,
       ...formData,
-      labels: labels.filter(l => formData.labels.includes(l.id)),
+      labels: labels.filter((l) => formData.labels.includes(l.id)),
       updatedAt: new Date().toISOString(),
     })
     onOpenChange(false)
@@ -344,7 +362,7 @@ function CardFormDialog({
         priority: card.priority || "low",
         assignee: card.assignee || "",
         dueDate: card.dueDate || "",
-        labels: card.labels?.map(l => l.id) || [],
+        labels: card.labels?.map((l) => l.id) || [],
       })
     } else {
       setFormData({
@@ -364,7 +382,9 @@ function CardFormDialog({
         <DialogHeader>
           <DialogTitle>{card ? "Edit Card" : "Create Card"}</DialogTitle>
           <DialogDescription>
-            {card ? "Update the card details below." : "Create a new card for your kanban board."}
+            {card
+              ? "Update the card details below."
+              : "Create a new card for your kanban board."}
           </DialogDescription>
         </DialogHeader>
 
@@ -374,7 +394,9 @@ function CardFormDialog({
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
               placeholder="Enter card title..."
               required
             />
@@ -385,7 +407,12 @@ function CardFormDialog({
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Enter card description..."
               rows={3}
             />
@@ -394,9 +421,12 @@ function CardFormDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="priority">Priority</Label>
-              <Select value={formData.priority} onValueChange={(value) =>
-                setFormData(prev => ({ ...prev, priority: value as any }))
-              }>
+              <Select
+                value={formData.priority}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, priority: value as any }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -414,7 +444,9 @@ function CardFormDialog({
               <Input
                 id="assignee"
                 value={formData.assignee}
-                onChange={(e) => setFormData(prev => ({ ...prev, assignee: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, assignee: e.target.value }))
+                }
                 placeholder="Assign to..."
               />
             </div>
@@ -426,17 +458,21 @@ function CardFormDialog({
               id="dueDate"
               type="date"
               value={formData.dueDate}
-              onChange={(e) => setFormData(prev => ({ ...prev, dueDate: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, dueDate: e.target.value }))
+              }
             />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit">
-              {card ? "Update" : "Create"} Card
-            </Button>
+            <Button type="submit">{card ? "Update" : "Create"} Card</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -451,7 +487,11 @@ export interface KanbanBoardProps {
   className?: string
 }
 
-export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProps) {
+export function KanbanBoard({
+  board,
+  onUpdateBoard,
+  className,
+}: KanbanBoardProps) {
   const [activeCard, setActiveCard] = React.useState<KanbanCard | null>(null)
   const [searchQuery, setSearchQuery] = React.useState("")
   const [cardFormOpen, setCardFormOpen] = React.useState(false)
@@ -472,14 +512,17 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
     const filtered = {
       ...board,
-      columns: board.columns.map(column => ({
+      columns: board.columns.map((column) => ({
         ...column,
-        cards: column.cards.filter(card =>
-          card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          card.labels?.some(label =>
-            label.name.toLowerCase().includes(searchQuery.toLowerCase())
-          )
+        cards: column.cards.filter(
+          (card) =>
+            card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            card.description
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            card.labels?.some((label) =>
+              label.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
         ),
       })),
     }
@@ -489,8 +532,8 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event
     const card = board.columns
-      .flatMap(col => col.cards)
-      .find(card => card.id === active.id)
+      .flatMap((col) => col.cards)
+      .find((card) => card.id === active.id)
     setActiveCard(card || null)
   }
 
@@ -505,19 +548,29 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
     const activeContainer = findContainer(activeId)
     const overContainer = findContainer(overId)
 
-    if (!activeContainer || !overContainer || activeContainer === overContainer) {
+    if (
+      !activeContainer ||
+      !overContainer ||
+      activeContainer === overContainer
+    ) {
       return
     }
 
     // Move card between columns
     const updatedBoard = { ...board }
-    const activeColumnIndex = updatedBoard.columns.findIndex(col => col.id === activeContainer)
-    const overColumnIndex = updatedBoard.columns.findIndex(col => col.id === overContainer)
+    const activeColumnIndex = updatedBoard.columns.findIndex(
+      (col) => col.id === activeContainer
+    )
+    const overColumnIndex = updatedBoard.columns.findIndex(
+      (col) => col.id === overContainer
+    )
 
     const activeColumn = updatedBoard.columns[activeColumnIndex]
     const overColumn = updatedBoard.columns[overColumnIndex]
 
-    const activeCardIndex = activeColumn.cards.findIndex(card => card.id === activeId)
+    const activeCardIndex = activeColumn.cards.findIndex(
+      (card) => card.id === activeId
+    )
     const [movedCard] = activeColumn.cards.splice(activeCardIndex, 1)
 
     // Check column limit
@@ -543,13 +596,19 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
     if (!activeContainer || !overContainer) return
 
-    const activeColumnIndex = board.columns.findIndex(col => col.id === activeContainer)
+    const activeColumnIndex = board.columns.findIndex(
+      (col) => col.id === activeContainer
+    )
     const activeColumn = board.columns[activeColumnIndex]
 
     if (activeContainer === overContainer) {
       // Reordering within the same column
-      const oldIndex = activeColumn.cards.findIndex(card => card.id === activeId)
-      const newIndex = activeColumn.cards.findIndex(card => card.id === overId)
+      const oldIndex = activeColumn.cards.findIndex(
+        (card) => card.id === activeId
+      )
+      const newIndex = activeColumn.cards.findIndex(
+        (card) => card.id === overId
+      )
 
       if (oldIndex !== newIndex) {
         const updatedBoard = { ...board }
@@ -565,14 +624,13 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
   const findContainer = (id: UniqueIdentifier): string | undefined => {
     // Check if it's a column
-    if (board.columns.some(col => col.id === id)) {
+    if (board.columns.some((col) => col.id === id)) {
       return id as string
     }
 
     // Find which column contains this card
-    return board.columns.find(col =>
-      col.cards.some(card => card.id === id)
-    )?.id
+    return board.columns.find((col) => col.cards.some((card) => card.id === id))
+      ?.id
   }
 
   const handleAddCard = (columnId: string) => {
@@ -592,12 +650,12 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
     if (editingCard) {
       // Update existing card
-      const columnIndex = updatedBoard.columns.findIndex(col =>
-        col.cards.some(card => card.id === editingCard.id)
+      const columnIndex = updatedBoard.columns.findIndex((col) =>
+        col.cards.some((card) => card.id === editingCard.id)
       )
       if (columnIndex !== -1) {
         const cardIndex = updatedBoard.columns[columnIndex].cards.findIndex(
-          card => card.id === editingCard.id
+          (card) => card.id === editingCard.id
         )
         if (cardIndex !== -1) {
           updatedBoard.columns[columnIndex].cards[cardIndex] = {
@@ -608,7 +666,9 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
       }
     } else {
       // Create new card
-      const columnIndex = updatedBoard.columns.findIndex(col => col.id === activeColumnId)
+      const columnIndex = updatedBoard.columns.findIndex(
+        (col) => col.id === activeColumnId
+      )
       if (columnIndex !== -1) {
         const newCard: KanbanCard = {
           id: `card-${Date.now()}`,
@@ -630,13 +690,13 @@ export function KanbanBoard({ board, onUpdateBoard, className }: KanbanBoardProp
 
   const handleDeleteCard = (cardId: string) => {
     const updatedBoard = { ...board }
-    const columnIndex = updatedBoard.columns.findIndex(col =>
-      col.cards.some(card => card.id === cardId)
+    const columnIndex = updatedBoard.columns.findIndex((col) =>
+      col.cards.some((card) => card.id === cardId)
     )
     if (columnIndex !== -1) {
-      updatedBoard.columns[columnIndex].cards = updatedBoard.columns[columnIndex].cards.filter(
-        card => card.id !== cardId
-      )
+      updatedBoard.columns[columnIndex].cards = updatedBoard.columns[
+        columnIndex
+      ].cards.filter((card) => card.id !== cardId)
       onUpdateBoard(updatedBoard)
     }
   }
