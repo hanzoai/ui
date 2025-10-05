@@ -2,6 +2,7 @@ packages:
   - "app"
   - "apps/*"
   - "packages/*"
+  - "pkg/*"
   - "!**/test/**"
   - "!**/fixtures/**"
   - "!**/temp/**"
