@@ -953,6 +953,18 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "Billing & Payments",
+          href: "/docs/blocks/billing",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Compose Spec",
+          href: "/docs/blocks/compose-spec",
+          items: [],
+          label: "New",
+        },
+        {
           title: "Contact Forms",
           href: "/docs/blocks/contact",
           items: [],
