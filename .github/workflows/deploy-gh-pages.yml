@@ -45,7 +45,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: |
+          pnpm install --no-frozen-lockfile
+          cd app && pnpm install --no-frozen-lockfile
 
       - name: Build UI library
         working-directory: ./pkg/ui
