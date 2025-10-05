@@ -1,0 +1,11 @@
+{
+  "name": "announcement",
+  "description": "Announcement banner component",
+  "files": [
+    {
+      "name": "announcement.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { X } from \"lucide-react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Button } from \"@/registry/default/ui/button\"\n\ninterface AnnouncementProps extends React.HTMLAttributes<HTMLDivElement> {\n  children: React.ReactNode\n  dismissible?: boolean\n  onDismiss?: () => void\n}\n\nconst Announcement = React.forwardRef<HTMLDivElement, AnnouncementProps>(\n  ({ className, children, dismissible = true, onDismiss, ...props }, ref) => {\n    const [isVisible, setIsVisible] = React.useState(true)\n\n    const handleDismiss = () => {\n      setIsVisible(false)\n      onDismiss?.()\n    }\n\n    if (!isVisible) return null\n\n    return (\n      <div\n        ref={ref}\n        className={cn(\n          \"relative flex items-center gap-4 rounded-lg border bg-background px-4 py-3 text-sm\",\n          className\n        )}\n        {...props}\n      >\n        <div className=\"flex-1\">{children}</div>\n        {dismissible && (\n          <Button\n            variant=\"ghost\"\n            size=\"icon\"\n            className=\"h-6 w-6\"\n            onClick={handleDismiss}\n          >\n            <X className=\"h-4 w-4\" />\n            <span className=\"sr-only\">Dismiss</span>\n          </Button>\n        )}\n      </div>\n    )\n  }\n)\n\nAnnouncement.displayName = \"Announcement\"\n\nexport { Announcement }\n"
+    }
+  ],
+  "type": "components:ui"
+}

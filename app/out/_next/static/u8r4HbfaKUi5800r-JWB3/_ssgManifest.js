@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fblocks\u002F[style]\u002F[name]","\u002Fdocs\u002F[[...slug]]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
