@@ -7,56 +7,56 @@ export const extended: Registry = [
     type: "components:code",
     dependencies: ["shiki", "react-copy-to-clipboard"],
     files: ["ui/code-block.tsx"],
-    description: "Syntax highlighted code block with copy functionality"
+    description: "Syntax highlighted code block with copy functionality",
   },
   {
     name: "code-editor",
     type: "components:code",
     dependencies: ["@monaco-editor/react"],
     files: ["ui/code-editor.tsx"],
-    description: "Full-featured code editor with syntax highlighting"
+    description: "Full-featured code editor with syntax highlighting",
   },
   {
     name: "code-compare",
     type: "components:code",
     dependencies: ["react-diff-viewer"],
     files: ["ui/code-compare.tsx"],
-    description: "Side-by-side code comparison"
+    description: "Side-by-side code comparison",
   },
   {
     name: "code-diff",
     type: "components:code",
     dependencies: ["diff"],
     files: ["ui/code-diff.tsx"],
-    description: "Code difference viewer with highlighting"
+    description: "Code difference viewer with highlighting",
   },
   {
     name: "code-explorer",
     type: "components:code",
     dependencies: ["@monaco-editor/react"],
     files: ["ui/code-explorer.tsx"],
-    description: "File tree and code explorer interface"
+    description: "File tree and code explorer interface",
   },
   {
     name: "code-preview",
     type: "components:code",
     dependencies: ["react-live"],
     files: ["ui/code-preview.tsx"],
-    description: "Live code preview with editing"
+    description: "Live code preview with editing",
   },
   {
     name: "code-snippet",
     type: "components:code",
     dependencies: ["prism-react-renderer"],
     files: ["ui/code-snippet.tsx"],
-    description: "Inline code snippet with syntax highlighting"
+    description: "Inline code snippet with syntax highlighting",
   },
   {
     name: "code-terminal",
     type: "components:code",
     dependencies: ["xterm", "xterm-addon-fit"],
     files: ["ui/code-terminal.tsx"],
-    description: "Terminal-style code interface"
+    description: "Terminal-style code interface",
   },
 
   // Project Management Components
@@ -72,13 +72,13 @@ export const extended: Registry = [
     type: "components:ui",
     dependencies: ["@dnd-kit/sortable", "@dnd-kit/core"],
     files: ["ui/kanban.tsx"],
-    description: "Drag and drop Kanban board"
+    description: "Drag and drop Kanban board",
   },
   {
     name: "list",
     type: "components:ui",
     files: ["ui/list.tsx"],
-    description: "Enhanced list component with sorting and filtering"
+    description: "Enhanced list component with sorting and filtering",
   },
   {
     name: "table",
@@ -86,7 +86,7 @@ export const extended: Registry = [
     dependencies: ["@tanstack/react-table"],
     registryDependencies: ["checkbox"],
     files: ["ui/table.tsx"],
-    description: "Advanced data table with sorting, filtering, and pagination"
+    description: "Advanced data table with sorting, filtering, and pagination",
   },
 
   // Device Mockups
@@ -94,19 +94,19 @@ export const extended: Registry = [
     name: "android",
     type: "components:ui",
     files: ["ui/android.tsx"],
-    description: "Android device mockup frame"
+    description: "Android device mockup frame",
   },
   {
     name: "iphone-15-pro",
     type: "components:ui",
     files: ["ui/iphone-15-pro.tsx"],
-    description: "iPhone 15 Pro device mockup"
+    description: "iPhone 15 Pro device mockup",
   },
   {
     name: "safari",
     type: "components:ui",
     files: ["ui/safari.tsx"],
-    description: "Safari browser window mockup"
+    description: "Safari browser window mockup",
   },
 
   // Dock Components
@@ -115,35 +115,35 @@ export const extended: Registry = [
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/dock.tsx"],
-    description: "macOS-style dock with animations"
+    description: "macOS-style dock with animations",
   },
   {
     name: "limelight-nav",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/limelight-nav.tsx"],
-    description: "Animated navigation with limelight effect"
+    description: "Animated navigation with limelight effect",
   },
   {
     name: "macos-dock",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/macos-dock.tsx"],
-    description: "macOS dock with hover magnification"
+    description: "macOS dock with hover magnification",
   },
   {
     name: "menu-dock",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/menu-dock.tsx"],
-    description: "Dock-style menu with icons"
+    description: "Dock-style menu with icons",
   },
   {
     name: "message-dock",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/message-dock.tsx"],
-    description: "Message app dock interface"
+    description: "Message app dock interface",
   },
 
   // Financial Components
@@ -152,14 +152,14 @@ export const extended: Registry = [
     type: "components:ui",
     dependencies: ["react-credit-cards-2"],
     files: ["ui/credit-card.tsx"],
-    description: "Interactive credit card component"
+    description: "Interactive credit card component",
   },
   {
     name: "ticker",
     type: "components:ui",
     dependencies: ["react-ticker"],
     files: ["ui/ticker.tsx"],
-    description: "Stock ticker or news ticker component"
+    description: "Stock ticker or news ticker component",
   },
 
   // Form Components
@@ -167,14 +167,14 @@ export const extended: Registry = [
     name: "choicebox",
     type: "components:ui",
     files: ["ui/choicebox.tsx"],
-    description: "Enhanced choice selector"
+    description: "Enhanced choice selector",
   },
   {
     name: "color-picker",
     type: "components:ui",
     dependencies: ["react-color"],
     files: ["ui/color-picker.tsx"],
-    description: "Advanced color picker with presets"
+    description: "Advanced color picker with presets",
   },
   {
     name: "combobox",
@@ -182,42 +182,42 @@ export const extended: Registry = [
     dependencies: ["@radix-ui/react-popover"],
     registryDependencies: ["command"],
     files: ["ui/combobox.tsx"],
-    description: "Autocomplete combobox with search"
+    description: "Autocomplete combobox with search",
   },
   {
     name: "dropzone",
     type: "components:ui",
     dependencies: ["react-dropzone"],
     files: ["ui/dropzone.tsx"],
-    description: "File upload dropzone"
+    description: "File upload dropzone",
   },
   {
     name: "editor",
     type: "components:ui",
     dependencies: ["@tiptap/react", "@tiptap/starter-kit"],
     files: ["ui/editor.tsx"],
-    description: "Rich text editor"
+    description: "Rich text editor",
   },
   {
     name: "minimal-tiptap",
     type: "components:ui",
     dependencies: ["@tiptap/react", "@tiptap/starter-kit"],
     files: ["ui/minimal-tiptap.tsx"],
-    description: "Minimal rich text editor"
+    description: "Minimal rich text editor",
   },
   {
     name: "image-crop",
     type: "components:ui",
     dependencies: ["react-image-crop"],
     files: ["ui/image-crop.tsx"],
-    description: "Image cropping component"
+    description: "Image cropping component",
   },
   {
     name: "image-zoom",
     type: "components:ui",
     dependencies: ["react-medium-image-zoom"],
     files: ["ui/image-zoom.tsx"],
-    description: "Image zoom on click/hover"
+    description: "Image zoom on click/hover",
   },
 
   // 3D Components
@@ -226,49 +226,49 @@ export const extended: Registry = [
     type: "components:3d",
     dependencies: ["motion", "three"],
     files: ["ui/3d-button.tsx"],
-    description: "Interactive 3D button with depth effects"
+    description: "Interactive 3D button with depth effects",
   },
   {
     name: "3d-card",
     type: "components:3d",
     dependencies: ["motion"],
     files: ["ui/3d-card.tsx"],
-    description: "Card with 3D tilt effect"
+    description: "Card with 3D tilt effect",
   },
   {
     name: "3d-carousel",
     type: "components:3d",
     dependencies: ["motion", "three"],
     files: ["ui/3d-carousel.tsx"],
-    description: "3D carousel with perspective rotation"
+    description: "3D carousel with perspective rotation",
   },
   {
     name: "3d-grid",
     type: "components:3d",
     dependencies: ["motion", "three"],
     files: ["ui/3d-grid.tsx"],
-    description: "Interactive 3D grid layout"
+    description: "Interactive 3D grid layout",
   },
   {
     name: "3d-model-viewer",
     type: "components:3d",
     dependencies: ["three", "@react-three/fiber"],
     files: ["ui/3d-model-viewer.tsx"],
-    description: "3D model viewer with controls"
+    description: "3D model viewer with controls",
   },
   {
     name: "3d-scene",
     type: "components:3d",
     dependencies: ["three", "@react-three/fiber"],
     files: ["ui/3d-scene.tsx"],
-    description: "Complete 3D scene component"
+    description: "Complete 3D scene component",
   },
   {
     name: "3d-text",
     type: "components:3d",
     dependencies: ["motion", "three"],
     files: ["ui/3d-text.tsx"],
-    description: "3D text with depth and lighting effects"
+    description: "3D text with depth and lighting effects",
   },
 
   // Animation Components
@@ -277,84 +277,84 @@ export const extended: Registry = [
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-background.tsx"],
-    description: "Animated background patterns and effects"
+    description: "Animated background patterns and effects",
   },
   {
     name: "animated-cursor",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-cursor.tsx"],
-    description: "Custom animated cursor"
+    description: "Custom animated cursor",
   },
   {
     name: "animated-icon",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-icon.tsx"],
-    description: "Icons with animation effects"
+    description: "Icons with animation effects",
   },
   {
     name: "animated-list",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-list.tsx"],
-    description: "List with staggered animations"
+    description: "List with staggered animations",
   },
   {
     name: "animated-number",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-number.tsx"],
-    description: "Number counter with animation"
+    description: "Number counter with animation",
   },
   {
     name: "animated-text",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/animated-text.tsx"],
-    description: "Text with reveal animations"
+    description: "Text with reveal animations",
   },
   {
     name: "apple-cards-carousel",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/apple-cards-carousel.tsx"],
-    description: "Apple-style cards carousel"
+    description: "Apple-style cards carousel",
   },
   {
     name: "grid-pattern",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/grid-pattern.tsx"],
-    description: "Animated grid background pattern"
+    description: "Animated grid background pattern",
   },
   {
     name: "particles-background",
     type: "components:animation",
     dependencies: ["tsparticles", "@tsparticles/react"],
     files: ["ui/particles-background.tsx"],
-    description: "Particle effects background"
+    description: "Particle effects background",
   },
   {
     name: "pulse-animation",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/pulse-animation.tsx"],
-    description: "Pulsing animation effects"
+    description: "Pulsing animation effects",
   },
   {
     name: "reveal-animation",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/reveal-animation.tsx"],
-    description: "Element reveal animations on scroll"
+    description: "Element reveal animations on scroll",
   },
   {
     name: "timeline",
     type: "components:animation",
     dependencies: ["motion"],
     files: ["ui/timeline.tsx"],
-    description: "Animated timeline component"
+    description: "Animated timeline component",
   },
 
   // UI Elements
@@ -362,53 +362,53 @@ export const extended: Registry = [
     name: "announcement",
     type: "components:ui",
     files: ["ui/announcement.tsx"],
-    description: "Announcement banner component"
+    description: "Announcement banner component",
   },
   {
     name: "banner",
     type: "components:ui",
     files: ["ui/banner.tsx"],
-    description: "Banner notification component"
+    description: "Banner notification component",
   },
   {
     name: "cursor",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/cursor.tsx"],
-    description: "Custom cursor component"
+    description: "Custom cursor component",
   },
   {
     name: "dialog-stack",
     type: "components:ui",
     dependencies: ["@radix-ui/react-dialog"],
     files: ["ui/dialog-stack.tsx"],
-    description: "Stacked dialog windows"
+    description: "Stacked dialog windows",
   },
   {
     name: "marquee",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/marquee.tsx"],
-    description: "Scrolling marquee text"
+    description: "Scrolling marquee text",
   },
   {
     name: "avatar-group",
     type: "components:ui",
     registryDependencies: ["avatar"],
     files: ["ui/avatar-group.tsx"],
-    description: "Grouped avatar display"
+    description: "Grouped avatar display",
   },
   {
     name: "pill",
     type: "components:ui",
     files: ["ui/pill.tsx"],
-    description: "Pill-shaped badge component"
+    description: "Pill-shaped badge component",
   },
   {
     name: "tags",
     type: "components:ui",
     files: ["ui/tags.tsx"],
-    description: "Tag input and display component"
+    description: "Tag input and display component",
   },
 
   // Navigation Components
@@ -416,109 +416,109 @@ export const extended: Registry = [
     name: "simple-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/simple-navigation-bar.tsx"],
-    description: "Simple navigation bar"
+    description: "Simple navigation bar",
   },
   {
     name: "advanced-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/advanced-navigation-bar.tsx"],
-    description: "Advanced navigation with dropdowns"
+    description: "Advanced navigation with dropdowns",
   },
   {
     name: "underline-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/underline-navigation-bar.tsx"],
-    description: "Navigation with underline animation"
+    description: "Navigation with underline animation",
   },
   {
     name: "e-commerce-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/e-commerce-navigation-bar.tsx"],
-    description: "E-commerce site navigation"
+    description: "E-commerce site navigation",
   },
   {
     name: "dashboard-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/dashboard-navigation-bar.tsx"],
-    description: "Dashboard navigation layout"
+    description: "Dashboard navigation layout",
   },
   {
     name: "icon-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/icon-navigation-bar.tsx"],
-    description: "Icon-based navigation"
+    description: "Icon-based navigation",
   },
   {
     name: "breadcrumb-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/breadcrumb-navigation-bar.tsx"],
-    description: "Breadcrumb navigation"
+    description: "Breadcrumb navigation",
   },
   {
     name: "two-tier-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/two-tier-navigation-bar.tsx"],
-    description: "Two-level navigation"
+    description: "Two-level navigation",
   },
   {
     name: "communication-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/communication-navigation-bar.tsx"],
-    description: "Communication app navigation"
+    description: "Communication app navigation",
   },
   {
     name: "centered-logo-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/centered-logo-navigation-bar.tsx"],
-    description: "Navigation with centered logo"
+    description: "Navigation with centered logo",
   },
   {
     name: "context-switcher-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/context-switcher-navigation-bar.tsx"],
-    description: "Navigation with context switcher"
+    description: "Navigation with context switcher",
   },
   {
     name: "team-switcher-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/team-switcher-navigation-bar.tsx"],
-    description: "Navigation with team switcher"
+    description: "Navigation with team switcher",
   },
   {
     name: "ai-model-selector-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/ai-model-selector-navigation-bar.tsx"],
-    description: "Navigation with AI model selector"
+    description: "Navigation with AI model selector",
   },
   {
     name: "search-and-toggle-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/search-and-toggle-navigation-bar.tsx"],
-    description: "Navigation with search and toggle"
+    description: "Navigation with search and toggle",
   },
   {
     name: "breadcrumb-and-filters-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/breadcrumb-and-filters-navigation-bar.tsx"],
-    description: "Navigation with breadcrumbs and filters"
+    description: "Navigation with breadcrumbs and filters",
   },
   {
     name: "app-switcher-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/app-switcher-navigation-bar.tsx"],
-    description: "Navigation with app switcher"
+    description: "Navigation with app switcher",
   },
   {
     name: "collaboration-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/collaboration-navigation-bar.tsx"],
-    description: "Collaboration tools navigation"
+    description: "Collaboration tools navigation",
   },
   {
     name: "status-dashboard-navigation-bar",
     type: "components:ui",
     files: ["ui/navigation/status-dashboard-navigation-bar.tsx"],
-    description: "Status dashboard navigation"
+    description: "Status dashboard navigation",
   },
 
   // Effect Components
@@ -527,27 +527,27 @@ export const extended: Registry = [
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/animated-beam.tsx"],
-    description: "Animated beam connection effect"
+    description: "Animated beam connection effect",
   },
   {
     name: "magnetic",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/magnetic.tsx"],
-    description: "Magnetic hover effect"
+    description: "Magnetic hover effect",
   },
   {
     name: "motion-highlight",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/motion-highlight.tsx"],
-    description: "Motion-based text highlighting"
+    description: "Motion-based text highlighting",
   },
   {
     name: "pixel-image",
     type: "components:ui",
     files: ["ui/pixel-image.tsx"],
-    description: "Pixelated image effect"
+    description: "Pixelated image effect",
   },
 
   // Utility Components
@@ -556,74 +556,74 @@ export const extended: Registry = [
     type: "components:ui",
     dependencies: ["react-day-picker", "date-fns"],
     files: ["ui/calendar.tsx"],
-    description: "Full calendar component"
+    description: "Full calendar component",
   },
   {
     name: "mini-calendar",
     type: "components:ui",
     dependencies: ["react-day-picker", "date-fns"],
     files: ["ui/mini-calendar.tsx"],
-    description: "Compact calendar widget"
+    description: "Compact calendar widget",
   },
   {
     name: "relative-time",
     type: "components:ui",
     dependencies: ["date-fns"],
     files: ["ui/relative-time.tsx"],
-    description: "Relative time display (e.g., '2 hours ago')"
+    description: "Relative time display (e.g., '2 hours ago')",
   },
   {
     name: "comparison",
     type: "components:ui",
     dependencies: ["react-compare-slider"],
     files: ["ui/comparison.tsx"],
-    description: "Before/after comparison slider"
+    description: "Before/after comparison slider",
   },
   {
     name: "kbd",
     type: "components:ui",
     files: ["ui/kbd.tsx"],
-    description: "Keyboard key component"
+    description: "Keyboard key component",
   },
   {
     name: "qr-code",
     type: "components:ui",
     dependencies: ["qrcode.react"],
     files: ["ui/qr-code.tsx"],
-    description: "QR code generator"
+    description: "QR code generator",
   },
   {
     name: "status",
     type: "components:ui",
     files: ["ui/status.tsx"],
-    description: "Status indicator component"
+    description: "Status indicator component",
   },
   {
     name: "terminal",
     type: "components:ui",
     dependencies: ["xterm", "xterm-addon-fit"],
     files: ["ui/terminal.tsx"],
-    description: "Terminal emulator component"
+    description: "Terminal emulator component",
   },
   {
     name: "video-player",
     type: "components:ui",
     dependencies: ["video.js", "videojs-react-enhanced"],
     files: ["ui/video-player.tsx"],
-    description: "Advanced video player component"
+    description: "Advanced video player component",
   },
   {
     name: "music-player",
     type: "components:ui",
     dependencies: ["react-h5-audio-player"],
     files: ["ui/music-player.tsx"],
-    description: "Advanced music player with playlist support"
+    description: "Advanced music player with playlist support",
   },
   {
     name: "dock",
     type: "components:ui",
     dependencies: ["motion"],
     files: ["ui/dock.tsx"],
-    description: "macOS-style dock with animations"
+    description: "macOS-style dock with animations",
   },
 ]

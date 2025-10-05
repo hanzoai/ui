@@ -1,8 +1,14 @@
 "use client"
 
-import React, { useEffect, useState, useRef, useMemo } from 'react'
-import { motion, useAnimation, useMotionValue, useTransform } from 'motion/react'
-import { cn } from '@/lib/utils'
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import {
+  motion,
+  useAnimation,
+  useMotionValue,
+  useTransform,
+} from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
@@ -11,17 +17,17 @@ function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
   return prefersReducedMotion
@@ -31,7 +37,7 @@ export interface AnimatedBackgroundProps {
   /**
    * Background animation type
    */
-  animation?: 'gradient' | 'blob' | 'wave' | 'mesh' | 'parallax' | 'particles'
+  animation?: "gradient" | "blob" | "wave" | "mesh" | "parallax" | "particles"
   /**
    * Animation speed (0.1 - 2.0)
    */
@@ -102,29 +108,34 @@ function GradientBackground({
   colors,
   speed,
   intensity,
-  paused
+  paused,
 }: {
   colors: string[]
   speed: number
   intensity: number
   paused: boolean
 }) {
-  const gradientColors = colors.length >= 2 ? colors : ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4']
+  const gradientColors =
+    colors.length >= 2 ? colors : ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4"]
 
   return (
     <motion.div
       className="absolute inset-0"
       style={{
-        background: `linear-gradient(-45deg, ${gradientColors.join(', ')})`,
-        backgroundSize: '400% 400%'
+        background: `linear-gradient(-45deg, ${gradientColors.join(", ")})`,
+        backgroundSize: "400% 400%",
       }}
-      animate={paused ? {} : {
-        x: ['0%', '100%', '0%']
-      }}
+      animate={
+        paused
+          ? {}
+          : {
+              x: ["0%", "100%", "0%"],
+            }
+      }
       transition={{
         duration: 10 / speed,
         repeat: Infinity,
-        ease: 'linear'
+        ease: "linear",
       }}
     />
   )
@@ -138,7 +149,7 @@ function BlobBackground({
   speed,
   elementCount,
   intensity,
-  paused
+  paused,
 }: {
   colors: string[]
   speed: number
@@ -146,15 +157,18 @@ function BlobBackground({
   intensity: number
   paused: boolean
 }) {
-  const blobs = useMemo(() =>
-    Array.from({ length: elementCount }, (_, i) => ({
-      id: i,
-      color: colors[i % colors.length],
-      size: Math.random() * 200 + 100,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      duration: (Math.random() * 10 + 10) / speed
-    })), [elementCount, colors, speed])
+  const blobs = useMemo(
+    () =>
+      Array.from({ length: elementCount }, (_, i) => ({
+        id: i,
+        color: colors[i % colors.length],
+        size: Math.random() * 200 + 100,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: (Math.random() * 10 + 10) / speed,
+      })),
+    [elementCount, colors, speed]
+  )
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -166,21 +180,25 @@ function BlobBackground({
             background: `radial-gradient(circle, ${blob.color}40, transparent)`,
             width: blob.size * intensity,
             height: blob.size * intensity,
-            filter: 'blur(40px)'
+            filter: "blur(40px)",
           }}
           initial={{
             x: `${blob.x}%`,
-            y: `${blob.y}%`
+            y: `${blob.y}%`,
           }}
-          animate={paused ? {} : {
-            x: [`${blob.x}%`, `${(blob.x + 50) % 100}%`, `${blob.x}%`],
-            y: [`${blob.y}%`, `${(blob.y + 30) % 100}%`, `${blob.y}%`],
-            scale: [1, 1.2, 1]
-          }}
+          animate={
+            paused
+              ? {}
+              : {
+                  x: [`${blob.x}%`, `${(blob.x + 50) % 100}%`, `${blob.x}%`],
+                  y: [`${blob.y}%`, `${(blob.y + 30) % 100}%`, `${blob.y}%`],
+                  scale: [1, 1.2, 1],
+                }
+          }
           transition={{
             duration: blob.duration,
             repeat: Infinity,
-            ease: 'easeInOut'
+            ease: "easeInOut",
           }}
         />
       ))}
@@ -195,14 +213,14 @@ function WaveBackground({
   colors,
   speed,
   intensity,
-  paused
+  paused,
 }: {
   colors: string[]
   speed: number
   intensity: number
   paused: boolean
 }) {
-  const waveColor = colors[0] || '#4ecdc4'
+  const waveColor = colors[0] || "#4ecdc4"
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -211,15 +229,23 @@ function WaveBackground({
           key={index}
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(ellipse 100% 50% at center ${50 + index * 20}%, ${waveColor}${Math.round(30 * intensity).toString(16).padStart(2, '0')}, transparent)`
+            background: `radial-gradient(ellipse 100% 50% at center ${50 + index * 20}%, ${waveColor}${Math.round(
+              30 * intensity
+            )
+              .toString(16)
+              .padStart(2, "0")}, transparent)`,
           }}
-          animate={paused ? {} : {
-            y: [index * 10, index * 10 + 20 * intensity, index * 10]
-          }}
+          animate={
+            paused
+              ? {}
+              : {
+                  y: [index * 10, index * 10 + 20 * intensity, index * 10],
+                }
+          }
           transition={{
             duration: (3 + index) / speed,
             repeat: Infinity,
-            ease: 'easeInOut'
+            ease: "easeInOut",
           }}
         />
       ))}
@@ -234,14 +260,17 @@ function MeshBackground({
   colors,
   speed,
   intensity,
-  paused
+  paused,
 }: {
   colors: string[]
   speed: number
   intensity: number
   paused: boolean
 }) {
-  const meshColors = colors.length >= 4 ? colors.slice(0, 4) : ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4']
+  const meshColors =
+    colors.length >= 4
+      ? colors.slice(0, 4)
+      : ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4"]
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -253,22 +282,34 @@ function MeshBackground({
             background: `radial-gradient(circle, ${color}60, transparent)`,
             width: `${60 + index * 20}%`,
             height: `${60 + index * 20}%`,
-            filter: 'blur(60px)',
-            mixBlendMode: 'multiply'
+            filter: "blur(60px)",
+            mixBlendMode: "multiply",
           }}
           initial={{
             x: `${25 + index * 15}%`,
-            y: `${25 + index * 15}%`
+            y: `${25 + index * 15}%`,
           }}
-          animate={paused ? {} : {
-            x: [`${25 + index * 15}%`, `${35 + index * 15}%`, `${25 + index * 15}%`],
-            y: [`${25 + index * 15}%`, `${15 + index * 15}%`, `${25 + index * 15}%`],
-            rotate: [0, 180, 360]
-          }}
+          animate={
+            paused
+              ? {}
+              : {
+                  x: [
+                    `${25 + index * 15}%`,
+                    `${35 + index * 15}%`,
+                    `${25 + index * 15}%`,
+                  ],
+                  y: [
+                    `${25 + index * 15}%`,
+                    `${15 + index * 15}%`,
+                    `${25 + index * 15}%`,
+                  ],
+                  rotate: [0, 180, 360],
+                }
+          }
           transition={{
             duration: (8 + index * 2) / speed,
             repeat: Infinity,
-            ease: 'easeInOut'
+            ease: "easeInOut",
           }}
         />
       ))}
@@ -282,7 +323,7 @@ function MeshBackground({
 function ParallaxBackground({
   layers,
   speed,
-  paused
+  paused,
 }: {
   layers: Array<{ speed: number; color: string; opacity: number }>
   speed: number
@@ -299,15 +340,23 @@ function ParallaxBackground({
       mouseY.set((clientY / innerHeight - 0.5) * 100)
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
   }, [mouseX, mouseY])
 
   return (
     <div className="absolute inset-0 overflow-hidden">
       {layers.map((layer, index) => {
-        const x = useTransform(mouseX, [-50, 50], [-layer.speed * 10, layer.speed * 10])
-        const y = useTransform(mouseY, [-50, 50], [-layer.speed * 10, layer.speed * 10])
+        const x = useTransform(
+          mouseX,
+          [-50, 50],
+          [-layer.speed * 10, layer.speed * 10]
+        )
+        const y = useTransform(
+          mouseY,
+          [-50, 50],
+          [-layer.speed * 10, layer.speed * 10]
+        )
 
         return (
           <motion.div
@@ -317,7 +366,7 @@ function ParallaxBackground({
               background: `radial-gradient(circle, ${layer.color}, transparent)`,
               opacity: layer.opacity,
               x: paused ? 0 : x,
-              y: paused ? 0 : y
+              y: paused ? 0 : y,
             }}
           />
         )
@@ -334,7 +383,7 @@ function ParticlesBackground({
   speed,
   elementCount,
   intensity,
-  paused
+  paused,
 }: {
   colors: string[]
   speed: number
@@ -342,16 +391,19 @@ function ParticlesBackground({
   intensity: number
   paused: boolean
 }) {
-  const particles = useMemo(() =>
-    Array.from({ length: elementCount }, (_, i) => ({
-      id: i,
-      color: colors[i % colors.length],
-      size: Math.random() * 4 + 2,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      duration: (Math.random() * 20 + 20) / speed,
-      delay: Math.random() * 5
-    })), [elementCount, colors, speed])
+  const particles = useMemo(
+    () =>
+      Array.from({ length: elementCount }, (_, i) => ({
+        id: i,
+        color: colors[i % colors.length],
+        size: Math.random() * 4 + 2,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: (Math.random() * 20 + 20) / speed,
+        delay: Math.random() * 5,
+      })),
+    [elementCount, colors, speed]
+  )
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -363,21 +415,25 @@ function ParticlesBackground({
             backgroundColor: particle.color,
             width: particle.size * intensity,
             height: particle.size * intensity,
-            opacity: 0.6
+            opacity: 0.6,
           }}
           initial={{
             x: `${particle.x}%`,
-            y: `${particle.y}%`
+            y: `${particle.y}%`,
           }}
-          animate={paused ? {} : {
-            y: [`${particle.y}%`, `${particle.y - 100}%`],
-            opacity: [0, 0.6, 0]
-          }}
+          animate={
+            paused
+              ? {}
+              : {
+                  y: [`${particle.y}%`, `${particle.y - 100}%`],
+                  opacity: [0, 0.6, 0],
+                }
+          }
           transition={{
             duration: particle.duration,
             repeat: Infinity,
             delay: particle.delay,
-            ease: 'linear'
+            ease: "linear",
           }}
         />
       ))}
@@ -389,9 +445,9 @@ function ParticlesBackground({
  * Animated background component with multiple animation types
  */
 export function AnimatedBackground({
-  animation = 'gradient',
+  animation = "gradient",
   speed = 1,
-  colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'],
+  colors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7"],
   paused = false,
   className,
   style,
@@ -401,39 +457,48 @@ export function AnimatedBackground({
   blurAmount = 20,
   opacity = 1,
   elementCount = 5,
-  width = '100%',
-  height = '100%',
+  width = "100%",
+  height = "100%",
   fullscreen = false,
   parallaxLayers = [
-    { speed: 0.5, color: '#ff6b6b50', opacity: 0.3 },
-    { speed: 1, color: '#4ecdc450', opacity: 0.4 },
-    { speed: 1.5, color: '#45b7d150', opacity: 0.3 }
-  ]
+    { speed: 0.5, color: "#ff6b6b50", opacity: 0.3 },
+    { speed: 1, color: "#4ecdc450", opacity: 0.4 },
+    { speed: 1.5, color: "#45b7d150", opacity: 0.3 },
+  ],
 }: AnimatedBackgroundProps) {
   const prefersReducedMotion = usePrefersReducedMotion()
   const isAnimationPaused = paused || prefersReducedMotion
 
-  const containerStyle = useMemo(() => ({
-    width: fullscreen ? '100vw' : width,
-    height: fullscreen ? '100vh' : height,
-    opacity,
-    filter: blur ? `blur(${blurAmount}px)` : undefined,
-    ...style
-  }), [fullscreen, width, height, opacity, blur, blurAmount, style])
+  const containerStyle = useMemo(
+    () => ({
+      width: fullscreen ? "100vw" : width,
+      height: fullscreen ? "100vh" : height,
+      opacity,
+      filter: blur ? `blur(${blurAmount}px)` : undefined,
+      ...style,
+    }),
+    [fullscreen, width, height, opacity, blur, blurAmount, style]
+  )
 
   const renderAnimation = () => {
     const props = { colors, speed, intensity, paused: isAnimationPaused }
 
     switch (animation) {
-      case 'blob':
+      case "blob":
         return <BlobBackground {...props} elementCount={elementCount} />
-      case 'wave':
+      case "wave":
         return <WaveBackground {...props} />
-      case 'mesh':
+      case "mesh":
         return <MeshBackground {...props} />
-      case 'parallax':
-        return <ParallaxBackground layers={parallaxLayers} speed={speed} paused={isAnimationPaused} />
-      case 'particles':
+      case "parallax":
+        return (
+          <ParallaxBackground
+            layers={parallaxLayers}
+            speed={speed}
+            paused={isAnimationPaused}
+          />
+        )
+      case "particles":
         return <ParticlesBackground {...props} elementCount={elementCount} />
       default:
         return <GradientBackground {...props} />
@@ -443,8 +508,8 @@ export function AnimatedBackground({
   return (
     <div
       className={cn(
-        'relative overflow-hidden',
-        fullscreen && 'fixed inset-0 z-0',
+        "relative overflow-hidden",
+        fullscreen && "fixed inset-0 z-0",
         className
       )}
       style={containerStyle}
@@ -452,9 +517,7 @@ export function AnimatedBackground({
       {renderAnimation()}
 
       {children && (
-        <div className="relative z-10 h-full w-full">
-          {children}
-        </div>
+        <div className="relative z-10 h-full w-full">{children}</div>
       )}
     </div>
   )
@@ -467,10 +530,12 @@ export const AnimatedBackgroundPresets = {
   /**
    * Calm gradient flow
    */
-  CalmGradient: (props: Omit<AnimatedBackgroundProps, 'animation' | 'colors' | 'speed'>) => (
+  CalmGradient: (
+    props: Omit<AnimatedBackgroundProps, "animation" | "colors" | "speed">
+  ) => (
     <AnimatedBackground
       animation="gradient"
-      colors={['#667eea', '#764ba2', '#f093fb', '#f5576c']}
+      colors={["#667eea", "#764ba2", "#f093fb", "#f5576c"]}
       speed={0.5}
       {...props}
     />
@@ -479,10 +544,12 @@ export const AnimatedBackgroundPresets = {
   /**
    * Ocean waves
    */
-  OceanWaves: (props: Omit<AnimatedBackgroundProps, 'animation' | 'colors'>) => (
+  OceanWaves: (
+    props: Omit<AnimatedBackgroundProps, "animation" | "colors">
+  ) => (
     <AnimatedBackground
       animation="wave"
-      colors={['#0093E9', '#80D0C7']}
+      colors={["#0093E9", "#80D0C7"]}
       {...props}
     />
   ),
@@ -490,10 +557,15 @@ export const AnimatedBackgroundPresets = {
   /**
    * Floating bubbles
    */
-  FloatingBubbles: (props: Omit<AnimatedBackgroundProps, 'animation' | 'colors' | 'elementCount'>) => (
+  FloatingBubbles: (
+    props: Omit<
+      AnimatedBackgroundProps,
+      "animation" | "colors" | "elementCount"
+    >
+  ) => (
     <AnimatedBackground
       animation="blob"
-      colors={['#667eea', '#764ba2', '#f093fb']}
+      colors={["#667eea", "#764ba2", "#f093fb"]}
       elementCount={8}
       {...props}
     />
@@ -502,10 +574,12 @@ export const AnimatedBackgroundPresets = {
   /**
    * Cosmic mesh
    */
-  CosmicMesh: (props: Omit<AnimatedBackgroundProps, 'animation' | 'colors'>) => (
+  CosmicMesh: (
+    props: Omit<AnimatedBackgroundProps, "animation" | "colors">
+  ) => (
     <AnimatedBackground
       animation="mesh"
-      colors={['#667eea', '#764ba2', '#f093fb', '#f5576c']}
+      colors={["#667eea", "#764ba2", "#f093fb", "#f5576c"]}
       {...props}
     />
   ),
@@ -513,10 +587,15 @@ export const AnimatedBackgroundPresets = {
   /**
    * Starfield particles
    */
-  Starfield: (props: Omit<AnimatedBackgroundProps, 'animation' | 'colors' | 'elementCount'>) => (
+  Starfield: (
+    props: Omit<
+      AnimatedBackgroundProps,
+      "animation" | "colors" | "elementCount"
+    >
+  ) => (
     <AnimatedBackground
       animation="particles"
-      colors={['#ffffff', '#f0f0f0', '#e0e0e0']}
+      colors={["#ffffff", "#f0f0f0", "#e0e0e0"]}
       elementCount={50}
       intensity={0.5}
       {...props}
@@ -526,18 +605,20 @@ export const AnimatedBackgroundPresets = {
   /**
    * Aurora parallax
    */
-  Aurora: (props: Omit<AnimatedBackgroundProps, 'animation' | 'parallaxLayers'>) => (
+  Aurora: (
+    props: Omit<AnimatedBackgroundProps, "animation" | "parallaxLayers">
+  ) => (
     <AnimatedBackground
       animation="parallax"
       parallaxLayers={[
-        { speed: 0.3, color: '#00ff8850', opacity: 0.4 },
-        { speed: 0.6, color: '#0080ff50', opacity: 0.3 },
-        { speed: 0.9, color: '#8000ff50', opacity: 0.3 },
-        { speed: 1.2, color: '#ff008050', opacity: 0.2 }
+        { speed: 0.3, color: "#00ff8850", opacity: 0.4 },
+        { speed: 0.6, color: "#0080ff50", opacity: 0.3 },
+        { speed: 0.9, color: "#8000ff50", opacity: 0.3 },
+        { speed: 1.2, color: "#ff008050", opacity: 0.2 },
       ]}
       {...props}
     />
-  )
+  ),
 }
 
 export default AnimatedBackground

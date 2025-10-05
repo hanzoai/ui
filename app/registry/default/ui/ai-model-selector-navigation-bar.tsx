@@ -1,9 +1,16 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/default/ui/select"
 import { Button } from "@/registry/default/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/default/ui/select"
 
 interface AIModel {
   id: string
@@ -12,14 +19,21 @@ interface AIModel {
   description?: string
 }
 
-interface AIModelSelectorNavigationBarProps extends React.HTMLAttributes<HTMLElement> {
+interface AIModelSelectorNavigationBarProps
+  extends React.HTMLAttributes<HTMLElement> {
   models: AIModel[]
   currentModel?: string
   onModelChange?: (modelId: string) => void
 }
 
-const AIModelSelectorNavigationBar = React.forwardRef<HTMLElement, AIModelSelectorNavigationBarProps>(
-  ({ className, models, currentModel, onModelChange, children, ...props }, ref) => {
+const AIModelSelectorNavigationBar = React.forwardRef<
+  HTMLElement,
+  AIModelSelectorNavigationBarProps
+>(
+  (
+    { className, models, currentModel, onModelChange, children, ...props },
+    ref
+  ) => {
     return (
       <nav
         ref={ref}
@@ -52,9 +66,7 @@ const AIModelSelectorNavigationBar = React.forwardRef<HTMLElement, AIModelSelect
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {children}
-        </div>
+        <div className="flex items-center gap-2">{children}</div>
       </nav>
     )
   }

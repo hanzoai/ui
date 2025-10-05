@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence } from "motion"
+import { AnimatePresence, motion } from "motion"
+
 import { cn } from "@/lib/utils"
 
 interface AnimatedTooltipProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,7 +33,7 @@ const AnimatedTooltip = React.forwardRef<HTMLDivElement, AnimatedTooltipProps>(
               transition={{
                 duration: 0.2,
                 delay: delay / 1000,
-                ease: "easeOut"
+                ease: "easeOut",
               }}
               className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-1.5 bg-popover text-popover-foreground text-sm rounded-md shadow-md whitespace-nowrap z-50"
             >

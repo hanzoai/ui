@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface GridPatternProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -61,13 +62,15 @@ const GridPattern = React.forwardRef<HTMLDivElement, GridPatternProps>(
     const maskId = React.useId()
     const gradientId = React.useId()
 
-    const normalizedSize = typeof size === "number"
-      ? { width: size, height: size }
-      : { width: size.width ?? 4, height: size.height ?? 4 }
+    const normalizedSize =
+      typeof size === "number"
+        ? { width: size, height: size }
+        : { width: size.width ?? 4, height: size.height ?? 4 }
 
-    const normalizedGap = typeof gap === "number"
-      ? { x: gap, y: gap }
-      : { x: gap.x ?? 20, y: gap.y ?? 20 }
+    const normalizedGap =
+      typeof gap === "number"
+        ? { x: gap, y: gap }
+        : { x: gap.x ?? 20, y: gap.y ?? 20 }
 
     const normalizedOffset = {
       x: offset?.x ?? 0,
@@ -213,7 +216,10 @@ const GridPattern = React.forwardRef<HTMLDivElement, GridPatternProps>(
     return (
       <div
         ref={ref}
-        className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+        className={cn(
+          "pointer-events-none absolute inset-0 overflow-hidden",
+          className
+        )}
         style={{
           ...style,
           ...animationStyle,
@@ -239,11 +245,15 @@ const GridPattern = React.forwardRef<HTMLDivElement, GridPatternProps>(
             </pattern>
             {renderFadeMask()}
             {gradient && (
-              <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient
+                id={gradientId}
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="100%"
+              >
                 <stop offset="0%" stopColor={gradient.from ?? "transparent"} />
-                {gradient.via && (
-                  <stop offset="50%" stopColor={gradient.via} />
-                )}
+                {gradient.via && <stop offset="50%" stopColor={gradient.via} />}
                 <stop offset="100%" stopColor={gradient.to ?? "transparent"} />
               </linearGradient>
             )}

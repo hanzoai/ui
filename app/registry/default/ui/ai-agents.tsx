@@ -1,54 +1,84 @@
 "use client"
 
-import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/default/ui/card'
-import { Button } from '@/registry/default/ui/button'
-import { Badge } from '@/registry/default/ui/badge'
-import { Input } from '@/registry/default/ui/input'
-import { Label } from '@/registry/default/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/default/ui/select'
-import { Textarea } from '@/registry/default/ui/textarea'
-import { Progress } from '@/registry/default/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/default/ui/tabs'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/registry/default/ui/dialog'
-import { Separator } from '@/registry/default/ui/separator'
-import { ScrollArea } from '@/registry/default/ui/scroll-area'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
-  Plus,
-  Play,
-  Pause,
-  Stop,
-  Settings,
-  Bot,
-  Network,
   Activity,
-  Brain,
-  Code,
-  Search,
-  Palette,
-  Zap,
-  ArrowRight,
-  MessageSquare,
-  CheckCircle,
   AlertCircle,
+  ArrowRight,
+  Bot,
+  Brain,
+  CheckCircle,
   Clock,
-  Trash2,
+  Code,
   Copy,
-  Edit
-} from 'lucide-react'
+  Edit,
+  MessageSquare,
+  Network,
+  Palette,
+  Pause,
+  Play,
+  Plus,
+  Search,
+  Settings,
+  Stop,
+  Trash2,
+  Zap,
+} from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/registry/default/ui/dialog"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
+import { Progress } from "@/registry/default/ui/progress"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/default/ui/select"
+import { Separator } from "@/registry/default/ui/separator"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 // Types and Interfaces
-export type AgentType = 'research' | 'code' | 'analysis' | 'creative' | 'automation'
-export type AgentStatus = 'idle' | 'working' | 'completed' | 'error'
-export type WorkflowMode = 'sequential' | 'parallel' | 'custom'
+export type AgentType =
+  | "research"
+  | "code"
+  | "analysis"
+  | "creative"
+  | "automation"
+export type AgentStatus = "idle" | "working" | "completed" | "error"
+export type WorkflowMode = "sequential" | "parallel" | "custom"
 
 export interface Task {
   id: string
   title: string
   description: string
-  priority: 'low' | 'medium' | 'high'
-  status: 'pending' | 'in-progress' | 'completed' | 'failed'
+  priority: "low" | "medium" | "high"
+  status: "pending" | "in-progress" | "completed" | "failed"
   assignedTo?: string
   progress: number
   createdAt: Date
@@ -83,9 +113,14 @@ export interface WorkflowConnection {
 
 export interface AIAgentsProps {
   agents?: Agent[]
-  onAgentCreate?: (agent: Omit<Agent, 'id' | 'position' | 'performance'>) => void
+  onAgentCreate?: (
+    agent: Omit<Agent, "id" | "position" | "performance">
+  ) => void
   onTaskAssign?: (task: Task, agentId: string) => void
-  onWorkflowSave?: (workflow: { agents: Agent[]; connections: WorkflowConnection[] }) => void
+  onWorkflowSave?: (workflow: {
+    agents: Agent[]
+    connections: WorkflowConnection[]
+  }) => void
   workflowMode?: WorkflowMode
   className?: string
 }
@@ -94,29 +129,49 @@ export interface AIAgentsProps {
 const agentTypeConfig = {
   research: {
     icon: Search,
-    color: 'bg-blue-500',
-    capabilities: ['web-search', 'data-analysis', 'fact-checking', 'source-validation']
+    color: "bg-blue-500",
+    capabilities: [
+      "web-search",
+      "data-analysis",
+      "fact-checking",
+      "source-validation",
+    ],
   },
   code: {
     icon: Code,
-    color: 'bg-green-500',
-    capabilities: ['code-generation', 'debugging', 'testing', 'optimization']
+    color: "bg-green-500",
+    capabilities: ["code-generation", "debugging", "testing", "optimization"],
   },
   analysis: {
     icon: Brain,
-    color: 'bg-purple-500',
-    capabilities: ['data-processing', 'pattern-recognition', 'insights', 'reporting']
+    color: "bg-purple-500",
+    capabilities: [
+      "data-processing",
+      "pattern-recognition",
+      "insights",
+      "reporting",
+    ],
   },
   creative: {
     icon: Palette,
-    color: 'bg-pink-500',
-    capabilities: ['content-creation', 'design', 'brainstorming', 'storytelling']
+    color: "bg-pink-500",
+    capabilities: [
+      "content-creation",
+      "design",
+      "brainstorming",
+      "storytelling",
+    ],
   },
   automation: {
     icon: Zap,
-    color: 'bg-orange-500',
-    capabilities: ['workflow-execution', 'api-integration', 'scheduling', 'monitoring']
-  }
+    color: "bg-orange-500",
+    capabilities: [
+      "workflow-execution",
+      "api-integration",
+      "scheduling",
+      "monitoring",
+    ],
+  },
 }
 
 // Communication animation component
@@ -129,11 +184,14 @@ const CommunicationFlow: React.FC<{
   useEffect(() => {
     const interval = setInterval(() => {
       if (connections.length > 0) {
-        const randomConnection = connections[Math.floor(Math.random() * connections.length)]
-        setActiveFlows(prev => [...prev, randomConnection.id])
+        const randomConnection =
+          connections[Math.floor(Math.random() * connections.length)]
+        setActiveFlows((prev) => [...prev, randomConnection.id])
 
         setTimeout(() => {
-          setActiveFlows(prev => prev.filter(id => id !== randomConnection.id))
+          setActiveFlows((prev) =>
+            prev.filter((id) => id !== randomConnection.id)
+          )
         }, 2000)
       }
     }, 3000)
@@ -144,11 +202,11 @@ const CommunicationFlow: React.FC<{
   return (
     <svg
       className="absolute inset-0 w-full h-full pointer-events-none z-10"
-      style={{ overflow: 'visible' }}
+      style={{ overflow: "visible" }}
     >
-      {connections.map(connection => {
-        const sourceAgent = agents.find(a => a.id === connection.source)
-        const targetAgent = agents.find(a => a.id === connection.target)
+      {connections.map((connection) => {
+        const sourceAgent = agents.find((a) => a.id === connection.source)
+        const targetAgent = agents.find((a) => a.id === connection.target)
 
         if (!sourceAgent || !targetAgent) return null
 
@@ -167,7 +225,7 @@ const CommunicationFlow: React.FC<{
               >
                 <polygon
                   points="0 0, 10 3.5, 0 7"
-                  fill={isActive ? '#3b82f6' : '#94a3b8'}
+                  fill={isActive ? "#3b82f6" : "#94a3b8"}
                 />
               </marker>
             </defs>
@@ -176,18 +234,14 @@ const CommunicationFlow: React.FC<{
               y1={sourceAgent.position.y + 50}
               x2={targetAgent.position.x + 50}
               y2={targetAgent.position.y + 50}
-              stroke={isActive ? '#3b82f6' : '#94a3b8'}
-              strokeWidth={isActive ? '3' : '2'}
-              strokeDasharray={isActive ? '5,5' : '0'}
+              stroke={isActive ? "#3b82f6" : "#94a3b8"}
+              strokeWidth={isActive ? "3" : "2"}
+              strokeDasharray={isActive ? "5,5" : "0"}
               markerEnd={`url(#arrowhead-${connection.id})`}
-              className={isActive ? 'animate-pulse' : ''}
+              className={isActive ? "animate-pulse" : ""}
             />
             {isActive && (
-              <circle
-                r="4"
-                fill="#3b82f6"
-                className="animate-pulse"
-              >
+              <circle r="4" fill="#3b82f6" className="animate-pulse">
                 <animateMotion
                   dur="2s"
                   repeatCount="1"
@@ -211,52 +265,73 @@ const AgentCard: React.FC<{
   onDelete?: () => void
   onDrag?: (position: { x: number; y: number }) => void
   isDragging?: boolean
-}> = ({ agent, isSelected, onSelect, onEdit, onDelete, onDrag, isDragging }) => {
+}> = ({
+  agent,
+  isSelected,
+  onSelect,
+  onEdit,
+  onDelete,
+  onDrag,
+  isDragging,
+}) => {
   const dragRef = useRef<HTMLDivElement>(null)
   const [isDragActive, setIsDragActive] = useState(false)
   const config = agentTypeConfig[agent.type]
   const Icon = config.icon
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!onDrag) return
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (!onDrag) return
 
-    setIsDragActive(true)
-    const startX = e.clientX - agent.position.x
-    const startY = e.clientY - agent.position.y
+      setIsDragActive(true)
+      const startX = e.clientX - agent.position.x
+      const startY = e.clientY - agent.position.y
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const newX = e.clientX - startX
-      const newY = e.clientY - startY
-      onDrag({ x: Math.max(0, newX), y: Math.max(0, newY) })
-    }
+      const handleMouseMove = (e: MouseEvent) => {
+        const newX = e.clientX - startX
+        const newY = e.clientY - startY
+        onDrag({ x: Math.max(0, newX), y: Math.max(0, newY) })
+      }
 
-    const handleMouseUp = () => {
-      setIsDragActive(false)
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
+      const handleMouseUp = () => {
+        setIsDragActive(false)
+        document.removeEventListener("mousemove", handleMouseMove)
+        document.removeEventListener("mouseup", handleMouseUp)
+      }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-  }, [agent.position, onDrag])
+      document.addEventListener("mousemove", handleMouseMove)
+      document.addEventListener("mouseup", handleMouseUp)
+    },
+    [agent.position, onDrag]
+  )
 
   const getStatusColor = (status: AgentStatus) => {
     switch (status) {
-      case 'idle': return 'bg-gray-500'
-      case 'working': return 'bg-blue-500'
-      case 'completed': return 'bg-green-500'
-      case 'error': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case "idle":
+        return "bg-gray-500"
+      case "working":
+        return "bg-blue-500"
+      case "completed":
+        return "bg-green-500"
+      case "error":
+        return "bg-red-500"
+      default:
+        return "bg-gray-500"
     }
   }
 
   const getStatusIcon = (status: AgentStatus) => {
     switch (status) {
-      case 'idle': return Clock
-      case 'working': return Activity
-      case 'completed': return CheckCircle
-      case 'error': return AlertCircle
-      default: return Clock
+      case "idle":
+        return Clock
+      case "working":
+        return Activity
+      case "completed":
+        return CheckCircle
+      case "error":
+        return AlertCircle
+      default:
+        return Clock
     }
   }
 
@@ -274,7 +349,7 @@ const AgentCard: React.FC<{
       style={{
         left: agent.position.x,
         top: agent.position.y,
-        transform: isDragActive ? 'scale(1.05)' : 'scale(1)'
+        transform: isDragActive ? "scale(1.05)" : "scale(1)",
       }}
       onMouseDown={handleMouseDown}
       onClick={onSelect}
@@ -330,7 +405,7 @@ const AgentCard: React.FC<{
         )}
 
         <div className="flex flex-wrap gap-1">
-          {agent.capabilities.slice(0, 3).map(capability => (
+          {agent.capabilities.slice(0, 3).map((capability) => (
             <Badge key={capability} variant="secondary" className="text-xs">
               {capability}
             </Badge>
@@ -353,14 +428,14 @@ const AgentCard: React.FC<{
 
 // Agent creation dialog
 const CreateAgentDialog: React.FC<{
-  onAgentCreate: (agent: Omit<Agent, 'id' | 'position' | 'performance'>) => void
+  onAgentCreate: (agent: Omit<Agent, "id" | "position" | "performance">) => void
 }> = ({ onAgentCreate }) => {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
-    name: '',
-    type: 'research' as AgentType,
-    description: '',
-    capabilities: [] as string[]
+    name: "",
+    type: "research" as AgentType,
+    description: "",
+    capabilities: [] as string[],
   })
 
   const handleSubmit = () => {
@@ -369,19 +444,20 @@ const CreateAgentDialog: React.FC<{
     onAgentCreate({
       name: formData.name,
       type: formData.type,
-      status: 'idle',
-      capabilities: formData.capabilities.length > 0
-        ? formData.capabilities
-        : agentTypeConfig[formData.type].capabilities,
+      status: "idle",
+      capabilities:
+        formData.capabilities.length > 0
+          ? formData.capabilities
+          : agentTypeConfig[formData.type].capabilities,
       connections: [],
-      description: formData.description
+      description: formData.description,
     })
 
     setFormData({
-      name: '',
-      type: 'research',
-      description: '',
-      capabilities: []
+      name: "",
+      type: "research",
+      description: "",
+      capabilities: [],
     })
     setOpen(false)
   }
@@ -407,7 +483,9 @@ const CreateAgentDialog: React.FC<{
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               placeholder="Enter agent name"
             />
           </div>
@@ -416,7 +494,9 @@ const CreateAgentDialog: React.FC<{
             <Label htmlFor="type">Agent Type</Label>
             <Select
               value={formData.type}
-              onValueChange={(value: AgentType) => setFormData(prev => ({ ...prev, type: value }))}
+              onValueChange={(value: AgentType) =>
+                setFormData((prev) => ({ ...prev, type: value }))
+              }
             >
               <SelectTrigger>
                 <SelectValue />
@@ -442,7 +522,12 @@ const CreateAgentDialog: React.FC<{
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Describe the agent's purpose and role"
             />
           </div>
@@ -468,11 +553,11 @@ const TaskAssignmentDialog: React.FC<{
 }> = ({ agents, onTaskAssign }) => {
   const [open, setOpen] = useState(false)
   const [taskData, setTaskData] = useState({
-    title: '',
-    description: '',
-    priority: 'medium' as Task['priority'],
-    assignedTo: '',
-    estimatedTime: 0
+    title: "",
+    description: "",
+    priority: "medium" as Task["priority"],
+    assignedTo: "",
+    estimatedTime: 0,
   })
 
   const handleSubmit = () => {
@@ -483,20 +568,20 @@ const TaskAssignmentDialog: React.FC<{
       title: taskData.title,
       description: taskData.description,
       priority: taskData.priority,
-      status: 'pending',
+      status: "pending",
       progress: 0,
       createdAt: new Date(),
-      estimatedTime: taskData.estimatedTime || undefined
+      estimatedTime: taskData.estimatedTime || undefined,
     }
 
     onTaskAssign(task, taskData.assignedTo)
 
     setTaskData({
-      title: '',
-      description: '',
-      priority: 'medium',
-      assignedTo: '',
-      estimatedTime: 0
+      title: "",
+      description: "",
+      priority: "medium",
+      assignedTo: "",
+      estimatedTime: 0,
     })
     setOpen(false)
   }
@@ -522,7 +607,9 @@ const TaskAssignmentDialog: React.FC<{
             <Input
               id="title"
               value={taskData.title}
-              onChange={(e) => setTaskData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setTaskData((prev) => ({ ...prev, title: e.target.value }))
+              }
               placeholder="Enter task title"
             />
           </div>
@@ -532,7 +619,12 @@ const TaskAssignmentDialog: React.FC<{
             <Textarea
               id="description"
               value={taskData.description}
-              onChange={(e) => setTaskData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setTaskData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Describe the task requirements"
             />
           </div>
@@ -542,7 +634,9 @@ const TaskAssignmentDialog: React.FC<{
               <Label htmlFor="priority">Priority</Label>
               <Select
                 value={taskData.priority}
-                onValueChange={(value: Task['priority']) => setTaskData(prev => ({ ...prev, priority: value }))}
+                onValueChange={(value: Task["priority"]) =>
+                  setTaskData((prev) => ({ ...prev, priority: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -561,7 +655,12 @@ const TaskAssignmentDialog: React.FC<{
                 id="estimatedTime"
                 type="number"
                 value={taskData.estimatedTime}
-                onChange={(e) => setTaskData(prev => ({ ...prev, estimatedTime: parseInt(e.target.value) || 0 }))}
+                onChange={(e) =>
+                  setTaskData((prev) => ({
+                    ...prev,
+                    estimatedTime: parseInt(e.target.value) || 0,
+                  }))
+                }
                 placeholder="0"
               />
             </div>
@@ -571,20 +670,29 @@ const TaskAssignmentDialog: React.FC<{
             <Label htmlFor="assignedTo">Assign to Agent</Label>
             <Select
               value={taskData.assignedTo}
-              onValueChange={(value) => setTaskData(prev => ({ ...prev, assignedTo: value }))}
+              onValueChange={(value) =>
+                setTaskData((prev) => ({ ...prev, assignedTo: value }))
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select an agent" />
               </SelectTrigger>
               <SelectContent>
-                {agents.filter(agent => agent.status === 'idle').map(agent => (
-                  <SelectItem key={agent.id} value={agent.id}>
-                    <div className="flex items-center gap-2">
-                      <div className={cn("w-2 h-2 rounded-full", agentTypeConfig[agent.type].color)} />
-                      {agent.name}
-                    </div>
-                  </SelectItem>
-                ))}
+                {agents
+                  .filter((agent) => agent.status === "idle")
+                  .map((agent) => (
+                    <SelectItem key={agent.id} value={agent.id}>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={cn(
+                            "w-2 h-2 rounded-full",
+                            agentTypeConfig[agent.type].color
+                          )}
+                        />
+                        {agent.name}
+                      </div>
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
           </div>
@@ -593,7 +701,10 @@ const TaskAssignmentDialog: React.FC<{
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit} disabled={!taskData.title || !taskData.assignedTo}>
+            <Button
+              onClick={handleSubmit}
+              disabled={!taskData.title || !taskData.assignedTo}
+            >
               Assign Task
             </Button>
           </div>
@@ -609,8 +720,8 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
   onAgentCreate,
   onTaskAssign,
   onWorkflowSave,
-  workflowMode = 'custom',
-  className
+  workflowMode = "custom",
+  className,
 }) => {
   const [agents, setAgents] = useState<Agent[]>(initialAgents)
   const [connections, setConnections] = useState<WorkflowConnection[]>([])
@@ -623,113 +734,140 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
     if (initialAgents.length === 0) {
       const defaultAgents: Agent[] = [
         {
-          id: '1',
-          name: 'Research Assistant',
-          type: 'research',
-          capabilities: ['web-search', 'data-analysis', 'fact-checking'],
-          status: 'idle',
+          id: "1",
+          name: "Research Assistant",
+          type: "research",
+          capabilities: ["web-search", "data-analysis", "fact-checking"],
+          status: "idle",
           position: { x: 50, y: 50 },
-          connections: ['2'],
-          performance: { tasksCompleted: 12, successRate: 95, avgCompletionTime: 45 }
-        },
-        {
-          id: '2',
-          name: 'Code Generator',
-          type: 'code',
-          capabilities: ['code-generation', 'debugging', 'testing'],
-          status: 'working',
-          position: { x: 400, y: 50 },
-          connections: ['3'],
-          currentTask: {
-            id: 't1',
-            title: 'Generate React Component',
-            description: 'Create a reusable button component',
-            priority: 'high',
-            status: 'in-progress',
-            progress: 65,
-            createdAt: new Date()
+          connections: ["2"],
+          performance: {
+            tasksCompleted: 12,
+            successRate: 95,
+            avgCompletionTime: 45,
           },
-          performance: { tasksCompleted: 8, successRate: 90, avgCompletionTime: 38 }
         },
         {
-          id: '3',
-          name: 'Quality Analyst',
-          type: 'analysis',
-          capabilities: ['code-review', 'performance-analysis', 'testing'],
-          status: 'idle',
+          id: "2",
+          name: "Code Generator",
+          type: "code",
+          capabilities: ["code-generation", "debugging", "testing"],
+          status: "working",
+          position: { x: 400, y: 50 },
+          connections: ["3"],
+          currentTask: {
+            id: "t1",
+            title: "Generate React Component",
+            description: "Create a reusable button component",
+            priority: "high",
+            status: "in-progress",
+            progress: 65,
+            createdAt: new Date(),
+          },
+          performance: {
+            tasksCompleted: 8,
+            successRate: 90,
+            avgCompletionTime: 38,
+          },
+        },
+        {
+          id: "3",
+          name: "Quality Analyst",
+          type: "analysis",
+          capabilities: ["code-review", "performance-analysis", "testing"],
+          status: "idle",
           position: { x: 750, y: 50 },
           connections: [],
-          performance: { tasksCompleted: 15, successRate: 98, avgCompletionTime: 25 }
-        }
+          performance: {
+            tasksCompleted: 15,
+            successRate: 98,
+            avgCompletionTime: 25,
+          },
+        },
       ]
       setAgents(defaultAgents)
 
       const defaultConnections: WorkflowConnection[] = [
-        { id: 'c1', source: '1', target: '2', animated: true },
-        { id: 'c2', source: '2', target: '3', animated: true }
+        { id: "c1", source: "1", target: "2", animated: true },
+        { id: "c2", source: "2", target: "3", animated: true },
       ]
       setConnections(defaultConnections)
     }
   }, [initialAgents])
 
-  const handleAgentCreate = (agentData: Omit<Agent, 'id' | 'position' | 'performance'>) => {
+  const handleAgentCreate = (
+    agentData: Omit<Agent, "id" | "position" | "performance">
+  ) => {
     const newAgent: Agent = {
       ...agentData,
       id: crypto.randomUUID(),
       position: { x: 100 + agents.length * 300, y: 100 },
-      performance: { tasksCompleted: 0, successRate: 100, avgCompletionTime: 0 }
+      performance: {
+        tasksCompleted: 0,
+        successRate: 100,
+        avgCompletionTime: 0,
+      },
     }
 
-    setAgents(prev => [...prev, newAgent])
+    setAgents((prev) => [...prev, newAgent])
     onAgentCreate?.(agentData)
   }
 
   const handleTaskAssign = (task: Task, agentId: string) => {
-    setAgents(prev => prev.map(agent =>
-      agent.id === agentId
-        ? { ...agent, currentTask: task, status: 'working' as AgentStatus }
-        : agent
-    ))
+    setAgents((prev) =>
+      prev.map((agent) =>
+        agent.id === agentId
+          ? { ...agent, currentTask: task, status: "working" as AgentStatus }
+          : agent
+      )
+    )
     onTaskAssign?.(task, agentId)
 
     // Simulate task progress
     const progressInterval = setInterval(() => {
-      setAgents(prev => prev.map(agent => {
-        if (agent.id === agentId && agent.currentTask) {
-          const newProgress = Math.min(agent.currentTask.progress + 10, 100)
-          const updatedTask = { ...agent.currentTask, progress: newProgress }
+      setAgents((prev) =>
+        prev.map((agent) => {
+          if (agent.id === agentId && agent.currentTask) {
+            const newProgress = Math.min(agent.currentTask.progress + 10, 100)
+            const updatedTask = { ...agent.currentTask, progress: newProgress }
 
-          if (newProgress === 100) {
-            clearInterval(progressInterval)
-            return {
-              ...agent,
-              currentTask: undefined,
-              status: 'completed' as AgentStatus,
-              performance: {
-                ...agent.performance,
-                tasksCompleted: agent.performance.tasksCompleted + 1
+            if (newProgress === 100) {
+              clearInterval(progressInterval)
+              return {
+                ...agent,
+                currentTask: undefined,
+                status: "completed" as AgentStatus,
+                performance: {
+                  ...agent.performance,
+                  tasksCompleted: agent.performance.tasksCompleted + 1,
+                },
               }
             }
-          }
 
-          return { ...agent, currentTask: updatedTask }
-        }
-        return agent
-      }))
+            return { ...agent, currentTask: updatedTask }
+          }
+          return agent
+        })
+      )
     }, 2000)
   }
 
-  const handleAgentDrag = (agentId: string, position: { x: number; y: number }) => {
-    setAgents(prev => prev.map(agent =>
-      agent.id === agentId ? { ...agent, position } : agent
-    ))
+  const handleAgentDrag = (
+    agentId: string,
+    position: { x: number; y: number }
+  ) => {
+    setAgents((prev) =>
+      prev.map((agent) =>
+        agent.id === agentId ? { ...agent, position } : agent
+      )
+    )
   }
 
   const handleDeleteAgent = (agentId: string) => {
-    setAgents(prev => prev.filter(agent => agent.id !== agentId))
-    setConnections(prev => prev.filter(conn =>
-      conn.source !== agentId && conn.target !== agentId
-    ))
+    setAgents((prev) => prev.filter((agent) => agent.id !== agentId))
+    setConnections((prev) =>
+      prev.filter((conn) => conn.source !== agentId && conn.target !== agentId)
+    )
     if (selectedAgent === agentId) {
       setSelectedAgent(null)
     }
@@ -742,14 +880,18 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
       // Start workflow simulation
       agents.forEach((agent, index) => {
         setTimeout(() => {
-          setAgents(prev => prev.map(a =>
-            a.id === agent.id ? { ...a, status: 'working' as AgentStatus } : a
-          ))
+          setAgents((prev) =>
+            prev.map((a) =>
+              a.id === agent.id ? { ...a, status: "working" as AgentStatus } : a
+            )
+          )
         }, index * 1000)
       })
     } else {
       // Stop workflow
-      setAgents(prev => prev.map(agent => ({ ...agent, status: 'idle' as AgentStatus })))
+      setAgents((prev) =>
+        prev.map((agent) => ({ ...agent, status: "idle" as AgentStatus }))
+      )
     }
   }
 
@@ -770,7 +912,10 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
 
           <div className="flex items-center gap-2">
             <CreateAgentDialog onAgentCreate={handleAgentCreate} />
-            <TaskAssignmentDialog agents={agents} onTaskAssign={handleTaskAssign} />
+            <TaskAssignmentDialog
+              agents={agents}
+              onTaskAssign={handleTaskAssign}
+            />
             <Separator orientation="vertical" className="h-6" />
             <Button
               variant={isWorkflowRunning ? "destructive" : "default"}
@@ -800,18 +945,20 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
             className="relative w-full h-[600px] bg-muted/20 overflow-hidden"
             style={{
               backgroundImage: `radial-gradient(circle, #e5e7eb 1px, transparent 1px)`,
-              backgroundSize: '20px 20px'
+              backgroundSize: "20px 20px",
             }}
           >
             <CommunicationFlow connections={connections} agents={agents} />
 
-            {agents.map(agent => (
+            {agents.map((agent) => (
               <AgentCard
                 key={agent.id}
                 agent={agent}
                 isSelected={selectedAgent === agent.id}
                 onSelect={() => setSelectedAgent(agent.id)}
-                onEdit={() => {/* TODO: Implement edit */}}
+                onEdit={() => {
+                  /* TODO: Implement edit */
+                }}
                 onDelete={() => handleDeleteAgent(agent.id)}
                 onDrag={(position) => handleAgentDrag(agent.id, position)}
               />
@@ -822,7 +969,9 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                 <div className="text-center">
                   <Bot className="h-12 w-12 mx-auto mb-4" />
                   <h3 className="text-lg font-medium">No Agents Created</h3>
-                  <p className="text-sm">Create your first AI agent to get started</p>
+                  <p className="text-sm">
+                    Create your first AI agent to get started
+                  </p>
                 </div>
               </div>
             )}
@@ -831,7 +980,7 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
 
         <TabsContent value="agents" className="flex-1 p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {agents.map(agent => {
+            {agents.map((agent) => {
               const config = agentTypeConfig[agent.type]
               const Icon = config.icon
 
@@ -839,7 +988,12 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                 <Card key={agent.id}>
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <div className={cn("p-3 rounded-lg text-white", config.color)}>
+                      <div
+                        className={cn(
+                          "p-3 rounded-lg text-white",
+                          config.color
+                        )}
+                      >
                         <Icon className="h-5 w-5" />
                       </div>
                       <div>
@@ -854,7 +1008,9 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">Status</span>
                       <Badge
-                        variant={agent.status === 'working' ? 'default' : 'secondary'}
+                        variant={
+                          agent.status === "working" ? "default" : "secondary"
+                        }
                         className="capitalize"
                       >
                         {agent.status}
@@ -865,8 +1021,13 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                       <div className="space-y-2">
                         <div className="text-sm font-medium">Current Task</div>
                         <div className="bg-muted p-3 rounded-lg">
-                          <div className="font-medium text-sm">{agent.currentTask.title}</div>
-                          <Progress value={agent.currentTask.progress} className="mt-2" />
+                          <div className="font-medium text-sm">
+                            {agent.currentTask.title}
+                          </div>
+                          <Progress
+                            value={agent.currentTask.progress}
+                            className="mt-2"
+                          />
                           <div className="text-xs text-muted-foreground mt-1">
                             {agent.currentTask.progress}% Complete
                           </div>
@@ -877,8 +1038,12 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                     <div className="space-y-2">
                       <div className="text-sm font-medium">Capabilities</div>
                       <div className="flex flex-wrap gap-1">
-                        {agent.capabilities.map(capability => (
-                          <Badge key={capability} variant="outline" className="text-xs">
+                        {agent.capabilities.map((capability) => (
+                          <Badge
+                            key={capability}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {capability}
                           </Badge>
                         ))}
@@ -887,16 +1052,28 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
 
                     <div className="grid grid-cols-3 gap-2 text-center">
                       <div>
-                        <div className="text-lg font-bold">{agent.performance.tasksCompleted}</div>
-                        <div className="text-xs text-muted-foreground">Tasks</div>
+                        <div className="text-lg font-bold">
+                          {agent.performance.tasksCompleted}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Tasks
+                        </div>
                       </div>
                       <div>
-                        <div className="text-lg font-bold">{agent.performance.successRate}%</div>
-                        <div className="text-xs text-muted-foreground">Success</div>
+                        <div className="text-lg font-bold">
+                          {agent.performance.successRate}%
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Success
+                        </div>
                       </div>
                       <div>
-                        <div className="text-lg font-bold">{agent.performance.avgCompletionTime}m</div>
-                        <div className="text-xs text-muted-foreground">Avg Time</div>
+                        <div className="text-lg font-bold">
+                          {agent.performance.avgCompletionTime}m
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Avg Time
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -919,11 +1096,13 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">{agents.length}</div>
-                    <div className="text-sm text-muted-foreground">Total Agents</div>
+                    <div className="text-sm text-muted-foreground">
+                      Total Agents
+                    </div>
                   </div>
                   <div className="text-center p-4 bg-muted rounded-lg">
                     <div className="text-2xl font-bold">
-                      {agents.filter(a => a.status === 'working').length}
+                      {agents.filter((a) => a.status === "working").length}
                     </div>
                     <div className="text-sm text-muted-foreground">Active</div>
                   </div>
@@ -932,7 +1111,9 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Workflow Status</span>
-                    <Badge variant={isWorkflowRunning ? "default" : "secondary"}>
+                    <Badge
+                      variant={isWorkflowRunning ? "default" : "secondary"}
+                    >
                       {isWorkflowRunning ? "Running" : "Stopped"}
                     </Badge>
                   </div>
@@ -954,18 +1135,34 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
               <CardContent>
                 <ScrollArea className="h-64">
                   <div className="space-y-3">
-                    {agents.map(agent => (
-                      <div key={agent.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                    {agents.map((agent) => (
+                      <div
+                        key={agent.id}
+                        className="flex items-center justify-between p-3 bg-muted rounded-lg"
+                      >
                         <div className="flex items-center gap-3">
-                          <div className={cn("w-3 h-3 rounded-full", agentTypeConfig[agent.type].color)} />
+                          <div
+                            className={cn(
+                              "w-3 h-3 rounded-full",
+                              agentTypeConfig[agent.type].color
+                            )}
+                          />
                           <div>
-                            <div className="font-medium text-sm">{agent.name}</div>
-                            <div className="text-xs text-muted-foreground capitalize">{agent.type}</div>
+                            <div className="font-medium text-sm">
+                              {agent.name}
+                            </div>
+                            <div className="text-xs text-muted-foreground capitalize">
+                              {agent.type}
+                            </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-sm font-medium">{agent.performance.successRate}%</div>
-                          <div className="text-xs text-muted-foreground">success rate</div>
+                          <div className="text-sm font-medium">
+                            {agent.performance.successRate}%
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            success rate
+                          </div>
                         </div>
                       </div>
                     ))}
