@@ -1,9 +1,15 @@
 "use client"
 
 import { Check } from "lucide-react"
-import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/registry/default/ui/card"
-import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/new-york/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/registry/new-york/ui/card"
+import { Badge } from "@/registry/new-york/ui/badge"
+
+export const description = "A pricing table with three tiers: Free, Pro, and Enterprise. Each tier displays features and a call-to-action button."
+
+export const iframeHeight = "800px"
+
+export const containerClassName = "w-full"
 
 const tiers = [
   {
