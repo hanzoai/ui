@@ -1,7 +1,8 @@
 {
   "name": "carousel",
   "dependencies": [
-    "embla-carousel-react"
+    "embla-carousel-react",
+    "lucide-react"
   ],
   "registryDependencies": [
     "button"
