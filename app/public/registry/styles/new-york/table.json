@@ -1,5 +1,12 @@
 {
   "name": "table",
+  "description": "Advanced data table with sorting, filtering, and pagination",
+  "dependencies": [
+    "@tanstack/react-table"
+  ],
+  "registryDependencies": [
+    "checkbox"
+  ],
   "files": [
     {
       "name": "table.tsx",

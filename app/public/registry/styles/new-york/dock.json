@@ -1,0 +1,14 @@
+{
+  "name": "dock",
+  "description": "macOS-style dock with animations",
+  "dependencies": [
+    "motion"
+  ],
+  "files": [
+    {
+      "name": "dock.tsx",
+      "content": "export default function Component() {\n  return (\n    <div className=\"flex items-center justify-center p-8\">\n      <p className=\"text-muted-foreground\">Component coming soon</p>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:ui"
+}
