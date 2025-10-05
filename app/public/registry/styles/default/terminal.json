@@ -1,7 +1,9 @@
 {
   "name": "terminal",
+  "description": "Terminal emulator component",
   "dependencies": [
-    "lucide-react"
+    "xterm",
+    "xterm-addon-fit"
   ],
   "files": [
     {

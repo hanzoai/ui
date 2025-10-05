@@ -1,11 +1,9 @@
 {
   "name": "calendar",
+  "description": "Full calendar component",
   "dependencies": [
     "react-day-picker",
     "date-fns"
-  ],
-  "registryDependencies": [
-    "button"
   ],
   "files": [
     {
