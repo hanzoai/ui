@@ -5,6 +5,12 @@ import { Button } from "@/registry/default/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/registry/default/ui/card"
 import { Badge } from "@/registry/default/ui/badge"
 
+export const description = "A pricing table with three tiers: Free, Pro, and Enterprise. Each tier displays features and a call-to-action button."
+
+export const iframeHeight = "800px"
+
+export const containerClassName = "w-full"
+
 const tiers = [
   {
     name: "Free",
