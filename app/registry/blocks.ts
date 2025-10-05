@@ -145,4 +145,28 @@ export const blocks: Registry = [
     category: "Marketing",
     subcategory: "Pricing",
   },
+  {
+    name: "subscription-portal-01",
+    type: "components:block",
+    registryDependencies: ["badge", "button", "card", "progress", "tabs"],
+    files: ["block/billing/subscription-portal-01.tsx"],
+    category: "Billing",
+    subcategory: "Subscription",
+  },
+  {
+    name: "payment-settings-01",
+    type: "components:block",
+    registryDependencies: ["button", "card", "input", "label", "radio-group", "select"],
+    files: ["block/billing/payment-settings-01.tsx"],
+    category: "Billing",
+    subcategory: "Payment",
+  },
+  {
+    name: "invoice-manager-01",
+    type: "components:block",
+    registryDependencies: ["badge", "button", "card", "table"],
+    files: ["block/billing/invoice-manager-01.tsx"],
+    category: "Billing",
+    subcategory: "Invoice",
+  },
 ]
