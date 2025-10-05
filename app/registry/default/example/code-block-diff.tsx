@@ -21,7 +21,7 @@ export default function CodeBlockDiffDemo() {
         filename="calculator.js"
         diff={{
           added: [6, 7, 8],
-          removed: [2]
+          removed: [2],
         }}
         showLineNumbers={true}
         theme="github-dark"

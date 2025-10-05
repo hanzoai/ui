@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+
 import { cn } from "@/lib/utils"
 
 interface DockProps {
@@ -30,7 +31,16 @@ const DockContext = React.createContext<{
 })
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(
-  ({ className, children, position = "bottom", magnification = 60, distance = 140 }, ref) => {
+  (
+    {
+      className,
+      children,
+      position = "bottom",
+      magnification = 60,
+      distance = 140,
+    },
+    ref
+  ) => {
     const positionClasses = {
       bottom: "bottom-0 left-1/2 -translate-x-1/2 flex-row",
       left: "left-0 top-1/2 -translate-y-1/2 flex-col",
@@ -58,9 +68,20 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
 Dock.displayName = "Dock"
 
 const DockItem = React.forwardRef<HTMLButtonElement, DockItemProps>(
-  ({ className, children, onClick, tooltip, magnification: itemMagnification, distance: itemDistance }, ref) => {
+  (
+    {
+      className,
+      children,
+      onClick,
+      tooltip,
+      magnification: itemMagnification,
+      distance: itemDistance,
+    },
+    ref
+  ) => {
     const buttonRef = React.useRef<HTMLButtonElement>(null)
-    const { magnification: contextMagnification, distance: contextDistance } = React.useContext(DockContext)
+    const { magnification: contextMagnification, distance: contextDistance } =
+      React.useContext(DockContext)
     const magnification = itemMagnification ?? contextMagnification
     const distance = itemDistance ?? contextDistance
 
@@ -70,7 +91,11 @@ const DockItem = React.forwardRef<HTMLButtonElement, DockItemProps>(
 
     const springConfig = { mass: 0.1, stiffness: 150, damping: 12 }
     const size = useSpring(
-      useTransform(mouseX, [-distance, 0, distance], [48, 48 + magnification, 48]),
+      useTransform(
+        mouseX,
+        [-distance, 0, distance],
+        [48, 48 + magnification, 48]
+      ),
       springConfig
     )
 
@@ -132,7 +157,8 @@ const DockItem = React.forwardRef<HTMLButtonElement, DockItemProps>(
           <motion.div
             className="absolute inset-0 rounded-xl"
             style={{
-              background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%)",
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%)",
             }}
           />
         </motion.button>

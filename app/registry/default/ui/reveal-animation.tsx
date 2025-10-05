@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useRef, useEffect, useState, useCallback } from 'react'
-import { motion, useInView, useAnimation, Variants } from 'motion/react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { motion, useAnimation, useInView, Variants } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
@@ -11,17 +12,17 @@ function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
   return prefersReducedMotion
@@ -35,7 +36,7 @@ export interface RevealAnimationProps {
   /**
    * Animation direction
    */
-  direction?: 'up' | 'down' | 'left' | 'right' | 'fade' | 'scale' | 'rotate'
+  direction?: "up" | "down" | "left" | "right" | "fade" | "scale" | "rotate"
   /**
    * Animation duration in milliseconds
    */
@@ -99,7 +100,17 @@ export interface RevealAnimationProps {
   /**
    * Easing function
    */
-  easing?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'circIn' | 'circOut' | 'circInOut' | 'backIn' | 'backOut' | 'backInOut'
+  easing?:
+    | "linear"
+    | "easeIn"
+    | "easeOut"
+    | "easeInOut"
+    | "circIn"
+    | "circOut"
+    | "circInOut"
+    | "backIn"
+    | "backOut"
+    | "backInOut"
   /**
    * Whether to animate on scroll
    */
@@ -120,47 +131,44 @@ const easingFunctions = {
   circInOut: [0.785, 0.135, 0.15, 0.86],
   backIn: [0.6, -0.28, 0.735, 0.045],
   backOut: [0.175, 0.885, 0.32, 1.275],
-  backInOut: [0.68, -0.55, 0.265, 1.55]
+  backInOut: [0.68, -0.55, 0.265, 1.55],
 } as const
 
 const directionVariants = {
   up: {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   },
   down: {
     hidden: { opacity: 0, y: -50 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   },
   left: {
     hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0 }
+    visible: { opacity: 1, x: 0 },
   },
   right: {
     hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0 }
+    visible: { opacity: 1, x: 0 },
   },
   fade: {
     hidden: { opacity: 0 },
-    visible: { opacity: 1 }
+    visible: { opacity: 1 },
   },
   scale: {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1 }
+    visible: { opacity: 1, scale: 1 },
   },
   rotate: {
     hidden: { opacity: 0, rotate: -10, scale: 0.9 },
-    visible: { opacity: 1, rotate: 0, scale: 1 }
-  }
+    visible: { opacity: 1, rotate: 0, scale: 1 },
+  },
 }
 
 /**
  * Custom hook for scroll-based animations
  */
-function useScrollAnimation(
-  animateOnScroll: boolean,
-  scrollProgress?: number
-) {
+function useScrollAnimation(animateOnScroll: boolean, scrollProgress?: number) {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -173,13 +181,14 @@ function useScrollAnimation(
 
     const handleScroll = () => {
       const scrolled = window.scrollY
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight
       const progress = Math.min(scrolled / maxScroll, 1)
       setProgress(progress)
     }
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [animateOnScroll, scrollProgress])
 
   return progress
@@ -199,7 +208,7 @@ function useRevealAnimation(
   const isInView = useInView(ref, {
     threshold,
     margin: rootMargin,
-    once: triggerOnce
+    once: triggerOnce,
   })
   const controls = useAnimation()
 
@@ -208,23 +217,30 @@ function useRevealAnimation(
   useEffect(() => {
     if (!useViewport && manualTrigger !== undefined) {
       if (manualTrigger && !hasTriggered) {
-        controls.start('visible')
+        controls.start("visible")
         setHasTriggered(true)
       } else if (!manualTrigger && !triggerOnce) {
-        controls.start('hidden')
+        controls.start("hidden")
       }
       return
     }
 
     if (useViewport) {
       if (isInView) {
-        controls.start('visible')
+        controls.start("visible")
         setHasTriggered(true)
       } else if (!triggerOnce && hasTriggered) {
-        controls.start('hidden')
+        controls.start("hidden")
       }
     }
-  }, [isInView, controls, useViewport, manualTrigger, triggerOnce, hasTriggered])
+  }, [
+    isInView,
+    controls,
+    useViewport,
+    manualTrigger,
+    triggerOnce,
+    hasTriggered,
+  ])
 
   return { ref, controls, isInView: useViewport ? isInView : manualTrigger }
 }
@@ -234,14 +250,14 @@ function useRevealAnimation(
  */
 export function RevealAnimation({
   children,
-  direction = 'up',
+  direction = "up",
   duration = 600,
   delay = 0,
   distance = 50,
   staggerChildren = false,
   staggerDelay = 100,
   threshold = 0.1,
-  rootMargin = '0px',
+  rootMargin = "0px",
   triggerOnce = true,
   className,
   style,
@@ -250,9 +266,9 @@ export function RevealAnimation({
   customVariants,
   useViewport = true,
   trigger,
-  easing = 'easeOut',
+  easing = "easeOut",
   animateOnScroll = false,
-  scrollProgress
+  scrollProgress,
 }: RevealAnimationProps) {
   const prefersReducedMotion = usePrefersReducedMotion()
 
@@ -264,12 +280,15 @@ export function RevealAnimation({
     trigger
   )
 
-  const scrollAnimationProgress = useScrollAnimation(animateOnScroll, scrollProgress)
+  const scrollAnimationProgress = useScrollAnimation(
+    animateOnScroll,
+    scrollProgress
+  )
 
   // Skip animations if reduced motion is preferred
   useEffect(() => {
     if (prefersReducedMotion) {
-      controls.set('visible')
+      controls.set("visible")
     }
   }, [prefersReducedMotion, controls])
 
@@ -277,11 +296,11 @@ export function RevealAnimation({
     ...directionVariants[direction],
     hidden: {
       ...directionVariants[direction].hidden,
-      ...(direction === 'up' && { y: distance }),
-      ...(direction === 'down' && { y: -distance }),
-      ...(direction === 'left' && { x: distance }),
-      ...(direction === 'right' && { x: -distance })
-    }
+      ...(direction === "up" && { y: distance }),
+      ...(direction === "down" && { y: -distance }),
+      ...(direction === "left" && { x: distance }),
+      ...(direction === "right" && { x: -distance }),
+    },
   }
 
   const containerVariants: Variants = staggerChildren
@@ -290,9 +309,9 @@ export function RevealAnimation({
         visible: {
           transition: {
             staggerChildren: staggerDelay / 1000,
-            delayChildren: delay / 1000
-          }
-        }
+            delayChildren: delay / 1000,
+          },
+        },
       }
     : variants
 
@@ -301,7 +320,7 @@ export function RevealAnimation({
   const transition = {
     duration: duration / 1000,
     delay: staggerChildren ? 0 : delay / 1000,
-    ease: easingFunctions[easing] as any
+    ease: easingFunctions[easing] as any,
   }
 
   // Handle scroll-based animation
@@ -309,9 +328,9 @@ export function RevealAnimation({
     if (animateOnScroll) {
       const progress = scrollAnimationProgress
       if (progress > 0) {
-        controls.start('visible')
+        controls.start("visible")
       } else {
-        controls.start('hidden')
+        controls.start("hidden")
       }
     }
   }, [animateOnScroll, scrollAnimationProgress, controls])
@@ -335,7 +354,7 @@ export function RevealAnimation({
         variants={childVariants}
         transition={{
           ...transition,
-          delay: index * (staggerDelay / 1000)
+          delay: index * (staggerDelay / 1000),
         }}
         onAnimationStart={index === 0 ? handleAnimationStart : undefined}
         onAnimationComplete={
@@ -359,7 +378,9 @@ export function RevealAnimation({
       animate={controls}
       transition={transition}
       onAnimationStart={!staggerChildren ? handleAnimationStart : undefined}
-      onAnimationComplete={!staggerChildren ? handleAnimationComplete : undefined}
+      onAnimationComplete={
+        !staggerChildren ? handleAnimationComplete : undefined
+      }
     >
       {renderChildren()}
     </motion.div>
@@ -376,15 +397,11 @@ export function RevealGroup({
 }: {
   children: React.ReactNode
   staggerDelay?: number
-} & Omit<RevealAnimationProps, 'children' | 'staggerChildren'>) {
+} & Omit<RevealAnimationProps, "children" | "staggerChildren">) {
   return (
     <div>
       {React.Children.map(children, (child, index) => (
-        <RevealAnimation
-          key={index}
-          delay={index * staggerDelay}
-          {...props}
-        >
+        <RevealAnimation key={index} delay={index * staggerDelay} {...props}>
           {child}
         </RevealAnimation>
       ))}
@@ -404,7 +421,7 @@ export function ScrollReveal({
   children: React.ReactNode
   startOffset?: number
   endOffset?: number
-} & Omit<RevealAnimationProps, 'children' | 'animateOnScroll'>) {
+} & Omit<RevealAnimationProps, "children" | "animateOnScroll">) {
   const ref = useRef<HTMLDivElement>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
 
@@ -422,14 +439,17 @@ export function ScrollReveal({
       const startPoint = windowHeight * (1 - startOffset)
       const endPoint = -elementHeight * endOffset
 
-      const progress = Math.max(0, Math.min(1, (startPoint - elementTop) / (startPoint - endPoint)))
+      const progress = Math.max(
+        0,
+        Math.min(1, (startPoint - elementTop) / (startPoint - endPoint))
+      )
       setScrollProgress(progress)
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll)
     handleScroll() // Initial call
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [startOffset, endOffset])
 
   return (
@@ -452,44 +472,61 @@ export const RevealPresets = {
   /**
    * Gentle fade up
    */
-  FadeUp: (props: Omit<RevealAnimationProps, 'direction' | 'easing'>) => (
+  FadeUp: (props: Omit<RevealAnimationProps, "direction" | "easing">) => (
     <RevealAnimation direction="up" easing="easeOut" {...props} />
   ),
 
   /**
    * Bouncy scale
    */
-  BounceScale: (props: Omit<RevealAnimationProps, 'direction' | 'easing'>) => (
-    <RevealAnimation direction="scale" easing="backOut" duration={800} {...props} />
+  BounceScale: (props: Omit<RevealAnimationProps, "direction" | "easing">) => (
+    <RevealAnimation
+      direction="scale"
+      easing="backOut"
+      duration={800}
+      {...props}
+    />
   ),
 
   /**
    * Staggered list reveal
    */
-  StaggerList: (props: Omit<RevealAnimationProps, 'staggerChildren' | 'direction'>) => (
-    <RevealAnimation direction="up" staggerChildren staggerDelay={150} {...props} />
+  StaggerList: (
+    props: Omit<RevealAnimationProps, "staggerChildren" | "direction">
+  ) => (
+    <RevealAnimation
+      direction="up"
+      staggerChildren
+      staggerDelay={150}
+      {...props}
+    />
   ),
 
   /**
    * Slide from left
    */
-  SlideLeft: (props: Omit<RevealAnimationProps, 'direction' | 'distance'>) => (
+  SlideLeft: (props: Omit<RevealAnimationProps, "direction" | "distance">) => (
     <RevealAnimation direction="left" distance={100} {...props} />
   ),
 
   /**
    * Rotate reveal
    */
-  RotateReveal: (props: Omit<RevealAnimationProps, 'direction' | 'easing'>) => (
-    <RevealAnimation direction="rotate" easing="backOut" duration={1000} {...props} />
+  RotateReveal: (props: Omit<RevealAnimationProps, "direction" | "easing">) => (
+    <RevealAnimation
+      direction="rotate"
+      easing="backOut"
+      duration={1000}
+      {...props}
+    />
   ),
 
   /**
    * Progressive scroll reveal
    */
-  ScrollProgressive: (props: Omit<RevealAnimationProps, 'animateOnScroll'>) => (
+  ScrollProgressive: (props: Omit<RevealAnimationProps, "animateOnScroll">) => (
     <RevealAnimation animateOnScroll useViewport={false} {...props} />
-  )
+  ),
 }
 
 export default RevealAnimation

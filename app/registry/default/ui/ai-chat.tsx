@@ -3,16 +3,33 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { format } from "date-fns"
-import { Bot, User, Copy, RotateCcw, Paperclip, Send, MoreHorizontal } from "lucide-react"
+import {
+  Bot,
+  Copy,
+  MoreHorizontal,
+  Paperclip,
+  RotateCcw,
+  Send,
+  User,
+} from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
-import { ScrollArea } from "@/registry/default/ui/scroll-area"
-import { Textarea } from "@/registry/default/ui/textarea"
-import { Separator } from "@/registry/default/ui/separator"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/registry/default/ui/dropdown-menu"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/registry/default/ui/avatar"
 import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/registry/default/ui/dropdown-menu"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import { Separator } from "@/registry/default/ui/separator"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 // Types
 export interface ChatMessage {
@@ -105,135 +122,144 @@ const ChatMessageComponent = React.forwardRef<
     userName?: string
     assistantName?: string
   } & React.HTMLAttributes<HTMLDivElement>
->(({
-  message,
-  onCopy,
-  onRegenerate,
-  showTimestamp = true,
-  showAvatar = true,
-  userAvatar,
-  assistantAvatar,
-  userName,
-  assistantName,
-  className,
-  ...props
-}, ref) => {
-  const [isCopied, setIsCopied] = React.useState(false)
+>(
+  (
+    {
+      message,
+      onCopy,
+      onRegenerate,
+      showTimestamp = true,
+      showAvatar = true,
+      userAvatar,
+      assistantAvatar,
+      userName,
+      assistantName,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    const [isCopied, setIsCopied] = React.useState(false)
 
-  const handleCopy = async () => {
-    if (onCopy) {
-      onCopy(message.content)
-      setIsCopied(true)
-      setTimeout(() => setIsCopied(false), 2000)
+    const handleCopy = async () => {
+      if (onCopy) {
+        onCopy(message.content)
+        setIsCopied(true)
+        setTimeout(() => setIsCopied(false), 2000)
+      }
     }
-  }
 
-  const handleRegenerate = () => {
-    if (onRegenerate && message.role === "assistant") {
-      onRegenerate(message.id)
+    const handleRegenerate = () => {
+      if (onRegenerate && message.role === "assistant") {
+        onRegenerate(message.id)
+      }
     }
-  }
 
-  const formatContent = (content: string) => {
-    // Basic markdown rendering - in a real implementation, you'd use a proper markdown library
-    return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code class="bg-muted px-1 rounded">$1</code>')
-      .replace(/```([\s\S]*?)```/g, '<pre class="bg-muted p-3 rounded-lg overflow-x-auto"><code>$1</code></pre>')
-  }
+    const formatContent = (content: string) => {
+      // Basic markdown rendering - in a real implementation, you'd use a proper markdown library
+      return content
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/`(.*?)`/g, '<code class="bg-muted px-1 rounded">$1</code>')
+        .replace(
+          /```([\s\S]*?)```/g,
+          '<pre class="bg-muted p-3 rounded-lg overflow-x-auto"><code>$1</code></pre>'
+        )
+    }
 
-  return (
-    <div
-      ref={ref}
-      className={cn(messageVariants({ role: message.role }), className)}
-      {...props}
-    >
-      {showAvatar && message.role !== "system" && (
-        <Avatar className="h-8 w-8 shrink-0">
-          <AvatarImage
-            src={message.role === "user" ? userAvatar : assistantAvatar}
-            alt={message.role === "user" ? userName : assistantName}
-          />
-          <AvatarFallback>
-            {message.role === "user" ? (
-              <User className="h-4 w-4" />
-            ) : (
-              <Bot className="h-4 w-4" />
-            )}
-          </AvatarFallback>
-        </Avatar>
-      )}
+    return (
+      <div
+        ref={ref}
+        className={cn(messageVariants({ role: message.role }), className)}
+        {...props}
+      >
+        {showAvatar && message.role !== "system" && (
+          <Avatar className="h-8 w-8 shrink-0">
+            <AvatarImage
+              src={message.role === "user" ? userAvatar : assistantAvatar}
+              alt={message.role === "user" ? userName : assistantName}
+            />
+            <AvatarFallback>
+              {message.role === "user" ? (
+                <User className="h-4 w-4" />
+              ) : (
+                <Bot className="h-4 w-4" />
+              )}
+            </AvatarFallback>
+          </Avatar>
+        )}
 
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {showTimestamp && (
-              <time className="text-xs text-muted-foreground">
-                {format(message.timestamp, "HH:mm")}
-              </time>
-            )}
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {showTimestamp && (
+                <time className="text-xs text-muted-foreground">
+                  {format(message.timestamp, "HH:mm")}
+                </time>
+              )}
+              {message.role !== "system" && (
+                <span className="text-xs font-medium">
+                  {message.role === "user"
+                    ? userName || "You"
+                    : assistantName || "AI Assistant"}
+                </span>
+              )}
+            </div>
+
             {message.role !== "system" && (
-              <span className="text-xs font-medium">
-                {message.role === "user"
-                  ? userName || "You"
-                  : assistantName || "AI Assistant"
-                }
-              </span>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                  >
+                    <MoreHorizontal className="h-3 w-3" />
+                    <span className="sr-only">Message actions</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleCopy}>
+                    <Copy className="mr-2 h-3 w-3" />
+                    {isCopied ? "Copied!" : "Copy"}
+                  </DropdownMenuItem>
+                  {message.role === "assistant" && onRegenerate && (
+                    <DropdownMenuItem onClick={handleRegenerate}>
+                      <RotateCcw className="mr-2 h-3 w-3" />
+                      Regenerate
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
 
-          {message.role !== "system" && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+          <div
+            className="prose prose-sm max-w-none dark:prose-invert"
+            dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}
+          />
+
+          {message.attachments && message.attachments.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {message.attachments.map((attachment) => (
+                <Badge
+                  key={attachment.id}
+                  variant="secondary"
+                  className="gap-1"
                 >
-                  <MoreHorizontal className="h-3 w-3" />
-                  <span className="sr-only">Message actions</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleCopy}>
-                  <Copy className="mr-2 h-3 w-3" />
-                  {isCopied ? "Copied!" : "Copy"}
-                </DropdownMenuItem>
-                {message.role === "assistant" && onRegenerate && (
-                  <DropdownMenuItem onClick={handleRegenerate}>
-                    <RotateCcw className="mr-2 h-3 w-3" />
-                    Regenerate
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  <Paperclip className="h-3 w-3" />
+                  {attachment.name}
+                </Badge>
+              ))}
+            </div>
           )}
+
+          {message.isGenerating && <TypingIndicator className="mt-2" />}
         </div>
-
-        <div
-          className="prose prose-sm max-w-none dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}
-        />
-
-        {message.attachments && message.attachments.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {message.attachments.map((attachment) => (
-              <Badge key={attachment.id} variant="secondary" className="gap-1">
-                <Paperclip className="h-3 w-3" />
-                {attachment.name}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {message.isGenerating && (
-          <TypingIndicator className="mt-2" />
-        )}
       </div>
-    </div>
-  )
-})
+    )
+  }
+)
 ChatMessageComponent.displayName = "ChatMessage"
 
 // Attachment preview component
@@ -266,8 +292,7 @@ const AttachmentPreview = React.forwardRef<
         className="h-6 w-6"
         onClick={() => onRemove(attachment.id)}
       >
-        <span className="sr-only">Remove attachment</span>
-        ×
+        <span className="sr-only">Remove attachment</span>×
       </Button>
     )}
   </div>
@@ -276,28 +301,31 @@ AttachmentPreview.displayName = "AttachmentPreview"
 
 // Main AI Chat component
 const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
-  ({
-    messages = [],
-    onSendMessage,
-    onRegenerateMessage,
-    onCopyMessage,
-    isGenerating = false,
-    placeholder = "Type your message...",
-    maxLength = 4000,
-    disabled = false,
-    showTimestamps = true,
-    showAvatars = true,
-    userAvatar,
-    assistantAvatar,
-    userName,
-    assistantName,
-    allowAttachments = true,
-    maxAttachments = 5,
-    maxAttachmentSize = 10 * 1024 * 1024, // 10MB
-    acceptedFileTypes = ["image/*", ".pdf", ".txt", ".doc", ".docx"],
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      messages = [],
+      onSendMessage,
+      onRegenerateMessage,
+      onCopyMessage,
+      isGenerating = false,
+      placeholder = "Type your message...",
+      maxLength = 4000,
+      disabled = false,
+      showTimestamps = true,
+      showAvatars = true,
+      userAvatar,
+      assistantAvatar,
+      userName,
+      assistantName,
+      allowAttachments = true,
+      maxAttachments = 5,
+      maxAttachmentSize = 10 * 1024 * 1024, // 10MB
+      acceptedFileTypes = ["image/*", ".pdf", ".txt", ".doc", ".docx"],
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const [input, setInput] = React.useState("")
     const [attachments, setAttachments] = React.useState<ChatAttachment[]>([])
     const scrollAreaRef = React.useRef<HTMLDivElement>(null)
@@ -307,7 +335,9 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
     // Auto-scroll to bottom when new messages arrive
     React.useEffect(() => {
       if (scrollAreaRef.current) {
-        const scrollElement = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]')
+        const scrollElement = scrollAreaRef.current.querySelector(
+          "[data-radix-scroll-area-viewport]"
+        )
         if (scrollElement) {
           scrollElement.scrollTop = scrollElement.scrollHeight
         }
@@ -341,7 +371,7 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
         })
       }
 
-      setAttachments(prev => [...prev, ...newAttachments])
+      setAttachments((prev) => [...prev, ...newAttachments])
 
       // Reset file input
       if (fileInputRef.current) {
@@ -374,7 +404,7 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
 
     // Remove attachment
     const removeAttachment = (id: string) => {
-      setAttachments(prev => prev.filter(att => att.id !== id))
+      setAttachments((prev) => prev.filter((att) => att.id !== id))
     }
 
     // Handle copy
@@ -467,7 +497,11 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
                   variant="outline"
                   size="icon"
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={disabled || isGenerating || attachments.length >= maxAttachments}
+                  disabled={
+                    disabled ||
+                    isGenerating ||
+                    attachments.length >= maxAttachments
+                  }
                 >
                   <Paperclip className="h-4 w-4" />
                   <span className="sr-only">Attach file</span>
@@ -475,7 +509,11 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
               )}
               <Button
                 onClick={handleSend}
-                disabled={disabled || isGenerating || (!input.trim() && attachments.length === 0)}
+                disabled={
+                  disabled ||
+                  isGenerating ||
+                  (!input.trim() && attachments.length === 0)
+                }
                 size="icon"
               >
                 <Send className="h-4 w-4" />
@@ -516,5 +554,5 @@ export {
   AttachmentPreview,
   type ChatMessage as ChatMessageType,
   type ChatAttachment,
-  type AIChatProps
+  type AIChatProps,
 }

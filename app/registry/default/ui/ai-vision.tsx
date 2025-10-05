@@ -3,47 +3,58 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import {
+  BarChart3,
   Camera,
-  Upload,
-  Link,
-  Download,
   Copy,
+  Download,
   Eye,
+  FileText,
+  Link,
+  Loader2,
+  Move,
+  Palette,
+  RotateCw,
+  Smile,
+  Square,
+  Tag,
   Target,
   Type,
-  Palette,
-  Tag,
-  Smile,
-  BarChart3,
-  FileText,
-  Loader2,
+  Upload,
   X,
   ZoomIn,
   ZoomOut,
-  RotateCw,
-  Move,
-  Square
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Input } from "@/registry/default/ui/input"
-import { Textarea } from "@/registry/default/ui/textarea"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/default/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
 import { Badge } from "@/registry/default/ui/badge"
-import { Separator } from "@/registry/default/ui/separator"
-import { ScrollArea } from "@/registry/default/ui/scroll-area"
-import { Slider } from "@/registry/default/ui/slider"
-import { Switch } from "@/registry/default/ui/switch"
-import { Label } from "@/registry/default/ui/label"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuSeparator
 } from "@/registry/default/ui/dropdown-menu"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import { Separator } from "@/registry/default/ui/separator"
+import { Slider } from "@/registry/default/ui/slider"
+import { Switch } from "@/registry/default/ui/switch"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 // Types
 export type VisionCapability =
@@ -142,7 +153,7 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
   showBoundingBoxes,
   showConfidence,
   minConfidence,
-  selectedTypes
+  selectedTypes,
 }) => {
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
@@ -163,10 +174,14 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
     // Draw bounding boxes
-    if (showBoundingBoxes && results.objects && selectedTypes.includes("objects")) {
+    if (
+      showBoundingBoxes &&
+      results.objects &&
+      selectedTypes.includes("objects")
+    ) {
       results.objects
-        .filter(obj => obj.confidence >= minConfidence)
-        .forEach(obj => {
+        .filter((obj) => obj.confidence >= minConfidence)
+        .forEach((obj) => {
           ctx.strokeStyle = obj.color || "#3b82f6"
           ctx.lineWidth = 3
           ctx.strokeRect(obj.x, obj.y, obj.width, obj.height)
@@ -187,8 +202,8 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
     // Draw text regions
     if (showBoundingBoxes && results.text && selectedTypes.includes("text")) {
       results.text
-        .filter(text => text.confidence >= minConfidence)
-        .forEach(textItem => {
+        .filter((text) => text.confidence >= minConfidence)
+        .forEach((textItem) => {
           ctx.strokeStyle = "#10b981"
           ctx.lineWidth = 2
           ctx.strokeRect(
@@ -202,9 +217,18 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
             ctx.fillStyle = "#10b981"
             ctx.font = "12px Inter, sans-serif"
             const text = `OCR (${Math.round(textItem.confidence * 100)}%)`
-            ctx.fillRect(textItem.boundingBox.x, textItem.boundingBox.y - 20, 80, 20)
+            ctx.fillRect(
+              textItem.boundingBox.x,
+              textItem.boundingBox.y - 20,
+              80,
+              20
+            )
             ctx.fillStyle = "white"
-            ctx.fillText(text, textItem.boundingBox.x + 5, textItem.boundingBox.y - 6)
+            ctx.fillText(
+              text,
+              textItem.boundingBox.x + 5,
+              textItem.boundingBox.y - 6
+            )
           }
         })
     }
@@ -212,8 +236,8 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
     // Draw face detection
     if (showBoundingBoxes && results.faces && selectedTypes.includes("faces")) {
       results.faces
-        .filter(face => face.confidence >= minConfidence)
-        .forEach(face => {
+        .filter((face) => face.confidence >= minConfidence)
+        .forEach((face) => {
           ctx.strokeStyle = "#f59e0b"
           ctx.lineWidth = 3
           ctx.strokeRect(
@@ -229,7 +253,12 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
             const text = `Face (${Math.round(face.confidence * 100)}%)`
             const textWidth = ctx.measureText(text).width
 
-            ctx.fillRect(face.boundingBox.x, face.boundingBox.y - 25, textWidth + 10, 25)
+            ctx.fillRect(
+              face.boundingBox.x,
+              face.boundingBox.y - 25,
+              textWidth + 10,
+              25
+            )
             ctx.fillStyle = "white"
             ctx.fillText(text, face.boundingBox.x + 5, face.boundingBox.y - 8)
           }
@@ -237,7 +266,7 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
           // Draw landmarks if available
           if (face.landmarks) {
             ctx.fillStyle = "#f59e0b"
-            face.landmarks.forEach(landmark => {
+            face.landmarks.forEach((landmark) => {
               ctx.beginPath()
               ctx.arc(landmark.x, landmark.y, 2, 0, 2 * Math.PI)
               ctx.fill()
@@ -245,7 +274,14 @@ const CanvasOverlay: React.FC<CanvasOverlayProps> = ({
           }
         })
     }
-  }, [imageRef, results, showBoundingBoxes, showConfidence, minConfidence, selectedTypes])
+  }, [
+    imageRef,
+    results,
+    showBoundingBoxes,
+    showConfidence,
+    minConfidence,
+    selectedTypes,
+  ])
 
   return (
     <canvas
@@ -266,7 +302,11 @@ interface ResultsPanelProps {
   onExport: (format: "json" | "pdf") => void
 }
 
-const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExport }) => {
+const ResultsPanel: React.FC<ResultsPanelProps> = ({
+  results,
+  isAnalyzing,
+  onExport,
+}) => {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
   }
@@ -292,7 +332,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <Eye className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Upload an image to see analysis results</p>
+          <p className="text-sm text-muted-foreground">
+            Upload an image to see analysis results
+          </p>
         </div>
       </div>
     )
@@ -393,7 +435,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Confidence:</span>
-                    <span className="text-sm">{Math.round(results.sentiment.confidence * 100)}%</span>
+                    <span className="text-sm">
+                      {Math.round(results.sentiment.confidence * 100)}%
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -414,14 +458,17 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                             className="w-3 h-3 rounded-sm"
                             style={{ backgroundColor: obj.color || "#3b82f6" }}
                           />
-                          <span className="text-sm font-medium">{obj.label}</span>
+                          <span className="text-sm font-medium">
+                            {obj.label}
+                          </span>
                         </div>
                         <Badge variant="outline">
                           {Math.round(obj.confidence * 100)}%
                         </Badge>
                       </div>
                       <div className="text-xs text-muted-foreground mt-1">
-                        Position: ({obj.x}, {obj.y}) Size: {obj.width}×{obj.height}
+                        Position: ({obj.x}, {obj.y}) Size: {obj.width}×
+                        {obj.height}
                       </div>
                     </CardContent>
                   </Card>
@@ -431,7 +478,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
           ) : (
             <div className="text-center py-8">
               <Target className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">No objects detected</p>
+              <p className="text-sm text-muted-foreground">
+                No objects detected
+              </p>
             </div>
           )}
         </TabsContent>
@@ -493,10 +542,14 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                       <div className="flex-1">
                         <div className="text-sm font-medium">{color.color}</div>
                         {color.name && (
-                          <div className="text-xs text-muted-foreground">{color.name}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {color.name}
+                          </div>
                         )}
                       </div>
-                      <div className="text-sm">{color.percentage.toFixed(1)}%</div>
+                      <div className="text-sm">
+                        {color.percentage.toFixed(1)}%
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -518,24 +571,31 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                   {results.faces.map((face, index) => (
                     <div key={index} className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Face {index + 1}</span>
+                        <span className="text-sm font-medium">
+                          Face {index + 1}
+                        </span>
                         <Badge variant="outline">
                           {Math.round(face.confidence * 100)}%
                         </Badge>
                       </div>
                       {face.age && (
                         <div className="text-sm">
-                          <span className="text-muted-foreground">Age:</span> ~{face.age}
+                          <span className="text-muted-foreground">Age:</span> ~
+                          {face.age}
                         </div>
                       )}
                       {face.gender && (
                         <div className="text-sm">
-                          <span className="text-muted-foreground">Gender:</span> {face.gender}
+                          <span className="text-muted-foreground">Gender:</span>{" "}
+                          {face.gender}
                         </div>
                       )}
                       {face.emotion && (
                         <div className="text-sm">
-                          <span className="text-muted-foreground">Emotion:</span> {face.emotion}
+                          <span className="text-muted-foreground">
+                            Emotion:
+                          </span>{" "}
+                          {face.emotion}
                         </div>
                       )}
                     </div>
@@ -558,7 +618,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Dimensions:</span>
-                    <span>{results.metadata.width} × {results.metadata.height}</span>
+                    <span>
+                      {results.metadata.width} × {results.metadata.height}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Format:</span>
@@ -566,7 +628,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Size:</span>
-                    <span>{(results.metadata.size / 1024 / 1024).toFixed(2)} MB</span>
+                    <span>
+                      {(results.metadata.size / 1024 / 1024).toFixed(2)} MB
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -580,32 +644,48 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({ results, isAnalyzing, onExp
 
 // Main AI Vision component
 export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
-  ({
-    className,
-    onAnalysis,
-    capabilities = ["object-detection", "scene-description", "ocr", "color-analysis", "tagging"],
-    maxFileSize = 10 * 1024 * 1024, // 10MB
-    acceptedFormats = ["image/jpeg", "image/png", "image/webp", "image/gif"],
-    apiEndpoint = "/api/vision",
-    apiKey,
-    defaultImage,
-    enableCamera = true,
-    enableUrl = true,
-    enableGeneration = false,
-    enableEditing = false,
-    showConfidence = true,
-    minConfidence = 0.5,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      onAnalysis,
+      capabilities = [
+        "object-detection",
+        "scene-description",
+        "ocr",
+        "color-analysis",
+        "tagging",
+      ],
+      maxFileSize = 10 * 1024 * 1024, // 10MB
+      acceptedFormats = ["image/jpeg", "image/png", "image/webp", "image/gif"],
+      apiEndpoint = "/api/vision",
+      apiKey,
+      defaultImage,
+      enableCamera = true,
+      enableUrl = true,
+      enableGeneration = false,
+      enableEditing = false,
+      showConfidence = true,
+      minConfidence = 0.5,
+      ...props
+    },
+    ref
+  ) => {
     // State
-    const [currentImage, setCurrentImage] = React.useState<string | null>(defaultImage || null)
+    const [currentImage, setCurrentImage] = React.useState<string | null>(
+      defaultImage || null
+    )
     const [isAnalyzing, setIsAnalyzing] = React.useState(false)
     const [results, setResults] = React.useState<VisionResults | null>(null)
     const [isDragging, setIsDragging] = React.useState(false)
     const [urlInput, setUrlInput] = React.useState("")
     const [showBoundingBoxes, setShowBoundingBoxes] = React.useState(true)
-    const [confidenceThreshold, setConfidenceThreshold] = React.useState(minConfidence)
-    const [selectedTypes, setSelectedTypes] = React.useState<string[]>(["objects", "text", "faces"])
+    const [confidenceThreshold, setConfidenceThreshold] =
+      React.useState(minConfidence)
+    const [selectedTypes, setSelectedTypes] = React.useState<string[]>([
+      "objects",
+      "text",
+      "faces",
+    ])
     const [generationPrompt, setGenerationPrompt] = React.useState("")
     const [isGenerating, setIsGenerating] = React.useState(false)
 
@@ -620,7 +700,7 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
       setIsAnalyzing(true)
 
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       // Mock results - replace with actual API call
       const mockResults: VisionResults = {
@@ -632,7 +712,7 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
             height: 150,
             confidence: 0.95,
             label: "Person",
-            color: "#3b82f6"
+            color: "#3b82f6",
           },
           {
             x: 350,
@@ -641,10 +721,11 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
             height: 80,
             confidence: 0.87,
             label: "Car",
-            color: "#ef4444"
-          }
+            color: "#ef4444",
+          },
         ],
-        description: "A street scene with a person walking next to a parked car. The image appears to be taken during daytime with good lighting conditions.",
+        description:
+          "A street scene with a person walking next to a parked car. The image appears to be taken during daytime with good lighting conditions.",
         text: [
           {
             text: "STOP",
@@ -655,21 +736,21 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
               width: 80,
               height: 30,
               confidence: 0.96,
-              label: "STOP"
-            }
-          }
+              label: "STOP",
+            },
+          },
         ],
         colors: [
           { color: "#2563eb", percentage: 25.3, name: "Blue" },
           { color: "#dc2626", percentage: 18.7, name: "Red" },
           { color: "#16a34a", percentage: 15.2, name: "Green" },
-          { color: "#6b7280", percentage: 41.8, name: "Gray" }
+          { color: "#6b7280", percentage: 41.8, name: "Gray" },
         ],
         tags: [
           { label: "outdoor", confidence: 0.98 },
           { label: "street", confidence: 0.92 },
           { label: "urban", confidence: 0.85 },
-          { label: "daytime", confidence: 0.89 }
+          { label: "daytime", confidence: 0.89 },
         ],
         faces: [
           {
@@ -679,26 +760,26 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
               width: 60,
               height: 80,
               confidence: 0.94,
-              label: "Face"
+              label: "Face",
             },
             confidence: 0.94,
             age: 35,
             gender: "male",
-            emotion: "neutral"
-          }
+            emotion: "neutral",
+          },
         ],
         sentiment: {
           emotion: "neutral",
           confidence: 0.76,
           valence: 0.2,
-          arousal: 0.1
+          arousal: 0.1,
         },
         metadata: {
           width: 800,
           height: 600,
           format: "jpeg",
-          size: 1024 * 500 // 500KB
-        }
+          size: 1024 * 500, // 500KB
+        },
       }
 
       setIsAnalyzing(false)
@@ -758,7 +839,7 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
     const startCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: 640, height: 480 }
+          video: { width: 640, height: 480 },
         })
         if (videoRef.current) {
           videoRef.current.srcObject = stream
@@ -785,11 +866,11 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
 
       // Stop camera
       const stream = video.srcObject as MediaStream
-      stream?.getTracks().forEach(track => track.stop())
+      stream?.getTracks().forEach((track) => track.stop())
       setIsCameraActive(false)
 
       // Analyze captured image
-      analyzeImage(imageData).then(results => {
+      analyzeImage(imageData).then((results) => {
         setResults(results)
         onAnalysis?.(results)
       })
@@ -818,7 +899,7 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
 
       setIsGenerating(true)
       // Simulate generation delay
-      await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise((resolve) => setTimeout(resolve, 3000))
 
       // Mock generated image URL
       const generatedUrl = `https://picsum.photos/800/600?random=${Date.now()}`
@@ -851,7 +932,11 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
     }
 
     return (
-      <div ref={ref} className={cn("flex flex-col h-full", className)} {...props}>
+      <div
+        ref={ref}
+        className={cn("flex flex-col h-full", className)}
+        {...props}
+      >
         {/* Header */}
         <div className="border-b p-4">
           <div className="flex items-center justify-between">
@@ -883,15 +968,21 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                 <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="upload">Upload</TabsTrigger>
                   {enableUrl && <TabsTrigger value="url">URL</TabsTrigger>}
-                  {enableCamera && <TabsTrigger value="camera">Camera</TabsTrigger>}
-                  {enableGeneration && <TabsTrigger value="generate">Generate</TabsTrigger>}
+                  {enableCamera && (
+                    <TabsTrigger value="camera">Camera</TabsTrigger>
+                  )}
+                  {enableGeneration && (
+                    <TabsTrigger value="generate">Generate</TabsTrigger>
+                  )}
                 </TabsList>
 
                 <TabsContent value="upload" className="mt-4">
                   <div
                     className={cn(
                       "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-                      isDragging ? "border-primary bg-primary/10" : "border-muted-foreground/25",
+                      isDragging
+                        ? "border-primary bg-primary/10"
+                        : "border-muted-foreground/25",
                       "hover:border-primary/50"
                     )}
                     onDragOver={handleDragOver}
@@ -904,7 +995,8 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                       Drop an image here or click to upload
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Supports: {acceptedFormats.map(f => f.split("/")[1]).join(", ")}
+                      Supports:{" "}
+                      {acceptedFormats.map((f) => f.split("/")[1]).join(", ")}
                       (Max: {maxFileSize / 1024 / 1024}MB)
                     </p>
                     <input
@@ -924,9 +1016,14 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                         placeholder="Enter image URL..."
                         value={urlInput}
                         onChange={(e) => setUrlInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleUrlSubmit()}
+                        onKeyDown={(e) =>
+                          e.key === "Enter" && handleUrlSubmit()
+                        }
                       />
-                      <Button onClick={handleUrlSubmit} disabled={!urlInput.trim()}>
+                      <Button
+                        onClick={handleUrlSubmit}
+                        disabled={!urlInput.trim()}
+                      >
                         <Link className="h-4 w-4" />
                       </Button>
                     </div>
@@ -1000,7 +1097,7 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                       // Trigger canvas redraw when image loads
                       if (results) {
                         // Force re-render of canvas overlay
-                        setShowBoundingBoxes(prev => !prev)
+                        setShowBoundingBoxes((prev) => !prev)
                         setTimeout(() => setShowBoundingBoxes(true), 10)
                       }
                     }}
@@ -1020,7 +1117,9 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                 <div className="h-full border-2 border-dashed rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <Eye className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-lg font-medium mb-2">No image selected</p>
+                    <p className="text-lg font-medium mb-2">
+                      No image selected
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       Upload an image to start analysis
                     </p>
@@ -1037,7 +1136,8 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                 {/* Confidence Threshold */}
                 <div className="space-y-2">
                   <Label className="text-sm">
-                    Confidence Threshold: {Math.round(confidenceThreshold * 100)}%
+                    Confidence Threshold:{" "}
+                    {Math.round(confidenceThreshold * 100)}%
                   </Label>
                   <Slider
                     value={[confidenceThreshold]}
@@ -1056,16 +1156,18 @@ export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
                     {[
                       { key: "objects", label: "Objects", icon: Target },
                       { key: "text", label: "Text", icon: Type },
-                      { key: "faces", label: "Faces", icon: Smile }
+                      { key: "faces", label: "Faces", icon: Smile },
                     ].map(({ key, label, icon: Icon }) => (
                       <Button
                         key={key}
-                        variant={selectedTypes.includes(key) ? "default" : "outline"}
+                        variant={
+                          selectedTypes.includes(key) ? "default" : "outline"
+                        }
                         size="sm"
                         onClick={() => {
-                          setSelectedTypes(prev =>
+                          setSelectedTypes((prev) =>
                             prev.includes(key)
-                              ? prev.filter(t => t !== key)
+                              ? prev.filter((t) => t !== key)
                               : [...prev, key]
                           )
                         }}

@@ -1,10 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { motion, AnimatePresence } from "motion"
+import { AnimatePresence, motion } from "motion"
+
 import { cn } from "@/lib/utils"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/registry/default/ui/avatar"
 import { Card, CardContent } from "@/registry/default/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
 
 interface Testimonial {
   id: string
@@ -15,14 +20,21 @@ interface Testimonial {
   avatar?: string
 }
 
-interface AnimatedTestimonialsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AnimatedTestimonialsProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   testimonials: Testimonial[]
   autoPlay?: boolean
   duration?: number
 }
 
-const AnimatedTestimonials = React.forwardRef<HTMLDivElement, AnimatedTestimonialsProps>(
-  ({ className, testimonials, autoPlay = true, duration = 5000, ...props }, ref) => {
+const AnimatedTestimonials = React.forwardRef<
+  HTMLDivElement,
+  AnimatedTestimonialsProps
+>(
+  (
+    { className, testimonials, autoPlay = true, duration = 5000, ...props },
+    ref
+  ) => {
     const [activeIndex, setActiveIndex] = React.useState(0)
 
     React.useEffect(() => {
@@ -36,7 +48,11 @@ const AnimatedTestimonials = React.forwardRef<HTMLDivElement, AnimatedTestimonia
     }, [autoPlay, duration, testimonials.length])
 
     return (
-      <div ref={ref} className={cn("relative min-h-[200px]", className)} {...props}>
+      <div
+        ref={ref}
+        className={cn("relative min-h-[200px]", className)}
+        {...props}
+      >
         <AnimatePresence mode="wait">
           <motion.div
             key={activeIndex}
@@ -55,7 +71,9 @@ const AnimatedTestimonials = React.forwardRef<HTMLDivElement, AnimatedTestimonia
                     <Avatar>
                       <AvatarImage src={testimonials[activeIndex].avatar} />
                       <AvatarFallback>
-                        {testimonials[activeIndex].author.slice(0, 2).toUpperCase()}
+                        {testimonials[activeIndex].author
+                          .slice(0, 2)
+                          .toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -65,7 +83,8 @@ const AnimatedTestimonials = React.forwardRef<HTMLDivElement, AnimatedTestimonia
                       {testimonials[activeIndex].role && (
                         <p className="text-sm text-muted-foreground">
                           {testimonials[activeIndex].role}
-                          {testimonials[activeIndex].company && `, ${testimonials[activeIndex].company}`}
+                          {testimonials[activeIndex].company &&
+                            `, ${testimonials[activeIndex].company}`}
                         </p>
                       )}
                     </div>

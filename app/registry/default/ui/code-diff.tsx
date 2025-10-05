@@ -2,7 +2,15 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Check, Copy, GitCompare, Minus, Plus, SplitSquareHorizontal, Square } from "lucide-react"
+import {
+  Check,
+  Copy,
+  GitCompare,
+  Minus,
+  Plus,
+  SplitSquareHorizontal,
+  Square,
+} from "lucide-react"
 import { codeToHtml } from "shiki"
 
 import { cn } from "@/lib/utils"
@@ -10,7 +18,10 @@ import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import { Separator } from "@/registry/default/ui/separator"
 import { Skeleton } from "@/registry/default/ui/skeleton"
-import { ToggleGroup, ToggleGroupItem } from "@/registry/default/ui/toggle-group"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/default/ui/toggle-group"
 
 const codeDiffVariants = cva(
   "relative overflow-hidden rounded-lg border bg-muted/50",
@@ -67,81 +78,83 @@ interface DiffLineProps {
   highlightedContent?: string
 }
 
-const DiffLine = React.memo(({
-  change,
-  showLineNumbers,
-  isUnified = false,
-  highlightedContent
-}: DiffLineProps) => {
-  const getLineClasses = () => {
-    const base = "group relative flex min-h-[1.5rem] items-center py-0.5"
+const DiffLine = React.memo(
+  ({
+    change,
+    showLineNumbers,
+    isUnified = false,
+    highlightedContent,
+  }: DiffLineProps) => {
+    const getLineClasses = () => {
+      const base = "group relative flex min-h-[1.5rem] items-center py-0.5"
 
-    if (isUnified) {
+      if (isUnified) {
+        switch (change.type) {
+          case "add":
+            return cn(base, "bg-green-500/10 border-l-2 border-l-green-500")
+          case "remove":
+            return cn(base, "bg-red-500/10 border-l-2 border-l-red-500")
+          default:
+            return cn(base, "hover:bg-muted/50")
+        }
+      }
+
+      return cn(base, "hover:bg-muted/50")
+    }
+
+    const getLinePrefix = () => {
+      if (!isUnified) return null
+
       switch (change.type) {
         case "add":
-          return cn(base, "bg-green-500/10 border-l-2 border-l-green-500")
+          return <Plus className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
         case "remove":
-          return cn(base, "bg-red-500/10 border-l-2 border-l-red-500")
+          return <Minus className="h-3 w-3 text-red-500 mr-2 flex-shrink-0" />
         default:
-          return cn(base, "hover:bg-muted/50")
+          return <span className="w-3 mr-2 flex-shrink-0" />
       }
     }
 
-    return cn(base, "hover:bg-muted/50")
-  }
-
-  const getLinePrefix = () => {
-    if (!isUnified) return null
-
-    switch (change.type) {
-      case "add":
-        return <Plus className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />
-      case "remove":
-        return <Minus className="h-3 w-3 text-red-500 mr-2 flex-shrink-0" />
-      default:
-        return <span className="w-3 mr-2 flex-shrink-0" />
-    }
-  }
-
-  return (
-    <div className={getLineClasses()}>
-      <div className="flex items-center px-4 w-full">
-        {showLineNumbers && (
-          <div className="flex items-center gap-2 mr-4">
-            {!isUnified ? (
-              <>
+    return (
+      <div className={getLineClasses()}>
+        <div className="flex items-center px-4 w-full">
+          {showLineNumbers && (
+            <div className="flex items-center gap-2 mr-4">
+              {!isUnified ? (
+                <>
+                  <span className="inline-block w-8 select-none text-right text-xs text-muted-foreground">
+                    {change.oldLineNumber || ""}
+                  </span>
+                  <span className="inline-block w-8 select-none text-right text-xs text-muted-foreground">
+                    {change.newLineNumber || ""}
+                  </span>
+                </>
+              ) : (
                 <span className="inline-block w-8 select-none text-right text-xs text-muted-foreground">
-                  {change.oldLineNumber || ""}
+                  {change.lineNumber}
                 </span>
-                <span className="inline-block w-8 select-none text-right text-xs text-muted-foreground">
-                  {change.newLineNumber || ""}
-                </span>
-              </>
-            ) : (
-              <span className="inline-block w-8 select-none text-right text-xs text-muted-foreground">
-                {change.lineNumber}
-              </span>
-            )}
-          </div>
-        )}
-        {getLinePrefix()}
-        <div
-          className="flex-1 overflow-x-auto font-mono"
-          dangerouslySetInnerHTML={{
-            __html: highlightedContent || change.content
-          }}
-        />
+              )}
+            </div>
+          )}
+          {getLinePrefix()}
+          <div
+            className="flex-1 overflow-x-auto font-mono"
+            dangerouslySetInnerHTML={{
+              __html: highlightedContent || change.content,
+            }}
+          />
+        </div>
       </div>
-    </div>
-  )
-})
+    )
+  }
+)
 
 DiffLine.displayName = "DiffLine"
 
 // Simple diff algorithm to generate changes
 function generateDiff(oldCode: string, newCode: string): DiffChange[] {
-  const oldLines = oldCode.split('\n')
-  const newLines = newCode.split('\n')
+  const oldLines = oldCode.split("\n")
+  const newLines = newCode.split("\n")
   const changes: DiffChange[] = []
 
   let oldIndex = 0
@@ -158,7 +171,7 @@ function generateDiff(oldCode: string, newCode: string): DiffChange[] {
         type: "add",
         lineNumber: lineNumber++,
         content: newLine,
-        newLineNumber: newIndex + 1
+        newLineNumber: newIndex + 1,
       })
       newIndex++
     } else if (newIndex >= newLines.length) {
@@ -167,7 +180,7 @@ function generateDiff(oldCode: string, newCode: string): DiffChange[] {
         type: "remove",
         lineNumber: lineNumber++,
         content: oldLine,
-        oldLineNumber: oldIndex + 1
+        oldLineNumber: oldIndex + 1,
       })
       oldIndex++
     } else if (oldLine === newLine) {
@@ -177,7 +190,7 @@ function generateDiff(oldCode: string, newCode: string): DiffChange[] {
         lineNumber: lineNumber++,
         content: oldLine,
         oldLineNumber: oldIndex + 1,
-        newLineNumber: newIndex + 1
+        newLineNumber: newIndex + 1,
       })
       oldIndex++
       newIndex++
@@ -187,13 +200,13 @@ function generateDiff(oldCode: string, newCode: string): DiffChange[] {
         type: "remove",
         lineNumber: lineNumber++,
         content: oldLine,
-        oldLineNumber: oldIndex + 1
+        oldLineNumber: oldIndex + 1,
       })
       changes.push({
         type: "add",
         lineNumber: lineNumber++,
         content: newLine,
-        newLineNumber: newIndex + 1
+        newLineNumber: newIndex + 1,
       })
       oldIndex++
       newIndex++
@@ -204,29 +217,34 @@ function generateDiff(oldCode: string, newCode: string): DiffChange[] {
 }
 
 const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
-  ({
-    className,
-    theme,
-    size,
-    oldCode,
-    newCode,
-    language = "text",
-    filename,
-    oldFilename,
-    newFilename,
-    showLineNumbers = true,
-    showCopyButton = true,
-    maxHeight = "500px",
-    defaultView = "unified",
-    collapseUnchanged = false,
-    contextLines = 3,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      theme,
+      size,
+      oldCode,
+      newCode,
+      language = "text",
+      filename,
+      oldFilename,
+      newFilename,
+      showLineNumbers = true,
+      showCopyButton = true,
+      maxHeight = "500px",
+      defaultView = "unified",
+      collapseUnchanged = false,
+      contextLines = 3,
+      ...props
+    },
+    ref
+  ) => {
     const [view, setView] = React.useState<"unified" | "split">(defaultView)
     const [copied, setCopied] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(true)
-    const [highlightedOldCode, setHighlightedOldCode] = React.useState<string>("")
-    const [highlightedNewCode, setHighlightedNewCode] = React.useState<string>("")
+    const [highlightedOldCode, setHighlightedOldCode] =
+      React.useState<string>("")
+    const [highlightedNewCode, setHighlightedNewCode] =
+      React.useState<string>("")
     const [changes, setChanges] = React.useState<DiffChange[]>([])
 
     const themeMap = {
@@ -248,14 +266,14 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
             codeToHtml(newCode, {
               lang: language,
               theme: themeMap[theme || "dark"],
-            })
+            }),
           ])
 
           // Extract just the inner HTML content
           const extractContent = (html: string) => {
-            const tempDiv = document.createElement('div')
+            const tempDiv = document.createElement("div")
             tempDiv.innerHTML = html
-            const codeElement = tempDiv.querySelector('code')
+            const codeElement = tempDiv.querySelector("code")
             return codeElement?.innerHTML || html
           }
 
@@ -266,7 +284,7 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
           const diffChanges = generateDiff(oldCode, newCode)
           setChanges(diffChanges)
         } catch (error) {
-          console.error('Failed to highlight code:', error)
+          console.error("Failed to highlight code:", error)
           setHighlightedOldCode(oldCode)
           setHighlightedNewCode(newCode)
           setChanges(generateDiff(oldCode, newCode))
@@ -280,18 +298,26 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
 
     const copyToClipboard = React.useCallback(async () => {
       try {
-        const diffText = view === "unified"
-          ? changes.map(change => {
-              const prefix = change.type === "add" ? "+" : change.type === "remove" ? "-" : " "
-              return `${prefix}${change.content}`
-            }).join('\n')
-          : `--- ${oldFilename || 'old'}\n+++ ${newFilename || 'new'}\n${oldCode}\n\n${newCode}`
+        const diffText =
+          view === "unified"
+            ? changes
+                .map((change) => {
+                  const prefix =
+                    change.type === "add"
+                      ? "+"
+                      : change.type === "remove"
+                        ? "-"
+                        : " "
+                  return `${prefix}${change.content}`
+                })
+                .join("\n")
+            : `--- ${oldFilename || "old"}\n+++ ${newFilename || "new"}\n${oldCode}\n\n${newCode}`
 
         await navigator.clipboard.writeText(diffText)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       } catch (error) {
-        console.error('Failed to copy diff:', error)
+        console.error("Failed to copy diff:", error)
       }
     }, [changes, view, oldCode, newCode, oldFilename, newFilename])
 
@@ -347,14 +373,14 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
     }, [changes, collapseUnchanged, contextLines])
 
     const stats = React.useMemo(() => {
-      const additions = changes.filter(c => c.type === "add").length
-      const deletions = changes.filter(c => c.type === "remove").length
+      const additions = changes.filter((c) => c.type === "add").length
+      const deletions = changes.filter((c) => c.type === "remove").length
       return { additions, deletions }
     }, [changes])
 
     const renderUnifiedView = () => {
-      const oldLines = highlightedOldCode.split('\n')
-      const newLines = highlightedNewCode.split('\n')
+      const oldLines = highlightedOldCode.split("\n")
+      const newLines = highlightedNewCode.split("\n")
 
       return (
         <div className="font-mono">
@@ -362,7 +388,10 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
             if (change.lineNumber === -1) {
               // Collapse indicator
               return (
-                <div key={index} className="flex items-center justify-center py-2 text-muted-foreground bg-muted/30">
+                <div
+                  key={index}
+                  className="flex items-center justify-center py-2 text-muted-foreground bg-muted/30"
+                >
                   <span className="text-xs">{change.content}</span>
                 </div>
               )
@@ -370,11 +399,14 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
 
             let highlightedContent = change.content
             if (change.type === "add" && change.newLineNumber) {
-              highlightedContent = newLines[change.newLineNumber - 1] || change.content
+              highlightedContent =
+                newLines[change.newLineNumber - 1] || change.content
             } else if (change.type === "remove" && change.oldLineNumber) {
-              highlightedContent = oldLines[change.oldLineNumber - 1] || change.content
+              highlightedContent =
+                oldLines[change.oldLineNumber - 1] || change.content
             } else if (change.type === "unchanged" && change.oldLineNumber) {
-              highlightedContent = oldLines[change.oldLineNumber - 1] || change.content
+              highlightedContent =
+                oldLines[change.oldLineNumber - 1] || change.content
             }
 
             return (
@@ -392,8 +424,8 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
     }
 
     const renderSplitView = () => {
-      const oldLines = highlightedOldCode.split('\n')
-      const newLines = highlightedNewCode.split('\n')
+      const oldLines = highlightedOldCode.split("\n")
+      const newLines = highlightedNewCode.split("\n")
 
       return (
         <div className="grid grid-cols-2 gap-0">
@@ -412,7 +444,7 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
                     type: "remove",
                     lineNumber: index + 1,
                     content: line,
-                    oldLineNumber: index + 1
+                    oldLineNumber: index + 1,
                   }}
                   showLineNumbers={showLineNumbers}
                   highlightedContent={line}
@@ -436,7 +468,7 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
                     type: "add",
                     lineNumber: index + 1,
                     content: line,
-                    newLineNumber: index + 1
+                    newLineNumber: index + 1,
                   }}
                   showLineNumbers={showLineNumbers}
                   highlightedContent={line}
@@ -485,7 +517,9 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
             <ToggleGroup
               type="single"
               value={view}
-              onValueChange={(value) => value && setView(value as "unified" | "split")}
+              onValueChange={(value) =>
+                value && setView(value as "unified" | "split")
+              }
               size="sm"
             >
               <ToggleGroupItem value="unified" aria-label="Unified view">
@@ -517,17 +551,12 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
         </div>
 
         {/* Content */}
-        <div
-          className="overflow-auto"
-          style={{ maxHeight }}
-        >
+        <div className="overflow-auto" style={{ maxHeight }}>
           {isLoading ? (
             <div className="p-4 space-y-2">
               {Array.from({ length: 10 }).map((_, i) => (
                 <div key={i} className="flex items-center gap-4">
-                  {showLineNumbers && (
-                    <Skeleton className="h-4 w-8" />
-                  )}
+                  {showLineNumbers && <Skeleton className="h-4 w-8" />}
                   <Skeleton className="h-4 flex-1" />
                 </div>
               ))}

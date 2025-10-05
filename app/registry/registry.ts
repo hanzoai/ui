@@ -5,4 +5,10 @@ import { extended } from "@/registry/extended"
 import { Registry } from "@/registry/schema"
 import { ui } from "@/registry/ui"
 
-export const registry: Registry = [...ui, ...ai, ...extended, ...examples, ...blocks]
+export const registry: Registry = [
+  ...ui,
+  ...ai,
+  ...extended,
+  ...examples,
+  ...blocks,
+]

@@ -3,7 +3,7 @@ import { Terminal } from "@/registry/default/ui/terminal"
 export default function TerminalDemo() {
   const handleCommand = async (command: string) => {
     // Simulate async command processing
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     const [cmd, ...args] = command.toLowerCase().split(" ")
 
@@ -13,7 +13,8 @@ export default function TerminalDemo() {
           <div className="space-y-1">
             <div>Terminal Component v1.0.0</div>
             <div className="text-muted-foreground">
-              A feature-rich terminal emulator with syntax highlighting and auto-completion.
+              A feature-rich terminal emulator with syntax highlighting and
+              auto-completion.
             </div>
           </div>
         )
