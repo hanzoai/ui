@@ -8,7 +8,8 @@ import {
   type SubscriptionPlan,
 } from "@hanzo/ui/billing"
 
-export const description = "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."
+export const description =
+  "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."
 
 export const iframeHeight = "1000px"
 
