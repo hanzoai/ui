@@ -1,58 +1,55 @@
-'use client'
+"use client"
 
-import {
-  PaymentMethodManager,
-  type PaymentMethod,
-} from '@hanzo/ui/billing'
+import { PaymentMethodManager, type PaymentMethod } from "@hanzo/ui/billing"
 
 // Demo payment methods for showcase
 const demoPaymentMethods: PaymentMethod[] = [
   {
-    id: 'pm_1',
-    type: 'card',
+    id: "pm_1",
+    type: "card",
     is_default: true,
-    created_at: '2024-01-15T10:30:00Z',
+    created_at: "2024-01-15T10:30:00Z",
     card: {
-      brand: 'visa',
-      last4: '4242',
+      brand: "visa",
+      last4: "4242",
       exp_month: 12,
       exp_year: 2025,
-      funding: 'credit',
+      funding: "credit",
     },
     billing_details: {
-      name: 'John Doe',
+      name: "John Doe",
       address: {
-        line1: '123 Main St',
-        city: 'San Francisco',
-        state: 'CA',
-        postal_code: '94102',
-        country: 'US',
+        line1: "123 Main St",
+        city: "San Francisco",
+        state: "CA",
+        postal_code: "94102",
+        country: "US",
       },
     },
   },
   {
-    id: 'pm_2',
-    type: 'card',
+    id: "pm_2",
+    type: "card",
     is_default: false,
-    created_at: '2024-02-20T14:15:00Z',
+    created_at: "2024-02-20T14:15:00Z",
     card: {
-      brand: 'mastercard',
-      last4: '5555',
+      brand: "mastercard",
+      last4: "5555",
       exp_month: 8,
       exp_year: 2026,
-      funding: 'debit',
+      funding: "debit",
     },
     billing_details: {
-      name: 'John Doe',
+      name: "John Doe",
     },
   },
   {
-    id: 'pm_3',
-    type: 'paypal',
+    id: "pm_3",
+    type: "paypal",
     is_default: false,
-    created_at: '2024-03-10T09:00:00Z',
+    created_at: "2024-03-10T09:00:00Z",
     paypal: {
-      email: 'john.doe@example.com',
+      email: "john.doe@example.com",
     },
   },
 ]
@@ -65,13 +62,13 @@ export default function PaymentSettings01() {
         initialMethods={demoPaymentMethods}
         // Callbacks for demo
         onMethodAdded={(method) => {
-          console.log('Payment method added:', method)
+          console.log("Payment method added:", method)
         }}
         onMethodRemoved={(id) => {
-          console.log('Payment method removed:', id)
+          console.log("Payment method removed:", id)
         }}
         onDefaultChanged={(id) => {
-          console.log('Default payment method changed to:', id)
+          console.log("Default payment method changed to:", id)
         }}
       />
     </div>
