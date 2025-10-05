@@ -95,6 +95,10 @@
       "import": "./dist/drawer.mjs",
       "require": "./dist/drawer.js"
     },
+    "./billing": {
+      "types": "./src/billing/index.ts",
+      "import": "./src/billing/index.ts"
+    },
     "./sonner": {
       "types": "./dist/sonner.d.ts",
       "import": "./dist/sonner.mjs",
