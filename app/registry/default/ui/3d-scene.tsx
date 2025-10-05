@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 // Basic types for 3D primitives
@@ -26,7 +27,7 @@ interface Material {
 }
 
 interface Light {
-  type: 'directional' | 'point' | 'ambient'
+  type: "directional" | "point" | "ambient"
   position?: Vector3
   direction?: Vector3
   color: Color
@@ -42,7 +43,7 @@ interface Camera {
 }
 
 interface Geometry {
-  type: 'box' | 'sphere' | 'plane' | 'cylinder' | 'torus'
+  type: "box" | "sphere" | "plane" | "cylinder" | "torus"
   parameters: Record<string, number>
 }
 
@@ -89,8 +90,8 @@ class SimpleRenderer {
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas
-    const ctx = canvas.getContext('2d')
-    if (!ctx) throw new Error('Could not get 2D context')
+    const ctx = canvas.getContext("2d")
+    if (!ctx) throw new Error("Could not get 2D context")
     this.ctx = ctx
 
     this.camera = {
@@ -98,17 +99,17 @@ class SimpleRenderer {
       target: { x: 0, y: 0, z: 0 },
       fov: 75,
       near: 0.1,
-      far: 1000
+      far: 1000,
     }
 
     this.setupEventListeners()
   }
 
   private setupEventListeners() {
-    this.canvas.addEventListener('mousedown', this.handleMouseDown.bind(this))
-    this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this))
-    this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this))
-    this.canvas.addEventListener('wheel', this.handleWheel.bind(this))
+    this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this))
+    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this))
+    this.canvas.addEventListener("mouseup", this.handleMouseUp.bind(this))
+    this.canvas.addEventListener("wheel", this.handleWheel.bind(this))
   }
 
   private handleMouseDown(e: MouseEvent) {
@@ -126,7 +127,10 @@ class SimpleRenderer {
       this.cameraRotation.y += deltaX * 0.01
       this.cameraRotation.x += deltaY * 0.01
 
-      this.cameraRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, this.cameraRotation.x))
+      this.cameraRotation.x = Math.max(
+        -Math.PI / 2,
+        Math.min(Math.PI / 2, this.cameraRotation.x)
+      )
 
       this.updateCameraPosition()
       this.lastMousePosition = { x: e.clientX, y: e.clientY }
@@ -141,8 +145,8 @@ class SimpleRenderer {
     e.preventDefault()
     const distance = Math.sqrt(
       this.camera.position.x ** 2 +
-      this.camera.position.y ** 2 +
-      this.camera.position.z ** 2
+        this.camera.position.y ** 2 +
+        this.camera.position.z ** 2
     )
     const newDistance = Math.max(1, Math.min(20, distance + e.deltaY * 0.01))
 
@@ -154,9 +158,15 @@ class SimpleRenderer {
 
   private updateCameraPosition() {
     const distance = 5
-    this.camera.position.x = distance * Math.sin(this.cameraRotation.y) * Math.cos(this.cameraRotation.x)
+    this.camera.position.x =
+      distance *
+      Math.sin(this.cameraRotation.y) *
+      Math.cos(this.cameraRotation.x)
     this.camera.position.y = distance * Math.sin(this.cameraRotation.x)
-    this.camera.position.z = distance * Math.cos(this.cameraRotation.y) * Math.cos(this.cameraRotation.x)
+    this.camera.position.z =
+      distance *
+      Math.cos(this.cameraRotation.y) *
+      Math.cos(this.cameraRotation.x)
   }
 
   private project(point: Vector3): { x: number; y: number; z: number } {
@@ -168,12 +178,13 @@ class SimpleRenderer {
     const dz = point.z - this.camera.position.z
 
     const distance = Math.sqrt(dx * dx + dy * dy + dz * dz)
-    const scale = (this.camera.far - this.camera.near) / (distance + this.camera.near)
+    const scale =
+      (this.camera.far - this.camera.near) / (distance + this.camera.near)
 
     return {
       x: width / 2 + (dx * scale * width) / 4,
       y: height / 2 - (dy * scale * height) / 4,
-      z: distance
+      z: distance,
     }
   }
 
@@ -196,19 +207,19 @@ class SimpleRenderer {
 
     // Draw based on geometry type
     switch (geometry.type) {
-      case 'box':
+      case "box":
         this.drawBox(geometry.parameters)
         break
-      case 'sphere':
+      case "sphere":
         this.drawSphere(geometry.parameters)
         break
-      case 'plane':
+      case "plane":
         this.drawPlane(geometry.parameters)
         break
-      case 'cylinder':
+      case "cylinder":
         this.drawCylinder(geometry.parameters)
         break
-      case 'torus':
+      case "torus":
         this.drawTorus(geometry.parameters)
         break
     }
@@ -303,18 +314,18 @@ class SimpleRenderer {
     const sortedMeshes = [...this.meshes].sort((a, b) => {
       const distA = Math.sqrt(
         (a.position.x - this.camera.position.x) ** 2 +
-        (a.position.y - this.camera.position.y) ** 2 +
-        (a.position.z - this.camera.position.z) ** 2
+          (a.position.y - this.camera.position.y) ** 2 +
+          (a.position.z - this.camera.position.z) ** 2
       )
       const distB = Math.sqrt(
         (b.position.x - this.camera.position.x) ** 2 +
-        (b.position.y - this.camera.position.y) ** 2 +
-        (b.position.z - this.camera.position.z) ** 2
+          (b.position.y - this.camera.position.y) ** 2 +
+          (b.position.z - this.camera.position.z) ** 2
       )
       return distB - distA
     })
 
-    sortedMeshes.forEach(mesh => this.drawMesh(mesh))
+    sortedMeshes.forEach((mesh) => this.drawMesh(mesh))
   }
 
   startAnimation() {
@@ -338,21 +349,24 @@ class SimpleRenderer {
 }
 
 const Scene3D = React.forwardRef<HTMLCanvasElement, Scene3DProps>(
-  ({
-    width = 800,
-    height = 600,
-    meshes = [],
-    lights = [],
-    camera,
-    backgroundColor = { r: 0.1, g: 0.1, b: 0.1, a: 1 },
-    enableOrbitControls = true,
-    enableAutoRotate = false,
-    autoRotateSpeed = 1,
-    onMeshClick,
-    onMeshHover,
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      width = 800,
+      height = 600,
+      meshes = [],
+      lights = [],
+      camera,
+      backgroundColor = { r: 0.1, g: 0.1, b: 0.1, a: 1 },
+      enableOrbitControls = true,
+      enableAutoRotate = false,
+      autoRotateSpeed = 1,
+      onMeshClick,
+      onMeshHover,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
     const rendererRef = React.useRef<SimpleRenderer | null>(null)
 
@@ -433,37 +447,40 @@ Scene3D.displayName = "Scene3D"
 
 // Helper functions to create common geometries
 const createBox = (width = 1, height = 1, depth = 1): Geometry => ({
-  type: 'box',
-  parameters: { width, height, depth }
+  type: "box",
+  parameters: { width, height, depth },
 })
 
 const createSphere = (radius = 0.5): Geometry => ({
-  type: 'sphere',
-  parameters: { radius }
+  type: "sphere",
+  parameters: { radius },
 })
 
 const createPlane = (width = 1, height = 1): Geometry => ({
-  type: 'plane',
-  parameters: { width, height }
+  type: "plane",
+  parameters: { width, height },
 })
 
 const createCylinder = (radius = 0.5, height = 1): Geometry => ({
-  type: 'cylinder',
-  parameters: { radius, height }
+  type: "cylinder",
+  parameters: { radius, height },
 })
 
 const createTorus = (radius = 0.5, tube = 0.2): Geometry => ({
-  type: 'torus',
-  parameters: { radius, tube }
+  type: "torus",
+  parameters: { radius, tube },
 })
 
 // Helper functions to create materials
-const createMaterial = (color: Color, options: Partial<Material> = {}): Material => ({
+const createMaterial = (
+  color: Color,
+  options: Partial<Material> = {}
+): Material => ({
   color,
   metalness: 0,
   roughness: 0.5,
   opacity: 1,
-  ...options
+  ...options,
 })
 
 // Helper functions to create lights
@@ -472,10 +489,10 @@ const createDirectionalLight = (
   color: Color = { r: 1, g: 1, b: 1 },
   intensity = 1
 ): Light => ({
-  type: 'directional',
+  type: "directional",
   direction,
   color,
-  intensity
+  intensity,
 })
 
 const createPointLight = (
@@ -483,104 +500,106 @@ const createPointLight = (
   color: Color = { r: 1, g: 1, b: 1 },
   intensity = 1
 ): Light => ({
-  type: 'point',
+  type: "point",
   position,
   color,
-  intensity
+  intensity,
 })
 
 const createAmbientLight = (
   color: Color = { r: 0.2, g: 0.2, b: 0.2 },
   intensity = 0.5
 ): Light => ({
-  type: 'ambient',
+  type: "ambient",
   color,
-  intensity
+  intensity,
 })
 
 // Preset scenes
 const Scene3DPreset = {
-  Basic: React.forwardRef<HTMLCanvasElement, Omit<Scene3DProps, 'meshes' | 'lights'>>(
-    (props, ref) => {
-      const meshes: Mesh[] = [
-        {
-          id: 'cube',
-          geometry: createBox(1, 1, 1),
-          material: createMaterial({ r: 0.5, g: 0.7, b: 1 }),
-          position: { x: 0, y: 0, z: 0 },
-          rotation: { x: 0, y: 0, z: 0 },
-          scale: { x: 1, y: 1, z: 1 },
-          visible: true
-        }
-      ]
+  Basic: React.forwardRef<
+    HTMLCanvasElement,
+    Omit<Scene3DProps, "meshes" | "lights">
+  >((props, ref) => {
+    const meshes: Mesh[] = [
+      {
+        id: "cube",
+        geometry: createBox(1, 1, 1),
+        material: createMaterial({ r: 0.5, g: 0.7, b: 1 }),
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        visible: true,
+      },
+    ]
 
-      const lights: Light[] = [
-        createDirectionalLight({ x: 1, y: 1, z: 1 }),
-        createAmbientLight()
-      ]
+    const lights: Light[] = [
+      createDirectionalLight({ x: 1, y: 1, z: 1 }),
+      createAmbientLight(),
+    ]
 
-      return (
-        <Scene3D
-          ref={ref}
-          meshes={meshes}
-          lights={lights}
-          enableOrbitControls
-          {...props}
-        />
-      )
-    }
-  ),
+    return (
+      <Scene3D
+        ref={ref}
+        meshes={meshes}
+        lights={lights}
+        enableOrbitControls
+        {...props}
+      />
+    )
+  }),
 
-  Primitives: React.forwardRef<HTMLCanvasElement, Omit<Scene3DProps, 'meshes' | 'lights'>>(
-    (props, ref) => {
-      const meshes: Mesh[] = [
-        {
-          id: 'cube',
-          geometry: createBox(0.8, 0.8, 0.8),
-          material: createMaterial({ r: 1, g: 0.3, b: 0.3 }),
-          position: { x: -2, y: 0, z: 0 },
-          rotation: { x: 0, y: 0, z: 0 },
-          scale: { x: 1, y: 1, z: 1 },
-          visible: true
-        },
-        {
-          id: 'sphere',
-          geometry: createSphere(0.5),
-          material: createMaterial({ r: 0.3, g: 1, b: 0.3 }),
-          position: { x: 0, y: 0, z: 0 },
-          rotation: { x: 0, y: 0, z: 0 },
-          scale: { x: 1, y: 1, z: 1 },
-          visible: true
-        },
-        {
-          id: 'cylinder',
-          geometry: createCylinder(0.4, 1),
-          material: createMaterial({ r: 0.3, g: 0.3, b: 1 }),
-          position: { x: 2, y: 0, z: 0 },
-          rotation: { x: 0, y: 0, z: 0 },
-          scale: { x: 1, y: 1, z: 1 },
-          visible: true
-        }
-      ]
+  Primitives: React.forwardRef<
+    HTMLCanvasElement,
+    Omit<Scene3DProps, "meshes" | "lights">
+  >((props, ref) => {
+    const meshes: Mesh[] = [
+      {
+        id: "cube",
+        geometry: createBox(0.8, 0.8, 0.8),
+        material: createMaterial({ r: 1, g: 0.3, b: 0.3 }),
+        position: { x: -2, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        visible: true,
+      },
+      {
+        id: "sphere",
+        geometry: createSphere(0.5),
+        material: createMaterial({ r: 0.3, g: 1, b: 0.3 }),
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        visible: true,
+      },
+      {
+        id: "cylinder",
+        geometry: createCylinder(0.4, 1),
+        material: createMaterial({ r: 0.3, g: 0.3, b: 1 }),
+        position: { x: 2, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        visible: true,
+      },
+    ]
 
-      const lights: Light[] = [
-        createDirectionalLight({ x: 1, y: 1, z: 1 }),
-        createAmbientLight({ r: 0.3, g: 0.3, b: 0.3 }, 0.3)
-      ]
+    const lights: Light[] = [
+      createDirectionalLight({ x: 1, y: 1, z: 1 }),
+      createAmbientLight({ r: 0.3, g: 0.3, b: 0.3 }, 0.3),
+    ]
 
-      return (
-        <Scene3D
-          ref={ref}
-          meshes={meshes}
-          lights={lights}
-          enableOrbitControls
-          enableAutoRotate
-          autoRotateSpeed={0.5}
-          {...props}
-        />
-      )
-    }
-  )
+    return (
+      <Scene3D
+        ref={ref}
+        meshes={meshes}
+        lights={lights}
+        enableOrbitControls
+        enableAutoRotate
+        autoRotateSpeed={0.5}
+        {...props}
+      />
+    )
+  }),
 }
 
 // Assign display names
@@ -606,5 +625,5 @@ export {
   type Light,
   type Camera,
   type Geometry,
-  type Mesh
+  type Mesh,
 }

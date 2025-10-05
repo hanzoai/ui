@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
-import { motion, useSpring, useTransform, MotionValue } from 'motion/react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { motion, MotionValue, useSpring, useTransform } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
@@ -11,17 +12,17 @@ function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
   return prefersReducedMotion
@@ -47,7 +48,7 @@ export interface AnimatedNumberProps {
   /**
    * Number format type
    */
-  format?: 'number' | 'currency' | 'percent'
+  format?: "number" | "currency" | "percent"
   /**
    * Currency code for currency format
    */
@@ -59,7 +60,7 @@ export interface AnimatedNumberProps {
   /**
    * Easing function
    */
-  easing?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'bounce' | 'elastic'
+  easing?: "linear" | "easeIn" | "easeOut" | "easeInOut" | "bounce" | "elastic"
   /**
    * Whether to start animation automatically
    */
@@ -116,7 +117,7 @@ const easingFunctions = {
   easeOut: [0, 0, 0.58, 1],
   easeInOut: [0.42, 0, 0.58, 1],
   bounce: [0.68, -0.6, 0.32, 1.6],
-  elastic: [0.175, 0.885, 0.32, 1.275]
+  elastic: [0.175, 0.885, 0.32, 1.275],
 } as const
 
 /**
@@ -127,7 +128,7 @@ function useAnimatedNumber(
   from: number,
   duration: number,
   decimals: number,
-  format: 'number' | 'currency' | 'percent',
+  format: "number" | "currency" | "percent",
   currency: string,
   locale: string,
   easing: keyof typeof easingFunctions,
@@ -145,7 +146,7 @@ function useAnimatedNumber(
   const springValue = useSpring(from, {
     tension: springConfig.tension || 100,
     friction: springConfig.friction || 10,
-    mass: springConfig.mass || 1
+    mass: springConfig.mass || 1,
   })
 
   // Motion value for non-spring animation
@@ -174,7 +175,7 @@ function useAnimatedNumber(
 
         // Apply easing
         const easedProgress = progress // Will be enhanced with actual easing
-        const currentValue = startValue + (distance * easedProgress)
+        const currentValue = startValue + distance * easedProgress
 
         setDisplayValue(currentValue)
         setMotionValue(currentValue)
@@ -189,7 +190,14 @@ function useAnimatedNumber(
 
       animationRef.current = requestAnimationFrame(animate)
     }
-  }, [targetValue, displayValue, duration, useSpringAnim, springValue, prefersReducedMotion])
+  }, [
+    targetValue,
+    displayValue,
+    duration,
+    useSpringAnim,
+    springValue,
+    prefersReducedMotion,
+  ])
 
   // Cleanup animation frame on unmount
   useEffect(() => {
@@ -203,11 +211,11 @@ function useAnimatedNumber(
   // Listen to spring value changes
   useEffect(() => {
     if (useSpringAnim) {
-      const unsubscribe = springValue.on('change', (latest) => {
+      const unsubscribe = springValue.on("change", (latest) => {
         setDisplayValue(latest)
       })
 
-      const unsubscribeComplete = springValue.on('animationComplete', () => {
+      const unsubscribeComplete = springValue.on("animationComplete", () => {
         setIsAnimating(false)
       })
 
@@ -225,32 +233,33 @@ function useAnimatedNumber(
   }, [autoStart, startAnimation])
 
   const formattedValue = useMemo(() => {
-    const roundedValue = Math.round(displayValue * Math.pow(10, decimals)) / Math.pow(10, decimals)
+    const roundedValue =
+      Math.round(displayValue * Math.pow(10, decimals)) / Math.pow(10, decimals)
 
     try {
       switch (format) {
-        case 'currency':
+        case "currency":
           return new Intl.NumberFormat(locale, {
-            style: 'currency',
+            style: "currency",
             currency: currency,
             minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals
+            maximumFractionDigits: decimals,
           }).format(roundedValue)
 
-        case 'percent':
+        case "percent":
           return new Intl.NumberFormat(locale, {
-            style: 'percent',
+            style: "percent",
             minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals
+            maximumFractionDigits: decimals,
           }).format(roundedValue / 100)
 
         default:
           let formatted = new Intl.NumberFormat(locale, {
             minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals
+            maximumFractionDigits: decimals,
           }).format(roundedValue)
 
-          if (separator && separator !== ',') {
+          if (separator && separator !== ",") {
             formatted = formatted.replace(/,/g, separator)
           }
 
@@ -265,7 +274,7 @@ function useAnimatedNumber(
     formattedValue,
     displayValue,
     isAnimating,
-    startAnimation
+    startAnimation,
   }
 }
 
@@ -277,50 +286,51 @@ export function AnimatedNumber({
   from = 0,
   duration = 2000,
   decimals = 0,
-  format = 'number',
-  currency = 'USD',
-  locale = 'en-US',
-  easing = 'easeOut',
+  format = "number",
+  currency = "USD",
+  locale = "en-US",
+  easing = "easeOut",
   autoStart = true,
   onComplete,
   className,
   style,
-  prefix = '',
-  suffix = '',
+  prefix = "",
+  suffix = "",
   useSpring = false,
   springConfig = {},
   separator,
   animateOnHover = false,
-  hoverValue
+  hoverValue,
 }: AnimatedNumberProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [animationKey, setAnimationKey] = useState(0)
 
-  const currentValue = animateOnHover && isHovered && hoverValue !== undefined ? hoverValue : value
+  const currentValue =
+    animateOnHover && isHovered && hoverValue !== undefined ? hoverValue : value
 
-  const {
-    formattedValue,
-    displayValue,
-    isAnimating,
-    startAnimation
-  } = useAnimatedNumber(
-    currentValue,
-    from,
-    duration,
-    decimals,
-    format,
-    currency,
-    locale,
-    easing,
-    autoStart,
-    useSpring,
-    springConfig,
-    separator
-  )
+  const { formattedValue, displayValue, isAnimating, startAnimation } =
+    useAnimatedNumber(
+      currentValue,
+      from,
+      duration,
+      decimals,
+      format,
+      currency,
+      locale,
+      easing,
+      autoStart,
+      useSpring,
+      springConfig,
+      separator
+    )
 
   // Handle completion callback
   useEffect(() => {
-    if (!isAnimating && onComplete && Math.abs(displayValue - currentValue) < 0.001) {
+    if (
+      !isAnimating &&
+      onComplete &&
+      Math.abs(displayValue - currentValue) < 0.001
+    ) {
       onComplete(displayValue)
     }
   }, [isAnimating, displayValue, currentValue, onComplete])
@@ -348,12 +358,16 @@ export function AnimatedNumber({
 
   return (
     <motion.span
-      className={cn('inline-block tabular-nums', className)}
+      className={cn("inline-block tabular-nums", className)}
       style={style}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       initial={{ scale: 1 }}
-      animate={!prefersReducedMotion && isAnimating ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+      animate={
+        !prefersReducedMotion && isAnimating
+          ? { scale: [1, 1.05, 1] }
+          : { scale: 1 }
+      }
       transition={{ duration: 0.3 }}
     >
       {prefix}
@@ -373,7 +387,8 @@ export function AnimatedNumber({
 /**
  * Counter component with increment/decrement controls
  */
-export interface AnimatedCounterProps extends Omit<AnimatedNumberProps, 'value' | 'from'> {
+export interface AnimatedCounterProps
+  extends Omit<AnimatedNumberProps, "value" | "from"> {
   /**
    * Initial value
    */
@@ -436,16 +451,12 @@ export function AnimatedCounter({
 
   if (!showControls) {
     return (
-      <AnimatedNumber
-        value={currentValue}
-        className={className}
-        {...props}
-      />
+      <AnimatedNumber value={currentValue} className={className} {...props} />
     )
   }
 
   return (
-    <div className={cn('flex items-center gap-2', className)}>
+    <div className={cn("flex items-center gap-2", className)}>
       <motion.button
         onClick={decrement}
         disabled={currentValue <= min}
@@ -453,13 +464,10 @@ export function AnimatedCounter({
         whileTap={{ scale: 0.95 }}
         whileHover={{ scale: 1.05 }}
       >
-        {decrementButton || '−'}
+        {decrementButton || "−"}
       </motion.button>
 
-      <AnimatedNumber
-        value={currentValue}
-        {...props}
-      />
+      <AnimatedNumber value={currentValue} {...props} />
 
       <motion.button
         onClick={increment}
@@ -468,7 +476,7 @@ export function AnimatedCounter({
         whileTap={{ scale: 0.95 }}
         whileHover={{ scale: 1.05 }}
       >
-        {incrementButton || '+'}
+        {incrementButton || "+"}
       </motion.button>
     </div>
   )

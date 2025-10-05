@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 interface Grid3DItem {
@@ -30,25 +31,28 @@ interface Grid3DProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
-  ({
-    items,
-    columns = 4,
-    rows = 3,
-    gap = 16,
-    perspective = 1000,
-    rotateX = 25,
-    rotateY = 15,
-    cellHeight = 200,
-    cellWidth = 200,
-    isometric = false,
-    tiltOnHover = true,
-    staggerAnimation = true,
-    animationDelay = 100,
-    elevationOnHover = true,
-    maxElevation = 50,
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      items,
+      columns = 4,
+      rows = 3,
+      gap = 16,
+      perspective = 1000,
+      rotateX = 25,
+      rotateY = 15,
+      cellHeight = 200,
+      cellWidth = 200,
+      isometric = false,
+      tiltOnHover = true,
+      staggerAnimation = true,
+      animationDelay = 100,
+      elevationOnHover = true,
+      maxElevation = 50,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const gridRef = React.useRef<HTMLDivElement>(null)
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
     const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 })
@@ -63,18 +67,21 @@ const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
     }, [isometric, perspective, rotateX, rotateY])
 
     // Handle mouse movement for global tilt effect
-    const handleMouseMove = React.useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-      if (!tiltOnHover || !gridRef.current) return
+    const handleMouseMove = React.useCallback(
+      (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!tiltOnHover || !gridRef.current) return
 
-      const rect = gridRef.current.getBoundingClientRect()
-      const centerX = rect.left + rect.width / 2
-      const centerY = rect.top + rect.height / 2
+        const rect = gridRef.current.getBoundingClientRect()
+        const centerX = rect.left + rect.width / 2
+        const centerY = rect.top + rect.height / 2
 
-      const mouseX = (e.clientX - centerX) / (rect.width / 2)
-      const mouseY = (e.clientY - centerY) / (rect.height / 2)
+        const mouseX = (e.clientX - centerX) / (rect.width / 2)
+        const mouseY = (e.clientY - centerY) / (rect.height / 2)
 
-      setMousePosition({ x: mouseX * 10, y: mouseY * 10 })
-    }, [tiltOnHover])
+        setMousePosition({ x: mouseX * 10, y: mouseY * 10 })
+      },
+      [tiltOnHover]
+    )
 
     const handleMouseEnter = React.useCallback(() => {
       setIsGridHovered(true)
@@ -90,19 +97,20 @@ const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
 
     const containerStyle: React.CSSProperties = {
       perspective: `${perspective}px`,
-      transformStyle: 'preserve-3d',
+      transformStyle: "preserve-3d",
     }
 
     const gridStyle: React.CSSProperties = {
-      display: 'grid',
+      display: "grid",
       gridTemplateColumns: `repeat(${columns}, ${cellWidth}px)`,
       gridTemplateRows: `repeat(${rows}, ${cellHeight}px)`,
       gap: `${gap}px`,
-      transform: tiltOnHover && isGridHovered
-        ? `${gridTransform} rotateX(${-mousePosition.y}deg) rotateY(${mousePosition.x}deg)`
-        : gridTransform,
-      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      transformStyle: 'preserve-3d',
+      transform:
+        tiltOnHover && isGridHovered
+          ? `${gridTransform} rotateX(${-mousePosition.y}deg) rotateY(${mousePosition.x}deg)`
+          : gridTransform,
+      transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+      transformStyle: "preserve-3d",
     }
 
     // Calculate grid position for each item
@@ -139,10 +147,11 @@ const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
               gridColumn: item.span ? `span ${item.span.x}` : undefined,
               gridRow: item.span ? `span ${item.span.y}` : undefined,
               transform: `translateZ(${
-                (item.elevation || 0) + (isHovered && elevationOnHover ? maxElevation : 0)
+                (item.elevation || 0) +
+                (isHovered && elevationOnHover ? maxElevation : 0)
               }px)`,
-              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              transformStyle: 'preserve-3d',
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              transformStyle: "preserve-3d",
               animationDelay: `${staggerDelay}ms`,
             }
 
@@ -153,7 +162,8 @@ const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
                   "relative rounded-lg border bg-card text-card-foreground shadow-lg",
                   "transform-gpu will-change-transform cursor-pointer",
                   "transition-all duration-300 hover:shadow-xl",
-                  staggerAnimation && "animate-in fade-in slide-in-from-bottom-4",
+                  staggerAnimation &&
+                    "animate-in fade-in slide-in-from-bottom-4",
                   isHovered && "ring-2 ring-primary ring-offset-2"
                 )}
                 style={itemStyle}
@@ -189,7 +199,7 @@ const Grid3D = React.forwardRef<HTMLDivElement, Grid3DProps>(
                 gridTemplateRows: `repeat(${rows}, ${cellHeight}px)`,
                 gap: `${gap}px`,
                 transform: gridTransform,
-                transformStyle: 'preserve-3d',
+                transformStyle: "preserve-3d",
               }}
             >
               {Array.from({ length: columns * rows }).map((_, index) => (
@@ -217,72 +227,82 @@ const Grid3DCard = React.forwardRef<
     badge?: string
     elevation?: number
   }
->(({ className, title, description, image, badge, elevation = 0, children, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "group relative w-full h-full flex flex-col bg-gradient-to-br from-background to-muted/20",
-      "border rounded-lg overflow-hidden",
-      className
-    )}
-    style={{
-      transform: `translateZ(${elevation}px)`,
-      transformStyle: 'preserve-3d',
-    }}
-    {...props}
-  >
-    {/* Image section */}
-    {image && (
-      <div className="relative h-32 overflow-hidden">
-        <img
-          src={image}
-          alt={title || ''}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-        />
-        {badge && (
-          <div className="absolute top-2 right-2 px-2 py-1 text-xs rounded-full bg-primary text-primary-foreground">
-            {badge}
-          </div>
-        )}
-      </div>
-    )}
-
-    {/* Content section */}
-    <div className="flex-1 p-4 flex flex-col justify-between">
-      {title && (
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-          {title}
-        </h3>
+>(
+  (
+    {
+      className,
+      title,
+      description,
+      image,
+      badge,
+      elevation = 0,
+      children,
+      ...props
+    },
+    ref
+  ) => (
+    <div
+      ref={ref}
+      className={cn(
+        "group relative w-full h-full flex flex-col bg-gradient-to-br from-background to-muted/20",
+        "border rounded-lg overflow-hidden",
+        className
       )}
-
-      {description && (
-        <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-          {description}
-        </p>
-      )}
-
-      {children && (
-        <div className="mt-auto">
-          {children}
+      style={{
+        transform: `translateZ(${elevation}px)`,
+        transformStyle: "preserve-3d",
+      }}
+      {...props}
+    >
+      {/* Image section */}
+      {image && (
+        <div className="relative h-32 overflow-hidden">
+          <img
+            src={image}
+            alt={title || ""}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+          {badge && (
+            <div className="absolute top-2 right-2 px-2 py-1 text-xs rounded-full bg-primary text-primary-foreground">
+              {badge}
+            </div>
+          )}
         </div>
       )}
-    </div>
 
-    {/* 3D depth effect */}
-    <div
-      className="absolute inset-0 -z-10 rounded-lg bg-gradient-to-br from-muted/50 to-muted"
-      style={{
-        transform: 'translateZ(-2px) scale(0.98)',
-        transformStyle: 'preserve-3d',
-      }}
-    />
-  </div>
-))
+      {/* Content section */}
+      <div className="flex-1 p-4 flex flex-col justify-between">
+        {title && (
+          <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+            {title}
+          </h3>
+        )}
+
+        {description && (
+          <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
+            {description}
+          </p>
+        )}
+
+        {children && <div className="mt-auto">{children}</div>}
+      </div>
+
+      {/* 3D depth effect */}
+      <div
+        className="absolute inset-0 -z-10 rounded-lg bg-gradient-to-br from-muted/50 to-muted"
+        style={{
+          transform: "translateZ(-2px) scale(0.98)",
+          transformStyle: "preserve-3d",
+        }}
+      />
+    </div>
+  )
+)
 Grid3DCard.displayName = "Grid3DCard"
 
 // Preset grid layouts
 const Grid3DPreset = {
-  Dashboard: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, 'items'>>(
+  Dashboard: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, "items">>(
     ({ children, ...props }, ref) => (
       <Grid3D
         ref={ref}
@@ -303,7 +323,7 @@ const Grid3DPreset = {
     )
   ),
 
-  Isometric: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, 'items'>>(
+  Isometric: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, "items">>(
     ({ children, ...props }, ref) => (
       <Grid3D
         ref={ref}
@@ -322,7 +342,7 @@ const Grid3DPreset = {
     )
   ),
 
-  Gallery: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, 'items'>>(
+  Gallery: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, "items">>(
     ({ children, ...props }, ref) => (
       <Grid3D
         ref={ref}
@@ -343,7 +363,7 @@ const Grid3DPreset = {
     )
   ),
 
-  Compact: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, 'items'>>(
+  Compact: React.forwardRef<HTMLDivElement, Omit<Grid3DProps, "items">>(
     ({ children, ...props }, ref) => (
       <Grid3D
         ref={ref}
@@ -362,7 +382,7 @@ const Grid3DPreset = {
         {...props}
       />
     )
-  )
+  ),
 }
 
 // Assign display names
@@ -372,18 +392,24 @@ Grid3DPreset.Gallery.displayName = "Grid3DPreset.Gallery"
 Grid3DPreset.Compact.displayName = "Grid3DPreset.Compact"
 
 // Auto-arranging grid that adjusts based on content
-const Grid3DAuto = React.forwardRef<HTMLDivElement, Omit<Grid3DProps, 'columns' | 'rows'> & {
-  minCellWidth?: number
-  maxCellWidth?: number
-  aspectRatio?: number
-}>(
-  ({
-    items,
-    minCellWidth = 200,
-    maxCellWidth = 300,
-    aspectRatio = 1,
-    ...props
-  }, ref) => {
+const Grid3DAuto = React.forwardRef<
+  HTMLDivElement,
+  Omit<Grid3DProps, "columns" | "rows"> & {
+    minCellWidth?: number
+    maxCellWidth?: number
+    aspectRatio?: number
+  }
+>(
+  (
+    {
+      items,
+      minCellWidth = 200,
+      maxCellWidth = 300,
+      aspectRatio = 1,
+      ...props
+    },
+    ref
+  ) => {
     const [dimensions, setDimensions] = React.useState({ columns: 3, rows: 2 })
 
     React.useEffect(() => {
@@ -417,5 +443,5 @@ export {
   Grid3DPreset,
   Grid3DAuto,
   type Grid3DItem,
-  type Grid3DProps
+  type Grid3DProps,
 }

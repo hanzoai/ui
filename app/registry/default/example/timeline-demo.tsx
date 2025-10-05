@@ -1,17 +1,29 @@
 "use client"
 
 import * as React from "react"
-import { Timeline } from "@/registry/default/ui/timeline"
-import type { TimelineItem } from "@/registry/default/ui/timeline"
-import { Rocket, Code, Trophy, CheckCircle, Clock, AlertCircle } from "lucide-react"
+import {
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Code,
+  Rocket,
+  Trophy,
+} from "lucide-react"
+
 import { Badge } from "@/registry/default/ui/badge"
-import { Progress } from "@/registry/default/ui/progress"
 import { Button } from "@/registry/default/ui/button"
 import { Card } from "@/registry/default/ui/card"
+import { Progress } from "@/registry/default/ui/progress"
+import { Timeline } from "@/registry/default/ui/timeline"
+import type { TimelineItem } from "@/registry/default/ui/timeline"
 
 export default function TimelineDemo() {
-  const [variant, setVariant] = React.useState<"default" | "alternate" | "compact" | "simple">("default")
-  const [orientation, setOrientation] = React.useState<"vertical" | "horizontal">("vertical")
+  const [variant, setVariant] = React.useState<
+    "default" | "alternate" | "compact" | "simple"
+  >("default")
+  const [orientation, setOrientation] = React.useState<
+    "vertical" | "horizontal"
+  >("vertical")
   const [animated, setAnimated] = React.useState(true)
 
   const basicItems: TimelineItem[] = [
@@ -22,7 +34,7 @@ export default function TimelineDemo() {
       date: "January 1, 2024",
       time: "9:00 AM",
       status: "completed",
-      icon: <Rocket className="h-4 w-4" />
+      icon: <Rocket className="h-4 w-4" />,
     },
     {
       id: "2",
@@ -31,7 +43,7 @@ export default function TimelineDemo() {
       date: "January 15, 2024",
       time: "2:00 PM",
       status: "completed",
-      icon: <Code className="h-4 w-4" />
+      icon: <Code className="h-4 w-4" />,
     },
     {
       id: "3",
@@ -39,7 +51,7 @@ export default function TimelineDemo() {
       description: "Gathering feedback from beta users",
       date: "February 1, 2024",
       status: "active",
-      icon: <AlertCircle className="h-4 w-4" />
+      icon: <AlertCircle className="h-4 w-4" />,
     },
     {
       id: "4",
@@ -47,8 +59,8 @@ export default function TimelineDemo() {
       description: "Public release and marketing campaign",
       date: "March 1, 2024",
       status: "pending",
-      icon: <Trophy className="h-4 w-4" />
-    }
+      icon: <Trophy className="h-4 w-4" />,
+    },
   ]
 
   const richItems: TimelineItem[] = [
@@ -70,7 +82,7 @@ export default function TimelineDemo() {
             Successfully deployed to production with 99.9% uptime
           </p>
         </div>
-      )
+      ),
     },
     {
       id: "2",
@@ -84,11 +96,13 @@ export default function TimelineDemo() {
           <Progress value={75} className="h-2" />
           <p className="text-xs text-muted-foreground">75% Complete</p>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline">View Changes</Button>
+            <Button size="sm" variant="outline">
+              View Changes
+            </Button>
             <Button size="sm">Test Beta</Button>
           </div>
         </div>
-      )
+      ),
     },
     {
       id: "3",
@@ -106,11 +120,12 @@ export default function TimelineDemo() {
             <li>• Mobile app support</li>
           </ul>
         </Card>
-      )
-    }
+      ),
+    },
   ]
 
-  const items = variant === "compact" || variant === "simple" ? basicItems : richItems
+  const items =
+    variant === "compact" || variant === "simple" ? basicItems : richItems
 
   return (
     <div className="space-y-8">
@@ -152,7 +167,11 @@ export default function TimelineDemo() {
             variant={orientation === "vertical" ? "default" : "outline"}
             size="sm"
             onClick={() => setOrientation("vertical")}
-            disabled={variant === "alternate" || variant === "compact" || variant === "simple"}
+            disabled={
+              variant === "alternate" ||
+              variant === "compact" ||
+              variant === "simple"
+            }
           >
             Vertical
           </Button>
@@ -160,7 +179,11 @@ export default function TimelineDemo() {
             variant={orientation === "horizontal" ? "default" : "outline"}
             size="sm"
             onClick={() => setOrientation("horizontal")}
-            disabled={variant === "alternate" || variant === "compact" || variant === "simple"}
+            disabled={
+              variant === "alternate" ||
+              variant === "compact" ||
+              variant === "simple"
+            }
           >
             Horizontal
           </Button>

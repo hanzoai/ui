@@ -21,7 +21,12 @@ import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import { CodeSnippet } from "@/registry/default/ui/code-snippet"
 import { Separator } from "@/registry/default/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
 import { Toggle } from "@/registry/default/ui/toggle"
 
 const codePreviewVariants = cva(
@@ -70,21 +75,21 @@ export interface CodePreviewProps
 
 // Simple HTML/CSS/JS runner
 const runHTMLCode = (files: PreviewFile[]): string => {
-  const htmlFile = files.find(f => f.type === "html")
-  const cssFiles = files.filter(f => f.type === "css")
-  const jsFiles = files.filter(f => f.type === "js")
+  const htmlFile = files.find((f) => f.type === "html")
+  const cssFiles = files.filter((f) => f.type === "css")
+  const jsFiles = files.filter((f) => f.type === "js")
 
   let html = htmlFile?.content || "<div>No HTML file provided</div>"
 
   // Inject CSS
   if (cssFiles.length > 0) {
-    const cssContent = cssFiles.map(f => f.content).join('\n')
+    const cssContent = cssFiles.map((f) => f.content).join("\n")
     html = `<style>${cssContent}</style>\n${html}`
   }
 
   // Inject JS
   if (jsFiles.length > 0) {
-    const jsContent = jsFiles.map(f => f.content).join('\n')
+    const jsContent = jsFiles.map((f) => f.content).join("\n")
     html = `${html}\n<script>${jsContent}</script>`
   }
 
@@ -132,22 +137,27 @@ const consoleScript = `
 `
 
 const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
-  ({
-    className,
-    size,
-    files,
-    defaultFile,
-    showPreview = true,
-    showConsole = true,
-    autoRun = false,
-    maxHeight = "600px",
-    previewHeight = "300px",
-    consoleHeight = "150px",
-    allowFullscreen = true,
-    customRunner,
-    ...props
-  }, ref) => {
-    const [activeFile, setActiveFile] = React.useState(defaultFile || files[0]?.filename || "")
+  (
+    {
+      className,
+      size,
+      files,
+      defaultFile,
+      showPreview = true,
+      showConsole = true,
+      autoRun = false,
+      maxHeight = "600px",
+      previewHeight = "300px",
+      consoleHeight = "150px",
+      allowFullscreen = true,
+      customRunner,
+      ...props
+    },
+    ref
+  ) => {
+    const [activeFile, setActiveFile] = React.useState(
+      defaultFile || files[0]?.filename || ""
+    )
     const [previewContent, setPreviewContent] = React.useState("")
     const [isRunning, setIsRunning] = React.useState(false)
     const [results, setResults] = React.useState<PreviewResult[]>([])
@@ -158,18 +168,18 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
 
     const iframeRef = React.useRef<HTMLIFrameElement>(null)
 
-    const currentFile = files.find(f => f.filename === activeFile) || files[0]
+    const currentFile = files.find((f) => f.filename === activeFile) || files[0]
 
     // Handle messages from iframe
     React.useEffect(() => {
       const handleMessage = (event: MessageEvent) => {
-        if (event.data?.type === 'console' || event.data?.type === 'error') {
-          setResults(prev => [...prev, event.data.data])
+        if (event.data?.type === "console" || event.data?.type === "error") {
+          setResults((prev) => [...prev, event.data.data])
         }
       }
 
-      window.addEventListener('message', handleMessage)
-      return () => window.removeEventListener('message', handleMessage)
+      window.addEventListener("message", handleMessage)
+      return () => window.removeEventListener("message", handleMessage)
     }, [])
 
     const runCode = React.useCallback(async () => {
@@ -200,11 +210,13 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
           }
         }
       } catch (error) {
-        setResults([{
-          type: "error",
-          content: error instanceof Error ? error.message : String(error),
-          timestamp: Date.now()
-        }])
+        setResults([
+          {
+            type: "error",
+            content: error instanceof Error ? error.message : String(error),
+            timestamp: Date.now(),
+          },
+        ])
       } finally {
         setIsRunning(false)
       }
@@ -218,20 +230,23 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
       }
     }, [files, autoRun, runCode])
 
-    const copyFileContent = React.useCallback(async (filename: string) => {
-      const file = files.find(f => f.filename === filename)
-      if (!file) return
+    const copyFileContent = React.useCallback(
+      async (filename: string) => {
+        const file = files.find((f) => f.filename === filename)
+        if (!file) return
 
-      try {
-        await navigator.clipboard.writeText(file.content)
-        setCopied(prev => ({ ...prev, [filename]: true }))
-        setTimeout(() => {
-          setCopied(prev => ({ ...prev, [filename]: false }))
-        }, 2000)
-      } catch (error) {
-        console.error('Failed to copy code:', error)
-      }
-    }, [files])
+        try {
+          await navigator.clipboard.writeText(file.content)
+          setCopied((prev) => ({ ...prev, [filename]: true }))
+          setTimeout(() => {
+            setCopied((prev) => ({ ...prev, [filename]: false }))
+          }, 2000)
+        } catch (error) {
+          console.error("Failed to copy code:", error)
+        }
+      },
+      [files]
+    )
 
     const clearConsole = () => {
       setResults([])
@@ -267,9 +282,12 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
                 key={index}
                 className={cn(
                   "flex items-start gap-2 p-2 rounded",
-                  result.type === "error" && "bg-red-500/10 text-red-600 dark:text-red-400",
-                  result.type === "log" && "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-                  result.type === "output" && "bg-green-500/10 text-green-600 dark:text-green-400"
+                  result.type === "error" &&
+                    "bg-red-500/10 text-red-600 dark:text-red-400",
+                  result.type === "log" &&
+                    "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+                  result.type === "output" &&
+                    "bg-green-500/10 text-green-600 dark:text-green-400"
                 )}
               >
                 <span className="text-xs text-muted-foreground">
@@ -290,17 +308,17 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          codePreviewVariants({ size }),
-          layout,
-          className
-        )}
+        className={cn(codePreviewVariants({ size }), layout, className)}
         style={{ maxHeight: isFullscreen ? "100vh" : maxHeight }}
         {...props}
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-2">
-          <Tabs value={activeFile} onValueChange={setActiveFile} className="flex-1">
+          <Tabs
+            value={activeFile}
+            onValueChange={setActiveFile}
+            className="flex-1"
+          >
             <TabsList className="h-auto p-0 bg-transparent">
               {files.map((file) => (
                 <TabsTrigger
@@ -393,7 +411,11 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
           <div className="flex-1 min-h-0">
             <Tabs value={activeFile} onValueChange={setActiveFile}>
               {files.map((file) => (
-                <TabsContent key={file.filename} value={file.filename} className="m-0 h-full">
+                <TabsContent
+                  key={file.filename}
+                  value={file.filename}
+                  className="m-0 h-full"
+                >
                   <CodeSnippet
                     code={file.content}
                     language={file.language}
@@ -422,7 +444,7 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
                     <div className="flex items-center gap-2 border-b px-4 py-2 bg-muted/30">
                       <Eye className="h-4 w-4" />
                       <span className="text-sm font-medium">Preview</span>
-                      {results.filter(r => r.type === "error").length > 0 && (
+                      {results.filter((r) => r.type === "error").length > 0 && (
                         <AlertTriangle className="h-4 w-4 text-red-500" />
                       )}
                     </div>
@@ -451,7 +473,10 @@ const CodePreview = React.forwardRef<HTMLDivElement, CodePreviewProps>(
 
         {/* Fullscreen overlay */}
         {isFullscreen && (
-          <div className="absolute inset-0 bg-black/50" onClick={() => setIsFullscreen(false)} />
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsFullscreen(false)}
+          />
         )}
       </div>
     )

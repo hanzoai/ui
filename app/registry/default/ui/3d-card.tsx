@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 interface Point {
@@ -20,17 +21,20 @@ interface Card3DProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card3D = React.forwardRef<HTMLDivElement, Card3DProps>(
-  ({
-    children,
-    maxTilt = 15,
-    perspective = 1000,
-    scale = 1.05,
-    speed = 400,
-    glare = true,
-    glareMaxOpacity = 0.7,
-    className,
-    ...props
-  }, ref) => {
+  (
+    {
+      children,
+      maxTilt = 15,
+      perspective = 1000,
+      scale = 1.05,
+      speed = 400,
+      glare = true,
+      glareMaxOpacity = 0.7,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     const cardRef = React.useRef<HTMLDivElement>(null)
     const glareRef = React.useRef<HTMLDivElement>(null)
     const [isHovered, setIsHovered] = React.useState(false)
@@ -66,8 +70,8 @@ const Card3D = React.forwardRef<HTMLDivElement, Card3DProps>(
         const rotateX = -deltaY * maxTilt
         const rotateY = deltaX * maxTilt
 
-        const glareX = (point.x - rect.left) / rect.width * 100
-        const glareY = (point.y - rect.top) / rect.height * 100
+        const glareX = ((point.x - rect.left) / rect.width) * 100
+        const glareY = ((point.y - rect.top) / rect.height) * 100
 
         setTransforms({
           rotateX,
@@ -125,13 +129,15 @@ const Card3D = React.forwardRef<HTMLDivElement, Card3DProps>(
 
     const cardStyle: React.CSSProperties = {
       transform: `perspective(${perspective}px) rotateX(${transforms.rotateX}deg) rotateY(${transforms.rotateY}deg) scale(${transforms.scale})`,
-      transition: isHovered ? 'none' : `transform ${speed}ms cubic-bezier(0.03, 0.98, 0.52, 0.99)`,
-      transformStyle: 'preserve-3d',
+      transition: isHovered
+        ? "none"
+        : `transform ${speed}ms cubic-bezier(0.03, 0.98, 0.52, 0.99)`,
+      transformStyle: "preserve-3d",
     }
 
     const glareStyle: React.CSSProperties = {
       background: `radial-gradient(circle at ${transforms.glareX}% ${transforms.glareY}%, rgba(255,255,255,${transforms.glareOpacity}) 0%, transparent 50%)`,
-      transition: isHovered ? 'none' : `opacity ${speed}ms ease-out`,
+      transition: isHovered ? "none" : `opacity ${speed}ms ease-out`,
     }
 
     React.useImperativeHandle(ref, () => cardRef.current!)
@@ -154,9 +160,7 @@ const Card3D = React.forwardRef<HTMLDivElement, Card3DProps>(
         {...props}
       >
         {/* Content Layer */}
-        <div className="relative z-10">
-          {children}
-        </div>
+        <div className="relative z-10">{children}</div>
 
         {/* Glare Effect */}
         {glare && (
@@ -262,5 +266,5 @@ export {
   Card3DTitle,
   Card3DDescription,
   Card3DContent,
-  Card3DFooter
+  Card3DFooter,
 }

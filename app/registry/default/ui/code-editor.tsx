@@ -2,7 +2,9 @@
 
 import * as React from "react"
 import Editor, { OnChange, OnMount } from "@monaco-editor/react"
-import { Copy, Check, ChevronDown } from "lucide-react"
+import { Check, ChevronDown, Copy } from "lucide-react"
+import { useTheme } from "next-themes"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 import {
@@ -11,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
-import { useTheme } from "next-themes"
 
 export interface CodeEditorProps {
   value?: string
@@ -111,9 +112,7 @@ const CodeEditor = React.forwardRef<HTMLDivElement, CodeEditorProps>(
     const { theme: systemTheme } = useTheme()
     const [selectedLanguage, setSelectedLanguage] = React.useState(language)
     const [copied, setCopied] = React.useState(false)
-    const [editorValue, setEditorValue] = React.useState(
-      value || defaultValue
-    )
+    const [editorValue, setEditorValue] = React.useState(value || defaultValue)
 
     React.useEffect(() => {
       if (value !== undefined) {
@@ -170,7 +169,10 @@ const CodeEditor = React.forwardRef<HTMLDivElement, CodeEditorProps>(
                     <ChevronDown className="h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="max-h-80 overflow-auto">
+                <DropdownMenuContent
+                  align="start"
+                  className="max-h-80 overflow-auto"
+                >
                   {availableLanguages.map((lang) => (
                     <DropdownMenuItem
                       key={lang}

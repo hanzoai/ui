@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { motion } from "motion"
+
 import { cn } from "@/lib/utils"
 
 interface AnimatedBeamProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -17,19 +18,22 @@ interface AnimatedBeamProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const AnimatedBeam = React.forwardRef<HTMLDivElement, AnimatedBeamProps>(
-  ({
-    className,
-    duration = 3,
-    delay = 0,
-    pathColor = "gray",
-    pathWidth = 2,
-    gradientStartColor = "#18CCFC",
-    gradientStopColor = "#6344F5",
-    containerRef,
-    fromRef,
-    toRef,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      duration = 3,
+      delay = 0,
+      pathColor = "gray",
+      pathWidth = 2,
+      gradientStartColor = "#18CCFC",
+      gradientStopColor = "#6344F5",
+      containerRef,
+      fromRef,
+      toRef,
+      ...props
+    },
+    ref
+  ) => {
     const [pathD, setPathD] = React.useState("")
 
     React.useEffect(() => {

@@ -111,31 +111,65 @@ const parseAnsiContent = (content: string): React.ReactNode => {
     if (match.index > lastIndex) {
       parts.push({
         text: content.slice(lastIndex, match.index),
-        classes: [...currentClasses]
+        classes: [...currentClasses],
       })
     }
 
     // Parse the escape sequence
-    const codes = match[1].split(';').map(code => parseInt(code) || 0)
-    codes.forEach(code => {
+    const codes = match[1].split(";").map((code) => parseInt(code) || 0)
+    codes.forEach((code) => {
       switch (code) {
-        case 0: currentClasses = []; break // reset
-        case 30: currentClasses.push(ansiColors.black); break
-        case 31: currentClasses.push(ansiColors.red); break
-        case 32: currentClasses.push(ansiColors.green); break
-        case 33: currentClasses.push(ansiColors.yellow); break
-        case 34: currentClasses.push(ansiColors.blue); break
-        case 35: currentClasses.push(ansiColors.magenta); break
-        case 36: currentClasses.push(ansiColors.cyan); break
-        case 37: currentClasses.push(ansiColors.white); break
-        case 90: currentClasses.push(ansiColors.gray); break
-        case 91: currentClasses.push(ansiColors.brightRed); break
-        case 92: currentClasses.push(ansiColors.brightGreen); break
-        case 93: currentClasses.push(ansiColors.brightYellow); break
-        case 94: currentClasses.push(ansiColors.brightBlue); break
-        case 95: currentClasses.push(ansiColors.brightMagenta); break
-        case 96: currentClasses.push(ansiColors.brightCyan); break
-        case 97: currentClasses.push(ansiColors.brightWhite); break
+        case 0:
+          currentClasses = []
+          break // reset
+        case 30:
+          currentClasses.push(ansiColors.black)
+          break
+        case 31:
+          currentClasses.push(ansiColors.red)
+          break
+        case 32:
+          currentClasses.push(ansiColors.green)
+          break
+        case 33:
+          currentClasses.push(ansiColors.yellow)
+          break
+        case 34:
+          currentClasses.push(ansiColors.blue)
+          break
+        case 35:
+          currentClasses.push(ansiColors.magenta)
+          break
+        case 36:
+          currentClasses.push(ansiColors.cyan)
+          break
+        case 37:
+          currentClasses.push(ansiColors.white)
+          break
+        case 90:
+          currentClasses.push(ansiColors.gray)
+          break
+        case 91:
+          currentClasses.push(ansiColors.brightRed)
+          break
+        case 92:
+          currentClasses.push(ansiColors.brightGreen)
+          break
+        case 93:
+          currentClasses.push(ansiColors.brightYellow)
+          break
+        case 94:
+          currentClasses.push(ansiColors.brightBlue)
+          break
+        case 95:
+          currentClasses.push(ansiColors.brightMagenta)
+          break
+        case 96:
+          currentClasses.push(ansiColors.brightCyan)
+          break
+        case 97:
+          currentClasses.push(ansiColors.brightWhite)
+          break
       }
     })
 
@@ -146,7 +180,7 @@ const parseAnsiContent = (content: string): React.ReactNode => {
   if (lastIndex < content.length) {
     parts.push({
       text: content.slice(lastIndex),
-      classes: [...currentClasses]
+      classes: [...currentClasses],
     })
   }
 
@@ -158,32 +192,36 @@ const parseAnsiContent = (content: string): React.ReactNode => {
 }
 
 const CodeTerminal = React.forwardRef<HTMLDivElement, CodeTerminalProps>(
-  ({
-    className,
-    theme,
-    size,
-    title = "Terminal",
-    prompt = "$",
-    maxLines = 1000,
-    showLineNumbers = false,
-    allowInput = true,
-    allowClear = true,
-    allowCopy = true,
-    allowDownload = false,
-    allowFullscreen = true,
-    height = "400px",
-    autoScroll = true,
-    history = [],
-    onCommand,
-    onClear,
-    initialLines = [],
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      theme,
+      size,
+      title = "Terminal",
+      prompt = "$",
+      maxLines = 1000,
+      showLineNumbers = false,
+      allowInput = true,
+      allowClear = true,
+      allowCopy = true,
+      allowDownload = false,
+      allowFullscreen = true,
+      height = "400px",
+      autoScroll = true,
+      history = [],
+      onCommand,
+      onClear,
+      initialLines = [],
+      ...props
+    },
+    ref
+  ) => {
     const [lines, setLines] = React.useState<TerminalLine[]>(initialLines)
     const [input, setInput] = React.useState("")
     const [historyIndex, setHistoryIndex] = React.useState(-1)
     const [isFullscreen, setIsFullscreen] = React.useState(false)
-    const [commandHistory, setCommandHistory] = React.useState<string[]>(history)
+    const [commandHistory, setCommandHistory] =
+      React.useState<string[]>(history)
 
     const scrollAreaRef = React.useRef<HTMLDivElement>(null)
     const inputRef = React.useRef<HTMLInputElement>(null)
@@ -195,80 +233,86 @@ const CodeTerminal = React.forwardRef<HTMLDivElement, CodeTerminalProps>(
       }
     }, [lines, autoScroll])
 
-    const addLine = React.useCallback((line: Omit<TerminalLine, "id" | "timestamp">) => {
-      const newLine: TerminalLine = {
-        ...line,
-        id: `line-${Date.now()}-${Math.random()}`,
-        timestamp: Date.now(),
-      }
-
-      setLines(prev => {
-        const updated = [...prev, newLine]
-        return updated.length > maxLines ? updated.slice(-maxLines) : updated
-      })
-    }, [maxLines])
-
-    const handleCommand = React.useCallback(async (command: string) => {
-      if (!command.trim()) return
-
-      // Add command to history
-      setCommandHistory(prev => [...prev, command])
-      setHistoryIndex(-1)
-
-      // Add input line
-      addLine({
-        type: "input",
-        content: `${prompt} ${command}`,
-        command,
-      })
-
-      // Handle built-in commands
-      if (command === "clear") {
-        if (onClear) {
-          onClear()
-        } else {
-          setLines([])
+    const addLine = React.useCallback(
+      (line: Omit<TerminalLine, "id" | "timestamp">) => {
+        const newLine: TerminalLine = {
+          ...line,
+          id: `line-${Date.now()}-${Math.random()}`,
+          timestamp: Date.now(),
         }
-        return
-      }
 
-      if (command === "history") {
-        commandHistory.forEach((cmd, index) => {
+        setLines((prev) => {
+          const updated = [...prev, newLine]
+          return updated.length > maxLines ? updated.slice(-maxLines) : updated
+        })
+      },
+      [maxLines]
+    )
+
+    const handleCommand = React.useCallback(
+      async (command: string) => {
+        if (!command.trim()) return
+
+        // Add command to history
+        setCommandHistory((prev) => [...prev, command])
+        setHistoryIndex(-1)
+
+        // Add input line
+        addLine({
+          type: "input",
+          content: `${prompt} ${command}`,
+          command,
+        })
+
+        // Handle built-in commands
+        if (command === "clear") {
+          if (onClear) {
+            onClear()
+          } else {
+            setLines([])
+          }
+          return
+        }
+
+        if (command === "history") {
+          commandHistory.forEach((cmd, index) => {
+            addLine({
+              type: "output",
+              content: `${index + 1}  ${cmd}`,
+            })
+          })
+          return
+        }
+
+        if (command.startsWith("echo ")) {
           addLine({
             type: "output",
-            content: `${index + 1}  ${cmd}`,
+            content: command.slice(5),
           })
-        })
-        return
-      }
+          return
+        }
 
-      if (command.startsWith("echo ")) {
-        addLine({
-          type: "output",
-          content: command.slice(5),
-        })
-        return
-      }
-
-      // Call custom command handler
-      if (onCommand) {
-        try {
-          await onCommand(command)
-        } catch (error) {
+        // Call custom command handler
+        if (onCommand) {
+          try {
+            await onCommand(command)
+          } catch (error) {
+            addLine({
+              type: "error",
+              content: error instanceof Error ? error.message : String(error),
+              exitCode: 1,
+            })
+          }
+        } else {
           addLine({
             type: "error",
-            content: error instanceof Error ? error.message : String(error),
-            exitCode: 1,
+            content: `Command not found: ${command}`,
+            exitCode: 127,
           })
         }
-      } else {
-        addLine({
-          type: "error",
-          content: `Command not found: ${command}`,
-          exitCode: 127,
-        })
-      }
-    }, [prompt, addLine, onCommand, onClear, commandHistory])
+      },
+      [prompt, addLine, onCommand, onClear, commandHistory]
+    )
 
     const handleInputSubmit = (e: React.FormEvent) => {
       e.preventDefault()
@@ -300,25 +344,26 @@ const CodeTerminal = React.forwardRef<HTMLDivElement, CodeTerminalProps>(
     }
 
     const copyContent = React.useCallback(async () => {
-      const content = lines
-        .map(line => line.content)
-        .join('\n')
+      const content = lines.map((line) => line.content).join("\n")
 
       try {
         await navigator.clipboard.writeText(content)
       } catch (error) {
-        console.error('Failed to copy terminal content:', error)
+        console.error("Failed to copy terminal content:", error)
       }
     }, [lines])
 
     const downloadContent = React.useCallback(() => {
       const content = lines
-        .map(line => `[${new Date(line.timestamp).toISOString()}] ${line.content}`)
-        .join('\n')
+        .map(
+          (line) =>
+            `[${new Date(line.timestamp).toISOString()}] ${line.content}`
+        )
+        .join("\n")
 
-      const blob = new Blob([content], { type: 'text/plain' })
+      const blob = new Blob([content], { type: "text/plain" })
       const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
+      const a = document.createElement("a")
       a.href = url
       a.download = `terminal-${Date.now()}.txt`
       document.body.appendChild(a)
@@ -442,10 +487,10 @@ const CodeTerminal = React.forwardRef<HTMLDivElement, CodeTerminalProps>(
                       line.type === "system" && "text-blue-400"
                     )}
                   >
-                    {typeof line.content === "string" && line.content.includes('\x1b[')
+                    {typeof line.content === "string" &&
+                    line.content.includes("\x1b[")
                       ? parseAnsiContent(line.content)
-                      : line.content
-                    }
+                      : line.content}
                   </div>
                 </div>
               ))}

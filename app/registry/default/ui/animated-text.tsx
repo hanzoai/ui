@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { motion, AnimatePresence, Variants } from 'motion/react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useMemo, useState } from "react"
+import { AnimatePresence, motion, Variants } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
@@ -11,17 +12,17 @@ function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
   return prefersReducedMotion
@@ -35,7 +36,12 @@ export interface AnimatedTextProps {
   /**
    * Animation type
    */
-  animation?: 'typewriter' | 'wordReveal' | 'letterShuffle' | 'gradient' | 'glitch'
+  animation?:
+    | "typewriter"
+    | "wordReveal"
+    | "letterShuffle"
+    | "gradient"
+    | "glitch"
   /**
    * Animation duration in milliseconds
    */
@@ -94,9 +100,9 @@ const letterVariants: Variants = {
     transition: {
       delay: i * 0.05,
       duration: 0.3,
-      ease: 'easeOut'
-    }
-  })
+      ease: "easeOut",
+    },
+  }),
 }
 
 const wordVariants: Variants = {
@@ -108,34 +114,35 @@ const wordVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
-  })
+      ease: "easeOut",
+    },
+  }),
 }
 
 const glitchVariants: Variants = {
   glitch: {
     x: [0, -2, 2, -1, 1, 0],
     filter: [
-      'hue-rotate(0deg)',
-      'hue-rotate(90deg)',
-      'hue-rotate(180deg)',
-      'hue-rotate(270deg)',
-      'hue-rotate(0deg)'
+      "hue-rotate(0deg)",
+      "hue-rotate(90deg)",
+      "hue-rotate(180deg)",
+      "hue-rotate(270deg)",
+      "hue-rotate(0deg)",
     ],
     transition: {
       duration: 0.2,
       repeat: Infinity,
-      repeatType: 'reverse'
-    }
-  }
+      repeatType: "reverse",
+    },
+  },
 }
 
 /**
  * Generate random characters for shuffle effect
  */
 function getRandomChar(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"
   return chars[Math.floor(Math.random() * chars.length)]
 }
 
@@ -143,12 +150,12 @@ function getRandomChar(): string {
  * Typewriter animation hook
  */
 function useTypewriter(text: string, speed: number, autoStart: boolean) {
-  const [displayText, setDisplayText] = useState('')
+  const [displayText, setDisplayText] = useState("")
   const [isComplete, setIsComplete] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const startAnimation = useCallback(() => {
-    setDisplayText('')
+    setDisplayText("")
     setCurrentIndex(0)
     setIsComplete(false)
   }, [])
@@ -161,8 +168,8 @@ function useTypewriter(text: string, speed: number, autoStart: boolean) {
   useEffect(() => {
     if (currentIndex < text.length && !isComplete) {
       const timer = setTimeout(() => {
-        setDisplayText(prev => prev + text[currentIndex])
-        setCurrentIndex(prev => prev + 1)
+        setDisplayText((prev) => prev + text[currentIndex])
+        setCurrentIndex((prev) => prev + 1)
       }, speed)
 
       return () => clearTimeout(timer)
@@ -189,14 +196,14 @@ function useLetterShuffle(text: string, duration: number, autoStart: boolean) {
     const interval = setInterval(() => {
       setDisplayText(() =>
         text
-          .split('')
+          .split("")
           .map((char, index) => {
             if (index < iterations) {
               return text[index]
             }
-            return char === ' ' ? ' ' : getRandomChar()
+            return char === " " ? " " : getRandomChar()
           })
-          .join('')
+          .join("")
       )
 
       if (iterations >= maxIterations) {
@@ -227,7 +234,7 @@ function useLetterShuffle(text: string, duration: number, autoStart: boolean) {
  */
 export function AnimatedText({
   text,
-  animation = 'typewriter',
+  animation = "typewriter",
   duration = 2000,
   delay = 50,
   repeat = false,
@@ -236,10 +243,10 @@ export function AnimatedText({
   onComplete,
   className,
   style,
-  gradientColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'],
+  gradientColors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#96ceb4", "#ffeaa7"],
   glitchIntensity = 0.5,
-  cursor = '|',
-  showCursor = true
+  cursor = "|",
+  showCursor = true,
 }: AnimatedTextProps) {
   const [animationKey, setAnimationKey] = useState(0)
   const [showGradient, setShowGradient] = useState(false)
@@ -248,8 +255,20 @@ export function AnimatedText({
   // Disable animations if user prefers reduced motion
   const shouldAnimate = !prefersReducedMotion && autoStart
 
-  const { displayText: typewriterText, isComplete: typewriterComplete, startAnimation: startTypewriter } = useTypewriter(text, delay, shouldAnimate && animation === 'typewriter')
-  const { displayText: shuffleText, isAnimating: shuffleAnimating, startAnimation: startShuffle } = useLetterShuffle(text, duration, shouldAnimate && animation === 'letterShuffle')
+  const {
+    displayText: typewriterText,
+    isComplete: typewriterComplete,
+    startAnimation: startTypewriter,
+  } = useTypewriter(text, delay, shouldAnimate && animation === "typewriter")
+  const {
+    displayText: shuffleText,
+    isAnimating: shuffleAnimating,
+    startAnimation: startShuffle,
+  } = useLetterShuffle(
+    text,
+    duration,
+    shouldAnimate && animation === "letterShuffle"
+  )
 
   // Handle repeat animation
   useEffect(() => {
@@ -257,37 +276,57 @@ export function AnimatedText({
 
     let timer: NodeJS.Timeout
 
-    if (animation === 'typewriter' && typewriterComplete) {
+    if (animation === "typewriter" && typewriterComplete) {
       timer = setTimeout(() => {
         startTypewriter()
       }, repeatDelay)
-    } else if (animation === 'letterShuffle' && !shuffleAnimating) {
+    } else if (animation === "letterShuffle" && !shuffleAnimating) {
       timer = setTimeout(() => {
         startShuffle()
       }, repeatDelay)
-    } else if (['wordReveal', 'gradient', 'glitch'].includes(animation)) {
+    } else if (["wordReveal", "gradient", "glitch"].includes(animation)) {
       timer = setTimeout(() => {
-        setAnimationKey(prev => prev + 1)
+        setAnimationKey((prev) => prev + 1)
       }, duration + repeatDelay)
     }
 
     return () => clearTimeout(timer)
-  }, [animation, typewriterComplete, shuffleAnimating, repeat, repeatDelay, duration, startTypewriter, startShuffle])
+  }, [
+    animation,
+    typewriterComplete,
+    shuffleAnimating,
+    repeat,
+    repeatDelay,
+    duration,
+    startTypewriter,
+    startShuffle,
+  ])
 
   // Handle completion callback
   useEffect(() => {
     if (!onComplete) return
 
-    if (animation === 'typewriter' && typewriterComplete) {
+    if (animation === "typewriter" && typewriterComplete) {
       onComplete()
-    } else if (animation === 'letterShuffle' && !shuffleAnimating && displayText === text) {
+    } else if (
+      animation === "letterShuffle" &&
+      !shuffleAnimating &&
+      displayText === text
+    ) {
       onComplete()
     }
-  }, [animation, typewriterComplete, shuffleAnimating, onComplete, displayText, text])
+  }, [
+    animation,
+    typewriterComplete,
+    shuffleAnimating,
+    onComplete,
+    displayText,
+    text,
+  ])
 
   // Gradient animation effect
   useEffect(() => {
-    if (animation === 'gradient') {
+    if (animation === "gradient") {
       setShowGradient(true)
       const timer = setTimeout(() => setShowGradient(false), duration)
       return () => clearTimeout(timer)
@@ -295,14 +334,14 @@ export function AnimatedText({
   }, [animation, duration, animationKey])
 
   const gradientStyle = useMemo(() => {
-    if (animation !== 'gradient' || !showGradient) return {}
+    if (animation !== "gradient" || !showGradient) return {}
 
     return {
-      background: `linear-gradient(-45deg, ${gradientColors.join(', ')})`,
-      backgroundSize: '400% 400%',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      animation: `gradientShift ${duration}ms ease-in-out infinite`
+      background: `linear-gradient(-45deg, ${gradientColors.join(", ")})`,
+      backgroundSize: "400% 400%",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
+      animation: `gradientShift ${duration}ms ease-in-out infinite`,
     }
   }, [animation, showGradient, gradientColors, duration])
 
@@ -313,7 +352,7 @@ export function AnimatedText({
     }
 
     switch (animation) {
-      case 'typewriter':
+      case "typewriter":
         return (
           <span className="relative">
             {typewriterText}
@@ -329,7 +368,7 @@ export function AnimatedText({
           </span>
         )
 
-      case 'wordReveal':
+      case "wordReveal":
         return (
           <motion.div
             key={animationKey}
@@ -338,7 +377,7 @@ export function AnimatedText({
             animate="visible"
             onAnimationComplete={() => onComplete?.()}
           >
-            {text.split(' ').map((word, i) => (
+            {text.split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 custom={i}
@@ -351,10 +390,10 @@ export function AnimatedText({
           </motion.div>
         )
 
-      case 'letterShuffle':
+      case "letterShuffle":
         return <span>{shuffleText}</span>
 
-      case 'gradient':
+      case "gradient":
         return (
           <motion.span
             key={animationKey}
@@ -368,7 +407,7 @@ export function AnimatedText({
           </motion.span>
         )
 
-      case 'glitch':
+      case "glitch":
         return (
           <motion.div
             key={animationKey}
@@ -379,7 +418,7 @@ export function AnimatedText({
               variants={glitchVariants}
               animate="glitch"
               style={{
-                textShadow: `${glitchIntensity * 2}px 0 #ff0000, ${-glitchIntensity * 2}px 0 #00ffff`
+                textShadow: `${glitchIntensity * 2}px 0 #ff0000, ${-glitchIntensity * 2}px 0 #00ffff`,
               }}
             >
               {text}
@@ -389,9 +428,9 @@ export function AnimatedText({
               variants={glitchVariants}
               animate="glitch"
               style={{
-                color: '#ff0000',
+                color: "#ff0000",
                 left: `${glitchIntensity}px`,
-                mixBlendMode: 'multiply'
+                mixBlendMode: "multiply",
               }}
             >
               {text}
@@ -401,9 +440,9 @@ export function AnimatedText({
               variants={glitchVariants}
               animate="glitch"
               style={{
-                color: '#00ffff',
+                color: "#00ffff",
                 left: `${-glitchIntensity}px`,
-                mixBlendMode: 'multiply'
+                mixBlendMode: "multiply",
               }}
             >
               {text}
@@ -418,21 +457,21 @@ export function AnimatedText({
 
   return (
     <>
-      {animation === 'gradient' && (
+      {animation === "gradient" && (
         <style jsx>{`
           @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,
+            100% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
           }
         `}</style>
       )}
-      <div
-        className={cn('inline-block', className)}
-        style={style}
-      >
-        <AnimatePresence mode="wait">
-          {renderContent()}
-        </AnimatePresence>
+      <div className={cn("inline-block", className)} style={style}>
+        <AnimatePresence mode="wait">{renderContent()}</AnimatePresence>
       </div>
     </>
   )

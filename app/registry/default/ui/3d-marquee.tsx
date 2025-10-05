@@ -1,50 +1,51 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "motion/react"
-import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
+import { motion } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 const marquee3DVariants = cva(
   [
     "relative overflow-hidden whitespace-nowrap",
     "transform-gpu will-change-transform",
-    "[perspective:1000px]"
+    "[perspective:1000px]",
   ],
   {
     variants: {
       variant: {
         default: [
           "bg-background text-foreground",
-          "[&_.marquee-content]:text-current"
+          "[&_.marquee-content]:text-current",
         ],
         neon: [
           "bg-black text-cyan-400",
           "[&_.marquee-content]:text-cyan-400",
           "[&_.marquee-content]:drop-shadow-[0_0_10px_currentColor]",
-          "[&_.marquee-content]:animate-pulse"
+          "[&_.marquee-content]:animate-pulse",
         ],
         rainbow: [
           "bg-black",
           "[&_.marquee-content]:bg-gradient-to-r [&_.marquee-content]:from-red-500 [&_.marquee-content]:via-yellow-500 [&_.marquee-content]:via-green-500 [&_.marquee-content]:via-blue-500 [&_.marquee-content]:to-purple-500",
-          "[&_.marquee-content]:bg-clip-text [&_.marquee-content]:text-transparent"
+          "[&_.marquee-content]:bg-clip-text [&_.marquee-content]:text-transparent",
         ],
         metallic: [
           "bg-slate-900",
           "[&_.marquee-content]:bg-gradient-to-b [&_.marquee-content]:from-gray-200 [&_.marquee-content]:via-gray-400 [&_.marquee-content]:to-gray-600",
-          "[&_.marquee-content]:bg-clip-text [&_.marquee-content]:text-transparent"
+          "[&_.marquee-content]:bg-clip-text [&_.marquee-content]:text-transparent",
         ],
         fire: [
           "bg-black",
           "[&_.marquee-content]:bg-gradient-to-t [&_.marquee-content]:from-red-600 [&_.marquee-content]:via-orange-500 [&_.marquee-content]:to-yellow-400",
           "[&_.marquee-content]:bg-clip-text [&_.marquee-content]:text-transparent",
-          "[&_.marquee-content]:drop-shadow-[0_0_20px_#ff6600]"
+          "[&_.marquee-content]:drop-shadow-[0_0_20px_#ff6600]",
         ],
         glass: [
           "bg-white/10 backdrop-blur-sm",
           "[&_.marquee-content]:text-white/90",
-          "[&_.marquee-content]:drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-        ]
+          "[&_.marquee-content]:drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]",
+        ],
       },
       size: {
         sm: "h-8 text-sm [&_.marquee-content]:py-1",
@@ -52,28 +53,28 @@ const marquee3DVariants = cva(
         lg: "h-16 text-lg [&_.marquee-content]:py-3",
         xl: "h-20 text-xl [&_.marquee-content]:py-4",
         "2xl": "h-24 text-2xl [&_.marquee-content]:py-5",
-        "3xl": "h-32 text-3xl [&_.marquee-content]:py-6"
+        "3xl": "h-32 text-3xl [&_.marquee-content]:py-6",
       },
       direction: {
         left: "",
         right: "",
         up: "flex-col",
-        down: "flex-col"
+        down: "flex-col",
       },
       perspective: {
         none: "[perspective:none]",
         sm: "[perspective:500px]",
         default: "[perspective:1000px]",
         lg: "[perspective:1500px]",
-        xl: "[perspective:2000px]"
-      }
+        xl: "[perspective:2000px]",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
       direction: "left",
-      perspective: "default"
-    }
+      perspective: "default",
+    },
   }
 )
 
@@ -96,28 +97,31 @@ interface Marquee3DProps
 }
 
 const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
-  ({
-    className,
-    variant,
-    size,
-    direction = "left",
-    perspective,
-    children,
-    speed = 50,
-    pauseOnHover = false,
-    reverse = false,
-    repeat = 5,
-    gap = 0,
-    rotateX = 0,
-    rotateY = 0,
-    rotateZ = 0,
-    autoFill = false,
-    gradient = false,
-    gradientColor = "#ffffff",
-    gradientWidth = 200,
-    style,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      direction = "left",
+      perspective,
+      children,
+      speed = 50,
+      pauseOnHover = false,
+      reverse = false,
+      repeat = 5,
+      gap = 0,
+      rotateX = 0,
+      rotateY = 0,
+      rotateZ = 0,
+      autoFill = false,
+      gradient = false,
+      gradientColor = "#ffffff",
+      gradientWidth = 200,
+      style,
+      ...props
+    },
+    ref
+  ) => {
     const [containerWidth, setContainerWidth] = React.useState(0)
     const [contentWidth, setContentWidth] = React.useState(0)
     const containerRef = React.useRef<HTMLDivElement>(null)
@@ -141,8 +145,8 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
       }
 
       measureDimensions()
-      window.addEventListener('resize', measureDimensions)
-      return () => window.removeEventListener('resize', measureDimensions)
+      window.addEventListener("resize", measureDimensions)
+      return () => window.removeEventListener("resize", measureDimensions)
     }, [direction, children])
 
     // Calculate animation duration based on speed and content width
@@ -168,19 +172,19 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
 
       if (direction === "left") {
         animateProps = {
-          x: reverse ? [distance, -distance] : [-distance, distance]
+          x: reverse ? [distance, -distance] : [-distance, distance],
         }
       } else if (direction === "right") {
         animateProps = {
-          x: reverse ? [-distance, distance] : [distance, -distance]
+          x: reverse ? [-distance, distance] : [distance, -distance],
         }
       } else if (direction === "up") {
         animateProps = {
-          y: reverse ? [distance, -distance] : [-distance, distance]
+          y: reverse ? [distance, -distance] : [-distance, distance],
         }
       } else if (direction === "down") {
         animateProps = {
-          y: reverse ? [-distance, distance] : [distance, -distance]
+          y: reverse ? [-distance, distance] : [distance, -distance],
         }
       }
 
@@ -190,7 +194,7 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
           duration,
           ease: "linear",
           repeat: Infinity,
-        }
+        },
       }
     }
 
@@ -198,10 +202,12 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
     const transform3D = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`
 
     // Gradient mask style
-    const gradientMask = gradient ? {
-      maskImage: `linear-gradient(to right, transparent, ${gradientColor} ${gradientWidth}px, ${gradientColor} calc(100% - ${gradientWidth}px), transparent)`,
-      WebkitMaskImage: `linear-gradient(to right, transparent, ${gradientColor} ${gradientWidth}px, ${gradientColor} calc(100% - ${gradientWidth}px), transparent)`
-    } : {}
+    const gradientMask = gradient
+      ? {
+          maskImage: `linear-gradient(to right, transparent, ${gradientColor} ${gradientWidth}px, ${gradientColor} calc(100% - ${gradientWidth}px), transparent)`,
+          WebkitMaskImage: `linear-gradient(to right, transparent, ${gradientColor} ${gradientWidth}px, ${gradientColor} calc(100% - ${gradientWidth}px), transparent)`,
+        }
+      : {}
 
     return (
       <div
@@ -215,7 +221,7 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
         style={{
           ...style,
           transform: transform3D,
-          ...gradientMask
+          ...gradientMask,
         }}
         {...props}
       >
@@ -223,7 +229,9 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
           ref={contentRef}
           className={cn(
             "marquee-content flex shrink-0 font-bold",
-            direction === "up" || direction === "down" ? "flex-col" : "flex-row",
+            direction === "up" || direction === "down"
+              ? "flex-col"
+              : "flex-row",
             pauseOnHover && "hover:[animation-play-state:paused]"
           )}
           style={{
@@ -236,20 +244,30 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
               <div
                 className={cn(
                   "flex shrink-0 items-center justify-center",
-                  direction === "up" || direction === "down" ? "flex-col" : "flex-row"
+                  direction === "up" || direction === "down"
+                    ? "flex-col"
+                    : "flex-row"
                 )}
                 style={{
                   transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`,
-                  transformStyle: "preserve-3d"
+                  transformStyle: "preserve-3d",
                 }}
               >
                 {children}
               </div>
               {index < actualRepeat - 1 && gap > 0 && (
-                <div style={{
-                  width: direction === "up" || direction === "down" ? "100%" : `${gap}px`,
-                  height: direction === "up" || direction === "down" ? `${gap}px` : "100%"
-                }} />
+                <div
+                  style={{
+                    width:
+                      direction === "up" || direction === "down"
+                        ? "100%"
+                        : `${gap}px`,
+                    height:
+                      direction === "up" || direction === "down"
+                        ? `${gap}px`
+                        : "100%",
+                  }}
+                />
               )}
             </React.Fragment>
           ))}
@@ -262,80 +280,85 @@ Marquee3D.displayName = "Marquee3D"
 
 // Preset marquee variants
 const Marquee3DPreset = {
-  Hero: React.forwardRef<HTMLDivElement, Omit<Marquee3DProps, 'variant' | 'size'>>(
-    (props, ref) => (
-      <Marquee3D
-        ref={ref}
-        variant="rainbow"
-        size="3xl"
-        speed={30}
-        rotateX={-10}
-        gradient
-        {...props}
-      />
-    )
-  ),
+  Hero: React.forwardRef<
+    HTMLDivElement,
+    Omit<Marquee3DProps, "variant" | "size">
+  >((props, ref) => (
+    <Marquee3D
+      ref={ref}
+      variant="rainbow"
+      size="3xl"
+      speed={30}
+      rotateX={-10}
+      gradient
+      {...props}
+    />
+  )),
 
-  Neon: React.forwardRef<HTMLDivElement, Omit<Marquee3DProps, 'variant' | 'size'>>(
-    (props, ref) => (
-      <Marquee3D
-        ref={ref}
-        variant="neon"
-        size="xl"
-        speed={40}
-        rotateY={5}
-        pauseOnHover
-        {...props}
-      />
-    )
-  ),
+  Neon: React.forwardRef<
+    HTMLDivElement,
+    Omit<Marquee3DProps, "variant" | "size">
+  >((props, ref) => (
+    <Marquee3D
+      ref={ref}
+      variant="neon"
+      size="xl"
+      speed={40}
+      rotateY={5}
+      pauseOnHover
+      {...props}
+    />
+  )),
 
-  Metallic: React.forwardRef<HTMLDivElement, Omit<Marquee3DProps, 'variant' | 'size'>>(
-    (props, ref) => (
-      <Marquee3D
-        ref={ref}
-        variant="metallic"
-        size="lg"
-        speed={35}
-        rotateX={-5}
-        rotateY={2}
-        gradient
-        gradientColor="#c4c4c4"
-        {...props}
-      />
-    )
-  ),
+  Metallic: React.forwardRef<
+    HTMLDivElement,
+    Omit<Marquee3DProps, "variant" | "size">
+  >((props, ref) => (
+    <Marquee3D
+      ref={ref}
+      variant="metallic"
+      size="lg"
+      speed={35}
+      rotateX={-5}
+      rotateY={2}
+      gradient
+      gradientColor="#c4c4c4"
+      {...props}
+    />
+  )),
 
-  Fire: React.forwardRef<HTMLDivElement, Omit<Marquee3DProps, 'variant' | 'size'>>(
-    (props, ref) => (
-      <Marquee3D
-        ref={ref}
-        variant="fire"
-        size="2xl"
-        speed={60}
-        rotateZ={1}
-        gradient
-        gradientColor="#ff6600"
-        {...props}
-      />
-    )
-  ),
+  Fire: React.forwardRef<
+    HTMLDivElement,
+    Omit<Marquee3DProps, "variant" | "size">
+  >((props, ref) => (
+    <Marquee3D
+      ref={ref}
+      variant="fire"
+      size="2xl"
+      speed={60}
+      rotateZ={1}
+      gradient
+      gradientColor="#ff6600"
+      {...props}
+    />
+  )),
 
-  Glass: React.forwardRef<HTMLDivElement, Omit<Marquee3DProps, 'variant' | 'size'>>(
-    (props, ref) => (
-      <Marquee3D
-        ref={ref}
-        variant="glass"
-        size="lg"
-        speed={25}
-        rotateX={-8}
-        pauseOnHover
-        gradient
-        gradientColor="rgba(255,255,255,0.9)"
-        {...props}
-      />
-    )
-  )
+  Glass: React.forwardRef<
+    HTMLDivElement,
+    Omit<Marquee3DProps, "variant" | "size">
+  >((props, ref) => (
+    <Marquee3D
+      ref={ref}
+      variant="glass"
+      size="lg"
+      speed={25}
+      rotateX={-8}
+      pauseOnHover
+      gradient
+      gradientColor="rgba(255,255,255,0.9)"
+      {...props}
+    />
+  )),
 }
 
 // Assign display names
@@ -346,49 +369,45 @@ Marquee3DPreset.Fire.displayName = "Marquee3DPreset.Fire"
 Marquee3DPreset.Glass.displayName = "Marquee3DPreset.Glass"
 
 // Marquee with floating 3D text effect
-const Marquee3DFloating = React.forwardRef<HTMLDivElement, Marquee3DProps & {
-  floatIntensity?: number
-  floatSpeed?: number
-}>(
-  ({
-    children,
-    floatIntensity = 10,
-    floatSpeed = 3,
-    ...props
-  }, ref) => {
-    const text = typeof children === 'string' ? children : ''
-
-    return (
-      <Marquee3D ref={ref} {...props}>
-        {text ? (
-          <div className="flex space-x-1">
-            {text.split('').map((char, index) => (
-              <motion.span
-                key={index}
-                className="inline-block"
-                animate={{
-                  y: [0, -floatIntensity, 0],
-                  rotateX: [0, 5, 0],
-                  rotateY: [0, 2, 0]
-                }}
-                transition={{
-                  duration: floatSpeed,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  delay: index * 0.1
-                }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </motion.span>
-            ))}
-          </div>
-        ) : (
-          children
-        )}
-      </Marquee3D>
-    )
+const Marquee3DFloating = React.forwardRef<
+  HTMLDivElement,
+  Marquee3DProps & {
+    floatIntensity?: number
+    floatSpeed?: number
   }
-)
+>(({ children, floatIntensity = 10, floatSpeed = 3, ...props }, ref) => {
+  const text = typeof children === "string" ? children : ""
+
+  return (
+    <Marquee3D ref={ref} {...props}>
+      {text ? (
+        <div className="flex space-x-1">
+          {text.split("").map((char, index) => (
+            <motion.span
+              key={index}
+              className="inline-block"
+              animate={{
+                y: [0, -floatIntensity, 0],
+                rotateX: [0, 5, 0],
+                rotateY: [0, 2, 0],
+              }}
+              transition={{
+                duration: floatSpeed,
+                ease: "easeInOut",
+                repeat: Infinity,
+                delay: index * 0.1,
+              }}
+            >
+              {char === " " ? "\u00A0" : char}
+            </motion.span>
+          ))}
+        </div>
+      ) : (
+        children
+      )}
+    </Marquee3D>
+  )
+})
 Marquee3DFloating.displayName = "Marquee3DFloating"
 
 export {
@@ -396,5 +415,5 @@ export {
   Marquee3DPreset,
   Marquee3DFloating,
   marquee3DVariants,
-  type Marquee3DProps
+  type Marquee3DProps,
 }

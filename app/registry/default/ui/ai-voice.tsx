@@ -1,21 +1,43 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Button } from '@/registry/default/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/registry/default/ui/card'
-import { Badge } from '@/registry/default/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/default/ui/select'
-import { Slider } from '@/registry/default/ui/slider'
-import { Switch } from '@/registry/default/ui/switch'
-import { Textarea } from '@/registry/default/ui/textarea'
-import { Mic, MicOff, Volume2, VolumeX, Settings, Play, Pause, Square, RotateCcw } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import {
+  Mic,
+  MicOff,
+  Pause,
+  Play,
+  RotateCcw,
+  Settings,
+  Square,
+  Volume2,
+  VolumeX,
+} from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/default/ui/select"
+import { Slider } from "@/registry/default/ui/slider"
+import { Switch } from "@/registry/default/ui/switch"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 interface VoiceProfile {
   id: string
   name: string
   language: string
-  gender: 'male' | 'female' | 'neutral'
+  gender: "male" | "female" | "neutral"
   accent?: string
   speed?: number
   pitch?: number
@@ -39,41 +61,92 @@ interface AIVoiceProps {
 }
 
 const defaultVoices: VoiceProfile[] = [
-  { id: 'default-en-us', name: 'English (US)', language: 'en-US', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-en-gb', name: 'English (UK)', language: 'en-GB', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-es-es', name: 'Spanish (Spain)', language: 'es-ES', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-fr-fr', name: 'French (France)', language: 'fr-FR', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-de-de', name: 'German (Germany)', language: 'de-DE', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-ja-jp', name: 'Japanese (Japan)', language: 'ja-JP', gender: 'neutral', speed: 1.0, pitch: 1.0 },
-  { id: 'default-zh-cn', name: 'Chinese (Mandarin)', language: 'zh-CN', gender: 'neutral', speed: 1.0, pitch: 1.0 },
+  {
+    id: "default-en-us",
+    name: "English (US)",
+    language: "en-US",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-en-gb",
+    name: "English (UK)",
+    language: "en-GB",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-es-es",
+    name: "Spanish (Spain)",
+    language: "es-ES",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-fr-fr",
+    name: "French (France)",
+    language: "fr-FR",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-de-de",
+    name: "German (Germany)",
+    language: "de-DE",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-ja-jp",
+    name: "Japanese (Japan)",
+    language: "ja-JP",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
+  {
+    id: "default-zh-cn",
+    name: "Chinese (Mandarin)",
+    language: "zh-CN",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 1.0,
+  },
 ]
 
 const commandPatterns = [
-  { pattern: /^(start|begin|go)$/i, command: 'start' },
-  { pattern: /^(stop|end|halt)$/i, command: 'stop' },
-  { pattern: /^(pause|wait)$/i, command: 'pause' },
-  { pattern: /^(resume|continue)$/i, command: 'resume' },
-  { pattern: /^(clear|reset)$/i, command: 'clear' },
-  { pattern: /^volume (\d+)$/i, command: 'volume', extract: 1 },
-  { pattern: /^speak (.+)$/i, command: 'speak', extract: 1 },
+  { pattern: /^(start|begin|go)$/i, command: "start" },
+  { pattern: /^(stop|end|halt)$/i, command: "stop" },
+  { pattern: /^(pause|wait)$/i, command: "pause" },
+  { pattern: /^(resume|continue)$/i, command: "resume" },
+  { pattern: /^(clear|reset)$/i, command: "clear" },
+  { pattern: /^volume (\d+)$/i, command: "volume", extract: 1 },
+  { pattern: /^speak (.+)$/i, command: "speak", extract: 1 },
 ]
 
 export function AIVoice({
   onTranscript,
   onCommand,
-  language = 'en-US',
+  language = "en-US",
   voice,
-  wakeWord = 'hey assistant',
+  wakeWord = "hey assistant",
   autoStart = false,
-  className
+  className,
 }: AIVoiceProps) {
   const [isListening, setIsListening] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
-  const [transcript, setTranscript] = useState('')
-  const [finalTranscript, setFinalTranscript] = useState('')
+  const [transcript, setTranscript] = useState("")
+  const [finalTranscript, setFinalTranscript] = useState("")
   const [currentVolume, setCurrentVolume] = useState(0)
   const [isWakeWordActive, setIsWakeWordActive] = useState(false)
-  const [selectedVoice, setSelectedVoice] = useState<VoiceProfile>(voice || defaultVoices[0])
+  const [selectedVoice, setSelectedVoice] = useState<VoiceProfile>(
+    voice || defaultVoices[0]
+  )
   const [showSettings, setShowSettings] = useState(false)
   const [speechSpeed, setSpeechSpeed] = useState(1.0)
   const [speechPitch, setSpeechPitch] = useState(1.0)
@@ -91,8 +164,9 @@ export function AIVoice({
 
   // Initialize speech recognition
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
+    if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
+      const SpeechRecognition =
+        window.webkitSpeechRecognition || window.SpeechRecognition
       recognitionRef.current = new SpeechRecognition()
 
       if (recognitionRef.current) {
@@ -101,8 +175,8 @@ export function AIVoice({
         recognitionRef.current.lang = language
 
         recognitionRef.current.onresult = (event) => {
-          let interimTranscript = ''
-          let finalTranscriptText = ''
+          let interimTranscript = ""
+          let finalTranscriptText = ""
 
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const result = event.results[i]
@@ -116,11 +190,14 @@ export function AIVoice({
           setTranscript(interimTranscript)
 
           if (finalTranscriptText) {
-            setFinalTranscript(prev => prev + finalTranscriptText)
+            setFinalTranscript((prev) => prev + finalTranscriptText)
             onTranscript?.(finalTranscriptText)
 
             // Check for wake word
-            if (isWakeWordActive && finalTranscriptText.toLowerCase().includes(wakeWord.toLowerCase())) {
+            if (
+              isWakeWordActive &&
+              finalTranscriptText.toLowerCase().includes(wakeWord.toLowerCase())
+            ) {
               setIsWakeWordActive(false)
               handleWakeWordDetected(finalTranscriptText)
             }
@@ -142,7 +219,7 @@ export function AIVoice({
     }
 
     // Initialize speech synthesis
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       synthRef.current = window.speechSynthesis
     }
 
@@ -168,9 +245,11 @@ export function AIVoice({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
 
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)()
+      audioContextRef.current = new (window.AudioContext ||
+        window.webkitAudioContext)()
       analyserRef.current = audioContextRef.current.createAnalyser()
-      microphoneRef.current = audioContextRef.current.createMediaStreamSource(stream)
+      microphoneRef.current =
+        audioContextRef.current.createMediaStreamSource(stream)
 
       analyserRef.current.fftSize = 256
       microphoneRef.current.connect(analyserRef.current)
@@ -178,7 +257,7 @@ export function AIVoice({
       startAudioVisualization()
       setError(null)
     } catch (err) {
-      setError('Microphone access denied')
+      setError("Microphone access denied")
     }
   }, [])
 
@@ -187,7 +266,7 @@ export function AIVoice({
     if (!analyserRef.current || !canvasRef.current) return
 
     const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext("2d")
     if (!ctx) return
 
     const bufferLength = analyserRef.current.frequencyBinCount
@@ -204,14 +283,14 @@ export function AIVoice({
       setAudioLevel(level)
 
       // Draw waveform
-      ctx.fillStyle = 'rgb(0, 0, 0, 0.1)'
+      ctx.fillStyle = "rgb(0, 0, 0, 0.1)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       const barWidth = (canvas.width / bufferLength) * 2.5
       let barHeight
       let x = 0
 
-      ctx.fillStyle = 'rgb(59, 130, 246)'
+      ctx.fillStyle = "rgb(59, 130, 246)"
 
       for (let i = 0; i < bufferLength; i++) {
         barHeight = (dataArray[i] / 255) * canvas.height * 0.8
@@ -228,7 +307,7 @@ export function AIVoice({
 
   const startListening = useCallback(async () => {
     if (!recognitionRef.current) {
-      setError('Speech recognition not supported')
+      setError("Speech recognition not supported")
       return
     }
 
@@ -238,7 +317,7 @@ export function AIVoice({
       setIsListening(true)
       setError(null)
     } catch (err) {
-      setError('Failed to start listening')
+      setError("Failed to start listening")
     }
   }, [initializeAudioContext])
 
@@ -253,26 +332,29 @@ export function AIVoice({
     }
   }, [])
 
-  const speak = useCallback((text: string) => {
-    if (!synthRef.current) return
+  const speak = useCallback(
+    (text: string) => {
+      if (!synthRef.current) return
 
-    synthRef.current.cancel()
+      synthRef.current.cancel()
 
-    const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = selectedVoice.language
-    utterance.rate = speechSpeed
-    utterance.pitch = speechPitch
-    utterance.volume = speechVolume
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = selectedVoice.language
+      utterance.rate = speechSpeed
+      utterance.pitch = speechPitch
+      utterance.volume = speechVolume
 
-    utterance.onstart = () => setIsSpeaking(true)
-    utterance.onend = () => setIsSpeaking(false)
-    utterance.onerror = () => {
-      setIsSpeaking(false)
-      setError('Speech synthesis error')
-    }
+      utterance.onstart = () => setIsSpeaking(true)
+      utterance.onend = () => setIsSpeaking(false)
+      utterance.onerror = () => {
+        setIsSpeaking(false)
+        setError("Speech synthesis error")
+      }
 
-    synthRef.current.speak(utterance)
-  }, [selectedVoice, speechSpeed, speechPitch, speechVolume])
+      synthRef.current.speak(utterance)
+    },
+    [selectedVoice, speechSpeed, speechPitch, speechVolume]
+  )
 
   const stopSpeaking = useCallback(() => {
     if (synthRef.current) {
@@ -281,62 +363,78 @@ export function AIVoice({
     }
   }, [])
 
-  const checkForCommands = useCallback((text: string) => {
-    const words = text.toLowerCase().trim()
+  const checkForCommands = useCallback(
+    (text: string) => {
+      const words = text.toLowerCase().trim()
 
-    for (const { pattern, command, extract } of commandPatterns) {
-      const match = words.match(pattern)
-      if (match) {
-        const voiceCommand: VoiceCommand = {
-          command,
-          confidence: 0.9,
-          timestamp: Date.now(),
-          parameters: extract ? { value: match[extract] } : undefined
+      for (const { pattern, command, extract } of commandPatterns) {
+        const match = words.match(pattern)
+        if (match) {
+          const voiceCommand: VoiceCommand = {
+            command,
+            confidence: 0.9,
+            timestamp: Date.now(),
+            parameters: extract ? { value: match[extract] } : undefined,
+          }
+          onCommand?.(voiceCommand)
+          break
         }
-        onCommand?.(voiceCommand)
-        break
       }
-    }
-  }, [onCommand])
+    },
+    [onCommand]
+  )
 
-  const handleWakeWordDetected = useCallback((text: string) => {
-    speak("How can I help you?")
-    const afterWakeWord = text.split(wakeWord)[1]?.trim()
-    if (afterWakeWord) {
-      checkForCommands(afterWakeWord)
-    }
-  }, [speak, wakeWord, checkForCommands])
+  const handleWakeWordDetected = useCallback(
+    (text: string) => {
+      speak("How can I help you?")
+      const afterWakeWord = text.split(wakeWord)[1]?.trim()
+      if (afterWakeWord) {
+        checkForCommands(afterWakeWord)
+      }
+    },
+    [speak, wakeWord, checkForCommands]
+  )
 
   const clearTranscript = useCallback(() => {
-    setTranscript('')
-    setFinalTranscript('')
+    setTranscript("")
+    setFinalTranscript("")
   }, [])
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-    switch (event.key) {
-      case ' ':
-        event.preventDefault()
-        if (isListening) {
-          stopListening()
-        } else {
-          startListening()
-        }
-        break
-      case 'Escape':
-        event.preventDefault()
-        stopListening()
-        stopSpeaking()
-        break
-      case 'Enter':
-        if (event.ctrlKey || event.metaKey) {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      switch (event.key) {
+        case " ":
           event.preventDefault()
-          if (finalTranscript.trim()) {
-            speak(finalTranscript)
+          if (isListening) {
+            stopListening()
+          } else {
+            startListening()
           }
-        }
-        break
-    }
-  }, [isListening, startListening, stopListening, stopSpeaking, finalTranscript, speak])
+          break
+        case "Escape":
+          event.preventDefault()
+          stopListening()
+          stopSpeaking()
+          break
+        case "Enter":
+          if (event.ctrlKey || event.metaKey) {
+            event.preventDefault()
+            if (finalTranscript.trim()) {
+              speak(finalTranscript)
+            }
+          }
+          break
+      }
+    },
+    [
+      isListening,
+      startListening,
+      stopListening,
+      stopSpeaking,
+      finalTranscript,
+      speak,
+    ]
+  )
 
   return (
     <div
@@ -393,7 +491,7 @@ export function AIVoice({
                 <Mic className="h-5 w-5" />
               )}
               <span className="ml-2">
-                {isListening ? 'Stop' : 'Start'} Listening
+                {isListening ? "Stop" : "Start"} Listening
               </span>
             </Button>
 
@@ -408,16 +506,10 @@ export function AIVoice({
               ) : (
                 <Volume2 className="h-4 w-4" />
               )}
-              <span className="ml-2">
-                {isSpeaking ? 'Stop' : 'Speak'}
-              </span>
+              <span className="ml-2">{isSpeaking ? "Stop" : "Speak"}</span>
             </Button>
 
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={clearTranscript}
-            >
+            <Button variant="outline" size="lg" onClick={clearTranscript}>
               <RotateCcw className="h-4 w-4" />
               <span className="ml-2">Clear</span>
             </Button>
@@ -450,9 +542,7 @@ export function AIVoice({
               </Badge>
             )}
             {isWakeWordActive && (
-              <Badge variant="outline">
-                Wake Word Active
-              </Badge>
+              <Badge variant="outline">Wake Word Active</Badge>
             )}
             {audioLevel > 0.1 && (
               <Badge variant="outline">
@@ -477,19 +567,15 @@ export function AIVoice({
         </CardHeader>
         <CardContent>
           <Textarea
-            value={finalTranscript + (transcript ? ` ${transcript}` : '')}
+            value={finalTranscript + (transcript ? ` ${transcript}` : "")}
             onChange={(e) => setFinalTranscript(e.target.value)}
             placeholder="Transcript will appear here..."
             className="min-h-[100px] resize-none"
             readOnly={false}
           />
           <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
-            <span>
-              {finalTranscript.length} characters
-            </span>
-            <span>
-              Ctrl/Cmd + Enter to speak
-            </span>
+            <span>{finalTranscript.length} characters</span>
+            <span>Ctrl/Cmd + Enter to speak</span>
           </div>
         </CardContent>
       </Card>
@@ -507,7 +593,7 @@ export function AIVoice({
               <Select
                 value={selectedVoice.id}
                 onValueChange={(value) => {
-                  const voice = defaultVoices.find(v => v.id === value)
+                  const voice = defaultVoices.find((v) => v.id === value)
                   if (voice) setSelectedVoice(voice)
                 }}
               >

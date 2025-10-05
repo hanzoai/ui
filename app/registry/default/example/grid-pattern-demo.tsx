@@ -1,7 +1,15 @@
 "use client"
 
-import { GridPattern, GridPatternPresets } from "@/registry/default/ui/grid-pattern"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
+import {
+  GridPattern,
+  GridPatternPresets,
+} from "@/registry/default/ui/grid-pattern"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
 
 export default function GridPatternDemo() {
   return (
@@ -26,7 +34,12 @@ export default function GridPatternDemo() {
           </TabsContent>
           <TabsContent value="lines">
             <div className="relative h-64 w-full rounded-lg border bg-background">
-              <GridPattern variant="lines" strokeWidth={1} gap={40} opacity={0.3} />
+              <GridPattern
+                variant="lines"
+                strokeWidth={1}
+                gap={40}
+                opacity={0.3}
+              />
               <div className="relative z-10 flex h-full items-center justify-center">
                 <span className="text-xl font-medium">Line Grid</span>
               </div>
@@ -34,7 +47,12 @@ export default function GridPatternDemo() {
           </TabsContent>
           <TabsContent value="crosses">
             <div className="relative h-64 w-full rounded-lg border bg-background">
-              <GridPattern variant="crosses" size={10} gap={25} opacity={0.35} />
+              <GridPattern
+                variant="crosses"
+                size={10}
+                gap={25}
+                opacity={0.35}
+              />
               <div className="relative z-10 flex h-full items-center justify-center">
                 <span className="text-xl font-medium">Cross Pattern</span>
               </div>
@@ -50,7 +68,12 @@ export default function GridPatternDemo() {
           </TabsContent>
           <TabsContent value="squares">
             <div className="relative h-64 w-full rounded-lg border bg-background">
-              <GridPattern variant="squares" size={20} gap={35} opacity={0.25} />
+              <GridPattern
+                variant="squares"
+                size={20}
+                gap={35}
+                opacity={0.25}
+              />
               <div className="relative z-10 flex h-full items-center justify-center">
                 <span className="text-xl font-medium">Square Grid</span>
               </div>
@@ -154,24 +177,14 @@ export default function GridPatternDemo() {
       <div>
         <h3 className="mb-4 text-lg font-semibold">Multi-Layer Pattern</h3>
         <div className="relative h-64 w-full rounded-lg border bg-background">
-          <GridPattern
-            variant="lines"
-            gap={80}
-            strokeWidth={1}
-            opacity={0.1}
-          />
+          <GridPattern variant="lines" gap={80} strokeWidth={1} opacity={0.1} />
           <GridPattern
             variant="lines"
             gap={40}
             strokeWidth={0.5}
             opacity={0.05}
           />
-          <GridPattern
-            variant="dots"
-            size={1}
-            gap={10}
-            opacity={0.03}
-          />
+          <GridPattern variant="dots" size={1} gap={10} opacity={0.03} />
           <div className="relative z-10 flex h-full items-center justify-center">
             <span className="text-xl font-medium">Multi-Layer Depth</span>
           </div>

@@ -1,7 +1,11 @@
 "use client"
 
 import React from "react"
-import { AIPlayground, type PlaygroundConfig } from "@/registry/default/ui/ai-playground"
+
+import {
+  AIPlayground,
+  type PlaygroundConfig,
+} from "@/registry/default/ui/ai-playground"
 import { Alert, AlertDescription } from "@/registry/default/ui/alert"
 import { Button } from "@/registry/default/ui/button"
 
@@ -10,7 +14,10 @@ export default function AIPlaygroundCustomExample() {
   const [showApiKeyInput, setShowApiKeyInput] = React.useState(false)
 
   // Custom message handler that integrates with OpenAI API
-  const handleSendMessage = async (message: string, config: PlaygroundConfig) => {
+  const handleSendMessage = async (
+    message: string,
+    config: PlaygroundConfig
+  ) => {
     // This is a mock implementation - in production, you would:
     // 1. Send the request to your backend API
     // 2. Your backend would handle the OpenAI API call securely
@@ -37,7 +44,8 @@ export default function AIPlaygroundCustomExample() {
       "gemini-pro": `[Gemini Pro] Multi-modal understanding of: "${message}". Integrated reasoning across modalities.`,
     }
 
-    const response = responses[config.model] || `Processed: "${message}" with ${config.model}`
+    const response =
+      responses[config.model] || `Processed: "${message}" with ${config.model}`
 
     // Add configuration details to response
     const configDetails = `
@@ -55,7 +63,8 @@ Configuration applied:
       {/* API Key Section (for demo purposes) */}
       <Alert>
         <AlertDescription>
-          This is a demo implementation. In production, API keys should be handled securely on the backend.
+          This is a demo implementation. In production, API keys should be
+          handled securely on the backend.
         </AlertDescription>
       </Alert>
 

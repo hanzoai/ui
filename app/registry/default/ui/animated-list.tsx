@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { motion, AnimatePresence, Reorder, Variants } from 'motion/react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useEffect, useMemo, useState } from "react"
+import { AnimatePresence, motion, Reorder, Variants } from "motion/react"
+
+import { cn } from "@/lib/utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
@@ -11,17 +12,17 @@ function usePrefersReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return
 
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
     setPrefersReducedMotion(mediaQuery.matches)
 
     const handleChange = (event: MediaQueryListEvent) => {
       setPrefersReducedMotion(event.matches)
     }
 
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
+    mediaQuery.addEventListener("change", handleChange)
+    return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
   return prefersReducedMotion
@@ -41,7 +42,14 @@ export interface AnimatedListProps {
   /**
    * Animation type for list items
    */
-  animation?: 'slide' | 'fade' | 'scale' | 'slideUp' | 'slideDown' | 'slideLeft' | 'slideRight'
+  animation?:
+    | "slide"
+    | "fade"
+    | "scale"
+    | "slideUp"
+    | "slideDown"
+    | "slideLeft"
+    | "slideRight"
   /**
    * Stagger delay between items in milliseconds
    */
@@ -61,7 +69,7 @@ export interface AnimatedListProps {
   /**
    * Layout type
    */
-  layout?: 'vertical' | 'horizontal' | 'grid'
+  layout?: "vertical" | "horizontal" | "grid"
   /**
    * Grid columns (for grid layout)
    */
@@ -124,10 +132,10 @@ const slideVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, x: 50, transition: { duration: 0.3 } }
+  exit: { opacity: 0, x: 50, transition: { duration: 0.3 } },
 }
 
 const fadeVariants: Variants = {
@@ -137,10 +145,10 @@ const fadeVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, transition: { duration: 0.3 } }
+  exit: { opacity: 0, transition: { duration: 0.3 } },
 }
 
 const scaleVariants: Variants = {
@@ -151,12 +159,12 @@ const scaleVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut',
-      type: 'spring',
-      stiffness: 100
-    }
+      ease: "easeOut",
+      type: "spring",
+      stiffness: 100,
+    },
   }),
-  exit: { opacity: 0, scale: 0.8, transition: { duration: 0.3 } }
+  exit: { opacity: 0, scale: 0.8, transition: { duration: 0.3 } },
 }
 
 const slideUpVariants: Variants = {
@@ -167,10 +175,10 @@ const slideUpVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, y: -50, transition: { duration: 0.3 } }
+  exit: { opacity: 0, y: -50, transition: { duration: 0.3 } },
 }
 
 const slideDownVariants: Variants = {
@@ -181,10 +189,10 @@ const slideDownVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, y: 50, transition: { duration: 0.3 } }
+  exit: { opacity: 0, y: 50, transition: { duration: 0.3 } },
 }
 
 const slideLeftVariants: Variants = {
@@ -195,10 +203,10 @@ const slideLeftVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, x: -50, transition: { duration: 0.3 } }
+  exit: { opacity: 0, x: -50, transition: { duration: 0.3 } },
 }
 
 const slideRightVariants: Variants = {
@@ -209,10 +217,10 @@ const slideRightVariants: Variants = {
     transition: {
       delay: i * 0.1,
       duration: 0.5,
-      ease: 'easeOut'
-    }
+      ease: "easeOut",
+    },
   }),
-  exit: { opacity: 0, x: 50, transition: { duration: 0.3 } }
+  exit: { opacity: 0, x: 50, transition: { duration: 0.3 } },
 }
 
 const animationVariants = {
@@ -222,7 +230,7 @@ const animationVariants = {
   slideUp: slideUpVariants,
   slideDown: slideDownVariants,
   slideLeft: slideLeftVariants,
-  slideRight: slideRightVariants
+  slideRight: slideRightVariants,
 }
 
 /**
@@ -249,11 +257,11 @@ function useVirtualizedList(
       ...item,
       virtualIndex: startIndex + index,
       style: {
-        position: 'absolute' as const,
+        position: "absolute" as const,
         top: (startIndex + index) * itemHeight,
         height: itemHeight,
-        width: '100%'
-      }
+        width: "100%",
+      },
     }))
   }, [items, scrollTop, itemHeight, containerHeight, enabled])
 
@@ -266,7 +274,7 @@ function useVirtualizedList(
   return {
     visibleItems,
     totalHeight,
-    handleScroll
+    handleScroll,
   }
 }
 
@@ -275,12 +283,12 @@ function useVirtualizedList(
  */
 export function AnimatedList({
   items,
-  animation = 'slideUp',
+  animation = "slideUp",
   staggerDelay = 100,
   duration = 500,
   reorderable = false,
   enableAddRemove = true,
-  layout = 'vertical',
+  layout = "vertical",
   gridColumns = 3,
   className,
   itemClassName,
@@ -293,7 +301,7 @@ export function AnimatedList({
   itemHeight = 60,
   containerHeight = 400,
   autoStart = true,
-  onAnimationComplete
+  onAnimationComplete,
 }: AnimatedListProps) {
   const [animatedItems, setAnimatedItems] = useState(items)
   const [animationKey, setAnimationKey] = useState(0)
@@ -302,11 +310,12 @@ export function AnimatedList({
   const variants = customVariants || animationVariants[animation]
   const shouldAnimate = !prefersReducedMotion && autoStart
 
-  const {
-    visibleItems,
-    totalHeight,
-    handleScroll
-  } = useVirtualizedList(items, containerHeight, itemHeight, virtualized)
+  const { visibleItems, totalHeight, handleScroll } = useVirtualizedList(
+    items,
+    containerHeight,
+    itemHeight,
+    virtualized
+  )
 
   // Update animated items when items change
   useEffect(() => {
@@ -315,7 +324,8 @@ export function AnimatedList({
 
   // Update stagger delay in variants
   const updatedVariants = useMemo(() => {
-    if (!variants.visible || typeof variants.visible !== 'function') return variants
+    if (!variants.visible || typeof variants.visible !== "function")
+      return variants
 
     return {
       ...variants,
@@ -327,25 +337,29 @@ export function AnimatedList({
           transition: {
             ...originalResult.transition,
             delay: i * (staggerDelay / 1000),
-            duration: duration / 1000
-          }
+            duration: duration / 1000,
+          },
         }
-      }
+      },
     }
   }, [variants, staggerDelay, duration])
 
   const getLayoutClassName = () => {
     switch (layout) {
-      case 'horizontal':
-        return 'flex flex-row gap-4 overflow-x-auto'
-      case 'grid':
+      case "horizontal":
+        return "flex flex-row gap-4 overflow-x-auto"
+      case "grid":
         return `grid gap-4 grid-cols-${gridColumns}`
       default:
-        return 'flex flex-col gap-4'
+        return "flex flex-col gap-4"
     }
   }
 
-  const renderListItem = (item: AnimatedListItem, index: number, virtualStyle?: React.CSSProperties) => {
+  const renderListItem = (
+    item: AnimatedListItem,
+    index: number,
+    virtualStyle?: React.CSSProperties
+  ) => {
     const itemContent = (
       <motion.div
         key={item.id}
@@ -356,8 +370,8 @@ export function AnimatedList({
         exit="exit"
         layout={enableAddRemove}
         className={cn(
-          'cursor-pointer select-none',
-          showHoverEffects && 'hover:scale-105 transition-transform',
+          "cursor-pointer select-none",
+          showHoverEffects && "hover:scale-105 transition-transform",
           itemClassName
         )}
         style={virtualStyle}
@@ -380,7 +394,7 @@ export function AnimatedList({
   if (reorderable && !virtualized) {
     return (
       <Reorder.Group
-        axis={layout === 'horizontal' ? 'x' : 'y'}
+        axis={layout === "horizontal" ? "x" : "y"}
         values={animatedItems}
         onReorder={(newItems) => {
           setAnimatedItems(newItems)
@@ -395,7 +409,7 @@ export function AnimatedList({
               key={item.id}
               value={item}
               className={cn(
-                'cursor-grab active:cursor-grabbing',
+                "cursor-grab active:cursor-grabbing",
                 itemClassName
               )}
               whileDrag={{ scale: 1.05, zIndex: 10 }}
@@ -411,11 +425,11 @@ export function AnimatedList({
   if (virtualized) {
     return (
       <div
-        className={cn('overflow-auto', className)}
+        className={cn("overflow-auto", className)}
         style={{ height: containerHeight, ...style }}
         onScroll={handleScroll}
       >
-        <div style={{ height: totalHeight, position: 'relative' }}>
+        <div style={{ height: totalHeight, position: "relative" }}>
           <AnimatePresence mode="popLayout">
             {visibleItems.map((item, index) =>
               renderListItem(item, item.virtualIndex || index, item.style)
@@ -435,9 +449,7 @@ export function AnimatedList({
       key={animationKey}
     >
       <AnimatePresence mode="popLayout">
-        {animatedItems.map((item, index) =>
-          renderListItem(item, index)
-        )}
+        {animatedItems.map((item, index) => renderListItem(item, index))}
       </AnimatePresence>
     </motion.div>
   )
@@ -450,44 +462,44 @@ export const AnimatedListPresets = {
   /**
    * Simple fade in list
    */
-  FadeList: (props: Omit<AnimatedListProps, 'animation'>) => (
+  FadeList: (props: Omit<AnimatedListProps, "animation">) => (
     <AnimatedList animation="fade" {...props} />
   ),
 
   /**
    * Scale up from center
    */
-  ScaleList: (props: Omit<AnimatedListProps, 'animation'>) => (
+  ScaleList: (props: Omit<AnimatedListProps, "animation">) => (
     <AnimatedList animation="scale" {...props} />
   ),
 
   /**
    * Slide up from bottom
    */
-  SlideUpList: (props: Omit<AnimatedListProps, 'animation'>) => (
+  SlideUpList: (props: Omit<AnimatedListProps, "animation">) => (
     <AnimatedList animation="slideUp" {...props} />
   ),
 
   /**
    * Horizontal carousel-style list
    */
-  CarouselList: (props: Omit<AnimatedListProps, 'layout' | 'animation'>) => (
+  CarouselList: (props: Omit<AnimatedListProps, "layout" | "animation">) => (
     <AnimatedList layout="horizontal" animation="slideLeft" {...props} />
   ),
 
   /**
    * Grid with scale animation
    */
-  GridList: (props: Omit<AnimatedListProps, 'layout' | 'animation'>) => (
+  GridList: (props: Omit<AnimatedListProps, "layout" | "animation">) => (
     <AnimatedList layout="grid" animation="scale" {...props} />
   ),
 
   /**
    * Reorderable task list
    */
-  TaskList: (props: Omit<AnimatedListProps, 'reorderable' | 'animation'>) => (
+  TaskList: (props: Omit<AnimatedListProps, "reorderable" | "animation">) => (
     <AnimatedList reorderable animation="slideUp" showHoverEffects {...props} />
-  )
+  ),
 }
 
 export default AnimatedList

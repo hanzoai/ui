@@ -70,30 +70,30 @@ export interface CodeExplorerProps
 const getFileIcon = (fileName: string, isFolder: boolean = false) => {
   if (isFolder) return Folder
 
-  const ext = fileName.split('.').pop()?.toLowerCase()
+  const ext = fileName.split(".").pop()?.toLowerCase()
 
   switch (ext) {
-    case 'js':
-    case 'jsx':
-    case 'ts':
-    case 'tsx':
-    case 'vue':
-    case 'svelte':
+    case "js":
+    case "jsx":
+    case "ts":
+    case "tsx":
+    case "vue":
+    case "svelte":
       return FileCode
-    case 'json':
-    case 'xml':
-    case 'yaml':
-    case 'yml':
-    case 'toml':
-    case 'ini':
+    case "json":
+    case "xml":
+    case "yaml":
+    case "yml":
+    case "toml":
+    case "ini":
       return FileText
-    case 'png':
-    case 'jpg':
-    case 'jpeg':
-    case 'gif':
-    case 'svg':
-    case 'webp':
-    case 'ico':
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "svg":
+    case "webp":
+    case "ico":
       return FileImage
     default:
       return File
@@ -104,7 +104,7 @@ const getFileIcon = (fileName: string, isFolder: boolean = false) => {
 const formatFileSize = (bytes?: number): string => {
   if (!bytes) return ""
 
-  const units = ['B', 'KB', 'MB', 'GB']
+  const units = ["B", "KB", "MB", "GB"]
   let size = bytes
   let unitIndex = 0
 
@@ -133,158 +133,177 @@ const formatModifiedDate = (date?: Date): string => {
 }
 
 const CodeExplorer = React.forwardRef<HTMLDivElement, CodeExplorerProps>(
-  ({
-    className,
-    size,
-    files,
-    onFileSelect,
-    onFolderToggle,
-    selectedFile,
-    showSearch = true,
-    showFileIcons = true,
-    showFileSize = false,
-    showModifiedDate = false,
-    height = "400px",
-    defaultExpanded = [],
-    searchPlaceholder = "Search files...",
-    emptyMessage = "No files found",
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      size,
+      files,
+      onFileSelect,
+      onFolderToggle,
+      selectedFile,
+      showSearch = true,
+      showFileIcons = true,
+      showFileSize = false,
+      showModifiedDate = false,
+      height = "400px",
+      defaultExpanded = [],
+      searchPlaceholder = "Search files...",
+      emptyMessage = "No files found",
+      ...props
+    },
+    ref
+  ) => {
     const [searchTerm, setSearchTerm] = React.useState("")
     const [expandedFolders, setExpandedFolders] = React.useState<Set<string>>(
       new Set(defaultExpanded)
     )
 
     // Build file tree with expansion state
-    const buildFileTree = React.useCallback((nodes: FileTreeNode[]): FileTreeNode[] => {
-      return nodes.map(node => ({
-        ...node,
-        isExpanded: expandedFolders.has(node.id),
-        children: node.children ? buildFileTree(node.children) : undefined
-      }))
-    }, [expandedFolders])
+    const buildFileTree = React.useCallback(
+      (nodes: FileTreeNode[]): FileTreeNode[] => {
+        return nodes.map((node) => ({
+          ...node,
+          isExpanded: expandedFolders.has(node.id),
+          children: node.children ? buildFileTree(node.children) : undefined,
+        }))
+      },
+      [expandedFolders]
+    )
 
     // Filter files based on search term
-    const filterFiles = React.useCallback((nodes: FileTreeNode[], term: string): FileTreeNode[] => {
-      if (!term) return nodes
+    const filterFiles = React.useCallback(
+      (nodes: FileTreeNode[], term: string): FileTreeNode[] => {
+        if (!term) return nodes
 
-      const filtered: FileTreeNode[] = []
+        const filtered: FileTreeNode[] = []
 
-      for (const node of nodes) {
-        if (node.name.toLowerCase().includes(term.toLowerCase())) {
-          filtered.push(node)
-        } else if (node.type === "folder" && node.children) {
-          const filteredChildren = filterFiles(node.children, term)
-          if (filteredChildren.length > 0) {
-            filtered.push({
-              ...node,
-              children: filteredChildren,
-              isExpanded: true // Auto-expand folders with matches
-            })
+        for (const node of nodes) {
+          if (node.name.toLowerCase().includes(term.toLowerCase())) {
+            filtered.push(node)
+          } else if (node.type === "folder" && node.children) {
+            const filteredChildren = filterFiles(node.children, term)
+            if (filteredChildren.length > 0) {
+              filtered.push({
+                ...node,
+                children: filteredChildren,
+                isExpanded: true, // Auto-expand folders with matches
+              })
+            }
           }
         }
-      }
 
-      return filtered
-    }, [])
+        return filtered
+      },
+      []
+    )
 
     const processedFiles = React.useMemo(() => {
       const withExpansion = buildFileTree(files)
       return searchTerm ? filterFiles(withExpansion, searchTerm) : withExpansion
     }, [files, searchTerm, buildFileTree, filterFiles])
 
-    const toggleFolder = React.useCallback((folder: FileTreeNode) => {
-      setExpandedFolders(prev => {
-        const newSet = new Set(prev)
-        if (newSet.has(folder.id)) {
-          newSet.delete(folder.id)
-        } else {
-          newSet.add(folder.id)
-        }
-        return newSet
-      })
+    const toggleFolder = React.useCallback(
+      (folder: FileTreeNode) => {
+        setExpandedFolders((prev) => {
+          const newSet = new Set(prev)
+          if (newSet.has(folder.id)) {
+            newSet.delete(folder.id)
+          } else {
+            newSet.add(folder.id)
+          }
+          return newSet
+        })
 
-      onFolderToggle?.(folder)
-    }, [onFolderToggle])
+        onFolderToggle?.(folder)
+      },
+      [onFolderToggle]
+    )
 
-    const renderFileNode = React.useCallback((node: FileTreeNode, depth: number = 0) => {
-      const Icon = showFileIcons ? getFileIcon(node.name, node.type === "folder") : null
-      const FolderIcon = node.type === "folder" && node.isExpanded ? FolderOpen : Folder
-      const isSelected = selectedFile === node.id || selectedFile === node.path
+    const renderFileNode = React.useCallback(
+      (node: FileTreeNode, depth: number = 0) => {
+        const Icon = showFileIcons
+          ? getFileIcon(node.name, node.type === "folder")
+          : null
+        const FolderIcon =
+          node.type === "folder" && node.isExpanded ? FolderOpen : Folder
+        const isSelected =
+          selectedFile === node.id || selectedFile === node.path
 
-      return (
-        <div key={node.id}>
-          <div
-            className={cn(
-              "flex items-center gap-2 px-2 py-1 hover:bg-muted/50 cursor-pointer transition-colors",
-              isSelected && "bg-muted",
-              "rounded-sm"
-            )}
-            style={{ paddingLeft: `${depth * 16 + 8}px` }}
-            onClick={() => {
-              if (node.type === "folder") {
-                toggleFolder(node)
-              } else {
-                onFileSelect?.(node)
-              }
-            }}
-          >
-            {/* Folder chevron */}
-            {node.type === "folder" && (
-              <div className="w-4 h-4 flex items-center justify-center">
-                {node.isExpanded ? (
-                  <ChevronDown className="h-3 w-3" />
-                ) : (
-                  <ChevronRight className="h-3 w-3" />
-                )}
+        return (
+          <div key={node.id}>
+            <div
+              className={cn(
+                "flex items-center gap-2 px-2 py-1 hover:bg-muted/50 cursor-pointer transition-colors",
+                isSelected && "bg-muted",
+                "rounded-sm"
+              )}
+              style={{ paddingLeft: `${depth * 16 + 8}px` }}
+              onClick={() => {
+                if (node.type === "folder") {
+                  toggleFolder(node)
+                } else {
+                  onFileSelect?.(node)
+                }
+              }}
+            >
+              {/* Folder chevron */}
+              {node.type === "folder" && (
+                <div className="w-4 h-4 flex items-center justify-center">
+                  {node.isExpanded ? (
+                    <ChevronDown className="h-3 w-3" />
+                  ) : (
+                    <ChevronRight className="h-3 w-3" />
+                  )}
+                </div>
+              )}
+
+              {/* File/Folder icon */}
+              {showFileIcons && (
+                <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+                  {node.type === "folder" ? (
+                    <FolderIcon className="h-4 w-4 text-blue-500" />
+                  ) : Icon ? (
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                  ) : null}
+                </div>
+              )}
+
+              {/* File/Folder name */}
+              <span className="flex-1 truncate">{node.name}</span>
+
+              {/* File size */}
+              {showFileSize && node.type === "file" && node.size && (
+                <span className="text-xs text-muted-foreground flex-shrink-0">
+                  {formatFileSize(node.size)}
+                </span>
+              )}
+
+              {/* Modified date */}
+              {showModifiedDate && node.modified && (
+                <span className="text-xs text-muted-foreground flex-shrink-0">
+                  {formatModifiedDate(node.modified)}
+                </span>
+              )}
+            </div>
+
+            {/* Render children if folder is expanded */}
+            {node.type === "folder" && node.isExpanded && node.children && (
+              <div>
+                {node.children.map((child) => renderFileNode(child, depth + 1))}
               </div>
-            )}
-
-            {/* File/Folder icon */}
-            {showFileIcons && (
-              <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
-                {node.type === "folder" ? (
-                  <FolderIcon className="h-4 w-4 text-blue-500" />
-                ) : Icon ? (
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                ) : null}
-              </div>
-            )}
-
-            {/* File/Folder name */}
-            <span className="flex-1 truncate">{node.name}</span>
-
-            {/* File size */}
-            {showFileSize && node.type === "file" && node.size && (
-              <span className="text-xs text-muted-foreground flex-shrink-0">
-                {formatFileSize(node.size)}
-              </span>
-            )}
-
-            {/* Modified date */}
-            {showModifiedDate && node.modified && (
-              <span className="text-xs text-muted-foreground flex-shrink-0">
-                {formatModifiedDate(node.modified)}
-              </span>
             )}
           </div>
-
-          {/* Render children if folder is expanded */}
-          {node.type === "folder" && node.isExpanded && node.children && (
-            <div>
-              {node.children.map(child => renderFileNode(child, depth + 1))}
-            </div>
-          )}
-        </div>
-      )
-    }, [
-      showFileIcons,
-      showFileSize,
-      showModifiedDate,
-      selectedFile,
-      toggleFolder,
-      onFileSelect
-    ])
+        )
+      },
+      [
+        showFileIcons,
+        showFileSize,
+        showModifiedDate,
+        selectedFile,
+        toggleFolder,
+        onFileSelect,
+      ]
+    )
 
     const clearSearch = () => {
       setSearchTerm("")
@@ -331,7 +350,7 @@ const CodeExplorer = React.forwardRef<HTMLDivElement, CodeExplorerProps>(
               </div>
             ) : (
               <div className="space-y-0.5">
-                {processedFiles.map(node => renderFileNode(node, 0))}
+                {processedFiles.map((node) => renderFileNode(node, 0))}
               </div>
             )}
           </div>
@@ -340,7 +359,9 @@ const CodeExplorer = React.forwardRef<HTMLDivElement, CodeExplorerProps>(
         {/* Footer with file count */}
         <div className="border-t px-4 py-2 text-xs text-muted-foreground">
           {(() => {
-            const countFiles = (nodes: FileTreeNode[]): { files: number; folders: number } => {
+            const countFiles = (
+              nodes: FileTreeNode[]
+            ): { files: number; folders: number } => {
               let files = 0
               let folders = 0
 
@@ -360,17 +381,18 @@ const CodeExplorer = React.forwardRef<HTMLDivElement, CodeExplorerProps>(
               return { files, folders }
             }
 
-            const { files: fileCount, folders: folderCount } = countFiles(processedFiles)
+            const { files: fileCount, folders: folderCount } =
+              countFiles(processedFiles)
             const parts = []
 
-            if (fileCount > 0) parts.push(`${fileCount} file${fileCount === 1 ? '' : 's'}`)
-            if (folderCount > 0) parts.push(`${folderCount} folder${folderCount === 1 ? '' : 's'}`)
+            if (fileCount > 0)
+              parts.push(`${fileCount} file${fileCount === 1 ? "" : "s"}`)
+            if (folderCount > 0)
+              parts.push(`${folderCount} folder${folderCount === 1 ? "" : "s"}`)
 
-            return parts.join(', ') || 'Empty'
+            return parts.join(", ") || "Empty"
           })()}
-          {searchTerm && (
-            <span> (filtered)</span>
-          )}
+          {searchTerm && <span> (filtered)</span>}
         </div>
       </div>
     )

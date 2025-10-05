@@ -1,16 +1,25 @@
 "use client"
 
 import * as React from "react"
-import { Bot, User, MessageSquare, Settings, Sparkles } from "lucide-react"
+import { Bot, MessageSquare, Settings, Sparkles, User } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/default/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
-import { ScrollArea } from "@/registry/default/ui/scroll-area"
-import { Textarea } from "@/registry/default/ui/textarea"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/registry/default/ui/avatar"
 import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import { Separator } from "@/registry/default/ui/separator"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 export interface AIAssistantProps extends React.HTMLAttributes<HTMLDivElement> {
   provider?: string
@@ -34,20 +43,23 @@ export interface AIAssistantProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const AIAssistant = React.forwardRef<HTMLDivElement, AIAssistantProps>(
-  ({
-    className,
-    children,
-    provider = "openai",
-    model = "gpt-4",
-    messages = [],
-    onSendMessage,
-    isLoading = false,
-    placeholder = "Ask the AI assistant anything...",
-    showAvatar = true,
-    showTimestamp = true,
-    tools = [],
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      children,
+      provider = "openai",
+      model = "gpt-4",
+      messages = [],
+      onSendMessage,
+      isLoading = false,
+      placeholder = "Ask the AI assistant anything...",
+      showAvatar = true,
+      showTimestamp = true,
+      tools = [],
+      ...props
+    },
+    ref
+  ) => {
     const [input, setInput] = React.useState("")
     const scrollRef = React.useRef<HTMLDivElement>(null)
 
@@ -152,7 +164,9 @@ const AIAssistant = React.forwardRef<HTMLDivElement, AIAssistantProps>(
                           : "bg-muted"
                       )}
                     >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      <div className="whitespace-pre-wrap">
+                        {message.content}
+                      </div>
                     </div>
                   </div>
                 </div>
