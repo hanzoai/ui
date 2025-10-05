@@ -1,0 +1,69 @@
+---
+title: Compose Spec
+description: Docker Compose visual editor and YAML tools
+---
+
+## Overview
+
+The `@hanzo/compose-spec` package provides visual editing tools for Docker Compose files with real-time YAML synchronization.
+
+## Installation
+
+```bash
+npm install @hanzo/compose-spec
+# or
+pnpm add @hanzo/compose-spec
+```
+
+## Components
+
+### ComposeEditor
+
+Visual drag-and-drop editor for Docker Compose files.
+
+```tsx
+import { ComposeEditor } from '@hanzo/ui/compose'
+
+export default function Page() {
+  return <ComposeEditor />
+}
+```
+
+### YamlEditor
+
+Side-by-side visual and YAML editor with live sync.
+
+```tsx
+import { ComposeYamlEditor } from '@hanzo/ui/compose'
+
+export default function Page() {
+  return <ComposeYamlEditor />
+}
+```
+
+### Playground
+
+Full interactive playground with service nodes, networks, and volumes.
+
+```tsx
+import { ComposePlayground } from '@hanzo/ui/compose'
+
+export default function Page() {
+  return <ComposePlayground />
+}
+```
+
+## Features
+
+- **Visual Editor**: Drag-and-drop interface for Docker services
+- **YAML Sync**: Real-time bidirectional YAML synchronization
+- **Service Nodes**: Visual representation of containers
+- **Network Nodes**: Network topology visualization
+- **Volume Management**: Persistent storage configuration
+- **Auto-Layout**: Automatic graph layout with customization
+- **Validation**: Real-time Docker Compose validation
+- **TypeScript**: Full type safety for Compose files
+
+## API Reference
+
+See the full [compose-spec documentation](https://github.com/hanzoai/ui/tree/main/compose-spec) for detailed API reference.

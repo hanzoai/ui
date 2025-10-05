@@ -1,0 +1,40 @@
+---
+title: Billing
+description: Complete billing and subscription management blocks
+---
+
+## Subscription Management
+
+<ComponentPreview name="subscription-portal-01" />
+
+Manage subscriptions, view usage, and upgrade/downgrade plans.
+
+## Payment Settings
+
+<ComponentPreview name="payment-settings-01" />
+
+Add, remove, and manage payment methods with Stripe integration.
+
+## Invoice Manager
+
+<ComponentPreview name="invoice-manager-01" />
+
+View billing history and download invoices.
+
+## Usage
+
+```tsx
+import { SubscriptionPortal, PaymentMethodManager, InvoiceManager } from "@hanzo/ui/billing"
+
+// Or use registry blocks
+import SubscriptionBlock from "@/registry/default/block/billing/subscription-portal-01"
+```
+
+## Features
+
+- **Subscription Management**: Current plan, usage tracking, upgrades/downgrades
+- **Payment Methods**: Add/remove cards, PayPal, Apple Pay support
+- **Invoice History**: Download PDFs, filter by date/status
+- **Full TypeScript**: Complete type safety
+- **Mobile Responsive**: Optimized for all devices
+- **Accessible**: WCAG 2.1 AA compliant
