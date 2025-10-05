@@ -1,4 +1,1 @@
-export {
-  InvoiceManager,
-  type InvoiceManagerProps,
-} from "@hanzo/ui/billing"
+export { InvoiceManager, type InvoiceManagerProps } from "@hanzo/ui/billing"
