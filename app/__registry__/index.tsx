@@ -3500,7 +3500,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["badge","button","card","progress","tabs"],
       component: React.lazy(() => import("@/registry/default/block/subscription-portal-01")),
       source: "__registry__/default/block/subscription-portal-01.tsx",
-      files: ["registry/default/block/billing/subscription-portal-01.tsx"],
+      files: ["registry/default/block/subscription-portal-01.tsx"],
       category: "Billing",
       subcategory: "Subscription",
       chunks: []
@@ -3511,7 +3511,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["button","card","input","label","radio-group","select"],
       component: React.lazy(() => import("@/registry/default/block/payment-settings-01")),
       source: "__registry__/default/block/payment-settings-01.tsx",
-      files: ["registry/default/block/billing/payment-settings-01.tsx"],
+      files: ["registry/default/block/payment-settings-01.tsx"],
       category: "Billing",
       subcategory: "Payment",
       chunks: []
@@ -3522,7 +3522,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["badge","button","card","table"],
       component: React.lazy(() => import("@/registry/default/block/invoice-manager-01")),
       source: "__registry__/default/block/invoice-manager-01.tsx",
-      files: ["registry/default/block/billing/invoice-manager-01.tsx"],
+      files: ["registry/default/block/invoice-manager-01.tsx"],
       category: "Billing",
       subcategory: "Invoice",
       chunks: []
@@ -7023,7 +7023,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["badge","button","card","progress","tabs"],
       component: React.lazy(() => import("@/registry/new-york/block/subscription-portal-01")),
       source: "__registry__/new-york/block/subscription-portal-01.tsx",
-      files: ["registry/new-york/block/billing/subscription-portal-01.tsx"],
+      files: ["registry/new-york/block/subscription-portal-01.tsx"],
       category: "Billing",
       subcategory: "Subscription",
       chunks: []
@@ -7034,7 +7034,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["button","card","input","label","radio-group","select"],
       component: React.lazy(() => import("@/registry/new-york/block/payment-settings-01")),
       source: "__registry__/new-york/block/payment-settings-01.tsx",
-      files: ["registry/new-york/block/billing/payment-settings-01.tsx"],
+      files: ["registry/new-york/block/payment-settings-01.tsx"],
       category: "Billing",
       subcategory: "Payment",
       chunks: []
@@ -7045,7 +7045,7 @@ export const Index: Record<string, any> = {
       registryDependencies: ["badge","button","card","table"],
       component: React.lazy(() => import("@/registry/new-york/block/invoice-manager-01")),
       source: "__registry__/new-york/block/invoice-manager-01.tsx",
-      files: ["registry/new-york/block/billing/invoice-manager-01.tsx"],
+      files: ["registry/new-york/block/invoice-manager-01.tsx"],
       category: "Billing",
       subcategory: "Invoice",
       chunks: []
