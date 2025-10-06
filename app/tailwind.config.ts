@@ -11,7 +11,6 @@ const config = {
     './registry/**/*.{ts,tsx}',
     './content/**/*.{mdx,tsx}',
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
