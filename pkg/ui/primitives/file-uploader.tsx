@@ -1,4 +1,13 @@
-import { useTranslation } from '@hanzo_network/hanzo-i18n';
+// Simple fallback for translation
+const useTranslation = () => ({
+  t: (key: string) => {
+    const translations: Record<string, string> = {
+      'common.clickToUpload': 'Click to upload'
+    };
+    return translations[key] || key;
+  }
+});
+
 import { partial } from 'filesize';
 import { Loader2, Trash, Upload } from 'lucide-react';
 import React, { useEffect, useState } from 'react';

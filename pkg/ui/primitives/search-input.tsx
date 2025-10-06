@@ -49,9 +49,9 @@ const SearchInput = ({
               target: { value: '' },
             } as React.ChangeEvent<HTMLInputElement>);
           }}
-          size="auto"
+          size="icon"
           type="button"
-          variant="tertiary"
+          variant="ghost"
         >
           <XIcon />
           <span className="sr-only">Clear</span>

@@ -138,7 +138,7 @@ export const MermaidDiagram: FC<MermaidDiagramProps> = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="tertiary"
+              variant="ghost"
               size="icon"
               onClick={resetZoom}
               className="text-text-secondary"
@@ -153,7 +153,7 @@ export const MermaidDiagram: FC<MermaidDiagramProps> = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="tertiary"
+              variant="ghost"
               size="icon"
               onClick={downloadSVG}
               className="text-text-secondary"

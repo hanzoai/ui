@@ -47,7 +47,7 @@ const CopyToClipboardIcon = ({
       onClick={onCopy}
       size={'icon'}
       type="button"
-      variant="tertiary"
+      variant="ghost"
     >
       <ClipboardIcon
         className={cn('h-3.5 w-3.5', isCopied && 'text-green-500')}

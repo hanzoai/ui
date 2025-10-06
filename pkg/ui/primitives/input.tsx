@@ -107,7 +107,7 @@ const Input = ({
           onClick={togglePasswordVisibility}
           size={'icon'}
           type="button"
-          variant="tertiary"
+          variant="ghost"
         >
           {showPassword ? (
             <EyeOffIcon aria-hidden="true" className="h-4 w-4" />
