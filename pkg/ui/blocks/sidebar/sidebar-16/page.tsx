@@ -1,5 +1,5 @@
-import { AppSidebar } from "./app-sidebar"
-import { SiteHeader } from "./site-header"
+import { AppSidebar } from "./components/app-sidebar"
+import { SiteHeader } from "./components/site-header"
 import { SidebarInset, SidebarProvider } from "../../../primitives/sidebar"
 
 export const iframeHeight = "800px"
