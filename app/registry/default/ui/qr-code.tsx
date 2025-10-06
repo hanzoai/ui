@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import QRCodeReact from "qrcode.react"
+import { QRCodeSVG } from "qrcode.react"
 import { cn } from "@/lib/utils"
 
 interface QRCodeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -40,7 +40,7 @@ const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(
         className={cn("inline-flex items-center justify-center", className)}
         {...props}
       >
-        <QRCodeReact
+        <QRCodeSVG
           value={value}
           size={size}
           level={level}
