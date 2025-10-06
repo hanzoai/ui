@@ -27,15 +27,14 @@ const LinkElement: React.FC<
     /** overrides def */
   iconAfter?: boolean   
   className?: string,
-}> = ({ 
+}> = ({
   def,
     // DO NOT provide a default to any of the props that also appear in def!
   onClick,
-  size, 
+  size,
   variant,
-  rounded,
-  icon,     
-  iconAfter, 
+  icon,
+  iconAfter,
   className = '',
   children,
 } ) => {
@@ -44,8 +43,7 @@ const LinkElement: React.FC<
     href,
     newTab,
     variant: defVariant,
-    size: defSize, 
-    rounded: defRounded, 
+    size: defSize,
     title
   } = def
 
@@ -87,17 +85,13 @@ const LinkElement: React.FC<
   return (
     <Link
       className={cn(
-        buttonVariants({ 
-          variant: variant ?  variant : (defVariant ? defVariant : 'link'), 
-          size: (!defVariant || defVariant.includes('link') || variant?.includes('link'))  ? 
-            'link' 
-            : 
-            (size ? size : defSize),
-          rounded: rounded ?  rounded : (defRounded ? defRounded : 'md'), 
-        }), 
+        buttonVariants({
+          variant: variant ?  variant : (defVariant ? defVariant : 'link'),
+          size: size ? size : (defSize || 'default'),
+        }),
           // This is a "label only" LinkDef.  cf: footer"
         ((href.length > 0 || onClick) ? '' : 'pointer-events-none'),
-        className 
+        className
       )}
       {...toSpread}
     >

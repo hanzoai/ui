@@ -9,6 +9,11 @@ import { ScrollArea, ScrollBar } from "@/registry/new-york/ui/scroll-area"
 
 const examples = [
   {
+    name: "Examples",
+    href: "/examples",
+    code: "https://github.com/hanzo/ui/tree/main/apps/web/app/(app)/examples",
+  },
+  {
     name: "Mail",
     href: "/examples/mail",
     code: "https://github.com/hanzo/ui/tree/main/apps/web/app/(app)/examples/mail",
