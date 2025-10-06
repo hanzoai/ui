@@ -1,0 +1,211 @@
+---
+title: MCP Server
+description: Model Context Protocol server for AI-powered component installation
+---
+
+## Overview
+
+The Hanzo UI MCP Server allows AI assistants to interact with the component registry. Browse, search, and install components using natural language.
+
+## Quick Start
+
+### Claude Code
+
+Run the following command in your project:
+
+```bash
+pnpm dlx @hanzo/ui mcp init --client claude
+```
+
+Or manually add to `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["@hanzo/ui@latest", "mcp"]
+    }
+  }
+}
+```
+
+### Cursor
+
+Add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["@hanzo/ui@latest", "mcp"]
+    }
+  }
+}
+```
+
+### VS Code
+
+Add to `.vscode/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "hanzo-ui": {
+      "command": "npx",
+      "args": ["@hanzo/ui@latest", "mcp"]
+    }
+  }
+}
+```
+
+## What is MCP?
+
+Model Context Protocol (MCP) is an open protocol that enables AI assistants to securely connect to external data sources and tools.
+
+With the Hanzo UI MCP server, your AI assistant can:
+
+- **Browse Components** - List all 150+ components and blocks
+- **Search** - Find components by name or functionality
+- **Install** - Add components with natural language
+- **Multiple Registries** - Access external component sources
+
+## Features
+
+### Browse Components
+
+```
+Show me all available components in the hanzo registry
+```
+
+Lists all 150+ components with descriptions.
+
+### Search
+
+```
+Find me a data table component
+Search for form components
+```
+
+Searches across component names and descriptions.
+
+### Install
+
+```
+Add the button component to my project
+Install the dashboard block
+Create a login form using hanzo components
+```
+
+Installs components directly into your project.
+
+### External Registries
+
+Access 35+ external registries:
+
+```
+Show me components from @aceternity registry
+Install @magicui/confetti
+```
+
+## Configuration
+
+### Registry Setup
+
+Configure registries in `components.json`:
+
+```json
+{
+  "registries": {
+    "@hanzo": "https://ui.hanzo.ai/r/{name}.json",
+    "@aceternity": "https://aceternity.com/r/{name}.json",
+    "@magicui": "https://magicui.design/r/{name}.json"
+  }
+}
+```
+
+### Private Registries
+
+For authentication, use environment variables:
+
+```bash
+# .env.local
+REGISTRY_TOKEN=your_token_here
+```
+
+```json
+{
+  "registries": {
+    "@private": {
+      "url": "https://internal.company.com/{name}.json",
+      "headers": {
+        "Authorization": "Bearer ${REGISTRY_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+## Example Prompts
+
+### Component Discovery
+
+- "Show me all button variants"
+- "Find form components"
+- "List all dashboard blocks"
+
+### Installation
+
+- "Add the card component"
+- "Install button, input and form components"
+- "Create a pricing page using blocks"
+
+### Registry Management
+
+- "Show available registries"
+- "List components from @aceternity"
+- "Search @magicui for animation components"
+
+## Tools Available
+
+The MCP server provides these tools:
+
+1. **list_components** - Browse all components
+2. **get_component** - Get component details
+3. **search_registry** - Search for components
+4. **add_component** - Install components
+5. **list_registries** - Show configured registries
+6. **get_installation_guide** - Setup instructions
+
+## Troubleshooting
+
+### MCP Not Responding
+
+- Check MCP server is enabled in your client
+- Restart your IDE after configuration
+- Verify `npx @hanzo/ui mcp` runs without errors
+
+### Registry Access Issues
+
+- Check `components.json` registry URLs
+- Verify environment variables for private registries
+- Test registry is online and accessible
+
+### Installation Failures
+
+- Ensure valid `components.json` exists
+- Check write permissions
+- Verify required dependencies are installed
+
+## Resources
+
+- [MCP Specification](https://modelcontextprotocol.io)
+- [Registry Documentation](/docs/registry)
+- [CLI Documentation](/docs/cli)
+
+## Learn More
+
+The MCP server is built into the Hanzo UI CLI and supports all registry features including namespaces, authentication, and multiple sources.
+
+For advanced usage, see the [Registry Guide](/docs/registry).
