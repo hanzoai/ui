@@ -907,3 +907,31 @@ pnpm add react-device-mockup @rc-component/color-picker
 
 **Total Time for Quick Wins**: 1 week to complete 20+ stub components!
 
+
+### Drag-Drop Page Builder (2025-10-05)
+
+**New Feature**: Visual page builder at `/builder` route
+
+**Functionality:**
+- **Left Sidebar**: Block library with 24+ viewport-sized blocks (hero, dashboard, login, sidebar, calendar variants)
+- **Center Canvas**: Drag-drop page assembly with reordering
+- **Block Management**: Add, remove, reorder blocks visually
+- **Export**: Generate React code from built pages
+- **Filter**: Search blocks by name
+- **Preview**: Real-time block preview (coming soon)
+
+**Technical Implementation:**
+- Uses @dnd-kit for drag-drop (lightweight, performant)
+- SortableContext for reordering
+- UUID-based block instances
+- Export generates valid React TSX code
+- Filter updates in real-time
+
+**Block vs Component Distinction:**
+- **Components**: Single UI elements (Button, Input, Card) - composable primitives
+- **Blocks**: Viewport-sized sections (Hero, Dashboard, Login, Pricing) - full-page sections
+- Blocks compose multiple components into complete, ready-to-use layouts
+- Examples: dashboard-01 (full admin dashboard), login-03 (auth page), sidebar-07 (navigation layout)
+
+**Available at**: http://localhost:3003/builder or https://ui.hanzo.ai/builder
+
