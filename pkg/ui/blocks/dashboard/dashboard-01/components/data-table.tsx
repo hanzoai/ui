@@ -54,7 +54,7 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { useIsMobile } from "@/registry/default/hooks/use-mobile"
+import { useIsMobile } from "../../../../util"
 import { Badge } from "../../../../primitives/badge"
 import { Button } from "../../../../primitives/button"
 import {
