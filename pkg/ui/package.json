@@ -367,6 +367,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
+    "embla-carousel": "^8.6.0",
     "glob": "^11.0.2",
     "jest": "^30.1.3",
     "jsdom": "^27.0.0",
