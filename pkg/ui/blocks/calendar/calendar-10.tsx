@@ -3,7 +3,7 @@
 import * as React from "react"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import {
   Card,
   CardContent,

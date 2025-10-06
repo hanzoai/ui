@@ -3,7 +3,7 @@
 import * as React from "react"
 import { type DateRange } from "react-day-picker"
 
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 
 export default function Calendar07() {
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>({

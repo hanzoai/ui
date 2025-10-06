@@ -147,6 +147,14 @@ export {
 } from './dropdown-menu'
 
 export {
+  Field,
+  FieldLabel,
+  FieldDescription,
+  FieldGroup,
+  FieldSeparator,
+} from './field'
+
+export {
   useFormField,
   Form,
   FormItem,
