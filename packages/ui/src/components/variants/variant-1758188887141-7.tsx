@@ -1,1 +1,0 @@
-pnpmnpmyarnbunpnpm add @radix-ui/react-checkboxCopy

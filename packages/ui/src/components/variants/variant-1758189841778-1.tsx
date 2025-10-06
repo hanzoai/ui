@@ -1,1 +1,0 @@
-pnpmnpmyarnbunbun add embla-carousel-reactCopy

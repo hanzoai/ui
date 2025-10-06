@@ -1,1 +1,0 @@
-bun create vite@latest

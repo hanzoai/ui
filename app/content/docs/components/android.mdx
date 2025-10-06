@@ -1,0 +1,126 @@
+---
+title: Android
+description: Android logo icon component with customizable size and color
+component: true
+---
+
+<ComponentPreview name="android-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx hanzo-ui@latest add android
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="android" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Android } from "@/registry/default/ui/android"
+
+export default function Example() {
+  return <Android size="lg" color="#3DDC84" />
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview name="android-demo" />
+
+### Sizes
+
+The Android icon supports multiple size variants:
+
+```tsx
+import { Android } from "@/registry/default/ui/android"
+
+export default function Sizes() {
+  return (
+    <div className="flex items-center gap-4">
+      <Android size="sm" />
+      <Android size="default" />
+      <Android size="lg" />
+      <Android size="xl" />
+    </div>
+  )
+}
+```
+
+### Custom Colors
+
+```tsx
+import { Android } from "@/registry/default/ui/android"
+
+export default function Colors() {
+  return (
+    <div className="flex items-center gap-4">
+      <Android color="#3DDC84" size="xl" />
+      <Android color="#FF6B6B" size="xl" />
+      <Android color="#4ECDC4" size="xl" />
+      <Android color="currentColor" size="xl" />
+    </div>
+  )
+}
+```
+
+## API
+
+### Android
+
+An SVG-based Android logo icon component.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `"sm" \| "default" \| "lg" \| "xl"` | `"default"` | Size of the icon |
+| `color` | `string` | `"currentColor"` | Fill color of the icon |
+| `className` | `string` | - | Additional CSS classes |
+
+All standard SVG attributes are also supported through `React.SVGAttributes<SVGSVGElement>`.
+
+## Features
+
+- **Size Variants**: Pre-defined size options (sm, default, lg, xl)
+- **Customizable Colors**: Use any color including `currentColor` for theme integration
+- **SVG-based**: Crisp rendering at any size
+- **Type-safe**: Full TypeScript support with proper type definitions
+- **Accessible**: Follows SVG accessibility best practices
+
+## Notes
+
+- The icon uses `currentColor` by default, making it easy to integrate with your theme
+- Eye colors automatically adjust based on the fill color for better contrast
+- The component is built using `class-variance-authority` for consistent variant handling

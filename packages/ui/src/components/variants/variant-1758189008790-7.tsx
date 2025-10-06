@@ -1,1 +1,0 @@
-pnpmnpmyarnbunpnpm dlx shadcn@latest add scroll-areaCopy

@@ -1,1 +1,0 @@
-pnpm dlx create-react-router@latest my-app

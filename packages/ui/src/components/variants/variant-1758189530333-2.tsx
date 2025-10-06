@@ -1,1 +1,0 @@
-bun add tailwindcss @tailwindcss/postcss postcss

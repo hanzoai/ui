@@ -1,1 +1,0 @@
-pnpm dlx shadcn@latest add @v0/dashboard
