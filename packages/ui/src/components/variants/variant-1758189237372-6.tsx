@@ -1,5 +1,0 @@
-Copy{
-  "registries": {
-    "@acme": "https://acme.com/r/{name}.json"
-  }
-}

@@ -1,1 +1,0 @@
-yarn create-react-router@latest my-app

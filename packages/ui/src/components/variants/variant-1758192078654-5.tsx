@@ -1,1 +1,0 @@
-pnpmnpmyarnbunbunx --bun shadcn@latest mcp init --client claudeCopy

@@ -1,1 +1,0 @@
-pnpmnpmyarnbunpnpm add @radix-ui/react-label @radix-ui/react-slot react-hook-form @hookform/resolvers zodCopy

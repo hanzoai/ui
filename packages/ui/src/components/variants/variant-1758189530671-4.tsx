@@ -1,1 +1,0 @@
-pnpm add tailwindcss @tailwindcss/postcss postcss

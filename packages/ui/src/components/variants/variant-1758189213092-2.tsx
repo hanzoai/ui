@@ -1,1 +1,0 @@
-bun add shadcn@canary
