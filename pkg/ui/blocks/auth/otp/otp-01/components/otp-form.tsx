@@ -42,12 +42,12 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
               <FieldLabel htmlFor="otp">Verification code</FieldLabel>
               <InputOTP maxLength={6} id="otp" name="otp" required>
                 <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
+                  <InputOTPSlot />
+                  <InputOTPSlot />
+                  <InputOTPSlot />
+                  <InputOTPSlot />
+                  <InputOTPSlot />
+                  <InputOTPSlot />
                 </InputOTPGroup>
               </InputOTP>
               <FieldDescription>
