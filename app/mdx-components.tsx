@@ -31,6 +31,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs"
+import { Kbd } from "@/registry/new-york/ui/kbd"
 
 export const mdxComponents: MDXComponents = {
   Accordion,
@@ -41,6 +42,7 @@ export const mdxComponents: MDXComponents = {
   AlertTitle,
   AlertDescription,
   CodeTabs,
+  Kbd,
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
       className={cn(

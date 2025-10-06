@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { useThemeConfig } from "@/components/active-theme"
-import { Label } from "@/registry/new-york-v4/ui/label"
+import { Label } from "@/registry/new-york/ui/label"
 import {
   Select,
   SelectContent,
@@ -12,7 +12,7 @@ import {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york-v4/ui/select"
+} from "@/registry/new-york/ui/select"
 
 const DEFAULT_THEMES = [
   {
