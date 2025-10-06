@@ -183,6 +183,147 @@ export default function ComposeSpecPage() {
 
   return (
     <div className="flex h-screen">
+      {/* Main Canvas */}
+      <div className="flex-1">
+        <div className="flex h-full flex-col">
+          {/* Top Toolbar */}
+          <div className="flex items-center justify-between border-b bg-card p-4">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-semibold">Docker Compose Editor</h1>
+              <span className="rounded bg-muted px-2 py-1 text-xs">
+                {Object.keys(services).length} services
+              </span>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setServices({})
+                  setNetworks(["default"])
+                  setVolumes([])
+                }}
+              >
+                Clear
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const input = document.createElement("input")
+                  input.type = "file"
+                  input.accept = ".yml,.yaml"
+                  input.onchange = (e: any) => {
+                    const file = e.target.files[0]
+                    const reader = new FileReader()
+                    reader.onload = (e) => {
+                      const content = e.target?.result as string
+                      const parsed = yaml.load(content) as any
+                      setServices(parsed.services || {})
+                      setNetworks(Object.keys(parsed.networks || { default: {} }))
+                      setVolumes(Object.keys(parsed.volumes || {}))
+                    }
+                    reader.readAsText(file)
+                  }
+                  input.click()
+                }}
+              >
+                Import
+              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button size="sm">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add service
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Add Service</SheetTitle>
+                  </SheetHeader>
+                  <ScrollArea className="mt-4 h-[calc(100vh-100px)]">
+                    <div className="space-y-2">
+                      {COMMON_IMAGES.map((template) => (
+                        <Button
+                          key={template.image}
+                          variant="outline"
+                          className="w-full justify-start"
+                          onClick={() => addService(template)}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          <div className="flex-1 text-left">
+                            <div className="font-medium">{template.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {template.image}
+                            </div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </SheetContent>
+              </Sheet>
+            </div>
+          </div>
+
+          {/* Canvas */}
+          <div className="flex-1 bg-background">
+            {Object.keys(services).length === 0 ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <Settings2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-4 text-lg font-semibold">No services yet</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Click "Add service" to start building your stack
+                  </p>
+                  <Button
+                    className="mt-4"
+                    onClick={() => addService(COMMON_IMAGES[1])}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add your first service
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                nodeTypes={nodeTypes}
+                onNodeClick={(_, node) => setSelectedService(node.id)}
+                fitView
+                className="bg-background"
+              >
+                <Background gap={16} color="hsl(var(--muted-foreground) / 0.3)" />
+                <Controls className="border-border bg-card" />
+                <Panel position="top-right" className="space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setNetworks([...networks, `network_${networks.length}`])}
+                  >
+                    <Network className="mr-2 h-4 w-4" />
+                    Add network
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setVolumes([...volumes, `vol_${volumes.length}`])}
+                  >
+                    <HardDrive className="mr-2 h-4 w-4" />
+                    Add volume
+                  </Button>
+                </Panel>
+              </ReactFlow>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Right Sidebar - Configuration */}
       <div className="flex w-80 flex-col border-l bg-card">
         <div className="border-b p-4">
@@ -390,151 +531,6 @@ export default function ComposeSpecPage() {
         </div>
       </div>
 
-      {/* Main Canvas */}
-      <div className="flex-1">
-        <div className="flex h-full flex-col">
-          {/* Top Toolbar */}
-          <div className="flex items-center justify-between border-b bg-card p-4">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl font-semibold">Docker Compose Editor</h1>
-              <span className="rounded bg-muted px-2 py-1 text-xs">
-                {Object.keys(services).length} services
-              </span>
-            </div>
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setServices({})
-                  setNetworks(["default"])
-                  setVolumes([])
-                }}
-              >
-                Clear
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  const input = document.createElement("input")
-                  input.type = "file"
-                  input.accept = ".yml,.yaml"
-                  input.onchange = (e: any) => {
-                    const file = e.target.files[0]
-                    const reader = new FileReader()
-                    reader.onload = (e) => {
-                      const content = e.target?.result as string
-                      const parsed = yaml.load(content) as any
-                      setServices(parsed.services || {})
-                      setNetworks(Object.keys(parsed.networks || { default: {} }))
-                      setVolumes(Object.keys(parsed.volumes || {}))
-                    }
-                    reader.readAsText(file)
-                  }
-                  input.click()
-                }}
-              >
-                Import
-              </Button>
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button size="sm">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add service
-                  </Button>
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Add Service</SheetTitle>
-                  </SheetHeader>
-                  <ScrollArea className="mt-4 h-[calc(100vh-100px)]">
-                    <div className="space-y-2">
-                      {COMMON_IMAGES.map((template) => (
-                        <Button
-                          key={template.image}
-                          variant="outline"
-                          className="w-full justify-start"
-                          onClick={() => addService(template)}
-                        >
-                          <Plus className="mr-2 h-4 w-4" />
-                          <div className="flex-1 text-left">
-                            <div className="font-medium">{template.name}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {template.image}
-                            </div>
-                          </div>
-                        </Button>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </SheetContent>
-              </Sheet>
-            </div>
-          </div>
-
-          {/* Canvas */}
-          <div className="flex-1 bg-muted/30">
-            {Object.keys(services).length === 0 ? (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center">
-                  <Settings2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                  <h3 className="mt-4 text-lg font-semibold">No services yet</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Click "Add service" to start building your stack
-                  </p>
-                  <Button
-                    className="mt-4"
-                    onClick={() => addService(COMMON_IMAGES[1])}
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add your first service
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                nodeTypes={nodeTypes}
-                onNodeClick={(_, node) => setSelectedService(node.id)}
-                fitView
-                className="bg-background"
-              >
-                <Background gap={16} color="hsl(var(--muted-foreground))" />
-                <Controls className="border-border bg-card" />
-                <MiniMap
-                  className="border-border bg-card"
-                  nodeColor="hsl(var(--primary))"
-                  maskColor="hsl(var(--muted) / 0.5)"
-                />
-                <Panel position="top-right" className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setNetworks([...networks, `network_${networks.length}`])}
-                  >
-                    <Network className="mr-2 h-4 w-4" />
-                    Add network
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setVolumes([...volumes, `vol_${volumes.length}`])}
-                  >
-                    <HardDrive className="mr-2 h-4 w-4" />
-                    Add volume
-                  </Button>
-                </Panel>
-              </ReactFlow>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
