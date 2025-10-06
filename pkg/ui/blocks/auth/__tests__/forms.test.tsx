@@ -338,9 +338,7 @@ describe('Auth Forms - Comprehensive Validation', () => {
 
       render(<SignupForm />)
 
-      const nameInput = screen.getByLabelText(/full name/i)
-      await user.type(nameInput, 'Alice Johnson')
-
+      // signup-04 only has email, password, and confirm-password (no name field)
       const emailInput = screen.getByLabelText(/email/i)
       await user.type(emailInput, 'alice@example.com')
 
@@ -354,43 +352,45 @@ describe('Auth Forms - Comprehensive Validation', () => {
       await user.click(submitButton)
 
       await waitFor(() => {
-        expect(consoleLogSpy).toHaveBeenCalled()
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+          'Form submitted:',
+          expect.objectContaining({
+            email: 'alice@example.com',
+            password: 'alice2024',
+            'confirm-password': 'alice2024'
+          })
+        )
       })
     })
 
-    it('signup-05: submits complete form data', async () => {
+    it('signup-05: submits complete form data (passwordless)', async () => {
       const { SignupForm } = await import('../signup/signup-05/components/signup-form')
       const user = userEvent.setup()
 
       render(<SignupForm />)
 
-      const nameInput = screen.getByLabelText(/full name/i)
-      await user.type(nameInput, 'Charlie Brown')
-
+      // signup-05 is email-only (passwordless/magic link signup)
       const emailInput = screen.getByLabelText(/email/i)
       await user.type(emailInput, 'charlie@hanzo.ai')
-
-      const passwordInput = screen.getByLabelText(/^password$/i)
-      await user.type(passwordInput, 'charlie999')
-
-      const confirmPasswordInput = screen.getByLabelText(/confirm password/i)
-      await user.type(confirmPasswordInput, 'charlie999')
 
       const submitButton = screen.getByRole('button', { name: /create account/i })
       await user.click(submitButton)
 
       await waitFor(() => {
-        expect(consoleLogSpy).toHaveBeenCalled()
+        expect(consoleLogSpy).toHaveBeenCalledWith(
+          'Form submitted:',
+          expect.objectContaining({
+            email: 'charlie@hanzo.ai'
+          })
+        )
       })
     })
 
-    it('all signup forms have name, email, password, and confirm password fields', async () => {
+    it('signup forms 01-03 have all fields (name, email, password, confirm)', async () => {
       const forms = [
         await import('../signup/signup-01/components/signup-form'),
         await import('../signup/signup-02/components/signup-form'),
         await import('../signup/signup-03/components/signup-form'),
-        await import('../signup/signup-04/components/signup-form'),
-        await import('../signup/signup-05/components/signup-form'),
       ]
 
       for (const { SignupForm } of forms) {
@@ -403,6 +403,28 @@ describe('Auth Forms - Comprehensive Validation', () => {
 
         unmount()
       }
+    })
+
+    it('signup-04 has email, password, and confirm password (no name)', async () => {
+      const { SignupForm } = await import('../signup/signup-04/components/signup-form')
+
+      render(<SignupForm />)
+
+      expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument()
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/^password$/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument()
+    })
+
+    it('signup-05 is email-only (passwordless)', async () => {
+      const { SignupForm } = await import('../signup/signup-05/components/signup-form')
+
+      render(<SignupForm />)
+
+      expect(screen.queryByLabelText(/full name/i)).not.toBeInTheDocument()
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+      expect(screen.queryByLabelText(/^password$/i)).not.toBeInTheDocument()
+      expect(screen.queryByLabelText(/confirm password/i)).not.toBeInTheDocument()
     })
 
     it('all signup forms have create account buttons', async () => {
