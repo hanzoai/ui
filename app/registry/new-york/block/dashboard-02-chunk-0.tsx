@@ -1,6 +1,6 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
-import {Button} from "@/registry/new-york/ui/button"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
+import {Button} from "@/registry/default/ui/button"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-02-chunk-0">

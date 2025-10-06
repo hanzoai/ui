@@ -15,16 +15,16 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/avatar"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Input } from "@/registry/new-york/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/registry/new-york/ui/sheet"
+} from "@/registry/default/ui/dropdown-menu"
+import { Input } from "@/registry/default/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/registry/default/ui/sheet"
 import {
   Table,
   TableBody,
@@ -42,12 +42,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table"
+} from "@/registry/default/ui/table"
 
 export const description =
-  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image. The main content area is divided into two rows. The first row has a grid of cards with statistics. The second row has a grid of cards with a table of recent transactions and a list of recent sales."
+  "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."
 
-export const iframeHeight = "730px"
+export const iframeHeight = "825px"
 
 export const containerClassName = "w-full h-full"
 
@@ -175,7 +175,7 @@ export default function Dashboard() {
       </header>
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="A card showing the total revenue in USD and the percentage difference from last month.">
+          <Card x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Total Revenue
@@ -189,7 +189,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="A card showing the total subscriptions and the percentage difference from last month.">
+          <Card x-chunk="dashboard-01-chunk-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Subscriptions
@@ -203,7 +203,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="A card showing the total sales and the percentage difference from last month.">
+          <Card x-chunk="dashboard-01-chunk-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Sales</CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -215,7 +215,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
-          <Card x-chunk="A card showing the total active users and the percentage difference from last hour.">
+          <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Now</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
@@ -230,8 +230,7 @@ export default function Dashboard() {
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           <Card
-            className="xl:col-span-2"
-            x-chunk="A card showing a table of recent transactions with a link to view all transactions."
+            className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
           >
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
@@ -369,7 +368,7 @@ export default function Dashboard() {
               </Table>
             </CardContent>
           </Card>
-          <Card x-chunk="A card showing a list of recent sales with customer names and email addresses.">
+          <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
               <CardTitle>Recent Sales</CardTitle>
             </CardHeader>

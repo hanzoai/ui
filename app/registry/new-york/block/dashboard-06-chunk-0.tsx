@@ -1,9 +1,9 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/new-york/ui/card"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
-import {Badge} from "@/registry/new-york/ui/badge"
-import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuItem} from "@/registry/new-york/ui/dropdown-menu"
-import {Button} from "@/registry/new-york/ui/button"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/default/ui/card"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
+import {Badge} from "@/registry/default/ui/badge"
+import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuItem} from "@/registry/default/ui/dropdown-menu"
+import {Button} from "@/registry/default/ui/button"
 import Image from "next/image"
 import {MoreHorizontal} from "lucide-react"
 
@@ -24,7 +24,9 @@ import {MoreHorizontal} from "lucide-react"
                         </TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Price</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Price
+                        </TableHead>
                         <TableHead className="hidden md:table-cell">
                           Total Sales
                         </TableHead>
@@ -53,7 +55,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="outline">Draft</Badge>
                         </TableCell>
-                        <TableCell>$499.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $499.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           25
                         </TableCell>
@@ -96,7 +100,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$129.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $129.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           100
                         </TableCell>
@@ -139,7 +145,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$39.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $39.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           50
                         </TableCell>
@@ -182,7 +190,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="secondary">Draft</Badge>
                         </TableCell>
-                        <TableCell>$2.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $2.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           0
                         </TableCell>
@@ -225,7 +235,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$59.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $59.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           75
                         </TableCell>
@@ -268,7 +280,9 @@ import {MoreHorizontal} from "lucide-react"
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$199.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $199.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           30
                         </TableCell>

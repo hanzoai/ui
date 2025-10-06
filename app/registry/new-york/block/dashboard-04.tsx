@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { CircleUser, Menu, Package2, Search } from "lucide-react"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
@@ -9,8 +9,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
-import { Checkbox } from "@/registry/new-york/ui/checkbox"
+} from "@/registry/default/ui/card"
+import { Checkbox } from "@/registry/default/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +18,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Input } from "@/registry/new-york/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/registry/new-york/ui/sheet"
+} from "@/registry/default/ui/dropdown-menu"
+import { Input } from "@/registry/default/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/registry/default/ui/sheet"
 
 export const description =
   "A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings."
@@ -157,9 +157,7 @@ export default function Dashboard() {
         </div>
         <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
           <nav
-            className="grid gap-4 text-sm text-muted-foreground"
-            x-chunk="A sidebar navigation with links to general, security, integrations, support, organizations, and advanced settings."
-            x-chunk-container="chunk-container after:right-0"
+            className="grid gap-4 text-sm text-muted-foreground" x-chunk="dashboard-04-chunk-0"
           >
             <Link href="#" className="font-semibold text-primary">
               General
@@ -171,7 +169,7 @@ export default function Dashboard() {
             <Link href="#">Advanced</Link>
           </nav>
           <div className="grid gap-6">
-            <Card x-chunk="A form to update the store name.">
+            <Card x-chunk="dashboard-04-chunk-1">
               <CardHeader>
                 <CardTitle>Store Name</CardTitle>
                 <CardDescription>
@@ -187,7 +185,7 @@ export default function Dashboard() {
                 <Button>Save</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="A form to update the plugins directory with a checkbox to allow administrators to change the directory.">
+            <Card x-chunk="dashboard-04-chunk-2">
               <CardHeader>
                 <CardTitle>Plugins Directory</CardTitle>
                 <CardDescription>
