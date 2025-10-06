@@ -27,9 +27,9 @@ jobs:
           node-version: "20"
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
 
       - name: Get pnpm store directory
         shell: bash
@@ -46,14 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm install --no-frozen-lockfile
-          cd app && pnpm install --no-frozen-lockfile
-
-      - name: Build UI library
-        working-directory: ./pkg/ui
-        run: |
-          npm install
-          npm run build
+          pnpm install --frozen-lockfile
 
       - name: Build documentation
         working-directory: ./app
@@ -63,6 +56,7 @@ jobs:
         env:
           NODE_ENV: production
           GITHUB_ACTIONS: true
+          NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
