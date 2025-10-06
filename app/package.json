@@ -110,6 +110,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
     "@playwright/test": "^1.55.1",
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.17.20",
     "@types/mdx": "^2.0.13",
