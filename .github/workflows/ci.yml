@@ -50,8 +50,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run linting
-        run: |
-          cd app && pnpm run lint || true
+        run: pnpm run lint
 
   typecheck:
     name: Type Check
@@ -125,7 +124,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build UI package
-        run: cd pkg/ui && pnpm run build
+        run: cd pkg/ui && pnpm run build:full
 
       - name: Build app
         run: cd app && pnpm run build
@@ -173,13 +172,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run tests
+      - name: Run pkg/ui tests
+        run: cd pkg/ui && pnpm test -- --run
+
+      - name: Run app tests
         run: |
           if [ -f "app/package.json" ] && grep -q '"test"' app/package.json 2>/dev/null; then
             cd app && pnpm test || echo "No tests configured"
           else
             echo "No test script found"
           fi
+
+      - name: Upload coverage
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./pkg/ui/coverage/lcov.info
+          flags: unit
 
   deploy-preview:
     name: Deploy Preview

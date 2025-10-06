@@ -3,11 +3,11 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-export interface underlineNavigationBarProps extends React.HTMLAttributes<HTMLElement> {
+export interface limelightnavNavigationBarProps extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const underlineNavigationBar = React.forwardRef<HTMLElement, underlineNavigationBarProps>(
+const limelightnavNavigationBar = React.forwardRef<HTMLElement, limelightnavNavigationBarProps>(
   ({ className, items = [], ...props }, ref) => {
     return (
       <nav ref={ref} className={cn("border-b bg-background", className)} {...props}>
@@ -26,6 +26,6 @@ const underlineNavigationBar = React.forwardRef<HTMLElement, underlineNavigation
     )
   }
 )
-underlineNavigationBar.displayName = "underlineNavigationBar"
+limelightnavNavigationBar.displayName = "limelightnavNavigationBar"
 
-export { underlineNavigationBar }
+export { limelightnavNavigationBar }
