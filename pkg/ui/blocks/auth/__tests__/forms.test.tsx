@@ -156,7 +156,7 @@ describe('Auth Forms - Comprehensive Validation', () => {
       })
     })
 
-    it('login-05: submits form data correctly', async () => {
+    it('login-05: submits form data correctly (passwordless)', async () => {
       const { LoginForm } = await import('../login/login-05/components/login-form')
       const user = userEvent.setup()
 
@@ -165,9 +165,7 @@ describe('Auth Forms - Comprehensive Validation', () => {
       const emailInput = screen.getByLabelText(/email/i)
       await user.type(emailInput, 'tester@hanzo.ai')
 
-      const passwordInput = screen.getByLabelText(/^password$/i)
-      await user.type(passwordInput, 'test456')
-
+      // login-05 is a passwordless/magic link login, so no password field
       const submitButton = screen.getByRole('button', { name: /^login$/i })
       await user.click(submitButton)
 
@@ -175,20 +173,18 @@ describe('Auth Forms - Comprehensive Validation', () => {
         expect(consoleLogSpy).toHaveBeenCalledWith(
           'Form submitted:',
           expect.objectContaining({
-            email: 'tester@hanzo.ai',
-            password: 'test456'
+            email: 'tester@hanzo.ai'
           })
         )
       })
     })
 
-    it('all login forms have email and password fields', async () => {
+    it('login forms 01-04 have email and password fields', async () => {
       const forms = [
         await import('../login/login-01/components/login-form'),
         await import('../login/login-02/components/login-form'),
         await import('../login/login-03/components/login-form'),
         await import('../login/login-04/components/login-form'),
-        await import('../login/login-05/components/login-form'),
       ]
 
       for (const { LoginForm } of forms) {
@@ -199,6 +195,15 @@ describe('Auth Forms - Comprehensive Validation', () => {
 
         unmount()
       }
+    })
+
+    it('login-05 is passwordless (email only)', async () => {
+      const { LoginForm } = await import('../login/login-05/components/login-form')
+
+      render(<LoginForm />)
+
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+      expect(screen.queryByLabelText(/^password$/i)).not.toBeInTheDocument()
     })
 
     it('all login forms have submit buttons', async () => {
