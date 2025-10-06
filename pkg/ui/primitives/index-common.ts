@@ -101,14 +101,12 @@ export {
 } from './context-menu'
 
 export {
-  type DrawerProps,
   Drawer,
   DrawerPortal,
   DrawerOverlay,
   DrawerTrigger,
   DrawerClose,
   DrawerContent,
-  DrawerHandle,
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
@@ -119,7 +117,6 @@ export {
   Dialog,
   DialogPortal,
   DialogOverlay,
-  DialogClose,
   DialogTrigger,
   DialogContent,
   DialogHeader,
@@ -217,8 +214,6 @@ export {
 export {
   Popover,
   PopoverAnchor,
-  PopoverArrow,
-  PopoverClose,
   PopoverContent,
   PopoverTrigger,
 } from './popover'
@@ -315,7 +310,7 @@ export { CopyToClipboardIcon } from './copy-to-clipboard-icon'
 export { DotsLoader } from './dots-loader'
 export { FileUploader } from './file-uploader'
 export { default as JsonForm } from './chat/json-form'
-export { MarkdownText, MarkdownPreview } from './markdown-preview'
+export { MarkdownText } from './markdown-preview'
 export { PrettyJsonPrint } from './pretty-json-print'
 
 // Re-export Tooltip components individually
