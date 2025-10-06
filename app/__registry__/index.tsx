@@ -214,6 +214,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "field": {
+      name: "field",
+      type: "components:ui",
+      registryDependencies: ["label","separator"],
+      component: React.lazy(() => import("@/registry/default/ui/field")),
+      source: "",
+      files: ["registry/default/ui/field.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "hover-card": {
       name: "hover-card",
       type: "components:ui",
@@ -3700,6 +3711,17 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/new-york/ui/form")),
       source: "",
       files: ["registry/new-york/ui/form.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "field": {
+      name: "field",
+      type: "components:ui",
+      registryDependencies: ["label","separator"],
+      component: React.lazy(() => import("@/registry/new-york/ui/field")),
+      source: "",
+      files: ["registry/new-york/ui/field.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []
