@@ -1,0 +1,90 @@
+---
+title: AI Tools
+description: AI-powered tools and utilities for intelligent applications
+---
+
+## Overview
+
+AI Tools components provide intelligent functionality for your applications, including code generation, content analysis, and automation capabilities.
+
+## Available Tools
+
+### Code Generation
+
+AI-powered code generation and completion tools.
+
+```tsx
+import { AICodeGenerator } from "@hanzo/ui/ai"
+
+export default function CodePage() {
+  return (
+    <AICodeGenerator
+      language="typescript"
+      context="React component"
+      onGenerate={(code) => console.log(code)}
+    />
+  )
+}
+```
+
+### Content Analysis
+
+Analyze and process text content with AI.
+
+```tsx
+import { AIContentAnalyzer } from "@hanzo/ui/ai"
+
+export default function AnalysisPage() {
+  return (
+    <AIContentAnalyzer
+      onAnalyze={(result) => console.log(result)}
+    />
+  )
+}
+```
+
+### Smart Search
+
+AI-enhanced search with semantic understanding.
+
+```tsx
+import { AISearch } from "@hanzo/ui/ai"
+
+export default function SearchPage() {
+  return (
+    <AISearch
+      placeholder="Ask anything..."
+      onSearch={(query) => console.log(query)}
+    />
+  )
+}
+```
+
+## Features
+
+- **Code Generation**: Generate code from natural language
+- **Content Analysis**: Sentiment, keywords, summarization
+- **Smart Search**: Semantic search with AI
+- **Auto-completion**: Intelligent suggestions
+- **Translation**: Multi-language support
+- **Classification**: Content categorization
+
+## Integration
+
+AI Tools integrate with popular AI providers:
+
+- OpenAI (GPT-4, GPT-3.5)
+- Anthropic (Claude)
+- Google (Gemini)
+- Local models (Ollama)
+
+## API Reference
+
+See individual component pages for detailed API documentation:
+
+- [AI Chat](/docs/ai/chat)
+- [AI Playground](/docs/ai/playground)
+
+## Examples
+
+For complete examples, see the [AI Examples](/examples) section.
