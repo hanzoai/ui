@@ -5,7 +5,7 @@ import { parseDate } from "chrono-node"
 import { CalendarIcon } from "lucide-react"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Input } from "../../primitives/input"
 import { Label } from "../../primitives/label"
 import {

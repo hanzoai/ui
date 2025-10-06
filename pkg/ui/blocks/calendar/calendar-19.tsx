@@ -4,7 +4,7 @@ import * as React from "react"
 import { addDays } from "date-fns"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Card, CardContent, CardFooter } from "../../primitives/card"
 
 export default function Calendar19() {

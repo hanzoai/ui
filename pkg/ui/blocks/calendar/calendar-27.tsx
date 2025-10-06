@@ -6,7 +6,7 @@ import { DateRange } from "react-day-picker"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import {
   Card,
   CardContent,

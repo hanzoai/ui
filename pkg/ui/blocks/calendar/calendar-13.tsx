@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Label } from "../../primitives/label"
 import {
   Select,
