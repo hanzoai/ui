@@ -1,1 +1,0 @@
-pnpm create vite@latest

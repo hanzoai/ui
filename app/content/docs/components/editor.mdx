@@ -1,0 +1,77 @@
+---
+title: Editor
+description: Editor component (coming soon)
+component: true
+---
+
+<ComponentPreview name="editor-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx hanzo-ui@latest add editor
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="editor" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Editor } from "@/registry/default/ui/editor"
+
+export default function Example() {
+  return <Editor />
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview name="editor-demo" />
+
+## API
+
+Documentation coming soon.
+
+## Features
+
+- Built with Radix UI and Tailwind CSS
+- Fully accessible and keyboard navigable  
+- Customizable styling with CSS variables
+- TypeScript support
+
+## Notes
+
+For more examples and advanced usage, see the [examples](/examples).

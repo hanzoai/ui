@@ -1,0 +1,153 @@
+---
+title: macOS Dock
+description: A macOS-style dock component with authentic magnification and interactions
+component: true
+---
+
+<ComponentPreview name="macos-dock-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx hanzo-ui@latest add macos-dock
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="macos-dock" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Dock, DockItem } from "@/registry/default/ui/macos-dock"
+import { Home, Search, Mail, Calendar } from "lucide-react"
+
+export function MacOSDockDemo() {
+  return (
+    <Dock>
+      <DockItem tooltip="Finder">
+        <Home className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Safari">
+        <Search className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Mail">
+        <Mail className="h-6 w-6" />
+      </DockItem>
+      <DockItem tooltip="Calendar">
+        <Calendar className="h-6 w-6" />
+      </DockItem>
+    </Dock>
+  )
+}
+```
+
+## Examples
+
+### Default
+
+<ComponentPreview name="macos-dock-demo" />
+
+### With App Icons
+
+<ComponentPreview name="macos-dock-apps" />
+
+### With Separators
+
+<ComponentPreview name="macos-dock-separators" />
+
+## API
+
+### Dock
+
+The main container component for the macOS dock.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `magnification` | `number` | `60` | Maximum magnification amount in pixels |
+| `distance` | `number` | `140` | Distance from cursor where magnification starts |
+| `className` | `string` | - | Additional CSS classes |
+| `children` | `ReactNode` | - | Dock items to render |
+
+### DockItem
+
+Individual dock item component.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `tooltip` | `string` | - | Tooltip text to show on hover |
+| `onClick` | `() => void` | - | Click handler |
+| `className` | `string` | - | Additional CSS classes |
+| `children` | `ReactNode` | - | Icon or content to render |
+
+## Features
+
+- **Authentic macOS Magnification**: Pixel-perfect recreation of macOS dock behavior
+- **Smooth Spring Animations**: Uses Framer Motion for natural physics-based motion
+- **Tooltips**: Built-in tooltip support with smooth transitions
+- **Glass Morphism**: Beautiful frosted glass effect with backdrop blur
+- **Customizable**: Control magnification, distance, and styling
+- **Accessible**: Keyboard navigation and ARIA support
+
+## Styling
+
+The macOS dock component uses Tailwind CSS with:
+- Authentic glass morphism effect
+- Smooth spring-based animations
+- macOS-style tooltips
+- Gradient overlays for depth
+
+Customize by:
+- Passing custom `className` props
+- Adjusting magnification parameters
+- Using CSS variables for theming
+
+## Accessibility
+
+The dock component includes:
+- Focus indicators for keyboard navigation
+- ARIA labels through tooltips
+- Keyboard event handlers
+- Screen reader support
+
+## Notes
+
+- Icons magnify based on cursor proximity
+- Spring animations provide natural, physics-based motion
+- Optimized for bottom-center placement like macOS
+- Best used with 24x24px icons

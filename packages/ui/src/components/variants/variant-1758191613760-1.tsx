@@ -1,1 +1,0 @@
-bunx --bun shadcn@latest add --all --overwrite

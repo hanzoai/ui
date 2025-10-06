@@ -1,1 +1,0 @@
-npx shadcn@canary init
