@@ -1,9 +1,9 @@
-import { 3dMarquee } from "@/registry/default/ui/3d-marquee"
+import { Marquee3D } from "@/registry/default/ui/3d-marquee"
 
-export default function 3dMarqueeDemo() {
+export default function ThreeDMarqueeDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <3dMarquee />
+      <Marquee3D />
     </div>
   )
 }

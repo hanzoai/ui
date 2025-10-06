@@ -1,9 +1,9 @@
-import { 3dText } from "@/registry/default/ui/3d-text"
+import { Text3D } from "@/registry/default/ui/3d-text"
 
-export default function 3dTextDemo() {
+export default function ThreeDTextDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <3dText />
+      <Text3D />
     </div>
   )
 }
