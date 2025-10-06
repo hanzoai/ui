@@ -1,1 +1,0 @@
-npx shadcn@latest add switch

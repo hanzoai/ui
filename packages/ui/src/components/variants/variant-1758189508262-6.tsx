@@ -1,1 +1,0 @@
-yarn create vite@latest
