@@ -52,15 +52,15 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
                   containerClassName="gap-4"
                 >
                   <InputOTPGroup>
-                    <InputOTPSlot />
-                    <InputOTPSlot />
-                    <InputOTPSlot />
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
                   </InputOTPGroup>
                   <InputOTPSeparator />
                   <InputOTPGroup>
-                    <InputOTPSlot />
-                    <InputOTPSlot />
-                    <InputOTPSlot />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
                   </InputOTPGroup>
                 </InputOTP>
                 <FieldDescription className="text-center">
