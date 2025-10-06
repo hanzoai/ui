@@ -72,7 +72,8 @@ export function pxToEm(px: number, base = 16): string {
 }
 
 // Missing utility functions
-export function containsToken(text: string, token: string): boolean {
+export function containsToken(text: string | undefined, token: string): boolean {
+  if (!text) return false;
   return text.toLowerCase().includes(token.toLowerCase());
 }
 

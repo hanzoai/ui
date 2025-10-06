@@ -1,9 +1,18 @@
-import { useTranslation } from '@hanzo_network/hanzo-i18n';
 import * as React from 'react';
 
 import { useCombinedRefs } from '../../src/hooks/use-combined-refs';
 import { cn } from '../../src/utils';
 import { ChatInput } from './chat-input';
+
+// Simple fallback for translation
+const useTranslation = () => ({
+  t: (key: string) => {
+    const translations: Record<string, string> = {
+      'chat.sendMessagePlaceholder': 'Type a message...'
+    };
+    return translations[key] || key;
+  }
+});
 
 type ChatInputAreaProps = {
   value: string;
