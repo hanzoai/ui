@@ -124,6 +124,12 @@ export const ui: Registry = [
     files: ["ui/form.tsx"],
   },
   {
+    name: "field",
+    type: "components:ui",
+    registryDependencies: ["label", "separator"],
+    files: ["ui/field.tsx"],
+  },
+  {
     name: "hover-card",
     type: "components:ui",
     dependencies: ["@radix-ui/react-hover-card"],
