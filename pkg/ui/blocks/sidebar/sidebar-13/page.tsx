@@ -1,4 +1,4 @@
-import { SettingsDialog } from "./settings-dialog"
+import { SettingsDialog } from "./components/settings-dialog"
 
 export default function Page() {
   return (
