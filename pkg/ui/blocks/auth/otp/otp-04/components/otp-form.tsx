@@ -15,6 +15,16 @@ import {
 } from "../../../../../primitives/input-otp"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    // TODO: Add your authentication logic here
+    console.log('Form submitted:', Object.fromEntries(formData))
+
+    // Example: await signIn(formData)
+  }
+
   return (
     <div
       className={cn("flex flex-col gap-6 md:min-h-[450px]", className)}
@@ -22,7 +32,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
     >
       <Card className="flex-1 overflow-hidden p-0">
         <CardContent className="grid flex-1 p-0 md:grid-cols-2">
-          <form className="flex flex-col items-center justify-center p-6 md:p-8">
+          <form className="flex flex-col items-center justify-center p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <Field className="items-center text-center">
                 <h1 className="text-2xl font-bold">Enter verification code</h1>
@@ -37,6 +47,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
                 <InputOTP
                   maxLength={6}
                   id="otp"
+                  name="otp"
                   required
                   containerClassName="gap-4"
                 >
