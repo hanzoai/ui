@@ -43,6 +43,10 @@ export const docsConfig: DocsConfig = {
       title: "Theme Gen",
       href: "/theme-generator",
     },
+    {
+      title: "Compose",
+      href: "/compose",
+    },
   ],
   sidebarNav: [
     {
