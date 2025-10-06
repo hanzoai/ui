@@ -88,7 +88,13 @@ export default function IndexPage() {
             />
           </section>
           <section className="theme-container hidden md:block">
-            <RootComponents />
+            <div className="overflow-hidden rounded-lg border bg-background shadow-lg">
+              <iframe
+                src="/examples/dashboard"
+                className="h-[900px] w-full border-0"
+                title="Dashboard Example"
+              />
+            </div>
           </section>
         </div>
       </div>

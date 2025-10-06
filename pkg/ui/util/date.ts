@@ -1,4 +1,8 @@
-import { FormattedMessage } from '@hanzo_network/hanzo-node-state/v2/queries/getChatConversation/types';
+// FormattedMessage type for chat messages
+export type FormattedMessage = {
+  createdAt?: string;
+  [key: string]: any;
+};
 
 export type ChatConversationMessage = {
   hash: string;
