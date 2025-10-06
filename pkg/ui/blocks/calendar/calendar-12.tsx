@@ -4,7 +4,7 @@ import * as React from "react"
 import { type DateRange } from "react-day-picker"
 import { enUS, es } from "react-day-picker/locale"
 
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import {
   Card,
   CardContent,

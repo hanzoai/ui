@@ -5,7 +5,7 @@ import { formatDateRange } from "little-date"
 import { PlusIcon } from "lucide-react"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Card, CardContent, CardFooter } from "../../primitives/card"
 
 const events = [
