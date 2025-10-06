@@ -118,5 +118,5 @@ export {
 export {
   HanzoLogo,
   HanzoIcon,  // Use this as the canonical HanzoIcon export
-  type HanzoLogoProps
+  // HanzoLogoProps type not exported from hanzo-logo
 } from './hanzo-logo';
