@@ -89,7 +89,6 @@
       "import": "./dist/form.mjs",
       "require": "./dist/form.js"
     },
-
     "./drawer": {
       "types": "./dist/drawer.d.ts",
       "import": "./dist/drawer.mjs",
@@ -145,9 +144,9 @@
       "require": "./dist/components/*.js"
     },
     "./primitives": {
-      "types": "./dist/primitives/index-next.d.ts",
-      "import": "./dist/primitives/index-next.mjs",
-      "require": "./dist/primitives/index-next.js"
+      "types": "./dist/primitives-export.d.ts",
+      "import": "./dist/primitives-export.mjs",
+      "require": "./dist/primitives-export.js"
     },
     "./primitives/*": {
       "types": "./dist/primitives/*.d.ts",
