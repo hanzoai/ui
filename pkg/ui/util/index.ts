@@ -14,6 +14,7 @@ export * from './number-abbreviate';
 export * from './format-to-max-char';
 export * from './format-and-abbreviate-as-currency';
 export * from './two-way-map';
+export * from './use-mobile';
 
 // Export cn utility and other common functions from src/utils
 export { cn, formatDate, absoluteUrl } from '../src/utils';
