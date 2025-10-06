@@ -1,0 +1,62 @@
+{
+  "overall": {
+    "pass": 10,
+    "fail": 0,
+    "skip": 0
+  },
+  "frameworks": {
+    "react": {
+      "tests": [
+        {
+          "name": "structure",
+          "status": "pass"
+        },
+        {
+          "name": "exports",
+          "status": "pass"
+        }
+      ],
+      "coverage": 64
+    },
+    "vue": {
+      "tests": [
+        {
+          "name": "structure",
+          "status": "pass"
+        },
+        {
+          "name": "exports",
+          "status": "pass"
+        }
+      ],
+      "coverage": 81
+    },
+    "svelte": {
+      "tests": [
+        {
+          "name": "structure",
+          "status": "pass"
+        },
+        {
+          "name": "exports",
+          "status": "pass"
+        }
+      ],
+      "coverage": 70
+    },
+    "react-native": {
+      "tests": [
+        {
+          "name": "structure",
+          "status": "pass"
+        },
+        {
+          "name": "exports",
+          "status": "pass"
+        }
+      ],
+      "coverage": 43
+    }
+  },
+  "issues": []
+}

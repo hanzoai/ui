@@ -256,6 +256,69 @@ services:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: password`,
+
+  analytics: `version: '3.8'
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    networks:
+      - analytics
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    networks:
+      - analytics
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    networks:
+      - analytics
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  vector:
+    image: timberio/vector:latest
+    networks:
+      - analytics
+    depends_on:
+      - clickhouse
+      - kafka
+    volumes:
+      - ./vector.toml:/etc/vector/vector.toml:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    networks:
+      - analytics
+    depends_on:
+      - clickhouse
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+networks:
+  analytics:
+
+volumes:
+  clickhouse_data:
+  grafana_data:`,
 }
 
 function parseComposeToNodes(composeYaml: string): { nodes: Node[]; edges: Edge[] } {
@@ -482,39 +545,74 @@ export default function ComposeSpecPage() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Example Stacks</CardTitle>
+          <CardTitle>Example Stacks - Click to Load</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm">
-          <div>
-            <h4 className="font-semibold">Rails Stack (Default)</h4>
-            <p className="text-muted-foreground">
-              Nginx → Rails → PostgreSQL + Redis + Sidekiq (full production stack)
+        <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("rails")}
+          >
+            <h4 className="font-semibold">Rails Stack</h4>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Nginx → Rails → PostgreSQL + Redis + Sidekiq
             </p>
-          </div>
-          <div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("nextjsPostgres")}
+          >
             <h4 className="font-semibold">Next.js + PostgreSQL</h4>
-            <p className="text-muted-foreground">
-              Next.js app → PostgreSQL with NextAuth (modern JS stack)
+            <p className="mt-1 text-xs text-muted-foreground">
+              Modern JS with SQL + NextAuth
             </p>
-          </div>
-          <div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("nextjsMongo")}
+          >
             <h4 className="font-semibold">Next.js + MongoDB</h4>
-            <p className="text-muted-foreground">
-              Next.js → MongoDB + Redis (NoSQL stack with caching)
+            <p className="mt-1 text-xs text-muted-foreground">
+              NoSQL stack with Redis caching
             </p>
-          </div>
-          <div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("laravel")}
+          >
             <h4 className="font-semibold">Laravel + MySQL</h4>
-            <p className="text-muted-foreground">
-              Nginx → PHP-FPM → MySQL + Redis + Queue workers (PHP stack)
+            <p className="mt-1 text-xs text-muted-foreground">
+              PHP stack with queue workers
             </p>
-          </div>
-          <div>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("analytics")}
+          >
+            <h4 className="font-semibold">Analytics Stack</h4>
+            <p className="mt-1 text-xs text-muted-foreground">
+              ClickHouse + Kafka + Vector + Grafana
+            </p>
+          </Button>
+
+          <Button
+            variant="outline"
+            className="h-auto flex-col items-start p-4 text-left"
+            onClick={() => loadExample("wordpress")}
+          >
             <h4 className="font-semibold">WordPress</h4>
-            <p className="text-muted-foreground">
-              WordPress → MySQL (classic CMS setup)
+            <p className="mt-1 text-xs text-muted-foreground">
+              Classic CMS with MySQL
             </p>
-          </div>
+          </Button>
         </CardContent>
       </Card>
     </div>
