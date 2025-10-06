@@ -2,8 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Checkbox } from "@/registry/new-york/ui/checkbox"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 
 import { labels, priorities, statuses } from "../data/data"
 import { Task } from "../data/schema"
@@ -53,7 +53,7 @@ export const columns: ColumnDef<Task>[] = [
       const label = labels.find((label) => label.value === row.original.label)
 
       return (
-        <div className="flex space-x-2">
+        <div className="flex gap-2">
           {label && <Badge variant="outline">{label.label}</Badge>}
           <span className="max-w-[500px] truncate font-medium">
             {row.getValue("title")}
@@ -77,9 +77,9 @@ export const columns: ColumnDef<Task>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
+        <div className="flex w-[100px] items-center gap-2">
           {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+            <status.icon className="text-muted-foreground size-4" />
           )}
           <span>{status.label}</span>
         </div>
@@ -104,9 +104,9 @@ export const columns: ColumnDef<Task>[] = [
       }
 
       return (
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           {priority.icon && (
-            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+            <priority.icon className="text-muted-foreground size-4" />
           )}
           <span>{priority.label}</span>
         </div>
