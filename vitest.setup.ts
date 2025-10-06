@@ -22,3 +22,8 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 })
+
+// Mock document.elementFromPoint for OTP input
+if (typeof document !== 'undefined') {
+  document.elementFromPoint = vi.fn().mockReturnValue(null)
+}
