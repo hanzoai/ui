@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york-v4/ui/dropdown-menu"
+} from "@/registry/new-york/ui/dropdown-menu"
 import {
   InputGroup,
   InputGroupAddon,
@@ -14,13 +14,13 @@ import {
   InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
-} from "@/registry/new-york-v4/ui/input-group"
-import { Separator } from "@/registry/new-york-v4/ui/separator"
+} from "@/registry/new-york/ui/input-group"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/registry/new-york-v4/ui/tooltip"
+} from "@/registry/new-york/ui/tooltip"
 
 export function InputGroupDemo() {
   return (
