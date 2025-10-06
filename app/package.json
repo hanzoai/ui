@@ -62,6 +62,7 @@
     "@tiptap/starter-kit": "^3.6.5",
     "@vercel/analytics": "^1.5.0",
     "@vercel/og": "^0.0.21",
+    "@xyflow/react": "^12.8.6",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
