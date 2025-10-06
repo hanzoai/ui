@@ -1,9 +1,9 @@
-import { 3dScene } from "@/registry/default/ui/3d-scene"
+import { Scene3D } from "@/registry/default/ui/3d-scene"
 
-export default function 3dSceneDemo() {
+export default function ThreeDSceneDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <3dScene />
+      <Scene3D />
     </div>
   )
 }
