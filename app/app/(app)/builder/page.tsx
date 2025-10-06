@@ -219,28 +219,42 @@ function SortableBlock({
     <div
       ref={setNodeRef}
       style={style}
-      className="group relative rounded-lg border bg-card p-4"
+      className="group relative"
     >
-      <div className="flex items-center gap-2">
+      <div className="absolute -left-8 top-4 z-10 flex items-center gap-2">
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing"
+          className="cursor-grab rounded bg-card p-1 shadow active:cursor-grabbing"
         >
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </button>
-        <div className="flex-1">
-          <p className="font-medium">{blockName}</p>
-          <p className="text-xs text-muted-foreground">Viewport block component</p>
+      </div>
+
+      <div className="relative overflow-hidden rounded-lg border">
+        <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onRemove}
+            className="bg-background/80 backdrop-blur"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onRemove}
-          className="opacity-0 group-hover:opacity-100"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+
+        {/* Block Preview */}
+        <div className="pointer-events-none">
+          <iframe
+            src={`/blocks/default/${blockName}`}
+            className="h-96 w-full border-0"
+            title={blockName}
+          />
+        </div>
+
+        <div className="border-t bg-card px-4 py-2">
+          <p className="text-sm font-medium">{blockName}</p>
+        </div>
       </div>
     </div>
   )
