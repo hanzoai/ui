@@ -6,7 +6,7 @@ import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } 
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical, Plus, Trash2, Download, Eye } from "lucide-react"
 
-import { getAllBlockIds } from "@/lib/blocks"
+import { Index } from "@/__registry__"
 import { Button } from "@/registry/new-york/ui/button"
 import { Card } from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
@@ -26,8 +26,14 @@ export default function PageBuilder() {
   const [filter, setFilter] = React.useState("")
 
   React.useEffect(() => {
-    getAllBlockIds().then(setBlocks).then(() => setAvailableBlocks(blocks))
-  }, [blocks])
+    // Get block IDs from the registry index
+    const blockIds = Object.keys(Index.default || {}).filter(key => {
+      const item = Index.default[key]
+      return item?.type === "components:block"
+    })
+    setBlocks(blockIds)
+    setAvailableBlocks(blockIds)
+  }, [])
 
   const filteredBlocks = availableBlocks.filter((block) =>
     block.toLowerCase().includes(filter.toLowerCase())
