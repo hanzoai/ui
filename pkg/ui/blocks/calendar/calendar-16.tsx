@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Clock2Icon } from "lucide-react"
 
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Card, CardContent, CardFooter } from "../../primitives/card"
 import { Input } from "../../primitives/input"
 import { Label } from "../../primitives/label"

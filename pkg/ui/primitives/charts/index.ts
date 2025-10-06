@@ -7,5 +7,6 @@ export * from './radar'
 export * from './radial'
 export * from './tooltip'
 
-// Core Chart Component
-export * from '../chart'
+// Note: Chart primitives (ChartContainer, ChartConfig, etc.) should be imported directly:
+// import { ChartContainer } from '@hanzo/ui/primitives/chart'
+// Not from charts/index to avoid circular dependencies

@@ -4,7 +4,7 @@ import * as React from "react"
 import { ChevronDownIcon } from "lucide-react"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Input } from "../../primitives/input"
 import { Label } from "../../primitives/label"
 import {

@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { type DateRange } from "react-day-picker"
 
 import { Button } from "../../primitives/button"
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 import { Label } from "../../primitives/label"
 import {
   Popover,

@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { Calendar } from "../../primitives/calendar"
+import Calendar from "../../primitives/calendar"
 
 export default function Calendar18() {
   const [date, setDate] = React.useState<Date | undefined>(
