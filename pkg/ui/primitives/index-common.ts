@@ -171,6 +171,30 @@ export {
 } from './input-otp'
 
 export {
+  Kbd,
+  KbdGroup,
+} from './kbd'
+
+export {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarContent,
+  MenubarItem,
+  MenubarSeparator,
+  MenubarLabel,
+  MenubarCheckboxItem,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarPortal,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarGroup,
+  MenubarSub,
+  MenubarShortcut,
+} from './menubar'
+
+export {
   navigationMenuTriggerStyle,
   NavigationMenu,
   NavigationMenuList,

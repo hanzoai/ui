@@ -4,66 +4,65 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is the Hanzo UI monorepo - a comprehensive React component library built on shadcn/ui v4 with Hanzo branding. It provides 50+ accessible, customizable components with a sophisticated build system and multiple deployment targets.
+This is the **Hanzo UI monorepo** - a comprehensive React component library based on shadcn/ui v4 with Hanzo branding. It provides 150+ accessible, customizable components with a sophisticated build system and multiple deployment targets.
 
-## Key Commands
+The monorepo contains:
+- **app/**: Main documentation site (Next.js 15.3.1, React 19, Fumadocs)
+- **pkg/ui**: Core UI library (@hanzo/ui v5.0.0) - published to npm
+- **pkg/auth**: Authentication components
+- **pkg/commerce**: E-commerce components
+- **pkg/brand**: Branding system
+
+## Essential Commands
 
 ### Development
 ```bash
-# Start main documentation site (port 3333)
-pnpm www:dev
+# Start main app dev server (port 3003)
+pnpm dev
+# or from app/
+cd app && pnpm dev
 
-# Start v4 component registry (port 4000)
-pnpm v4:dev
+# Start specific workspace
+pnpm --filter=app dev    # App only
+pnpm --filter=ui dev     # UI package watch mode
 
-# Start main app with Turbopack (port 3003)
-cd app && npm run dev --turbopack
-
-# Run all development servers
-make dev
-```
-
-### Building & Testing
-```bash
 # Build everything
-make build
 pnpm build
 
-# Build registry (required before building apps)
+# Build registry (required before app build)
 pnpm build:registry
-cd apps/www && pnpm registry:build
-
-# Run tests
-pnpm test
-pnpm test:dev  # Watch mode
-
-# Run single test
-pnpm test path/to/test.spec.ts
+# or
+cd app && pnpm registry:build
 ```
 
-### Linting & Formatting
+### Code Quality
 ```bash
 # Lint all workspaces
 pnpm lint
-make lint
+pnpm lint:fix
+
+# Type checking (excludes www)
+pnpm typecheck
 
 # Format code
-pnpm format
-make format
-
-# Type checking
-pnpm typecheck
-make typecheck
+pnpm format:write
+pnpm format:check
 ```
 
-### CLI Development
+### Testing
 ```bash
-# Test CLI locally
-pnpm shadcn --help
-pnpm shadcn add button
+# Run tests (requires v4 dev server)
+pnpm test
 
-# CLI development mode
-cd packages/shadcn && pnpm dev
+# Watch mode
+pnpm test:dev
+
+# E2E tests
+pnpm test:e2e
+pnpm test:e2e:ui    # With Playwright UI
+
+# Visual tests
+pnpm test:visual
 ```
 
 ### Package Publishing
@@ -74,134 +73,399 @@ pnpm changeset
 # Version packages
 pnpm changeset version
 
-# Publish to npm
-make publish
+# Publish to npm (from pkg/ui)
+cd pkg/ui && npm publish --access public
 ```
 
-## Architecture & Structure
+## Architecture Overview
 
-### Monorepo Layout
-- **apps/www**: Main documentation site (Next.js 14.3.0-canary.43, port 3333)
-- **apps/v4**: Component registry/playground (Next.js 15.3.1 with React 19, port 4000)
-- **packages/shadcn**: CLI tool for component installation (v3.3.1)
-- **pkg/ui**: Core UI library (@hanzo/ui v4.5.6)
-- **app/**: Main demo application with all components
+### Monorepo Structure
+```
+ui/
+├── app/                    # Documentation site (Next.js 15, React 19)
+│   ├── registry/          # Component registry (source of truth)
+│   │   ├── default/       # Default theme variant
+│   │   │   ├── ui/       # Component implementations
+│   │   │   ├── example/  # Usage examples
+│   │   │   └── blocks/   # Full-page sections
+│   │   └── new-york/      # New York theme variant
+│   ├── content/docs/      # MDX documentation
+│   └── scripts/           # Build scripts (registry, capture)
+├── pkg/
+│   ├── ui/                # Core UI library (published to npm)
+│   ├── auth/              # Auth components
+│   ├── commerce/          # E-commerce components
+│   └── brand/             # Branding system
+├── brands/                # White-label configurations
+└── templates/             # Project templates
+```
 
-### Component Registry System
+### Three-Layer Component System
 
-The registry is the core of the component system:
+**1. Components** (`registry/{style}/ui/`)
+- Single UI primitives (Button, Input, Card, Dialog)
+- 150+ components total
+- Composable building blocks
+- Two theme variants: default and new-york
 
-1. **Registry Structure**:
-   - `apps/www/registry/default/ui/` - Default theme components
-   - `apps/www/registry/new-york/ui/` - New York theme variant
-   - `apps/www/public/r/` - Built JSON registry files
+**2. Examples** (`registry/{style}/example/`)
+- Usage demonstrations for each component
+- Used in documentation via `<ComponentPreview />`
+- Shows typical usage patterns
 
-2. **Registry Build Process**:
-   ```bash
-   # Build registry files (must run before app build)
-   cd apps/www
-   tsx scripts/build-registry.mts
-   ```
+**3. Blocks** (`registry/{style}/blocks/`)
+- Viewport-sized sections (Dashboard, Hero, Login, Pricing)
+- Compose multiple components into full layouts
+- 24+ production-ready templates
+- Examples: dashboard-01, sidebar-07, login-03
 
-3. **External Registries**: Supports 35+ external registries configured in `registries.json`
+### Registry Build System
+
+**CRITICAL**: The registry is the core of the distribution system.
+
+**Build Process:**
+1. Source: Components in `app/registry/{style}/ui/`
+2. Build script: `app/scripts/build-registry.mts`
+3. Output: JSON files in `app/public/r/{style}/{name}.json`
+4. Consumption: shadcn CLI reads JSON to install components
+
+**Always run before app build:**
+```bash
+pnpm build:registry
+# or from app/
+pnpm registry:build
+```
+
+**Registry Entry Structure:**
+```json
+{
+  "name": "button",
+  "type": "components:ui",
+  "files": ["registry/default/ui/button.tsx"],
+  "dependencies": ["class-variance-authority"],
+  "registryDependencies": ["utils"]
+}
+```
 
 ### Package Exports
 
-The `pkg/ui` package provides multiple export paths:
-- `@hanzo/ui` - Top-level exports with cn utility
-- `@hanzo/ui/components` - All components
-- `@hanzo/ui/blocks` - UI patterns
-- `@hanzo/ui/primitives` - Base primitives
-- `@hanzo/ui/lib/utils` - Utilities including cn()
+The `@hanzo/ui` package provides multiple export paths:
 
-### Deployment Targets
+```typescript
+// Main exports
+import { Button, Card } from '@hanzo/ui'
 
-1. **GitHub Pages** (ui.hanzo.ai):
-   - Workflow: `.github/workflows/deploy-pages.yml`
-   - Static export with Next.js
-   - Automatic deployment on main push
+// Component-specific
+import { Button } from '@hanzo/ui/components'
 
-2. **Forked Repositories** (Zoo, Lux):
-   - Zoo UI: `~/work/zoo/ui`
-   - Lux UI: `~/work/lux/ui`
-   - Sync with: `git fetch hanzo main && git merge hanzo/main`
+// Blocks
+import { DashboardBlock } from '@hanzo/ui/blocks'
 
-## Critical Configuration
+// Primitives (Radix UI re-exports)
+import * as Dialog from '@hanzo/ui/primitives/dialog'
 
-### Environment Variables
-```bash
-# For GitHub Pages deployment
-NEXT_PUBLIC_APP_URL=https://ui.hanzo.ai
-GITHUB_ACTIONS=true  # Enables static export
-
-# For local development
-NEXT_PUBLIC_APP_URL=http://localhost:3003
+// Utilities
+import { cn } from '@hanzo/ui/lib/utils'
 ```
 
-### Build Dependencies
-- The registry MUST be built before building apps
-- Apps depend on registry JSON files in `public/r/`
-- Use Turbo for coordinated builds: `pnpm build`
+## Development Workflows
 
-### Model Context Protocol (MCP)
-The CLI includes an MCP server for AI assistance:
+### Adding a New Component
+
+1. **Create component files** in both theme variants:
 ```bash
-# Start MCP server
-pnpm shadcn serve
+touch app/registry/default/ui/my-component.tsx
+touch app/registry/new-york/ui/my-component.tsx
+touch app/registry/default/example/my-component-demo.tsx
+```
 
-# Available tools: list_components, get_component, add_component, search_registry
+2. **Implement component** following the standard pattern:
+```tsx
+"use client"
+
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const componentVariants = cva(
+  "base-classes",
+  {
+    variants: {
+      variant: {
+        default: "default-styles",
+        outline: "outline-styles"
+      }
+    },
+    defaultVariants: {
+      variant: "default"
+    }
+  }
+)
+
+interface ComponentProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof componentVariants> {}
+
+const Component = React.forwardRef<HTMLDivElement, ComponentProps>(
+  ({ className, variant, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(componentVariants({ variant }), className)}
+        {...props}
+      />
+    )
+  }
+)
+Component.displayName = "Component"
+
+export { Component, componentVariants, type ComponentProps }
+```
+
+3. **Create documentation**:
+```bash
+touch app/content/docs/components/my-component.mdx
+```
+
+4. **Add to navigation** in `app/config/docs.ts`
+
+5. **Build registry**:
+```bash
+pnpm build:registry
+```
+
+6. **Test locally**:
+```bash
+pnpm dev
+# Visit http://localhost:3003/docs/components/my-component
+```
+
+### Running Single Tests
+
+```bash
+# Vitest (for component tests)
+pnpm test path/to/test.spec.ts
+
+# Playwright (for E2E)
+pnpm test:e2e tests/specific-test.spec.ts
+```
+
+### Building for Production
+
+```bash
+# Full build (registry + all packages + app)
+pnpm build
+
+# Build specific package
+pnpm --filter=ui build
+pnpm --filter=app build
+
+# Production server
+cd app && pnpm start  # Port 3001
+```
+
+## Key Technologies
+
+- **React**: 18.3.1 (app) / 19.1.0 (experimental in some areas)
+- **Next.js**: 15.3.1 with Turbopack
+- **Styling**: Tailwind CSS 3.4.6-4.1.11, OKLCH colors
+- **Components**: Radix UI primitives
+- **Build**: Turborepo + pnpm workspaces
+- **Docs**: Fumadocs (MDX processing)
+- **Package Manager**: pnpm 9.0.6+
+
+## Component Patterns
+
+### Standard Component Structure
+```tsx
+// 1. "use client" if interactive
+"use client"
+
+// 2. Imports
+import * as React from "react"
+import { cva } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+// 3. Variants using cva
+const variants = cva(/* ... */)
+
+// 4. TypeScript interface extending HTML props
+interface Props extends React.HTMLAttributes<HTMLElement> {
+  // component-specific props
+}
+
+// 5. forwardRef component
+const Component = React.forwardRef<HTMLElement, Props>(
+  ({ className, ...props }, ref) => (
+    <element
+      ref={ref}
+      className={cn(variants(), className)}
+      {...props}
+    />
+  )
+)
+
+// 6. Display name
+Component.displayName = "Component"
+
+// 7. Export
+export { Component }
+```
+
+### Registry Dependencies
+Components can depend on other registry components:
+```json
+{
+  "registryDependencies": ["button", "dialog", "utils"]
+}
+```
+
+These auto-install when users add the component via CLI.
+
+### Import Path Patterns
+
+**In registry files:**
+```tsx
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
+```
+
+**After CLI installation** (paths are rewritten):
+```tsx
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 ```
 
 ## White-Label System
 
-The repository includes a white-label system for creating branded forks:
+The repository supports white-labeling for branded forks (Zoo, Lux).
 
-1. **Brand Configuration**: Edit `brand.config.ts`
-2. **Update Package Names**: Search/replace @hanzo with your scope
-3. **Sync Updates**: Pull from upstream hanzo/main regularly
-
-## Common Workflows
-
-### Adding New Components
-1. Create component in `apps/www/registry/default/ui/`
-2. Add example in `apps/www/registry/default/example/`
-3. Update registry configuration
-4. Run `pnpm build:registry`
-5. Test with CLI: `pnpm shadcn add [component]`
-
-### Updating from Upstream shadcn/ui
-```bash
-git remote add upstream https://github.com/shadcn-ui/ui.git
-git fetch upstream
-git merge upstream/main
-# Resolve conflicts, preserve Hanzo branding
+**Configuration**: Create `brands/YOUR_BRAND.brand.ts`
+```typescript
+export const yourBrand: BrandConfig = {
+  name: "YourBrand",
+  npmOrg: "@yourorg",
+  packageName: "@yourorg/ui",
+  domain: "ui.yourdomain.com",
+  colors: { /* custom colors */ }
+}
 ```
 
-### Running Specific App Builds
+**Sync Updates:**
 ```bash
-# Build www only
-pnpm --filter=www build
-
-# Build v4 only
-pnpm --filter=v4 build
-
-# Build CLI only
-pnpm --filter=shadcn build
+git remote add hanzo https://github.com/hanzoai/ui.git
+git fetch hanzo main
+git merge hanzo/main
 ```
 
-## Technical Stack
+## MDX Documentation System
 
-- **React**: 18.3.1 (www) / 19.1.0 (v4)
-- **Next.js**: 14.3.0-canary.43 (www) / 15.3.1 (v4)
-- **Tailwind CSS**: 3.4.6-4.1.11 with OKLCH colors
-- **Build System**: Turborepo + pnpm workspaces
-- **Component Base**: Radix UI primitives
-- **Documentation**: Contentlayer2 (www) / Fumadocs (v4)
+**Framework**: Fumadocs (replaces Contentlayer)
 
-## Important Notes
+**Available Components in MDX:**
+```tsx
+<ComponentPreview name="button-demo" />      // Live demo
+<ComponentSource name="button" />            // Source code
+<CodeTabs>                                   // Install tabs
+<Steps>                                      // Step instructions
+<Callout>                                    // Info/warning boxes
+```
 
-- Components use `@/lib/utils` imports that must be aliased correctly
-- The cn() utility is essential for component styling
-- Registry files are gitignored but required for builds
-- Use pnpm 9.0.6+ for workspace compatibility
-- The v4 app uses React 19 with experimental features
+**Navigation**: Configured in `app/config/docs.ts`
+
+## External Registries
+
+The CLI supports 35+ external component registries configured in `app/registries.json`:
+
+- @aceternity, @magicui, @shadcn-editor
+- @plate-ui, @kokonut, @nextui-org
+- Validates via `pnpm validate:registries`
+
+Users can install from external registries:
+```bash
+npx @hanzo/ui add @aceternity/spotlight
+```
+
+## Page Builder Feature
+
+New drag-drop visual builder at `/builder` route:
+
+- **Left Sidebar**: Filterable block library (24+ blocks)
+- **Canvas**: Drag-drop page assembly with reordering
+- **Export**: Generates React TSX code
+- **Tech**: @dnd-kit for drag-drop, SortableContext for reordering
+
+Access: http://localhost:3003/builder or https://ui.hanzo.ai/builder
+
+## Deployment
+
+### GitHub Pages (ui.hanzo.ai)
+- **Workflow**: `.github/workflows/deploy-pages.yml`
+- **Triggers**: Push to main branch
+- **Process**:
+  1. Build pkg/ui package
+  2. Build registry
+  3. Build Next.js app
+  4. Deploy to GitHub Pages
+- **Requirements**: npm-run-all, del-cli
+
+### Forked Repositories
+Zoo UI (`~/work/zoo/ui`) and Lux UI (`~/work/lux/ui`) are white-labeled forks that sync updates from this repo.
+
+## Environment Variables
+
+**For GitHub Pages deployment:**
+```bash
+NEXT_PUBLIC_APP_URL=https://ui.hanzo.ai
+GITHUB_ACTIONS=true  # Enables static export
+```
+
+**For local development:**
+```bash
+NEXT_PUBLIC_APP_URL=http://localhost:3003
+```
+
+## Common Issues & Solutions
+
+### Registry Not Found
+**Problem**: App build fails with registry errors
+**Solution**: `pnpm build:registry` before `pnpm build`
+
+### Port Already In Use
+**Problem**: 3003 already taken
+**Solution**: Change port in app/package.json or kill existing process
+
+### Type Errors After Component Changes
+**Problem**: TypeScript errors in registry
+**Solution**: Rebuild registry to regenerate types
+
+### Package Not Publishing
+**Problem**: npm publish fails
+**Solution**: Ensure you're in pkg/ui and version is bumped
+
+## Critical Patterns
+
+1. **Always build registry before app**: Components → Registry JSON → App
+2. **Two theme variants must sync**: default and new-york use same API
+3. **Import paths transform**: `@/registry/` → `@/components/` on install
+4. **Blocks vs Components**: Blocks are full sections, not CLI-installable
+5. **Package exports**: Multiple entry points for different use cases
+
+## Recent Changes (2025-10-05)
+
+- Upgraded to Next.js 15.3.1 with Turbopack
+- React 19 support (experimental features)
+- Migrated from Contentlayer to Fumadocs
+- Added @dnd-kit page builder
+- Synced with shadcn/ui v3.4.0 (7 new components)
+- Electric blue primary color (210 100% 50%)
+- Added /primitives export for CTV pages
+
+## Notes for AI Assistants
+
+- Registry must rebuild after component changes
+- Two theme variants (default, new-york) must stay in sync
+- Import paths in registry use `@/registry/{style}/` which becomes `@/components/` after CLI install
+- Blocks are full-page sections, NOT installable via CLI like components
+- GitHub Pages deployment builds pkg/ui first, then app
+- Use `pnpm` (9.0.6+), not npm/yarn for workspace commands
