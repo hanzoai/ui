@@ -35,6 +35,14 @@ export const docsConfig: DocsConfig = {
       title: "Colors",
       href: "/colors",
     },
+    {
+      title: "Builder",
+      href: "/builder",
+    },
+    {
+      title: "Theme Gen",
+      href: "/theme-generator",
+    },
   ],
   sidebarNav: [
     {
