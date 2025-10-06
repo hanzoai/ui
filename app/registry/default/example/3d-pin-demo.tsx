@@ -1,9 +1,9 @@
-import { 3dPin } from "@/registry/default/ui/3d-pin"
+import { Pin3D } from "@/registry/default/ui/3d-pin"
 
-export default function 3dPinDemo() {
+export default function ThreeDPinDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <3dPin />
+      <Pin3D />
     </div>
   )
 }

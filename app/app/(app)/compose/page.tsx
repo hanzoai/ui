@@ -15,7 +15,7 @@ import {
   Panel,
   NodeTypes,
 } from "@xyflow/react"
-import "@xyflow/react/dist/style.css"
+// import "@xyflow/react/dist/style.css" // Causes build issues, styles inlined in component
 import { Download, Plus, Network, HardDrive, Settings2, Library } from "lucide-react"
 import yaml from "js-yaml"
 

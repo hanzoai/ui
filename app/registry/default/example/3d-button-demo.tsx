@@ -1,9 +1,9 @@
-import { 3dButton } from "@/registry/default/ui/3d-button"
+import { Button3D } from "@/registry/default/ui/3d-button"
 
-export default function 3dButtonDemo() {
+export default function ThreeDButtonDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <3dButton />
+      <Button3D />
     </div>
   )
 }
