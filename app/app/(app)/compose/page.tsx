@@ -243,19 +243,74 @@ volumes:
 
   wordpress: `version: '3.8'
 services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - wordpress
+    networks:
+      - frontend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - wordpress_data:/var/www/html
+
   wordpress:
     image: wordpress:latest
-    ports:
-      - "8000:80"
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_PASSWORD: password
     depends_on:
       - db
-  db:
-    image: mysql:8
+      - redis
+    networks:
+      - frontend
+      - backend
     environment:
-      MYSQL_ROOT_PASSWORD: password`,
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_REDIS_HOST: redis
+      WORDPRESS_REDIS_PORT: 6379
+    volumes:
+      - wordpress_data:/var/www/html
+
+  db:
+    image: mysql:8.4
+    networks:
+      - backend
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - backend
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    depends_on:
+      - db
+
+networks:
+  frontend:
+  backend:
+
+volumes:
+  wordpress_data:
+  mysql_data:
+  redis_data:`,
 
   analytics: `version: '3.8'
 services:
@@ -608,9 +663,9 @@ export default function ComposeSpecPage() {
             className="h-auto flex-col items-start p-4 text-left"
             onClick={() => loadExample("wordpress")}
           >
-            <h4 className="font-semibold">WordPress</h4>
+            <h4 className="font-semibold">WordPress Pro</h4>
             <p className="mt-1 text-xs text-muted-foreground">
-              Classic CMS with MySQL
+              Nginx + WP + MySQL + Redis + Adminer
             </p>
           </Button>
         </CardContent>
