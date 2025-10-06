@@ -19,6 +19,16 @@ import {
 } from "../../../../../primitives/input-otp"
 
 export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    // TODO: Add your authentication logic here
+    console.log('Form submitted:', Object.fromEntries(formData))
+
+    // Example: await signIn(formData)
+  }
+
   return (
     <Card {...props}>
       <CardHeader className="text-center">
@@ -26,13 +36,13 @@ export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
         <CardDescription>We sent a 6-digit code to your email.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form>
+        <form onSubmit={handleSubmit}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="otp" className="sr-only">
                 Verification code
               </FieldLabel>
-              <InputOTP maxLength={6} id="otp" required>
+              <InputOTP maxLength={6} id="otp" name="otp" required>
                 <InputOTPGroup className="gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />

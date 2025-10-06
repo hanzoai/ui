@@ -15,9 +15,19 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    // TODO: Add your authentication logic here
+    console.log('Form submitted:', Object.fromEntries(formData))
+
+    // Example: await signIn(formData)
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
@@ -38,6 +48,7 @@ export function SignupForm({
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               id="email"
+              name="email"
               type="email"
               placeholder="m@example.com"
               required
