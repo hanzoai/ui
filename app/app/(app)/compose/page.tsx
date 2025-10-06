@@ -396,7 +396,7 @@ export default function ComposeSpecPage() {
           {/* Top Toolbar */}
           <div className="flex items-center justify-between border-b bg-card p-4">
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-semibold">Compose Craft</h1>
+              <h1 className="text-xl font-semibold">Docker Compose Editor</h1>
               <span className="rounded bg-muted px-2 py-1 text-xs">
                 {Object.keys(services).length} services
               </span>
