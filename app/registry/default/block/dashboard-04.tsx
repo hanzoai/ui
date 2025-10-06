@@ -157,9 +157,7 @@ export default function Dashboard() {
         </div>
         <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
           <nav
-            className="grid gap-4 text-sm text-muted-foreground"
-            x-chunk="A sidebar navigation with links to general, security, integrations, support, organizations, and advanced settings."
-            x-chunk-container="chunk-container after:right-0"
+            className="grid gap-4 text-sm text-muted-foreground" x-chunk="dashboard-04-chunk-0"
           >
             <Link href="#" className="font-semibold text-primary">
               General
@@ -171,7 +169,7 @@ export default function Dashboard() {
             <Link href="#">Advanced</Link>
           </nav>
           <div className="grid gap-6">
-            <Card x-chunk="A form to update the store name.">
+            <Card x-chunk="dashboard-04-chunk-1">
               <CardHeader>
                 <CardTitle>Store Name</CardTitle>
                 <CardDescription>
@@ -187,7 +185,7 @@ export default function Dashboard() {
                 <Button>Save</Button>
               </CardFooter>
             </Card>
-            <Card x-chunk="A form to update the plugins directory with a checkbox to allow administrators to change the directory.">
+            <Card x-chunk="dashboard-04-chunk-2">
               <CardHeader>
                 <CardTitle>Plugins Directory</CardTitle>
                 <CardDescription>

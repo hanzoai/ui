@@ -1,6 +1,6 @@
 
-            import {Card,CardHeader,CardDescription,CardTitle,CardContent,CardFooter} from "@/registry/new-york/ui/card"
-import {Progress} from "@/registry/new-york/ui/progress"
+            import {Card,CardHeader,CardDescription,CardTitle,CardContent,CardFooter} from "@/registry/default/ui/card"
+import {Progress} from "@/registry/default/ui/progress"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-05-chunk-2">

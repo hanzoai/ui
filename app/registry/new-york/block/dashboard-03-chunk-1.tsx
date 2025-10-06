@@ -1,8 +1,8 @@
 
-            import {Label} from "@/registry/new-york/ui/label"
-import {Tooltip,TooltipTrigger,TooltipContent} from "@/registry/new-york/ui/tooltip"
-import {Button} from "@/registry/new-york/ui/button"
-import {Textarea} from "@/registry/new-york/ui/textarea"
+            import {Label} from "@/registry/default/ui/label"
+import {Tooltip,TooltipTrigger,TooltipContent} from "@/registry/default/ui/tooltip"
+import {Button} from "@/registry/default/ui/button"
+import {Textarea} from "@/registry/default/ui/textarea"
 import {Paperclip,Mic,CornerDownLeft} from "lucide-react"
 
             export default function Component() {

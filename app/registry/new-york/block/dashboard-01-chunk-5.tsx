@@ -1,6 +1,6 @@
 
-            import {Card,CardHeader,CardTitle,CardContent} from "@/registry/new-york/ui/card"
-import {Avatar,AvatarFallback,AvatarImage} from "@/registry/new-york/ui/avatar"
+            import {Card,CardHeader,CardTitle,CardContent} from "@/registry/default/ui/card"
+import {Avatar,AvatarFallback,AvatarImage} from "@/registry/default/ui/avatar"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-01-chunk-5">
