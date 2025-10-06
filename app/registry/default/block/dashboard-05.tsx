@@ -284,8 +284,7 @@ export default function Dashboard() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               <Card
-                className="sm:col-span-2"
-                x-chunk="A card for an orders dashboard with a description and a button to create a new order."
+                className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
               >
                 <CardHeader className="pb-3">
                   <CardTitle>Your Orders</CardTitle>
@@ -298,7 +297,7 @@ export default function Dashboard() {
                   <Button>Create New Order</Button>
                 </CardFooter>
               </Card>
-              <Card x-chunk="A stats card showing this week's total sales in USD, the percentage difference from last week, and a progress bar.">
+              <Card x-chunk="dashboard-05-chunk-1">
                 <CardHeader className="pb-2">
                   <CardDescription>This Week</CardDescription>
                   <CardTitle className="text-4xl">$1,329</CardTitle>
@@ -312,7 +311,7 @@ export default function Dashboard() {
                   <Progress value={25} aria-label="25% increase" />
                 </CardFooter>
               </Card>
-              <Card x-chunk="A stats card showing this month's total sales in USD, the percentage difference from last month, and a progress bar.">
+              <Card x-chunk="dashboard-05-chunk-2">
                 <CardHeader className="pb-2">
                   <CardDescription>This Month</CardDescription>
                   <CardTitle className="text-4xl">$5,329</CardTitle>
@@ -371,7 +370,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <TabsContent value="week">
-                <Card x-chunk="A table of recent orders showing the following columns: Customer, Type, Status, Date, and Amount.">
+                <Card x-chunk="dashboard-05-chunk-3">
                   <CardHeader className="px-7">
                     <CardTitle>Orders</CardTitle>
                     <CardDescription>
@@ -565,8 +564,7 @@ export default function Dashboard() {
           </div>
           <div>
             <Card
-              className="overflow-hidden"
-              x-chunk="An order details card with order details, shipping information, customer information and payment information."
+              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
             >
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">

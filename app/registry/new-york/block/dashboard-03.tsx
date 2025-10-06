@@ -17,8 +17,8 @@ import {
   Turtle,
 } from "lucide-react"
 
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
 import {
   Drawer,
   DrawerContent,
@@ -26,33 +26,33 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/registry/new-york/ui/drawer"
-import { Input } from "@/registry/new-york/ui/input"
-import { Label } from "@/registry/new-york/ui/label"
+} from "@/registry/default/ui/drawer"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york/ui/select"
-import { Textarea } from "@/registry/new-york/ui/textarea"
+} from "@/registry/default/ui/select"
+import { Textarea } from "@/registry/default/ui/textarea"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/registry/new-york/ui/tooltip"
+} from "@/registry/default/ui/tooltip"
 
 export const description =
   "An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."
 
-export const iframeHeight = "720px"
+export const iframeHeight = "740px"
 
 export const containerClassName = "w-full h-full"
 
 export default function Dashboard() {
   return (
-    <div className="grid h-screen w-full pl-[53px]">
+    <div className="grid h-screen w-full pl-[56px]">
       <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
         <div className="border-b p-2">
           <Button variant="outline" size="icon" aria-label="Home">
@@ -170,7 +170,7 @@ export default function Dashboard() {
         </nav>
       </aside>
       <div className="flex flex-col">
-        <header className="sticky top-0 z-10 flex h-[53px] items-center gap-1 border-b bg-background px-4">
+        <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
           <h1 className="text-xl font-semibold">Playground</h1>
           <Drawer>
             <DrawerTrigger asChild>
@@ -302,8 +302,7 @@ export default function Dashboard() {
         </header>
         <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
           <div
-            className="relative hidden flex-col items-start gap-8 md:flex"
-            x-chunk="A settings form a configuring an AI model and messages."
+            className="relative hidden flex-col items-start gap-8 md:flex" x-chunk="dashboard-03-chunk-0"
           >
             <form className="grid w-full items-start gap-6">
               <fieldset className="grid gap-6 rounded-lg border p-4">
@@ -420,8 +419,7 @@ export default function Dashboard() {
             </Badge>
             <div className="flex-1" />
             <form
-              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
-              x-chunk="A form for sending a message to an AI chatbot. The form has a textarea and buttons to upload files and record audio."
+              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring" x-chunk="dashboard-03-chunk-1"
             >
               <Label htmlFor="message" className="sr-only">
                 Message

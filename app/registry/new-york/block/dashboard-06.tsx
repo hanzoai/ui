@@ -16,7 +16,7 @@ import {
   Users2,
 } from "lucide-react"
 
-import { Badge } from "@/registry/new-york/ui/badge"
+import { Badge } from "@/registry/default/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,8 +24,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/breadcrumb"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
@@ -33,7 +33,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -42,9 +42,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Input } from "@/registry/new-york/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/registry/new-york/ui/sheet"
+} from "@/registry/default/ui/dropdown-menu"
+import { Input } from "@/registry/default/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/registry/default/ui/sheet"
 import {
   Table,
   TableBody,
@@ -52,23 +52,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table"
+} from "@/registry/default/ui/table"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/tabs"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/registry/new-york/ui/tooltip"
+} from "@/registry/default/ui/tooltip"
 
 export const description =
   "An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions."
 
-export const iframeHeight = "820px"
+export const iframeHeight = "938px"
 
 export const containerClassName = "w-full h-full"
 
@@ -76,7 +76,7 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 py-4">
+        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <Link
             href="#"
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
@@ -100,7 +100,7 @@ export default function Dashboard() {
             <TooltipTrigger asChild>
               <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <ShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Orders</span>
@@ -112,7 +112,7 @@ export default function Dashboard() {
             <TooltipTrigger asChild>
               <Link
                 href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Package className="h-5 w-5" />
                 <span className="sr-only">Products</span>
@@ -145,7 +145,7 @@ export default function Dashboard() {
             <TooltipContent side="right">Analytics</TooltipContent>
           </Tooltip>
         </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 py-4">
+        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
@@ -240,7 +240,7 @@ export default function Dashboard() {
             <Input
               type="search"
               placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
           </div>
           <DropdownMenu>
@@ -283,7 +283,7 @@ export default function Dashboard() {
               <div className="ml-auto flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-7 gap-1">
+                    <Button variant="outline" size="sm" className="h-8 gap-1">
                       <ListFilter className="h-3.5 w-3.5" />
                       <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                         Filter
@@ -302,13 +302,13 @@ export default function Dashboard() {
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button size="sm" variant="outline" className="h-7 gap-1">
+                <Button size="sm" variant="outline" className="h-8 gap-1">
                   <File className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                     Export
                   </span>
                 </Button>
-                <Button size="sm" className="h-7 gap-1">
+                <Button size="sm" className="h-8 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                     Add Product
@@ -317,7 +317,7 @@ export default function Dashboard() {
               </div>
             </div>
             <TabsContent value="all">
-              <Card x-chunk="A list of products in a table with actions. Each row has an image, name, status, price, total sales, created at and actions.">
+              <Card x-chunk="dashboard-06-chunk-0">
                 <CardHeader>
                   <CardTitle>Products</CardTitle>
                   <CardDescription>
@@ -333,7 +333,9 @@ export default function Dashboard() {
                         </TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Price</TableHead>
+                        <TableHead className="hidden md:table-cell">
+                          Price
+                        </TableHead>
                         <TableHead className="hidden md:table-cell">
                           Total Sales
                         </TableHead>
@@ -362,7 +364,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="outline">Draft</Badge>
                         </TableCell>
-                        <TableCell>$499.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $499.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           25
                         </TableCell>
@@ -405,7 +409,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$129.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $129.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           100
                         </TableCell>
@@ -448,7 +454,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$39.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $39.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           50
                         </TableCell>
@@ -491,7 +499,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="secondary">Draft</Badge>
                         </TableCell>
-                        <TableCell>$2.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $2.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           0
                         </TableCell>
@@ -534,7 +544,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$59.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $59.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           75
                         </TableCell>
@@ -577,7 +589,9 @@ export default function Dashboard() {
                         <TableCell>
                           <Badge variant="outline">Active</Badge>
                         </TableCell>
-                        <TableCell>$199.99</TableCell>
+                        <TableCell className="hidden md:table-cell">
+                          $199.99
+                        </TableCell>
                         <TableCell className="hidden md:table-cell">
                           30
                         </TableCell>
