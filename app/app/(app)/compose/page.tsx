@@ -13,433 +13,156 @@ import {
   addEdge,
   Connection,
   Panel,
+  NodeTypes,
 } from "@xyflow/react"
 import "@xyflow/react/dist/style.css"
-import { Download, Upload, Play, RotateCcw } from "lucide-react"
+import { Download, Plus, Network, HardDrive, Settings2, Library } from "lucide-react"
 import yaml from "js-yaml"
 
 import { Button } from "@/registry/new-york/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/registry/new-york/ui/card"
+import { Card } from "@/registry/new-york/ui/card"
+import { Input } from "@/registry/new-york/ui/input"
+import { Label } from "@/registry/new-york/ui/label"
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select"
+import { Separator } from "@/registry/new-york/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
-import { Textarea } from "@/registry/new-york/ui/textarea"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/registry/new-york/ui/sheet"
 
-// Default Rails stack compose file
-const DEFAULT_COMPOSE = `version: '3.8'
+const COMMON_IMAGES = [
+  { name: "nginx", image: "nginx:alpine", category: "proxy" },
+  { name: "postgres", image: "postgres:16-alpine", category: "database" },
+  { name: "mysql", image: "mysql:8.4", category: "database" },
+  { name: "mongodb", image: "mongo:7", category: "database" },
+  { name: "redis", image: "redis:7-alpine", category: "cache" },
+  { name: "node", image: "node:20-alpine", category: "runtime" },
+  { name: "php", image: "php:8.3-fpm-alpine", category: "runtime" },
+  { name: "ruby", image: "ruby:3.2-alpine", category: "runtime" },
+  { name: "python", image: "python:3.12-alpine", category: "runtime" },
+  { name: "clickhouse", image: "clickhouse/clickhouse-server:latest", category: "analytics" },
+  { name: "kafka", image: "confluentinc/cp-kafka:latest", category: "streaming" },
+  { name: "grafana", image: "grafana/grafana:latest", category: "monitoring" },
+]
 
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - rails
-    networks:
-      - frontend
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-
-  rails:
-    image: ruby:3.2-alpine
-    command: bundle exec rails server -b 0.0.0.0
-    ports:
-      - "3000:3000"
-    depends_on:
-      - postgres
-      - redis
-    networks:
-      - frontend
-      - backend
-    environment:
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/myapp
-      REDIS_URL: redis://redis:6379/0
-    volumes:
-      - ./app:/app
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: myapp
-    networks:
-      - backend
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  redis:
-    image: redis:7-alpine
-    networks:
-      - backend
-    volumes:
-      - redis_data:/data
-
-  sidekiq:
-    image: ruby:3.2-alpine
-    command: bundle exec sidekiq
-    depends_on:
-      - redis
-      - postgres
-    networks:
-      - backend
-    environment:
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/myapp
-      REDIS_URL: redis://redis:6379/0
-
-networks:
-  frontend:
-  backend:
-
-volumes:
-  postgres_data:
-  redis_data:
-`
-
-const EXAMPLE_STACKS = {
-  rails: DEFAULT_COMPOSE,
-
-  nextjsMongo: `version: '3.8'
-services:
-  nextjs:
-    image: node:20-alpine
-    command: npm run dev
-    ports:
-      - "3000:3000"
-    environment:
-      MONGODB_URI: mongodb://mongo:27017/myapp
-      REDIS_URL: redis://redis:6379
-    depends_on:
-      - mongo
-      - redis
-    networks:
-      - app
-    volumes:
-      - ./app:/app
-      - /app/node_modules
-
-  mongo:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    networks:
-      - app
-    volumes:
-      - mongo_data:/data/db
-
-  redis:
-    image: redis:7-alpine
-    networks:
-      - app
-    volumes:
-      - redis_data:/data
-
-networks:
-  app:
-
-volumes:
-  mongo_data:
-  redis_data:`,
-
-  nextjsPostgres: `version: '3.8'
-services:
-  nextjs:
-    image: node:20-alpine
-    command: npm run dev
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: postgresql://postgres:password@postgres:5432/app
-      NEXTAUTH_URL: http://localhost:3000
-      NEXTAUTH_SECRET: supersecret
-    depends_on:
-      - postgres
-    networks:
-      - app
-
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: app
-    networks:
-      - app
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-networks:
-  app:
-
-volumes:
-  postgres_data:`,
-
-  laravel: `version: '3.8'
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    depends_on:
-      - php
-    networks:
-      - frontend
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./public:/var/www/html/public
-
-  php:
-    image: php:8.3-fpm-alpine
-    networks:
-      - frontend
-      - backend
-    depends_on:
-      - mysql
-      - redis
-    environment:
-      DB_HOST: mysql
-      DB_DATABASE: laravel
-      DB_USERNAME: laravel
-      DB_PASSWORD: password
-      REDIS_HOST: redis
-    volumes:
-      - ./:/var/www/html
-
-  mysql:
-    image: mysql:8.4
-    environment:
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: laravel
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: rootpassword
-    networks:
-      - backend
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-  redis:
-    image: redis:7-alpine
-    networks:
-      - backend
-    volumes:
-      - redis_data:/data
-
-  queue:
-    image: php:8.3-fpm-alpine
-    command: php artisan queue:work
-    depends_on:
-      - mysql
-      - redis
-    networks:
-      - backend
-    environment:
-      DB_HOST: mysql
-      REDIS_HOST: redis
-
-networks:
-  frontend:
-  backend:
-
-volumes:
-  mysql_data:
-  redis_data:`,
-
-  wordpress: `version: '3.8'
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - wordpress
-    networks:
-      - frontend
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - wordpress_data:/var/www/html
-
-  wordpress:
-    image: wordpress:latest
-    depends_on:
-      - db
-      - redis
-    networks:
-      - frontend
-      - backend
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: password
-      WORDPRESS_REDIS_HOST: redis
-      WORDPRESS_REDIS_PORT: 6379
-    volumes:
-      - wordpress_data:/var/www/html
-
-  db:
-    image: mysql:8.4
-    networks:
-      - backend
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: rootpassword
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-  redis:
-    image: redis:7-alpine
-    networks:
-      - backend
-    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
-    volumes:
-      - redis_data:/data
-
-  adminer:
-    image: adminer:latest
-    ports:
-      - "8080:8080"
-    networks:
-      - backend
-    depends_on:
-      - db
-
-networks:
-  frontend:
-  backend:
-
-volumes:
-  wordpress_data:
-  mysql_data:
-  redis_data:`,
-
-  analytics: `version: '3.8'
-services:
-  clickhouse:
-    image: clickhouse/clickhouse-server:latest
-    ports:
-      - "8123:8123"
-      - "9000:9000"
-    networks:
-      - analytics
-    volumes:
-      - clickhouse_data:/var/lib/clickhouse
-    environment:
-      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    ports:
-      - "9092:9092"
-    networks:
-      - analytics
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    depends_on:
-      - zookeeper
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    networks:
-      - analytics
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-
-  vector:
-    image: timberio/vector:latest
-    networks:
-      - analytics
-    depends_on:
-      - clickhouse
-      - kafka
-    volumes:
-      - ./vector.toml:/etc/vector/vector.toml:ro
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3001:3000"
-    networks:
-      - analytics
-    depends_on:
-      - clickhouse
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    volumes:
-      - grafana_data:/var/lib/grafana
-
-networks:
-  analytics:
-
-volumes:
-  clickhouse_data:
-  grafana_data:`,
+interface ComposeService {
+  image: string
+  ports?: string[]
+  environment?: Record<string, string>
+  networks?: string[]
+  volumes?: string[]
+  depends_on?: string[]
 }
 
-function parseComposeToNodes(composeYaml: string): { nodes: Node[]; edges: Edge[] } {
-  try {
-    const compose = yaml.load(composeYaml) as any
-    const services = compose.services || {}
+function ServiceNode({ data }: { data: any }) {
+  return (
+    <div className="rounded-lg border-2 bg-card p-4 shadow-lg min-w-[200px]">
+      <div className="flex items-center gap-2">
+        <div className="rounded bg-primary/10 p-2">
+          <Settings2 className="h-4 w-4 text-primary" />
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold">{data.name}</div>
+          <div className="text-xs text-muted-foreground">{data.image}</div>
+        </div>
+      </div>
+      {data.ports && (
+        <div className="mt-2 text-xs text-muted-foreground">
+          📡 {data.ports[0]}
+        </div>
+      )}
+      {data.networks && (
+        <div className="mt-1 flex gap-1">
+          {data.networks.map((net: string) => (
+            <span key={net} className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
+              {net}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
-    const nodes: Node[] = Object.keys(services).map((name, i) => ({
-      id: name,
-      type: "default",
-      position: { x: 100 + (i % 3) * 250, y: 100 + Math.floor(i / 3) * 150 },
-      data: {
-        label: (
-          <div className="rounded-lg border bg-card p-3 shadow-sm">
-            <div className="font-semibold">{name}</div>
-            <div className="mt-1 text-xs text-muted-foreground">
-              {services[name].image || services[name].build || "custom"}
-            </div>
-            {services[name].ports && (
-              <div className="mt-1 text-xs text-muted-foreground">
-                📡 {services[name].ports[0]}
-              </div>
-            )}
-          </div>
-        ),
-      },
-    }))
-
-    const edges: Edge[] = []
-    Object.entries(services).forEach(([name, config]: [string, any]) => {
-      if (config.depends_on) {
-        const deps = Array.isArray(config.depends_on) ? config.depends_on : Object.keys(config.depends_on)
-        deps.forEach((dep: string) => {
-          edges.push({
-            id: `${dep}-${name}`,
-            source: dep,
-            target: name,
-            animated: true,
-          })
-        })
-      }
-    })
-
-    return { nodes, edges }
-  } catch (e) {
-    return { nodes: [], edges: [] }
-  }
+const nodeTypes: NodeTypes = {
+  service: ServiceNode,
 }
 
 export default function ComposeSpecPage() {
-  const [yamlContent, setYamlContent] = React.useState(DEFAULT_COMPOSE)
+  const [projectName, setProjectName] = React.useState("my-stack")
+  const [services, setServices] = React.useState<Record<string, ComposeService>>({})
+  const [networks, setNetworks] = React.useState<string[]>(["default"])
+  const [volumes, setVolumes] = React.useState<string[]>([])
+  const [selectedService, setSelectedService] = React.useState<string | null>(null)
+
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
+  // Update nodes when services change
   React.useEffect(() => {
-    const { nodes: parsedNodes, edges: parsedEdges } = parseComposeToNodes(yamlContent)
-    setNodes(parsedNodes)
-    setEdges(parsedEdges)
-  }, [yamlContent, setNodes, setEdges])
+    const newNodes: Node[] = Object.entries(services).map(([name, config], i) => ({
+      id: name,
+      type: "service",
+      position: { x: 100 + (i % 4) * 250, y: 100 + Math.floor(i / 4) * 150 },
+      data: { name, ...config },
+    }))
+
+    const newEdges: Edge[] = []
+    Object.entries(services).forEach(([name, config]) => {
+      config.depends_on?.forEach((dep) => {
+        newEdges.push({
+          id: `${dep}-${name}`,
+          source: dep,
+          target: name,
+          animated: true,
+          style: { stroke: "hsl(var(--primary))" },
+        })
+      })
+    })
+
+    setNodes(newNodes)
+    setEdges(newEdges)
+  }, [services, setNodes, setEdges])
+
+  const addService = (template: typeof COMMON_IMAGES[0]) => {
+    const serviceName = `${template.name}_${Object.keys(services).length + 1}`
+    setServices({
+      ...services,
+      [serviceName]: {
+        image: template.image,
+        networks: ["default"],
+      },
+    })
+  }
 
   const onConnect = React.useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => {
+      // Add dependency when connecting nodes
+      if (params.source && params.target) {
+        setServices((prev) => ({
+          ...prev,
+          [params.target!]: {
+            ...prev[params.target!],
+            depends_on: [...(prev[params.target!]?.depends_on || []), params.source!],
+          },
+        }))
+      }
+      setEdges((eds) => addEdge(params, eds))
+    },
     [setEdges]
   )
 
-  const handleExport = () => {
+  const generateYAML = () => {
+    const compose = {
+      version: "3.8",
+      services,
+      networks: networks.reduce((acc, net) => ({ ...acc, [net]: {} }), {}),
+      volumes: volumes.reduce((acc, vol) => ({ ...acc, [vol]: {} }), {}),
+    }
+    return yaml.dump(compose, { indent: 2 })
+  }
+
+  const downloadCompose = () => {
+    const yamlContent = generateYAML()
     const blob = new Blob([yamlContent], { type: "text/yaml" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
@@ -448,228 +171,370 @@ export default function ComposeSpecPage() {
     a.click()
   }
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const content = e.target?.result as string
-        setYamlContent(content)
-      }
-      reader.readAsText(file)
-    }
-  }
-
-  const loadExample = (stack: keyof typeof EXAMPLE_STACKS) => {
-    setYamlContent(EXAMPLE_STACKS[stack])
+  const updateServiceConfig = (serviceName: string, key: string, value: any) => {
+    setServices((prev) => ({
+      ...prev,
+      [serviceName]: {
+        ...prev[serviceName],
+        [key]: value,
+      },
+    }))
   }
 
   return (
-    <div className="container py-10">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold">Docker Compose Playground</h1>
-        <p className="mt-2 text-muted-foreground">
-          Visual editor for Docker Compose files with live YAML sync and React Flow
-        </p>
-      </div>
-
-      <div className="mb-4 flex flex-wrap gap-2">
-        <Button onClick={handleExport} variant="outline" size="sm">
-          <Download className="mr-2 h-4 w-4" />
-          Export YAML
-        </Button>
-        <Button variant="outline" size="sm" asChild>
-          <label>
-            <Upload className="mr-2 h-4 w-4" />
-            Upload File
-            <input
-              type="file"
-              accept=".yml,.yaml"
-              onChange={handleFileUpload}
-              className="hidden"
+    <div className="flex h-screen">
+      {/* Right Sidebar - Configuration */}
+      <div className="flex w-80 flex-col border-l bg-card">
+        <div className="border-b p-4">
+          <h2 className="text-lg font-semibold">Compose</h2>
+          <div className="mt-4 space-y-2">
+            <Label htmlFor="project-name">Project Name</Label>
+            <Input
+              id="project-name"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder="my-stack"
             />
-          </label>
-        </Button>
-        <Button onClick={() => loadExample("rails")} variant="outline" size="sm">
-          Rails Stack
-        </Button>
-        <Button onClick={() => loadExample("nextjsPostgres")} variant="outline" size="sm">
-          Next.js + Postgres
-        </Button>
-        <Button onClick={() => loadExample("nextjsMongo")} variant="outline" size="sm">
-          Next.js + MongoDB
-        </Button>
-        <Button onClick={() => loadExample("laravel")} variant="outline" size="sm">
-          Laravel + MySQL
-        </Button>
-        <Button onClick={() => loadExample("wordpress")} variant="outline" size="sm">
-          WordPress
-        </Button>
-        <Button onClick={() => setYamlContent(DEFAULT_COMPOSE)} variant="outline" size="sm">
-          <RotateCcw className="mr-2 h-4 w-4" />
-          Reset
-        </Button>
+          </div>
+        </div>
+
+        <Tabs defaultValue="services" className="flex-1">
+          <TabsList className="w-full rounded-none">
+            <TabsTrigger value="services" className="flex-1">
+              <Settings2 className="mr-2 h-4 w-4" />
+              Services
+            </TabsTrigger>
+            <TabsTrigger value="config" className="flex-1">
+              <Network className="mr-2 h-4 w-4" />
+              Config
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="services" className="mt-0 flex-1">
+            <ScrollArea className="h-[calc(100vh-220px)]">
+              <div className="space-y-2 p-4">
+                {selectedService ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold">{selectedService}</h3>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedService(null)}
+                      >
+                        ✕
+                      </Button>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Image</Label>
+                      <Input
+                        value={services[selectedService]?.image || ""}
+                        onChange={(e) =>
+                          updateServiceConfig(selectedService, "image", e.target.value)
+                        }
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Ports</Label>
+                      <Input
+                        placeholder="80:80"
+                        onBlur={(e) => {
+                          if (e.target.value) {
+                            updateServiceConfig(selectedService, "ports", [
+                              e.target.value,
+                            ])
+                          }
+                        }}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Networks</Label>
+                      <Select
+                        onValueChange={(value) => {
+                          updateServiceConfig(selectedService, "networks", [value])
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select network" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {networks.map((net) => (
+                            <SelectItem key={net} value={net}>
+                              {net}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center text-sm text-muted-foreground">
+                    Click a service node to configure
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="config" className="mt-0 flex-1">
+            <div className="space-y-4 p-4">
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Networks</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const name = prompt("Network name:")
+                      if (name) setNetworks([...networks, name])
+                    }}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+                <div className="mt-2 space-y-1">
+                  {networks.map((net) => (
+                    <div
+                      key={net}
+                      className="rounded bg-muted px-2 py-1 text-sm"
+                    >
+                      {net}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <Label>Volumes</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const name = prompt("Volume name:")
+                      if (name) setVolumes([...volumes, name])
+                    }}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+                <div className="mt-2 space-y-1">
+                  {volumes.map((vol) => (
+                    <div
+                      key={vol}
+                      className="rounded bg-muted px-2 py-1 text-sm"
+                    >
+                      {vol}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <Separator />
+
+        <div className="space-y-2 p-4">
+          <Button onClick={downloadCompose} className="w-full">
+            <Download className="mr-2 h-4 w-4" />
+            Download compose
+          </Button>
+
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full">
+                <Library className="mr-2 h-4 w-4" />
+                Library
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Service Library</SheetTitle>
+              </SheetHeader>
+              <ScrollArea className="mt-4 h-[calc(100vh-100px)]">
+                <div className="space-y-4">
+                  {["proxy", "database", "cache", "runtime", "analytics", "streaming", "monitoring"].map(
+                    (category) => (
+                      <div key={category}>
+                        <h4 className="mb-2 text-sm font-semibold capitalize">
+                          {category}
+                        </h4>
+                        <div className="space-y-2">
+                          {COMMON_IMAGES.filter((img) => img.category === category).map(
+                            (template) => (
+                              <Button
+                                key={template.image}
+                                variant="outline"
+                                className="w-full justify-start"
+                                onClick={() => {
+                                  addService(template)
+                                }}
+                              >
+                                <Plus className="mr-2 h-4 w-4" />
+                                {template.name}
+                              </Button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </ScrollArea>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
 
-      <Tabs defaultValue="visual" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="visual">Visual Editor</TabsTrigger>
-          <TabsTrigger value="yaml">YAML Editor</TabsTrigger>
-          <TabsTrigger value="split">Split View</TabsTrigger>
-        </TabsList>
+      {/* Main Canvas */}
+      <div className="flex-1">
+        <div className="flex h-full flex-col">
+          {/* Top Toolbar */}
+          <div className="flex items-center justify-between border-b bg-card p-4">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-semibold">Compose Craft</h1>
+              <span className="rounded bg-muted px-2 py-1 text-xs">
+                {Object.keys(services).length} services
+              </span>
+            </div>
 
-        <TabsContent value="visual">
-          <Card>
-            <CardHeader>
-              <CardTitle>Service Architecture</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[600px] rounded-lg border">
-                <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onConnect={onConnect}
-                  fitView
-                >
-                  <Background />
-                  <Controls />
-                  <MiniMap />
-                  <Panel position="top-right">
-                    <div className="rounded-lg border bg-card p-2 text-xs">
-                      {nodes.length} services • {edges.length} dependencies
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setServices({})
+                  setNetworks(["default"])
+                  setVolumes([])
+                }}
+              >
+                Clear
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const input = document.createElement("input")
+                  input.type = "file"
+                  input.accept = ".yml,.yaml"
+                  input.onchange = (e: any) => {
+                    const file = e.target.files[0]
+                    const reader = new FileReader()
+                    reader.onload = (e) => {
+                      const content = e.target?.result as string
+                      const parsed = yaml.load(content) as any
+                      setServices(parsed.services || {})
+                      setNetworks(Object.keys(parsed.networks || { default: {} }))
+                      setVolumes(Object.keys(parsed.volumes || {}))
+                    }
+                    reader.readAsText(file)
+                  }
+                  input.click()
+                }}
+              >
+                Import
+              </Button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button size="sm">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add service
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Add Service</SheetTitle>
+                  </SheetHeader>
+                  <ScrollArea className="mt-4 h-[calc(100vh-100px)]">
+                    <div className="space-y-2">
+                      {COMMON_IMAGES.map((template) => (
+                        <Button
+                          key={template.image}
+                          variant="outline"
+                          className="w-full justify-start"
+                          onClick={() => addService(template)}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          <div className="flex-1 text-left">
+                            <div className="font-medium">{template.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {template.image}
+                            </div>
+                          </div>
+                        </Button>
+                      ))}
                     </div>
-                  </Panel>
-                </ReactFlow>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="yaml">
-          <Card>
-            <CardContent className="p-0">
-              <Textarea
-                className="min-h-[600px] resize-none rounded-lg border-0 bg-muted p-4 font-mono text-sm focus-visible:ring-0"
-                value={yamlContent}
-                onChange={(e) => setYamlContent(e.target.value)}
-                placeholder="Paste your docker-compose.yml here..."
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="split">
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Visual</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[500px] rounded-lg border">
-                  <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    fitView
-                  >
-                    <Background />
-                    <Controls />
-                  </ReactFlow>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>YAML</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  className="min-h-[500px] resize-none font-mono text-sm"
-                  value={yamlContent}
-                  onChange={(e) => setYamlContent(e.target.value)}
-                />
-              </CardContent>
-            </Card>
+                  </ScrollArea>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
-        </TabsContent>
-      </Tabs>
 
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Example Stacks - Click to Load</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("rails")}
-          >
-            <h4 className="font-semibold">Rails Stack</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Nginx → Rails → PostgreSQL + Redis + Sidekiq
-            </p>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("nextjsPostgres")}
-          >
-            <h4 className="font-semibold">Next.js + PostgreSQL</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Modern JS with SQL + NextAuth
-            </p>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("nextjsMongo")}
-          >
-            <h4 className="font-semibold">Next.js + MongoDB</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              NoSQL stack with Redis caching
-            </p>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("laravel")}
-          >
-            <h4 className="font-semibold">Laravel + MySQL</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              PHP stack with queue workers
-            </p>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("analytics")}
-          >
-            <h4 className="font-semibold">Analytics Stack</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              ClickHouse + Kafka + Vector + Grafana
-            </p>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="h-auto flex-col items-start p-4 text-left"
-            onClick={() => loadExample("wordpress")}
-          >
-            <h4 className="font-semibold">WordPress Pro</h4>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Nginx + WP + MySQL + Redis + Adminer
-            </p>
-          </Button>
-        </CardContent>
-      </Card>
+          {/* Canvas */}
+          <div className="flex-1 bg-muted/30">
+            {Object.keys(services).length === 0 ? (
+              <div className="flex h-full items-center justify-center">
+                <div className="text-center">
+                  <Settings2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
+                  <h3 className="mt-4 text-lg font-semibold">No services yet</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Click "Add service" to start building your stack
+                  </p>
+                  <Button
+                    className="mt-4"
+                    onClick={() => addService(COMMON_IMAGES[1])}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add your first service
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                nodeTypes={nodeTypes}
+                onNodeClick={(_, node) => setSelectedService(node.id)}
+                fitView
+                className="bg-background"
+              >
+                <Background gap={16} color="hsl(var(--muted-foreground))" />
+                <Controls className="border-border bg-card" />
+                <MiniMap
+                  className="border-border bg-card"
+                  nodeColor="hsl(var(--primary))"
+                  maskColor="hsl(var(--muted) / 0.5)"
+                />
+                <Panel position="top-right" className="space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setNetworks([...networks, `network_${networks.length}`])}
+                  >
+                    <Network className="mr-2 h-4 w-4" />
+                    Add network
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setVolumes([...volumes, `vol_${volumes.length}`])}
+                  >
+                    <HardDrive className="mr-2 h-4 w-4" />
+                    Add volume
+                  </Button>
+                </Panel>
+              </ReactFlow>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
