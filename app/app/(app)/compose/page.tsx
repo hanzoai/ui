@@ -488,19 +488,31 @@ export default function ComposeSpecPage() {
           <div>
             <h4 className="font-semibold">Rails Stack (Default)</h4>
             <p className="text-muted-foreground">
-              Nginx proxy → Rails app → PostgreSQL + Redis + Sidekiq workers
+              Nginx → Rails → PostgreSQL + Redis + Sidekiq (full production stack)
             </p>
           </div>
           <div>
-            <h4 className="font-semibold">Next.js Stack</h4>
+            <h4 className="font-semibold">Next.js + PostgreSQL</h4>
             <p className="text-muted-foreground">
-              Next.js app → PostgreSQL + Redis for sessions
+              Next.js app → PostgreSQL with NextAuth (modern JS stack)
             </p>
           </div>
           <div>
-            <h4 className="font-semibold">WordPress Stack</h4>
+            <h4 className="font-semibold">Next.js + MongoDB</h4>
             <p className="text-muted-foreground">
-              WordPress → MySQL database (classic LAMP stack)
+              Next.js → MongoDB + Redis (NoSQL stack with caching)
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold">Laravel + MySQL</h4>
+            <p className="text-muted-foreground">
+              Nginx → PHP-FPM → MySQL + Redis + Queue workers (PHP stack)
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold">WordPress</h4>
+            <p className="text-muted-foreground">
+              WordPress → MySQL (classic CMS setup)
             </p>
           </div>
         </CardContent>

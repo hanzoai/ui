@@ -40,18 +40,18 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
             </FieldLabel>
             <InputOTP maxLength={6} id="otp" name="otp" required>
               <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
-                <InputOTPSlot />
-                <InputOTPSlot />
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
               </InputOTPGroup>
               <InputOTPSeparator />
               <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
-                <InputOTPSlot />
-                <InputOTPSlot />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
               </InputOTPGroup>
               <InputOTPSeparator />
               <InputOTPGroup className="gap-2 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border">
-                <InputOTPSlot />
-                <InputOTPSlot />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
               </InputOTPGroup>
             </InputOTP>
             <FieldDescription className="text-center">
