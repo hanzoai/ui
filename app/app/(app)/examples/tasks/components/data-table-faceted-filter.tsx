@@ -1,10 +1,10 @@
 import * as React from "react"
-import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { Column } from "@tanstack/react-table"
+import { Check, PlusCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -13,13 +13,13 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/registry/new-york/ui/command"
+} from "@/registry/new-york-v4/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/new-york-v4/ui/popover"
+import { Separator } from "@/registry/new-york-v4/ui/separator"
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -43,7 +43,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
+          <PlusCircle />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -54,7 +54,7 @@ export function DataTableFacetedFilter<TData, TValue>({
               >
                 {selectedValues.size}
               </Badge>
-              <div className="hidden space-x-1 lg:flex">
+              <div className="hidden gap-1 lg:flex">
                 {selectedValues.size > 2 ? (
                   <Badge
                     variant="secondary"
@@ -105,20 +105,20 @@ export function DataTableFacetedFilter<TData, TValue>({
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        "flex size-4 items-center justify-center rounded-[4px] border",
                         isSelected
-                          ? "bg-primary text-primary-foreground"
-                          : "opacity-50 [&_svg]:invisible"
+                          ? "bg-primary border-primary text-primary-foreground"
+                          : "border-input [&_svg]:invisible"
                       )}
                     >
-                      <CheckIcon className={cn("h-4 w-4")} />
+                      <Check className="text-primary-foreground size-3.5" />
                     </div>
                     {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <option.icon className="text-muted-foreground size-4" />
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      <span className="text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs">
                         {facets.get(option.value)}
                       </span>
                     )}
