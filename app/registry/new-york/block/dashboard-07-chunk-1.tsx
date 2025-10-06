@@ -1,10 +1,10 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/new-york/ui/card"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
-import {Label} from "@/registry/new-york/ui/label"
-import {ToggleGroup,ToggleGroupItem} from "@/registry/new-york/ui/toggle-group"
-import {Button} from "@/registry/new-york/ui/button"
-import {Input} from "@/registry/new-york/ui/input"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/default/ui/card"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
+import {Label} from "@/registry/default/ui/label"
+import {ToggleGroup,ToggleGroupItem} from "@/registry/default/ui/toggle-group"
+import {Button} from "@/registry/default/ui/button"
+import {Input} from "@/registry/default/ui/input"
 import {PlusCircle} from "lucide-react"
 
             export default function Component() {

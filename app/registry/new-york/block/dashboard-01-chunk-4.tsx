@@ -1,9 +1,9 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
-import {Button} from "@/registry/new-york/ui/button"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
+import {Button} from "@/registry/default/ui/button"
 import Link from "next/link"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
-import {Badge} from "@/registry/new-york/ui/badge"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
+import {Badge} from "@/registry/default/ui/badge"
 import {ArrowUpRight} from "lucide-react"
 
             export default function Component() {

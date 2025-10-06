@@ -1,5 +1,5 @@
 
-            import {Card,CardHeader,CardTitle,CardContent} from "@/registry/new-york/ui/card"
+            import {Card,CardHeader,CardTitle,CardContent} from "@/registry/default/ui/card"
 import {DollarSign} from "lucide-react"
 
             export default function Component() {

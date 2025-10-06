@@ -1,7 +1,7 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
-import {Badge} from "@/registry/new-york/ui/badge"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
+import {Badge} from "@/registry/default/ui/badge"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-05-chunk-3">
@@ -69,26 +69,6 @@ import {Badge} from "@/registry/new-york/ui/badge"
                           </TableCell>
                           <TableCell className="text-right">$150.00</TableCell>
                         </TableRow>
-                        {/* <TableRow>
-                          <TableCell>
-                            <div className="font-medium">Liam Johnson</div>
-                            <div className="hidden text-sm text-muted-foreground md:inline">
-                              liam@example.com
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            Sale
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge className="text-xs" variant="secondary">
-                              Fulfilled
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            2023-06-23
-                          </TableCell>
-                          <TableCell className="text-right">$250.00</TableCell>
-                        </TableRow> */}
                         <TableRow>
                           <TableCell>
                             <div className="font-medium">Noah Williams</div>
@@ -128,6 +108,26 @@ import {Badge} from "@/registry/new-york/ui/badge"
                             2023-06-26
                           </TableCell>
                           <TableCell className="text-right">$450.00</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <div className="font-medium">Liam Johnson</div>
+                            <div className="hidden text-sm text-muted-foreground md:inline">
+                              liam@example.com
+                            </div>
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            Sale
+                          </TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Badge className="text-xs" variant="secondary">
+                              Fulfilled
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            2023-06-23
+                          </TableCell>
+                          <TableCell className="text-right">$250.00</TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell>
