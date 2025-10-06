@@ -1,0 +1,182 @@
+---
+title: Page Builder
+description: Build pages visually with drag-and-drop using blocks
+---
+
+## Overview
+
+The Hanzo UI Page Builder allows you to visually compose pages by dragging and dropping blocks. It's powered by [@dnd-kit](https://dndkit.com/), a modern, lightweight drag-and-drop toolkit for React.
+
+## Features
+
+- **Drag-Drop Block Assembly**: Click or drag blocks from library to canvas
+- **Reordering**: Drag blocks to reorder them on the page
+- **Live Preview**: See blocks as you build
+- **Code Export**: Generate React TSX code from your layout
+- **Filter & Search**: Find blocks quickly
+- **Block Categories**: Dashboard, Auth, Hero, Sidebar, Calendar, and more
+
+## Usage
+
+Visit [/builder](/builder) to start building.
+
+### Quick Start
+
+1. **Browse Blocks**: Use the left sidebar to view all available blocks
+2. **Add to Page**: Click a block or drag it to the canvas
+3. **Reorder**: Drag blocks up/down to rearrange
+4. **Remove**: Click the trash icon to remove blocks
+5. **Export**: Click "Export" to download React code
+
+## Block Types
+
+### Dashboard Blocks
+- `dashboard-01` through `dashboard-07` - Full admin layouts
+- Includes sidebar, header, charts, tables
+- Responsive grid layouts
+
+### Authentication Blocks
+- `login-01` through `login-05` - Login pages
+- `signup-01` through `signup-05` - Registration pages
+- `otp-01` through `otp-05` - OTP verification
+
+### Sidebar Blocks
+- `sidebar-01` through `sidebar-15` - Navigation layouts
+- Collapsible, responsive, multi-level
+- With user menus, search, notifications
+
+### Calendar Blocks
+- `calendar-01` through `calendar-32` - Calendar views
+- Date pickers, range selectors, event calendars
+- Mobile and desktop variants
+
+## Technical Details
+
+### Built with dnd-kit
+
+The page builder uses [@dnd-kit](https://dndkit.com/) for drag-and-drop:
+
+```tsx
+import { DndContext, closestCenter } from "@dnd-kit/core"
+import { SortableContext, useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+
+// Sortable item
+const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+
+const style = {
+  transform: CSS.Transform.toString(transform),
+  transition,
+}
+```
+
+### Key Features of dnd-kit
+
+- **Lightweight**: ~10kb gzipped
+- **Accessibility**: Built-in keyboard support
+- **Performant**: Optimized for 60fps
+- **Flexible**: Works with any component
+- **TypeScript**: Full type safety
+
+### Code Export
+
+The builder generates clean React code:
+
+```tsx
+// Exported code example
+export default function CustomPage() {
+  return (
+    <>
+      <DashboardBlock name="dashboard-01" />
+      <SidebarBlock name="sidebar-07" />
+      <CalendarBlock name="calendar-12" />
+    </>
+  )
+}
+```
+
+## API Reference
+
+### Page Builder Props
+
+The builder accepts configuration through URL parameters:
+
+- `?style=default` - Default theme
+- `?style=new-york` - New York theme
+- `?preview=true` - Preview mode
+
+### Block Library
+
+Blocks are loaded from the registry:
+
+```tsx
+import { getAllBlockIds } from "@/lib/blocks"
+
+const blocks = await getAllBlockIds() // Returns array of block names
+```
+
+## Examples
+
+### Basic Usage
+
+Visit `/builder` and:
+1. Click "dashboard-01" from library
+2. Click "sidebar-07"
+3. Drag "sidebar-07" above "dashboard-01"
+4. Click Export
+
+Result: Complete admin dashboard layout code!
+
+### Custom Workflows
+
+Build common page types:
+
+**Landing Page:**
+1. Hero block (hero-01)
+2. Features block (features-02)
+3. Pricing block (pricing-01)
+4. CTA block (cta-03)
+
+**Admin Dashboard:**
+1. Sidebar navigation (sidebar-07)
+2. Dashboard metrics (dashboard-01)
+3. Data table (table-01)
+4. Calendar view (calendar-12)
+
+**Authentication Flow:**
+1. Login page (login-03)
+2. Signup page (signup-04)
+3. OTP verification (otp-02)
+
+## Best Practices
+
+1. **Start with Structure**: Add sidebar/header blocks first
+2. **Group Related Blocks**: Keep related content blocks together
+3. **Test Responsiveness**: Check mobile view in exported code
+4. **Customize After Export**: Use exported code as starting point
+5. **Reuse Patterns**: Save successful layouts for future use
+
+## dnd-kit Resources
+
+- [Documentation](https://docs.dndkit.com/)
+- [Examples](https://docs.dndkit.com/presets)
+- [API Reference](https://docs.dndkit.com/api-documentation)
+- [GitHub](https://github.com/clauderic/dnd-kit)
+
+## Limitations
+
+- Blocks cannot be edited in the builder (export and edit code)
+- No undo/redo (coming soon)
+- No save functionality (export code instead)
+- Preview shows block structure, not final styling
+
+## Next Steps
+
+After building your page:
+
+1. Export the code
+2. Create a new page in your Next.js app
+3. Paste the exported code
+4. Customize component props
+5. Add your content
+6. Style as needed
