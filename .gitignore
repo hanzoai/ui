@@ -47,7 +47,10 @@ package-lock.json
 # pnpm-lock.yaml - needed for CI/CD, do not ignore
 yarn.lock
 
-.AGENTS.md
+
+
+
+
 AGENTS.md
 CLAUDE.md
 GEMINI.md
