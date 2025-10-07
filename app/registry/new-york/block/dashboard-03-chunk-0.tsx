@@ -1,9 +1,9 @@
 
-            import {Label} from "@/registry/default/ui/label"
-import {Select,SelectTrigger,SelectContent,SelectItem,SelectValue} from "@/registry/default/ui/select"
+            import {Label} from "@/registry/new-york/ui/label"
+import {Select,SelectTrigger,SelectContent,SelectItem,SelectValue} from "@/registry/new-york/ui/select"
 import {Rabbit,Bird,Turtle} from "lucide-react"
-import {Input} from "@/registry/default/ui/input"
-import {Textarea} from "@/registry/default/ui/textarea"
+import {Input} from "@/registry/new-york/ui/input"
+import {Textarea} from "@/registry/new-york/ui/textarea"
 
             export default function Component() {
               return (<div

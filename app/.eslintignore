@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+next-env.d.ts
+__registry__/
+.source/
+*.config.js
+*.config.mjs
+.turbo/
+coverage/

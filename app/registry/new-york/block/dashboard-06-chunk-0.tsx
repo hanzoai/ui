@@ -1,9 +1,9 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/default/ui/card"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
-import {Badge} from "@/registry/default/ui/badge"
-import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuItem} from "@/registry/default/ui/dropdown-menu"
-import {Button} from "@/registry/default/ui/button"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/new-york/ui/card"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
+import {Badge} from "@/registry/new-york/ui/badge"
+import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuLabel,DropdownMenuItem} from "@/registry/new-york/ui/dropdown-menu"
+import {Button} from "@/registry/new-york/ui/button"
 import Image from "next/image"
 import {MoreHorizontal} from "lucide-react"
 

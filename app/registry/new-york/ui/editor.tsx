@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Bold, Italic, List, ListOrdered } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
+import { Button } from "@/registry/new-york/ui/button"
 
 export interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
   value?: string

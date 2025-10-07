@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
+import { Button } from "@/registry/new-york/ui/button"
 
 export interface MiniCalendarProps extends React.HTMLAttributes<HTMLDivElement> {
   selected?: Date

@@ -20,20 +20,20 @@ export default function OTPPage() {
     </div>
   )
 }
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "../../../../../primitives/field"
+} from "@/registry/new-york/ui/field"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "../../../../../primitives/input-otp"
+} from "@/registry/new-york/ui/input-otp"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
