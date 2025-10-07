@@ -2,15 +2,15 @@
 
 import * as React from "react"
 
-import Calendar from "../../primitives/calendar"
-import { Label } from "../../primitives/label"
+import Calendar from "@/registry/default/ui/calendar"
+import { Label } from "@/registry/default/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../primitives/select"
+} from "@/registry/default/ui/select"
 
 export default function Calendar13() {
   const [dropdown, setDropdown] =

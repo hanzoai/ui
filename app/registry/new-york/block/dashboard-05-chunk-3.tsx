@@ -1,7 +1,7 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
-import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/default/ui/table"
-import {Badge} from "@/registry/default/ui/badge"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/registry/new-york/ui/table"
+import {Badge} from "@/registry/new-york/ui/badge"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-05-chunk-3">

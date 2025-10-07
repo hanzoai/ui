@@ -1,5 +1,5 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
 import Image from "next/image"
 import {Upload} from "lucide-react"
 

@@ -9,21 +9,21 @@ export default function Page() {
     </div>
   )
 }
-import { Button } from "../../../../../primitives/button"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../../primitives/card"
+} from "@/registry/new-york/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "../../../../../primitives/field"
-import { Input } from "../../../../../primitives/input"
+} from "@/registry/new-york/ui/field"
+import { Input } from "@/registry/new-york/ui/input"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

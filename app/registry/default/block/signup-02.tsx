@@ -30,16 +30,16 @@ export default function SignupPage() {
     </div>
   )
 }
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "../../../../../primitives/field"
-import { Input } from "../../../../../primitives/input"
+} from "@/registry/default/ui/field"
+import { Input } from "@/registry/default/ui/input"
 
 export function SignupForm({
   className,

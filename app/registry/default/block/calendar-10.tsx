@@ -2,15 +2,15 @@
 
 import * as React from "react"
 
-import { Button } from "../../primitives/button"
-import Calendar from "../../primitives/calendar"
+import { Button } from "@/registry/default/ui/button"
+import Calendar from "@/registry/default/ui/calendar"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../primitives/card"
+} from "@/registry/default/ui/card"
 
 export default function Calendar10() {
   const [date, setDate] = React.useState<Date | undefined>(

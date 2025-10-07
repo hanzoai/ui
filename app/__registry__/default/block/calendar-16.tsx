@@ -3,10 +3,10 @@
 import * as React from "react"
 import { Clock2Icon } from "lucide-react"
 
-import Calendar from "../../primitives/calendar"
-import { Card, CardContent, CardFooter } from "../../primitives/card"
-import { Input } from "../../primitives/input"
-import { Label } from "../../primitives/label"
+import Calendar from "@/registry/default/ui/calendar"
+import { Card, CardContent, CardFooter } from "@/registry/default/ui/card"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 
 export default function Calendar16() {
   const [date, setDate] = React.useState<Date | undefined>(
