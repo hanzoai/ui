@@ -1,6 +1,6 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardFooter} from "@/registry/default/ui/card"
-import {Button} from "@/registry/default/ui/button"
+            import {Card,CardHeader,CardTitle,CardDescription,CardFooter} from "@/registry/new-york/ui/card"
+import {Button} from "@/registry/new-york/ui/button"
 
             export default function Component() {
               return (<Card

@@ -31,5 +31,5 @@
     "**/*.tsx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "./scripts/build-registry.mts"]
+  "exclude": ["node_modules", "./scripts/build-registry.mts", ".source/**", "__registry__/**"]
 }

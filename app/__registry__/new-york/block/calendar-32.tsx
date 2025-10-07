@@ -3,8 +3,8 @@
 import * as React from "react"
 import { CalendarPlusIcon } from "lucide-react"
 
-import { Button } from "../../primitives/button"
-import Calendar from "../../primitives/calendar"
+import { Button } from "@/registry/new-york/ui/button"
+import Calendar from "@/registry/new-york/ui/calendar"
 import {
   Drawer,
   DrawerContent,
@@ -12,8 +12,8 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "../../primitives/drawer"
-import { Label } from "../../primitives/label"
+} from "@/registry/new-york/ui/drawer"
+import { Label } from "@/registry/new-york/ui/label"
 
 export default function Calendar32() {
   const [open, setOpen] = React.useState(false)

@@ -1,8 +1,8 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/default/ui/card"
-import {Label} from "@/registry/default/ui/label"
-import {Input} from "@/registry/default/ui/input"
-import {Textarea} from "@/registry/default/ui/textarea"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/registry/new-york/ui/card"
+import {Label} from "@/registry/new-york/ui/label"
+import {Input} from "@/registry/new-york/ui/input"
+import {Textarea} from "@/registry/new-york/ui/textarea"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-07-chunk-0">

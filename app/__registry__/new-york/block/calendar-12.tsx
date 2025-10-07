@@ -4,21 +4,21 @@ import * as React from "react"
 import { type DateRange } from "react-day-picker"
 import { enUS, es } from "react-day-picker/locale"
 
-import Calendar from "../../primitives/calendar"
+import Calendar from "@/registry/new-york/ui/calendar"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../primitives/card"
+} from "@/registry/new-york/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../primitives/select"
+} from "@/registry/new-york/ui/select"
 
 const localizedStrings = {
   en: {

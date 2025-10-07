@@ -1,10 +1,10 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/default/ui/card"
-import {Button} from "@/registry/default/ui/button"
-import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator} from "@/registry/default/ui/dropdown-menu"
-import {Pagination,PaginationContent,PaginationItem} from "@/registry/default/ui/pagination"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/new-york/ui/card"
+import {Button} from "@/registry/new-york/ui/button"
+import {DropdownMenu,DropdownMenuTrigger,DropdownMenuContent,DropdownMenuItem,DropdownMenuSeparator} from "@/registry/new-york/ui/dropdown-menu"
+import {Pagination,PaginationContent,PaginationItem} from "@/registry/new-york/ui/pagination"
 import {Copy,Truck,MoreVertical,CreditCard,ChevronLeft,ChevronRight} from "lucide-react"
-import {Separator} from "@/registry/default/ui/separator"
+import {Separator} from "@/registry/new-york/ui/separator"
 
             export default function Component() {
               return (<Card

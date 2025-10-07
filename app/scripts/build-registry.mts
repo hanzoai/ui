@@ -67,10 +67,10 @@ export const Index: Record<string, any> = {
           }
         >()
         sourceFile.getImportDeclarations().forEach((node) => {
-          const module = node.getModuleSpecifier().getLiteralValue()
+          const modulePath = node.getModuleSpecifier().getLiteralValue()
           node.getNamedImports().forEach((item) => {
             imports.set(item.getText(), {
-              module,
+              module: modulePath,
               text: node.getText(),
             })
           })
@@ -78,7 +78,7 @@ export const Index: Record<string, any> = {
           const defaultImport = node.getDefaultImport()
           if (defaultImport) {
             imports.set(defaultImport.getText(), {
-              module,
+              module: modulePath,
               text: defaultImport.getText(),
               isDefault: true,
             })

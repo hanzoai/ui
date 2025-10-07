@@ -11,20 +11,20 @@ export default function OTPPage() {
 }
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "../../../../../primitives/field"
+} from "@/registry/default/ui/field"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "../../../../../primitives/input-otp"
+} from "@/registry/default/ui/input-otp"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

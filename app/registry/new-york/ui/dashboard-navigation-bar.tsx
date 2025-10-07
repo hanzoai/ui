@@ -3,8 +3,8 @@
 import * as React from "react"
 import { Bell, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
+import { Button } from "@/registry/new-york/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/registry/new-york/ui/avatar"
 
 export interface DashboardNavigationBarProps extends React.HTMLAttributes<HTMLElement> {
   title?: string

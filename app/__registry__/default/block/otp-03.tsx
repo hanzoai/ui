@@ -17,25 +17,25 @@ export default function OTPPage() {
     </div>
   )
 }
-import { Button } from "../../../../../primitives/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../../primitives/card"
+} from "@/registry/default/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "../../../../../primitives/field"
+} from "@/registry/default/ui/field"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "../../../../../primitives/input-otp"
+} from "@/registry/default/ui/input-otp"
 
 export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

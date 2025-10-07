@@ -15,16 +15,16 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/default/ui/avatar"
-import { Badge } from "@/registry/default/ui/badge"
-import { Button } from "@/registry/default/ui/button"
+} from "@/registry/new-york/ui/avatar"
+import { Badge } from "@/registry/new-york/ui/badge"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/default/ui/card"
+} from "@/registry/new-york/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,9 +32,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/default/ui/dropdown-menu"
-import { Input } from "@/registry/default/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/registry/default/ui/sheet"
+} from "@/registry/new-york/ui/dropdown-menu"
+import { Input } from "@/registry/new-york/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/registry/new-york/ui/sheet"
 import {
   Table,
   TableBody,
@@ -42,7 +42,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/default/ui/table"
+} from "@/registry/new-york/ui/table"
 
 export const description =
   "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."
