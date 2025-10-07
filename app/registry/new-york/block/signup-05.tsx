@@ -11,16 +11,16 @@ export default function SignupPage() {
 }
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "../../../../../primitives/field"
-import { Input } from "../../../../../primitives/input"
+} from "@/registry/new-york/ui/field"
+import { Input } from "@/registry/new-york/ui/input"
 
 export function SignupForm({
   className,

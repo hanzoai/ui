@@ -17,22 +17,22 @@ export default function SignupPage() {
     </div>
   )
 }
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../../primitives/card"
+} from "@/registry/new-york/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "../../../../../primitives/field"
-import { Input } from "../../../../../primitives/input"
+} from "@/registry/new-york/ui/field"
+import { Input } from "@/registry/new-york/ui/input"
 
 export function SignupForm({
   className,

@@ -29,6 +29,7 @@ export function Toaster() {
           </Toast>
         )
       })}
+      {/* @ts-expect-error - React 19 types issue with Radix UI */}
       <ToastViewport />
     </ToastProvider>
   )

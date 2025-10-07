@@ -11,10 +11,10 @@ export default function LoginPage() {
 }
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
-import { Input } from "../../../../../primitives/input"
-import { Label } from "../../../../../primitives/label"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 
 export function LoginForm({
   className,

@@ -5,8 +5,8 @@ import { CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
-import { Button } from "../../primitives/button"
-import Calendar from "../../primitives/calendar"
+import { Button } from "@/registry/new-york/ui/button"
+import Calendar from "@/registry/new-york/ui/calendar"
 import {
   Card,
   CardContent,
@@ -14,18 +14,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../primitives/card"
+} from "@/registry/new-york/ui/card"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../../primitives/chart"
+} from "@/registry/new-york/ui/chart"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../primitives/popover"
+} from "@/registry/new-york/ui/popover"
 
 const chartData = [
   { date: "2025-06-01", visitors: 178 },

@@ -4,14 +4,14 @@ import * as React from "react"
 import { ChevronDownIcon } from "lucide-react"
 import { type DateRange } from "react-day-picker"
 
-import { Button } from "../../primitives/button"
-import Calendar from "../../primitives/calendar"
-import { Label } from "../../primitives/label"
+import { Button } from "@/registry/default/ui/button"
+import Calendar from "@/registry/default/ui/calendar"
+import { Label } from "@/registry/default/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../primitives/popover"
+} from "@/registry/default/ui/popover"
 
 export default function Calendar23() {
   const [range, setRange] = React.useState<DateRange | undefined>(undefined)

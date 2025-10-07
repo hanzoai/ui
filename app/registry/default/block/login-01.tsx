@@ -9,17 +9,17 @@ export default function Page() {
     </div>
   )
 }
-import { cn } from "../../../../../util"
-import { Button } from "../../../../../primitives/button"
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../../primitives/card"
-import { Input } from "../../../../../primitives/input"
-import { Label } from "../../../../../primitives/label"
+} from "@/registry/default/ui/card"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 
 export function LoginForm({
   className,

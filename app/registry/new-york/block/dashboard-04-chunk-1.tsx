@@ -1,7 +1,7 @@
 
-            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/default/ui/card"
-import {Button} from "@/registry/default/ui/button"
-import {Input} from "@/registry/default/ui/input"
+            import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/registry/new-york/ui/card"
+import {Button} from "@/registry/new-york/ui/button"
+import {Input} from "@/registry/new-york/ui/input"
 
             export default function Component() {
               return (<Card x-chunk="dashboard-04-chunk-1">

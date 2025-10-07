@@ -337,7 +337,7 @@ const CodeDiff = React.forwardRef<HTMLDivElement, CodeDiffProps>(
         }
 
         // Find consecutive unchanged lines
-        let unchangedStart = i
+        const unchangedStart = i
         while (i < changes.length && changes[i].type === "unchanged") {
           i++
         }
