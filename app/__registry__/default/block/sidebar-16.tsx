@@ -261,7 +261,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar16({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
@@ -533,7 +533,7 @@ export function NavUser({
   )
 }
 
-export function SearchForm({ ...props }: React.ComponentProps<"form">) {
+export function SearchForm16({ ...props }: React.ComponentProps<"form">) {
   return (
     <form {...props}>
       <div className="relative">

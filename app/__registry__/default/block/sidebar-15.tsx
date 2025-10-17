@@ -831,7 +831,7 @@ export function SidebarRight({
 }
 ;("use client")
 
-export function TeamSwitcher({
+export function TeamSwitcher15({
   teams,
 }: {
   teams: {
