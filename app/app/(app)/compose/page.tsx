@@ -2,32 +2,56 @@
 
 import * as React from "react"
 import {
-  ReactFlow,
-  Node,
-  Edge,
-  Background,
-  Controls,
-  MiniMap,
-  useNodesState,
-  useEdgesState,
   addEdge,
+  Background,
   Connection,
-  Panel,
+  Controls,
+  Edge,
+  MiniMap,
+  Node,
   NodeTypes,
+  Panel,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
 } from "@xyflow/react"
-// import "@xyflow/react/dist/style.css" // Causes build issues, styles inlined in component
-import { Download, Plus, Network, HardDrive, Settings2, Library } from "lucide-react"
 import yaml from "js-yaml"
+// import "@xyflow/react/dist/style.css" // Causes build issues, styles inlined in component
+import {
+  Download,
+  HardDrive,
+  Library,
+  Network,
+  Plus,
+  Settings2,
+} from "lucide-react"
 
 import { Button } from "@/registry/new-york/ui/button"
 import { Card } from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select"
 import { Separator } from "@/registry/new-york/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/registry/new-york/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/registry/new-york/ui/sheet"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/new-york/ui/tabs"
 
 const COMMON_IMAGES = [
   { name: "nginx", image: "nginx:alpine", category: "proxy" },
@@ -39,8 +63,16 @@ const COMMON_IMAGES = [
   { name: "php", image: "php:8.3-fpm-alpine", category: "runtime" },
   { name: "ruby", image: "ruby:3.2-alpine", category: "runtime" },
   { name: "python", image: "python:3.12-alpine", category: "runtime" },
-  { name: "clickhouse", image: "clickhouse/clickhouse-server:latest", category: "analytics" },
-  { name: "kafka", image: "confluentinc/cp-kafka:latest", category: "streaming" },
+  {
+    name: "clickhouse",
+    image: "clickhouse/clickhouse-server:latest",
+    category: "analytics",
+  },
+  {
+    name: "kafka",
+    image: "confluentinc/cp-kafka:latest",
+    category: "streaming",
+  },
   { name: "grafana", image: "grafana/grafana:latest", category: "monitoring" },
 ]
 
@@ -73,7 +105,10 @@ function ServiceNode({ data }: { data: any }) {
       {data.networks && (
         <div className="mt-1 flex gap-1">
           {data.networks.map((net: string) => (
-            <span key={net} className="rounded bg-muted px-1.5 py-0.5 text-[10px]">
+            <span
+              key={net}
+              className="rounded bg-muted px-1.5 py-0.5 text-[10px]"
+            >
               {net}
             </span>
           ))}
@@ -89,22 +124,28 @@ const nodeTypes: NodeTypes = {
 
 export default function ComposeSpecPage() {
   const [projectName, setProjectName] = React.useState("my-stack")
-  const [services, setServices] = React.useState<Record<string, ComposeService>>({})
+  const [services, setServices] = React.useState<
+    Record<string, ComposeService>
+  >({})
   const [networks, setNetworks] = React.useState<string[]>(["default"])
   const [volumes, setVolumes] = React.useState<string[]>([])
-  const [selectedService, setSelectedService] = React.useState<string | null>(null)
+  const [selectedService, setSelectedService] = React.useState<string | null>(
+    null
+  )
 
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
   // Update nodes when services change
   React.useEffect(() => {
-    const newNodes: Node[] = Object.entries(services).map(([name, config], i) => ({
-      id: name,
-      type: "service",
-      position: { x: 100 + (i % 4) * 250, y: 100 + Math.floor(i / 4) * 150 },
-      data: { name, ...config },
-    }))
+    const newNodes: Node[] = Object.entries(services).map(
+      ([name, config], i) => ({
+        id: name,
+        type: "service",
+        position: { x: 100 + (i % 4) * 250, y: 100 + Math.floor(i / 4) * 150 },
+        data: { name, ...config },
+      })
+    )
 
     const newEdges: Edge[] = []
     Object.entries(services).forEach(([name, config]) => {
@@ -123,7 +164,7 @@ export default function ComposeSpecPage() {
     setEdges(newEdges)
   }, [services, setNodes, setEdges])
 
-  const addService = (template: typeof COMMON_IMAGES[0]) => {
+  const addService = (template: (typeof COMMON_IMAGES)[0]) => {
     const serviceName = `${template.name}_${Object.keys(services).length + 1}`
     setServices({
       ...services,
@@ -142,7 +183,10 @@ export default function ComposeSpecPage() {
           ...prev,
           [params.target!]: {
             ...prev[params.target!],
-            depends_on: [...(prev[params.target!]?.depends_on || []), params.source!],
+            depends_on: [
+              ...(prev[params.target!]?.depends_on || []),
+              params.source!,
+            ],
           },
         }))
       }
@@ -171,7 +215,11 @@ export default function ComposeSpecPage() {
     a.click()
   }
 
-  const updateServiceConfig = (serviceName: string, key: string, value: any) => {
+  const updateServiceConfig = (
+    serviceName: string,
+    key: string,
+    value: any
+  ) => {
     setServices((prev) => ({
       ...prev,
       [serviceName]: {
@@ -221,7 +269,9 @@ export default function ComposeSpecPage() {
                       const content = e.target?.result as string
                       const parsed = yaml.load(content) as any
                       setServices(parsed.services || {})
-                      setNetworks(Object.keys(parsed.networks || { default: {} }))
+                      setNetworks(
+                        Object.keys(parsed.networks || { default: {} })
+                      )
                       setVolumes(Object.keys(parsed.volumes || {}))
                     }
                     reader.readAsText(file)
@@ -273,7 +323,9 @@ export default function ComposeSpecPage() {
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
                   <Settings2 className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                  <h3 className="mt-4 text-lg font-semibold">No services yet</h3>
+                  <h3 className="mt-4 text-lg font-semibold">
+                    No services yet
+                  </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     Click "Add service" to start building your stack
                   </p>
@@ -298,13 +350,18 @@ export default function ComposeSpecPage() {
                 fitView
                 className="bg-background"
               >
-                <Background gap={16} color="hsl(var(--muted-foreground) / 0.3)" />
+                <Background
+                  gap={16}
+                  color="hsl(var(--muted-foreground) / 0.3)"
+                />
                 <Controls className="border-border bg-card" />
                 <Panel position="top-right" className="space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setNetworks([...networks, `network_${networks.length}`])}
+                    onClick={() =>
+                      setNetworks([...networks, `network_${networks.length}`])
+                    }
                   >
                     <Network className="mr-2 h-4 w-4" />
                     Add network
@@ -312,7 +369,9 @@ export default function ComposeSpecPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setVolumes([...volumes, `vol_${volumes.length}`])}
+                    onClick={() =>
+                      setVolumes([...volumes, `vol_${volumes.length}`])
+                    }
                   >
                     <HardDrive className="mr-2 h-4 w-4" />
                     Add volume
@@ -372,7 +431,11 @@ export default function ComposeSpecPage() {
                       <Input
                         value={services[selectedService]?.image || ""}
                         onChange={(e) =>
-                          updateServiceConfig(selectedService, "image", e.target.value)
+                          updateServiceConfig(
+                            selectedService,
+                            "image",
+                            e.target.value
+                          )
                         }
                       />
                     </div>
@@ -395,7 +458,9 @@ export default function ComposeSpecPage() {
                       <Label>Networks</Label>
                       <Select
                         onValueChange={(value) => {
-                          updateServiceConfig(selectedService, "networks", [value])
+                          updateServiceConfig(selectedService, "networks", [
+                            value,
+                          ])
                         }}
                       >
                         <SelectTrigger>
@@ -498,39 +563,44 @@ export default function ComposeSpecPage() {
               </SheetHeader>
               <ScrollArea className="mt-4 h-[calc(100vh-100px)]">
                 <div className="space-y-4">
-                  {["proxy", "database", "cache", "runtime", "analytics", "streaming", "monitoring"].map(
-                    (category) => (
-                      <div key={category}>
-                        <h4 className="mb-2 text-sm font-semibold capitalize">
-                          {category}
-                        </h4>
-                        <div className="space-y-2">
-                          {COMMON_IMAGES.filter((img) => img.category === category).map(
-                            (template) => (
-                              <Button
-                                key={template.image}
-                                variant="outline"
-                                className="w-full justify-start"
-                                onClick={() => {
-                                  addService(template)
-                                }}
-                              >
-                                <Plus className="mr-2 h-4 w-4" />
-                                {template.name}
-                              </Button>
-                            )
-                          )}
-                        </div>
+                  {[
+                    "proxy",
+                    "database",
+                    "cache",
+                    "runtime",
+                    "analytics",
+                    "streaming",
+                    "monitoring",
+                  ].map((category) => (
+                    <div key={category}>
+                      <h4 className="mb-2 text-sm font-semibold capitalize">
+                        {category}
+                      </h4>
+                      <div className="space-y-2">
+                        {COMMON_IMAGES.filter(
+                          (img) => img.category === category
+                        ).map((template) => (
+                          <Button
+                            key={template.image}
+                            variant="outline"
+                            className="w-full justify-start"
+                            onClick={() => {
+                              addService(template)
+                            }}
+                          >
+                            <Plus className="mr-2 h-4 w-4" />
+                            {template.name}
+                          </Button>
+                        ))}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </ScrollArea>
             </SheetContent>
           </Sheet>
         </div>
       </div>
-
     </div>
   )
 }

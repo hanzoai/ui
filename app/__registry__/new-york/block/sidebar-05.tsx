@@ -1,4 +1,28 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import { GalleryVerticalEnd, Minus, Plus, Search } from "lucide-react"
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../../primitives/collapsible"
+import { Label } from "../../../../primitives/label"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+} from "../../../../primitives/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +37,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { AppSidebar } from "./components/app-sidebar"
+import { SearchForm } from "./search-form"
 
 export default function Page() {
   return (
@@ -48,28 +74,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-import * as React from "react"
-import { GalleryVerticalEnd, Minus, Plus } from "lucide-react"
-
-import { SearchForm } from "./search-form"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
-} from "../../../../primitives/sidebar"
 
 // This is sample data.
 const data = {
@@ -276,14 +280,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-import { Search } from "lucide-react"
-
-import { Label } from "../../../../primitives/label"
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarInput,
-} from "../../../../primitives/sidebar"
 
 export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (

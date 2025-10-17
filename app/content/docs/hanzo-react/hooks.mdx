@@ -1,0 +1,634 @@
+---
+title: Hanzo React Hooks
+description: Complete reference for all @hanzo/react hooks
+---
+
+# React Hooks Reference
+
+The `@hanzo/react` package provides a comprehensive set of hooks for building AI-powered applications.
+
+## Core Hooks
+
+### useHanzo
+
+Access the complete Hanzo context and all available operations.
+
+```tsx
+import { useHanzo } from "@hanzo/react"
+
+function Component() {
+  const {
+    sendMessage,
+    streamMessage,
+    threads,
+    activeThreadId,
+    components,
+    tools,
+    isStreaming,
+    responseStage,
+    error,
+  } = useHanzo()
+
+  // Use any Hanzo feature directly
+}
+```
+
+### useMessage
+
+Send messages and manage conversation state.
+
+```tsx
+import { useMessage } from "@hanzo/react"
+
+function ChatInput() {
+  const {
+    sendMessage,
+    sendMessageWithAttachments,
+    isLoading,
+    error,
+    lastMessage,
+    clearError,
+    retry,
+  } = useMessage({
+    threadId: "optional-thread-id",
+    onSuccess: (message) => console.log("Sent:", message),
+    onError: (error) => console.error("Error:", error),
+    autoRetry: true,
+    maxRetries: 3,
+    retryDelay: 1000,
+  })
+
+  const handleSubmit = async (text: string) => {
+    try {
+      const response = await sendMessage(text)
+      // Handle response
+    } catch (error) {
+      // Error is also available in hook state
+    }
+  }
+
+  const handleFileUpload = async (text: string, files: File[]) => {
+    const response = await sendMessageWithAttachments(text, files)
+  }
+
+  return (
+    <div>
+      {error && (
+        <div>
+          Error: {error.message}
+          <button onClick={clearError}>Clear</button>
+          <button onClick={retry}>Retry</button>
+        </div>
+      )}
+      {/* Your UI */}
+    </div>
+  )
+}
+```
+
+### useStreaming
+
+Stream AI responses in real-time with progress tracking.
+
+```tsx
+import { useStreaming } from "@hanzo/react"
+
+function StreamingInterface() {
+  const {
+    streamMessage,
+    isStreaming,
+    currentMessage,
+    error,
+    stopStreaming,
+    clearMessage,
+    progress,
+  } = useStreaming({
+    onChunk: (chunk) => console.log("Received:", chunk),
+    onComplete: (message) => console.log("Complete:", message),
+    onError: (error) => console.error("Error:", error),
+    bufferSize: 5, // Buffer 5 chunks before updating
+    throttleMs: 100, // Update at most every 100ms
+  })
+
+  const handleStream = async () => {
+    await streamMessage("Generate a long response...")
+  }
+
+  return (
+    <div>
+      <button onClick={handleStream}>Start Streaming</button>
+      {isStreaming && (
+        <>
+          <button onClick={stopStreaming}>Stop</button>
+          <progress value={progress} max={100} />
+        </>
+      )}
+      <div>{currentMessage}</div>
+    </div>
+  )
+}
+```
+
+### useThread
+
+Manage conversation threads and history.
+
+```tsx
+import { useThread } from "@hanzo/react"
+
+function ThreadManager() {
+  const {
+    threads,
+    activeThread,
+    createThread,
+    switchThread,
+    deleteThread,
+    updateThreadMetadata,
+    getThreadMessages,
+    clearThread,
+  } = useThread()
+
+  const handleNewThread = () => {
+    const thread = createThread({
+      name: "New Conversation",
+      topic: "General",
+    })
+    switchThread(thread.id)
+  }
+
+  const handleRename = (threadId: string, newName: string) => {
+    updateThreadMetadata(threadId, { name: newName })
+  }
+
+  return (
+    <div>
+      <button onClick={handleNewThread}>New Thread</button>
+      {Array.from(threads.values()).map((thread) => (
+        <div key={thread.id}>
+          <h3>{thread.metadata?.name || "Untitled"}</h3>
+          <p>{thread.messages.length} messages</p>
+          <button onClick={() => switchThread(thread.id)}>Switch</button>
+          <button onClick={() => deleteThread(thread.id)}>Delete</button>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Component Hooks
+
+### useComponent
+
+Dynamically register and render components.
+
+```tsx
+import { useComponent } from "@hanzo/react"
+
+function DynamicComponents() {
+  const {
+    registerComponent,
+    unregisterComponent,
+    renderComponent,
+    getComponent,
+    hasComponent,
+    listComponents,
+  } = useComponent()
+
+  useEffect(() => {
+    // Register a component dynamically
+    registerComponent({
+      name: "custom-chart",
+      component: ChartComponent,
+      description: "Renders data charts",
+      parameters: z.object({
+        data: z.array(z.number()),
+        type: z.enum(["bar", "line", "pie"]),
+      }),
+    })
+
+    return () => {
+      // Cleanup on unmount
+      unregisterComponent("custom-chart")
+    }
+  }, [])
+
+  // Render component dynamically
+  const chart = renderComponent("custom-chart", {
+    data: [1, 2, 3, 4, 5],
+    type: "bar",
+  })
+
+  return <div>{chart}</div>
+}
+```
+
+### useGenerativeUI
+
+Create AI-generated UI components on the fly.
+
+```tsx
+import { useGenerativeUI } from "@hanzo/react"
+
+function GenerativeInterface() {
+  const {
+    generateUI,
+    isGenerating,
+    generatedComponents,
+    clearComponents,
+    saveComponent,
+  } = useGenerativeUI()
+
+  const handleGenerate = async () => {
+    const ui = await generateUI({
+      description: "Create a dashboard showing user analytics",
+      data: analyticsData,
+      style: "modern, dark theme",
+    })
+
+    // Optionally save for reuse
+    saveComponent("analytics-dashboard", ui)
+  }
+
+  return (
+    <div>
+      <button onClick={handleGenerate}>Generate UI</button>
+      {isGenerating && <p>Generating UI...</p>}
+      {generatedComponents.map((component, i) => (
+        <div key={i}>{component}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Tool Hooks
+
+### useTool
+
+Execute and manage AI tools.
+
+```tsx
+import { useTool } from "@hanzo/react"
+
+function ToolExecutor() {
+  const {
+    executeTool,
+    registerTool,
+    unregisterTool,
+    isExecuting,
+    lastResult,
+    error,
+  } = useTool()
+
+  const handleCalculation = async () => {
+    const result = await executeTool("calculator", {
+      expression: "2 + 2",
+    })
+    console.log("Result:", result)
+  }
+
+  useEffect(() => {
+    registerTool({
+      name: "fetcher",
+      description: "Fetches data from APIs",
+      parameters: z.object({
+        url: z.string().url(),
+      }),
+      execute: async ({ url }) => {
+        const response = await fetch(url)
+        return response.json()
+      },
+    })
+  }, [])
+
+  return (
+    <div>
+      <button onClick={handleCalculation}>Calculate</button>
+      {isExecuting && <p>Executing tool...</p>}
+      {lastResult && <pre>{JSON.stringify(lastResult, null, 2)}</pre>}
+    </div>
+  )
+}
+```
+
+## Utility Hooks
+
+### useSuggestions
+
+Provide intelligent suggestions to users.
+
+```tsx
+import { useSuggestions } from "@hanzo/react"
+
+function SuggestionsPanel() {
+  const {
+    suggestions,
+    getSuggestions,
+    acceptSuggestion,
+    dismissSuggestion,
+    isLoading,
+  } = useSuggestions({
+    maxSuggestions: 5,
+    autoRefresh: true,
+    refreshInterval: 30000,
+  })
+
+  useEffect(() => {
+    getSuggestions({
+      context: currentConversation,
+      userPreferences: preferences,
+    })
+  }, [currentConversation])
+
+  return (
+    <div className="suggestions">
+      <h3>Suggestions</h3>
+      {isLoading ? (
+        <p>Loading suggestions...</p>
+      ) : (
+        <ul>
+          {suggestions.map((suggestion) => (
+            <li key={suggestion.id}>
+              <button onClick={() => acceptSuggestion(suggestion)}>
+                {suggestion.text}
+              </button>
+              <button onClick={() => dismissSuggestion(suggestion.id)}>
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+```
+
+### useModelConfig
+
+Configure and switch between AI models.
+
+```tsx
+import { useModelConfig } from "@hanzo/react"
+
+function ModelSelector() {
+  const {
+    currentModel,
+    availableModels,
+    switchModel,
+    updateParameters,
+    resetToDefaults,
+  } = useModelConfig()
+
+  const handleModelChange = (modelId: string) => {
+    switchModel(modelId)
+  }
+
+  const handleParameterUpdate = () => {
+    updateParameters({
+      temperature: 0.7,
+      maxTokens: 2000,
+      topP: 0.9,
+      frequencyPenalty: 0.5,
+      presencePenalty: 0.5,
+    })
+  }
+
+  return (
+    <div>
+      <select
+        value={currentModel}
+        onChange={(e) => handleModelChange(e.target.value)}
+      >
+        {availableModels.map((model) => (
+          <option key={model.id} value={model.id}>
+            {model.name} - {model.description}
+          </option>
+        ))}
+      </select>
+      <button onClick={handleParameterUpdate}>Update Parameters</button>
+      <button onClick={resetToDefaults}>Reset to Defaults</button>
+    </div>
+  )
+}
+```
+
+### useAttachments
+
+Handle file attachments and media in conversations.
+
+```tsx
+import { useAttachments } from "@hanzo/react"
+
+function AttachmentManager() {
+  const {
+    attachments,
+    addAttachment,
+    removeAttachment,
+    clearAttachments,
+    uploadAttachment,
+    isUploading,
+    uploadProgress,
+  } = useAttachments({
+    maxSize: 10 * 1024 * 1024, // 10MB
+    allowedTypes: ["image/*", "application/pdf", ".doc", ".docx"],
+    autoUpload: true,
+  })
+
+  const handleFileSelect = async (files: FileList) => {
+    for (const file of files) {
+      const attachment = await addAttachment(file)
+      // Attachment is automatically uploaded if autoUpload is true
+    }
+  }
+
+  const handleRemove = (attachmentId: string) => {
+    removeAttachment(attachmentId)
+  }
+
+  return (
+    <div>
+      <input
+        type="file"
+        multiple
+        onChange={(e) => handleFileSelect(e.target.files!)}
+      />
+      {isUploading && <progress value={uploadProgress} max={100} />}
+      <div className="attachments">
+        {attachments.map((attachment) => (
+          <div key={attachment.id}>
+            <span>{attachment.name}</span>
+            <button onClick={() => handleRemove(attachment.id)}>Remove</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+## Authentication Hooks
+
+### useAuth
+
+Manage user authentication for AI features.
+
+```tsx
+import { useAuth } from "@hanzo/react"
+
+function AuthGate({ children }) {
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+    signIn,
+    signOut,
+    getToken,
+    refreshToken,
+  } = useAuth()
+
+  const handleSignIn = async () => {
+    await signIn({
+      provider: "google",
+      redirectUrl: "/dashboard",
+    })
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <h2>Sign in to continue</h2>
+        <button onClick={handleSignIn}>Sign in with Google</button>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>Welcome, {user?.name}</p>
+      <button onClick={signOut}>Sign out</button>
+      {children}
+    </div>
+  )
+}
+```
+
+## MCP Integration
+
+### useMCP
+
+Integrate Model Context Protocol for enhanced AI capabilities.
+
+```tsx
+import { useMCP } from "@hanzo/react"
+
+function MCPInterface() {
+  const {
+    connectServer,
+    disconnectServer,
+    connectedServers,
+    executeServerTool,
+    getServerResources,
+    isConnected,
+  } = useMCP()
+
+  const handleConnect = async () => {
+    await connectServer({
+      url: "ws://localhost:3000",
+      name: "Local MCP Server",
+    })
+  }
+
+  const handleToolExecution = async () => {
+    const result = await executeServerTool("local-server", "database-query", {
+      sql: "SELECT * FROM users",
+    })
+    console.log("Query result:", result)
+  }
+
+  return (
+    <div>
+      <button onClick={handleConnect}>Connect MCP Server</button>
+      {connectedServers.map((server) => (
+        <div key={server.id}>
+          <h4>{server.name}</h4>
+          <p>Status: {isConnected(server.id) ? "Connected" : "Disconnected"}</p>
+          <button onClick={() => disconnectServer(server.id)}>
+            Disconnect
+          </button>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Best Practices
+
+### Error Handling
+
+Always handle errors gracefully:
+
+```tsx
+function SafeChat() {
+  const { sendMessage } = useMessage({
+    onError: (error) => {
+      // Log to error tracking service
+      trackError(error)
+      // Show user-friendly message
+      showToast("Something went wrong. Please try again.")
+    },
+  })
+
+  // Component logic
+}
+```
+
+### Performance Optimization
+
+Use memoization for expensive operations:
+
+```tsx
+import { useMemo } from "react"
+import { useThread } from "@hanzo/react"
+
+function ThreadList() {
+  const { threads } = useThread()
+
+  const sortedThreads = useMemo(() => {
+    return Array.from(threads.values()).sort(
+      (a, b) => b.updatedAt - a.updatedAt
+    )
+  }, [threads])
+
+  // Render sorted threads
+}
+```
+
+### Cleanup
+
+Always clean up resources:
+
+```tsx
+function ComponentWithCleanup() {
+  const { registerComponent, unregisterComponent } = useComponent()
+
+  useEffect(() => {
+    const componentId = "my-component"
+
+    registerComponent({
+      name: componentId,
+      component: MyComponent,
+    })
+
+    return () => {
+      unregisterComponent(componentId)
+    }
+  }, [])
+}
+```

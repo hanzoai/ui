@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Check, X } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 export interface ComparisonItem {
@@ -25,7 +26,10 @@ const Comparison = React.forwardRef<HTMLDivElement, ComparisonProps>(
 
     return (
       <div ref={ref} className={cn("overflow-x-auto", className)} {...props}>
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}>
+        <div
+          className="grid gap-4"
+          style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}
+        >
           {columns.map((column, colIndex) => (
             <div
               key={colIndex}

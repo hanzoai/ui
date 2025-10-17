@@ -12,31 +12,45 @@ A comprehensive collection of animation components built with Framer Motion, des
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Animated Text</h3>
-    <p className="text-sm text-muted-foreground">Typewriter, word reveal, letter shuffle, gradient, and glitch effects</p>
+    <p className="text-sm text-muted-foreground">
+      Typewriter, word reveal, letter shuffle, gradient, and glitch effects
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Animated Number</h3>
-    <p className="text-sm text-muted-foreground">Count up/down with formatting, decimals, and easing options</p>
+    <p className="text-sm text-muted-foreground">
+      Count up/down with formatting, decimals, and easing options
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Animated List</h3>
-    <p className="text-sm text-muted-foreground">Stagger animations, reorderable items, virtualized for performance</p>
+    <p className="text-sm text-muted-foreground">
+      Stagger animations, reorderable items, virtualized for performance
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Animated Background</h3>
-    <p className="text-sm text-muted-foreground">Gradient shifts, blob animations, wave patterns, parallax layers</p>
+    <p className="text-sm text-muted-foreground">
+      Gradient shifts, blob animations, wave patterns, parallax layers
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Animated Icon</h3>
-    <p className="text-sm text-muted-foreground">Morph between icons, SVG path animations, hover effects</p>
+    <p className="text-sm text-muted-foreground">
+      Morph between icons, SVG path animations, hover effects
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Reveal Animation</h3>
-    <p className="text-sm text-muted-foreground">Scroll-triggered reveals, multiple directions, stagger children</p>
+    <p className="text-sm text-muted-foreground">
+      Scroll-triggered reveals, multiple directions, stagger children
+    </p>
   </div>
   <div className="p-4 border rounded-lg">
     <h3 className="font-semibold">Pulse Animation</h3>
-    <p className="text-sm text-muted-foreground">Attention-grabbing pulse with customizable intensity and patterns</p>
+    <p className="text-sm text-muted-foreground">
+      Attention-grabbing pulse with customizable intensity and patterns
+    </p>
   </div>
 </div>
 
@@ -95,12 +109,7 @@ Create engaging text animations with multiple effects.
 import { AnimatedText } from "@/components/ui/animated-text"
 
 export function TextDemo() {
-  return (
-    <AnimatedText
-      text="Hello, World!"
-      animation="typewriter"
-    />
-  )
+  return <AnimatedText text="Hello, World!" animation="typewriter" />
 }
 ```
 
@@ -143,7 +152,7 @@ export function TextDemo() {
   repeatDelay={1000}
   showCursor={true}
   cursor="▋"
-  onComplete={() => console.log('Animation complete!')}
+  onComplete={() => console.log("Animation complete!")}
 />
 ```
 
@@ -157,9 +166,7 @@ Animate numerical values with formatting options.
 import { AnimatedNumber } from "@/components/ui/animated-number"
 
 export function NumberDemo() {
-  return (
-    <AnimatedNumber value={1234} />
-  )
+  return <AnimatedNumber value={1234} />
 }
 ```
 
@@ -200,7 +207,7 @@ export function NumberDemo() {
   easing="easeOut"
   useSpring={true}
   springConfig={{ tension: 100, friction: 10 }}
-  onComplete={(value) => console.log('Final value:', value)}
+  onComplete={(value) => console.log("Final value:", value)}
 />
 ```
 
@@ -209,13 +216,13 @@ export function NumberDemo() {
 ```tsx
 import { AnimatedCounter } from "@/components/ui/animated-number"
 
-<AnimatedCounter
+;<AnimatedCounter
   initialValue={0}
   min={0}
   max={100}
   step={1}
   showControls={true}
-  onChange={(value) => console.log('Value changed:', value)}
+  onChange={(value) => console.log("Value changed:", value)}
 />
 ```
 
@@ -231,17 +238,11 @@ import { AnimatedList } from "@/components/ui/animated-list"
 const items = [
   { id: 1, content: <div>Item 1</div> },
   { id: 2, content: <div>Item 2</div> },
-  { id: 3, content: <div>Item 3</div> }
+  { id: 3, content: <div>Item 3</div> },
 ]
 
 export function ListDemo() {
-  return (
-    <AnimatedList
-      items={items}
-      animation="slideUp"
-      staggerDelay={150}
-    />
-  )
+  return <AnimatedList items={items} animation="slideUp" staggerDelay={150} />
 }
 ```
 
@@ -415,13 +416,7 @@ Bring icons to life with smooth animations.
 import { AnimatedIcon } from "@/components/ui/animated-icon"
 
 export function IconDemo() {
-  return (
-    <AnimatedIcon
-      icon="loading"
-      animation="spin"
-      size={24}
-    />
-  )
+  return <AnimatedIcon icon="loading" animation="spin" size={24} />
 }
 ```
 
@@ -473,7 +468,7 @@ export function IconDemo() {
   interactive={true}
   hoverAnimation="scale"
   clickAnimation="ripple"
-  onClick={() => console.log('Icon clicked!')}
+  onClick={() => console.log("Icon clicked!")}
 />
 ```
 
@@ -537,11 +532,7 @@ export function RevealDemo() {
 ### Staggered Children
 
 ```tsx
-<RevealAnimation
-  direction="up"
-  staggerChildren={true}
-  staggerDelay={150}
->
+<RevealAnimation direction="up" staggerChildren={true} staggerDelay={150}>
   <div>Child 1</div>
   <div>Child 2</div>
   <div>Child 3</div>
@@ -677,7 +668,7 @@ export function PulseDemo() {
 <PulseAnimation
   pulseOnHover={true}
   pulseOnClick={true}
-  onClick={() => console.log('Pulsed!')}
+  onClick={() => console.log("Pulsed!")}
 >
   <button>Interactive button</button>
 </PulseAnimation>
@@ -816,15 +807,13 @@ For large lists, use virtualization:
 ### Data Visualization
 
 ```tsx
-{data.map((item, i) => (
-  <RevealAnimation
-    key={item.id}
-    direction="up"
-    delay={i * 100}
-  >
-    <AnimatedNumber value={item.value} />
-  </RevealAnimation>
-))}
+{
+  data.map((item, i) => (
+    <RevealAnimation key={item.id} direction="up" delay={i * 100}>
+      <AnimatedNumber value={item.value} />
+    </RevealAnimation>
+  ))
+}
 ```
 
 ## Accessibility
@@ -868,10 +857,7 @@ function MyComponent() {
   const prefersReducedMotion = usePrefersReducedMotion()
 
   return (
-    <AnimatedNumber
-      value={1000}
-      duration={prefersReducedMotion ? 0 : 2000}
-    />
+    <AnimatedNumber value={1000} duration={prefersReducedMotion ? 0 : 2000} />
   )
 }
 ```

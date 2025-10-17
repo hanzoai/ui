@@ -1,11 +1,16 @@
 "use client"
 
 import * as React from "react"
-import { HexColorPicker, HexColorInput } from "react-colorful"
+import { HexColorInput, HexColorPicker } from "react-colorful"
+
 import { cn } from "@/lib/utils"
-import { Popover, PopoverContent, PopoverTrigger } from "@/registry/default/ui/popover"
 import { Button } from "@/registry/default/ui/button"
 import { Input } from "@/registry/default/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/registry/default/ui/popover"
 
 interface ColorPickerProps {
   value?: string

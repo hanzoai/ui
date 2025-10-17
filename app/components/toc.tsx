@@ -47,13 +47,13 @@ export function DocsTableOfContents({ toc }: { toc: any[] }) {
   }
 
   // Convert Fumadocs TOC format to our format if needed
-  const tocItems = toc.map(item => ({
+  const tocItems = toc.map((item) => ({
     title: item.title,
-    url: `#${item.url || item.id || ''}`,
+    url: `#${item.url || item.id || ""}`,
     items: item.children?.map((child: any) => ({
       title: child.title,
-      url: `#${child.url || child.id || ''}`
-    }))
+      url: `#${child.url || child.id || ""}`,
+    })),
   }))
 
   const tocData = { items: tocItems }

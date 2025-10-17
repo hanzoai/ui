@@ -1,14 +1,3 @@
-import { OTPForm } from "./components/otp-form"
-
-export default function OTPPage() {
-  return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <OTPForm />
-      </div>
-    </div>
-  )
-}
 import { GalleryVerticalEnd } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -26,13 +15,25 @@ import {
   InputOTPSlot,
 } from "@/registry/new-york/ui/input-otp"
 
+import { OTPForm } from "./components/otp-form"
+
+export default function OTPPage() {
+  return (
+    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <OTPForm />
+      </div>
+    </div>
+  )
+}
+
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

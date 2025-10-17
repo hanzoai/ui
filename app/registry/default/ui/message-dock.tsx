@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { X } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 
@@ -19,7 +20,10 @@ export interface MessageDockProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const MessageDock = React.forwardRef<HTMLDivElement, MessageDockProps>(
-  ({ className, messages, onClose, position = "bottom-right", ...props }, ref) => {
+  (
+    { className, messages, onClose, position = "bottom-right", ...props },
+    ref
+  ) => {
     const positionClasses = {
       top: "top-4 left-1/2 -translate-x-1/2",
       bottom: "bottom-4 left-1/2 -translate-x-1/2",
@@ -30,7 +34,11 @@ const MessageDock = React.forwardRef<HTMLDivElement, MessageDockProps>(
     return (
       <div
         ref={ref}
-        className={cn("fixed z-50 flex flex-col gap-2", positionClasses[position], className)}
+        className={cn(
+          "fixed z-50 flex flex-col gap-2",
+          positionClasses[position],
+          className
+        )}
         {...props}
       >
         {messages.map((message) => (
@@ -38,10 +46,14 @@ const MessageDock = React.forwardRef<HTMLDivElement, MessageDockProps>(
             key={message.id}
             className={cn(
               "min-w-[300px] rounded-lg border p-4 shadow-lg",
-              message.type === "success" && "border-green-500 bg-green-50 dark:bg-green-950",
-              message.type === "warning" && "border-yellow-500 bg-yellow-50 dark:bg-yellow-950",
-              message.type === "error" && "border-red-500 bg-red-50 dark:bg-red-950",
-              message.type === "info" && "border-blue-500 bg-blue-50 dark:bg-blue-950",
+              message.type === "success" &&
+                "border-green-500 bg-green-50 dark:bg-green-950",
+              message.type === "warning" &&
+                "border-yellow-500 bg-yellow-50 dark:bg-yellow-950",
+              message.type === "error" &&
+                "border-red-500 bg-red-50 dark:bg-red-950",
+              message.type === "info" &&
+                "border-blue-500 bg-blue-50 dark:bg-blue-950",
               !message.type && "bg-background"
             )}
           >
@@ -49,7 +61,9 @@ const MessageDock = React.forwardRef<HTMLDivElement, MessageDockProps>(
               <div className="flex-1">
                 <h4 className="font-medium">{message.title}</h4>
                 {message.description && (
-                  <p className="mt-1 text-sm text-muted-foreground">{message.description}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {message.description}
+                  </p>
                 )}
               </div>
               {onClose && (

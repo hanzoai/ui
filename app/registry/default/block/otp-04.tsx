@@ -1,14 +1,3 @@
-import { OTPForm } from "./components/otp-form"
-
-export default function OTPPage() {
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-3xl">
-        <OTPForm />
-      </div>
-    </div>
-  )
-}
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 import { Card, CardContent } from "@/registry/default/ui/card"
@@ -25,13 +14,25 @@ import {
   InputOTPSlot,
 } from "@/registry/default/ui/input-otp"
 
+import { OTPForm } from "./components/otp-form"
+
+export default function OTPPage() {
+  return (
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-3xl">
+        <OTPForm />
+      </div>
+    </div>
+  )
+}
+
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }
@@ -43,7 +44,10 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
     >
       <Card className="flex-1 overflow-hidden p-0">
         <CardContent className="grid flex-1 p-0 md:grid-cols-2">
-          <form className="flex flex-col items-center justify-center p-6 md:p-8" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col items-center justify-center p-6 md:p-8"
+            onSubmit={handleSubmit}
+          >
             <FieldGroup>
               <Field className="items-center text-center">
                 <h1 className="text-2xl font-bold">Enter verification code</h1>

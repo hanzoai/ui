@@ -1,5 +1,6 @@
+import { Calendar, Home, Mail, Search, Settings, User } from "lucide-react"
+
 import { Dock, DockItem } from "@/registry/default/ui/macos-dock"
-import { Home, Search, Mail, Calendar, Settings, User } from "lucide-react"
 
 export default function MacOSDockDemo() {
   return (

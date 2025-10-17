@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -11,7 +12,18 @@ export interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
-  ({ className, children, repeat = 2, reverse = false, pauseOnHover = false, vertical = false, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      repeat = 2,
+      reverse = false,
+      pauseOnHover = false,
+      vertical = false,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         ref={ref}
@@ -27,8 +39,13 @@ const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
             key={i}
             className={cn(
               "flex shrink-0",
-              vertical ? "animate-marquee-vertical flex-col" : "animate-marquee",
-              reverse && (vertical ? "[animation-direction:reverse]" : "[animation-direction:reverse]"),
+              vertical
+                ? "animate-marquee-vertical flex-col"
+                : "animate-marquee",
+              reverse &&
+                (vertical
+                  ? "[animation-direction:reverse]"
+                  : "[animation-direction:reverse]"),
               pauseOnHover && "group-hover:[animation-play-state:paused]"
             )}
           >

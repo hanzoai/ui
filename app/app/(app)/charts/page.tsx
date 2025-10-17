@@ -2,6 +2,7 @@
 
 import { ChartDisplay } from "@/components/chart-display"
 import { Separator } from "@/registry/new-york/ui/separator"
+
 import * as Charts from "./charts"
 
 export default function ChartsPage() {

@@ -1,17 +1,37 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { CheckCircle, XCircle, AlertCircle, Clock, TrendingUp, TrendingDown, Activity } from 'lucide-react'
-import { registry } from '@/registry/registry'
-import { extended } from '@/registry/extended'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/registry/default/ui/card'
-import { Progress } from '@/registry/default/ui/progress'
-import { Badge } from '@/registry/default/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/default/ui/tabs'
+import { useEffect, useState } from "react"
+import {
+  Activity,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  TrendingDown,
+  TrendingUp,
+  XCircle,
+} from "lucide-react"
+
+import { Badge } from "@/registry/default/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import { Progress } from "@/registry/default/ui/progress"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
+import { extended } from "@/registry/extended"
+import { registry } from "@/registry/registry"
 
 interface ComponentHealth {
   name: string
-  status: 'healthy' | 'warning' | 'error'
+  status: "healthy" | "warning" | "error"
   hasDoc: boolean
   hasImplementation: boolean
   hasTests: boolean
@@ -37,7 +57,7 @@ export default function HealthDashboard() {
     coverage: 0,
   })
   const [loading, setLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedCategory, setSelectedCategory] = useState("all")
 
   useEffect(() => {
     checkComponentHealth()
@@ -51,7 +71,7 @@ export default function HealthDashboard() {
     for (const component of allComponents) {
       const health: ComponentHealth = {
         name: component.name,
-        status: 'healthy',
+        status: "healthy",
         hasDoc: false,
         hasImplementation: false,
         hasTests: false,
@@ -63,20 +83,20 @@ export default function HealthDashboard() {
         const docResponse = await fetch(`/docs/components/${component.name}`)
         health.hasDoc = docResponse.status === 200
         if (!health.hasDoc) {
-          health.issues.push('Missing documentation')
-          health.status = 'warning'
+          health.issues.push("Missing documentation")
+          health.status = "warning"
         }
       } catch {
         health.hasDoc = false
-        health.issues.push('Documentation check failed')
-        health.status = 'error'
+        health.issues.push("Documentation check failed")
+        health.status = "error"
       }
 
       // Check implementation (simplified check)
       health.hasImplementation = component.files && component.files.length > 0
       if (!health.hasImplementation) {
-        health.issues.push('Missing implementation files')
-        health.status = 'error'
+        health.issues.push("Missing implementation files")
+        health.status = "error"
       }
 
       // Check for tests (would need actual test file check)
@@ -86,9 +106,9 @@ export default function HealthDashboard() {
     }
 
     // Calculate metrics
-    const healthy = healthData.filter(c => c.status === 'healthy').length
-    const warnings = healthData.filter(c => c.status === 'warning').length
-    const errors = healthData.filter(c => c.status === 'error').length
+    const healthy = healthData.filter((c) => c.status === "healthy").length
+    const warnings = healthData.filter((c) => c.status === "warning").length
+    const errors = healthData.filter((c) => c.status === "error").length
 
     setMetrics({
       total: healthData.length,
@@ -104,11 +124,11 @@ export default function HealthDashboard() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'healthy':
+      case "healthy":
         return <CheckCircle className="h-5 w-5 text-green-500" />
-      case 'warning':
+      case "warning":
         return <AlertCircle className="h-5 w-5 text-yellow-500" />
-      case 'error':
+      case "error":
         return <XCircle className="h-5 w-5 text-red-500" />
       default:
         return <Clock className="h-5 w-5 text-gray-500" />
@@ -117,20 +137,21 @@ export default function HealthDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'healthy':
-        return 'text-green-500'
-      case 'warning':
-        return 'text-yellow-500'
-      case 'error':
-        return 'text-red-500'
+      case "healthy":
+        return "text-green-500"
+      case "warning":
+        return "text-yellow-500"
+      case "error":
+        return "text-red-500"
       default:
-        return 'text-gray-500'
+        return "text-gray-500"
     }
   }
 
-  const filteredComponents = selectedCategory === 'all'
-    ? components
-    : components.filter(c => c.status === selectedCategory)
+  const filteredComponents =
+    selectedCategory === "all"
+      ? components
+      : components.filter((c) => c.status === selectedCategory)
 
   if (loading) {
     return (
@@ -138,7 +159,9 @@ export default function HealthDashboard() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <Activity className="h-12 w-12 animate-pulse mx-auto mb-4" />
-            <p className="text-muted-foreground">Checking component health...</p>
+            <p className="text-muted-foreground">
+              Checking component health...
+            </p>
           </div>
         </div>
       </div>
@@ -158,7 +181,9 @@ export default function HealthDashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Components</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Components
+            </CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -175,7 +200,9 @@ export default function HealthDashboard() {
             <CheckCircle className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-500">{metrics.healthy}</div>
+            <div className="text-2xl font-bold text-green-500">
+              {metrics.healthy}
+            </div>
             <p className="text-xs text-muted-foreground">
               {((metrics.healthy / metrics.total) * 100).toFixed(1)}% of total
             </p>
@@ -188,10 +215,10 @@ export default function HealthDashboard() {
             <AlertCircle className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-500">{metrics.warnings}</div>
-            <p className="text-xs text-muted-foreground">
-              Need attention
-            </p>
+            <div className="text-2xl font-bold text-yellow-500">
+              {metrics.warnings}
+            </div>
+            <p className="text-xs text-muted-foreground">Need attention</p>
           </CardContent>
         </Card>
 
@@ -201,10 +228,10 @@ export default function HealthDashboard() {
             <XCircle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-500">{metrics.errors}</div>
-            <p className="text-xs text-muted-foreground">
-              Critical issues
-            </p>
+            <div className="text-2xl font-bold text-red-500">
+              {metrics.errors}
+            </div>
+            <p className="text-xs text-muted-foreground">Critical issues</p>
           </CardContent>
         </Card>
       </div>
@@ -220,7 +247,9 @@ export default function HealthDashboard() {
         <CardContent>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold">{metrics.coverage.toFixed(1)}%</span>
+              <span className="text-2xl font-bold">
+                {metrics.coverage.toFixed(1)}%
+              </span>
               {metrics.coverage > 80 ? (
                 <TrendingUp className="h-5 w-5 text-green-500" />
               ) : (
@@ -248,18 +277,14 @@ export default function HealthDashboard() {
         <CardContent>
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
             <TabsList className="mb-4">
-              <TabsTrigger value="all">
-                All ({components.length})
-              </TabsTrigger>
+              <TabsTrigger value="all">All ({components.length})</TabsTrigger>
               <TabsTrigger value="healthy">
                 Healthy ({metrics.healthy})
               </TabsTrigger>
               <TabsTrigger value="warning">
                 Warnings ({metrics.warnings})
               </TabsTrigger>
-              <TabsTrigger value="error">
-                Errors ({metrics.errors})
-              </TabsTrigger>
+              <TabsTrigger value="error">Errors ({metrics.errors})</TabsTrigger>
             </TabsList>
 
             <TabsContent value={selectedCategory} className="space-y-2">
@@ -308,7 +333,11 @@ export default function HealthDashboard() {
                             {component.issues.map((issue, idx) => (
                               <Badge
                                 key={idx}
-                                variant={component.status === 'error' ? 'destructive' : 'secondary'}
+                                variant={
+                                  component.status === "error"
+                                    ? "destructive"
+                                    : "secondary"
+                                }
                                 className="text-xs"
                               >
                                 {issue}
@@ -328,7 +357,8 @@ export default function HealthDashboard() {
 
       {/* Last Update */}
       <div className="mt-8 text-center text-sm text-muted-foreground">
-        Dashboard updates in real-time • Last check: {new Date().toLocaleTimeString()}
+        Dashboard updates in real-time • Last check:{" "}
+        {new Date().toLocaleTimeString()}
       </div>
     </div>
   )

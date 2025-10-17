@@ -1,6 +1,113 @@
+import * as React from "react"
+import * as React from "react"
+import {
+  BadgeCheck,
+  Bell,
+  BookOpen,
+  Bot,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Folder,
+  Frame,
+  LifeBuoy,
+  LogOut,
+  Map,
+  MoreHorizontal,
+  PieChart,
+  Search,
+  Send,
+  Settings2,
+  Share,
+  SidebarIcon,
+  Sparkles,
+  SquareTerminal,
+  Trash2,
+  type LucideIcon,
+  type LucideIcon,
+  type LucideIcon,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../../primitives/avatar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../../../../primitives/breadcrumb"
+import { Button } from "../../../../primitives/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../../primitives/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import { Label } from "../../../../primitives/label"
+import { Separator } from "../../../../primitives/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  useSidebar,
+  useSidebar,
+  useSidebar,
+} from "../../../../primitives/sidebar"
+import { SidebarInset, SidebarProvider } from "../../../primitives/sidebar"
 import { AppSidebar } from "./components/app-sidebar"
 import { SiteHeader } from "./components/site-header"
-import { SidebarInset, SidebarProvider } from "../../../primitives/sidebar"
+import { NavMain } from "./nav-main"
+import { NavProjects } from "./nav-projects"
+import { NavSecondary } from "./nav-secondary"
+import { NavUser } from "./nav-user"
+import { SearchForm } from "./search-form"
 
 export const iframeHeight = "800px"
 
@@ -28,35 +135,7 @@ export default function Page() {
     </div>
   )
 }
-"use client"
-
-import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
-
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 const data = {
   user: {
@@ -216,26 +295,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-"use client"
-
-import { ChevronRight, type LucideIcon } from "lucide-react"
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavMain({
   items,
@@ -294,32 +354,7 @@ export function NavMain({
     </SidebarGroup>
   )
 }
-"use client"
-
-import {
-  Folder,
-  MoreHorizontal,
-  Share,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavProjects({
   projects,
@@ -383,16 +418,6 @@ export function NavProjects({
     </SidebarGroup>
   )
 }
-import * as React from "react"
-import { type LucideIcon } from "lucide-react"
-
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
 
 export function NavSecondary({
   items,
@@ -423,37 +448,7 @@ export function NavSecondary({
     </SidebarGroup>
   )
 }
-"use client"
-
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../../primitives/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavUser({
   user,
@@ -537,10 +532,6 @@ export function NavUser({
     </SidebarMenu>
   )
 }
-import { Search } from "lucide-react"
-
-import { Label } from "../../../../primitives/label"
-import { SidebarInput } from "../../../../primitives/sidebar"
 
 export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (
@@ -559,22 +550,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     </form>
   )
 }
-"use client"
-
-import { SidebarIcon } from "lucide-react"
-
-import { SearchForm } from "./search-form"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "../../../../primitives/breadcrumb"
-import { Button } from "../../../../primitives/button"
-import { Separator } from "../../../../primitives/separator"
-import { useSidebar } from "../../../../primitives/sidebar"
+;("use client")
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar()

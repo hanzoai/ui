@@ -1,4 +1,40 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import {
+  GalleryVerticalEnd,
+  MoreHorizontal,
+  type LucideIcon,
+} from "lucide-react"
+
+import { Button } from "../../../../primitives/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../../../../primitives/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarInput,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from "../../../../primitives/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +49,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { AppSidebar } from "./components/app-sidebar"
+import { NavMain } from "./nav-main"
+import { SidebarOptInForm } from "./sidebar-opt-in-form"
 
 export default function Page() {
   return (
@@ -48,21 +87,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
-
-import { NavMain } from "./nav-main"
-import { SidebarOptInForm } from "./sidebar-opt-in-form"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "../../../../primitives/sidebar"
 
 // This is sample data.
 const data = {
@@ -227,23 +251,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-"use client"
-
-import { MoreHorizontal, type LucideIcon } from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavMain({
   items,
@@ -292,15 +300,6 @@ export function NavMain({
     </SidebarGroup>
   )
 }
-import { Button } from "../../../../primitives/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../../../../primitives/card"
-import { SidebarInput } from "../../../../primitives/sidebar"
 
 export function SidebarOptInForm() {
   return (

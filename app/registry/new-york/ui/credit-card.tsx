@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { CreditCard as CreditCardIcon } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 export interface CreditCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -13,7 +14,18 @@ export interface CreditCardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const CreditCard = React.forwardRef<HTMLDivElement, CreditCardProps>(
-  ({ className, number = "•••• •••• •••• ••••", name = "CARD HOLDER", expiry = "MM/YY", cvv, variant = "default", ...props }, ref) => {
+  (
+    {
+      className,
+      number = "•••• •••• •••• ••••",
+      name = "CARD HOLDER",
+      expiry = "MM/YY",
+      cvv,
+      variant = "default",
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         ref={ref}
@@ -35,7 +47,7 @@ const CreditCard = React.forwardRef<HTMLDivElement, CreditCardProps>(
               </div>
             )}
           </div>
-          
+
           <div className="space-y-4">
             <div className="text-lg tracking-widest">{number}</div>
             <div className="flex items-end justify-between">

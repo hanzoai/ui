@@ -183,16 +183,16 @@ export default function SyntaxHighlightedTerminal() {
 
 ### Terminal
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| prompt | `string` | `"$"` | The prompt string displayed before each command |
-| initialCommands | `Command[]` | `[]` | Initial commands to display in the terminal |
-| onCommand | `(command: string) => Promise<string \| ReactNode> \| string \| ReactNode` | `undefined` | Handler for processing commands |
-| theme | `"dark" \| "light" \| "matrix" \| "dracula"` | `"dark"` | Terminal color theme |
-| enableHistory | `boolean` | `true` | Enable command history navigation with arrow keys |
-| enableAutoComplete | `boolean` | `true` | Enable command auto-completion |
-| autoCompleteCommands | `string[]` | `["help", "clear", "exit", "ls", "cd", "pwd", "echo", "date", "whoami"]` | Commands available for auto-completion |
-| maxHistorySize | `number` | `50` | Maximum number of commands to store in history |
+| Property             | Type                                                                       | Default                                                                  | Description                                       |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------- |
+| prompt               | `string`                                                                   | `"$"`                                                                    | The prompt string displayed before each command   |
+| initialCommands      | `Command[]`                                                                | `[]`                                                                     | Initial commands to display in the terminal       |
+| onCommand            | `(command: string) => Promise<string \| ReactNode> \| string \| ReactNode` | `undefined`                                                              | Handler for processing commands                   |
+| theme                | `"dark" \| "light" \| "matrix" \| "dracula"`                               | `"dark"`                                                                 | Terminal color theme                              |
+| enableHistory        | `boolean`                                                                  | `true`                                                                   | Enable command history navigation with arrow keys |
+| enableAutoComplete   | `boolean`                                                                  | `true`                                                                   | Enable command auto-completion                    |
+| autoCompleteCommands | `string[]`                                                                 | `["help", "clear", "exit", "ls", "cd", "pwd", "echo", "date", "whoami"]` | Commands available for auto-completion            |
+| maxHistorySize       | `number`                                                                   | `50`                                                                     | Maximum number of commands to store in history    |
 
 ### Command Type
 

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { QRCodeSVG } from "qrcode.react"
+
 import { cn } from "@/lib/utils"
 
 interface QRCodeProps extends React.HTMLAttributes<HTMLDivElement> {

@@ -1,4 +1,52 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import {
+  ArchiveX,
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  File,
+  Inbox,
+  LogOut,
+  Send,
+  Sparkles,
+  Trash2,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../../primitives/avatar"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import { Label } from "../../../../primitives/label"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  useSidebar,
+  useSidebar,
+} from "../../../../primitives/sidebar"
+import { Switch } from "../../../../primitives/switch"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +61,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { AppSidebar } from "./components/app-sidebar"
+import { NavUser } from "./nav-user"
 
 export default function Page() {
   return (
@@ -52,27 +102,7 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-"use client"
-
-import * as React from "react"
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react"
-
-import { NavUser } from "./nav-user"
-import { Label } from "../../../../primitives/label"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarHeader,
-  SidebarInput,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
-import { Switch } from "../../../../primitives/switch"
+;("use client")
 
 // This is sample data
 const data = {
@@ -314,37 +344,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-"use client"
-
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../../primitives/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavUser({
   user,

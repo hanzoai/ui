@@ -4,7 +4,10 @@ description: A comprehensive drag-and-drop Kanban board component with cards, co
 component: true
 ---
 
-<ComponentPreview name="kanban-demo" description="A fully functional Kanban board with drag-and-drop" />
+<ComponentPreview
+  name="kanban-demo"
+  description="A fully functional Kanban board with drag-and-drop"
+/>
 
 ## Installation
 
@@ -101,18 +104,21 @@ const [board, setBoard] = useState({
 ## Features
 
 ### Drag and Drop
+
 - **Card Movement**: Drag cards between columns
 - **Card Reordering**: Reorder cards within columns
 - **Visual Feedback**: Smooth animations and drag overlay
 - **Column Limits**: Respect maximum card limits per column
 
 ### Card Management
+
 - **Create Cards**: Add new cards to any column
 - **Edit Cards**: Update card details in-place
 - **Delete Cards**: Remove cards with confirmation
 - **Card Actions**: Dropdown menu for card operations
 
 ### Card Properties
+
 - **Title & Description**: Basic card information
 - **Priority Levels**: Low, Medium, High, Urgent with color coding
 - **Labels**: Custom colored labels for categorization
@@ -121,11 +127,13 @@ const [board, setBoard] = useState({
 - **Timestamps**: Automatic creation and update timestamps
 
 ### Search and Filtering
+
 - **Real-time Search**: Filter cards by title, description, or labels
 - **Preserved State**: Search doesn't affect board state
 - **Highlight Matches**: Visual indication of search results
 
 ### Responsive Design
+
 - **Mobile Friendly**: Works on all screen sizes
 - **Horizontal Scroll**: Columns scroll horizontally on smaller screens
 - **Touch Support**: Full touch device support
@@ -170,25 +178,34 @@ interface KanbanBoard {
 
 ### KanbanBoard
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| board | KanbanBoard | - | The board data structure |
-| onUpdateBoard | (board: KanbanBoard) => void | - | Callback when board state changes |
-| className | string | - | Additional CSS classes |
+| Prop          | Type                         | Default | Description                       |
+| ------------- | ---------------------------- | ------- | --------------------------------- |
+| board         | KanbanBoard                  | -       | The board data structure          |
+| onUpdateBoard | (board: KanbanBoard) => void | -       | Callback when board state changes |
+| className     | string                       | -       | Additional CSS classes            |
 
 ## Examples
 
 ### Basic Kanban Board
 
-<ComponentPreview name="kanban-basic" description="A simple Kanban board with basic functionality" />
+<ComponentPreview
+  name="kanban-basic"
+  description="A simple Kanban board with basic functionality"
+/>
 
 ### Kanban with Labels
 
-<ComponentPreview name="kanban-labels" description="Kanban board showcasing label functionality" />
+<ComponentPreview
+  name="kanban-labels"
+  description="Kanban board showcasing label functionality"
+/>
 
 ### Project Management Board
 
-<ComponentPreview name="kanban-project" description="A project management Kanban board with all features" />
+<ComponentPreview
+  name="kanban-project"
+  description="A project management Kanban board with all features"
+/>
 
 ## Customization
 
@@ -234,7 +251,7 @@ const column = {
   id: "todo",
   title: "To Do",
   cards: [],
-  limit: 5 // Maximum 5 cards
+  limit: 5, // Maximum 5 cards
 }
 ```
 
@@ -249,10 +266,13 @@ const useKanbanBoard = (boardId: string) => {
     return saved ? JSON.parse(saved) : defaultBoard
   })
 
-  const updateBoard = useCallback((newBoard: KanbanBoard) => {
-    setBoard(newBoard)
-    localStorage.setItem(`kanban-${boardId}`, JSON.stringify(newBoard))
-  }, [boardId])
+  const updateBoard = useCallback(
+    (newBoard: KanbanBoard) => {
+      setBoard(newBoard)
+      localStorage.setItem(`kanban-${boardId}`, JSON.stringify(newBoard))
+    },
+    [boardId]
+  )
 
   return { board, updateBoard }
 }
@@ -264,19 +284,22 @@ const useKanbanBoard = (boardId: string) => {
 const useKanbanAPI = (boardId: string) => {
   const [board, setBoard] = useState<KanbanBoard | null>(null)
 
-  const updateBoard = useCallback(async (newBoard: KanbanBoard) => {
-    setBoard(newBoard)
+  const updateBoard = useCallback(
+    async (newBoard: KanbanBoard) => {
+      setBoard(newBoard)
 
-    try {
-      await fetch(`/api/boards/${boardId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newBoard)
-      })
-    } catch (error) {
-      console.error('Failed to save board:', error)
-    }
-  }, [boardId])
+      try {
+        await fetch(`/api/boards/${boardId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newBoard),
+        })
+      } catch (error) {
+        console.error("Failed to save board:", error)
+      }
+    },
+    [boardId]
+  )
 
   return { board, updateBoard }
 }
@@ -291,22 +314,25 @@ const useRealtimeKanban = (boardId: string) => {
   useEffect(() => {
     const socket = io()
 
-    socket.emit('join-board', boardId)
+    socket.emit("join-board", boardId)
 
-    socket.on('board-updated', (updatedBoard: KanbanBoard) => {
+    socket.on("board-updated", (updatedBoard: KanbanBoard) => {
       setBoard(updatedBoard)
     })
 
     return () => {
-      socket.emit('leave-board', boardId)
+      socket.emit("leave-board", boardId)
       socket.disconnect()
     }
   }, [boardId])
 
-  const updateBoard = useCallback((newBoard: KanbanBoard) => {
-    setBoard(newBoard)
-    socket.emit('update-board', { boardId, board: newBoard })
-  }, [boardId])
+  const updateBoard = useCallback(
+    (newBoard: KanbanBoard) => {
+      setBoard(newBoard)
+      socket.emit("update-board", { boardId, board: newBoard })
+    },
+    [boardId]
+  )
 
   return { board, updateBoard }
 }

@@ -18,27 +18,28 @@ pnpm add @xyflow/react
 ```tsx
 "use client"
 
-import { useCallback } from 'react'
+import { useCallback } from "react"
 import {
-  ReactFlow,
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
   addEdge,
-} from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+  Background,
+  Controls,
+  MiniMap,
+  ReactFlow,
+  useEdgesState,
+  useNodesState,
+} from "@xyflow/react"
+
+import "@xyflow/react/dist/style.css"
 
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Start' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: 'Process' } },
-  { id: '3', position: { x: 0, y: 200 }, data: { label: 'End' } },
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "Start" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "Process" } },
+  { id: "3", position: { x: 0, y: 200 }, data: { label: "End" } },
 ]
 
 const initialEdges = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e2-3', source: '2', target: '3' },
+  { id: "e1-2", source: "1", target: "2" },
+  { id: "e2-3", source: "2", target: "3" },
 ]
 
 export function WorkflowBuilder() {
@@ -111,28 +112,28 @@ Build visual AI agent orchestration:
 ```tsx
 const aiNodes = [
   {
-    id: 'input',
-    type: 'custom',
+    id: "input",
+    type: "custom",
     position: { x: 0, y: 0 },
-    data: { label: 'User Input', badge: 'Start' }
+    data: { label: "User Input", badge: "Start" },
   },
   {
-    id: 'llm',
-    type: 'custom',
+    id: "llm",
+    type: "custom",
     position: { x: 0, y: 100 },
-    data: { label: 'LLM Agent', description: 'Claude 3.5 Sonnet' }
+    data: { label: "LLM Agent", description: "Claude 3.5 Sonnet" },
   },
   {
-    id: 'tool',
-    type: 'custom',
+    id: "tool",
+    type: "custom",
     position: { x: 200, y: 100 },
-    data: { label: 'Tool Use', description: 'Execute functions' }
+    data: { label: "Tool Use", description: "Execute functions" },
   },
   {
-    id: 'output',
-    type: 'custom',
+    id: "output",
+    type: "custom",
     position: { x: 0, y: 200 },
-    data: { label: 'Response', badge: 'End' }
+    data: { label: "Response", badge: "End" },
   },
 ]
 ```
@@ -143,10 +144,10 @@ Create ETL pipelines visually:
 
 ```tsx
 const pipelineNodes = [
-  { id: 'source', data: { label: 'Data Source', type: 'database' } },
-  { id: 'transform', data: { label: 'Transform', type: 'function' } },
-  { id: 'filter', data: { label: 'Filter', type: 'condition' } },
-  { id: 'sink', data: { label: 'Data Sink', type: 'storage' } },
+  { id: "source", data: { label: "Data Source", type: "database" } },
+  { id: "transform", data: { label: "Transform", type: "function" } },
+  { id: "filter", data: { label: "Filter", type: "condition" } },
+  { id: "sink", data: { label: "Data Sink", type: "storage" } },
 ]
 ```
 
@@ -156,10 +157,10 @@ Visualize component hierarchies:
 
 ```tsx
 const componentTree = [
-  { id: 'app', data: { label: 'App', component: 'Layout' } },
-  { id: 'header', data: { label: 'Header', component: 'Navigation' } },
-  { id: 'main', data: { label: 'Main', component: 'Content' } },
-  { id: 'footer', data: { label: 'Footer', component: 'Footer' } },
+  { id: "app", data: { label: "App", component: "Layout" } },
+  { id: "header", data: { label: "Header", component: "Navigation" } },
+  { id: "main", data: { label: "Main", component: "Content" } },
+  { id: "footer", data: { label: "Footer", component: "Footer" } },
 ]
 ```
 
@@ -168,8 +169,9 @@ const componentTree = [
 React Flow integrates seamlessly with Hanzo UI theming:
 
 ```tsx
-import { ReactFlow } from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import { ReactFlow } from "@xyflow/react"
+
+import "@xyflow/react/dist/style.css"
 
 export function ThemedFlow() {
   return (
@@ -179,18 +181,12 @@ export function ThemedFlow() {
         edges={edges}
         className="bg-background"
         style={{
-          background: 'hsl(var(--background))',
+          background: "hsl(var(--background))",
         }}
       >
         <Controls className="border-border bg-card" />
-        <MiniMap
-          className="border-border bg-card"
-          nodeBorderRadius={8}
-        />
-        <Background
-          color="hsl(var(--muted-foreground))"
-          gap={16}
-        />
+        <MiniMap className="border-border bg-card" nodeBorderRadius={8} />
+        <Background color="hsl(var(--muted-foreground))" gap={16} />
       </ReactFlow>
     </div>
   )
@@ -204,8 +200,9 @@ export function ThemedFlow() {
 Create custom edge connections:
 
 ```tsx
-import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@xyflow/react'
-import { Badge } from '@/components/ui/badge'
+import { BaseEdge, EdgeLabelRenderer, getStraightPath } from "@xyflow/react"
+
+import { Badge } from "@/components/ui/badge"
 
 function CustomEdge({ id, sourceX, sourceY, targetX, targetY, data }) {
   const [edgePath, labelX, labelY] = getStraightPath({
@@ -221,7 +218,7 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY, data }) {
       <EdgeLabelRenderer>
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
         >
@@ -238,11 +235,12 @@ function CustomEdge({ id, sourceX, sourceY, targetX, targetY, data }) {
 Add custom controls using Hanzo UI components:
 
 ```tsx
-import { Controls } from '@xyflow/react'
-import { Button } from '@/components/ui/button'
-import { ZoomIn, ZoomOut, Maximize } from 'lucide-react'
+import { Controls } from "@xyflow/react"
+import { Maximize, ZoomIn, ZoomOut } from "lucide-react"
 
-<Controls>
+import { Button } from "@/components/ui/button"
+
+;<Controls>
   <Button size="icon" variant="ghost">
     <ZoomIn className="h-4 w-4" />
   </Button>
@@ -266,11 +264,11 @@ function WorkflowEditor() {
 
   const saveWorkflow = () => {
     const workflow = { nodes, edges }
-    localStorage.setItem('workflow', JSON.stringify(workflow))
+    localStorage.setItem("workflow", JSON.stringify(workflow))
   }
 
   const loadWorkflow = () => {
-    const saved = localStorage.getItem('workflow')
+    const saved = localStorage.getItem("workflow")
     if (saved) {
       const { nodes, edges } = JSON.parse(saved)
       setNodes(nodes)
@@ -282,7 +280,9 @@ function WorkflowEditor() {
     <div className="space-y-4">
       <div className="flex gap-2">
         <Button onClick={saveWorkflow}>Save</Button>
-        <Button onClick={loadWorkflow} variant="outline">Load</Button>
+        <Button onClick={loadWorkflow} variant="outline">
+          Load
+        </Button>
       </div>
       <ReactFlow nodes={nodes} edges={edges} />
     </div>
@@ -297,9 +297,10 @@ function WorkflowEditor() {
 Add actions to nodes:
 
 ```tsx
-import { NodeToolbar, Position } from '@xyflow/react'
-import { Button } from '@/components/ui/button'
-import { Settings, Trash2, Copy } from 'lucide-react'
+import { NodeToolbar, Position } from "@xyflow/react"
+import { Copy, Settings, Trash2 } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 
 function NodeWithToolbar({ data }) {
   return (
@@ -317,9 +318,7 @@ function NodeWithToolbar({ data }) {
           </Button>
         </div>
       </NodeToolbar>
-      <Card>
-        {/* Node content */}
-      </Card>
+      <Card>{/* Node content */}</Card>
     </>
   )
 }
@@ -330,13 +329,14 @@ function NodeWithToolbar({ data }) {
 Right-click context menu:
 
 ```tsx
-import { useReactFlow } from '@xyflow/react'
+import { useReactFlow } from "@xyflow/react"
+
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
+} from "@/components/ui/context-menu"
 
 function FlowWithContextMenu() {
   const { addNodes, deleteElements } = useReactFlow()
@@ -362,11 +362,13 @@ function FlowWithContextMenu() {
 ## Resources
 
 ### dnd-kit
+
 - [Documentation](https://docs.dndkit.com/)
 - [Examples](https://docs.dndkit.com/presets/sortable)
 - [Storybook](https://master--5fc05e08a4a65d0021ae0bf2.chromatic.com/)
 
 ### React Flow
+
 - [Documentation](https://reactflow.dev/learn)
 - [Examples](https://reactflow.dev/examples)
 - [API Reference](https://reactflow.dev/api-reference)

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 interface IPhone15ProProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -10,7 +11,10 @@ interface IPhone15ProProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const IPhone15Pro = React.forwardRef<HTMLDivElement, IPhone15ProProps>(
-  ({ className, children, variant = "default", color = "black", ...props }, ref) => {
+  (
+    { className, children, variant = "default", color = "black", ...props },
+    ref
+  ) => {
     const colorClasses = {
       black: "bg-zinc-900 border-zinc-800",
       white: "bg-zinc-100 border-zinc-300",
@@ -19,11 +23,7 @@ const IPhone15Pro = React.forwardRef<HTMLDivElement, IPhone15ProProps>(
     }
 
     return (
-      <div
-        ref={ref}
-        className={cn("inline-block", className)}
-        {...props}
-      >
+      <div ref={ref} className={cn("inline-block", className)} {...props}>
         {/* iPhone Frame */}
         <div
           className={cn(
@@ -31,8 +31,18 @@ const IPhone15Pro = React.forwardRef<HTMLDivElement, IPhone15ProProps>(
             colorClasses[color]
           )}
           style={{
-            width: variant === "pro-max" ? "430px" : variant === "mini" ? "360px" : "393px",
-            height: variant === "pro-max" ? "932px" : variant === "mini" ? "780px" : "852px",
+            width:
+              variant === "pro-max"
+                ? "430px"
+                : variant === "mini"
+                  ? "360px"
+                  : "393px",
+            height:
+              variant === "pro-max"
+                ? "932px"
+                : variant === "mini"
+                  ? "780px"
+                  : "852px",
           }}
         >
           {/* Dynamic Island */}

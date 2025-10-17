@@ -41,6 +41,7 @@ import { Skeleton } from "@/registry/new-york/ui/skeleton"
 import { Theme, themes } from "@/registry/themes"
 
 import "@/styles/mdx.css"
+
 import {
   Tooltip,
   TooltipContent,

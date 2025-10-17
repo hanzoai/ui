@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { ColorFormat } from "@/lib/colors"
 
 interface ColorsContextType {
@@ -9,7 +10,9 @@ interface ColorsContextType {
   isLoading: boolean
 }
 
-const ColorsContext = React.createContext<ColorsContextType | undefined>(undefined)
+const ColorsContext = React.createContext<ColorsContextType | undefined>(
+  undefined
+)
 
 export function ColorsProvider({ children }: { children: React.ReactNode }) {
   const [format, setFormat] = React.useState<ColorFormat>("hex")
@@ -29,7 +32,7 @@ export function useColors() {
     return {
       format: "hex" as ColorFormat,
       setFormat: () => {},
-      isLoading: false
+      isLoading: false,
     }
   }
   return context
