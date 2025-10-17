@@ -394,7 +394,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar10({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -724,7 +724,7 @@ export function NavWorkspaces({
 }
 ;("use client")
 
-export function TeamSwitcher({
+export function TeamSwitcher10({
   teams,
 }: {
   teams: {
