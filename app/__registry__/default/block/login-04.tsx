@@ -16,7 +16,7 @@ export default function LoginPage() {
   )
 }
 
-export function LoginForm({
+export function LoginForm04({
   className,
   ...props
 }: React.ComponentProps<"div">) {

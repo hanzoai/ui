@@ -30,7 +30,7 @@ export default function LoginPage() {
   )
 }
 
-export function LoginForm({
+export function LoginForm03({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {

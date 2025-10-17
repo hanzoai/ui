@@ -30,7 +30,7 @@ export default function OTPPage() {
   )
 }
 
-export function OTPForm({ ...props }: React.ComponentProps<typeof Card>) {
+export function OTPForm01({ ...props }: React.ComponentProps<typeof Card>) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)

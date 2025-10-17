@@ -36,7 +36,7 @@ export default function OTPPage() {
   )
 }
 
-export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
+export function OTPForm02({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
