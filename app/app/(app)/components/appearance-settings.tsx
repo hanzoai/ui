@@ -19,10 +19,7 @@ import {
 } from "@/registry/new-york/ui/field"
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/registry/new-york/ui/radio-group"
+import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group"
 import { Switch } from "@/registry/new-york/ui/switch"
 
 const accents = [

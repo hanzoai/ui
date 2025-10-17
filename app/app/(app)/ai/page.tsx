@@ -1,14 +1,31 @@
 import Link from "next/link"
-import { ArrowRightIcon, SparklesIcon, BrainIcon, MessageSquareIcon, EyeIcon, UsersIcon, WrenchIcon, RocketIcon, PlayIcon } from "lucide-react"
+import {
+  ArrowRightIcon,
+  BrainIcon,
+  EyeIcon,
+  MessageSquareIcon,
+  PlayIcon,
+  RocketIcon,
+  SparklesIcon,
+  UsersIcon,
+  WrenchIcon,
+} from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/default/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
 
 const aiComponents = [
   {
     name: "AI Playground",
     href: "/docs/ai/playground",
-    description: "Interactive AI model testing environment with adjustable parameters",
+    description:
+      "Interactive AI model testing environment with adjustable parameters",
     icon: PlayIcon,
   },
   {
@@ -64,7 +81,8 @@ export default function AIPage() {
           AI Components
         </h1>
         <p className="max-w-[750px] text-center text-lg text-muted-foreground sm:text-xl">
-          Beautiful AI-powered components for building intelligent interfaces. Copy and paste into your apps.
+          Beautiful AI-powered components for building intelligent interfaces.
+          Copy and paste into your apps.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Button size="lg" asChild>
@@ -85,7 +103,8 @@ export default function AIPage() {
             Production-ready AI components
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Built with React, TypeScript, and Tailwind CSS. Works with all major AI providers.
+            Built with React, TypeScript, and Tailwind CSS. Works with all major
+            AI providers.
           </p>
         </div>
 
@@ -119,37 +138,43 @@ export default function AIPage() {
             <div className="space-y-3">
               <h3 className="font-semibold">Multiple Providers</h3>
               <p className="text-muted-foreground">
-                Support for OpenAI, Anthropic, Google AI, Cohere, and more. Switch providers with a single prop.
+                Support for OpenAI, Anthropic, Google AI, Cohere, and more.
+                Switch providers with a single prop.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">Real-time Streaming</h3>
               <p className="text-muted-foreground">
-                Stream responses token by token for better user experience. Built-in loading states and animations.
+                Stream responses token by token for better user experience.
+                Built-in loading states and animations.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">Fully Customizable</h3>
               <p className="text-muted-foreground">
-                Style with Tailwind CSS. Override any component. Extend with your own functionality.
+                Style with Tailwind CSS. Override any component. Extend with
+                your own functionality.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">TypeScript First</h3>
               <p className="text-muted-foreground">
-                Full TypeScript support with proper types for all components and utilities.
+                Full TypeScript support with proper types for all components and
+                utilities.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">Accessible</h3>
               <p className="text-muted-foreground">
-                Built with accessibility in mind. Keyboard navigation, screen readers, and ARIA support.
+                Built with accessibility in mind. Keyboard navigation, screen
+                readers, and ARIA support.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="font-semibold">Production Ready</h3>
               <p className="text-muted-foreground">
-                Battle-tested components used in production by thousands of developers.
+                Battle-tested components used in production by thousands of
+                developers.
               </p>
             </div>
           </div>
@@ -159,7 +184,8 @@ export default function AIPage() {
           <div className="flex flex-col items-center gap-4 text-center">
             <h2 className="text-2xl font-bold">Ready to build with AI?</h2>
             <p className="max-w-[600px] text-muted-foreground">
-              Start building intelligent interfaces with our comprehensive collection of AI components.
+              Start building intelligent interfaces with our comprehensive
+              collection of AI components.
             </p>
             <div className="flex gap-4">
               <Button asChild>

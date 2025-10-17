@@ -10,10 +10,14 @@ const pillVariants = cva(
     variants: {
       variant: {
         default: "bg-primary/10 text-primary hover:bg-primary/20",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        success: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
-        warning: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        outline:
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        success:
+          "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+        warning:
+          "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
         error: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
       },
     },

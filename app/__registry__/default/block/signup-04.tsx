@@ -1,14 +1,3 @@
-import { SignupForm } from "./components/signup-form"
-
-export default function SignupPage() {
-  return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm md:max-w-4xl">
-        <SignupForm />
-      </div>
-    </div>
-  )
-}
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 import { Card, CardContent } from "@/registry/default/ui/card"
@@ -21,6 +10,18 @@ import {
 } from "@/registry/default/ui/field"
 import { Input } from "@/registry/default/ui/input"
 
+import { SignupForm } from "./components/signup-form"
+
+export default function SignupPage() {
+  return (
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">
+        <SignupForm />
+      </div>
+    </div>
+  )
+}
+
 export function SignupForm({
   className,
   ...props
@@ -30,7 +31,7 @@ export function SignupForm({
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }
@@ -65,13 +66,23 @@ export function SignupForm({
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="password" type="password" required />
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
                       Confirm Password
                     </FieldLabel>
-                    <Input id="confirm-password" name="confirm-password" type="password" required />
+                    <Input
+                      id="confirm-password"
+                      name="confirm-password"
+                      type="password"
+                      required
+                    />
                   </Field>
                 </Field>
                 <FieldDescription>

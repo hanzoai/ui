@@ -6,12 +6,12 @@ const { fontFamily } = defaultTheme
 const config = {
   darkMode: "class",
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-    './registry/**/*.{ts,tsx}',
-    './content/**/*.{mdx,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "./registry/**/*.{ts,tsx}",
+    "./content/**/*.{mdx,tsx}",
   ],
   theme: {
     container: {
@@ -106,7 +106,7 @@ const config = {
   },
   plugins: [
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require("tailwindcss-animate")
+    require("tailwindcss-animate"),
   ],
 } satisfies Config
 

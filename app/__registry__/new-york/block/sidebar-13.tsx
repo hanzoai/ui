@@ -1,14 +1,3 @@
-import { SettingsDialog } from "./components/settings-dialog"
-
-export default function Page() {
-  return (
-    <div className="flex h-svh items-center justify-center">
-      <SettingsDialog />
-    </div>
-  )
-}
-"use client"
-
 import * as React from "react"
 import {
   Bell,
@@ -51,6 +40,16 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "../../../../primitives/sidebar"
+import { SettingsDialog } from "./components/settings-dialog"
+
+export default function Page() {
+  return (
+    <div className="flex h-svh items-center justify-center">
+      <SettingsDialog />
+    </div>
+  )
+}
+;("use client")
 
 const data = {
   nav: [

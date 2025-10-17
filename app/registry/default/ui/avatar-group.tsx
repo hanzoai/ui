@@ -1,8 +1,13 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/registry/default/ui/avatar"
 
 export interface AvatarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   items: Array<{
@@ -19,16 +24,9 @@ const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
     const remaining = items.length - max
 
     return (
-      <div
-        ref={ref}
-        className={cn("flex -space-x-4", className)}
-        {...props}
-      >
+      <div ref={ref} className={cn("flex -space-x-4", className)} {...props}>
         {displayItems.map((item, index) => (
-          <Avatar
-            key={index}
-            className="border-2 border-background"
-          >
+          <Avatar key={index} className="border-2 border-background">
             <AvatarImage src={item.src} alt={item.alt} />
             <AvatarFallback>{item.fallback}</AvatarFallback>
           </Avatar>

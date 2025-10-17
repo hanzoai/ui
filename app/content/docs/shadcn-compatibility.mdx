@@ -23,7 +23,7 @@ npm install @hanzo/ui
 Then import components directly:
 
 ```tsx
-import { AIPlayground, Dock, CodeEditor } from "@hanzo/ui"
+import { AIPlayground, CodeEditor, Dock } from "@hanzo/ui"
 ```
 
 ### CLI Installation (shadcn Compatible)
@@ -43,24 +43,26 @@ hanzo/ui supports both import patterns:
 ### Package Imports (@hanzo/ui)
 
 Best for:
+
 - Quick prototyping
 - Consistent updates across projects
 - Smaller projects with fewer customizations
 
 ```tsx
-import { Button, Card, AIChat } from "@hanzo/ui"
+import { AIChat, Button, Card } from "@hanzo/ui"
 ```
 
 ### Relative Imports (@/components)
 
 Best for:
+
 - Full customization control
 - shadcn/ui compatibility
 - Existing shadcn projects
 
 ```tsx
-import { Button } from "@/components/ui/button"
 import { AIChat } from "@/components/ui/ai-chat"
+import { Button } from "@/components/ui/button"
 ```
 
 ## Registry Configuration
@@ -101,6 +103,7 @@ hanzo/ui includes native MCP (Model Context Protocol) support, allowing AI assis
 ### MCP Configuration
 
 For Claude Code:
+
 ```json
 {
   "mcpServers": {
@@ -113,6 +116,7 @@ For Claude Code:
 ```
 
 For Cursor:
+
 ```json
 {
   "mcpServers": {
@@ -140,6 +144,7 @@ All hanzo/ui components:
 hanzo/ui extends shadcn/ui with:
 
 ### AI Components
+
 - AI Playground
 - AI Chat
 - AI Assistant
@@ -148,6 +153,7 @@ hanzo/ui extends shadcn/ui with:
 - AI Tools
 
 ### Code Components
+
 - Code Editor
 - Code Block
 - Syntax Highlighter
@@ -155,6 +161,7 @@ hanzo/ui extends shadcn/ui with:
 - Sandbox
 
 ### Advanced UI
+
 - 3D Card
 - Animated Cursor
 - Apple Cards Carousel
@@ -162,11 +169,13 @@ hanzo/ui extends shadcn/ui with:
 - Particles Background
 
 ### Device Mockups
+
 - iPhone 15 Pro
 - Android Device
 - Safari Browser
 
 ### Dock Components
+
 - macOS Dock
 - Limelight Nav
 - Menu Dock
@@ -195,23 +204,25 @@ hanzo/ui uses the same theming system as shadcn/ui:
 ### From shadcn/ui to hanzo/ui
 
 1. Install hanzo/ui:
+
 ```bash
 npm install @hanzo/ui
 ```
 
 2. Update imports (optional):
+
 ```tsx
 // Before
-import { Button } from "@/components/ui/button"
 
 // After (if using package imports)
 import { Button } from "@hanzo/ui"
 
 // Or keep relative imports - both work!
-import { Button } from "@/components/ui/button"
+import { Button, Button } from "@/components/ui/button"
 ```
 
 3. Add new components:
+
 ```bash
 npx hanzo-ui@latest add ai-playground dock code-editor
 ```
@@ -222,12 +233,12 @@ You can use both registries in the same project:
 
 ```tsx
 // shadcn/ui components
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 
 // hanzo/ui components
-import { AIPlayground } from "@hanzo/ui"
-import { Dock } from "@hanzo/ui"
+import { AIPlayground, Dock } from "@hanzo/ui"
+
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 
 // They work together perfectly!
 export function MyApp() {
@@ -246,11 +257,7 @@ export function MyApp() {
 Full TypeScript support with proper type exports:
 
 ```tsx
-import type {
-  AIChatProps,
-  DockProps,
-  CodeEditorProps
-} from "@hanzo/ui"
+import type { AIChatProps, CodeEditorProps, DockProps } from "@hanzo/ui"
 ```
 
 ## Best Practices

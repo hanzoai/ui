@@ -1,14 +1,3 @@
-import { SignupForm } from "./components/signup-form"
-
-export default function SignupPage() {
-  return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <SignupForm />
-      </div>
-    </div>
-  )
-}
 import { GalleryVerticalEnd } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -22,6 +11,18 @@ import {
 } from "@/registry/new-york/ui/field"
 import { Input } from "@/registry/new-york/ui/input"
 
+import { SignupForm } from "./components/signup-form"
+
+export default function SignupPage() {
+  return (
+    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <SignupForm />
+      </div>
+    </div>
+  )
+}
+
 export function SignupForm({
   className,
   ...props
@@ -31,7 +32,7 @@ export function SignupForm({
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

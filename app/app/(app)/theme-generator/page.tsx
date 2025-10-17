@@ -1,18 +1,33 @@
 "use client"
 
 import * as React from "react"
+import { Download, RotateCcw, Shuffle } from "lucide-react"
 import { HexColorPicker } from "react-colorful"
-import { Download, Shuffle, RotateCcw } from "lucide-react"
 
 import { Button } from "@/registry/new-york/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/new-york/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/registry/new-york/ui/popover"
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
 import { Separator } from "@/registry/new-york/ui/separator"
 import { Slider } from "@/registry/new-york/ui/slider"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
-import { Popover, PopoverContent, PopoverTrigger } from "@/registry/new-york/ui/popover"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/new-york/ui/tabs"
 
 const DEFAULT_COLORS = {
   background: "#ffffff",
@@ -112,8 +127,8 @@ ${Object.entries(colors)
       <div className="mb-8">
         <h1 className="text-4xl font-bold">Theme Generator</h1>
         <p className="mt-2 text-muted-foreground">
-          Customize your theme with live preview. Generate CSS variables for your
-          app.
+          Customize your theme with live preview. Generate CSS variables for
+          your app.
         </p>
       </div>
 
@@ -179,7 +194,11 @@ ${Object.entries(colors)
           </Card>
 
           <div className="flex gap-2">
-            <Button onClick={randomizeTheme} variant="outline" className="flex-1">
+            <Button
+              onClick={randomizeTheme}
+              variant="outline"
+              className="flex-1"
+            >
               <Shuffle className="mr-2 h-4 w-4" />
               Random
             </Button>
@@ -209,7 +228,9 @@ ${Object.entries(colors)
               "--primary": hexToHSL(colors.primary),
               "--primary-foreground": hexToHSL(colors["primary-foreground"]),
               "--secondary": hexToHSL(colors.secondary),
-              "--secondary-foreground": hexToHSL(colors["secondary-foreground"]),
+              "--secondary-foreground": hexToHSL(
+                colors["secondary-foreground"]
+              ),
               "--muted": hexToHSL(colors.muted),
               "--muted-foreground": hexToHSL(colors["muted-foreground"]),
               "--accent": hexToHSL(colors.accent),

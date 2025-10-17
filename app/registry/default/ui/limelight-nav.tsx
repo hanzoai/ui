@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Search, Command } from "lucide-react"
+import { Command, Search } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 import { Input } from "@/registry/default/ui/input"
@@ -32,7 +33,11 @@ const LimelightNav = React.forwardRef<HTMLElement, LimelightNavProps>(
 
     return (
       <>
-        <nav ref={ref} className={cn("flex items-center gap-4", className)} {...props}>
+        <nav
+          ref={ref}
+          className={cn("flex items-center gap-4", className)}
+          {...props}
+        >
           <Button
             variant="outline"
             onClick={() => setIsOpen(true)}

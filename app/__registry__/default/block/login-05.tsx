@@ -1,3 +1,10 @@
+import { GalleryVerticalEnd } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
+
 import { LoginForm } from "./components/login-form"
 
 export default function LoginPage() {
@@ -9,12 +16,6 @@ export default function LoginPage() {
     </div>
   )
 }
-import { GalleryVerticalEnd } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/registry/default/ui/button"
-import { Input } from "@/registry/default/ui/input"
-import { Label } from "@/registry/default/ui/label"
 
 export function LoginForm({
   className,
@@ -25,7 +26,7 @@ export function LoginForm({
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

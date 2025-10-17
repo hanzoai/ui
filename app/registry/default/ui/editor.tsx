@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Bold, Italic, List, ListOrdered } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 
@@ -12,7 +13,10 @@ export interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
-  ({ className, value, onChange, placeholder = "Start typing...", ...props }, ref) => {
+  (
+    { className, value, onChange, placeholder = "Start typing...", ...props },
+    ref
+  ) => {
     const editorRef = React.useRef<HTMLDivElement>(null)
 
     const executeCommand = (command: string, value?: string) => {

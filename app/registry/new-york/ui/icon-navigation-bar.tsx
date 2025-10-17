@@ -1,9 +1,11 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
-export interface IconNavigationBarProps extends React.HTMLAttributes<HTMLElement> {
+export interface IconNavigationBarProps
+  extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ icon: React.ReactNode; label: string; href: string }>
 }
 

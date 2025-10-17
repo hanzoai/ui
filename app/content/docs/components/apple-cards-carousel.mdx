@@ -47,28 +47,34 @@ npm install framer-motion lucide-react
 ## Usage
 
 ```tsx
-import { AppleCardsCarousel, gradientPresets } from "@/registry/default/ui/apple-cards-carousel"
+import {
+  AppleCardsCarousel,
+  gradientPresets,
+} from "@/registry/default/ui/apple-cards-carousel"
 
 const cards = [
   {
     id: "1",
     title: "Innovation",
     subtitle: "Think Different",
-    description: "Pushing the boundaries of what's possible with cutting-edge technology.",
+    description:
+      "Pushing the boundaries of what's possible with cutting-edge technology.",
     gradient: gradientPresets.sunset,
   },
   {
     id: "2",
     title: "Design",
     subtitle: "Form Meets Function",
-    description: "Beautiful, intuitive interfaces that delight users at every interaction.",
+    description:
+      "Beautiful, intuitive interfaces that delight users at every interaction.",
     gradient: gradientPresets.ocean,
   },
   {
     id: "3",
     title: "Performance",
     subtitle: "Speed & Efficiency",
-    description: "Optimized for the best possible user experience across all devices.",
+    description:
+      "Optimized for the best possible user experience across all devices.",
     gradient: gradientPresets.galaxy,
   },
 ]
@@ -170,60 +176,66 @@ export default function MinimalCarousel() {
 
 ### AppleCardsCarousel
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| cards | `CarouselCard[]` | Required | Array of card objects to display |
-| autoPlay | `boolean` | `false` | Enable automatic card rotation |
-| autoPlayInterval | `number` | `5000` | Interval between auto-play transitions (ms) |
-| className | `string` | - | Additional CSS classes for the container |
-| cardClassName | `string` | - | Additional CSS classes for cards |
-| showArrows | `boolean` | `true` | Show navigation arrows |
-| showDots | `boolean` | `true` | Show dot indicators |
-| parallaxOffset | `number` | `50` | Parallax effect intensity |
-| stackOffset | `number` | `10` | Horizontal offset for stacked cards |
-| stackScale | `number` | `0.95` | Scale factor for stacked cards |
-| swipeThreshold | `number` | `50` | Minimum swipe distance to trigger navigation |
+| Prop             | Type             | Default  | Description                                  |
+| ---------------- | ---------------- | -------- | -------------------------------------------- |
+| cards            | `CarouselCard[]` | Required | Array of card objects to display             |
+| autoPlay         | `boolean`        | `false`  | Enable automatic card rotation               |
+| autoPlayInterval | `number`         | `5000`   | Interval between auto-play transitions (ms)  |
+| className        | `string`         | -        | Additional CSS classes for the container     |
+| cardClassName    | `string`         | -        | Additional CSS classes for cards             |
+| showArrows       | `boolean`        | `true`   | Show navigation arrows                       |
+| showDots         | `boolean`        | `true`   | Show dot indicators                          |
+| parallaxOffset   | `number`         | `50`     | Parallax effect intensity                    |
+| stackOffset      | `number`         | `10`     | Horizontal offset for stacked cards          |
+| stackScale       | `number`         | `0.95`   | Scale factor for stacked cards               |
+| swipeThreshold   | `number`         | `50`     | Minimum swipe distance to trigger navigation |
 
 ### CarouselCard
 
-| Property | Type | Required | Description |
-| --- | --- | --- | --- |
-| id | `string` | Yes | Unique identifier for the card |
-| title | `string` | Yes | Main heading text |
-| subtitle | `string` | No | Secondary heading text |
-| description | `string` | No | Descriptive text |
-| image | `string` | No | Background image URL |
-| gradient | `string` | No | CSS gradient string |
-| content | `React.ReactNode` | No | Custom content (overrides title/subtitle/description) |
+| Property    | Type              | Required | Description                                           |
+| ----------- | ----------------- | -------- | ----------------------------------------------------- |
+| id          | `string`          | Yes      | Unique identifier for the card                        |
+| title       | `string`          | Yes      | Main heading text                                     |
+| subtitle    | `string`          | No       | Secondary heading text                                |
+| description | `string`          | No       | Descriptive text                                      |
+| image       | `string`          | No       | Background image URL                                  |
+| gradient    | `string`          | No       | CSS gradient string                                   |
+| content     | `React.ReactNode` | No       | Custom content (overrides title/subtitle/description) |
 
 ## Features
 
 ### Smooth Animations
+
 - Spring-based physics for natural movement
 - Hardware-accelerated transforms
 - 60fps performance
 
 ### Touch & Gesture Support
+
 - Swipe to navigate on touch devices
 - Drag with mouse on desktop
 - Keyboard navigation (arrow keys)
 
 ### Parallax Effects
+
 - Background images move at different speeds
 - Creates depth and immersion
 - Customizable intensity
 
 ### Card Stacking
+
 - Cards stack behind the active card
 - Configurable offset and scale
 - Beautiful depth perception
 
 ### Auto-play
+
 - Automatic rotation through cards
 - Pauses on hover
 - Customizable intervals
 
 ### Responsive Design
+
 - Adapts to all screen sizes
 - Touch-optimized for mobile
 - Desktop-optimized controls

@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
+import { File, Upload, X } from "lucide-react"
 import { useDropzone } from "react-dropzone"
-import { Upload, X, File } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 interface DropzoneProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -66,7 +67,8 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
                 {isDragActive ? "Drop files here" : "Drag & drop files here"}
               </p>
               <p className="text-xs text-muted-foreground">
-                or click to browse (max {maxFiles} files, {Math.round(maxSize / 1024 / 1024)}MB each)
+                or click to browse (max {maxFiles} files,{" "}
+                {Math.round(maxSize / 1024 / 1024)}MB each)
               </p>
             </div>
           </div>
