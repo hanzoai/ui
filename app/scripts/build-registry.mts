@@ -254,9 +254,7 @@ export const Index: Record<string, any> = {
   // Build registry/index.json.
   // ----------------------------------------------------------------------------
   const names = registry.filter((item) =>
-    item.type === "components:ui" ||
-    item.type === "components:ai" ||
-    item.type === "components:extended"
+    item.type?.startsWith("components:")
   )
   const registryJson = JSON.stringify(names, null, 2)
   rimraf.sync(path.join(REGISTRY_PATH, "index.json"))
@@ -284,11 +282,8 @@ async function buildStyles(registry: Registry) {
     }
 
     for (const item of registry) {
-      if (
-        item.type !== "components:ui" &&
-        item.type !== "components:ai" &&
-        item.type !== "components:extended"
-      ) {
+      // Include all component types (ui, ai, 3d, animation, code, etc.)
+      if (!item.type?.startsWith("components:")) {
         continue
       }
 
