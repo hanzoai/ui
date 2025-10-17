@@ -452,32 +452,45 @@ ${Object.entries(colors)
             </TabsList>
 
             <TabsContent value="preview" className="mt-6">
+              <div className="theme-preview-container" data-theme="custom">
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                      .theme-preview-container[data-theme="custom"] {
+                        --background: ${hexToHSL(colors.background)};
+                        --foreground: ${hexToHSL(colors.foreground)};
+                        --card: ${hexToHSL(colors.card)};
+                        --card-foreground: ${hexToHSL(colors["card-foreground"])};
+                        --popover: ${hexToHSL(colors.popover)};
+                        --popover-foreground: ${hexToHSL(colors["popover-foreground"])};
+                        --primary: ${hexToHSL(colors.primary)};
+                        --primary-foreground: ${hexToHSL(colors["primary-foreground"])};
+                        --secondary: ${hexToHSL(colors.secondary)};
+                        --secondary-foreground: ${hexToHSL(colors["secondary-foreground"])};
+                        --muted: ${hexToHSL(colors.muted)};
+                        --muted-foreground: ${hexToHSL(colors["muted-foreground"])};
+                        --accent: ${hexToHSL(colors.accent)};
+                        --accent-foreground: ${hexToHSL(colors["accent-foreground"])};
+                        --destructive: ${hexToHSL(colors.destructive)};
+                        --destructive-foreground: ${hexToHSL(colors["destructive-foreground"])};
+                        --border: ${hexToHSL(colors.border)};
+                        --input: ${hexToHSL(colors.input)};
+                        --ring: ${hexToHSL(colors.ring)};
+                        --radius: ${radius}rem;
+                      }
+                      .theme-preview-container[data-theme="custom"] * {
+                        border-radius: calc(var(--radius) * 1);
+                      }
+                    `,
+                  }}
+                />
               <div
                 className="rounded-lg border bg-background p-8 shadow-sm"
                 style={{
-                  "--background": hexToHSL(colors.background),
-                  "--foreground": hexToHSL(colors.foreground),
-                  "--card": hexToHSL(colors.card),
-                  "--card-foreground": hexToHSL(colors["card-foreground"]),
-                  "--popover": hexToHSL(colors.popover),
-                  "--popover-foreground": hexToHSL(colors["popover-foreground"]),
-                  "--primary": hexToHSL(colors.primary),
-                  "--primary-foreground": hexToHSL(colors["primary-foreground"]),
-                  "--secondary": hexToHSL(colors.secondary),
-                  "--secondary-foreground": hexToHSL(colors["secondary-foreground"]),
-                  "--muted": hexToHSL(colors.muted),
-                  "--muted-foreground": hexToHSL(colors["muted-foreground"]),
-                  "--accent": hexToHSL(colors.accent),
-                  "--accent-foreground": hexToHSL(colors["accent-foreground"]),
-                  "--destructive": hexToHSL(colors.destructive),
-                  "--destructive-foreground": hexToHSL(colors["destructive-foreground"]),
-                  "--border": hexToHSL(colors.border),
-                  "--input": hexToHSL(colors.input),
-                  "--ring": hexToHSL(colors.ring),
-                  "--radius": `${radius}rem`,
-                  backgroundColor: `hsl(${hexToHSL(colors.background)})`,
-                  color: `hsl(${hexToHSL(colors.foreground)})`,
-                } as React.CSSProperties}
+                  backgroundColor: `hsl(var(--background))`,
+                  color: `hsl(var(--foreground))`,
+                  borderColor: `hsl(var(--border))`,
+                }}
               >
                 <div className="space-y-8">
                   {/* Hero Section Preview */}
@@ -592,35 +605,49 @@ ${Object.entries(colors)
                   </Alert>
                 </div>
               </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="components" className="mt-6">
+              <div className="theme-components-container" data-theme="custom-components">
+                <style
+                  dangerouslySetInnerHTML={{
+                    __html: `
+                      .theme-components-container[data-theme="custom-components"] {
+                        --background: ${hexToHSL(colors.background)};
+                        --foreground: ${hexToHSL(colors.foreground)};
+                        --card: ${hexToHSL(colors.card)};
+                        --card-foreground: ${hexToHSL(colors["card-foreground"])};
+                        --popover: ${hexToHSL(colors.popover)};
+                        --popover-foreground: ${hexToHSL(colors["popover-foreground"])};
+                        --primary: ${hexToHSL(colors.primary)};
+                        --primary-foreground: ${hexToHSL(colors["primary-foreground"])};
+                        --secondary: ${hexToHSL(colors.secondary)};
+                        --secondary-foreground: ${hexToHSL(colors["secondary-foreground"])};
+                        --muted: ${hexToHSL(colors.muted)};
+                        --muted-foreground: ${hexToHSL(colors["muted-foreground"])};
+                        --accent: ${hexToHSL(colors.accent)};
+                        --accent-foreground: ${hexToHSL(colors["accent-foreground"])};
+                        --destructive: ${hexToHSL(colors.destructive)};
+                        --destructive-foreground: ${hexToHSL(colors["destructive-foreground"])};
+                        --border: ${hexToHSL(colors.border)};
+                        --input: ${hexToHSL(colors.input)};
+                        --ring: ${hexToHSL(colors.ring)};
+                        --radius: ${radius}rem;
+                      }
+                      .theme-components-container[data-theme="custom-components"] * {
+                        border-radius: calc(var(--radius) * 1);
+                      }
+                    `,
+                  }}
+                />
               <div
                 className="rounded-lg border bg-background p-8 space-y-8"
                 style={{
-                  "--background": hexToHSL(colors.background),
-                  "--foreground": hexToHSL(colors.foreground),
-                  "--card": hexToHSL(colors.card),
-                  "--card-foreground": hexToHSL(colors["card-foreground"]),
-                  "--popover": hexToHSL(colors.popover),
-                  "--popover-foreground": hexToHSL(colors["popover-foreground"]),
-                  "--primary": hexToHSL(colors.primary),
-                  "--primary-foreground": hexToHSL(colors["primary-foreground"]),
-                  "--secondary": hexToHSL(colors.secondary),
-                  "--secondary-foreground": hexToHSL(colors["secondary-foreground"]),
-                  "--muted": hexToHSL(colors.muted),
-                  "--muted-foreground": hexToHSL(colors["muted-foreground"]),
-                  "--accent": hexToHSL(colors.accent),
-                  "--accent-foreground": hexToHSL(colors["accent-foreground"]),
-                  "--destructive": hexToHSL(colors.destructive),
-                  "--destructive-foreground": hexToHSL(colors["destructive-foreground"]),
-                  "--border": hexToHSL(colors.border),
-                  "--input": hexToHSL(colors.input),
-                  "--ring": hexToHSL(colors.ring),
-                  "--radius": `${radius}rem`,
-                  backgroundColor: `hsl(${hexToHSL(colors.background)})`,
-                  color: `hsl(${hexToHSL(colors.foreground)})`,
-                } as React.CSSProperties}
+                  backgroundColor: `hsl(var(--background))`,
+                  color: `hsl(var(--foreground))`,
+                  borderColor: `hsl(var(--border))`,
+                }}
               >
                 <div className="space-y-6">
                   <div>
@@ -666,6 +693,7 @@ ${Object.entries(colors)
                     </div>
                   </div>
                 </div>
+              </div>
               </div>
             </TabsContent>
 
