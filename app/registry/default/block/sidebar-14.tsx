@@ -13,7 +13,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "../../../../primitives/sidebar"
+} from "@/registry/default/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,13 +21,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
+} from "@/registry/default/ui/breadcrumb"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (
@@ -58,7 +57,7 @@ export default function Page() {
           <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
       </SidebarInset>
-      <AppSidebar side="right" />
+      <AppSidebar14 side="right" />
     </SidebarProvider>
   )
 }
@@ -204,7 +203,9 @@ const data = {
   ],
 }
 
-export function AppSidebar14({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar14({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarContent>

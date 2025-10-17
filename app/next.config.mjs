@@ -2,6 +2,9 @@ import { createMDX } from "fumadocs-mdx/next"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Transpile packages that might have issues with pnpm symlinks
+  transpilePackages: ["chrono-node"],
+
   // Enable static export for GitHub Pages deployment
   output: process.env.GITHUB_ACTIONS ? "export" : undefined,
   
