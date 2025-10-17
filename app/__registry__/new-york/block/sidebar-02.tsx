@@ -1,4 +1,5 @@
-import * as React from "react"
+"use client"
+
 import * as React from "react"
 import {
   Check,
@@ -9,57 +10,48 @@ import {
 } from "lucide-react"
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import { Label } from "../../../../primitives/label"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInput,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarRail,
-} from "../../../../primitives/sidebar"
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/new-york/ui/breadcrumb"
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/registry/new-york/ui/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/registry/new-york/ui/dropdown-menu"
+import { Label } from "@/registry/new-york/ui/label"
+import { Separator } from "@/registry/new-york/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
   SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { SearchForm } from "./search-form"
-import { VersionSwitcher } from "./version-switcher"
+} from "@/registry/new-york/ui/sidebar"
+
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar02 />
       <SidebarInset>
         <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -233,7 +225,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar02({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -284,7 +278,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   )
 }
 
-export function SearchForm({ ...props }: React.ComponentProps<"form">) {
+export function SearchForm02({ ...props }: React.ComponentProps<"form">) {
   return (
     <form {...props}>
       <SidebarGroup className="py-0">
@@ -303,9 +297,8 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     </form>
   )
 }
-;("use client")
 
-export function VersionSwitcher({
+export function VersionSwitcher02({
   versions,
   defaultVersion,
 }: {

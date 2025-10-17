@@ -2,20 +2,27 @@
 
 import * as React from "react"
 import {
-  Download,
-  RotateCcw,
-  Shuffle,
-  Copy,
   Check,
-  Palette,
-  Moon,
-  Sun,
+  Copy,
+  Download,
   Monitor,
+  Moon,
+  Palette,
+  RotateCcw,
   Settings2,
-  Sparkles
+  Shuffle,
+  Sparkles,
+  Sun,
 } from "lucide-react"
-import { HexColorPicker, HexColorInput } from "react-colorful"
+import { HexColorInput, HexColorPicker } from "react-colorful"
 
+import { cn } from "@/lib/utils"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/registry/default/ui/alert"
+import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import {
   Card,
@@ -24,6 +31,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/default/ui/card"
+import { Checkbox } from "@/registry/default/ui/checkbox"
 import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
 import {
@@ -31,18 +39,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/registry/default/ui/popover"
+import { Progress } from "@/registry/default/ui/progress"
+import { RadioGroup, RadioGroupItem } from "@/registry/default/ui/radio-group"
 import { ScrollArea } from "@/registry/default/ui/scroll-area"
-import { Separator } from "@/registry/default/ui/separator"
-import { Slider } from "@/registry/default/ui/slider"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/default/ui/tabs"
-import { Badge } from "@/registry/default/ui/badge"
-import { Switch } from "@/registry/default/ui/switch"
-import { Textarea } from "@/registry/default/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -50,15 +49,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/default/ui/select"
+import { Separator } from "@/registry/default/ui/separator"
+import { Slider } from "@/registry/default/ui/slider"
+import { Switch } from "@/registry/default/ui/switch"
 import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/registry/default/ui/alert"
-import { Checkbox } from "@/registry/default/ui/checkbox"
-import { RadioGroup, RadioGroupItem } from "@/registry/default/ui/radio-group"
-import { Progress } from "@/registry/default/ui/progress"
-import { cn } from "@/lib/utils"
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 const DEFAULT_LIGHT_COLORS = {
   background: "#ffffff",
@@ -110,12 +110,12 @@ const PRESET_THEMES = {
     secondary: "#1e293b",
     accent: "#06b6d4",
   },
-  "Forest": {
+  Forest: {
     primary: "#10b981",
     secondary: "#065f46",
     accent: "#34d399",
   },
-  "Sunset": {
+  Sunset: {
     primary: "#f97316",
     secondary: "#dc2626",
     accent: "#fbbf24",
@@ -125,7 +125,7 @@ const PRESET_THEMES = {
     secondary: "#7c3aed",
     accent: "#a78bfa",
   },
-  "Ocean": {
+  Ocean: {
     primary: "#0ea5e9",
     secondary: "#0284c7",
     accent: "#38bdf8",
@@ -137,10 +137,12 @@ export default function ThemeGeneratorPage() {
   const [radius, setRadius] = React.useState(0.5)
   const [mode, setMode] = React.useState<"light" | "dark">("light")
   const [copied, setCopied] = React.useState(false)
-  const [activeColorKey, setActiveColorKey] = React.useState<string | null>(null)
+  const [activeColorKey, setActiveColorKey] = React.useState<string | null>(
+    null
+  )
 
   const updateColor = (key: string, value: string) => {
-    setColors(prev => ({ ...prev, [key]: value }))
+    setColors((prev) => ({ ...prev, [key]: value }))
   }
 
   const toggleMode = () => {
@@ -213,7 +215,7 @@ ${Object.entries(colors)
   const applyPresetTheme = (presetName: string) => {
     const preset = PRESET_THEMES[presetName as keyof typeof PRESET_THEMES]
     if (preset) {
-      setColors(prev => ({
+      setColors((prev) => ({
         ...prev,
         primary: preset.primary,
         "primary-foreground": mode === "dark" ? "#ffffff" : "#ffffff",
@@ -238,7 +240,7 @@ ${Object.entries(colors)
     const secondary = randomHex()
     const accent = randomHex()
 
-    setColors(prev => ({
+    setColors((prev) => ({
       ...prev,
       primary,
       "primary-foreground": "#ffffff",
@@ -252,11 +254,13 @@ ${Object.entries(colors)
 
   const hslToHex = (h: number, s: number, l: number) => {
     l /= 100
-    const a = s * Math.min(l, 1 - l) / 100
+    const a = (s * Math.min(l, 1 - l)) / 100
     const f = (n: number) => {
       const k = (n + h / 30) % 12
       const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1)
-      return Math.round(255 * color).toString(16).padStart(2, '0')
+      return Math.round(255 * color)
+        .toString(16)
+        .padStart(2, "0")
     }
     return `#${f(0)}${f(8)}${f(4)}`
   }
@@ -304,7 +308,7 @@ ${Object.entries(colors)
             </CardHeader>
             <CardContent className="pt-6">
               <div className="grid grid-cols-2 gap-2">
-                {Object.keys(PRESET_THEMES).map(presetName => (
+                {Object.keys(PRESET_THEMES).map((presetName) => (
                   <Button
                     key={presetName}
                     variant="outline"
@@ -338,7 +342,9 @@ ${Object.entries(colors)
                       </Label>
                       <Popover
                         open={activeColorKey === key}
-                        onOpenChange={(open) => setActiveColorKey(open ? key : null)}
+                        onOpenChange={(open) =>
+                          setActiveColorKey(open ? key : null)
+                        }
                       >
                         <PopoverTrigger asChild>
                           <Button
@@ -354,7 +360,7 @@ ${Object.entries(colors)
                               <span>{value.toUpperCase()}</span>
                             </div>
                             <div className="text-[10px] text-muted-foreground">
-                              HSL: {hexToHSL(value).split(' ').join(', ')}
+                              HSL: {hexToHSL(value).split(" ").join(", ")}
                             </div>
                           </Button>
                         </PopoverTrigger>
@@ -362,12 +368,12 @@ ${Object.entries(colors)
                           <div className="space-y-3">
                             <HexColorPicker
                               color={value}
-                              onChange={v => updateColor(key, v)}
+                              onChange={(v) => updateColor(key, v)}
                               style={{ width: 200, height: 200 }}
                             />
                             <HexColorInput
                               color={value}
-                              onChange={v => updateColor(key, v)}
+                              onChange={(v) => updateColor(key, v)}
                               className="w-full rounded-md border px-3 py-1 text-sm font-mono"
                               prefixed
                             />
@@ -390,7 +396,7 @@ ${Object.entries(colors)
               <div className="space-y-3">
                 <Slider
                   value={[radius]}
-                  onValueChange={v => setRadius(v[0])}
+                  onValueChange={(v) => setRadius(v[0])}
                   min={0}
                   max={1.5}
                   step={0.05}
@@ -417,7 +423,11 @@ ${Object.entries(colors)
               Randomize
             </Button>
             <Button
-              onClick={() => setColors(mode === "light" ? DEFAULT_LIGHT_COLORS : DEFAULT_DARK_COLORS)}
+              onClick={() =>
+                setColors(
+                  mode === "light" ? DEFAULT_LIGHT_COLORS : DEFAULT_DARK_COLORS
+                )
+              }
               variant="outline"
               size="sm"
               className="w-full"
@@ -484,132 +494,163 @@ ${Object.entries(colors)
                     `,
                   }}
                 />
-              <div
-                className="rounded-lg border bg-background p-8 shadow-sm"
-                style={{
-                  backgroundColor: `hsl(var(--background))`,
-                  color: `hsl(var(--foreground))`,
-                  borderColor: `hsl(var(--border))`,
-                }}
-              >
-                <div className="space-y-8">
-                  {/* Hero Section Preview */}
-                  <div className="space-y-4">
-                    <h2 className="text-3xl font-bold">Welcome to Your App</h2>
-                    <p className="text-lg text-muted-foreground">
-                      This is how your theme looks in a real application context
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <Button size="lg">Get Started</Button>
-                      <Button size="lg" variant="secondary">Learn More</Button>
-                      <Button size="lg" variant="outline">Documentation</Button>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  {/* Form Elements */}
-                  <div className="grid gap-6 md:grid-cols-2">
+                <div
+                  className="rounded-lg border bg-background p-8 shadow-sm"
+                  style={{
+                    backgroundColor: `hsl(var(--background))`,
+                    color: `hsl(var(--foreground))`,
+                    borderColor: `hsl(var(--border))`,
+                  }}
+                >
+                  <div className="space-y-8">
+                    {/* Hero Section Preview */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Form Elements</h3>
-                      <div className="space-y-3">
-                        <div className="space-y-1">
-                          <Label htmlFor="email">Email</Label>
-                          <Input id="email" placeholder="name@example.com" type="email" />
+                      <h2 className="text-3xl font-bold">
+                        Welcome to Your App
+                      </h2>
+                      <p className="text-lg text-muted-foreground">
+                        This is how your theme looks in a real application
+                        context
+                      </p>
+                      <div className="flex flex-wrap gap-3">
+                        <Button size="lg">Get Started</Button>
+                        <Button size="lg" variant="secondary">
+                          Learn More
+                        </Button>
+                        <Button size="lg" variant="outline">
+                          Documentation
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Form Elements */}
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Form Elements</h3>
+                        <div className="space-y-3">
+                          <div className="space-y-1">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                              id="email"
+                              placeholder="name@example.com"
+                              type="email"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label htmlFor="message">Message</Label>
+                            <Textarea
+                              id="message"
+                              placeholder="Type your message here..."
+                            />
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox id="terms" />
+                            <Label htmlFor="terms" className="text-sm">
+                              Accept terms and conditions
+                            </Label>
+                          </div>
                         </div>
-                        <div className="space-y-1">
-                          <Label htmlFor="message">Message</Label>
-                          <Textarea id="message" placeholder="Type your message here..." />
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox id="terms" />
-                          <Label htmlFor="terms" className="text-sm">
-                            Accept terms and conditions
-                          </Label>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Selections</h3>
+                        <div className="space-y-3">
+                          <Select>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an option" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="option1">Option 1</SelectItem>
+                              <SelectItem value="option2">Option 2</SelectItem>
+                              <SelectItem value="option3">Option 3</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <RadioGroup defaultValue="option-one">
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem
+                                value="option-one"
+                                id="option-one"
+                              />
+                              <Label htmlFor="option-one">Option One</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <RadioGroupItem
+                                value="option-two"
+                                id="option-two"
+                              />
+                              <Label htmlFor="option-two">Option Two</Label>
+                            </div>
+                          </RadioGroup>
+                          <div className="flex items-center space-x-2">
+                            <Switch id="notifications" />
+                            <Label htmlFor="notifications">
+                              Enable notifications
+                            </Label>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Selections</h3>
-                      <div className="space-y-3">
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select an option" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="option1">Option 1</SelectItem>
-                            <SelectItem value="option2">Option 2</SelectItem>
-                            <SelectItem value="option3">Option 3</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <RadioGroup defaultValue="option-one">
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-one" id="option-one" />
-                            <Label htmlFor="option-one">Option One</Label>
+                    {/* Cards */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Card Title</CardTitle>
+                          <CardDescription>
+                            Card description goes here
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground">
+                            This is how cards appear with your custom theme. The
+                            borders, shadows, and colors all adapt to your
+                            selections.
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Statistics</CardTitle>
+                          <CardDescription>
+                            Your performance metrics
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm">Progress</span>
+                            <span className="text-sm font-medium">75%</span>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="option-two" id="option-two" />
-                            <Label htmlFor="option-two">Option Two</Label>
+                          <Progress value={75} className="h-2" />
+                          <div className="flex gap-2 pt-2">
+                            <Badge>Active</Badge>
+                            <Badge variant="secondary">Updated</Badge>
+                            <Badge variant="outline">New</Badge>
                           </div>
-                        </RadioGroup>
-                        <div className="flex items-center space-x-2">
-                          <Switch id="notifications" />
-                          <Label htmlFor="notifications">Enable notifications</Label>
-                        </div>
-                      </div>
+                        </CardContent>
+                      </Card>
                     </div>
-                  </div>
 
-                  {/* Cards */}
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Card Title</CardTitle>
-                        <CardDescription>Card description goes here</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">
-                          This is how cards appear with your custom theme. The borders,
-                          shadows, and colors all adapt to your selections.
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Statistics</CardTitle>
-                        <CardDescription>Your performance metrics</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Progress</span>
-                          <span className="text-sm font-medium">75%</span>
-                        </div>
-                        <Progress value={75} className="h-2" />
-                        <div className="flex gap-2 pt-2">
-                          <Badge>Active</Badge>
-                          <Badge variant="secondary">Updated</Badge>
-                          <Badge variant="outline">New</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    {/* Alert */}
+                    <Alert>
+                      <AlertTitle>Heads up!</AlertTitle>
+                      <AlertDescription>
+                        You can customize every aspect of your theme using the
+                        controls on the left. Changes are reflected in
+                        real-time.
+                      </AlertDescription>
+                    </Alert>
                   </div>
-
-                  {/* Alert */}
-                  <Alert>
-                    <AlertTitle>Heads up!</AlertTitle>
-                    <AlertDescription>
-                      You can customize every aspect of your theme using the controls on the left.
-                      Changes are reflected in real-time.
-                    </AlertDescription>
-                  </Alert>
                 </div>
-              </div>
               </div>
             </TabsContent>
 
             <TabsContent value="components" className="mt-6">
-              <div className="theme-components-container" data-theme="custom-components">
+              <div
+                className="theme-components-container"
+                data-theme="custom-components"
+              >
                 <style
                   dangerouslySetInnerHTML={{
                     __html: `
@@ -641,59 +682,65 @@ ${Object.entries(colors)
                     `,
                   }}
                 />
-              <div
-                className="rounded-lg border bg-background p-8 space-y-8"
-                style={{
-                  backgroundColor: `hsl(var(--background))`,
-                  color: `hsl(var(--foreground))`,
-                  borderColor: `hsl(var(--border))`,
-                }}
-              >
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Button Variants</h3>
-                    <div className="flex flex-wrap gap-3">
-                      <Button>Primary</Button>
-                      <Button variant="secondary">Secondary</Button>
-                      <Button variant="outline">Outline</Button>
-                      <Button variant="ghost">Ghost</Button>
-                      <Button variant="destructive">Destructive</Button>
-                      <Button variant="link">Link</Button>
-                      <Button size="sm">Small</Button>
-                      <Button size="lg">Large</Button>
-                      <Button disabled>Disabled</Button>
+                <div
+                  className="rounded-lg border bg-background p-8 space-y-8"
+                  style={{
+                    backgroundColor: `hsl(var(--background))`,
+                    color: `hsl(var(--foreground))`,
+                    borderColor: `hsl(var(--border))`,
+                  }}
+                >
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">
+                        Button Variants
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        <Button>Primary</Button>
+                        <Button variant="secondary">Secondary</Button>
+                        <Button variant="outline">Outline</Button>
+                        <Button variant="ghost">Ghost</Button>
+                        <Button variant="destructive">Destructive</Button>
+                        <Button variant="link">Link</Button>
+                        <Button size="sm">Small</Button>
+                        <Button size="lg">Large</Button>
+                        <Button disabled>Disabled</Button>
+                      </div>
                     </div>
-                  </div>
 
-                  <Separator />
+                    <Separator />
 
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Badge Variants</h3>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge>Default</Badge>
-                      <Badge variant="secondary">Secondary</Badge>
-                      <Badge variant="outline">Outline</Badge>
-                      <Badge variant="destructive">Destructive</Badge>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">
+                        Badge Variants
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge>Default</Badge>
+                        <Badge variant="secondary">Secondary</Badge>
+                        <Badge variant="outline">Outline</Badge>
+                        <Badge variant="destructive">Destructive</Badge>
+                      </div>
                     </div>
-                  </div>
 
-                  <Separator />
+                    <Separator />
 
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Typography</h3>
-                    <div className="space-y-2">
-                      <h1 className="text-4xl font-bold">Heading 1</h1>
-                      <h2 className="text-3xl font-bold">Heading 2</h2>
-                      <h3 className="text-2xl font-bold">Heading 3</h3>
-                      <h4 className="text-xl font-bold">Heading 4</h4>
-                      <p className="text-lg">Large paragraph text</p>
-                      <p>Regular paragraph text</p>
-                      <p className="text-sm text-muted-foreground">Muted text</p>
-                      <p className="text-xs">Small text</p>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-4">Typography</h3>
+                      <div className="space-y-2">
+                        <h1 className="text-4xl font-bold">Heading 1</h1>
+                        <h2 className="text-3xl font-bold">Heading 2</h2>
+                        <h3 className="text-2xl font-bold">Heading 3</h3>
+                        <h4 className="text-xl font-bold">Heading 4</h4>
+                        <p className="text-lg">Large paragraph text</p>
+                        <p>Regular paragraph text</p>
+                        <p className="text-sm text-muted-foreground">
+                          Muted text
+                        </p>
+                        <p className="text-xs">Small text</p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </TabsContent>
 
@@ -724,11 +771,18 @@ ${Object.entries(colors)
                     </Button>
                   </div>
                   <div className="mt-4 rounded-lg bg-muted/50 p-4">
-                    <p className="text-sm font-medium mb-2">Usage Instructions:</p>
+                    <p className="text-sm font-medium mb-2">
+                      Usage Instructions:
+                    </p>
                     <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
                       <li>Copy the CSS variables above</li>
-                      <li>Open your project's global CSS file (usually globals.css or app.css)</li>
-                      <li>Replace the existing :root variables with your new theme</li>
+                      <li>
+                        Open your project's global CSS file (usually globals.css
+                        or app.css)
+                      </li>
+                      <li>
+                        Replace the existing :root variables with your new theme
+                      </li>
                       <li>Save the file and refresh your application</li>
                     </ol>
                   </div>

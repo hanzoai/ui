@@ -5,7 +5,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/default/ui/collapsible"
 import {
   Sidebar,
   SidebarContent,
@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarRail,
-} from "../../../../primitives/sidebar"
+} from "@/registry/default/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,19 +26,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/default/ui/breadcrumb"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar11 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -116,7 +115,9 @@ const data = {
   ],
 }
 
-export function AppSidebar11({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar11({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarContent>

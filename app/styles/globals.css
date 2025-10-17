@@ -138,6 +138,14 @@
   button:active {
     @apply opacity-60 md:opacity-100;
   }
+
+  .container {
+    @apply mx-auto w-full px-4 md:px-6 lg:px-8;
+  }
+
+  .container-wrapper {
+    @apply w-full;
+  }
 }
 
 @utility no-scrollbar {

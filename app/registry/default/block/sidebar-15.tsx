@@ -1,8 +1,4 @@
 import * as React from "react"
-import React from "react"
-import * as React from "react"
-import * as React from "react"
-import * as React from "react"
 import {
   ArrowUpRight,
   AudioWaveform,
@@ -13,7 +9,6 @@ import {
   Check,
   ChevronDown,
   ChevronRight,
-  ChevronRight,
   ChevronsUpDown,
   Command,
   CreditCard,
@@ -23,18 +18,12 @@ import {
   LogOut,
   MessageCircleQuestion,
   MoreHorizontal,
-  MoreHorizontal,
-  Plus,
-  Plus,
   Plus,
   Search,
   Settings2,
   Sparkles,
-  Sparkles,
   StarOff,
   Trash2,
-  Trash2,
-  type LucideIcon,
   type LucideIcon,
 } from "lucide-react"
 
@@ -42,116 +31,55 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
-import { Calendar } from "../../../../primitives/calendar"
+} from "@/registry/default/ui/avatar"
+import { Calendar } from "@/registry/default/ui/calendar"
 import {
   Collapsible,
-  Collapsible,
-  CollapsibleContent,
   CollapsibleContent,
   CollapsibleTrigger,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/default/ui/collapsible"
 import {
   DropdownMenu,
-  DropdownMenu,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuContent,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuItem,
-  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSeparator,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-  DropdownMenuTrigger,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/default/ui/dropdown-menu"
 import {
   Sidebar,
-  Sidebar,
-  SidebarContent,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarGroupLabel,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarHeader,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuAction,
   SidebarMenuBadge,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-  SidebarRail,
-  SidebarSeparator,
   SidebarSeparator,
   useSidebar,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/default/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/default/ui/breadcrumb"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { Calendars } from "./calendars"
-import { SidebarLeft } from "./components/sidebar-left"
-import { SidebarRight } from "./components/sidebar-right"
-import { DatePicker } from "./date-picker"
-import { NavFavorites } from "./nav-favorites"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import { NavWorkspaces } from "./nav-workspaces"
-import { TeamSwitcher } from "./team-switcher"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (
@@ -246,7 +174,6 @@ export function DatePicker() {
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavFavorites({
   favorites,
@@ -315,7 +242,6 @@ export function NavFavorites({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavMain({
   items,
@@ -374,7 +300,6 @@ export function NavSecondary({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavUser({
   user,
@@ -524,7 +449,6 @@ export function NavWorkspaces({
     </SidebarGroup>
   )
 }
-;("use client")
 
 // This is sample data.
 const data = {
@@ -763,7 +687,7 @@ export function SidebarLeft({
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher15 teams={data.teams} />
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
@@ -776,8 +700,8 @@ export function SidebarLeft({
   )
 }
 
-// This is sample data.
-const data = {
+// This is sample data for the right sidebar.
+const rightSidebarData = {
   user: {
     name: "shadcn",
     email: "m@example.com",
@@ -809,12 +733,12 @@ export function SidebarRight({
       {...props}
     >
       <SidebarHeader className="h-16 border-b border-sidebar-border">
-        <NavUser user={data.user} />
+        <NavUser user={rightSidebarData.user} />
       </SidebarHeader>
       <SidebarContent>
         <DatePicker />
         <SidebarSeparator className="mx-0" />
-        <Calendars calendars={data.calendars} />
+        <Calendars calendars={rightSidebarData.calendars} />
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
@@ -829,7 +753,6 @@ export function SidebarRight({
     </Sidebar>
   )
 }
-;("use client")
 
 export function TeamSwitcher15({
   teams,

@@ -5,20 +5,20 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-import { Button } from "../../../../primitives/button"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../../../../primitives/card"
+} from "@/registry/new-york/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/new-york/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
@@ -27,14 +27,11 @@ import {
   SidebarHeader,
   SidebarInput,
   SidebarMenu,
-  SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarRail,
   useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/new-york/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -42,21 +39,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { NavMain } from "./nav-main"
-import { SidebarOptInForm } from "./sidebar-opt-in-form"
+} from "@/registry/new-york/ui/sidebar"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar06 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -219,7 +213,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar06({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -240,20 +236,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain06 items={data.navMain} />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-1">
-          <SidebarOptInForm />
+          <SidebarOptInForm06 />
         </div>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )
 }
-;("use client")
 
-export function NavMain({
+export function NavMain06({
   items,
 }: {
   items: {
@@ -301,7 +296,7 @@ export function NavMain({
   )
 }
 
-export function SidebarOptInForm() {
+export function SidebarOptInForm06() {
   return (
     <Card className="shadow-none">
       <form>

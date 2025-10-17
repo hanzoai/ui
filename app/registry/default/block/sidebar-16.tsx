@@ -1,5 +1,4 @@
 import * as React from "react"
-import * as React from "react"
 import {
   BadgeCheck,
   Bell,
@@ -25,15 +24,13 @@ import {
   SquareTerminal,
   Trash2,
   type LucideIcon,
-  type LucideIcon,
-  type LucideIcon,
 } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
+} from "@/registry/default/ui/avatar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -41,73 +38,43 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../../primitives/breadcrumb"
-import { Button } from "../../../../primitives/button"
+} from "@/registry/default/ui/breadcrumb"
+import { Button } from "@/registry/default/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/default/ui/collapsible"
 import {
   DropdownMenu,
-  DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import { Label } from "../../../../primitives/label"
-import { Separator } from "../../../../primitives/separator"
+} from "@/registry/default/ui/dropdown-menu"
+import { Label } from "@/registry/default/ui/label"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuAction,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-  useSidebar,
-  useSidebar,
-} from "../../../../primitives/sidebar"
-import { SidebarInset, SidebarProvider } from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { SiteHeader } from "./components/site-header"
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
-import { SearchForm } from "./search-form"
+} from "@/registry/default/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/registry/default/ui/sidebar"
 
 export const iframeHeight = "800px"
 
@@ -119,7 +86,7 @@ export default function Page() {
       <SidebarProvider className="flex flex-col">
         <SiteHeader />
         <div className="flex flex-1">
-          <AppSidebar />
+          <AppSidebar16 />
           <SidebarInset>
             <div className="flex flex-1 flex-col gap-4 p-4">
               <div className="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -135,7 +102,6 @@ export default function Page() {
     </div>
   )
 }
-;("use client")
 
 const data = {
   user: {
@@ -261,7 +227,9 @@ const data = {
   ],
 }
 
-export function AppSidebar16({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar16({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       className="top-[--header-height] !h-[calc(100svh-var(--header-height))]"
@@ -295,7 +263,6 @@ export function AppSidebar16({ ...props }: React.ComponentProps<typeof Sidebar>)
     </Sidebar>
   )
 }
-;("use client")
 
 export function NavMain({
   items,
@@ -354,7 +321,6 @@ export function NavMain({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavProjects({
   projects,
@@ -448,7 +414,6 @@ export function NavSecondary({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavUser({
   user,
@@ -550,7 +515,6 @@ export function SearchForm16({ ...props }: React.ComponentProps<"form">) {
     </form>
   )
 }
-;("use client")
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar()
@@ -580,7 +544,7 @@ export function SiteHeader() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <SearchForm className="w-full sm:ml-auto sm:w-auto" />
+        <SearchForm16 className="w-full sm:ml-auto sm:w-auto" />
       </div>
     </header>
   )
