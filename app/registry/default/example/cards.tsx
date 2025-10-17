@@ -18,7 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avata
 
 export default function Component() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-4 md:px-6 lg:px-8">
       {/* Stats Cards Row */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
