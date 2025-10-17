@@ -3,9 +3,7 @@
 import {Button} from "@/registry/default/ui/button"
 
             export default function Component() {
-              return (<Card
-                className="sm:col-span-2" x-chunk="dashboard-05-chunk-0"
-              >
+              return (<Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
                 <CardHeader className="pb-3">
                   <CardTitle>Your Orders</CardTitle>
                   <CardDescription className="max-w-lg text-balance leading-relaxed">

@@ -2,9 +2,11 @@
 
 import * as React from "react"
 import { ZoomIn } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
-export interface ImageZoomProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageZoomProps
+  extends React.ImgHTMLAttributes<HTMLImageElement> {
   zoomScale?: number
 }
 
@@ -24,7 +26,10 @@ const ImageZoom = React.forwardRef<HTMLDivElement, ImageZoomProps>(
     return (
       <div
         ref={ref}
-        className={cn("group relative cursor-zoom-in overflow-hidden rounded-lg", className)}
+        className={cn(
+          "group relative cursor-zoom-in overflow-hidden rounded-lg",
+          className
+        )}
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
         onMouseMove={handleMouseMove}

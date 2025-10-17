@@ -1,9 +1,11 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
-export interface MinimalTiptapProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface MinimalTiptapProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value?: string
   onChange?: (value: string) => void
 }

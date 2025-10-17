@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface TickerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -11,7 +12,17 @@ export interface TickerProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Ticker = React.forwardRef<HTMLDivElement, TickerProps>(
-  ({ className, children, speed = 50, direction = "left", pauseOnHover = true, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      speed = 50,
+      direction = "left",
+      pauseOnHover = true,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         ref={ref}

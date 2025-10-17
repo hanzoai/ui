@@ -54,8 +54,9 @@ npm install framer-motion
 ## Usage
 
 ```tsx
+import { Calendar, Home, Mail, Search } from "lucide-react"
+
 import { Dock, DockItem } from "@/registry/default/ui/macos-dock"
-import { Home, Search, Mail, Calendar } from "lucide-react"
 
 export function MacOSDockDemo() {
   return (
@@ -97,23 +98,23 @@ export function MacOSDockDemo() {
 
 The main container component for the macOS dock.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `magnification` | `number` | `60` | Maximum magnification amount in pixels |
-| `distance` | `number` | `140` | Distance from cursor where magnification starts |
-| `className` | `string` | - | Additional CSS classes |
-| `children` | `ReactNode` | - | Dock items to render |
+| Prop            | Type        | Default | Description                                     |
+| --------------- | ----------- | ------- | ----------------------------------------------- |
+| `magnification` | `number`    | `60`    | Maximum magnification amount in pixels          |
+| `distance`      | `number`    | `140`   | Distance from cursor where magnification starts |
+| `className`     | `string`    | -       | Additional CSS classes                          |
+| `children`      | `ReactNode` | -       | Dock items to render                            |
 
 ### DockItem
 
 Individual dock item component.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tooltip` | `string` | - | Tooltip text to show on hover |
-| `onClick` | `() => void` | - | Click handler |
-| `className` | `string` | - | Additional CSS classes |
-| `children` | `ReactNode` | - | Icon or content to render |
+| Prop        | Type         | Default | Description                   |
+| ----------- | ------------ | ------- | ----------------------------- |
+| `tooltip`   | `string`     | -       | Tooltip text to show on hover |
+| `onClick`   | `() => void` | -       | Click handler                 |
+| `className` | `string`     | -       | Additional CSS classes        |
+| `children`  | `ReactNode`  | -       | Icon or content to render     |
 
 ## Features
 
@@ -127,12 +128,14 @@ Individual dock item component.
 ## Styling
 
 The macOS dock component uses Tailwind CSS with:
+
 - Authentic glass morphism effect
 - Smooth spring-based animations
 - macOS-style tooltips
 - Gradient overlays for depth
 
 Customize by:
+
 - Passing custom `className` props
 - Adjusting magnification parameters
 - Using CSS variables for theming
@@ -140,6 +143,7 @@ Customize by:
 ## Accessibility
 
 The dock component includes:
+
 - Focus indicators for keyboard navigation
 - ARIA labels through tooltips
 - Keyboard event handlers

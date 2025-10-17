@@ -1,3 +1,10 @@
+import { GalleryVerticalEnd } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
+import { Input } from "@/registry/new-york/ui/input"
+import { Label } from "@/registry/new-york/ui/label"
+
 import { LoginForm } from "./components/login-form"
 
 export default function LoginPage() {
@@ -9,12 +16,6 @@ export default function LoginPage() {
     </div>
   )
 }
-import { GalleryVerticalEnd } from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
-import { Input } from "@/registry/new-york/ui/input"
-import { Label } from "@/registry/new-york/ui/label"
 
 export function LoginForm({
   className,
@@ -25,7 +26,7 @@ export function LoginForm({
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

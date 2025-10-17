@@ -1,4 +1,21 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import { GalleryVerticalEnd } from "lucide-react"
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/registry/default/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,13 +23,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "../../../primitives/sidebar"
+} from "@/registry/default/ui/breadcrumb"
+import { Separator } from "@/registry/default/ui/separator"
+import { AppSidebar } from "./components/app-sidebar"
 
 export default function Page() {
   return (
@@ -54,21 +67,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
-
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "../../../../primitives/sidebar"
 
 // This is sample data.
 const data = {

@@ -19,8 +19,9 @@ component: true
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
 import { Check, Circle, Clock } from "lucide-react"
+
+import { cn } from "@/lib/utils"
 
 // Component code here...
 ```
@@ -40,22 +41,22 @@ const items: TimelineItem[] = [
     title: "Project Started",
     description: "Initial planning and setup",
     date: "Jan 1, 2024",
-    status: "completed"
+    status: "completed",
   },
   {
     id: "2",
     title: "Development Phase",
     description: "Building core features",
     date: "Feb 15, 2024",
-    status: "active"
+    status: "active",
   },
   {
     id: "3",
     title: "Testing",
     description: "Quality assurance and bug fixes",
     date: "Mar 1, 2024",
-    status: "pending"
-  }
+    status: "pending",
+  },
 ]
 
 export default function TimelineDemo() {
@@ -128,7 +129,7 @@ export default function TimelineDemo() {
 />
 
 ```tsx
-import { Rocket, Code, Trophy, Star } from "lucide-react"
+import { Code, Rocket, Star, Trophy } from "lucide-react"
 
 const items: TimelineItem[] = [
   {
@@ -137,7 +138,7 @@ const items: TimelineItem[] = [
     description: "Product launch",
     date: "Jan 1, 2024",
     icon: <Rocket className="h-4 w-4" />,
-    status: "completed"
+    status: "completed",
   },
   {
     id: "2",
@@ -145,7 +146,7 @@ const items: TimelineItem[] = [
     description: "Feature development",
     date: "Feb 1, 2024",
     icon: <Code className="h-4 w-4" />,
-    status: "active"
+    status: "active",
   },
   {
     id: "3",
@@ -153,8 +154,8 @@ const items: TimelineItem[] = [
     description: "Milestone reached",
     date: "Mar 1, 2024",
     icon: <Trophy className="h-4 w-4" />,
-    status: "pending"
-  }
+    status: "pending",
+  },
 ]
 
 export default function TimelineWithIcons() {
@@ -183,7 +184,7 @@ const items: TimelineItem[] = [
         <Badge>TypeScript</Badge>
         <Badge>Tailwind</Badge>
       </div>
-    )
+    ),
   },
   {
     id: "2",
@@ -191,10 +192,8 @@ const items: TimelineItem[] = [
     description: "Major update with new features",
     date: "Feb 15, 2024",
     status: "active",
-    content: (
-      <Progress value={75} className="mt-2" />
-    )
-  }
+    content: <Progress value={75} className="mt-2" />,
+  },
 ]
 ```
 
@@ -213,26 +212,26 @@ const items: TimelineItem[] = [
 
 ### Timeline
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| items | `TimelineItem[]` | - | Array of timeline items to display |
-| orientation | `"vertical" \| "horizontal"` | `"vertical"` | Layout orientation |
-| variant | `"default" \| "alternate" \| "compact" \| "simple"` | `"default"` | Visual style variant |
-| animated | `boolean` | `true` | Enable scroll animations |
-| className | `string` | - | Additional CSS classes |
+| Prop        | Type                                                | Default      | Description                        |
+| ----------- | --------------------------------------------------- | ------------ | ---------------------------------- |
+| items       | `TimelineItem[]`                                    | -            | Array of timeline items to display |
+| orientation | `"vertical" \| "horizontal"`                        | `"vertical"` | Layout orientation                 |
+| variant     | `"default" \| "alternate" \| "compact" \| "simple"` | `"default"`  | Visual style variant               |
+| animated    | `boolean`                                           | `true`       | Enable scroll animations           |
+| className   | `string`                                            | -            | Additional CSS classes             |
 
 ### TimelineItem
 
-| Property | Type | Description |
-|----------|------|-------------|
-| id | `string` | Unique identifier for the item |
-| title | `string` | Title of the timeline item |
-| description | `string?` | Optional description text |
-| date | `string?` | Optional date string |
-| time | `string?` | Optional time string |
-| status | `"completed" \| "active" \| "pending"?` | Optional status indicator |
-| icon | `React.ReactNode?` | Optional custom icon |
-| content | `React.ReactNode?` | Optional custom content |
+| Property    | Type                                    | Description                    |
+| ----------- | --------------------------------------- | ------------------------------ |
+| id          | `string`                                | Unique identifier for the item |
+| title       | `string`                                | Title of the timeline item     |
+| description | `string?`                               | Optional description text      |
+| date        | `string?`                               | Optional date string           |
+| time        | `string?`                               | Optional time string           |
+| status      | `"completed" \| "active" \| "pending"?` | Optional status indicator      |
+| icon        | `React.ReactNode?`                      | Optional custom icon           |
+| content     | `React.ReactNode?`                      | Optional custom content        |
 
 ## Features
 
@@ -262,16 +261,16 @@ const items: TimelineItem[] = [
 You can customize status colors by modifying the `getStatusColor` function:
 
 ```tsx
-const getStatusColor = (status?: TimelineItem['status']) => {
+const getStatusColor = (status?: TimelineItem["status"]) => {
   switch (status) {
-    case 'completed':
-      return 'bg-green-500 text-white'
-    case 'active':
-      return 'bg-blue-500 text-white'
-    case 'pending':
-      return 'bg-gray-300 dark:bg-gray-600'
+    case "completed":
+      return "bg-green-500 text-white"
+    case "active":
+      return "bg-blue-500 text-white"
+    case "pending":
+      return "bg-gray-300 dark:bg-gray-600"
     default:
-      return 'bg-primary text-primary-foreground'
+      return "bg-primary text-primary-foreground"
   }
 }
 ```

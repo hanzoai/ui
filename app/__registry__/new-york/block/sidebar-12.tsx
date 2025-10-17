@@ -1,4 +1,61 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import * as React from "react"
+import {
+  BadgeCheck,
+  Bell,
+  Check,
+  ChevronRight,
+  ChevronsUpDown,
+  CreditCard,
+  LogOut,
+  Plus,
+  Sparkles,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../../primitives/avatar"
+import { Calendar } from "../../../../primitives/calendar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../../primitives/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarSeparator,
+  useSidebar,
+} from "../../../../primitives/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,6 +68,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { Calendars } from "./calendars"
+import { AppSidebar } from "./components/app-sidebar"
+import { DatePicker } from "./date-picker"
+import { NavUser } from "./nav-user"
 
 export default function Page() {
   return (
@@ -39,23 +100,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-import * as React from "react"
-import { Plus } from "lucide-react"
-
-import { Calendars } from "./calendars"
-import { DatePicker } from "./date-picker"
-import { NavUser } from "./nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-  SidebarSeparator,
-} from "../../../../primitives/sidebar"
 
 // This is sample data.
 const data = {
@@ -105,23 +149,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-import * as React from "react"
-import { Check, ChevronRight } from "lucide-react"
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarSeparator,
-} from "../../../../primitives/sidebar"
 
 export function Calendars({
   calendars,
@@ -176,11 +203,6 @@ export function Calendars({
     </>
   )
 }
-import { Calendar } from "../../../../primitives/calendar"
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-} from "../../../../primitives/sidebar"
 
 export function DatePicker() {
   return (
@@ -191,37 +213,7 @@ export function DatePicker() {
     </SidebarGroup>
   )
 }
-"use client"
-
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../../primitives/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavUser({
   user,

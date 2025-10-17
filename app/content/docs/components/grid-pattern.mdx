@@ -47,12 +47,7 @@ import { GridPattern } from "@/registry/default/ui/grid-pattern"
 export default function GridPatternDemo() {
   return (
     <div className="relative h-96 w-full">
-      <GridPattern
-        variant="dots"
-        size={4}
-        gap={20}
-        opacity={0.4}
-      />
+      <GridPattern variant="dots" size={4} gap={20} opacity={0.4} />
       <div className="relative z-10 flex h-full items-center justify-center">
         <h1 className="text-4xl font-bold">Content over grid</h1>
       </div>
@@ -168,10 +163,7 @@ Create animated grid patterns:
 Control horizontal and vertical spacing independently:
 
 ```tsx
-<GridPattern
-  gap={{ x: 40, y: 20 }}
-  size={{ width: 10, height: 5 }}
-/>
+<GridPattern gap={{ x: 40, y: 20 }} size={{ width: 10, height: 5 }} />
 ```
 
 ### Presets
@@ -258,28 +250,13 @@ export function MultiLayerGrid() {
   return (
     <div className="relative h-96">
       {/* Base layer - large grid */}
-      <GridPattern
-        variant="lines"
-        gap={80}
-        strokeWidth={1}
-        opacity={0.1}
-      />
+      <GridPattern variant="lines" gap={80} strokeWidth={1} opacity={0.1} />
 
       {/* Middle layer - medium grid */}
-      <GridPattern
-        variant="lines"
-        gap={40}
-        strokeWidth={0.5}
-        opacity={0.05}
-      />
+      <GridPattern variant="lines" gap={40} strokeWidth={0.5} opacity={0.05} />
 
       {/* Top layer - fine dots */}
-      <GridPattern
-        variant="dots"
-        size={1}
-        gap={10}
-        opacity={0.02}
-      />
+      <GridPattern variant="dots" size={1} gap={10} opacity={0.02} />
 
       <div className="relative z-10 flex h-full items-center justify-center">
         <span className="text-2xl font-semibold">Multi-layer depth</span>
@@ -293,36 +270,36 @@ export function MultiLayerGrid() {
 
 ### Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| variant | `"dots" \| "lines" \| "crosses" \| "plus" \| "squares"` | `"dots"` | Grid pattern style |
-| size | `number \| { width?: number; height?: number }` | `4` | Size of grid elements |
-| gap | `number \| { x?: number; y?: number }` | `20` | Spacing between elements |
-| color | `string` | `"currentColor"` | Color of grid elements |
-| opacity | `number` | `0.4` | Opacity of grid elements |
-| strokeWidth | `number` | `1` | Stroke width for line patterns |
-| fade | `boolean \| "edges" \| "center" \| "radial"` | `false` | Fade effect type |
-| gradient | `object` | - | Gradient overlay configuration |
-| animation | `object` | - | Animation configuration |
-| offset | `{ x?: number; y?: number }` | - | Position offset |
-| maxArea | `{ width?: number; height?: number }` | - | Maximum render area |
+| Prop        | Type                                                    | Default          | Description                    |
+| ----------- | ------------------------------------------------------- | ---------------- | ------------------------------ |
+| variant     | `"dots" \| "lines" \| "crosses" \| "plus" \| "squares"` | `"dots"`         | Grid pattern style             |
+| size        | `number \| { width?: number; height?: number }`         | `4`              | Size of grid elements          |
+| gap         | `number \| { x?: number; y?: number }`                  | `20`             | Spacing between elements       |
+| color       | `string`                                                | `"currentColor"` | Color of grid elements         |
+| opacity     | `number`                                                | `0.4`            | Opacity of grid elements       |
+| strokeWidth | `number`                                                | `1`              | Stroke width for line patterns |
+| fade        | `boolean \| "edges" \| "center" \| "radial"`            | `false`          | Fade effect type               |
+| gradient    | `object`                                                | -                | Gradient overlay configuration |
+| animation   | `object`                                                | -                | Animation configuration        |
+| offset      | `{ x?: number; y?: number }`                            | -                | Position offset                |
+| maxArea     | `{ width?: number; height?: number }`                   | -                | Maximum render area            |
 
 ### Gradient Configuration
 
-| Property | Type | Description |
-| --- | --- | --- |
-| from | `string` | Start color |
-| via | `string` | Middle color (optional) |
-| to | `string` | End color |
-| opacity | `number` | Gradient opacity |
+| Property | Type     | Description             |
+| -------- | -------- | ----------------------- |
+| from     | `string` | Start color             |
+| via      | `string` | Middle color (optional) |
+| to       | `string` | End color               |
+| opacity  | `number` | Gradient opacity        |
 
 ### Animation Configuration
 
-| Property | Type | Description |
-| --- | --- | --- |
-| duration | `number` | Animation duration in seconds |
-| direction | `"normal" \| "reverse" \| "alternate"` | Animation direction |
-| timing | `"linear" \| "ease" \| "ease-in" \| "ease-out" \| "ease-in-out"` | Timing function |
+| Property  | Type                                                             | Description                   |
+| --------- | ---------------------------------------------------------------- | ----------------------------- |
+| duration  | `number`                                                         | Animation duration in seconds |
+| direction | `"normal" \| "reverse" \| "alternate"`                           | Animation direction           |
+| timing    | `"linear" \| "ease" \| "ease-in" \| "ease-out" \| "ease-in-out"` | Timing function               |
 
 ## Accessibility
 

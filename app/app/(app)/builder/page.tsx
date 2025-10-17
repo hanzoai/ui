@@ -1,12 +1,23 @@
 "use client"
 
 import * as React from "react"
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCenter } from "@dnd-kit/core"
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { GripVertical, Plus, Trash2, Download, Eye } from "lucide-react"
-
 import { Index } from "@/__registry__"
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { Download, Eye, GripVertical, Plus, Trash2 } from "lucide-react"
+
 import { Button } from "@/registry/new-york/ui/button"
 import { Card } from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
@@ -27,7 +38,7 @@ export default function PageBuilder() {
 
   React.useEffect(() => {
     // Get block IDs from the registry index
-    const blockIds = Object.keys(Index.default || {}).filter(key => {
+    const blockIds = Object.keys(Index.default || {}).filter((key) => {
       const item = Index.default[key]
       return item?.type === "components:block"
     })
@@ -206,8 +217,14 @@ function SortableBlock({
   blockName: string
   onRemove: () => void
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id })
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -216,11 +233,7 @@ function SortableBlock({
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="group relative"
-    >
+    <div ref={setNodeRef} style={style} className="group relative">
       <div className="absolute -left-8 top-4 z-10 flex items-center gap-2">
         <button
           {...attributes}

@@ -7,9 +7,7 @@ import {Badge} from "@/registry/default/ui/badge"
 import {ArrowUpRight} from "lucide-react"
 
             export default function Component() {
-              return (<Card
-            className="xl:col-span-2" x-chunk="dashboard-01-chunk-4"
-          >
+              return (<Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
               <div className="grid gap-2">
                 <CardTitle>Transactions</CardTitle>

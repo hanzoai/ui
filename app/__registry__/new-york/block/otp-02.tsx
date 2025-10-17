@@ -1,3 +1,18 @@
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/registry/new-york/ui/field"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/registry/new-york/ui/input-otp"
+
 import { OTPForm } from "./components/otp-form"
 
 export default function OTPPage() {
@@ -20,20 +35,6 @@ export default function OTPPage() {
     </div>
   )
 }
-import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/registry/new-york/ui/field"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp"
 
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,7 +42,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

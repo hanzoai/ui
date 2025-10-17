@@ -76,18 +76,18 @@ export function App() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `className` | `string` | `undefined` | Additional CSS classes |
-| `particleCount` | `number` | `50` | Number of particles to render |
-| `particleColor` | `string` | `"rgba(255, 255, 255, 0.6)"` | Color of the particles |
-| `lineColor` | `string` | `"rgba(255, 255, 255, 0.2)"` | Color of connection lines |
-| `particleSize` | `number` | `2` | Maximum size of particles |
-| `speed` | `number` | `0.5` | Movement speed of particles |
-| `connectionDistance` | `number` | `100` | Distance threshold for drawing connections |
-| `opacity` | `number` | `1` | Overall opacity of the effect |
-| `enableMouseInteraction` | `boolean` | `true` | Enable mouse repulsion effect |
-| `mouseRadius` | `number` | `150` | Radius of mouse interaction |
+| Prop                     | Type      | Default                      | Description                                |
+| ------------------------ | --------- | ---------------------------- | ------------------------------------------ |
+| `className`              | `string`  | `undefined`                  | Additional CSS classes                     |
+| `particleCount`          | `number`  | `50`                         | Number of particles to render              |
+| `particleColor`          | `string`  | `"rgba(255, 255, 255, 0.6)"` | Color of the particles                     |
+| `lineColor`              | `string`  | `"rgba(255, 255, 255, 0.2)"` | Color of connection lines                  |
+| `particleSize`           | `number`  | `2`                          | Maximum size of particles                  |
+| `speed`                  | `number`  | `0.5`                        | Movement speed of particles                |
+| `connectionDistance`     | `number`  | `100`                        | Distance threshold for drawing connections |
+| `opacity`                | `number`  | `1`                          | Overall opacity of the effect              |
+| `enableMouseInteraction` | `boolean` | `true`                       | Enable mouse repulsion effect              |
+| `mouseRadius`            | `number`  | `150`                        | Radius of mouse interaction                |
 
 ## Features
 
@@ -151,9 +151,7 @@ export function Dashboard() {
         speed={0.3}
         enableMouseInteraction={false}
       />
-      <div className="relative z-10 p-6">
-        {/* Dashboard content */}
-      </div>
+      <div className="relative z-10 p-6">{/* Dashboard content */}</div>
     </div>
   )
 }

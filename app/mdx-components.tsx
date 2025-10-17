@@ -1,7 +1,7 @@
 import * as React from "react"
-import type { MDXComponents } from "mdx/types"
 import Image from "next/image"
 import Link from "next/link"
+import type { MDXComponents } from "mdx/types"
 
 import { cn } from "@/lib/utils"
 import { Callout } from "@/components/callout"
@@ -25,13 +25,13 @@ import {
   AlertTitle,
 } from "@/registry/new-york/ui/alert"
 import { AspectRatio } from "@/registry/new-york/ui/aspect-ratio"
+import { Kbd } from "@/registry/new-york/ui/kbd"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs"
-import { Kbd } from "@/registry/new-york/ui/kbd"
 
 export const mdxComponents: MDXComponents = {
   Accordion,
@@ -164,10 +164,7 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  pre: ({
-    className,
-    ...props
-  }: React.HTMLAttributes<HTMLPreElement>) => {
+  pre: ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => {
     return (
       <pre
         className={cn(

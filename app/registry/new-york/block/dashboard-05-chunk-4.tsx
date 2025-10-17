@@ -7,9 +7,7 @@ import {Copy,Truck,MoreVertical,CreditCard,ChevronLeft,ChevronRight} from "lucid
 import {Separator} from "@/registry/new-york/ui/separator"
 
             export default function Component() {
-              return (<Card
-              className="overflow-hidden" x-chunk="dashboard-05-chunk-4"
-            >
+              return (<Card className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">

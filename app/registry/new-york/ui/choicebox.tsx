@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Check } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 
 export interface ChoiceboxOption {
@@ -10,7 +11,8 @@ export interface ChoiceboxOption {
   description?: string
 }
 
-export interface ChoiceboxProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface ChoiceboxProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   options: ChoiceboxOption[]
   value?: string
   onChange?: (value: string) => void
@@ -18,7 +20,10 @@ export interface ChoiceboxProps extends Omit<React.HTMLAttributes<HTMLDivElement
 }
 
 const Choicebox = React.forwardRef<HTMLDivElement, ChoiceboxProps>(
-  ({ className, options, value, onChange, multiple = false, ...props }, ref) => {
+  (
+    { className, options, value, onChange, multiple = false, ...props },
+    ref
+  ) => {
     const [selected, setSelected] = React.useState<string[]>(
       value ? [value] : []
     )
@@ -51,12 +56,14 @@ const Choicebox = React.forwardRef<HTMLDivElement, ChoiceboxProps>(
             )}
           >
             <div className="flex items-start gap-3">
-              <div className={cn(
-                "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
-                selected.includes(option.value)
-                  ? "border-primary bg-primary"
-                  : "border-input"
-              )}>
+              <div
+                className={cn(
+                  "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
+                  selected.includes(option.value)
+                    ? "border-primary bg-primary"
+                    : "border-input"
+                )}
+              >
                 {selected.includes(option.value) && (
                   <Check className="h-3 w-3 text-primary-foreground" />
                 )}

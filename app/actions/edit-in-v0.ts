@@ -1,4 +1,4 @@
-// Removed "use server" for static export compatibility  
+// Removed "use server" for static export compatibility
 // This functionality is disabled for static export
 export async function editInV0({
   name,
@@ -16,6 +16,6 @@ export async function editInV0({
   return {
     error: "Edit in v0 is not available in static export mode",
     url: null,
-    hasV0Config: false
+    hasV0Config: false,
   }
 }
