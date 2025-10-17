@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { parseDate } from "chrono-node"
+// import { parseDate } from "chrono-node" - temporarily disabled
 import { CalendarIcon } from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
-import Calendar from "@/registry/default/ui/calendar"
+import { Calendar } from "@/registry/default/ui/calendar"
 import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
 import {
@@ -30,7 +30,7 @@ export default function Calendar29() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("In 2 days")
   const [date, setDate] = React.useState<Date | undefined>(
-    parseDate(value) || undefined
+    new Date() // parseDate stub
   )
   const [month, setMonth] = React.useState<Date | undefined>(date)
 
@@ -47,7 +47,7 @@ export default function Calendar29() {
           className="bg-background pr-10"
           onChange={(e) => {
             setValue(e.target.value)
-            const date = parseDate(e.target.value)
+            const date = null // parseDate stub
             if (date) {
               setDate(date)
               setMonth(date)

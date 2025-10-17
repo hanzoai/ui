@@ -1,7 +1,4 @@
 import * as React from "react"
-import * as React from "react"
-import React from "react"
-import * as React from "react"
 import {
   ArrowDown,
   ArrowUp,
@@ -22,118 +19,74 @@ import {
   Inbox,
   LineChart,
   Link,
-  Link,
   MessageCircleQuestion,
   MoreHorizontal,
-  MoreHorizontal,
-  MoreHorizontal,
-  Plus,
   Plus,
   Search,
-  Settings2,
   Settings2,
   Sparkles,
   Star,
   StarOff,
   Trash,
   Trash2,
-  Trash2,
-  Trash2,
-  type LucideIcon,
   type LucideIcon,
 } from "lucide-react"
 
-import { Button } from "../../../../primitives/button"
+import { Button } from "@/registry/new-york/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/new-york/ui/collapsible"
 import {
   DropdownMenu,
-  DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/new-york/ui/dropdown-menu"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../../../primitives/popover"
+} from "@/registry/new-york/ui/popover"
 import {
   Sidebar,
-  Sidebar,
-  SidebarContent,
   SidebarContent,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuAction,
   SidebarMenuBadge,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/new-york/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { NavActions } from "./components/nav-actions"
-import { NavFavorites } from "./nav-favorites"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavWorkspaces } from "./nav-workspaces"
-import { TeamSwitcher } from "./team-switcher"
+} from "@/registry/new-york/ui/sidebar"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar10 />
       <SidebarInset>
         <header className="flex h-14 shrink-0 items-center gap-2">
           <div className="flex flex-1 items-center gap-2 px-3">
@@ -161,7 +114,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-;("use client")
 
 // This is sample data.
 const data = {
@@ -394,7 +346,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar10({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -410,9 +364,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-;("use client")
 
-const data = [
+const navActionsData = [
   [
     {
       label: "Customize Page",
@@ -506,7 +459,7 @@ export function NavActions() {
         >
           <Sidebar collapsible="none" className="bg-transparent">
             <SidebarContent>
-              {data.map((group, index) => (
+              {navActionsData.map((group, index) => (
                 <SidebarGroup key={index} className="border-b last:border-none">
                   <SidebarGroupContent className="gap-0">
                     <SidebarMenu>
@@ -528,7 +481,6 @@ export function NavActions() {
     </div>
   )
 }
-;("use client")
 
 export function NavFavorites({
   favorites,
@@ -597,7 +549,6 @@ export function NavFavorites({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavMain({
   items,
@@ -722,7 +673,6 @@ export function NavWorkspaces({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function TeamSwitcher({
   teams,

@@ -10,19 +10,17 @@ import {
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"
 
-import { LoginForm } from "./components/login-form"
-
 export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <LoginForm />
+        <LoginForm01 />
       </div>
     </div>
   )
 }
 
-export function LoginForm({
+export function LoginForm01({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {

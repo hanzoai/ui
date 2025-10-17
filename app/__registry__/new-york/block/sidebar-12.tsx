@@ -1,5 +1,4 @@
 import * as React from "react"
-import * as React from "react"
 import {
   BadgeCheck,
   Bell,
@@ -16,13 +15,13 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
-import { Calendar } from "../../../../primitives/calendar"
+} from "@/registry/new-york/ui/avatar"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/new-york/ui/collapsible"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,52 +30,39 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/new-york/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
-  SidebarSeparator,
   useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/new-york/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { Calendars } from "./calendars"
-import { AppSidebar } from "./components/app-sidebar"
-import { DatePicker } from "./date-picker"
-import { NavUser } from "./nav-user"
+} from "@/registry/new-york/ui/sidebar"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar12 />
       <SidebarInset>
         <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
           <SidebarTrigger className="-ml-1" />
@@ -124,7 +110,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar12({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader className="h-16 border-b border-sidebar-border">
@@ -213,7 +201,6 @@ export function DatePicker() {
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavUser({
   user,

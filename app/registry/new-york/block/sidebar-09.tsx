@@ -18,7 +18,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
+} from "@/registry/new-york/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,8 +27,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import { Label } from "../../../../primitives/label"
+} from "@/registry/new-york/ui/dropdown-menu"
+import { Label } from "@/registry/new-york/ui/label"
 import {
   Sidebar,
   SidebarContent,
@@ -38,15 +38,11 @@ import {
   SidebarHeader,
   SidebarInput,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuItem,
   useSidebar,
-  useSidebar,
-} from "../../../../primitives/sidebar"
-import { Switch } from "../../../../primitives/switch"
+} from "@/registry/new-york/ui/sidebar"
+import { Switch } from "@/registry/new-york/ui/switch"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -54,15 +50,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { NavUser } from "./nav-user"
+} from "@/registry/new-york/ui/sidebar"
 
 export default function Page() {
   return (
@@ -73,7 +67,7 @@ export default function Page() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar />
+      <AppSidebar09 />
       <SidebarInset>
         <header className="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-4">
           <SidebarTrigger className="-ml-1" />
@@ -102,7 +96,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-;("use client")
 
 // This is sample data
 const data = {
@@ -227,7 +220,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar09({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   // Note: I'm using state to show active item.
   // IRL you should use the url/router.
   const [activeItem, setActiveItem] = React.useState(data.navMain[0])
@@ -344,7 +339,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-;("use client")
 
 export function NavUser({
   user,
