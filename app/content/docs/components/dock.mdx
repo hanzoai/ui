@@ -54,8 +54,9 @@ npm install framer-motion
 ## Usage
 
 ```tsx
+import { Calendar, Home, Mail, Search, Settings, User } from "lucide-react"
+
 import { Dock, DockItem } from "@/registry/default/ui/dock"
-import { Home, Search, Settings, User, Mail, Calendar } from "lucide-react"
 
 export function DockDemo() {
   return (
@@ -66,16 +67,25 @@ export function DockDemo() {
       <DockItem tooltip="Search" onClick={() => console.log("Search clicked")}>
         <Search className="h-6 w-6" />
       </DockItem>
-      <DockItem tooltip="Settings" onClick={() => console.log("Settings clicked")}>
+      <DockItem
+        tooltip="Settings"
+        onClick={() => console.log("Settings clicked")}
+      >
         <Settings className="h-6 w-6" />
       </DockItem>
-      <DockItem tooltip="Profile" onClick={() => console.log("Profile clicked")}>
+      <DockItem
+        tooltip="Profile"
+        onClick={() => console.log("Profile clicked")}
+      >
         <User className="h-6 w-6" />
       </DockItem>
       <DockItem tooltip="Mail" onClick={() => console.log("Mail clicked")}>
         <Mail className="h-6 w-6" />
       </DockItem>
-      <DockItem tooltip="Calendar" onClick={() => console.log("Calendar clicked")}>
+      <DockItem
+        tooltip="Calendar"
+        onClick={() => console.log("Calendar clicked")}
+      >
         <Calendar className="h-6 w-6" />
       </DockItem>
     </Dock>
@@ -184,12 +194,7 @@ export function CustomIconDock() {
   return (
     <Dock>
       <DockItem tooltip="Custom App">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
           {/* Your custom SVG path */}
         </svg>
       </DockItem>
@@ -208,8 +213,9 @@ Add visual separators between groups of icons.
 <ComponentPreview name="dock-with-separators" />
 
 ```tsx
+import { Calendar, Home, Mail, Search, Settings, User } from "lucide-react"
+
 import { Dock, DockItem } from "@/registry/default/ui/dock"
-import { Home, Search, Mail, Calendar, Settings, User } from "lucide-react"
 
 export function DockWithSeparators() {
   return (
@@ -249,26 +255,26 @@ export function DockWithSeparators() {
 
 The main container component for the dock.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `position` | `"bottom" \| "left" \| "right"` | `"bottom"` | Position of the dock on the screen |
-| `magnification` | `number` | `60` | Maximum magnification amount in pixels |
-| `distance` | `number` | `140` | Distance from cursor where magnification starts |
-| `className` | `string` | - | Additional CSS classes |
-| `children` | `ReactNode` | - | Dock items to render |
+| Prop            | Type                            | Default    | Description                                     |
+| --------------- | ------------------------------- | ---------- | ----------------------------------------------- |
+| `position`      | `"bottom" \| "left" \| "right"` | `"bottom"` | Position of the dock on the screen              |
+| `magnification` | `number`                        | `60`       | Maximum magnification amount in pixels          |
+| `distance`      | `number`                        | `140`      | Distance from cursor where magnification starts |
+| `className`     | `string`                        | -          | Additional CSS classes                          |
+| `children`      | `ReactNode`                     | -          | Dock items to render                            |
 
 ### DockItem
 
 Individual dock item component.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `tooltip` | `string` | - | Tooltip text to show on hover |
-| `onClick` | `() => void` | - | Click handler |
-| `magnification` | `number` | - | Override magnification for this item |
-| `distance` | `number` | - | Override distance for this item |
-| `className` | `string` | - | Additional CSS classes |
-| `children` | `ReactNode` | - | Icon or content to render |
+| Prop            | Type         | Default | Description                          |
+| --------------- | ------------ | ------- | ------------------------------------ |
+| `tooltip`       | `string`     | -       | Tooltip text to show on hover        |
+| `onClick`       | `() => void` | -       | Click handler                        |
+| `magnification` | `number`     | -       | Override magnification for this item |
+| `distance`      | `number`     | -       | Override distance for this item      |
+| `className`     | `string`     | -       | Additional CSS classes               |
+| `children`      | `ReactNode`  | -       | Icon or content to render            |
 
 ## Features
 
@@ -283,12 +289,14 @@ Individual dock item component.
 ## Styling
 
 The dock component uses Tailwind CSS for styling with:
+
 - Glass morphism effect using `backdrop-blur` and semi-transparent backgrounds
 - Smooth hover transitions
 - Focus indicators for accessibility
 - Gradient overlays for depth
 
 You can customize the appearance by:
+
 - Passing custom `className` props
 - Modifying the default styles in the component
 - Using CSS variables for theming
@@ -297,6 +305,7 @@ You can customize the appearance by:
 ## Accessibility
 
 The dock component includes:
+
 - Focus indicators for keyboard navigation
 - ARIA labels through tooltips
 - Keyboard event handlers

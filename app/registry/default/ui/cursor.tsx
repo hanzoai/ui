@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface CursorProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -44,7 +45,9 @@ const Cursor = React.forwardRef<HTMLDivElement, CursorProps>(
             }}
           >
             {cursorText && (
-              <span className="text-xs font-medium text-primary">{cursorText}</span>
+              <span className="text-xs font-medium text-primary">
+                {cursorText}
+              </span>
             )}
           </div>
         )}

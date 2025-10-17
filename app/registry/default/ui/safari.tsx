@@ -1,8 +1,16 @@
 "use client"
 
 import * as React from "react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  Plus,
+  RotateCw,
+  Share2,
+} from "lucide-react"
+
 import { cn } from "@/lib/utils"
-import { ChevronLeft, ChevronRight, RotateCw, Share2, Plus, Menu } from "lucide-react"
 
 interface SafariProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
@@ -11,7 +19,16 @@ interface SafariProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Safari = React.forwardRef<HTMLDivElement, SafariProps>(
-  ({ className, children, url = "https://ui.hanzo.ai", showToolbar = true, ...props }, ref) => {
+  (
+    {
+      className,
+      children,
+      url = "https://ui.hanzo.ai",
+      showToolbar = true,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div
         ref={ref}
@@ -42,10 +59,16 @@ const Safari = React.forwardRef<HTMLDivElement, SafariProps>(
 
           {/* URL Bar */}
           <div className="mx-3 flex flex-1 items-center gap-2 rounded-lg bg-white px-3 py-1.5 dark:bg-zinc-800">
-            <svg className="h-4 w-4 text-zinc-400" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              className="h-4 w-4 text-zinc-400"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
               <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
             </svg>
-            <span className="flex-1 text-sm text-zinc-600 dark:text-zinc-400">{url}</span>
+            <span className="flex-1 text-sm text-zinc-600 dark:text-zinc-400">
+              {url}
+            </span>
             <button className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-700">
               <RotateCw className="h-3.5 w-3.5 text-zinc-600 dark:text-zinc-400" />
             </button>
@@ -81,9 +104,7 @@ const Safari = React.forwardRef<HTMLDivElement, SafariProps>(
         )}
 
         {/* Content Area */}
-        <div className="bg-white dark:bg-zinc-950">
-          {children}
-        </div>
+        <div className="bg-white dark:bg-zinc-950">{children}</div>
       </div>
     )
   }

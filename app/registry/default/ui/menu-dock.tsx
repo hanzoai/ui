@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface MenuDockItem {
@@ -33,7 +34,8 @@ const MenuDock = React.forwardRef<HTMLDivElement, MenuDockProps>(
             onClick={item.onClick}
             className={cn(
               "group relative flex items-center justify-center rounded-full p-3 transition-colors hover:bg-accent",
-              item.active && "bg-primary text-primary-foreground hover:bg-primary/90"
+              item.active &&
+                "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
             title={item.label}
           >

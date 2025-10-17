@@ -77,7 +77,7 @@ export default function Page() {
       models={[
         { id: "gpt-4", name: "GPT-4" },
         { id: "claude-3", name: "Claude 3" },
-        { id: "gemini-pro", name: "Gemini Pro" }
+        { id: "gemini-pro", name: "Gemini Pro" },
       ]}
       defaultModel="gpt-4"
       defaultParameters={{
@@ -85,7 +85,7 @@ export default function Page() {
         maxTokens: 2048,
         topP: 1,
         frequencyPenalty: 0,
-        presencePenalty: 0
+        presencePenalty: 0,
       }}
       systemPrompt="You are a helpful assistant."
       onResponse={(response) => {
@@ -102,20 +102,15 @@ export default function Page() {
 ### With Custom Providers
 
 ```tsx
-import { AIPlayground, OpenAIProvider, AnthropicProvider } from "@hanzo/ui"
+import { AIPlayground, AnthropicProvider, OpenAIProvider } from "@hanzo/ui"
 
 const providers = [
   new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
-  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY })
+  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY }),
 ]
 
 export default function Page() {
-  return (
-    <AIPlayground
-      providers={providers}
-      defaultProvider="openai"
-    />
-  )
+  return <AIPlayground providers={providers} defaultProvider="openai" />
 }
 ```
 
@@ -123,21 +118,21 @@ export default function Page() {
 
 ### Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| models | `Model[]` | `[]` | Available AI models |
-| defaultModel | `string` | - | Default selected model |
-| providers | `Provider[]` | `[]` | AI providers |
-| defaultProvider | `string` | - | Default provider |
-| defaultParameters | `Parameters` | `{}` | Default model parameters |
-| systemPrompt | `string` | - | System prompt |
-| placeholder | `string` | `"Enter your prompt..."` | Input placeholder |
-| streaming | `boolean` | `true` | Enable response streaming |
-| history | `boolean` | `true` | Enable conversation history |
-| onResponse | `(response: Response) => void` | - | Response callback |
-| onError | `(error: Error) => void` | - | Error callback |
-| onParameterChange | `(params: Parameters) => void` | - | Parameter change callback |
-| className | `string` | - | Additional CSS classes |
+| Prop              | Type                           | Default                  | Description                 |
+| ----------------- | ------------------------------ | ------------------------ | --------------------------- |
+| models            | `Model[]`                      | `[]`                     | Available AI models         |
+| defaultModel      | `string`                       | -                        | Default selected model      |
+| providers         | `Provider[]`                   | `[]`                     | AI providers                |
+| defaultProvider   | `string`                       | -                        | Default provider            |
+| defaultParameters | `Parameters`                   | `{}`                     | Default model parameters    |
+| systemPrompt      | `string`                       | -                        | System prompt               |
+| placeholder       | `string`                       | `"Enter your prompt..."` | Input placeholder           |
+| streaming         | `boolean`                      | `true`                   | Enable response streaming   |
+| history           | `boolean`                      | `true`                   | Enable conversation history |
+| onResponse        | `(response: Response) => void` | -                        | Response callback           |
+| onError           | `(error: Error) => void`       | -                        | Error callback              |
+| onParameterChange | `(params: Parameters) => void` | -                        | Parameter change callback   |
+| className         | `string`                       | -                        | Additional CSS classes      |
 
 ### Model Interface
 
@@ -194,17 +189,18 @@ interface Parameters {
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-| --- | --- |
-| `Ctrl/Cmd + Enter` | Send message |
-| `Ctrl/Cmd + K` | Clear chat |
-| `Ctrl/Cmd + /` | Toggle parameters |
-| `Ctrl/Cmd + S` | Save session |
-| `Ctrl/Cmd + O` | Load session |
+| Shortcut           | Action            |
+| ------------------ | ----------------- |
+| `Ctrl/Cmd + Enter` | Send message      |
+| `Ctrl/Cmd + K`     | Clear chat        |
+| `Ctrl/Cmd + /`     | Toggle parameters |
+| `Ctrl/Cmd + S`     | Save session      |
+| `Ctrl/Cmd + O`     | Load session      |
 
 ## Accessibility
 
 The AI Playground is fully accessible with:
+
 - Keyboard navigation
 - Screen reader support
 - ARIA labels

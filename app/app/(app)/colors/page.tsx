@@ -10,7 +10,8 @@ export default function ColorsPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Colors</h1>
           <p className="text-muted-foreground">
-            Beautiful, thoughtful palettes designed for interfaces. Click to copy.
+            Beautiful, thoughtful palettes designed for interfaces. Click to
+            copy.
           </p>
         </div>
 

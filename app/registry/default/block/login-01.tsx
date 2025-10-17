@@ -1,14 +1,3 @@
-import { LoginForm } from "./components/login-form"
-
-export default function Page() {
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <LoginForm />
-      </div>
-    </div>
-  )
-}
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 import {
@@ -21,6 +10,18 @@ import {
 import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
 
+import { LoginForm } from "./components/login-form"
+
+export default function Page() {
+  return (
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <LoginForm />
+      </div>
+    </div>
+  )
+}
+
 export function LoginForm({
   className,
   ...props
@@ -30,7 +31,7 @@ export function LoginForm({
     const formData = new FormData(e.currentTarget)
 
     // TODO: Add your authentication logic here
-    console.log('Form submitted:', Object.fromEntries(formData))
+    console.log("Form submitted:", Object.fromEntries(formData))
 
     // Example: await signIn(formData)
   }

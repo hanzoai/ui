@@ -1,15 +1,20 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
-export interface MotionHighlightProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface MotionHighlightProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
 }
 
 const MotionHighlight = React.forwardRef<HTMLDivElement, MotionHighlightProps>(
   ({ className, children, ...props }, ref) => {
-    const [highlightPosition, setHighlightPosition] = React.useState({ x: 0, y: 0 })
+    const [highlightPosition, setHighlightPosition] = React.useState({
+      x: 0,
+      y: 0,
+    })
     const [isHovered, setIsHovered] = React.useState(false)
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

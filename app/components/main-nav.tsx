@@ -99,9 +99,7 @@ export function MainNav() {
           href="/mcp"
           className={cn(
             "transition-colors hover:text-foreground/80",
-            pathname === "/mcp"
-              ? "text-foreground"
-              : "text-foreground/80"
+            pathname === "/mcp" ? "text-foreground" : "text-foreground/80"
           )}
         >
           MCP

@@ -1,16 +1,28 @@
 import Link from "next/link"
-import { TerminalIcon, CodeIcon, ArrowRightIcon } from "lucide-react"
+import { ArrowRightIcon, CodeIcon, TerminalIcon } from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/default/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/default/ui/tabs"
 
 const setupGuides = [
   {
     name: "Claude Code",
     id: "claude",
     description: "Anthropic's official CLI for Claude",
-    command: "claude mcp add --transport http hanzo-ui https://ui.hanzo.ai/api/mcp",
+    command:
+      "claude mcp add --transport http hanzo-ui https://ui.hanzo.ai/api/mcp",
   },
   {
     name: "Cursor",
@@ -88,7 +100,8 @@ export default function MCPPage() {
           MCP Server
         </h1>
         <p className="max-w-[750px] text-center text-lg text-muted-foreground sm:text-xl">
-          Connect AI coding assistants to hanzo/ui components. Get accurate TypeScript props and React component data without hallucinations.
+          Connect AI coding assistants to hanzo/ui components. Get accurate
+          TypeScript props and React component data without hallucinations.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Button size="lg" asChild>
@@ -108,8 +121,10 @@ export default function MCPPage() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight">What is MCP?</h2>
             <p className="mt-4 text-lg text-muted-foreground">
-              Model Context Protocol (MCP) connects AI coding tools directly to component registries and documentation.
-              Instead of relying on training data, your AI assistant gets real-time access to actual component implementations.
+              Model Context Protocol (MCP) connects AI coding tools directly to
+              component registries and documentation. Instead of relying on
+              training data, your AI assistant gets real-time access to actual
+              component implementations.
             </p>
           </div>
 
@@ -121,7 +136,8 @@ export default function MCPPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Get exact TypeScript props and interfaces, not outdated or hallucinated types.
+                  Get exact TypeScript props and interfaces, not outdated or
+                  hallucinated types.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -132,7 +148,8 @@ export default function MCPPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Access actual component implementations from the registry, not approximations.
+                  Access actual component implementations from the registry, not
+                  approximations.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -143,7 +160,8 @@ export default function MCPPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Always get the latest component versions and patterns as they're updated.
+                  Always get the latest component versions and patterns as
+                  they're updated.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -163,7 +181,11 @@ export default function MCPPage() {
             </TabsList>
 
             {setupGuides.map((guide) => (
-              <TabsContent key={guide.id} value={guide.id} className="space-y-4">
+              <TabsContent
+                key={guide.id}
+                value={guide.id}
+                className="space-y-4"
+              >
                 <Card>
                   <CardHeader>
                     <CardTitle>{guide.name} Setup</CardTitle>
@@ -194,19 +216,31 @@ export default function MCPPage() {
                       <h4 className="mb-2 font-semibold">Usage Examples</h4>
                       <div className="space-y-2 rounded-lg bg-muted p-4">
                         <p className="text-sm">
-                          <code className="text-primary">// List all components</code>
+                          <code className="text-primary">
+                            // List all components
+                          </code>
                         </p>
-                        <p className="text-sm">use hanzo-ui to list all available components</p>
+                        <p className="text-sm">
+                          use hanzo-ui to list all available components
+                        </p>
 
                         <p className="mt-4 text-sm">
-                          <code className="text-primary">// Get component details</code>
+                          <code className="text-primary">
+                            // Get component details
+                          </code>
                         </p>
-                        <p className="text-sm">use hanzo-ui to show me the AI Playground component</p>
+                        <p className="text-sm">
+                          use hanzo-ui to show me the AI Playground component
+                        </p>
 
                         <p className="mt-4 text-sm">
-                          <code className="text-primary">// Implement in your project</code>
+                          <code className="text-primary">
+                            // Implement in your project
+                          </code>
                         </p>
-                        <p className="text-sm">use hanzo-ui to add the AI Chat component to my app</p>
+                        <p className="text-sm">
+                          use hanzo-ui to add the AI Chat component to my app
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -231,18 +265,30 @@ export default function MCPPage() {
               <tbody>
                 <tr className="border-b">
                   <td className="p-4">"Show me AI components"</td>
-                  <td className="p-4 text-muted-foreground">Generic AI input fields</td>
-                  <td className="p-4">8 specialized AI components with props</td>
+                  <td className="p-4 text-muted-foreground">
+                    Generic AI input fields
+                  </td>
+                  <td className="p-4">
+                    8 specialized AI components with props
+                  </td>
                 </tr>
                 <tr className="border-b">
                   <td className="p-4">"Add chat interface"</td>
-                  <td className="p-4 text-muted-foreground">Basic textarea with send button</td>
-                  <td className="p-4">Full AI Chat with streaming, history, providers</td>
+                  <td className="p-4 text-muted-foreground">
+                    Basic textarea with send button
+                  </td>
+                  <td className="p-4">
+                    Full AI Chat with streaming, history, providers
+                  </td>
                 </tr>
                 <tr>
                   <td className="p-4">"Implement AI playground"</td>
-                  <td className="p-4 text-muted-foreground">Random code snippets</td>
-                  <td className="p-4">Complete AI Playground with parameters</td>
+                  <td className="p-4 text-muted-foreground">
+                    Random code snippets
+                  </td>
+                  <td className="p-4">
+                    Complete AI Playground with parameters
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -253,7 +299,8 @@ export default function MCPPage() {
           <div className="flex flex-col items-center gap-4 text-center">
             <h2 className="text-2xl font-bold">Need Help?</h2>
             <p className="max-w-[600px] text-muted-foreground">
-              Join our Discord community for help from other developers using MCP with hanzo/ui components.
+              Join our Discord community for help from other developers using
+              MCP with hanzo/ui components.
             </p>
             <div className="flex gap-4">
               <Button asChild>

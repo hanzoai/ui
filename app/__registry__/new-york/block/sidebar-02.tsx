@@ -1,4 +1,43 @@
-import { AppSidebar } from "./components/app-sidebar"
+import * as React from "react"
+import * as React from "react"
+import {
+  Check,
+  ChevronRight,
+  ChevronsUpDown,
+  GalleryVerticalEnd,
+  Search,
+} from "lucide-react"
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../../primitives/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import { Label } from "../../../../primitives/label"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarRail,
+} from "../../../../primitives/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +52,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { AppSidebar } from "./components/app-sidebar"
+import { SearchForm } from "./search-form"
+import { VersionSwitcher } from "./version-switcher"
 
 export default function Page() {
   return (
@@ -48,28 +90,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-import * as React from "react"
-import { ChevronRight } from "lucide-react"
-
-import { SearchForm } from "./search-form"
-import { VersionSwitcher } from "./version-switcher"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "../../../../primitives/sidebar"
 
 // This is sample data.
 const data = {
@@ -263,14 +283,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-import { Search } from "lucide-react"
-
-import { Label } from "../../../../primitives/label"
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarInput,
-} from "../../../../primitives/sidebar"
 
 export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (
@@ -291,22 +303,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     </form>
   )
 }
-"use client"
-
-import * as React from "react"
-import { Check, ChevronsUpDown, GalleryVerticalEnd } from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function VersionSwitcher({
   versions,

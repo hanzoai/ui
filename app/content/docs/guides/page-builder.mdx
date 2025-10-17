@@ -31,21 +31,25 @@ Visit [/builder](/builder) to start building.
 ## Block Types
 
 ### Dashboard Blocks
+
 - `dashboard-01` through `dashboard-07` - Full admin layouts
 - Includes sidebar, header, charts, tables
 - Responsive grid layouts
 
 ### Authentication Blocks
+
 - `login-01` through `login-05` - Login pages
 - `signup-01` through `signup-05` - Registration pages
 - `otp-01` through `otp-05` - OTP verification
 
 ### Sidebar Blocks
+
 - `sidebar-01` through `sidebar-15` - Navigation layouts
 - Collapsible, responsive, multi-level
 - With user menus, search, notifications
 
 ### Calendar Blocks
+
 - `calendar-01` through `calendar-32` - Calendar views
 - Date pickers, range selectors, event calendars
 - Mobile and desktop variants
@@ -57,12 +61,13 @@ Visit [/builder](/builder) to start building.
 The page builder uses [@dnd-kit](https://dndkit.com/) for drag-and-drop:
 
 ```tsx
-import { DndContext, closestCenter } from "@dnd-kit/core"
+import { closestCenter, DndContext } from "@dnd-kit/core"
 import { SortableContext, useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 
 // Sortable item
-const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+const { attributes, listeners, setNodeRef, transform, transition } =
+  useSortable({ id })
 
 const style = {
   transform: CSS.Transform.toString(transform),
@@ -120,6 +125,7 @@ const blocks = await getAllBlockIds() // Returns array of block names
 ### Basic Usage
 
 Visit `/builder` and:
+
 1. Click "dashboard-01" from library
 2. Click "sidebar-07"
 3. Drag "sidebar-07" above "dashboard-01"
@@ -132,18 +138,21 @@ Result: Complete admin dashboard layout code!
 Build common page types:
 
 **Landing Page:**
+
 1. Hero block (hero-01)
 2. Features block (features-02)
 3. Pricing block (pricing-01)
 4. CTA block (cta-03)
 
 **Admin Dashboard:**
+
 1. Sidebar navigation (sidebar-07)
 2. Dashboard metrics (dashboard-01)
 3. Data table (table-01)
 4. Calendar view (calendar-12)
 
 **Authentication Flow:**
+
 1. Login page (login-03)
 2. Signup page (signup-04)
 3. OTP verification (otp-02)

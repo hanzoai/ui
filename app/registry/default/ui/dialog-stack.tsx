@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { X } from "lucide-react"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
 
@@ -24,7 +25,7 @@ const DialogStack = React.forwardRef<HTMLDivElement, DialogStackProps>(
           <div
             key={dialog.id}
             className={cn(
-              "absolute inset-0 rounded-lg border bg-background p-6 shadow-lg transition-transform",
+              "absolute inset-0 rounded-lg border bg-background p-6 shadow-lg transition-transform"
             )}
             style={{
               transform: `translate(${index * 10}px, ${index * 10}px)`,

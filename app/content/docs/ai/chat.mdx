@@ -43,19 +43,19 @@ export default function ChatPage() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| provider | `string` | `"openai"` | AI provider |
-| model | `string` | `"gpt-3.5-turbo"` | Model to use |
-| apiKey | `string` | - | API key for provider |
-| welcomeMessage | `string` | - | Initial message |
-| placeholder | `string` | `"Type a message..."` | Input placeholder |
-| streaming | `boolean` | `true` | Enable streaming |
-| history | `Message[]` | `[]` | Initial chat history |
-| maxMessages | `number` | - | Maximum messages to keep |
-| onMessage | `(message: Message) => void` | - | Message callback |
-| onError | `(error: Error) => void` | - | Error callback |
-| className | `string` | - | Additional classes |
+| Prop           | Type                         | Default               | Description              |
+| -------------- | ---------------------------- | --------------------- | ------------------------ |
+| provider       | `string`                     | `"openai"`            | AI provider              |
+| model          | `string`                     | `"gpt-3.5-turbo"`     | Model to use             |
+| apiKey         | `string`                     | -                     | API key for provider     |
+| welcomeMessage | `string`                     | -                     | Initial message          |
+| placeholder    | `string`                     | `"Type a message..."` | Input placeholder        |
+| streaming      | `boolean`                    | `true`                | Enable streaming         |
+| history        | `Message[]`                  | `[]`                  | Initial chat history     |
+| maxMessages    | `number`                     | -                     | Maximum messages to keep |
+| onMessage      | `(message: Message) => void` | -                     | Message callback         |
+| onError        | `(error: Error) => void`     | -                     | Error callback           |
+| className      | `string`                     | -                     | Additional classes       |
 
 ## Examples
 
@@ -72,11 +72,11 @@ export default function ChatPage() {
 ### With Multiple Providers
 
 ```tsx
-import { AIChat, OpenAIProvider, AnthropicProvider } from "@hanzo/ui"
+import { AIChat, AnthropicProvider, OpenAIProvider } from "@hanzo/ui"
 
 const providers = [
   new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY }),
-  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY })
+  new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY }),
 ]
 
 export default function ChatPage() {

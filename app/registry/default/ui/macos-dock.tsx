@@ -61,7 +61,10 @@ const DockItem = React.forwardRef<HTMLButtonElement, DockItemProps>(
     const [isHovered, setIsHovered] = React.useState(false)
 
     const distanceCalc = useTransform(mouseX, (val: number) => {
-      const bounds = buttonRef.current?.getBoundingClientRect() ?? { x: 0, width: 0 }
+      const bounds = buttonRef.current?.getBoundingClientRect() ?? {
+        x: 0,
+        width: 0,
+      }
       return val - bounds.x - bounds.width / 2
     })
 

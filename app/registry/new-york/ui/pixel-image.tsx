@@ -1,9 +1,11 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
-export interface PixelImageProps extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
+export interface PixelImageProps
+  extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
   src: string
   pixelSize?: number
 }

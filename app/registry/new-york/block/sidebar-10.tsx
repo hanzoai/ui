@@ -1,5 +1,115 @@
-import { AppSidebar } from "./components/app-sidebar"
-import { NavActions } from "./components/nav-actions"
+import * as React from "react"
+import * as React from "react"
+import React from "react"
+import * as React from "react"
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpRight,
+  AudioWaveform,
+  Bell,
+  Blocks,
+  Calendar,
+  ChevronDown,
+  ChevronRight,
+  Command,
+  Copy,
+  CornerUpLeft,
+  CornerUpRight,
+  FileText,
+  GalleryVerticalEnd,
+  Home,
+  Inbox,
+  LineChart,
+  Link,
+  Link,
+  MessageCircleQuestion,
+  MoreHorizontal,
+  MoreHorizontal,
+  MoreHorizontal,
+  Plus,
+  Plus,
+  Search,
+  Settings2,
+  Settings2,
+  Sparkles,
+  Star,
+  StarOff,
+  Trash,
+  Trash2,
+  Trash2,
+  Trash2,
+  type LucideIcon,
+  type LucideIcon,
+} from "lucide-react"
+
+import { Button } from "../../../../primitives/button"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../../../../primitives/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+  DropdownMenuTrigger,
+} from "../../../../primitives/dropdown-menu"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../../../primitives/popover"
+import {
+  Sidebar,
+  Sidebar,
+  SidebarContent,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupContent,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarRail,
+  useSidebar,
+} from "../../../../primitives/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +122,13 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../../../primitives/sidebar"
+import { AppSidebar } from "./components/app-sidebar"
+import { NavActions } from "./components/nav-actions"
+import { NavFavorites } from "./nav-favorites"
+import { NavMain } from "./nav-main"
+import { NavSecondary } from "./nav-secondary"
+import { NavWorkspaces } from "./nav-workspaces"
+import { TeamSwitcher } from "./team-switcher"
 
 export default function Page() {
   return (
@@ -44,34 +161,7 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-"use client"
-
-import * as React from "react"
-import {
-  AudioWaveform,
-  Blocks,
-  Calendar,
-  Command,
-  Home,
-  Inbox,
-  MessageCircleQuestion,
-  Search,
-  Settings2,
-  Sparkles,
-  Trash2,
-} from "lucide-react"
-
-import { NavFavorites } from "./nav-favorites"
-import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavWorkspaces } from "./nav-workspaces"
-import { TeamSwitcher } from "./team-switcher"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarRail,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 // This is sample data.
 const data = {
@@ -320,42 +410,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-"use client"
-
-import * as React from "react"
-import {
-  ArrowDown,
-  ArrowUp,
-  Bell,
-  Copy,
-  CornerUpLeft,
-  CornerUpRight,
-  FileText,
-  GalleryVerticalEnd,
-  LineChart,
-  Link,
-  MoreHorizontal,
-  Settings2,
-  Star,
-  Trash,
-  Trash2,
-} from "lucide-react"
-
-import { Button } from "../../../../primitives/button"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../../../primitives/popover"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 const data = [
   [
@@ -473,32 +528,7 @@ export function NavActions() {
     </div>
   )
 }
-"use client"
-
-import {
-  ArrowUpRight,
-  Link,
-  MoreHorizontal,
-  StarOff,
-  Trash2,
-} from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavFavorites({
   favorites,
@@ -567,15 +597,7 @@ export function NavFavorites({
     </SidebarGroup>
   )
 }
-"use client"
-
-import { type LucideIcon } from "lucide-react"
-
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function NavMain({
   items,
@@ -602,17 +624,6 @@ export function NavMain({
     </SidebarMenu>
   )
 }
-import React from "react"
-import { type LucideIcon } from "lucide-react"
-
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
 
 export function NavSecondary({
   items,
@@ -645,25 +656,6 @@ export function NavSecondary({
     </SidebarGroup>
   )
 }
-import { ChevronRight, MoreHorizontal, Plus } from "lucide-react"
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-} from "../../../../primitives/sidebar"
 
 export function NavWorkspaces({
   workspaces,
@@ -730,25 +722,7 @@ export function NavWorkspaces({
     </SidebarGroup>
   )
 }
-"use client"
-
-import * as React from "react"
-import { ChevronDown, Plus } from "lucide-react"
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "../../../../primitives/sidebar"
+;("use client")
 
 export function TeamSwitcher({
   teams,
