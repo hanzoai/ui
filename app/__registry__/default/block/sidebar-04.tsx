@@ -209,7 +209,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar04({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>

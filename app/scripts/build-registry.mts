@@ -253,7 +253,11 @@ export const Index: Record<string, any> = {
   // ----------------------------------------------------------------------------
   // Build registry/index.json.
   // ----------------------------------------------------------------------------
-  const names = registry.filter((item) => item.type === "components:ui")
+  const names = registry.filter((item) =>
+    item.type === "components:ui" ||
+    item.type === "components:ai" ||
+    item.type === "components:extended"
+  )
   const registryJson = JSON.stringify(names, null, 2)
   rimraf.sync(path.join(REGISTRY_PATH, "index.json"))
   await fs.writeFile(
@@ -280,21 +284,34 @@ async function buildStyles(registry: Registry) {
     }
 
     for (const item of registry) {
-      if (item.type !== "components:ui") {
+      if (
+        item.type !== "components:ui" &&
+        item.type !== "components:ai" &&
+        item.type !== "components:extended"
+      ) {
         continue
       }
 
       const files = item.files?.map((file) => {
-        const content = readFileSync(
-          path.join(process.cwd(), "registry", style.name, file),
-          "utf8"
-        )
+        const filePath = path.join(process.cwd(), "registry", style.name, file)
+
+        // Check if file exists for this style variant
+        if (!existsSync(filePath)) {
+          return null
+        }
+
+        const content = readFileSync(filePath, "utf8")
 
         return {
           name: basename(file),
           content,
         }
-      })
+      }).filter(Boolean)
+
+      // Skip if no files exist for this style variant
+      if (!files || files.length === 0) {
+        continue
+      }
 
       const payload = {
         ...item,
