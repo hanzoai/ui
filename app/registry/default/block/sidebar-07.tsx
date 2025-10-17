@@ -277,7 +277,7 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar07({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -499,7 +499,7 @@ export function NavUser({
 }
 ;("use client")
 
-export function TeamSwitcher({
+export function TeamSwitcher07({
   teams,
 }: {
   teams: {
