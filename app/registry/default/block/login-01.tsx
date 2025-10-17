@@ -22,7 +22,7 @@ export default function Page() {
   )
 }
 
-export function LoginForm({
+export function LoginForm01({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {

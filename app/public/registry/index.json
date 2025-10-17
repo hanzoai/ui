@@ -479,6 +479,94 @@
     "type": "components:ui"
   },
   {
+    "name": "ai-playground",
+    "description": "Interactive AI model testing environment with adjustable parameters",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-playground.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-chat",
+    "description": "Complete chat interface with streaming support",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-chat.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-agents",
+    "description": "Multi-agent system components",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-agents.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-vision",
+    "description": "Image analysis and computer vision components",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-vision.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-voice",
+    "description": "Voice recognition and speech synthesis components",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-voice.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-code",
+    "description": "AI-powered code generation and analysis",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-code.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-assistant",
+    "description": "Full-featured AI assistant component",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-assistant.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
+    "name": "ai-tools",
+    "description": "Tool use and function calling interfaces",
+    "dependencies": [
+      "@hanzo/ui"
+    ],
+    "files": [
+      "ui/ai-tools.tsx"
+    ],
+    "type": "components:ai"
+  },
+  {
     "name": "kanban",
     "description": "Drag and drop Kanban board",
     "dependencies": [
