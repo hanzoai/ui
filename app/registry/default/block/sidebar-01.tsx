@@ -4,12 +4,21 @@ import * as React from "react"
 import { Check, ChevronsUpDown, GalleryVerticalEnd, Search } from "lucide-react"
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/default/ui/breadcrumb"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
 import { Label } from "@/registry/default/ui/label"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -18,31 +27,19 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
-  SidebarInset,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@/registry/default/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/default/ui/breadcrumb"
-import { Separator } from "@/registry/default/ui/separator"
-import { AppSidebar } from "./components/app-sidebar"
-import { SearchForm } from "./search-form"
-import { VersionSwitcher } from "./version-switcher"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar01 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -206,15 +203,17 @@ const data = {
   ],
 }
 
-export function AppSidebar01({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar01({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <VersionSwitcher
+        <VersionSwitcher01
           versions={data.versions}
           defaultVersion={data.versions[0]}
         />
-        <SearchForm />
+        <SearchForm01 />
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}

@@ -1,5 +1,4 @@
 import * as React from "react"
-import * as React from "react"
 import {
   AudioWaveform,
   BadgeCheck,
@@ -7,7 +6,6 @@ import {
   BookOpen,
   Bot,
   ChevronRight,
-  ChevronsUpDown,
   ChevronsUpDown,
   Command,
   CreditCard,
@@ -25,70 +23,45 @@ import {
   SquareTerminal,
   Trash2,
   type LucideIcon,
-  type LucideIcon,
 } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
+} from "@/registry/default/ui/avatar"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/default/ui/collapsible"
 import {
   DropdownMenu,
-  DropdownMenu,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuContent,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuItem,
-  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSeparator,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-  DropdownMenuTrigger,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/default/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
   useSidebar,
-  useSidebar,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/default/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -96,23 +69,18 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
+} from "@/registry/default/ui/breadcrumb"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavUser } from "./nav-user"
-import { TeamSwitcher } from "./team-switcher"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar07 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -145,7 +113,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-;("use client")
 
 // This is sample data.
 const data = {
@@ -277,26 +244,27 @@ const data = {
   ],
 }
 
-export function AppSidebar07({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar07({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher07 teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain07 items={data.navMain} />
+        <NavProjects07 projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser07 user={data.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )
 }
-;("use client")
 
-export function NavMain({
+export function NavMain07({
   items,
 }: {
   items: {
@@ -349,9 +317,8 @@ export function NavMain({
     </SidebarGroup>
   )
 }
-;("use client")
 
-export function NavProjects({
+export function NavProjects07({
   projects,
 }: {
   projects: {
@@ -413,9 +380,8 @@ export function NavProjects({
     </SidebarGroup>
   )
 }
-;("use client")
 
-export function NavUser({
+export function NavUser07({
   user,
 }: {
   user: {
@@ -497,7 +463,6 @@ export function NavUser({
     </SidebarMenu>
   )
 }
-;("use client")
 
 export function TeamSwitcher07({
   teams,

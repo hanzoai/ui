@@ -1,5 +1,4 @@
 import * as React from "react"
-import * as React from "react"
 import {
   BadgeCheck,
   Bell,
@@ -23,68 +22,47 @@ import {
   SquareTerminal,
   Trash2,
   type LucideIcon,
-  type LucideIcon,
-  type LucideIcon,
 } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "../../../../primitives/avatar"
+} from "@/registry/new-york/ui/avatar"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
+} from "@/registry/new-york/ui/collapsible"
 import {
   DropdownMenu,
-  DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuTrigger,
-} from "../../../../primitives/dropdown-menu"
+} from "@/registry/new-york/ui/dropdown-menu"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
-  SidebarMenu,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
-  SidebarMenuAction,
   SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
-  SidebarMenuItem,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarTrigger,
   useSidebar,
-  useSidebar,
-} from "../../../../primitives/sidebar"
+} from "@/registry/new-york/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -92,23 +70,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar08 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2">
           <div className="flex items-center gap-2 px-4">
@@ -141,7 +109,6 @@ export default function Page() {
     </SidebarProvider>
   )
 }
-;("use client")
 
 const data = {
   user: {
@@ -267,7 +234,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar08({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -298,7 +267,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-;("use client")
 
 export function NavMain({
   items,
@@ -357,7 +325,6 @@ export function NavMain({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavProjects({
   projects,
@@ -451,7 +418,6 @@ export function NavSecondary({
     </SidebarGroup>
   )
 }
-;("use client")
 
 export function NavUser({
   user,

@@ -1,8 +1,23 @@
 "use client"
 
 import * as React from "react"
-import { Bell, CreditCard, DollarSign, Activity, Users, Package, ArrowUpRight, ArrowDownRight } from "lucide-react"
+import {
+  Activity,
+  ArrowDownRight,
+  ArrowUpRight,
+  Bell,
+  CreditCard,
+  DollarSign,
+  Package,
+  Users,
+} from "lucide-react"
 
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/registry/default/ui/avatar"
+import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import {
   Card,
@@ -12,9 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/default/ui/card"
-import { Badge } from "@/registry/default/ui/badge"
 import { Progress } from "@/registry/default/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/registry/default/ui/avatar"
 
 export default function Component() {
   return (
@@ -23,9 +36,7 @@ export default function Component() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Revenue
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -41,9 +52,7 @@ export default function Component() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Subscriptions
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -75,9 +84,7 @@ export default function Component() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Active Now
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Active Now</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -109,25 +116,50 @@ export default function Component() {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>
-              You made 265 sales this month.
-            </CardDescription>
+            <CardDescription>You made 265 sales this month.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
               {[
-                { name: "Olivia Martin", email: "olivia.martin@email.com", amount: "+$1,999.00", avatar: "/avatars/01.png" },
-                { name: "Jackson Lee", email: "jackson.lee@email.com", amount: "+$39.00", avatar: "/avatars/02.png" },
-                { name: "Isabella Nguyen", email: "isabella@email.com", amount: "+$299.00", avatar: "/avatars/03.png" },
-                { name: "William Kim", email: "will@email.com", amount: "+$99.00", avatar: "/avatars/04.png" },
+                {
+                  name: "Olivia Martin",
+                  email: "olivia.martin@email.com",
+                  amount: "+$1,999.00",
+                  avatar: "/avatars/01.png",
+                },
+                {
+                  name: "Jackson Lee",
+                  email: "jackson.lee@email.com",
+                  amount: "+$39.00",
+                  avatar: "/avatars/02.png",
+                },
+                {
+                  name: "Isabella Nguyen",
+                  email: "isabella@email.com",
+                  amount: "+$299.00",
+                  avatar: "/avatars/03.png",
+                },
+                {
+                  name: "William Kim",
+                  email: "will@email.com",
+                  amount: "+$99.00",
+                  avatar: "/avatars/04.png",
+                },
               ].map((sale, index) => (
                 <div key={index} className="flex items-center">
                   <Avatar className="h-9 w-9">
                     <AvatarImage src={sale.avatar} alt="Avatar" />
-                    <AvatarFallback>{sale.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    <AvatarFallback>
+                      {sale.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">{sale.name}</p>
+                    <p className="text-sm font-medium leading-none">
+                      {sale.name}
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       {sale.email}
                     </p>
@@ -199,18 +231,34 @@ export default function Component() {
                 { name: "Jackson Lee", role: "Member", status: "offline" },
                 { name: "Isabella Nguyen", role: "Member", status: "online" },
               ].map((member, i) => (
-                <div key={i} className="flex items-center justify-between space-x-4">
+                <div
+                  key={i}
+                  className="flex items-center justify-between space-x-4"
+                >
                   <div className="flex items-center space-x-4">
                     <Avatar>
                       <AvatarImage src={`/avatars/0${i + 1}.png`} />
-                      <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                      <AvatarFallback>
+                        {member.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-medium leading-none">{member.name}</p>
-                      <p className="text-sm text-muted-foreground">{member.role}</p>
+                      <p className="text-sm font-medium leading-none">
+                        {member.name}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {member.role}
+                      </p>
                     </div>
                   </div>
-                  <Badge variant={member.status === "online" ? "default" : "secondary"}>
+                  <Badge
+                    variant={
+                      member.status === "online" ? "default" : "secondary"
+                    }
+                  >
                     {member.status}
                   </Badge>
                 </div>

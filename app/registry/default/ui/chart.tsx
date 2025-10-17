@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export const Chart = React.forwardRef<
@@ -31,6 +32,10 @@ export const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("chart-tooltip-content", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("chart-tooltip-content", className)}
+    {...props}
+  />
 ))
 ChartTooltipContent.displayName = "ChartTooltipContent"

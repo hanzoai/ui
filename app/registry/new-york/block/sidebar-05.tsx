@@ -5,24 +5,26 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "../../../../primitives/collapsible"
-import { Label } from "../../../../primitives/label"
+} from "@/registry/new-york/ui/collapsible"
+import { Label } from "@/registry/new-york/ui/label"
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
   SidebarInput,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarProvider,
   SidebarRail,
-} from "../../../../primitives/sidebar"
+  SidebarTrigger,
+} from "@/registry/new-york/ui/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -30,20 +32,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../../../primitives/breadcrumb"
-import { Separator } from "../../../primitives/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "../../../primitives/sidebar"
-import { AppSidebar } from "./components/app-sidebar"
-import { SearchForm } from "./search-form"
+} from "@/registry/new-york/ui/breadcrumb"
+import { Separator } from "@/registry/new-york/ui/separator"
 
 export default function Page() {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar05 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -216,7 +211,9 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar05({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -235,7 +232,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <SearchForm />
+        <SearchForm05 />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -281,7 +278,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   )
 }
 
-export function SearchForm({ ...props }: React.ComponentProps<"form">) {
+export function SearchForm05({ ...props }: React.ComponentProps<"form">) {
   return (
     <form {...props}>
       <SidebarGroup className="py-0">

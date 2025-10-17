@@ -2,21 +2,6 @@ import * as React from "react"
 import { GalleryVerticalEnd } from "lucide-react"
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/registry/default/ui/sidebar"
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -25,7 +10,22 @@ import {
   BreadcrumbSeparator,
 } from "@/registry/default/ui/breadcrumb"
 import { Separator } from "@/registry/default/ui/separator"
-import { AppSidebar } from "./components/app-sidebar"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/registry/default/ui/sidebar"
+
 
 export default function Page() {
   return (
@@ -36,7 +36,7 @@ export default function Page() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar />
+      <AppSidebar04 />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
@@ -209,7 +209,9 @@ const data = {
   ],
 }
 
-export function AppSidebar04({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar04({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
