@@ -1,0 +1,15 @@
+{
+  "name": "calendar-21",
+  "registryDependencies": [
+    "calendar"
+  ],
+  "files": [
+    {
+      "name": "calendar-21.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { DateRange } from \"react-day-picker\"\n\nimport { cn } from \"@/lib/utils\"\nimport { buttonVariants } from \"@/registry/new-york/ui/button\"\nimport { Calendar } from \"@/registry/new-york/ui/calendar\"\n\nexport default function Calendar21() {\n  const [range, setRange] = React.useState<DateRange | undefined>({\n    from: new Date(2025, 5, 12),\n    to: new Date(2025, 5, 17),\n  })\n\n  return (\n    <Calendar\n      mode=\"range\"\n      defaultMonth={range?.from}\n      selected={range}\n      onSelect={setRange}\n      numberOfMonths={1}\n      captionLayout=\"dropdown\"\n      className=\"rounded-lg border shadow-sm [--cell-size:2.75rem] md:[--cell-size:3rem]\"\n      formatters={{\n        formatMonthDropdown: (date) => {\n          return date.toLocaleString(\"default\", { month: \"long\" })\n        },\n      }}\n      components={{\n        DayButton: ({ children, modifiers, day, ...props }) => {\n          const isWeekend = day.date.getDay() === 0 || day.date.getDay() === 6\n\n          return (\n            <button\n              className={cn(\n                buttonVariants({ variant: \"ghost\" }),\n                \"relative flex flex-col items-center justify-center h-9 w-9 p-0 font-normal aria-selected:opacity-100\"\n              )}\n              {...props}\n            >\n              <div>{children}</div>\n              {!modifiers.outside && (\n                <span className=\"text-xs\">{isWeekend ? \"$220\" : \"$100\"}</span>\n              )}\n            </button>\n          )\n        },\n      }}\n    />\n  )\n}\n"
+    }
+  ],
+  "type": "components:block",
+  "category": "Application",
+  "subcategory": "Calendar"
+}

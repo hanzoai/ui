@@ -1,0 +1,520 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","new-york","dashboard-04",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","new-york","d"],{"children":[["name","dashboard-04","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","new-york","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","dashboard-04","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+1e:I[46311,[],"IconMark"]
+17:T5e5,import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from "@/components/ui/card"
+import {Button} from "@/components/ui/button"
+import {Input} from "@/components/ui/input"
+import {Checkbox} from "@/components/ui/checkbox"
+
+            export default function Component() {
+              return (<Card>
+              <CardHeader>
+                <CardTitle>Plugins Directory</CardTitle>
+                <CardDescription>
+                  The directory within your project, in which your plugins are
+                  located.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="flex flex-col gap-4">
+                  <Input
+                    placeholder="Project Name"
+                    defaultValue="/content/plugins"
+                  />
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="include" defaultChecked />
+                    <label
+                      htmlFor="include"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Allow administrators to change the directory.
+                    </label>
+                  </div>
+                </form>
+              </CardContent>
+              <CardFooter className="border-t px-6 py-4">
+                <Button>Save</Button>
+              </CardFooter>
+            </Card>)
+            }18:T1e3f,import Link from "next/link"
+import { CircleUser, Menu, Package2, Search } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+
+export function Dashboard() {
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Link
+            href="#"
+            className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          >
+            <Package2 className="h-6 w-6" />
+            <span className="sr-only">Acme Inc</span>
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Orders
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Products
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Customers
+          </Link>
+          <Link
+            href="#"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Settings
+          </Link>
+        </nav>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="grid gap-6 text-lg font-medium">
+              <Link
+                href="#"
+                className="flex items-center gap-2 text-lg font-semibold"
+              >
+                <Package2 className="h-6 w-6" />
+                <span className="sr-only">Acme Inc</span>
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Orders
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Products
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Customers
+              </Link>
+              <Link href="#" className="hover:text-foreground">
+                Settings
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <form className="ml-auto flex-1 sm:flex-initial">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+              />
+            </div>
+          </form>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+        <div className="mx-auto grid w-full max-w-6xl gap-2">
+          <h1 className="text-3xl font-semibold">Settings</h1>
+        </div>
+        <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
+          <nav
+            className="grid gap-4 text-sm text-muted-foreground" x-chunk="dashboard-04-chunk-0"
+          >
+            <Link href="#" className="font-semibold text-primary">
+              General
+            </Link>
+            <Link href="#">Security</Link>
+            <Link href="#">Integrations</Link>
+            <Link href="#">Support</Link>
+            <Link href="#">Organizations</Link>
+            <Link href="#">Advanced</Link>
+          </nav>
+          <div className="grid gap-6">
+            <Card x-chunk="dashboard-04-chunk-1">
+              <CardHeader>
+                <CardTitle>Store Name</CardTitle>
+                <CardDescription>
+                  Used to identify your store in the marketplace.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form>
+                  <Input placeholder="Store Name" />
+                </form>
+              </CardContent>
+              <CardFooter className="border-t px-6 py-4">
+                <Button>Save</Button>
+              </CardFooter>
+            </Card>
+            <Card x-chunk="dashboard-04-chunk-2">
+              <CardHeader>
+                <CardTitle>Plugins Directory</CardTitle>
+                <CardDescription>
+                  The directory within your project, in which your plugins are
+                  located.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="flex flex-col gap-4">
+                  <Input
+                    placeholder="Project Name"
+                    defaultValue="/content/plugins"
+                  />
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="include" defaultChecked />
+                    <label
+                      htmlFor="include"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Allow administrators to change the directory.
+                    </label>
+                  </div>
+                </form>
+              </CardContent>
+              <CardFooter className="border-t px-6 py-4">
+                <Button>Save</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
+19:T2513,<pre><code class="language-typescript">import Link from &quot;next/link&quot;
+import { CircleUser, Menu, Package2, Search } from &quot;lucide-react&quot;
+
+import { Button } from &quot;@/components/ui/button&quot;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from &quot;@/components/ui/card&quot;
+import { Checkbox } from &quot;@/components/ui/checkbox&quot;
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from &quot;@/components/ui/dropdown-menu&quot;
+import { Input } from &quot;@/components/ui/input&quot;
+import { Sheet, SheetContent, SheetTrigger } from &quot;@/components/ui/sheet&quot;
+
+export function Dashboard() {
+  return (
+    &lt;div className=&quot;flex min-h-screen w-full flex-col&quot;&gt;
+      &lt;header className=&quot;sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6&quot;&gt;
+        &lt;nav className=&quot;hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6&quot;&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;flex items-center gap-2 text-lg font-semibold md:text-base&quot;
+          &gt;
+            &lt;Package2 className=&quot;h-6 w-6&quot; /&gt;
+            &lt;span className=&quot;sr-only&quot;&gt;Acme Inc&lt;/span&gt;
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Dashboard
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Orders
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Products
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Customers
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Settings
+          &lt;/Link&gt;
+        &lt;/nav&gt;
+        &lt;Sheet&gt;
+          &lt;SheetTrigger asChild&gt;
+            &lt;Button
+              variant=&quot;outline&quot;
+              size=&quot;icon&quot;
+              className=&quot;shrink-0 md:hidden&quot;
+            &gt;
+              &lt;Menu className=&quot;h-5 w-5&quot; /&gt;
+              &lt;span className=&quot;sr-only&quot;&gt;Toggle navigation menu&lt;/span&gt;
+            &lt;/Button&gt;
+          &lt;/SheetTrigger&gt;
+          &lt;SheetContent side=&quot;left&quot;&gt;
+            &lt;nav className=&quot;grid gap-6 text-lg font-medium&quot;&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;flex items-center gap-2 text-lg font-semibold&quot;
+              &gt;
+                &lt;Package2 className=&quot;h-6 w-6&quot; /&gt;
+                &lt;span className=&quot;sr-only&quot;&gt;Acme Inc&lt;/span&gt;
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Dashboard
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Orders
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Products
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Customers
+              &lt;/Link&gt;
+              &lt;Link href=&quot;#&quot; className=&quot;hover:text-foreground&quot;&gt;
+                Settings
+              &lt;/Link&gt;
+            &lt;/nav&gt;
+          &lt;/SheetContent&gt;
+        &lt;/Sheet&gt;
+        &lt;div className=&quot;flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4&quot;&gt;
+          &lt;form className=&quot;ml-auto flex-1 sm:flex-initial&quot;&gt;
+            &lt;div className=&quot;relative&quot;&gt;
+              &lt;Search className=&quot;absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground&quot; /&gt;
+              &lt;Input
+                type=&quot;search&quot;
+                placeholder=&quot;Search products...&quot;
+                className=&quot;pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]&quot;
+              /&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+          &lt;DropdownMenu&gt;
+            &lt;DropdownMenuTrigger asChild&gt;
+              &lt;Button variant=&quot;secondary&quot; size=&quot;icon&quot; className=&quot;rounded-full&quot;&gt;
+                &lt;CircleUser className=&quot;h-5 w-5&quot; /&gt;
+                &lt;span className=&quot;sr-only&quot;&gt;Toggle user menu&lt;/span&gt;
+              &lt;/Button&gt;
+            &lt;/DropdownMenuTrigger&gt;
+            &lt;DropdownMenuContent align=&quot;end&quot;&gt;
+              &lt;DropdownMenuLabel&gt;My Account&lt;/DropdownMenuLabel&gt;
+              &lt;DropdownMenuSeparator /&gt;
+              &lt;DropdownMenuItem&gt;Settings&lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;Support&lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuSeparator /&gt;
+              &lt;DropdownMenuItem&gt;Logout&lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuContent&gt;
+          &lt;/DropdownMenu&gt;
+        &lt;/div&gt;
+      &lt;/header&gt;
+      &lt;main className=&quot;flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10&quot;&gt;
+        &lt;div className=&quot;mx-auto grid w-full max-w-6xl gap-2&quot;&gt;
+          &lt;h1 className=&quot;text-3xl font-semibold&quot;&gt;Settings&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]&quot;&gt;
+          &lt;nav
+            className=&quot;grid gap-4 text-sm text-muted-foreground&quot; x-chunk=&quot;dashboard-04-chunk-0&quot;
+          &gt;
+            &lt;Link href=&quot;#&quot; className=&quot;font-semibold text-primary&quot;&gt;
+              General
+            &lt;/Link&gt;
+            &lt;Link href=&quot;#&quot;&gt;Security&lt;/Link&gt;
+            &lt;Link href=&quot;#&quot;&gt;Integrations&lt;/Link&gt;
+            &lt;Link href=&quot;#&quot;&gt;Support&lt;/Link&gt;
+            &lt;Link href=&quot;#&quot;&gt;Organizations&lt;/Link&gt;
+            &lt;Link href=&quot;#&quot;&gt;Advanced&lt;/Link&gt;
+          &lt;/nav&gt;
+          &lt;div className=&quot;grid gap-6&quot;&gt;
+            &lt;Card x-chunk=&quot;dashboard-04-chunk-1&quot;&gt;
+              &lt;CardHeader&gt;
+                &lt;CardTitle&gt;Store Name&lt;/CardTitle&gt;
+                &lt;CardDescription&gt;
+                  Used to identify your store in the marketplace.
+                &lt;/CardDescription&gt;
+              &lt;/CardHeader&gt;
+              &lt;CardContent&gt;
+                &lt;form&gt;
+                  &lt;Input placeholder=&quot;Store Name&quot; /&gt;
+                &lt;/form&gt;
+              &lt;/CardContent&gt;
+              &lt;CardFooter className=&quot;border-t px-6 py-4&quot;&gt;
+                &lt;Button&gt;Save&lt;/Button&gt;
+              &lt;/CardFooter&gt;
+            &lt;/Card&gt;
+            &lt;Card x-chunk=&quot;dashboard-04-chunk-2&quot;&gt;
+              &lt;CardHeader&gt;
+                &lt;CardTitle&gt;Plugins Directory&lt;/CardTitle&gt;
+                &lt;CardDescription&gt;
+                  The directory within your project, in which your plugins are
+                  located.
+                &lt;/CardDescription&gt;
+              &lt;/CardHeader&gt;
+              &lt;CardContent&gt;
+                &lt;form className=&quot;flex flex-col gap-4&quot;&gt;
+                  &lt;Input
+                    placeholder=&quot;Project Name&quot;
+                    defaultValue=&quot;/content/plugins&quot;
+                  /&gt;
+                  &lt;div className=&quot;flex items-center space-x-2&quot;&gt;
+                    &lt;Checkbox id=&quot;include&quot; defaultChecked /&gt;
+                    &lt;label
+                      htmlFor=&quot;include&quot;
+                      className=&quot;text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70&quot;
+                    &gt;
+                      Allow administrators to change the directory.
+                    &lt;/label&gt;
+                  &lt;/div&gt;
+                &lt;/form&gt;
+              &lt;/CardContent&gt;
+              &lt;CardFooter className=&quot;border-t px-6 py-4&quot;&gt;
+                &lt;Button&gt;Save&lt;/Button&gt;
+              &lt;/CardFooter&gt;
+            &lt;/Card&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"w-full h-full theme-zinc","children":["$","$L16",null,{"block":{"name":"dashboard-04","description":"A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings.","registryDependencies":["button","card","dropdown-menu","input"],"files":["registry/new-york/block/dashboard-04.tsx"],"source":"__registry__/new-york/block/dashboard-04.tsx","type":"components:block","category":"Application","subcategory":"Dashboard","chunks":[{"name":"dashboard-04-chunk-0","description":"dashboard-04-chunk-0","file":"registry/new-york/block/dashboard-04-chunk-0.tsx","code":"import Link from \"next/link\"\n\n            export default function Component() {\n              return (<nav\n            className=\"grid gap-4 text-sm text-muted-foreground\"\n          >\n            <Link href=\"#\" className=\"font-semibold text-primary\">\n              General\n            </Link>\n            <Link href=\"#\">Security</Link>\n            <Link href=\"#\">Integrations</Link>\n            <Link href=\"#\">Support</Link>\n            <Link href=\"#\">Organizations</Link>\n            <Link href=\"#\">Advanced</Link>\n          </nav>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-04-chunk-1","description":"dashboard-04-chunk-1","file":"registry/new-york/block/dashboard-04-chunk-1.tsx","code":"import {Card,CardHeader,CardTitle,CardDescription,CardContent,CardFooter} from \"@/components/ui/card\"\nimport {Button} from \"@/components/ui/button\"\nimport {Input} from \"@/components/ui/input\"\n\n            export default function Component() {\n              return (<Card>\n              <CardHeader>\n                <CardTitle>Store Name</CardTitle>\n                <CardDescription>\n                  Used to identify your store in the marketplace.\n                </CardDescription>\n              </CardHeader>\n              <CardContent>\n                <form>\n                  <Input placeholder=\"Store Name\" />\n                </form>\n              </CardContent>\n              <CardFooter className=\"border-t px-6 py-4\">\n                <Button>Save</Button>\n              </CardFooter>\n            </Card>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-04-chunk-2","description":"dashboard-04-chunk-2","file":"registry/new-york/block/dashboard-04-chunk-2.tsx","code":"$17","container":{"className":"undefined"}}],"style":"new-york","container":{"height":"780px","className":"w-full h-full"},"code":"$18","highlightedCode":"$19"},"children":["$L1a",["$L1b","$L1c","$L1d"]]}]}]
+f:{"metadata":[["$","title","0",{"children":"dashboard-04 - hanzo/ui"}],["$","meta","1",{"name":"description","content":"A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings."}],["$","link","2",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","3",{"name":"author","content":"hanzo"}],["$","link","4",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","5",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","6",{"name":"creator","content":"hanzo"}],["$","meta","7",{"property":"og:title","content":"dashboard-04"}],["$","meta","8",{"property":"og:description","content":"A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings."}],["$","meta","9",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/dashboard-04/"}],["$","meta","10",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","11",{"property":"og:image:width","content":"1200"}],["$","meta","12",{"property":"og:image:height","content":"630"}],["$","meta","13",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","14",{"property":"og:type","content":"article"}],["$","meta","15",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","16",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","17",{"name":"twitter:title","content":"dashboard-04"}],["$","meta","18",{"name":"twitter:description","content":"A settings page. The settings page has a sidebar navigation and a main content area. The main content area has a form to update the store name and a form to update the plugins directory. The sidebar navigation has links to general, security, integrations, support, organizations, and advanced settings."}],["$","meta","19",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","20",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","21",{"rel":"icon","href":"/favicon.ico"}],["$","link","22",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L1e","23",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+1f:I[13335,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockChunk"]
+1b:["$","$L1f","dashboard-04-chunk-0",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:0","children":"$L20"}]
+1c:["$","$L1f","dashboard-04-chunk-1",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:1","children":"$L21"}]
+1d:["$","$L1f","dashboard-04-chunk-2",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:2","children":"$L22"}]
+23:I[42018,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],""]
+24:I[91040,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Sheet"]
+25:I[91040,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SheetTrigger"]
+26:I[91040,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SheetContent"]
+2b:I[23428,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Checkbox"]
+1a:["$","div",null,{"className":"flex min-h-screen w-full flex-col","children":[["$","header",null,{"className":"sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6","children":[["$","nav",null,{"className":"hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6","children":[["$","$L23",null,{"href":"#","className":"flex items-center gap-2 text-lg font-semibold md:text-base","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-package2 lucide-package-2 h-6 w-6","aria-hidden":"true","children":[["$","path","1holv5",{"d":"M12 3v6"}],["$","path","187q7i",{"d":"M16.76 3a2 2 0 0 1 1.8 1.1l2.23 4.479a2 2 0 0 1 .21.891V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.472a2 2 0 0 1 .211-.894L5.45 4.1A2 2 0 0 1 7.24 3z"}],["$","path","grwhos",{"d":"M3.054 9.013h17.893"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Acme Inc"}]]}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Dashboard"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Orders"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Products"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Customers"}],["$","$L23",null,{"href":"#","className":"text-foreground transition-colors hover:text-foreground","children":"Settings"}]]}],["$","$L24",null,{"children":[["$","$L25",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 shrink-0 md:hidden","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-menu h-5 w-5","aria-hidden":"true","children":[["$","path","1tepv9",{"d":"M4 5h16"}],["$","path","1lakjw",{"d":"M4 12h16"}],["$","path","1djgab",{"d":"M4 19h16"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Toggle navigation menu"}]]}]}],["$","$L26",null,{"side":"left","children":["$","nav",null,{"className":"grid gap-6 text-lg font-medium","children":[["$","$L23",null,{"href":"#","className":"flex items-center gap-2 text-lg font-semibold","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-package2 lucide-package-2 h-6 w-6","aria-hidden":"true","children":[["$","path","1holv5",{"d":"M12 3v6"}],["$","path","187q7i",{"d":"M16.76 3a2 2 0 0 1 1.8 1.1l2.23 4.479a2 2 0 0 1 .21.891V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.472a2 2 0 0 1 .211-.894L5.45 4.1A2 2 0 0 1 7.24 3z"}],["$","path","grwhos",{"d":"M3.054 9.013h17.893"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Acme Inc"}]]}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Dashboard"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Orders"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Products"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Customers"}],["$","$L23",null,{"href":"#","className":"hover:text-foreground","children":"Settings"}]]}]}]]}],["$","div",null,{"className":"flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4","children":[["$","form",null,{"className":"ml-auto flex-1 sm:flex-initial","children":["$","div",null,{"className":"relative","children":["$L27","$L28"]}]}],"$L29"]}]]}],"$L2a"]}]
+20:["$","nav",null,{"className":"grid gap-4 text-sm text-muted-foreground","x-chunk":"dashboard-04-chunk-0","children":[["$","$L23",null,{"href":"#","className":"font-semibold text-primary","children":"General"}],["$","$L23",null,{"href":"#","children":"Security"}],["$","$L23",null,{"href":"#","children":"Integrations"}],["$","$L23",null,{"href":"#","children":"Support"}],["$","$L23",null,{"href":"#","children":"Organizations"}],["$","$L23",null,{"href":"#","children":"Advanced"}]]}]
+21:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm","x-chunk":"dashboard-04-chunk-1","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":[["$","div",null,{"data-slot":"card-title","className":"leading-none font-semibold","children":"Store Name"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"Used to identify your store in the marketplace."}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","form",null,{"children":["$","input",null,{"type":"$undefined","className":"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","placeholder":"Store Name"}]}]}],["$","div",null,{"data-slot":"card-footer","className":"flex items-center [.border-t]:pt-6 border-t px-6 py-4","children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2","ref":"$undefined","children":"Save"}]}]]}]
+22:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm","x-chunk":"dashboard-04-chunk-2","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":[["$","div",null,{"data-slot":"card-title","className":"leading-none font-semibold","children":"Plugins Directory"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"The directory within your project, in which your plugins are located."}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","form",null,{"className":"flex flex-col gap-4","children":[["$","input",null,{"type":"$undefined","className":"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","placeholder":"Project Name","defaultValue":"/content/plugins"}],["$","div",null,{"className":"flex items-center space-x-2","children":[["$","$L2b",null,{"id":"include","defaultChecked":true}],["$","label",null,{"htmlFor":"include","className":"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70","children":"Allow administrators to change the directory."}]]}]]}]}],["$","div",null,{"data-slot":"card-footer","className":"flex items-center [.border-t]:pt-6 border-t px-6 py-4","children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2","ref":"$undefined","children":"Save"}]}]]}]
+2c:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenu"]
+2d:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuTrigger"]
+2e:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuContent"]
+2f:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuLabel"]
+30:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuSeparator"]
+31:I[42244,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuItem"]
+27:["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-search absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","14j7rj",{"d":"m21 21-4.34-4.34"}],["$","circle","4ej97u",{"cx":"11","cy":"11","r":"8"}],"$undefined"]}]
+28:["$","input",null,{"type":"search","className":"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]","ref":"$undefined","placeholder":"Search products..."}]
+29:["$","$L2c",null,{"children":[["$","$L2d",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 w-9 rounded-full","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-circle-user h-5 w-5","aria-hidden":"true","children":[["$","circle","1mglay",{"cx":"12","cy":"12","r":"10"}],["$","circle","ilqhr7",{"cx":"12","cy":"10","r":"3"}],["$","path","154egf",{"d":"M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Toggle user menu"}]]}]}],["$","$L2e",null,{"align":"end","children":[["$","$L2f",null,{"children":"My Account"}],["$","$L30",null,{}],["$","$L31",null,{"children":"Settings"}],["$","$L31",null,{"children":"Support"}],["$","$L30",null,{}],["$","$L31",null,{"children":"Logout"}]]}]]}]
+2a:["$","main",null,{"className":"flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10","children":[["$","div",null,{"className":"mx-auto grid w-full max-w-6xl gap-2","children":["$","h1",null,{"className":"text-3xl font-semibold","children":"Settings"}]}],["$","div",null,{"className":"mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]","children":[["$","nav",null,{"className":"grid gap-4 text-sm text-muted-foreground","x-chunk":"dashboard-04-chunk-0","children":[["$","$L23",null,{"href":"#","className":"font-semibold text-primary","children":"General"}],["$","$L23",null,{"href":"#","children":"Security"}],["$","$L23",null,{"href":"#","children":"Integrations"}],["$","$L23",null,{"href":"#","children":"Support"}],["$","$L23",null,{"href":"#","children":"Organizations"}],["$","$L23",null,{"href":"#","children":"Advanced"}]]}],["$","div",null,{"className":"grid gap-6","children":[["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm","x-chunk":"dashboard-04-chunk-1","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":[["$","div",null,{"data-slot":"card-title","className":"leading-none font-semibold","children":"Store Name"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"Used to identify your store in the marketplace."}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","form",null,{"children":["$","input",null,{"type":"$undefined","className":"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","placeholder":"Store Name"}]}]}],["$","div",null,{"data-slot":"card-footer","className":"flex items-center [.border-t]:pt-6 border-t px-6 py-4","children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2","ref":"$undefined","children":"Save"}]}]]}],["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm","x-chunk":"dashboard-04-chunk-2","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":[["$","div",null,{"data-slot":"card-title","className":"leading-none font-semibold","children":"Plugins Directory"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"The directory within your project, in which your plugins are located."}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","form",null,{"className":"flex flex-col gap-4","children":[["$","input",null,{"type":"$undefined","className":"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","placeholder":"Project Name","defaultValue":"/content/plugins"}],["$","div",null,{"className":"flex items-center space-x-2","children":["$L32","$L33"]}]]}]}],"$L34"]}]]}]]}]]}]
+32:["$","$L2b",null,{"id":"include","defaultChecked":true}]
+33:["$","label",null,{"htmlFor":"include","className":"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70","children":"Allow administrators to change the directory."}]
+34:["$","div",null,{"data-slot":"card-footer","className":"flex items-center [.border-t]:pt-6 border-t px-6 py-4","children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2","ref":"$undefined","children":"Save"}]}]

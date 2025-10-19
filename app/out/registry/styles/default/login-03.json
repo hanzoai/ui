@@ -1,0 +1,18 @@
+{
+  "name": "login-03",
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "label"
+  ],
+  "files": [
+    {
+      "name": "login-03.tsx",
+      "content": "\"use client\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Button } from \"@/registry/new-york/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/registry/new-york/ui/card\"\nimport { Input } from \"@/registry/new-york/ui/input\"\nimport { Label } from \"@/registry/new-york/ui/label\"\n\nexport default function Page() {\n  return (\n    <div className=\"flex min-h-svh w-full items-center justify-center p-6 md:p-10\">\n      <div className=\"w-full max-w-sm\">\n        <LoginForm03 />\n      </div>\n    </div>\n  )\n}\n\nexport function LoginForm03({\n  className,\n  ...props\n}: React.ComponentPropsWithoutRef<\"div\">) {\n  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {\n    e.preventDefault()\n    const formData = new FormData(e.currentTarget)\n\n    // TODO: Add your authentication logic here\n    console.log(\"Form submitted:\", Object.fromEntries(formData))\n\n    // Example: await signIn(formData)\n  }\n\n  return (\n    <div className={cn(\"flex flex-col gap-6\", className)} {...props}>\n      <Card>\n        <CardHeader>\n          <CardTitle className=\"text-2xl\">Login</CardTitle>\n          <CardDescription>\n            Enter your email below to login to your account\n          </CardDescription>\n        </CardHeader>\n        <CardContent>\n          <form onSubmit={handleSubmit}>\n            <div className=\"flex flex-col gap-6\">\n              <div className=\"grid gap-2\">\n                <Label htmlFor=\"email\">Email</Label>\n                <Input\n                  id=\"email\"\n                  name=\"email\"\n                  type=\"email\"\n                  placeholder=\"m@example.com\"\n                  required\n                />\n              </div>\n              <div className=\"grid gap-2\">\n                <div className=\"flex items-center\">\n                  <Label htmlFor=\"password\">Password</Label>\n                  <a\n                    href=\"#\"\n                    className=\"ml-auto inline-block text-sm underline-offset-4 hover:underline\"\n                  >\n                    Forgot your password?\n                  </a>\n                </div>\n                <Input id=\"password\" name=\"password\" type=\"password\" required />\n              </div>\n              <Button type=\"submit\" className=\"w-full\">\n                Login\n              </Button>\n              <Button variant=\"outline\" className=\"w-full\">\n                Login with Google\n              </Button>\n            </div>\n            <div className=\"mt-4 text-center text-sm\">\n              Don&apos;t have an account?{\" \"}\n              <a href=\"#\" className=\"underline underline-offset-4\">\n                Sign up\n              </a>\n            </div>\n          </form>\n        </CardContent>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:block",
+  "category": "Authentication",
+  "subcategory": "Login"
+}

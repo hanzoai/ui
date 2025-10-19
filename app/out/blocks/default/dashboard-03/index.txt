@@ -1,0 +1,1141 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","default","dashboard-03",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","default","d"],{"children":[["name","dashboard-03","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","default","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","dashboard-03","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+1e:I[46311,[],"IconMark"]
+17:T1579,import {Label} from "@/components/ui/label"
+import {Select,SelectTrigger,SelectContent,SelectItem,SelectValue} from "@/components/ui/select"
+import {Rabbit,Bird,Turtle} from "lucide-react"
+import {Input} from "@/components/ui/input"
+import {Textarea} from "@/components/ui/textarea"
+
+            export default function Component() {
+              return (<div
+            className="relative hidden flex-col items-start gap-8 md:flex"
+          >
+            <form className="grid w-full items-start gap-6">
+              <fieldset className="grid gap-6 rounded-lg border p-4">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Settings
+                </legend>
+                <div className="grid gap-3">
+                  <Label htmlFor="model">Model</Label>
+                  <Select>
+                    <SelectTrigger
+                      id="model"
+                      className="items-start [&_[data-description]]:hidden"
+                    >
+                      <SelectValue placeholder="Select a model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="genesis">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Rabbit className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Genesis
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              Our fastest model for general use cases.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="explorer">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Bird className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Explorer
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              Performance and speed for efficiency.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="quantum">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Turtle className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Quantum
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              The most powerful model for complex computations.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="temperature">Temperature</Label>
+                  <Input id="temperature" type="number" placeholder="0.4" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-p">Top P</Label>
+                    <Input id="top-p" type="number" placeholder="0.7" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-k">Top K</Label>
+                    <Input id="top-k" type="number" placeholder="0.0" />
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset className="grid gap-6 rounded-lg border p-4">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Messages
+                </legend>
+                <div className="grid gap-3">
+                  <Label htmlFor="role">Role</Label>
+                  <Select defaultValue="system">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="system">System</SelectItem>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="assistant">Assistant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="content">Content</Label>
+                  <Textarea
+                    id="content"
+                    placeholder="You are a..."
+                    className="min-h-[9.5rem]"
+                  />
+                </div>
+              </fieldset>
+            </form>
+          </div>)
+            }18:T7a7,import {Label} from "@/components/ui/label"
+import {Tooltip,TooltipTrigger,TooltipContent} from "@/components/ui/tooltip"
+import {Button} from "@/components/ui/button"
+import {Textarea} from "@/components/ui/textarea"
+import {Paperclip,Mic,CornerDownLeft} from "lucide-react"
+
+            export default function Component() {
+              return (<form
+              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring"
+            >
+              <Label htmlFor="message" className="sr-only">
+                Message
+              </Label>
+              <Textarea
+                id="message"
+                placeholder="Type your message here..."
+                className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+              />
+              <div className="flex items-center p-3 pt-0">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Paperclip className="size-4" />
+                      <span className="sr-only">Attach file</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Attach File</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Mic className="size-4" />
+                      <span className="sr-only">Use Microphone</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Use Microphone</TooltipContent>
+                </Tooltip>
+                <Button type="submit" size="sm" className="ml-auto gap-1.5">
+                  Send Message
+                  <CornerDownLeft className="size-3.5" />
+                </Button>
+              </div>
+            </form>)
+            }19:T462a,import {
+  Bird,
+  Book,
+  Bot,
+  Code2,
+  CornerDownLeft,
+  LifeBuoy,
+  Mic,
+  Paperclip,
+  Rabbit,
+  Settings,
+  Settings2,
+  Share,
+  SquareTerminal,
+  SquareUser,
+  Triangle,
+  Turtle,
+} from "lucide-react"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
+export function Dashboard() {
+  return (
+    <div className="grid h-screen w-full pl-[56px]">
+      <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
+        <div className="border-b p-2">
+          <Button variant="outline" size="icon" aria-label="Home">
+            <Triangle className="size-5 fill-foreground" />
+          </Button>
+        </div>
+        <nav className="grid gap-1 p-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-lg bg-muted"
+                aria-label="Playground"
+              >
+                <SquareTerminal className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Playground
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-lg"
+                aria-label="Models"
+              >
+                <Bot className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Models
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-lg"
+                aria-label="API"
+              >
+                <Code2 className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              API
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-lg"
+                aria-label="Documentation"
+              >
+                <Book className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Documentation
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-lg"
+                aria-label="Settings"
+              >
+                <Settings2 className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Settings
+            </TooltipContent>
+          </Tooltip>
+        </nav>
+        <nav className="mt-auto grid gap-1 p-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="mt-auto rounded-lg"
+                aria-label="Help"
+              >
+                <LifeBuoy className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Help
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="mt-auto rounded-lg"
+                aria-label="Account"
+              >
+                <SquareUser className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Account
+            </TooltipContent>
+          </Tooltip>
+        </nav>
+      </aside>
+      <div className="flex flex-col">
+        <header className="sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4">
+          <h1 className="text-xl font-semibold">Playground</h1>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Settings className="size-4" />
+                <span className="sr-only">Settings</span>
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="max-h-[80vh]">
+              <DrawerHeader>
+                <DrawerTitle>Configuration</DrawerTitle>
+                <DrawerDescription>
+                  Configure the settings for the model and messages.
+                </DrawerDescription>
+              </DrawerHeader>
+              <form className="grid w-full items-start gap-6 overflow-auto p-4 pt-0">
+                <fieldset className="grid gap-6 rounded-lg border p-4">
+                  <legend className="-ml-1 px-1 text-sm font-medium">
+                    Settings
+                  </legend>
+                  <div className="grid gap-3">
+                    <Label htmlFor="model">Model</Label>
+                    <Select>
+                      <SelectTrigger
+                        id="model"
+                        className="items-start [&_[data-description]]:hidden"
+                      >
+                        <SelectValue placeholder="Select a model" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="genesis">
+                          <div className="flex items-start gap-3 text-muted-foreground">
+                            <Rabbit className="size-5" />
+                            <div className="grid gap-0.5">
+                              <p>
+                                Neural{" "}
+                                <span className="font-medium text-foreground">
+                                  Genesis
+                                </span>
+                              </p>
+                              <p className="text-xs" data-description>
+                                Our fastest model for general use cases.
+                              </p>
+                            </div>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="explorer">
+                          <div className="flex items-start gap-3 text-muted-foreground">
+                            <Bird className="size-5" />
+                            <div className="grid gap-0.5">
+                              <p>
+                                Neural{" "}
+                                <span className="font-medium text-foreground">
+                                  Explorer
+                                </span>
+                              </p>
+                              <p className="text-xs" data-description>
+                                Performance and speed for efficiency.
+                              </p>
+                            </div>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="quantum">
+                          <div className="flex items-start gap-3 text-muted-foreground">
+                            <Turtle className="size-5" />
+                            <div className="grid gap-0.5">
+                              <p>
+                                Neural{" "}
+                                <span className="font-medium text-foreground">
+                                  Quantum
+                                </span>
+                              </p>
+                              <p className="text-xs" data-description>
+                                The most powerful model for complex
+                                computations.
+                              </p>
+                            </div>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="temperature">Temperature</Label>
+                    <Input id="temperature" type="number" placeholder="0.4" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-p">Top P</Label>
+                    <Input id="top-p" type="number" placeholder="0.7" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-k">Top K</Label>
+                    <Input id="top-k" type="number" placeholder="0.0" />
+                  </div>
+                </fieldset>
+                <fieldset className="grid gap-6 rounded-lg border p-4">
+                  <legend className="-ml-1 px-1 text-sm font-medium">
+                    Messages
+                  </legend>
+                  <div className="grid gap-3">
+                    <Label htmlFor="role">Role</Label>
+                    <Select defaultValue="system">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="system">System</SelectItem>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="assistant">Assistant</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="content">Content</Label>
+                    <Textarea id="content" placeholder="You are a..." />
+                  </div>
+                </fieldset>
+              </form>
+            </DrawerContent>
+          </Drawer>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto gap-1.5 text-sm"
+          >
+            <Share className="size-3.5" />
+            Share
+          </Button>
+        </header>
+        <main className="grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="relative hidden flex-col items-start gap-8 md:flex" x-chunk="dashboard-03-chunk-0"
+          >
+            <form className="grid w-full items-start gap-6">
+              <fieldset className="grid gap-6 rounded-lg border p-4">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Settings
+                </legend>
+                <div className="grid gap-3">
+                  <Label htmlFor="model">Model</Label>
+                  <Select>
+                    <SelectTrigger
+                      id="model"
+                      className="items-start [&_[data-description]]:hidden"
+                    >
+                      <SelectValue placeholder="Select a model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="genesis">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Rabbit className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Genesis
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              Our fastest model for general use cases.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="explorer">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Bird className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Explorer
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              Performance and speed for efficiency.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="quantum">
+                        <div className="flex items-start gap-3 text-muted-foreground">
+                          <Turtle className="size-5" />
+                          <div className="grid gap-0.5">
+                            <p>
+                              Neural{" "}
+                              <span className="font-medium text-foreground">
+                                Quantum
+                              </span>
+                            </p>
+                            <p className="text-xs" data-description>
+                              The most powerful model for complex computations.
+                            </p>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="temperature">Temperature</Label>
+                  <Input id="temperature" type="number" placeholder="0.4" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-p">Top P</Label>
+                    <Input id="top-p" type="number" placeholder="0.7" />
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="top-k">Top K</Label>
+                    <Input id="top-k" type="number" placeholder="0.0" />
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset className="grid gap-6 rounded-lg border p-4">
+                <legend className="-ml-1 px-1 text-sm font-medium">
+                  Messages
+                </legend>
+                <div className="grid gap-3">
+                  <Label htmlFor="role">Role</Label>
+                  <Select defaultValue="system">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="system">System</SelectItem>
+                      <SelectItem value="user">User</SelectItem>
+                      <SelectItem value="assistant">Assistant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="content">Content</Label>
+                  <Textarea
+                    id="content"
+                    placeholder="You are a..."
+                    className="min-h-[9.5rem]"
+                  />
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
+            <Badge variant="outline" className="absolute right-3 top-3">
+              Output
+            </Badge>
+            <div className="flex-1" />
+            <form
+              className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring" x-chunk="dashboard-03-chunk-1"
+            >
+              <Label htmlFor="message" className="sr-only">
+                Message
+              </Label>
+              <Textarea
+                id="message"
+                placeholder="Type your message here..."
+                className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
+              />
+              <div className="flex items-center p-3 pt-0">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Paperclip className="size-4" />
+                      <span className="sr-only">Attach file</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Attach File</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Mic className="size-4" />
+                      <span className="sr-only">Use Microphone</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Use Microphone</TooltipContent>
+                </Tooltip>
+                <Button type="submit" size="sm" className="ml-auto gap-1.5">
+                  Send Message
+                  <CornerDownLeft className="size-3.5" />
+                </Button>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+  )
+}
+1a:T56dc,<pre><code class="language-typescript">import {
+  Bird,
+  Book,
+  Bot,
+  Code2,
+  CornerDownLeft,
+  LifeBuoy,
+  Mic,
+  Paperclip,
+  Rabbit,
+  Settings,
+  Settings2,
+  Share,
+  SquareTerminal,
+  SquareUser,
+  Triangle,
+  Turtle,
+} from &quot;lucide-react&quot;
+
+import { Badge } from &quot;@/components/ui/badge&quot;
+import { Button } from &quot;@/components/ui/button&quot;
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from &quot;@/components/ui/drawer&quot;
+import { Input } from &quot;@/components/ui/input&quot;
+import { Label } from &quot;@/components/ui/label&quot;
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from &quot;@/components/ui/select&quot;
+import { Textarea } from &quot;@/components/ui/textarea&quot;
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from &quot;@/components/ui/tooltip&quot;
+
+export function Dashboard() {
+  return (
+    &lt;div className=&quot;grid h-screen w-full pl-[56px]&quot;&gt;
+      &lt;aside className=&quot;inset-y fixed  left-0 z-20 flex h-full flex-col border-r&quot;&gt;
+        &lt;div className=&quot;border-b p-2&quot;&gt;
+          &lt;Button variant=&quot;outline&quot; size=&quot;icon&quot; aria-label=&quot;Home&quot;&gt;
+            &lt;Triangle className=&quot;size-5 fill-foreground&quot; /&gt;
+          &lt;/Button&gt;
+        &lt;/div&gt;
+        &lt;nav className=&quot;grid gap-1 p-2&quot;&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;rounded-lg bg-muted&quot;
+                aria-label=&quot;Playground&quot;
+              &gt;
+                &lt;SquareTerminal className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Playground
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;rounded-lg&quot;
+                aria-label=&quot;Models&quot;
+              &gt;
+                &lt;Bot className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Models
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;rounded-lg&quot;
+                aria-label=&quot;API&quot;
+              &gt;
+                &lt;Code2 className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              API
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;rounded-lg&quot;
+                aria-label=&quot;Documentation&quot;
+              &gt;
+                &lt;Book className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Documentation
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;rounded-lg&quot;
+                aria-label=&quot;Settings&quot;
+              &gt;
+                &lt;Settings2 className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Settings
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+        &lt;/nav&gt;
+        &lt;nav className=&quot;mt-auto grid gap-1 p-2&quot;&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;mt-auto rounded-lg&quot;
+                aria-label=&quot;Help&quot;
+              &gt;
+                &lt;LifeBuoy className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Help
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+          &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+              &lt;Button
+                variant=&quot;ghost&quot;
+                size=&quot;icon&quot;
+                className=&quot;mt-auto rounded-lg&quot;
+                aria-label=&quot;Account&quot;
+              &gt;
+                &lt;SquareUser className=&quot;size-5&quot; /&gt;
+              &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent side=&quot;right&quot; sideOffset={5}&gt;
+              Account
+            &lt;/TooltipContent&gt;
+          &lt;/Tooltip&gt;
+        &lt;/nav&gt;
+      &lt;/aside&gt;
+      &lt;div className=&quot;flex flex-col&quot;&gt;
+        &lt;header className=&quot;sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4&quot;&gt;
+          &lt;h1 className=&quot;text-xl font-semibold&quot;&gt;Playground&lt;/h1&gt;
+          &lt;Drawer&gt;
+            &lt;DrawerTrigger asChild&gt;
+              &lt;Button variant=&quot;ghost&quot; size=&quot;icon&quot; className=&quot;md:hidden&quot;&gt;
+                &lt;Settings className=&quot;size-4&quot; /&gt;
+                &lt;span className=&quot;sr-only&quot;&gt;Settings&lt;/span&gt;
+              &lt;/Button&gt;
+            &lt;/DrawerTrigger&gt;
+            &lt;DrawerContent className=&quot;max-h-[80vh]&quot;&gt;
+              &lt;DrawerHeader&gt;
+                &lt;DrawerTitle&gt;Configuration&lt;/DrawerTitle&gt;
+                &lt;DrawerDescription&gt;
+                  Configure the settings for the model and messages.
+                &lt;/DrawerDescription&gt;
+              &lt;/DrawerHeader&gt;
+              &lt;form className=&quot;grid w-full items-start gap-6 overflow-auto p-4 pt-0&quot;&gt;
+                &lt;fieldset className=&quot;grid gap-6 rounded-lg border p-4&quot;&gt;
+                  &lt;legend className=&quot;-ml-1 px-1 text-sm font-medium&quot;&gt;
+                    Settings
+                  &lt;/legend&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;model&quot;&gt;Model&lt;/Label&gt;
+                    &lt;Select&gt;
+                      &lt;SelectTrigger
+                        id=&quot;model&quot;
+                        className=&quot;items-start [&amp;_[data-description]]:hidden&quot;
+                      &gt;
+                        &lt;SelectValue placeholder=&quot;Select a model&quot; /&gt;
+                      &lt;/SelectTrigger&gt;
+                      &lt;SelectContent&gt;
+                        &lt;SelectItem value=&quot;genesis&quot;&gt;
+                          &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                            &lt;Rabbit className=&quot;size-5&quot; /&gt;
+                            &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                              &lt;p&gt;
+                                Neural{&quot; &quot;}
+                                &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                  Genesis
+                                &lt;/span&gt;
+                              &lt;/p&gt;
+                              &lt;p className=&quot;text-xs&quot; data-description&gt;
+                                Our fastest model for general use cases.
+                              &lt;/p&gt;
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                        &lt;/SelectItem&gt;
+                        &lt;SelectItem value=&quot;explorer&quot;&gt;
+                          &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                            &lt;Bird className=&quot;size-5&quot; /&gt;
+                            &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                              &lt;p&gt;
+                                Neural{&quot; &quot;}
+                                &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                  Explorer
+                                &lt;/span&gt;
+                              &lt;/p&gt;
+                              &lt;p className=&quot;text-xs&quot; data-description&gt;
+                                Performance and speed for efficiency.
+                              &lt;/p&gt;
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                        &lt;/SelectItem&gt;
+                        &lt;SelectItem value=&quot;quantum&quot;&gt;
+                          &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                            &lt;Turtle className=&quot;size-5&quot; /&gt;
+                            &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                              &lt;p&gt;
+                                Neural{&quot; &quot;}
+                                &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                  Quantum
+                                &lt;/span&gt;
+                              &lt;/p&gt;
+                              &lt;p className=&quot;text-xs&quot; data-description&gt;
+                                The most powerful model for complex
+                                computations.
+                              &lt;/p&gt;
+                            &lt;/div&gt;
+                          &lt;/div&gt;
+                        &lt;/SelectItem&gt;
+                      &lt;/SelectContent&gt;
+                    &lt;/Select&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;temperature&quot;&gt;Temperature&lt;/Label&gt;
+                    &lt;Input id=&quot;temperature&quot; type=&quot;number&quot; placeholder=&quot;0.4&quot; /&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;top-p&quot;&gt;Top P&lt;/Label&gt;
+                    &lt;Input id=&quot;top-p&quot; type=&quot;number&quot; placeholder=&quot;0.7&quot; /&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;top-k&quot;&gt;Top K&lt;/Label&gt;
+                    &lt;Input id=&quot;top-k&quot; type=&quot;number&quot; placeholder=&quot;0.0&quot; /&gt;
+                  &lt;/div&gt;
+                &lt;/fieldset&gt;
+                &lt;fieldset className=&quot;grid gap-6 rounded-lg border p-4&quot;&gt;
+                  &lt;legend className=&quot;-ml-1 px-1 text-sm font-medium&quot;&gt;
+                    Messages
+                  &lt;/legend&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;role&quot;&gt;Role&lt;/Label&gt;
+                    &lt;Select defaultValue=&quot;system&quot;&gt;
+                      &lt;SelectTrigger&gt;
+                        &lt;SelectValue placeholder=&quot;Select a role&quot; /&gt;
+                      &lt;/SelectTrigger&gt;
+                      &lt;SelectContent&gt;
+                        &lt;SelectItem value=&quot;system&quot;&gt;System&lt;/SelectItem&gt;
+                        &lt;SelectItem value=&quot;user&quot;&gt;User&lt;/SelectItem&gt;
+                        &lt;SelectItem value=&quot;assistant&quot;&gt;Assistant&lt;/SelectItem&gt;
+                      &lt;/SelectContent&gt;
+                    &lt;/Select&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;content&quot;&gt;Content&lt;/Label&gt;
+                    &lt;Textarea id=&quot;content&quot; placeholder=&quot;You are a...&quot; /&gt;
+                  &lt;/div&gt;
+                &lt;/fieldset&gt;
+              &lt;/form&gt;
+            &lt;/DrawerContent&gt;
+          &lt;/Drawer&gt;
+          &lt;Button
+            variant=&quot;outline&quot;
+            size=&quot;sm&quot;
+            className=&quot;ml-auto gap-1.5 text-sm&quot;
+          &gt;
+            &lt;Share className=&quot;size-3.5&quot; /&gt;
+            Share
+          &lt;/Button&gt;
+        &lt;/header&gt;
+        &lt;main className=&quot;grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3&quot;&gt;
+          &lt;div
+            className=&quot;relative hidden flex-col items-start gap-8 md:flex&quot; x-chunk=&quot;dashboard-03-chunk-0&quot;
+          &gt;
+            &lt;form className=&quot;grid w-full items-start gap-6&quot;&gt;
+              &lt;fieldset className=&quot;grid gap-6 rounded-lg border p-4&quot;&gt;
+                &lt;legend className=&quot;-ml-1 px-1 text-sm font-medium&quot;&gt;
+                  Settings
+                &lt;/legend&gt;
+                &lt;div className=&quot;grid gap-3&quot;&gt;
+                  &lt;Label htmlFor=&quot;model&quot;&gt;Model&lt;/Label&gt;
+                  &lt;Select&gt;
+                    &lt;SelectTrigger
+                      id=&quot;model&quot;
+                      className=&quot;items-start [&amp;_[data-description]]:hidden&quot;
+                    &gt;
+                      &lt;SelectValue placeholder=&quot;Select a model&quot; /&gt;
+                    &lt;/SelectTrigger&gt;
+                    &lt;SelectContent&gt;
+                      &lt;SelectItem value=&quot;genesis&quot;&gt;
+                        &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                          &lt;Rabbit className=&quot;size-5&quot; /&gt;
+                          &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                            &lt;p&gt;
+                              Neural{&quot; &quot;}
+                              &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                Genesis
+                              &lt;/span&gt;
+                            &lt;/p&gt;
+                            &lt;p className=&quot;text-xs&quot; data-description&gt;
+                              Our fastest model for general use cases.
+                            &lt;/p&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                      &lt;/SelectItem&gt;
+                      &lt;SelectItem value=&quot;explorer&quot;&gt;
+                        &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                          &lt;Bird className=&quot;size-5&quot; /&gt;
+                          &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                            &lt;p&gt;
+                              Neural{&quot; &quot;}
+                              &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                Explorer
+                              &lt;/span&gt;
+                            &lt;/p&gt;
+                            &lt;p className=&quot;text-xs&quot; data-description&gt;
+                              Performance and speed for efficiency.
+                            &lt;/p&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                      &lt;/SelectItem&gt;
+                      &lt;SelectItem value=&quot;quantum&quot;&gt;
+                        &lt;div className=&quot;flex items-start gap-3 text-muted-foreground&quot;&gt;
+                          &lt;Turtle className=&quot;size-5&quot; /&gt;
+                          &lt;div className=&quot;grid gap-0.5&quot;&gt;
+                            &lt;p&gt;
+                              Neural{&quot; &quot;}
+                              &lt;span className=&quot;font-medium text-foreground&quot;&gt;
+                                Quantum
+                              &lt;/span&gt;
+                            &lt;/p&gt;
+                            &lt;p className=&quot;text-xs&quot; data-description&gt;
+                              The most powerful model for complex computations.
+                            &lt;/p&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                      &lt;/SelectItem&gt;
+                    &lt;/SelectContent&gt;
+                  &lt;/Select&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;grid gap-3&quot;&gt;
+                  &lt;Label htmlFor=&quot;temperature&quot;&gt;Temperature&lt;/Label&gt;
+                  &lt;Input id=&quot;temperature&quot; type=&quot;number&quot; placeholder=&quot;0.4&quot; /&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;grid grid-cols-2 gap-4&quot;&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;top-p&quot;&gt;Top P&lt;/Label&gt;
+                    &lt;Input id=&quot;top-p&quot; type=&quot;number&quot; placeholder=&quot;0.7&quot; /&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid gap-3&quot;&gt;
+                    &lt;Label htmlFor=&quot;top-k&quot;&gt;Top K&lt;/Label&gt;
+                    &lt;Input id=&quot;top-k&quot; type=&quot;number&quot; placeholder=&quot;0.0&quot; /&gt;
+                  &lt;/div&gt;
+                &lt;/div&gt;
+              &lt;/fieldset&gt;
+              &lt;fieldset className=&quot;grid gap-6 rounded-lg border p-4&quot;&gt;
+                &lt;legend className=&quot;-ml-1 px-1 text-sm font-medium&quot;&gt;
+                  Messages
+                &lt;/legend&gt;
+                &lt;div className=&quot;grid gap-3&quot;&gt;
+                  &lt;Label htmlFor=&quot;role&quot;&gt;Role&lt;/Label&gt;
+                  &lt;Select defaultValue=&quot;system&quot;&gt;
+                    &lt;SelectTrigger&gt;
+                      &lt;SelectValue placeholder=&quot;Select a role&quot; /&gt;
+                    &lt;/SelectTrigger&gt;
+                    &lt;SelectContent&gt;
+                      &lt;SelectItem value=&quot;system&quot;&gt;System&lt;/SelectItem&gt;
+                      &lt;SelectItem value=&quot;user&quot;&gt;User&lt;/SelectItem&gt;
+                      &lt;SelectItem value=&quot;assistant&quot;&gt;Assistant&lt;/SelectItem&gt;
+                    &lt;/SelectContent&gt;
+                  &lt;/Select&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;grid gap-3&quot;&gt;
+                  &lt;Label htmlFor=&quot;content&quot;&gt;Content&lt;/Label&gt;
+                  &lt;Textarea
+                    id=&quot;content&quot;
+                    placeholder=&quot;You are a...&quot;
+                    className=&quot;min-h-[9.5rem]&quot;
+                  /&gt;
+                &lt;/div&gt;
+              &lt;/fieldset&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+          &lt;div className=&quot;relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2&quot;&gt;
+            &lt;Badge variant=&quot;outline&quot; className=&quot;absolute right-3 top-3&quot;&gt;
+              Output
+            &lt;/Badge&gt;
+            &lt;div className=&quot;flex-1&quot; /&gt;
+            &lt;form
+              className=&quot;relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring&quot; x-chunk=&quot;dashboard-03-chunk-1&quot;
+            &gt;
+              &lt;Label htmlFor=&quot;message&quot; className=&quot;sr-only&quot;&gt;
+                Message
+              &lt;/Label&gt;
+              &lt;Textarea
+                id=&quot;message&quot;
+                placeholder=&quot;Type your message here...&quot;
+                className=&quot;min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0&quot;
+              /&gt;
+              &lt;div className=&quot;flex items-center p-3 pt-0&quot;&gt;
+                &lt;Tooltip&gt;
+                  &lt;TooltipTrigger asChild&gt;
+                    &lt;Button variant=&quot;ghost&quot; size=&quot;icon&quot;&gt;
+                      &lt;Paperclip className=&quot;size-4&quot; /&gt;
+                      &lt;span className=&quot;sr-only&quot;&gt;Attach file&lt;/span&gt;
+                    &lt;/Button&gt;
+                  &lt;/TooltipTrigger&gt;
+                  &lt;TooltipContent side=&quot;top&quot;&gt;Attach File&lt;/TooltipContent&gt;
+                &lt;/Tooltip&gt;
+                &lt;Tooltip&gt;
+                  &lt;TooltipTrigger asChild&gt;
+                    &lt;Button variant=&quot;ghost&quot; size=&quot;icon&quot;&gt;
+                      &lt;Mic className=&quot;size-4&quot; /&gt;
+                      &lt;span className=&quot;sr-only&quot;&gt;Use Microphone&lt;/span&gt;
+                    &lt;/Button&gt;
+                  &lt;/TooltipTrigger&gt;
+                  &lt;TooltipContent side=&quot;top&quot;&gt;Use Microphone&lt;/TooltipContent&gt;
+                &lt;/Tooltip&gt;
+                &lt;Button type=&quot;submit&quot; size=&quot;sm&quot; className=&quot;ml-auto gap-1.5&quot;&gt;
+                  Send Message
+                  &lt;CornerDownLeft className=&quot;size-3.5&quot; /&gt;
+                &lt;/Button&gt;
+              &lt;/div&gt;
+            &lt;/form&gt;
+          &lt;/div&gt;
+        &lt;/main&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"w-full h-full theme-zinc","children":["$","$L16",null,{"block":{"name":"dashboard-03","description":"An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages.","registryDependencies":["badge","button","drawer","input","label","select","textarea","tooltip"],"files":["registry/default/block/dashboard-03.tsx"],"source":"__registry__/default/block/dashboard-03.tsx","type":"components:block","category":"Application","subcategory":"Dashboard","chunks":[{"name":"dashboard-03-chunk-0","description":"dashboard-03-chunk-0","file":"registry/default/block/dashboard-03-chunk-0.tsx","code":"$17","container":{"className":"undefined"}},{"name":"dashboard-03-chunk-1","description":"dashboard-03-chunk-1","file":"registry/default/block/dashboard-03-chunk-1.tsx","code":"$18","container":{"className":"undefined"}}],"style":"default","container":{"height":"740px","className":"w-full h-full"},"code":"$19","highlightedCode":"$1a"},"children":["$L1b",["$L1c","$L1d"]]}]}]
+f:{"metadata":[["$","title","0",{"children":"dashboard-03 - hanzo/ui"}],["$","meta","1",{"name":"description","content":"An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."}],["$","link","2",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","3",{"name":"author","content":"hanzo"}],["$","link","4",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","5",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","6",{"name":"creator","content":"hanzo"}],["$","meta","7",{"property":"og:title","content":"dashboard-03"}],["$","meta","8",{"property":"og:description","content":"An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."}],["$","meta","9",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/dashboard-03/"}],["$","meta","10",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","11",{"property":"og:image:width","content":"1200"}],["$","meta","12",{"property":"og:image:height","content":"630"}],["$","meta","13",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","14",{"property":"og:type","content":"article"}],["$","meta","15",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","16",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","17",{"name":"twitter:title","content":"dashboard-03"}],["$","meta","18",{"name":"twitter:description","content":"An AI playground with a sidebar navigation and a main content area. The playground has a header with a settings drawer and a share button. The sidebar has navigation links and a user menu. The main content area shows a form to configure the model and messages."}],["$","meta","19",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","20",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","21",{"rel":"icon","href":"/favicon.ico"}],["$","link","22",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L1e","23",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+1f:I[13335,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockChunk"]
+1c:["$","$L1f","dashboard-03-chunk-0",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:0","children":"$L20"}]
+1d:["$","$L1f","dashboard-03-chunk-1",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:1","children":"$L21"}]
+22:I[51850,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Label"]
+23:I[22840,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Select"]
+24:I[22840,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SelectTrigger"]
+25:I[22840,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SelectValue"]
+26:I[22840,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SelectContent"]
+27:I[22840,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SelectItem"]
+2a:I[14273,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Tooltip"]
+2b:I[14273,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"TooltipTrigger"]
+2c:I[14273,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"TooltipContent"]
+20:["$","div",null,{"className":"relative hidden flex-col items-start gap-8 md:flex","x-chunk":"dashboard-03-chunk-0","children":["$","form",null,{"className":"grid w-full items-start gap-6","children":[["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Settings"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"model","children":"Model"}],["$","$L23",null,{"children":[["$","$L24",null,{"id":"model","className":"items-start [&_[data-description]]:hidden","children":["$","$L25",null,{"placeholder":"Select a model"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"genesis","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-rabbit size-5","aria-hidden":"true","children":[["$","path","1epib5",{"d":"M13 16a3 3 0 0 1 2.24 5"}],["$","path","yjnet6",{"d":"M18 12h.01"}],["$","path","ue9ozu",{"d":"M18 21h-8a4 4 0 0 1-4-4 7 7 0 0 1 7-7h.2L9.6 6.4a1 1 0 1 1 2.8-2.8L15.8 7h.2c3.3 0 6 2.7 6 6v1a2 2 0 0 1-2 2h-1a3 3 0 0 0-3 3"}],["$","path","49iql8",{"d":"M20 8.54V4a2 2 0 1 0-4 0v3"}],["$","path","1e33i0",{"d":"M7.612 12.524a3 3 0 1 0-1.6 4.3"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Genesis"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Our fastest model for general use cases."}]]}]]}]}],["$","$L27",null,{"value":"explorer","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-bird size-5","aria-hidden":"true","children":[["$","path","1kdx03",{"d":"M16 7h.01"}],["$","path","oj1oa8",{"d":"M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"}],["$","path","12nv4d",{"d":"m20 7 2 .5-2 .5"}],["$","path","1yea0a",{"d":"M10 18v3"}],["$","path","1pymcb",{"d":"M14 17.75V21"}],["$","path","1npnn0",{"d":"M7 18a6 6 0 0 0 3.84-10.61"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Explorer"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Performance and speed for efficiency."}]]}]]}]}],["$","$L27",null,{"value":"quantum","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-turtle size-5","aria-hidden":"true","children":[["$","path","1lbbv7",{"d":"m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z"}],["$","path","m9wose",{"d":"M4.82 7.9 8 10"}],["$","path","p8dp2u",{"d":"M15.18 7.9 12 10"}],["$","path","12nsm7",{"d":"M16.93 10H20a2 2 0 0 1 0 4H2"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Quantum"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"The most powerful model for complex computations."}]]}]]}]}]]}]]}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"temperature","children":"Temperature"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"temperature","placeholder":"0.4"}]]}],"$L28"]}],"$L29"]}]}]
+21:["$","form",null,{"className":"relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring","x-chunk":"dashboard-03-chunk-1","children":[["$","$L22",null,{"htmlFor":"message","className":"sr-only","children":"Message"}],["$","textarea",null,{"className":"flex w-full rounded-md border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0","ref":"$undefined","id":"message","placeholder":"Type your message here..."}],["$","div",null,{"className":"flex items-center p-3 pt-0","children":[["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-paperclip size-4","aria-hidden":"true","children":[["$","path","1miecu",{"d":"m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Attach file"}]]}]}],["$","$L2c",null,{"side":"top","children":"Attach File"}]]}],["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-mic size-4","aria-hidden":"true","children":[["$","path","npa21l",{"d":"M12 19v3"}],["$","path","1vc78b",{"d":"M19 10v2a7 7 0 0 1-14 0v-2"}],["$","rect","s6n7sd",{"x":"9","y":"2","width":"6","height":"13","rx":"3"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Use Microphone"}]]}]}],["$","$L2c",null,{"side":"top","children":"Use Microphone"}]]}],["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto gap-1.5","ref":"$undefined","type":"submit","children":["Send Message",["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-corner-down-left size-3.5","aria-hidden":"true","children":[["$","path","6o5b7l",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}],["$","path","1kshq7",{"d":"m9 10-5 5 5 5"}],"$undefined"]}]]}]]}]]}]
+1b:["$","div",null,{"className":"grid h-screen w-full pl-[56px]","children":[["$","aside",null,{"className":"inset-y fixed  left-0 z-20 flex h-full flex-col border-r","children":[["$","div",null,{"className":"border-b p-2","children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10","ref":"$undefined","aria-label":"Home","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-triangle size-5 fill-foreground","aria-hidden":"true","children":[["$","path","14u9p9",{"d":"M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"}],"$undefined"]}]}]}],["$","nav",null,{"className":"grid gap-1 p-2","children":[["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-lg bg-muted","ref":"$undefined","aria-label":"Playground","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-square-terminal size-5","aria-hidden":"true","children":[["$","path","1lz0vl",{"d":"m7 11 2-2-2-2"}],["$","path","1p7l4v",{"d":"M11 13h4"}],["$","rect","1m3agn",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Playground"}]]}],["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-lg","ref":"$undefined","aria-label":"Models","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-bot size-5","aria-hidden":"true","children":[["$","path","hb8ula",{"d":"M12 8V4H8"}],["$","rect","enze0r",{"width":"16","height":"12","x":"4","y":"8","rx":"2"}],["$","path","vft8re",{"d":"M2 14h2"}],["$","path","4cs60a",{"d":"M20 14h2"}],["$","path","1xurst",{"d":"M15 13v2"}],["$","path","rq6x2g",{"d":"M9 13v2"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Models"}]]}],["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-lg","ref":"$undefined","aria-label":"API","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-code-xml size-5","aria-hidden":"true","children":[["$","path","1inbqp",{"d":"m18 16 4-4-4-4"}],["$","path","15zrgr",{"d":"m6 8-4 4 4 4"}],["$","path","e7oirm",{"d":"m14.5 4-5 16"}],"$undefined"]}]}]}],"$L2d"]}],"$L2e","$L2f"]}],"$L30"]}],"$L31"]}]
+32:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Drawer"]
+33:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DrawerTrigger"]
+34:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DrawerContent"]
+35:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DrawerHeader"]
+36:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DrawerTitle"]
+37:I[40703,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DrawerDescription"]
+28:["$","div",null,{"className":"grid grid-cols-2 gap-4","children":[["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-p","children":"Top P"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-p","placeholder":"0.7"}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-k","children":"Top K"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-k","placeholder":"0.0"}]]}]]}]
+29:["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Messages"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"role","children":"Role"}],["$","$L23",null,{"defaultValue":"system","children":[["$","$L24",null,{"children":["$","$L25",null,{"placeholder":"Select a role"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"system","children":"System"}],["$","$L27",null,{"value":"user","children":"User"}],["$","$L27",null,{"value":"assistant","children":"Assistant"}]]}]]}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"content","children":"Content"}],["$","textarea",null,{"className":"flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[9.5rem]","ref":"$undefined","id":"content","placeholder":"You are a..."}]]}]]}]
+2d:["$","$L2c",null,{"side":"right","sideOffset":5,"children":"API"}]
+2e:["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-lg","ref":"$undefined","aria-label":"Documentation","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-book size-5","aria-hidden":"true","children":[["$","path","k3hazp",{"d":"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Documentation"}]]}]
+2f:["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 rounded-lg","ref":"$undefined","aria-label":"Settings","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-settings2 lucide-settings-2 size-5","aria-hidden":"true","children":[["$","path","gfn3mx",{"d":"M14 17H5"}],["$","path","6i9tg",{"d":"M19 7h-9"}],["$","circle","18b49y",{"cx":"17","cy":"17","r":"3"}],["$","circle","dfmy0x",{"cx":"7","cy":"7","r":"3"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Settings"}]]}]
+30:["$","nav",null,{"className":"mt-auto grid gap-1 p-2","children":[["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 mt-auto rounded-lg","ref":"$undefined","aria-label":"Help","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-life-buoy size-5","aria-hidden":"true","children":[["$","circle","1mglay",{"cx":"12","cy":"12","r":"10"}],["$","path","1ymg45",{"d":"m4.93 4.93 4.24 4.24"}],["$","path","1cb5xl",{"d":"m14.83 9.17 4.24-4.24"}],["$","path","q42g0n",{"d":"m14.83 14.83 4.24 4.24"}],["$","path","bqpfvv",{"d":"m9.17 14.83-4.24 4.24"}],["$","circle","4exip2",{"cx":"12","cy":"12","r":"4"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Help"}]]}],["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 mt-auto rounded-lg","ref":"$undefined","aria-label":"Account","children":["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-square-user size-5","aria-hidden":"true","children":[["$","rect","afitv7",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}],["$","circle","ilqhr7",{"cx":"12","cy":"10","r":"3"}],["$","path","1m6ac2",{"d":"M7 21v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"}],"$undefined"]}]}]}],["$","$L2c",null,{"side":"right","sideOffset":5,"children":"Account"}]]}]]}]
+31:["$","div",null,{"className":"flex flex-col","children":[["$","header",null,{"className":"sticky top-0 z-10 flex h-[57px] items-center gap-1 border-b bg-background px-4","children":[["$","h1",null,{"className":"text-xl font-semibold","children":"Playground"}],["$","$L32",null,{"children":[["$","$L33",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 md:hidden","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-settings size-4","aria-hidden":"true","children":[["$","path","1i5ecw",{"d":"M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"}],["$","circle","1v7zrd",{"cx":"12","cy":"12","r":"3"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Settings"}]]}]}],["$","$L34",null,{"className":"max-h-[80vh]","children":[["$","$L35",null,{"children":[["$","$L36",null,{"children":"Configuration"}],["$","$L37",null,{"children":"Configure the settings for the model and messages."}]]}],["$","form",null,{"className":"grid w-full items-start gap-6 overflow-auto p-4 pt-0","children":[["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Settings"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"model","children":"Model"}],["$","$L23",null,{"children":[["$","$L24",null,{"id":"model","className":"items-start [&_[data-description]]:hidden","children":["$","$L25",null,{"placeholder":"Select a model"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"genesis","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-rabbit size-5","aria-hidden":"true","children":[["$","path","1epib5",{"d":"M13 16a3 3 0 0 1 2.24 5"}],["$","path","yjnet6",{"d":"M18 12h.01"}],["$","path","ue9ozu",{"d":"M18 21h-8a4 4 0 0 1-4-4 7 7 0 0 1 7-7h.2L9.6 6.4a1 1 0 1 1 2.8-2.8L15.8 7h.2c3.3 0 6 2.7 6 6v1a2 2 0 0 1-2 2h-1a3 3 0 0 0-3 3"}],["$","path","49iql8",{"d":"M20 8.54V4a2 2 0 1 0-4 0v3"}],["$","path","1e33i0",{"d":"M7.612 12.524a3 3 0 1 0-1.6 4.3"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Genesis"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Our fastest model for general use cases."}]]}]]}]}],["$","$L27",null,{"value":"explorer","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-bird size-5","aria-hidden":"true","children":[["$","path","1kdx03",{"d":"M16 7h.01"}],["$","path","oj1oa8",{"d":"M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"}],["$","path","12nv4d",{"d":"m20 7 2 .5-2 .5"}],["$","path","1yea0a",{"d":"M10 18v3"}],["$","path","1pymcb",{"d":"M14 17.75V21"}],["$","path","1npnn0",{"d":"M7 18a6 6 0 0 0 3.84-10.61"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Explorer"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Performance and speed for efficiency."}]]}]]}]}],"$L38"]}]]}]]}],"$L39","$L3a","$L3b"]}],"$L3c"]}]]}]]}],"$L3d"]}],"$L3e"]}]
+38:["$","$L27",null,{"value":"quantum","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-turtle size-5","aria-hidden":"true","children":[["$","path","1lbbv7",{"d":"m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z"}],["$","path","m9wose",{"d":"M4.82 7.9 8 10"}],["$","path","p8dp2u",{"d":"M15.18 7.9 12 10"}],["$","path","12nsm7",{"d":"M16.93 10H20a2 2 0 0 1 0 4H2"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Quantum"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"The most powerful model for complex computations."}]]}]]}]}]
+39:["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"temperature","children":"Temperature"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"temperature","placeholder":"0.4"}]]}]
+3a:["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-p","children":"Top P"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-p","placeholder":"0.7"}]]}]
+3b:["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-k","children":"Top K"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-k","placeholder":"0.0"}]]}]
+3c:["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Messages"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"role","children":"Role"}],["$","$L23",null,{"defaultValue":"system","children":[["$","$L24",null,{"children":["$","$L25",null,{"placeholder":"Select a role"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"system","children":"System"}],["$","$L27",null,{"value":"user","children":"User"}],["$","$L27",null,{"value":"assistant","children":"Assistant"}]]}]]}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"content","children":"Content"}],["$","textarea",null,{"className":"flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"content","placeholder":"You are a..."}]]}]]}]
+3d:["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 ml-auto gap-1.5 text-sm","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-share size-3.5","aria-hidden":"true","children":[["$","path","1km8f5",{"d":"M12 2v13"}],["$","path","13yo43",{"d":"m16 6-4-4-4 4"}],["$","path","1b2hhj",{"d":"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"}],"$undefined"]}],"Share"]}]
+3e:["$","main",null,{"className":"grid flex-1 gap-4 overflow-auto p-4 md:grid-cols-2 lg:grid-cols-3","children":[["$","div",null,{"className":"relative hidden flex-col items-start gap-8 md:flex","x-chunk":"dashboard-03-chunk-0","children":["$","form",null,{"className":"grid w-full items-start gap-6","children":[["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Settings"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"model","children":"Model"}],["$","$L23",null,{"children":[["$","$L24",null,{"id":"model","className":"items-start [&_[data-description]]:hidden","children":["$","$L25",null,{"placeholder":"Select a model"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"genesis","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-rabbit size-5","aria-hidden":"true","children":[["$","path","1epib5",{"d":"M13 16a3 3 0 0 1 2.24 5"}],["$","path","yjnet6",{"d":"M18 12h.01"}],["$","path","ue9ozu",{"d":"M18 21h-8a4 4 0 0 1-4-4 7 7 0 0 1 7-7h.2L9.6 6.4a1 1 0 1 1 2.8-2.8L15.8 7h.2c3.3 0 6 2.7 6 6v1a2 2 0 0 1-2 2h-1a3 3 0 0 0-3 3"}],["$","path","49iql8",{"d":"M20 8.54V4a2 2 0 1 0-4 0v3"}],["$","path","1e33i0",{"d":"M7.612 12.524a3 3 0 1 0-1.6 4.3"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Genesis"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Our fastest model for general use cases."}]]}]]}]}],["$","$L27",null,{"value":"explorer","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-bird size-5","aria-hidden":"true","children":[["$","path","1kdx03",{"d":"M16 7h.01"}],["$","path","oj1oa8",{"d":"M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"}],["$","path","12nv4d",{"d":"m20 7 2 .5-2 .5"}],["$","path","1yea0a",{"d":"M10 18v3"}],["$","path","1pymcb",{"d":"M14 17.75V21"}],["$","path","1npnn0",{"d":"M7 18a6 6 0 0 0 3.84-10.61"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Explorer"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"Performance and speed for efficiency."}]]}]]}]}],["$","$L27",null,{"value":"quantum","children":["$","div",null,{"className":"flex items-start gap-3 text-muted-foreground","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-turtle size-5","aria-hidden":"true","children":[["$","path","1lbbv7",{"d":"m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z"}],["$","path","m9wose",{"d":"M4.82 7.9 8 10"}],["$","path","p8dp2u",{"d":"M15.18 7.9 12 10"}],["$","path","12nsm7",{"d":"M16.93 10H20a2 2 0 0 1 0 4H2"}],"$undefined"]}],["$","div",null,{"className":"grid gap-0.5","children":[["$","p",null,{"children":["Neural"," ",["$","span",null,{"className":"font-medium text-foreground","children":"Quantum"}]]}],["$","p",null,{"className":"text-xs","data-description":true,"children":"The most powerful model for complex computations."}]]}]]}]}]]}]]}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"temperature","children":"Temperature"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"temperature","placeholder":"0.4"}]]}],"$L3f"]}],"$L40"]}]}],"$L41"]}]
+3f:["$","div",null,{"className":"grid grid-cols-2 gap-4","children":[["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-p","children":"Top P"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-p","placeholder":"0.7"}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"top-k","children":"Top K"}],["$","input",null,{"type":"number","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50","ref":"$undefined","id":"top-k","placeholder":"0.0"}]]}]]}]
+40:["$","fieldset",null,{"className":"grid gap-6 rounded-lg border p-4","children":[["$","legend",null,{"className":"-ml-1 px-1 text-sm font-medium","children":"Messages"}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"role","children":"Role"}],["$","$L23",null,{"defaultValue":"system","children":[["$","$L24",null,{"children":["$","$L25",null,{"placeholder":"Select a role"}]}],["$","$L26",null,{"children":[["$","$L27",null,{"value":"system","children":"System"}],["$","$L27",null,{"value":"user","children":"User"}],["$","$L27",null,{"value":"assistant","children":"Assistant"}]]}]]}]]}],["$","div",null,{"className":"grid gap-3","children":[["$","$L22",null,{"htmlFor":"content","children":"Content"}],["$","textarea",null,{"className":"flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[9.5rem]","ref":"$undefined","id":"content","placeholder":"You are a..."}]]}]]}]
+41:["$","div",null,{"className":"relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2","children":[["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground absolute right-3 top-3","children":"Output"}],["$","div",null,{"className":"flex-1"}],["$","form",null,{"className":"relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring","x-chunk":"dashboard-03-chunk-1","children":[["$","$L22",null,{"htmlFor":"message","className":"sr-only","children":"Message"}],["$","textarea",null,{"className":"flex w-full rounded-md border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0","ref":"$undefined","id":"message","placeholder":"Type your message here..."}],["$","div",null,{"className":"flex items-center p-3 pt-0","children":[["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-paperclip size-4","aria-hidden":"true","children":[["$","path","1miecu",{"d":"m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Attach file"}]]}]}],["$","$L2c",null,{"side":"top","children":"Attach File"}]]}],["$","$L2a",null,{"children":[["$","$L2b",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-mic size-4","aria-hidden":"true","children":[["$","path","npa21l",{"d":"M12 19v3"}],["$","path","1vc78b",{"d":"M19 10v2a7 7 0 0 1-14 0v-2"}],["$","rect","s6n7sd",{"x":"9","y":"2","width":"6","height":"13","rx":"3"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Use Microphone"}]]}]}],["$","$L2c",null,{"side":"top","children":"Use Microphone"}]]}],["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto gap-1.5","ref":"$undefined","type":"submit","children":["Send Message",["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-corner-down-left size-3.5","aria-hidden":"true","children":["$L42","$L43","$undefined"]}]]}]]}]]}]]}]
+42:["$","path","6o5b7l",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]
+43:["$","path","1kshq7",{"d":"m9 10-5 5 5 5"}]

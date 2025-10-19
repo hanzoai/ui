@@ -1,0 +1,879 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","default","sidebar-09",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","default","d"],{"children":[["name","sidebar-09","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","default","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","sidebar-09","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[46311,[],"IconMark"]
+f:{"metadata":[["$","title","0",{"children":"sidebar-09 - hanzo/ui"}],["$","link","1",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","2",{"name":"author","content":"hanzo"}],["$","link","3",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","5",{"name":"creator","content":"hanzo"}],["$","meta","6",{"property":"og:title","content":"sidebar-09"}],["$","meta","7",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/sidebar-09/"}],["$","meta","8",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","9",{"property":"og:image:width","content":"1200"}],["$","meta","10",{"property":"og:image:height","content":"630"}],["$","meta","11",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","12",{"property":"og:type","content":"article"}],["$","meta","13",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","14",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","15",{"name":"twitter:title","content":"sidebar-09"}],["$","meta","16",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","17",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","18",{"rel":"icon","href":"/favicon.ico"}],["$","link","19",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L16","20",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+17:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+18:T34e3,"use client"
+
+import * as React from "react"
+import {
+  ArchiveX,
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  File,
+  Inbox,
+  LogOut,
+  Send,
+  Sparkles,
+  Trash2,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar"
+import { Switch } from "@/components/ui/switch"
+
+export function Page() {
+  return (
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "350px",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar09 />
+      <SidebarInset>
+        <header className="sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Inbox</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          {Array.from({ length: 24 }).map((_, index) => (
+            <div
+              key={index}
+              className="aspect-video h-12 w-full rounded-lg bg-muted/50"
+            />
+          ))}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
+
+// This is sample data
+const data = {
+  user: {
+    name: "hanzo",
+    email: "m@example.com",
+    avatar: "/avatars/hanzo.jpg",
+  },
+  navMain: [
+    {
+      title: "Inbox",
+      url: "#",
+      icon: Inbox,
+      isActive: true,
+    },
+    {
+      title: "Drafts",
+      url: "#",
+      icon: File,
+      isActive: false,
+    },
+    {
+      title: "Sent",
+      url: "#",
+      icon: Send,
+      isActive: false,
+    },
+    {
+      title: "Junk",
+      url: "#",
+      icon: ArchiveX,
+      isActive: false,
+    },
+    {
+      title: "Trash",
+      url: "#",
+      icon: Trash2,
+      isActive: false,
+    },
+  ],
+  mails: [
+    {
+      name: "William Smith",
+      email: "williamsmith@example.com",
+      subject: "Meeting Tomorrow",
+      date: "09:34 AM",
+      teaser:
+        "Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.",
+    },
+    {
+      name: "Alice Smith",
+      email: "alicesmith@example.com",
+      subject: "Re: Project Update",
+      date: "Yesterday",
+      teaser:
+        "Thanks for the update. The progress looks great so far.\nLet's schedule a call to discuss the next steps.",
+    },
+    {
+      name: "Bob Johnson",
+      email: "bobjohnson@example.com",
+      subject: "Weekend Plans",
+      date: "2 days ago",
+      teaser:
+        "Hey everyone! I'm thinking of organizing a team outing this weekend.\nWould you be interested in a hiking trip or a beach day?",
+    },
+    {
+      name: "Emily Davis",
+      email: "emilydavis@example.com",
+      subject: "Re: Question about Budget",
+      date: "2 days ago",
+      teaser:
+        "I've reviewed the budget numbers you sent over.\nCan we set up a quick call to discuss some potential adjustments?",
+    },
+    {
+      name: "Michael Wilson",
+      email: "michaelwilson@example.com",
+      subject: "Important Announcement",
+      date: "1 week ago",
+      teaser:
+        "Please join us for an all-hands meeting this Friday at 3 PM.\nWe have some exciting news to share about the company's future.",
+    },
+    {
+      name: "Sarah Brown",
+      email: "sarahbrown@example.com",
+      subject: "Re: Feedback on Proposal",
+      date: "1 week ago",
+      teaser:
+        "Thank you for sending over the proposal. I've reviewed it and have some thoughts.\nCould we schedule a meeting to discuss my feedback in detail?",
+    },
+    {
+      name: "David Lee",
+      email: "davidlee@example.com",
+      subject: "New Project Idea",
+      date: "1 week ago",
+      teaser:
+        "I've been brainstorming and came up with an interesting project concept.\nDo you have time this week to discuss its potential impact and feasibility?",
+    },
+    {
+      name: "Olivia Wilson",
+      email: "oliviawilson@example.com",
+      subject: "Vacation Plans",
+      date: "1 week ago",
+      teaser:
+        "Just a heads up that I'll be taking a two-week vacation next month.\nI'll make sure all my projects are up to date before I leave.",
+    },
+    {
+      name: "James Martin",
+      email: "jamesmartin@example.com",
+      subject: "Re: Conference Registration",
+      date: "1 week ago",
+      teaser:
+        "I've completed the registration for the upcoming tech conference.\nLet me know if you need any additional information from my end.",
+    },
+    {
+      name: "Sophia White",
+      email: "sophiawhite@example.com",
+      subject: "Team Dinner",
+      date: "1 week ago",
+      teaser:
+        "To celebrate our recent project success, I'd like to organize a team dinner.\nAre you available next Friday evening? Please let me know your preferences.",
+    },
+  ],
+}
+
+export function AppSidebar09({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  // Note: I'm using state to show active item.
+  // IRL you should use the url/router.
+  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
+  const [mails, setMails] = React.useState(data.mails)
+  const { setOpen } = useSidebar()
+
+  return (
+    <Sidebar
+      collapsible="icon"
+      className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
+      {...props}
+    >
+      {/* This is the first sidebar */}
+      {/* We disable collapsible and adjust width to icon. */}
+      {/* This will make the sidebar appear as icons. */}
+      <Sidebar
+        collapsible="none"
+        className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
+      >
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+                <a href="#">
+                  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                    <Command className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">Acme Inc</span>
+                    <span className="truncate text-xs">Enterprise</span>
+                  </div>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent className="px-1.5 md:px-0">
+              <SidebarMenu>
+                {data.navMain.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      tooltip={{
+                        children: item.title,
+                        hidden: false,
+                      }}
+                      onClick={() => {
+                        setActiveItem(item)
+                        const mail = data.mails.sort(() => Math.random() - 0.5)
+                        setMails(
+                          mail.slice(
+                            0,
+                            Math.max(5, Math.floor(Math.random() * 10) + 1)
+                          )
+                        )
+                        setOpen(true)
+                      }}
+                      isActive={activeItem?.title === item.title}
+                      className="px-2.5 md:px-2"
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+      </Sidebar>
+
+      {/* This is the second sidebar */}
+      {/* We disable collapsible and let it fill remaining space */}
+      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
+        <SidebarHeader className="gap-3.5 border-b p-4">
+          <div className="flex w-full items-center justify-between">
+            <div className="text-base font-medium text-foreground">
+              {activeItem?.title}
+            </div>
+            <Label className="flex items-center gap-2 text-sm">
+              <span>Unreads</span>
+              <Switch className="shadow-none" />
+            </Label>
+          </div>
+          <SidebarInput placeholder="Type to search..." />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup className="px-0">
+            <SidebarGroupContent>
+              {mails.map((mail) => (
+                <a
+                  href="#"
+                  key={mail.email}
+                  className="flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                >
+                  <div className="flex w-full items-center gap-2">
+                    <span>{mail.name}</span>{" "}
+                    <span className="ml-auto text-xs">{mail.date}</span>
+                  </div>
+                  <span className="font-medium">{mail.subject}</span>
+                  <span className="line-clamp-2 w-[260px] whitespace-break-spaces text-xs">
+                    {mail.teaser}
+                  </span>
+                </a>
+              ))}
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+    </Sidebar>
+  )
+}
+
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="end"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Sparkles />
+                Upgrade to Pro
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <BadgeCheck />
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCard />
+                Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bell />
+                Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
+19:T3e56,<pre><code class="language-typescript">&quot;use client&quot;
+
+import * as React from &quot;react&quot;
+import {
+  ArchiveX,
+  BadgeCheck,
+  Bell,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  File,
+  Inbox,
+  LogOut,
+  Send,
+  Sparkles,
+  Trash2,
+} from &quot;lucide-react&quot;
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from &quot;@/components/ui/avatar&quot;
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from &quot;@/components/ui/breadcrumb&quot;
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from &quot;@/components/ui/dropdown-menu&quot;
+import { Label } from &quot;@/components/ui/label&quot;
+import { Separator } from &quot;@/components/ui/separator&quot;
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
+} from &quot;@/components/ui/sidebar&quot;
+import { Switch } from &quot;@/components/ui/switch&quot;
+
+export function Page() {
+  return (
+    &lt;SidebarProvider
+      style={
+        {
+          &quot;--sidebar-width&quot;: &quot;350px&quot;,
+        } as React.CSSProperties
+      }
+    &gt;
+      &lt;AppSidebar09 /&gt;
+      &lt;SidebarInset&gt;
+        &lt;header className=&quot;sticky top-0 flex shrink-0 items-center gap-2 border-b bg-background p-4&quot;&gt;
+          &lt;SidebarTrigger className=&quot;-ml-1&quot; /&gt;
+          &lt;Separator orientation=&quot;vertical&quot; className=&quot;mr-2 h-4&quot; /&gt;
+          &lt;Breadcrumb&gt;
+            &lt;BreadcrumbList&gt;
+              &lt;BreadcrumbItem className=&quot;hidden md:block&quot;&gt;
+                &lt;BreadcrumbLink href=&quot;#&quot;&gt;All Inboxes&lt;/BreadcrumbLink&gt;
+              &lt;/BreadcrumbItem&gt;
+              &lt;BreadcrumbSeparator className=&quot;hidden md:block&quot; /&gt;
+              &lt;BreadcrumbItem&gt;
+                &lt;BreadcrumbPage&gt;Inbox&lt;/BreadcrumbPage&gt;
+              &lt;/BreadcrumbItem&gt;
+            &lt;/BreadcrumbList&gt;
+          &lt;/Breadcrumb&gt;
+        &lt;/header&gt;
+        &lt;div className=&quot;flex flex-1 flex-col gap-4 p-4&quot;&gt;
+          {Array.from({ length: 24 }).map((_, index) =&gt; (
+            &lt;div
+              key={index}
+              className=&quot;aspect-video h-12 w-full rounded-lg bg-muted/50&quot;
+            /&gt;
+          ))}
+        &lt;/div&gt;
+      &lt;/SidebarInset&gt;
+    &lt;/SidebarProvider&gt;
+  )
+}
+
+// This is sample data
+const data = {
+  user: {
+    name: &quot;hanzo&quot;,
+    email: &quot;m@example.com&quot;,
+    avatar: &quot;/avatars/hanzo.jpg&quot;,
+  },
+  navMain: [
+    {
+      title: &quot;Inbox&quot;,
+      url: &quot;#&quot;,
+      icon: Inbox,
+      isActive: true,
+    },
+    {
+      title: &quot;Drafts&quot;,
+      url: &quot;#&quot;,
+      icon: File,
+      isActive: false,
+    },
+    {
+      title: &quot;Sent&quot;,
+      url: &quot;#&quot;,
+      icon: Send,
+      isActive: false,
+    },
+    {
+      title: &quot;Junk&quot;,
+      url: &quot;#&quot;,
+      icon: ArchiveX,
+      isActive: false,
+    },
+    {
+      title: &quot;Trash&quot;,
+      url: &quot;#&quot;,
+      icon: Trash2,
+      isActive: false,
+    },
+  ],
+  mails: [
+    {
+      name: &quot;William Smith&quot;,
+      email: &quot;williamsmith@example.com&quot;,
+      subject: &quot;Meeting Tomorrow&quot;,
+      date: &quot;09:34 AM&quot;,
+      teaser:
+        &quot;Hi team, just a reminder about our meeting tomorrow at 10 AM.\nPlease come prepared with your project updates.&quot;,
+    },
+    {
+      name: &quot;Alice Smith&quot;,
+      email: &quot;alicesmith@example.com&quot;,
+      subject: &quot;Re: Project Update&quot;,
+      date: &quot;Yesterday&quot;,
+      teaser:
+        &quot;Thanks for the update. The progress looks great so far.\nLet&#039;s schedule a call to discuss the next steps.&quot;,
+    },
+    {
+      name: &quot;Bob Johnson&quot;,
+      email: &quot;bobjohnson@example.com&quot;,
+      subject: &quot;Weekend Plans&quot;,
+      date: &quot;2 days ago&quot;,
+      teaser:
+        &quot;Hey everyone! I&#039;m thinking of organizing a team outing this weekend.\nWould you be interested in a hiking trip or a beach day?&quot;,
+    },
+    {
+      name: &quot;Emily Davis&quot;,
+      email: &quot;emilydavis@example.com&quot;,
+      subject: &quot;Re: Question about Budget&quot;,
+      date: &quot;2 days ago&quot;,
+      teaser:
+        &quot;I&#039;ve reviewed the budget numbers you sent over.\nCan we set up a quick call to discuss some potential adjustments?&quot;,
+    },
+    {
+      name: &quot;Michael Wilson&quot;,
+      email: &quot;michaelwilson@example.com&quot;,
+      subject: &quot;Important Announcement&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;Please join us for an all-hands meeting this Friday at 3 PM.\nWe have some exciting news to share about the company&#039;s future.&quot;,
+    },
+    {
+      name: &quot;Sarah Brown&quot;,
+      email: &quot;sarahbrown@example.com&quot;,
+      subject: &quot;Re: Feedback on Proposal&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;Thank you for sending over the proposal. I&#039;ve reviewed it and have some thoughts.\nCould we schedule a meeting to discuss my feedback in detail?&quot;,
+    },
+    {
+      name: &quot;David Lee&quot;,
+      email: &quot;davidlee@example.com&quot;,
+      subject: &quot;New Project Idea&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;I&#039;ve been brainstorming and came up with an interesting project concept.\nDo you have time this week to discuss its potential impact and feasibility?&quot;,
+    },
+    {
+      name: &quot;Olivia Wilson&quot;,
+      email: &quot;oliviawilson@example.com&quot;,
+      subject: &quot;Vacation Plans&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;Just a heads up that I&#039;ll be taking a two-week vacation next month.\nI&#039;ll make sure all my projects are up to date before I leave.&quot;,
+    },
+    {
+      name: &quot;James Martin&quot;,
+      email: &quot;jamesmartin@example.com&quot;,
+      subject: &quot;Re: Conference Registration&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;I&#039;ve completed the registration for the upcoming tech conference.\nLet me know if you need any additional information from my end.&quot;,
+    },
+    {
+      name: &quot;Sophia White&quot;,
+      email: &quot;sophiawhite@example.com&quot;,
+      subject: &quot;Team Dinner&quot;,
+      date: &quot;1 week ago&quot;,
+      teaser:
+        &quot;To celebrate our recent project success, I&#039;d like to organize a team dinner.\nAre you available next Friday evening? Please let me know your preferences.&quot;,
+    },
+  ],
+}
+
+export function AppSidebar09({
+  ...props
+}: React.ComponentProps&lt;typeof Sidebar&gt;) {
+  // Note: I&#039;m using state to show active item.
+  // IRL you should use the url/router.
+  const [activeItem, setActiveItem] = React.useState(data.navMain[0])
+  const [mails, setMails] = React.useState(data.mails)
+  const { setOpen } = useSidebar()
+
+  return (
+    &lt;Sidebar
+      collapsible=&quot;icon&quot;
+      className=&quot;overflow-hidden [&amp;&gt;[data-sidebar=sidebar]]:flex-row&quot;
+      {...props}
+    &gt;
+      {/* This is the first sidebar */}
+      {/* We disable collapsible and adjust width to icon. */}
+      {/* This will make the sidebar appear as icons. */}
+      &lt;Sidebar
+        collapsible=&quot;none&quot;
+        className=&quot;!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r&quot;
+      &gt;
+        &lt;SidebarHeader&gt;
+          &lt;SidebarMenu&gt;
+            &lt;SidebarMenuItem&gt;
+              &lt;SidebarMenuButton size=&quot;lg&quot; asChild className=&quot;md:h-8 md:p-0&quot;&gt;
+                &lt;a href=&quot;#&quot;&gt;
+                  &lt;div className=&quot;flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground&quot;&gt;
+                    &lt;Command className=&quot;size-4&quot; /&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;grid flex-1 text-left text-sm leading-tight&quot;&gt;
+                    &lt;span className=&quot;truncate font-semibold&quot;&gt;Acme Inc&lt;/span&gt;
+                    &lt;span className=&quot;truncate text-xs&quot;&gt;Enterprise&lt;/span&gt;
+                  &lt;/div&gt;
+                &lt;/a&gt;
+              &lt;/SidebarMenuButton&gt;
+            &lt;/SidebarMenuItem&gt;
+          &lt;/SidebarMenu&gt;
+        &lt;/SidebarHeader&gt;
+        &lt;SidebarContent&gt;
+          &lt;SidebarGroup&gt;
+            &lt;SidebarGroupContent className=&quot;px-1.5 md:px-0&quot;&gt;
+              &lt;SidebarMenu&gt;
+                {data.navMain.map((item) =&gt; (
+                  &lt;SidebarMenuItem key={item.title}&gt;
+                    &lt;SidebarMenuButton
+                      tooltip={{
+                        children: item.title,
+                        hidden: false,
+                      }}
+                      onClick={() =&gt; {
+                        setActiveItem(item)
+                        const mail = data.mails.sort(() =&gt; Math.random() - 0.5)
+                        setMails(
+                          mail.slice(
+                            0,
+                            Math.max(5, Math.floor(Math.random() * 10) + 1)
+                          )
+                        )
+                        setOpen(true)
+                      }}
+                      isActive={activeItem?.title === item.title}
+                      className=&quot;px-2.5 md:px-2&quot;
+                    &gt;
+                      &lt;item.icon /&gt;
+                      &lt;span&gt;{item.title}&lt;/span&gt;
+                    &lt;/SidebarMenuButton&gt;
+                  &lt;/SidebarMenuItem&gt;
+                ))}
+              &lt;/SidebarMenu&gt;
+            &lt;/SidebarGroupContent&gt;
+          &lt;/SidebarGroup&gt;
+        &lt;/SidebarContent&gt;
+        &lt;SidebarFooter&gt;
+          &lt;NavUser user={data.user} /&gt;
+        &lt;/SidebarFooter&gt;
+      &lt;/Sidebar&gt;
+
+      {/* This is the second sidebar */}
+      {/* We disable collapsible and let it fill remaining space */}
+      &lt;Sidebar collapsible=&quot;none&quot; className=&quot;hidden flex-1 md:flex&quot;&gt;
+        &lt;SidebarHeader className=&quot;gap-3.5 border-b p-4&quot;&gt;
+          &lt;div className=&quot;flex w-full items-center justify-between&quot;&gt;
+            &lt;div className=&quot;text-base font-medium text-foreground&quot;&gt;
+              {activeItem?.title}
+            &lt;/div&gt;
+            &lt;Label className=&quot;flex items-center gap-2 text-sm&quot;&gt;
+              &lt;span&gt;Unreads&lt;/span&gt;
+              &lt;Switch className=&quot;shadow-none&quot; /&gt;
+            &lt;/Label&gt;
+          &lt;/div&gt;
+          &lt;SidebarInput placeholder=&quot;Type to search...&quot; /&gt;
+        &lt;/SidebarHeader&gt;
+        &lt;SidebarContent&gt;
+          &lt;SidebarGroup className=&quot;px-0&quot;&gt;
+            &lt;SidebarGroupContent&gt;
+              {mails.map((mail) =&gt; (
+                &lt;a
+                  href=&quot;#&quot;
+                  key={mail.email}
+                  className=&quot;flex flex-col items-start gap-2 whitespace-nowrap border-b p-4 text-sm leading-tight last:border-b-0 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground&quot;
+                &gt;
+                  &lt;div className=&quot;flex w-full items-center gap-2&quot;&gt;
+                    &lt;span&gt;{mail.name}&lt;/span&gt;{&quot; &quot;}
+                    &lt;span className=&quot;ml-auto text-xs&quot;&gt;{mail.date}&lt;/span&gt;
+                  &lt;/div&gt;
+                  &lt;span className=&quot;font-medium&quot;&gt;{mail.subject}&lt;/span&gt;
+                  &lt;span className=&quot;line-clamp-2 w-[260px] whitespace-break-spaces text-xs&quot;&gt;
+                    {mail.teaser}
+                  &lt;/span&gt;
+                &lt;/a&gt;
+              ))}
+            &lt;/SidebarGroupContent&gt;
+          &lt;/SidebarGroup&gt;
+        &lt;/SidebarContent&gt;
+      &lt;/Sidebar&gt;
+    &lt;/Sidebar&gt;
+  )
+}
+
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    &lt;SidebarMenu&gt;
+      &lt;SidebarMenuItem&gt;
+        &lt;DropdownMenu&gt;
+          &lt;DropdownMenuTrigger asChild&gt;
+            &lt;SidebarMenuButton
+              size=&quot;lg&quot;
+              className=&quot;data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0&quot;
+            &gt;
+              &lt;Avatar className=&quot;h-8 w-8 rounded-lg&quot;&gt;
+                &lt;AvatarImage src={user.avatar} alt={user.name} /&gt;
+                &lt;AvatarFallback className=&quot;rounded-lg&quot;&gt;CN&lt;/AvatarFallback&gt;
+              &lt;/Avatar&gt;
+              &lt;div className=&quot;grid flex-1 text-left text-sm leading-tight&quot;&gt;
+                &lt;span className=&quot;truncate font-semibold&quot;&gt;{user.name}&lt;/span&gt;
+                &lt;span className=&quot;truncate text-xs&quot;&gt;{user.email}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;ChevronsUpDown className=&quot;ml-auto size-4&quot; /&gt;
+            &lt;/SidebarMenuButton&gt;
+          &lt;/DropdownMenuTrigger&gt;
+          &lt;DropdownMenuContent
+            className=&quot;w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg&quot;
+            side={isMobile ? &quot;bottom&quot; : &quot;right&quot;}
+            align=&quot;end&quot;
+            sideOffset={4}
+          &gt;
+            &lt;DropdownMenuLabel className=&quot;p-0 font-normal&quot;&gt;
+              &lt;div className=&quot;flex items-center gap-2 px-1 py-1.5 text-left text-sm&quot;&gt;
+                &lt;Avatar className=&quot;h-8 w-8 rounded-lg&quot;&gt;
+                  &lt;AvatarImage src={user.avatar} alt={user.name} /&gt;
+                  &lt;AvatarFallback className=&quot;rounded-lg&quot;&gt;CN&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid flex-1 text-left text-sm leading-tight&quot;&gt;
+                  &lt;span className=&quot;truncate font-semibold&quot;&gt;{user.name}&lt;/span&gt;
+                  &lt;span className=&quot;truncate text-xs&quot;&gt;{user.email}&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/DropdownMenuLabel&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuGroup&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;Sparkles /&gt;
+                Upgrade to Pro
+              &lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuGroup&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuGroup&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;BadgeCheck /&gt;
+                Account
+              &lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;CreditCard /&gt;
+                Billing
+              &lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;Bell /&gt;
+                Notifications
+              &lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuGroup&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuItem&gt;
+              &lt;LogOut /&gt;
+              Log out
+            &lt;/DropdownMenuItem&gt;
+          &lt;/DropdownMenuContent&gt;
+        &lt;/DropdownMenu&gt;
+      &lt;/SidebarMenuItem&gt;
+    &lt;/SidebarMenu&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"theme-zinc","children":["$","$L17",null,{"block":{"name":"sidebar-09","description":"$undefined","registryDependencies":["sidebar","breadcrumb","separator"],"files":["registry/default/block/sidebar-09.tsx"],"source":"__registry__/default/block/sidebar-09.tsx","type":"components:block","category":"Application","subcategory":"Sidebar","chunks":[],"style":"default","container":{"height":"$undefined","className":"$undefined"},"code":"$18","highlightedCode":"$19"},"children":["$L1a",[]]}]}]
+1b:I[94725,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"default"]
+1a:["$","$L1b",null,{}]

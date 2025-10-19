@@ -1,0 +1,1199 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","default","dashboard-01",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","default","d"],{"children":[["name","dashboard-01","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","default","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","dashboard-01","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[46311,[],"IconMark"]
+f:{"metadata":[["$","title","0",{"children":"dashboard-01 - hanzo/ui"}],["$","meta","1",{"name":"description","content":"An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."}],["$","link","2",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","3",{"name":"author","content":"hanzo"}],["$","link","4",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","5",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","6",{"name":"creator","content":"hanzo"}],["$","meta","7",{"property":"og:title","content":"dashboard-01"}],["$","meta","8",{"property":"og:description","content":"An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."}],["$","meta","9",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/dashboard-01/"}],["$","meta","10",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","11",{"property":"og:image:width","content":"1200"}],["$","meta","12",{"property":"og:image:height","content":"630"}],["$","meta","13",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","14",{"property":"og:type","content":"article"}],["$","meta","15",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","16",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","17",{"name":"twitter:title","content":"dashboard-01"}],["$","meta","18",{"name":"twitter:description","content":"An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image."}],["$","meta","19",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","20",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","21",{"rel":"icon","href":"/favicon.ico"}],["$","link","22",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L16","23",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+17:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+18:T198f,import {Card,CardHeader,CardTitle,CardDescription,CardContent} from "@/components/ui/card"
+import {Button} from "@/components/ui/button"
+import Link from "next/link"
+import {Table,TableHeader,TableRow,TableHead,TableBody,TableCell} from "@/components/ui/table"
+import {Badge} from "@/components/ui/badge"
+import {ArrowUpRight} from "lucide-react"
+
+            export default function Component() {
+              return (<Card className="xl:col-span-2">
+            <CardHeader className="flex flex-row items-center">
+              <div className="grid gap-2">
+                <CardTitle>Transactions</CardTitle>
+                <CardDescription>
+                  Recent transactions from your store.
+                </CardDescription>
+              </div>
+              <Button asChild size="sm" className="ml-auto gap-1">
+                <Link href="#">
+                  View All
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Customer</TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Type
+                    </TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Status
+                    </TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Date
+                    </TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Liam Johnson</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        liam@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-23
+                    </TableCell>
+                    <TableCell className="text-right">$250.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Olivia Smith</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        olivia@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Refund
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Declined
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-24
+                    </TableCell>
+                    <TableCell className="text-right">$150.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Noah Williams</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        noah@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Subscription
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-25
+                    </TableCell>
+                    <TableCell className="text-right">$350.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Emma Brown</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        emma@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-26
+                    </TableCell>
+                    <TableCell className="text-right">$450.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Liam Johnson</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        liam@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-27
+                    </TableCell>
+                    <TableCell className="text-right">$550.00</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>)
+            }19:Tede,import {Card,CardHeader,CardTitle,CardContent} from "@/components/ui/card"
+import {Avatar,AvatarFallback,AvatarImage} from "@/components/ui/avatar"
+
+            export default function Component() {
+              return (<Card>
+            <CardHeader>
+              <CardTitle>Recent Sales</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-8">
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                  <AvatarFallback>OM</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Olivia Martin
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    olivia.martin@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$1,999.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
+                  <AvatarFallback>JL</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Jackson Lee
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    jackson.lee@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$39.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
+                  <AvatarFallback>IN</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Isabella Nguyen
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    isabella.nguyen@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$299.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
+                  <AvatarFallback>WK</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    William Kim
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    will@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$99.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
+                  <AvatarFallback>SD</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Sofia Davis
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    sofia.davis@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$39.00</div>
+              </div>
+            </CardContent>
+          </Card>)
+            }1a:T44cd,import Link from "next/link"
+import {
+  Activity,
+  ArrowUpRight,
+  CircleUser,
+  CreditCard,
+  DollarSign,
+  Menu,
+  Package2,
+  Search,
+  Users,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+export function Dashboard() {
+  return (
+    <div className="flex min-h-screen w-full flex-col">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+        <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+          <Link
+            href="#"
+            className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          >
+            <Package2 className="h-6 w-6" />
+            <span className="sr-only">Acme Inc</span>
+          </Link>
+          <Link
+            href="#"
+            className="text-foreground transition-colors hover:text-foreground"
+          >
+            Dashboard
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Orders
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Products
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Customers
+          </Link>
+          <Link
+            href="#"
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Analytics
+          </Link>
+        </nav>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left">
+            <nav className="grid gap-6 text-lg font-medium">
+              <Link
+                href="#"
+                className="flex items-center gap-2 text-lg font-semibold"
+              >
+                <Package2 className="h-6 w-6" />
+                <span className="sr-only">Acme Inc</span>
+              </Link>
+              <Link href="#" className="hover:text-foreground">
+                Dashboard
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Orders
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Products
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Customers
+              </Link>
+              <Link
+                href="#"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Analytics
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
+        <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+          <form className="ml-auto flex-1 sm:flex-initial">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+              />
+            </div>
+          </form>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+          <Card x-chunk="dashboard-01-chunk-0">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">$45,231.89</div>
+              <p className="text-xs text-muted-foreground">
+                +20.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Subscriptions
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">+2350</div>
+              <p className="text-xs text-muted-foreground">
+                +180.1% from last month
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Sales</CardTitle>
+              <CreditCard className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">+12,234</div>
+              <p className="text-xs text-muted-foreground">
+                +19% from last month
+              </p>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-3">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Active Now</CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">+573</div>
+              <p className="text-xs text-muted-foreground">
+                +201 since last hour
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+            <CardHeader className="flex flex-row items-center">
+              <div className="grid gap-2">
+                <CardTitle>Transactions</CardTitle>
+                <CardDescription>
+                  Recent transactions from your store.
+                </CardDescription>
+              </div>
+              <Button asChild size="sm" className="ml-auto gap-1">
+                <Link href="#">
+                  View All
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Customer</TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Type
+                    </TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Status
+                    </TableHead>
+                    <TableHead className="hidden xl:table-column">
+                      Date
+                    </TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Liam Johnson</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        liam@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-23
+                    </TableCell>
+                    <TableCell className="text-right">$250.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Olivia Smith</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        olivia@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Refund
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Declined
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-24
+                    </TableCell>
+                    <TableCell className="text-right">$150.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Noah Williams</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        noah@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Subscription
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-25
+                    </TableCell>
+                    <TableCell className="text-right">$350.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Emma Brown</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        emma@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-26
+                    </TableCell>
+                    <TableCell className="text-right">$450.00</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <div className="font-medium">Liam Johnson</div>
+                      <div className="hidden text-sm text-muted-foreground md:inline">
+                        liam@example.com
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      Sale
+                    </TableCell>
+                    <TableCell className="hidden xl:table-column">
+                      <Badge className="text-xs" variant="outline">
+                        Approved
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell lg:hidden xl:table-column">
+                      2023-06-27
+                    </TableCell>
+                    <TableCell className="text-right">$550.00</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-5">
+            <CardHeader>
+              <CardTitle>Recent Sales</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-8">
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                  <AvatarFallback>OM</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Olivia Martin
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    olivia.martin@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$1,999.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/02.png" alt="Avatar" />
+                  <AvatarFallback>JL</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Jackson Lee
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    jackson.lee@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$39.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/03.png" alt="Avatar" />
+                  <AvatarFallback>IN</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Isabella Nguyen
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    isabella.nguyen@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$299.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/04.png" alt="Avatar" />
+                  <AvatarFallback>WK</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    William Kim
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    will@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$99.00</div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Avatar className="hidden h-9 w-9 sm:flex">
+                  <AvatarImage src="/avatars/05.png" alt="Avatar" />
+                  <AvatarFallback>SD</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <p className="text-sm font-medium leading-none">
+                    Sofia Davis
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    sofia.davis@email.com
+                  </p>
+                </div>
+                <div className="ml-auto font-medium">+$39.00</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </div>
+  )
+}
+1b:T542d,<pre><code class="language-typescript">import Link from &quot;next/link&quot;
+import {
+  Activity,
+  ArrowUpRight,
+  CircleUser,
+  CreditCard,
+  DollarSign,
+  Menu,
+  Package2,
+  Search,
+  Users,
+} from &quot;lucide-react&quot;
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from &quot;@/components/ui/avatar&quot;
+import { Badge } from &quot;@/components/ui/badge&quot;
+import { Button } from &quot;@/components/ui/button&quot;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from &quot;@/components/ui/card&quot;
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from &quot;@/components/ui/dropdown-menu&quot;
+import { Input } from &quot;@/components/ui/input&quot;
+import { Sheet, SheetContent, SheetTrigger } from &quot;@/components/ui/sheet&quot;
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from &quot;@/components/ui/table&quot;
+
+export function Dashboard() {
+  return (
+    &lt;div className=&quot;flex min-h-screen w-full flex-col&quot;&gt;
+      &lt;header className=&quot;sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6&quot;&gt;
+        &lt;nav className=&quot;hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6&quot;&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;flex items-center gap-2 text-lg font-semibold md:text-base&quot;
+          &gt;
+            &lt;Package2 className=&quot;h-6 w-6&quot; /&gt;
+            &lt;span className=&quot;sr-only&quot;&gt;Acme Inc&lt;/span&gt;
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Dashboard
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Orders
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Products
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Customers
+          &lt;/Link&gt;
+          &lt;Link
+            href=&quot;#&quot;
+            className=&quot;text-muted-foreground transition-colors hover:text-foreground&quot;
+          &gt;
+            Analytics
+          &lt;/Link&gt;
+        &lt;/nav&gt;
+        &lt;Sheet&gt;
+          &lt;SheetTrigger asChild&gt;
+            &lt;Button
+              variant=&quot;outline&quot;
+              size=&quot;icon&quot;
+              className=&quot;shrink-0 md:hidden&quot;
+            &gt;
+              &lt;Menu className=&quot;h-5 w-5&quot; /&gt;
+              &lt;span className=&quot;sr-only&quot;&gt;Toggle navigation menu&lt;/span&gt;
+            &lt;/Button&gt;
+          &lt;/SheetTrigger&gt;
+          &lt;SheetContent side=&quot;left&quot;&gt;
+            &lt;nav className=&quot;grid gap-6 text-lg font-medium&quot;&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;flex items-center gap-2 text-lg font-semibold&quot;
+              &gt;
+                &lt;Package2 className=&quot;h-6 w-6&quot; /&gt;
+                &lt;span className=&quot;sr-only&quot;&gt;Acme Inc&lt;/span&gt;
+              &lt;/Link&gt;
+              &lt;Link href=&quot;#&quot; className=&quot;hover:text-foreground&quot;&gt;
+                Dashboard
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Orders
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Products
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Customers
+              &lt;/Link&gt;
+              &lt;Link
+                href=&quot;#&quot;
+                className=&quot;text-muted-foreground hover:text-foreground&quot;
+              &gt;
+                Analytics
+              &lt;/Link&gt;
+            &lt;/nav&gt;
+          &lt;/SheetContent&gt;
+        &lt;/Sheet&gt;
+        &lt;div className=&quot;flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4&quot;&gt;
+          &lt;form className=&quot;ml-auto flex-1 sm:flex-initial&quot;&gt;
+            &lt;div className=&quot;relative&quot;&gt;
+              &lt;Search className=&quot;absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground&quot; /&gt;
+              &lt;Input
+                type=&quot;search&quot;
+                placeholder=&quot;Search products...&quot;
+                className=&quot;pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]&quot;
+              /&gt;
+            &lt;/div&gt;
+          &lt;/form&gt;
+          &lt;DropdownMenu&gt;
+            &lt;DropdownMenuTrigger asChild&gt;
+              &lt;Button variant=&quot;secondary&quot; size=&quot;icon&quot; className=&quot;rounded-full&quot;&gt;
+                &lt;CircleUser className=&quot;h-5 w-5&quot; /&gt;
+                &lt;span className=&quot;sr-only&quot;&gt;Toggle user menu&lt;/span&gt;
+              &lt;/Button&gt;
+            &lt;/DropdownMenuTrigger&gt;
+            &lt;DropdownMenuContent align=&quot;end&quot;&gt;
+              &lt;DropdownMenuLabel&gt;My Account&lt;/DropdownMenuLabel&gt;
+              &lt;DropdownMenuSeparator /&gt;
+              &lt;DropdownMenuItem&gt;Settings&lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;Support&lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuSeparator /&gt;
+              &lt;DropdownMenuItem&gt;Logout&lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuContent&gt;
+          &lt;/DropdownMenu&gt;
+        &lt;/div&gt;
+      &lt;/header&gt;
+      &lt;main className=&quot;flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8&quot;&gt;
+        &lt;div className=&quot;grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4&quot;&gt;
+          &lt;Card x-chunk=&quot;dashboard-01-chunk-0&quot;&gt;
+            &lt;CardHeader className=&quot;flex flex-row items-center justify-between space-y-0 pb-2&quot;&gt;
+              &lt;CardTitle className=&quot;text-sm font-medium&quot;&gt;
+                Total Revenue
+              &lt;/CardTitle&gt;
+              &lt;DollarSign className=&quot;h-4 w-4 text-muted-foreground&quot; /&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent&gt;
+              &lt;div className=&quot;text-2xl font-bold&quot;&gt;$45,231.89&lt;/div&gt;
+              &lt;p className=&quot;text-xs text-muted-foreground&quot;&gt;
+                +20.1% from last month
+              &lt;/p&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+          &lt;Card x-chunk=&quot;dashboard-01-chunk-1&quot;&gt;
+            &lt;CardHeader className=&quot;flex flex-row items-center justify-between space-y-0 pb-2&quot;&gt;
+              &lt;CardTitle className=&quot;text-sm font-medium&quot;&gt;
+                Subscriptions
+              &lt;/CardTitle&gt;
+              &lt;Users className=&quot;h-4 w-4 text-muted-foreground&quot; /&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent&gt;
+              &lt;div className=&quot;text-2xl font-bold&quot;&gt;+2350&lt;/div&gt;
+              &lt;p className=&quot;text-xs text-muted-foreground&quot;&gt;
+                +180.1% from last month
+              &lt;/p&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+          &lt;Card x-chunk=&quot;dashboard-01-chunk-2&quot;&gt;
+            &lt;CardHeader className=&quot;flex flex-row items-center justify-between space-y-0 pb-2&quot;&gt;
+              &lt;CardTitle className=&quot;text-sm font-medium&quot;&gt;Sales&lt;/CardTitle&gt;
+              &lt;CreditCard className=&quot;h-4 w-4 text-muted-foreground&quot; /&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent&gt;
+              &lt;div className=&quot;text-2xl font-bold&quot;&gt;+12,234&lt;/div&gt;
+              &lt;p className=&quot;text-xs text-muted-foreground&quot;&gt;
+                +19% from last month
+              &lt;/p&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+          &lt;Card x-chunk=&quot;dashboard-01-chunk-3&quot;&gt;
+            &lt;CardHeader className=&quot;flex flex-row items-center justify-between space-y-0 pb-2&quot;&gt;
+              &lt;CardTitle className=&quot;text-sm font-medium&quot;&gt;Active Now&lt;/CardTitle&gt;
+              &lt;Activity className=&quot;h-4 w-4 text-muted-foreground&quot; /&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent&gt;
+              &lt;div className=&quot;text-2xl font-bold&quot;&gt;+573&lt;/div&gt;
+              &lt;p className=&quot;text-xs text-muted-foreground&quot;&gt;
+                +201 since last hour
+              &lt;/p&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+        &lt;/div&gt;
+        &lt;div className=&quot;grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3&quot;&gt;
+          &lt;Card className=&quot;xl:col-span-2&quot; x-chunk=&quot;dashboard-01-chunk-4&quot;&gt;
+            &lt;CardHeader className=&quot;flex flex-row items-center&quot;&gt;
+              &lt;div className=&quot;grid gap-2&quot;&gt;
+                &lt;CardTitle&gt;Transactions&lt;/CardTitle&gt;
+                &lt;CardDescription&gt;
+                  Recent transactions from your store.
+                &lt;/CardDescription&gt;
+              &lt;/div&gt;
+              &lt;Button asChild size=&quot;sm&quot; className=&quot;ml-auto gap-1&quot;&gt;
+                &lt;Link href=&quot;#&quot;&gt;
+                  View All
+                  &lt;ArrowUpRight className=&quot;h-4 w-4&quot; /&gt;
+                &lt;/Link&gt;
+              &lt;/Button&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent&gt;
+              &lt;Table&gt;
+                &lt;TableHeader&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableHead&gt;Customer&lt;/TableHead&gt;
+                    &lt;TableHead className=&quot;hidden xl:table-column&quot;&gt;
+                      Type
+                    &lt;/TableHead&gt;
+                    &lt;TableHead className=&quot;hidden xl:table-column&quot;&gt;
+                      Status
+                    &lt;/TableHead&gt;
+                    &lt;TableHead className=&quot;hidden xl:table-column&quot;&gt;
+                      Date
+                    &lt;/TableHead&gt;
+                    &lt;TableHead className=&quot;text-right&quot;&gt;Amount&lt;/TableHead&gt;
+                  &lt;/TableRow&gt;
+                &lt;/TableHeader&gt;
+                &lt;TableBody&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;font-medium&quot;&gt;Liam Johnson&lt;/div&gt;
+                      &lt;div className=&quot;hidden text-sm text-muted-foreground md:inline&quot;&gt;
+                        liam@example.com
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      Sale
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      &lt;Badge className=&quot;text-xs&quot; variant=&quot;outline&quot;&gt;
+                        Approved
+                      &lt;/Badge&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden md:table-cell lg:hidden xl:table-column&quot;&gt;
+                      2023-06-23
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;text-right&quot;&gt;$250.00&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;font-medium&quot;&gt;Olivia Smith&lt;/div&gt;
+                      &lt;div className=&quot;hidden text-sm text-muted-foreground md:inline&quot;&gt;
+                        olivia@example.com
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      Refund
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      &lt;Badge className=&quot;text-xs&quot; variant=&quot;outline&quot;&gt;
+                        Declined
+                      &lt;/Badge&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden md:table-cell lg:hidden xl:table-column&quot;&gt;
+                      2023-06-24
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;text-right&quot;&gt;$150.00&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;font-medium&quot;&gt;Noah Williams&lt;/div&gt;
+                      &lt;div className=&quot;hidden text-sm text-muted-foreground md:inline&quot;&gt;
+                        noah@example.com
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      Subscription
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      &lt;Badge className=&quot;text-xs&quot; variant=&quot;outline&quot;&gt;
+                        Approved
+                      &lt;/Badge&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden md:table-cell lg:hidden xl:table-column&quot;&gt;
+                      2023-06-25
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;text-right&quot;&gt;$350.00&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;font-medium&quot;&gt;Emma Brown&lt;/div&gt;
+                      &lt;div className=&quot;hidden text-sm text-muted-foreground md:inline&quot;&gt;
+                        emma@example.com
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      Sale
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      &lt;Badge className=&quot;text-xs&quot; variant=&quot;outline&quot;&gt;
+                        Approved
+                      &lt;/Badge&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden md:table-cell lg:hidden xl:table-column&quot;&gt;
+                      2023-06-26
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;text-right&quot;&gt;$450.00&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                  &lt;TableRow&gt;
+                    &lt;TableCell&gt;
+                      &lt;div className=&quot;font-medium&quot;&gt;Liam Johnson&lt;/div&gt;
+                      &lt;div className=&quot;hidden text-sm text-muted-foreground md:inline&quot;&gt;
+                        liam@example.com
+                      &lt;/div&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      Sale
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden xl:table-column&quot;&gt;
+                      &lt;Badge className=&quot;text-xs&quot; variant=&quot;outline&quot;&gt;
+                        Approved
+                      &lt;/Badge&gt;
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;hidden md:table-cell lg:hidden xl:table-column&quot;&gt;
+                      2023-06-27
+                    &lt;/TableCell&gt;
+                    &lt;TableCell className=&quot;text-right&quot;&gt;$550.00&lt;/TableCell&gt;
+                  &lt;/TableRow&gt;
+                &lt;/TableBody&gt;
+              &lt;/Table&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+          &lt;Card x-chunk=&quot;dashboard-01-chunk-5&quot;&gt;
+            &lt;CardHeader&gt;
+              &lt;CardTitle&gt;Recent Sales&lt;/CardTitle&gt;
+            &lt;/CardHeader&gt;
+            &lt;CardContent className=&quot;grid gap-8&quot;&gt;
+              &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+                &lt;Avatar className=&quot;hidden h-9 w-9 sm:flex&quot;&gt;
+                  &lt;AvatarImage src=&quot;/avatars/01.png&quot; alt=&quot;Avatar&quot; /&gt;
+                  &lt;AvatarFallback&gt;OM&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid gap-1&quot;&gt;
+                  &lt;p className=&quot;text-sm font-medium leading-none&quot;&gt;
+                    Olivia Martin
+                  &lt;/p&gt;
+                  &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
+                    olivia.martin@email.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;ml-auto font-medium&quot;&gt;+$1,999.00&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+                &lt;Avatar className=&quot;hidden h-9 w-9 sm:flex&quot;&gt;
+                  &lt;AvatarImage src=&quot;/avatars/02.png&quot; alt=&quot;Avatar&quot; /&gt;
+                  &lt;AvatarFallback&gt;JL&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid gap-1&quot;&gt;
+                  &lt;p className=&quot;text-sm font-medium leading-none&quot;&gt;
+                    Jackson Lee
+                  &lt;/p&gt;
+                  &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
+                    jackson.lee@email.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;ml-auto font-medium&quot;&gt;+$39.00&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+                &lt;Avatar className=&quot;hidden h-9 w-9 sm:flex&quot;&gt;
+                  &lt;AvatarImage src=&quot;/avatars/03.png&quot; alt=&quot;Avatar&quot; /&gt;
+                  &lt;AvatarFallback&gt;IN&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid gap-1&quot;&gt;
+                  &lt;p className=&quot;text-sm font-medium leading-none&quot;&gt;
+                    Isabella Nguyen
+                  &lt;/p&gt;
+                  &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
+                    isabella.nguyen@email.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;ml-auto font-medium&quot;&gt;+$299.00&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+                &lt;Avatar className=&quot;hidden h-9 w-9 sm:flex&quot;&gt;
+                  &lt;AvatarImage src=&quot;/avatars/04.png&quot; alt=&quot;Avatar&quot; /&gt;
+                  &lt;AvatarFallback&gt;WK&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid gap-1&quot;&gt;
+                  &lt;p className=&quot;text-sm font-medium leading-none&quot;&gt;
+                    William Kim
+                  &lt;/p&gt;
+                  &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
+                    will@email.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;ml-auto font-medium&quot;&gt;+$99.00&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;flex items-center gap-4&quot;&gt;
+                &lt;Avatar className=&quot;hidden h-9 w-9 sm:flex&quot;&gt;
+                  &lt;AvatarImage src=&quot;/avatars/05.png&quot; alt=&quot;Avatar&quot; /&gt;
+                  &lt;AvatarFallback&gt;SD&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid gap-1&quot;&gt;
+                  &lt;p className=&quot;text-sm font-medium leading-none&quot;&gt;
+                    Sofia Davis
+                  &lt;/p&gt;
+                  &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
+                    sofia.davis@email.com
+                  &lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;ml-auto font-medium&quot;&gt;+$39.00&lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/CardContent&gt;
+          &lt;/Card&gt;
+        &lt;/div&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"w-full h-full theme-zinc","children":["$","$L17",null,{"block":{"name":"dashboard-01","description":"An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.","registryDependencies":["button","dropdown-menu","input","sheet"],"files":["registry/default/block/dashboard-01.tsx"],"source":"__registry__/default/block/dashboard-01.tsx","type":"components:block","category":"Application","subcategory":"Dashboard","chunks":[{"name":"dashboard-01-chunk-0","description":"dashboard-01-chunk-0","file":"registry/default/block/dashboard-01-chunk-0.tsx","code":"import {Card,CardHeader,CardTitle,CardContent} from \"@/components/ui/card\"\nimport {DollarSign} from \"lucide-react\"\n\n            export default function Component() {\n              return (<Card>\n            <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">\n              <CardTitle className=\"text-sm font-medium\">\n                Total Revenue\n              </CardTitle>\n              <DollarSign className=\"h-4 w-4 text-muted-foreground\" />\n            </CardHeader>\n            <CardContent>\n              <div className=\"text-2xl font-bold\">$45,231.89</div>\n              <p className=\"text-xs text-muted-foreground\">\n                +20.1% from last month\n              </p>\n            </CardContent>\n          </Card>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-01-chunk-1","description":"dashboard-01-chunk-1","file":"registry/default/block/dashboard-01-chunk-1.tsx","code":"import {Card,CardHeader,CardTitle,CardContent} from \"@/components/ui/card\"\nimport {Users} from \"lucide-react\"\n\n            export default function Component() {\n              return (<Card>\n            <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">\n              <CardTitle className=\"text-sm font-medium\">\n                Subscriptions\n              </CardTitle>\n              <Users className=\"h-4 w-4 text-muted-foreground\" />\n            </CardHeader>\n            <CardContent>\n              <div className=\"text-2xl font-bold\">+2350</div>\n              <p className=\"text-xs text-muted-foreground\">\n                +180.1% from last month\n              </p>\n            </CardContent>\n          </Card>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-01-chunk-2","description":"dashboard-01-chunk-2","file":"registry/default/block/dashboard-01-chunk-2.tsx","code":"import {Card,CardHeader,CardTitle,CardContent} from \"@/components/ui/card\"\nimport {CreditCard} from \"lucide-react\"\n\n            export default function Component() {\n              return (<Card>\n            <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">\n              <CardTitle className=\"text-sm font-medium\">Sales</CardTitle>\n              <CreditCard className=\"h-4 w-4 text-muted-foreground\" />\n            </CardHeader>\n            <CardContent>\n              <div className=\"text-2xl font-bold\">+12,234</div>\n              <p className=\"text-xs text-muted-foreground\">\n                +19% from last month\n              </p>\n            </CardContent>\n          </Card>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-01-chunk-3","description":"dashboard-01-chunk-3","file":"registry/default/block/dashboard-01-chunk-3.tsx","code":"import {Card,CardHeader,CardTitle,CardContent} from \"@/components/ui/card\"\nimport {Activity} from \"lucide-react\"\n\n            export default function Component() {\n              return (<Card>\n            <CardHeader className=\"flex flex-row items-center justify-between space-y-0 pb-2\">\n              <CardTitle className=\"text-sm font-medium\">Active Now</CardTitle>\n              <Activity className=\"h-4 w-4 text-muted-foreground\" />\n            </CardHeader>\n            <CardContent>\n              <div className=\"text-2xl font-bold\">+573</div>\n              <p className=\"text-xs text-muted-foreground\">\n                +201 since last hour\n              </p>\n            </CardContent>\n          </Card>)\n            }","container":{"className":"undefined"}},{"name":"dashboard-01-chunk-4","description":"dashboard-01-chunk-4","file":"registry/default/block/dashboard-01-chunk-4.tsx","code":"$18","container":{"className":"undefined"}},{"name":"dashboard-01-chunk-5","description":"dashboard-01-chunk-5","file":"registry/default/block/dashboard-01-chunk-5.tsx","code":"$19","container":{"className":"undefined"}}],"style":"default","container":{"height":"825px","className":"w-full h-full"},"code":"$1a","highlightedCode":"$1b"},"children":["$L1c",["$L1d","$L1e","$L1f","$L20","$L21","$L22"]]}]}]
+23:I[42018,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],""]
+24:I[86893,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Sheet"]
+25:I[86893,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SheetTrigger"]
+26:I[86893,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"SheetContent"]
+2a:I[13335,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockChunk"]
+1c:["$","div",null,{"className":"flex min-h-screen w-full flex-col","children":[["$","header",null,{"className":"sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6","children":[["$","nav",null,{"className":"hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6","children":[["$","$L23",null,{"href":"#","className":"flex items-center gap-2 text-lg font-semibold md:text-base","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-package2 lucide-package-2 h-6 w-6","aria-hidden":"true","children":[["$","path","1holv5",{"d":"M12 3v6"}],["$","path","187q7i",{"d":"M16.76 3a2 2 0 0 1 1.8 1.1l2.23 4.479a2 2 0 0 1 .21.891V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.472a2 2 0 0 1 .211-.894L5.45 4.1A2 2 0 0 1 7.24 3z"}],["$","path","grwhos",{"d":"M3.054 9.013h17.893"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Acme Inc"}]]}],["$","$L23",null,{"href":"#","className":"text-foreground transition-colors hover:text-foreground","children":"Dashboard"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Orders"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Products"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Customers"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground transition-colors hover:text-foreground","children":"Analytics"}]]}],["$","$L24",null,{"children":[["$","$L25",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 w-10 shrink-0 md:hidden","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-menu h-5 w-5","aria-hidden":"true","children":[["$","path","1tepv9",{"d":"M4 5h16"}],["$","path","1lakjw",{"d":"M4 12h16"}],["$","path","1djgab",{"d":"M4 19h16"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Toggle navigation menu"}]]}]}],["$","$L26",null,{"side":"left","children":["$","nav",null,{"className":"grid gap-6 text-lg font-medium","children":[["$","$L23",null,{"href":"#","className":"flex items-center gap-2 text-lg font-semibold","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-package2 lucide-package-2 h-6 w-6","aria-hidden":"true","children":[["$","path","1holv5",{"d":"M12 3v6"}],["$","path","187q7i",{"d":"M16.76 3a2 2 0 0 1 1.8 1.1l2.23 4.479a2 2 0 0 1 .21.891V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9.472a2 2 0 0 1 .211-.894L5.45 4.1A2 2 0 0 1 7.24 3z"}],["$","path","grwhos",{"d":"M3.054 9.013h17.893"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Acme Inc"}]]}],["$","$L23",null,{"href":"#","className":"hover:text-foreground","children":"Dashboard"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Orders"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Products"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Customers"}],["$","$L23",null,{"href":"#","className":"text-muted-foreground hover:text-foreground","children":"Analytics"}]]}]}]]}],["$","div",null,{"className":"flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4","children":[["$","form",null,{"className":"ml-auto flex-1 sm:flex-initial","children":"$L27"}],"$L28"]}]]}],"$L29"]}]
+1d:["$","$L2a","dashboard-01-chunk-0",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:0","children":"$L2b"}]
+1e:["$","$L2a","dashboard-01-chunk-1",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:1","children":"$L2c"}]
+1f:["$","$L2a","dashboard-01-chunk-2",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:2","children":"$L2d"}]
+20:["$","$L2a","dashboard-01-chunk-3",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:3","children":"$L2e"}]
+21:["$","$L2a","dashboard-01-chunk-4",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:4","children":"$L2f"}]
+22:["$","$L2a","dashboard-01-chunk-5",{"block":"$b:props:children:props:block","chunk":"$b:props:children:props:block:chunks:5","children":"$L30"}]
+31:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenu"]
+32:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuTrigger"]
+33:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuContent"]
+34:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuLabel"]
+35:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuSeparator"]
+36:I[63117,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"DropdownMenuItem"]
+3e:I[20367,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Avatar"]
+3f:I[20367,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"AvatarImage"]
+40:I[20367,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"AvatarFallback"]
+27:["$","div",null,{"className":"relative","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-search absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","14j7rj",{"d":"m21 21-4.34-4.34"}],["$","circle","4ej97u",{"cx":"11","cy":"11","r":"8"}],"$undefined"]}],["$","input",null,{"type":"search","className":"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]","ref":"$undefined","placeholder":"Search products..."}]]}]
+28:["$","$L31",null,{"children":[["$","$L32",null,{"asChild":true,"children":["$","button",null,{"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 w-10 rounded-full","ref":"$undefined","children":[["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-circle-user h-5 w-5","aria-hidden":"true","children":[["$","circle","1mglay",{"cx":"12","cy":"12","r":"10"}],["$","circle","ilqhr7",{"cx":"12","cy":"10","r":"3"}],["$","path","154egf",{"d":"M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"}],"$undefined"]}],["$","span",null,{"className":"sr-only","children":"Toggle user menu"}]]}]}],["$","$L33",null,{"align":"end","children":[["$","$L34",null,{"children":"My Account"}],["$","$L35",null,{}],["$","$L36",null,{"children":"Settings"}],["$","$L36",null,{"children":"Support"}],["$","$L35",null,{}],["$","$L36",null,{"children":"Logout"}]]}]]}]
+29:["$","main",null,{"className":"flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8","children":[["$","div",null,{"className":"grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4","children":[["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-0","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Total Revenue"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-dollar-sign h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","line","7eqyqh",{"x1":"12","x2":"12","y1":"2","y2":"22"}],["$","path","1b0p4s",{"d":"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"$$45,231.89"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+20.1% from last month"}]]}]]}],["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-1","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Subscriptions"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-users h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","1yyitq",{"d":"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"}],["$","path","16gr8j",{"d":"M16 3.128a4 4 0 0 1 0 7.744"}],["$","path","kshegd",{"d":"M22 21v-2a4 4 0 0 0-3-3.87"}],["$","circle","nufk8",{"cx":"9","cy":"7","r":"4"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+2350"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+180.1% from last month"}]]}]]}],["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-2","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Sales"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-credit-card h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","rect","ynyp8z",{"width":"20","height":"14","x":"2","y":"5","rx":"2"}],["$","line","1b3vmo",{"x1":"2","x2":"22","y1":"10","y2":"10"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+12,234"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+19% from last month"}]]}]]}],["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-3","children":["$L37","$L38"]}]]}],"$L39"]}]
+2b:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-0","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Total Revenue"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-dollar-sign h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","line","7eqyqh",{"x1":"12","x2":"12","y1":"2","y2":"22"}],["$","path","1b0p4s",{"d":"M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"$$45,231.89"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+20.1% from last month"}]]}]]}]
+2c:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-1","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Subscriptions"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-users h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","1yyitq",{"d":"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"}],["$","path","16gr8j",{"d":"M16 3.128a4 4 0 0 1 0 7.744"}],["$","path","kshegd",{"d":"M22 21v-2a4 4 0 0 0-3-3.87"}],["$","circle","nufk8",{"cx":"9","cy":"7","r":"4"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+2350"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+180.1% from last month"}]]}]]}]
+2d:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-2","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Sales"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-credit-card h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","rect","ynyp8z",{"width":"20","height":"14","x":"2","y":"5","rx":"2"}],["$","line","1b3vmo",{"x1":"2","x2":"22","y1":"10","y2":"10"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+12,234"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+19% from last month"}]]}]]}]
+2e:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-3","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Active Now"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-activity h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","169zse",{"d":"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"}],"$undefined"]}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+573"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+201 since last hour"}]]}]]}]
+2f:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm xl:col-span-2","x-chunk":"dashboard-01-chunk-4","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center","children":[["$","div",null,{"className":"grid gap-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-2xl leading-none font-semibold","children":"Transactions"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"Recent transactions from your store."}]]}],["$","$L23",null,{"href":"#","children":["View All",["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-arrow-up-right h-4 w-4","aria-hidden":"true","children":[["$","path","1tivn9",{"d":"M7 7h10v10"}],["$","path","1vkiza",{"d":"M7 17 17 7"}],"$undefined"]}]],"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto gap-1","ref":null}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","div",null,{"className":"relative w-full overflow-auto","children":["$","table",null,{"ref":"$undefined","className":"w-full caption-bottom text-sm","children":[["$","thead",null,{"ref":"$undefined","className":"[&_tr]:border-b","children":["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0","children":"Customer"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Type"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Status"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Date"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right","children":"Amount"}]]}]}],["$","tbody",null,{"ref":"$undefined","className":"[&_tr:last-child]:border-0","children":[["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Liam Johnson"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"liam@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-23"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$250.00"}]]}],"$L3a","$L3b","$L3c","$L3d"]}]]}]}]}]]}]
+30:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-5","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":["$","div",null,{"data-slot":"card-title","className":"text-2xl leading-none font-semibold","children":"Recent Sales"}]}],["$","div",null,{"data-slot":"card-content","className":"px-6 grid gap-8","children":[["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/01.png","alt":"Avatar"}],["$","$L40",null,{"children":"OM"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Olivia Martin"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"olivia.martin@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$1,999.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/02.png","alt":"Avatar"}],["$","$L40",null,{"children":"JL"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Jackson Lee"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"jackson.lee@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$39.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/03.png","alt":"Avatar"}],["$","$L40",null,{"children":"IN"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Isabella Nguyen"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"isabella.nguyen@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$299.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/04.png","alt":"Avatar"}],["$","$L40",null,{"children":"WK"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"William Kim"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"will@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$99.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/05.png","alt":"Avatar"}],["$","$L40",null,{"children":"SD"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Sofia Davis"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"sofia.davis@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$39.00"}]]}]]}]]}]
+37:["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center justify-between space-y-0 pb-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-sm font-medium","children":"Active Now"}],["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-activity h-4 w-4 text-muted-foreground","aria-hidden":"true","children":[["$","path","169zse",{"d":"M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"}],"$undefined"]}]]}]
+38:["$","div",null,{"data-slot":"card-content","className":"px-6","children":[["$","div",null,{"className":"text-2xl font-bold","children":"+573"}],["$","p",null,{"className":"text-xs text-muted-foreground","children":"+201 since last hour"}]]}]
+39:["$","div",null,{"className":"grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3","children":[["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm xl:col-span-2","x-chunk":"dashboard-01-chunk-4","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header auto-rows-min grid-rows-[auto_auto] gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 flex flex-row items-center","children":[["$","div",null,{"className":"grid gap-2","children":[["$","div",null,{"data-slot":"card-title","className":"text-2xl leading-none font-semibold","children":"Transactions"}],["$","div",null,{"data-slot":"card-description","className":"text-muted-foreground text-sm","children":"Recent transactions from your store."}]]}],["$","$L23",null,{"href":"#","children":["View All",["$","svg",null,{"ref":"$undefined","xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-arrow-up-right h-4 w-4","aria-hidden":"true","children":[["$","path","1tivn9",{"d":"M7 7h10v10"}],["$","path","1vkiza",{"d":"M7 17 17 7"}],"$undefined"]}]],"className":"inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 ml-auto gap-1","ref":null}]]}],["$","div",null,{"data-slot":"card-content","className":"px-6","children":["$","div",null,{"className":"relative w-full overflow-auto","children":["$","table",null,{"ref":"$undefined","className":"w-full caption-bottom text-sm","children":[["$","thead",null,{"ref":"$undefined","className":"[&_tr]:border-b","children":["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0","children":"Customer"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Type"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Status"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Date"}],["$","th",null,{"ref":"$undefined","className":"h-12 px-4 align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 text-right","children":"Amount"}]]}]}],["$","tbody",null,{"ref":"$undefined","className":"[&_tr:last-child]:border-0","children":[["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Liam Johnson"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"liam@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-23"}],"$L41"]}],"$L42","$L43","$L44","$L45"]}]]}]}]}]]}],"$L46"]}]
+3a:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Olivia Smith"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"olivia@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Refund"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Declined"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-24"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$150.00"}]]}]
+3b:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Noah Williams"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"noah@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Subscription"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-25"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$350.00"}]]}]
+3c:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Emma Brown"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"emma@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-26"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$450.00"}]]}]
+3d:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Liam Johnson"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"liam@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-27"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$550.00"}]]}]
+41:["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$250.00"}]
+42:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Olivia Smith"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"olivia@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Refund"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Declined"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-24"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$150.00"}]]}]
+43:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Noah Williams"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"noah@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Subscription"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-25"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$350.00"}]]}]
+44:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Emma Brown"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"emma@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-26"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$450.00"}]]}]
+45:["$","tr",null,{"ref":"$undefined","className":"border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted","children":[["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0","children":[["$","div",null,{"className":"font-medium","children":"Liam Johnson"}],["$","div",null,{"className":"hidden text-sm text-muted-foreground md:inline","children":"liam@example.com"}]]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":"Sale"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden xl:table-column","children":["$","div",null,{"className":"inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground text-xs","children":"Approved"}]}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 hidden md:table-cell lg:hidden xl:table-column","children":"2023-06-27"}],["$","td",null,{"ref":"$undefined","className":"p-4 align-middle [&:has([role=checkbox])]:pr-0 text-right","children":"$$550.00"}]]}]
+46:["$","div",null,{"data-slot":"card","className":"bg-card text-card-foreground flex flex-col gap-6 rounded-lg border py-6 shadow-sm","x-chunk":"dashboard-01-chunk-5","children":[["$","div",null,{"data-slot":"card-header","className":"@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6","children":["$","div",null,{"data-slot":"card-title","className":"text-2xl leading-none font-semibold","children":"Recent Sales"}]}],["$","div",null,{"data-slot":"card-content","className":"px-6 grid gap-8","children":[["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/01.png","alt":"Avatar"}],["$","$L40",null,{"children":"OM"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Olivia Martin"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"olivia.martin@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$1,999.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/02.png","alt":"Avatar"}],["$","$L40",null,{"children":"JL"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Jackson Lee"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"jackson.lee@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$39.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/03.png","alt":"Avatar"}],["$","$L40",null,{"children":"IN"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Isabella Nguyen"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"isabella.nguyen@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$299.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/04.png","alt":"Avatar"}],["$","$L40",null,{"children":"WK"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"William Kim"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"will@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$99.00"}]]}],["$","div",null,{"className":"flex items-center gap-4","children":[["$","$L3e",null,{"className":"hidden h-9 w-9 sm:flex","children":[["$","$L3f",null,{"src":"/avatars/05.png","alt":"Avatar"}],["$","$L40",null,{"children":"SD"}]]}],["$","div",null,{"className":"grid gap-1","children":[["$","p",null,{"className":"text-sm font-medium leading-none","children":"Sofia Davis"}],["$","p",null,{"className":"text-sm text-muted-foreground","children":"sofia.davis@email.com"}]]}],["$","div",null,{"className":"ml-auto font-medium","children":"+$39.00"}]]}]]}]]}]

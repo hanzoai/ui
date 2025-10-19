@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[59299],{59299:(e,n,s)=>{s.r(n),s.d(n,{default:()=>c});var t=s(2616),u=s(63349),a=s(18075);function c(){return(0,t.jsx)(a.Button,{variant:"outline",size:"icon",children:(0,t.jsx)(u.vKP,{className:"h-4 w-4"})})}}}]);

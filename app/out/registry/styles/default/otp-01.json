@@ -1,0 +1,18 @@
+{
+  "name": "otp-01",
+  "registryDependencies": [
+    "button",
+    "card",
+    "input",
+    "label"
+  ],
+  "files": [
+    {
+      "name": "otp-01.tsx",
+      "content": "\"use client\"\n\nimport { Button } from \"@/registry/default/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/registry/default/ui/card\"\nimport {\n  Field,\n  FieldDescription,\n  FieldGroup,\n  FieldLabel,\n} from \"@/registry/default/ui/field\"\nimport {\n  InputOTP,\n  InputOTPGroup,\n  InputOTPSlot,\n} from \"@/registry/default/ui/input-otp\"\n\nexport default function OTPPage() {\n  return (\n    <div className=\"flex min-h-svh w-full items-center justify-center p-6 md:p-10\">\n      <div className=\"w-full max-w-xs\">\n        <OTPForm01 />\n      </div>\n    </div>\n  )\n}\n\nexport function OTPForm01({ ...props }: React.ComponentProps<typeof Card>) {\n  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {\n    e.preventDefault()\n    const formData = new FormData(e.currentTarget)\n\n    // TODO: Add your authentication logic here\n    console.log(\"Form submitted:\", Object.fromEntries(formData))\n\n    // Example: await signIn(formData)\n  }\n\n  return (\n    <Card {...props}>\n      <CardHeader>\n        <CardTitle>Enter verification code</CardTitle>\n        <CardDescription>We sent a 6-digit code to your email.</CardDescription>\n      </CardHeader>\n      <CardContent>\n        <form onSubmit={handleSubmit}>\n          <FieldGroup>\n            <Field>\n              <FieldLabel htmlFor=\"otp\">Verification code</FieldLabel>\n              <InputOTP maxLength={6} id=\"otp\" name=\"otp\" required>\n                <InputOTPGroup className=\"gap-2.5 *:data-[slot=input-otp-slot]:rounded-md *:data-[slot=input-otp-slot]:border\">\n                  <InputOTPSlot index={0} />\n                  <InputOTPSlot index={1} />\n                  <InputOTPSlot index={2} />\n                  <InputOTPSlot index={3} />\n                  <InputOTPSlot index={4} />\n                  <InputOTPSlot index={5} />\n                </InputOTPGroup>\n              </InputOTP>\n              <FieldDescription>\n                Enter the 6-digit code sent to your email.\n              </FieldDescription>\n            </Field>\n            <FieldGroup>\n              <Button type=\"submit\">Verify</Button>\n              <FieldDescription className=\"text-center\">\n                Didn&apos;t receive the code? <a href=\"#\">Resend</a>\n              </FieldDescription>\n            </FieldGroup>\n          </FieldGroup>\n        </form>\n      </CardContent>\n    </Card>\n  )\n}\n"
+    }
+  ],
+  "type": "components:block",
+  "category": "Authentication",
+  "subcategory": "OTP"
+}

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[80755],{80755:(e,t,l)=>{l.r(t),l.d(t,{default:()=>r});var a=l(2616);function r(){return(0,a.jsx)("h1",{className:"scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl",children:"Taxing Laughter: The Joke Tax Chronicles"})}}}]);

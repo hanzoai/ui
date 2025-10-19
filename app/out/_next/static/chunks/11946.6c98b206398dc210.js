@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[11946],{11946:(e,n,s)=>{s.r(n),s.d(n,{Skeleton:()=>u});var a=s(2616),r=s(26868);function u(e){let{className:n,...s}=e;return(0,a.jsx)("div",{className:(0,r.cn)("animate-pulse rounded-md bg-primary/10",n),...s})}}}]);

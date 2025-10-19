@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[70488],{70488:(e,n,s)=>{s.r(n),s.d(n,{default:()=>c});var t=s(2616);function c(){return(0,t.jsx)("div",{className:"flex items-center justify-center p-8",children:(0,t.jsx)("p",{className:"text-muted-foreground",children:"Component coming soon"})})}}}]);
