@@ -1,20 +1,5 @@
-import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
-
-import {
-  PageActions,
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header"
-import { Button } from "@/registry/new-york/ui/button"
-
-export const metadata: Metadata = {
-  title: "Examples",
-  description:
-    "Dashboard, cards, authentication. Some examples built using the components. Use this as a guide to build your own.",
-}
 
 const examples = [
   {
@@ -77,56 +62,37 @@ const examples = [
 
 export default function ExamplesPage() {
   return (
-    <div className="flex flex-1 flex-col">
-      <PageHeader>
-        <PageHeaderHeading>Check out some examples</PageHeaderHeading>
-        <PageHeaderDescription>
-          Dashboard, cards, authentication. Some examples built using the
-          components. Use this as a guide to build your own.
-        </PageHeaderDescription>
-        <PageActions>
-          <Button asChild size="sm">
-            <Link href="/docs/components">Browse Components</Link>
-          </Button>
-          <Button asChild size="sm" variant="ghost">
-            <Link href="/blocks">View Blocks</Link>
-          </Button>
-        </PageActions>
-      </PageHeader>
-      <div className="container flex-1 py-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {examples.map((example) => (
-            <Link
-              key={example.name}
-              href={example.href}
-              className="group relative overflow-hidden rounded-lg border bg-background transition-colors hover:bg-muted/50"
-            >
-              <div className="aspect-video overflow-hidden">
-                <Image
-                  src={example.image}
-                  alt={example.name}
-                  width={800}
-                  height={450}
-                  className="block object-cover transition-transform group-hover:scale-105 dark:hidden"
-                />
-                <Image
-                  src={example.imageDark}
-                  alt={example.name}
-                  width={800}
-                  height={450}
-                  className="hidden object-cover transition-transform group-hover:scale-105 dark:block"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold">{example.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {example.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+    <div className="grid gap-6 p-8 sm:grid-cols-2 lg:grid-cols-3">
+      {examples.map((example) => (
+        <Link
+          key={example.name}
+          href={example.href}
+          className="group relative overflow-hidden rounded-lg border bg-background transition-colors hover:bg-muted/50"
+        >
+          <div className="aspect-video overflow-hidden">
+            <Image
+              src={example.image}
+              alt={example.name}
+              width={800}
+              height={450}
+              className="block object-cover transition-transform group-hover:scale-105 dark:hidden"
+            />
+            <Image
+              src={example.imageDark}
+              alt={example.name}
+              width={800}
+              height={450}
+              className="hidden object-cover transition-transform group-hover:scale-105 dark:block"
+            />
+          </div>
+          <div className="p-4">
+            <h3 className="font-semibold">{example.name}</h3>
+            <p className="text-sm text-muted-foreground">
+              {example.description}
+            </p>
+          </div>
+        </Link>
+      ))}
     </div>
   )
 }
