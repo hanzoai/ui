@@ -277,7 +277,7 @@ export function AppSidebar02({
   )
 }
 
-export function SearchForm02({ ...props }: React.ComponentProps<"form">) {
+export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (
     <form {...props}>
       <SidebarGroup className="py-0">
@@ -297,7 +297,7 @@ export function SearchForm02({ ...props }: React.ComponentProps<"form">) {
   )
 }
 
-export function VersionSwitcher02({
+export function VersionSwitcher({
   versions,
   defaultVersion,
 }: {

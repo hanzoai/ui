@@ -1,3 +1,5 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york/ui/button"
 import { Card, CardContent } from "@/registry/new-york/ui/card"
