@@ -4,7 +4,7 @@ import * as React from "react"
 import { addDays } from "date-fns"
 
 import { Button } from "@/registry/new-york/ui/button"
-import Calendar from "@/registry/new-york/ui/calendar"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 import { Card, CardContent, CardFooter } from "@/registry/new-york/ui/card"
 
 export default function Calendar19() {

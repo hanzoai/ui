@@ -36,7 +36,7 @@ export default function BlocksLayout({
           </Button>
           <Button asChild variant="outline">
             <a
-              href="https://github.com/hanzo-ui/ui/discussions/new?category=blocks-request"
+              href="https://github.com/hanzoai/ui/discussions/new?category=blocks-request"
               target="_blank"
             >
               Request a block

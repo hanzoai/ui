@@ -1,6 +1,7 @@
 import * as React from "react"
 import { z } from "zod"
 
+import { getBlock } from "@/lib/blocks"
 import { highlightCode } from "@/lib/highlight-code"
 import {
   createFileTreeForRegistryItemFiles,
@@ -9,9 +10,39 @@ import {
 import { registryItemFileSchema } from "@/lib/schemas"
 import { cn } from "@/lib/utils"
 import { BlockViewer } from "@/components/block-viewer"
+import { BlockWrapper } from "@/components/block-wrapper"
 import { ComponentPreview } from "@/components/component-preview"
+import { Style } from "@/registry/styles"
 
-export async function BlockDisplay({ name }: { name: string }) {
+interface BlockDisplayProps {
+  name: string
+  style?: Style["name"]
+}
+
+export async function BlockDisplay({
+  name,
+  style = "default",
+}: BlockDisplayProps) {
+  // Try to get as a block first (with style support)
+  const block = await getCachedBlock(name, style)
+
+  if (block) {
+    // Render block using BlockWrapper like the individual block pages do
+    const Component = block.component
+    const chunks = block.chunks?.map((chunk) => ({ ...chunk }))
+    delete block.component
+    block.chunks?.map((chunk) => delete chunk.component)
+
+    return (
+      <div className={cn(block.container?.className || "", "theme-zinc")}>
+        <BlockWrapper block={block}>
+          <Component />
+        </BlockWrapper>
+      </div>
+    )
+  }
+
+  // Fallback to registry item for non-block components
   const item = await getCachedRegistryItem(name)
 
   if (!item?.files) {
@@ -36,6 +67,16 @@ export async function BlockDisplay({ name }: { name: string }) {
     </BlockViewer>
   )
 }
+
+const getCachedBlock = React.cache(
+  async (name: string, style: Style["name"]) => {
+    try {
+      return await getBlock(name, style)
+    } catch {
+      return null
+    }
+  }
+)
 
 const getCachedRegistryItem = React.cache(async (name: string) => {
   return await getRegistryItem(name)

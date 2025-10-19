@@ -3,7 +3,7 @@
 import * as React from "react"
 
 import { Button } from "@/registry/default/ui/button"
-import Calendar from "@/registry/default/ui/calendar"
+import { Calendar } from "@/registry/default/ui/calendar"
 import {
   Card,
   CardContent,

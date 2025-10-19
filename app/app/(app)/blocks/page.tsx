@@ -16,14 +16,19 @@ const FEATURED_BLOCKS = [
 
 export default async function BlocksPage() {
   return (
-    <div className="flex flex-col gap-12 md:gap-24">
-      {FEATURED_BLOCKS.map((name) => (
-        <BlockDisplay name={name} key={name} />
+    <div>
+      {FEATURED_BLOCKS.map((block) => (
+        <div
+          key={block}
+          className="border-grid container border-b py-8 first:pt-6 last:border-b-0 md:py-12"
+        >
+          <BlockDisplay name={block} />
+        </div>
       ))}
       <div className="container-wrapper">
         <div className="container flex justify-center py-6">
           <Button asChild variant="outline">
-            <Link href="/blocks/sidebar">Browse more blocks</Link>
+            <Link href="/blocks/sidebar">Browse all blocks</Link>
           </Button>
         </div>
       </div>

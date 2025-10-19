@@ -47,7 +47,6 @@ import {
   SidebarTrigger,
 } from "@/registry/new-york/ui/sidebar"
 
-
 export default function Page() {
   return (
     <SidebarProvider>

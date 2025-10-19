@@ -98,8 +98,8 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
-          title: "shadcn Compatibility",
-          href: "/docs/shadcn-compatibility",
+          title: "hanzo Compatibility",
+          href: "/docs/hanzo-compatibility",
           items: [],
           label: "New",
         },
@@ -1049,6 +1049,68 @@ export const docsConfig: DocsConfig = {
         {
           title: "Tooltip",
           href: "/docs/charts/tooltip",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Frameworks",
+      items: [
+        {
+          title: "Overview",
+          href: "/docs/frameworks",
+          items: [],
+        },
+        {
+          title: "React",
+          href: "/docs/frameworks/react",
+          items: [],
+        },
+        {
+          title: "Vue",
+          href: "/docs/frameworks/vue",
+          items: [],
+        },
+        {
+          title: "Svelte",
+          href: "/docs/frameworks/svelte",
+          items: [],
+          label: "Beta",
+        },
+        {
+          title: "React Native",
+          href: "/docs/frameworks/react-native",
+          items: [],
+          label: "Beta",
+        },
+      ],
+    },
+    {
+      title: "Packages",
+      items: [
+        {
+          title: "Overview",
+          href: "/docs/packages",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Testing",
+      items: [
+        {
+          title: "Testing Guide",
+          href: "/docs/testing",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "White-Label",
+      items: [
+        {
+          title: "White-Label Guide",
+          href: "/docs/white-label",
           items: [],
         },
       ],

@@ -1,0 +1,413 @@
+---
+title: React
+description: Using @hanzo/ui components in React applications
+---
+
+# React Guide
+
+@hanzo/ui components are built with React 18+ and fully support React 19. All components follow React best practices with hooks, forwardRef, and TypeScript.
+
+## Installation
+
+<Steps>
+
+### Install the package
+
+```bash
+npm install @hanzo/ui
+# or
+pnpm add @hanzo/ui
+# or
+bun add @hanzo/ui
+```
+
+### Install peer dependencies
+
+```bash
+npm install react react-dom
+npm install -D tailwindcss postcss autoprefixer
+```
+
+### Configure Tailwind
+
+```js title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@hanzo/ui/**/*.{js,ts,jsx,tsx}", // Add this
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+</Steps>
+
+## Usage
+
+### Basic Import
+
+```tsx
+import { Button, Card, Input } from "@hanzo/ui"
+// or explicitly from React
+import { Button } from "@hanzo/ui/react"
+
+export function MyComponent() {
+  return (
+    <Card>
+      <Button>Click me</Button>
+      <Input placeholder="Enter text..." />
+    </Card>
+  )
+}
+```
+
+### With Client Components (Next.js App Router)
+
+```tsx
+"use client"
+
+import { useState } from "react"
+import { Button, Dialog } from "@hanzo/ui"
+
+export function InteractiveComponent() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog.Content>
+          <Dialog.Title>Hello!</Dialog.Title>
+          <Dialog.Description>This is a dialog.</Dialog.Description>
+        </Dialog.Content>
+      </Dialog>
+    </>
+  )
+}
+```
+
+### Server Components
+
+Many components can be used in React Server Components:
+
+```tsx
+import { Badge, Card, Separator } from "@hanzo/ui"
+
+export default function ServerComponent() {
+  return (
+    <Card>
+      <h2>Server Rendered</h2>
+      <Badge>No JavaScript needed</Badge>
+      <Separator />
+      <p>This renders on the server</p>
+    </Card>
+  )
+}
+```
+
+## React 19 Support
+
+All components are compatible with React 19:
+
+- ✅ New JSX transform
+- ✅ Async components
+- ✅ useTransition
+- ✅ useOptimistic
+- ✅ Server Actions integration
+
+```tsx
+"use client"
+
+import { useActionState } from "react"
+import { Button, Input } from "@hanzo/ui"
+
+export function Form() {
+  const [state, formAction] = useActionState(submitForm, null)
+
+  return (
+    <form action={formAction}>
+      <Input name="email" type="email" />
+      <Button type="submit">Submit</Button>
+    </form>
+  )
+}
+```
+
+## Hooks Integration
+
+### React Hook Form
+
+```tsx
+"use client"
+
+import { Button, Form, Input } from "@hanzo/ui"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+})
+
+export function LoginForm() {
+  const form = useForm({
+    resolver: zodResolver(schema),
+  })
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form.Field name="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control>
+            <Input type="email" />
+          </Form.Control>
+        </Form.Field>
+        <Button type="submit">Login</Button>
+      </form>
+    </Form>
+  )
+}
+```
+
+### TanStack Query
+
+```tsx
+"use client"
+
+import { Card, Skeleton } from "@hanzo/ui"
+import { useQuery } from "@tanstack/react-query"
+
+export function DataComponent() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  })
+
+  if (isLoading) {
+    return (
+      <Card>
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+      </Card>
+    )
+  }
+
+  return (
+    <Card>
+      {data?.map((user) => (
+        <div key={user.id}>{user.name}</div>
+      ))}
+    </Card>
+  )
+}
+```
+
+## Component Patterns
+
+### Forwarding Refs
+
+All components support ref forwarding:
+
+```tsx
+import { useRef } from "react"
+import { Button, Input } from "@hanzo/ui"
+
+export function FocusExample() {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  return (
+    <>
+      <Input ref={inputRef} />
+      <Button onClick={() => inputRef.current?.focus()}>Focus Input</Button>
+    </>
+  )
+}
+```
+
+### Composition
+
+Components are designed to be composed:
+
+```tsx
+import { Badge, Button, Card } from "@hanzo/ui"
+
+export function ProductCard({ product }) {
+  return (
+    <Card>
+      <Card.Header>
+        <Card.Title>{product.name}</Card.Title>
+        <Badge>{product.category}</Badge>
+      </Card.Header>
+      <Card.Content>
+        <p>{product.description}</p>
+      </Card.Content>
+      <Card.Footer>
+        <Button>Add to Cart</Button>
+      </Card.Footer>
+    </Card>
+  )
+}
+```
+
+### Variants with CVA
+
+```tsx
+import { Button } from "@hanzo/ui"
+import { cva } from "class-variance-authority"
+
+const buttonVariants = cva("custom-base", {
+  variants: {
+    intent: {
+      primary: "bg-blue-500",
+      secondary: "bg-gray-500",
+    },
+  },
+})
+
+export function CustomButton({ intent, ...props }) {
+  return <Button className={buttonVariants({ intent })} {...props} />
+}
+```
+
+## TypeScript Support
+
+Full TypeScript support with type inference:
+
+```tsx
+import type { ButtonProps } from "@hanzo/ui"
+
+// Extend component props
+interface MyButtonProps extends ButtonProps {
+  loading?: boolean
+}
+
+export function MyButton({ loading, children, ...props }: MyButtonProps) {
+  return (
+    <Button disabled={loading} {...props}>
+      {loading ? "Loading..." : children}
+    </Button>
+  )
+}
+```
+
+## Next.js Integration
+
+### App Router (Next.js 13+)
+
+```tsx
+// app/page.tsx
+import { useState } from "react"
+import { Button, Button, Card } from "@hanzo/ui"
+
+export default function Page() {
+  return (
+    <Card>
+      <Button>Server Component</Button>
+    </Card>
+  )
+}
+
+// app/interactive.tsx
+;("use client")
+
+export function Interactive() {
+  const [count, setCount] = useState(0)
+  return <Button onClick={() => setCount((c) => c + 1)}>{count}</Button>
+}
+```
+
+### Pages Router (Next.js 12)
+
+```tsx
+// pages/index.tsx
+import { Button, Card } from "@hanzo/ui"
+
+export default function Page() {
+  return (
+    <Card>
+      <Button>Click me</Button>
+    </Card>
+  )
+}
+```
+
+## Available Components
+
+All 161 components are available in React:
+
+- **UI Primitives**: Button, Input, Card, Dialog, etc.
+- **3D Components**: 3d-button, 3d-card, 3d-carousel, etc.
+- **AI Components**: ai-chat, ai-assistant, ai-playground, etc.
+- **Animations**: animated-beam, animated-text, etc.
+- **Data Display**: Table, DataTable, Charts, etc.
+- **Forms**: Form, Input, Select, Checkbox, etc.
+
+See [Components](/docs/components) for the complete list.
+
+## Best Practices
+
+1. **Use Client Components for Interactivity**
+
+   ```tsx
+   "use client" // Add when using hooks or events
+   ```
+
+2. **Leverage Server Components**
+
+   ```tsx
+   // No 'use client' needed for static components
+   ```
+
+3. **Memoize Expensive Computations**
+
+   ```tsx
+   const data = useMemo(() => processData(raw), [raw])
+   ```
+
+4. **Use Suspense for Loading States**
+
+   ```tsx
+   <Suspense fallback={<Skeleton />}>
+     <AsyncComponent />
+   </Suspense>
+   ```
+
+5. **Extract Reusable Patterns**
+   ```tsx
+   // Create your own composed components
+   ```
+
+## Troubleshooting
+
+### "use client" Errors
+
+If you see errors about hooks or events:
+
+- Add `'use client'` at the top of the file
+- Or move interactive code to a separate client component
+
+### Hydration Mismatches
+
+- Ensure server and client render the same HTML
+- Use `suppressHydrationWarning` sparingly
+- Check for browser-only APIs (window, localStorage)
+
+### TypeScript Errors
+
+- Update to latest TypeScript (5.0+)
+- Enable strict mode in tsconfig.json
+- Check peer dependency versions
+
+## Next Steps
+
+- [View all React components](/docs/components)
+- [Explore component examples](/examples)
+- [Learn about theming](/docs/dark-mode)
+- [Check out the page builder](/docs/guides/page-builder)

@@ -1,12 +1,12 @@
 ---
-title: shadcn/ui Compatibility
-description: Complete interoperability with shadcn/ui ecosystem
+title: hanzo/ui Compatibility
+description: Complete interoperability with hanzo/ui ecosystem
 ---
 
-hanzo/ui is built to be **100% compatible** with the shadcn/ui ecosystem. This means you can:
+hanzo/ui is built to be **100% compatible** with the hanzo/ui ecosystem. This means you can:
 
-- Use hanzo/ui components in any shadcn/ui project
-- Use shadcn/ui components alongside hanzo/ui components
+- Use hanzo/ui components in any hanzo/ui project
+- Use hanzo/ui components alongside hanzo/ui components
 - Mix and match components from both registries
 - Share the same theming and configuration
 
@@ -26,15 +26,15 @@ Then import components directly:
 import { AIPlayground, CodeEditor, Dock } from "@hanzo/ui"
 ```
 
-### CLI Installation (shadcn Compatible)
+### CLI Installation (hanzo Compatible)
 
-Use our CLI to copy components into your project, just like shadcn/ui:
+Use our CLI to copy components into your project, just like hanzo/ui:
 
 ```bash
 npx hanzo-ui@latest add ai-playground
 ```
 
-This copies the component into your project at `@/components/ui/ai-playground.tsx`, maintaining full shadcn compatibility.
+This copies the component into your project at `@/components/ui/ai-playground.tsx`, maintaining full hanzo compatibility.
 
 ## Import Patterns
 
@@ -57,8 +57,8 @@ import { AIChat, Button, Card } from "@hanzo/ui"
 Best for:
 
 - Full customization control
-- shadcn/ui compatibility
-- Existing shadcn projects
+- hanzo/ui compatibility
+- Existing hanzo projects
 
 ```tsx
 import { AIChat } from "@/components/ui/ai-chat"
@@ -74,7 +74,7 @@ Configure multiple registries in your `components.json`:
   "$schema": "https://ui.hanzo.ai/schema.json",
   "registries": {
     "@hanzo": "https://ui.hanzo.ai/r/{name}.json",
-    "@shadcn": "https://ui.shadcn.com/r/{name}.json"
+    "@hanzo": "https://ui.hanzo.com/r/{name}.json"
   }
 }
 ```
@@ -85,8 +85,8 @@ This allows you to install components from both registries:
 # Install from hanzo/ui
 npx hanzo-ui@latest add ai-playground
 
-# Install from shadcn/ui
-npx shadcn@latest add button
+# Install from hanzo/ui
+npx hanzo@latest add button
 
 # They work together seamlessly
 ```
@@ -132,16 +132,16 @@ For Cursor:
 
 All hanzo/ui components:
 
-✅ Use the same CSS variables as shadcn/ui
+✅ Use the same CSS variables as hanzo/ui
 ✅ Support the same theme configurations
-✅ Work with shadcn/ui's dark mode
+✅ Work with hanzo/ui's dark mode
 ✅ Use Radix UI primitives where applicable
 ✅ Follow the same component patterns
 ✅ Support the same prop interfaces
 
 ## Extended Component Library
 
-hanzo/ui extends shadcn/ui with:
+hanzo/ui extends hanzo/ui with:
 
 ### AI Components
 
@@ -183,25 +183,25 @@ hanzo/ui extends shadcn/ui with:
 
 ### And 100+ More Components
 
-All maintaining full shadcn/ui compatibility!
+All maintaining full hanzo/ui compatibility!
 
 ## Theming
 
-hanzo/ui uses the same theming system as shadcn/ui:
+hanzo/ui uses the same theming system as hanzo/ui:
 
 ```css
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    /* Same variables as shadcn/ui */
+    /* Same variables as hanzo/ui */
   }
 }
 ```
 
 ## Migration Guide
 
-### From shadcn/ui to hanzo/ui
+### From hanzo/ui to hanzo/ui
 
 1. Install hanzo/ui:
 
@@ -232,7 +232,7 @@ npx hanzo-ui@latest add ai-playground dock code-editor
 You can use both registries in the same project:
 
 ```tsx
-// shadcn/ui components
+// hanzo/ui components
 
 // hanzo/ui components
 import { AIPlayground, Dock } from "@hanzo/ui"
@@ -244,7 +244,7 @@ import { Card } from "@/components/ui/card"
 export function MyApp() {
   return (
     <Card>
-      <Button>shadcn/ui Button</Button>
+      <Button>hanzo/ui Button</Button>
       <AIPlayground />
       <Dock />
     </Card>
@@ -275,4 +275,4 @@ import type { AIChatProps, CodeEditorProps, DockProps } from "@hanzo/ui"
 
 ## License
 
-MIT - Same as shadcn/ui
+MIT - Same as hanzo/ui

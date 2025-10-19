@@ -44,7 +44,7 @@ export function ItemAvatar() {
         <ItemMedia>
           <div className="*:data-[slot=avatar]:ring-background flex -space-x-2 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:grayscale">
             <Avatar className="hidden sm:flex">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src="https://github.com/hanzo.png" alt="@hanzo" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <Avatar className="hidden sm:flex">

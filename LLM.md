@@ -1,12 +1,12 @@
 # Hanzo UI - AI Assistant Knowledge Base
 
-**Last Updated**: 2025-10-05
-**Project**: Hanzo UI Component Library (shadcn/ui v4 fork)
+**Last Updated**: 2025-10-18
+**Project**: Hanzo UI Component Library (shadcn/ui fork with multi-framework support)
 **Version**: @hanzo/ui v5.0.0
 
 ## Project Overview
 
-Hanzo UI is a comprehensive React component library built on shadcn/ui v4 with Hanzo branding. It provides 150+ accessible, customizable components distributed via npm and CLI.
+Hanzo UI is a comprehensive React component library built on hanzo/ui v4 with Hanzo branding. It provides 150+ accessible, customizable components distributed via npm and CLI.
 
 ### Repository Structure
 
@@ -282,21 +282,87 @@ NEXT_PUBLIC_APP_URL=http://localhost:3003
 4. **Blocks vs Components**: Blocks are docs only, not CLI-installable
 5. **Package Exports**: Multiple entry points for different needs
 
-## Recent Updates (2025-10-05)
+## Recent Updates
 
+### 2025-10-18 - Blocks Display Bug Fix (COMPLETED)
+**Issue**: Blocks not displaying on http://localhost:3003/blocks
+**Root Cause**: Registry index structure mismatch
+- Registry is structured as: `Index[style][componentName]` (e.g., `Index["default"]["dashboard-01"]`)
+- `BlockDisplay` component used `getRegistryItem(name)` which tried `Index[name]` (undefined)
+- Result: Silent failure returning null, blocks never rendered
+
+**Solution**: Updated `BlockDisplay` component to:
+1. Import `getBlock` function from `/lib/blocks.ts` which correctly accesses `Index[style][name]`
+2. Accept optional `style` parameter with default "default"
+3. Use `BlockWrapper` for blocks (same as individual block pages)
+4. Fallback to `BlockViewer` for non-block components
+
+**Changes Made**:
+- File: `/Users/z/work/hanzo/ui/app/components/block-display.tsx`
+- Added imports: `getBlock`, `BlockWrapper`, `Style`
+- Added interface `BlockDisplayProps` with optional style
+- Rewrote logic to first try `getBlock(name, style)`, fallback to `getRegistryItem(name)`
+- For blocks: render with `BlockWrapper` (simpler, no file tree needed)
+- For components: render with `BlockViewer` (includes code display)
+
+**Status**: ✅ FIXED - All 5 featured blocks now displaying correctly on blocks page
+- dashboard-01 ✅
+- sidebar-07 ✅
+- sidebar-03 ✅
+- login-03 ✅
+- login-04 ✅
+
+**Testing**: Verified via browser - no console errors, clean rendering
+
+### 2025-10-18 - Documentation Overhaul
+- ✅ **Cleaned up root directory** - Moved old status reports to docs/archive/
+- ✅ **Deleted unnecessary MD files** - Removed USAGE.md, WHITE_LABEL.md, TESTING_GUIDE.md
+- ✅ **Created comprehensive framework docs** - React, Vue guides in app/content/docs/frameworks/
+- ✅ **Created testing guide** - Complete testing documentation in app/content/docs/testing/
+- ✅ **Created white-label guide** - Fork and rebrand documentation in app/content/docs/white-label/
+- ✅ **Created packages overview** - All packages documented in app/content/docs/packages/
+- ✅ **Updated README.md** - Concise, feature-rich overview
+- ✅ **Updated navigation** - Added Frameworks, Packages, Testing, White-Label sections
+- ✅ **Fixed build:registry command** - Updated workspace references from www,v4 to app
+- ✅ **Fixed prettier warnings** - Removed deprecated import order options
+- ✅ **Created shadcn/ui comparison** - Archived in docs/archive/SHADCN_COMPARISON_REPORT.md
+- ✅ **Verified build process** - Registry builds successfully
+
+### 2025-10-05
 - ✅ Next.js 15.3.1 with Turbopack
 - ✅ React 19 support (experimental)
 - ✅ Fumadocs (replaced Contentlayer)
 - ✅ @dnd-kit page builder
 - ✅ Electric blue primary (210 100% 50%)
-- ✅ Synced with shadcn/ui v3.4.0
+- ✅ Synced with hanzo/ui v3.4.0
 
 ## Component Status Tracking
 
-### Current State
-- **Implemented**: 150+ components (button, card, dialog, calendar, etc.)
-- **Stub Components**: 63 need implementation (navigation bars, utilities)
+### Current State (2025-10-18)
+- **Total Component Files**: 161 in registry/default/ui/
+- **Implemented**: ~127 fully functional components
+- **Stub Components**: ~34 need implementation
 - **Blocks**: 24+ viewport-sized templates
+- **Frameworks**: React (100%), Vue (~90%), Svelte (~85%), React Native (~70%)
+
+### shadcn/ui Comparison
+**We have 3x more components than shadcn/ui (161 vs 58)**
+
+**Unique to @hanzo/ui:**
+- 3D Components (9): 3d-button, 3d-card, 3d-carousel, 3d-grid, etc.
+- AI Components (12): ai-chat, ai-assistant, ai-playground, ai-vision, etc.
+- Animation Components (13): animated-beam, animated-text, animated-cursor, etc.
+- Navigation Variants (15): Multiple specialized navigation bars
+- Advanced Features: Page builder, white-label system, multi-framework support
+
+**Latest from shadcn/ui 2025 (verify implementation):**
+1. button-group ✅ (exists)
+2. empty ✅ (exists)
+3. field ✅ (exists)
+4. input-group ✅ (exists)
+5. item ✅ (exists)
+6. kbd ✅ (exists)
+7. spinner ✅ (exists)
 
 ### High-Priority Missing Components
 1. **combobox** - Search, filter, keyboard nav
@@ -306,14 +372,23 @@ NEXT_PUBLIC_APP_URL=http://localhost:3003
 5. **image-crop** - Cropping tool
 6. **image-zoom** - Zoom/pan functionality
 
-### Navigation Components (15 stubs)
-All need extraction from blocks:
+### Navigation Components (~15 stubs)
+Need extraction from blocks:
 - advanced-navigation-bar
 - ai-model-selector-navigation-bar
 - breadcrumb-navigation-bar
 - dashboard-navigation-bar
 - e-commerce-navigation-bar
-- (10 more variants...)
+- filter-navigation-bar
+- mobile-bottom-navigation-bar
+- multi-level-navigation-bar
+- notification-center-navigation-bar
+- project-switcher-navigation-bar
+- search-navigation-bar
+- settings-navigation-bar
+- tabs-navigation-bar
+- app-switcher-navigation-bar
+- breadcrumb-and-filters-navigation-bar
 
 ## Dependencies
 
@@ -364,15 +439,40 @@ This file (`LLM.md`) is symlinked as:
 
 All files reference the same knowledge base. Updates here propagate to all AI systems.
 
+## Documentation Structure
+
+All documentation now lives in `app/content/docs/` and is visible on ui.hanzo.ai:
+
+- **/frameworks/** - Multi-framework guides (React, Vue, Svelte, React Native)
+- **/packages/** - Package documentation (@hanzo/ui, @hanzo/auth, etc.)
+- **/testing/** - Testing guide (unit, E2E, visual regression)
+- **/white-label/** - Fork and rebrand guide
+- **/components/** - All 161 component docs
+- **/blocks/** - Block documentation
+- **/installation/** - Framework-specific installation guides
+- **/guides/** - Page builder, workflows
+
+**Archived**: Old status reports in `/docs/archive/`
+
+**Root MD Files** (ONLY these allowed):
+- LLM.md (this file)
+- README.md
+- CONTRIBUTING.md
+- LICENSE.md
+- SECURITY.md
+- AGENTS.md, CLAUDE.md, QWEN.md, GEMINI.md (symlinks to LLM.md)
+
 ## Rules for AI Assistants
 
 1. **ALWAYS** build registry before app build
 2. **NEVER** commit symlinked files (.AGENTS.md, CLAUDE.md, etc.) - they're in .gitignore
 3. **ALWAYS** update LLM.md with significant discoveries
-4. **NEVER** create random summary files - update THIS file
-5. **ALWAYS** use pnpm, not npm/yarn
-6. **ALWAYS** check both theme variants (default, new-york)
-7. **NEVER** confuse blocks with components (blocks are docs only)
+4. **NEVER** create random summary/status files at root - they go in docs/archive/ or update LLM.md
+5. **NEVER** create BARE .md files at root except LLM.md, README.md, CONTRIBUTING.md, LICENSE.md, SECURITY.md
+6. **ALWAYS** put documentation in app/content/docs/ so it's visible on ui.hanzo.ai
+7. **ALWAYS** use pnpm, not npm/yarn
+8. **ALWAYS** check both theme variants (default, new-york)
+9. **NEVER** confuse blocks with components (blocks are docs only)
 
 ## Testing Patterns
 

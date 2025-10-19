@@ -6,7 +6,7 @@ import { DateRange } from "react-day-picker"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { Button } from "@/registry/new-york/ui/button"
-import Calendar from "@/registry/new-york/ui/calendar"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 import {
   Card,
   CardContent,

@@ -113,8 +113,8 @@ const SAMPLE_DATA = {
     },
     {
       type: "user",
-      title: "shadcn",
-      image: "https://github.com/shadcn.png",
+      title: "hanzo",
+      image: "https://github.com/hanzo.png",
       workspace: "Workspace",
     },
     {
@@ -383,10 +383,10 @@ export function NotionPromptForm() {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
                       <Avatar className="size-4">
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage src="https://github.com/hanzo.png" />
                         <AvatarFallback>CN</AvatarFallback>
                       </Avatar>
-                      shadcn
+                      hanzo
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent className="w-72 p-0 [--radius:1rem]">
                       <Command>
