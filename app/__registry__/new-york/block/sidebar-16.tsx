@@ -65,6 +65,7 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarInput,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -72,9 +73,9 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarProvider,
   useSidebar,
 } from "@/registry/new-york/ui/sidebar"
-import { SidebarInset, SidebarProvider } from "@/registry/new-york/ui/sidebar"
 
 export const iframeHeight = "800px"
 
@@ -105,9 +106,9 @@ export default function Page() {
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "hanzo",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/hanzo.jpg",
   },
   navMain: [
     {

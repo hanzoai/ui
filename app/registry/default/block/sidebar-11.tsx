@@ -2,24 +2,6 @@ import * as React from "react"
 import { ChevronRight, File, Folder } from "lucide-react"
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/registry/default/ui/collapsible"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarRail,
-} from "@/registry/default/ui/sidebar"
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -27,10 +9,26 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/registry/default/ui/breadcrumb"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/registry/default/ui/collapsible"
 import { Separator } from "@/registry/default/ui/separator"
 import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarInset,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@/registry/default/ui/sidebar"
 

@@ -1,0 +1,342 @@
+---
+title: Packages
+description: Overview of all @hanzo packages
+---
+
+# Packages
+
+@hanzo/ui is a monorepo containing multiple packages. Each package serves a specific purpose and can be used independently or together.
+
+## Core Packages
+
+### @hanzo/ui
+
+The main UI component library.
+
+```bash
+npm install @hanzo/ui
+```
+
+**Features:**
+
+- 161+ components
+- Multi-framework support (React, Vue, Svelte, React Native)
+- Two theme variants (default, new-york)
+- 3D and AI components
+- Full TypeScript support
+
+**Exports:**
+
+```ts
+import { Button, Card } from "@hanzo/ui" // React (default)
+
+import { cn } from "@hanzo/ui/lib/utils" // Utilities
+import { Button } from "@hanzo/ui/react" // Explicit React
+
+import { Button } from "@hanzo/ui/react-native" // React Native
+import { Button } from "@hanzo/ui/svelte" // Svelte
+import { Button } from "@hanzo/ui/vue" // Vue 3
+```
+
+[View Documentation](/docs/components)
+
+### @hanzo/auth
+
+Authentication components and utilities.
+
+```bash
+npm install @hanzo/auth
+```
+
+**Features:**
+
+- Login/signup components
+- Social auth buttons
+- Password reset flows
+- Multi-factor authentication
+- Session management
+
+**Usage:**
+
+```tsx
+import { LoginForm, SignupForm } from "@hanzo/auth"
+import { useAuth } from "@hanzo/auth/hooks"
+
+function App() {
+  const { user, login, logout } = useAuth()
+
+  return user ? (
+    <Dashboard user={user} onLogout={logout} />
+  ) : (
+    <LoginForm onLogin={login} />
+  )
+}
+```
+
+[View Auth Docs](/docs/auth)
+
+### @hanzo/commerce
+
+E-commerce components and cart management.
+
+```bash
+npm install @hanzo/commerce
+```
+
+**Features:**
+
+- Product cards and listings
+- Shopping cart
+- Checkout components
+- Payment integration
+- Order management
+
+**Usage:**
+
+```tsx
+import { Cart, Checkout, ProductCard } from "@hanzo/commerce"
+import { useCart } from "@hanzo/commerce/hooks"
+
+function Shop() {
+  const { items, addToCart, removeFromCart } = useCart()
+
+  return (
+    <div>
+      <ProductCard product={product} onAddToCart={addToCart} />
+      <Cart items={items} onRemove={removeFromCart} />
+    </div>
+  )
+}
+```
+
+[View Commerce Docs](/docs/commerce)
+
+### @hanzo/brand
+
+Branding system for white-label applications.
+
+```bash
+npm install @hanzo/brand
+```
+
+**Features:**
+
+- Brand configuration
+- Theme management
+- Logo components
+- Color system
+- Typography scale
+
+**Usage:**
+
+```tsx
+import { BrandProvider, useBrand } from "@hanzo/brand"
+import { luxBrand } from "@hanzo/brand/presets/lux"
+
+function App() {
+  return (
+    <BrandProvider brand={luxBrand}>
+      <YourApp />
+    </BrandProvider>
+  )
+}
+```
+
+[View Brand Docs](/docs/white-label)
+
+### @hanzo/react
+
+Additional React utilities and hooks.
+
+```bash
+npm install @hanzo/react
+```
+
+**Features:**
+
+- Custom hooks
+- Context providers
+- Utility components
+- State management helpers
+
+**Usage:**
+
+```tsx
+import { Portal, Slot } from "@hanzo/react/components"
+import { useLocalStorage, useMediaQuery } from "@hanzo/react/hooks"
+
+function Component() {
+  const [value, setValue] = useLocalStorage("key", "default")
+  const isMobile = useMediaQuery("(max-width: 768px)")
+
+  return <Portal>{isMobile && <MobileMenu />}</Portal>
+}
+```
+
+## Development Packages
+
+### @hanzo/ui-web
+
+The documentation site and registry.
+
+**Internal package** - Not published to npm.
+
+Located in `/app`, this is the Next.js application that powers ui.hanzo.ai.
+
+**Features:**
+
+- Component documentation
+- Interactive examples
+- Registry builder
+- Theme generator
+- Page builder
+
+### Workspace Structure
+
+```
+ui/
+├── pkg/
+│   ├── ui/           # @hanzo/ui
+│   ├── auth/         # @hanzo/auth
+│   ├── commerce/     # @hanzo/commerce
+│   ├── brand/        # @hanzo/brand
+│   └── react/        # @hanzo/react
+├── app/              # @hanzo/ui-web (docs site)
+├── brands/           # Brand configurations
+└── templates/        # Project templates
+```
+
+## Installation Patterns
+
+### Install All Packages
+
+```bash
+npm install @hanzo/ui @hanzo/auth @hanzo/commerce @hanzo/brand
+```
+
+### Install Specific Features
+
+```bash
+# Just UI components
+npm install @hanzo/ui
+
+# UI + Auth
+npm install @hanzo/ui @hanzo/auth
+
+# Full commerce stack
+npm install @hanzo/ui @hanzo/commerce @hanzo/auth
+```
+
+### Peer Dependencies
+
+All packages require:
+
+```json
+{
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
+}
+```
+
+Vue/Svelte packages require their respective frameworks.
+
+## Package Versions
+
+All packages follow semantic versioning and are released together:
+
+- **Major**: Breaking changes
+- **Minor**: New features, backward compatible
+- **Patch**: Bug fixes
+
+Check current versions:
+
+```bash
+npm info @hanzo/ui version
+npm info @hanzo/auth version
+```
+
+## TypeScript Support
+
+All packages include TypeScript definitions:
+
+```ts
+import type { AuthUser } from "@hanzo/auth"
+import type { BrandConfig } from "@hanzo/brand"
+import type { CartItem } from "@hanzo/commerce"
+import type { ButtonProps } from "@hanzo/ui"
+```
+
+## Tree Shaking
+
+All packages support tree shaking for optimal bundle sizes:
+
+```ts
+// Only imports Button code
+// Tree shakes unused components
+import { Button, Button, Card } from "@hanzo/ui"
+
+// Dialog, Input, etc. not included in bundle
+```
+
+## Bundle Sizes
+
+Approximate gzipped sizes:
+
+- `@hanzo/ui` - 45KB (core) + components (as needed)
+- `@hanzo/auth` - 12KB
+- `@hanzo/commerce` - 18KB
+- `@hanzo/brand` - 8KB
+- `@hanzo/react` - 6KB
+
+## Source Maps
+
+All packages include source maps for debugging:
+
+```bash
+# View source in browser DevTools
+# Original TypeScript files visible
+```
+
+## Package Scripts
+
+Common scripts across packages:
+
+```json
+{
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  }
+}
+```
+
+## Publishing
+
+Packages are published automatically via GitHub Actions:
+
+```bash
+# Create changeset
+pnpm changeset
+
+# Version packages
+pnpm changeset version
+
+# Publish (automated in CI)
+pnpm changeset publish
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md) for package contribution guidelines.
+
+## Next Steps
+
+- [View UI components](/docs/components)
+- [Auth documentation](/docs/auth)
+- [Commerce documentation](/docs/commerce)
+- [White-label guide](/docs/white-label)

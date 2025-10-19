@@ -1,0 +1,346 @@
+---
+title: White-Label Guide
+description: Fork and rebrand @hanzo/ui for your organization
+---
+
+# White-Label Guide
+
+@hanzo/ui is designed to be forked and rebranded for your organization. This guide shows you how to create your own branded UI library.
+
+## Overview
+
+The white-label system allows you to:
+
+- Fork the repository to your organization
+- Replace branding (name, logo, colors)
+- Customize component defaults
+- Publish under your own npm org
+- Deploy docs to your domain
+- Maintain sync with upstream updates
+
+## Quick Start
+
+<Steps>
+
+### Fork the Repository
+
+Fork [hanzoai/ui](https://github.com/hanzoai/ui) to your GitHub organization.
+
+### Clone and Setup
+
+```bash
+git clone https://github.com/YOUR_ORG/ui.git
+cd ui
+pnpm install
+```
+
+### Create Brand Configuration
+
+Create `brands/YOUR_BRAND.brand.ts`:
+
+```ts
+import { BrandConfig } from "../brand.config"
+
+export const yourBrand: BrandConfig = {
+  // Identity
+  name: "YourBrand UI",
+  orgName: "Your Organization",
+  orgHandle: "yourorg",
+  tagline: "Beautiful components for your brand",
+  description: "A comprehensive UI library for YourBrand",
+
+  // Publishing
+  npmOrg: "@yourorg",
+  packageName: "@yourorg/ui",
+
+  // URLs
+  domain: "ui.yourdomain.com",
+  githubOrg: "yourorg",
+  githubRepo: "ui",
+  docsUrl: "https://ui.yourdomain.com",
+
+  // Branding
+  logo: {
+    svg: "/your-logo.svg",
+    width: 32,
+    height: 32,
+  },
+
+  // Theme Colors (HSL format)
+  colors: {
+    primary: "210 100% 50%", // Your brand blue
+    primaryForeground: "0 0% 100%",
+    secondary: "214 32% 91%",
+    secondaryForeground: "222 47% 11%",
+    accent: "210 40% 96%",
+    accentForeground: "222 47% 11%",
+    destructive: "0 84% 60%",
+    destructiveForeground: "0 0% 98%",
+    // ... more colors
+  },
+
+  // Social Links
+  social: {
+    twitter: "https://twitter.com/yourorg",
+    github: "https://github.com/yourorg",
+    discord: "https://discord.gg/yourorg",
+  },
+}
+```
+
+### Apply Branding
+
+```bash
+# Run the rebrand script
+pnpm rebrand --brand YOUR_BRAND
+
+# Or use the CLI
+npx @hanzo/ui rebrand --brand YOUR_BRAND
+```
+
+</Steps>
+
+## What Gets Updated
+
+The rebrand script updates:
+
+### Package Files
+
+- `package.json` - name, description, repository
+- `app/package.json` - name and dependencies
+- `pkg/*/package.json` - all package configs
+
+### Documentation
+
+- Site title and metadata
+- Logo in header and favicon
+- Color scheme
+- Social links
+
+### Build Configuration
+
+- GitHub Actions workflows
+- Deployment targets
+- NPM publish org
+
+### Code
+
+- Import statements (optional)
+- Component headers (optional)
+- Example code snippets
+
+## Customizing Components
+
+### Update Default Variants
+
+```ts title="brands/YOUR_BRAND.brand.ts"
+export const yourBrand: BrandConfig = {
+  // ... other config
+
+  // Component overrides
+  components: {
+    Button: {
+      defaultVariant: "default",
+      defaultSize: "md",
+      className: "rounded-lg", // Custom default classes
+    },
+    Card: {
+      defaultVariant: "elevated",
+      className: "shadow-xl",
+    },
+  },
+}
+```
+
+### Custom Theme
+
+```css title="app/styles/your-brand.css"
+@layer base {
+  :root {
+    --radius: 0.75rem; /* More rounded */
+    --font-sans: "Your Custom Font", sans-serif;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+  }
+}
+```
+
+## Publishing
+
+### Setup NPM
+
+```bash
+# Login to npm
+npm login
+
+# Create organization if needed
+npm org create @yourorg
+```
+
+### Publish Packages
+
+```bash
+# Build all packages
+pnpm build
+
+# Publish to npm
+cd pkg/ui && npm publish --access public
+cd pkg/auth && npm publish --access public
+# ... publish other packages
+```
+
+### Automated Publishing
+
+```yaml title=".github/workflows/publish.yml"
+name: Publish
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm build
+      - run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          cd pkg/ui && npm publish --access public
+```
+
+## Deploying Documentation
+
+### GitHub Pages
+
+```bash
+# Configure custom domain
+echo "ui.yourdomain.com" > app/public/CNAME
+
+# Push to trigger deployment
+git add .
+git commit -m "Configure custom domain"
+git push
+```
+
+### Vercel
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+cd app
+vercel --prod
+```
+
+### Netlify
+
+```toml title="netlify.toml"
+[build]
+  command = "cd app && pnpm build"
+  publish = "app/out"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+## Maintaining Sync with Upstream
+
+### Add Upstream Remote
+
+```bash
+git remote add upstream https://github.com/hanzoai/ui.git
+git fetch upstream
+```
+
+### Sync Updates
+
+```bash
+# Fetch latest from upstream
+git fetch upstream main
+
+# Merge into your branch
+git checkout main
+git merge upstream/main
+
+# Resolve conflicts
+git status
+# ... fix conflicts
+
+# Push updates
+git push origin main
+```
+
+### Selective Syncing
+
+```bash
+# Only sync specific directories
+git checkout upstream/main -- app/registry/default/ui/button.tsx
+
+# Or specific components
+git checkout upstream/main -- app/registry/default/ui/{button,card,input}.tsx
+```
+
+## Example Forks
+
+- **Zoo UI**: `~/work/zoo/ui` - Zoo blockchain UI
+- **Lux UI**: `~/work/lux/ui` - Lux blockchain UI
+
+Both are white-labeled versions of @hanzo/ui.
+
+## Best Practices
+
+1. **Keep Brand Config Separate**
+   - Don't modify core files directly
+   - Use brand config for all customizations
+
+2. **Document Changes**
+   - Track what you've customized
+   - Makes syncing easier
+
+3. **Version Control**
+   - Tag releases
+   - Keep changelog updated
+
+4. **Test Before Publishing**
+   - Build all packages
+   - Run tests
+   - Check docs site
+
+5. **Maintain Security**
+   - Keep dependencies updated
+   - Run security audits
+   - Update from upstream regularly
+
+## Troubleshooting
+
+### Rebrand Script Fails
+
+- Check brand config syntax
+- Ensure all required fields present
+- Run with `--dry-run` first
+
+### Conflicts When Syncing
+
+- Resolve carefully
+- Test after merge
+- Consider selective syncing
+
+### Publishing Fails
+
+- Check npm auth token
+- Verify organization exists
+- Ensure version is bumped
+
+## Next Steps
+
+- [View example brand configs](https://github.com/hanzoai/ui/tree/main/brands)
+- [Learn about component customization](/docs/theming)
+- [Set up automated deployments](/docs/deployment)

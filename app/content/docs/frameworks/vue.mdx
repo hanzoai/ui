@@ -1,0 +1,257 @@
+---
+title: Vue
+description: Using @hanzo/ui components in Vue 3 applications
+---
+
+# Vue Guide
+
+@hanzo/ui provides native Vue 3 components using the Composition API. All components are fully typed with TypeScript and support both `<script setup>` and Options API.
+
+## Installation
+
+<Steps>
+
+### Install the package
+
+```bash
+npm install @hanzo/ui
+# or
+pnpm add @hanzo/ui
+```
+
+### Install Vue and dependencies
+
+```bash
+npm install vue
+npm install -D tailwindcss postcss autoprefixer
+```
+
+### Configure Tailwind
+
+```js title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    "./node_modules/@hanzo/ui/**/*.{js,ts,jsx,tsx,vue}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+</Steps>
+
+## Usage
+
+### Script Setup (Recommended)
+
+```vue
+<script setup lang="ts">
+import { Button, Card, Input } from '@hanzo/ui/vue'
+import { ref } from 'vue'
+
+const count = ref(0)
+</script>
+
+<template>
+  <Card>
+    <Button @click="count++">
+      Clicked {{ count }} times
+    </Button>
+    <Input v-model="count" type="number" />
+  </Card>
+</template>
+```
+
+### Options API
+
+```vue
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { Button, Card } from '@hanzo/ui/vue'
+
+export default defineComponent({
+  components: { Button, Card },
+  data() {
+    return {
+      count: 0
+    }
+  }
+})
+</script>
+
+<template>
+  <Card>
+    <Button @click="count++">Count: {{ count }}</Button>
+  </Card>
+</template>
+```
+
+## Composables
+
+Use Vue composables for state management:
+
+```vue
+<script setup>
+import { Dialog, Button } from '@hanzo/ui/vue'
+import { useDialog } from '@hanzo/ui/vue/composables'
+
+const { open, close, isOpen } = useDialog()
+</script>
+
+<template>
+  <Button @click="open">Open Dialog</Button>
+  <Dialog :open="isOpen" @update:open="close">
+    <DialogContent>
+      <DialogTitle>Hello Vue!</DialogTitle>
+    </DialogContent>
+  </Dialog>
+</template>
+```
+
+## Form Handling
+
+### With VeeValidate
+
+```vue
+<script setup>
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+import * as z from 'zod'
+import { Form, Input, Button } from '@hanzo/ui/vue'
+
+const schema = toTypedSchema(
+  z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+  })
+)
+
+const { handleSubmit } = useForm({
+  validationSchema: schema,
+})
+
+const onSubmit = handleSubmit((values) => {
+  console.log(values)
+})
+</script>
+
+<template>
+  <form @submit="onSubmit">
+    <Form.Field name="email">
+      <Form.Label>Email</Form.Label>
+      <Form.Control>
+        <Input type="email" />
+      </Form.Control>
+    </Form.Field>
+    <Button type="submit">Submit</Button>
+  </form>
+</template>
+```
+
+## Component Coverage
+
+**Available (~90% coverage):**
+
+- Alert, Avatar, Badge, Button, Card
+- Checkbox, Dialog, Input, Label, Progress
+- Radio, Select, Separator, Skeleton, Switch
+- Tabs, Textarea, Toast, Toggle, Table
+
+**In Progress:**
+
+- Popover (🚧 Beta)
+- Sheet (🚧 Beta)
+- Some advanced animations
+
+**Not Available:**
+
+- Complex 3D components
+- Some AI-specific components
+
+## TypeScript Support
+
+Full type inference and checking:
+
+```vue
+<script setup lang="ts">
+import type { ButtonProps } from '@hanzo/ui/vue'
+import { Button } from '@hanzo/ui/vue'
+
+interface MyButtonProps extends ButtonProps {
+  loading?: boolean
+}
+
+const props = defineProps<MyButtonProps>()
+</script>
+
+<template>
+  <Button :disabled="loading" v-bind="$attrs">
+    <slot v-if="!loading" />
+    <span v-else>Loading...</span>
+  </Button>
+</template>
+```
+
+## Nuxt Integration
+
+```vue
+<!-- pages/index.vue -->
+<script setup>
+import { Button, Card } from '@hanzo/ui/vue'
+</script>
+
+<template>
+  <Card>
+    <h1>Welcome to Nuxt</h1>
+    <Button>Click me</Button>
+  </Card>
+</template>
+```
+
+### Nuxt Config
+
+```ts
+// nuxt.config.ts
+export default defineNuxtConfig({
+  css: ["@hanzo/ui/styles"],
+  modules: [],
+  tailwindcss: {
+    config: {
+      content: ["./node_modules/@hanzo/ui/**/*.vue"],
+    },
+  },
+})
+```
+
+## Best Practices
+
+1. **Use Composition API**
+   - Better TypeScript support
+   - More composable and reusable
+
+2. **Use `<script setup>`**
+   - Less boilerplate
+   - Better performance
+
+3. **Type Your Props**
+
+   ```vue
+   const props = defineProps<{ title: string }>()
+   ```
+
+4. **Use Provide/Inject for Deep Props**
+   ```vue
+   provide('theme', theme)
+   const theme = inject('theme')
+   ```
+
+## Next Steps
+
+- [View all Vue components](/docs/components)
+- [Explore Vue examples](/examples/vue)
+- [Learn about composables](/docs/frameworks/vue/composables)

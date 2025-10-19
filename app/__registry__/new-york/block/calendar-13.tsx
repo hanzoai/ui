@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import Calendar from "@/registry/new-york/ui/calendar"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 import { Label } from "@/registry/new-york/ui/label"
 import {
   Select,

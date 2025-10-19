@@ -21,15 +21,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/breadcrumb"
+import { Button } from "@/registry/default/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/new-york/ui/dialog"
+} from "@/registry/default/ui/dialog"
 import {
   Sidebar,
   SidebarContent,
@@ -39,16 +39,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-} from "@/registry/new-york/ui/sidebar"
-import { SettingsDialog } from "./components/settings-dialog"
-
-export default function Page() {
-  return (
-    <div className="flex h-svh items-center justify-center">
-      <SettingsDialog />
-    </div>
-  )
-}
+} from "@/registry/default/ui/sidebar"
 
 const data = {
   nav: [
@@ -65,4 +56,57 @@ const data = {
     { name: "Privacy & visibility", icon: Lock },
     { name: "Advanced", icon: Settings },
   ],
+}
+
+function SettingsDialog() {
+  const [selectedItem, setSelectedItem] = React.useState<string | null>(null)
+
+  return (
+    <SidebarProvider>
+      <div className="flex w-full">
+        <Sidebar>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {data.nav.map((item) => (
+                    <SidebarMenuItem key={item.name}>
+                      <SidebarMenuButton
+                        onClick={() => setSelectedItem(item.name)}
+                        isActive={selectedItem === item.name}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+        <div className="flex-1 p-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="#">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{selectedItem || "Settings"}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
+    </SidebarProvider>
+  )
+}
+
+export default function Page() {
+  return (
+    <div className="flex h-svh items-center justify-center">
+      <SettingsDialog />
+    </div>
+  )
 }

@@ -1,0 +1,151 @@
+---
+title: Multi-Framework Support
+description: Use @hanzo/ui components in React, Vue, Svelte, and React Native
+---
+
+# Multi-Framework Support
+
+@hanzo/ui provides **official support** for multiple JavaScript frameworks, not just React. This means you get consistent, well-tested components across your entire stack.
+
+## Supported Frameworks
+
+| Framework        | Coverage | Status    | Documentation                               |
+| ---------------- | -------- | --------- | ------------------------------------------- |
+| **React**        | 100%     | ✅ Stable | [View Guide](/docs/frameworks/react)        |
+| **Vue**          | ~90%     | ✅ Stable | [View Guide](/docs/frameworks/vue)          |
+| **Svelte**       | ~85%     | ✅ Beta   | [View Guide](/docs/frameworks/svelte)       |
+| **React Native** | ~70%     | 🚧 Beta   | [View Guide](/docs/frameworks/react-native) |
+
+## Why Multi-Framework?
+
+Unlike shadcn/ui which relies on community ports, @hanzo/ui provides:
+
+- **Single Source of Truth**: All frameworks maintained in one repository
+- **Consistent API**: Same component props across all frameworks
+- **Unified Documentation**: One place for all examples
+- **Synchronized Updates**: Bug fixes and features released together
+- **Type Safety**: Full TypeScript support everywhere
+
+## Installation
+
+### React (Default)
+
+```bash
+npm install @hanzo/ui
+```
+
+```tsx
+import { Button, Card } from "@hanzo/ui"
+// or explicitly
+import { Button } from "@hanzo/ui/react"
+```
+
+### Vue
+
+```bash
+npm install @hanzo/ui
+```
+
+```vue
+<script setup>
+import { Button, Card } from '@hanzo/ui/vue'
+</script>
+
+<template>
+  <Card>
+    <Button variant="default">Click me</Button>
+  </Card>
+</template>
+```
+
+### Svelte
+
+```bash
+npm install @hanzo/ui
+```
+
+```svelte
+<script>
+import { Button, Card } from '@hanzo/ui/svelte'
+</script>
+
+<Card>
+  <Button variant="default">Click me</Button>
+</Card>
+```
+
+### React Native
+
+```bash
+npm install @hanzo/ui
+npm install react-native-reanimated react-native-gesture-handler
+```
+
+```tsx
+import { Button, Card } from "@hanzo/ui/react-native"
+import { View } from "react-native"
+
+function App() {
+  return (
+    <View>
+      <Card>
+        <Button variant="default">Click me</Button>
+      </Card>
+    </View>
+  )
+}
+```
+
+## Component Availability
+
+Most core components are available across all frameworks:
+
+**Available Everywhere:**
+
+- Alert, Avatar, Badge, Button, Card
+- Checkbox, Dialog, Input, Label, Progress
+- Radio, Separator, Skeleton, Switch
+- Tabs, Textarea, Toast, Toggle
+
+**React/Vue/Svelte Only:**
+
+- Table, Popover, Tooltip, Sheet
+- Command, Context Menu, Dropdown Menu
+
+**React Only (Currently):**
+
+- Advanced 3D components
+- AI components
+- Some animation components
+
+See individual [framework guides](/docs/frameworks) for complete component lists.
+
+## Conversion Tools
+
+Convert components between frameworks:
+
+```bash
+# Convert React to Vue
+npx @hanzo/ui convert --from react --to vue button.tsx
+
+# Convert to all frameworks
+npx @hanzo/ui convert --from react --to all button.tsx
+```
+
+## Framework-Specific Patterns
+
+Each framework has its own patterns for:
+
+- **State Management**: React hooks, Vue composables, Svelte stores
+- **Styling**: All use Tailwind CSS
+- **Event Handling**: Framework-native events
+- **Refs**: React refs, Vue template refs, Svelte bindings
+
+See framework-specific guides for details.
+
+## Next Steps
+
+- [React Guide](/docs/frameworks/react) - Complete React documentation
+- [Vue Guide](/docs/frameworks/vue) - Vue 3 Composition API guide
+- [Svelte Guide](/docs/frameworks/svelte) - Svelte 4/5 guide
+- [React Native Guide](/docs/frameworks/react-native) - Mobile development guide
