@@ -1,0 +1,17 @@
+{
+  "name": "sidebar-13",
+  "registryDependencies": [
+    "sidebar",
+    "breadcrumb",
+    "separator"
+  ],
+  "files": [
+    {
+      "name": "sidebar-13.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport {\n  Bell,\n  Check,\n  Globe,\n  Home,\n  Keyboard,\n  Link,\n  Lock,\n  Menu,\n  MessageCircle,\n  Paintbrush,\n  Settings,\n  Video,\n} from \"lucide-react\"\n\nimport {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbLink,\n  BreadcrumbList,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n} from \"@/registry/default/ui/breadcrumb\"\nimport { Button } from \"@/registry/default/ui/button\"\nimport {\n  Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogTitle,\n  DialogTrigger,\n} from \"@/registry/default/ui/dialog\"\nimport {\n  Sidebar,\n  SidebarContent,\n  SidebarGroup,\n  SidebarGroupContent,\n  SidebarMenu,\n  SidebarMenuButton,\n  SidebarMenuItem,\n  SidebarProvider,\n} from \"@/registry/default/ui/sidebar\"\n\nconst data = {\n  nav: [\n    { name: \"Notifications\", icon: Bell },\n    { name: \"Navigation\", icon: Menu },\n    { name: \"Home\", icon: Home },\n    { name: \"Appearance\", icon: Paintbrush },\n    { name: \"Messages & media\", icon: MessageCircle },\n    { name: \"Language & region\", icon: Globe },\n    { name: \"Accessibility\", icon: Keyboard },\n    { name: \"Mark as read\", icon: Check },\n    { name: \"Audio & video\", icon: Video },\n    { name: \"Connected accounts\", icon: Link },\n    { name: \"Privacy & visibility\", icon: Lock },\n    { name: \"Advanced\", icon: Settings },\n  ],\n}\n\nfunction SettingsDialog() {\n  const [selectedItem, setSelectedItem] = React.useState<string | null>(null)\n\n  return (\n    <SidebarProvider>\n      <div className=\"flex w-full\">\n        <Sidebar>\n          <SidebarContent>\n            <SidebarGroup>\n              <SidebarGroupContent>\n                <SidebarMenu>\n                  {data.nav.map((item) => (\n                    <SidebarMenuItem key={item.name}>\n                      <SidebarMenuButton\n                        onClick={() => setSelectedItem(item.name)}\n                        isActive={selectedItem === item.name}\n                      >\n                        <item.icon className=\"h-4 w-4\" />\n                        <span>{item.name}</span>\n                      </SidebarMenuButton>\n                    </SidebarMenuItem>\n                  ))}\n                </SidebarMenu>\n              </SidebarGroupContent>\n            </SidebarGroup>\n          </SidebarContent>\n        </Sidebar>\n        <div className=\"flex-1 p-6\">\n          <Breadcrumb>\n            <BreadcrumbList>\n              <BreadcrumbItem>\n                <BreadcrumbLink href=\"#\">Home</BreadcrumbLink>\n              </BreadcrumbItem>\n              <BreadcrumbSeparator />\n              <BreadcrumbItem>\n                <BreadcrumbPage>{selectedItem || \"Settings\"}</BreadcrumbPage>\n              </BreadcrumbItem>\n            </BreadcrumbList>\n          </Breadcrumb>\n        </div>\n      </div>\n    </SidebarProvider>\n  )\n}\n\nexport default function Page() {\n  return (\n    <div className=\"flex h-svh items-center justify-center\">\n      <SettingsDialog />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:block",
+  "category": "Application",
+  "subcategory": "Sidebar"
+}
