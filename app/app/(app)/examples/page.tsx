@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 
 const examples = [
@@ -70,19 +69,15 @@ export default function ExamplesPage() {
           className="group relative overflow-hidden rounded-lg border bg-background transition-colors hover:bg-muted/50"
         >
           <div className="aspect-video overflow-hidden">
-            <Image
+            <img
               src={example.image}
               alt={example.name}
-              width={800}
-              height={450}
-              className="block object-cover transition-transform group-hover:scale-105 dark:hidden"
+              className="block h-full w-full object-cover transition-transform group-hover:scale-105 dark:hidden"
             />
-            <Image
+            <img
               src={example.imageDark}
               alt={example.name}
-              width={800}
-              height={450}
-              className="hidden object-cover transition-transform group-hover:scale-105 dark:block"
+              className="hidden h-full w-full object-cover transition-transform group-hover:scale-105 dark:block"
             />
           </div>
           <div className="p-4">
