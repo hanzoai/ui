@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[43969],{43969:(e,r,t)=>{t.r(r),t.d(r,{default:()=>d});var a=t(2616);function d(){return(0,a.jsx)("code",{className:"relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",children:"@radix-ui/react-alert-dialog"})}}}]);

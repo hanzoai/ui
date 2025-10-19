@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[97415],{97415:(e,s,a)=>{a.r(s),a.d(s,{default:()=>l});var n=a(2616);function l(){return(0,n.jsx)("small",{className:"text-sm font-medium leading-none",children:"Email address"})}}}]);

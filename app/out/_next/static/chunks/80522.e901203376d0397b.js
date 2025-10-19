@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[80522],{80522:(e,t,s)=>{s.r(t),s.d(t,{default:()=>a});var l=s(2616);function a(){return(0,l.jsx)("h3",{className:"scroll-m-20 text-2xl font-semibold tracking-tight",children:"The Joke Tax"})}}}]);

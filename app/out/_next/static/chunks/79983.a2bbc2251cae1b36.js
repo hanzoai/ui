@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[79983],{79983:(e,t,u)=>{u.r(t),u.d(t,{default:()=>s});var r=u(70703),n=u(34530);function s(){return(0,r.jsx)(n.Button,{variant:"destructive",children:"Destructive"})}}}]);

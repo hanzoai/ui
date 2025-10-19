@@ -1,0 +1,1669 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","default","sidebar-15",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","default","d"],{"children":[["name","sidebar-15","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","default","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","sidebar-15","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+1a:I[46311,[],"IconMark"]
+17:T5568,"use client"
+
+import * as React from "react"
+import {
+  ArrowUpRight,
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
+  Blocks,
+  Calendar as CalendarIcon,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Home,
+  Inbox,
+  Link,
+  LogOut,
+  MessageCircleQuestion,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings2,
+  Sparkles,
+  StarOff,
+  Trash2,
+  type LucideIcon,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Separator } from "@/components/ui/separator"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from "@/components/ui/sidebar"
+
+export function Page() {
+  return (
+    <SidebarProvider>
+      <SidebarLeft />
+      <SidebarInset>
+        <header className="sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background">
+          <div className="flex flex-1 items-center gap-2 px-3">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="line-clamp-1">
+                    Project Management & Task Tracking
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+          </div>
+        </header>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <div className="mx-auto h-24 w-full max-w-3xl rounded-xl bg-muted/50" />
+          <div className="mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50" />
+        </div>
+      </SidebarInset>
+      <SidebarRight />
+    </SidebarProvider>
+  )
+}
+
+export function Calendars({
+  calendars,
+}: {
+  calendars: {
+    name: string
+    items: string[]
+  }[]
+}) {
+  return (
+    <>
+      {calendars.map((calendar, index) => (
+        <React.Fragment key={calendar.name}>
+          <SidebarGroup key={calendar.name} className="py-0">
+            <Collapsible
+              defaultOpen={index === 0}
+              className="group/collapsible"
+            >
+              <SidebarGroupLabel
+                asChild
+                className="group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              >
+                <CollapsibleTrigger>
+                  {calendar.name}{" "}
+                  <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                </CollapsibleTrigger>
+              </SidebarGroupLabel>
+              <CollapsibleContent>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {calendar.items.map((item, index) => (
+                      <SidebarMenuItem key={item}>
+                        <SidebarMenuButton>
+                          <div
+                            data-active={index < 2}
+                            className="group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border border-sidebar-border text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary"
+                          >
+                            <Check className="hidden size-3 group-data-[active=true]/calendar-item:block" />
+                          </div>
+                          {item}
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarGroup>
+          <SidebarSeparator className="mx-0" />
+        </React.Fragment>
+      ))}
+    </>
+  )
+}
+
+export function DatePicker() {
+  return (
+    <SidebarGroup className="px-0">
+      <SidebarGroupContent>
+        <Calendar className="[&_[role=gridcell].bg-accent]:bg-sidebar-primary [&_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&_[role=gridcell]]:w-[33px]" />
+      </SidebarGroupContent>
+    </SidebarGroup>
+  )
+}
+
+export function NavFavorites({
+  favorites,
+}: {
+  favorites: {
+    name: string
+    url: string
+    emoji: string
+  }[]
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+      <SidebarGroupLabel>Favorites</SidebarGroupLabel>
+      <SidebarMenu>
+        {favorites.map((item) => (
+          <SidebarMenuItem key={item.name}>
+            <SidebarMenuButton asChild>
+              <a href={item.url} title={item.name}>
+                <span>{item.emoji}</span>
+                <span>{item.name}</span>
+              </a>
+            </SidebarMenuButton>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuAction showOnHover>
+                  <MoreHorizontal />
+                  <span className="sr-only">More</span>
+                </SidebarMenuAction>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 rounded-lg"
+                side={isMobile ? "bottom" : "right"}
+                align={isMobile ? "end" : "start"}
+              >
+                <DropdownMenuItem>
+                  <StarOff className="text-muted-foreground" />
+                  <span>Remove from Favorites</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link className="text-muted-foreground" />
+                  <span>Copy Link</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <ArrowUpRight className="text-muted-foreground" />
+                  <span>Open in New Tab</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Trash2 className="text-muted-foreground" />
+                  <span>Delete</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        ))}
+        <SidebarMenuItem>
+          <SidebarMenuButton className="text-sidebar-foreground/70">
+            <MoreHorizontal />
+            <span>More</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroup>
+  )
+}
+
+export function NavMain({
+  items,
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+    isActive?: boolean
+  }[]
+}) {
+  return (
+    <SidebarMenu>
+      {items.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton asChild isActive={item.isActive}>
+            <a href={item.url}>
+              <item.icon />
+              <span>{item.title}</span>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
+}
+
+export function NavSecondary({
+  items,
+  ...props
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+    badge?: React.ReactNode
+  }[]
+} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  return (
+    <SidebarGroup {...props}>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <a href={item.url}>
+                  <item.icon />
+                  <span>{item.title}</span>
+                </a>
+              </SidebarMenuButton>
+              {item.badge && <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>}
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  )
+}
+
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
+              </div>
+              <ChevronsUpDown className="ml-auto size-4" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+            side={isMobile ? "bottom" : "right"}
+            align="start"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="p-0 font-normal">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <Sparkles />
+                Upgrade to Pro
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <BadgeCheck />
+                Account
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <CreditCard />
+                Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bell />
+                Notifications
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
+
+export function NavWorkspaces({
+  workspaces,
+}: {
+  workspaces: {
+    name: string
+    emoji: React.ReactNode
+    pages: {
+      name: string
+      emoji: React.ReactNode
+    }[]
+  }[]
+}) {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Workspaces</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {workspaces.map((workspace) => (
+            <Collapsible key={workspace.name}>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="#">
+                    <span>{workspace.emoji}</span>
+                    <span>{workspace.name}</span>
+                  </a>
+                </SidebarMenuButton>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuAction
+                    className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90"
+                    showOnHover
+                  >
+                    <ChevronRight />
+                  </SidebarMenuAction>
+                </CollapsibleTrigger>
+                <SidebarMenuAction showOnHover>
+                  <Plus />
+                </SidebarMenuAction>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {workspace.pages.map((page) => (
+                      <SidebarMenuSubItem key={page.name}>
+                        <SidebarMenuSubButton asChild>
+                          <a href="#">
+                            <span>{page.emoji}</span>
+                            <span>{page.name}</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          ))}
+          <SidebarMenuItem>
+            <SidebarMenuButton className="text-sidebar-foreground/70">
+              <MoreHorizontal />
+              <span>More</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  )
+}
+
+// This is sample data.
+const data = {
+  teams: [
+    {
+      name: "Acme Inc",
+      logo: Command,
+      plan: "Enterprise",
+    },
+    {
+      name: "Acme Corp.",
+      logo: AudioWaveform,
+      plan: "Startup",
+    },
+    {
+      name: "Evil Corp.",
+      logo: Command,
+      plan: "Free",
+    },
+  ],
+  navMain: [
+    {
+      title: "Search",
+      url: "#",
+      icon: Search,
+    },
+    {
+      title: "Ask AI",
+      url: "#",
+      icon: Sparkles,
+    },
+    {
+      title: "Home",
+      url: "#",
+      icon: Home,
+      isActive: true,
+    },
+    {
+      title: "Inbox",
+      url: "#",
+      icon: Inbox,
+      badge: "10",
+    },
+  ],
+  navSecondary: [
+    {
+      title: "Calendar",
+      url: "#",
+      icon: CalendarIcon,
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings2,
+    },
+    {
+      title: "Templates",
+      url: "#",
+      icon: Blocks,
+    },
+    {
+      title: "Trash",
+      url: "#",
+      icon: Trash2,
+    },
+    {
+      title: "Help",
+      url: "#",
+      icon: MessageCircleQuestion,
+    },
+  ],
+  favorites: [
+    {
+      name: "Project Management & Task Tracking",
+      url: "#",
+      emoji: "📊",
+    },
+    {
+      name: "Family Recipe Collection & Meal Planning",
+      url: "#",
+      emoji: "🍳",
+    },
+    {
+      name: "Fitness Tracker & Workout Routines",
+      url: "#",
+      emoji: "💪",
+    },
+    {
+      name: "Book Notes & Reading List",
+      url: "#",
+      emoji: "📚",
+    },
+    {
+      name: "Sustainable Gardening Tips & Plant Care",
+      url: "#",
+      emoji: "🌱",
+    },
+    {
+      name: "Language Learning Progress & Resources",
+      url: "#",
+      emoji: "🗣️",
+    },
+    {
+      name: "Home Renovation Ideas & Budget Tracker",
+      url: "#",
+      emoji: "🏠",
+    },
+    {
+      name: "Personal Finance & Investment Portfolio",
+      url: "#",
+      emoji: "💰",
+    },
+    {
+      name: "Movie & TV Show Watchlist with Reviews",
+      url: "#",
+      emoji: "🎬",
+    },
+    {
+      name: "Daily Habit Tracker & Goal Setting",
+      url: "#",
+      emoji: "✅",
+    },
+  ],
+  workspaces: [
+    {
+      name: "Personal Life Management",
+      emoji: "🏠",
+      pages: [
+        {
+          name: "Daily Journal & Reflection",
+          url: "#",
+          emoji: "📔",
+        },
+        {
+          name: "Health & Wellness Tracker",
+          url: "#",
+          emoji: "🍏",
+        },
+        {
+          name: "Personal Growth & Learning Goals",
+          url: "#",
+          emoji: "🌟",
+        },
+      ],
+    },
+    {
+      name: "Professional Development",
+      emoji: "💼",
+      pages: [
+        {
+          name: "Career Objectives & Milestones",
+          url: "#",
+          emoji: "🎯",
+        },
+        {
+          name: "Skill Acquisition & Training Log",
+          url: "#",
+          emoji: "🧠",
+        },
+        {
+          name: "Networking Contacts & Events",
+          url: "#",
+          emoji: "🤝",
+        },
+      ],
+    },
+    {
+      name: "Creative Projects",
+      emoji: "🎨",
+      pages: [
+        {
+          name: "Writing Ideas & Story Outlines",
+          url: "#",
+          emoji: "✍️",
+        },
+        {
+          name: "Art & Design Portfolio",
+          url: "#",
+          emoji: "🖼️",
+        },
+        {
+          name: "Music Composition & Practice Log",
+          url: "#",
+          emoji: "🎵",
+        },
+      ],
+    },
+    {
+      name: "Home Management",
+      emoji: "🏡",
+      pages: [
+        {
+          name: "Household Budget & Expense Tracking",
+          url: "#",
+          emoji: "💰",
+        },
+        {
+          name: "Home Maintenance Schedule & Tasks",
+          url: "#",
+          emoji: "🔧",
+        },
+        {
+          name: "Family Calendar & Event Planning",
+          url: "#",
+          emoji: "📅",
+        },
+      ],
+    },
+    {
+      name: "Travel & Adventure",
+      emoji: "🧳",
+      pages: [
+        {
+          name: "Trip Planning & Itineraries",
+          url: "#",
+          emoji: "🗺️",
+        },
+        {
+          name: "Travel Bucket List & Inspiration",
+          url: "#",
+          emoji: "🌎",
+        },
+        {
+          name: "Travel Journal & Photo Gallery",
+          url: "#",
+          emoji: "📸",
+        },
+      ],
+    },
+  ],
+}
+
+export function SidebarLeft({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar className="border-r-0" {...props}>
+      <SidebarHeader>
+        <TeamSwitcher15 teams={data.teams} />
+        <NavMain items={data.navMain} />
+      </SidebarHeader>
+      <SidebarContent>
+        <NavFavorites favorites={data.favorites} />
+        <NavWorkspaces workspaces={data.workspaces} />
+        <NavSecondary items={data.navSecondary} className="mt-auto" />
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+// This is sample data for the right sidebar.
+const rightSidebarData = {
+  user: {
+    name: "hanzo",
+    email: "m@example.com",
+    avatar: "/avatars/hanzo.jpg",
+  },
+  calendars: [
+    {
+      name: "My Calendars",
+      items: ["Personal", "Work", "Family"],
+    },
+    {
+      name: "Favorites",
+      items: ["Holidays", "Birthdays"],
+    },
+    {
+      name: "Other",
+      items: ["Travel", "Reminders", "Deadlines"],
+    },
+  ],
+}
+
+export function SidebarRight({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar
+      collapsible="none"
+      className="sticky hidden lg:flex top-0 h-svh border-l"
+      {...props}
+    >
+      <SidebarHeader className="h-16 border-b border-sidebar-border">
+        <NavUser user={rightSidebarData.user} />
+      </SidebarHeader>
+      <SidebarContent>
+        <DatePicker />
+        <SidebarSeparator className="mx-0" />
+        <Calendars calendars={rightSidebarData.calendars} />
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <Plus />
+              <span>New Calendar</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  )
+}
+
+export function TeamSwitcher15({
+  teams,
+}: {
+  teams: {
+    name: string
+    logo: React.ElementType
+    plan: string
+  }[]
+}) {
+  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+
+  if (!activeTeam) {
+    return null
+  }
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SidebarMenuButton className="w-fit px-1.5">
+              <div className="flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+                <activeTeam.logo className="size-3" />
+              </div>
+              <span className="truncate font-semibold">{activeTeam.name}</span>
+              <ChevronDown className="opacity-50" />
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="w-64 rounded-lg"
+            align="start"
+            side="bottom"
+            sideOffset={4}
+          >
+            <DropdownMenuLabel className="text-xs text-muted-foreground">
+              Teams
+            </DropdownMenuLabel>
+            {teams.map((team, index) => (
+              <DropdownMenuItem
+                key={team.name}
+                onClick={() => setActiveTeam(team)}
+                className="gap-2 p-2"
+              >
+                <div className="flex size-6 items-center justify-center rounded-sm border">
+                  <team.logo className="size-4 shrink-0" />
+                </div>
+                {team.name}
+                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 p-2">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                <Plus className="size-4" />
+              </div>
+              <div className="font-medium text-muted-foreground">Add team</div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  )
+}
+18:T65ee,<pre><code class="language-typescript">&quot;use client&quot;
+
+import * as React from &quot;react&quot;
+import {
+  ArrowUpRight,
+  AudioWaveform,
+  BadgeCheck,
+  Bell,
+  Blocks,
+  Calendar as CalendarIcon,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ChevronsUpDown,
+  Command,
+  CreditCard,
+  Home,
+  Inbox,
+  Link,
+  LogOut,
+  MessageCircleQuestion,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings2,
+  Sparkles,
+  StarOff,
+  Trash2,
+  type LucideIcon,
+} from &quot;lucide-react&quot;
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from &quot;@/components/ui/avatar&quot;
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from &quot;@/components/ui/breadcrumb&quot;
+import { Calendar } from &quot;@/components/ui/calendar&quot;
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from &quot;@/components/ui/collapsible&quot;
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from &quot;@/components/ui/dropdown-menu&quot;
+import { Separator } from &quot;@/components/ui/separator&quot;
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+} from &quot;@/components/ui/sidebar&quot;
+
+export function Page() {
+  return (
+    &lt;SidebarProvider&gt;
+      &lt;SidebarLeft /&gt;
+      &lt;SidebarInset&gt;
+        &lt;header className=&quot;sticky top-0 flex h-14 shrink-0 items-center gap-2 bg-background&quot;&gt;
+          &lt;div className=&quot;flex flex-1 items-center gap-2 px-3&quot;&gt;
+            &lt;SidebarTrigger /&gt;
+            &lt;Separator orientation=&quot;vertical&quot; className=&quot;mr-2 h-4&quot; /&gt;
+            &lt;Breadcrumb&gt;
+              &lt;BreadcrumbList&gt;
+                &lt;BreadcrumbItem&gt;
+                  &lt;BreadcrumbPage className=&quot;line-clamp-1&quot;&gt;
+                    Project Management &amp; Task Tracking
+                  &lt;/BreadcrumbPage&gt;
+                &lt;/BreadcrumbItem&gt;
+              &lt;/BreadcrumbList&gt;
+            &lt;/Breadcrumb&gt;
+          &lt;/div&gt;
+        &lt;/header&gt;
+        &lt;div className=&quot;flex flex-1 flex-col gap-4 p-4&quot;&gt;
+          &lt;div className=&quot;mx-auto h-24 w-full max-w-3xl rounded-xl bg-muted/50&quot; /&gt;
+          &lt;div className=&quot;mx-auto h-[100vh] w-full max-w-3xl rounded-xl bg-muted/50&quot; /&gt;
+        &lt;/div&gt;
+      &lt;/SidebarInset&gt;
+      &lt;SidebarRight /&gt;
+    &lt;/SidebarProvider&gt;
+  )
+}
+
+export function Calendars({
+  calendars,
+}: {
+  calendars: {
+    name: string
+    items: string[]
+  }[]
+}) {
+  return (
+    &lt;&gt;
+      {calendars.map((calendar, index) =&gt; (
+        &lt;React.Fragment key={calendar.name}&gt;
+          &lt;SidebarGroup key={calendar.name} className=&quot;py-0&quot;&gt;
+            &lt;Collapsible
+              defaultOpen={index === 0}
+              className=&quot;group/collapsible&quot;
+            &gt;
+              &lt;SidebarGroupLabel
+                asChild
+                className=&quot;group/label w-full text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground&quot;
+              &gt;
+                &lt;CollapsibleTrigger&gt;
+                  {calendar.name}{&quot; &quot;}
+                  &lt;ChevronRight className=&quot;ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90&quot; /&gt;
+                &lt;/CollapsibleTrigger&gt;
+              &lt;/SidebarGroupLabel&gt;
+              &lt;CollapsibleContent&gt;
+                &lt;SidebarGroupContent&gt;
+                  &lt;SidebarMenu&gt;
+                    {calendar.items.map((item, index) =&gt; (
+                      &lt;SidebarMenuItem key={item}&gt;
+                        &lt;SidebarMenuButton&gt;
+                          &lt;div
+                            data-active={index &lt; 2}
+                            className=&quot;group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border border-sidebar-border text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary&quot;
+                          &gt;
+                            &lt;Check className=&quot;hidden size-3 group-data-[active=true]/calendar-item:block&quot; /&gt;
+                          &lt;/div&gt;
+                          {item}
+                        &lt;/SidebarMenuButton&gt;
+                      &lt;/SidebarMenuItem&gt;
+                    ))}
+                  &lt;/SidebarMenu&gt;
+                &lt;/SidebarGroupContent&gt;
+              &lt;/CollapsibleContent&gt;
+            &lt;/Collapsible&gt;
+          &lt;/SidebarGroup&gt;
+          &lt;SidebarSeparator className=&quot;mx-0&quot; /&gt;
+        &lt;/React.Fragment&gt;
+      ))}
+    &lt;/&gt;
+  )
+}
+
+export function DatePicker() {
+  return (
+    &lt;SidebarGroup className=&quot;px-0&quot;&gt;
+      &lt;SidebarGroupContent&gt;
+        &lt;Calendar className=&quot;[&amp;_[role=gridcell].bg-accent]:bg-sidebar-primary [&amp;_[role=gridcell].bg-accent]:text-sidebar-primary-foreground [&amp;_[role=gridcell]]:w-[33px]&quot; /&gt;
+      &lt;/SidebarGroupContent&gt;
+    &lt;/SidebarGroup&gt;
+  )
+}
+
+export function NavFavorites({
+  favorites,
+}: {
+  favorites: {
+    name: string
+    url: string
+    emoji: string
+  }[]
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    &lt;SidebarGroup className=&quot;group-data-[collapsible=icon]:hidden&quot;&gt;
+      &lt;SidebarGroupLabel&gt;Favorites&lt;/SidebarGroupLabel&gt;
+      &lt;SidebarMenu&gt;
+        {favorites.map((item) =&gt; (
+          &lt;SidebarMenuItem key={item.name}&gt;
+            &lt;SidebarMenuButton asChild&gt;
+              &lt;a href={item.url} title={item.name}&gt;
+                &lt;span&gt;{item.emoji}&lt;/span&gt;
+                &lt;span&gt;{item.name}&lt;/span&gt;
+              &lt;/a&gt;
+            &lt;/SidebarMenuButton&gt;
+            &lt;DropdownMenu&gt;
+              &lt;DropdownMenuTrigger asChild&gt;
+                &lt;SidebarMenuAction showOnHover&gt;
+                  &lt;MoreHorizontal /&gt;
+                  &lt;span className=&quot;sr-only&quot;&gt;More&lt;/span&gt;
+                &lt;/SidebarMenuAction&gt;
+              &lt;/DropdownMenuTrigger&gt;
+              &lt;DropdownMenuContent
+                className=&quot;w-56 rounded-lg&quot;
+                side={isMobile ? &quot;bottom&quot; : &quot;right&quot;}
+                align={isMobile ? &quot;end&quot; : &quot;start&quot;}
+              &gt;
+                &lt;DropdownMenuItem&gt;
+                  &lt;StarOff className=&quot;text-muted-foreground&quot; /&gt;
+                  &lt;span&gt;Remove from Favorites&lt;/span&gt;
+                &lt;/DropdownMenuItem&gt;
+                &lt;DropdownMenuSeparator /&gt;
+                &lt;DropdownMenuItem&gt;
+                  &lt;Link className=&quot;text-muted-foreground&quot; /&gt;
+                  &lt;span&gt;Copy Link&lt;/span&gt;
+                &lt;/DropdownMenuItem&gt;
+                &lt;DropdownMenuItem&gt;
+                  &lt;ArrowUpRight className=&quot;text-muted-foreground&quot; /&gt;
+                  &lt;span&gt;Open in New Tab&lt;/span&gt;
+                &lt;/DropdownMenuItem&gt;
+                &lt;DropdownMenuSeparator /&gt;
+                &lt;DropdownMenuItem&gt;
+                  &lt;Trash2 className=&quot;text-muted-foreground&quot; /&gt;
+                  &lt;span&gt;Delete&lt;/span&gt;
+                &lt;/DropdownMenuItem&gt;
+              &lt;/DropdownMenuContent&gt;
+            &lt;/DropdownMenu&gt;
+          &lt;/SidebarMenuItem&gt;
+        ))}
+        &lt;SidebarMenuItem&gt;
+          &lt;SidebarMenuButton className=&quot;text-sidebar-foreground/70&quot;&gt;
+            &lt;MoreHorizontal /&gt;
+            &lt;span&gt;More&lt;/span&gt;
+          &lt;/SidebarMenuButton&gt;
+        &lt;/SidebarMenuItem&gt;
+      &lt;/SidebarMenu&gt;
+    &lt;/SidebarGroup&gt;
+  )
+}
+
+export function NavMain({
+  items,
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+    isActive?: boolean
+  }[]
+}) {
+  return (
+    &lt;SidebarMenu&gt;
+      {items.map((item) =&gt; (
+        &lt;SidebarMenuItem key={item.title}&gt;
+          &lt;SidebarMenuButton asChild isActive={item.isActive}&gt;
+            &lt;a href={item.url}&gt;
+              &lt;item.icon /&gt;
+              &lt;span&gt;{item.title}&lt;/span&gt;
+            &lt;/a&gt;
+          &lt;/SidebarMenuButton&gt;
+        &lt;/SidebarMenuItem&gt;
+      ))}
+    &lt;/SidebarMenu&gt;
+  )
+}
+
+export function NavSecondary({
+  items,
+  ...props
+}: {
+  items: {
+    title: string
+    url: string
+    icon: LucideIcon
+    badge?: React.ReactNode
+  }[]
+} &amp; React.ComponentPropsWithoutRef&lt;typeof SidebarGroup&gt;) {
+  return (
+    &lt;SidebarGroup {...props}&gt;
+      &lt;SidebarGroupContent&gt;
+        &lt;SidebarMenu&gt;
+          {items.map((item) =&gt; (
+            &lt;SidebarMenuItem key={item.title}&gt;
+              &lt;SidebarMenuButton asChild&gt;
+                &lt;a href={item.url}&gt;
+                  &lt;item.icon /&gt;
+                  &lt;span&gt;{item.title}&lt;/span&gt;
+                &lt;/a&gt;
+              &lt;/SidebarMenuButton&gt;
+              {item.badge &amp;&amp; &lt;SidebarMenuBadge&gt;{item.badge}&lt;/SidebarMenuBadge&gt;}
+            &lt;/SidebarMenuItem&gt;
+          ))}
+        &lt;/SidebarMenu&gt;
+      &lt;/SidebarGroupContent&gt;
+    &lt;/SidebarGroup&gt;
+  )
+}
+
+export function NavUser({
+  user,
+}: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
+  const { isMobile } = useSidebar()
+
+  return (
+    &lt;SidebarMenu&gt;
+      &lt;SidebarMenuItem&gt;
+        &lt;DropdownMenu&gt;
+          &lt;DropdownMenuTrigger asChild&gt;
+            &lt;SidebarMenuButton
+              size=&quot;lg&quot;
+              className=&quot;data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground&quot;
+            &gt;
+              &lt;Avatar className=&quot;h-8 w-8 rounded-lg&quot;&gt;
+                &lt;AvatarImage src={user.avatar} alt={user.name} /&gt;
+                &lt;AvatarFallback className=&quot;rounded-lg&quot;&gt;CN&lt;/AvatarFallback&gt;
+              &lt;/Avatar&gt;
+              &lt;div className=&quot;grid flex-1 text-left text-sm leading-tight&quot;&gt;
+                &lt;span className=&quot;truncate font-semibold&quot;&gt;{user.name}&lt;/span&gt;
+                &lt;span className=&quot;truncate text-xs&quot;&gt;{user.email}&lt;/span&gt;
+              &lt;/div&gt;
+              &lt;ChevronsUpDown className=&quot;ml-auto size-4&quot; /&gt;
+            &lt;/SidebarMenuButton&gt;
+          &lt;/DropdownMenuTrigger&gt;
+          &lt;DropdownMenuContent
+            className=&quot;w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg&quot;
+            side={isMobile ? &quot;bottom&quot; : &quot;right&quot;}
+            align=&quot;start&quot;
+            sideOffset={4}
+          &gt;
+            &lt;DropdownMenuLabel className=&quot;p-0 font-normal&quot;&gt;
+              &lt;div className=&quot;flex items-center gap-2 px-1 py-1.5 text-left text-sm&quot;&gt;
+                &lt;Avatar className=&quot;h-8 w-8 rounded-lg&quot;&gt;
+                  &lt;AvatarImage src={user.avatar} alt={user.name} /&gt;
+                  &lt;AvatarFallback className=&quot;rounded-lg&quot;&gt;CN&lt;/AvatarFallback&gt;
+                &lt;/Avatar&gt;
+                &lt;div className=&quot;grid flex-1 text-left text-sm leading-tight&quot;&gt;
+                  &lt;span className=&quot;truncate font-semibold&quot;&gt;{user.name}&lt;/span&gt;
+                  &lt;span className=&quot;truncate text-xs&quot;&gt;{user.email}&lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/DropdownMenuLabel&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuGroup&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;Sparkles /&gt;
+                Upgrade to Pro
+              &lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuGroup&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuGroup&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;BadgeCheck /&gt;
+                Account
+              &lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;CreditCard /&gt;
+                Billing
+              &lt;/DropdownMenuItem&gt;
+              &lt;DropdownMenuItem&gt;
+                &lt;Bell /&gt;
+                Notifications
+              &lt;/DropdownMenuItem&gt;
+            &lt;/DropdownMenuGroup&gt;
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuItem&gt;
+              &lt;LogOut /&gt;
+              Log out
+            &lt;/DropdownMenuItem&gt;
+          &lt;/DropdownMenuContent&gt;
+        &lt;/DropdownMenu&gt;
+      &lt;/SidebarMenuItem&gt;
+    &lt;/SidebarMenu&gt;
+  )
+}
+
+export function NavWorkspaces({
+  workspaces,
+}: {
+  workspaces: {
+    name: string
+    emoji: React.ReactNode
+    pages: {
+      name: string
+      emoji: React.ReactNode
+    }[]
+  }[]
+}) {
+  return (
+    &lt;SidebarGroup&gt;
+      &lt;SidebarGroupLabel&gt;Workspaces&lt;/SidebarGroupLabel&gt;
+      &lt;SidebarGroupContent&gt;
+        &lt;SidebarMenu&gt;
+          {workspaces.map((workspace) =&gt; (
+            &lt;Collapsible key={workspace.name}&gt;
+              &lt;SidebarMenuItem&gt;
+                &lt;SidebarMenuButton asChild&gt;
+                  &lt;a href=&quot;#&quot;&gt;
+                    &lt;span&gt;{workspace.emoji}&lt;/span&gt;
+                    &lt;span&gt;{workspace.name}&lt;/span&gt;
+                  &lt;/a&gt;
+                &lt;/SidebarMenuButton&gt;
+                &lt;CollapsibleTrigger asChild&gt;
+                  &lt;SidebarMenuAction
+                    className=&quot;left-2 bg-sidebar-accent text-sidebar-accent-foreground data-[state=open]:rotate-90&quot;
+                    showOnHover
+                  &gt;
+                    &lt;ChevronRight /&gt;
+                  &lt;/SidebarMenuAction&gt;
+                &lt;/CollapsibleTrigger&gt;
+                &lt;SidebarMenuAction showOnHover&gt;
+                  &lt;Plus /&gt;
+                &lt;/SidebarMenuAction&gt;
+                &lt;CollapsibleContent&gt;
+                  &lt;SidebarMenuSub&gt;
+                    {workspace.pages.map((page) =&gt; (
+                      &lt;SidebarMenuSubItem key={page.name}&gt;
+                        &lt;SidebarMenuSubButton asChild&gt;
+                          &lt;a href=&quot;#&quot;&gt;
+                            &lt;span&gt;{page.emoji}&lt;/span&gt;
+                            &lt;span&gt;{page.name}&lt;/span&gt;
+                          &lt;/a&gt;
+                        &lt;/SidebarMenuSubButton&gt;
+                      &lt;/SidebarMenuSubItem&gt;
+                    ))}
+                  &lt;/SidebarMenuSub&gt;
+                &lt;/CollapsibleContent&gt;
+              &lt;/SidebarMenuItem&gt;
+            &lt;/Collapsible&gt;
+          ))}
+          &lt;SidebarMenuItem&gt;
+            &lt;SidebarMenuButton className=&quot;text-sidebar-foreground/70&quot;&gt;
+              &lt;MoreHorizontal /&gt;
+              &lt;span&gt;More&lt;/span&gt;
+            &lt;/SidebarMenuButton&gt;
+          &lt;/SidebarMenuItem&gt;
+        &lt;/SidebarMenu&gt;
+      &lt;/SidebarGroupContent&gt;
+    &lt;/SidebarGroup&gt;
+  )
+}
+
+// This is sample data.
+const data = {
+  teams: [
+    {
+      name: &quot;Acme Inc&quot;,
+      logo: Command,
+      plan: &quot;Enterprise&quot;,
+    },
+    {
+      name: &quot;Acme Corp.&quot;,
+      logo: AudioWaveform,
+      plan: &quot;Startup&quot;,
+    },
+    {
+      name: &quot;Evil Corp.&quot;,
+      logo: Command,
+      plan: &quot;Free&quot;,
+    },
+  ],
+  navMain: [
+    {
+      title: &quot;Search&quot;,
+      url: &quot;#&quot;,
+      icon: Search,
+    },
+    {
+      title: &quot;Ask AI&quot;,
+      url: &quot;#&quot;,
+      icon: Sparkles,
+    },
+    {
+      title: &quot;Home&quot;,
+      url: &quot;#&quot;,
+      icon: Home,
+      isActive: true,
+    },
+    {
+      title: &quot;Inbox&quot;,
+      url: &quot;#&quot;,
+      icon: Inbox,
+      badge: &quot;10&quot;,
+    },
+  ],
+  navSecondary: [
+    {
+      title: &quot;Calendar&quot;,
+      url: &quot;#&quot;,
+      icon: CalendarIcon,
+    },
+    {
+      title: &quot;Settings&quot;,
+      url: &quot;#&quot;,
+      icon: Settings2,
+    },
+    {
+      title: &quot;Templates&quot;,
+      url: &quot;#&quot;,
+      icon: Blocks,
+    },
+    {
+      title: &quot;Trash&quot;,
+      url: &quot;#&quot;,
+      icon: Trash2,
+    },
+    {
+      title: &quot;Help&quot;,
+      url: &quot;#&quot;,
+      icon: MessageCircleQuestion,
+    },
+  ],
+  favorites: [
+    {
+      name: &quot;Project Management &amp; Task Tracking&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;📊&quot;,
+    },
+    {
+      name: &quot;Family Recipe Collection &amp; Meal Planning&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;🍳&quot;,
+    },
+    {
+      name: &quot;Fitness Tracker &amp; Workout Routines&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;💪&quot;,
+    },
+    {
+      name: &quot;Book Notes &amp; Reading List&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;📚&quot;,
+    },
+    {
+      name: &quot;Sustainable Gardening Tips &amp; Plant Care&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;🌱&quot;,
+    },
+    {
+      name: &quot;Language Learning Progress &amp; Resources&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;🗣️&quot;,
+    },
+    {
+      name: &quot;Home Renovation Ideas &amp; Budget Tracker&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;🏠&quot;,
+    },
+    {
+      name: &quot;Personal Finance &amp; Investment Portfolio&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;💰&quot;,
+    },
+    {
+      name: &quot;Movie &amp; TV Show Watchlist with Reviews&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;🎬&quot;,
+    },
+    {
+      name: &quot;Daily Habit Tracker &amp; Goal Setting&quot;,
+      url: &quot;#&quot;,
+      emoji: &quot;✅&quot;,
+    },
+  ],
+  workspaces: [
+    {
+      name: &quot;Personal Life Management&quot;,
+      emoji: &quot;🏠&quot;,
+      pages: [
+        {
+          name: &quot;Daily Journal &amp; Reflection&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;📔&quot;,
+        },
+        {
+          name: &quot;Health &amp; Wellness Tracker&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🍏&quot;,
+        },
+        {
+          name: &quot;Personal Growth &amp; Learning Goals&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🌟&quot;,
+        },
+      ],
+    },
+    {
+      name: &quot;Professional Development&quot;,
+      emoji: &quot;💼&quot;,
+      pages: [
+        {
+          name: &quot;Career Objectives &amp; Milestones&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🎯&quot;,
+        },
+        {
+          name: &quot;Skill Acquisition &amp; Training Log&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🧠&quot;,
+        },
+        {
+          name: &quot;Networking Contacts &amp; Events&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🤝&quot;,
+        },
+      ],
+    },
+    {
+      name: &quot;Creative Projects&quot;,
+      emoji: &quot;🎨&quot;,
+      pages: [
+        {
+          name: &quot;Writing Ideas &amp; Story Outlines&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;✍️&quot;,
+        },
+        {
+          name: &quot;Art &amp; Design Portfolio&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🖼️&quot;,
+        },
+        {
+          name: &quot;Music Composition &amp; Practice Log&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🎵&quot;,
+        },
+      ],
+    },
+    {
+      name: &quot;Home Management&quot;,
+      emoji: &quot;🏡&quot;,
+      pages: [
+        {
+          name: &quot;Household Budget &amp; Expense Tracking&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;💰&quot;,
+        },
+        {
+          name: &quot;Home Maintenance Schedule &amp; Tasks&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🔧&quot;,
+        },
+        {
+          name: &quot;Family Calendar &amp; Event Planning&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;📅&quot;,
+        },
+      ],
+    },
+    {
+      name: &quot;Travel &amp; Adventure&quot;,
+      emoji: &quot;🧳&quot;,
+      pages: [
+        {
+          name: &quot;Trip Planning &amp; Itineraries&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🗺️&quot;,
+        },
+        {
+          name: &quot;Travel Bucket List &amp; Inspiration&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;🌎&quot;,
+        },
+        {
+          name: &quot;Travel Journal &amp; Photo Gallery&quot;,
+          url: &quot;#&quot;,
+          emoji: &quot;📸&quot;,
+        },
+      ],
+    },
+  ],
+}
+
+export function SidebarLeft({
+  ...props
+}: React.ComponentProps&lt;typeof Sidebar&gt;) {
+  return (
+    &lt;Sidebar className=&quot;border-r-0&quot; {...props}&gt;
+      &lt;SidebarHeader&gt;
+        &lt;TeamSwitcher15 teams={data.teams} /&gt;
+        &lt;NavMain items={data.navMain} /&gt;
+      &lt;/SidebarHeader&gt;
+      &lt;SidebarContent&gt;
+        &lt;NavFavorites favorites={data.favorites} /&gt;
+        &lt;NavWorkspaces workspaces={data.workspaces} /&gt;
+        &lt;NavSecondary items={data.navSecondary} className=&quot;mt-auto&quot; /&gt;
+      &lt;/SidebarContent&gt;
+      &lt;SidebarRail /&gt;
+    &lt;/Sidebar&gt;
+  )
+}
+
+// This is sample data for the right sidebar.
+const rightSidebarData = {
+  user: {
+    name: &quot;hanzo&quot;,
+    email: &quot;m@example.com&quot;,
+    avatar: &quot;/avatars/hanzo.jpg&quot;,
+  },
+  calendars: [
+    {
+      name: &quot;My Calendars&quot;,
+      items: [&quot;Personal&quot;, &quot;Work&quot;, &quot;Family&quot;],
+    },
+    {
+      name: &quot;Favorites&quot;,
+      items: [&quot;Holidays&quot;, &quot;Birthdays&quot;],
+    },
+    {
+      name: &quot;Other&quot;,
+      items: [&quot;Travel&quot;, &quot;Reminders&quot;, &quot;Deadlines&quot;],
+    },
+  ],
+}
+
+export function SidebarRight({
+  ...props
+}: React.ComponentProps&lt;typeof Sidebar&gt;) {
+  return (
+    &lt;Sidebar
+      collapsible=&quot;none&quot;
+      className=&quot;sticky hidden lg:flex top-0 h-svh border-l&quot;
+      {...props}
+    &gt;
+      &lt;SidebarHeader className=&quot;h-16 border-b border-sidebar-border&quot;&gt;
+        &lt;NavUser user={rightSidebarData.user} /&gt;
+      &lt;/SidebarHeader&gt;
+      &lt;SidebarContent&gt;
+        &lt;DatePicker /&gt;
+        &lt;SidebarSeparator className=&quot;mx-0&quot; /&gt;
+        &lt;Calendars calendars={rightSidebarData.calendars} /&gt;
+      &lt;/SidebarContent&gt;
+      &lt;SidebarFooter&gt;
+        &lt;SidebarMenu&gt;
+          &lt;SidebarMenuItem&gt;
+            &lt;SidebarMenuButton&gt;
+              &lt;Plus /&gt;
+              &lt;span&gt;New Calendar&lt;/span&gt;
+            &lt;/SidebarMenuButton&gt;
+          &lt;/SidebarMenuItem&gt;
+        &lt;/SidebarMenu&gt;
+      &lt;/SidebarFooter&gt;
+    &lt;/Sidebar&gt;
+  )
+}
+
+export function TeamSwitcher15({
+  teams,
+}: {
+  teams: {
+    name: string
+    logo: React.ElementType
+    plan: string
+  }[]
+}) {
+  const [activeTeam, setActiveTeam] = React.useState(teams[0])
+
+  if (!activeTeam) {
+    return null
+  }
+
+  return (
+    &lt;SidebarMenu&gt;
+      &lt;SidebarMenuItem&gt;
+        &lt;DropdownMenu&gt;
+          &lt;DropdownMenuTrigger asChild&gt;
+            &lt;SidebarMenuButton className=&quot;w-fit px-1.5&quot;&gt;
+              &lt;div className=&quot;flex aspect-square size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground&quot;&gt;
+                &lt;activeTeam.logo className=&quot;size-3&quot; /&gt;
+              &lt;/div&gt;
+              &lt;span className=&quot;truncate font-semibold&quot;&gt;{activeTeam.name}&lt;/span&gt;
+              &lt;ChevronDown className=&quot;opacity-50&quot; /&gt;
+            &lt;/SidebarMenuButton&gt;
+          &lt;/DropdownMenuTrigger&gt;
+          &lt;DropdownMenuContent
+            className=&quot;w-64 rounded-lg&quot;
+            align=&quot;start&quot;
+            side=&quot;bottom&quot;
+            sideOffset={4}
+          &gt;
+            &lt;DropdownMenuLabel className=&quot;text-xs text-muted-foreground&quot;&gt;
+              Teams
+            &lt;/DropdownMenuLabel&gt;
+            {teams.map((team, index) =&gt; (
+              &lt;DropdownMenuItem
+                key={team.name}
+                onClick={() =&gt; setActiveTeam(team)}
+                className=&quot;gap-2 p-2&quot;
+              &gt;
+                &lt;div className=&quot;flex size-6 items-center justify-center rounded-sm border&quot;&gt;
+                  &lt;team.logo className=&quot;size-4 shrink-0&quot; /&gt;
+                &lt;/div&gt;
+                {team.name}
+                &lt;DropdownMenuShortcut&gt;⌘{index + 1}&lt;/DropdownMenuShortcut&gt;
+              &lt;/DropdownMenuItem&gt;
+            ))}
+            &lt;DropdownMenuSeparator /&gt;
+            &lt;DropdownMenuItem className=&quot;gap-2 p-2&quot;&gt;
+              &lt;div className=&quot;flex size-6 items-center justify-center rounded-md border bg-background&quot;&gt;
+                &lt;Plus className=&quot;size-4&quot; /&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;font-medium text-muted-foreground&quot;&gt;Add team&lt;/div&gt;
+            &lt;/DropdownMenuItem&gt;
+          &lt;/DropdownMenuContent&gt;
+        &lt;/DropdownMenu&gt;
+      &lt;/SidebarMenuItem&gt;
+    &lt;/SidebarMenu&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"theme-zinc","children":["$","$L16",null,{"block":{"name":"sidebar-15","description":"$undefined","registryDependencies":["sidebar","breadcrumb","separator"],"files":["registry/default/block/sidebar-15.tsx"],"source":"__registry__/default/block/sidebar-15.tsx","type":"components:block","category":"Application","subcategory":"Sidebar","chunks":[],"style":"default","container":{"height":"$undefined","className":"$undefined"},"code":"$17","highlightedCode":"$18"},"children":["$L19",[]]}]}]
+f:{"metadata":[["$","title","0",{"children":"sidebar-15 - hanzo/ui"}],["$","link","1",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","2",{"name":"author","content":"hanzo"}],["$","link","3",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","5",{"name":"creator","content":"hanzo"}],["$","meta","6",{"property":"og:title","content":"sidebar-15"}],["$","meta","7",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/sidebar-15/"}],["$","meta","8",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","9",{"property":"og:image:width","content":"1200"}],["$","meta","10",{"property":"og:image:height","content":"630"}],["$","meta","11",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","12",{"property":"og:type","content":"article"}],["$","meta","13",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","14",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","15",{"name":"twitter:title","content":"sidebar-15"}],["$","meta","16",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","17",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","18",{"rel":"icon","href":"/favicon.ico"}],["$","link","19",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L1a","20",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+1b:I[64766,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"default"]
+19:["$","$L1b",null,{}]

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[51592],{51592:(e,t,n)=>{n.r(t),n.d(t,{default:()=>s});var r=n(2616);function s(){return(0,r.jsx)("p",{className:"text-xl text-muted-foreground",children:"A modal dialog that interrupts the user with important content and expects a response."})}}}]);

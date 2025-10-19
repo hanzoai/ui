@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[10894],{10894:(e,n,r)=>{r.r(n),r.d(n,{default:()=>u});var a=r(2616),t=r(18075);function u(){return(0,a.jsx)(t.Button,{variant:"secondary",children:"Secondary"})}}}]);
