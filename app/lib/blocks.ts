@@ -72,10 +72,11 @@ export async function getBlock(
 }
 
 async function _getAllBlocks(style: Style["name"] = DEFAULT_BLOCKS_STYLE) {
-  const index = z.record(registryEntrySchema).parse(Index[style])
+  // Get the index directly without Zod validation since we control the generation
+  const index = Index[style]
 
   return Object.values(index).filter(
-    (block) => block.type === "components:block"
+    (block: any) => block.type === "components:block"
   )
 }
 
@@ -84,13 +85,12 @@ async function _getBlockCode(
   style: Style["name"] = DEFAULT_BLOCKS_STYLE
 ) {
   const entry = Index[style][name]
-  const block = registryEntrySchema.parse(entry)
 
-  if (!block.source) {
+  if (!entry?.source) {
     return ""
   }
 
-  return await readFile(block.source)
+  return await readFile(entry.source)
 }
 
 async function readFile(source: string) {
@@ -122,11 +122,11 @@ async function _getBlockContent(name: string, style: Style["name"]) {
   code = code.replaceAll("export default", "export")
 
   return {
-    description,
+    description: description ?? undefined,
     code,
     container: {
-      height: iframeHeight,
-      className: containerClassName,
+      height: iframeHeight ?? undefined,
+      className: containerClassName ?? undefined,
     },
   }
 }
