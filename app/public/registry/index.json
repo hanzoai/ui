@@ -2928,6 +2928,16 @@
     "type": "components:example"
   },
   {
+    "name": "3d-card-demo",
+    "registryDependencies": [
+      "3d-card"
+    ],
+    "files": [
+      "example/3d-card-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
     "name": "dashboard-05",
     "registryDependencies": [
       "badge",
