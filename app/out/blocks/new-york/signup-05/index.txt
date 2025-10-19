@@ -1,0 +1,233 @@
+1:"$Sreact.fragment"
+2:I[86292,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeProvider"]
+3:I[34572,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ActiveThemeProvider"]
+4:I[95851,[],""]
+5:I[41815,[],""]
+6:I[59131,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"ThemeSwitcher"]
+7:I[25894,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Analytics"]
+8:I[3969,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+9:I[23828,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","34542","static/chunks/34542-885324a7bb2da419.js","62817","static/chunks/62817-d87c4b332c59b86a.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","52717","static/chunks/52717-4eb31de2a51c806f.js","44083","static/chunks/44083-31e53abc40837820.js","64239","static/chunks/64239-c193b0e02779a003.js","7177","static/chunks/app/layout-4da613bba4c5a3e3.js"],"Toaster"]
+a:I[80432,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"Toaster"]
+c:I[65762,[],"OutletBoundary"]
+e:I[53751,[],"AsyncMetadataOutlet"]
+10:I[65762,[],"ViewportBoundary"]
+12:I[65762,[],"MetadataBoundary"]
+13:"$Sreact.suspense"
+15:I[66609,[],""]
+:HL["https://ui.hanzo.ai/_next/static/media/028c0d39d2e8f589-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/media/5b01f339abf2f1a5.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","style"]
+:HL["https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","style"]
+0:{"P":null,"b":"599EM8ulx1ROLGAlS2onU","p":"https://ui.hanzo.ai","c":["","blocks","new-york","signup-05",""],"i":false,"f":[[["",{"children":["(blocks)",{"children":["blocks",{"children":[["style","new-york","d"],{"children":[["name","signup-05","d"],{"children":["__PAGE__",{}]}]}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/9198dc7f9a19d6d7.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","link","1",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/3e541973982fcc14.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{}],["$","body",null,{"className":"min-h-svh bg-background font-sans antialiased __variable_ce4fce __variable_d731b2","children":["$","$L2",null,{"attribute":"class","defaultTheme":"system","enableSystem":true,"disableTransitionOnChange":true,"children":["$","$L3",null,{"initialTheme":"blue","children":[["$","div",null,{"vaul-drawer-wrapper":"","children":["$","div",null,{"className":"relative flex min-h-svh flex-col bg-background","children":["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],null,["$","$L6",null,{}],["$","$L7",null,{}],["$","$L8",null,{}],["$","$L9",null,{}],["$","$La",null,{}]]}]}]}]]}]]}],{"children":["(blocks)",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:style","children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:1:props:style","children":404}],["$","div",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:style","children":["$","h2",null,{"style":"$0:f:0:1:1:props:children:1:props:children:1:props:children:props:children:props:children:0:props:children:props:children:props:notFound:0:1:props:children:props:children:2:props:children:props:style","children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["blocks",["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["style","new-york","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["name","signup-05","d"],["$","$1","c",{"children":[null,["$","$L4",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$Lb",[["$","link","0",{"rel":"stylesheet","href":"https://ui.hanzo.ai/_next/static/css/d879013d47f887f1.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","$Lc",null,{"children":["$Ld",["$","$Le",null,{"promise":"$@f"}]]}]]}],{},null,false]},null,false]},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,[["$","$L10",null,{"children":"$L11"}],["$","meta",null,{"name":"next-size-adjust","content":""}]],["$","$L12",null,{"children":["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":"$L14"}]}]}]]}],false]],"m":"$undefined","G":["$15",[]],"s":false,"S":true}
+11:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","media":"(prefers-color-scheme: light)","content":"white"}],["$","meta","3",{"name":"theme-color","media":"(prefers-color-scheme: dark)","content":"black"}]]
+d:null
+16:I[15559,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"BlockWrapper"]
+1a:I[46311,[],"IconMark"]
+17:Tf8f,"use client"
+
+import { GalleryVerticalEnd } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+
+export function SignupPage() {
+  return (
+    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <SignupForm />
+      </div>
+    </div>
+  )
+}
+
+export function SignupForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    // TODO: Add your authentication logic here
+    console.log("Form submitted:", Object.fromEntries(formData))
+
+    // Example: await signIn(formData)
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <form onSubmit={handleSubmit}>
+        <FieldGroup>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <a
+              href="#"
+              className="flex flex-col items-center gap-2 font-medium"
+            >
+              <div className="flex size-8 items-center justify-center rounded-md">
+                <GalleryVerticalEnd className="size-6" />
+              </div>
+              <span className="sr-only">Acme Inc.</span>
+            </a>
+            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+            <FieldDescription>
+              Already have an account? <a href="#">Sign in</a>
+            </FieldDescription>
+          </div>
+          <Field>
+            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </Field>
+          <Field>
+            <Button type="submit">Create Account</Button>
+          </Field>
+          <FieldSeparator>Or</FieldSeparator>
+          <Field className="grid gap-4 sm:grid-cols-2">
+            <Button variant="outline" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
+                  fill="currentColor"
+                />
+              </svg>
+              Continue with Apple
+            </Button>
+            <Button variant="outline" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                  fill="currentColor"
+                />
+              </svg>
+              Continue with Google
+            </Button>
+          </Field>
+        </FieldGroup>
+      </form>
+      <FieldDescription className="px-6 text-center">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        and <a href="#">Privacy Policy</a>.
+      </FieldDescription>
+    </div>
+  )
+}
+18:T12c0,<pre><code class="language-typescript">&quot;use client&quot;
+
+import { GalleryVerticalEnd } from &quot;lucide-react&quot;
+
+import { cn } from &quot;@/lib/utils&quot;
+import { Button } from &quot;@/components/ui/button&quot;
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from &quot;@/components/ui/field&quot;
+import { Input } from &quot;@/components/ui/input&quot;
+
+export function SignupPage() {
+  return (
+    &lt;div className=&quot;bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10&quot;&gt;
+      &lt;div className=&quot;w-full max-w-sm&quot;&gt;
+        &lt;SignupForm /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export function SignupForm({
+  className,
+  ...props
+}: React.ComponentProps&lt;&quot;div&quot;&gt;) {
+  const handleSubmit = async (e: React.FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+
+    // TODO: Add your authentication logic here
+    console.log(&quot;Form submitted:&quot;, Object.fromEntries(formData))
+
+    // Example: await signIn(formData)
+  }
+
+  return (
+    &lt;div className={cn(&quot;flex flex-col gap-6&quot;, className)} {...props}&gt;
+      &lt;form onSubmit={handleSubmit}&gt;
+        &lt;FieldGroup&gt;
+          &lt;div className=&quot;flex flex-col items-center gap-2 text-center&quot;&gt;
+            &lt;a
+              href=&quot;#&quot;
+              className=&quot;flex flex-col items-center gap-2 font-medium&quot;
+            &gt;
+              &lt;div className=&quot;flex size-8 items-center justify-center rounded-md&quot;&gt;
+                &lt;GalleryVerticalEnd className=&quot;size-6&quot; /&gt;
+              &lt;/div&gt;
+              &lt;span className=&quot;sr-only&quot;&gt;Acme Inc.&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;h1 className=&quot;text-xl font-bold&quot;&gt;Welcome to Acme Inc.&lt;/h1&gt;
+            &lt;FieldDescription&gt;
+              Already have an account? &lt;a href=&quot;#&quot;&gt;Sign in&lt;/a&gt;
+            &lt;/FieldDescription&gt;
+          &lt;/div&gt;
+          &lt;Field&gt;
+            &lt;FieldLabel htmlFor=&quot;email&quot;&gt;Email&lt;/FieldLabel&gt;
+            &lt;Input
+              id=&quot;email&quot;
+              name=&quot;email&quot;
+              type=&quot;email&quot;
+              placeholder=&quot;m@example.com&quot;
+              required
+            /&gt;
+          &lt;/Field&gt;
+          &lt;Field&gt;
+            &lt;Button type=&quot;submit&quot;&gt;Create Account&lt;/Button&gt;
+          &lt;/Field&gt;
+          &lt;FieldSeparator&gt;Or&lt;/FieldSeparator&gt;
+          &lt;Field className=&quot;grid gap-4 sm:grid-cols-2&quot;&gt;
+            &lt;Button variant=&quot;outline&quot; type=&quot;button&quot;&gt;
+              &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  d=&quot;M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701&quot;
+                  fill=&quot;currentColor&quot;
+                /&gt;
+              &lt;/svg&gt;
+              Continue with Apple
+            &lt;/Button&gt;
+            &lt;Button variant=&quot;outline&quot; type=&quot;button&quot;&gt;
+              &lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 24 24&quot;&gt;
+                &lt;path
+                  d=&quot;M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z&quot;
+                  fill=&quot;currentColor&quot;
+                /&gt;
+              &lt;/svg&gt;
+              Continue with Google
+            &lt;/Button&gt;
+          &lt;/Field&gt;
+        &lt;/FieldGroup&gt;
+      &lt;/form&gt;
+      &lt;FieldDescription className=&quot;px-6 text-center&quot;&gt;
+        By clicking continue, you agree to our &lt;a href=&quot;#&quot;&gt;Terms of Service&lt;/a&gt;{&quot; &quot;}
+        and &lt;a href=&quot;#&quot;&gt;Privacy Policy&lt;/a&gt;.
+      &lt;/FieldDescription&gt;
+    &lt;/div&gt;
+  )
+}
+</code></pre>b:["$","div",null,{"className":"theme-zinc","children":["$","$L16",null,{"block":{"name":"signup-05","description":"$undefined","registryDependencies":["button","card","input","label"],"files":["registry/new-york/block/signup-05.tsx"],"source":"__registry__/new-york/block/signup-05.tsx","type":"components:block","category":"Authentication","subcategory":"Signup","chunks":[],"style":"new-york","container":{"height":"$undefined","className":"$undefined"},"code":"$17","highlightedCode":"$18"},"children":["$L19",[]]}]}]
+f:{"metadata":[["$","title","0",{"children":"signup-05 - hanzo/ui"}],["$","link","1",{"rel":"author","href":"https://hanzo.ai"}],["$","meta","2",{"name":"author","content":"hanzo"}],["$","link","3",{"rel":"manifest","href":"https://ui.hanzo.ai/site.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"Next.js,React,Tailwind CSS,Server Components,Radix UI"}],["$","meta","5",{"name":"creator","content":"hanzo"}],["$","meta","6",{"property":"og:title","content":"signup-05"}],["$","meta","7",{"property":"og:url","content":"https://ui.hanzo.ai/blocks/signup-05/"}],["$","meta","8",{"property":"og:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","meta","9",{"property":"og:image:width","content":"1200"}],["$","meta","10",{"property":"og:image:height","content":"630"}],["$","meta","11",{"property":"og:image:alt","content":"hanzo/ui"}],["$","meta","12",{"property":"og:type","content":"article"}],["$","meta","13",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","14",{"name":"twitter:creator","content":"@hanzoai"}],["$","meta","15",{"name":"twitter:title","content":"signup-05"}],["$","meta","16",{"name":"twitter:image","content":"https://ui.hanzo.ai/og.jpg"}],["$","link","17",{"rel":"shortcut icon","href":"/favicon-16x16.png"}],["$","link","18",{"rel":"icon","href":"/favicon.ico"}],["$","link","19",{"rel":"apple-touch-icon","href":"/apple-touch-icon.png"}],["$","$L1a","20",{}]],"error":null,"digest":"$undefined"}
+14:"$f:metadata"
+1b:I[11620,["77879","static/chunks/cbf0ec12-1fc782e6900af337.js","61591","static/chunks/61591-557438ce592b3704.js","80726","static/chunks/80726-358601db50fd11c8.js","20500","static/chunks/20500-020fb52cc9cd13f1.js","58359","static/chunks/58359-0779807794212734.js","77819","static/chunks/77819-c0c5b508026800dc.js","42018","static/chunks/42018-7e4627c510881187.js","34542","static/chunks/34542-885324a7bb2da419.js","89309","static/chunks/89309-4396bafd4dbfd6d2.js","17141","static/chunks/17141-60e9948989a53c5a.js","62817","static/chunks/62817-d87c4b332c59b86a.js","82733","static/chunks/82733-14a5aed2d1aa5d92.js","42255","static/chunks/42255-672bf8a48b9ccd65.js","40022","static/chunks/40022-02d79ecab2e44c5c.js","78244","static/chunks/78244-56590d299066b0a9.js","1203","static/chunks/1203-217730bba77148a6.js","11487","static/chunks/11487-9b2b1a32f7027a72.js","16242","static/chunks/16242-f3b760a87f10d0c5.js","24288","static/chunks/24288-a5cc027813ff38c0.js","41471","static/chunks/41471-ccfd1f67fb6d0489.js","72967","static/chunks/72967-53fe84a8fb2dfa83.js","52717","static/chunks/52717-4eb31de2a51c806f.js","1086","static/chunks/1086-7aac7f6021cd27f5.js","40807","static/chunks/40807-423972387a08038a.js","60458","static/chunks/60458-cb9c78e48d483aae.js","42805","static/chunks/42805-32ca02b5bed41361.js","28583","static/chunks/28583-779e4eed783e91b9.js","68780","static/chunks/68780-a4d7595a6bf095ce.js","48930","static/chunks/48930-072fdf7d93985875.js","44083","static/chunks/44083-31e53abc40837820.js","9759","static/chunks/9759-7bc6ca6e42d6986d.js","46493","static/chunks/46493-42f3fce33454057f.js","49022","static/chunks/49022-5a1216b66a3840f7.js","33143","static/chunks/33143-08b18ab0980b464f.js","48027","static/chunks/48027-94d5c255abbd981d.js","1067","static/chunks/1067-8a12a06eb1683de2.js","80601","static/chunks/80601-fb5900530740910f.js","22245","static/chunks/22245-d4d2ebb02132c215.js","42541","static/chunks/app/(blocks)/blocks/%5Bstyle%5D/%5Bname%5D/page-91e119f5cef4b154.js"],"default"]
+19:["$","$L1b",null,{}]

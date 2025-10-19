@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[10272],{10272:(e,t,r)=>{r.r(t),r.d(t,{default:()=>l});var s=r(2616);function l(){return(0,s.jsx)("h2",{className:"scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0",children:"The People of the Kingdom"})}}}]);
