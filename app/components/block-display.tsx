@@ -43,7 +43,7 @@ export async function BlockDisplay({
   }
 
   // Fallback to registry item for non-block components
-  const item = await getCachedRegistryItem(name)
+  const item = await getCachedRegistryItem(name, style)
 
   if (!item?.files) {
     return null
@@ -78,8 +78,8 @@ const getCachedBlock = React.cache(
   }
 )
 
-const getCachedRegistryItem = React.cache(async (name: string) => {
-  return await getRegistryItem(name)
+const getCachedRegistryItem = React.cache(async (name: string, style: Style["name"] = "default") => {
+  return await getRegistryItem(name, style)
 })
 
 const getCachedFileTree = React.cache(
