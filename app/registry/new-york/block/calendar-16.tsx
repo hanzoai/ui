@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Clock2Icon } from "lucide-react"
 
-import Calendar from "@/registry/new-york/ui/calendar"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 import { Card, CardContent, CardFooter } from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
 import { Label } from "@/registry/new-york/ui/label"

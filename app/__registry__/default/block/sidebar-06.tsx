@@ -5,6 +5,14 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/default/ui/breadcrumb"
 import { Button } from "@/registry/default/ui/button"
 import {
   Card,
@@ -19,6 +27,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -26,25 +35,14 @@ import {
   SidebarGroup,
   SidebarHeader,
   SidebarInput,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
-  useSidebar,
-} from "@/registry/default/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/default/ui/breadcrumb"
-import { Separator } from "@/registry/default/ui/separator"
-import {
-  SidebarInset,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/registry/default/ui/sidebar"
 
 export default function Page() {

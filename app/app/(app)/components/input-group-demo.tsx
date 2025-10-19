@@ -90,7 +90,7 @@ export function InputGroupDemo() {
         </InputGroupAddon>
       </InputGroup>
       <InputGroup>
-        <InputGroupInput placeholder="@shadcn" />
+        <InputGroupInput placeholder="@hanzo" />
         <InputGroupAddon align="inline-end">
           <div className="bg-primary text-foreground flex size-4 items-center justify-center rounded-full">
             <IconCheck className="size-3 text-white" />

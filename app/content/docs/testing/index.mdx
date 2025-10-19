@@ -1,0 +1,343 @@
+---
+title: Testing Guide
+description: How to test @hanzo/ui components and applications
+---
+
+# Testing Guide
+
+Comprehensive guide to testing applications built with @hanzo/ui.
+
+## Prerequisites
+
+- Node.js 18+
+- pnpm (recommended) or npm
+- Playwright for E2E tests (optional)
+
+## Unit Testing
+
+### Setup with Vitest
+
+```bash
+npm install -D vitest @testing-library/react @testing-library/user-event happy-dom
+```
+
+```ts title="vitest.config.ts"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vitest/config"
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "happy-dom",
+    setupFiles: ["./vitest.setup.ts"],
+  },
+})
+```
+
+```ts title="vitest.setup.ts"
+import "@testing-library/jest-dom"
+```
+
+### Testing Components
+
+```tsx title="button.test.tsx"
+import { Button } from "@hanzo/ui"
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+
+describe("Button", () => {
+  it("renders correctly", () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole("button")).toHaveTextContent("Click me")
+  })
+
+  it("handles click events", async () => {
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
+
+    await userEvent.click(screen.getByRole("button"))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
+
+  it("applies variants correctly", () => {
+    render(<Button variant="destructive">Delete</Button>)
+    expect(screen.getByRole("button")).toHaveClass("bg-destructive")
+  })
+})
+```
+
+### Testing Forms
+
+```tsx title="form.test.tsx"
+import { Button, Form, Input } from "@hanzo/ui"
+import { render, screen, waitFor } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { useForm } from "react-hook-form"
+
+function LoginForm({ onSubmit }) {
+  const form = useForm()
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Input {...form.register("email")} type="email" />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  )
+}
+
+describe("LoginForm", () => {
+  it("submits form data", async () => {
+    const handleSubmit = vi.fn()
+    render(<LoginForm onSubmit={handleSubmit} />)
+
+    await userEvent.type(screen.getByRole("textbox"), "test@example.com")
+    await userEvent.click(screen.getByRole("button"))
+
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledWith(
+        {
+          email: "test@example.com",
+        },
+        expect.anything()
+      )
+    })
+  })
+})
+```
+
+## End-to-End Testing
+
+### Setup with Playwright
+
+```bash
+npm install -D @playwright/test
+npx playwright install
+```
+
+```ts title="playwright.config.ts"
+import { defineConfig, devices } from "@playwright/test"
+
+export default defineConfig({
+  testDir: "./tests/e2e",
+  fullyParallel: true,
+  use: {
+    baseURL: "http://localhost:3003",
+    trace: "on-first-retry",
+  },
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+  ],
+  webServer: {
+    command: "npm run dev",
+    url: "http://localhost:3003",
+    reuseExistingServer: !process.env.CI,
+  },
+})
+```
+
+### E2E Test Examples
+
+```ts title="tests/e2e/navigation.spec.ts"
+import { expect, test } from "@playwright/test"
+
+test.describe("Navigation", () => {
+  test("homepage loads correctly", async ({ page }) => {
+    await page.goto("/")
+    await expect(page).toHaveTitle(/Hanzo UI/)
+    await expect(page.locator("h1")).toBeVisible()
+  })
+
+  test("component page navigates", async ({ page }) => {
+    await page.goto("/docs/components/button")
+    await expect(page.locator("h1")).toContainText("Button")
+
+    // Test component preview
+    const preview = page.locator("[data-rehype-pretty-code-fragment]")
+    await expect(preview).toBeVisible()
+  })
+})
+```
+
+### Testing Interactive Components
+
+```ts title="tests/e2e/dialog.spec.ts"
+import { expect, test } from "@playwright/test"
+
+test("dialog opens and closes", async ({ page }) => {
+  await page.goto("/docs/components/dialog")
+
+  // Click trigger button
+  await page.click("text=Open Dialog")
+
+  // Check dialog is visible
+  await expect(page.locator('[role="dialog"]')).toBeVisible()
+
+  // Close dialog
+  await page.click('[aria-label="Close"]')
+
+  // Check dialog is hidden
+  await expect(page.locator('[role="dialog"]')).not.toBeVisible()
+})
+```
+
+## Visual Regression Testing
+
+```ts title="tests/visual/components.spec.ts"
+import { expect, test } from "@playwright/test"
+
+test.describe("Visual Regression", () => {
+  test("button variants", async ({ page }) => {
+    await page.goto("/docs/components/button")
+
+    const button = page.locator('[data-variant="default"]')
+    await expect(button).toHaveScreenshot("button-default.png")
+  })
+
+  test("dark mode theme", async ({ page }) => {
+    await page.goto("/")
+    await page.click("[data-theme-toggle]")
+
+    await expect(page).toHaveScreenshot("dark-mode.png", {
+      fullPage: true,
+    })
+  })
+})
+```
+
+## Accessibility Testing
+
+```tsx title="button.test.tsx"
+import { Button } from "@hanzo/ui"
+import { render } from "@testing-library/react"
+import { axe, toHaveNoViolations } from "jest-axe"
+
+expect.extend(toHaveNoViolations)
+
+test("Button has no accessibility violations", async () => {
+  const { container } = render(<Button>Click me</Button>)
+  const results = await axe(container)
+  expect(results).toHaveNoViolations()
+})
+```
+
+## Running Tests
+
+### Development
+
+```bash
+# Run all tests
+pnpm test
+
+# Run in watch mode
+pnpm test:watch
+
+# Run with coverage
+pnpm test:coverage
+
+# Run specific file
+pnpm test button.test.tsx
+```
+
+### End-to-End
+
+```bash
+# Run E2E tests
+pnpm test:e2e
+
+# Run in headed mode
+pnpm test:e2e --headed
+
+# Run in UI mode
+pnpm test:e2e --ui
+
+# Generate report
+pnpm test:e2e
+npx playwright show-report
+```
+
+### CI/CD
+
+```yaml
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+      - run: pnpm install
+      - run: pnpm test
+      - run: pnpm test:e2e
+```
+
+## Best Practices
+
+1. **Test User Behavior, Not Implementation**
+
+   ```tsx
+   // Good
+   await userEvent.click(screen.getByRole("button"))
+
+   // Bad
+   fireEvent.click(getByTestId("submit-btn"))
+   ```
+
+2. **Use Semantic Queries**
+
+   ```tsx
+   screen.getByRole("button", { name: /submit/i })
+   screen.getByLabelText("Email")
+   ```
+
+3. **Test Accessibility**
+   - Always include axe tests
+   - Test keyboard navigation
+   - Verify ARIA attributes
+
+4. **Mock External Dependencies**
+
+   ```tsx
+   vi.mock("@/api", () => ({
+     fetchData: vi.fn(() => Promise.resolve(mockData)),
+   }))
+   ```
+
+5. **Use Data Attributes for Test IDs**
+   ```tsx
+   <Button data-testid="submit-btn">Submit</Button>
+   ```
+
+## Troubleshooting
+
+### Tests Fail Intermittently
+
+- Use `waitFor` for async operations
+- Increase timeout for slow operations
+- Check for race conditions
+
+### Snapshot Tests Break Often
+
+- Use visual regression instead
+- Keep snapshots small and focused
+- Update snapshots carefully
+
+### Playwright Can't Find Elements
+
+- Wait for navigation: `await page.waitForURL()`
+- Wait for selectors: `await page.waitForSelector()`
+- Use more specific selectors
+
+## Next Steps
+
+- [View test examples](https://github.com/hanzoai/ui/tree/main/tests)
+- [Learn about CI/CD](/docs/deployment)
+- [Accessibility guide](/docs/accessibility)

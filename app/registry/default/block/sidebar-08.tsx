@@ -30,6 +30,14 @@ import {
   AvatarImage,
 } from "@/registry/default/ui/avatar"
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/default/ui/breadcrumb"
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -43,6 +51,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -63,15 +72,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/registry/default/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/default/ui/breadcrumb"
-import { Separator } from "@/registry/default/ui/separator"
 
 export default function Page() {
   return (
@@ -112,9 +112,9 @@ export default function Page() {
 
 const data = {
   user: {
-    name: "shadcn",
+    name: "hanzo",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/hanzo.jpg",
   },
   navMain: [
     {

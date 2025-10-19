@@ -31,6 +31,14 @@ import {
   AvatarImage,
 } from "@/registry/default/ui/avatar"
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/default/ui/breadcrumb"
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
@@ -45,6 +53,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -52,6 +61,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -59,22 +69,10 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarRail,
-  useSidebar,
-} from "@/registry/default/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/default/ui/breadcrumb"
-import { Separator } from "@/registry/default/ui/separator"
-import {
-  SidebarInset,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/registry/default/ui/sidebar"
 
 export default function Page() {
@@ -117,9 +115,9 @@ export default function Page() {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "hanzo",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/hanzo.jpg",
   },
   teams: [
     {

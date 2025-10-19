@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 3
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -38,7 +40,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -52,7 +56,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -66,7 +72,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -80,7 +88,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -94,7 +104,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -108,7 +120,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 3
+        },
         "id": "visual",
         "name": "visual",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -122,7 +136,7 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.55.0",
+    "version": "1.55.1",
     "workers": 5,
     "webServer": {
       "command": "cd app && pnpm dev",
@@ -131,17 +145,127 @@
       "timeout": 120000
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
-      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
+      "title": "theme-dropdown.spec.ts",
+      "file": "theme-dropdown.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Theme switcher dropdown should work on homepage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7382,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Theme changed from light to dark\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-10-18T21:38:10.636Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "18ba93d99d2c4e3e1176-c154a13bfed878d28e0e",
+          "file": "theme-dropdown.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "Theme switcher dropdown should work on dashboard example",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 4127,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-10-18T21:38:10.634Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "18ba93d99d2c4e3e1176-63d30f0c7894ad6d21d7",
+          "file": "theme-dropdown.spec.ts",
+          "line": 39,
+          "column": 1
+        },
+        {
+          "title": "Theme should persist across page navigation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 8080,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2025-10-18T21:38:10.637Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "18ba93d99d2c4e3e1176-a16283e21a3adb716647",
+          "file": "theme-dropdown.spec.ts",
+          "line": 64,
+          "column": 1
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-09-18T23:50:43.378Z",
-    "duration": 18.772000000000048,
-    "expected": 0,
+    "startTime": "2025-10-18T21:38:10.122Z",
+    "duration": 9726.474,
+    "expected": 3,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

@@ -11,8 +11,6 @@ import {
 } from "@/registry/default/ui/field"
 import { Input } from "@/registry/default/ui/input"
 
-import { SignupForm } from "./components/signup-form"
-
 export default function SignupPage() {
   return (
     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">

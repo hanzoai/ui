@@ -2,11 +2,20 @@ import * as React from "react"
 import { GalleryVerticalEnd, Minus, Plus, Search } from "lucide-react"
 
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/registry/new-york/ui/breadcrumb"
+import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/registry/new-york/ui/collapsible"
 import { Label } from "@/registry/new-york/ui/label"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -25,15 +34,6 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/registry/new-york/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Separator } from "@/registry/new-york/ui/separator"
 
 export default function Page() {
   return (
