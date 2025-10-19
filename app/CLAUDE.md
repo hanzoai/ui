@@ -80,7 +80,7 @@ The registry is the **core of the component distribution system**:
 2. **Build Script**: `scripts/build-registry.mts` reads components and generates:
    - JSON metadata files in `/public/registry/styles/{style}/{name}.json`
    - Includes dependencies, files, type info
-3. **CLI Consumption**: The `hanzo` CLI reads these JSON files to install components
+3. **CLI Consumption**: The `@hanzo/ui` CLI reads these JSON files to install components
 4. **Documentation**: MDX files in `/content/docs/components/` reference the registry
 
 **CRITICAL**: Always run `pnpm registry:build` before building the app if you modify components.

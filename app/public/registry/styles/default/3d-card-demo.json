@@ -1,0 +1,13 @@
+{
+  "name": "3d-card-demo",
+  "registryDependencies": [
+    "3d-card"
+  ],
+  "files": [
+    {
+      "name": "3d-card-demo.tsx",
+      "content": "import {\n  Card3D,\n  Card3DContent,\n  Card3DDescription,\n  Card3DFooter,\n  Card3DHeader,\n  Card3DTitle,\n} from \"@/registry/default/ui/3d-card\"\nimport { Button } from \"@/registry/default/ui/button\"\n\nexport default function ThreeDCardDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <Card3D className=\"w-[350px]\">\n        <Card3DHeader>\n          <Card3DTitle>3D Card Effect</Card3DTitle>\n          <Card3DDescription>\n            Hover over this card to see the 3D tilt effect\n          </Card3DDescription>\n        </Card3DHeader>\n        <Card3DContent>\n          <p className=\"text-sm\">\n            This card responds to your mouse movement with a realistic 3D perspective\n            transform and an interactive glare effect.\n          </p>\n        </Card3DContent>\n        <Card3DFooter>\n          <Button variant=\"outline\">Learn More</Button>\n        </Card3DFooter>\n      </Card3D>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

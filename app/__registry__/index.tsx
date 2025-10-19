@@ -3173,6 +3173,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "3d-card-demo": {
+      name: "3d-card-demo",
+      type: "components:example",
+      registryDependencies: ["3d-card"],
+      component: React.lazy(() => import("@/registry/default/example/3d-card-demo")),
+      source: "",
+      files: ["registry/default/example/3d-card-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "dashboard-05": {
       name: "dashboard-05",
       type: "components:block",
@@ -7363,6 +7374,17 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/new-york/example/cards")),
       source: "",
       files: ["registry/new-york/example/cards/cards.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "3d-card-demo": {
+      name: "3d-card-demo",
+      type: "components:example",
+      registryDependencies: ["3d-card"],
+      component: React.lazy(() => import("@/registry/new-york/example/3d-card-demo")),
+      source: "",
+      files: ["registry/new-york/example/3d-card-demo.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []
