@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { type DateRange } from "react-day-picker"
 
 import { Button } from "@/registry/default/ui/button"
-import Calendar from "@/registry/default/ui/calendar"
+import { Calendar } from "@/registry/default/ui/calendar"
 import { Label } from "@/registry/default/ui/label"
 import {
   Popover,

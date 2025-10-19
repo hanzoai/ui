@@ -4,7 +4,7 @@ import * as React from "react"
 import { CalendarPlusIcon } from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
-import Calendar from "@/registry/default/ui/calendar"
+import { Calendar } from "@/registry/default/ui/calendar"
 import {
   Drawer,
   DrawerContent,

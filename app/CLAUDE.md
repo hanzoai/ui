@@ -80,7 +80,7 @@ The registry is the **core of the component distribution system**:
 2. **Build Script**: `scripts/build-registry.mts` reads components and generates:
    - JSON metadata files in `/public/registry/styles/{style}/{name}.json`
    - Includes dependencies, files, type info
-3. **CLI Consumption**: The `shadcn` CLI reads these JSON files to install components
+3. **CLI Consumption**: The `hanzo` CLI reads these JSON files to install components
 4. **Documentation**: MDX files in `/content/docs/components/` reference the registry
 
 **CRITICAL**: Always run `pnpm registry:build` before building the app if you modify components.
@@ -120,7 +120,7 @@ content/docs/components/{component}.mdx       # Documentation
 config/site.ts        # Site metadata, links
 config/docs.ts        # Documentation navigation structure
 tailwind.config.cjs   # Tailwind configuration
-components.json       # shadcn CLI configuration
+components.json       # hanzo CLI configuration
 ```
 
 ### Build & Scripts
@@ -213,7 +213,7 @@ The registry system enables the `npx hanzo-ui@latest add {component}` CLI workfl
 
 **External Registries** (`registries.json`):
 - 35+ external component sources
-- Examples: @aceternity, @magicui, @shadcn-editor
+- Examples: @aceternity, @magicui, @hanzo-editor
 - Validated via `pnpm validate:registries`
 
 ## Theme System
@@ -347,7 +347,7 @@ These are auto-installed when user adds the component.
 2. **Upgraded to Next.js 15.3.1** with Turbopack
 3. **React 19** with new JSX transform
 4. **Added @dnd-kit** for page builder drag-drop
-5. **Synced with shadcn/ui v3.4.0** (7 new components: button-group, empty, field, input-group, item, kbd, spinner)
+5. **Synced with hanzo/ui v3.4.0** (7 new components: button-group, empty, field, input-group, item, kbd, spinner)
 6. **Electric blue primary color** (210 100% 50%)
 7. **Page builder feature** at `/builder` route
 

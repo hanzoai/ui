@@ -16,6 +16,12 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/registry/new-york/ui/avatar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from "@/registry/new-york/ui/breadcrumb"
 import { Calendar } from "@/registry/new-york/ui/calendar"
 import {
   Collapsible,
@@ -31,6 +37,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/registry/new-york/ui/dropdown-menu"
+import { Separator } from "@/registry/new-york/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -39,24 +46,15 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  useSidebar,
-} from "@/registry/new-york/ui/sidebar"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Separator } from "@/registry/new-york/ui/separator"
-import {
-  SidebarInset,
-  SidebarProvider,
   SidebarTrigger,
+  useSidebar,
 } from "@/registry/new-york/ui/sidebar"
 
 export default function Page() {
@@ -90,9 +88,9 @@ export default function Page() {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "hanzo",
     email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "/avatars/hanzo.jpg",
   },
   calendars: [
     {

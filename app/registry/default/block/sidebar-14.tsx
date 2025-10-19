@@ -1,20 +1,6 @@
 import * as React from "react"
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarRail,
-} from "@/registry/default/ui/sidebar"
-import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -23,8 +9,20 @@ import {
   BreadcrumbSeparator,
 } from "@/registry/default/ui/breadcrumb"
 import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarProvider,
+  SidebarRail,
   SidebarTrigger,
 } from "@/registry/default/ui/sidebar"
 

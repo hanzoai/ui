@@ -3,7 +3,9 @@
 import * as React from "react"
 import { DateRange } from "react-day-picker"
 
-import { Calendar, CalendarDayButton } from "@/registry/new-york/ui/calendar"
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/registry/new-york/ui/button"
+import { Calendar } from "@/registry/new-york/ui/calendar"
 
 export default function Calendar21() {
   const [range, setRange] = React.useState<DateRange | undefined>({
@@ -30,10 +32,18 @@ export default function Calendar21() {
           const isWeekend = day.date.getDay() === 0 || day.date.getDay() === 6
 
           return (
-            <CalendarDayButton day={day} modifiers={modifiers} {...props}>
-              {children}
-              {!modifiers.outside && <span>{isWeekend ? "$220" : "$100"}</span>}
-            </CalendarDayButton>
+            <button
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "relative flex flex-col items-center justify-center h-9 w-9 p-0 font-normal aria-selected:opacity-100"
+              )}
+              {...props}
+            >
+              <div>{children}</div>
+              {!modifiers.outside && (
+                <span className="text-xs">{isWeekend ? "$220" : "$100"}</span>
+              )}
+            </button>
           )
         },
       }}

@@ -47,7 +47,6 @@ import {
   SidebarTrigger,
 } from "@/registry/default/ui/sidebar"
 
-
 export default function Page() {
   return (
     <SidebarProvider>
