@@ -284,6 +284,32 @@ NEXT_PUBLIC_APP_URL=http://localhost:3003
 
 ## Recent Updates
 
+### 2025-10-19 - Registry Structure Fix & Build Issues (IN PROGRESS)
+**Issue**: Deployment failing due to registry access pattern and build errors
+**Root Causes**:
+1. Registry functions accessing `Index[name]` instead of `Index[style][name]`
+2. Zod validation expecting objects but Index structure uses nested style keys
+3. Shiki `getHighlighter` incompatible with static export
+4. Block schema validation failing on null values
+5. Some blocks have Server Component issues with event handlers
+
+**Fixes Applied**:
+1. Updated `getRegistryItem()` and `getRegistryComponent()` to accept style parameter
+2. Updated all callers to pass style parameter (block-display.tsx)
+3. Removed Zod validation in `_getAllBlocks()` and `_getBlockCode()` - we control generation
+4. Disabled syntax highlighting for static exports (replaced with basic pre/code)
+5. Convert null to undefined in block metadata extraction
+
+**Remaining Issues**:
+- Some blocks (login-01, login-02, sidebar-02) have Server Component errors
+- Need to mark these blocks as Client Components or skip in static generation
+
+**Files Modified**:
+- `/lib/registry.ts` - Added style parameter to registry functions
+- `/components/block-display.tsx` - Pass style to getCachedRegistryItem
+- `/lib/blocks.ts` - Removed Zod validation, fixed null values
+- `/lib/highlight-code.ts` - Disabled highlighting for static export
+
 ### 2025-10-18 - Blocks Display Bug Fix (COMPLETED)
 **Issue**: Blocks not displaying on http://localhost:3003/blocks
 **Root Cause**: Registry index structure mismatch
