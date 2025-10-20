@@ -99,14 +99,6 @@ export default function IndexPage() {
         </div>
       </div>
       <div className="container py-12">
-        <div className="mb-8">
-          <h2 className="text-center text-3xl font-bold tracking-tight">
-            Check out some examples
-          </h2>
-          <p className="text-center text-muted-foreground mt-2">
-            Dashboard, cards, authentication. Some examples built using the components. Use this as a guide to build your own.
-          </p>
-        </div>
         <RootComponents />
       </div>
     </div>
