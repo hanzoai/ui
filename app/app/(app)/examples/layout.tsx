@@ -1,4 +1,7 @@
-import { Metadata } from "next"
+"use client"
+
+import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
@@ -12,16 +15,20 @@ import {
 } from "@/components/page-header"
 import { buttonVariants } from "@/registry/new-york/ui/button"
 
-export const metadata: Metadata = {
-  title: "Examples",
-  description: "Check out some examples app built using the components.",
-}
-
 interface ExamplesLayoutProps {
   children: React.ReactNode
 }
 
-export default function ExamplesLayout({ children }: ExamplesLayoutProps) {
+function ExamplesLayoutContent({ children }: ExamplesLayoutProps) {
+  const searchParams = useSearchParams()
+  const isEmbedded = searchParams.get("embedded") === "true"
+
+  // If embedded, just show the content without header
+  if (isEmbedded) {
+    return <>{children}</>
+  }
+
+  // Full layout for standalone view
   return (
     <>
       <div className="container relative">
@@ -61,5 +68,13 @@ export default function ExamplesLayout({ children }: ExamplesLayoutProps) {
         </section>
       </div>
     </>
+  )
+}
+
+export default function ExamplesLayout({ children }: ExamplesLayoutProps) {
+  return (
+    <Suspense fallback={<>{children}</>}>
+      <ExamplesLayoutContent>{children}</ExamplesLayoutContent>
+    </Suspense>
   )
 }
