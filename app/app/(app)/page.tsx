@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 
 import { Announcement } from "@/components/announcement"
@@ -11,7 +10,7 @@ import {
 } from "@/components/page-header"
 import { Button } from "@/registry/new-york/ui/button"
 
-import { RootComponents } from "./components"
+import { HomeContent } from "./home-content"
 
 const title = "The Foundation for your Design System"
 const description =
@@ -60,40 +59,7 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
-      <div className="container-wrapper section-soft flex-1 pb-6">
-        <div className="container overflow-hidden">
-          <section className="border-border/50 -mx-4 w-[160vw] overflow-hidden rounded-lg border md:hidden md:w-[150vw]">
-            <Image
-              src="/r/styles/new-york-v4/dashboard-01-light.png"
-              width={1400}
-              height={875}
-              alt="Dashboard"
-              className="block dark:hidden"
-              priority
-            />
-            <Image
-              src="/r/styles/new-york-v4/dashboard-01-dark.png"
-              width={1400}
-              height={875}
-              alt="Dashboard"
-              className="hidden dark:block"
-              priority
-            />
-          </section>
-          <section className="theme-container hidden md:block">
-            <div className="overflow-hidden rounded-lg border bg-background shadow-lg">
-              <iframe
-                src="/examples/dashboard"
-                className="h-[900px] w-full border-0"
-                title="Dashboard Example"
-              />
-            </div>
-          </section>
-        </div>
-      </div>
-      <div className="container py-12">
-        <RootComponents />
-      </div>
+      <HomeContent />
     </div>
   )
 }

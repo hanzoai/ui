@@ -113,8 +113,10 @@ export function HanzoProvider({
   onMessage,
   onError,
   enableStreaming = true,
-  enableMCP = false,
-  mcpServers = []
+  // @ts-expect-error - MCP integration coming soon
+  enableMCP = false, // eslint-disable-line @typescript-eslint/no-unused-vars
+  // @ts-expect-error - MCP server support coming soon
+  mcpServers = [] // eslint-disable-line @typescript-eslint/no-unused-vars
 }: HanzoProviderProps) {
   // State
   const [components] = useState(() => new Map(initialComponents.map(c => [c.name, c])))
