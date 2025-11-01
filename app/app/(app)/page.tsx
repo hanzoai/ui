@@ -12,9 +12,9 @@ import { Button } from "@/registry/new-york/ui/button"
 
 import { HomeContent } from "./home-content"
 
-const title = "The Foundation for your Design System"
+const title = "Hanzo UI Component Library"
 const description =
-  "A set of beautifully designed components that you can customize, extend, and build on. Start here then make it your own. Open Source. Open Code."
+  "Beautifully designed components built by Hanzo AI. Accessible. Customizable. Open Source. Built with React and Tailwind CSS."
 
 export const dynamic = "force-static"
 export const revalidate = false
