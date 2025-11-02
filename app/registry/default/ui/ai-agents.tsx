@@ -8,6 +8,7 @@ import {
   Bot,
   Brain,
   CheckCircle,
+  CircleStop,
   Clock,
   Code,
   Copy,
@@ -20,7 +21,6 @@ import {
   Plus,
   Search,
   Settings,
-  Stop,
   Trash2,
   Zap,
 } from "lucide-react"
@@ -923,7 +923,7 @@ export const AIAgents: React.FC<AIAgentsProps> = ({
             >
               {isWorkflowRunning ? (
                 <>
-                  <Stop className="h-4 w-4 mr-2" />
+                  <CircleStop className="h-4 w-4 mr-2" />
                   Stop Workflow
                 </>
               ) : (
