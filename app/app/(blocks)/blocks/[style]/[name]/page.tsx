@@ -68,6 +68,9 @@ export async function generateStaticParams() {
     .flat()
 }
 
+// Force dynamic rendering to avoid static export serialization issues with React.lazy
+export const dynamic = 'force-dynamic'
+
 export default async function BlockPage({
   params,
 }: {
@@ -85,9 +88,12 @@ export default async function BlockPage({
 
   const Component = block.component
 
+  // Keep shallow copy of chunks with components for rendering
   const chunks = block.chunks?.map((chunk) => ({ ...chunk }))
+  
+  // Clean up non-serializable data from block object (not from chunks copy)
   delete block.component
-  block.chunks?.map((chunk) => delete chunk.component)
+  block.chunks?.forEach((chunk) => delete chunk.component)
 
   return (
     <div className={cn(block.container?.className || "", "theme-zinc")}>
@@ -99,7 +105,7 @@ export default async function BlockPage({
             block={block}
             chunk={block.chunks?.[index]}
           >
-            <chunk.component />
+            {chunk.component && <chunk.component />}
           </BlockChunk>
         ))}
       </BlockWrapper>
