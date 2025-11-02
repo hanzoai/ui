@@ -1,0 +1,13 @@
+{
+  "name": "ai-vision-demo",
+  "registryDependencies": [
+    "ai-vision"
+  ],
+  "files": [
+    {
+      "name": "ai-vision-demo.tsx",
+      "content": "import { AiVision } from \"@/registry/default/ui/ai-vision\"\n\nexport default function AiVisionDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiVision />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

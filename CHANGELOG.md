@@ -23,11 +23,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Badge padding adjusted from `px-2.5` to `px-2`
 - Badge hover states now only apply within anchor tags (`[a&]:hover`)
 - Updated both default (rounded-full) and new-york (rounded-md) badge variants
+- **Button component updated to shadcn/ui v4 patterns**:
+  - Changed focus ring from `ring-2` to `ring-[3px]` with 50% opacity
+  - Added SVG icon support with `[&_svg]:size-4` default sizing
+  - Added `has-[>svg]:px-*` conditional padding when button contains icons
+  - Added new icon size variants: `icon-sm` (size-8) and `icon-lg` (size-10)
+  - Changed from `forwardRef` to regular function component
+  - Added `data-slot="button"` attribute
+  - Improved accessibility with `aria-invalid` states
+  - Enhanced dark mode support for destructive, outline, and ghost variants
+- **Input component updated to shadcn/ui v4 patterns**:
+  - Changed height from `h-10` to `h-9` (consistent with Button)
+  - Changed from `forwardRef` to regular function component
+  - Added `data-slot="input"` attribute
+  - Changed background to transparent with `dark:bg-input/30` dark mode variant
+  - Added responsive text sizing: `text-base md:text-sm`
+  - Added `min-w-0` to prevent flex overflow issues
+  - Enhanced file input styling with `file:inline-flex file:h-7`
+  - Added selection highlighting: `selection:bg-primary selection:text-primary-foreground`
+  - Changed focus ring from `ring-2` to `ring-[3px]` with 50% opacity
+  - Added `aria-invalid` states for form validation
+  - Changed transition to `transition-[color,box-shadow]` for smoother animations
 
 ### Fixed
 - Badge component styling now matches shadcn/ui v4 implementation
 - Improved accessibility with proper focus-visible states
 - Better form integration with aria-invalid support
+- **Security**: Fixed 31 of 32 vulnerabilities (96.9% reduction):
+  - Upgraded happy-dom from 19.0.2 to 20.0.10 (fixes 2 critical RCE vulnerabilities)
+  - Upgraded vite from 5.4.20 to 7.1.12 (fixes moderate vulnerability)
+  - Applied 21 package overrides for next, axios, undici, prismjs, and other dependencies
+  - All critical (5), all but 1 high (3/4), all moderate (19), and all low (5) vulnerabilities resolved
+  - Remaining: 1 high severity in lodash.template (no patch available, abandoned package)
 
 ### Removed
 - Removed hanzo-compatibility documentation page (redundant with main docs)
