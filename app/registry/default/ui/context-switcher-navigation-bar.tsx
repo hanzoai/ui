@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface contextswitcherNavigationBarProps
+export interface ContextSwitcherNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const contextswitcherNavigationBar = React.forwardRef<
+const ContextSwitcherNavigationBar = React.forwardRef<
   HTMLElement,
-  contextswitcherNavigationBarProps
+  ContextSwitcherNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const contextswitcherNavigationBar = React.forwardRef<
     </nav>
   )
 })
-contextswitcherNavigationBar.displayName = "contextswitcherNavigationBar"
+ContextSwitcherNavigationBar.displayName = "ContextSwitcherNavigationBar"
 
-export { contextswitcherNavigationBar }
+export { ContextSwitcherNavigationBar }
