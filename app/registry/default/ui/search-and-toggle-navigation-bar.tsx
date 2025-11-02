@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface searchandtoggleNavigationBarProps
+export interface SearchAndToggleNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const searchandtoggleNavigationBar = React.forwardRef<
+const SearchAndToggleNavigationBar = React.forwardRef<
   HTMLElement,
-  searchandtoggleNavigationBarProps
+  SearchAndToggleNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const searchandtoggleNavigationBar = React.forwardRef<
     </nav>
   )
 })
-searchandtoggleNavigationBar.displayName = "searchandtoggleNavigationBar"
+SearchAndToggleNavigationBar.displayName = "SearchAndToggleNavigationBar"
 
-export { searchandtoggleNavigationBar }
+export { SearchAndToggleNavigationBar }
