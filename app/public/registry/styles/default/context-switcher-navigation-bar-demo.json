@@ -1,0 +1,10 @@
+{
+  "name": "context-switcher-navigation-bar-demo",
+  "files": [
+    {
+      "name": "context-switcher-navigation-bar-demo.tsx",
+      "content": "import { ContextSwitcherNavigationBar } from \"@/registry/default/ui/context-switcher-navigation-bar\"\n\nexport default function ContextSwitcherNavigationBarDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <ContextSwitcherNavigationBar />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

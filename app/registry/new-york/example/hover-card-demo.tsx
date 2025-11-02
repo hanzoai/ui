@@ -1,16 +1,16 @@
-import { CalendarIcon } from "@radix-ui/react-icons"
+import { CalendarDays } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/avatar"
+import { Button } from "@/registry/default/ui/button"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/registry/new-york/ui/hover-card"
+} from "@/registry/default/ui/hover-card"
 
 export default function HoverCardDemo() {
   return (
@@ -30,7 +30,7 @@ export default function HoverCardDemo() {
               The React Framework – created and maintained by @vercel.
             </p>
             <div className="flex items-center pt-2">
-              <CalendarIcon className="mr-2 h-4 w-4 opacity-70" />{" "}
+              <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
               <span className="text-xs text-muted-foreground">
                 Joined December 2021
               </span>

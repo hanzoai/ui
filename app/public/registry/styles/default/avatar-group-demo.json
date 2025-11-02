@@ -1,0 +1,10 @@
+{
+  "name": "avatar-group-demo",
+  "files": [
+    {
+      "name": "avatar-group-demo.tsx",
+      "content": "import { AvatarGroup } from \"@/registry/default/ui/avatar-group\"\n\nexport default function AvatarGroupDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <AvatarGroup />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

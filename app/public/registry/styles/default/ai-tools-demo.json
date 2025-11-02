@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "ai-tools-demo.tsx",
-      "content": "import { AiTools } from \"@/registry/default/ui/ai-tools\"\n\nexport default function AiToolsDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiTools />\n    </div>\n  )\n}\n"
+      "content": "import { AITools } from \"@/registry/default/ui/ai-tools\"\n\nexport default function AiToolsDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AITools />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"

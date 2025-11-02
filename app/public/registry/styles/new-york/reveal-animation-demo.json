@@ -1,0 +1,10 @@
+{
+  "name": "reveal-animation-demo",
+  "files": [
+    {
+      "name": "reveal-animation-demo.tsx",
+      "content": "import { RevealAnimation } from \"@/registry/default/ui/reveal-animation\"\n\nexport default function RevealAnimationDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <RevealAnimation />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

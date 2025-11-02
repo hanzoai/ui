@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@/registry/new-york/ui/button"
-import { ToastAction } from "@/registry/new-york/ui/toast"
-import { useToast } from "@/registry/new-york/ui/use-toast"
+import { Button } from "@/registry/default/ui/button"
+import { ToastAction } from "@/registry/default/ui/toast"
+import { useToast } from "@/registry/default/ui/use-toast"
 
 export default function ToastDestructive() {
   const { toast } = useToast()
