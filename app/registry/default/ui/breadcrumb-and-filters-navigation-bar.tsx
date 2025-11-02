@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface ureadcrumuandfiltersNavigationBarProps
+export interface BreadcrumbAndFiltersNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const ureadcrumuandfiltersNavigationBar = React.forwardRef<
+const BreadcrumbAndFiltersNavigationBar = React.forwardRef<
   HTMLElement,
-  ureadcrumuandfiltersNavigationBarProps
+  BreadcrumbAndFiltersNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,7 +33,7 @@ const ureadcrumuandfiltersNavigationBar = React.forwardRef<
     </nav>
   )
 })
-ureadcrumuandfiltersNavigationBar.displayName =
-  "ureadcrumuandfiltersNavigationBar"
+BreadcrumbAndFiltersNavigationBar.displayName =
+  "BreadcrumbAndFiltersNavigationBar"
 
-export { ureadcrumuandfiltersNavigationBar }
+export { BreadcrumbAndFiltersNavigationBar }
