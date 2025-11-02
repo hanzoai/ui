@@ -1,0 +1,10 @@
+{
+  "name": "editor-demo",
+  "files": [
+    {
+      "name": "editor-demo.tsx",
+      "content": "import { Editor } from \"@/registry/default/ui/editor\"\n\nexport default function EditorDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <Editor />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

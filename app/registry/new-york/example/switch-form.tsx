@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Form,
   FormControl,
@@ -12,9 +12,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/registry/new-york/ui/form"
-import { Switch } from "@/registry/new-york/ui/switch"
-import { toast } from "@/registry/new-york/ui/use-toast"
+} from "@/registry/default/ui/form"
+import { Switch } from "@/registry/default/ui/switch"
+import { toast } from "@/registry/default/ui/use-toast"
 
 const FormSchema = z.object({
   marketing_emails: z.boolean().default(false).optional(),
@@ -50,9 +50,11 @@ export default function SwitchForm() {
               control={form.control}
               name="marketing_emails"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel>Marketing emails</FormLabel>
+                    <FormLabel className="text-base">
+                      Marketing emails
+                    </FormLabel>
                     <FormDescription>
                       Receive emails about new products, features, and more.
                     </FormDescription>
@@ -70,9 +72,9 @@ export default function SwitchForm() {
               control={form.control}
               name="security_emails"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel>Security emails</FormLabel>
+                    <FormLabel className="text-base">Security emails</FormLabel>
                     <FormDescription>
                       Receive emails about your account security.
                     </FormDescription>

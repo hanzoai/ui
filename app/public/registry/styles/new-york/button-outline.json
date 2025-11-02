@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "button-outline.tsx",
-      "content": "import { Button } from \"@/registry/new-york/ui/button\"\n\nexport default function ButtonOutline() {\n  return <Button variant=\"outline\">Outline</Button>\n}\n"
+      "content": "import { Button } from \"@/registry/default/ui/button\"\n\nexport default function ButtonOutline() {\n  return <Button variant=\"outline\">Outline</Button>\n}\n"
     }
   ],
   "type": "components:example"

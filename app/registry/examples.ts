@@ -937,4 +937,364 @@ export const examples: Registry = [
     registryDependencies: ["ai-voice"],
     files: ["example/ai-voice-demo.tsx"],
   },
+  {
+    name: "apple-hello-effect-demo",
+    type: "components:example",
+    files: ["example/apple-hello-effect-demo.tsx"],
+  },
+  {
+    name: "avatar-group-demo",
+    type: "components:example",
+    files: ["example/avatar-group-demo.tsx"],
+  },
+  {
+    name: "banner-demo",
+    type: "components:example",
+    files: ["example/banner-demo.tsx"],
+  },
+  {
+    name: "breadcrumb-and-filters-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/breadcrumb-and-filters-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "breadcrumb-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/breadcrumb-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "button-group-demo",
+    type: "components:example",
+    files: ["example/button-group-demo.tsx"],
+  },
+  {
+    name: "centered-logo-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/centered-logo-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "chart-demo",
+    type: "components:example",
+    files: ["example/chart-demo.tsx"],
+  },
+  {
+    name: "choicebox-demo",
+    type: "components:example",
+    files: ["example/choicebox-demo.tsx"],
+  },
+  {
+    name: "code-compare-demo",
+    type: "components:example",
+    files: ["example/code-compare-demo.tsx"],
+  },
+  {
+    name: "code-diff-demo",
+    type: "components:example",
+    files: ["example/code-diff-demo.tsx"],
+  },
+  {
+    name: "code-editor-demo",
+    type: "components:example",
+    files: ["example/code-editor-demo.tsx"],
+  },
+  {
+    name: "code-explorer-demo",
+    type: "components:example",
+    files: ["example/code-explorer-demo.tsx"],
+  },
+  {
+    name: "code-preview-demo",
+    type: "components:example",
+    files: ["example/code-preview-demo.tsx"],
+  },
+  {
+    name: "code-snippet-demo",
+    type: "components:example",
+    files: ["example/code-snippet-demo.tsx"],
+  },
+  {
+    name: "code-terminal-demo",
+    type: "components:example",
+    files: ["example/code-terminal-demo.tsx"],
+  },
+  {
+    name: "collaboration-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/collaboration-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "color-picker-demo",
+    type: "components:example",
+    files: ["example/color-picker-demo.tsx"],
+  },
+  {
+    name: "communication-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/communication-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "comparison-demo",
+    type: "components:example",
+    files: ["example/comparison-demo.tsx"],
+  },
+  {
+    name: "context-switcher-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/context-switcher-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "credit-card-demo",
+    type: "components:example",
+    files: ["example/credit-card-demo.tsx"],
+  },
+  {
+    name: "cursor-demo",
+    type: "components:example",
+    files: ["example/cursor-demo.tsx"],
+  },
+  {
+    name: "dashboard-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/dashboard-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "dialog-stack-demo",
+    type: "components:example",
+    files: ["example/dialog-stack-demo.tsx"],
+  },
+  {
+    name: "dropzone-demo",
+    type: "components:example",
+    files: ["example/dropzone-demo.tsx"],
+  },
+  {
+    name: "e-commerce-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/e-commerce-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "editor-demo",
+    type: "components:example",
+    files: ["example/editor-demo.tsx"],
+  },
+  {
+    name: "empty-demo",
+    type: "components:example",
+    files: ["example/empty-demo.tsx"],
+  },
+  {
+    name: "field-demo",
+    type: "components:example",
+    files: ["example/field-demo.tsx"],
+  },
+  {
+    name: "form-demo",
+    type: "components:example",
+    files: ["example/form-demo.tsx"],
+  },
+  {
+    name: "icon-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/icon-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "image-crop-demo",
+    type: "components:example",
+    files: ["example/image-crop-demo.tsx"],
+  },
+  {
+    name: "image-zoom-demo",
+    type: "components:example",
+    files: ["example/image-zoom-demo.tsx"],
+  },
+  {
+    name: "input-group-demo",
+    type: "components:example",
+    files: ["example/input-group-demo.tsx"],
+  },
+  {
+    name: "iphone-15-pro-demo",
+    type: "components:example",
+    files: ["example/iphone-15-pro-demo.tsx"],
+  },
+  {
+    name: "item-demo",
+    type: "components:example",
+    files: ["example/item-demo.tsx"],
+  },
+  {
+    name: "kanban-demo",
+    type: "components:example",
+    files: ["example/kanban-demo.tsx"],
+  },
+  {
+    name: "kbd-demo",
+    type: "components:example",
+    files: ["example/kbd-demo.tsx"],
+  },
+  {
+    name: "limelight-nav-demo",
+    type: "components:example",
+    files: ["example/limelight-nav-demo.tsx"],
+  },
+  {
+    name: "limelight-nav-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/limelight-nav-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "list-demo",
+    type: "components:example",
+    files: ["example/list-demo.tsx"],
+  },
+  {
+    name: "macos-dock-demo",
+    type: "components:example",
+    files: ["example/macos-dock-demo.tsx"],
+  },
+  {
+    name: "magnetic-demo",
+    type: "components:example",
+    files: ["example/magnetic-demo.tsx"],
+  },
+  {
+    name: "marquee-demo",
+    type: "components:example",
+    files: ["example/marquee-demo.tsx"],
+  },
+  {
+    name: "menu-dock-demo",
+    type: "components:example",
+    files: ["example/menu-dock-demo.tsx"],
+  },
+  {
+    name: "message-dock-demo",
+    type: "components:example",
+    files: ["example/message-dock-demo.tsx"],
+  },
+  {
+    name: "mini-calendar-demo",
+    type: "components:example",
+    files: ["example/mini-calendar-demo.tsx"],
+  },
+  {
+    name: "minimal-tiptap-demo",
+    type: "components:example",
+    files: ["example/minimal-tiptap-demo.tsx"],
+  },
+  {
+    name: "motion-highlight-demo",
+    type: "components:example",
+    files: ["example/motion-highlight-demo.tsx"],
+  },
+  {
+    name: "music-player-demo",
+    type: "components:example",
+    files: ["example/music-player-demo.tsx"],
+  },
+  {
+    name: "particles-background-demo",
+    type: "components:example",
+    files: ["example/particles-background-demo.tsx"],
+  },
+  {
+    name: "pill-demo",
+    type: "components:example",
+    files: ["example/pill-demo.tsx"],
+  },
+  {
+    name: "pixel-image-demo",
+    type: "components:example",
+    files: ["example/pixel-image-demo.tsx"],
+  },
+  {
+    name: "pulse-animation-demo",
+    type: "components:example",
+    files: ["example/pulse-animation-demo.tsx"],
+  },
+  {
+    name: "qr-code-demo",
+    type: "components:example",
+    files: ["example/qr-code-demo.tsx"],
+  },
+  {
+    name: "relative-time-demo",
+    type: "components:example",
+    files: ["example/relative-time-demo.tsx"],
+  },
+  {
+    name: "reveal-animation-demo",
+    type: "components:example",
+    files: ["example/reveal-animation-demo.tsx"],
+  },
+  {
+    name: "safari-demo",
+    type: "components:example",
+    files: ["example/safari-demo.tsx"],
+  },
+  {
+    name: "search-and-toggle-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/search-and-toggle-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "sidebar-demo",
+    type: "components:example",
+    files: ["example/sidebar-demo.tsx"],
+  },
+  {
+    name: "simple-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/simple-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "spinner-demo",
+    type: "components:example",
+    files: ["example/spinner-demo.tsx"],
+  },
+  {
+    name: "status-dashboard-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/status-dashboard-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "status-demo",
+    type: "components:example",
+    files: ["example/status-demo.tsx"],
+  },
+  {
+    name: "tags-demo",
+    type: "components:example",
+    files: ["example/tags-demo.tsx"],
+  },
+  {
+    name: "team-switcher-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/team-switcher-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "ticker-demo",
+    type: "components:example",
+    files: ["example/ticker-demo.tsx"],
+  },
+  {
+    name: "toaster-demo",
+    type: "components:example",
+    files: ["example/toaster-demo.tsx"],
+  },
+  {
+    name: "two-tier-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/two-tier-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "underline-navigation-bar-demo",
+    type: "components:example",
+    files: ["example/underline-navigation-bar-demo.tsx"],
+  },
+  {
+    name: "video-player-demo",
+    type: "components:example",
+    files: ["example/video-player-demo.tsx"],
+  },
 ]

@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "avatar-demo.tsx",
-      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/new-york/ui/avatar\"\n\nexport default function AvatarDemo() {\n  return (\n    <Avatar>\n      <AvatarImage src=\"https://github.com/hanzoai.png\" alt=\"@hanzoai\" />\n      <AvatarFallback>CN</AvatarFallback>\n    </Avatar>\n  )\n}\n"
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\"\n\nexport default function AvatarDemo() {\n  return (\n    <Avatar>\n      <AvatarImage src=\"https://github.com/hanzoai.png\" alt=\"@hanzoai\" />\n      <AvatarFallback>CN</AvatarFallback>\n    </Avatar>\n  )\n}\n"
     }
   ],
   "type": "components:example"

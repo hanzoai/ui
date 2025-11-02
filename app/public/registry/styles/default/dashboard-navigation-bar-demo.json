@@ -1,0 +1,10 @@
+{
+  "name": "dashboard-navigation-bar-demo",
+  "files": [
+    {
+      "name": "dashboard-navigation-bar-demo.tsx",
+      "content": "import { DashboardNavigationBar } from \"@/registry/default/ui/dashboard-navigation-bar\"\n\nexport default function DashboardNavigationBarDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <DashboardNavigationBar />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

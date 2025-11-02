@@ -16,9 +16,9 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/avatar"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
@@ -26,8 +26,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
-import { Progress } from "@/registry/new-york/ui/progress"
+} from "@/registry/default/ui/card"
+import { Progress } from "@/registry/default/ui/progress"
 
 export default function Component() {
   return (

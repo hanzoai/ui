@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "ai-assistant-demo.tsx",
-      "content": "import { AiAssistant } from \"@/registry/default/ui/ai-assistant\"\n\nexport default function AiAssistantDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiAssistant />\n    </div>\n  )\n}\n"
+      "content": "import { AIAssistant } from \"@/registry/default/ui/ai-assistant\"\n\nexport default function AiAssistantDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AIAssistant />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"

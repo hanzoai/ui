@@ -3068,6 +3068,510 @@
     "type": "components:example"
   },
   {
+    "name": "apple-hello-effect-demo",
+    "files": [
+      "example/apple-hello-effect-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "avatar-group-demo",
+    "files": [
+      "example/avatar-group-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "banner-demo",
+    "files": [
+      "example/banner-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "breadcrumb-and-filters-navigation-bar-demo",
+    "files": [
+      "example/breadcrumb-and-filters-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "breadcrumb-navigation-bar-demo",
+    "files": [
+      "example/breadcrumb-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "button-group-demo",
+    "files": [
+      "example/button-group-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "centered-logo-navigation-bar-demo",
+    "files": [
+      "example/centered-logo-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "chart-demo",
+    "files": [
+      "example/chart-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "choicebox-demo",
+    "files": [
+      "example/choicebox-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-compare-demo",
+    "files": [
+      "example/code-compare-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-diff-demo",
+    "files": [
+      "example/code-diff-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-editor-demo",
+    "files": [
+      "example/code-editor-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-explorer-demo",
+    "files": [
+      "example/code-explorer-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-preview-demo",
+    "files": [
+      "example/code-preview-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-snippet-demo",
+    "files": [
+      "example/code-snippet-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-terminal-demo",
+    "files": [
+      "example/code-terminal-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "collaboration-navigation-bar-demo",
+    "files": [
+      "example/collaboration-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "color-picker-demo",
+    "files": [
+      "example/color-picker-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "communication-navigation-bar-demo",
+    "files": [
+      "example/communication-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "comparison-demo",
+    "files": [
+      "example/comparison-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "context-switcher-navigation-bar-demo",
+    "files": [
+      "example/context-switcher-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "credit-card-demo",
+    "files": [
+      "example/credit-card-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "cursor-demo",
+    "files": [
+      "example/cursor-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "dashboard-navigation-bar-demo",
+    "files": [
+      "example/dashboard-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "dialog-stack-demo",
+    "files": [
+      "example/dialog-stack-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "dropzone-demo",
+    "files": [
+      "example/dropzone-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "e-commerce-navigation-bar-demo",
+    "files": [
+      "example/e-commerce-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "editor-demo",
+    "files": [
+      "example/editor-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "empty-demo",
+    "files": [
+      "example/empty-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "field-demo",
+    "files": [
+      "example/field-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "form-demo",
+    "files": [
+      "example/form-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "icon-navigation-bar-demo",
+    "files": [
+      "example/icon-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "image-crop-demo",
+    "files": [
+      "example/image-crop-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "image-zoom-demo",
+    "files": [
+      "example/image-zoom-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "input-group-demo",
+    "files": [
+      "example/input-group-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "iphone-15-pro-demo",
+    "files": [
+      "example/iphone-15-pro-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "item-demo",
+    "files": [
+      "example/item-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "kanban-demo",
+    "files": [
+      "example/kanban-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "kbd-demo",
+    "files": [
+      "example/kbd-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "limelight-nav-demo",
+    "files": [
+      "example/limelight-nav-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "limelight-nav-navigation-bar-demo",
+    "files": [
+      "example/limelight-nav-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "list-demo",
+    "files": [
+      "example/list-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "macos-dock-demo",
+    "files": [
+      "example/macos-dock-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "magnetic-demo",
+    "files": [
+      "example/magnetic-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "marquee-demo",
+    "files": [
+      "example/marquee-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "menu-dock-demo",
+    "files": [
+      "example/menu-dock-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "message-dock-demo",
+    "files": [
+      "example/message-dock-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "mini-calendar-demo",
+    "files": [
+      "example/mini-calendar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "minimal-tiptap-demo",
+    "files": [
+      "example/minimal-tiptap-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "motion-highlight-demo",
+    "files": [
+      "example/motion-highlight-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "music-player-demo",
+    "files": [
+      "example/music-player-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "particles-background-demo",
+    "files": [
+      "example/particles-background-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "pill-demo",
+    "files": [
+      "example/pill-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "pixel-image-demo",
+    "files": [
+      "example/pixel-image-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "pulse-animation-demo",
+    "files": [
+      "example/pulse-animation-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "qr-code-demo",
+    "files": [
+      "example/qr-code-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "relative-time-demo",
+    "files": [
+      "example/relative-time-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "reveal-animation-demo",
+    "files": [
+      "example/reveal-animation-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "safari-demo",
+    "files": [
+      "example/safari-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "search-and-toggle-navigation-bar-demo",
+    "files": [
+      "example/search-and-toggle-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "sidebar-demo",
+    "files": [
+      "example/sidebar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "simple-navigation-bar-demo",
+    "files": [
+      "example/simple-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "spinner-demo",
+    "files": [
+      "example/spinner-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "status-dashboard-navigation-bar-demo",
+    "files": [
+      "example/status-dashboard-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "status-demo",
+    "files": [
+      "example/status-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "tags-demo",
+    "files": [
+      "example/tags-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "team-switcher-navigation-bar-demo",
+    "files": [
+      "example/team-switcher-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ticker-demo",
+    "files": [
+      "example/ticker-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "toaster-demo",
+    "files": [
+      "example/toaster-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "two-tier-navigation-bar-demo",
+    "files": [
+      "example/two-tier-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "underline-navigation-bar-demo",
+    "files": [
+      "example/underline-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "video-player-demo",
+    "files": [
+      "example/video-player-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
     "name": "dashboard-05",
     "registryDependencies": [
       "badge",

@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "ai-playground-demo.tsx",
-      "content": "import { AIPlayground } from \"@/registry/default/ui/ai-playground\"\n\nexport default function AIPlaygroundDemo() {\n  return (\n    <div className=\"flex justify-center p-4\">\n      <AIPlayground />\n    </div>\n  )\n}\n"
+      "content": "import { AIPlayground } from \"@/registry/default/ui/ai-playground\"\n\nexport default function AIPlaygroundDemo() {\n  return (\n    <div className=\"w-full min-h-[500px]\">\n      <AIPlayground />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"
