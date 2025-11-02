@@ -5,9 +5,21 @@ import {
   frontmatterSchema
 } from "fumadocs-mdx/config";
 import { z } from "zod";
+import rehypePrettyCode from "rehype-pretty-code";
 var source_config_default = defineConfig({
   mdxOptions: {
-    rehypePlugins: []
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: {
+            dark: "github-dark",
+            light: "github-light"
+          },
+          keepBackground: false
+        }
+      ]
+    ]
   }
 });
 var docs = defineDocs({
