@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface limelightnavNavigationBarProps
+export interface LimelightNavNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const limelightnavNavigationBar = React.forwardRef<
+const LimelightNavNavigationBar = React.forwardRef<
   HTMLElement,
-  limelightnavNavigationBarProps
+  LimelightNavNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const limelightnavNavigationBar = React.forwardRef<
     </nav>
   )
 })
-limelightnavNavigationBar.displayName = "limelightnavNavigationBar"
+LimelightNavNavigationBar.displayName = "LimelightNavNavigationBar"
 
-export { limelightnavNavigationBar }
+export { LimelightNavNavigationBar }
