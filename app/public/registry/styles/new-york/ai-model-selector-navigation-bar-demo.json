@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "ai-model-selector-navigation-bar-demo.tsx",
-      "content": "import { AiModelSelectorNavigationBar } from \"@/registry/default/ui/ai-model-selector-navigation-bar\"\n\nexport default function AiModelSelectorNavigationBarDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiModelSelectorNavigationBar />\n    </div>\n  )\n}\n"
+      "content": "import { AIModelSelectorNavigationBar } from \"@/registry/default/ui/ai-model-selector-navigation-bar\"\n\nexport default function AiModelSelectorNavigationBarDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AIModelSelectorNavigationBar />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"

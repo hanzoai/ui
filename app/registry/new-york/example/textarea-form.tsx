@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Form,
   FormControl,
@@ -13,9 +13,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/registry/new-york/ui/form"
-import { Textarea } from "@/registry/new-york/ui/textarea"
-import { toast } from "@/registry/new-york/ui/use-toast"
+} from "@/registry/default/ui/form"
+import { Textarea } from "@/registry/default/ui/textarea"
+import { toast } from "@/registry/default/ui/use-toast"
 
 const FormSchema = z.object({
   bio: z

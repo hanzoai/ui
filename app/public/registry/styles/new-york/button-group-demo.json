@@ -1,0 +1,10 @@
+{
+  "name": "button-group-demo",
+  "files": [
+    {
+      "name": "button-group-demo.tsx",
+      "content": "import { ButtonGroup } from \"@/registry/default/ui/button-group\"\n\nexport default function ButtonGroupDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <ButtonGroup />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

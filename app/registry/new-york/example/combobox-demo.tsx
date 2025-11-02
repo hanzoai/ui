@@ -1,22 +1,22 @@
 "use client"
 
 import * as React from "react"
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { Check, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/registry/new-york/ui/command"
+} from "@/registry/default/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/default/ui/popover"
 
 const frameworks = [
   {
@@ -57,12 +57,12 @@ export default function ComboboxDemo() {
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
             : "Select framework..."}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search framework..." />
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandGroup>
             {frameworks.map((framework) => (
@@ -74,13 +74,13 @@ export default function ComboboxDemo() {
                   setOpen(false)
                 }}
               >
-                {framework.label}
-                <CheckIcon
+                <Check
                   className={cn(
-                    "ml-auto h-4 w-4",
+                    "mr-2 h-4 w-4",
                     value === framework.value ? "opacity-100" : "opacity-0"
                   )}
                 />
+                {framework.label}
               </CommandItem>
             ))}
           </CommandGroup>

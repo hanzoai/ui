@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "button-link.tsx",
-      "content": "import { Button } from \"@/registry/new-york/ui/button\"\n\nexport default function ButtonLink() {\n  return <Button variant=\"link\">Link</Button>\n}\n"
+      "content": "import { Button } from \"@/registry/default/ui/button\"\n\nexport default function ButtonLink() {\n  return <Button variant=\"link\">Link</Button>\n}\n"
     }
   ],
   "type": "components:example"

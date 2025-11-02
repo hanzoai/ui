@@ -1,0 +1,10 @@
+{
+  "name": "list-demo",
+  "files": [
+    {
+      "name": "list-demo.tsx",
+      "content": "import { List } from \"@/registry/default/ui/list\"\n\nexport default function ListDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <List />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
