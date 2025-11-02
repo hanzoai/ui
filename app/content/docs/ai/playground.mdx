@@ -38,23 +38,36 @@ export function PlaygroundExample() {
 
 ## Installation
 
-### CLI
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
 
 ```bash
 npx @hanzo/ui@latest add ai-playground
 ```
 
-### Manual
+</TabsContent>
 
-```bash
-npm install @hanzo/ui
-```
+<TabsContent value="manual">
 
-Then import the component:
+<Steps>
 
-```tsx
-import { AIPlayground } from "@hanzo/ui"
-```
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="ai-playground" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
 
 ## Usage
 

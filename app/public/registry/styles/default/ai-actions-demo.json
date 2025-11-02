@@ -1,0 +1,13 @@
+{
+  "name": "ai-actions-demo",
+  "registryDependencies": [
+    "ai-actions"
+  ],
+  "files": [
+    {
+      "name": "ai-actions-demo.tsx",
+      "content": "import { AiActions } from \"@/registry/default/ui/ai-actions\"\n\nexport default function AiActionsDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiActions />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

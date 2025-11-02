@@ -2938,6 +2938,136 @@
     "type": "components:example"
   },
   {
+    "name": "ai-actions-demo",
+    "registryDependencies": [
+      "ai-actions"
+    ],
+    "files": [
+      "example/ai-actions-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-agents-demo",
+    "registryDependencies": [
+      "ai-agents"
+    ],
+    "files": [
+      "example/ai-agents-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-assistant-demo",
+    "registryDependencies": [
+      "ai-assistant"
+    ],
+    "files": [
+      "example/ai-assistant-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-chat-demo",
+    "registryDependencies": [
+      "ai-chat"
+    ],
+    "files": [
+      "example/ai-chat-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-code-demo",
+    "registryDependencies": [
+      "ai-code"
+    ],
+    "files": [
+      "example/ai-code-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-model-selector-navigation-bar-demo",
+    "registryDependencies": [
+      "ai-model-selector-navigation-bar"
+    ],
+    "files": [
+      "example/ai-model-selector-navigation-bar-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-models-demo",
+    "registryDependencies": [
+      "ai-models"
+    ],
+    "files": [
+      "example/ai-models-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-playground-demo",
+    "registryDependencies": [
+      "ai-playground"
+    ],
+    "files": [
+      "example/ai-playground-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-playground-basic",
+    "registryDependencies": [
+      "ai-playground"
+    ],
+    "files": [
+      "example/ai-playground-basic.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-playground-custom",
+    "registryDependencies": [
+      "ai-playground"
+    ],
+    "files": [
+      "example/ai-playground-custom.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-tools-demo",
+    "registryDependencies": [
+      "ai-tools"
+    ],
+    "files": [
+      "example/ai-tools-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-vision-demo",
+    "registryDependencies": [
+      "ai-vision"
+    ],
+    "files": [
+      "example/ai-vision-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "ai-voice-demo",
+    "registryDependencies": [
+      "ai-voice"
+    ],
+    "files": [
+      "example/ai-voice-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
     "name": "dashboard-05",
     "registryDependencies": [
       "badge",
