@@ -1,0 +1,10 @@
+{
+  "name": "centered-logo-navigation-bar-demo",
+  "files": [
+    {
+      "name": "centered-logo-navigation-bar-demo.tsx",
+      "content": "import { CenteredLogoNavigationBar } from \"@/registry/default/ui/centered-logo-navigation-bar\"\n\nexport default function CenteredLogoNavigationBarDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <CenteredLogoNavigationBar />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

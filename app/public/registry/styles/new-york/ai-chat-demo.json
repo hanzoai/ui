@@ -6,7 +6,7 @@
   "files": [
     {
       "name": "ai-chat-demo.tsx",
-      "content": "import { AiChat } from \"@/registry/default/ui/ai-chat\"\n\nexport default function AiChatDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiChat />\n    </div>\n  )\n}\n"
+      "content": "import { AIChat } from \"@/registry/default/ui/ai-chat\"\n\nexport default function AiChatDemo() {\n  return (\n    <div className=\"w-full min-h-[400px]\">\n      <AIChat />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"

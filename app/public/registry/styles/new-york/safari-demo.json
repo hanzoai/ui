@@ -1,0 +1,10 @@
+{
+  "name": "safari-demo",
+  "files": [
+    {
+      "name": "safari-demo.tsx",
+      "content": "import { Safari } from \"@/registry/default/ui/safari\"\n\nexport default function SafariDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <Safari />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

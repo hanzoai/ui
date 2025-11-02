@@ -1,0 +1,10 @@
+{
+  "name": "pulse-animation-demo",
+  "files": [
+    {
+      "name": "pulse-animation-demo.tsx",
+      "content": "import { PulseAnimation } from \"@/registry/default/ui/pulse-animation\"\n\nexport default function PulseAnimationDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <PulseAnimation />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

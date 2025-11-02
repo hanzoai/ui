@@ -1,0 +1,10 @@
+{
+  "name": "toaster-demo",
+  "files": [
+    {
+      "name": "toaster-demo.tsx",
+      "content": "import { Toaster } from \"@/registry/default/ui/toaster\"\n\nexport default function ToasterDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <Toaster />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

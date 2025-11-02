@@ -1,0 +1,10 @@
+{
+  "name": "minimal-tiptap-demo",
+  "files": [
+    {
+      "name": "minimal-tiptap-demo.tsx",
+      "content": "import { MinimalTiptap } from \"@/registry/default/ui/minimal-tiptap\"\n\nexport default function MinimalTiptapDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <MinimalTiptap />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
