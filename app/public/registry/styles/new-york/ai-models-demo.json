@@ -1,0 +1,13 @@
+{
+  "name": "ai-models-demo",
+  "registryDependencies": [
+    "ai-models"
+  ],
+  "files": [
+    {
+      "name": "ai-models-demo.tsx",
+      "content": "import { AiModels } from \"@/registry/default/ui/ai-models\"\n\nexport default function AiModelsDemo() {\n  return (\n    <div className=\"flex min-h-[400px] items-center justify-center p-8\">\n      <AiModels />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
