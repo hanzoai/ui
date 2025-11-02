@@ -1,0 +1,10 @@
+{
+  "name": "macos-dock-demo",
+  "files": [
+    {
+      "name": "macos-dock-demo.tsx",
+      "content": "import { Calendar, Home, Mail, Search, Settings, User } from \"lucide-react\"\n\nimport { Dock, DockItem } from \"@/registry/default/ui/macos-dock\"\n\nexport default function MacOSDockDemo() {\n  return (\n    <div className=\"flex min-h-[300px] items-end justify-center pb-12\">\n      <Dock>\n        <DockItem tooltip=\"Finder\" onClick={() => console.log(\"Finder\")}>\n          <Home className=\"h-6 w-6 text-white\" />\n        </DockItem>\n        <DockItem tooltip=\"Safari\" onClick={() => console.log(\"Safari\")}>\n          <Search className=\"h-6 w-6 text-white\" />\n        </DockItem>\n        <DockItem tooltip=\"Mail\" onClick={() => console.log(\"Mail\")}>\n          <Mail className=\"h-6 w-6 text-white\" />\n        </DockItem>\n        <DockItem tooltip=\"Calendar\" onClick={() => console.log(\"Calendar\")}>\n          <Calendar className=\"h-6 w-6 text-white\" />\n        </DockItem>\n        <DockItem tooltip=\"Settings\" onClick={() => console.log(\"Settings\")}>\n          <Settings className=\"h-6 w-6 text-white\" />\n        </DockItem>\n        <DockItem tooltip=\"Profile\" onClick={() => console.log(\"Profile\")}>\n          <User className=\"h-6 w-6 text-white\" />\n        </DockItem>\n      </Dock>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
