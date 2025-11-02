@@ -97,12 +97,6 @@ export const docsConfig: DocsConfig = {
           href: "/docs/changelog",
           items: [],
         },
-        {
-          title: "hanzo Compatibility",
-          href: "/docs/hanzo-compatibility",
-          items: [],
-          label: "New",
-        },
       ],
     },
     {
