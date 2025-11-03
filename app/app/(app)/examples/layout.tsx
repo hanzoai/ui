@@ -7,6 +7,8 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Announcement } from "@/components/announcement"
 import { ExamplesNav } from "@/components/examples-nav"
+import { PageNav } from "@/components/page-nav"
+import { ThemeSelector } from "@/components/theme-selector"
 import {
   PageActions,
   PageHeader,
@@ -61,7 +63,10 @@ function ExamplesLayoutContent({ children }: ExamplesLayoutProps) {
           </PageActions>
         </PageHeader>
         <section>
-          <ExamplesNav />
+          <PageNav id="examples" className="hidden md:flex">
+            <ExamplesNav className="[&>a:first-child]:text-primary flex-1 overflow-hidden" />
+            <ThemeSelector className="mr-4 hidden md:flex" />
+          </PageNav>
           <div className="overflow-hidden rounded-[0.5rem] border bg-background shadow-md md:shadow-xl">
             {children}
           </div>
