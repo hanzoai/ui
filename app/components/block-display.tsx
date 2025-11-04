@@ -78,9 +78,11 @@ const getCachedBlock = React.cache(
   }
 )
 
-const getCachedRegistryItem = React.cache(async (name: string, style: Style["name"] = "default") => {
-  return await getRegistryItem(name, style)
-})
+const getCachedRegistryItem = React.cache(
+  async (name: string, style: Style["name"] = "default") => {
+    return await getRegistryItem(name, style)
+  }
+)
 
 const getCachedFileTree = React.cache(
   async (files: Array<{ path: string; target?: string }>) => {

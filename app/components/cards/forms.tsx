@@ -20,10 +20,7 @@ import {
   FieldTitle,
 } from "@/registry/new-york/ui/field"
 import { Input } from "@/registry/new-york/ui/input"
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/registry/new-york/ui/radio-group"
+import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group"
 import { Textarea } from "@/registry/new-york/ui/textarea"
 
 const plans = [

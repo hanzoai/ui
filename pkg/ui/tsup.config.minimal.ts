@@ -57,7 +57,7 @@ export default defineConfig({
     'tailwind/index': 'tailwind/index.ts',
   },
   format: ['cjs', 'esm'],
-  dts: false, // Skip for now to speed up builds
+  dts: true, // Generate TypeScript definitions
   sourcemap: false,
   external: [
     // Everything is external except what we're building

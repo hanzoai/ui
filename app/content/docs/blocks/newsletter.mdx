@@ -1,0 +1,131 @@
+---
+title: Newsletter
+description: Newsletter subscription forms with email input and submission handling.
+---
+
+## Variations
+
+### Centered Card
+
+<ComponentPreview name="newsletter-01" />
+
+A centered card-based newsletter form with icon, perfect for dedicated landing pages.
+
+### Inline Minimal
+
+<ComponentPreview name="newsletter-02" />
+
+Minimal inline form with heading, ideal for embedding in content areas.
+
+### Split Layout
+
+<ComponentPreview name="newsletter-03" />
+
+Two-column layout with features list and form, great for marketing pages.
+
+### Hero Style
+
+<ComponentPreview name="newsletter-04" />
+
+Bold, minimal hero-style newsletter with large typography.
+
+### Full-Width Banner
+
+<ComponentPreview name="newsletter-05" />
+
+Eye-catching full-width banner with colored background, perfect for CTAs.
+
+## Overview
+
+Newsletter blocks are viewport-sized sections designed for collecting email subscriptions. All variations feature:
+
+- Email input with HTML5 validation
+- Loading and success states
+- Responsive design
+- Accessible form elements
+- Privacy notices
+
+## Features
+
+- **Email Validation**: Built-in HTML5 email validation
+- **Loading States**: Visual feedback during submission
+- **Success Message**: Confirmation after successful subscription
+- **Auto-reset**: Form clears and resets after submission
+- **Centered Layout**: Focuses user attention on the subscription form
+- **Icon Integration**: Mail icon for visual appeal
+- **Privacy Notice**: Terms of service and privacy policy text
+
+## Usage
+
+Newsletter blocks are ideal for:
+
+- Landing pages
+- Blog sidebars (can be extracted and resized)
+- Marketing pages
+- Footer sections
+- Popup modals
+
+## Implementation Details
+
+The newsletter block includes:
+
+1. **Form State Management**:
+   - Email input state
+   - Submission loading state
+   - Success confirmation state
+
+2. **Simulated API Call**:
+   - Replace the `setTimeout` with your actual API endpoint
+   - Handle errors appropriately
+   - Add email validation on the backend
+
+3. **Accessibility**:
+   - Semantic form elements
+   - Required field validation
+   - Disabled states during submission
+   - ARIA labels where appropriate
+
+## Customization
+
+You can customize the newsletter block by:
+
+- Changing the icon (replace `Mail` with any Lucide icon)
+- Modifying the card size (`max-w-md` to other sizes)
+- Adding additional form fields (name, preferences, etc.)
+- Customizing the success message
+- Adding error handling
+- Integrating with email services (Mailchimp, ConvertKit, etc.)
+
+## Example Integration
+
+```tsx
+// Example with real API
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+
+  try {
+    const response = await fetch('/api/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    })
+
+    if (!response.ok) throw new Error('Subscription failed')
+
+    setIsSubscribed(true)
+    setEmail("")
+  } catch (error) {
+    console.error('Failed to subscribe:', error)
+    // Handle error state
+  } finally {
+    setIsSubmitting(false)
+  }
+}
+```
+
+## Related Blocks
+
+- **Sidebar 06**: Newsletter form integrated into a sidebar
+- **Login Blocks**: Similar form patterns for authentication
+- **Contact Forms**: Extended form patterns with multiple fields

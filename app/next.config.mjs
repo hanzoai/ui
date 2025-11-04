@@ -105,6 +105,17 @@ const nextConfig = {
   },
 }
 
-const withMDX = createMDX({})
+const withMDX = createMDX({
+  mdxOptions: {
+    rehypeCodeOptions: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+      // Keep background color from theme
+      keepBackground: false,
+    },
+  },
+})
 
 export default withMDX(nextConfig)

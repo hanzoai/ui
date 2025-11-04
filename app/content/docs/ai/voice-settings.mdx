@@ -1,0 +1,424 @@
+---
+title: AI Voice Settings
+description: Composable voice configuration components for AI voice interfaces with language, voice, personality, and audio settings
+---
+
+<ComponentPreview name="ai-voice-settings-demo" />
+
+## Overview
+
+AI Voice Settings provides a comprehensive, **composable** configuration interface for voice AI applications. Built with orthogonal design principles, each setting component can be used independently or combined in the full settings interface.
+
+## Architecture: Composability First
+
+This component follows the **"more is more"** philosophy with a highly modular architecture:
+
+### 9 Independent Sub-Components
+
+Each component is **orthogonal** (independent, single-purpose) and can be composed as needed:
+
+1. **VoiceSelector** - Voice selection with gender badges
+2. **LanguageSelector** - Language selection with auto-detect
+3. **PersonalitySelector** - Personality/tone selection
+4. **SpeedControl** - Speaking speed slider (0.5x - 2.0x)
+5. **PitchControl** - Voice pitch slider (0.5x - 2.0x)
+6. **WakeWordInput** - Wake word configuration
+7. **CustomInstructions** - AI instructions textarea
+8. **AutoListenToggle** - Auto-listen mode toggle
+9. **NoiseCancellationToggle** - Noise cancellation toggle
+
+### Benefits of Composability
+
+- ✅ Use only what you need
+- ✅ Mix and match components
+- ✅ Create custom layouts
+- ✅ Consistent API across components
+- ✅ Easy to extend and customize
+
+## Usage
+
+### Full Settings Interface
+
+The complete settings component with all features:
+
+```tsx
+import { AIVoiceSettings } from "@/components/ui/ai-voice-settings"
+
+export default function Settings() {
+  const handleSave = (settings) => {
+    // Save to localStorage, database, etc.
+    localStorage.setItem("voiceSettings", JSON.stringify(settings))
+  }
+
+  return (
+    <AIVoiceSettings
+      settings={{
+        voice: "nova",
+        language: "en-US",
+        personality: "friendly",
+        speed: 1.0,
+        pitch: 1.0,
+        wakeWord: "Hey Assistant",
+        customInstructions: "",
+        autoListen: false,
+        noiseCancellation: true,
+      }}
+      onSettingsChange={(settings) => console.log(settings)}
+      onSave={handleSave}
+      onPreview={(voice, speed, pitch) => {
+        // Play preview audio
+      }}
+    />
+  )
+}
+```
+
+### Using Individual Components
+
+The power of composability - use components independently:
+
+#### Voice Selector Only
+
+```tsx
+import { VoiceSelector } from "@/components/ui/ai-voice-settings"
+
+export default function QuickVoiceSelect() {
+  const [voice, setVoice] = useState("alloy")
+
+  return <VoiceSelector value={voice} onValueChange={setVoice} />
+}
+```
+
+#### Language + Voice Combo
+
+```tsx
+import {
+  LanguageSelector,
+  VoiceSelector
+} from "@/components/ui/ai-voice-settings"
+
+export default function LanguageAndVoice() {
+  const [language, setLanguage] = useState("en-US")
+  const [voice, setVoice] = useState("nova")
+
+  return (
+    <div className="space-y-4">
+      <LanguageSelector
+        value={language}
+        onValueChange={setLanguage}
+      />
+      <VoiceSelector
+        value={voice}
+        onValueChange={setVoice}
+      />
+    </div>
+  )
+}
+```
+
+#### Speed & Pitch Controls
+
+```tsx
+import {
+  SpeedControl,
+  PitchControl
+} from "@/components/ui/ai-voice-settings"
+
+export default function VoiceCharacteristics() {
+  const [speed, setSpeed] = useState(1.0)
+  const [pitch, setPitch] = useState(1.0)
+
+  return (
+    <div className="space-y-6">
+      <SpeedControl value={speed} onValueChange={setSpeed} />
+      <PitchControl value={pitch} onValueChange={setPitch} />
+    </div>
+  )
+}
+```
+
+#### Custom Layout
+
+Build your own layout with any combination:
+
+```tsx
+import {
+  VoiceSelector,
+  PersonalitySelector,
+  SpeedControl,
+  AutoListenToggle
+} from "@/components/ui/ai-voice-settings"
+
+export default function CustomSettings() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Quick Voice Setup</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <VoiceSelector value={voice} onValueChange={setVoice} />
+        <PersonalitySelector value={personality} onValueChange={setPersonality} />
+        <SpeedControl value={speed} onValueChange={setSpeed} />
+        <AutoListenToggle checked={autoListen} onCheckedChange={setAutoListen} />
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+## Component API
+
+### AIVoiceSettings (Main Component)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `settings` | `Partial<AIVoiceSettings>` | Initial settings object |
+| `onSettingsChange` | `(settings: AIVoiceSettings) => void` | Called when any setting changes |
+| `onSave` | `(settings: AIVoiceSettings) => void` | Called when Save button clicked |
+| `onReset` | `() => void` | Called when Reset button clicked |
+| `onPreview` | `(voice: string, speed: number, pitch: number) => void` | Called when Preview button clicked |
+
+### VoiceSelector
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Current voice value |
+| `onValueChange` | `(value: string) => void` | - | Change handler |
+| `voices` | `Voice[]` | Built-in voices | Custom voice list |
+| `showDescription` | `boolean` | `true` | Show voice description |
+
+### LanguageSelector
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Current language value |
+| `onValueChange` | `(value: string) => void` | - | Change handler |
+| `languages` | `Language[]` | Built-in languages | Custom language list |
+| `showAutoDetect` | `boolean` | `true` | Show auto-detect option |
+
+### PersonalitySelector
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Current personality value |
+| `onValueChange` | `(value: string) => void` | - | Change handler |
+| `personalities` | `Personality[]` | Built-in personalities | Custom personality list |
+| `showDescription` | `boolean` | `true` | Show personality description |
+
+### SpeedControl
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | Current speed (0.5 - 2.0) |
+| `onValueChange` | `(value: number) => void` | - | Change handler |
+| `min` | `number` | `0.5` | Minimum speed |
+| `max` | `number` | `2.0` | Maximum speed |
+| `step` | `number` | `0.1` | Step increment |
+
+### PitchControl
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | Current pitch (0.5 - 2.0) |
+| `onValueChange` | `(value: number) => void` | - | Change handler |
+| `min` | `number` | `0.5` | Minimum pitch |
+| `max` | `number` | `2.0` | Maximum pitch |
+| `step` | `number` | `0.1` | Step increment |
+
+### WakeWordInput
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Current wake word |
+| `onValueChange` | `(value: string) => void` | - | Change handler |
+| `placeholder` | `string` | Default message | Input placeholder |
+
+### CustomInstructions
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Current instructions |
+| `onValueChange` | `(value: string) => void` | - | Change handler |
+| `rows` | `number` | `4` | Textarea rows |
+| `placeholder` | `string` | Default message | Textarea placeholder |
+
+### AutoListenToggle
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `checked` | `boolean` | Toggle state |
+| `onCheckedChange` | `(checked: boolean) => void` | Change handler |
+
+### NoiseCancellationToggle
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `checked` | `boolean` | Toggle state |
+| `onCheckedChange` | `(checked: boolean) => void` | Change handler |
+
+## Built-in Data
+
+### Voices (8 options)
+
+```typescript
+const voices = [
+  { label: "Alloy", value: "alloy", gender: "neutral", description: "Neutral and balanced" },
+  { label: "Echo", value: "echo", gender: "male", description: "Clear and articulate" },
+  { label: "Fable", value: "fable", gender: "neutral", description: "Expressive storytelling" },
+  { label: "Onyx", value: "onyx", gender: "male", description: "Deep and authoritative" },
+  { label: "Nova", value: "nova", gender: "female", description: "Warm and friendly" },
+  { label: "Shimmer", value: "shimmer", gender: "female", description: "Energetic and bright" },
+  { label: "Samantha", value: "samantha", gender: "female", description: "Classic and smooth" },
+  { label: "Alex", value: "alex", gender: "male", description: "Professional" },
+]
+```
+
+### Languages (20+ options)
+
+Includes English (US, UK, AU), Spanish, French, German, Italian, Portuguese, Japanese, Korean, Chinese, Arabic, Hindi, Russian, Dutch, Polish, and more.
+
+### Personalities (5 options)
+
+- **Friendly** - Warm and approachable
+- **Professional** - Formal and authoritative
+- **Enthusiastic** - Energetic and upbeat
+- **Calm** - Soothing and measured
+- **Witty** - Quick and clever
+
+## Custom Data
+
+Provide your own data for any selector:
+
+```tsx
+// Custom voices
+const customVoices = [
+  { label: "Jarvis", value: "jarvis", gender: "male", description: "AI assistant" },
+  { label: "Friday", value: "friday", gender: "female", description: "AI companion" },
+]
+
+<VoiceSelector
+  value={voice}
+  onValueChange={setVoice}
+  voices={customVoices}
+/>
+
+// Custom personalities
+const customPersonalities = [
+  { label: "Helpful", value: "helpful", description: "Always ready to assist" },
+  { label: "Creative", value: "creative", description: "Thinks outside the box" },
+]
+
+<PersonalitySelector
+  value={personality}
+  onValueChange={setPersonality}
+  personalities={customPersonalities}
+/>
+```
+
+## Integration Examples
+
+### Save to LocalStorage
+
+```tsx
+const handleSave = (settings: AIVoiceSettings) => {
+  localStorage.setItem("hanzo-voice-settings", JSON.stringify(settings))
+  toast.success("Settings saved!")
+}
+
+const loadSettings = () => {
+  const saved = localStorage.getItem("hanzo-voice-settings")
+  return saved ? JSON.parse(saved) : undefined
+}
+
+<AIVoiceSettings
+  settings={loadSettings()}
+  onSave={handleSave}
+/>
+```
+
+### Integrate with AI Voice Component
+
+```tsx
+import { AIVoice } from "@/components/ui/ai-voice"
+import { AIVoiceSettings } from "@/components/ui/ai-voice-settings"
+
+export default function VoiceChat() {
+  const [settings, setSettings] = useState(defaultSettings)
+
+  return (
+    <div className="grid gap-4">
+      {/* Voice interaction */}
+      <AIVoice
+        language={settings.language}
+        voice={{
+          id: settings.voice,
+          speed: settings.speed,
+          pitch: settings.pitch
+        }}
+        wakeWord={settings.wakeWord}
+        autoStart={settings.autoListen}
+        onTranscript={handleTranscript}
+      />
+
+      {/* Settings panel */}
+      <AIVoiceSettings
+        settings={settings}
+        onSettingsChange={setSettings}
+      />
+    </div>
+  )
+}
+```
+
+### Preview Voice
+
+```tsx
+const handlePreview = async (voice: string, speed: number, pitch: number) => {
+  const utterance = new SpeechSynthesisUtterance(
+    "Hello, this is how I sound with these settings."
+  )
+  utterance.voice = speechSynthesis.getVoices().find(v => v.name === voice)
+  utterance.rate = speed
+  utterance.pitch = pitch
+  speechSynthesis.speak(utterance)
+}
+
+<AIVoiceSettings onPreview={handlePreview} />
+```
+
+## Styling
+
+All components inherit theme colors and adapt to light/dark mode. Customize with className:
+
+```tsx
+<VoiceSelector
+  className="border-2 rounded-xl"
+  value={voice}
+  onValueChange={setVoice}
+/>
+```
+
+## Accessibility
+
+- All form inputs have proper labels
+- Keyboard navigation support
+- Screen reader friendly
+- ARIA attributes where appropriate
+- Focus indicators
+- High contrast mode support
+
+## Best Practices
+
+1. **Start Simple**: Use individual components for focused UIs
+2. **Compose Up**: Build complex settings from simple pieces
+3. **Persist Settings**: Save user preferences
+4. **Provide Feedback**: Show when settings are saved
+5. **Test Thoroughly**: Verify voice preview works across browsers
+6. **Handle Errors**: Gracefully handle unsupported voices/languages
+
+## Related Components
+
+- [AI Voice](/docs/ai/voice) - Voice interaction component
+- [AI Chat](/docs/ai/chat) - Chat interface with voice
+- [AI Assistant](/docs/ai/assistant) - Conversational AI
+- [AI Models](/docs/ai/models) - Model selection
