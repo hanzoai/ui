@@ -1,20 +1,20 @@
 "use client"
 
 import { Suspense } from "react"
-import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { Announcement } from "@/components/announcement"
 import { ExamplesNav } from "@/components/examples-nav"
-import { PageNav } from "@/components/page-nav"
-import { ThemeSelector } from "@/components/theme-selector"
 import {
   PageActions,
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header"
+import { PageNav } from "@/components/page-nav"
+import { ThemeSelector } from "@/components/theme-selector"
 import { buttonVariants } from "@/registry/new-york/ui/button"
 
 interface ExamplesLayoutProps {

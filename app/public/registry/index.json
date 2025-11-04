@@ -3572,6 +3572,73 @@
     "type": "components:example"
   },
   {
+    "name": "newsletter-01",
+    "registryDependencies": [
+      "button",
+      "card",
+      "input"
+    ],
+    "files": [
+      "block/newsletter-01.tsx"
+    ],
+    "type": "components:block",
+    "category": "Marketing",
+    "subcategory": "Newsletter"
+  },
+  {
+    "name": "newsletter-02",
+    "registryDependencies": [
+      "button",
+      "input"
+    ],
+    "files": [
+      "block/newsletter-02.tsx"
+    ],
+    "type": "components:block",
+    "category": "Marketing",
+    "subcategory": "Newsletter"
+  },
+  {
+    "name": "newsletter-03",
+    "registryDependencies": [
+      "button",
+      "card",
+      "input"
+    ],
+    "files": [
+      "block/newsletter-03.tsx"
+    ],
+    "type": "components:block",
+    "category": "Marketing",
+    "subcategory": "Newsletter"
+  },
+  {
+    "name": "newsletter-04",
+    "registryDependencies": [
+      "button",
+      "input"
+    ],
+    "files": [
+      "block/newsletter-04.tsx"
+    ],
+    "type": "components:block",
+    "category": "Marketing",
+    "subcategory": "Newsletter"
+  },
+  {
+    "name": "newsletter-05",
+    "registryDependencies": [
+      "button",
+      "input"
+    ],
+    "files": [
+      "block/newsletter-05.tsx"
+    ],
+    "type": "components:block",
+    "category": "Marketing",
+    "subcategory": "Newsletter"
+  },
+  {
     "name": "dashboard-05",
     "registryDependencies": [
       "badge",
