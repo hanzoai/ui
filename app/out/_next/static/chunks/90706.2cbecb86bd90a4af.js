@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[90706],{90706:(e,s,u)=>{u.r(s),u.d(s,{default:()=>t});var l=u(2616);function t(){return(0,l.jsx)("div",{className:"text-lg font-semibold",children:"Are you absolutely sure?"})}}}]);
