@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 
 import { Mail } from "@/app/(app)/examples/mail/components/mail"
 import { accounts, mails } from "@/app/(app)/examples/mail/data"
@@ -67,7 +67,11 @@ export default async function EmbeddedExamplePage({
 
   // Dynamically import and render the example
   const ExampleModule = await examples[slug as keyof typeof examples]()
-  if (!ExampleModule || typeof ExampleModule !== "object" || !("default" in ExampleModule)) {
+  if (
+    !ExampleModule ||
+    typeof ExampleModule !== "object" ||
+    !("default" in ExampleModule)
+  ) {
     notFound()
   }
 

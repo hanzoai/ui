@@ -1,0 +1,298 @@
+---
+title: AI Agents
+description: Multi-agent workflow designer for building AI automation systems
+---
+
+<ComponentPreview name="ai-agents-demo" />
+
+## Overview
+
+The AI Agents component provides a visual workflow designer for creating, managing, and orchestrating multiple AI agents. It includes drag-and-drop agent placement, task assignment, real-time monitoring, and inter-agent communication visualization.
+
+## Features
+
+- **Visual Workflow Designer** - Drag-and-drop canvas for building agent workflows
+- **5 Agent Types** - Research, Code, Analysis, Creative, and Automation agents
+- **Task Management** - Assign tasks with priority, estimated time, and descriptions
+- **Real-time Monitoring** - Track agent performance, success rates, and active tasks
+- **Agent Communication** - Animated connections showing data flow between agents
+- **Performance Metrics** - Tasks completed, success rate, and average completion time
+
+## Agent Types
+
+### Research Agent
+- **Capabilities**: Web search, data analysis, fact-checking, source validation
+- **Icon**: Search
+- **Color**: Blue
+- **Best for**: Information gathering, market research, competitive analysis
+
+### Code Agent
+- **Capabilities**: Code generation, debugging, testing, optimization
+- **Icon**: Code
+- **Color**: Green
+- **Best for**: Development tasks, refactoring, code reviews
+
+### Analysis Agent
+- **Capabilities**: Data processing, pattern recognition, insights, reporting
+- **Icon**: Brain
+- **Color**: Purple
+- **Best for**: Data analysis, business intelligence, trend detection
+
+### Creative Agent
+- **Capabilities**: Content creation, design, brainstorming, storytelling
+- **Icon**: Palette
+- **Color**: Pink
+- **Best for**: Marketing content, design concepts, creative writing
+
+### Automation Agent
+- **Capabilities**: Workflow execution, API integration, scheduling, monitoring
+- **Icon**: Zap
+- **Color**: Orange
+- **Best for**: Process automation, system integration, scheduled tasks
+
+## Usage
+
+### Basic Setup
+
+```tsx
+import { AIAgents } from "@/components/ui/ai-agents"
+
+export default function Page() {
+  return (
+    <AIAgents
+      workflowMode="custom"
+      onAgentCreate={(agent) => {
+        console.log("New agent created:", agent)
+      }}
+      onTaskAssign={(task, agentId) => {
+        console.log("Task assigned:", task, "to agent:", agentId)
+      }}
+      onWorkflowSave={(workflow) => {
+        console.log("Workflow saved:", workflow)
+      }}
+    />
+  )
+}
+```
+
+### With Initial Agents
+
+```tsx
+const initialAgents = [
+  {
+    id: "1",
+    name: "Research Bot",
+    type: "research",
+    capabilities: ["web-search", "data-analysis"],
+    status: "idle",
+    position: { x: 100, y: 100 },
+    connections: [],
+    performance: {
+      tasksCompleted: 0,
+      successRate: 100,
+      avgCompletionTime: 0,
+    },
+  },
+]
+
+<AIAgents agents={initialAgents} />
+```
+
+### Custom Workflow Mode
+
+```tsx
+// Sequential: Agents execute tasks one after another
+<AIAgents workflowMode="sequential" />
+
+// Parallel: All agents work simultaneously
+<AIAgents workflowMode="parallel" />
+
+// Custom: Manual connection and orchestration
+<AIAgents workflowMode="custom" />
+```
+
+## Component Structure
+
+### Three Main Tabs
+
+1. **Workflow Designer**
+   - Visual canvas with grid background
+   - Draggable agent cards
+   - Animated connection lines
+   - Real-time communication flow
+
+2. **Agent Manager**
+   - Grid view of all agents
+   - Status badges and current tasks
+   - Performance statistics
+   - Capability tags
+
+3. **Monitoring**
+   - System overview dashboard
+   - Active agent count
+   - Workflow status
+   - Per-agent performance metrics
+
+## Task Assignment
+
+Tasks include:
+- **Title** - Short task description
+- **Description** - Detailed requirements
+- **Priority** - Low, Medium, or High
+- **Estimated Time** - Time in hours
+- **Assigned Agent** - Which agent will execute the task
+
+Agents can only be assigned tasks when in "idle" status.
+
+## Performance Tracking
+
+Each agent tracks:
+- **Tasks Completed** - Total number of finished tasks
+- **Success Rate** - Percentage of successful completions
+- **Avg Completion Time** - Average time in minutes per task
+
+## Agent Communication
+
+The workflow designer visualizes agent connections with:
+- **Animated Lines** - Show active data flow
+- **Directional Arrows** - Indicate data direction
+- **Pulse Effects** - Highlight active transfers
+- **Color Coding** - Blue for active, gray for inactive
+
+## Workflow Controls
+
+- **Create Agent** - Add new agent to workflow
+- **Assign Task** - Give tasks to idle agents
+- **Run Workflow** - Start all agents
+- **Stop Workflow** - Pause all agents
+- **Save Workflow** - Export configuration
+
+## Drag & Drop
+
+Agents on the workflow designer can be:
+- **Clicked** - Select for details
+- **Dragged** - Reposition on canvas
+- **Edited** - Modify settings (button)
+- **Deleted** - Remove from workflow (button)
+
+## State Management
+
+The component manages:
+- Agent positions and connections
+- Task assignments and progress
+- Workflow execution state
+- Selected agent tracking
+
+All updates trigger callbacks for external persistence.
+
+## Customization
+
+### Styling
+
+```tsx
+<AIAgents className="min-h-[800px] rounded-lg border" />
+```
+
+### Add Custom Agent Types
+
+Extend `agentTypeConfig` in the component for custom agent types with unique icons, colors, and capabilities.
+
+### Persist Workflows
+
+Use `onWorkflowSave` callback to save to database:
+
+```tsx
+const handleSave = (workflow) => {
+  fetch("/api/workflows", {
+    method: "POST",
+    body: JSON.stringify(workflow),
+  })
+}
+
+<AIAgents onWorkflowSave={handleSave} />
+```
+
+## Examples
+
+### Research → Code → Analysis Pipeline
+
+```tsx
+const pipeline = [
+  { id: "1", name: "Researcher", type: "research", position: { x: 50, y: 50 } },
+  { id: "2", name: "Developer", type: "code", position: { x: 400, y: 50 } },
+  { id: "3", name: "Analyzer", type: "analysis", position: { x: 750, y: 50 } },
+]
+
+const connections = [
+  { id: "c1", source: "1", target: "2" },
+  { id: "c2", source: "2", target: "3" },
+]
+
+<AIAgents agents={pipeline} />
+```
+
+### Multi-Agent Content Creation
+
+```tsx
+const contentTeam = [
+  { id: "1", name: "Researcher", type: "research" },
+  { id: "2", name: "Writer", type: "creative" },
+  { id: "3", name: "Editor", type: "analysis" },
+]
+
+<AIAgents agents={contentTeam} workflowMode="sequential" />
+```
+
+## API Reference
+
+### AIAgentsProps
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `agents` | `Agent[]` | Initial agents to display |
+| `onAgentCreate` | `(agent) => void` | Called when new agent created |
+| `onTaskAssign` | `(task, agentId) => void` | Called when task assigned |
+| `onWorkflowSave` | `(workflow) => void` | Called when workflow saved |
+| `workflowMode` | `"sequential" \| "parallel" \| "custom"` | Execution mode |
+| `className` | `string` | Additional CSS classes |
+
+### Agent Interface
+
+```tsx
+interface Agent {
+  id: string
+  name: string
+  type: AgentType
+  capabilities: string[]
+  status: "idle" | "working" | "completed" | "error"
+  currentTask?: Task
+  position: { x: number; y: number }
+  connections: string[]
+  performance: {
+    tasksCompleted: number
+    successRate: number
+    avgCompletionTime: number
+  }
+}
+```
+
+### Task Interface
+
+```tsx
+interface Task {
+  id: string
+  title: string
+  description: string
+  priority: "low" | "medium" | "high"
+  status: "pending" | "in-progress" | "completed" | "failed"
+  progress: number
+  createdAt: Date
+  estimatedTime?: number
+}
+```
+
+## Related Components
+
+- **AI Chat** - Conversational interface with AI agents
+- **AI Playground** - Test and experiment with AI models
+- **AI Tools** - Tool library for agent capabilities

@@ -1,0 +1,405 @@
+---
+title: AI Vision
+description: Computer vision interface with object detection, OCR, image analysis, and visual AI capabilities
+---
+
+<ComponentPreview name="ai-vision-demo" />
+
+## Overview
+
+AI Vision provides a comprehensive interface for computer vision tasks including object detection, OCR (text recognition), scene description, color analysis, face detection, sentiment analysis, and image generation/editing.
+
+## Features
+
+- **Object Detection** - Detect and label objects with bounding boxes
+- **Scene Description** - Generate natural language descriptions of images
+- **OCR (Text Recognition)** - Extract text from images with confidence scores
+- **Color Analysis** - Extract dominant colors and color palettes
+- **Image Tagging** - Automatic tagging and categorization
+- **Face Detection** - Detect faces with age, gender, emotion analysis
+- **Sentiment Analysis** - Analyze emotional content of images
+- **Image Generation** - Generate images from text descriptions
+- **Image Editing** - AI-powered image modifications
+- **Interactive Canvas** - Draw bounding boxes and annotations
+
+## Usage
+
+### Basic Image Analysis
+
+```tsx
+import { AIVision } from "@/components/ui/ai-vision"
+
+export default function ImageAnalysis() {
+  const handleAnalyze = async (
+    file: File,
+    capabilities: VisionCapability[]
+  ) => {
+    // Upload and analyze image
+    const formData = new FormData()
+    formData.append("image", file)
+    formData.append("capabilities", JSON.stringify(capabilities))
+
+    const response = await fetch("/api/vision/analyze", {
+      method: "POST",
+      body: formData,
+    })
+
+    return await response.json()
+  }
+
+  return (
+    <AIVision
+      onAnalyze={handleAnalyze}
+      capabilities={[
+        "object-detection",
+        "scene-description",
+        "ocr",
+        "color-analysis",
+      ]}
+    />
+  )
+}
+```
+
+### With Object Detection
+
+```tsx
+import { AIVision, BoundingBox } from "@/components/ui/ai-vision"
+
+const detections: BoundingBox[] = [
+  {
+    x: 100,
+    y: 150,
+    width: 200,
+    height: 250,
+    confidence: 0.95,
+    label: "Person",
+    color: "#3b82f6",
+  },
+  {
+    x: 350,
+    y: 200,
+    width: 150,
+    height: 180,
+    confidence: 0.88,
+    label: "Dog",
+    color: "#10b981",
+  },
+]
+
+<AIVision
+  imageUrl="/sample-image.jpg"
+  detectedObjects={detections}
+  showConfidence={true}
+/>
+```
+
+### With OCR Results
+
+```tsx
+const textDetections = [
+  {
+    text: "Welcome to AI Vision",
+    confidence: 0.98,
+    boundingBox: { x: 50, y: 30, width: 300, height: 40 },
+  },
+  {
+    text: "Powered by deep learning",
+    confidence: 0.95,
+    boundingBox: { x: 50, y: 80, width: 280, height: 35 },
+  },
+]
+
+<AIVision
+  imageUrl="/image-with-text.jpg"
+  detectedText={textDetections}
+  highlightText={true}
+/>
+```
+
+### Complete Vision Pipeline
+
+```tsx
+import { AIVision } from "@/components/ui/ai-vision"
+import { useState } from "react"
+
+export default function VisionPipeline() {
+  const [results, setResults] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const handleAnalyze = async (file, capabilities) => {
+    setLoading(true)
+
+    // Upload image
+    const formData = new FormData()
+    formData.append("image", file)
+
+    // Analyze with multiple capabilities
+    const response = await fetch("/api/vision/analyze", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Capabilities": JSON.stringify(capabilities),
+      },
+    })
+
+    const data = await response.json()
+
+    setResults({
+      objects: data.objects || [],
+      text: data.text || [],
+      colors: data.colors || [],
+      faces: data.faces || [],
+      description: data.description || "",
+      tags: data.tags || [],
+      sentiment: data.sentiment || null,
+    })
+
+    setLoading(false)
+    return data
+  }
+
+  return (
+    <AIVision
+      onAnalyze={handleAnalyze}
+      isLoading={loading}
+      detectedObjects={results?.objects}
+      detectedText={results?.text}
+      colorPalette={results?.colors}
+      detectedFaces={results?.faces}
+      description={results?.description}
+      tags={results?.tags}
+    />
+  )
+}
+```
+
+## Vision Capabilities
+
+### Object Detection
+
+Detect and classify objects in images:
+
+```typescript
+interface BoundingBox {
+  x: number
+  y: number
+  width: number
+  height: number
+  confidence: number
+  label: string
+  color?: string
+}
+```
+
+### OCR (Text Recognition)
+
+Extract text with position and confidence:
+
+```typescript
+interface DetectedText {
+  text: string
+  confidence: number
+  boundingBox: BoundingBox
+}
+```
+
+### Color Analysis
+
+Extract color palettes from images:
+
+```typescript
+interface ColorPalette {
+  color: string // Hex color
+  percentage: number
+  name?: string
+}
+```
+
+### Face Detection
+
+Detect faces with attributes:
+
+```typescript
+interface FaceDetection {
+  boundingBox: BoundingBox
+  confidence: number
+  age?: number
+  gender?: string
+  emotion?: string
+  landmarks?: { x: number; y: number }[]
+}
+```
+
+## Props
+
+### AIVisionProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `imageUrl` | `string` | - | URL of image to analyze |
+| `onAnalyze` | `(file: File, capabilities: VisionCapability[]) => Promise<any>` | - | Called when analyzing image |
+| `capabilities` | `VisionCapability[]` | All | Enabled vision capabilities |
+| `detectedObjects` | `BoundingBox[]` | `[]` | Objects detected in image |
+| `detectedText` | `DetectedText[]` | `[]` | Text detected via OCR |
+| `detectedFaces` | `FaceDetection[]` | `[]` | Faces detected in image |
+| `colorPalette` | `ColorPalette[]` | `[]` | Dominant colors extracted |
+| `description` | `string` | - | Scene description |
+| `tags` | `string[]` | `[]` | Image tags/categories |
+| `sentiment` | `string` | - | Sentiment analysis result |
+| `isLoading` | `boolean` | `false` | Show loading state |
+| `showConfidence` | `boolean` | `true` | Display confidence scores |
+| `highlightText` | `boolean` | `true` | Highlight detected text |
+
+### VisionCapability Type
+
+```typescript
+type VisionCapability =
+  | "object-detection"
+  | "scene-description"
+  | "ocr"
+  | "color-analysis"
+  | "tagging"
+  | "face-detection"
+  | "sentiment-analysis"
+  | "image-generation"
+  | "image-editing"
+```
+
+## Integration Examples
+
+### OpenAI Vision (GPT-4 Vision)
+
+```typescript
+import OpenAI from "openai"
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+async function analyzeImage(imageUrl: string) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4-vision-preview",
+    messages: [
+      {
+        role: "user",
+        content: [
+          { type: "text", text: "What's in this image?" },
+          { type: "image_url", image_url: { url: imageUrl } },
+        ],
+      },
+    ],
+  })
+
+  return response.choices[0].message.content
+}
+```
+
+### Anthropic Claude Vision
+
+```typescript
+import Anthropic from "@anthropic-ai/sdk"
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+async function analyzeImage(imageBase64: string) {
+  const response = await anthropic.messages.create({
+    model: "claude-3-opus-20240229",
+    max_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: "image/jpeg",
+              data: imageBase64,
+            },
+          },
+          { type: "text", text: "Describe this image in detail." },
+        ],
+      },
+    ],
+  })
+
+  return response.content[0].text
+}
+```
+
+### Google Cloud Vision API
+
+```typescript
+import vision from "@google-cloud/vision"
+
+const client = new vision.ImageAnnotatorClient()
+
+async function detectObjects(imageUri: string) {
+  const [result] = await client.objectLocalization(imageUri)
+  return result.localizedObjectAnnotations?.map((object) => ({
+    label: object.name,
+    confidence: object.score,
+    x: object.boundingPoly?.normalizedVertices?.[0]?.x * imageWidth,
+    y: object.boundingPoly?.normalizedVertices?.[0]?.y * imageHeight,
+    width:
+      (object.boundingPoly?.normalizedVertices?.[2]?.x -
+        object.boundingPoly?.normalizedVertices?.[0]?.x) *
+      imageWidth,
+    height:
+      (object.boundingPoly?.normalizedVertices?.[2]?.y -
+        object.boundingPoly?.normalizedVertices?.[0]?.y) *
+      imageHeight,
+  }))
+}
+```
+
+## Canvas Interactions
+
+The AI Vision component includes an interactive canvas for:
+
+- **Zoom In/Out** - Magnify image details
+- **Pan** - Move around zoomed image
+- **Draw Annotations** - Add custom bounding boxes
+- **Crop** - Select image regions
+- **Rotate** - Rotate image for analysis
+- **Measure** - Measure distances between points
+
+## Toolbar Actions
+
+- **Upload** - Load new image
+- **Analyze** - Run vision analysis
+- **Download** - Export annotated image
+- **Copy** - Copy results to clipboard
+- **Settings** - Configure analysis parameters
+- **View Options** - Toggle overlays and labels
+
+## Styling
+
+The component uses semantic color tokens:
+
+- **Blue** - Object detection boxes
+- **Green** - Face detection boxes
+- **Purple** - Text OCR boxes
+- **Amber** - Custom annotations
+- **Background** - Adapts to light/dark theme
+
+## Performance
+
+- Images are processed server-side for security
+- Lazy loading for large images
+- Debounced analysis to prevent excessive API calls
+- Caching of analysis results
+- Optimized canvas rendering
+
+## Accessibility
+
+- Keyboard navigation for all controls
+- Screen reader announcements for analysis results
+- High contrast mode for bounding boxes
+- Descriptive ARIA labels
+- Focus management
+
+## Related Components
+
+- [AI Chat](/docs/ai/chat) - Conversational vision analysis
+- [AI Playground](/docs/ai/playground) - Experiment with vision models
+- [AI Models](/docs/ai/models) - Vision model selection

@@ -89,7 +89,7 @@ export default async function BlockPage({
   const serializableBlock = {
     ...block,
     component: undefined,
-    chunks: block.chunks?.map(({ component, ...chunk }) => chunk) || []
+    chunks: block.chunks?.map(({ component, ...chunk }) => chunk) || [],
   }
 
   // Keep original chunks with components for server-side rendering

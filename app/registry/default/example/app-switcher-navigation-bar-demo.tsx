@@ -1,4 +1,4 @@
-import { Home, Settings, FileText, Database } from "lucide-react"
+import { Database, FileText, Home, Settings } from "lucide-react"
 
 import { AppSwitcherNavigationBar } from "@/registry/default/ui/app-switcher-navigation-bar"
 

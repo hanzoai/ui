@@ -1,0 +1,17 @@
+{
+  "name": "newsletter-01",
+  "registryDependencies": [
+    "button",
+    "card",
+    "input"
+  ],
+  "files": [
+    {
+      "name": "newsletter-01.tsx",
+      "content": "\"use client\"\n\nimport * as React from \"react\"\nimport { Mail } from \"lucide-react\"\n\nimport { Button } from \"@/registry/new-york/ui/button\"\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/registry/new-york/ui/card\"\nimport { Input } from \"@/registry/new-york/ui/input\"\n\nexport default function NewsletterBlock() {\n  const [email, setEmail] = React.useState(\"\")\n  const [isSubmitting, setIsSubmitting] = React.useState(false)\n  const [isSubscribed, setIsSubscribed] = React.useState(false)\n\n  const handleSubmit = async (e: React.FormEvent) => {\n    e.preventDefault()\n    setIsSubmitting(true)\n\n    // Simulate API call\n    await new Promise(resolve => setTimeout(resolve, 1000))\n\n    setIsSubscribed(true)\n    setIsSubmitting(false)\n    setEmail(\"\")\n\n    // Reset success message after 3 seconds\n    setTimeout(() => setIsSubscribed(false), 3000)\n  }\n\n  return (\n    <div className=\"flex min-h-screen items-center justify-center p-4\">\n      <Card className=\"w-full max-w-md\">\n        <form onSubmit={handleSubmit}>\n          <CardHeader className=\"space-y-1 text-center\">\n            <div className=\"mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10\">\n              <Mail className=\"h-6 w-6 text-primary\" />\n            </div>\n            <CardTitle className=\"text-2xl\">Subscribe to our newsletter</CardTitle>\n            <CardDescription>\n              Get the latest updates, articles, and resources delivered to your inbox weekly.\n            </CardDescription>\n          </CardHeader>\n          <CardContent className=\"space-y-4\">\n            <div className=\"space-y-2\">\n              <Input\n                type=\"email\"\n                placeholder=\"Enter your email\"\n                value={email}\n                onChange={(e) => setEmail(e.target.value)}\n                required\n                disabled={isSubmitting}\n              />\n            </div>\n            <Button\n              type=\"submit\"\n              className=\"w-full\"\n              disabled={isSubmitting || isSubscribed}\n            >\n              {isSubmitting ? \"Subscribing...\" : isSubscribed ? \"Subscribed! ✓\" : \"Subscribe\"}\n            </Button>\n            {isSubscribed && (\n              <p className=\"text-center text-sm text-muted-foreground\">\n                Thank you for subscribing!\n              </p>\n            )}\n            <p className=\"text-center text-xs text-muted-foreground\">\n              By subscribing, you agree to our Terms of Service and Privacy Policy.\n            </p>\n          </CardContent>\n        </form>\n      </Card>\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:block",
+  "category": "Marketing",
+  "subcategory": "Newsletter"
+}
