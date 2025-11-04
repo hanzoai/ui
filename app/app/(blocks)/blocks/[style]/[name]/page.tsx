@@ -68,9 +68,6 @@ export async function generateStaticParams() {
     .flat()
 }
 
-// Force dynamic rendering to avoid static export serialization issues with React.lazy
-export const dynamic = 'force-dynamic'
-
 export default async function BlockPage({
   params,
 }: {
