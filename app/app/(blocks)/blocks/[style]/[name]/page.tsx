@@ -57,6 +57,11 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
+  // Skip static generation for blocks in GitHub Actions (static export)
+  if (process.env.GITHUB_ACTIONS) {
+    return []
+  }
+
   const blockIds = await getAllBlockIds()
   return styles
     .map((style) =>
