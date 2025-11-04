@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[30229],{30229:(e,t,l)=>{l.r(t),l.d(t,{default:()=>n});var s=l(2616);function n(){return(0,s.jsx)("h4",{className:"scroll-m-20 text-xl font-semibold tracking-tight",children:"People stopped telling jokes"})}}}]);
