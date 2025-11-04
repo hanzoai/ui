@@ -42,6 +42,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
   const cmmc = useCommerce()
   
   const shippingForm = useForm<z.infer<typeof shippingFormSchema>>({
+    // @ts-expect-error Zod version incompatibility between ZodTypeDef and $ZodTypeInternals
     resolver: zodResolver(shippingFormSchema),
     defaultValues: {
       addressLine1: '',
