@@ -98,7 +98,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <ActiveThemeProvider initialTheme="blue">
+            <ActiveThemeProvider initialTheme="neutral">
               <div vaul-drawer-wrapper="">
                 <div className="relative flex min-h-svh flex-col bg-background">
                   {children}
