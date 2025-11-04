@@ -29,6 +29,11 @@ export async function getBlock(
 ) {
   const entry = Index[style][name]
 
+  // Return null if block doesn't exist
+  if (!entry) {
+    return null
+  }
+
   const content = await _getBlockContent(name, style)
 
   const chunks = await Promise.all(
