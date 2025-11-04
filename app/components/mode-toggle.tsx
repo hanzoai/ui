@@ -14,11 +14,12 @@ export function ModeToggle() {
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="icon"
       className="size-8"
       onClick={toggleTheme}
       title="Toggle theme"
+      aria-label="Toggle theme"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
