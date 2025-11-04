@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface twotierNavigationBarProps
+export interface TwoTierNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const twotierNavigationBar = React.forwardRef<
+const TwoTierNavigationBar = React.forwardRef<
   HTMLElement,
-  twotierNavigationBarProps
+  TwoTierNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const twotierNavigationBar = React.forwardRef<
     </nav>
   )
 })
-twotierNavigationBar.displayName = "twotierNavigationBar"
+TwoTierNavigationBar.displayName = "TwoTierNavigationBar"
 
-export { twotierNavigationBar }
+export { TwoTierNavigationBar }
