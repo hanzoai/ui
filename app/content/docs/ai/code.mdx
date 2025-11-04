@@ -1,0 +1,541 @@
+---
+title: AI Code
+description: AI-powered code editor with Monaco, code generation, explanation, refactoring, debugging, and testing
+---
+
+<ComponentPreview name="ai-code-demo" />
+
+## Overview
+
+The AI Code component provides a complete AI-powered coding environment built on Monaco Editor. It includes code generation, intelligent explanations, automated refactoring, bug detection, test generation, documentation, and code review capabilities.
+
+## Features
+
+- **Monaco Editor** - Full VS Code editor experience
+- **Code Generation** - Generate code from natural language
+- **Code Explanation** - Line-by-line code explanations
+- **Smart Refactoring** - AI-powered code improvements
+- **Bug Detection** - Identify and fix bugs automatically
+- **Test Generation** - Generate unit tests
+- **Documentation** - Auto-generate docstrings and comments
+- **Code Review** - Get AI feedback on code quality
+- **Multi-Language** - Support for 50+ programming languages
+- **Diff View** - Compare original and AI-suggested code
+- **Chat Sidebar** - Ask questions about your code
+- **Terminal** - Integrated terminal for running code
+
+## Usage
+
+### Basic Code Editor
+
+```tsx
+import { AICode } from "@/components/ui/ai-code"
+
+export default function Editor() {
+  const [code, setCode] = useState("")
+
+  return (
+    <AICode
+      value={code}
+      onChange={setCode}
+      language="typescript"
+      theme="vs-dark"
+    />
+  )
+}
+```
+
+### With AI Code Generation
+
+```tsx
+import { AICode } from "@/components/ui/ai-code"
+import { useState } from "react"
+
+export default function AICodeEditor() {
+  const [code, setCode] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  const handleGenerate = async (prompt: string) => {
+    setLoading(true)
+
+    const response = await fetch("/api/code/generate", {
+      method: "POST",
+      body: JSON.stringify({ prompt, language: "typescript" }),
+    })
+
+    const data = await response.json()
+    setCode(data.code)
+    setLoading(false)
+  }
+
+  return (
+    <AICode
+      value={code}
+      onChange={setCode}
+      language="typescript"
+      onGenerate={handleGenerate}
+      isGenerating={loading}
+    />
+  )
+}
+```
+
+### Code Explanation
+
+```tsx
+const handleExplain = async (code: string, lineNumber?: number) => {
+  const response = await fetch("/api/code/explain", {
+    method: "POST",
+    body: JSON.stringify({ code, line: lineNumber }),
+  })
+
+  const data = await response.json()
+  return data.explanation
+}
+
+<AICode
+  value={code}
+  onChange={setCode}
+  onExplain={handleExplain}
+  showExplanations={true}
+/>
+```
+
+### Complete AI Coding Assistant
+
+```tsx
+import { AICode, CodeFeature } from "@/components/ui/ai-code"
+import { useState } from "react"
+
+export default function CodingAssistant() {
+  const [code, setCode] = useState("")
+  const [language, setLanguage] = useState("typescript")
+  const [suggestions, setSuggestions] = useState([])
+
+  const handleAIAction = async (
+    feature: CodeFeature,
+    code: string,
+    context?: any
+  ) => {
+    const response = await fetch("/api/code/ai", {
+      method: "POST",
+      body: JSON.stringify({
+        feature,
+        code,
+        language,
+        context,
+      }),
+    })
+
+    return await response.json()
+  }
+
+  return (
+    <AICode
+      value={code}
+      onChange={setCode}
+      language={language}
+      onLanguageChange={setLanguage}
+      // AI Features
+      onGenerate={(prompt) => handleAIAction("generate", prompt)}
+      onExplain={(code, line) => handleAIAction("explain", code, { line })}
+      onRefactor={(code) => handleAIAction("refactor", code)}
+      onDebug={(code) => handleAIAction("debug", code)}
+      onTest={(code) => handleAIAction("test", code)}
+      onDocument={(code) => handleAIAction("document", code)}
+      onReview={(code) => handleAIAction("review", code)}
+      // Features
+      suggestions={suggestions}
+      showLineNumbers={true}
+      showMinimap={true}
+      enableDiffView={true}
+      enableChat={true}
+    />
+  )
+}
+```
+
+## AI Code Features
+
+### 1. Code Generation
+
+Generate code from natural language descriptions:
+
+```typescript
+// User prompt: "Create a function to sort an array of objects by a key"
+
+// Generated code:
+function sortByKey<T>(array: T[], key: keyof T): T[] {
+  return array.sort((a, b) => {
+    if (a[key] < b[key]) return -1
+    if (a[key] > b[key]) return 1
+    return 0
+  })
+}
+```
+
+### 2. Code Explanation
+
+Get line-by-line explanations:
+
+```typescript
+// Code:
+const result = array.reduce((acc, item) => acc + item.value, 0)
+
+// Explanation:
+// Line 1: Uses reduce() to iterate through the array
+// - 'acc' is the accumulator (running total)
+// - 'item' is the current array element
+// - Adds item.value to the accumulator
+// - Starts with initial value of 0
+// Returns the sum of all values
+```
+
+### 3. Smart Refactoring
+
+Improve code quality and performance:
+
+```typescript
+// Original:
+let sum = 0
+for (let i = 0; i < array.length; i++) {
+  sum += array[i]
+}
+
+// Refactored:
+const sum = array.reduce((acc, val) => acc + val, 0)
+```
+
+### 4. Bug Detection
+
+Find and fix bugs automatically:
+
+```typescript
+// Original (buggy):
+function divide(a, b) {
+  return a / b
+}
+
+// Fixed:
+function divide(a: number, b: number): number {
+  if (b === 0) {
+    throw new Error("Division by zero")
+  }
+  return a / b
+}
+```
+
+### 5. Test Generation
+
+Generate unit tests:
+
+```typescript
+// Function:
+function isPalindrome(str: string): boolean {
+  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, "")
+  return cleaned === cleaned.split("").reverse().join("")
+}
+
+// Generated tests:
+describe("isPalindrome", () => {
+  it("should return true for palindromes", () => {
+    expect(isPalindrome("racecar")).toBe(true)
+    expect(isPalindrome("A man, a plan, a canal: Panama")).toBe(true)
+  })
+
+  it("should return false for non-palindromes", () => {
+    expect(isPalindrome("hello")).toBe(false)
+  })
+
+  it("should handle empty strings", () => {
+    expect(isPalindrome("")).toBe(true)
+  })
+})
+```
+
+### 6. Documentation Generation
+
+Auto-generate docstrings:
+
+```typescript
+// Original:
+function fetchUser(id: string) {
+  return fetch(`/api/users/${id}`).then((res) => res.json())
+}
+
+// With documentation:
+/**
+ * Fetches a user from the API by their ID
+ * @param id - The unique identifier of the user
+ * @returns Promise resolving to the user object
+ * @throws Error if the fetch request fails
+ */
+function fetchUser(id: string): Promise<User> {
+  return fetch(`/api/users/${id}`).then((res) => res.json())
+}
+```
+
+### 7. Code Review
+
+Get AI feedback on code quality:
+
+```markdown
+## Code Review
+
+### Strengths
+
+- Clean, readable code
+- Good variable naming
+- Proper error handling
+
+### Issues
+
+- Missing type annotations (lines 5, 12)
+- Potential null reference on line 8
+- Consider extracting magic number on line 15
+
+### Suggestions
+
+1. Add TypeScript interfaces for data structures
+2. Use optional chaining on line 8
+3. Extract constants to top of file
+4. Add input validation
+
+### Security
+
+- ⚠️ Potential XSS vulnerability on line 23 (user input not sanitized)
+```
+
+## Props
+
+### AICodeProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | `""` | Current code value |
+| `onChange` | `(value: string) => void` | - | Called when code changes |
+| `language` | `string` | `"typescript"` | Programming language |
+| `theme` | `"vs-dark" \| "vs-light"` | `"vs-dark"` | Editor theme |
+| `onGenerate` | `(prompt: string) => Promise<string>` | - | Generate code from prompt |
+| `onExplain` | `(code: string, line?: number) => Promise<string>` | - | Explain code |
+| `onRefactor` | `(code: string) => Promise<string>` | - | Refactor code |
+| `onDebug` | `(code: string) => Promise<DebugResult>` | - | Debug code |
+| `onTest` | `(code: string) => Promise<string>` | - | Generate tests |
+| `onDocument` | `(code: string) => Promise<string>` | - | Generate docs |
+| `onReview` | `(code: string) => Promise<ReviewResult>` | - | Review code |
+| `suggestions` | `CodeSuggestion[]` | `[]` | AI suggestions |
+| `explanations` | `Explanation[]` | `[]` | Code explanations |
+| `showLineNumbers` | `boolean` | `true` | Show line numbers |
+| `showMinimap` | `boolean` | `true` | Show minimap |
+| `enableDiffView` | `boolean` | `false` | Enable diff view |
+| `enableChat` | `boolean` | `true` | Enable chat sidebar |
+| `isGenerating` | `boolean` | `false` | Show generating state |
+
+### CodeFeature Type
+
+```typescript
+type CodeFeature =
+  | "generate"
+  | "explain"
+  | "refactor"
+  | "debug"
+  | "test"
+  | "document"
+  | "review"
+```
+
+### CodeSuggestion Interface
+
+```typescript
+interface CodeSuggestion {
+  id: string
+  type: CodeFeature
+  title: string
+  description: string
+  code?: string
+  line?: number
+  severity: "info" | "warning" | "error"
+}
+```
+
+### Explanation Interface
+
+```typescript
+interface Explanation {
+  id: string
+  line: number
+  content: string
+  type: "explanation" | "suggestion" | "warning" | "error"
+}
+```
+
+## Supported Languages
+
+50+ programming languages including:
+
+- **Web**: JavaScript, TypeScript, HTML, CSS, JSON
+- **Backend**: Python, Java, Go, Rust, C++, C#
+- **Mobile**: Swift, Kotlin, Dart
+- **Data**: SQL, GraphQL, YAML
+- **Scripting**: Bash, PowerShell, Ruby, PHP
+- **Functional**: Haskell, Scala, Elixir
+- **System**: C, Assembly
+- And many more...
+
+## Integration Examples
+
+### OpenAI Codex
+
+```typescript
+import OpenAI from "openai"
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+async function generateCode(prompt: string, language: string) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4",
+    messages: [
+      {
+        role: "system",
+        content: `You are an expert ${language} programmer. Generate clean, efficient code.`,
+      },
+      { role: "user", content: prompt },
+    ],
+  })
+
+  return response.choices[0].message.content
+}
+```
+
+### Anthropic Claude for Code
+
+```typescript
+import Anthropic from "@anthropic-ai/sdk"
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+async function explainCode(code: string, language: string) {
+  const response = await anthropic.messages.create({
+    model: "claude-3-opus-20240229",
+    max_tokens: 1024,
+    messages: [
+      {
+        role: "user",
+        content: `Explain this ${language} code:\n\`\`\`${language}\n${code}\n\`\`\``,
+      },
+    ],
+  })
+
+  return response.content[0].text
+}
+```
+
+### GitHub Copilot Integration
+
+```typescript
+// Use Copilot API for inline suggestions
+async function getCompletions(code: string, position: number) {
+  const response = await fetch("https://api.github.com/copilot/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      prompt: code,
+      suffix: code.slice(position),
+    }),
+  })
+
+  return await response.json()
+}
+```
+
+## Monaco Editor Configuration
+
+The component uses Monaco Editor with custom configuration:
+
+```typescript
+const monacoOptions = {
+  minimap: { enabled: true },
+  fontSize: 14,
+  lineNumbers: "on",
+  roundedSelection: true,
+  scrollBeyondLastLine: false,
+  automaticLayout: true,
+  tabSize: 2,
+  wordWrap: "on",
+  suggest: { preview: true },
+  quickSuggestions: true,
+  formatOnPaste: true,
+  formatOnType: true,
+}
+```
+
+## Keyboard Shortcuts
+
+- **Ctrl/Cmd + Enter** - Generate code from prompt
+- **Ctrl/Cmd + /** - Add/remove line comment
+- **Ctrl/Cmd + K, Ctrl/Cmd + C** - Explain selected code
+- **Ctrl/Cmd + Shift + R** - Refactor code
+- **Ctrl/Cmd + Shift + T** - Generate tests
+- **Ctrl/Cmd + Shift + D** - Document code
+- **F8** - Go to next error/warning
+- **Shift + F8** - Go to previous error/warning
+
+## Diff View
+
+Compare original and AI-suggested code side-by-side:
+
+```tsx
+<AICode
+  value={originalCode}
+  onChange={setCode}
+  enableDiffView={true}
+  diffCode={suggestedCode}
+  onAcceptDiff={() => setCode(suggestedCode)}
+  onRejectDiff={() => setShowDiff(false)}
+/>
+```
+
+## Chat Sidebar
+
+Ask questions about your code:
+
+```tsx
+<AICode
+  value={code}
+  onChange={setCode}
+  enableChat={true}
+  onChatMessage={async (message) => {
+    // Send to AI
+    const response = await fetch("/api/code/chat", {
+      method: "POST",
+      body: JSON.stringify({ message, code }),
+    })
+    return await response.json()
+  }}
+/>
+```
+
+## Performance
+
+- Lazy loading of Monaco Editor
+- Syntax highlighting via Web Workers
+- Incremental parsing for large files
+- Virtualized rendering for long files
+- Debounced AI requests
+
+## Accessibility
+
+- Keyboard navigation for all features
+- Screen reader support
+- High contrast themes
+- Configurable font sizes
+- Focus indicators
+
+## Related Components
+
+- [AI Chat](/docs/ai/chat) - Discuss code with AI
+- [AI Playground](/docs/ai/playground) - Experiment with code
+- [AI Assistant](/docs/ai/assistant) - Coding assistant

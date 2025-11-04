@@ -3,8 +3,8 @@ import {
   defineDocs,
   frontmatterSchema,
 } from "fumadocs-mdx/config"
-import { z } from "zod"
 import rehypePrettyCode from "rehype-pretty-code"
+import { z } from "zod"
 
 export default defineConfig({
   mdxOptions: {
@@ -14,7 +14,7 @@ export default defineConfig({
         {
           theme: {
             dark: "github-dark",
-            light: "github-light",
+            light: "github-light-default",
           },
           keepBackground: false,
         },
