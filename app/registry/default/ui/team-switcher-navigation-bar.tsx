@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface teamswitcherNavigationBarProps
+export interface TeamSwitcherNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const teamswitcherNavigationBar = React.forwardRef<
+const TeamSwitcherNavigationBar = React.forwardRef<
   HTMLElement,
-  teamswitcherNavigationBarProps
+  TeamSwitcherNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const teamswitcherNavigationBar = React.forwardRef<
     </nav>
   )
 })
-teamswitcherNavigationBar.displayName = "teamswitcherNavigationBar"
+TeamSwitcherNavigationBar.displayName = "TeamSwitcherNavigationBar"
 
-export { teamswitcherNavigationBar }
+export { TeamSwitcherNavigationBar }

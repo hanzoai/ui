@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface statusdashuoardNavigationBarProps
+export interface StatusDashboardNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const statusdashuoardNavigationBar = React.forwardRef<
+const StatusDashboardNavigationBar = React.forwardRef<
   HTMLElement,
-  statusdashuoardNavigationBarProps
+  StatusDashboardNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const statusdashuoardNavigationBar = React.forwardRef<
     </nav>
   )
 })
-statusdashuoardNavigationBar.displayName = "statusdashuoardNavigationBar"
+StatusDashboardNavigationBar.displayName = "StatusDashboardNavigationBar"
 
-export { statusdashuoardNavigationBar }
+export { StatusDashboardNavigationBar }

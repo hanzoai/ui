@@ -4,14 +4,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export interface underlineNavigationBarProps
+export interface UnderlineNavigationBarProps
   extends React.HTMLAttributes<HTMLElement> {
   items?: Array<{ label: string; href: string }>
 }
 
-const underlineNavigationBar = React.forwardRef<
+const UnderlineNavigationBar = React.forwardRef<
   HTMLElement,
-  underlineNavigationBarProps
+  UnderlineNavigationBarProps
 >(({ className, items = [], ...props }, ref) => {
   return (
     <nav
@@ -33,6 +33,6 @@ const underlineNavigationBar = React.forwardRef<
     </nav>
   )
 })
-underlineNavigationBar.displayName = "underlineNavigationBar"
+UnderlineNavigationBar.displayName = "UnderlineNavigationBar"
 
-export { underlineNavigationBar }
+export { UnderlineNavigationBar }
