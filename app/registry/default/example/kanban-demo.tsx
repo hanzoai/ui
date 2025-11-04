@@ -1,7 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { KanbanBoard, type KanbanBoard as KanbanBoardType } from "@/registry/default/ui/kanban"
+
+import {
+  KanbanBoard,
+  type KanbanBoard as KanbanBoardType,
+} from "@/registry/default/ui/kanban"
 
 export default function KanbanDemo() {
   const [board, setBoard] = React.useState<KanbanBoardType>({
@@ -20,7 +24,8 @@ export default function KanbanDemo() {
           {
             id: "card-1",
             title: "Setup project structure",
-            description: "Initialize the basic project structure and configuration",
+            description:
+              "Initialize the basic project structure and configuration",
             priority: "high",
             assignee: "John",
             createdAt: new Date().toISOString(),

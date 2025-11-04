@@ -205,10 +205,7 @@ export function SiteFooter() {
             .
           </p>
           <div className="flex gap-4 text-sm text-muted-foreground">
-            <a
-              href="/docs"
-              className="hover:text-foreground"
-            >
+            <a href="/docs" className="hover:text-foreground">
               Documentation
             </a>
             <a
@@ -219,10 +216,7 @@ export function SiteFooter() {
             >
               Contribute
             </a>
-            <a
-              href="/docs/changelog"
-              className="hover:text-foreground"
-            >
+            <a href="/docs/changelog" className="hover:text-foreground">
               v{siteConfig.version || "5.0.0"}
             </a>
           </div>

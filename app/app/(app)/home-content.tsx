@@ -1,7 +1,12 @@
 "use client"
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
 import { ThemeSelector } from "@/components/theme-selector"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/new-york/ui/tabs"
 
 import { RootComponents } from "./components"
 
@@ -11,7 +16,11 @@ const examples = [
   { id: "tasks", label: "Tasks", path: "/examples-embed/tasks" },
   { id: "playground", label: "Playground", path: "/examples-embed/playground" },
   { id: "music", label: "Music", path: "/examples-embed/music" },
-  { id: "authentication", label: "Authentication", path: "/examples-embed/authentication" },
+  {
+    id: "authentication",
+    label: "Authentication",
+    path: "/examples-embed/authentication",
+  },
 ]
 
 export function HomeContent() {

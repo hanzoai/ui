@@ -1,5 +1,6 @@
+import { Bell, Home, Search, Settings } from "lucide-react"
+
 import { MenuDock } from "@/registry/new-york/ui/menu-dock"
-import { Home, Search, Bell, Settings } from "lucide-react"
 
 export default function MenuDockDemo() {
   const menuItems = [

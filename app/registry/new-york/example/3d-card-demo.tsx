@@ -20,8 +20,8 @@ export default function ThreeDCardDemo() {
         </Card3DHeader>
         <Card3DContent>
           <p className="text-sm">
-            This card responds to your mouse movement with a realistic 3D perspective
-            transform and an interactive glare effect.
+            This card responds to your mouse movement with a realistic 3D
+            perspective transform and an interactive glare effect.
           </p>
         </Card3DContent>
         <Card3DFooter>

@@ -1,0 +1,423 @@
+---
+title: AI Voice
+description: Voice transcription and synthesis interface with real-time waveform visualization and voice commands
+---
+
+<ComponentPreview name="ai-voice-demo" />
+
+## Overview
+
+The AI Voice component provides a complete interface for voice interaction with AI systems. It includes real-time speech-to-text transcription, text-to-speech synthesis, waveform visualization, voice command recognition, and wake word detection.
+
+## Features
+
+- **Speech-to-Text** - Real-time voice transcription
+- **Text-to-Speech** - Natural voice synthesis
+- **Waveform Visualization** - Real-time audio visualization
+- **Voice Commands** - Command recognition and handling
+- **Wake Word Detection** - Hands-free activation ("Hey Assistant")
+- **Multiple Languages** - Support for 50+ languages
+- **Voice Profiles** - Different voices with adjustable speed/pitch
+- **Audio Recording** - Save and playback recordings
+- **Noise Cancellation** - Background noise filtering
+
+## Usage
+
+### Basic Voice Transcription
+
+```tsx
+import { AIVoice } from "@/components/ui/ai-voice"
+
+export default function VoiceInput() {
+  const handleTranscript = (text: string) => {
+    console.log("Transcribed:", text)
+  }
+
+  return (
+    <AIVoice
+      onTranscript={handleTranscript}
+      language="en-US"
+      autoStart={false}
+    />
+  )
+}
+```
+
+### Voice Chat Interface
+
+```tsx
+import { AIVoice } from "@/components/ui/ai-voice"
+import { AIChat } from "@/components/ui/ai-chat"
+import { useState } from "react"
+
+export default function VoiceChat() {
+  const [messages, setMessages] = useState([])
+  const [isListening, setIsListening] = useState(false)
+
+  const handleTranscript = async (text: string) => {
+    // Add user message
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: text, timestamp: new Date() },
+    ])
+
+    // Get AI response
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: text }),
+    })
+    const data = await response.json()
+
+    // Add assistant message and speak it
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: data.message, timestamp: new Date() },
+    ])
+
+    // Speak the response
+    speakText(data.message)
+  }
+
+  return (
+    <div className="flex flex-col space-y-4">
+      <AIChat messages={messages} />
+      <AIVoice
+        onTranscript={handleTranscript}
+        language="en-US"
+        wakeWord="hey assistant"
+      />
+    </div>
+  )
+}
+```
+
+### Voice Commands
+
+```tsx
+import { AIVoice, VoiceCommand } from "@/components/ui/ai-voice"
+
+const handleCommand = (command: VoiceCommand) => {
+  console.log("Command:", command.command)
+  console.log("Confidence:", command.confidence)
+  console.log("Parameters:", command.parameters)
+
+  // Handle different commands
+  switch (command.command) {
+    case "open settings":
+      // Navigate to settings
+      break
+    case "create new document":
+      // Create document
+      break
+    case "search for":
+      // Search with parameters
+      const query = command.parameters?.query
+      break
+  }
+}
+
+<AIVoice
+  onCommand={handleCommand}
+  wakeWord="computer"
+  language="en-US"
+/>
+```
+
+### Custom Voice Profiles
+
+```tsx
+import { AIVoice, VoiceProfile } from "@/components/ui/ai-voice"
+
+const customVoices: VoiceProfile[] = [
+  {
+    id: "assistant-female",
+    name: "Female Assistant",
+    language: "en-US",
+    gender: "female",
+    speed: 1.1,
+    pitch: 1.05,
+  },
+  {
+    id: "narrator-male",
+    name: "Male Narrator",
+    language: "en-GB",
+    gender: "male",
+    speed: 0.9,
+    pitch: 0.95,
+  },
+  {
+    id: "robot-voice",
+    name: "Robot Voice",
+    language: "en-US",
+    gender: "neutral",
+    speed: 1.0,
+    pitch: 0.8,
+  },
+]
+
+<AIVoice
+  voice={customVoices[0]}
+  onTranscript={handleTranscript}
+/>
+```
+
+## Props
+
+### AIVoiceProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `onTranscript` | `(text: string) => void` | - | Called with transcribed text |
+| `onCommand` | `(command: VoiceCommand) => void` | - | Called when command recognized |
+| `language` | `string` | `"en-US"` | Language code for recognition |
+| `voice` | `VoiceProfile` | Default | Voice profile for synthesis |
+| `wakeWord` | `string` | - | Wake word for hands-free activation |
+| `autoStart` | `boolean` | `false` | Start listening on mount |
+| `className` | `string` | - | Additional CSS classes |
+
+### VoiceProfile Interface
+
+```typescript
+interface VoiceProfile {
+  id: string
+  name: string
+  language: string
+  gender: "male" | "female" | "neutral"
+  accent?: string
+  speed?: number // 0.5 - 2.0
+  pitch?: number // 0.5 - 2.0
+}
+```
+
+### VoiceCommand Interface
+
+```typescript
+interface VoiceCommand {
+  command: string
+  confidence: number
+  timestamp: number
+  parameters?: Record<string, any>
+}
+```
+
+## Supported Languages
+
+The component supports 50+ languages including:
+
+- **English**: en-US, en-GB, en-AU, en-CA, en-IN
+- **Spanish**: es-ES, es-MX, es-AR
+- **French**: fr-FR, fr-CA
+- **German**: de-DE, de-AT, de-CH
+- **Italian**: it-IT
+- **Portuguese**: pt-BR, pt-PT
+- **Japanese**: ja-JP
+- **Korean**: ko-KR
+- **Chinese**: zh-CN, zh-TW, zh-HK
+- **Arabic**: ar-SA, ar-AE
+- **Hindi**: hi-IN
+- **Russian**: ru-RU
+- And many more...
+
+## Integration Examples
+
+### OpenAI Whisper (Speech-to-Text)
+
+```typescript
+import OpenAI from "openai"
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
+async function transcribeAudio(audioFile: File) {
+  const transcription = await openai.audio.transcriptions.create({
+    file: audioFile,
+    model: "whisper-1",
+    language: "en",
+    response_format: "json",
+  })
+
+  return transcription.text
+}
+```
+
+### OpenAI TTS (Text-to-Speech)
+
+```typescript
+async function synthesizeSpeech(text: string) {
+  const mp3 = await openai.audio.speech.create({
+    model: "tts-1",
+    voice: "alloy", // alloy, echo, fable, onyx, nova, shimmer
+    input: text,
+  })
+
+  const buffer = Buffer.from(await mp3.arrayBuffer())
+  return buffer
+}
+```
+
+### Google Cloud Speech-to-Text
+
+```typescript
+import speech from "@google-cloud/speech"
+
+const client = new speech.SpeechClient()
+
+async function transcribe(audioBytes: Buffer) {
+  const audio = { content: audioBytes.toString("base64") }
+  const config = {
+    encoding: "LINEAR16",
+    sampleRateHertz: 16000,
+    languageCode: "en-US",
+  }
+
+  const [response] = await client.recognize({ audio, config })
+  return response.results
+    ?.map((result) => result.alternatives?.[0]?.transcript)
+    .join("\n")
+}
+```
+
+### ElevenLabs TTS
+
+```typescript
+async function generateSpeech(text: string, voiceId: string) {
+  const response = await fetch(
+    `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": process.env.ELEVENLABS_API_KEY,
+      },
+      body: JSON.stringify({
+        text,
+        model_id: "eleven_monolingual_v1",
+        voice_settings: {
+          stability: 0.5,
+          similarity_boost: 0.5,
+        },
+      }),
+    }
+  )
+
+  return await response.arrayBuffer()
+}
+```
+
+## Waveform Visualization
+
+The component includes real-time audio waveform visualization:
+
+- **Frequency Bars** - Show audio frequencies
+- **Amplitude Waves** - Show audio volume over time
+- **Spectrum Analyzer** - Full frequency spectrum display
+- **Recording Indicator** - Visual feedback when recording
+- **Playback Progress** - Show playback position
+
+## Voice Controls
+
+### Recording Controls
+
+- **Start/Stop Recording** - Mic button toggles recording
+- **Pause/Resume** - Pause without stopping recording
+- **Clear** - Discard current recording
+- **Settings** - Adjust microphone and voice settings
+
+### Playback Controls
+
+- **Play/Pause** - Control audio playback
+- **Volume** - Adjust output volume
+- **Speed** - Adjust playback speed (0.5x - 2.0x)
+- **Pitch** - Adjust voice pitch
+
+## Wake Word Detection
+
+Enable hands-free activation with wake words:
+
+```tsx
+<AIVoice
+  wakeWord="hey assistant"
+  onTranscript={handleTranscript}
+  autoStart={true}
+/>
+```
+
+When the wake word is detected:
+1. Component activates listening mode
+2. Visual indicator shows it's listening
+3. Processes user's command
+4. Returns to standby after response
+
+## Command Recognition
+
+Define custom voice commands:
+
+```typescript
+const commands = [
+  {
+    pattern: /open (.*)/i,
+    handler: (matches) => {
+      const app = matches[1]
+      // Open application
+    },
+  },
+  {
+    pattern: /search for (.*)/i,
+    handler: (matches) => {
+      const query = matches[1]
+      // Perform search
+    },
+  },
+  {
+    pattern: /create (.*)/i,
+    handler: (matches) => {
+      const item = matches[1]
+      // Create item
+    },
+  },
+]
+```
+
+## Noise Cancellation
+
+The component includes noise cancellation features:
+
+- **Microphone Noise Filter** - Reduce background noise
+- **Echo Cancellation** - Remove echo and feedback
+- **Gain Control** - Automatic volume adjustment
+- **Wind Noise Reduction** - Filter wind noise
+- **Voice Activity Detection** - Detect when user is speaking
+
+## Accessibility
+
+- Keyboard shortcuts for all controls
+- Screen reader announcements for transcripts
+- Visual indicators for recording/listening states
+- High contrast mode support
+- Focus management
+
+## Performance
+
+- Web Audio API for efficient audio processing
+- Streaming transcription for low latency
+- Buffered audio playback
+- Memory-efficient waveform rendering
+- Web Workers for audio processing
+
+## Browser Support
+
+Requires browsers with:
+- Web Audio API support
+- MediaRecorder API support
+- Web Speech API (optional, for basic functionality)
+
+Supported in:
+- Chrome 47+
+- Firefox 55+
+- Safari 14.1+
+- Edge 79+
+
+## Related Components
+
+- [AI Chat](/docs/ai/chat) - Voice-enabled chat interface
+- [AI Assistant](/docs/ai/assistant) - Conversational AI with voice
+- [AI Actions](/docs/ai/actions) - Voice-activated actions

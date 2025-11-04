@@ -4119,6 +4119,61 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "newsletter-01": {
+      name: "newsletter-01",
+      type: "components:block",
+      registryDependencies: ["button","card","input"],
+      component: React.lazy(() => import("@/registry/default/block/newsletter-01")),
+      source: "__registry__/default/block/newsletter-01.tsx",
+      files: ["registry/default/block/newsletter-01.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-02": {
+      name: "newsletter-02",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/default/block/newsletter-02")),
+      source: "__registry__/default/block/newsletter-02.tsx",
+      files: ["registry/default/block/newsletter-02.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-03": {
+      name: "newsletter-03",
+      type: "components:block",
+      registryDependencies: ["button","card","input"],
+      component: React.lazy(() => import("@/registry/default/block/newsletter-03")),
+      source: "__registry__/default/block/newsletter-03.tsx",
+      files: ["registry/default/block/newsletter-03.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-04": {
+      name: "newsletter-04",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/default/block/newsletter-04")),
+      source: "__registry__/default/block/newsletter-04.tsx",
+      files: ["registry/default/block/newsletter-04.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-05": {
+      name: "newsletter-05",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/default/block/newsletter-05")),
+      source: "__registry__/default/block/newsletter-05.tsx",
+      files: ["registry/default/block/newsletter-05.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
     "dashboard-05": {
       name: "dashboard-05",
       type: "components:block",
@@ -9257,6 +9312,61 @@ export const Index: Record<string, any> = {
       files: ["registry/new-york/example/video-player-demo.tsx"],
       category: "undefined",
       subcategory: "undefined",
+      chunks: []
+    },
+    "newsletter-01": {
+      name: "newsletter-01",
+      type: "components:block",
+      registryDependencies: ["button","card","input"],
+      component: React.lazy(() => import("@/registry/new-york/block/newsletter-01")),
+      source: "__registry__/new-york/block/newsletter-01.tsx",
+      files: ["registry/new-york/block/newsletter-01.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-02": {
+      name: "newsletter-02",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/new-york/block/newsletter-02")),
+      source: "__registry__/new-york/block/newsletter-02.tsx",
+      files: ["registry/new-york/block/newsletter-02.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-03": {
+      name: "newsletter-03",
+      type: "components:block",
+      registryDependencies: ["button","card","input"],
+      component: React.lazy(() => import("@/registry/new-york/block/newsletter-03")),
+      source: "__registry__/new-york/block/newsletter-03.tsx",
+      files: ["registry/new-york/block/newsletter-03.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-04": {
+      name: "newsletter-04",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/new-york/block/newsletter-04")),
+      source: "__registry__/new-york/block/newsletter-04.tsx",
+      files: ["registry/new-york/block/newsletter-04.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
+      chunks: []
+    },
+    "newsletter-05": {
+      name: "newsletter-05",
+      type: "components:block",
+      registryDependencies: ["button","input"],
+      component: React.lazy(() => import("@/registry/new-york/block/newsletter-05")),
+      source: "__registry__/new-york/block/newsletter-05.tsx",
+      files: ["registry/new-york/block/newsletter-05.tsx"],
+      category: "Marketing",
+      subcategory: "Newsletter",
       chunks: []
     },
     "dashboard-05": {

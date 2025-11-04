@@ -1,0 +1,54 @@
+---
+title: AI Actions
+description: Pre-built AI action buttons and command palette for common AI tasks
+---
+
+<ComponentPreview name="ai-actions-demo" />
+
+## Overview
+
+AI Actions provides a command palette and quick action buttons for common AI operations like summarize, translate, explain, and improve text. Perfect for adding AI capabilities to any text editor or content management system.
+
+## Features
+
+- **Action Palette** - Searchable command palette with keyboard shortcuts
+- **Quick Actions** - One-click buttons for common tasks
+- **Context-Aware** - Actions adapt based on selected text
+- **Customizable** - Add your own actions and prompts
+- **Keyboard Shortcuts** - Fast access with hotkeys
+
+## Usage
+
+```tsx
+import { AIActions } from "@/components/ui/ai-actions"
+
+export default function Editor() {
+  const handleAction = (action: string, text: string) => {
+    console.log(`Executing ${action} on:`, text)
+    // Send to AI API
+  }
+
+  return (
+    <AIActions
+      selectedText="Your selected text here"
+      onAction={handleAction}
+    />
+  )
+}
+```
+
+## Built-in Actions
+
+- **Summarize** - Create concise summary
+- **Explain** - Simplify complex text
+- **Translate** - Convert to another language
+- **Improve** - Enhance writing quality
+- **Fix Grammar** - Correct spelling and grammar
+- **Change Tone** - Adjust formal/casual tone
+- **Expand** - Add more detail
+- **Shorten** - Make more concise
+
+## Related
+
+- [AI Chat](/docs/ai/chat) - Conversational AI interface
+- [AI Playground](/docs/ai/playground) - Test and experiment

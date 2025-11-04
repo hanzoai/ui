@@ -1,0 +1,371 @@
+---
+title: AI Models
+description: Model selection dropdown for choosing between different AI models and providers
+---
+
+<ComponentPreview name="ai-models-demo" />
+
+## Overview
+
+The AI Models component provides a clean dropdown interface for selecting AI models from different providers. It displays model names, providers, and optional descriptions in an organized, searchable format.
+
+## Features
+
+- **Provider Grouping** - Group models by provider (OpenAI, Anthropic, Google, etc.)
+- **Model Metadata** - Display model capabilities and descriptions
+- **Search/Filter** - Quickly find specific models
+- **Clean UI** - Simple, accessible dropdown interface
+- **Customizable** - Add custom models and providers
+
+## Usage
+
+### Basic Model Selection
+
+```tsx
+import { AIModels } from "@/components/ui/ai-models"
+
+const models = [
+  {
+    id: "gpt-4-turbo",
+    name: "GPT-4 Turbo",
+    provider: "OpenAI",
+    description: "Most capable model, great for complex tasks",
+  },
+  {
+    id: "gpt-3.5-turbo",
+    name: "GPT-3.5 Turbo",
+    provider: "OpenAI",
+    description: "Fast and efficient for most tasks",
+  },
+  {
+    id: "claude-3-opus",
+    name: "Claude 3 Opus",
+    provider: "Anthropic",
+    description: "Powerful model with strong reasoning",
+  },
+]
+
+export default function ModelPicker() {
+  const [selectedModel, setSelectedModel] = useState("gpt-4-turbo")
+
+  return (
+    <AIModels
+      models={models}
+      selectedModel={selectedModel}
+      onModelSelect={setSelectedModel}
+    />
+  )
+}
+```
+
+### With Complete Model Catalog
+
+```tsx
+import { AIModels } from "@/components/ui/ai-models"
+
+const modelCatalog = [
+  // OpenAI Models
+  {
+    id: "gpt-4-turbo-preview",
+    name: "GPT-4 Turbo Preview",
+    provider: "OpenAI",
+    description: "Latest GPT-4 with 128K context",
+  },
+  {
+    id: "gpt-4",
+    name: "GPT-4",
+    provider: "OpenAI",
+    description: "Standard GPT-4 with 8K context",
+  },
+  {
+    id: "gpt-3.5-turbo",
+    name: "GPT-3.5 Turbo",
+    provider: "OpenAI",
+    description: "Fast and cost-effective",
+  },
+
+  // Anthropic Models
+  {
+    id: "claude-3-opus-20240229",
+    name: "Claude 3 Opus",
+    provider: "Anthropic",
+    description: "Most capable Claude model",
+  },
+  {
+    id: "claude-3-sonnet-20240229",
+    name: "Claude 3 Sonnet",
+    provider: "Anthropic",
+    description: "Balanced performance and speed",
+  },
+  {
+    id: "claude-3-haiku-20240307",
+    name: "Claude 3 Haiku",
+    provider: "Anthropic",
+    description: "Fastest Claude model",
+  },
+
+  // Google Models
+  {
+    id: "gemini-pro",
+    name: "Gemini Pro",
+    provider: "Google",
+    description: "Multimodal AI model",
+  },
+  {
+    id: "gemini-pro-vision",
+    name: "Gemini Pro Vision",
+    provider: "Google",
+    description: "Gemini with vision capabilities",
+  },
+
+  // Open Source Models
+  {
+    id: "mixtral-8x7b",
+    name: "Mixtral 8x7B",
+    provider: "Mistral AI",
+    description: "Open source mixture of experts",
+  },
+  {
+    id: "llama-2-70b",
+    name: "LLaMA 2 70B",
+    provider: "Meta",
+    description: "Open source large language model",
+  },
+]
+
+<AIModels
+  models={modelCatalog}
+  selectedModel={selectedModel}
+  onModelSelect={handleModelChange}
+/>
+```
+
+### Integration with AI Chat
+
+```tsx
+import { AIModels } from "@/components/ui/ai-models"
+import { AIChat } from "@/components/ui/ai-chat"
+import { useState } from "react"
+
+export default function ChatWithModelSelection() {
+  const [currentModel, setCurrentModel] = useState("gpt-4-turbo")
+  const [messages, setMessages] = useState([])
+
+  const handleSendMessage = async (message: string) => {
+    // Use currentModel for API request
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({
+        model: currentModel,
+        messages: [...messages, { role: "user", content: message }],
+      }),
+    })
+    // Handle response...
+  }
+
+  return (
+    <div className="flex h-screen flex-col">
+      {/* Model selector in header */}
+      <div className="border-b p-4">
+        <AIModels
+          models={models}
+          selectedModel={currentModel}
+          onModelSelect={setCurrentModel}
+        />
+      </div>
+
+      {/* Chat interface */}
+      <AIChat
+        model={currentModel}
+        messages={messages}
+        onSendMessage={handleSendMessage}
+      />
+    </div>
+  )
+}
+```
+
+## Props
+
+### AIModelsProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `models` | `AIModel[]` | `[]` | Array of available models |
+| `selectedModel` | `string` | - | Currently selected model ID |
+| `onModelSelect` | `(modelId: string) => void` | - | Called when model changes |
+| `className` | `string` | - | Additional CSS classes |
+
+### AIModel Interface
+
+```typescript
+interface AIModel {
+  id: string // Unique model identifier
+  name: string // Display name
+  description?: string // Model description
+  provider?: string // Provider name (OpenAI, Anthropic, etc.)
+}
+```
+
+## Model Grouping
+
+For large model catalogs, you can group by provider:
+
+```tsx
+const groupedModels = {
+  OpenAI: [
+    { id: "gpt-4-turbo", name: "GPT-4 Turbo", provider: "OpenAI" },
+    { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", provider: "OpenAI" },
+  ],
+  Anthropic: [
+    { id: "claude-3-opus", name: "Claude 3 Opus", provider: "Anthropic" },
+    { id: "claude-3-sonnet", name: "Claude 3 Sonnet", provider: "Anthropic" },
+  ],
+  Google: [
+    { id: "gemini-pro", name: "Gemini Pro", provider: "Google" },
+  ],
+}
+```
+
+## Common Model Configurations
+
+### GPT Models (OpenAI)
+
+```typescript
+const gptModels = [
+  { id: "gpt-4-turbo-preview", name: "GPT-4 Turbo", provider: "OpenAI" },
+  { id: "gpt-4", name: "GPT-4", provider: "OpenAI" },
+  { id: "gpt-3.5-turbo", name: "GPT-3.5 Turbo", provider: "OpenAI" },
+]
+```
+
+### Claude Models (Anthropic)
+
+```typescript
+const claudeModels = [
+  { id: "claude-3-opus-20240229", name: "Claude 3 Opus", provider: "Anthropic" },
+  { id: "claude-3-sonnet-20240229", name: "Claude 3 Sonnet", provider: "Anthropic" },
+  { id: "claude-3-haiku-20240307", name: "Claude 3 Haiku", provider: "Anthropic" },
+]
+```
+
+### Gemini Models (Google)
+
+```typescript
+const geminiModels = [
+  { id: "gemini-pro", name: "Gemini Pro", provider: "Google" },
+  { id: "gemini-pro-vision", name: "Gemini Pro Vision", provider: "Google" },
+]
+```
+
+### Open Source Models
+
+```typescript
+const openSourceModels = [
+  { id: "mixtral-8x7b-instruct", name: "Mixtral 8x7B", provider: "Mistral AI" },
+  { id: "llama-2-70b-chat", name: "LLaMA 2 70B Chat", provider: "Meta" },
+  { id: "mistral-7b-instruct", name: "Mistral 7B", provider: "Mistral AI" },
+]
+```
+
+## Dynamic Model Loading
+
+Load models from an API:
+
+```tsx
+import { AIModels } from "@/components/ui/ai-models"
+import { useEffect, useState } from "react"
+
+export default function DynamicModels() {
+  const [models, setModels] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchModels() {
+      const response = await fetch("/api/models")
+      const data = await response.json()
+      setModels(data.models)
+      setLoading(false)
+    }
+    fetchModels()
+  }, [])
+
+  if (loading) return <div>Loading models...</div>
+
+  return (
+    <AIModels
+      models={models}
+      selectedModel={selectedModel}
+      onModelSelect={setSelectedModel}
+    />
+  )
+}
+```
+
+## Model Capabilities
+
+Track model capabilities for UI hints:
+
+```typescript
+interface ExtendedAIModel {
+  id: string
+  name: string
+  provider: string
+  capabilities: {
+    vision?: boolean
+    functionCalling?: boolean
+    streaming?: boolean
+    maxTokens?: number
+    contextWindow?: number
+  }
+}
+
+const modelsWithCapabilities: ExtendedAIModel[] = [
+  {
+    id: "gpt-4-turbo",
+    name: "GPT-4 Turbo",
+    provider: "OpenAI",
+    capabilities: {
+      vision: false,
+      functionCalling: true,
+      streaming: true,
+      maxTokens: 4096,
+      contextWindow: 128000,
+    },
+  },
+  {
+    id: "gpt-4-vision",
+    name: "GPT-4 Vision",
+    provider: "OpenAI",
+    capabilities: {
+      vision: true,
+      functionCalling: true,
+      streaming: true,
+      maxTokens: 4096,
+      contextWindow: 128000,
+    },
+  },
+]
+```
+
+## Styling
+
+The component uses Radix UI Select with shadcn/ui theming:
+
+- Inherits border, background, and text colors from theme
+- Adapts to light/dark mode
+- Hover and focus states for accessibility
+- Mobile-friendly dropdown behavior
+
+## Accessibility
+
+- Keyboard navigation with arrow keys
+- Screen reader friendly labels
+- Focus management
+- ARIA attributes for proper semantics
+
+## Related Components
+
+- [AI Chat](/docs/ai/chat) - Chat interface with model selection
+- [AI Playground](/docs/ai/playground) - Test different models
+- [AI Assistant](/docs/ai/assistant) - Conversational AI with model switching

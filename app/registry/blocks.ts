@@ -2,6 +2,46 @@ import { Registry } from "@/registry/schema"
 
 export const blocks: Registry = [
   {
+    name: "newsletter-01",
+    type: "components:block",
+    registryDependencies: ["button", "card", "input"],
+    files: ["block/newsletter-01.tsx"],
+    category: "Marketing",
+    subcategory: "Newsletter",
+  },
+  {
+    name: "newsletter-02",
+    type: "components:block",
+    registryDependencies: ["button", "input"],
+    files: ["block/newsletter-02.tsx"],
+    category: "Marketing",
+    subcategory: "Newsletter",
+  },
+  {
+    name: "newsletter-03",
+    type: "components:block",
+    registryDependencies: ["button", "card", "input"],
+    files: ["block/newsletter-03.tsx"],
+    category: "Marketing",
+    subcategory: "Newsletter",
+  },
+  {
+    name: "newsletter-04",
+    type: "components:block",
+    registryDependencies: ["button", "input"],
+    files: ["block/newsletter-04.tsx"],
+    category: "Marketing",
+    subcategory: "Newsletter",
+  },
+  {
+    name: "newsletter-05",
+    type: "components:block",
+    registryDependencies: ["button", "input"],
+    files: ["block/newsletter-05.tsx"],
+    category: "Marketing",
+    subcategory: "Newsletter",
+  },
+  {
     name: "dashboard-05",
     type: "components:block",
     registryDependencies: [
