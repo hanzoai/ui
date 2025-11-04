@@ -2,12 +2,15 @@ import { Metadata } from "next"
 import Link from "next/link"
 
 import { Announcement } from "@/components/announcement"
+import { ExamplesNav } from "@/components/examples-nav"
 import {
   PageActions,
   PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header"
+import { PageNav } from "@/components/page-nav"
+import { ThemeSelector } from "@/components/theme-selector"
 import { Button } from "@/registry/new-york/ui/button"
 
 import { HomeContent } from "./home-content"
@@ -59,6 +62,10 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
+      <PageNav className="hidden md:flex">
+        <ExamplesNav className="[&>a:first-child]:text-primary flex-1 overflow-hidden" />
+        <ThemeSelector className="mr-4 hidden md:flex" />
+      </PageNav>
       <HomeContent />
     </div>
   )
