@@ -1,9 +1,9 @@
-import { VideoPlayer } from "@/registry/default/ui/video-player"
+import Component from "@/registry/new-york/ui/video-player"
 
 export default function VideoPlayerDemo() {
   return (
     <div className="w-full min-h-[400px] flex items-center justify-center">
-      <VideoPlayer />
+      <Component />
     </div>
   )
 }
