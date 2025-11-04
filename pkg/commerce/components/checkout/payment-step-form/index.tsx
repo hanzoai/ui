@@ -35,7 +35,6 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   }
 
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
-    // @ts-expect-error Zod version incompatibility between ZodTypeDef and $ZodTypeInternals
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: auth?.user?.displayName ?? '',
