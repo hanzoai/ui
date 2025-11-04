@@ -57,11 +57,6 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  // Skip static generation for blocks in GitHub Actions (static export)
-  if (process.env.GITHUB_ACTIONS) {
-    return []
-  }
-
   const blockIds = await getAllBlockIds()
   return styles
     .map((style) =>
@@ -90,26 +85,32 @@ export default async function BlockPage({
 
   const Component = block.component
 
-  // Keep shallow copy of chunks with components for rendering
-  const chunks = block.chunks?.map((chunk) => ({ ...chunk }))
-  
-  // Clean up non-serializable data from block object (not from chunks copy)
-  delete block.component
-  block.chunks?.forEach((chunk) => delete chunk.component)
+  // Create serializable copy of block for client components
+  const serializableBlock = {
+    ...block,
+    component: undefined,
+    chunks: block.chunks?.map(({ component, ...chunk }) => chunk) || []
+  }
+
+  // Keep original chunks with components for server-side rendering
+  const chunks = block.chunks || []
 
   return (
     <div className={cn(block.container?.className || "", "theme-zinc")}>
-      <BlockWrapper block={block}>
+      <BlockWrapper block={serializableBlock}>
         <Component />
-        {chunks?.map((chunk, index) => (
-          <BlockChunk
-            key={chunk.name}
-            block={block}
-            chunk={block.chunks?.[index]}
-          >
-            {chunk.component && <chunk.component />}
-          </BlockChunk>
-        ))}
+        {chunks.map((chunk, index) => {
+          const ChunkComponent = chunk.component
+          return (
+            <BlockChunk
+              key={chunk.name}
+              block={serializableBlock}
+              chunk={serializableBlock.chunks?.[index]}
+            >
+              {ChunkComponent && <ChunkComponent />}
+            </BlockChunk>
+          )
+        })}
       </BlockWrapper>
     </div>
   )
