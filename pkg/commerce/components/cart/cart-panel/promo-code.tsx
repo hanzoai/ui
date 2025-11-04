@@ -53,7 +53,6 @@ const PromoCode = observer(() => {
   }, [cmmc.appliedPromo])
 
   const form = useForm<z.infer<typeof formSchema>>({
-    // @ts-expect-error Zod version incompatibility between ZodTypeDef and $ZodTypeInternals
     resolver: zodResolver(formSchema),
     defaultValues: {
       code: '',
