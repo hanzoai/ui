@@ -21,30 +21,35 @@ The AI Agents component provides a visual workflow designer for creating, managi
 ## Agent Types
 
 ### Research Agent
+
 - **Capabilities**: Web search, data analysis, fact-checking, source validation
 - **Icon**: Search
 - **Color**: Blue
 - **Best for**: Information gathering, market research, competitive analysis
 
 ### Code Agent
+
 - **Capabilities**: Code generation, debugging, testing, optimization
 - **Icon**: Code
 - **Color**: Green
 - **Best for**: Development tasks, refactoring, code reviews
 
 ### Analysis Agent
+
 - **Capabilities**: Data processing, pattern recognition, insights, reporting
 - **Icon**: Brain
 - **Color**: Purple
 - **Best for**: Data analysis, business intelligence, trend detection
 
 ### Creative Agent
+
 - **Capabilities**: Content creation, design, brainstorming, storytelling
 - **Icon**: Palette
 - **Color**: Pink
 - **Best for**: Marketing content, design concepts, creative writing
 
 ### Automation Agent
+
 - **Capabilities**: Workflow execution, API integration, scheduling, monitoring
 - **Icon**: Zap
 - **Color**: Orange
@@ -136,6 +141,7 @@ const initialAgents = [
 ## Task Assignment
 
 Tasks include:
+
 - **Title** - Short task description
 - **Description** - Detailed requirements
 - **Priority** - Low, Medium, or High
@@ -147,6 +153,7 @@ Agents can only be assigned tasks when in "idle" status.
 ## Performance Tracking
 
 Each agent tracks:
+
 - **Tasks Completed** - Total number of finished tasks
 - **Success Rate** - Percentage of successful completions
 - **Avg Completion Time** - Average time in minutes per task
@@ -154,6 +161,7 @@ Each agent tracks:
 ## Agent Communication
 
 The workflow designer visualizes agent connections with:
+
 - **Animated Lines** - Show active data flow
 - **Directional Arrows** - Indicate data direction
 - **Pulse Effects** - Highlight active transfers
@@ -170,6 +178,7 @@ The workflow designer visualizes agent connections with:
 ## Drag & Drop
 
 Agents on the workflow designer can be:
+
 - **Clicked** - Select for details
 - **Dragged** - Reposition on canvas
 - **Edited** - Modify settings (button)
@@ -178,6 +187,7 @@ Agents on the workflow designer can be:
 ## State Management
 
 The component manages:
+
 - Agent positions and connections
 - Task assignments and progress
 - Workflow execution state
@@ -209,7 +219,7 @@ const handleSave = (workflow) => {
   })
 }
 
-<AIAgents onWorkflowSave={handleSave} />
+;<AIAgents onWorkflowSave={handleSave} />
 ```
 
 ## Examples
@@ -247,14 +257,14 @@ const contentTeam = [
 
 ### AIAgentsProps
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `agents` | `Agent[]` | Initial agents to display |
-| `onAgentCreate` | `(agent) => void` | Called when new agent created |
-| `onTaskAssign` | `(task, agentId) => void` | Called when task assigned |
-| `onWorkflowSave` | `(workflow) => void` | Called when workflow saved |
-| `workflowMode` | `"sequential" \| "parallel" \| "custom"` | Execution mode |
-| `className` | `string` | Additional CSS classes |
+| Prop             | Type                                     | Description                   |
+| ---------------- | ---------------------------------------- | ----------------------------- |
+| `agents`         | `Agent[]`                                | Initial agents to display     |
+| `onAgentCreate`  | `(agent) => void`                        | Called when new agent created |
+| `onTaskAssign`   | `(task, agentId) => void`                | Called when task assigned     |
+| `onWorkflowSave` | `(workflow) => void`                     | Called when workflow saved    |
+| `workflowMode`   | `"sequential" \| "parallel" \| "custom"` | Execution mode                |
+| `className`      | `string`                                 | Additional CSS classes        |
 
 ### Agent Interface
 

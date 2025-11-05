@@ -218,7 +218,7 @@ describe('Auth Forms - Comprehensive Validation', () => {
       for (const { LoginForm } of forms) {
         const { unmount } = render(<LoginForm />)
 
-        expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /^login$/i })).toBeInTheDocument()
 
         unmount()
       }

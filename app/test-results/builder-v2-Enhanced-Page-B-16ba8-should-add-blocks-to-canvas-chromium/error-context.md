@@ -1,0 +1,8041 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - link [ref=e7] [cursor=pointer]:
+            - /url: /
+            - img [ref=e8]
+          - navigation [ref=e16]:
+            - link "Docs" [ref=e17] [cursor=pointer]:
+              - /url: /docs/installation/
+            - link "Components" [ref=e18] [cursor=pointer]:
+              - /url: /docs/components/
+            - link "AI" [ref=e19] [cursor=pointer]:
+              - /url: /ai/
+            - link "Blocks" [ref=e20] [cursor=pointer]:
+              - /url: /blocks/
+            - link "Charts" [ref=e21] [cursor=pointer]:
+              - /url: /charts/
+            - link "Themes" [ref=e22] [cursor=pointer]:
+              - /url: /themes/
+            - link "Colors" [ref=e23] [cursor=pointer]:
+              - /url: /colors/
+            - link "MCP" [ref=e24] [cursor=pointer]:
+              - /url: /mcp/
+        - generic [ref=e25]:
+          - button "Search documentation... ⌘ K" [ref=e27]:
+            - generic [ref=e28]: Search documentation...
+            - generic:
+              - generic: ⌘
+              - text: K
+          - navigation [ref=e29]:
+            - link "GitHub" [ref=e30] [cursor=pointer]:
+              - /url: https://github.com/hanzoai/ui
+              - generic [ref=e31]:
+                - img
+                - generic [ref=e32]: GitHub
+            - link "Twitter" [ref=e33] [cursor=pointer]:
+              - /url: https://x.com/hanzoai
+              - generic [ref=e34]:
+                - img
+                - generic [ref=e35]: Twitter
+            - button "Toggle theme" [ref=e36]:
+              - img
+              - generic [ref=e37]: Toggle theme
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - heading "Component Library" [level=2] [ref=e42]
+            - paragraph [ref=e43]: Add blocks, components, and layouts
+          - generic [ref=e44]:
+            - tablist [ref=e45]:
+              - tab "Blocks" [selected] [ref=e46]
+              - tab "Components" [ref=e47]
+            - generic [ref=e48]:
+              - textbox "Filter blocks..." [ref=e49]
+              - button "Add Container" [ref=e51]:
+                - img
+                - text: Add Container
+              - tabpanel "Blocks" [active] [ref=e55]:
+                - generic [ref=e56] [cursor=pointer]:
+                  - generic [ref=e57]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Login
+                            - generic: Enter your email below to login to your account.
+                          - generic:
+                            - generic:
+                              - generic: Email
+                              - textbox "Email Email Email Email Email Email Email Email Email Email address Email Email Email Email Email":
+                                - /placeholder: m@example.com
+                            - generic:
+                              - generic: Password
+                              - textbox "Password Password Password Password Password Password Password Password Password Password Password Password Password"
+                          - generic:
+                            - button "Sign in"
+                    - generic [ref=e59]:
+                      - img [ref=e60]
+                      - generic [ref=e61]: Add to page
+                  - paragraph [ref=e63]: authentication-01
+                - generic [ref=e64] [cursor=pointer]:
+                  - generic [ref=e65]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Login
+                            - generic: Enter your email below to login to your account
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Email
+                                - textbox "m@example.com"
+                              - generic:
+                                - generic:
+                                  - generic: Password
+                                  - link "Forgot your password?":
+                                    - /url: "#"
+                                - textbox
+                              - button "Login"
+                              - button "Login with Google"
+                            - generic:
+                              - text: Don't have an account?
+                              - link "Sign up":
+                                - /url: "#"
+                    - generic [ref=e67]:
+                      - img [ref=e68]
+                      - generic [ref=e69]: Add to page
+                  - paragraph [ref=e71]: authentication-02
+                - generic [ref=e72] [cursor=pointer]:
+                  - generic [ref=e73]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Sign Up
+                            - generic: Enter your information to create an account
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: First name
+                                  - textbox "First name":
+                                    - /placeholder: Max
+                                - generic:
+                                  - generic: Last name
+                                  - textbox "Last name":
+                                    - /placeholder: Robinson
+                              - generic:
+                                - generic: Email
+                                - textbox "m@example.com"
+                              - generic:
+                                - generic: Password
+                                - textbox
+                              - button "Create an account"
+                              - button "Sign up with GitHub"
+                            - generic:
+                              - text: Already have an account?
+                              - link "Sign in":
+                                - /url: "#"
+                    - generic [ref=e75]:
+                      - img [ref=e76]
+                      - generic [ref=e77]: Add to page
+                  - paragraph [ref=e79]: authentication-03
+                - generic [ref=e80] [cursor=pointer]:
+                  - generic [ref=e81]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - heading "Login" [level=1]
+                                - paragraph: Enter your email below to login to your account
+                              - generic:
+                                - generic:
+                                  - generic: Email
+                                  - textbox "m@example.com"
+                                - generic:
+                                  - generic:
+                                    - generic: Password
+                                    - link "Forgot your password?":
+                                      - /url: /forgot-password/
+                                  - textbox
+                                - button "Login"
+                                - button "Login with Google"
+                              - generic:
+                                - text: Don't have an account?
+                                - link "Sign up":
+                                  - /url: "#"
+                          - generic:
+                            - img "Image"
+                    - generic [ref=e83]:
+                      - img [ref=e84]
+                      - generic [ref=e85]: Add to page
+                  - paragraph [ref=e87]: authentication-04
+                - generic [ref=e88] [cursor=pointer]:
+                  - generic [ref=e89]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025": "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025": "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025": "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025": "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025": "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025": "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                    - generic [ref=e91]:
+                      - img [ref=e92]
+                      - generic [ref=e93]: Add to page
+                  - paragraph [ref=e95]: calendar-01
+                - generic [ref=e96] [cursor=pointer]:
+                  - generic [ref=e97]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025": "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025": "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025": "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025": "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025": "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025": "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                            - generic:
+                              - generic:
+                                - status: July 2025
+                              - grid "July 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                                  - row "Sunday, July 6th, 2025 Monday, July 7th, 2025 Tuesday, July 8th, 2025 Wednesday, July 9th, 2025 Thursday, July 10th, 2025 Friday, July 11th, 2025 Saturday, July 12th, 2025":
+                                    - gridcell "Sunday, July 6th, 2025":
+                                      - button "Sunday, July 6th, 2025": "6"
+                                    - gridcell "Monday, July 7th, 2025":
+                                      - button "Monday, July 7th, 2025": "7"
+                                    - gridcell "Tuesday, July 8th, 2025":
+                                      - button "Tuesday, July 8th, 2025": "8"
+                                    - gridcell "Wednesday, July 9th, 2025":
+                                      - button "Wednesday, July 9th, 2025": "9"
+                                    - gridcell "Thursday, July 10th, 2025":
+                                      - button "Thursday, July 10th, 2025": "10"
+                                    - gridcell "Friday, July 11th, 2025":
+                                      - button "Friday, July 11th, 2025": "11"
+                                    - gridcell "Saturday, July 12th, 2025":
+                                      - button "Saturday, July 12th, 2025": "12"
+                                  - row "Sunday, July 13th, 2025 Monday, July 14th, 2025 Tuesday, July 15th, 2025 Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                    - gridcell "Sunday, July 13th, 2025":
+                                      - button "Sunday, July 13th, 2025": "13"
+                                    - gridcell "Monday, July 14th, 2025":
+                                      - button "Monday, July 14th, 2025": "14"
+                                    - gridcell "Tuesday, July 15th, 2025":
+                                      - button "Tuesday, July 15th, 2025": "15"
+                                    - gridcell "Wednesday, July 16th, 2025":
+                                      - button "Wednesday, July 16th, 2025": "16"
+                                    - gridcell "Thursday, July 17th, 2025":
+                                      - button "Thursday, July 17th, 2025": "17"
+                                    - gridcell "Friday, July 18th, 2025":
+                                      - button "Friday, July 18th, 2025": "18"
+                                    - gridcell "Saturday, July 19th, 2025":
+                                      - button "Saturday, July 19th, 2025": "19"
+                                  - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025 Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                    - gridcell "Sunday, July 20th, 2025":
+                                      - button "Sunday, July 20th, 2025": "20"
+                                    - gridcell "Monday, July 21st, 2025":
+                                      - button "Monday, July 21st, 2025": "21"
+                                    - gridcell "Tuesday, July 22nd, 2025":
+                                      - button "Tuesday, July 22nd, 2025": "22"
+                                    - gridcell "Wednesday, July 23rd, 2025":
+                                      - button "Wednesday, July 23rd, 2025": "23"
+                                    - gridcell "Thursday, July 24th, 2025":
+                                      - button "Thursday, July 24th, 2025": "24"
+                                    - gridcell "Friday, July 25th, 2025":
+                                      - button "Friday, July 25th, 2025": "25"
+                                    - gridcell "Saturday, July 26th, 2025":
+                                      - button "Saturday, July 26th, 2025": "26"
+                                  - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025 Friday, August 1st, 2025 Saturday, August 2nd, 2025":
+                                    - gridcell "Sunday, July 27th, 2025":
+                                      - button "Sunday, July 27th, 2025": "27"
+                                    - gridcell "Monday, July 28th, 2025":
+                                      - button "Monday, July 28th, 2025": "28"
+                                    - gridcell "Tuesday, July 29th, 2025":
+                                      - button "Tuesday, July 29th, 2025": "29"
+                                    - gridcell "Wednesday, July 30th, 2025":
+                                      - button "Wednesday, July 30th, 2025": "30"
+                                    - gridcell "Thursday, July 31st, 2025":
+                                      - button "Thursday, July 31st, 2025": "31"
+                                    - gridcell "Friday, August 1st, 2025":
+                                      - button "Friday, August 1st, 2025": "1"
+                                    - gridcell "Saturday, August 2nd, 2025":
+                                      - button "Saturday, August 2nd, 2025": "2"
+                    - generic [ref=e99]:
+                      - img [ref=e100]
+                      - generic [ref=e101]: Add to page
+                  - paragraph [ref=e103]: calendar-02
+                - generic [ref=e104] [cursor=pointer]:
+                  - generic [ref=e105]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025": "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025": "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025": "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025": "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025": "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025": "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                            - generic:
+                              - generic:
+                                - status: July 2025
+                              - grid "July 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                                  - row "Sunday, July 6th, 2025 Monday, July 7th, 2025 Tuesday, July 8th, 2025 Wednesday, July 9th, 2025 Thursday, July 10th, 2025 Friday, July 11th, 2025 Saturday, July 12th, 2025":
+                                    - gridcell "Sunday, July 6th, 2025":
+                                      - button "Sunday, July 6th, 2025": "6"
+                                    - gridcell "Monday, July 7th, 2025":
+                                      - button "Monday, July 7th, 2025": "7"
+                                    - gridcell "Tuesday, July 8th, 2025":
+                                      - button "Tuesday, July 8th, 2025": "8"
+                                    - gridcell "Wednesday, July 9th, 2025":
+                                      - button "Wednesday, July 9th, 2025": "9"
+                                    - gridcell "Thursday, July 10th, 2025":
+                                      - button "Thursday, July 10th, 2025": "10"
+                                    - gridcell "Friday, July 11th, 2025":
+                                      - button "Friday, July 11th, 2025": "11"
+                                    - gridcell "Saturday, July 12th, 2025":
+                                      - button "Saturday, July 12th, 2025": "12"
+                                  - row "Sunday, July 13th, 2025 Monday, July 14th, 2025 Tuesday, July 15th, 2025 Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                    - gridcell "Sunday, July 13th, 2025":
+                                      - button "Sunday, July 13th, 2025": "13"
+                                    - gridcell "Monday, July 14th, 2025":
+                                      - button "Monday, July 14th, 2025": "14"
+                                    - gridcell "Tuesday, July 15th, 2025":
+                                      - button "Tuesday, July 15th, 2025": "15"
+                                    - gridcell "Wednesday, July 16th, 2025":
+                                      - button "Wednesday, July 16th, 2025": "16"
+                                    - gridcell "Thursday, July 17th, 2025":
+                                      - button "Thursday, July 17th, 2025": "17"
+                                    - gridcell "Friday, July 18th, 2025":
+                                      - button "Friday, July 18th, 2025": "18"
+                                    - gridcell "Saturday, July 19th, 2025":
+                                      - button "Saturday, July 19th, 2025": "19"
+                                  - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025, selected Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                    - gridcell "Sunday, July 20th, 2025":
+                                      - button "Sunday, July 20th, 2025": "20"
+                                    - gridcell "Monday, July 21st, 2025":
+                                      - button "Monday, July 21st, 2025": "21"
+                                    - gridcell "Tuesday, July 22nd, 2025":
+                                      - button "Tuesday, July 22nd, 2025": "22"
+                                    - gridcell "Wednesday, July 23rd, 2025":
+                                      - button "Wednesday, July 23rd, 2025": "23"
+                                    - gridcell "Thursday, July 24th, 2025, selected" [selected]:
+                                      - button "Thursday, July 24th, 2025, selected": "24"
+                                    - gridcell "Friday, July 25th, 2025":
+                                      - button "Friday, July 25th, 2025": "25"
+                                    - gridcell "Saturday, July 26th, 2025":
+                                      - button "Saturday, July 26th, 2025": "26"
+                                  - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025 Friday, August 1st, 2025 Saturday, August 2nd, 2025":
+                                    - gridcell "Sunday, July 27th, 2025":
+                                      - button "Sunday, July 27th, 2025": "27"
+                                    - gridcell "Monday, July 28th, 2025":
+                                      - button "Monday, July 28th, 2025": "28"
+                                    - gridcell "Tuesday, July 29th, 2025":
+                                      - button "Tuesday, July 29th, 2025": "29"
+                                    - gridcell "Wednesday, July 30th, 2025":
+                                      - button "Wednesday, July 30th, 2025": "30"
+                                    - gridcell "Thursday, July 31st, 2025":
+                                      - button "Thursday, July 31st, 2025": "31"
+                                    - gridcell "Friday, August 1st, 2025":
+                                      - button "Friday, August 1st, 2025": "1"
+                                    - gridcell "Saturday, August 2nd, 2025":
+                                      - button "Saturday, August 2nd, 2025": "2"
+                    - generic [ref=e107]:
+                      - img [ref=e108]
+                      - generic [ref=e109]: Add to page
+                  - paragraph [ref=e111]: calendar-03
+                - generic [ref=e112] [cursor=pointer]:
+                  - generic [ref=e113]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025, selected Tuesday, June 10th, 2025, selected Wednesday, June 11th, 2025, selected Thursday, June 12th, 2025, selected Friday, June 13th, 2025, selected Saturday, June 14th, 2025, selected":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025, selected" [selected]:
+                                      - button "Monday, June 9th, 2025, selected": "9"
+                                    - gridcell "Tuesday, June 10th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 10th, 2025, selected": "10"
+                                    - gridcell "Wednesday, June 11th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 11th, 2025, selected": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025, selected" [selected]:
+                                      - button "Friday, June 13th, 2025, selected": "13"
+                                    - gridcell "Saturday, June 14th, 2025, selected" [selected]:
+                                      - button "Saturday, June 14th, 2025, selected": "14"
+                                  - row "Sunday, June 15th, 2025, selected Monday, June 16th, 2025, selected Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025, selected":
+                                    - gridcell "Sunday, June 15th, 2025, selected" [selected]:
+                                      - button "Sunday, June 15th, 2025, selected": "15"
+                                    - gridcell "Monday, June 16th, 2025, selected" [selected]:
+                                      - button "Monday, June 16th, 2025, selected": "16"
+                                    - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 17th, 2025, selected": "17"
+                                    - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 18th, 2025, selected": "18"
+                                    - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                      - button "Thursday, June 19th, 2025, selected": "19"
+                                    - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                      - button "Friday, June 20th, 2025, selected": "20"
+                                    - gridcell "Saturday, June 21st, 2025, selected" [selected]:
+                                      - button "Saturday, June 21st, 2025, selected": "21"
+                                  - row "Sunday, June 22nd, 2025, selected Monday, June 23rd, 2025, selected Tuesday, June 24th, 2025, selected Wednesday, June 25th, 2025, selected Thursday, June 26th, 2025, selected Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025, selected" [selected]:
+                                      - button "Sunday, June 22nd, 2025, selected": "22"
+                                    - gridcell "Monday, June 23rd, 2025, selected" [selected]:
+                                      - button "Monday, June 23rd, 2025, selected": "23"
+                                    - gridcell "Tuesday, June 24th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 24th, 2025, selected": "24"
+                                    - gridcell "Wednesday, June 25th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 25th, 2025, selected": "25"
+                                    - gridcell "Thursday, June 26th, 2025, selected" [selected]:
+                                      - button "Thursday, June 26th, 2025, selected": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                    - generic [ref=e115]:
+                      - img [ref=e116]
+                      - generic [ref=e117]: Add to page
+                  - paragraph [ref=e119]: calendar-04
+                - generic [ref=e120] [cursor=pointer]:
+                  - generic [ref=e121]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025, selected Saturday, June 14th, 2025, selected":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025, selected" [selected]:
+                                      - button "Friday, June 13th, 2025, selected": "13"
+                                    - gridcell "Saturday, June 14th, 2025, selected" [selected]:
+                                      - button "Saturday, June 14th, 2025, selected": "14"
+                                  - row "Sunday, June 15th, 2025, selected Monday, June 16th, 2025, selected Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025, selected":
+                                    - gridcell "Sunday, June 15th, 2025, selected" [selected]:
+                                      - button "Sunday, June 15th, 2025, selected": "15"
+                                    - gridcell "Monday, June 16th, 2025, selected" [selected]:
+                                      - button "Monday, June 16th, 2025, selected": "16"
+                                    - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 17th, 2025, selected": "17"
+                                    - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 18th, 2025, selected": "18"
+                                    - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                      - button "Thursday, June 19th, 2025, selected": "19"
+                                    - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                      - button "Friday, June 20th, 2025, selected": "20"
+                                    - gridcell "Saturday, June 21st, 2025, selected" [selected]:
+                                      - button "Saturday, June 21st, 2025, selected": "21"
+                                  - row "Sunday, June 22nd, 2025, selected Monday, June 23rd, 2025, selected Tuesday, June 24th, 2025, selected Wednesday, June 25th, 2025, selected Thursday, June 26th, 2025, selected Friday, June 27th, 2025, selected Saturday, June 28th, 2025, selected":
+                                    - gridcell "Sunday, June 22nd, 2025, selected" [selected]:
+                                      - button "Sunday, June 22nd, 2025, selected": "22"
+                                    - gridcell "Monday, June 23rd, 2025, selected" [selected]:
+                                      - button "Monday, June 23rd, 2025, selected": "23"
+                                    - gridcell "Tuesday, June 24th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 24th, 2025, selected": "24"
+                                    - gridcell "Wednesday, June 25th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 25th, 2025, selected": "25"
+                                    - gridcell "Thursday, June 26th, 2025, selected" [selected]:
+                                      - button "Thursday, June 26th, 2025, selected": "26"
+                                    - gridcell "Friday, June 27th, 2025, selected" [selected]:
+                                      - button "Friday, June 27th, 2025, selected": "27"
+                                    - gridcell "Saturday, June 28th, 2025, selected" [selected]:
+                                      - button "Saturday, June 28th, 2025, selected": "28"
+                                  - row "Sunday, June 29th, 2025, selected Monday, June 30th, 2025, selected Tuesday, July 1st, 2025, selected Wednesday, July 2nd, 2025, selected Thursday, July 3rd, 2025, selected Friday, July 4th, 2025, selected Saturday, July 5th, 2025, selected":
+                                    - gridcell "Sunday, June 29th, 2025, selected" [selected]:
+                                      - button "Sunday, June 29th, 2025, selected": "29"
+                                    - gridcell "Monday, June 30th, 2025, selected" [selected]:
+                                      - button "Monday, June 30th, 2025, selected": "30"
+                                    - gridcell "Tuesday, July 1st, 2025, selected" [selected]:
+                                      - button "Tuesday, July 1st, 2025, selected": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025, selected" [selected]:
+                                      - button "Wednesday, July 2nd, 2025, selected": "2"
+                                    - gridcell "Thursday, July 3rd, 2025, selected" [selected]:
+                                      - button "Thursday, July 3rd, 2025, selected": "3"
+                                    - gridcell "Friday, July 4th, 2025, selected" [selected]:
+                                      - button "Friday, July 4th, 2025, selected": "4"
+                                    - gridcell "Saturday, July 5th, 2025, selected" [selected]:
+                                      - button "Saturday, July 5th, 2025, selected": "5"
+                            - generic:
+                              - generic:
+                                - status: July 2025
+                              - grid "July 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 29th, 2025, selected Monday, June 30th, 2025, selected Tuesday, July 1st, 2025, selected Wednesday, July 2nd, 2025, selected Thursday, July 3rd, 2025, selected Friday, July 4th, 2025, selected Saturday, July 5th, 2025, selected":
+                                    - gridcell "Sunday, June 29th, 2025, selected" [selected]:
+                                      - button "Sunday, June 29th, 2025, selected": "29"
+                                    - gridcell "Monday, June 30th, 2025, selected" [selected]:
+                                      - button "Monday, June 30th, 2025, selected": "30"
+                                    - gridcell "Tuesday, July 1st, 2025, selected" [selected]:
+                                      - button "Tuesday, July 1st, 2025, selected": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025, selected" [selected]:
+                                      - button "Wednesday, July 2nd, 2025, selected": "2"
+                                    - gridcell "Thursday, July 3rd, 2025, selected" [selected]:
+                                      - button "Thursday, July 3rd, 2025, selected": "3"
+                                    - gridcell "Friday, July 4th, 2025, selected" [selected]:
+                                      - button "Friday, July 4th, 2025, selected": "4"
+                                    - gridcell "Saturday, July 5th, 2025, selected" [selected]:
+                                      - button "Saturday, July 5th, 2025, selected": "5"
+                                  - row "Sunday, July 6th, 2025, selected Monday, July 7th, 2025, selected Tuesday, July 8th, 2025, selected Wednesday, July 9th, 2025, selected Thursday, July 10th, 2025, selected Friday, July 11th, 2025, selected Saturday, July 12th, 2025, selected":
+                                    - gridcell "Sunday, July 6th, 2025, selected" [selected]:
+                                      - button "Sunday, July 6th, 2025, selected": "6"
+                                    - gridcell "Monday, July 7th, 2025, selected" [selected]:
+                                      - button "Monday, July 7th, 2025, selected": "7"
+                                    - gridcell "Tuesday, July 8th, 2025, selected" [selected]:
+                                      - button "Tuesday, July 8th, 2025, selected": "8"
+                                    - gridcell "Wednesday, July 9th, 2025, selected" [selected]:
+                                      - button "Wednesday, July 9th, 2025, selected": "9"
+                                    - gridcell "Thursday, July 10th, 2025, selected" [selected]:
+                                      - button "Thursday, July 10th, 2025, selected": "10"
+                                    - gridcell "Friday, July 11th, 2025, selected" [selected]:
+                                      - button "Friday, July 11th, 2025, selected": "11"
+                                    - gridcell "Saturday, July 12th, 2025, selected" [selected]:
+                                      - button "Saturday, July 12th, 2025, selected": "12"
+                                  - row "Sunday, July 13th, 2025, selected Monday, July 14th, 2025, selected Tuesday, July 15th, 2025, selected Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                    - gridcell "Sunday, July 13th, 2025, selected" [selected]:
+                                      - button "Sunday, July 13th, 2025, selected": "13"
+                                    - gridcell "Monday, July 14th, 2025, selected" [selected]:
+                                      - button "Monday, July 14th, 2025, selected": "14"
+                                    - gridcell "Tuesday, July 15th, 2025, selected" [selected]:
+                                      - button "Tuesday, July 15th, 2025, selected": "15"
+                                    - gridcell "Wednesday, July 16th, 2025":
+                                      - button "Wednesday, July 16th, 2025": "16"
+                                    - gridcell "Thursday, July 17th, 2025":
+                                      - button "Thursday, July 17th, 2025": "17"
+                                    - gridcell "Friday, July 18th, 2025":
+                                      - button "Friday, July 18th, 2025": "18"
+                                    - gridcell "Saturday, July 19th, 2025":
+                                      - button "Saturday, July 19th, 2025": "19"
+                                  - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025 Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                    - gridcell "Sunday, July 20th, 2025":
+                                      - button "Sunday, July 20th, 2025": "20"
+                                    - gridcell "Monday, July 21st, 2025":
+                                      - button "Monday, July 21st, 2025": "21"
+                                    - gridcell "Tuesday, July 22nd, 2025":
+                                      - button "Tuesday, July 22nd, 2025": "22"
+                                    - gridcell "Wednesday, July 23rd, 2025":
+                                      - button "Wednesday, July 23rd, 2025": "23"
+                                    - gridcell "Thursday, July 24th, 2025":
+                                      - button "Thursday, July 24th, 2025": "24"
+                                    - gridcell "Friday, July 25th, 2025":
+                                      - button "Friday, July 25th, 2025": "25"
+                                    - gridcell "Saturday, July 26th, 2025":
+                                      - button "Saturday, July 26th, 2025": "26"
+                                  - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025 Friday, August 1st, 2025 Saturday, August 2nd, 2025":
+                                    - gridcell "Sunday, July 27th, 2025":
+                                      - button "Sunday, July 27th, 2025": "27"
+                                    - gridcell "Monday, July 28th, 2025":
+                                      - button "Monday, July 28th, 2025": "28"
+                                    - gridcell "Tuesday, July 29th, 2025":
+                                      - button "Tuesday, July 29th, 2025": "29"
+                                    - gridcell "Wednesday, July 30th, 2025":
+                                      - button "Wednesday, July 30th, 2025": "30"
+                                    - gridcell "Thursday, July 31st, 2025":
+                                      - button "Thursday, July 31st, 2025": "31"
+                                    - gridcell "Friday, August 1st, 2025":
+                                      - button "Friday, August 1st, 2025": "1"
+                                    - gridcell "Saturday, August 2nd, 2025":
+                                      - button "Saturday, August 2nd, 2025": "2"
+                    - generic [ref=e123]:
+                      - img [ref=e124]
+                      - generic [ref=e125]: Add to page
+                  - paragraph [ref=e127]: calendar-05
+                - generic [ref=e128] [cursor=pointer]:
+                  - generic [ref=e129]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - navigation:
+                                - button "Go to the Previous Month":
+                                  - img
+                                - button "Go to the Next Month":
+                                  - img
+                              - generic:
+                                - generic:
+                                  - status: June 2025
+                                - grid "June 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                      - gridcell "Sunday, June 1st, 2025":
+                                        - button "Sunday, June 1st, 2025": "1"
+                                      - gridcell "Monday, June 2nd, 2025":
+                                        - button "Monday, June 2nd, 2025": "2"
+                                      - gridcell "Tuesday, June 3rd, 2025":
+                                        - button "Tuesday, June 3rd, 2025": "3"
+                                      - gridcell "Wednesday, June 4th, 2025":
+                                        - button "Wednesday, June 4th, 2025": "4"
+                                      - gridcell "Thursday, June 5th, 2025":
+                                        - button "Thursday, June 5th, 2025": "5"
+                                      - gridcell "Friday, June 6th, 2025":
+                                        - button "Friday, June 6th, 2025": "6"
+                                      - gridcell "Saturday, June 7th, 2025":
+                                        - button "Saturday, June 7th, 2025": "7"
+                                    - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025, selected Saturday, June 14th, 2025, selected":
+                                      - gridcell "Sunday, June 8th, 2025":
+                                        - button "Sunday, June 8th, 2025": "8"
+                                      - gridcell "Monday, June 9th, 2025":
+                                        - button "Monday, June 9th, 2025": "9"
+                                      - gridcell "Tuesday, June 10th, 2025":
+                                        - button "Tuesday, June 10th, 2025": "10"
+                                      - gridcell "Wednesday, June 11th, 2025":
+                                        - button "Wednesday, June 11th, 2025": "11"
+                                      - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                        - button "Thursday, June 12th, 2025, selected": "12"
+                                      - gridcell "Friday, June 13th, 2025, selected" [selected]:
+                                        - button "Friday, June 13th, 2025, selected": "13"
+                                      - gridcell "Saturday, June 14th, 2025, selected" [selected]:
+                                        - button "Saturday, June 14th, 2025, selected": "14"
+                                    - row "Sunday, June 15th, 2025, selected Monday, June 16th, 2025, selected Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025, selected":
+                                      - gridcell "Sunday, June 15th, 2025, selected" [selected]:
+                                        - button "Sunday, June 15th, 2025, selected": "15"
+                                      - gridcell "Monday, June 16th, 2025, selected" [selected]:
+                                        - button "Monday, June 16th, 2025, selected": "16"
+                                      - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                        - button "Tuesday, June 17th, 2025, selected": "17"
+                                      - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                        - button "Wednesday, June 18th, 2025, selected": "18"
+                                      - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                        - button "Thursday, June 19th, 2025, selected": "19"
+                                      - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                        - button "Friday, June 20th, 2025, selected": "20"
+                                      - gridcell "Saturday, June 21st, 2025, selected" [selected]:
+                                        - button "Saturday, June 21st, 2025, selected": "21"
+                                    - row "Sunday, June 22nd, 2025, selected Monday, June 23rd, 2025, selected Tuesday, June 24th, 2025, selected Wednesday, June 25th, 2025, selected Thursday, June 26th, 2025, selected Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                      - gridcell "Sunday, June 22nd, 2025, selected" [selected]:
+                                        - button "Sunday, June 22nd, 2025, selected": "22"
+                                      - gridcell "Monday, June 23rd, 2025, selected" [selected]:
+                                        - button "Monday, June 23rd, 2025, selected": "23"
+                                      - gridcell "Tuesday, June 24th, 2025, selected" [selected]:
+                                        - button "Tuesday, June 24th, 2025, selected": "24"
+                                      - gridcell "Wednesday, June 25th, 2025, selected" [selected]:
+                                        - button "Wednesday, June 25th, 2025, selected": "25"
+                                      - gridcell "Thursday, June 26th, 2025, selected" [selected]:
+                                        - button "Thursday, June 26th, 2025, selected": "26"
+                                      - gridcell "Friday, June 27th, 2025":
+                                        - button "Friday, June 27th, 2025": "27"
+                                      - gridcell "Saturday, June 28th, 2025":
+                                        - button "Saturday, June 28th, 2025": "28"
+                                    - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                      - gridcell "Sunday, June 29th, 2025":
+                                        - button "Sunday, June 29th, 2025": "29"
+                                      - gridcell "Monday, June 30th, 2025":
+                                        - button "Monday, June 30th, 2025": "30"
+                                      - gridcell "Tuesday, July 1st, 2025":
+                                        - button "Tuesday, July 1st, 2025": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025":
+                                        - button "Wednesday, July 2nd, 2025": "2"
+                                      - gridcell "Thursday, July 3rd, 2025":
+                                        - button "Thursday, July 3rd, 2025": "3"
+                                      - gridcell "Friday, July 4th, 2025":
+                                        - button "Friday, July 4th, 2025": "4"
+                                      - gridcell "Saturday, July 5th, 2025":
+                                        - button "Saturday, July 5th, 2025": "5"
+                          - generic: A minimum of 5 days is required
+                    - generic [ref=e131]:
+                      - img [ref=e132]
+                      - generic [ref=e133]: Add to page
+                  - paragraph [ref=e135]: calendar-06
+                - generic [ref=e136] [cursor=pointer]:
+                  - generic [ref=e137]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - navigation:
+                                - button "Go to the Previous Month":
+                                  - img
+                                - button "Go to the Next Month":
+                                  - img
+                              - generic:
+                                - generic:
+                                  - status: June 2025
+                                - grid "June 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                      - gridcell "Sunday, June 1st, 2025":
+                                        - button "Sunday, June 1st, 2025": "1"
+                                      - gridcell "Monday, June 2nd, 2025":
+                                        - button "Monday, June 2nd, 2025": "2"
+                                      - gridcell "Tuesday, June 3rd, 2025":
+                                        - button "Tuesday, June 3rd, 2025": "3"
+                                      - gridcell "Wednesday, June 4th, 2025":
+                                        - button "Wednesday, June 4th, 2025": "4"
+                                      - gridcell "Thursday, June 5th, 2025":
+                                        - button "Thursday, June 5th, 2025": "5"
+                                      - gridcell "Friday, June 6th, 2025":
+                                        - button "Friday, June 6th, 2025": "6"
+                                      - gridcell "Saturday, June 7th, 2025":
+                                        - button "Saturday, June 7th, 2025": "7"
+                                    - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025 Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                      - gridcell "Sunday, June 8th, 2025":
+                                        - button "Sunday, June 8th, 2025": "8"
+                                      - gridcell "Monday, June 9th, 2025":
+                                        - button "Monday, June 9th, 2025": "9"
+                                      - gridcell "Tuesday, June 10th, 2025":
+                                        - button "Tuesday, June 10th, 2025": "10"
+                                      - gridcell "Wednesday, June 11th, 2025":
+                                        - button "Wednesday, June 11th, 2025": "11"
+                                      - gridcell "Thursday, June 12th, 2025":
+                                        - button "Thursday, June 12th, 2025": "12"
+                                      - gridcell "Friday, June 13th, 2025":
+                                        - button "Friday, June 13th, 2025": "13"
+                                      - gridcell "Saturday, June 14th, 2025":
+                                        - button "Saturday, June 14th, 2025": "14"
+                                    - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025, selected":
+                                      - gridcell "Sunday, June 15th, 2025":
+                                        - button "Sunday, June 15th, 2025": "15"
+                                      - gridcell "Monday, June 16th, 2025":
+                                        - button "Monday, June 16th, 2025": "16"
+                                      - gridcell "Tuesday, June 17th, 2025":
+                                        - button "Tuesday, June 17th, 2025": "17"
+                                      - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                        - button "Wednesday, June 18th, 2025, selected": "18"
+                                      - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                        - button "Thursday, June 19th, 2025, selected": "19"
+                                      - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                        - button "Friday, June 20th, 2025, selected": "20"
+                                      - gridcell "Saturday, June 21st, 2025, selected" [selected]:
+                                        - button "Saturday, June 21st, 2025, selected": "21"
+                                    - row "Sunday, June 22nd, 2025, selected Monday, June 23rd, 2025, selected Tuesday, June 24th, 2025, selected Wednesday, June 25th, 2025, selected Thursday, June 26th, 2025, selected Friday, June 27th, 2025, selected Saturday, June 28th, 2025, selected":
+                                      - gridcell "Sunday, June 22nd, 2025, selected" [selected]:
+                                        - button "Sunday, June 22nd, 2025, selected": "22"
+                                      - gridcell "Monday, June 23rd, 2025, selected" [selected]:
+                                        - button "Monday, June 23rd, 2025, selected": "23"
+                                      - gridcell "Tuesday, June 24th, 2025, selected" [selected]:
+                                        - button "Tuesday, June 24th, 2025, selected": "24"
+                                      - gridcell "Wednesday, June 25th, 2025, selected" [selected]:
+                                        - button "Wednesday, June 25th, 2025, selected": "25"
+                                      - gridcell "Thursday, June 26th, 2025, selected" [selected]:
+                                        - button "Thursday, June 26th, 2025, selected": "26"
+                                      - gridcell "Friday, June 27th, 2025, selected" [selected]:
+                                        - button "Friday, June 27th, 2025, selected": "27"
+                                      - gridcell "Saturday, June 28th, 2025, selected" [selected]:
+                                        - button "Saturday, June 28th, 2025, selected": "28"
+                                    - row "Sunday, June 29th, 2025, selected Monday, June 30th, 2025, selected Tuesday, July 1st, 2025, selected Wednesday, July 2nd, 2025, selected Thursday, July 3rd, 2025, selected Friday, July 4th, 2025, selected Saturday, July 5th, 2025, selected":
+                                      - gridcell "Sunday, June 29th, 2025, selected" [selected]:
+                                        - button "Sunday, June 29th, 2025, selected": "29"
+                                      - gridcell "Monday, June 30th, 2025, selected" [selected]:
+                                        - button "Monday, June 30th, 2025, selected": "30"
+                                      - gridcell "Tuesday, July 1st, 2025, selected" [selected]:
+                                        - button "Tuesday, July 1st, 2025, selected": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025, selected" [selected]:
+                                        - button "Wednesday, July 2nd, 2025, selected": "2"
+                                      - gridcell "Thursday, July 3rd, 2025, selected" [selected]:
+                                        - button "Thursday, July 3rd, 2025, selected": "3"
+                                      - gridcell "Friday, July 4th, 2025, selected" [selected]:
+                                        - button "Friday, July 4th, 2025, selected": "4"
+                                      - gridcell "Saturday, July 5th, 2025, selected" [selected]:
+                                        - button "Saturday, July 5th, 2025, selected": "5"
+                              - generic:
+                                - generic:
+                                  - status: July 2025
+                                - grid "July 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 29th, 2025, selected Monday, June 30th, 2025, selected Tuesday, July 1st, 2025, selected Wednesday, July 2nd, 2025, selected Thursday, July 3rd, 2025, selected Friday, July 4th, 2025, selected Saturday, July 5th, 2025, selected":
+                                      - gridcell "Sunday, June 29th, 2025, selected" [selected]:
+                                        - button "Sunday, June 29th, 2025, selected": "29"
+                                      - gridcell "Monday, June 30th, 2025, selected" [selected]:
+                                        - button "Monday, June 30th, 2025, selected": "30"
+                                      - gridcell "Tuesday, July 1st, 2025, selected" [selected]:
+                                        - button "Tuesday, July 1st, 2025, selected": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025, selected" [selected]:
+                                        - button "Wednesday, July 2nd, 2025, selected": "2"
+                                      - gridcell "Thursday, July 3rd, 2025, selected" [selected]:
+                                        - button "Thursday, July 3rd, 2025, selected": "3"
+                                      - gridcell "Friday, July 4th, 2025, selected" [selected]:
+                                        - button "Friday, July 4th, 2025, selected": "4"
+                                      - gridcell "Saturday, July 5th, 2025, selected" [selected]:
+                                        - button "Saturday, July 5th, 2025, selected": "5"
+                                    - row "Sunday, July 6th, 2025, selected Monday, July 7th, 2025, selected Tuesday, July 8th, 2025 Wednesday, July 9th, 2025 Thursday, July 10th, 2025 Friday, July 11th, 2025 Saturday, July 12th, 2025":
+                                      - gridcell "Sunday, July 6th, 2025, selected" [selected]:
+                                        - button "Sunday, July 6th, 2025, selected": "6"
+                                      - gridcell "Monday, July 7th, 2025, selected" [selected]:
+                                        - button "Monday, July 7th, 2025, selected": "7"
+                                      - gridcell "Tuesday, July 8th, 2025":
+                                        - button "Tuesday, July 8th, 2025": "8"
+                                      - gridcell "Wednesday, July 9th, 2025":
+                                        - button "Wednesday, July 9th, 2025": "9"
+                                      - gridcell "Thursday, July 10th, 2025":
+                                        - button "Thursday, July 10th, 2025": "10"
+                                      - gridcell "Friday, July 11th, 2025":
+                                        - button "Friday, July 11th, 2025": "11"
+                                      - gridcell "Saturday, July 12th, 2025":
+                                        - button "Saturday, July 12th, 2025": "12"
+                                    - row "Sunday, July 13th, 2025 Monday, July 14th, 2025 Tuesday, July 15th, 2025 Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                      - gridcell "Sunday, July 13th, 2025":
+                                        - button "Sunday, July 13th, 2025": "13"
+                                      - gridcell "Monday, July 14th, 2025":
+                                        - button "Monday, July 14th, 2025": "14"
+                                      - gridcell "Tuesday, July 15th, 2025":
+                                        - button "Tuesday, July 15th, 2025": "15"
+                                      - gridcell "Wednesday, July 16th, 2025":
+                                        - button "Wednesday, July 16th, 2025": "16"
+                                      - gridcell "Thursday, July 17th, 2025":
+                                        - button "Thursday, July 17th, 2025": "17"
+                                      - gridcell "Friday, July 18th, 2025":
+                                        - button "Friday, July 18th, 2025": "18"
+                                      - gridcell "Saturday, July 19th, 2025":
+                                        - button "Saturday, July 19th, 2025": "19"
+                                    - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025 Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                      - gridcell "Sunday, July 20th, 2025":
+                                        - button "Sunday, July 20th, 2025": "20"
+                                      - gridcell "Monday, July 21st, 2025":
+                                        - button "Monday, July 21st, 2025": "21"
+                                      - gridcell "Tuesday, July 22nd, 2025":
+                                        - button "Tuesday, July 22nd, 2025": "22"
+                                      - gridcell "Wednesday, July 23rd, 2025":
+                                        - button "Wednesday, July 23rd, 2025": "23"
+                                      - gridcell "Thursday, July 24th, 2025":
+                                        - button "Thursday, July 24th, 2025": "24"
+                                      - gridcell "Friday, July 25th, 2025":
+                                        - button "Friday, July 25th, 2025": "25"
+                                      - gridcell "Saturday, July 26th, 2025":
+                                        - button "Saturday, July 26th, 2025": "26"
+                                    - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025 Friday, August 1st, 2025 Saturday, August 2nd, 2025":
+                                      - gridcell "Sunday, July 27th, 2025":
+                                        - button "Sunday, July 27th, 2025": "27"
+                                      - gridcell "Monday, July 28th, 2025":
+                                        - button "Monday, July 28th, 2025": "28"
+                                      - gridcell "Tuesday, July 29th, 2025":
+                                        - button "Tuesday, July 29th, 2025": "29"
+                                      - gridcell "Wednesday, July 30th, 2025":
+                                        - button "Wednesday, July 30th, 2025": "30"
+                                      - gridcell "Thursday, July 31st, 2025":
+                                        - button "Thursday, July 31st, 2025": "31"
+                                      - gridcell "Friday, August 1st, 2025":
+                                        - button "Friday, August 1st, 2025": "1"
+                                      - gridcell "Saturday, August 2nd, 2025":
+                                        - button "Saturday, August 2nd, 2025": "2"
+                          - generic: Your stay must be between 2 and 20 nights
+                    - generic [ref=e139]:
+                      - img [ref=e140]
+                      - generic [ref=e141]: Add to page
+                  - paragraph [ref=e143]: calendar-07
+                - generic [ref=e144] [cursor=pointer]:
+                  - generic [ref=e145]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025" [disabled]: "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025" [disabled]: "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025" [disabled]: "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025" [disabled]: "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025" [disabled]: "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025" [disabled]: "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025" [disabled]: "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025" [disabled]: "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025" [disabled]: "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025" [disabled]: "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025" [disabled]: "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025": "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025": "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025": "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025": "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025": "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025": "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                    - generic [ref=e147]:
+                      - img [ref=e148]
+                      - generic [ref=e149]: Add to page
+                  - paragraph [ref=e151]: calendar-08
+                - generic [ref=e152] [cursor=pointer]:
+                  - generic [ref=e153]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025" [disabled]: "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025" [disabled]: "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025 Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025" [disabled]: "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025":
+                                      - button "Thursday, June 12th, 2025": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025" [disabled]: "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025" [disabled]: "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 17th, 2025, selected": "17"
+                                    - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                      - button "Wednesday, June 18th, 2025, selected": "18"
+                                    - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                      - button "Thursday, June 19th, 2025, selected": "19"
+                                    - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                      - button "Friday, June 20th, 2025, selected": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025" [disabled]: "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025" [disabled]: "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025" [disabled]: "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025" [disabled]: "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025" [disabled]: "5"
+                            - generic:
+                              - generic:
+                                - status: July 2025
+                              - grid "July 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025" [disabled]: "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025" [disabled]: "5"
+                                  - row "Sunday, July 6th, 2025 Monday, July 7th, 2025 Tuesday, July 8th, 2025 Wednesday, July 9th, 2025 Thursday, July 10th, 2025 Friday, July 11th, 2025 Saturday, July 12th, 2025":
+                                    - gridcell "Sunday, July 6th, 2025":
+                                      - button "Sunday, July 6th, 2025" [disabled]: "6"
+                                    - gridcell "Monday, July 7th, 2025":
+                                      - button "Monday, July 7th, 2025": "7"
+                                    - gridcell "Tuesday, July 8th, 2025":
+                                      - button "Tuesday, July 8th, 2025": "8"
+                                    - gridcell "Wednesday, July 9th, 2025":
+                                      - button "Wednesday, July 9th, 2025": "9"
+                                    - gridcell "Thursday, July 10th, 2025":
+                                      - button "Thursday, July 10th, 2025": "10"
+                                    - gridcell "Friday, July 11th, 2025":
+                                      - button "Friday, July 11th, 2025": "11"
+                                    - gridcell "Saturday, July 12th, 2025":
+                                      - button "Saturday, July 12th, 2025" [disabled]: "12"
+                                  - row "Sunday, July 13th, 2025 Monday, July 14th, 2025 Tuesday, July 15th, 2025 Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                    - gridcell "Sunday, July 13th, 2025":
+                                      - button "Sunday, July 13th, 2025" [disabled]: "13"
+                                    - gridcell "Monday, July 14th, 2025":
+                                      - button "Monday, July 14th, 2025": "14"
+                                    - gridcell "Tuesday, July 15th, 2025":
+                                      - button "Tuesday, July 15th, 2025": "15"
+                                    - gridcell "Wednesday, July 16th, 2025":
+                                      - button "Wednesday, July 16th, 2025": "16"
+                                    - gridcell "Thursday, July 17th, 2025":
+                                      - button "Thursday, July 17th, 2025": "17"
+                                    - gridcell "Friday, July 18th, 2025":
+                                      - button "Friday, July 18th, 2025": "18"
+                                    - gridcell "Saturday, July 19th, 2025":
+                                      - button "Saturday, July 19th, 2025" [disabled]: "19"
+                                  - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025 Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                    - gridcell "Sunday, July 20th, 2025":
+                                      - button "Sunday, July 20th, 2025" [disabled]: "20"
+                                    - gridcell "Monday, July 21st, 2025":
+                                      - button "Monday, July 21st, 2025": "21"
+                                    - gridcell "Tuesday, July 22nd, 2025":
+                                      - button "Tuesday, July 22nd, 2025": "22"
+                                    - gridcell "Wednesday, July 23rd, 2025":
+                                      - button "Wednesday, July 23rd, 2025": "23"
+                                    - gridcell "Thursday, July 24th, 2025":
+                                      - button "Thursday, July 24th, 2025": "24"
+                                    - gridcell "Friday, July 25th, 2025":
+                                      - button "Friday, July 25th, 2025": "25"
+                                    - gridcell "Saturday, July 26th, 2025":
+                                      - button "Saturday, July 26th, 2025" [disabled]: "26"
+                                  - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025 Friday, August 1st, 2025 Saturday, August 2nd, 2025":
+                                    - gridcell "Sunday, July 27th, 2025":
+                                      - button "Sunday, July 27th, 2025" [disabled]: "27"
+                                    - gridcell "Monday, July 28th, 2025":
+                                      - button "Monday, July 28th, 2025": "28"
+                                    - gridcell "Tuesday, July 29th, 2025":
+                                      - button "Tuesday, July 29th, 2025": "29"
+                                    - gridcell "Wednesday, July 30th, 2025":
+                                      - button "Wednesday, July 30th, 2025": "30"
+                                    - gridcell "Thursday, July 31st, 2025":
+                                      - button "Thursday, July 31st, 2025": "31"
+                                    - gridcell "Friday, August 1st, 2025":
+                                      - button "Friday, August 1st, 2025": "1"
+                                    - gridcell "Saturday, August 2nd, 2025":
+                                      - button "Saturday, August 2nd, 2025" [disabled]: "2"
+                    - generic [ref=e155]:
+                      - img [ref=e156]
+                      - generic [ref=e157]: Add to page
+                  - paragraph [ref=e159]: calendar-09
+                - generic [ref=e160] [cursor=pointer]:
+                  - generic [ref=e161]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Appointment
+                            - generic: Find a date
+                            - button "Today"
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: November 2025
+                                  - grid "November 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: Su
+                                        - columnheader: Mo
+                                        - columnheader: Tu
+                                        - columnheader: We
+                                        - columnheader: Th
+                                        - columnheader: Fr
+                                        - columnheader: Sa
+                                    - rowgroup:
+                                      - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                        - gridcell "Sunday, October 26th, 2025":
+                                          - button "Sunday, October 26th, 2025": "26"
+                                        - gridcell "Monday, October 27th, 2025":
+                                          - button "Monday, October 27th, 2025": "27"
+                                        - gridcell "Tuesday, October 28th, 2025":
+                                          - button "Tuesday, October 28th, 2025": "28"
+                                        - gridcell "Wednesday, October 29th, 2025":
+                                          - button "Wednesday, October 29th, 2025": "29"
+                                        - gridcell "Thursday, October 30th, 2025":
+                                          - button "Thursday, October 30th, 2025": "30"
+                                        - gridcell "Friday, October 31st, 2025":
+                                          - button "Friday, October 31st, 2025": "31"
+                                        - gridcell "Saturday, November 1st, 2025":
+                                          - button "Saturday, November 1st, 2025": "1"
+                                      - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                        - gridcell "Sunday, November 2nd, 2025":
+                                          - button "Sunday, November 2nd, 2025": "2"
+                                        - gridcell "Monday, November 3rd, 2025":
+                                          - button "Monday, November 3rd, 2025": "3"
+                                        - gridcell "Today, Tuesday, November 4th, 2025":
+                                          - button "Today, Tuesday, November 4th, 2025": "4"
+                                        - gridcell "Wednesday, November 5th, 2025":
+                                          - button "Wednesday, November 5th, 2025": "5"
+                                        - gridcell "Thursday, November 6th, 2025":
+                                          - button "Thursday, November 6th, 2025": "6"
+                                        - gridcell "Friday, November 7th, 2025":
+                                          - button "Friday, November 7th, 2025": "7"
+                                        - gridcell "Saturday, November 8th, 2025":
+                                          - button "Saturday, November 8th, 2025": "8"
+                                      - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                        - gridcell "Sunday, November 9th, 2025":
+                                          - button "Sunday, November 9th, 2025": "9"
+                                        - gridcell "Monday, November 10th, 2025":
+                                          - button "Monday, November 10th, 2025": "10"
+                                        - gridcell "Tuesday, November 11th, 2025":
+                                          - button "Tuesday, November 11th, 2025": "11"
+                                        - gridcell "Wednesday, November 12th, 2025":
+                                          - button "Wednesday, November 12th, 2025": "12"
+                                        - gridcell "Thursday, November 13th, 2025":
+                                          - button "Thursday, November 13th, 2025": "13"
+                                        - gridcell "Friday, November 14th, 2025":
+                                          - button "Friday, November 14th, 2025": "14"
+                                        - gridcell "Saturday, November 15th, 2025":
+                                          - button "Saturday, November 15th, 2025": "15"
+                                      - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                        - gridcell "Sunday, November 16th, 2025":
+                                          - button "Sunday, November 16th, 2025": "16"
+                                        - gridcell "Monday, November 17th, 2025":
+                                          - button "Monday, November 17th, 2025": "17"
+                                        - gridcell "Tuesday, November 18th, 2025":
+                                          - button "Tuesday, November 18th, 2025": "18"
+                                        - gridcell "Wednesday, November 19th, 2025":
+                                          - button "Wednesday, November 19th, 2025": "19"
+                                        - gridcell "Thursday, November 20th, 2025":
+                                          - button "Thursday, November 20th, 2025": "20"
+                                        - gridcell "Friday, November 21st, 2025":
+                                          - button "Friday, November 21st, 2025": "21"
+                                        - gridcell "Saturday, November 22nd, 2025":
+                                          - button "Saturday, November 22nd, 2025": "22"
+                                      - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                        - gridcell "Sunday, November 23rd, 2025":
+                                          - button "Sunday, November 23rd, 2025": "23"
+                                        - gridcell "Monday, November 24th, 2025":
+                                          - button "Monday, November 24th, 2025": "24"
+                                        - gridcell "Tuesday, November 25th, 2025":
+                                          - button "Tuesday, November 25th, 2025": "25"
+                                        - gridcell "Wednesday, November 26th, 2025":
+                                          - button "Wednesday, November 26th, 2025": "26"
+                                        - gridcell "Thursday, November 27th, 2025":
+                                          - button "Thursday, November 27th, 2025": "27"
+                                        - gridcell "Friday, November 28th, 2025":
+                                          - button "Friday, November 28th, 2025": "28"
+                                        - gridcell "Saturday, November 29th, 2025":
+                                          - button "Saturday, November 29th, 2025": "29"
+                                      - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                        - gridcell "Sunday, November 30th, 2025":
+                                          - button "Sunday, November 30th, 2025": "30"
+                                        - gridcell "Monday, December 1st, 2025":
+                                          - button "Monday, December 1st, 2025": "1"
+                                        - gridcell "Tuesday, December 2nd, 2025":
+                                          - button "Tuesday, December 2nd, 2025": "2"
+                                        - gridcell "Wednesday, December 3rd, 2025":
+                                          - button "Wednesday, December 3rd, 2025": "3"
+                                        - gridcell "Thursday, December 4th, 2025":
+                                          - button "Thursday, December 4th, 2025": "4"
+                                        - gridcell "Friday, December 5th, 2025":
+                                          - button "Friday, December 5th, 2025": "5"
+                                        - gridcell "Saturday, December 6th, 2025":
+                                          - button "Saturday, December 6th, 2025": "6"
+                    - generic [ref=e163]:
+                      - img [ref=e164]
+                      - generic [ref=e165]: Add to page
+                  - paragraph [ref=e167]: calendar-10
+                - generic [ref=e168] [cursor=pointer]:
+                  - generic [ref=e169]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - navigation:
+                                - button "Go to the Previous Month" [disabled]:
+                                  - img
+                                - button "Go to the Next Month" [disabled]:
+                                  - img
+                              - generic:
+                                - generic:
+                                  - status: June 2025
+                                - grid "June 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                      - gridcell "Sunday, June 1st, 2025":
+                                        - button "Sunday, June 1st, 2025": "1"
+                                      - gridcell "Monday, June 2nd, 2025":
+                                        - button "Monday, June 2nd, 2025": "2"
+                                      - gridcell "Tuesday, June 3rd, 2025":
+                                        - button "Tuesday, June 3rd, 2025": "3"
+                                      - gridcell "Wednesday, June 4th, 2025":
+                                        - button "Wednesday, June 4th, 2025": "4"
+                                      - gridcell "Thursday, June 5th, 2025":
+                                        - button "Thursday, June 5th, 2025": "5"
+                                      - gridcell "Friday, June 6th, 2025":
+                                        - button "Friday, June 6th, 2025": "6"
+                                      - gridcell "Saturday, June 7th, 2025":
+                                        - button "Saturday, June 7th, 2025": "7"
+                                    - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025 Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                      - gridcell "Sunday, June 8th, 2025":
+                                        - button "Sunday, June 8th, 2025": "8"
+                                      - gridcell "Monday, June 9th, 2025":
+                                        - button "Monday, June 9th, 2025": "9"
+                                      - gridcell "Tuesday, June 10th, 2025":
+                                        - button "Tuesday, June 10th, 2025": "10"
+                                      - gridcell "Wednesday, June 11th, 2025":
+                                        - button "Wednesday, June 11th, 2025": "11"
+                                      - gridcell "Thursday, June 12th, 2025":
+                                        - button "Thursday, June 12th, 2025": "12"
+                                      - gridcell "Friday, June 13th, 2025":
+                                        - button "Friday, June 13th, 2025": "13"
+                                      - gridcell "Saturday, June 14th, 2025":
+                                        - button "Saturday, June 14th, 2025": "14"
+                                    - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025, selected Thursday, June 19th, 2025, selected Friday, June 20th, 2025, selected Saturday, June 21st, 2025":
+                                      - gridcell "Sunday, June 15th, 2025":
+                                        - button "Sunday, June 15th, 2025": "15"
+                                      - gridcell "Monday, June 16th, 2025":
+                                        - button "Monday, June 16th, 2025": "16"
+                                      - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                        - button "Tuesday, June 17th, 2025, selected": "17"
+                                      - gridcell "Wednesday, June 18th, 2025, selected" [selected]:
+                                        - button "Wednesday, June 18th, 2025, selected": "18"
+                                      - gridcell "Thursday, June 19th, 2025, selected" [selected]:
+                                        - button "Thursday, June 19th, 2025, selected": "19"
+                                      - gridcell "Friday, June 20th, 2025, selected" [selected]:
+                                        - button "Friday, June 20th, 2025, selected": "20"
+                                      - gridcell "Saturday, June 21st, 2025":
+                                        - button "Saturday, June 21st, 2025": "21"
+                                    - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                      - gridcell "Sunday, June 22nd, 2025":
+                                        - button "Sunday, June 22nd, 2025": "22"
+                                      - gridcell "Monday, June 23rd, 2025":
+                                        - button "Monday, June 23rd, 2025": "23"
+                                      - gridcell "Tuesday, June 24th, 2025":
+                                        - button "Tuesday, June 24th, 2025": "24"
+                                      - gridcell "Wednesday, June 25th, 2025":
+                                        - button "Wednesday, June 25th, 2025": "25"
+                                      - gridcell "Thursday, June 26th, 2025":
+                                        - button "Thursday, June 26th, 2025": "26"
+                                      - gridcell "Friday, June 27th, 2025":
+                                        - button "Friday, June 27th, 2025": "27"
+                                      - gridcell "Saturday, June 28th, 2025":
+                                        - button "Saturday, June 28th, 2025": "28"
+                                    - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                      - gridcell "Sunday, June 29th, 2025":
+                                        - button "Sunday, June 29th, 2025": "29"
+                                      - gridcell "Monday, June 30th, 2025":
+                                        - button "Monday, June 30th, 2025": "30"
+                                      - gridcell "Tuesday, July 1st, 2025":
+                                        - button "Tuesday, July 1st, 2025": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025":
+                                        - button "Wednesday, July 2nd, 2025": "2"
+                                      - gridcell "Thursday, July 3rd, 2025":
+                                        - button "Thursday, July 3rd, 2025": "3"
+                                      - gridcell "Friday, July 4th, 2025":
+                                        - button "Friday, July 4th, 2025": "4"
+                                      - gridcell "Saturday, July 5th, 2025":
+                                        - button "Saturday, July 5th, 2025": "5"
+                              - generic:
+                                - generic:
+                                  - status: July 2025
+                                - grid "July 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                      - gridcell "Sunday, June 29th, 2025":
+                                        - button "Sunday, June 29th, 2025": "29"
+                                      - gridcell "Monday, June 30th, 2025":
+                                        - button "Monday, June 30th, 2025": "30"
+                                      - gridcell "Tuesday, July 1st, 2025":
+                                        - button "Tuesday, July 1st, 2025": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025":
+                                        - button "Wednesday, July 2nd, 2025": "2"
+                                      - gridcell "Thursday, July 3rd, 2025":
+                                        - button "Thursday, July 3rd, 2025": "3"
+                                      - gridcell "Friday, July 4th, 2025":
+                                        - button "Friday, July 4th, 2025": "4"
+                                      - gridcell "Saturday, July 5th, 2025":
+                                        - button "Saturday, July 5th, 2025": "5"
+                                    - row "Sunday, July 6th, 2025 Monday, July 7th, 2025 Tuesday, July 8th, 2025 Wednesday, July 9th, 2025 Thursday, July 10th, 2025 Friday, July 11th, 2025 Saturday, July 12th, 2025":
+                                      - gridcell "Sunday, July 6th, 2025":
+                                        - button "Sunday, July 6th, 2025": "6"
+                                      - gridcell "Monday, July 7th, 2025":
+                                        - button "Monday, July 7th, 2025": "7"
+                                      - gridcell "Tuesday, July 8th, 2025":
+                                        - button "Tuesday, July 8th, 2025": "8"
+                                      - gridcell "Wednesday, July 9th, 2025":
+                                        - button "Wednesday, July 9th, 2025": "9"
+                                      - gridcell "Thursday, July 10th, 2025":
+                                        - button "Thursday, July 10th, 2025": "10"
+                                      - gridcell "Friday, July 11th, 2025":
+                                        - button "Friday, July 11th, 2025": "11"
+                                      - gridcell "Saturday, July 12th, 2025":
+                                        - button "Saturday, July 12th, 2025": "12"
+                                    - row "Sunday, July 13th, 2025 Monday, July 14th, 2025 Tuesday, July 15th, 2025 Wednesday, July 16th, 2025 Thursday, July 17th, 2025 Friday, July 18th, 2025 Saturday, July 19th, 2025":
+                                      - gridcell "Sunday, July 13th, 2025":
+                                        - button "Sunday, July 13th, 2025": "13"
+                                      - gridcell "Monday, July 14th, 2025":
+                                        - button "Monday, July 14th, 2025": "14"
+                                      - gridcell "Tuesday, July 15th, 2025":
+                                        - button "Tuesday, July 15th, 2025": "15"
+                                      - gridcell "Wednesday, July 16th, 2025":
+                                        - button "Wednesday, July 16th, 2025": "16"
+                                      - gridcell "Thursday, July 17th, 2025":
+                                        - button "Thursday, July 17th, 2025": "17"
+                                      - gridcell "Friday, July 18th, 2025":
+                                        - button "Friday, July 18th, 2025": "18"
+                                      - gridcell "Saturday, July 19th, 2025":
+                                        - button "Saturday, July 19th, 2025": "19"
+                                    - row "Sunday, July 20th, 2025 Monday, July 21st, 2025 Tuesday, July 22nd, 2025 Wednesday, July 23rd, 2025 Thursday, July 24th, 2025 Friday, July 25th, 2025 Saturday, July 26th, 2025":
+                                      - gridcell "Sunday, July 20th, 2025":
+                                        - button "Sunday, July 20th, 2025": "20"
+                                      - gridcell "Monday, July 21st, 2025":
+                                        - button "Monday, July 21st, 2025": "21"
+                                      - gridcell "Tuesday, July 22nd, 2025":
+                                        - button "Tuesday, July 22nd, 2025": "22"
+                                      - gridcell "Wednesday, July 23rd, 2025":
+                                        - button "Wednesday, July 23rd, 2025": "23"
+                                      - gridcell "Thursday, July 24th, 2025":
+                                        - button "Thursday, July 24th, 2025": "24"
+                                      - gridcell "Friday, July 25th, 2025":
+                                        - button "Friday, July 25th, 2025": "25"
+                                      - gridcell "Saturday, July 26th, 2025":
+                                        - button "Saturday, July 26th, 2025": "26"
+                                    - row "Sunday, July 27th, 2025 Monday, July 28th, 2025 Tuesday, July 29th, 2025 Wednesday, July 30th, 2025 Thursday, July 31st, 2025":
+                                      - gridcell "Sunday, July 27th, 2025":
+                                        - button "Sunday, July 27th, 2025": "27"
+                                      - gridcell "Monday, July 28th, 2025":
+                                        - button "Monday, July 28th, 2025": "28"
+                                      - gridcell "Tuesday, July 29th, 2025":
+                                        - button "Tuesday, July 29th, 2025": "29"
+                                      - gridcell "Wednesday, July 30th, 2025":
+                                        - button "Wednesday, July 30th, 2025": "30"
+                                      - gridcell "Thursday, July 31st, 2025":
+                                        - button "Thursday, July 31st, 2025": "31"
+                          - generic: We are open in June and July only.
+                    - generic [ref=e171]:
+                      - img [ref=e172]
+                      - generic [ref=e173]: Add to page
+                  - paragraph [ref=e175]: calendar-11
+                - generic [ref=e176] [cursor=pointer]:
+                  - generic [ref=e177]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Reserva una cita
+                            - generic: Selecciona las fechas para tu cita
+                            - combobox:
+                              - generic: Español
+                              - img
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: septiembre 2025
+                                  - grid "septiembre 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: lu
+                                        - columnheader: ma
+                                        - columnheader: mi
+                                        - columnheader: ju
+                                        - columnheader: vi
+                                        - columnheader: sá
+                                        - columnheader: do
+                                    - rowgroup:
+                                      - row "lunes, 1 de septiembre de 2025 martes, 2 de septiembre de 2025 miércoles, 3 de septiembre de 2025 jueves, 4 de septiembre de 2025 viernes, 5 de septiembre de 2025 sábado, 6 de septiembre de 2025 domingo, 7 de septiembre de 2025":
+                                        - gridcell "lunes, 1 de septiembre de 2025":
+                                          - button "lunes, 1 de septiembre de 2025": "1"
+                                        - gridcell "martes, 2 de septiembre de 2025":
+                                          - button "martes, 2 de septiembre de 2025": "2"
+                                        - gridcell "miércoles, 3 de septiembre de 2025":
+                                          - button "miércoles, 3 de septiembre de 2025": "3"
+                                        - gridcell "jueves, 4 de septiembre de 2025":
+                                          - button "jueves, 4 de septiembre de 2025": "4"
+                                        - gridcell "viernes, 5 de septiembre de 2025":
+                                          - button "viernes, 5 de septiembre de 2025": "5"
+                                        - gridcell "sábado, 6 de septiembre de 2025":
+                                          - button "sábado, 6 de septiembre de 2025": "6"
+                                        - gridcell "domingo, 7 de septiembre de 2025":
+                                          - button "domingo, 7 de septiembre de 2025": "7"
+                                      - row "lunes, 8 de septiembre de 2025 martes, 9 de septiembre de 2025, selected miércoles, 10 de septiembre de 2025, selected jueves, 11 de septiembre de 2025, selected viernes, 12 de septiembre de 2025, selected sábado, 13 de septiembre de 2025, selected domingo, 14 de septiembre de 2025, selected":
+                                        - gridcell "lunes, 8 de septiembre de 2025":
+                                          - button "lunes, 8 de septiembre de 2025": "8"
+                                        - gridcell "martes, 9 de septiembre de 2025, selected" [selected]:
+                                          - button "martes, 9 de septiembre de 2025, selected": "9"
+                                        - gridcell "miércoles, 10 de septiembre de 2025, selected" [selected]:
+                                          - button "miércoles, 10 de septiembre de 2025, selected": "10"
+                                        - gridcell "jueves, 11 de septiembre de 2025, selected" [selected]:
+                                          - button "jueves, 11 de septiembre de 2025, selected": "11"
+                                        - gridcell "viernes, 12 de septiembre de 2025, selected" [selected]:
+                                          - button "viernes, 12 de septiembre de 2025, selected": "12"
+                                        - gridcell "sábado, 13 de septiembre de 2025, selected" [selected]:
+                                          - button "sábado, 13 de septiembre de 2025, selected": "13"
+                                        - gridcell "domingo, 14 de septiembre de 2025, selected" [selected]:
+                                          - button "domingo, 14 de septiembre de 2025, selected": "14"
+                                      - row "lunes, 15 de septiembre de 2025, selected martes, 16 de septiembre de 2025, selected miércoles, 17 de septiembre de 2025, selected jueves, 18 de septiembre de 2025 viernes, 19 de septiembre de 2025 sábado, 20 de septiembre de 2025 domingo, 21 de septiembre de 2025":
+                                        - gridcell "lunes, 15 de septiembre de 2025, selected" [selected]:
+                                          - button "lunes, 15 de septiembre de 2025, selected": "15"
+                                        - gridcell "martes, 16 de septiembre de 2025, selected" [selected]:
+                                          - button "martes, 16 de septiembre de 2025, selected": "16"
+                                        - gridcell "miércoles, 17 de septiembre de 2025, selected" [selected]:
+                                          - button "miércoles, 17 de septiembre de 2025, selected": "17"
+                                        - gridcell "jueves, 18 de septiembre de 2025":
+                                          - button "jueves, 18 de septiembre de 2025": "18"
+                                        - gridcell "viernes, 19 de septiembre de 2025":
+                                          - button "viernes, 19 de septiembre de 2025": "19"
+                                        - gridcell "sábado, 20 de septiembre de 2025":
+                                          - button "sábado, 20 de septiembre de 2025": "20"
+                                        - gridcell "domingo, 21 de septiembre de 2025":
+                                          - button "domingo, 21 de septiembre de 2025": "21"
+                                      - row "lunes, 22 de septiembre de 2025 martes, 23 de septiembre de 2025 miércoles, 24 de septiembre de 2025 jueves, 25 de septiembre de 2025 viernes, 26 de septiembre de 2025 sábado, 27 de septiembre de 2025 domingo, 28 de septiembre de 2025":
+                                        - gridcell "lunes, 22 de septiembre de 2025":
+                                          - button "lunes, 22 de septiembre de 2025": "22"
+                                        - gridcell "martes, 23 de septiembre de 2025":
+                                          - button "martes, 23 de septiembre de 2025": "23"
+                                        - gridcell "miércoles, 24 de septiembre de 2025":
+                                          - button "miércoles, 24 de septiembre de 2025": "24"
+                                        - gridcell "jueves, 25 de septiembre de 2025":
+                                          - button "jueves, 25 de septiembre de 2025": "25"
+                                        - gridcell "viernes, 26 de septiembre de 2025":
+                                          - button "viernes, 26 de septiembre de 2025": "26"
+                                        - gridcell "sábado, 27 de septiembre de 2025":
+                                          - button "sábado, 27 de septiembre de 2025": "27"
+                                        - gridcell "domingo, 28 de septiembre de 2025":
+                                          - button "domingo, 28 de septiembre de 2025": "28"
+                                      - row "lunes, 29 de septiembre de 2025 martes, 30 de septiembre de 2025 miércoles, 1 de octubre de 2025 jueves, 2 de octubre de 2025 viernes, 3 de octubre de 2025 sábado, 4 de octubre de 2025 domingo, 5 de octubre de 2025":
+                                        - gridcell "lunes, 29 de septiembre de 2025":
+                                          - button "lunes, 29 de septiembre de 2025": "29"
+                                        - gridcell "martes, 30 de septiembre de 2025":
+                                          - button "martes, 30 de septiembre de 2025": "30"
+                                        - gridcell "miércoles, 1 de octubre de 2025":
+                                          - button "miércoles, 1 de octubre de 2025": "1"
+                                        - gridcell "jueves, 2 de octubre de 2025":
+                                          - button "jueves, 2 de octubre de 2025": "2"
+                                        - gridcell "viernes, 3 de octubre de 2025":
+                                          - button "viernes, 3 de octubre de 2025": "3"
+                                        - gridcell "sábado, 4 de octubre de 2025":
+                                          - button "sábado, 4 de octubre de 2025": "4"
+                                        - gridcell "domingo, 5 de octubre de 2025":
+                                          - button "domingo, 5 de octubre de 2025": "5"
+                                - generic:
+                                  - generic:
+                                    - status: octubre 2025
+                                  - grid "octubre 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: lu
+                                        - columnheader: ma
+                                        - columnheader: mi
+                                        - columnheader: ju
+                                        - columnheader: vi
+                                        - columnheader: sá
+                                        - columnheader: do
+                                    - rowgroup:
+                                      - row "lunes, 29 de septiembre de 2025 martes, 30 de septiembre de 2025 miércoles, 1 de octubre de 2025 jueves, 2 de octubre de 2025 viernes, 3 de octubre de 2025 sábado, 4 de octubre de 2025 domingo, 5 de octubre de 2025":
+                                        - gridcell "lunes, 29 de septiembre de 2025":
+                                          - button "lunes, 29 de septiembre de 2025": "29"
+                                        - gridcell "martes, 30 de septiembre de 2025":
+                                          - button "martes, 30 de septiembre de 2025": "30"
+                                        - gridcell "miércoles, 1 de octubre de 2025":
+                                          - button "miércoles, 1 de octubre de 2025": "1"
+                                        - gridcell "jueves, 2 de octubre de 2025":
+                                          - button "jueves, 2 de octubre de 2025": "2"
+                                        - gridcell "viernes, 3 de octubre de 2025":
+                                          - button "viernes, 3 de octubre de 2025": "3"
+                                        - gridcell "sábado, 4 de octubre de 2025":
+                                          - button "sábado, 4 de octubre de 2025": "4"
+                                        - gridcell "domingo, 5 de octubre de 2025":
+                                          - button "domingo, 5 de octubre de 2025": "5"
+                                      - row "lunes, 6 de octubre de 2025 martes, 7 de octubre de 2025 miércoles, 8 de octubre de 2025 jueves, 9 de octubre de 2025 viernes, 10 de octubre de 2025 sábado, 11 de octubre de 2025 domingo, 12 de octubre de 2025":
+                                        - gridcell "lunes, 6 de octubre de 2025":
+                                          - button "lunes, 6 de octubre de 2025": "6"
+                                        - gridcell "martes, 7 de octubre de 2025":
+                                          - button "martes, 7 de octubre de 2025": "7"
+                                        - gridcell "miércoles, 8 de octubre de 2025":
+                                          - button "miércoles, 8 de octubre de 2025": "8"
+                                        - gridcell "jueves, 9 de octubre de 2025":
+                                          - button "jueves, 9 de octubre de 2025": "9"
+                                        - gridcell "viernes, 10 de octubre de 2025":
+                                          - button "viernes, 10 de octubre de 2025": "10"
+                                        - gridcell "sábado, 11 de octubre de 2025":
+                                          - button "sábado, 11 de octubre de 2025": "11"
+                                        - gridcell "domingo, 12 de octubre de 2025":
+                                          - button "domingo, 12 de octubre de 2025": "12"
+                                      - row "lunes, 13 de octubre de 2025 martes, 14 de octubre de 2025 miércoles, 15 de octubre de 2025 jueves, 16 de octubre de 2025 viernes, 17 de octubre de 2025 sábado, 18 de octubre de 2025 domingo, 19 de octubre de 2025":
+                                        - gridcell "lunes, 13 de octubre de 2025":
+                                          - button "lunes, 13 de octubre de 2025": "13"
+                                        - gridcell "martes, 14 de octubre de 2025":
+                                          - button "martes, 14 de octubre de 2025": "14"
+                                        - gridcell "miércoles, 15 de octubre de 2025":
+                                          - button "miércoles, 15 de octubre de 2025": "15"
+                                        - gridcell "jueves, 16 de octubre de 2025":
+                                          - button "jueves, 16 de octubre de 2025": "16"
+                                        - gridcell "viernes, 17 de octubre de 2025":
+                                          - button "viernes, 17 de octubre de 2025": "17"
+                                        - gridcell "sábado, 18 de octubre de 2025":
+                                          - button "sábado, 18 de octubre de 2025": "18"
+                                        - gridcell "domingo, 19 de octubre de 2025":
+                                          - button "domingo, 19 de octubre de 2025": "19"
+                                      - row "lunes, 20 de octubre de 2025 martes, 21 de octubre de 2025 miércoles, 22 de octubre de 2025 jueves, 23 de octubre de 2025 viernes, 24 de octubre de 2025 sábado, 25 de octubre de 2025 domingo, 26 de octubre de 2025":
+                                        - gridcell "lunes, 20 de octubre de 2025":
+                                          - button "lunes, 20 de octubre de 2025": "20"
+                                        - gridcell "martes, 21 de octubre de 2025":
+                                          - button "martes, 21 de octubre de 2025": "21"
+                                        - gridcell "miércoles, 22 de octubre de 2025":
+                                          - button "miércoles, 22 de octubre de 2025": "22"
+                                        - gridcell "jueves, 23 de octubre de 2025":
+                                          - button "jueves, 23 de octubre de 2025": "23"
+                                        - gridcell "viernes, 24 de octubre de 2025":
+                                          - button "viernes, 24 de octubre de 2025": "24"
+                                        - gridcell "sábado, 25 de octubre de 2025":
+                                          - button "sábado, 25 de octubre de 2025": "25"
+                                        - gridcell "domingo, 26 de octubre de 2025":
+                                          - button "domingo, 26 de octubre de 2025": "26"
+                                      - row "lunes, 27 de octubre de 2025 martes, 28 de octubre de 2025 miércoles, 29 de octubre de 2025 jueves, 30 de octubre de 2025 viernes, 31 de octubre de 2025 sábado, 1 de noviembre de 2025 domingo, 2 de noviembre de 2025":
+                                        - gridcell "lunes, 27 de octubre de 2025":
+                                          - button "lunes, 27 de octubre de 2025": "27"
+                                        - gridcell "martes, 28 de octubre de 2025":
+                                          - button "martes, 28 de octubre de 2025": "28"
+                                        - gridcell "miércoles, 29 de octubre de 2025":
+                                          - button "miércoles, 29 de octubre de 2025": "29"
+                                        - gridcell "jueves, 30 de octubre de 2025":
+                                          - button "jueves, 30 de octubre de 2025": "30"
+                                        - gridcell "viernes, 31 de octubre de 2025":
+                                          - button "viernes, 31 de octubre de 2025": "31"
+                                        - gridcell "sábado, 1 de noviembre de 2025":
+                                          - button "sábado, 1 de noviembre de 2025": "1"
+                                        - gridcell "domingo, 2 de noviembre de 2025":
+                                          - button "domingo, 2 de noviembre de 2025": "2"
+                    - generic [ref=e179]:
+                      - img [ref=e180]
+                      - generic [ref=e181]: Add to page
+                  - paragraph [ref=e183]: calendar-12
+                - generic [ref=e184] [cursor=pointer]:
+                  - generic [ref=e185]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - navigation:
+                                - button "Go to the Previous Month":
+                                  - img
+                                - button "Go to the Next Month":
+                                  - img
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - combobox "Choose the Month":
+                                        - option "January"
+                                        - option "February"
+                                        - option "March"
+                                        - option "April"
+                                        - option "May"
+                                        - option "June" [selected]
+                                        - option "July"
+                                        - option "August"
+                                        - option "September"
+                                        - option "October"
+                                        - option "November"
+                                        - option "December"
+                                      - generic:
+                                        - text: June
+                                        - img
+                                    - generic:
+                                      - combobox "Choose the Year":
+                                        - option "1925"
+                                        - option "1926"
+                                        - option "1927"
+                                        - option "1928"
+                                        - option "1929"
+                                        - option "1930"
+                                        - option "1931"
+                                        - option "1932"
+                                        - option "1933"
+                                        - option "1934"
+                                        - option "1935"
+                                        - option "1936"
+                                        - option "1937"
+                                        - option "1938"
+                                        - option "1939"
+                                        - option "1940"
+                                        - option "1941"
+                                        - option "1942"
+                                        - option "1943"
+                                        - option "1944"
+                                        - option "1945"
+                                        - option "1946"
+                                        - option "1947"
+                                        - option "1948"
+                                        - option "1949"
+                                        - option "1950"
+                                        - option "1951"
+                                        - option "1952"
+                                        - option "1953"
+                                        - option "1954"
+                                        - option "1955"
+                                        - option "1956"
+                                        - option "1957"
+                                        - option "1958"
+                                        - option "1959"
+                                        - option "1960"
+                                        - option "1961"
+                                        - option "1962"
+                                        - option "1963"
+                                        - option "1964"
+                                        - option "1965"
+                                        - option "1966"
+                                        - option "1967"
+                                        - option "1968"
+                                        - option "1969"
+                                        - option "1970"
+                                        - option "1971"
+                                        - option "1972"
+                                        - option "1973"
+                                        - option "1974"
+                                        - option "1975"
+                                        - option "1976"
+                                        - option "1977"
+                                        - option "1978"
+                                        - option "1979"
+                                        - option "1980"
+                                        - option "1981"
+                                        - option "1982"
+                                        - option "1983"
+                                        - option "1984"
+                                        - option "1985"
+                                        - option "1986"
+                                        - option "1987"
+                                        - option "1988"
+                                        - option "1989"
+                                        - option "1990"
+                                        - option "1991"
+                                        - option "1992"
+                                        - option "1993"
+                                        - option "1994"
+                                        - option "1995"
+                                        - option "1996"
+                                        - option "1997"
+                                        - option "1998"
+                                        - option "1999"
+                                        - option "2000"
+                                        - option "2001"
+                                        - option "2002"
+                                        - option "2003"
+                                        - option "2004"
+                                        - option "2005"
+                                        - option "2006"
+                                        - option "2007"
+                                        - option "2008"
+                                        - option "2009"
+                                        - option "2010"
+                                        - option "2011"
+                                        - option "2012"
+                                        - option "2013"
+                                        - option "2014"
+                                        - option "2015"
+                                        - option "2016"
+                                        - option "2017"
+                                        - option "2018"
+                                        - option "2019"
+                                        - option "2020"
+                                        - option "2021"
+                                        - option "2022"
+                                        - option "2023"
+                                        - option "2024"
+                                        - option "2025" [selected]
+                                      - generic:
+                                        - text: "2025"
+                                        - img
+                                    - status: June 2025
+                                - grid "June 2025":
+                                  - rowgroup:
+                                    - row:
+                                      - columnheader: Su
+                                      - columnheader: Mo
+                                      - columnheader: Tu
+                                      - columnheader: We
+                                      - columnheader: Th
+                                      - columnheader: Fr
+                                      - columnheader: Sa
+                                  - rowgroup:
+                                    - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                      - gridcell "Sunday, June 1st, 2025":
+                                        - button "Sunday, June 1st, 2025": "1"
+                                      - gridcell "Monday, June 2nd, 2025":
+                                        - button "Monday, June 2nd, 2025": "2"
+                                      - gridcell "Tuesday, June 3rd, 2025":
+                                        - button "Tuesday, June 3rd, 2025": "3"
+                                      - gridcell "Wednesday, June 4th, 2025":
+                                        - button "Wednesday, June 4th, 2025": "4"
+                                      - gridcell "Thursday, June 5th, 2025":
+                                        - button "Thursday, June 5th, 2025": "5"
+                                      - gridcell "Friday, June 6th, 2025":
+                                        - button "Friday, June 6th, 2025": "6"
+                                      - gridcell "Saturday, June 7th, 2025":
+                                        - button "Saturday, June 7th, 2025": "7"
+                                    - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                      - gridcell "Sunday, June 8th, 2025":
+                                        - button "Sunday, June 8th, 2025": "8"
+                                      - gridcell "Monday, June 9th, 2025":
+                                        - button "Monday, June 9th, 2025": "9"
+                                      - gridcell "Tuesday, June 10th, 2025":
+                                        - button "Tuesday, June 10th, 2025": "10"
+                                      - gridcell "Wednesday, June 11th, 2025":
+                                        - button "Wednesday, June 11th, 2025": "11"
+                                      - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                        - button "Thursday, June 12th, 2025, selected": "12"
+                                      - gridcell "Friday, June 13th, 2025":
+                                        - button "Friday, June 13th, 2025": "13"
+                                      - gridcell "Saturday, June 14th, 2025":
+                                        - button "Saturday, June 14th, 2025": "14"
+                                    - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                      - gridcell "Sunday, June 15th, 2025":
+                                        - button "Sunday, June 15th, 2025": "15"
+                                      - gridcell "Monday, June 16th, 2025":
+                                        - button "Monday, June 16th, 2025": "16"
+                                      - gridcell "Tuesday, June 17th, 2025":
+                                        - button "Tuesday, June 17th, 2025": "17"
+                                      - gridcell "Wednesday, June 18th, 2025":
+                                        - button "Wednesday, June 18th, 2025": "18"
+                                      - gridcell "Thursday, June 19th, 2025":
+                                        - button "Thursday, June 19th, 2025": "19"
+                                      - gridcell "Friday, June 20th, 2025":
+                                        - button "Friday, June 20th, 2025": "20"
+                                      - gridcell "Saturday, June 21st, 2025":
+                                        - button "Saturday, June 21st, 2025": "21"
+                                    - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                      - gridcell "Sunday, June 22nd, 2025":
+                                        - button "Sunday, June 22nd, 2025": "22"
+                                      - gridcell "Monday, June 23rd, 2025":
+                                        - button "Monday, June 23rd, 2025": "23"
+                                      - gridcell "Tuesday, June 24th, 2025":
+                                        - button "Tuesday, June 24th, 2025": "24"
+                                      - gridcell "Wednesday, June 25th, 2025":
+                                        - button "Wednesday, June 25th, 2025": "25"
+                                      - gridcell "Thursday, June 26th, 2025":
+                                        - button "Thursday, June 26th, 2025": "26"
+                                      - gridcell "Friday, June 27th, 2025":
+                                        - button "Friday, June 27th, 2025": "27"
+                                      - gridcell "Saturday, June 28th, 2025":
+                                        - button "Saturday, June 28th, 2025": "28"
+                                    - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                      - gridcell "Sunday, June 29th, 2025":
+                                        - button "Sunday, June 29th, 2025": "29"
+                                      - gridcell "Monday, June 30th, 2025":
+                                        - button "Monday, June 30th, 2025": "30"
+                                      - gridcell "Tuesday, July 1st, 2025":
+                                        - button "Tuesday, July 1st, 2025": "1"
+                                      - gridcell "Wednesday, July 2nd, 2025":
+                                        - button "Wednesday, July 2nd, 2025": "2"
+                                      - gridcell "Thursday, July 3rd, 2025":
+                                        - button "Thursday, July 3rd, 2025": "3"
+                                      - gridcell "Friday, July 4th, 2025":
+                                        - button "Friday, July 4th, 2025": "4"
+                                      - gridcell "Saturday, July 5th, 2025":
+                                        - button "Saturday, July 5th, 2025": "5"
+                          - generic:
+                            - generic: Dropdown
+                            - combobox "Dropdown":
+                              - generic: Month and Year
+                              - img
+                    - generic [ref=e187]:
+                      - img [ref=e188]
+                      - generic [ref=e189]: Add to page
+                  - paragraph [ref=e191]: calendar-13
+                - generic [ref=e192] [cursor=pointer]:
+                  - generic [ref=e193]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025" [disabled]: "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025" [disabled]: "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025" [disabled]: "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025" [disabled]: "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025" [disabled]: "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025" [disabled]: "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025" [disabled]: "21"
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025" [disabled]: "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025" [disabled]: "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025" [disabled]: "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025" [disabled]: "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025" [disabled]: "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                    - generic [ref=e195]:
+                      - img [ref=e196]
+                      - generic [ref=e197]: Add to page
+                  - paragraph [ref=e199]: calendar-14
+                - generic [ref=e200] [cursor=pointer]:
+                  - generic [ref=e201]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Week 23 Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - rowheader "Week 23": "23"
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025": "1"
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025": "2"
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025": "3"
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025": "4"
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025": "5"
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025": "6"
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025": "7"
+                                  - row "Week 24 Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                    - rowheader "Week 24": "24"
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025": "8"
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025": "9"
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025": "10"
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025": "11"
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected": "12"
+                                    - gridcell "Friday, June 13th, 2025":
+                                      - button "Friday, June 13th, 2025": "13"
+                                    - gridcell "Saturday, June 14th, 2025":
+                                      - button "Saturday, June 14th, 2025": "14"
+                                  - row "Week 25 Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - rowheader "Week 25": "25"
+                                    - gridcell "Sunday, June 15th, 2025":
+                                      - button "Sunday, June 15th, 2025": "15"
+                                    - gridcell "Monday, June 16th, 2025":
+                                      - button "Monday, June 16th, 2025": "16"
+                                    - gridcell "Tuesday, June 17th, 2025":
+                                      - button "Tuesday, June 17th, 2025": "17"
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025": "18"
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025": "19"
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025": "20"
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025": "21"
+                                  - row "Week 26 Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - rowheader "Week 26": "26"
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025": "22"
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025": "23"
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025": "24"
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025": "25"
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025": "26"
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025": "27"
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025": "28"
+                                  - row "Week 27 Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - rowheader "Week 27": "27"
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025": "29"
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025": "30"
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025": "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025": "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025": "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025": "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025": "5"
+                    - generic [ref=e203]:
+                      - img [ref=e204]
+                      - generic [ref=e205]: Add to page
+                  - paragraph [ref=e207]: calendar-15
+                - generic [ref=e208] [cursor=pointer]:
+                  - generic [ref=e209]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: November 2025
+                                  - grid "November 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: Su
+                                        - columnheader: Mo
+                                        - columnheader: Tu
+                                        - columnheader: We
+                                        - columnheader: Th
+                                        - columnheader: Fr
+                                        - columnheader: Sa
+                                    - rowgroup:
+                                      - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                        - gridcell "Sunday, October 26th, 2025":
+                                          - button "Sunday, October 26th, 2025": "26"
+                                        - gridcell "Monday, October 27th, 2025":
+                                          - button "Monday, October 27th, 2025": "27"
+                                        - gridcell "Tuesday, October 28th, 2025":
+                                          - button "Tuesday, October 28th, 2025": "28"
+                                        - gridcell "Wednesday, October 29th, 2025":
+                                          - button "Wednesday, October 29th, 2025": "29"
+                                        - gridcell "Thursday, October 30th, 2025":
+                                          - button "Thursday, October 30th, 2025": "30"
+                                        - gridcell "Friday, October 31st, 2025":
+                                          - button "Friday, October 31st, 2025": "31"
+                                        - gridcell "Saturday, November 1st, 2025":
+                                          - button "Saturday, November 1st, 2025": "1"
+                                      - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                        - gridcell "Sunday, November 2nd, 2025":
+                                          - button "Sunday, November 2nd, 2025": "2"
+                                        - gridcell "Monday, November 3rd, 2025":
+                                          - button "Monday, November 3rd, 2025": "3"
+                                        - gridcell "Today, Tuesday, November 4th, 2025":
+                                          - button "Today, Tuesday, November 4th, 2025": "4"
+                                        - gridcell "Wednesday, November 5th, 2025":
+                                          - button "Wednesday, November 5th, 2025": "5"
+                                        - gridcell "Thursday, November 6th, 2025":
+                                          - button "Thursday, November 6th, 2025": "6"
+                                        - gridcell "Friday, November 7th, 2025":
+                                          - button "Friday, November 7th, 2025": "7"
+                                        - gridcell "Saturday, November 8th, 2025":
+                                          - button "Saturday, November 8th, 2025": "8"
+                                      - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                        - gridcell "Sunday, November 9th, 2025":
+                                          - button "Sunday, November 9th, 2025": "9"
+                                        - gridcell "Monday, November 10th, 2025":
+                                          - button "Monday, November 10th, 2025": "10"
+                                        - gridcell "Tuesday, November 11th, 2025":
+                                          - button "Tuesday, November 11th, 2025": "11"
+                                        - gridcell "Wednesday, November 12th, 2025":
+                                          - button "Wednesday, November 12th, 2025": "12"
+                                        - gridcell "Thursday, November 13th, 2025":
+                                          - button "Thursday, November 13th, 2025": "13"
+                                        - gridcell "Friday, November 14th, 2025":
+                                          - button "Friday, November 14th, 2025": "14"
+                                        - gridcell "Saturday, November 15th, 2025":
+                                          - button "Saturday, November 15th, 2025": "15"
+                                      - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                        - gridcell "Sunday, November 16th, 2025":
+                                          - button "Sunday, November 16th, 2025": "16"
+                                        - gridcell "Monday, November 17th, 2025":
+                                          - button "Monday, November 17th, 2025": "17"
+                                        - gridcell "Tuesday, November 18th, 2025":
+                                          - button "Tuesday, November 18th, 2025": "18"
+                                        - gridcell "Wednesday, November 19th, 2025":
+                                          - button "Wednesday, November 19th, 2025": "19"
+                                        - gridcell "Thursday, November 20th, 2025":
+                                          - button "Thursday, November 20th, 2025": "20"
+                                        - gridcell "Friday, November 21st, 2025":
+                                          - button "Friday, November 21st, 2025": "21"
+                                        - gridcell "Saturday, November 22nd, 2025":
+                                          - button "Saturday, November 22nd, 2025": "22"
+                                      - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                        - gridcell "Sunday, November 23rd, 2025":
+                                          - button "Sunday, November 23rd, 2025": "23"
+                                        - gridcell "Monday, November 24th, 2025":
+                                          - button "Monday, November 24th, 2025": "24"
+                                        - gridcell "Tuesday, November 25th, 2025":
+                                          - button "Tuesday, November 25th, 2025": "25"
+                                        - gridcell "Wednesday, November 26th, 2025":
+                                          - button "Wednesday, November 26th, 2025": "26"
+                                        - gridcell "Thursday, November 27th, 2025":
+                                          - button "Thursday, November 27th, 2025": "27"
+                                        - gridcell "Friday, November 28th, 2025":
+                                          - button "Friday, November 28th, 2025": "28"
+                                        - gridcell "Saturday, November 29th, 2025":
+                                          - button "Saturday, November 29th, 2025": "29"
+                                      - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                        - gridcell "Sunday, November 30th, 2025":
+                                          - button "Sunday, November 30th, 2025": "30"
+                                        - gridcell "Monday, December 1st, 2025":
+                                          - button "Monday, December 1st, 2025": "1"
+                                        - gridcell "Tuesday, December 2nd, 2025":
+                                          - button "Tuesday, December 2nd, 2025": "2"
+                                        - gridcell "Wednesday, December 3rd, 2025":
+                                          - button "Wednesday, December 3rd, 2025": "3"
+                                        - gridcell "Thursday, December 4th, 2025":
+                                          - button "Thursday, December 4th, 2025": "4"
+                                        - gridcell "Friday, December 5th, 2025":
+                                          - button "Friday, December 5th, 2025": "5"
+                                        - gridcell "Saturday, December 6th, 2025":
+                                          - button "Saturday, December 6th, 2025": "6"
+                          - generic:
+                            - generic:
+                              - generic: Start Time
+                              - generic:
+                                - img
+                                - textbox "Start Time Start Time From From": 10:30:00
+                            - generic:
+                              - generic: End Time
+                              - generic:
+                                - img
+                                - textbox "End Time End Time To To": 12:30:00
+                    - generic [ref=e211]:
+                      - img [ref=e212]
+                      - generic [ref=e213]: Add to page
+                  - paragraph [ref=e215]: calendar-16
+                - generic [ref=e216] [cursor=pointer]:
+                  - generic [ref=e217]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: November 2025
+                                  - grid "November 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: Su
+                                        - columnheader: Mo
+                                        - columnheader: Tu
+                                        - columnheader: We
+                                        - columnheader: Th
+                                        - columnheader: Fr
+                                        - columnheader: Sa
+                                    - rowgroup:
+                                      - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                        - gridcell "Sunday, October 26th, 2025":
+                                          - button "Sunday, October 26th, 2025": "26"
+                                        - gridcell "Monday, October 27th, 2025":
+                                          - button "Monday, October 27th, 2025": "27"
+                                        - gridcell "Tuesday, October 28th, 2025":
+                                          - button "Tuesday, October 28th, 2025": "28"
+                                        - gridcell "Wednesday, October 29th, 2025":
+                                          - button "Wednesday, October 29th, 2025": "29"
+                                        - gridcell "Thursday, October 30th, 2025":
+                                          - button "Thursday, October 30th, 2025": "30"
+                                        - gridcell "Friday, October 31st, 2025":
+                                          - button "Friday, October 31st, 2025": "31"
+                                        - gridcell "Saturday, November 1st, 2025":
+                                          - button "Saturday, November 1st, 2025": "1"
+                                      - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                        - gridcell "Sunday, November 2nd, 2025":
+                                          - button "Sunday, November 2nd, 2025": "2"
+                                        - gridcell "Monday, November 3rd, 2025":
+                                          - button "Monday, November 3rd, 2025": "3"
+                                        - gridcell "Today, Tuesday, November 4th, 2025":
+                                          - button "Today, Tuesday, November 4th, 2025": "4"
+                                        - gridcell "Wednesday, November 5th, 2025":
+                                          - button "Wednesday, November 5th, 2025": "5"
+                                        - gridcell "Thursday, November 6th, 2025":
+                                          - button "Thursday, November 6th, 2025": "6"
+                                        - gridcell "Friday, November 7th, 2025":
+                                          - button "Friday, November 7th, 2025": "7"
+                                        - gridcell "Saturday, November 8th, 2025":
+                                          - button "Saturday, November 8th, 2025": "8"
+                                      - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                        - gridcell "Sunday, November 9th, 2025":
+                                          - button "Sunday, November 9th, 2025": "9"
+                                        - gridcell "Monday, November 10th, 2025":
+                                          - button "Monday, November 10th, 2025": "10"
+                                        - gridcell "Tuesday, November 11th, 2025":
+                                          - button "Tuesday, November 11th, 2025": "11"
+                                        - gridcell "Wednesday, November 12th, 2025":
+                                          - button "Wednesday, November 12th, 2025": "12"
+                                        - gridcell "Thursday, November 13th, 2025":
+                                          - button "Thursday, November 13th, 2025": "13"
+                                        - gridcell "Friday, November 14th, 2025":
+                                          - button "Friday, November 14th, 2025": "14"
+                                        - gridcell "Saturday, November 15th, 2025":
+                                          - button "Saturday, November 15th, 2025": "15"
+                                      - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                        - gridcell "Sunday, November 16th, 2025":
+                                          - button "Sunday, November 16th, 2025": "16"
+                                        - gridcell "Monday, November 17th, 2025":
+                                          - button "Monday, November 17th, 2025": "17"
+                                        - gridcell "Tuesday, November 18th, 2025":
+                                          - button "Tuesday, November 18th, 2025": "18"
+                                        - gridcell "Wednesday, November 19th, 2025":
+                                          - button "Wednesday, November 19th, 2025": "19"
+                                        - gridcell "Thursday, November 20th, 2025":
+                                          - button "Thursday, November 20th, 2025": "20"
+                                        - gridcell "Friday, November 21st, 2025":
+                                          - button "Friday, November 21st, 2025": "21"
+                                        - gridcell "Saturday, November 22nd, 2025":
+                                          - button "Saturday, November 22nd, 2025": "22"
+                                      - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                        - gridcell "Sunday, November 23rd, 2025":
+                                          - button "Sunday, November 23rd, 2025": "23"
+                                        - gridcell "Monday, November 24th, 2025":
+                                          - button "Monday, November 24th, 2025": "24"
+                                        - gridcell "Tuesday, November 25th, 2025":
+                                          - button "Tuesday, November 25th, 2025": "25"
+                                        - gridcell "Wednesday, November 26th, 2025":
+                                          - button "Wednesday, November 26th, 2025": "26"
+                                        - gridcell "Thursday, November 27th, 2025":
+                                          - button "Thursday, November 27th, 2025": "27"
+                                        - gridcell "Friday, November 28th, 2025":
+                                          - button "Friday, November 28th, 2025": "28"
+                                        - gridcell "Saturday, November 29th, 2025":
+                                          - button "Saturday, November 29th, 2025": "29"
+                                      - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                        - gridcell "Sunday, November 30th, 2025":
+                                          - button "Sunday, November 30th, 2025": "30"
+                                        - gridcell "Monday, December 1st, 2025":
+                                          - button "Monday, December 1st, 2025": "1"
+                                        - gridcell "Tuesday, December 2nd, 2025":
+                                          - button "Tuesday, December 2nd, 2025": "2"
+                                        - gridcell "Wednesday, December 3rd, 2025":
+                                          - button "Wednesday, December 3rd, 2025": "3"
+                                        - gridcell "Thursday, December 4th, 2025":
+                                          - button "Thursday, December 4th, 2025": "4"
+                                        - gridcell "Friday, December 5th, 2025":
+                                          - button "Friday, December 5th, 2025": "5"
+                                        - gridcell "Saturday, December 6th, 2025":
+                                          - button "Saturday, December 6th, 2025": "6"
+                          - generic:
+                            - generic:
+                              - generic: Start Time
+                              - textbox: 10:30:00
+                            - generic: "-"
+                            - generic:
+                              - generic: End Time
+                              - textbox: 12:30:00
+                    - generic [ref=e219]:
+                      - img [ref=e220]
+                      - generic [ref=e221]: Add to page
+                  - paragraph [ref=e223]: calendar-17
+                - generic [ref=e224] [cursor=pointer]:
+                  - generic [ref=e225]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - status: November 2025
+                              - grid "November 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                    - gridcell "Sunday, October 26th, 2025":
+                                      - button "Sunday, October 26th, 2025": "26"
+                                    - gridcell "Monday, October 27th, 2025":
+                                      - button "Monday, October 27th, 2025": "27"
+                                    - gridcell "Tuesday, October 28th, 2025":
+                                      - button "Tuesday, October 28th, 2025": "28"
+                                    - gridcell "Wednesday, October 29th, 2025":
+                                      - button "Wednesday, October 29th, 2025": "29"
+                                    - gridcell "Thursday, October 30th, 2025":
+                                      - button "Thursday, October 30th, 2025": "30"
+                                    - gridcell "Friday, October 31st, 2025":
+                                      - button "Friday, October 31st, 2025": "31"
+                                    - gridcell "Saturday, November 1st, 2025":
+                                      - button "Saturday, November 1st, 2025": "1"
+                                  - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                    - gridcell "Sunday, November 2nd, 2025":
+                                      - button "Sunday, November 2nd, 2025": "2"
+                                    - gridcell "Monday, November 3rd, 2025":
+                                      - button "Monday, November 3rd, 2025": "3"
+                                    - gridcell "Today, Tuesday, November 4th, 2025":
+                                      - button "Today, Tuesday, November 4th, 2025": "4"
+                                    - gridcell "Wednesday, November 5th, 2025":
+                                      - button "Wednesday, November 5th, 2025": "5"
+                                    - gridcell "Thursday, November 6th, 2025":
+                                      - button "Thursday, November 6th, 2025": "6"
+                                    - gridcell "Friday, November 7th, 2025":
+                                      - button "Friday, November 7th, 2025": "7"
+                                    - gridcell "Saturday, November 8th, 2025":
+                                      - button "Saturday, November 8th, 2025": "8"
+                                  - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                    - gridcell "Sunday, November 9th, 2025":
+                                      - button "Sunday, November 9th, 2025": "9"
+                                    - gridcell "Monday, November 10th, 2025":
+                                      - button "Monday, November 10th, 2025": "10"
+                                    - gridcell "Tuesday, November 11th, 2025":
+                                      - button "Tuesday, November 11th, 2025": "11"
+                                    - gridcell "Wednesday, November 12th, 2025":
+                                      - button "Wednesday, November 12th, 2025": "12"
+                                    - gridcell "Thursday, November 13th, 2025":
+                                      - button "Thursday, November 13th, 2025": "13"
+                                    - gridcell "Friday, November 14th, 2025":
+                                      - button "Friday, November 14th, 2025": "14"
+                                    - gridcell "Saturday, November 15th, 2025":
+                                      - button "Saturday, November 15th, 2025": "15"
+                                  - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                    - gridcell "Sunday, November 16th, 2025":
+                                      - button "Sunday, November 16th, 2025": "16"
+                                    - gridcell "Monday, November 17th, 2025":
+                                      - button "Monday, November 17th, 2025": "17"
+                                    - gridcell "Tuesday, November 18th, 2025":
+                                      - button "Tuesday, November 18th, 2025": "18"
+                                    - gridcell "Wednesday, November 19th, 2025":
+                                      - button "Wednesday, November 19th, 2025": "19"
+                                    - gridcell "Thursday, November 20th, 2025":
+                                      - button "Thursday, November 20th, 2025": "20"
+                                    - gridcell "Friday, November 21st, 2025":
+                                      - button "Friday, November 21st, 2025": "21"
+                                    - gridcell "Saturday, November 22nd, 2025":
+                                      - button "Saturday, November 22nd, 2025": "22"
+                                  - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                    - gridcell "Sunday, November 23rd, 2025":
+                                      - button "Sunday, November 23rd, 2025": "23"
+                                    - gridcell "Monday, November 24th, 2025":
+                                      - button "Monday, November 24th, 2025": "24"
+                                    - gridcell "Tuesday, November 25th, 2025":
+                                      - button "Tuesday, November 25th, 2025": "25"
+                                    - gridcell "Wednesday, November 26th, 2025":
+                                      - button "Wednesday, November 26th, 2025": "26"
+                                    - gridcell "Thursday, November 27th, 2025":
+                                      - button "Thursday, November 27th, 2025": "27"
+                                    - gridcell "Friday, November 28th, 2025":
+                                      - button "Friday, November 28th, 2025": "28"
+                                    - gridcell "Saturday, November 29th, 2025":
+                                      - button "Saturday, November 29th, 2025": "29"
+                                  - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                    - gridcell "Sunday, November 30th, 2025":
+                                      - button "Sunday, November 30th, 2025": "30"
+                                    - gridcell "Monday, December 1st, 2025":
+                                      - button "Monday, December 1st, 2025": "1"
+                                    - gridcell "Tuesday, December 2nd, 2025":
+                                      - button "Tuesday, December 2nd, 2025": "2"
+                                    - gridcell "Wednesday, December 3rd, 2025":
+                                      - button "Wednesday, December 3rd, 2025": "3"
+                                    - gridcell "Thursday, December 4th, 2025":
+                                      - button "Thursday, December 4th, 2025": "4"
+                                    - gridcell "Friday, December 5th, 2025":
+                                      - button "Friday, December 5th, 2025": "5"
+                                    - gridcell "Saturday, December 6th, 2025":
+                                      - button "Saturday, December 6th, 2025": "6"
+                    - generic [ref=e227]:
+                      - img [ref=e228]
+                      - generic [ref=e229]: Add to page
+                  - paragraph [ref=e231]: calendar-18
+                - generic [ref=e232] [cursor=pointer]:
+                  - generic [ref=e233]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: June 2025
+                                  - grid "June 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: Su
+                                        - columnheader: Mo
+                                        - columnheader: Tu
+                                        - columnheader: We
+                                        - columnheader: Th
+                                        - columnheader: Fr
+                                        - columnheader: Sa
+                                    - rowgroup:
+                                      - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                        - gridcell "Sunday, June 1st, 2025":
+                                          - button "Sunday, June 1st, 2025": "1"
+                                        - gridcell "Monday, June 2nd, 2025":
+                                          - button "Monday, June 2nd, 2025": "2"
+                                        - gridcell "Tuesday, June 3rd, 2025":
+                                          - button "Tuesday, June 3rd, 2025": "3"
+                                        - gridcell "Wednesday, June 4th, 2025":
+                                          - button "Wednesday, June 4th, 2025": "4"
+                                        - gridcell "Thursday, June 5th, 2025":
+                                          - button "Thursday, June 5th, 2025": "5"
+                                        - gridcell "Friday, June 6th, 2025":
+                                          - button "Friday, June 6th, 2025": "6"
+                                        - gridcell "Saturday, June 7th, 2025":
+                                          - button "Saturday, June 7th, 2025": "7"
+                                      - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                        - gridcell "Sunday, June 8th, 2025":
+                                          - button "Sunday, June 8th, 2025": "8"
+                                        - gridcell "Monday, June 9th, 2025":
+                                          - button "Monday, June 9th, 2025": "9"
+                                        - gridcell "Tuesday, June 10th, 2025":
+                                          - button "Tuesday, June 10th, 2025": "10"
+                                        - gridcell "Wednesday, June 11th, 2025":
+                                          - button "Wednesday, June 11th, 2025": "11"
+                                        - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                          - button "Thursday, June 12th, 2025, selected": "12"
+                                        - gridcell "Friday, June 13th, 2025":
+                                          - button "Friday, June 13th, 2025": "13"
+                                        - gridcell "Saturday, June 14th, 2025":
+                                          - button "Saturday, June 14th, 2025": "14"
+                                      - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                        - gridcell "Sunday, June 15th, 2025":
+                                          - button "Sunday, June 15th, 2025": "15"
+                                        - gridcell "Monday, June 16th, 2025":
+                                          - button "Monday, June 16th, 2025": "16"
+                                        - gridcell "Tuesday, June 17th, 2025":
+                                          - button "Tuesday, June 17th, 2025": "17"
+                                        - gridcell "Wednesday, June 18th, 2025":
+                                          - button "Wednesday, June 18th, 2025": "18"
+                                        - gridcell "Thursday, June 19th, 2025":
+                                          - button "Thursday, June 19th, 2025": "19"
+                                        - gridcell "Friday, June 20th, 2025":
+                                          - button "Friday, June 20th, 2025": "20"
+                                        - gridcell "Saturday, June 21st, 2025":
+                                          - button "Saturday, June 21st, 2025": "21"
+                                      - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                        - gridcell "Sunday, June 22nd, 2025":
+                                          - button "Sunday, June 22nd, 2025": "22"
+                                        - gridcell "Monday, June 23rd, 2025":
+                                          - button "Monday, June 23rd, 2025": "23"
+                                        - gridcell "Tuesday, June 24th, 2025":
+                                          - button "Tuesday, June 24th, 2025": "24"
+                                        - gridcell "Wednesday, June 25th, 2025":
+                                          - button "Wednesday, June 25th, 2025": "25"
+                                        - gridcell "Thursday, June 26th, 2025":
+                                          - button "Thursday, June 26th, 2025": "26"
+                                        - gridcell "Friday, June 27th, 2025":
+                                          - button "Friday, June 27th, 2025": "27"
+                                        - gridcell "Saturday, June 28th, 2025":
+                                          - button "Saturday, June 28th, 2025": "28"
+                                      - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                        - gridcell "Sunday, June 29th, 2025":
+                                          - button "Sunday, June 29th, 2025": "29"
+                                        - gridcell "Monday, June 30th, 2025":
+                                          - button "Monday, June 30th, 2025": "30"
+                                        - gridcell "Tuesday, July 1st, 2025":
+                                          - button "Tuesday, July 1st, 2025": "1"
+                                        - gridcell "Wednesday, July 2nd, 2025":
+                                          - button "Wednesday, July 2nd, 2025": "2"
+                                        - gridcell "Thursday, July 3rd, 2025":
+                                          - button "Thursday, July 3rd, 2025": "3"
+                                        - gridcell "Friday, July 4th, 2025":
+                                          - button "Friday, July 4th, 2025": "4"
+                                        - gridcell "Saturday, July 5th, 2025":
+                                          - button "Saturday, July 5th, 2025": "5"
+                          - generic:
+                            - button "Today"
+                            - button "Tomorrow"
+                            - button "In 3 days"
+                            - button "In a week"
+                            - button "In 2 weeks"
+                    - generic [ref=e235]:
+                      - img [ref=e236]
+                      - generic [ref=e237]: Add to page
+                  - paragraph [ref=e239]: calendar-19
+                - generic [ref=e240] [cursor=pointer]:
+                  - generic [ref=e241]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - navigation:
+                                    - button "Go to the Previous Month":
+                                      - img
+                                    - button "Go to the Next Month":
+                                      - img
+                                  - generic:
+                                    - generic:
+                                      - status: June 2025
+                                    - grid "June 2025":
+                                      - rowgroup:
+                                        - row:
+                                          - columnheader: Sun
+                                          - columnheader: Mon
+                                          - columnheader: Tue
+                                          - columnheader: Wed
+                                          - columnheader: Thu
+                                          - columnheader: Fri
+                                          - columnheader: Sat
+                                      - rowgroup:
+                                        - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                          - gridcell "Sunday, June 1st, 2025":
+                                            - button "Sunday, June 1st, 2025": "1"
+                                          - gridcell "Monday, June 2nd, 2025":
+                                            - button "Monday, June 2nd, 2025": "2"
+                                          - gridcell "Tuesday, June 3rd, 2025":
+                                            - button "Tuesday, June 3rd, 2025": "3"
+                                          - gridcell "Wednesday, June 4th, 2025":
+                                            - button "Wednesday, June 4th, 2025": "4"
+                                          - gridcell "Thursday, June 5th, 2025":
+                                            - button "Thursday, June 5th, 2025": "5"
+                                          - gridcell "Friday, June 6th, 2025":
+                                            - button "Friday, June 6th, 2025": "6"
+                                          - gridcell "Saturday, June 7th, 2025":
+                                            - button "Saturday, June 7th, 2025": "7"
+                                        - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025 Saturday, June 14th, 2025":
+                                          - gridcell "Sunday, June 8th, 2025":
+                                            - button "Sunday, June 8th, 2025": "8"
+                                          - gridcell "Monday, June 9th, 2025":
+                                            - button "Monday, June 9th, 2025": "9"
+                                          - gridcell "Tuesday, June 10th, 2025":
+                                            - button "Tuesday, June 10th, 2025": "10"
+                                          - gridcell "Wednesday, June 11th, 2025":
+                                            - button "Wednesday, June 11th, 2025": "11"
+                                          - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                            - button "Thursday, June 12th, 2025, selected": "12"
+                                          - gridcell "Friday, June 13th, 2025":
+                                            - button "Friday, June 13th, 2025": "13"
+                                          - gridcell "Saturday, June 14th, 2025":
+                                            - button "Saturday, June 14th, 2025": "14"
+                                        - row "Sunday, June 15th, 2025 Monday, June 16th, 2025 Tuesday, June 17th, 2025 Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                          - gridcell "Sunday, June 15th, 2025":
+                                            - button "Sunday, June 15th, 2025": "15"
+                                          - gridcell "Monday, June 16th, 2025":
+                                            - button "Monday, June 16th, 2025": "16"
+                                          - gridcell "Tuesday, June 17th, 2025":
+                                            - button "Tuesday, June 17th, 2025" [disabled]: "17"
+                                          - gridcell "Wednesday, June 18th, 2025":
+                                            - button "Wednesday, June 18th, 2025" [disabled]: "18"
+                                          - gridcell "Thursday, June 19th, 2025":
+                                            - button "Thursday, June 19th, 2025" [disabled]: "19"
+                                          - gridcell "Friday, June 20th, 2025":
+                                            - button "Friday, June 20th, 2025": "20"
+                                          - gridcell "Saturday, June 21st, 2025":
+                                            - button "Saturday, June 21st, 2025": "21"
+                                        - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                          - gridcell "Sunday, June 22nd, 2025":
+                                            - button "Sunday, June 22nd, 2025": "22"
+                                          - gridcell "Monday, June 23rd, 2025":
+                                            - button "Monday, June 23rd, 2025": "23"
+                                          - gridcell "Tuesday, June 24th, 2025":
+                                            - button "Tuesday, June 24th, 2025": "24"
+                                          - gridcell "Wednesday, June 25th, 2025":
+                                            - button "Wednesday, June 25th, 2025": "25"
+                                          - gridcell "Thursday, June 26th, 2025":
+                                            - button "Thursday, June 26th, 2025": "26"
+                                          - gridcell "Friday, June 27th, 2025":
+                                            - button "Friday, June 27th, 2025": "27"
+                                          - gridcell "Saturday, June 28th, 2025":
+                                            - button "Saturday, June 28th, 2025": "28"
+                                        - row "Sunday, June 29th, 2025 Monday, June 30th, 2025":
+                                          - gridcell "Sunday, June 29th, 2025":
+                                            - button "Sunday, June 29th, 2025": "29"
+                                          - gridcell "Monday, June 30th, 2025":
+                                            - button "Monday, June 30th, 2025": "30"
+                                          - gridcell
+                                          - gridcell
+                                          - gridcell
+                                          - gridcell
+                                          - gridcell
+                            - generic:
+                              - generic:
+                                - button "09:00"
+                                - button "09:15"
+                                - button "09:30"
+                                - button "09:45"
+                                - button "10:00"
+                                - button "10:15"
+                                - button "10:30"
+                                - button "10:45"
+                                - button "11:00"
+                                - button "11:15"
+                                - button "11:30"
+                                - button "11:45"
+                                - button "12:00"
+                                - button "12:15"
+                                - button "12:30"
+                                - button "12:45"
+                                - button "13:00"
+                                - button "13:15"
+                                - button "13:30"
+                                - button "13:45"
+                                - button "14:00"
+                                - button "14:15"
+                                - button "14:30"
+                                - button "14:45"
+                                - button "15:00"
+                                - button "15:15"
+                                - button "15:30"
+                                - button "15:45"
+                                - button "16:00"
+                                - button "16:15"
+                                - button "16:30"
+                                - button "16:45"
+                                - button "17:00"
+                                - button "17:15"
+                                - button "17:30"
+                                - button "17:45"
+                                - button "18:00"
+                          - generic:
+                            - generic:
+                              - text: Your meeting is booked for
+                              - generic: Thursday, June 12
+                              - text: at 10:00.
+                            - button "Continue"
+                    - generic [ref=e243]:
+                      - img [ref=e244]
+                      - generic [ref=e245]: Add to page
+                  - paragraph [ref=e247]: calendar-20
+                - generic [ref=e248] [cursor=pointer]:
+                  - generic [ref=e249]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - button "Go to the Previous Month":
+                                - img
+                              - button "Go to the Next Month":
+                                - img
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - combobox "Choose the Month":
+                                      - option "January"
+                                      - option "February"
+                                      - option "March"
+                                      - option "April"
+                                      - option "May"
+                                      - option "June" [selected]
+                                      - option "July"
+                                      - option "August"
+                                      - option "September"
+                                      - option "October"
+                                      - option "November"
+                                      - option "December"
+                                    - generic:
+                                      - text: June
+                                      - img
+                                  - generic:
+                                    - combobox "Choose the Year":
+                                      - option "1925"
+                                      - option "1926"
+                                      - option "1927"
+                                      - option "1928"
+                                      - option "1929"
+                                      - option "1930"
+                                      - option "1931"
+                                      - option "1932"
+                                      - option "1933"
+                                      - option "1934"
+                                      - option "1935"
+                                      - option "1936"
+                                      - option "1937"
+                                      - option "1938"
+                                      - option "1939"
+                                      - option "1940"
+                                      - option "1941"
+                                      - option "1942"
+                                      - option "1943"
+                                      - option "1944"
+                                      - option "1945"
+                                      - option "1946"
+                                      - option "1947"
+                                      - option "1948"
+                                      - option "1949"
+                                      - option "1950"
+                                      - option "1951"
+                                      - option "1952"
+                                      - option "1953"
+                                      - option "1954"
+                                      - option "1955"
+                                      - option "1956"
+                                      - option "1957"
+                                      - option "1958"
+                                      - option "1959"
+                                      - option "1960"
+                                      - option "1961"
+                                      - option "1962"
+                                      - option "1963"
+                                      - option "1964"
+                                      - option "1965"
+                                      - option "1966"
+                                      - option "1967"
+                                      - option "1968"
+                                      - option "1969"
+                                      - option "1970"
+                                      - option "1971"
+                                      - option "1972"
+                                      - option "1973"
+                                      - option "1974"
+                                      - option "1975"
+                                      - option "1976"
+                                      - option "1977"
+                                      - option "1978"
+                                      - option "1979"
+                                      - option "1980"
+                                      - option "1981"
+                                      - option "1982"
+                                      - option "1983"
+                                      - option "1984"
+                                      - option "1985"
+                                      - option "1986"
+                                      - option "1987"
+                                      - option "1988"
+                                      - option "1989"
+                                      - option "1990"
+                                      - option "1991"
+                                      - option "1992"
+                                      - option "1993"
+                                      - option "1994"
+                                      - option "1995"
+                                      - option "1996"
+                                      - option "1997"
+                                      - option "1998"
+                                      - option "1999"
+                                      - option "2000"
+                                      - option "2001"
+                                      - option "2002"
+                                      - option "2003"
+                                      - option "2004"
+                                      - option "2005"
+                                      - option "2006"
+                                      - option "2007"
+                                      - option "2008"
+                                      - option "2009"
+                                      - option "2010"
+                                      - option "2011"
+                                      - option "2012"
+                                      - option "2013"
+                                      - option "2014"
+                                      - option "2015"
+                                      - option "2016"
+                                      - option "2017"
+                                      - option "2018"
+                                      - option "2019"
+                                      - option "2020"
+                                      - option "2021"
+                                      - option "2022"
+                                      - option "2023"
+                                      - option "2024"
+                                      - option "2025" [selected]
+                                    - generic:
+                                      - text: "2025"
+                                      - img
+                                  - status: June 2025
+                              - grid "June 2025":
+                                - rowgroup:
+                                  - row:
+                                    - columnheader: Su
+                                    - columnheader: Mo
+                                    - columnheader: Tu
+                                    - columnheader: We
+                                    - columnheader: Th
+                                    - columnheader: Fr
+                                    - columnheader: Sa
+                                - rowgroup:
+                                  - row "Sunday, June 1st, 2025 Monday, June 2nd, 2025 Tuesday, June 3rd, 2025 Wednesday, June 4th, 2025 Thursday, June 5th, 2025 Friday, June 6th, 2025 Saturday, June 7th, 2025":
+                                    - gridcell "Sunday, June 1st, 2025":
+                                      - button "Sunday, June 1st, 2025":
+                                        - generic: "1"
+                                        - text: $220
+                                    - gridcell "Monday, June 2nd, 2025":
+                                      - button "Monday, June 2nd, 2025":
+                                        - generic: "2"
+                                        - text: $100
+                                    - gridcell "Tuesday, June 3rd, 2025":
+                                      - button "Tuesday, June 3rd, 2025":
+                                        - generic: "3"
+                                        - text: $100
+                                    - gridcell "Wednesday, June 4th, 2025":
+                                      - button "Wednesday, June 4th, 2025":
+                                        - generic: "4"
+                                        - text: $100
+                                    - gridcell "Thursday, June 5th, 2025":
+                                      - button "Thursday, June 5th, 2025":
+                                        - generic: "5"
+                                        - text: $100
+                                    - gridcell "Friday, June 6th, 2025":
+                                      - button "Friday, June 6th, 2025":
+                                        - generic: "6"
+                                        - text: $100
+                                    - gridcell "Saturday, June 7th, 2025":
+                                      - button "Saturday, June 7th, 2025":
+                                        - generic: "7"
+                                        - text: $220
+                                  - row "Sunday, June 8th, 2025 Monday, June 9th, 2025 Tuesday, June 10th, 2025 Wednesday, June 11th, 2025 Thursday, June 12th, 2025, selected Friday, June 13th, 2025, selected Saturday, June 14th, 2025, selected":
+                                    - gridcell "Sunday, June 8th, 2025":
+                                      - button "Sunday, June 8th, 2025":
+                                        - generic: "8"
+                                        - text: $220
+                                    - gridcell "Monday, June 9th, 2025":
+                                      - button "Monday, June 9th, 2025":
+                                        - generic: "9"
+                                        - text: $100
+                                    - gridcell "Tuesday, June 10th, 2025":
+                                      - button "Tuesday, June 10th, 2025":
+                                        - generic: "10"
+                                        - text: $100
+                                    - gridcell "Wednesday, June 11th, 2025":
+                                      - button "Wednesday, June 11th, 2025":
+                                        - generic: "11"
+                                        - text: $100
+                                    - gridcell "Thursday, June 12th, 2025, selected" [selected]:
+                                      - button "Thursday, June 12th, 2025, selected":
+                                        - generic: "12"
+                                        - text: $100
+                                    - gridcell "Friday, June 13th, 2025, selected" [selected]:
+                                      - button "Friday, June 13th, 2025, selected":
+                                        - generic: "13"
+                                        - text: $100
+                                    - gridcell "Saturday, June 14th, 2025, selected" [selected]:
+                                      - button "Saturday, June 14th, 2025, selected":
+                                        - generic: "14"
+                                        - text: $220
+                                  - row "Sunday, June 15th, 2025, selected Monday, June 16th, 2025, selected Tuesday, June 17th, 2025, selected Wednesday, June 18th, 2025 Thursday, June 19th, 2025 Friday, June 20th, 2025 Saturday, June 21st, 2025":
+                                    - gridcell "Sunday, June 15th, 2025, selected" [selected]:
+                                      - button "Sunday, June 15th, 2025, selected":
+                                        - generic: "15"
+                                        - text: $220
+                                    - gridcell "Monday, June 16th, 2025, selected" [selected]:
+                                      - button "Monday, June 16th, 2025, selected":
+                                        - generic: "16"
+                                        - text: $100
+                                    - gridcell "Tuesday, June 17th, 2025, selected" [selected]:
+                                      - button "Tuesday, June 17th, 2025, selected":
+                                        - generic: "17"
+                                        - text: $100
+                                    - gridcell "Wednesday, June 18th, 2025":
+                                      - button "Wednesday, June 18th, 2025":
+                                        - generic: "18"
+                                        - text: $100
+                                    - gridcell "Thursday, June 19th, 2025":
+                                      - button "Thursday, June 19th, 2025":
+                                        - generic: "19"
+                                        - text: $100
+                                    - gridcell "Friday, June 20th, 2025":
+                                      - button "Friday, June 20th, 2025":
+                                        - generic: "20"
+                                        - text: $100
+                                    - gridcell "Saturday, June 21st, 2025":
+                                      - button "Saturday, June 21st, 2025":
+                                        - generic: "21"
+                                        - text: $220
+                                  - row "Sunday, June 22nd, 2025 Monday, June 23rd, 2025 Tuesday, June 24th, 2025 Wednesday, June 25th, 2025 Thursday, June 26th, 2025 Friday, June 27th, 2025 Saturday, June 28th, 2025":
+                                    - gridcell "Sunday, June 22nd, 2025":
+                                      - button "Sunday, June 22nd, 2025":
+                                        - generic: "22"
+                                        - text: $220
+                                    - gridcell "Monday, June 23rd, 2025":
+                                      - button "Monday, June 23rd, 2025":
+                                        - generic: "23"
+                                        - text: $100
+                                    - gridcell "Tuesday, June 24th, 2025":
+                                      - button "Tuesday, June 24th, 2025":
+                                        - generic: "24"
+                                        - text: $100
+                                    - gridcell "Wednesday, June 25th, 2025":
+                                      - button "Wednesday, June 25th, 2025":
+                                        - generic: "25"
+                                        - text: $100
+                                    - gridcell "Thursday, June 26th, 2025":
+                                      - button "Thursday, June 26th, 2025":
+                                        - generic: "26"
+                                        - text: $100
+                                    - gridcell "Friday, June 27th, 2025":
+                                      - button "Friday, June 27th, 2025":
+                                        - generic: "27"
+                                        - text: $100
+                                    - gridcell "Saturday, June 28th, 2025":
+                                      - button "Saturday, June 28th, 2025":
+                                        - generic: "28"
+                                        - text: $220
+                                  - row "Sunday, June 29th, 2025 Monday, June 30th, 2025 Tuesday, July 1st, 2025 Wednesday, July 2nd, 2025 Thursday, July 3rd, 2025 Friday, July 4th, 2025 Saturday, July 5th, 2025":
+                                    - gridcell "Sunday, June 29th, 2025":
+                                      - button "Sunday, June 29th, 2025":
+                                        - generic: "29"
+                                        - text: $220
+                                    - gridcell "Monday, June 30th, 2025":
+                                      - button "Monday, June 30th, 2025":
+                                        - generic: "30"
+                                        - text: $100
+                                    - gridcell "Tuesday, July 1st, 2025":
+                                      - button "Tuesday, July 1st, 2025":
+                                        - generic: "1"
+                                    - gridcell "Wednesday, July 2nd, 2025":
+                                      - button "Wednesday, July 2nd, 2025":
+                                        - generic: "2"
+                                    - gridcell "Thursday, July 3rd, 2025":
+                                      - button "Thursday, July 3rd, 2025":
+                                        - generic: "3"
+                                    - gridcell "Friday, July 4th, 2025":
+                                      - button "Friday, July 4th, 2025":
+                                        - generic: "4"
+                                    - gridcell "Saturday, July 5th, 2025":
+                                      - button "Saturday, July 5th, 2025":
+                                        - generic: "5"
+                    - generic [ref=e251]:
+                      - img [ref=e252]
+                      - generic [ref=e253]: Add to page
+                  - paragraph [ref=e255]: calendar-21
+                - generic [ref=e256] [cursor=pointer]:
+                  - generic [ref=e257]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Date of birth
+                          - button "Date of birth Date Date Subscription Date Schedule Date Date of birth":
+                            - text: Select date
+                            - img
+                    - generic [ref=e259]:
+                      - img [ref=e260]
+                      - generic [ref=e261]: Add to page
+                  - paragraph [ref=e263]: calendar-22
+                - generic [ref=e264] [cursor=pointer]:
+                  - generic [ref=e265]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Select your stay
+                          - button "Select your stay Select your stay":
+                            - text: Select date
+                            - img
+                    - generic [ref=e267]:
+                      - img [ref=e268]
+                      - generic [ref=e269]: Add to page
+                  - paragraph [ref=e271]: calendar-23
+                - generic [ref=e272] [cursor=pointer]:
+                  - generic [ref=e273]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Date
+                            - button "Select date":
+                              - text: Select date
+                              - img
+                          - generic:
+                            - generic: Time
+                            - textbox "Time": 10:30:00
+                    - generic [ref=e275]:
+                      - img [ref=e276]
+                      - generic [ref=e277]: Add to page
+                  - paragraph [ref=e279]: calendar-24
+                - generic [ref=e280] [cursor=pointer]:
+                  - generic [ref=e281]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Date
+                            - button "Select date":
+                              - text: Select date
+                              - img
+                          - generic:
+                            - generic:
+                              - generic: From
+                              - textbox: 10:30:00
+                            - generic:
+                              - generic: To
+                              - textbox: 12:30:00
+                    - generic [ref=e283]:
+                      - img [ref=e284]
+                      - generic [ref=e285]: Add to page
+                  - paragraph [ref=e287]: calendar-25
+                - generic [ref=e288] [cursor=pointer]:
+                  - generic [ref=e289]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic: Check-in
+                              - button "Check-in":
+                                - text: May 31, 2025
+                                - img
+                            - generic:
+                              - textbox: 10:30:00
+                          - generic:
+                            - generic:
+                              - generic: Check-out
+                              - button "Check-out":
+                                - text: Jun 02, 2025
+                                - img
+                            - generic:
+                              - textbox: 12:30:00
+                    - generic [ref=e291]:
+                      - img [ref=e292]
+                      - generic [ref=e293]: Add to page
+                  - paragraph [ref=e295]: calendar-26
+                - generic [ref=e296] [cursor=pointer]:
+                  - generic [ref=e297]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: Web Analytics
+                            - generic: Showing total visitors for this month.
+                            - button "6/5/2025 - 6/20/2025":
+                              - img
+                              - text: 6/5/2025 - 6/20/2025
+                          - generic:
+                            - generic: You had 8,792 visitors for the month of June.
+                    - generic [ref=e299]:
+                      - img [ref=e300]
+                      - generic [ref=e301]: Add to page
+                  - paragraph [ref=e303]: calendar-27
+                - generic [ref=e304] [cursor=pointer]:
+                  - generic [ref=e305]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Subscription Date
+                          - generic:
+                            - textbox "June 01, 2025": May 31, 2025
+                            - button "Select date":
+                              - img
+                              - generic: Select date
+                    - generic [ref=e307]:
+                      - img [ref=e308]
+                      - generic [ref=e309]: Add to page
+                  - paragraph [ref=e311]: calendar-28
+                - generic [ref=e312] [cursor=pointer]:
+                  - generic [ref=e313]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Schedule Date
+                          - generic:
+                            - textbox "Tomorrow or next week": In 2 days
+                            - button "Select date":
+                              - img
+                              - generic: Select date
+                          - generic: Your post will be published on November 04, 2025.
+                    - generic [ref=e315]:
+                      - img [ref=e316]
+                      - generic [ref=e317]: Add to page
+                  - paragraph [ref=e319]: calendar-29
+                - generic [ref=e320] [cursor=pointer]:
+                  - generic [ref=e321]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Select your stay
+                          - button "Jun 4 - 10":
+                            - text: Jun 4 - 10
+                            - img
+                    - generic [ref=e323]:
+                      - img [ref=e324]
+                      - generic [ref=e325]: Add to page
+                  - paragraph [ref=e327]: calendar-30
+                - generic [ref=e328] [cursor=pointer]:
+                  - generic [ref=e329]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - navigation:
+                                  - button "Go to the Previous Month":
+                                    - img
+                                  - button "Go to the Next Month":
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - status: November 2025
+                                  - grid "November 2025":
+                                    - rowgroup:
+                                      - row:
+                                        - columnheader: Su
+                                        - columnheader: Mo
+                                        - columnheader: Tu
+                                        - columnheader: We
+                                        - columnheader: Th
+                                        - columnheader: Fr
+                                        - columnheader: Sa
+                                    - rowgroup:
+                                      - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                        - gridcell "Sunday, October 26th, 2025":
+                                          - button "Sunday, October 26th, 2025": "26"
+                                        - gridcell "Monday, October 27th, 2025":
+                                          - button "Monday, October 27th, 2025": "27"
+                                        - gridcell "Tuesday, October 28th, 2025":
+                                          - button "Tuesday, October 28th, 2025": "28"
+                                        - gridcell "Wednesday, October 29th, 2025":
+                                          - button "Wednesday, October 29th, 2025": "29"
+                                        - gridcell "Thursday, October 30th, 2025":
+                                          - button "Thursday, October 30th, 2025": "30"
+                                        - gridcell "Friday, October 31st, 2025":
+                                          - button "Friday, October 31st, 2025": "31"
+                                        - gridcell "Saturday, November 1st, 2025":
+                                          - button "Saturday, November 1st, 2025": "1"
+                                      - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                        - gridcell "Sunday, November 2nd, 2025":
+                                          - button "Sunday, November 2nd, 2025": "2"
+                                        - gridcell "Monday, November 3rd, 2025":
+                                          - button "Monday, November 3rd, 2025": "3"
+                                        - gridcell "Today, Tuesday, November 4th, 2025":
+                                          - button "Today, Tuesday, November 4th, 2025": "4"
+                                        - gridcell "Wednesday, November 5th, 2025":
+                                          - button "Wednesday, November 5th, 2025": "5"
+                                        - gridcell "Thursday, November 6th, 2025":
+                                          - button "Thursday, November 6th, 2025": "6"
+                                        - gridcell "Friday, November 7th, 2025":
+                                          - button "Friday, November 7th, 2025": "7"
+                                        - gridcell "Saturday, November 8th, 2025":
+                                          - button "Saturday, November 8th, 2025": "8"
+                                      - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                        - gridcell "Sunday, November 9th, 2025":
+                                          - button "Sunday, November 9th, 2025": "9"
+                                        - gridcell "Monday, November 10th, 2025":
+                                          - button "Monday, November 10th, 2025": "10"
+                                        - gridcell "Tuesday, November 11th, 2025":
+                                          - button "Tuesday, November 11th, 2025": "11"
+                                        - gridcell "Wednesday, November 12th, 2025":
+                                          - button "Wednesday, November 12th, 2025": "12"
+                                        - gridcell "Thursday, November 13th, 2025":
+                                          - button "Thursday, November 13th, 2025": "13"
+                                        - gridcell "Friday, November 14th, 2025":
+                                          - button "Friday, November 14th, 2025": "14"
+                                        - gridcell "Saturday, November 15th, 2025":
+                                          - button "Saturday, November 15th, 2025": "15"
+                                      - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                        - gridcell "Sunday, November 16th, 2025":
+                                          - button "Sunday, November 16th, 2025": "16"
+                                        - gridcell "Monday, November 17th, 2025":
+                                          - button "Monday, November 17th, 2025": "17"
+                                        - gridcell "Tuesday, November 18th, 2025":
+                                          - button "Tuesday, November 18th, 2025": "18"
+                                        - gridcell "Wednesday, November 19th, 2025":
+                                          - button "Wednesday, November 19th, 2025": "19"
+                                        - gridcell "Thursday, November 20th, 2025":
+                                          - button "Thursday, November 20th, 2025": "20"
+                                        - gridcell "Friday, November 21st, 2025":
+                                          - button "Friday, November 21st, 2025": "21"
+                                        - gridcell "Saturday, November 22nd, 2025":
+                                          - button "Saturday, November 22nd, 2025": "22"
+                                      - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                        - gridcell "Sunday, November 23rd, 2025":
+                                          - button "Sunday, November 23rd, 2025": "23"
+                                        - gridcell "Monday, November 24th, 2025":
+                                          - button "Monday, November 24th, 2025": "24"
+                                        - gridcell "Tuesday, November 25th, 2025":
+                                          - button "Tuesday, November 25th, 2025": "25"
+                                        - gridcell "Wednesday, November 26th, 2025":
+                                          - button "Wednesday, November 26th, 2025": "26"
+                                        - gridcell "Thursday, November 27th, 2025":
+                                          - button "Thursday, November 27th, 2025": "27"
+                                        - gridcell "Friday, November 28th, 2025":
+                                          - button "Friday, November 28th, 2025": "28"
+                                        - gridcell "Saturday, November 29th, 2025":
+                                          - button "Saturday, November 29th, 2025": "29"
+                                      - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                        - gridcell "Sunday, November 30th, 2025":
+                                          - button "Sunday, November 30th, 2025": "30"
+                                        - gridcell "Monday, December 1st, 2025":
+                                          - button "Monday, December 1st, 2025": "1"
+                                        - gridcell "Tuesday, December 2nd, 2025":
+                                          - button "Tuesday, December 2nd, 2025": "2"
+                                        - gridcell "Wednesday, December 3rd, 2025":
+                                          - button "Wednesday, December 3rd, 2025": "3"
+                                        - gridcell "Thursday, December 4th, 2025":
+                                          - button "Thursday, December 4th, 2025": "4"
+                                        - gridcell "Friday, December 5th, 2025":
+                                          - button "Friday, December 5th, 2025": "5"
+                                        - gridcell "Saturday, December 6th, 2025":
+                                          - button "Saturday, December 6th, 2025": "6"
+                          - generic:
+                            - generic:
+                              - generic: June 12, 2025
+                              - button "Add Event":
+                                - img
+                                - generic: Add Event
+                            - generic:
+                              - generic:
+                                - generic: Team Sync Meeting
+                                - generic: Jun 12, 9am - 10am
+                              - generic:
+                                - generic: Design Review
+                                - generic: Jun 12, 11:30am - 12:30pm
+                              - generic:
+                                - generic: Client Presentation
+                                - generic: Jun 12, 2pm - 3pm
+                    - generic [ref=e331]:
+                      - img [ref=e332]
+                      - generic [ref=e333]: Add to page
+                  - paragraph [ref=e335]: calendar-31
+                - generic [ref=e336] [cursor=pointer]:
+                  - generic [ref=e337]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: Date of birth
+                          - button "Select date":
+                            - text: Select date
+                            - img
+                          - generic: This example works best on mobile.
+                    - generic [ref=e339]:
+                      - img [ref=e340]
+                      - generic [ref=e341]: Add to page
+                  - paragraph [ref=e343]: calendar-32
+                - generic [ref=e344] [cursor=pointer]:
+                  - generic [ref=e345]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - link "Acme Inc":
+                                - /url: "#"
+                                - img
+                                - generic: Acme Inc
+                              - link "Dashboard":
+                                - /url: "#"
+                              - link "Orders":
+                                - /url: "#"
+                              - link "Products":
+                                - /url: "#"
+                              - link "Customers":
+                                - /url: "#"
+                              - link "Analytics":
+                                - /url: "#"
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - img
+                                  - searchbox "Search products..."
+                              - button "Toggle user menu":
+                                - img
+                                - generic: Toggle user menu
+                          - main:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Total Revenue
+                                  - img
+                                - generic:
+                                  - generic: $45,231.89
+                                  - paragraph: +20.1% from last month
+                              - generic:
+                                - generic:
+                                  - generic: Subscriptions
+                                  - img
+                                - generic:
+                                  - generic: "+2350"
+                                  - paragraph: +180.1% from last month
+                              - generic:
+                                - generic:
+                                  - generic: Sales
+                                  - img
+                                - generic:
+                                  - generic: +12,234
+                                  - paragraph: +19% from last month
+                              - generic:
+                                - generic:
+                                  - generic: Active Now
+                                  - img
+                                - generic:
+                                  - generic: "+573"
+                                  - paragraph: +201 since last hour
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Transactions
+                                    - generic: Recent transactions from your store.
+                                  - link "View All":
+                                    - /url: "#"
+                                    - text: View All
+                                    - img
+                                - generic:
+                                  - generic:
+                                    - table:
+                                      - rowgroup:
+                                        - row "Customer Type Status Date Amount":
+                                          - cell "Customer"
+                                          - cell "Type"
+                                          - cell "Status"
+                                          - cell "Date"
+                                          - cell "Amount"
+                                      - rowgroup:
+                                        - row "Liam Johnson liam@example.com Sale 2023-06-23 $250.00":
+                                          - cell "Liam Johnson liam@example.com":
+                                            - generic: Liam Johnson
+                                            - text: liam@example.com
+                                          - cell "Sale"
+                                          - cell
+                                          - cell "2023-06-23"
+                                          - cell "$250.00"
+                                        - row "Olivia Smith olivia@example.com Refund 2023-06-24 $150.00":
+                                          - cell "Olivia Smith olivia@example.com":
+                                            - generic: Olivia Smith
+                                            - text: olivia@example.com
+                                          - cell "Refund"
+                                          - cell
+                                          - cell "2023-06-24"
+                                          - cell "$150.00"
+                                        - row "Noah Williams noah@example.com Subscription 2023-06-25 $350.00":
+                                          - cell "Noah Williams noah@example.com":
+                                            - generic: Noah Williams
+                                            - text: noah@example.com
+                                          - cell "Subscription"
+                                          - cell
+                                          - cell "2023-06-25"
+                                          - cell "$350.00"
+                                        - row "Emma Brown emma@example.com Sale 2023-06-26 $450.00":
+                                          - cell "Emma Brown emma@example.com":
+                                            - generic: Emma Brown
+                                            - text: emma@example.com
+                                          - cell "Sale"
+                                          - cell
+                                          - cell "2023-06-26"
+                                          - cell "$450.00"
+                                        - row "Liam Johnson liam@example.com Sale 2023-06-27 $550.00":
+                                          - cell "Liam Johnson liam@example.com":
+                                            - generic: Liam Johnson
+                                            - text: liam@example.com
+                                          - cell "Sale"
+                                          - cell
+                                          - cell "2023-06-27"
+                                          - cell "$550.00"
+                              - generic:
+                                - generic:
+                                  - generic: Recent Sales
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - img "Avatar"
+                                    - generic:
+                                      - paragraph: Olivia Martin
+                                      - paragraph: olivia.martin@email.com
+                                    - generic: +$1,999.00
+                                  - generic:
+                                    - generic:
+                                      - img "Avatar"
+                                    - generic:
+                                      - paragraph: Jackson Lee
+                                      - paragraph: jackson.lee@email.com
+                                    - generic: +$39.00
+                                  - generic:
+                                    - generic:
+                                      - img "Avatar"
+                                    - generic:
+                                      - paragraph: Isabella Nguyen
+                                      - paragraph: isabella.nguyen@email.com
+                                    - generic: +$299.00
+                                  - generic:
+                                    - generic:
+                                      - img "Avatar"
+                                    - generic:
+                                      - paragraph: William Kim
+                                      - paragraph: will@email.com
+                                    - generic: +$99.00
+                                  - generic:
+                                    - generic:
+                                      - img "Avatar"
+                                    - generic:
+                                      - paragraph: Sofia Davis
+                                      - paragraph: sofia.davis@email.com
+                                    - generic: +$39.00
+                    - generic [ref=e347]:
+                      - img [ref=e348]
+                      - generic [ref=e349]: Add to page
+                  - paragraph [ref=e351]: dashboard-01
+                - generic [ref=e352] [cursor=pointer]:
+                  - generic [ref=e353]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - link "Acme Inc":
+                                  - /url: /
+                                  - img
+                                  - generic: Acme Inc
+                                - button "Toggle notifications":
+                                  - img
+                                  - generic: Toggle notifications
+                              - generic:
+                                - navigation:
+                                  - link "Dashboard":
+                                    - /url: "#"
+                                    - img
+                                    - text: Dashboard
+                                  - link "Orders 6":
+                                    - /url: "#"
+                                    - img
+                                    - text: Orders
+                                    - generic: "6"
+                                  - link "Products":
+                                    - /url: "#"
+                                    - img
+                                    - text: Products
+                                  - link "Customers":
+                                    - /url: "#"
+                                    - img
+                                    - text: Customers
+                                  - link "Analytics":
+                                    - /url: "#"
+                                    - img
+                                    - text: Analytics
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Upgrade to Pro
+                                    - generic: Unlock all features and get unlimited access to our support team.
+                                  - generic:
+                                    - button "Upgrade"
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - img
+                                    - searchbox "Search products..."
+                              - button "Toggle user menu":
+                                - img
+                                - generic: Toggle user menu
+                            - main:
+                              - generic:
+                                - heading "Inventory" [level=1]
+                              - generic:
+                                - generic:
+                                  - heading "You have no products" [level=3]
+                                  - paragraph: You can start selling as soon as you add a product.
+                                  - button "Add Product"
+                    - generic [ref=e355]:
+                      - img [ref=e356]
+                      - generic [ref=e357]: Add to page
+                  - paragraph [ref=e359]: dashboard-02
+                - generic [ref=e360] [cursor=pointer]:
+                  - generic [ref=e361]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - complementary:
+                            - generic:
+                              - button "Home":
+                                - img
+                            - navigation:
+                              - button "Playground":
+                                - img
+                              - button "Models":
+                                - img
+                              - button "API":
+                                - img
+                              - button "Documentation":
+                                - img
+                              - button "Settings":
+                                - img
+                            - navigation:
+                              - button "Help":
+                                - img
+                              - button "Account":
+                                - img
+                          - generic:
+                            - generic:
+                              - heading "Playground" [level=1]
+                              - button "Share":
+                                - img
+                                - text: Share
+                            - main:
+                              - generic:
+                                - generic:
+                                  - group "Settings":
+                                    - generic: Settings
+                                    - generic:
+                                      - generic: Model
+                                      - combobox "Model":
+                                        - generic: Select a model
+                                        - img
+                                      - combobox
+                                    - generic:
+                                      - generic: Temperature
+                                      - spinbutton "Temperature"
+                                    - generic:
+                                      - generic:
+                                        - generic: Top P
+                                        - spinbutton "Top P"
+                                      - generic:
+                                        - generic: Top K
+                                        - spinbutton "Top K"
+                                  - group "Messages":
+                                    - generic: Messages
+                                    - generic:
+                                      - generic: Role
+                                      - combobox:
+                                        - generic: System
+                                        - img
+                                      - combobox
+                                    - generic:
+                                      - generic: Content
+                                      - textbox "Content":
+                                        - /placeholder: You are a...
+                              - generic:
+                                - generic: Output
+                                - generic:
+                                  - generic: Message
+                                  - textbox "Message":
+                                    - /placeholder: Type your message here...
+                                  - generic:
+                                    - button "Attach file":
+                                      - img
+                                      - generic: Attach file
+                                    - button "Use Microphone":
+                                      - img
+                                      - generic: Use Microphone
+                                    - button "Send Message":
+                                      - text: Send Message
+                                      - img
+                    - generic [ref=e363]:
+                      - img [ref=e364]
+                      - generic [ref=e365]: Add to page
+                  - paragraph [ref=e367]: dashboard-03
+                - generic [ref=e368] [cursor=pointer]:
+                  - generic [ref=e369]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - navigation:
+                              - link "Acme Inc":
+                                - /url: "#"
+                                - img
+                                - generic: Acme Inc
+                              - link "Dashboard":
+                                - /url: "#"
+                              - link "Orders":
+                                - /url: "#"
+                              - link "Products":
+                                - /url: "#"
+                              - link "Customers":
+                                - /url: "#"
+                              - link "Settings":
+                                - /url: "#"
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - img
+                                  - searchbox "Search products..."
+                              - button "Toggle user menu":
+                                - img
+                                - generic: Toggle user menu
+                          - main:
+                            - generic:
+                              - heading "Settings" [level=1]
+                            - generic:
+                              - navigation:
+                                - link "General":
+                                  - /url: "#"
+                                - link "Security":
+                                  - /url: "#"
+                                - link "Integrations":
+                                  - /url: "#"
+                                - link "Support":
+                                  - /url: "#"
+                                - link "Organizations":
+                                  - /url: "#"
+                                - link "Advanced":
+                                  - /url: "#"
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Store Name
+                                    - generic: Used to identify your store in the marketplace.
+                                  - generic:
+                                    - generic:
+                                      - textbox "Store Name"
+                                  - generic:
+                                    - button "Save"
+                                - generic:
+                                  - generic:
+                                    - generic: Plugins Directory
+                                    - generic: The directory within your project, in which your plugins are located.
+                                  - generic:
+                                    - generic:
+                                      - textbox "Project Name": /content/plugins
+                                      - generic:
+                                        - checkbox "Allow administrators to change the directory." [checked]:
+                                          - generic:
+                                            - img
+                                        - checkbox [checked]
+                                        - generic: Allow administrators to change the directory.
+                                  - generic:
+                                    - button "Save"
+                    - generic [ref=e371]:
+                      - img [ref=e372]
+                      - generic [ref=e373]: Add to page
+                  - paragraph [ref=e375]: dashboard-04
+                - generic [ref=e376] [cursor=pointer]:
+                  - generic [ref=e377]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - complementary:
+                            - navigation:
+                              - link "Acme Inc":
+                                - /url: "#"
+                                - img
+                                - generic: Acme Inc
+                              - link "Dashboard":
+                                - /url: "#"
+                                - img
+                                - generic: Dashboard
+                              - link "Orders":
+                                - /url: "#"
+                                - img
+                                - generic: Orders
+                              - link "Products":
+                                - /url: "#"
+                                - img
+                                - generic: Products
+                              - link "Customers":
+                                - /url: "#"
+                                - img
+                                - generic: Customers
+                              - link "Analytics":
+                                - /url: "#"
+                                - img
+                                - generic: Analytics
+                            - navigation:
+                              - link "Settings":
+                                - /url: "#"
+                                - img
+                                - generic: Settings
+                          - generic:
+                            - generic:
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Dashboard":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Orders":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Recent Orders" [disabled]
+                              - generic:
+                                - img
+                                - searchbox "Search..."
+                              - button "Avatar":
+                                - img "Avatar"
+                            - main:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: Your Orders
+                                      - generic: Introducing Our Dynamic Orders Dashboard for Seamless Management and Insightful Analysis.
+                                    - generic:
+                                      - button "Create New Order"
+                                  - generic:
+                                    - generic:
+                                      - generic: This Week
+                                      - generic: $1,329
+                                    - generic:
+                                      - generic: +25% from last week
+                                    - generic:
+                                      - progressbar "25% increase"
+                                  - generic:
+                                    - generic:
+                                      - generic: This Month
+                                      - generic: $5,329
+                                    - generic:
+                                      - generic: +10% from last month
+                                    - generic:
+                                      - progressbar "12% increase"
+                                - generic:
+                                  - generic:
+                                    - tablist:
+                                      - tab "Week" [selected]
+                                      - tab "Month"
+                                      - tab "Year"
+                                    - generic:
+                                      - button "Filter":
+                                        - img
+                                        - generic: Filter
+                                      - button "Export":
+                                        - img
+                                        - generic: Export
+                                  - tabpanel "Week":
+                                    - generic:
+                                      - generic:
+                                        - generic: Orders
+                                        - generic: Recent orders from your store.
+                                      - generic:
+                                        - generic:
+                                          - table:
+                                            - rowgroup:
+                                              - row "Customer Type Status Date Amount":
+                                                - cell "Customer"
+                                                - cell "Type"
+                                                - cell "Status"
+                                                - cell "Date"
+                                                - cell "Amount"
+                                            - rowgroup:
+                                              - row "Liam Johnson liam@example.com Sale Fulfilled 2023-06-23 $250.00":
+                                                - cell "Liam Johnson liam@example.com":
+                                                  - generic: Liam Johnson
+                                                  - text: liam@example.com
+                                                - cell "Sale"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-23"
+                                                - cell "$250.00"
+                                              - row "Olivia Smith olivia@example.com Refund Declined 2023-06-24 $150.00":
+                                                - cell "Olivia Smith olivia@example.com":
+                                                  - generic: Olivia Smith
+                                                  - text: olivia@example.com
+                                                - cell "Refund"
+                                                - cell "Declined":
+                                                  - generic: Declined
+                                                - cell "2023-06-24"
+                                                - cell "$150.00"
+                                              - row "Noah Williams noah@example.com Subscription Fulfilled 2023-06-25 $350.00":
+                                                - cell "Noah Williams noah@example.com":
+                                                  - generic: Noah Williams
+                                                  - text: noah@example.com
+                                                - cell "Subscription"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-25"
+                                                - cell "$350.00"
+                                              - row "Emma Brown emma@example.com Sale Fulfilled 2023-06-26 $450.00":
+                                                - cell "Emma Brown emma@example.com":
+                                                  - generic: Emma Brown
+                                                  - text: emma@example.com
+                                                - cell "Sale"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-26"
+                                                - cell "$450.00"
+                                              - row "Liam Johnson liam@example.com Sale Fulfilled 2023-06-23 $250.00":
+                                                - cell "Liam Johnson liam@example.com":
+                                                  - generic: Liam Johnson
+                                                  - text: liam@example.com
+                                                - cell "Sale"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-23"
+                                                - cell "$250.00"
+                                              - row "Liam Johnson liam@example.com Sale Fulfilled 2023-06-23 $250.00":
+                                                - cell "Liam Johnson liam@example.com":
+                                                  - generic: Liam Johnson
+                                                  - text: liam@example.com
+                                                - cell "Sale"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-23"
+                                                - cell "$250.00"
+                                              - row "Olivia Smith olivia@example.com Refund Declined 2023-06-24 $150.00":
+                                                - cell "Olivia Smith olivia@example.com":
+                                                  - generic: Olivia Smith
+                                                  - text: olivia@example.com
+                                                - cell "Refund"
+                                                - cell "Declined":
+                                                  - generic: Declined
+                                                - cell "2023-06-24"
+                                                - cell "$150.00"
+                                              - row "Emma Brown emma@example.com Sale Fulfilled 2023-06-26 $450.00":
+                                                - cell "Emma Brown emma@example.com":
+                                                  - generic: Emma Brown
+                                                  - text: emma@example.com
+                                                - cell "Sale"
+                                                - cell "Fulfilled":
+                                                  - generic: Fulfilled
+                                                - cell "2023-06-26"
+                                                - cell "$450.00"
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - text: Order Oe31b70H
+                                        - button "Copy Order ID":
+                                          - img
+                                          - generic: Copy Order ID
+                                      - generic: "Date: November 23, 2023"
+                                    - generic:
+                                      - button "Track Order":
+                                        - img
+                                        - generic: Track Order
+                                      - button "More":
+                                        - img
+                                        - generic: More
+                                  - generic:
+                                    - generic:
+                                      - generic: Order Details
+                                      - list:
+                                        - listitem:
+                                          - generic: Glimmer Lamps x 2
+                                          - generic: $250.00
+                                        - listitem:
+                                          - generic: Aqua Filters x 1
+                                          - generic: $49.00
+                                      - list:
+                                        - listitem:
+                                          - generic: Subtotal
+                                          - generic: $299.00
+                                        - listitem:
+                                          - generic: Shipping
+                                          - generic: $5.00
+                                        - listitem:
+                                          - generic: Tax
+                                          - generic: $25.00
+                                        - listitem:
+                                          - generic: Total
+                                          - generic: $329.00
+                                    - generic:
+                                      - generic:
+                                        - generic: Shipping Information
+                                        - generic:
+                                          - generic: Liam Johnson
+                                          - generic: 1234 Main St.
+                                          - generic: Anytown, CA 12345
+                                      - generic:
+                                        - generic: Billing Information
+                                        - generic: Same as shipping address
+                                    - generic:
+                                      - generic: Customer Information
+                                      - generic:
+                                        - generic:
+                                          - term: Customer
+                                          - definition: Liam Johnson
+                                        - generic:
+                                          - term: Email
+                                          - definition:
+                                            - link "liam@acme.com":
+                                              - /url: "mailto:"
+                                        - generic:
+                                          - term: Phone
+                                          - definition:
+                                            - link "+1 234 567 890":
+                                              - /url: "tel:"
+                                    - generic:
+                                      - generic: Payment Information
+                                      - generic:
+                                        - generic:
+                                          - term:
+                                            - img
+                                            - text: Visa
+                                          - definition: "**** **** **** 4532"
+                                  - generic:
+                                    - generic:
+                                      - text: Updated
+                                      - time: November 23, 2023
+                                    - navigation "pagination":
+                                      - list:
+                                        - listitem:
+                                          - button "Previous Order":
+                                            - img
+                                            - generic: Previous Order
+                                        - listitem:
+                                          - button "Next Order":
+                                            - img
+                                            - generic: Next Order
+                    - generic [ref=e379]:
+                      - img [ref=e380]
+                      - generic [ref=e381]: Add to page
+                  - paragraph [ref=e383]: dashboard-05
+                - generic [ref=e384] [cursor=pointer]:
+                  - generic [ref=e385]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - complementary:
+                            - navigation:
+                              - link "Acme Inc":
+                                - /url: "#"
+                                - img
+                                - generic: Acme Inc
+                              - link "Dashboard":
+                                - /url: "#"
+                                - img
+                                - generic: Dashboard
+                              - link "Orders":
+                                - /url: "#"
+                                - img
+                                - generic: Orders
+                              - link "Products":
+                                - /url: "#"
+                                - img
+                                - generic: Products
+                              - link "Customers":
+                                - /url: "#"
+                                - img
+                                - generic: Customers
+                              - link "Analytics":
+                                - /url: "#"
+                                - img
+                                - generic: Analytics
+                            - navigation:
+                              - link "Settings":
+                                - /url: "#"
+                                - img
+                                - generic: Settings
+                          - generic:
+                            - generic:
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Dashboard":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Products":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "All Products" [disabled]
+                              - generic:
+                                - img
+                                - searchbox "Search..."
+                              - button "Avatar":
+                                - img "Avatar"
+                            - main:
+                              - generic:
+                                - generic:
+                                  - tablist:
+                                    - tab "All" [selected]
+                                    - tab "Active"
+                                    - tab "Draft"
+                                    - tab "Archived"
+                                  - generic:
+                                    - button "Filter":
+                                      - img
+                                      - generic: Filter
+                                    - button "Export":
+                                      - img
+                                      - generic: Export
+                                    - button "Add Product":
+                                      - img
+                                      - generic: Add Product
+                                - tabpanel "All":
+                                  - generic:
+                                    - generic:
+                                      - generic: Products
+                                      - generic: Manage your products and view their sales performance.
+                                    - generic:
+                                      - generic:
+                                        - table:
+                                          - rowgroup:
+                                            - row "Image Name Status Price Total Sales Created at Actions":
+                                              - cell "Image":
+                                                - generic: Image
+                                              - cell "Name"
+                                              - cell "Status"
+                                              - cell "Price"
+                                              - cell "Total Sales"
+                                              - cell "Created at"
+                                              - cell "Actions":
+                                                - generic: Actions
+                                          - rowgroup:
+                                            - row "Product image Laser Lemonade Machine Draft $499.99 25 2023-07-12 10:42 AM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "Laser Lemonade Machine"
+                                              - cell "Draft":
+                                                - generic: Draft
+                                              - cell "$499.99"
+                                              - cell "25"
+                                              - cell "2023-07-12 10:42 AM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                            - row "Product image Hypernova Headphones Active $129.99 100 2023-10-18 03:21 PM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "Hypernova Headphones"
+                                              - cell "Active":
+                                                - generic: Active
+                                              - cell "$129.99"
+                                              - cell "100"
+                                              - cell "2023-10-18 03:21 PM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                            - row "Product image AeroGlow Desk Lamp Active $39.99 50 2023-11-29 08:15 AM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "AeroGlow Desk Lamp"
+                                              - cell "Active":
+                                                - generic: Active
+                                              - cell "$39.99"
+                                              - cell "50"
+                                              - cell "2023-11-29 08:15 AM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                            - row "Product image TechTonic Energy Drink Draft $2.99 0 2023-12-25 11:59 PM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "TechTonic Energy Drink"
+                                              - cell "Draft":
+                                                - generic: Draft
+                                              - cell "$2.99"
+                                              - cell "0"
+                                              - cell "2023-12-25 11:59 PM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                            - row "Product image Gamer Gear Pro Controller Active $59.99 75 2024-01-01 12:00 AM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "Gamer Gear Pro Controller"
+                                              - cell "Active":
+                                                - generic: Active
+                                              - cell "$59.99"
+                                              - cell "75"
+                                              - cell "2024-01-01 12:00 AM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                            - row "Product image Luminous VR Headset Active $199.99 30 2024-02-14 02:14 PM Toggle menu":
+                                              - cell "Product image":
+                                                - img "Product image"
+                                              - cell "Luminous VR Headset"
+                                              - cell "Active":
+                                                - generic: Active
+                                              - cell "$199.99"
+                                              - cell "30"
+                                              - cell "2024-02-14 02:14 PM"
+                                              - cell "Toggle menu":
+                                                - button "Toggle menu":
+                                                  - img
+                                                  - generic: Toggle menu
+                                    - generic:
+                                      - generic:
+                                        - text: Showing
+                                        - strong: 1-10
+                                        - text: of
+                                        - strong: "32"
+                                        - text: products
+                    - generic [ref=e387]:
+                      - img [ref=e388]
+                      - generic [ref=e389]: Add to page
+                  - paragraph [ref=e391]: dashboard-06
+                - generic [ref=e392] [cursor=pointer]:
+                  - generic [ref=e393]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - complementary:
+                            - navigation:
+                              - link "Acme Inc":
+                                - /url: "#"
+                                - img
+                                - generic: Acme Inc
+                              - link "Dashboard":
+                                - /url: "#"
+                                - img
+                                - generic: Dashboard
+                              - link "Orders":
+                                - /url: "#"
+                                - img
+                                - generic: Orders
+                              - link "Products":
+                                - /url: "#"
+                                - img
+                                - generic: Products
+                              - link "Customers":
+                                - /url: "#"
+                                - img
+                                - generic: Customers
+                              - link "Analytics":
+                                - /url: "#"
+                                - img
+                                - generic: Analytics
+                            - navigation:
+                              - link "Settings":
+                                - /url: "#"
+                                - img
+                                - generic: Settings
+                          - generic:
+                            - generic:
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Dashboard":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Products":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Edit Product" [disabled]
+                              - generic:
+                                - img
+                                - searchbox "Search..."
+                              - button "Avatar":
+                                - img "Avatar"
+                            - main:
+                              - generic:
+                                - generic:
+                                  - button "Back":
+                                    - img
+                                    - generic: Back
+                                  - heading "Pro Controller" [level=1]
+                                  - generic: In stock
+                                  - generic:
+                                    - button "Discard"
+                                    - button "Save Product"
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Product Details
+                                        - generic: Lipsum dolor sit amet, consectetur adipiscing elit
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: Name
+                                            - textbox "Name Full Name Full Name Full Name": Gamer Gear Pro Controller
+                                          - generic:
+                                            - generic: Description
+                                            - textbox "Description": Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc.
+                                    - generic:
+                                      - generic:
+                                        - generic: Stock
+                                        - generic: Lipsum dolor sit amet, consectetur adipiscing elit
+                                      - generic:
+                                        - generic:
+                                          - table:
+                                            - rowgroup:
+                                              - row "SKU Stock Price Size":
+                                                - cell "SKU"
+                                                - cell "Stock"
+                                                - cell "Price"
+                                                - cell "Size"
+                                            - rowgroup:
+                                              - row "GGPC-001 Stock 100 Price 99.99":
+                                                - cell "GGPC-001"
+                                                - cell "Stock 100":
+                                                  - generic: Stock
+                                                  - spinbutton "Stock": "100"
+                                                - cell "Price 99.99":
+                                                  - generic: Price
+                                                  - spinbutton "Price": "99.99"
+                                                - cell:
+                                                  - group:
+                                                    - radio "S" [checked]
+                                                    - radio "M"
+                                                    - radio "L"
+                                              - row "GGPC-002 Stock 143 Price 99.99":
+                                                - cell "GGPC-002"
+                                                - cell "Stock 143":
+                                                  - generic: Stock
+                                                  - spinbutton "Stock": "143"
+                                                - cell "Price 99.99":
+                                                  - generic: Price
+                                                  - spinbutton "Price": "99.99"
+                                                - cell:
+                                                  - group:
+                                                    - radio "S"
+                                                    - radio "M" [checked]
+                                                    - radio "L"
+                                              - row "GGPC-003 Stock 32 Stock 99.99":
+                                                - cell "GGPC-003"
+                                                - cell "Stock 32":
+                                                  - generic: Stock
+                                                  - spinbutton "Stock": "32"
+                                                - cell "Stock 99.99":
+                                                  - generic: Stock
+                                                  - spinbutton "Stock": "99.99"
+                                                - cell:
+                                                  - group:
+                                                    - radio "S" [checked]
+                                                    - radio "M"
+                                                    - radio "L"
+                                      - generic:
+                                        - button "Add Variant":
+                                          - img
+                                          - text: Add Variant
+                                    - generic:
+                                      - generic:
+                                        - generic: Product Category
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: Category
+                                            - combobox "Select category":
+                                              - generic: Select category
+                                              - img
+                                          - generic:
+                                            - generic: Subcategory (optional)
+                                            - combobox "Select subcategory":
+                                              - generic: Select subcategory
+                                              - img
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Product Status
+                                      - generic:
+                                        - generic:
+                                          - generic:
+                                            - generic: Status
+                                            - combobox "Select status":
+                                              - generic: Select status
+                                              - img
+                                    - generic:
+                                      - generic:
+                                        - generic: Product Images
+                                        - generic: Lipsum dolor sit amet, consectetur adipiscing elit
+                                      - generic:
+                                        - generic:
+                                          - img "Product image"
+                                          - generic:
+                                            - button "Product image":
+                                              - img "Product image"
+                                            - button "Product image":
+                                              - img "Product image"
+                                            - button "Upload":
+                                              - img
+                                              - generic: Upload
+                                    - generic:
+                                      - generic:
+                                        - generic: Archive Product
+                                        - generic: Lipsum dolor sit amet, consectetur adipiscing elit.
+                                      - generic:
+                                        - button "Archive Product"
+                    - generic [ref=e395]:
+                      - img [ref=e396]
+                      - generic [ref=e397]: Add to page
+                  - paragraph [ref=e399]: dashboard-07
+                - generic [ref=e400] [cursor=pointer]:
+                  - generic [ref=e401]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Login
+                                  - generic: Enter your email below to login to your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - generic:
+                                        - generic:
+                                          - generic: Password
+                                          - link "Forgot your password?":
+                                            - /url: "#"
+                                        - textbox
+                                      - button "Login"
+                                      - button "Login with Google"
+                                    - generic:
+                                      - text: Don't have an account?
+                                      - link "Sign up":
+                                        - /url: "#"
+                    - generic [ref=e403]:
+                      - img [ref=e404]
+                      - generic [ref=e405]: Add to page
+                  - paragraph [ref=e407]: login-01
+                - generic [ref=e408] [cursor=pointer]:
+                  - generic [ref=e409]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Login
+                                  - generic: Enter your email below to login to your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - generic:
+                                        - generic:
+                                          - generic: Password
+                                          - link "Forgot your password?":
+                                            - /url: "#"
+                                        - textbox
+                                      - button "Login"
+                                      - button "Login with Google"
+                                    - generic:
+                                      - text: Don't have an account?
+                                      - link "Sign up":
+                                        - /url: "#"
+                    - generic [ref=e411]:
+                      - img [ref=e412]
+                      - generic [ref=e413]: Add to page
+                  - paragraph [ref=e415]: login-02
+                - generic [ref=e416] [cursor=pointer]:
+                  - generic [ref=e417]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Login
+                                  - generic: Enter your email below to login to your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - generic:
+                                        - generic:
+                                          - generic: Password
+                                          - link "Forgot your password?":
+                                            - /url: "#"
+                                        - textbox
+                                      - button "Login"
+                                      - button "Login with Google"
+                                    - generic:
+                                      - text: Don't have an account?
+                                      - link "Sign up":
+                                        - /url: "#"
+                    - generic [ref=e419]:
+                      - img [ref=e420]
+                      - generic [ref=e421]: Add to page
+                  - paragraph [ref=e423]: login-03
+                - generic [ref=e424] [cursor=pointer]:
+                  - generic [ref=e425]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Login
+                                  - generic: Enter your email below to login to your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - generic:
+                                        - generic:
+                                          - generic: Password
+                                          - link "Forgot your password?":
+                                            - /url: "#"
+                                        - textbox
+                                      - button "Login"
+                                      - button "Login with Google"
+                                    - generic:
+                                      - text: Don't have an account?
+                                      - link "Sign up":
+                                        - /url: "#"
+                    - generic [ref=e427]:
+                      - img [ref=e428]
+                      - generic [ref=e429]: Add to page
+                  - paragraph [ref=e431]: login-04
+                - generic [ref=e432] [cursor=pointer]:
+                  - generic [ref=e433]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Login
+                                  - generic: Enter your email below to login to your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - generic:
+                                        - generic:
+                                          - generic: Password
+                                          - link "Forgot your password?":
+                                            - /url: "#"
+                                        - textbox
+                                      - button "Login"
+                                      - button "Login with Google"
+                                    - generic:
+                                      - text: Don't have an account?
+                                      - link "Sign up":
+                                        - /url: "#"
+                    - generic [ref=e435]:
+                      - img [ref=e436]
+                      - generic [ref=e437]: Add to page
+                  - paragraph [ref=e439]: login-05
+                - generic [ref=e440] [cursor=pointer]:
+                  - generic [ref=e441]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - img
+                                - generic: Subscribe to our newsletter
+                                - generic: Get the latest updates, articles, and resources delivered to your inbox weekly.
+                              - generic:
+                                - generic:
+                                  - textbox "Enter your email"
+                                - button "Subscribe"
+                                - paragraph: By subscribing, you agree to our Terms of Service and Privacy Policy.
+                    - generic [ref=e443]:
+                      - img [ref=e444]
+                      - generic [ref=e445]: Add to page
+                  - paragraph [ref=e447]: newsletter-01
+                - generic [ref=e448] [cursor=pointer]:
+                  - generic [ref=e449]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - heading "Stay Updated" [level=2]
+                                - paragraph: Join our newsletter for the latest updates and exclusive content.
+                              - generic:
+                                - textbox "your@email.com"
+                                - button "Subscribe"
+                    - generic [ref=e451]:
+                      - img [ref=e452]
+                      - generic [ref=e453]: Add to page
+                  - paragraph [ref=e455]: newsletter-02
+                - generic [ref=e456] [cursor=pointer]:
+                  - generic [ref=e457]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - heading "Join Our Newsletter" [level=2]
+                                - paragraph: Get weekly insights, tips, and exclusive content delivered directly to your inbox.
+                              - list:
+                                - listitem:
+                                  - generic:
+                                    - img
+                                  - generic: Weekly curated content
+                                - listitem:
+                                  - generic:
+                                    - img
+                                  - generic: Exclusive subscriber-only resources
+                                - listitem:
+                                  - generic:
+                                    - img
+                                  - generic: Early access to new features
+                                - listitem:
+                                  - generic:
+                                    - img
+                                  - generic: Unsubscribe anytime
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - text: Email address
+                                    - textbox "you@example.com"
+                                  - button "Subscribe Now":
+                                    - img
+                                    - text: Subscribe Now
+                                  - paragraph: By subscribing, you agree to our Terms and Privacy Policy.
+                    - generic [ref=e459]:
+                      - img [ref=e460]
+                      - generic [ref=e461]: Add to page
+                  - paragraph [ref=e463]: newsletter-03
+                - generic [ref=e464] [cursor=pointer]:
+                  - generic [ref=e465]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - heading "Subscribe" [level=1]
+                              - paragraph: Get notified about new articles, tutorials, and product updates.
+                            - generic:
+                              - generic:
+                                - textbox "Enter your email"
+                                - button "Join"
+                    - generic [ref=e467]:
+                      - img [ref=e468]
+                      - generic [ref=e469]: Add to page
+                  - paragraph [ref=e471]: newsletter-04
+                - generic [ref=e472] [cursor=pointer]:
+                  - generic [ref=e473]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Newsletter
+                                  - heading "Never miss an update" [level=2]
+                                  - paragraph: Join thousands of subscribers getting exclusive insights, tutorials, and early access to new features.
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - textbox "your@email.com"
+                                      - button "Subscribe":
+                                        - text: Subscribe
+                                        - img
+                                    - paragraph: We respect your privacy. Unsubscribe at any time.
+                    - generic [ref=e475]:
+                      - img [ref=e476]
+                      - generic [ref=e477]: Add to page
+                  - paragraph [ref=e479]: newsletter-05
+                - generic [ref=e480] [cursor=pointer]:
+                  - generic [ref=e481]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Enter verification code
+                                - generic: We sent a 6-digit code to your email.
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Verification code
+                                      - textbox "Verification code Verification code Verification code Verification code Verification code" [ref=e482]
+                                      - paragraph: Enter the 6-digit code sent to your email.
+                                    - generic:
+                                      - button "Verify"
+                                      - paragraph:
+                                        - text: Didn't receive the code?
+                                        - link "Resend":
+                                          - /url: "#"
+                    - generic [ref=e484]:
+                      - img [ref=e485]
+                      - generic [ref=e486]: Add to page
+                  - paragraph [ref=e488]: otp-01
+                - generic [ref=e489] [cursor=pointer]:
+                  - generic [ref=e490]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Enter verification code
+                                - generic: We sent a 6-digit code to your email.
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Verification code
+                                      - textbox [ref=e491]
+                                      - paragraph: Enter the 6-digit code sent to your email.
+                                    - generic:
+                                      - button "Verify"
+                                      - paragraph:
+                                        - text: Didn't receive the code?
+                                        - link "Resend":
+                                          - /url: "#"
+                    - generic [ref=e493]:
+                      - img [ref=e494]
+                      - generic [ref=e495]: Add to page
+                  - paragraph [ref=e497]: otp-02
+                - generic [ref=e498] [cursor=pointer]:
+                  - generic [ref=e499]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Enter verification code
+                                - generic: We sent a 6-digit code to your email.
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Verification code
+                                      - textbox [ref=e500]
+                                      - paragraph: Enter the 6-digit code sent to your email.
+                                    - generic:
+                                      - button "Verify"
+                                      - paragraph:
+                                        - text: Didn't receive the code?
+                                        - link "Resend":
+                                          - /url: "#"
+                    - generic [ref=e502]:
+                      - img [ref=e503]
+                      - generic [ref=e504]: Add to page
+                  - paragraph [ref=e506]: otp-03
+                - generic [ref=e507] [cursor=pointer]:
+                  - generic [ref=e508]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Enter verification code
+                                - generic: We sent a 6-digit code to your email.
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Verification code
+                                      - textbox [ref=e509]
+                                      - paragraph: Enter the 6-digit code sent to your email.
+                                    - generic:
+                                      - button "Verify"
+                                      - paragraph:
+                                        - text: Didn't receive the code?
+                                        - link "Resend":
+                                          - /url: "#"
+                    - generic [ref=e511]:
+                      - img [ref=e512]
+                      - generic [ref=e513]: Add to page
+                  - paragraph [ref=e515]: otp-04
+                - generic [ref=e516] [cursor=pointer]:
+                  - generic [ref=e517]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Enter verification code
+                                - generic: We sent a 6-digit code to your email.
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Verification code
+                                      - textbox [ref=e518]
+                                      - paragraph: Enter the 6-digit code sent to your email.
+                                    - generic:
+                                      - button "Verify"
+                                      - paragraph:
+                                        - text: Didn't receive the code?
+                                        - link "Resend":
+                                          - /url: "#"
+                    - generic [ref=e520]:
+                      - img [ref=e521]
+                      - generic [ref=e522]: Add to page
+                  - paragraph [ref=e524]: otp-05
+                - generic [ref=e525] [cursor=pointer]:
+                  - generic [ref=e526]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - heading "Simple, transparent pricing" [level=2]
+                              - paragraph: Choose the plan that's right for you
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Free
+                                  - generic: Perfect for getting started
+                                - generic:
+                                  - generic: $0/month
+                                  - list:
+                                    - listitem:
+                                      - img
+                                      - generic: Up to 10 components
+                                    - listitem:
+                                      - img
+                                      - generic: Basic support
+                                    - listitem:
+                                      - img
+                                      - generic: Community access
+                                    - listitem:
+                                      - img
+                                      - generic: 1 project
+                                - generic:
+                                  - button "Get Started"
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Pro
+                                    - generic: Popular
+                                  - generic: For professional developers
+                                - generic:
+                                  - generic: $29/month
+                                  - list:
+                                    - listitem:
+                                      - img
+                                      - generic: Unlimited components
+                                    - listitem:
+                                      - img
+                                      - generic: Priority support
+                                    - listitem:
+                                      - img
+                                      - generic: Private repository access
+                                    - listitem:
+                                      - img
+                                      - generic: Unlimited projects
+                                    - listitem:
+                                      - img
+                                      - generic: Advanced analytics
+                                    - listitem:
+                                      - img
+                                      - generic: Custom themes
+                                - generic:
+                                  - button "Start Free Trial"
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Enterprise
+                                  - generic: For large teams and organizations
+                                - generic:
+                                  - generic: Custom
+                                  - list:
+                                    - listitem:
+                                      - img
+                                      - generic: Everything in Pro
+                                    - listitem:
+                                      - img
+                                      - generic: Dedicated support
+                                    - listitem:
+                                      - img
+                                      - generic: SLA guarantee
+                                    - listitem:
+                                      - img
+                                      - generic: Custom integrations
+                                    - listitem:
+                                      - img
+                                      - generic: On-premise deployment
+                                    - listitem:
+                                      - img
+                                      - generic: Training & onboarding
+                                - generic:
+                                  - button "Contact Sales"
+                    - generic [ref=e528]:
+                      - img [ref=e529]
+                      - generic [ref=e530]: Add to page
+                  - paragraph [ref=e532]: pricing-01
+                - generic [ref=e533] [cursor=pointer]:
+                  - generic [ref=e534]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "Documentation v1.0.1":
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.1
+                                        - img
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Search
+                                        - textbox "Search Search Search Search":
+                                          - /placeholder: Search the docs...
+                                        - img
+                                - generic:
+                                  - generic:
+                                    - generic: Getting Started
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Installation":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Project Structure":
+                                            - /url: "#"
+                                  - generic:
+                                    - generic: Building Your Application
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Routing":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Data Fetching":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Rendering":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Caching":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Styling":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Optimizing":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Configuring":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Testing":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Authentication":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Deploying":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Upgrading":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Examples":
+                                            - /url: "#"
+                                  - generic:
+                                    - generic: API Reference
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Components":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "File Conventions":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Functions":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "next.config.js Options":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "CLI":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Edge Runtime":
+                                            - /url: "#"
+                                  - generic:
+                                    - generic: Architecture
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Accessibility":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Fast Refresh":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Next.js Compiler":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Supported Browsers":
+                                            - /url: "#"
+                                        - listitem:
+                                          - link "Turbopack":
+                                            - /url: "#"
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                    - generic [ref=e536]:
+                      - img [ref=e537]
+                      - generic [ref=e538]: Add to page
+                  - paragraph [ref=e540]: sidebar-01
+                - generic [ref=e541] [cursor=pointer]:
+                  - generic [ref=e542]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "Documentation v1.0.1":
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.1
+                                        - img
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Search
+                                        - textbox "Search the docs..."
+                                        - img
+                                - generic:
+                                  - generic "Getting Started":
+                                    - generic:
+                                      - button "Getting Started" [expanded]:
+                                        - text: Getting Started
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Installation":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Project Structure":
+                                                - /url: "#"
+                                  - generic "Building Your Application":
+                                    - generic:
+                                      - button "Building Your Application" [expanded]:
+                                        - text: Building Your Application
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Routing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Data Fetching":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Rendering":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Caching":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Styling":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Optimizing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Configuring":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Testing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Authentication":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Deploying":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Upgrading":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Examples":
+                                                - /url: "#"
+                                  - generic "API Reference":
+                                    - generic:
+                                      - button "API Reference" [expanded]:
+                                        - text: API Reference
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Components":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "File Conventions":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Functions":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "next.config.js Options":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "CLI":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Edge Runtime":
+                                                - /url: "#"
+                                  - generic "Architecture":
+                                    - generic:
+                                      - button "Architecture" [expanded]:
+                                        - text: Architecture
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Accessibility":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Fast Refresh":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Next.js Compiler":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Supported Browsers":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Turbopack":
+                                                - /url: "#"
+                                  - generic "Community":
+                                    - generic:
+                                      - button "Community" [expanded]:
+                                        - text: Community
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Contribution Guide":
+                                                - /url: "#"
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                    - generic [ref=e544]:
+                      - img [ref=e545]
+                      - generic [ref=e546]: Add to page
+                  - paragraph [ref=e548]: sidebar-02
+                - generic [ref=e549] [cursor=pointer]:
+                  - generic [ref=e550]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link "Documentation v1.0.0":
+                                        - /url: "#"
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.0
+                                - generic:
+                                  - generic:
+                                    - list:
+                                      - listitem:
+                                        - link "Getting Started":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Installation":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Project Structure":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Building Your Application":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Routing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Data Fetching":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Rendering":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Caching":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Styling":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Optimizing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Configuring":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Testing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Authentication":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Deploying":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Upgrading":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Examples":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "API Reference":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Components":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "File Conventions":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Functions":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "next.config.js Options":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "CLI":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Edge Runtime":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Architecture":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Accessibility":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Fast Refresh":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Next.js Compiler":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Supported Browsers":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Turbopack":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Community":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Contribution Guide":
+                                              - /url: "#"
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - generic:
+                                - button "Toggle Sidebar":
+                                  - img
+                                  - generic: Toggle Sidebar
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Building Your Application":
+                                        - /url: "#"
+                                    - listitem:
+                                      - img
+                                    - listitem:
+                                      - link "Data Fetching" [disabled]
+                    - generic [ref=e552]:
+                      - img [ref=e553]
+                      - generic [ref=e554]: Add to page
+                  - paragraph [ref=e556]: sidebar-03
+                - generic [ref=e557] [cursor=pointer]:
+                  - generic [ref=e558]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link "Documentation v1.0.0":
+                                        - /url: "#"
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.0
+                                - generic:
+                                  - generic:
+                                    - list:
+                                      - listitem:
+                                        - link "Getting Started":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Installation":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Project Structure":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Building Your Application":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Routing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Data Fetching":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Rendering":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Caching":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Styling":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Optimizing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Configuring":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Testing":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Authentication":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Deploying":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Upgrading":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Examples":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "API Reference":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Components":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "File Conventions":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Functions":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "next.config.js Options":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "CLI":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Edge Runtime":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Architecture":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Accessibility":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Fast Refresh":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Next.js Compiler":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Supported Browsers":
+                                              - /url: "#"
+                                          - listitem:
+                                            - link "Turbopack":
+                                              - /url: "#"
+                                      - listitem:
+                                        - link "Community":
+                                          - /url: "#"
+                                        - list:
+                                          - listitem:
+                                            - link "Contribution Guide":
+                                              - /url: "#"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                    - generic [ref=e560]:
+                      - img [ref=e561]
+                      - generic [ref=e562]: Add to page
+                  - paragraph [ref=e564]: sidebar-04
+                - generic [ref=e565] [cursor=pointer]:
+                  - generic [ref=e566]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link "Documentation v1.0.0":
+                                        - /url: "#"
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.0
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic: Search
+                                        - textbox "Search the docs..."
+                                        - img
+                                - generic:
+                                  - generic:
+                                    - list:
+                                      - generic:
+                                        - listitem:
+                                          - button "Getting Started":
+                                            - text: Getting Started
+                                            - img
+                                      - generic:
+                                        - listitem:
+                                          - button "Building Your Application" [expanded]:
+                                            - text: Building Your Application
+                                            - img
+                                          - generic:
+                                            - list:
+                                              - listitem:
+                                                - link "Routing":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Data Fetching":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Rendering":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Caching":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Styling":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Optimizing":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Configuring":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Testing":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Authentication":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Deploying":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Upgrading":
+                                                  - /url: "#"
+                                              - listitem:
+                                                - link "Examples":
+                                                  - /url: "#"
+                                      - generic:
+                                        - listitem:
+                                          - button "API Reference":
+                                            - text: API Reference
+                                            - img
+                                      - generic:
+                                        - listitem:
+                                          - button "Architecture":
+                                            - text: Architecture
+                                            - img
+                                      - generic:
+                                        - listitem:
+                                          - button "Community":
+                                            - text: Community
+                                            - img
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                    - generic [ref=e568]:
+                      - img [ref=e569]
+                      - generic [ref=e570]: Add to page
+                  - paragraph [ref=e572]: sidebar-05
+                - generic [ref=e573] [cursor=pointer]:
+                  - generic [ref=e574]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link "Documentation v1.0.0":
+                                        - /url: "#"
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Documentation
+                                          - generic: v1.0.0
+                                - generic:
+                                  - generic:
+                                    - list:
+                                      - listitem:
+                                        - button "Getting Started":
+                                          - text: Getting Started
+                                          - img
+                                      - listitem:
+                                        - button "Building Your Application":
+                                          - text: Building Your Application
+                                          - img
+                                      - listitem:
+                                        - button "API Reference":
+                                          - text: API Reference
+                                          - img
+                                      - listitem:
+                                        - button "Architecture":
+                                          - text: Architecture
+                                          - img
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - generic: Subscribe to our newsletter
+                                          - generic: Opt-in to receive updates and news about the sidebar.
+                                        - generic:
+                                          - textbox "Email"
+                                          - button "Subscribe"
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                    - generic [ref=e576]:
+                      - img [ref=e577]
+                      - generic [ref=e578]: Add to page
+                  - paragraph [ref=e580]: sidebar-06
+                - generic [ref=e581] [cursor=pointer]:
+                  - generic [ref=e582]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "Acme Inc Enterprise":
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Acme Inc
+                                          - generic: Enterprise
+                                        - img
+                                - generic:
+                                  - generic:
+                                    - generic: Platform
+                                    - list:
+                                      - listitem:
+                                        - button "Playground" [expanded]:
+                                          - img
+                                          - generic: Playground
+                                          - img
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "History":
+                                                - /url: "#"
+                                                - generic: History
+                                            - listitem:
+                                              - link "Starred":
+                                                - /url: "#"
+                                                - generic: Starred
+                                            - listitem:
+                                              - link "Settings":
+                                                - /url: "#"
+                                                - generic: Settings
+                                      - listitem:
+                                        - button "Models":
+                                          - img
+                                          - generic: Models
+                                          - img
+                                      - listitem:
+                                        - button "Documentation":
+                                          - img
+                                          - generic: Documentation
+                                          - img
+                                      - listitem:
+                                        - button "Settings":
+                                          - img
+                                          - generic: Settings
+                                          - img
+                                  - generic:
+                                    - generic: Projects
+                                    - list:
+                                      - listitem:
+                                        - link "Design Engineering":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Design Engineering
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "Sales & Marketing":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Sales & Marketing
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "Travel":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Travel
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "CN hanzo m@example.com":
+                                        - generic:
+                                          - generic: CN
+                                        - generic:
+                                          - generic: hanzo
+                                          - generic: m@example.com
+                                        - img
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - generic:
+                                - button "Toggle Sidebar":
+                                  - img
+                                  - generic: Toggle Sidebar
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Building Your Application":
+                                        - /url: "#"
+                                    - listitem:
+                                      - img
+                                    - listitem:
+                                      - link "Data Fetching" [disabled]
+                    - generic [ref=e584]:
+                      - img [ref=e585]
+                      - generic [ref=e586]: Add to page
+                  - paragraph [ref=e588]: sidebar-07
+                - generic [ref=e589] [cursor=pointer]:
+                  - generic [ref=e590]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - link "Acme Inc Enterprise":
+                                        - /url: "#"
+                                        - generic:
+                                          - img
+                                        - generic:
+                                          - generic: Acme Inc
+                                          - generic: Enterprise
+                                - generic:
+                                  - generic:
+                                    - generic: Platform
+                                    - list:
+                                      - listitem:
+                                        - link "Playground":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Playground
+                                        - button "Toggle" [expanded]:
+                                          - img
+                                          - generic: Toggle
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "History":
+                                                - /url: "#"
+                                                - generic: History
+                                            - listitem:
+                                              - link "Starred":
+                                                - /url: "#"
+                                                - generic: Starred
+                                            - listitem:
+                                              - link "Settings":
+                                                - /url: "#"
+                                                - generic: Settings
+                                      - listitem:
+                                        - link "Models":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Models
+                                        - button "Toggle":
+                                          - img
+                                          - generic: Toggle
+                                      - listitem:
+                                        - link "Documentation":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Documentation
+                                        - button "Toggle":
+                                          - img
+                                          - generic: Toggle
+                                      - listitem:
+                                        - link "Settings":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Settings
+                                        - button "Toggle":
+                                          - img
+                                          - generic: Toggle
+                                  - generic:
+                                    - generic: Projects
+                                    - list:
+                                      - listitem:
+                                        - link "Design Engineering":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Design Engineering
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "Sales & Marketing":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Sales & Marketing
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "Travel":
+                                          - /url: "#"
+                                          - img
+                                          - generic: Travel
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                  - generic:
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Support":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Support
+                                        - listitem:
+                                          - link "Feedback":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Feedback
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "CN hanzo m@example.com":
+                                        - generic:
+                                          - generic: CN
+                                        - generic:
+                                          - generic: hanzo
+                                          - generic: m@example.com
+                                        - img
+                          - main:
+                            - generic:
+                              - generic:
+                                - button "Toggle Sidebar":
+                                  - img
+                                  - generic: Toggle Sidebar
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Building Your Application":
+                                        - /url: "#"
+                                    - listitem:
+                                      - img
+                                    - listitem:
+                                      - link "Data Fetching" [disabled]
+                    - generic [ref=e592]:
+                      - img [ref=e593]
+                      - generic [ref=e594]: Add to page
+                  - paragraph [ref=e596]: sidebar-08
+                - generic [ref=e597] [cursor=pointer]:
+                  - generic [ref=e598]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - list:
+                                      - listitem:
+                                        - link "Acme Inc Enterprise":
+                                          - /url: "#"
+                                          - generic:
+                                            - img
+                                          - generic:
+                                            - generic: Acme Inc
+                                            - generic: Enterprise
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - list:
+                                          - listitem:
+                                            - button "Inbox":
+                                              - img
+                                              - generic: Inbox
+                                          - listitem:
+                                            - button "Drafts":
+                                              - img
+                                              - generic: Drafts
+                                          - listitem:
+                                            - button "Sent":
+                                              - img
+                                              - generic: Sent
+                                          - listitem:
+                                            - button "Junk":
+                                              - img
+                                              - generic: Junk
+                                          - listitem:
+                                            - button "Trash":
+                                              - img
+                                              - generic: Trash
+                                  - generic:
+                                    - list:
+                                      - listitem:
+                                        - button "CN hanzo m@example.com":
+                                          - generic:
+                                            - generic: CN
+                                          - generic:
+                                            - generic: hanzo
+                                            - generic: m@example.com
+                                          - img
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic: Inbox
+                                      - generic:
+                                        - generic: Unreads
+                                        - switch "Unreads"
+                                    - textbox "Type to search..."
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - link "William Smith 09:34 AM Meeting Tomorrow Hi team, just a reminder about our meeting tomorrow at 10 AM. Please come prepared with your project updates.":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: William Smith
+                                            - generic: 09:34 AM
+                                          - generic: Meeting Tomorrow
+                                          - generic: Hi team, just a reminder about our meeting tomorrow at 10 AM. Please come prepared with your project updates.
+                                        - 'link "Alice Smith Yesterday Re: Project Update Thanks for the update. The progress looks great so far. Let''s schedule a call to discuss the next steps."':
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Alice Smith
+                                            - generic: Yesterday
+                                          - generic: "Re: Project Update"
+                                          - generic: Thanks for the update. The progress looks great so far. Let's schedule a call to discuss the next steps.
+                                        - link "Bob Johnson 2 days ago Weekend Plans Hey everyone! I'm thinking of organizing a team outing this weekend. Would you be interested in a hiking trip or a beach day?":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Bob Johnson
+                                            - generic: 2 days ago
+                                          - generic: Weekend Plans
+                                          - generic: Hey everyone! I'm thinking of organizing a team outing this weekend. Would you be interested in a hiking trip or a beach day?
+                                        - 'link "Emily Davis 2 days ago Re: Question about Budget I''ve reviewed the budget numbers you sent over. Can we set up a quick call to discuss some potential adjustments?"':
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Emily Davis
+                                            - generic: 2 days ago
+                                          - generic: "Re: Question about Budget"
+                                          - generic: I've reviewed the budget numbers you sent over. Can we set up a quick call to discuss some potential adjustments?
+                                        - link "Michael Wilson 1 week ago Important Announcement Please join us for an all-hands meeting this Friday at 3 PM. We have some exciting news to share about the company's future.":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Michael Wilson
+                                            - generic: 1 week ago
+                                          - generic: Important Announcement
+                                          - generic: Please join us for an all-hands meeting this Friday at 3 PM. We have some exciting news to share about the company's future.
+                                        - 'link "Sarah Brown 1 week ago Re: Feedback on Proposal Thank you for sending over the proposal. I''ve reviewed it and have some thoughts. Could we schedule a meeting to discuss my feedback in detail?"':
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Sarah Brown
+                                            - generic: 1 week ago
+                                          - generic: "Re: Feedback on Proposal"
+                                          - generic: Thank you for sending over the proposal. I've reviewed it and have some thoughts. Could we schedule a meeting to discuss my feedback in detail?
+                                        - link "David Lee 1 week ago New Project Idea I've been brainstorming and came up with an interesting project concept. Do you have time this week to discuss its potential impact and feasibility?":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: David Lee
+                                            - generic: 1 week ago
+                                          - generic: New Project Idea
+                                          - generic: I've been brainstorming and came up with an interesting project concept. Do you have time this week to discuss its potential impact and feasibility?
+                                        - link "Olivia Wilson 1 week ago Vacation Plans Just a heads up that I'll be taking a two-week vacation next month. I'll make sure all my projects are up to date before I leave.":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Olivia Wilson
+                                            - generic: 1 week ago
+                                          - generic: Vacation Plans
+                                          - generic: Just a heads up that I'll be taking a two-week vacation next month. I'll make sure all my projects are up to date before I leave.
+                                        - 'link "James Martin 1 week ago Re: Conference Registration I''ve completed the registration for the upcoming tech conference. Let me know if you need any additional information from my end."':
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: James Martin
+                                            - generic: 1 week ago
+                                          - generic: "Re: Conference Registration"
+                                          - generic: I've completed the registration for the upcoming tech conference. Let me know if you need any additional information from my end.
+                                        - link "Sophia White 1 week ago Team Dinner To celebrate our recent project success, I'd like to organize a team dinner. Are you available next Friday evening? Please let me know your preferences.":
+                                          - /url: "#"
+                                          - generic:
+                                            - generic: Sophia White
+                                            - generic: 1 week ago
+                                          - generic: Team Dinner
+                                          - generic: To celebrate our recent project success, I'd like to organize a team dinner. Are you available next Friday evening? Please let me know your preferences.
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "All Inboxes":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Inbox" [disabled]
+                    - generic [ref=e600]:
+                      - img [ref=e601]
+                      - generic [ref=e602]: Add to page
+                  - paragraph [ref=e604]: sidebar-09
+                - generic [ref=e605] [cursor=pointer]:
+                  - generic [ref=e606]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "Acme Inc":
+                                        - generic:
+                                          - img
+                                        - generic: Acme Inc
+                                        - img
+                                  - list:
+                                    - listitem:
+                                      - link "Search":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Search
+                                    - listitem:
+                                      - link "Ask AI":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Ask AI
+                                    - listitem:
+                                      - link "Home":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Home
+                                    - listitem:
+                                      - link "Inbox":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Inbox
+                                - generic:
+                                  - generic:
+                                    - generic: Favorites
+                                    - list:
+                                      - listitem:
+                                        - link "📊 Project Management & Task Tracking":
+                                          - /url: "#"
+                                          - generic: 📊
+                                          - generic: Project Management & Task Tracking
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🍳 Family Recipe Collection & Meal Planning":
+                                          - /url: "#"
+                                          - generic: 🍳
+                                          - generic: Family Recipe Collection & Meal Planning
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "💪 Fitness Tracker & Workout Routines":
+                                          - /url: "#"
+                                          - generic: 💪
+                                          - generic: Fitness Tracker & Workout Routines
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "📚 Book Notes & Reading List":
+                                          - /url: "#"
+                                          - generic: 📚
+                                          - generic: Book Notes & Reading List
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🌱 Sustainable Gardening Tips & Plant Care":
+                                          - /url: "#"
+                                          - generic: 🌱
+                                          - generic: Sustainable Gardening Tips & Plant Care
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🗣️ Language Learning Progress & Resources":
+                                          - /url: "#"
+                                          - generic: 🗣️
+                                          - generic: Language Learning Progress & Resources
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🏠 Home Renovation Ideas & Budget Tracker":
+                                          - /url: "#"
+                                          - generic: 🏠
+                                          - generic: Home Renovation Ideas & Budget Tracker
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "💰 Personal Finance & Investment Portfolio":
+                                          - /url: "#"
+                                          - generic: 💰
+                                          - generic: Personal Finance & Investment Portfolio
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🎬 Movie & TV Show Watchlist with Reviews":
+                                          - /url: "#"
+                                          - generic: 🎬
+                                          - generic: Movie & TV Show Watchlist with Reviews
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "✅ Daily Habit Tracker & Goal Setting":
+                                          - /url: "#"
+                                          - generic: ✅
+                                          - generic: Daily Habit Tracker & Goal Setting
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                  - generic:
+                                    - generic: Workspaces
+                                    - generic:
+                                      - list:
+                                        - generic:
+                                          - listitem:
+                                            - link "🏠 Personal Life Management":
+                                              - /url: "#"
+                                              - generic: 🏠
+                                              - generic: Personal Life Management
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "💼 Professional Development":
+                                              - /url: "#"
+                                              - generic: 💼
+                                              - generic: Professional Development
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🎨 Creative Projects":
+                                              - /url: "#"
+                                              - generic: 🎨
+                                              - generic: Creative Projects
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🏡 Home Management":
+                                              - /url: "#"
+                                              - generic: 🏡
+                                              - generic: Home Management
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🧳 Travel & Adventure":
+                                              - /url: "#"
+                                              - generic: 🧳
+                                              - generic: Travel & Adventure
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - listitem:
+                                          - button "More":
+                                            - img
+                                            - generic: More
+                                  - generic:
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Calendar":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Calendar
+                                        - listitem:
+                                          - link "Settings":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Settings
+                                        - listitem:
+                                          - link "Templates":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Templates
+                                        - listitem:
+                                          - link "Trash":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Trash
+                                        - listitem:
+                                          - link "Help":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Help
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - generic:
+                                - button "Toggle Sidebar":
+                                  - img
+                                  - generic: Toggle Sidebar
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Project Management & Task Tracking" [disabled]
+                              - generic:
+                                - generic:
+                                  - generic: Edit Oct 08
+                                  - button:
+                                    - img
+                                  - button:
+                                    - img
+                    - generic [ref=e608]:
+                      - img [ref=e609]
+                      - generic [ref=e610]: Add to page
+                  - paragraph [ref=e612]: sidebar-10
+                - generic [ref=e613] [cursor=pointer]:
+                  - generic [ref=e614]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Changes
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - button "README.md":
+                                            - img
+                                            - text: README.md
+                                          - generic: M
+                                        - listitem:
+                                          - button "api/hello/route.ts":
+                                            - img
+                                            - text: api/hello/route.ts
+                                          - generic: U
+                                        - listitem:
+                                          - button "app/layout.tsx":
+                                            - img
+                                            - text: app/layout.tsx
+                                          - generic: M
+                                  - generic:
+                                    - generic: Files
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - generic:
+                                            - button "app":
+                                              - img
+                                              - img
+                                              - text: app
+                                        - listitem:
+                                          - generic:
+                                            - button "components" [expanded]:
+                                              - img
+                                              - img
+                                              - text: components
+                                            - generic:
+                                              - list:
+                                                - listitem:
+                                                  - generic:
+                                                    - button "ui" [expanded]:
+                                                      - img
+                                                      - img
+                                                      - text: ui
+                                                    - generic:
+                                                      - list:
+                                                        - button "button.tsx":
+                                                          - img
+                                                          - text: button.tsx
+                                                        - button "card.tsx":
+                                                          - img
+                                                          - text: card.tsx
+                                                - button "header.tsx":
+                                                  - img
+                                                  - text: header.tsx
+                                                - button "footer.tsx":
+                                                  - img
+                                                  - text: footer.tsx
+                                        - listitem:
+                                          - generic:
+                                            - button "lib":
+                                              - img
+                                              - img
+                                              - text: lib
+                                        - listitem:
+                                          - generic:
+                                            - button "public":
+                                              - img
+                                              - img
+                                              - text: public
+                                        - button ".eslintrc.json":
+                                          - img
+                                          - text: .eslintrc.json
+                                        - button ".gitignore":
+                                          - img
+                                          - text: .gitignore
+                                        - button "next.config.js":
+                                          - img
+                                          - text: next.config.js
+                                        - button "tailwind.config.js":
+                                          - img
+                                          - text: tailwind.config.js
+                                        - button "package.json":
+                                          - img
+                                          - text: package.json
+                                        - button "README.md":
+                                          - img
+                                          - text: README.md
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "components":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "ui":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "button.tsx" [disabled]
+                    - generic [ref=e616]:
+                      - img [ref=e617]
+                      - generic [ref=e618]: Add to page
+                  - paragraph [ref=e620]: sidebar-11
+                - generic [ref=e621] [cursor=pointer]:
+                  - generic [ref=e622]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "CN hanzo m@example.com":
+                                        - generic:
+                                          - generic: CN
+                                        - generic:
+                                          - generic: hanzo
+                                          - generic: m@example.com
+                                        - img
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - navigation:
+                                            - button "Go to the Previous Month":
+                                              - img
+                                            - button "Go to the Next Month":
+                                              - img
+                                          - generic:
+                                            - generic:
+                                              - status: November 2025
+                                            - grid "November 2025":
+                                              - rowgroup:
+                                                - row:
+                                                  - columnheader: Su
+                                                  - columnheader: Mo
+                                                  - columnheader: Tu
+                                                  - columnheader: We
+                                                  - columnheader: Th
+                                                  - columnheader: Fr
+                                                  - columnheader: Sa
+                                              - rowgroup:
+                                                - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                                  - gridcell "Sunday, October 26th, 2025": "26"
+                                                  - gridcell "Monday, October 27th, 2025": "27"
+                                                  - gridcell "Tuesday, October 28th, 2025": "28"
+                                                  - gridcell "Wednesday, October 29th, 2025": "29"
+                                                  - gridcell "Thursday, October 30th, 2025": "30"
+                                                  - gridcell "Friday, October 31st, 2025": "31"
+                                                  - gridcell "Saturday, November 1st, 2025": "1"
+                                                - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                                  - gridcell "Sunday, November 2nd, 2025": "2"
+                                                  - gridcell "Monday, November 3rd, 2025": "3"
+                                                  - gridcell "Today, Tuesday, November 4th, 2025": "4"
+                                                  - gridcell "Wednesday, November 5th, 2025": "5"
+                                                  - gridcell "Thursday, November 6th, 2025": "6"
+                                                  - gridcell "Friday, November 7th, 2025": "7"
+                                                  - gridcell "Saturday, November 8th, 2025": "8"
+                                                - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                                  - gridcell "Sunday, November 9th, 2025": "9"
+                                                  - gridcell "Monday, November 10th, 2025": "10"
+                                                  - gridcell "Tuesday, November 11th, 2025": "11"
+                                                  - gridcell "Wednesday, November 12th, 2025": "12"
+                                                  - gridcell "Thursday, November 13th, 2025": "13"
+                                                  - gridcell "Friday, November 14th, 2025": "14"
+                                                  - gridcell "Saturday, November 15th, 2025": "15"
+                                                - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                                  - gridcell "Sunday, November 16th, 2025": "16"
+                                                  - gridcell "Monday, November 17th, 2025": "17"
+                                                  - gridcell "Tuesday, November 18th, 2025": "18"
+                                                  - gridcell "Wednesday, November 19th, 2025": "19"
+                                                  - gridcell "Thursday, November 20th, 2025": "20"
+                                                  - gridcell "Friday, November 21st, 2025": "21"
+                                                  - gridcell "Saturday, November 22nd, 2025": "22"
+                                                - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                                  - gridcell "Sunday, November 23rd, 2025": "23"
+                                                  - gridcell "Monday, November 24th, 2025": "24"
+                                                  - gridcell "Tuesday, November 25th, 2025": "25"
+                                                  - gridcell "Wednesday, November 26th, 2025": "26"
+                                                  - gridcell "Thursday, November 27th, 2025": "27"
+                                                  - gridcell "Friday, November 28th, 2025": "28"
+                                                  - gridcell "Saturday, November 29th, 2025": "29"
+                                                - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                                  - gridcell "Sunday, November 30th, 2025": "30"
+                                                  - gridcell "Monday, December 1st, 2025": "1"
+                                                  - gridcell "Tuesday, December 2nd, 2025": "2"
+                                                  - gridcell "Wednesday, December 3rd, 2025": "3"
+                                                  - gridcell "Thursday, December 4th, 2025": "4"
+                                                  - gridcell "Friday, December 5th, 2025": "5"
+                                                  - gridcell "Saturday, December 6th, 2025": "6"
+                                  - generic:
+                                    - generic:
+                                      - button "My Calendars" [expanded]:
+                                        - text: My Calendars
+                                        - img
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - button "Personal":
+                                                - generic:
+                                                  - img
+                                                - text: Personal
+                                            - listitem:
+                                              - button "Work":
+                                                - generic:
+                                                  - img
+                                                - text: Work
+                                            - listitem:
+                                              - button "Family": Family
+                                  - generic:
+                                    - generic:
+                                      - button "Favorites":
+                                        - text: Favorites
+                                        - img
+                                  - generic:
+                                    - generic:
+                                      - button "Other":
+                                        - text: Other
+                                        - img
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "New Calendar":
+                                        - img
+                                        - generic: New Calendar
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "October 2024" [disabled]
+                    - generic [ref=e624]:
+                      - img [ref=e625]
+                      - generic [ref=e626]: Add to page
+                  - paragraph [ref=e628]: sidebar-12
+                - generic [ref=e629] [cursor=pointer]:
+                  - generic [ref=e630]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - button "Notifications":
+                                                - img
+                                                - generic: Notifications
+                                            - listitem:
+                                              - button "Navigation":
+                                                - img
+                                                - generic: Navigation
+                                            - listitem:
+                                              - button "Home":
+                                                - img
+                                                - generic: Home
+                                            - listitem:
+                                              - button "Appearance":
+                                                - img
+                                                - generic: Appearance
+                                            - listitem:
+                                              - button "Messages & media":
+                                                - img
+                                                - generic: Messages & media
+                                            - listitem:
+                                              - button "Language & region":
+                                                - img
+                                                - generic: Language & region
+                                            - listitem:
+                                              - button "Accessibility":
+                                                - img
+                                                - generic: Accessibility
+                                            - listitem:
+                                              - button "Mark as read":
+                                                - img
+                                                - generic: Mark as read
+                                            - listitem:
+                                              - button "Audio & video":
+                                                - img
+                                                - generic: Audio & video
+                                            - listitem:
+                                              - button "Connected accounts":
+                                                - img
+                                                - generic: Connected accounts
+                                            - listitem:
+                                              - button "Privacy & visibility":
+                                                - img
+                                                - generic: Privacy & visibility
+                                            - listitem:
+                                              - button "Advanced":
+                                                - img
+                                                - generic: Advanced
+                              - generic:
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Home":
+                                        - /url: "#"
+                                    - listitem:
+                                      - img
+                                    - listitem:
+                                      - link "Settings" [disabled]
+                    - generic [ref=e632]:
+                      - img [ref=e633]
+                      - generic [ref=e634]: Add to page
+                  - paragraph [ref=e636]: sidebar-13
+                - generic [ref=e637] [cursor=pointer]:
+                  - generic [ref=e638]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - main:
+                            - generic:
+                              - navigation "breadcrumb":
+                                - list:
+                                  - listitem:
+                                    - link "Building Your Application":
+                                      - /url: "#"
+                                  - listitem:
+                                    - img
+                                  - listitem:
+                                    - link "Data Fetching" [disabled]
+                              - button "Toggle Sidebar":
+                                - img
+                                - generic: Toggle Sidebar
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic: Table of Contents
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Getting Started":
+                                            - /url: "#"
+                                          - list:
+                                            - listitem:
+                                              - link "Installation":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Project Structure":
+                                                - /url: "#"
+                                        - listitem:
+                                          - link "Building Your Application":
+                                            - /url: "#"
+                                          - list:
+                                            - listitem:
+                                              - link "Routing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Data Fetching":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Rendering":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Caching":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Styling":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Optimizing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Configuring":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Testing":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Authentication":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Deploying":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Upgrading":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Examples":
+                                                - /url: "#"
+                                        - listitem:
+                                          - link "API Reference":
+                                            - /url: "#"
+                                          - list:
+                                            - listitem:
+                                              - link "Components":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "File Conventions":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Functions":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "next.config.js Options":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "CLI":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Edge Runtime":
+                                                - /url: "#"
+                                        - listitem:
+                                          - link "Architecture":
+                                            - /url: "#"
+                                          - list:
+                                            - listitem:
+                                              - link "Accessibility":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Fast Refresh":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Next.js Compiler":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Supported Browsers":
+                                                - /url: "#"
+                                            - listitem:
+                                              - link "Turbopack":
+                                                - /url: "#"
+                                        - listitem:
+                                          - link "Community":
+                                            - /url: "#"
+                                          - list:
+                                            - listitem:
+                                              - link "Contribution Guide":
+                                                - /url: "#"
+                                - button "Toggle Sidebar"
+                    - generic [ref=e640]:
+                      - img [ref=e641]
+                      - generic [ref=e642]: Add to page
+                  - paragraph [ref=e644]: sidebar-14
+                - generic [ref=e645] [cursor=pointer]:
+                  - generic [ref=e646]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - list:
+                                    - listitem:
+                                      - button "Acme Inc":
+                                        - generic:
+                                          - img
+                                        - generic: Acme Inc
+                                        - img
+                                  - list:
+                                    - listitem:
+                                      - link "Search":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Search
+                                    - listitem:
+                                      - link "Ask AI":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Ask AI
+                                    - listitem:
+                                      - link "Home":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Home
+                                    - listitem:
+                                      - link "Inbox":
+                                        - /url: "#"
+                                        - img
+                                        - generic: Inbox
+                                - generic:
+                                  - generic:
+                                    - generic: Favorites
+                                    - list:
+                                      - listitem:
+                                        - link "📊 Project Management & Task Tracking":
+                                          - /url: "#"
+                                          - generic: 📊
+                                          - generic: Project Management & Task Tracking
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🍳 Family Recipe Collection & Meal Planning":
+                                          - /url: "#"
+                                          - generic: 🍳
+                                          - generic: Family Recipe Collection & Meal Planning
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "💪 Fitness Tracker & Workout Routines":
+                                          - /url: "#"
+                                          - generic: 💪
+                                          - generic: Fitness Tracker & Workout Routines
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "📚 Book Notes & Reading List":
+                                          - /url: "#"
+                                          - generic: 📚
+                                          - generic: Book Notes & Reading List
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🌱 Sustainable Gardening Tips & Plant Care":
+                                          - /url: "#"
+                                          - generic: 🌱
+                                          - generic: Sustainable Gardening Tips & Plant Care
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🗣️ Language Learning Progress & Resources":
+                                          - /url: "#"
+                                          - generic: 🗣️
+                                          - generic: Language Learning Progress & Resources
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🏠 Home Renovation Ideas & Budget Tracker":
+                                          - /url: "#"
+                                          - generic: 🏠
+                                          - generic: Home Renovation Ideas & Budget Tracker
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "💰 Personal Finance & Investment Portfolio":
+                                          - /url: "#"
+                                          - generic: 💰
+                                          - generic: Personal Finance & Investment Portfolio
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "🎬 Movie & TV Show Watchlist with Reviews":
+                                          - /url: "#"
+                                          - generic: 🎬
+                                          - generic: Movie & TV Show Watchlist with Reviews
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - link "✅ Daily Habit Tracker & Goal Setting":
+                                          - /url: "#"
+                                          - generic: ✅
+                                          - generic: Daily Habit Tracker & Goal Setting
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                      - listitem:
+                                        - button "More":
+                                          - img
+                                          - generic: More
+                                  - generic:
+                                    - generic: Workspaces
+                                    - generic:
+                                      - list:
+                                        - generic:
+                                          - listitem:
+                                            - link "🏠 Personal Life Management":
+                                              - /url: "#"
+                                              - generic: 🏠
+                                              - generic: Personal Life Management
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "💼 Professional Development":
+                                              - /url: "#"
+                                              - generic: 💼
+                                              - generic: Professional Development
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🎨 Creative Projects":
+                                              - /url: "#"
+                                              - generic: 🎨
+                                              - generic: Creative Projects
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🏡 Home Management":
+                                              - /url: "#"
+                                              - generic: 🏡
+                                              - generic: Home Management
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - generic:
+                                          - listitem:
+                                            - link "🧳 Travel & Adventure":
+                                              - /url: "#"
+                                              - generic: 🧳
+                                              - generic: Travel & Adventure
+                                            - button:
+                                              - img
+                                            - button:
+                                              - img
+                                        - listitem:
+                                          - button "More":
+                                            - img
+                                            - generic: More
+                                  - generic:
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Calendar":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Calendar
+                                        - listitem:
+                                          - link "Settings":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Settings
+                                        - listitem:
+                                          - link "Templates":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Templates
+                                        - listitem:
+                                          - link "Trash":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Trash
+                                        - listitem:
+                                          - link "Help":
+                                            - /url: "#"
+                                            - img
+                                            - generic: Help
+                                - button "Toggle Sidebar"
+                          - main:
+                            - generic:
+                              - generic:
+                                - button "Toggle Sidebar":
+                                  - img
+                                  - generic: Toggle Sidebar
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Project Management & Task Tracking" [disabled]
+                          - generic:
+                            - generic:
+                              - list:
+                                - listitem:
+                                  - button "CN hanzo m@example.com":
+                                    - generic:
+                                      - generic: CN
+                                    - generic:
+                                      - generic: hanzo
+                                      - generic: m@example.com
+                                    - img
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - navigation:
+                                        - button "Go to the Previous Month":
+                                          - img
+                                        - button "Go to the Next Month":
+                                          - img
+                                      - generic:
+                                        - generic:
+                                          - status: November 2025
+                                        - grid "November 2025":
+                                          - rowgroup:
+                                            - row:
+                                              - columnheader: Su
+                                              - columnheader: Mo
+                                              - columnheader: Tu
+                                              - columnheader: We
+                                              - columnheader: Th
+                                              - columnheader: Fr
+                                              - columnheader: Sa
+                                          - rowgroup:
+                                            - row "Sunday, October 26th, 2025 Monday, October 27th, 2025 Tuesday, October 28th, 2025 Wednesday, October 29th, 2025 Thursday, October 30th, 2025 Friday, October 31st, 2025 Saturday, November 1st, 2025":
+                                              - gridcell "Sunday, October 26th, 2025": "26"
+                                              - gridcell "Monday, October 27th, 2025": "27"
+                                              - gridcell "Tuesday, October 28th, 2025": "28"
+                                              - gridcell "Wednesday, October 29th, 2025": "29"
+                                              - gridcell "Thursday, October 30th, 2025": "30"
+                                              - gridcell "Friday, October 31st, 2025": "31"
+                                              - gridcell "Saturday, November 1st, 2025": "1"
+                                            - row "Sunday, November 2nd, 2025 Monday, November 3rd, 2025 Today, Tuesday, November 4th, 2025 Wednesday, November 5th, 2025 Thursday, November 6th, 2025 Friday, November 7th, 2025 Saturday, November 8th, 2025":
+                                              - gridcell "Sunday, November 2nd, 2025": "2"
+                                              - gridcell "Monday, November 3rd, 2025": "3"
+                                              - gridcell "Today, Tuesday, November 4th, 2025": "4"
+                                              - gridcell "Wednesday, November 5th, 2025": "5"
+                                              - gridcell "Thursday, November 6th, 2025": "6"
+                                              - gridcell "Friday, November 7th, 2025": "7"
+                                              - gridcell "Saturday, November 8th, 2025": "8"
+                                            - row "Sunday, November 9th, 2025 Monday, November 10th, 2025 Tuesday, November 11th, 2025 Wednesday, November 12th, 2025 Thursday, November 13th, 2025 Friday, November 14th, 2025 Saturday, November 15th, 2025":
+                                              - gridcell "Sunday, November 9th, 2025": "9"
+                                              - gridcell "Monday, November 10th, 2025": "10"
+                                              - gridcell "Tuesday, November 11th, 2025": "11"
+                                              - gridcell "Wednesday, November 12th, 2025": "12"
+                                              - gridcell "Thursday, November 13th, 2025": "13"
+                                              - gridcell "Friday, November 14th, 2025": "14"
+                                              - gridcell "Saturday, November 15th, 2025": "15"
+                                            - row "Sunday, November 16th, 2025 Monday, November 17th, 2025 Tuesday, November 18th, 2025 Wednesday, November 19th, 2025 Thursday, November 20th, 2025 Friday, November 21st, 2025 Saturday, November 22nd, 2025":
+                                              - gridcell "Sunday, November 16th, 2025": "16"
+                                              - gridcell "Monday, November 17th, 2025": "17"
+                                              - gridcell "Tuesday, November 18th, 2025": "18"
+                                              - gridcell "Wednesday, November 19th, 2025": "19"
+                                              - gridcell "Thursday, November 20th, 2025": "20"
+                                              - gridcell "Friday, November 21st, 2025": "21"
+                                              - gridcell "Saturday, November 22nd, 2025": "22"
+                                            - row "Sunday, November 23rd, 2025 Monday, November 24th, 2025 Tuesday, November 25th, 2025 Wednesday, November 26th, 2025 Thursday, November 27th, 2025 Friday, November 28th, 2025 Saturday, November 29th, 2025":
+                                              - gridcell "Sunday, November 23rd, 2025": "23"
+                                              - gridcell "Monday, November 24th, 2025": "24"
+                                              - gridcell "Tuesday, November 25th, 2025": "25"
+                                              - gridcell "Wednesday, November 26th, 2025": "26"
+                                              - gridcell "Thursday, November 27th, 2025": "27"
+                                              - gridcell "Friday, November 28th, 2025": "28"
+                                              - gridcell "Saturday, November 29th, 2025": "29"
+                                            - row "Sunday, November 30th, 2025 Monday, December 1st, 2025 Tuesday, December 2nd, 2025 Wednesday, December 3rd, 2025 Thursday, December 4th, 2025 Friday, December 5th, 2025 Saturday, December 6th, 2025":
+                                              - gridcell "Sunday, November 30th, 2025": "30"
+                                              - gridcell "Monday, December 1st, 2025": "1"
+                                              - gridcell "Tuesday, December 2nd, 2025": "2"
+                                              - gridcell "Wednesday, December 3rd, 2025": "3"
+                                              - gridcell "Thursday, December 4th, 2025": "4"
+                                              - gridcell "Friday, December 5th, 2025": "5"
+                                              - gridcell "Saturday, December 6th, 2025": "6"
+                              - generic:
+                                - generic:
+                                  - button "My Calendars" [expanded]:
+                                    - text: My Calendars
+                                    - img
+                                  - generic:
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - button "Personal":
+                                            - generic:
+                                              - img
+                                            - text: Personal
+                                        - listitem:
+                                          - button "Work":
+                                            - generic:
+                                              - img
+                                            - text: Work
+                                        - listitem:
+                                          - button "Family": Family
+                              - generic:
+                                - generic:
+                                  - button "Favorites":
+                                    - text: Favorites
+                                    - img
+                              - generic:
+                                - generic:
+                                  - button "Other":
+                                    - text: Other
+                                    - img
+                            - generic:
+                              - list:
+                                - listitem:
+                                  - button "New Calendar":
+                                    - img
+                                    - generic: New Calendar
+                    - generic [ref=e648]:
+                      - img [ref=e649]
+                      - generic [ref=e650]: Add to page
+                  - paragraph [ref=e652]: sidebar-15
+                - generic [ref=e653] [cursor=pointer]:
+                  - generic [ref=e654]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - button:
+                                  - img
+                                - navigation "breadcrumb":
+                                  - list:
+                                    - listitem:
+                                      - link "Building Your Application":
+                                        - /url: "#"
+                                    - listitem:
+                                      - img
+                                    - listitem:
+                                      - link "Data Fetching" [disabled]
+                                - generic:
+                                  - generic:
+                                    - generic: Search
+                                    - textbox "Type to search..."
+                                    - img
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - link "Acme Inc Enterprise":
+                                            - /url: "#"
+                                            - generic:
+                                              - img
+                                            - generic:
+                                              - generic: Acme Inc
+                                              - generic: Enterprise
+                                    - generic:
+                                      - generic:
+                                        - generic: Platform
+                                        - list:
+                                          - listitem:
+                                            - link "Playground":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Playground
+                                            - button "Toggle" [expanded]:
+                                              - img
+                                              - generic: Toggle
+                                            - generic:
+                                              - list:
+                                                - listitem:
+                                                  - link "History":
+                                                    - /url: "#"
+                                                    - generic: History
+                                                - listitem:
+                                                  - link "Starred":
+                                                    - /url: "#"
+                                                    - generic: Starred
+                                                - listitem:
+                                                  - link "Settings":
+                                                    - /url: "#"
+                                                    - generic: Settings
+                                          - listitem:
+                                            - link "Models":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Models
+                                            - button "Toggle":
+                                              - img
+                                              - generic: Toggle
+                                          - listitem:
+                                            - link "Documentation":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Documentation
+                                            - button "Toggle":
+                                              - img
+                                              - generic: Toggle
+                                          - listitem:
+                                            - link "Settings":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Settings
+                                            - button "Toggle":
+                                              - img
+                                              - generic: Toggle
+                                      - generic:
+                                        - generic: Projects
+                                        - list:
+                                          - listitem:
+                                            - link "Design Engineering":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Design Engineering
+                                            - button "More":
+                                              - img
+                                              - generic: More
+                                          - listitem:
+                                            - link "Sales & Marketing":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Sales & Marketing
+                                            - button "More":
+                                              - img
+                                              - generic: More
+                                          - listitem:
+                                            - link "Travel":
+                                              - /url: "#"
+                                              - img
+                                              - generic: Travel
+                                            - button "More":
+                                              - img
+                                              - generic: More
+                                          - listitem:
+                                            - button "More":
+                                              - img
+                                              - generic: More
+                                      - generic:
+                                        - generic:
+                                          - list:
+                                            - listitem:
+                                              - link "Support":
+                                                - /url: "#"
+                                                - img
+                                                - generic: Support
+                                            - listitem:
+                                              - link "Feedback":
+                                                - /url: "#"
+                                                - img
+                                                - generic: Feedback
+                                    - generic:
+                                      - list:
+                                        - listitem:
+                                          - button "CN hanzo m@example.com":
+                                            - generic:
+                                              - generic: CN
+                                            - generic:
+                                              - generic: hanzo
+                                              - generic: m@example.com
+                                            - img
+                              - main
+                    - generic [ref=e656]:
+                      - img [ref=e657]
+                      - generic [ref=e658]: Add to page
+                  - paragraph [ref=e660]: sidebar-16
+                - generic [ref=e661] [cursor=pointer]:
+                  - generic [ref=e662]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic: Create an account
+                                - generic: Enter your information below to create your account
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - group:
+                                      - generic: Full Name
+                                      - textbox "John Doe"
+                                    - group:
+                                      - generic: Email
+                                      - textbox "m@example.com"
+                                      - paragraph: We'll use this to contact you. We will not share your email with anyone else.
+                                    - group:
+                                      - generic: Password
+                                      - textbox
+                                      - paragraph: Must be at least 8 characters long.
+                                    - group:
+                                      - generic: Confirm Password
+                                      - textbox "Confirm Password Confirm Password Confirm Password Confirm Password"
+                                      - paragraph: Please confirm your password.
+                                    - generic:
+                                      - group:
+                                        - button "Create Account"
+                                        - button "Sign up with Google"
+                                        - paragraph:
+                                          - text: Already have an account?
+                                          - link "Sign in":
+                                            - /url: "#"
+                    - generic [ref=e664]:
+                      - img [ref=e665]
+                      - generic [ref=e666]: Add to page
+                  - paragraph [ref=e668]: signup-01
+                - generic [ref=e669] [cursor=pointer]:
+                  - generic [ref=e670]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - link "Acme Inc.":
+                                - /url: "#"
+                                - generic:
+                                  - img
+                                - text: Acme Inc.
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - heading "Create your account" [level=1]
+                                      - paragraph: Fill in the form below to create your account
+                                    - group:
+                                      - generic: Full Name
+                                      - textbox "John Doe"
+                                    - group:
+                                      - generic: Email
+                                      - textbox "m@example.com"
+                                      - paragraph: We'll use this to contact you. We will not share your email with anyone else.
+                                    - group:
+                                      - generic: Password
+                                      - textbox
+                                      - paragraph: Must be at least 8 characters long.
+                                    - group:
+                                      - generic: Confirm Password
+                                      - textbox
+                                      - paragraph: Please confirm your password.
+                                    - group:
+                                      - button "Create Account"
+                                    - generic:
+                                      - generic: Or continue with
+                                    - group:
+                                      - button "Sign up with GitHub":
+                                        - img
+                                        - text: Sign up with GitHub
+                                      - paragraph:
+                                        - text: Already have an account?
+                                        - link "Sign in":
+                                          - /url: "#"
+                          - generic:
+                            - img "Image"
+                    - generic [ref=e672]:
+                      - img [ref=e673]
+                      - generic [ref=e674]: Add to page
+                  - paragraph [ref=e676]: signup-02
+                - generic [ref=e677] [cursor=pointer]:
+                  - generic [ref=e678]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - link "Acme Inc.":
+                              - /url: "#"
+                              - generic:
+                                - img
+                              - text: Acme Inc.
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Create your account
+                                  - generic: Enter your email below to create your account
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - group:
+                                        - generic: Full Name
+                                        - textbox "John Doe"
+                                      - group:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                      - group:
+                                        - group:
+                                          - group:
+                                            - generic: Password
+                                            - textbox
+                                          - group:
+                                            - generic: Confirm Password
+                                            - textbox
+                                        - paragraph: Must be at least 8 characters long.
+                                      - group:
+                                        - button "Create Account"
+                                        - paragraph:
+                                          - text: Already have an account?
+                                          - link "Sign in":
+                                            - /url: "#"
+                              - paragraph:
+                                - text: By clicking continue, you agree to our
+                                - link "Terms of Service":
+                                  - /url: "#"
+                                - text: and
+                                - link "Privacy Policy":
+                                  - /url: "#"
+                                - text: .
+                    - generic [ref=e680]:
+                      - img [ref=e681]
+                      - generic [ref=e682]: Add to page
+                  - paragraph [ref=e684]: signup-03
+                - generic [ref=e685] [cursor=pointer]:
+                  - generic [ref=e686]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - generic:
+                                      - generic:
+                                        - heading "Create your account" [level=1]
+                                        - paragraph: Enter your email below to create your account
+                                      - group:
+                                        - generic: Email
+                                        - textbox "m@example.com"
+                                        - paragraph: We'll use this to contact you. We will not share your email with anyone else.
+                                      - group:
+                                        - group:
+                                          - group:
+                                            - generic: Password
+                                            - textbox
+                                          - group:
+                                            - generic: Confirm Password
+                                            - textbox
+                                        - paragraph: Must be at least 8 characters long.
+                                      - group:
+                                        - button "Create Account"
+                                      - generic:
+                                        - generic: Or continue with
+                                      - group:
+                                        - button "Sign up with Apple":
+                                          - img
+                                          - generic: Sign up with Apple
+                                        - button "Sign up with Google":
+                                          - img
+                                          - generic: Sign up with Google
+                                        - button "Sign up with Meta":
+                                          - img
+                                          - generic: Sign up with Meta
+                                      - paragraph:
+                                        - text: Already have an account?
+                                        - link "Sign in":
+                                          - /url: "#"
+                                  - generic:
+                                    - img "Image"
+                              - paragraph:
+                                - text: By clicking continue, you agree to our
+                                - link "Terms of Service":
+                                  - /url: "#"
+                                - text: and
+                                - link "Privacy Policy":
+                                  - /url: "#"
+                                - text: .
+                    - generic [ref=e688]:
+                      - img [ref=e689]
+                      - generic [ref=e690]: Add to page
+                  - paragraph [ref=e692]: signup-04
+                - generic [ref=e693] [cursor=pointer]:
+                  - generic [ref=e694]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - link "Acme Inc.":
+                                      - /url: "#"
+                                      - generic:
+                                        - img
+                                      - generic: Acme Inc.
+                                    - heading "Welcome to Acme Inc." [level=1]
+                                    - paragraph:
+                                      - text: Already have an account?
+                                      - link "Sign in":
+                                        - /url: "#"
+                                  - group:
+                                    - generic: Email
+                                    - textbox "m@example.com"
+                                  - group:
+                                    - button "Create Account"
+                                  - generic:
+                                    - generic: Or
+                                  - group:
+                                    - button "Continue with Apple":
+                                      - img
+                                      - text: Continue with Apple
+                                    - button "Continue with Google":
+                                      - img
+                                      - text: Continue with Google
+                              - paragraph:
+                                - text: By clicking continue, you agree to our
+                                - link "Terms of Service":
+                                  - /url: "#"
+                                - text: and
+                                - link "Privacy Policy":
+                                  - /url: "#"
+                                - text: .
+                    - generic [ref=e696]:
+                      - img [ref=e697]
+                      - generic [ref=e698]: Add to page
+                  - paragraph [ref=e700]: signup-05
+        - generic [ref=e703]:
+          - generic [ref=e704]:
+            - generic [ref=e705]:
+              - heading "Enhanced Page Builder" [level=2] [ref=e706]
+              - paragraph [ref=e707]: 1 items in page
+            - generic [ref=e708]:
+              - generic [ref=e709]:
+                - button "Mobile" [ref=e710]
+                - button "Tablet" [ref=e711]
+                - button "Desktop" [ref=e712]
+              - generic [ref=e713]:
+                - button "Copy Code" [ref=e714]
+                - button "Download" [ref=e715]:
+                  - img
+                  - text: Download
+                - button "Deploy with Hanzo" [ref=e716]
+          - generic [ref=e721]:
+            - generic [ref=e723]:
+              - generic [ref=e724]:
+                - button [ref=e725]:
+                  - img [ref=e726]
+                - button [ref=e733]:
+                  - img
+              - generic [ref=e738]:
+                - generic [ref=e739]:
+                  - img [ref=e741]
+                  - generic [ref=e744]: Subscribe to our newsletter
+                  - generic [ref=e745]: Get the latest updates, articles, and resources delivered to your inbox weekly.
+                - generic [ref=e746]:
+                  - textbox "Enter your email" [ref=e748]
+                  - button "Subscribe" [ref=e749]
+                  - paragraph [ref=e750]: By subscribing, you agree to our Terms of Service and Privacy Policy.
+            - status [ref=e751]
+    - contentinfo [ref=e752]:
+      - generic [ref=e753]:
+        - generic [ref=e754]:
+          - generic [ref=e755]:
+            - heading "Getting Started" [level=3] [ref=e756]
+            - list [ref=e757]:
+              - listitem [ref=e758]:
+                - link "Introduction" [ref=e759] [cursor=pointer]:
+                  - /url: /docs
+              - listitem [ref=e760]:
+                - link "Installation" [ref=e761] [cursor=pointer]:
+                  - /url: /docs/installation
+              - listitem [ref=e762]:
+                - link "CLI" [ref=e763] [cursor=pointer]:
+                  - /url: /docs/cli
+              - listitem [ref=e764]:
+                - link "Components" [ref=e765] [cursor=pointer]:
+                  - /url: /docs/components
+          - generic [ref=e766]:
+            - heading "Frameworks" [level=3] [ref=e767]
+            - list [ref=e768]:
+              - listitem [ref=e769]:
+                - link "Overview" [ref=e770] [cursor=pointer]:
+                  - /url: /docs/frameworks
+              - listitem [ref=e771]:
+                - link "React" [ref=e772] [cursor=pointer]:
+                  - /url: /docs/frameworks/react
+              - listitem [ref=e773]:
+                - link "Vue" [ref=e774] [cursor=pointer]:
+                  - /url: /docs/frameworks/vue
+              - listitem [ref=e775]:
+                - link "Svelte" [ref=e776] [cursor=pointer]:
+                  - /url: /docs/frameworks/svelte
+              - listitem [ref=e777]:
+                - link "React Native" [ref=e778] [cursor=pointer]:
+                  - /url: /docs/frameworks/react-native
+          - generic [ref=e779]:
+            - heading "Resources" [level=3] [ref=e780]
+            - list [ref=e781]:
+              - listitem [ref=e782]:
+                - link "Packages" [ref=e783] [cursor=pointer]:
+                  - /url: /docs/packages
+              - listitem [ref=e784]:
+                - link "Testing" [ref=e785] [cursor=pointer]:
+                  - /url: /docs/testing
+              - listitem [ref=e786]:
+                - link "White-Label" [ref=e787] [cursor=pointer]:
+                  - /url: /docs/white-label
+              - listitem [ref=e788]:
+                - link "Blocks" [ref=e789] [cursor=pointer]:
+                  - /url: /blocks
+              - listitem [ref=e790]:
+                - link "Page Builder" [ref=e791] [cursor=pointer]:
+                  - /url: /docs/guides/page-builder
+          - generic [ref=e792]:
+            - heading "Community" [level=3] [ref=e793]
+            - list [ref=e794]:
+              - listitem [ref=e795]:
+                - link "GitHub" [ref=e796] [cursor=pointer]:
+                  - /url: https://github.com/hanzoai/ui
+              - listitem [ref=e797]:
+                - link "Twitter" [ref=e798] [cursor=pointer]:
+                  - /url: https://x.com/hanzoai
+              - listitem [ref=e799]:
+                - link "Discord" [ref=e800] [cursor=pointer]:
+                  - /url: https://discord.gg/hanzo
+              - listitem [ref=e801]:
+                - link "Changelog" [ref=e802] [cursor=pointer]:
+                  - /url: /docs/changelog
+        - generic [ref=e803]:
+          - paragraph [ref=e804]:
+            - text: Built by
+            - link "@hanzoai" [ref=e805] [cursor=pointer]:
+              - /url: https://x.com/hanzoai
+            - text: . The source code is available on
+            - link "GitHub" [ref=e806] [cursor=pointer]:
+              - /url: https://github.com/hanzoai/ui
+            - text: .
+          - generic [ref=e807]:
+            - link "Documentation" [ref=e808] [cursor=pointer]:
+              - /url: /docs
+            - link "Contribute" [ref=e809] [cursor=pointer]:
+              - /url: https://github.com/hanzoai/ui
+            - link "v5.0.0" [ref=e810] [cursor=pointer]:
+              - /url: /docs/changelog
+  - generic [ref=e812]: xl
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - alert [ref=e813]
+```
