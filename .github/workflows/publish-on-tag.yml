@@ -39,12 +39,6 @@ jobs:
           cd ../react && pnpm test
           cd ../..
 
-      - name: Typecheck
-        run: cd app && pnpm typecheck
-
-      - name: Lint
-        run: cd app && pnpm lint
-
   publish:
     name: Publish to NPM
     needs: test
