@@ -11,7 +11,9 @@ export default function AIVoiceSettingsDemo() {
   }
 
   const handlePreview = (voice: string, speed: number, pitch: number) => {
-    console.log(`Previewing voice: ${voice} at ${speed}x speed, ${pitch}x pitch`)
+    console.log(
+      `Previewing voice: ${voice} at ${speed}x speed, ${pitch}x pitch`
+    )
     // Here you would play a sample audio
   }
 

@@ -60,8 +60,9 @@ export default function Chat() {
 ### With AI Provider Integration
 
 ```tsx
-import { AIAssistant } from "@/components/ui/ai-assistant"
 import { useState } from "react"
+
+import { AIAssistant } from "@/components/ui/ai-assistant"
 
 export default function ChatWithAI() {
   const [messages, setMessages] = useState([])
@@ -150,21 +151,21 @@ const tools = [
 
 ### AIAssistantProps
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `provider` | `string` | `"openai"` | AI provider name |
-| `model` | `string` | `"gpt-4"` | Model identifier |
-| `apiKey` | `string` | - | API key for provider |
-| `systemPrompt` | `string` | - | System instruction for AI |
-| `messages` | `Message[]` | `[]` | Array of chat messages |
-| `onSendMessage` | `(message: string) => void` | - | Called when user sends message |
-| `isLoading` | `boolean` | `false` | Show typing indicator |
-| `placeholder` | `string` | `"Ask the AI assistant anything..."` | Input placeholder text |
-| `showAvatar` | `boolean` | `true` | Display user/assistant avatars |
-| `showTimestamp` | `boolean` | `true` | Show message timestamps |
-| `tools` | `Tool[]` | `[]` | Available AI tools |
-| `onResponse` | `(response: any) => void` | - | Called when AI responds |
-| `onError` | `(error: Error) => void` | - | Called on error |
+| Prop            | Type                        | Default                              | Description                    |
+| --------------- | --------------------------- | ------------------------------------ | ------------------------------ |
+| `provider`      | `string`                    | `"openai"`                           | AI provider name               |
+| `model`         | `string`                    | `"gpt-4"`                            | Model identifier               |
+| `apiKey`        | `string`                    | -                                    | API key for provider           |
+| `systemPrompt`  | `string`                    | -                                    | System instruction for AI      |
+| `messages`      | `Message[]`                 | `[]`                                 | Array of chat messages         |
+| `onSendMessage` | `(message: string) => void` | -                                    | Called when user sends message |
+| `isLoading`     | `boolean`                   | `false`                              | Show typing indicator          |
+| `placeholder`   | `string`                    | `"Ask the AI assistant anything..."` | Input placeholder text         |
+| `showAvatar`    | `boolean`                   | `true`                               | Display user/assistant avatars |
+| `showTimestamp` | `boolean`                   | `true`                               | Show message timestamps        |
+| `tools`         | `Tool[]`                    | `[]`                                 | Available AI tools             |
+| `onResponse`    | `(response: any) => void`   | -                                    | Called when AI responds        |
+| `onError`       | `(error: Error) => void`    | -                                    | Called on error                |
 
 ### Message Interface
 
@@ -205,6 +206,7 @@ The component uses semantic color tokens and adapts to light/dark mode:
 ## Auto-scrolling Behavior
 
 The component automatically scrolls to the latest message when:
+
 - New messages are added
 - Initial messages are loaded
 - User sends a message

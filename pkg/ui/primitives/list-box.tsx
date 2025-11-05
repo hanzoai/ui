@@ -51,7 +51,7 @@ function ListBox<T>({
   isEqual: (v1: T, v2: T) => boolean
   clx?: string
   itemClx?: string 
-}): JSX.Element {
+}): React.ReactElement {
 
   return (
     <div className={cn('border rounded-md select-none', clx)} >

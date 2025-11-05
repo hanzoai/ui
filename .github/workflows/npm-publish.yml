@@ -12,6 +12,8 @@ on:
           - ui-mcp
           - auth
           - commerce
+          - brand
+          - react
           - all
       version_bump:
         description: 'Version bump type'
@@ -45,7 +47,24 @@ jobs:
       - name: Build packages
         run: |
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "ui" ]; then
-            cd pkg/ui && npm run build || true
+            cd pkg/ui && pnpm build
+            cd ../..
+          fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "auth" ]; then
+            cd pkg/auth && pnpm build
+            cd ../..
+          fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "commerce" ]; then
+            cd pkg/commerce && pnpm build
+            cd ../..
+          fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "brand" ]; then
+            cd pkg/brand && pnpm build
+            cd ../..
+          fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "react" ]; then
+            cd pkg/react && pnpm build
+            cd ../..
           fi
 
       - name: Bump version and publish
@@ -75,11 +94,19 @@ jobs:
             commerce)
               publish_package "pkg/commerce"
               ;;
+            brand)
+              publish_package "pkg/brand"
+              ;;
+            react)
+              publish_package "pkg/react"
+              ;;
             all)
               publish_package "pkg/ui"
               publish_package "pkg/ui-mcp"
               publish_package "pkg/auth"
               publish_package "pkg/commerce"
+              publish_package "pkg/brand"
+              publish_package "pkg/react"
               ;;
           esac
 

@@ -27,11 +27,17 @@ jobs:
 
       - name: Build packages
         run: |
-          cd pkg/ui && pnpm build
-          cd ../..
+          cd pkg/ui && pnpm build && cd ../..
+          cd pkg/auth && pnpm build && cd ../..
+          cd pkg/commerce && pnpm build && cd ../..
+          cd pkg/brand && pnpm build && cd ../..
+          cd pkg/react && pnpm build && cd ../..
 
       - name: Run tests
-        run: pnpm test || echo "No tests configured yet"
+        run: |
+          cd pkg/ui && pnpm test
+          cd ../react && pnpm test
+          cd ../..
 
       - name: Typecheck
         run: cd app && pnpm typecheck
@@ -63,8 +69,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build @hanzo/ui package
-        run: cd pkg/ui && pnpm build
+      - name: Build all packages
+        run: |
+          cd pkg/ui && pnpm build && cd ../..
+          cd pkg/auth && pnpm build && cd ../..
+          cd pkg/commerce && pnpm build && cd ../..
+          cd pkg/brand && pnpm build && cd ../..
+          cd pkg/react && pnpm build && cd ../..
 
       - name: Extract version from tag
         id: extract_version
@@ -73,17 +84,23 @@ jobs:
           echo "VERSION=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Publishing version: $TAG_NAME"
 
-      - name: Update package version
+      - name: Update package versions
         run: |
-          cd pkg/ui
-          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version
+          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version --prefix pkg/ui
+          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version --prefix pkg/auth
+          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version --prefix pkg/commerce
+          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version --prefix pkg/brand
+          npm version ${{ steps.extract_version.outputs.VERSION }} --no-git-tag-version --prefix pkg/react
 
-      - name: Publish to NPM
+      - name: Publish all packages to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
-          cd pkg/ui
-          npm publish --access public --provenance
+          npm publish --access public --provenance --workspace pkg/ui
+          npm publish --access public --provenance --workspace pkg/auth
+          npm publish --access public --provenance --workspace pkg/commerce
+          npm publish --access public --provenance --workspace pkg/brand
+          npm publish --access public --provenance --workspace pkg/react
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

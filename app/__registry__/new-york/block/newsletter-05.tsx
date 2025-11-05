@@ -14,7 +14,7 @@ export default function NewsletterBlock() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     setIsSubscribed(true)
     setIsSubmitting(false)
     setEmail("")
@@ -35,7 +35,8 @@ export default function NewsletterBlock() {
                 Never miss an update
               </h2>
               <p className="text-lg text-primary-foreground/90 sm:text-xl">
-                Join thousands of subscribers getting exclusive insights, tutorials, and early access to new features.
+                Join thousands of subscribers getting exclusive insights,
+                tutorials, and early access to new features.
               </p>
             </div>
 

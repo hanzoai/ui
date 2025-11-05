@@ -10,8 +10,8 @@ import type BlockComponentProps from './block-component-props'
 const CtaBlockComponent: React.FC<BlockComponentProps & {
   itemClasses?: string
   itemSize?: VariantProps<typeof buttonVariants>['size'],
-  renderLink?: (def: LinkDef, key: any) => JSX.Element
-  renderButton?: (def: ButtonDef, key: any) => JSX.Element
+  renderLink?: (def: LinkDef, key: any) => React.ReactElement
+  renderButton?: (def: ButtonDef, key: any) => React.ReactElement
 }> = ({
   block,
   className='', // assigned to each item

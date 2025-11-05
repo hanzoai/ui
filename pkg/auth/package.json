@@ -30,20 +30,20 @@
     "firebase-admin": "^12.1.0"
   },
   "peerDependencies": {
-    "@hanzo/ui": "4.5.0",
+    "@hanzo/ui": "workspace:*",
     "@hookform/resolvers": "^3.3.4",
     "firebase": "^10.8.0",
     "lucide-react": "0.456.0",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
     "next": "14.2.16",
-    "react": "18.3.1",
+    "react": "^19.0.0",
     "react-hook-form": "7.51.4",
     "zod": "3.23.8"
   },
   "devDependencies": {
     "@types/node": "^24.4.0",
-    "@types/react": "18.3.12",
+    "@types/react": "^19.0.0",
     "cross-fetch": "^4.0.0",
     "typescript": "5.6.3"
   }

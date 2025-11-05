@@ -48,8 +48,9 @@ export default function Editor() {
 ### With AI Code Generation
 
 ```tsx
-import { AICode } from "@/components/ui/ai-code"
 import { useState } from "react"
+
+import { AICode } from "@/components/ui/ai-code"
 
 export default function AICodeEditor() {
   const [code, setCode] = useState("")
@@ -93,7 +94,7 @@ const handleExplain = async (code: string, lineNumber?: number) => {
   return data.explanation
 }
 
-<AICode
+;<AICode
   value={code}
   onChange={setCode}
   onExplain={handleExplain}
@@ -104,8 +105,9 @@ const handleExplain = async (code: string, lineNumber?: number) => {
 ### Complete AI Coding Assistant
 
 ```tsx
-import { AICode, CodeFeature } from "@/components/ui/ai-code"
 import { useState } from "react"
+
+import { AICode, CodeFeature } from "@/components/ui/ai-code"
 
 export default function CodingAssistant() {
   const [code, setCode] = useState("")
@@ -310,26 +312,26 @@ Get AI feedback on code quality:
 
 ### AICodeProps
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | `""` | Current code value |
-| `onChange` | `(value: string) => void` | - | Called when code changes |
-| `language` | `string` | `"typescript"` | Programming language |
-| `theme` | `"vs-dark" \| "vs-light"` | `"vs-dark"` | Editor theme |
-| `onGenerate` | `(prompt: string) => Promise<string>` | - | Generate code from prompt |
-| `onExplain` | `(code: string, line?: number) => Promise<string>` | - | Explain code |
-| `onRefactor` | `(code: string) => Promise<string>` | - | Refactor code |
-| `onDebug` | `(code: string) => Promise<DebugResult>` | - | Debug code |
-| `onTest` | `(code: string) => Promise<string>` | - | Generate tests |
-| `onDocument` | `(code: string) => Promise<string>` | - | Generate docs |
-| `onReview` | `(code: string) => Promise<ReviewResult>` | - | Review code |
-| `suggestions` | `CodeSuggestion[]` | `[]` | AI suggestions |
-| `explanations` | `Explanation[]` | `[]` | Code explanations |
-| `showLineNumbers` | `boolean` | `true` | Show line numbers |
-| `showMinimap` | `boolean` | `true` | Show minimap |
-| `enableDiffView` | `boolean` | `false` | Enable diff view |
-| `enableChat` | `boolean` | `true` | Enable chat sidebar |
-| `isGenerating` | `boolean` | `false` | Show generating state |
+| Prop              | Type                                               | Default        | Description               |
+| ----------------- | -------------------------------------------------- | -------------- | ------------------------- |
+| `value`           | `string`                                           | `""`           | Current code value        |
+| `onChange`        | `(value: string) => void`                          | -              | Called when code changes  |
+| `language`        | `string`                                           | `"typescript"` | Programming language      |
+| `theme`           | `"vs-dark" \| "vs-light"`                          | `"vs-dark"`    | Editor theme              |
+| `onGenerate`      | `(prompt: string) => Promise<string>`              | -              | Generate code from prompt |
+| `onExplain`       | `(code: string, line?: number) => Promise<string>` | -              | Explain code              |
+| `onRefactor`      | `(code: string) => Promise<string>`                | -              | Refactor code             |
+| `onDebug`         | `(code: string) => Promise<DebugResult>`           | -              | Debug code                |
+| `onTest`          | `(code: string) => Promise<string>`                | -              | Generate tests            |
+| `onDocument`      | `(code: string) => Promise<string>`                | -              | Generate docs             |
+| `onReview`        | `(code: string) => Promise<ReviewResult>`          | -              | Review code               |
+| `suggestions`     | `CodeSuggestion[]`                                 | `[]`           | AI suggestions            |
+| `explanations`    | `Explanation[]`                                    | `[]`           | Code explanations         |
+| `showLineNumbers` | `boolean`                                          | `true`         | Show line numbers         |
+| `showMinimap`     | `boolean`                                          | `true`         | Show minimap              |
+| `enableDiffView`  | `boolean`                                          | `false`        | Enable diff view          |
+| `enableChat`      | `boolean`                                          | `true`         | Enable chat sidebar       |
+| `isGenerating`    | `boolean`                                          | `false`        | Show generating state     |
 
 ### CodeFeature Type
 

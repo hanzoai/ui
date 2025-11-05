@@ -23,7 +23,7 @@ export default function NewsletterBlock() {
     setIsSubmitting(true)
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     setIsSubscribed(true)
     setIsSubmitting(false)
@@ -41,9 +41,12 @@ export default function NewsletterBlock() {
             <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <Mail className="h-6 w-6 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Subscribe to our newsletter</CardTitle>
+            <CardTitle className="text-2xl">
+              Subscribe to our newsletter
+            </CardTitle>
             <CardDescription>
-              Get the latest updates, articles, and resources delivered to your inbox weekly.
+              Get the latest updates, articles, and resources delivered to your
+              inbox weekly.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -62,7 +65,11 @@ export default function NewsletterBlock() {
               className="w-full"
               disabled={isSubmitting || isSubscribed}
             >
-              {isSubmitting ? "Subscribing..." : isSubscribed ? "Subscribed! ✓" : "Subscribe"}
+              {isSubmitting
+                ? "Subscribing..."
+                : isSubscribed
+                  ? "Subscribed! ✓"
+                  : "Subscribe"}
             </Button>
             {isSubscribed && (
               <p className="text-center text-sm text-muted-foreground">
@@ -70,7 +77,8 @@ export default function NewsletterBlock() {
               </p>
             )}
             <p className="text-center text-xs text-muted-foreground">
-              By subscribing, you agree to our Terms of Service and Privacy Policy.
+              By subscribing, you agree to our Terms of Service and Privacy
+              Policy.
             </p>
           </CardContent>
         </form>
