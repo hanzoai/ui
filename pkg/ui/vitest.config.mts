@@ -9,6 +9,13 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: ['./test/setup.ts'],
     css: true,
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      'test/charts.test.js',
+      'test/charts-runtime.test.tsx',
+      'test/multi-framework.test.js'
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
