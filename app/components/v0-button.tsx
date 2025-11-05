@@ -102,7 +102,10 @@ export function V0Button({
   )
 }
 
-export function HanzoLogo({ className, ...props }: React.ComponentProps<"svg">) {
+export function HanzoLogo({
+  className,
+  ...props
+}: React.ComponentProps<"svg">) {
   return (
     <svg
       viewBox="0 0 24 24"

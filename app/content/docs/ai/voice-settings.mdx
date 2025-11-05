@@ -94,7 +94,7 @@ export default function QuickVoiceSelect() {
 ```tsx
 import {
   LanguageSelector,
-  VoiceSelector
+  VoiceSelector,
 } from "@/components/ui/ai-voice-settings"
 
 export default function LanguageAndVoice() {
@@ -103,14 +103,8 @@ export default function LanguageAndVoice() {
 
   return (
     <div className="space-y-4">
-      <LanguageSelector
-        value={language}
-        onValueChange={setLanguage}
-      />
-      <VoiceSelector
-        value={voice}
-        onValueChange={setVoice}
-      />
+      <LanguageSelector value={language} onValueChange={setLanguage} />
+      <VoiceSelector value={voice} onValueChange={setVoice} />
     </div>
   )
 }
@@ -119,10 +113,7 @@ export default function LanguageAndVoice() {
 #### Speed & Pitch Controls
 
 ```tsx
-import {
-  SpeedControl,
-  PitchControl
-} from "@/components/ui/ai-voice-settings"
+import { PitchControl, SpeedControl } from "@/components/ui/ai-voice-settings"
 
 export default function VoiceCharacteristics() {
   const [speed, setSpeed] = useState(1.0)
@@ -143,10 +134,10 @@ Build your own layout with any combination:
 
 ```tsx
 import {
-  VoiceSelector,
+  AutoListenToggle,
   PersonalitySelector,
   SpeedControl,
-  AutoListenToggle
+  VoiceSelector,
 } from "@/components/ui/ai-voice-settings"
 
 export default function CustomSettings() {
@@ -157,9 +148,15 @@ export default function CustomSettings() {
       </CardHeader>
       <CardContent className="space-y-4">
         <VoiceSelector value={voice} onValueChange={setVoice} />
-        <PersonalitySelector value={personality} onValueChange={setPersonality} />
+        <PersonalitySelector
+          value={personality}
+          onValueChange={setPersonality}
+        />
         <SpeedControl value={speed} onValueChange={setSpeed} />
-        <AutoListenToggle checked={autoListen} onCheckedChange={setAutoListen} />
+        <AutoListenToggle
+          checked={autoListen}
+          onCheckedChange={setAutoListen}
+        />
       </CardContent>
     </Card>
   )
@@ -170,90 +167,90 @@ export default function CustomSettings() {
 
 ### AIVoiceSettings (Main Component)
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `settings` | `Partial<AIVoiceSettings>` | Initial settings object |
-| `onSettingsChange` | `(settings: AIVoiceSettings) => void` | Called when any setting changes |
-| `onSave` | `(settings: AIVoiceSettings) => void` | Called when Save button clicked |
-| `onReset` | `() => void` | Called when Reset button clicked |
-| `onPreview` | `(voice: string, speed: number, pitch: number) => void` | Called when Preview button clicked |
+| Prop               | Type                                                    | Description                        |
+| ------------------ | ------------------------------------------------------- | ---------------------------------- |
+| `settings`         | `Partial<AIVoiceSettings>`                              | Initial settings object            |
+| `onSettingsChange` | `(settings: AIVoiceSettings) => void`                   | Called when any setting changes    |
+| `onSave`           | `(settings: AIVoiceSettings) => void`                   | Called when Save button clicked    |
+| `onReset`          | `() => void`                                            | Called when Reset button clicked   |
+| `onPreview`        | `(voice: string, speed: number, pitch: number) => void` | Called when Preview button clicked |
 
 ### VoiceSelector
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current voice value |
-| `onValueChange` | `(value: string) => void` | - | Change handler |
-| `voices` | `Voice[]` | Built-in voices | Custom voice list |
-| `showDescription` | `boolean` | `true` | Show voice description |
+| Prop              | Type                      | Default         | Description            |
+| ----------------- | ------------------------- | --------------- | ---------------------- |
+| `value`           | `string`                  | -               | Current voice value    |
+| `onValueChange`   | `(value: string) => void` | -               | Change handler         |
+| `voices`          | `Voice[]`                 | Built-in voices | Custom voice list      |
+| `showDescription` | `boolean`                 | `true`          | Show voice description |
 
 ### LanguageSelector
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current language value |
-| `onValueChange` | `(value: string) => void` | - | Change handler |
-| `languages` | `Language[]` | Built-in languages | Custom language list |
-| `showAutoDetect` | `boolean` | `true` | Show auto-detect option |
+| Prop             | Type                      | Default            | Description             |
+| ---------------- | ------------------------- | ------------------ | ----------------------- |
+| `value`          | `string`                  | -                  | Current language value  |
+| `onValueChange`  | `(value: string) => void` | -                  | Change handler          |
+| `languages`      | `Language[]`              | Built-in languages | Custom language list    |
+| `showAutoDetect` | `boolean`                 | `true`             | Show auto-detect option |
 
 ### PersonalitySelector
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current personality value |
-| `onValueChange` | `(value: string) => void` | - | Change handler |
-| `personalities` | `Personality[]` | Built-in personalities | Custom personality list |
-| `showDescription` | `boolean` | `true` | Show personality description |
+| Prop              | Type                      | Default                | Description                  |
+| ----------------- | ------------------------- | ---------------------- | ---------------------------- |
+| `value`           | `string`                  | -                      | Current personality value    |
+| `onValueChange`   | `(value: string) => void` | -                      | Change handler               |
+| `personalities`   | `Personality[]`           | Built-in personalities | Custom personality list      |
+| `showDescription` | `boolean`                 | `true`                 | Show personality description |
 
 ### SpeedControl
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `number` | - | Current speed (0.5 - 2.0) |
-| `onValueChange` | `(value: number) => void` | - | Change handler |
-| `min` | `number` | `0.5` | Minimum speed |
-| `max` | `number` | `2.0` | Maximum speed |
-| `step` | `number` | `0.1` | Step increment |
+| Prop            | Type                      | Default | Description               |
+| --------------- | ------------------------- | ------- | ------------------------- |
+| `value`         | `number`                  | -       | Current speed (0.5 - 2.0) |
+| `onValueChange` | `(value: number) => void` | -       | Change handler            |
+| `min`           | `number`                  | `0.5`   | Minimum speed             |
+| `max`           | `number`                  | `2.0`   | Maximum speed             |
+| `step`          | `number`                  | `0.1`   | Step increment            |
 
 ### PitchControl
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `number` | - | Current pitch (0.5 - 2.0) |
-| `onValueChange` | `(value: number) => void` | - | Change handler |
-| `min` | `number` | `0.5` | Minimum pitch |
-| `max` | `number` | `2.0` | Maximum pitch |
-| `step` | `number` | `0.1` | Step increment |
+| Prop            | Type                      | Default | Description               |
+| --------------- | ------------------------- | ------- | ------------------------- |
+| `value`         | `number`                  | -       | Current pitch (0.5 - 2.0) |
+| `onValueChange` | `(value: number) => void` | -       | Change handler            |
+| `min`           | `number`                  | `0.5`   | Minimum pitch             |
+| `max`           | `number`                  | `2.0`   | Maximum pitch             |
+| `step`          | `number`                  | `0.1`   | Step increment            |
 
 ### WakeWordInput
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current wake word |
-| `onValueChange` | `(value: string) => void` | - | Change handler |
-| `placeholder` | `string` | Default message | Input placeholder |
+| Prop            | Type                      | Default         | Description       |
+| --------------- | ------------------------- | --------------- | ----------------- |
+| `value`         | `string`                  | -               | Current wake word |
+| `onValueChange` | `(value: string) => void` | -               | Change handler    |
+| `placeholder`   | `string`                  | Default message | Input placeholder |
 
 ### CustomInstructions
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `value` | `string` | - | Current instructions |
-| `onValueChange` | `(value: string) => void` | - | Change handler |
-| `rows` | `number` | `4` | Textarea rows |
-| `placeholder` | `string` | Default message | Textarea placeholder |
+| Prop            | Type                      | Default         | Description          |
+| --------------- | ------------------------- | --------------- | -------------------- |
+| `value`         | `string`                  | -               | Current instructions |
+| `onValueChange` | `(value: string) => void` | -               | Change handler       |
+| `rows`          | `number`                  | `4`             | Textarea rows        |
+| `placeholder`   | `string`                  | Default message | Textarea placeholder |
 
 ### AutoListenToggle
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `checked` | `boolean` | Toggle state |
+| Prop              | Type                         | Description    |
+| ----------------- | ---------------------------- | -------------- |
+| `checked`         | `boolean`                    | Toggle state   |
 | `onCheckedChange` | `(checked: boolean) => void` | Change handler |
 
 ### NoiseCancellationToggle
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `checked` | `boolean` | Toggle state |
+| Prop              | Type                         | Description    |
+| ----------------- | ---------------------------- | -------------- |
+| `checked`         | `boolean`                    | Toggle state   |
 | `onCheckedChange` | `(checked: boolean) => void` | Change handler |
 
 ## Built-in Data
@@ -262,13 +259,48 @@ export default function CustomSettings() {
 
 ```typescript
 const voices = [
-  { label: "Alloy", value: "alloy", gender: "neutral", description: "Neutral and balanced" },
-  { label: "Echo", value: "echo", gender: "male", description: "Clear and articulate" },
-  { label: "Fable", value: "fable", gender: "neutral", description: "Expressive storytelling" },
-  { label: "Onyx", value: "onyx", gender: "male", description: "Deep and authoritative" },
-  { label: "Nova", value: "nova", gender: "female", description: "Warm and friendly" },
-  { label: "Shimmer", value: "shimmer", gender: "female", description: "Energetic and bright" },
-  { label: "Samantha", value: "samantha", gender: "female", description: "Classic and smooth" },
+  {
+    label: "Alloy",
+    value: "alloy",
+    gender: "neutral",
+    description: "Neutral and balanced",
+  },
+  {
+    label: "Echo",
+    value: "echo",
+    gender: "male",
+    description: "Clear and articulate",
+  },
+  {
+    label: "Fable",
+    value: "fable",
+    gender: "neutral",
+    description: "Expressive storytelling",
+  },
+  {
+    label: "Onyx",
+    value: "onyx",
+    gender: "male",
+    description: "Deep and authoritative",
+  },
+  {
+    label: "Nova",
+    value: "nova",
+    gender: "female",
+    description: "Warm and friendly",
+  },
+  {
+    label: "Shimmer",
+    value: "shimmer",
+    gender: "female",
+    description: "Energetic and bright",
+  },
+  {
+    label: "Samantha",
+    value: "samantha",
+    gender: "female",
+    description: "Classic and smooth",
+  },
   { label: "Alex", value: "alex", gender: "male", description: "Professional" },
 ]
 ```
@@ -330,10 +362,7 @@ const loadSettings = () => {
   return saved ? JSON.parse(saved) : undefined
 }
 
-<AIVoiceSettings
-  settings={loadSettings()}
-  onSave={handleSave}
-/>
+;<AIVoiceSettings settings={loadSettings()} onSave={handleSave} />
 ```
 
 ### Integrate with AI Voice Component
@@ -353,7 +382,7 @@ export default function VoiceChat() {
         voice={{
           id: settings.voice,
           speed: settings.speed,
-          pitch: settings.pitch
+          pitch: settings.pitch,
         }}
         wakeWord={settings.wakeWord}
         autoStart={settings.autoListen}
@@ -361,10 +390,7 @@ export default function VoiceChat() {
       />
 
       {/* Settings panel */}
-      <AIVoiceSettings
-        settings={settings}
-        onSettingsChange={setSettings}
-      />
+      <AIVoiceSettings settings={settings} onSettingsChange={setSettings} />
     </div>
   )
 }
@@ -377,13 +403,13 @@ const handlePreview = async (voice: string, speed: number, pitch: number) => {
   const utterance = new SpeechSynthesisUtterance(
     "Hello, this is how I sound with these settings."
   )
-  utterance.voice = speechSynthesis.getVoices().find(v => v.name === voice)
+  utterance.voice = speechSynthesis.getVoices().find((v) => v.name === voice)
   utterance.rate = speed
   utterance.pitch = pitch
   speechSynthesis.speak(utterance)
 }
 
-<AIVoiceSettings onPreview={handlePreview} />
+;<AIVoiceSettings onPreview={handlePreview} />
 ```
 
 ## Styling

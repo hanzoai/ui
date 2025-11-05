@@ -49,29 +49,7 @@ export default defineConfig({
     )
   },
   format: ['cjs', 'esm'],
-  dts: {
-    resolve: true,
-    entry: {
-      'index': 'primitives/index-next.ts',
-      'primitives/index-next': 'primitives/index-next.ts',
-      'primitives/index-common': 'primitives/index-common.ts',
-      'assets/index': 'assets/index.ts',
-      'blocks/index': 'blocks/index.ts',
-      'components/index': 'components/index.ts',
-      'tailwind/index': 'tailwind/index.ts',
-      'types/index': 'types/index.ts',
-      'util/index': 'util/index.ts',
-      'util/index-client': 'util/index-client.ts',
-      'src/utils': 'src/utils.ts',
-      'src/registry/index': 'src/registry/index.ts',
-      'src/mcp/index': 'src/mcp/index.ts',
-      'src/hooks/index': 'src/hooks/index.ts',
-      'frameworks/react/index': 'frameworks/react/index.ts',
-      'frameworks/vue/index': 'frameworks/vue/index.ts',
-      'frameworks/svelte/index': 'frameworks/svelte/index.ts',
-      'frameworks/react-native/index': 'frameworks/react-native/index.ts',
-    }
-  },
+  dts: false, // Disabled due to React 19 migration issues
   sourcemap: true,
   external: [
     // React and Next.js

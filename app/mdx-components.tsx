@@ -1,9 +1,9 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import type { MDXComponents } from "mdx/types"
+import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
 import defaultComponents from "fumadocs-ui/mdx"
-import { Pre, CodeBlock } from "fumadocs-ui/components/codeblock"
+import type { MDXComponents } from "mdx/types"
 
 import { cn } from "@/lib/utils"
 import { Callout } from "@/components/callout"
