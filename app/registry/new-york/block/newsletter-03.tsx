@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Mail, Check } from "lucide-react"
+import { Check, Mail } from "lucide-react"
 
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
@@ -14,7 +14,7 @@ export default function NewsletterBlock() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     setIsSubscribed(true)
     setIsSubmitting(false)
     setEmail("")
@@ -31,7 +31,8 @@ export default function NewsletterBlock() {
               Join Our Newsletter
             </h2>
             <p className="text-xl text-muted-foreground">
-              Get weekly insights, tips, and exclusive content delivered directly to your inbox.
+              Get weekly insights, tips, and exclusive content delivered
+              directly to your inbox.
             </p>
           </div>
           <ul className="space-y-3">
@@ -76,7 +77,11 @@ export default function NewsletterBlock() {
                 disabled={isSubmitting || isSubscribed}
               >
                 <Mail className="mr-2 h-4 w-4" />
-                {isSubmitting ? "Subscribing..." : isSubscribed ? "Subscribed! ✓" : "Subscribe Now"}
+                {isSubmitting
+                  ? "Subscribing..."
+                  : isSubscribed
+                    ? "Subscribed! ✓"
+                    : "Subscribe Now"}
               </Button>
               {isSubscribed && (
                 <p className="text-center text-sm text-muted-foreground">

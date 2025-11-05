@@ -46,8 +46,9 @@ export default defineConfig({
     'input-otp': 'primitives/input-otp.tsx',
     'resizable': 'primitives/resizable.tsx',
 
-    // Essential utilities
-    'src/utils': 'src/utils.ts',
+    // Re-exports for package compatibility
+    'primitives/index': 'primitives/index-core.ts',
+    'util/index': 'util/index-client.ts',
     'lib/utils': 'src/utils.ts',
 
     // Core types
@@ -57,7 +58,7 @@ export default defineConfig({
     'tailwind/index': 'tailwind/index.ts',
   },
   format: ['cjs', 'esm'],
-  dts: true, // Generate TypeScript definitions
+  dts: false, // Disabled - will generate with tsc instead
   sourcemap: false,
   external: [
     // Everything is external except what we're building

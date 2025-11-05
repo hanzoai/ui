@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import dynamic from "next/dynamic"
 import { Index } from "@/__registry__"
 import {
   closestCenter,
@@ -17,87 +16,178 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Download, Eye, GripVertical, Plus, Trash2 } from "lucide-react"
+import { Download, GripVertical, Plus, Settings2, Trash2 } from "lucide-react"
 
+import { BuilderPreview } from "@/components/builder-preview"
 import { Button } from "@/registry/new-york/ui/button"
 import { Card } from "@/registry/new-york/ui/card"
 import { Input } from "@/registry/new-york/ui/input"
 import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select"
 import { Separator } from "@/registry/new-york/ui/separator"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/new-york/ui/tabs"
 
-// Dynamic block component loader
-const DynamicBlock = ({ blockName, scale = 1 }: { blockName: string; scale?: number }) => {
-  const [BlockComponent, setBlockComponent] = React.useState<React.ComponentType | null>(null)
-  const [error, setError] = React.useState(false)
-
-  React.useEffect(() => {
-    import(`@/registry/default/block/${blockName}`)
-      .then((mod) => {
-        setBlockComponent(() => mod.default)
-        setError(false)
-      })
-      .catch((err) => {
-        console.error(`Failed to load block ${blockName}:`, err)
-        setError(true)
-      })
-  }, [blockName])
-
-  if (error) {
-    return (
-      <div className="flex h-full items-center justify-center bg-muted/50 p-4 text-center">
-        <p className="text-xs text-muted-foreground">Failed to load {blockName}</p>
-      </div>
-    )
-  }
-
-  if (!BlockComponent) {
-    return (
-      <div className="flex h-full items-center justify-center bg-muted/50">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    )
-  }
-
-  return (
-    <div style={{ transform: `scale(${scale})`, transformOrigin: "top left" }}>
-      <BlockComponent />
-    </div>
-  )
-}
-
-interface PageBlock {
+interface PageItem {
   id: string
-  blockName: string
+  name: string
+  type: "block" | "component" | "container"
+  containerType?: "div" | "section" | "article"
+  layoutType?: "flex" | "grid" | "stack"
+  children?: PageItem[]
+  props?: Record<string, any>
 }
 
-export default function PageBuilder() {
+export default function EnhancedBuilder() {
   const [blocks, setBlocks] = React.useState<string[]>([])
-  const [availableBlocks, setAvailableBlocks] = React.useState<string[]>([])
-  const [pageBlocks, setPageBlocks] = React.useState<PageBlock[]>([])
+  const [components, setComponents] = React.useState<string[]>([])
+  const [pageItems, setPageItems] = React.useState<PageItem[]>([])
   const [activeId, setActiveId] = React.useState<string | null>(null)
   const [filter, setFilter] = React.useState("")
-  const [viewport, setViewport] = React.useState<"desktop" | "tablet" | "mobile">("desktop")
+  const [activeTab, setActiveTab] = React.useState("blocks")
+  const [viewport, setViewport] = React.useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop")
+  const [selectedItem, setSelectedItem] = React.useState<string | null>(null)
 
   React.useEffect(() => {
-    // Get block IDs from the registry index
+    // Get blocks from registry
     const blockIds = Object.keys(Index.default || {}).filter((key) => {
       const item = Index.default[key]
       return item?.type === "components:block"
     })
-    setBlocks(blockIds)
-    setAvailableBlocks(blockIds)
+    setBlocks(blockIds.sort())
+
+    // Get UI components from registry
+    const componentIds = Object.keys(Index.default || {}).filter((key) => {
+      const item = Index.default[key]
+      return item?.type === "components:ui"
+    })
+    setComponents(componentIds.sort())
   }, [])
 
-  const filteredBlocks = availableBlocks.filter((block) =>
-    block.toLowerCase().includes(filter.toLowerCase())
+  // Filter blocks and components FIRST
+  const filteredBlocks = React.useMemo(
+    () =>
+      blocks.filter((block) =>
+        block.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [blocks, filter]
   )
 
-  const addBlock = (blockName: string) => {
-    setPageBlocks([...pageBlocks, { id: crypto.randomUUID(), blockName }])
+  const filteredComponents = React.useMemo(
+    () =>
+      components.filter((component) =>
+        component.toLowerCase().includes(filter.toLowerCase())
+      ),
+    [components, filter]
+  )
+
+  // THEN categorize them (now filteredBlocks and filteredComponents exist)
+  const blockCategories = React.useMemo(() => {
+    const categories: Record<string, string[]> = {
+      Dashboard: [],
+      Authentication: [],
+      Sidebar: [],
+      Calendar: [],
+      Newsletter: [],
+      Login: [],
+      Signup: [],
+      Other: [],
+    }
+
+    filteredBlocks.forEach((block) => {
+      if (block.startsWith("dashboard-")) categories["Dashboard"].push(block)
+      else if (block.startsWith("authentication-") || block.startsWith("otp-"))
+        categories["Authentication"].push(block)
+      else if (block.startsWith("sidebar-")) categories["Sidebar"].push(block)
+      else if (block.startsWith("calendar-")) categories["Calendar"].push(block)
+      else if (block.startsWith("newsletter-"))
+        categories["Newsletter"].push(block)
+      else if (block.startsWith("login-")) categories["Login"].push(block)
+      else if (block.startsWith("signup-")) categories["Signup"].push(block)
+      else categories["Other"].push(block)
+    })
+
+    // Remove empty categories
+    return Object.fromEntries(
+      Object.entries(categories).filter(([_, items]) => items.length > 0)
+    )
+  }, [filteredBlocks])
+
+  const componentCategories = React.useMemo(() => {
+    const categories: Record<string, string[]> = {
+      Form: [],
+      Layout: [],
+      Navigation: [],
+      Display: [],
+      Feedback: [],
+      AI: [],
+      Other: [],
+    }
+
+    filteredComponents.forEach((comp) => {
+      if (
+        ["input", "button", "checkbox", "select", "textarea", "form"].some(
+          (c) => comp.includes(c)
+        )
+      )
+        categories["Form"].push(comp)
+      else if (
+        ["card", "separator", "sheet", "dialog", "drawer"].some((c) =>
+          comp.includes(c)
+        )
+      )
+        categories["Layout"].push(comp)
+      else if (
+        ["navigation", "breadcrumb", "tabs", "menu"].some((c) =>
+          comp.includes(c)
+        )
+      )
+        categories["Navigation"].push(comp)
+      else if (
+        ["table", "list", "avatar", "badge", "calendar"].some((c) =>
+          comp.includes(c)
+        )
+      )
+        categories["Display"].push(comp)
+      else if (
+        ["alert", "toast", "progress", "skeleton"].some((c) => comp.includes(c))
+      )
+        categories["Feedback"].push(comp)
+      else if (comp.startsWith("ai-")) categories["AI"].push(comp)
+      else categories["Other"].push(comp)
+    })
+
+    return Object.fromEntries(
+      Object.entries(categories).filter(([_, items]) => items.length > 0)
+    )
+  }, [filteredComponents])
+
+  const addItem = (name: string, type: "block" | "component" | "container") => {
+    const newItem: PageItem = {
+      id: crypto.randomUUID(),
+      name,
+      type,
+      children: type === "container" ? [] : undefined,
+      containerType: type === "container" ? "div" : undefined,
+      layoutType: type === "container" ? "flex" : undefined,
+    }
+    setPageItems([...pageItems, newItem])
   }
 
-  const removeBlock = (id: string) => {
-    setPageBlocks(pageBlocks.filter((b) => b.id !== id))
+  const removeItem = (id: string) => {
+    setPageItems(pageItems.filter((item) => item.id !== id))
   }
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -110,7 +200,7 @@ export default function PageBuilder() {
 
     if (!over || active.id === over.id) return
 
-    setPageBlocks((items) => {
+    setPageItems((items) => {
       const oldIndex = items.findIndex((item) => item.id === active.id)
       const newIndex = items.findIndex((item) => item.id === over.id)
       return arrayMove(items, oldIndex, newIndex)
@@ -118,23 +208,114 @@ export default function PageBuilder() {
   }
 
   const generatePageCode = () => {
-    const imports = pageBlocks
-      .map((block) => `import ${toPascalCase(block.blockName)} from "@/registry/default/block/${block.blockName}"`)
-      .join("\n")
+    // Collect all unique imports from the page tree
+    const collectImports = (items: PageItem[]) => {
+      const blocks = new Set<string>()
+      const components = new Set<string>()
 
-    const components = pageBlocks
-      .map((block) => `      <${toPascalCase(block.blockName)} />`)
-      .join("\n")
+      const traverse = (item: PageItem) => {
+        if (item.type === "block") {
+          blocks.add(item.name)
+        } else if (item.type === "component") {
+          components.add(item.name)
+        }
+        if (item.children) {
+          item.children.forEach(traverse)
+        }
+      }
+
+      items.forEach(traverse)
+
+      const blockImports = Array.from(blocks)
+        .map(
+          (name) =>
+            `import ${toPascalCase(name)} from "@/registry/default/block/${name}"`
+        )
+        .join("\n")
+
+      const componentImports = Array.from(components)
+        .map(
+          (name) =>
+            `import { ${toPascalCase(name)} } from "@/registry/default/ui/${name}"`
+        )
+        .join("\n")
+
+      return [blockImports, componentImports].filter(Boolean).join("\n")
+    }
+
+    const renderProps = (props?: Record<string, any>) => {
+      if (!props || Object.keys(props).length === 0) return ""
+
+      return Object.entries(props)
+        .map(([key, value]) => {
+          if (typeof value === "string") {
+            return `${key}="${value}"`
+          } else if (typeof value === "boolean") {
+            return value ? key : ""
+          } else if (typeof value === "number") {
+            return `${key}={${value}}`
+          }
+          return ""
+        })
+        .filter(Boolean)
+        .join(" ")
+    }
+
+    const renderItems = (items: PageItem[], indent = 2): string => {
+      return items
+        .map((item): string => {
+          const spacing = " ".repeat(indent * 2)
+          const props = renderProps(item.props)
+
+          if (item.type === "block") {
+            const componentName = toPascalCase(item.name)
+            return props
+              ? `${spacing}<${componentName} ${props} />`
+              : `${spacing}<${componentName} />`
+          } else if (item.type === "component") {
+            const componentName = toPascalCase(item.name)
+            return props
+              ? `${spacing}<${componentName} ${props} />`
+              : `${spacing}<${componentName} />`
+          } else if (item.type === "container") {
+            const Tag = item.containerType || "div"
+            const layoutClass =
+              item.layoutType === "flex"
+                ? "flex flex-col gap-4"
+                : item.layoutType === "grid"
+                  ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+                  : "space-y-4"
+
+            const customClass = item.props?.className || ""
+            const fullClassName = [layoutClass, customClass]
+              .filter(Boolean)
+              .join(" ")
+
+            const children: string =
+              item.children && item.children.length > 0
+                ? "\n" + renderItems(item.children, indent + 1) + "\n" + spacing
+                : ""
+
+            return children
+              ? `${spacing}<${Tag} className="${fullClassName}">${children}</${Tag}>`
+              : `${spacing}<${Tag} className="${fullClassName}" />`
+          }
+          return ""
+        })
+        .join("\n")
+    }
+
+    const allImports = collectImports(pageItems)
 
     return `"use client"
 
 import * as React from "react"
-${imports}
+${allImports}
 
 export default function CustomPage() {
   return (
     <div className="flex min-h-screen flex-col">
-${components}
+${renderItems(pageItems, 3)}
     </div>
   )
 }
@@ -144,7 +325,6 @@ ${components}
   const copyCode = async () => {
     const code = generatePageCode()
     await navigator.clipboard.writeText(code)
-    // TODO: Show toast notification
   }
 
   const downloadCode = () => {
@@ -159,10 +339,8 @@ ${components}
   }
 
   const deployWithHanzo = () => {
-    // TODO: Integrate with Hanzo deployment API
     const code = generatePageCode()
     console.log("Deploying with Hanzo:", code)
-    // This would call hanzo deployment service
     window.open("https://hanzo.ai/deploy", "_blank")
   }
 
@@ -179,51 +357,141 @@ ${components}
     mobile: "375px",
   }
 
+  const updateItemProps = (id: string, props: Record<string, any>) => {
+    setPageItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, props: { ...item.props, ...props } } : item
+      )
+    )
+  }
+
+  const updateItemSettings = (
+    id: string,
+    settings: Partial<Omit<PageItem, "id" | "name" | "type">>
+  ) => {
+    setPageItems((items) =>
+      items.map((item) => (item.id === id ? { ...item, ...settings } : item))
+    )
+  }
+
+  const addChildToContainer = (containerId: string, child: PageItem) => {
+    setPageItems((items) =>
+      items.map((item) =>
+        item.id === containerId && item.type === "container"
+          ? {
+              ...item,
+              children: [...(item.children || []), child],
+            }
+          : item
+      )
+    )
+  }
+
+  const removeChildFromContainer = (containerId: string, childId: string) => {
+    setPageItems((items) =>
+      items.map((item) =>
+        item.id === containerId && item.type === "container"
+          ? {
+              ...item,
+              children: item.children?.filter((c) => c.id !== childId),
+            }
+          : item
+      )
+    )
+  }
+
+  const selectedItemData = pageItems.find((item) => item.id === selectedItem)
+
   return (
     <div className="flex h-screen max-h-screen gap-4 p-6">
-      {/* Left Sidebar - Block Library */}
-      <div className="w-64 space-y-4">
+      {/* Left Sidebar - Component/Block Library */}
+      <div className="w-80 space-y-4">
         <div>
-          <h2 className="text-lg font-semibold">Block Library</h2>
+          <h2 className="text-lg font-semibold">Component Library</h2>
           <p className="text-sm text-muted-foreground">
-            Drag blocks to build your page
+            Add blocks, components, and layouts
           </p>
         </div>
 
-        <Input
-          placeholder="Filter blocks..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="blocks">Blocks</TabsTrigger>
+            <TabsTrigger value="components">Components</TabsTrigger>
+          </TabsList>
 
-        <ScrollArea className="h-[calc(100vh-200px)]">
-          <div className="space-y-4">
-            {filteredBlocks.map((block) => (
-              <Card
-                key={block}
-                className="cursor-grab overflow-hidden transition-colors hover:bg-muted"
-                onClick={() => addBlock(block)}
+          <div className="mt-4 space-y-4">
+            <Input
+              placeholder={`Filter ${activeTab}...`}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => addItem("container", "container")}
+                className="w-full"
               >
-                {/* 1/4 Scale Block Preview */}
-                <div className="relative h-32 overflow-hidden bg-muted/50">
-                  <div className="pointer-events-none">
-                    <DynamicBlock blockName={block} scale={0.25} />
-                  </div>
-                  {/* Overlay with block name and add button */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity hover:bg-background/80 hover:opacity-100">
-                    <div className="flex items-center gap-2">
-                      <Plus className="h-5 w-5" />
-                      <span className="text-sm font-medium">Add to page</span>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Container
+              </Button>
+            </div>
+
+            <ScrollArea className="h-[calc(100vh-320px)]">
+              <TabsContent value="blocks" className="mt-0 space-y-4">
+                {filteredBlocks.map((block) => (
+                  <Card
+                    key={block}
+                    className="cursor-pointer overflow-hidden transition-colors hover:bg-muted"
+                    onClick={() => addItem(block, "block")}
+                  >
+                    <div className="relative h-32 overflow-hidden bg-muted/50">
+                      <div className="pointer-events-none">
+                        <BuilderPreview
+                          name={block}
+                          type="block"
+                          scale={0.25}
+                        />
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity hover:bg-background/80 hover:opacity-100">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-5 w-5" />
+                          <span className="text-sm font-medium">
+                            Add to page
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                <div className="border-t p-2">
-                  <p className="truncate text-xs font-medium">{block}</p>
-                </div>
-              </Card>
-            ))}
+                    <div className="border-t p-2">
+                      <p className="truncate text-xs font-medium">{block}</p>
+                    </div>
+                  </Card>
+                ))}
+              </TabsContent>
+
+              <TabsContent value="components" className="mt-0 space-y-2">
+                {filteredComponents.map((component) => (
+                  <Card
+                    key={component}
+                    className="cursor-pointer p-3 transition-colors hover:bg-muted"
+                    onClick={() => addItem(component, "component")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">{component}</p>
+                        <p className="text-xs text-muted-foreground">
+                          UI Component
+                        </p>
+                      </div>
+                      <Plus className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </Card>
+                ))}
+              </TabsContent>
+            </ScrollArea>
           </div>
-        </ScrollArea>
+        </Tabs>
       </div>
 
       <Separator orientation="vertical" />
@@ -234,7 +502,7 @@ ${components}
           <div>
             <h2 className="text-lg font-semibold">Page Builder</h2>
             <p className="text-sm text-muted-foreground">
-              {pageBlocks.length} blocks in page
+              {pageItems.length} items in page
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -267,49 +535,32 @@ ${components}
             </div>
             <Separator orientation="vertical" className="h-8" />
             <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={copyCode}
-              disabled={pageBlocks.length === 0}
-            >
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyCode}
+                disabled={pageItems.length === 0}
               >
-                <rect width="13" height="13" x="9" y="9" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-              Copy Code
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={downloadCode}
-              disabled={pageBlocks.length === 0}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Download
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={deployWithHanzo}
-              disabled={pageBlocks.length === 0}
-            >
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+                Copy Code
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadCode}
+                disabled={pageItems.length === 0}
               >
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-              Deploy with Hanzo
-            </Button>
-          </div>
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={deployWithHanzo}
+                disabled={pageItems.length === 0}
+              >
+                Deploy with Hanzo
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -328,28 +579,29 @@ ${components}
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={pageBlocks.map((b) => b.id)}
+                  items={pageItems.map((item) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
                   <div className="min-h-[600px] bg-background">
-                    {pageBlocks.length === 0 ? (
+                    {pageItems.length === 0 ? (
                       <div className="flex h-96 items-center justify-center rounded-lg border border-dashed text-center">
                         <div className="space-y-2">
                           <p className="text-sm text-muted-foreground">
                             Your page is empty
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            Click blocks from the left to add them
+                            Add blocks, components, or containers from the left
                           </p>
                         </div>
                       </div>
                     ) : (
-                      pageBlocks.map((block) => (
-                        <SortableBlock
-                          key={block.id}
-                          id={block.id}
-                          blockName={block.blockName}
-                          onRemove={() => removeBlock(block.id)}
+                      pageItems.map((item) => (
+                        <SortableItem
+                          key={item.id}
+                          item={item}
+                          onRemove={() => removeItem(item.id)}
+                          onSelect={() => setSelectedItem(item.id)}
+                          isSelected={selectedItem === item.id}
                         />
                       ))
                     )}
@@ -360,7 +612,7 @@ ${components}
                   {activeId ? (
                     <div className="rounded-lg border bg-card p-4 shadow-lg">
                       <p className="text-sm font-medium">
-                        {pageBlocks.find((b) => b.id === activeId)?.blockName}
+                        {pageItems.find((item) => item.id === activeId)?.name}
                       </p>
                     </div>
                   ) : null}
@@ -370,18 +622,285 @@ ${components}
           </div>
         </ScrollArea>
       </div>
+
+      {/* Right Sidebar - Property Editor */}
+      {selectedItemData && (
+        <>
+          <Separator orientation="vertical" />
+          <div className="w-80 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">Properties</h2>
+                <p className="text-sm text-muted-foreground">
+                  {selectedItemData.name}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedItem(null)}
+              >
+                Close
+              </Button>
+            </div>
+
+            <ScrollArea className="h-[calc(100vh-120px)]">
+              <div className="space-y-6 pr-4">
+                {/* Basic Settings */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Basic Settings</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Type
+                      </label>
+                      <p className="text-sm capitalize">
+                        {selectedItemData.type}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Name
+                      </label>
+                      <p className="text-sm">{selectedItemData.name}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Container Settings */}
+                {selectedItemData.type === "container" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Container Settings
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          HTML Tag
+                        </label>
+                        <Select
+                          value={selectedItemData.containerType || "div"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              containerType: value as
+                                | "div"
+                                | "section"
+                                | "article",
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="div">div</SelectItem>
+                            <SelectItem value="section">section</SelectItem>
+                            <SelectItem value="article">article</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Layout Type
+                        </label>
+                        <Select
+                          value={selectedItemData.layoutType || "flex"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layoutType: value as "flex" | "grid" | "stack",
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="flex">Flex (Column)</SelectItem>
+                            <SelectItem value="grid">Grid (2 cols)</SelectItem>
+                            <SelectItem value="stack">
+                              Stack (Vertical)
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Styling */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Styling</h3>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Custom Classes
+                    </label>
+                    <Input
+                      placeholder="e.g. bg-muted p-8"
+                      value={selectedItemData.props?.className || ""}
+                      onChange={(e) =>
+                        updateItemProps(selectedItemData.id, {
+                          className: e.target.value,
+                        })
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Add Tailwind CSS classes
+                    </p>
+                  </div>
+                </div>
+
+                {/* Container Children */}
+                {selectedItemData.type === "container" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Container Children (
+                      {selectedItemData.children?.length || 0})
+                    </h3>
+                    {selectedItemData.children &&
+                    selectedItemData.children.length > 0 ? (
+                      <div className="space-y-2">
+                        {selectedItemData.children.map((child, index) => (
+                          <div
+                            key={child.id}
+                            className="flex items-center justify-between rounded-md border bg-card p-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                #{index + 1}
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium">
+                                  {child.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground capitalize">
+                                  {child.type}
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                removeChildFromContainer(
+                                  selectedItemData.id,
+                                  child.id
+                                )
+                              }
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        No children yet. Children can be added in a future
+                        update.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Component Props */}
+                {selectedItemData.type === "component" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Component Properties
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Variant
+                        </label>
+                        <Input
+                          placeholder="e.g. default, outline"
+                          value={selectedItemData.props?.variant || ""}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              variant: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Size
+                        </label>
+                        <Input
+                          placeholder="e.g. sm, md, lg"
+                          value={selectedItemData.props?.size || ""}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              size: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Advanced */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Advanced</h3>
+                  <div className="space-y-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        const code = JSON.stringify(selectedItemData, null, 2)
+                        navigator.clipboard.writeText(code)
+                      }}
+                    >
+                      Copy Item JSON
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full text-destructive hover:text-destructive"
+                      onClick={() => {
+                        removeItem(selectedItemData.id)
+                        setSelectedItem(null)
+                      }}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete Item
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Component Info */}
+                <div className="rounded-lg border bg-muted/50 p-3 text-xs">
+                  <p className="font-medium">About this item:</p>
+                  <ul className="mt-2 space-y-1 text-muted-foreground">
+                    <li>• ID: {selectedItemData.id.slice(0, 8)}...</li>
+                    <li>• Type: {selectedItemData.type}</li>
+                    {selectedItemData.children && (
+                      <li>• Children: {selectedItemData.children.length}</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </ScrollArea>
+          </div>
+        </>
+      )}
     </div>
   )
 }
 
-function SortableBlock({
-  id,
-  blockName,
+function SortableItem({
+  item,
   onRemove,
+  onSelect,
+  isSelected,
 }: {
-  id: string
-  blockName: string
+  item: PageItem
   onRemove: () => void
+  onSelect: () => void
+  isSelected: boolean
 }) {
   const {
     attributes,
@@ -390,7 +909,7 @@ function SortableBlock({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id })
+  } = useSortable({ id: item.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -399,7 +918,12 @@ function SortableBlock({
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="group relative">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
+      onClick={onSelect}
+    >
       <div className="absolute -left-12 top-2 z-10 flex flex-col items-center gap-2">
         <button
           {...attributes}
@@ -411,16 +935,78 @@ function SortableBlock({
         <Button
           variant="ghost"
           size="icon"
-          onClick={onRemove}
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemove()
+          }}
           className="h-6 w-6 bg-background/80 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
         >
           <Trash2 className="h-3 w-3" />
         </Button>
+        {isSelected && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 bg-background/80 backdrop-blur"
+          >
+            <Settings2 className="h-3 w-3" />
+          </Button>
+        )}
       </div>
 
-      {/* Block Preview - No gaps between blocks */}
       <div className="relative overflow-hidden border-b last:border-b-0">
-        <DynamicBlock blockName={blockName} scale={1} />
+        {item.type === "container" ? (
+          <div className="min-h-[100px] bg-muted/20 p-4">
+            <div className="mb-2 flex items-center gap-2 border-b border-dashed pb-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Container ({item.containerType || "div"}) -{" "}
+                {item.layoutType || "flex"}
+              </p>
+            </div>
+            {item.children && item.children.length > 0 ? (
+              <div
+                className={
+                  item.layoutType === "flex"
+                    ? "flex flex-col gap-4"
+                    : item.layoutType === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+                      : "space-y-4"
+                }
+              >
+                {item.children.map((child) => (
+                  <div
+                    key={child.id}
+                    className="border-l-2 border-primary/50 pl-3"
+                  >
+                    {child.type === "container" ? (
+                      <div className="text-xs text-muted-foreground">
+                        Nested Container: {child.name}
+                      </div>
+                    ) : (
+                      <BuilderPreview
+                        name={child.name}
+                        type={child.type as "block" | "component"}
+                        scale={0.75}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex min-h-[80px] items-center justify-center">
+                <p className="text-xs text-muted-foreground">
+                  Empty container - Add items from the left sidebar
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <BuilderPreview
+            name={item.name}
+            type={item.type as "block" | "component"}
+            scale={1}
+          />
+        )}
       </div>
     </div>
   )

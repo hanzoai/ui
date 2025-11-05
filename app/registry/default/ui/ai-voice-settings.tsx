@@ -57,13 +57,48 @@ export interface Personality {
 }
 
 export const voices: Voice[] = [
-  { label: "Alloy", value: "alloy", gender: "neutral", description: "Neutral and balanced" },
-  { label: "Echo", value: "echo", gender: "male", description: "Clear and articulate" },
-  { label: "Fable", value: "fable", gender: "neutral", description: "Expressive storytelling" },
-  { label: "Onyx", value: "onyx", gender: "male", description: "Deep and authoritative" },
-  { label: "Nova", value: "nova", gender: "female", description: "Warm and friendly" },
-  { label: "Shimmer", value: "shimmer", gender: "female", description: "Energetic and bright" },
-  { label: "Samantha", value: "samantha", gender: "female", description: "Classic and smooth" },
+  {
+    label: "Alloy",
+    value: "alloy",
+    gender: "neutral",
+    description: "Neutral and balanced",
+  },
+  {
+    label: "Echo",
+    value: "echo",
+    gender: "male",
+    description: "Clear and articulate",
+  },
+  {
+    label: "Fable",
+    value: "fable",
+    gender: "neutral",
+    description: "Expressive storytelling",
+  },
+  {
+    label: "Onyx",
+    value: "onyx",
+    gender: "male",
+    description: "Deep and authoritative",
+  },
+  {
+    label: "Nova",
+    value: "nova",
+    gender: "female",
+    description: "Warm and friendly",
+  },
+  {
+    label: "Shimmer",
+    value: "shimmer",
+    gender: "female",
+    description: "Energetic and bright",
+  },
+  {
+    label: "Samantha",
+    value: "samantha",
+    gender: "female",
+    description: "Classic and smooth",
+  },
   { label: "Alex", value: "alex", gender: "male", description: "Professional" },
 ]
 
@@ -129,8 +164,19 @@ export interface VoiceSelectorProps {
   showDescription?: boolean
 }
 
-export const VoiceSelector = React.forwardRef<HTMLDivElement, VoiceSelectorProps>(
-  ({ value, onValueChange, voices: customVoices = voices, showDescription = true }, ref) => {
+export const VoiceSelector = React.forwardRef<
+  HTMLDivElement,
+  VoiceSelectorProps
+>(
+  (
+    {
+      value,
+      onValueChange,
+      voices: customVoices = voices,
+      showDescription = true,
+    },
+    ref
+  ) => {
     const selected = customVoices.find((v) => v.value === value)
 
     return (
@@ -154,7 +200,9 @@ export const VoiceSelector = React.forwardRef<HTMLDivElement, VoiceSelectorProps
           </SelectContent>
         </Select>
         {showDescription && selected && (
-          <p className="text-xs text-muted-foreground">{selected.description}</p>
+          <p className="text-xs text-muted-foreground">
+            {selected.description}
+          </p>
         )}
       </div>
     )
@@ -169,8 +217,19 @@ export interface LanguageSelectorProps {
   showAutoDetect?: boolean
 }
 
-export const LanguageSelector = React.forwardRef<HTMLDivElement, LanguageSelectorProps>(
-  ({ value, onValueChange, languages: customLanguages = languages, showAutoDetect = true }, ref) => {
+export const LanguageSelector = React.forwardRef<
+  HTMLDivElement,
+  LanguageSelectorProps
+>(
+  (
+    {
+      value,
+      onValueChange,
+      languages: customLanguages = languages,
+      showAutoDetect = true,
+    },
+    ref
+  ) => {
     return (
       <div ref={ref} className="space-y-2">
         <Label htmlFor="language">Spoken Language</Label>
@@ -208,8 +267,19 @@ export interface PersonalitySelectorProps {
   showDescription?: boolean
 }
 
-export const PersonalitySelector = React.forwardRef<HTMLDivElement, PersonalitySelectorProps>(
-  ({ value, onValueChange, personalities: customPersonalities = personalities, showDescription = true }, ref) => {
+export const PersonalitySelector = React.forwardRef<
+  HTMLDivElement,
+  PersonalitySelectorProps
+>(
+  (
+    {
+      value,
+      onValueChange,
+      personalities: customPersonalities = personalities,
+      showDescription = true,
+    },
+    ref
+  ) => {
     const selected = customPersonalities.find((p) => p.value === value)
 
     return (
@@ -228,7 +298,9 @@ export const PersonalitySelector = React.forwardRef<HTMLDivElement, PersonalityS
           </SelectContent>
         </Select>
         {showDescription && selected && (
-          <p className="text-xs text-muted-foreground">{selected.description}</p>
+          <p className="text-xs text-muted-foreground">
+            {selected.description}
+          </p>
         )}
       </div>
     )
@@ -250,7 +322,9 @@ export const SpeedControl = React.forwardRef<HTMLDivElement, SpeedControlProps>(
       <div ref={ref} className="space-y-3">
         <div className="flex items-center justify-between">
           <Label htmlFor="speed">Speaking Speed</Label>
-          <span className="text-sm text-muted-foreground">{value.toFixed(1)}x</span>
+          <span className="text-sm text-muted-foreground">
+            {value.toFixed(1)}x
+          </span>
         </div>
         <Slider
           id="speed"
@@ -285,7 +359,9 @@ export const PitchControl = React.forwardRef<HTMLDivElement, PitchControlProps>(
       <div ref={ref} className="space-y-3">
         <div className="flex items-center justify-between">
           <Label htmlFor="pitch">Voice Pitch</Label>
-          <span className="text-sm text-muted-foreground">{value.toFixed(1)}x</span>
+          <span className="text-sm text-muted-foreground">
+            {value.toFixed(1)}x
+          </span>
         </div>
         <Slider
           id="pitch"
@@ -312,8 +388,18 @@ export interface WakeWordInputProps {
   placeholder?: string
 }
 
-export const WakeWordInput = React.forwardRef<HTMLDivElement, WakeWordInputProps>(
-  ({ value, onValueChange, placeholder = "e.g., Hey Assistant, Computer, Jarvis" }, ref) => {
+export const WakeWordInput = React.forwardRef<
+  HTMLDivElement,
+  WakeWordInputProps
+>(
+  (
+    {
+      value,
+      onValueChange,
+      placeholder = "e.g., Hey Assistant, Computer, Jarvis",
+    },
+    ref
+  ) => {
     return (
       <div ref={ref} className="space-y-2">
         <Label htmlFor="wakeWord">Wake Word</Label>
@@ -339,8 +425,19 @@ export interface CustomInstructionsProps {
   placeholder?: string
 }
 
-export const CustomInstructions = React.forwardRef<HTMLDivElement, CustomInstructionsProps>(
-  ({ value, onValueChange, rows = 4, placeholder = "Add any specific instructions for the AI assistant..." }, ref) => {
+export const CustomInstructions = React.forwardRef<
+  HTMLDivElement,
+  CustomInstructionsProps
+>(
+  (
+    {
+      value,
+      onValueChange,
+      rows = 4,
+      placeholder = "Add any specific instructions for the AI assistant...",
+    },
+    ref
+  ) => {
     return (
       <div ref={ref} className="space-y-2">
         <Label htmlFor="customInstructions">Custom Instructions</Label>
@@ -365,25 +462,26 @@ export interface AutoListenToggleProps {
   onCheckedChange: (checked: boolean) => void
 }
 
-export const AutoListenToggle = React.forwardRef<HTMLDivElement, AutoListenToggleProps>(
-  ({ checked, onCheckedChange }, ref) => {
-    return (
-      <div ref={ref} className="flex items-center justify-between">
-        <div className="space-y-0.5">
-          <Label htmlFor="autoListen">Auto-listen Mode</Label>
-          <p className="text-xs text-muted-foreground">
-            Automatically start listening after each response
-          </p>
-        </div>
-        <Switch
-          id="autoListen"
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-        />
+export const AutoListenToggle = React.forwardRef<
+  HTMLDivElement,
+  AutoListenToggleProps
+>(({ checked, onCheckedChange }, ref) => {
+  return (
+    <div ref={ref} className="flex items-center justify-between">
+      <div className="space-y-0.5">
+        <Label htmlFor="autoListen">Auto-listen Mode</Label>
+        <p className="text-xs text-muted-foreground">
+          Automatically start listening after each response
+        </p>
       </div>
-    )
-  }
-)
+      <Switch
+        id="autoListen"
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+      />
+    </div>
+  )
+})
 AutoListenToggle.displayName = "AutoListenToggle"
 
 export interface NoiseCancellationToggleProps {
@@ -391,25 +489,26 @@ export interface NoiseCancellationToggleProps {
   onCheckedChange: (checked: boolean) => void
 }
 
-export const NoiseCancellationToggle = React.forwardRef<HTMLDivElement, NoiseCancellationToggleProps>(
-  ({ checked, onCheckedChange }, ref) => {
-    return (
-      <div ref={ref} className="flex items-center justify-between">
-        <div className="space-y-0.5">
-          <Label htmlFor="noiseCancellation">Noise Cancellation</Label>
-          <p className="text-xs text-muted-foreground">
-            Filter background noise for clearer recognition
-          </p>
-        </div>
-        <Switch
-          id="noiseCancellation"
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-        />
+export const NoiseCancellationToggle = React.forwardRef<
+  HTMLDivElement,
+  NoiseCancellationToggleProps
+>(({ checked, onCheckedChange }, ref) => {
+  return (
+    <div ref={ref} className="flex items-center justify-between">
+      <div className="space-y-0.5">
+        <Label htmlFor="noiseCancellation">Noise Cancellation</Label>
+        <p className="text-xs text-muted-foreground">
+          Filter background noise for clearer recognition
+        </p>
       </div>
-    )
-  }
-)
+      <Switch
+        id="noiseCancellation"
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+      />
+    </div>
+  )
+})
 NoiseCancellationToggle.displayName = "NoiseCancellationToggle"
 
 // ============================================================================
@@ -428,7 +527,8 @@ export interface AIVoiceSettings {
   noiseCancellation: boolean
 }
 
-export interface AIVoiceSettingsProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIVoiceSettingsProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   settings?: Partial<AIVoiceSettings>
   onSettingsChange?: (settings: AIVoiceSettings) => void
   onSave?: (settings: AIVoiceSettings) => void
@@ -437,7 +537,18 @@ export interface AIVoiceSettingsProps extends React.HTMLAttributes<HTMLDivElemen
 }
 
 const AIVoiceSettings = React.forwardRef<HTMLDivElement, AIVoiceSettingsProps>(
-  ({ className, settings: initialSettings, onSettingsChange, onSave, onReset, onPreview, ...props }, ref) => {
+  (
+    {
+      className,
+      settings: initialSettings,
+      onSettingsChange,
+      onSave,
+      onReset,
+      onPreview,
+      ...props
+    },
+    ref
+  ) => {
     const [settings, setSettings] = React.useState<AIVoiceSettings>({
       voice: initialSettings?.voice || "alloy",
       language: initialSettings?.language || "en-US",
@@ -537,7 +648,11 @@ const AIVoiceSettings = React.forwardRef<HTMLDivElement, AIVoiceSettingsProps>(
                   onValueChange={(value) => updateSetting("pitch", value)}
                 />
                 <Separator />
-                <Button variant="outline" className="w-full" onClick={handlePreview}>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handlePreview}
+                >
                   Preview Voice
                 </Button>
               </CardContent>
@@ -614,6 +729,4 @@ const AIVoiceSettings = React.forwardRef<HTMLDivElement, AIVoiceSettingsProps>(
 
 AIVoiceSettings.displayName = "AIVoiceSettings"
 
-export {
-  AIVoiceSettings,
-}
+export { AIVoiceSettings }

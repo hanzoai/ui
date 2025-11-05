@@ -46,9 +46,10 @@ export default function VoiceInput() {
 ### Voice Chat Interface
 
 ```tsx
-import { AIVoice } from "@/components/ui/ai-voice"
-import { AIChat } from "@/components/ui/ai-chat"
 import { useState } from "react"
+
+import { AIChat } from "@/components/ui/ai-chat"
+import { AIVoice } from "@/components/ui/ai-voice"
 
 export default function VoiceChat() {
   const [messages, setMessages] = useState([])
@@ -116,11 +117,7 @@ const handleCommand = (command: VoiceCommand) => {
   }
 }
 
-<AIVoice
-  onCommand={handleCommand}
-  wakeWord="computer"
-  language="en-US"
-/>
+;<AIVoice onCommand={handleCommand} wakeWord="computer" language="en-US" />
 ```
 
 ### Custom Voice Profiles
@@ -165,15 +162,15 @@ const customVoices: VoiceProfile[] = [
 
 ### AIVoiceProps
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `onTranscript` | `(text: string) => void` | - | Called with transcribed text |
-| `onCommand` | `(command: VoiceCommand) => void` | - | Called when command recognized |
-| `language` | `string` | `"en-US"` | Language code for recognition |
-| `voice` | `VoiceProfile` | Default | Voice profile for synthesis |
-| `wakeWord` | `string` | - | Wake word for hands-free activation |
-| `autoStart` | `boolean` | `false` | Start listening on mount |
-| `className` | `string` | - | Additional CSS classes |
+| Prop           | Type                              | Default   | Description                         |
+| -------------- | --------------------------------- | --------- | ----------------------------------- |
+| `onTranscript` | `(text: string) => void`          | -         | Called with transcribed text        |
+| `onCommand`    | `(command: VoiceCommand) => void` | -         | Called when command recognized      |
+| `language`     | `string`                          | `"en-US"` | Language code for recognition       |
+| `voice`        | `VoiceProfile`                    | Default   | Voice profile for synthesis         |
+| `wakeWord`     | `string`                          | -         | Wake word for hands-free activation |
+| `autoStart`    | `boolean`                         | `false`   | Start listening on mount            |
+| `className`    | `string`                          | -         | Additional CSS classes              |
 
 ### VoiceProfile Interface
 
@@ -342,6 +339,7 @@ Enable hands-free activation with wake words:
 ```
 
 When the wake word is detected:
+
 1. Component activates listening mode
 2. Visual indicator shows it's listening
 3. Processes user's command
@@ -406,11 +404,13 @@ The component includes noise cancellation features:
 ## Browser Support
 
 Requires browsers with:
+
 - Web Audio API support
 - MediaRecorder API support
 - Web Speech API (optional, for basic functionality)
 
 Supported in:
+
 - Chrome 47+
 - Firefox 55+
 - Safari 14.1+
