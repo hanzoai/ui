@@ -90,11 +90,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
-          npm publish --access public --provenance --workspace pkg/ui
-          npm publish --access public --provenance --workspace pkg/auth
-          npm publish --access public --provenance --workspace pkg/commerce
-          npm publish --access public --provenance --workspace pkg/brand
-          npm publish --access public --provenance --workspace pkg/react
+          cd pkg/ui && npm publish --access public && cd ../..
+          cd pkg/auth && npm publish --access public && cd ../..
+          cd pkg/commerce && npm publish --access public && cd ../..
+          cd pkg/brand && npm publish --access public && cd ../..
+          cd pkg/react && npm publish --access public && cd ../..
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -105,44 +105,45 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  deploy-docs:
-    name: Deploy Documentation
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build pkg/ui
-        run: cd pkg/ui && pnpm build
-
-      - name: Build docs site
-        run: cd app && pnpm build
-        env:
-          GITHUB_ACTIONS: true
-          NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './app/out'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+  # Temporarily disabled - app build issues unrelated to package publishing
+  # deploy-docs:
+  #   name: Deploy Documentation
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     pages: write
+  #     id-token: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #
+  #     - uses: pnpm/action-setup@v3
+  #       with:
+  #         version: 9
+  #
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #         cache: 'pnpm'
+  #
+  #     - name: Install dependencies
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Build pkg/ui
+  #       run: cd pkg/ui && pnpm build
+  #
+  #     - name: Build docs site
+  #       run: cd app && pnpm build
+  #       env:
+  #         GITHUB_ACTIONS: true
+  #         NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
+  #
+  #     - name: Upload artifact
+  #       uses: actions/upload-pages-artifact@v3
+  #       with:
+  #         path: './app/out'
+  #
+  #     - name: Deploy to GitHub Pages
+  #       id: deployment
+  #       uses: actions/deploy-pages@v4
