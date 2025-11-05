@@ -119,6 +119,8 @@ jobs:
           npm whoami
 
       - name: Build and publish packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           PACKAGES="${{ steps.determine_packages.outputs.PACKAGES }}"
 
