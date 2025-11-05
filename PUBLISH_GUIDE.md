@@ -14,56 +14,42 @@ All packages updated to support **React 19.2.0**:
 
 ### 1. Automatic Publishing (Tag-based)
 
-#### Publish All Packages
-
-When you push a git tag starting with `v`, all packages will be automatically published:
+When you push a git tag starting with `v` (typically matching @hanzo/ui version), the workflow automatically checks all packages and publishes any with new versions:
 
 ```bash
-# Publish all packages with version 5.2.0
-git tag v5.2.0
-git push origin v5.2.0
+# Tag with @hanzo/ui version (workflow checks all packages)
+git tag v5.1.1
+git push origin v5.1.1
 ```
 
 **What happens:**
-- Tests run (pkg/ui and pkg/react)
-- All 5 packages build
-- Each package checks if its current version already exists on npm
-- Only unpublished versions are published
-- GitHub release created
+1. Tests run (pkg/ui and pkg/react)
+2. All 5 packages build
+3. **Automatic version detection:**
+   - Checks each package's current version in package.json
+   - Queries npm to see if that version already exists
+   - Only publishes packages with new versions not on npm
+4. GitHub release created (only if packages were published)
 
-#### Publish Individual Package
+**Example workflow output:**
+```
+📦 Checking @hanzo/ui@5.1.1
+⏭️  Already published - skipping
 
-To publish a single package, use package-specific tags:
+📦 Checking @hanzo/auth@2.5.5
+🚀 Publishing to npm...
+✅ Successfully published @hanzo/auth@2.5.5
 
-```bash
-# Publish only @hanzo/ui with its current package.json version
-git tag @hanzo/ui-v5.1.2
-git push origin @hanzo/ui-v5.1.2
-
-# Publish only @hanzo/auth
-git tag @hanzo/auth-v2.0.1
-git push origin @hanzo/auth-v2.0.1
-
-# Publish only @hanzo/commerce
-git tag @hanzo/commerce-v3.1.0
-git push origin @hanzo/commerce-v3.1.0
-
-# Publish only @hanzo/brand
-git tag @hanzo/brand-v1.5.0
-git push origin @hanzo/brand-v1.5.0
-
-# Publish only @hanzo/react
-git tag @hanzo/react-v1.0.1
-git push origin @hanzo/react-v1.0.1
+📊 Publishing Summary
+✅ Published: 1 package(s)
+⏭️  Skipped: 4 package(s)
 ```
 
-**Supported tag patterns:**
-- `v*` - Publish all packages
-- `@hanzo/ui-*` - Publish @hanzo/ui only
-- `@hanzo/auth-*` - Publish @hanzo/auth only
-- `@hanzo/commerce-*` - Publish @hanzo/commerce only
-- `@hanzo/brand-*` - Publish @hanzo/brand only
-- `@hanzo/react-*` - Publish @hanzo/react only
+This approach means you:
+- Only need to tag once (with @hanzo/ui version)
+- Don't need to track which packages need publishing
+- Can bump any package version and it auto-publishes on next tag
+- Similar to python-sdk monorepo publishing
 
 **Workflow:** `.github/workflows/publish-on-tag.yml`
 

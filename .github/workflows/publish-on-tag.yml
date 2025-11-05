@@ -3,12 +3,7 @@ name: Publish on Tag
 on:
   push:
     tags:
-      - 'v*'                 # Publish all packages
-      - '@hanzo/ui-*'        # Publish @hanzo/ui only
-      - '@hanzo/auth-*'      # Publish @hanzo/auth only
-      - '@hanzo/commerce-*'  # Publish @hanzo/commerce only
-      - '@hanzo/brand-*'     # Publish @hanzo/brand only
-      - '@hanzo/react-*'     # Publish @hanzo/react only
+      - 'v*'  # Match @hanzo/ui version (e.g., v5.1.1)
 
 jobs:
   test:
@@ -68,48 +63,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Get tag name
-        id: get_tag
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-
-      - name: Determine packages to publish
-        id: determine_packages
+      - name: Build all packages
         run: |
-          TAG="${{ steps.get_tag.outputs.TAG }}"
-          PACKAGES=""
-
-          # Package-specific tags
-          if [[ $TAG == @hanzo/ui-* ]]; then
-            PACKAGES="ui"
-          elif [[ $TAG == @hanzo/auth-* ]]; then
-            PACKAGES="auth"
-          elif [[ $TAG == @hanzo/commerce-* ]]; then
-            PACKAGES="commerce"
-          elif [[ $TAG == @hanzo/brand-* ]]; then
-            PACKAGES="brand"
-          elif [[ $TAG == @hanzo/react-* ]]; then
-            PACKAGES="react"
-          elif [[ $TAG == v* ]]; then
-            # General version tags publish all packages
-            PACKAGES="ui auth commerce brand react"
-          fi
-
-          echo "PACKAGES=$PACKAGES" >> $GITHUB_OUTPUT
-          echo "Publishing packages: $PACKAGES"
-
-      - name: Build packages to publish
-        run: |
-          PACKAGES="${{ steps.determine_packages.outputs.PACKAGES }}"
-
-          if [ -z "$PACKAGES" ]; then
-            echo "No packages to publish for tag ${{ steps.get_tag.outputs.TAG }}"
-            exit 0
-          fi
-
-          for package in $PACKAGES; do
-            echo "Building $package..."
-            cd "pkg/$package" && pnpm build && cd ../..
-          done
+          cd pkg/ui && pnpm build && cd ../..
+          cd pkg/auth && pnpm build && cd ../..
+          cd pkg/commerce && pnpm build && cd ../..
+          cd pkg/brand && pnpm build && cd ../..
+          cd pkg/react && pnpm build && cd ../..
 
       - name: Configure npm authentication
         env:
@@ -118,42 +78,77 @@ jobs:
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
           npm whoami
 
-      - name: Build and publish packages
+      - name: Check and publish packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
-          PACKAGES="${{ steps.determine_packages.outputs.PACKAGES }}"
+          echo "Checking all packages for unpublished versions..."
 
-          if [ -z "$PACKAGES" ]; then
-            echo "No packages to publish"
-            exit 0
-          fi
+          PUBLISHED_COUNT=0
+          SKIPPED_COUNT=0
+          PUBLISHED_PACKAGES=""
 
-          for package in $PACKAGES; do
-            echo "Publishing $package..."
+          for package in ui auth commerce brand react; do
             cd "pkg/$package"
 
-            # Get current version from package.json
             CURRENT_VERSION=$(node -p "require('./package.json').version")
             PACKAGE_NAME=$(node -p "require('./package.json').name")
 
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📦 Checking $PACKAGE_NAME@$CURRENT_VERSION"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
             # Check if this version already exists on npm
             if npm view "$PACKAGE_NAME@$CURRENT_VERSION" version 2>/dev/null; then
-              echo "⚠️  $PACKAGE_NAME@$CURRENT_VERSION already published, skipping..."
+              echo "⏭️  Already published - skipping"
+              SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
             else
-              echo "✅ Publishing $PACKAGE_NAME@$CURRENT_VERSION..."
+              echo "🚀 Publishing to npm..."
               npm publish --access public
-              echo "✨ Successfully published $PACKAGE_NAME@$CURRENT_VERSION"
+              echo "✅ Successfully published $PACKAGE_NAME@$CURRENT_VERSION"
+              PUBLISHED_COUNT=$((PUBLISHED_COUNT + 1))
+              PUBLISHED_PACKAGES="$PUBLISHED_PACKAGES
+- $PACKAGE_NAME@$CURRENT_VERSION"
             fi
 
             cd ../..
           done
 
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📊 Publishing Summary"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Published: $PUBLISHED_COUNT package(s)"
+          echo "⏭️  Skipped: $SKIPPED_COUNT package(s)"
+
+          if [ $PUBLISHED_COUNT -gt 0 ]; then
+            echo ""
+            echo "Published packages:$PUBLISHED_PACKAGES"
+          fi
+
+          # Save for GitHub release notes
+          echo "PUBLISHED_COUNT=$PUBLISHED_COUNT" >> $GITHUB_ENV
+          echo "PUBLISHED_PACKAGES<<EOF" >> $GITHUB_ENV
+          echo "$PUBLISHED_PACKAGES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Create GitHub Release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: env.PUBLISHED_COUNT > 0
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
+          body: |
+            ## 📦 NPM Packages Published
+
+            ${{ env.PUBLISHED_PACKAGES }}
+
+            ### Installation
+
+            ```bash
+            # Install latest versions
+            npm install @hanzo/ui @hanzo/auth @hanzo/commerce @hanzo/brand @hanzo/react
+            ```
           files: |
             CHANGELOG.md
         env:
