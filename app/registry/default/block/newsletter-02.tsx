@@ -13,7 +13,7 @@ export default function NewsletterBlock() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     setIsSubscribed(true)
     setIsSubmitting(false)
     setEmail("")
@@ -45,7 +45,11 @@ export default function NewsletterBlock() {
               disabled={isSubmitting || isSubscribed}
               className="min-w-[120px]"
             >
-              {isSubmitting ? "Subscribing..." : isSubscribed ? "Subscribed! ✓" : "Subscribe"}
+              {isSubmitting
+                ? "Subscribing..."
+                : isSubscribed
+                  ? "Subscribed! ✓"
+                  : "Subscribe"}
             </Button>
           </div>
           {isSubscribed && (

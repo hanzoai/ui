@@ -38,7 +38,10 @@ export default function BlockPhotoGrid01() {
     <section className="container px-4 py-24 mx-auto">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {photos.map((photo) => (
-          <div key={photo.id} className="aspect-square overflow-hidden rounded-lg sm:aspect-[3/2]">
+          <div
+            key={photo.id}
+            className="aspect-square overflow-hidden rounded-lg sm:aspect-[3/2]"
+          >
             <img
               src={photo.src}
               alt={photo.alt}

@@ -32,7 +32,8 @@ const posts: BlogPost[] = [
     title: "The Future of AI",
     excerpt:
       "Exploring the latest developments in artificial intelligence and machine learning technologies.",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop",
     views: "2.4K",
     comments: 12,
   },
@@ -42,7 +43,8 @@ const posts: BlogPost[] = [
     title: "Modern UI Patterns",
     excerpt:
       "Discover the trending design patterns that are shaping modern user interfaces.",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=600&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=600&fit=crop",
     views: "1.8K",
     comments: 8,
   },
@@ -52,7 +54,8 @@ const posts: BlogPost[] = [
     title: "Building Scalable Apps",
     excerpt:
       "Best practices for creating applications that scale efficiently with your user base.",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop",
     views: "3.1K",
     comments: 15,
   },

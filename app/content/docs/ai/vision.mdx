@@ -120,8 +120,9 @@ const textDetections = [
 ### Complete Vision Pipeline
 
 ```tsx
-import { AIVision } from "@/components/ui/ai-vision"
 import { useState } from "react"
+
+import { AIVision } from "@/components/ui/ai-vision"
 
 export default function VisionPipeline() {
   const [results, setResults] = useState(null)
@@ -235,21 +236,21 @@ interface FaceDetection {
 
 ### AIVisionProps
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `imageUrl` | `string` | - | URL of image to analyze |
-| `onAnalyze` | `(file: File, capabilities: VisionCapability[]) => Promise<any>` | - | Called when analyzing image |
-| `capabilities` | `VisionCapability[]` | All | Enabled vision capabilities |
-| `detectedObjects` | `BoundingBox[]` | `[]` | Objects detected in image |
-| `detectedText` | `DetectedText[]` | `[]` | Text detected via OCR |
-| `detectedFaces` | `FaceDetection[]` | `[]` | Faces detected in image |
-| `colorPalette` | `ColorPalette[]` | `[]` | Dominant colors extracted |
-| `description` | `string` | - | Scene description |
-| `tags` | `string[]` | `[]` | Image tags/categories |
-| `sentiment` | `string` | - | Sentiment analysis result |
-| `isLoading` | `boolean` | `false` | Show loading state |
-| `showConfidence` | `boolean` | `true` | Display confidence scores |
-| `highlightText` | `boolean` | `true` | Highlight detected text |
+| Prop              | Type                                                             | Default | Description                 |
+| ----------------- | ---------------------------------------------------------------- | ------- | --------------------------- |
+| `imageUrl`        | `string`                                                         | -       | URL of image to analyze     |
+| `onAnalyze`       | `(file: File, capabilities: VisionCapability[]) => Promise<any>` | -       | Called when analyzing image |
+| `capabilities`    | `VisionCapability[]`                                             | All     | Enabled vision capabilities |
+| `detectedObjects` | `BoundingBox[]`                                                  | `[]`    | Objects detected in image   |
+| `detectedText`    | `DetectedText[]`                                                 | `[]`    | Text detected via OCR       |
+| `detectedFaces`   | `FaceDetection[]`                                                | `[]`    | Faces detected in image     |
+| `colorPalette`    | `ColorPalette[]`                                                 | `[]`    | Dominant colors extracted   |
+| `description`     | `string`                                                         | -       | Scene description           |
+| `tags`            | `string[]`                                                       | `[]`    | Image tags/categories       |
+| `sentiment`       | `string`                                                         | -       | Sentiment analysis result   |
+| `isLoading`       | `boolean`                                                        | `false` | Show loading state          |
+| `showConfidence`  | `boolean`                                                        | `true`  | Display confidence scores   |
+| `highlightText`   | `boolean`                                                        | `true`  | Highlight detected text     |
 
 ### VisionCapability Type
 

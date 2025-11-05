@@ -20,7 +20,7 @@ declare const SheetOverlay: React.ForwardRefExoticComponent<
 declare const sheetVariants: (
   props?:
     | ({
-        side?: "top" | "bottom" | "left" | "right" | null | undefined
+        side?: "left" | "right" | "top" | "bottom" | null | undefined
       } & import("class-variance-authority/types").ClassProp)
     | undefined
 ) => string
@@ -34,14 +34,14 @@ declare const SheetHeader: {
   ({
     className,
     ...props
-  }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element
+  }: React.HTMLAttributes<HTMLDivElement>): import("react/jsx-runtime").JSX.Element
   displayName: string
 }
 declare const SheetFooter: {
   ({
     className,
     ...props
-  }: React.HTMLAttributes<HTMLDivElement>): React.JSX.Element
+  }: React.HTMLAttributes<HTMLDivElement>): import("react/jsx-runtime").JSX.Element
   displayName: string
 }
 declare const SheetTitle: React.ForwardRefExoticComponent<
