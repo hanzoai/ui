@@ -14,10 +14,12 @@ All packages updated to support **React 19.2.0**:
 
 ### 1. Automatic Publishing (Tag-based)
 
+#### Publish All Packages
+
 When you push a git tag starting with `v`, all packages will be automatically published:
 
 ```bash
-# Bump version and create tag
+# Publish all packages with version 5.2.0
 git tag v5.2.0
 git push origin v5.2.0
 ```
@@ -25,10 +27,43 @@ git push origin v5.2.0
 **What happens:**
 - Tests run (pkg/ui and pkg/react)
 - All 5 packages build
-- Versions updated to match tag
-- All packages published to npm
+- Each package checks if its current version already exists on npm
+- Only unpublished versions are published
 - GitHub release created
-- Docs deployed to GitHub Pages
+
+#### Publish Individual Package
+
+To publish a single package, use package-specific tags:
+
+```bash
+# Publish only @hanzo/ui with its current package.json version
+git tag @hanzo/ui-v5.1.2
+git push origin @hanzo/ui-v5.1.2
+
+# Publish only @hanzo/auth
+git tag @hanzo/auth-v2.0.1
+git push origin @hanzo/auth-v2.0.1
+
+# Publish only @hanzo/commerce
+git tag @hanzo/commerce-v3.1.0
+git push origin @hanzo/commerce-v3.1.0
+
+# Publish only @hanzo/brand
+git tag @hanzo/brand-v1.5.0
+git push origin @hanzo/brand-v1.5.0
+
+# Publish only @hanzo/react
+git tag @hanzo/react-v1.0.1
+git push origin @hanzo/react-v1.0.1
+```
+
+**Supported tag patterns:**
+- `v*` - Publish all packages
+- `@hanzo/ui-*` - Publish @hanzo/ui only
+- `@hanzo/auth-*` - Publish @hanzo/auth only
+- `@hanzo/commerce-*` - Publish @hanzo/commerce only
+- `@hanzo/brand-*` - Publish @hanzo/brand only
+- `@hanzo/react-*` - Publish @hanzo/react only
 
 **Workflow:** `.github/workflows/publish-on-tag.yml`
 
