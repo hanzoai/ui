@@ -134,7 +134,7 @@ jobs:
           echo "EOF" >> $GITHUB_ENV
 
       - name: Create GitHub Release
-        if: env.PUBLISHED_COUNT > 0
+        if: ${{ env.PUBLISHED_COUNT > 0 }}
         uses: softprops/action-gh-release@v1
         with:
           generate_release_notes: true
