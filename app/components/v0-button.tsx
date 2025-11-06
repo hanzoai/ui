@@ -77,7 +77,7 @@ export function HanzoLogo({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("h-5 w-5 text-current", className)}
+      className={cn("h-5 w-5", className)}
       {...props}
     >
       <text
@@ -87,7 +87,7 @@ export function HanzoLogo({
         textAnchor="middle"
         fontSize="16"
         fontWeight="bold"
-        fill="currentColor"
+        fill="#000000"
       >
         H
       </text>

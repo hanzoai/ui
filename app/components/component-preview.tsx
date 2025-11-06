@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import Image from "next/image"
 import { Index } from "@/__registry__"
@@ -103,7 +105,27 @@ export function ComponentPreview({
     return <Component />
   }, [Component])
 
+  // Fetch code from registry JSON if not provided as children
+  const [registryCode, setRegistryCode] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    // Only fetch if no children were provided
+    if (!Code) {
+      fetch(`/registry/styles/${activeStyle}/${name}.json`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data?.files?.[0]?.content) {
+            setRegistryCode(data.files[0].content)
+          }
+        })
+        .catch(() => {
+          // Silently fail - component will still render preview
+        })
+    }
+  }, [activeStyle, name, Code])
+
   const codeString = React.useMemo(() => {
+    // First try to get code from MDX children (backward compatibility)
     const codeProps = Code?.props as CodeBlockProps | undefined
     if (
       typeof codeProps?.["data-rehype-pretty-code-fragment"] !== "undefined"
@@ -112,9 +134,13 @@ export function ComponentPreview({
         codeProps.children
       ) as React.ReactElement[]
       const buttonProps = Button?.props as CodeButtonProps | undefined
-      return buttonProps?.value || buttonProps?.__rawString__ || null
+      const childrenCode = buttonProps?.value || buttonProps?.__rawString__ || null
+      if (childrenCode) return childrenCode
     }
-  }, [Code])
+
+    // Fall back to registry code
+    return registryCode
+  }, [Code, registryCode])
 
   return (
     <div
@@ -188,7 +214,11 @@ export function ComponentPreview({
         <TabsContent value="code">
           <div className="flex flex-col space-y-4">
             <div className="w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
-              {Code}
+              {Code || (codeString && (
+                <pre className="overflow-x-auto rounded-lg border bg-zinc-950 p-4 dark:bg-zinc-900">
+                  <code className="text-sm text-zinc-50">{codeString}</code>
+                </pre>
+              ))}
             </div>
           </div>
         </TabsContent>

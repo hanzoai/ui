@@ -63,15 +63,15 @@ export default function EnhancedBuilder() {
 
   React.useEffect(() => {
     // Get blocks from registry
-    const blockIds = Object.keys(Index).filter((key) => {
-      const item = Index[key]
+    const blockIds = Object.keys(Index.default || {}).filter((key) => {
+      const item = Index.default[key]
       return item?.type === "components:block"
     })
     setBlocks(blockIds.sort())
 
     // Get UI components from registry
-    const componentIds = Object.keys(Index).filter((key) => {
-      const item = Index[key]
+    const componentIds = Object.keys(Index.default || {}).filter((key) => {
+      const item = Index.default[key]
       return item?.type === "components:ui"
     })
     setComponents(componentIds.sort())

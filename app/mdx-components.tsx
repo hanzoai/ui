@@ -216,7 +216,7 @@ export const mdxComponents: MDXComponents = {
   }: React.ComponentProps<typeof TabsList>) => (
     <TabsList
       className={cn(
-        "w-full justify-start rounded-none border-b bg-transparent p-0",
+        "h-10 w-full justify-start rounded-none border-b bg-transparent p-0",
         className
       )}
       {...props}
@@ -228,7 +228,7 @@ export const mdxComponents: MDXComponents = {
   }: React.ComponentProps<typeof TabsTrigger>) => (
     <TabsTrigger
       className={cn(
-        "relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none",
+        "relative rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-colors data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none",
         className
       )}
       {...props}
@@ -240,7 +240,7 @@ export const mdxComponents: MDXComponents = {
   }: React.ComponentProps<typeof TabsContent>) => (
     <TabsContent
       className={cn(
-        "relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-semibold",
+        "relative mt-2 [&_h3.font-heading]:text-base [&_h3.font-heading]:font-semibold",
         className
       )}
       {...props}

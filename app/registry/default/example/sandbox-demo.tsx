@@ -1,12 +1,15 @@
+import { Sandbox } from "@/registry/default/ui/sandbox"
+
 export default function SandboxDemo() {
+  const sampleCode = `// Simple JavaScript calculator
+const add = (a, b) => a + b
+const result = add(5, 3)
+console.log("5 + 3 =", result)
+result`
+
   return (
-    <div className="flex min-h-[400px] items-center justify-center p-8">
-      <div className="text-center space-y-2">
-        <p className="text-muted-foreground">Sandbox component coming soon</p>
-        <p className="text-sm text-muted-foreground">
-          This component is planned for a future release
-        </p>
-      </div>
+    <div className="w-full max-w-3xl">
+      <Sandbox code={sampleCode} language="javascript" editable />
     </div>
   )
 }
