@@ -1,1 +1,1 @@
-export * from '../../../app/registry/new-york/ui/button'
+export * from '../../../app/registry/default/ui/button'

@@ -494,10 +494,19 @@ Per user feedback: "don't suppress errors just do shit right or cover up things"
 - **Note**: These warnings also appear in shadcn/ui v4, suggesting they may be framework-level issues
 - **Action**: Can investigate if desired, but not critical since pages work perfectly
 
-**3. Tabs Hydration Issues** (FIXED):
+**3. Tabs Hydration Issues** ✅ FIXED:
 - **Was**: Tabs component had hydration errors due to SSR/client mismatch
 - **Fix**: Updated `registry/default/ui/tabs.tsx` with proper refs and display names
 - **Status**: ✅ RESOLVED
+
+**4. macOS Dock Demo SSR Error** ✅ FIXED (2025-11-06):
+- **Was**: Build error "Event handlers cannot be passed to Client Component props" on `/view/new-york/macos-dock-demo`
+- **Root Cause**: `macos-dock-demo` component has onClick event handlers on DockItem components. During static prerendering with `force-static`, Next.js tries to serialize props but can't serialize functions.
+- **Fix**: Added component to skip list in `generateStaticParams()` in `app/(view)/view/[name]/page.tsx`
+  - Components with event handlers that can't be serialized are excluded from static generation
+  - They can still be accessed dynamically at runtime
+- **Result**: ✅ Build completes successfully, no SSR errors
+- **Note**: Component works perfectly in dev mode and at runtime, just skips static prerendering
 
 ### Testing Coverage
 
