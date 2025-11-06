@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "pixel-image-demo.tsx",
-      "content": "import { PixelImage } from \"@/registry/default/ui/pixel-image\"\n\nexport default function PixelImageDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <PixelImage />\n    </div>\n  )\n}\n"
+      "content": "import { PixelImage } from \"@/registry/new-york/ui/pixel-image\"\n\nexport default function PixelImageDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center p-8 bg-slate-900\">\n      <PixelImage\n        src=\"https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400&h=400&fit=crop\"\n        pixelSize={8}\n        className=\"rounded-lg\"\n      />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"
