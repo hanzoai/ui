@@ -3,9 +3,9 @@
 import * as React from "react"
 import { addDays } from "date-fns"
 
-import { Button } from "@/registry/new-york/ui/button"
-import { Calendar } from "@/registry/new-york/ui/calendar"
-import { Card, CardContent, CardFooter } from "@/registry/new-york/ui/card"
+import { Button } from "@/registry/default/ui/button"
+import { Calendar } from "@/registry/default/ui/calendar"
+import { Card, CardContent, CardFooter } from "@/registry/default/ui/card"
 
 export default function Calendar19() {
   const [date, setDate] = React.useState<Date | undefined>(

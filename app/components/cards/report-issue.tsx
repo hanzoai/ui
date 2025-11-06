@@ -2,24 +2,24 @@
 
 import * as React from "react"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
-import { Field, FieldGroup, FieldLabel } from "@/registry/new-york/ui/field"
-import { Input } from "@/registry/new-york/ui/input"
+} from "@/registry/default/ui/card"
+import { Field, FieldGroup, FieldLabel } from "@/registry/default/ui/field"
+import { Input } from "@/registry/default/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york/ui/select"
-import { Textarea } from "@/registry/new-york/ui/textarea"
+} from "@/registry/default/ui/select"
+import { Textarea } from "@/registry/default/ui/textarea"
 
 export function CardsReportIssue() {
   const id = React.useId()

@@ -16,20 +16,20 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Input } from "@/registry/new-york/ui/input"
+import { Input } from "@/registry/default/ui/input"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/registry/new-york/ui/resizable"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/resizable"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
-import { TooltipProvider } from "@/registry/new-york/ui/tooltip"
+} from "@/registry/default/ui/tabs"
+import { TooltipProvider } from "@/registry/default/ui/tooltip"
 import { AccountSwitcher } from "@/app/(app)/examples/mail/components/account-switcher"
 import { MailDisplay } from "@/app/(app)/examples/mail/components/mail-display"
 import { MailList } from "@/app/(app)/examples/mail/components/mail-list"

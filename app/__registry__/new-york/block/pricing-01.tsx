@@ -2,8 +2,8 @@
 
 import { Check } from "lucide-react"
 
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 
 export const description =
   "A pricing table with three tiers: Free, Pro, and Enterprise. Each tier displays features and a call-to-action button."

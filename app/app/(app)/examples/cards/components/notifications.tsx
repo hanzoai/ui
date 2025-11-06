@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 
 export function DemoNotifications() {
   return (

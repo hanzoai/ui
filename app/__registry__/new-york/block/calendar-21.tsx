@@ -4,8 +4,8 @@ import * as React from "react"
 import { DateRange } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/registry/new-york/ui/button"
-import { Calendar } from "@/registry/new-york/ui/calendar"
+import { buttonVariants } from "@/registry/default/ui/button"
+import { Calendar } from "@/registry/default/ui/calendar"
 
 export default function Calendar21() {
   const [range, setRange] = React.useState<DateRange | undefined>({

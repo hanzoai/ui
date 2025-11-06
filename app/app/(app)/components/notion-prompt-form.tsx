@@ -17,8 +17,8 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Badge } from "@/registry/new-york/ui/badge"
+} from "@/registry/default/ui/avatar"
+import { Badge } from "@/registry/default/ui/badge"
 import {
   Command,
   CommandEmpty,
@@ -26,7 +26,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/new-york/ui/command"
+} from "@/registry/default/ui/command"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -39,25 +39,25 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Field, FieldLabel } from "@/registry/new-york/ui/field"
+} from "@/registry/default/ui/dropdown-menu"
+import { Field, FieldLabel } from "@/registry/default/ui/field"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupTextarea,
-} from "@/registry/new-york/ui/input-group"
+} from "@/registry/default/ui/input-group"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
-import { Switch } from "@/registry/new-york/ui/switch"
+} from "@/registry/default/ui/popover"
+import { Switch } from "@/registry/default/ui/switch"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/registry/new-york/ui/tooltip"
+} from "@/registry/default/ui/tooltip"
 
 const SAMPLE_DATA = {
   mentionable: [

@@ -10,7 +10,7 @@ import { useThemeConfig } from "@/components/active-theme"
 import { copyToClipboardWithMeta } from "@/components/copy-button"
 import { Icons } from "@/components/icons"
 import { BaseColor, baseColors, baseColorsOKLCH } from "@/registry/base-colors"
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/registry/new-york/ui/dialog"
+} from "@/registry/default/ui/dialog"
 import {
   Drawer,
   DrawerContent,
@@ -26,9 +26,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/registry/new-york/ui/drawer"
-import { Label } from "@/registry/new-york/ui/label"
-import { ScrollArea, ScrollBar } from "@/registry/new-york/ui/scroll-area"
+} from "@/registry/default/ui/drawer"
+import { Label } from "@/registry/default/ui/label"
+import { ScrollArea, ScrollBar } from "@/registry/default/ui/scroll-area"
 import {
   Select,
   SelectContent,
@@ -36,13 +36,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york/ui/select"
+} from "@/registry/default/ui/select"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/tabs"
 
 interface BaseColorOKLCH {
   light: Record<string, string>

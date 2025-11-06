@@ -1,16 +1,16 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
-import { Card, CardContent } from "@/registry/new-york/ui/card"
+import { Button } from "@/registry/default/ui/button"
+import { Card, CardContent } from "@/registry/default/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/registry/new-york/ui/field"
-import { Input } from "@/registry/new-york/ui/input"
+} from "@/registry/default/ui/field"
+import { Input } from "@/registry/default/ui/input"
 
 export default function SignupPage() {
   return (
