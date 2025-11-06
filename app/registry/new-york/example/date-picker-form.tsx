@@ -27,7 +27,7 @@ import { toast } from "@/registry/default/ui/use-toast"
 
 const FormSchema = z.object({
   dob: z.date({
-    required_error: "A date of birth is required.",
+    message: "A date of birth is required.",
   }),
 })
 
