@@ -58,6 +58,10 @@ QWEN.md
 app/out
 app/.source
 
+# test artifacts
+tests/reports/
+tests/artifacts/
+
 # block screenshots (generated at build time)
 app/public/r/styles/*/
 
