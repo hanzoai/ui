@@ -36,11 +36,11 @@ import * as React from "react"
 export const Index: Record<string, any> = {
 `
 
-  for (const style of styles) {
-    index += `  "${style.name}": {`
+  // Only build for "default" style (single theme system)
+  const style = { name: "default" }
 
-    // Build style index.
-    for (const item of registry) {
+  // Build component index
+  for (const item of registry) {
       const resolveFiles = item.files.map(
         (file) => `registry/${style.name}/${file}`
       )
@@ -240,10 +240,6 @@ export const Index: Record<string, any> = {
       }`
       )}]
     },`
-    }
-
-    index += `
-  },`
   }
 
   index += `
@@ -270,18 +266,19 @@ export const Index: Record<string, any> = {
 }
 
 // ----------------------------------------------------------------------------
-// Build registry/styles/[style]/[name].json.
+// Build registry/styles/default/[name].json.
 // ----------------------------------------------------------------------------
 async function buildStyles(registry: Registry) {
-  for (const style of styles) {
-    const targetPath = path.join(REGISTRY_PATH, "styles", style.name)
+  // Only build for "default" style (single theme system)
+  const style = { name: "default" }
+  const targetPath = path.join(REGISTRY_PATH, "styles", style.name)
 
-    // Create directory if it doesn't exist.
-    if (!existsSync(targetPath)) {
-      await fs.mkdir(targetPath, { recursive: true })
-    }
+  // Create directory if it doesn't exist.
+  if (!existsSync(targetPath)) {
+    await fs.mkdir(targetPath, { recursive: true })
+  }
 
-    for (const item of registry) {
+  for (const item of registry) {
       // Include all component types (ui, ai, 3d, animation, code, etc.)
       if (!item.type?.startsWith("components:")) {
         continue
@@ -318,7 +315,6 @@ async function buildStyles(registry: Registry) {
         JSON.stringify(payload, null, 2),
         "utf8"
       )
-    }
   }
 
   // ----------------------------------------------------------------------------
