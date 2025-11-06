@@ -28,7 +28,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/registry/new-york/ui/sidebar"
+} from "@/registry/default/ui/sidebar"
 import { NavDocuments } from "@/app/(app)/examples/dashboard/components/nav-documents"
 import { NavMain } from "@/app/(app)/examples/dashboard/components/nav-main"
 import { NavSecondary } from "@/app/(app)/examples/dashboard/components/nav-secondary"

@@ -12,8 +12,8 @@ import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { Web3Provider } from "@/components/web3-provider"
 import { Toaster as DefaultToaster } from "@/registry/default/ui/toaster"
-import { Toaster as NewYorkSonner } from "@/registry/new-york/ui/sonner"
-import { Toaster as NewYorkToaster } from "@/registry/new-york/ui/toaster"
+import { Toaster as NewYorkSonner } from "@/registry/default/ui/sonner"
+import { Toaster as NewYorkToaster } from "@/registry/default/ui/toaster"
 
 export const metadata: Metadata = {
   title: {

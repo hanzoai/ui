@@ -21,20 +21,20 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/registry/new-york/ui/accordion"
+} from "@/registry/default/ui/accordion"
 import {
   Alert,
   AlertDescription,
   AlertTitle,
-} from "@/registry/new-york/ui/alert"
-import { AspectRatio } from "@/registry/new-york/ui/aspect-ratio"
-import { Kbd } from "@/registry/new-york/ui/kbd"
+} from "@/registry/default/ui/alert"
+import { AspectRatio } from "@/registry/default/ui/aspect-ratio"
+import { Kbd } from "@/registry/default/ui/kbd"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/tabs"
 
 export const mdxComponents: MDXComponents = {
   ...defaultComponents,

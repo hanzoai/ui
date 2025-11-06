@@ -4,16 +4,16 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/avatar"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
-import { Input } from "@/registry/new-york/ui/input"
+} from "@/registry/default/ui/card"
+import { Input } from "@/registry/default/ui/input"
 import {
   Item,
   ItemActions,
@@ -21,16 +21,16 @@ import {
   ItemDescription,
   ItemGroup,
   ItemTitle,
-} from "@/registry/new-york/ui/item"
-import { Label } from "@/registry/new-york/ui/label"
+} from "@/registry/default/ui/item"
+import { Label } from "@/registry/default/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york/ui/select"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/select"
+import { Separator } from "@/registry/default/ui/separator"
 
 const people = [
   {

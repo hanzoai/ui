@@ -14,22 +14,22 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/breadcrumb"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/dropdown-menu"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -45,7 +45,7 @@ import {
   SidebarRail,
   SidebarTrigger,
   useSidebar,
-} from "@/registry/new-york/ui/sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (

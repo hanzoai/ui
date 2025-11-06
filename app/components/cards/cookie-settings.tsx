@@ -1,20 +1,20 @@
 "use client"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
-} from "@/registry/new-york/ui/field"
-import { Switch } from "@/registry/new-york/ui/switch"
+} from "@/registry/default/ui/field"
+import { Switch } from "@/registry/default/ui/switch"
 
 export function CardsCookieSettings() {
   return (

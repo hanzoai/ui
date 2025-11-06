@@ -10,14 +10,14 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
+} from "@/registry/default/ui/breadcrumb"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/registry/new-york/ui/collapsible"
-import { Label } from "@/registry/new-york/ui/label"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/collapsible"
+import { Label } from "@/registry/default/ui/label"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -35,7 +35,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from "@/registry/new-york/ui/sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (

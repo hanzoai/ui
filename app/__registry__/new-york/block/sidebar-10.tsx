@@ -39,13 +39,13 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from "@/registry/new-york/ui/breadcrumb"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/breadcrumb"
+import { Button } from "@/registry/default/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/registry/new-york/ui/collapsible"
+} from "@/registry/default/ui/collapsible"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,13 +54,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
+} from "@/registry/default/ui/dropdown-menu"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/popover"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -81,7 +81,7 @@ import {
   SidebarRail,
   SidebarTrigger,
   useSidebar,
-} from "@/registry/new-york/ui/sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (

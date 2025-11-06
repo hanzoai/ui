@@ -10,15 +10,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/registry/new-york/ui/breadcrumb"
+} from "@/registry/default/ui/breadcrumb"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/registry/new-york/ui/dropdown-menu"
-import { Label } from "@/registry/new-york/ui/label"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/dropdown-menu"
+import { Label } from "@/registry/default/ui/label"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Sidebar,
   SidebarContent,
@@ -34,7 +34,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from "@/registry/new-york/ui/sidebar"
+} from "@/registry/default/ui/sidebar"
 
 export default function Page() {
   return (

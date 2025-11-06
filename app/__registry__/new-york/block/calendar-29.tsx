@@ -4,15 +4,15 @@ import * as React from "react"
 // import { parseDate } from "chrono-node" - temporarily disabled
 import { CalendarIcon } from "lucide-react"
 
-import { Button } from "@/registry/new-york/ui/button"
-import { Calendar } from "@/registry/new-york/ui/calendar"
-import { Input } from "@/registry/new-york/ui/input"
-import { Label } from "@/registry/new-york/ui/label"
+import { Button } from "@/registry/default/ui/button"
+import { Calendar } from "@/registry/default/ui/calendar"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/default/ui/popover"
 
 function formatDate(date: Date | undefined) {
   if (!date) {
