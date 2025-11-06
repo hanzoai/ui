@@ -3,7 +3,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Check, Copy, FileText, Maximize2, Minimize2 } from "lucide-react"
-import { codeToHtml } from "shiki"
+import { bundledLanguages, codeToHtml } from "shiki"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/registry/default/ui/badge"
@@ -99,8 +99,11 @@ const CodeSnippet = React.forwardRef<HTMLDivElement, CodeSnippetProps>(
       const highlightCode = async () => {
         setIsLoading(true)
         try {
+          // Check if language is supported
+          const supportedLang = Object.keys(bundledLanguages).includes(language)
+
           const highlighted = await codeToHtml(code, {
-            lang: language,
+            lang: supportedLang ? language : "text",
             theme: themeMap[theme || "dark"],
           })
 
@@ -111,7 +114,12 @@ const CodeSnippet = React.forwardRef<HTMLDivElement, CodeSnippetProps>(
           setHighlightedCode(codeElement?.innerHTML || highlighted)
         } catch (error) {
           console.error("Failed to highlight code:", error)
-          setHighlightedCode(code)
+          // Fallback to plain text with basic HTML escaping
+          const escaped = code
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+          setHighlightedCode(escaped)
         } finally {
           setIsLoading(false)
         }
