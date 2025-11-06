@@ -21,9 +21,7 @@ import { Switch } from "@/registry/new-york/ui/switch"
 import { toast } from "@/registry/new-york/ui/use-toast"
 
 const notificationsFormSchema = z.object({
-  type: z.enum(["all", "mentions", "none"], {
-    required_error: "You need to select a notification type.",
-  }),
+  type: z.enum(["all", "mentions", "none"], { message: "You need to select a notification type." }),
   mobile: z.boolean().default(false).optional(),
   communication_emails: z.boolean().default(false).optional(),
   social_emails: z.boolean().default(false).optional(),

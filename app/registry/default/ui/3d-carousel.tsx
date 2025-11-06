@@ -48,7 +48,7 @@ const Carousel3D = React.forwardRef<HTMLDivElement, Carousel3DProps>(
     const [isDragging, setIsDragging] = React.useState(false)
     const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 })
     const [dragOffset, setDragOffset] = React.useState(0)
-    const autoRotateRef = React.useRef<NodeJS.Timeout>()
+    const autoRotateRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
 
     const totalItems = items.length
     const radius = (itemWidth + spacing) / 2 / Math.tan(Math.PI / totalItems)

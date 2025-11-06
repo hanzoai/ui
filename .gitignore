@@ -58,3 +58,6 @@ QWEN.md
 app/out
 app/.source
 
+# block screenshots (generated at build time)
+app/public/r/styles/*/
+

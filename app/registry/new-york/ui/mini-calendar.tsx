@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york/ui/button"
 
 export interface MiniCalendarProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
   selected?: Date
   onSelect?: (date: Date) => void
   month?: Date

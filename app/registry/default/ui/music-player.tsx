@@ -69,7 +69,7 @@ export function MusicPlayer({
 
   const audioRef = React.useRef<HTMLAudioElement | null>(null)
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
-  const animationRef = React.useRef<number>()
+  const animationRef = React.useRef<number | undefined>(undefined)
 
   const currentTrack = tracks[currentTrackIndex]
 

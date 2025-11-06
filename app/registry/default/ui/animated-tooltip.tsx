@@ -1,11 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { AnimatePresence, motion } from "motion"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
-interface AnimatedTooltipProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AnimatedTooltipProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "content"> {
   content: React.ReactNode
   children: React.ReactNode
   delay?: number

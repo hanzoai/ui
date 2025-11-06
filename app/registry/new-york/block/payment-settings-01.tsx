@@ -1,6 +1,6 @@
 "use client"
 
-import { PaymentMethodManager, type PaymentMethod } from "@hanzo/ui/billing"
+import { PaymentMethodManager, type PaymentMethod } from "@/registry/new-york/ui/billing"
 
 export const description =
   "Payment method management interface for adding, removing, and setting default payment methods."
@@ -68,13 +68,13 @@ export default function PaymentSettings01() {
         // Use demo mode (no API endpoint)
         initialMethods={demoPaymentMethods}
         // Callbacks for demo
-        onMethodAdded={(method) => {
+        onMethodAdded={(method: any) => {
           console.log("Payment method added:", method)
         }}
-        onMethodRemoved={(id) => {
+        onMethodRemoved={(id: string) => {
           console.log("Payment method removed:", id)
         }}
-        onDefaultChanged={(id) => {
+        onDefaultChanged={(id: string) => {
           console.log("Default payment method changed to:", id)
         }}
       />
