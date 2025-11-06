@@ -13,19 +13,17 @@ export async function highlightCode(code: string) {
   }
 
   try {
-    const { getHighlighter } = await import("shiki")
+    const { createHighlighter } = await import("shiki")
 
     const editorTheme = await fs.readFile(
       path.join(process.cwd(), "lib/themes/dark.json"),
       "utf-8"
     )
 
-    const highlighter = await getHighlighter({
+    const highlighter = await createHighlighter({
       langs: ["typescript"],
-      themes: [],
+      themes: [JSON.parse(editorTheme)],
     })
-
-    await highlighter.loadTheme(JSON.parse(editorTheme))
 
     const html = await highlighter.codeToHtml(code, {
       lang: "typescript",

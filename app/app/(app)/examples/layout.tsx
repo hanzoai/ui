@@ -23,7 +23,7 @@ interface ExamplesLayoutProps {
 
 function ExamplesLayoutContent({ children }: ExamplesLayoutProps) {
   const searchParams = useSearchParams()
-  const isEmbedded = searchParams.get("embedded") === "true"
+  const isEmbedded = searchParams?.get("embedded") === "true"
 
   // If embedded, just show the content without header
   if (isEmbedded) {

@@ -6,7 +6,7 @@ import {
   type Subscription,
   type SubscriptionHistory,
   type SubscriptionPlan,
-} from "@hanzo/ui/billing"
+} from "@/registry/new-york/ui/billing"
 
 export const description =
   "A comprehensive subscription management portal with plan upgrades, usage tracking, and subscription history."

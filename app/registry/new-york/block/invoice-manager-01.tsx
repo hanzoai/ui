@@ -1,6 +1,6 @@
 "use client"
 
-import { InvoiceManager } from "@hanzo/ui/billing"
+import { InvoiceManager } from "@/registry/new-york/ui/billing"
 
 export const description =
   "A complete invoice management interface with list/card views, filtering, sorting, pagination, and PDF download functionality. Features responsive design with mobile-optimized layouts."

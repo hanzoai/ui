@@ -6,7 +6,8 @@ import { Bold, Italic, List, ListOrdered } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york/ui/button"
 
-export interface EditorProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EditorProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   value?: string
   onChange?: (value: string) => void
   placeholder?: string

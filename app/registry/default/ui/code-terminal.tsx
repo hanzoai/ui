@@ -527,4 +527,4 @@ const CodeTerminal = React.forwardRef<HTMLDivElement, CodeTerminalProps>(
 
 CodeTerminal.displayName = "CodeTerminal"
 
-export { CodeTerminal, codeTerminalVariants, type TerminalLine }
+export { CodeTerminal, codeTerminalVariants }

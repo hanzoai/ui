@@ -10,6 +10,7 @@ import { Analytics } from "@/components/analytics"
 import { ThemeProvider } from "@/components/providers"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeSwitcher } from "@/components/theme-switcher"
+import { Web3Provider } from "@/components/web3-provider"
 import { Toaster as DefaultToaster } from "@/registry/default/ui/toaster"
 import { Toaster as NewYorkSonner } from "@/registry/new-york/ui/sonner"
 import { Toaster as NewYorkToaster } from "@/registry/new-york/ui/toaster"
@@ -98,19 +99,21 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <ActiveThemeProvider initialTheme="neutral">
-              <div vaul-drawer-wrapper="">
-                <div className="relative flex min-h-svh flex-col bg-background">
-                  {children}
+            <Web3Provider>
+              <ActiveThemeProvider initialTheme="neutral">
+                <div vaul-drawer-wrapper="">
+                  <div className="relative flex min-h-svh flex-col bg-background">
+                    {children}
+                  </div>
                 </div>
-              </div>
-              <TailwindIndicator />
-              <ThemeSwitcher />
-              <Analytics />
-              <NewYorkToaster />
-              <DefaultToaster />
-              <NewYorkSonner />
-            </ActiveThemeProvider>
+                <TailwindIndicator />
+                <ThemeSwitcher />
+                <Analytics />
+                <NewYorkToaster />
+                <DefaultToaster />
+                <NewYorkSonner />
+              </ActiveThemeProvider>
+            </Web3Provider>
           </ThemeProvider>
         </body>
       </html>
