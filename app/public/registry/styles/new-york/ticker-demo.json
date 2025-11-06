@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "ticker-demo.tsx",
-      "content": "import { Ticker } from \"@/registry/default/ui/ticker\"\n\nexport default function TickerDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <Ticker />\n    </div>\n  )\n}\n"
+      "content": "import { Ticker } from \"@/registry/new-york/ui/ticker\"\n\nexport default function TickerDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center p-8\">\n      <Ticker className=\"w-full max-w-4xl\">\n        <span className=\"mx-4\">🚀 Breaking News</span>\n        <span className=\"mx-4\">•</span>\n        <span className=\"mx-4\">Latest Updates</span>\n        <span className=\"mx-4\">•</span>\n        <span className=\"mx-4\">Live Feed</span>\n        <span className=\"mx-4\">•</span>\n        <span className=\"mx-4\">Real-time Ticker</span>\n      </Ticker>\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"
