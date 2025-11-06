@@ -145,19 +145,20 @@ function ModelItem({ model, isSelected, onSelect, onPeek }: ModelItemProps) {
   })
 
   return (
-    <CommandItem
-      key={model.id}
-      onSelect={onSelect}
-      ref={ref}
-      className="aria-selected:bg-primary aria-selected:text-primary-foreground"
-    >
-      {model.name}
-      <CheckIcon
-        className={cn(
-          "ml-auto h-4 w-4",
-          isSelected ? "opacity-100" : "opacity-0"
-        )}
-      />
-    </CommandItem>
+    <div ref={ref}>
+      <CommandItem
+        key={model.id}
+        onSelect={onSelect}
+        className="aria-selected:bg-primary aria-selected:text-primary-foreground"
+      >
+        {model.name}
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            isSelected ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    </div>
   )
 }
