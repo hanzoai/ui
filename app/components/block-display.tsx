@@ -33,6 +33,7 @@ export async function BlockDisplay({ name }: { name: string }) {
       item={item}
       tree={tree}
       highlightedFiles={highlightedFiles}
+      styleName="default"
     >
       <ComponentPreview
         name={item.name}
