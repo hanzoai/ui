@@ -144,8 +144,8 @@ function useAnimatedNumber(
 
   // Spring animation
   const springValue = useSpring(from, {
-    tension: springConfig.tension || 100,
-    friction: springConfig.friction || 10,
+    stiffness: springConfig.tension || 100,
+    damping: springConfig.friction || 10,
     mass: springConfig.mass || 1,
   })
 
@@ -211,20 +211,19 @@ function useAnimatedNumber(
   // Listen to spring value changes
   useEffect(() => {
     if (useSpringAnim) {
-      const unsubscribe = springValue.on("change", (latest) => {
+      const unsubscribe = springValue.onChange((latest) => {
         setDisplayValue(latest)
-      })
-
-      const unsubscribeComplete = springValue.on("animationComplete", () => {
-        setIsAnimating(false)
+        // For springs, consider animation complete when value stops changing significantly
+        if (Math.abs(latest - targetValue) < 0.01) {
+          setIsAnimating(false)
+        }
       })
 
       return () => {
         unsubscribe()
-        unsubscribeComplete()
       }
     }
-  }, [springValue, useSpringAnim])
+  }, [springValue, useSpringAnim, targetValue])
 
   useEffect(() => {
     if (autoStart) {

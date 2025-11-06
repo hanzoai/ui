@@ -18,6 +18,16 @@ interface ComponentExampleProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string
 }
 
+interface CodeBlockProps {
+  "data-rehype-pretty-code-fragment"?: string
+  children?: React.ReactNode
+}
+
+interface CodeButtonProps {
+  value?: string
+  __rawString__?: string
+}
+
 export function ComponentExample({
   children,
   className,
@@ -32,13 +42,15 @@ export function ComponentExample({
   ) as React.ReactElement[]
 
   const codeString = React.useMemo(() => {
+    const codeProps = Code?.props as CodeBlockProps | undefined
     if (
-      typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
+      typeof codeProps?.["data-rehype-pretty-code-fragment"] !== "undefined"
     ) {
       const [, Button] = React.Children.toArray(
-        Code.props.children
+        codeProps.children
       ) as React.ReactElement[]
-      return Button?.props?.value || Button?.props?.__rawString__ || null
+      const buttonProps = Button?.props as CodeButtonProps | undefined
+      return buttonProps?.value || buttonProps?.__rawString__ || null
     }
   }, [Code])
 
@@ -63,19 +75,19 @@ export function ComponentExample({
               Code
             </TabsTrigger>
           </TabsList>
-          {extractedClassNames ? (
+          {extractedClassNames && codeString ? (
             <CopyWithClassNames
               value={codeString}
               classNames={extractedClassNames}
               className="absolute right-4 top-20"
             />
           ) : (
-            codeString && (
+            codeString ? (
               <CopyButton
                 value={codeString}
                 className="absolute right-4 top-20"
               />
-            )
+            ) : null
           )}
         </div>
         <TabsContent value="preview" className="rounded-md border">

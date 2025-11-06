@@ -17,13 +17,15 @@ import {
   Terminal,
 } from "lucide-react"
 import { ImperativePanelHandle } from "react-resizable-panels"
-import { registryItemFileSchema, registryItemSchema } from "@/registry/schema"
+import { registryItemFileSchema, registryItemSchema } from "@/lib/schemas"
 import { z } from "zod"
 
+import { trackEvent } from "@/lib/events"
 import { createFileTreeForRegistryItemFiles, FileTree } from "@/lib/registry"
 import { cn } from "@/lib/utils"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { getIconForLanguageExtension } from "@/components/icons"
+import { OpenInHButton } from "@/components/open-in-h-button"
 import { Button } from "@/registry/default/ui/button"
 import {
   Collapsible,
@@ -151,6 +153,13 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
           <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
       </Tabs>
+      <Separator orientation="vertical" className="mx-2 !h-4" />
+      <a
+        href={`#${item.name}`}
+        className="flex-1 text-center text-sm font-medium underline-offset-2 hover:underline md:flex-auto md:text-left"
+      >
+        {item.description?.replace(/\.$/, "")}
+      </a>
       <div className="ml-auto flex items-center gap-2">
         <div className="h-8 items-center gap-1.5 rounded-md border p-1 shadow-none">
           <ToggleGroup
@@ -215,29 +224,8 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
           {isCopied ? <Check /> : <Terminal />}
           <span>npx hanzo-ui add {item.name}</span>
         </Button>
-        <Button
-          variant="default"
-          className="w-fit gap-1.5 bg-neutral-900 px-2 text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-100"
-          size="sm"
-          asChild
-        >
-          <Link href={`https://hanzo.app/builder?block=${item.name}`} target="_blank">
-            <span className="font-medium">Open in</span>
-            <svg
-              viewBox="0 0 67 67"
-              className="size-4"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M22.21 67V44.6369H0V67H22.21Z" fill="currentColor"/>
-              <path d="M0 44.6369L22.21 46.8285V44.6369H0Z" fill="currentColor" opacity="0.8"/>
-              <path d="M66.7038 22.3184H22.2534L0.0878906 44.6367H44.4634L66.7038 22.3184Z" fill="currentColor"/>
-              <path d="M22.21 0H0V22.3184H22.21V0Z" fill="currentColor"/>
-              <path d="M66.7198 0H44.5098V22.3184H66.7198V0Z" fill="currentColor"/>
-              <path d="M66.6753 22.3185L44.5098 20.0822V22.3185H66.6753Z" fill="currentColor" opacity="0.8"/>
-              <path d="M66.7198 67V44.6369H44.5098V67H66.7198Z" fill="currentColor"/>
-            </svg>
-          </Link>
-        </Button>
+        <Separator orientation="vertical" className="mx-1 !h-4" />
+        <OpenInHButton name={item.name} />
       </div>
     </div>
   )
@@ -479,6 +467,13 @@ function BlockCopyCodeButton() {
       className="size-7"
       onClick={() => {
         copyToClipboard(content)
+        trackEvent({
+          name: "copy_block_code",
+          properties: {
+            name: item.name,
+            file: file.path,
+          },
+        })
       }}
     >
       {isCopied ? <Check /> : <Clipboard />}

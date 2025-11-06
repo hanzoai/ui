@@ -385,4 +385,4 @@ const AITools = React.forwardRef<HTMLDivElement, AIToolsProps>(
 )
 AITools.displayName = "AITools"
 
-export { AITools, type AITool }
+export { AITools }

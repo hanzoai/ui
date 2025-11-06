@@ -113,7 +113,7 @@ const ChatMessageComponent = React.forwardRef<
   HTMLDivElement,
   {
     message: ChatMessage
-    onCopy?: (content: string) => void
+    onCopy?: (content: string) => void | Promise<void>
     onRegenerate?: (messageId: string) => void
     showTimestamp?: boolean
     showAvatar?: boolean
@@ -121,7 +121,7 @@ const ChatMessageComponent = React.forwardRef<
     assistantAvatar?: string
     userName?: string
     assistantName?: string
-  } & React.HTMLAttributes<HTMLDivElement>
+  } & Omit<React.HTMLAttributes<HTMLDivElement>, "onCopy">
 >(
   (
     {
@@ -553,6 +553,4 @@ export {
   TypingIndicator,
   AttachmentPreview,
   type ChatMessage as ChatMessageType,
-  type ChatAttachment,
-  type AIChatProps,
 }

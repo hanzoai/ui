@@ -167,12 +167,17 @@ const animationVariants: { [key: string]: Variants } = {
   },
   draw: {
     initial: { pathLength: 0, opacity: 0 },
-    animate: { pathLength: 1, opacity: 1 },
-    transition: { duration: 2, ease: "easeInOut" },
+    animate: {
+      pathLength: 1,
+      opacity: 1,
+      transition: { duration: 2, ease: "easeInOut" },
+    },
   },
   hover: {
-    whileHover: { scale: 1.1 },
-    transition: { duration: 0.2 },
+    whileHover: {
+      scale: 1.1,
+      transition: { duration: 0.2 },
+    },
   },
 }
 
@@ -426,7 +431,6 @@ export function AnimatedIcon({
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
-        {...(animation === "draw" ? animationVariants.draw : {})}
       />
     ))
   }

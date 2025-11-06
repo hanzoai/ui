@@ -416,7 +416,7 @@ const Text3DFloating = React.forwardRef<
           {char === " " ? "\u00A0" : char}
         </span>
       ))}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%,
           100% {

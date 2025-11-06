@@ -107,7 +107,7 @@ export function ButtonGroupDemo() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem variant="destructive">
+              <DropdownMenuItem>
                 <Trash2Icon />
                 Trash
               </DropdownMenuItem>

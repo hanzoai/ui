@@ -21,7 +21,8 @@ import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import { Separator } from "@/registry/default/ui/separator"
 import { Textarea } from "@/registry/default/ui/textarea"
 
-export interface AIAssistantProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AIAssistantProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onError"> {
   provider?: string
   model?: string
   apiKey?: string
@@ -49,6 +50,10 @@ const AIAssistant = React.forwardRef<HTMLDivElement, AIAssistantProps>(
       children,
       provider = "openai",
       model = "gpt-4",
+      apiKey,
+      systemPrompt,
+      onResponse,
+      onError,
       messages = [],
       onSendMessage,
       isLoading = false,

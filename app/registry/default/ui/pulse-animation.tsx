@@ -137,7 +137,7 @@ const easingFunctions = {
   easeOut: "easeOut",
   easeInOut: "easeInOut",
   bounce: "easeOut",
-}
+} as const
 
 const pulsePatterns = {
   steady: {
@@ -192,7 +192,7 @@ function PulseRings({
   shape: "circle" | "square" | "rounded"
   duration: number
   active: boolean
-  easing: string
+  easing: keyof typeof easingFunctions
 }) {
   const getShapeClasses = () => {
     switch (shape) {
@@ -233,7 +233,7 @@ function PulseRings({
             duration: duration / 1000,
             delay: i * 0.1,
             repeat: Infinity,
-            ease: easing,
+            ease: easingFunctions[easing],
           }}
         />
       ))}
@@ -259,7 +259,7 @@ function PulseGlow({
   shape: "circle" | "square" | "rounded"
   active: boolean
   duration: number
-  easing: string
+  easing: keyof typeof easingFunctions
 }) {
   const getShapeClasses = () => {
     switch (shape) {
@@ -294,7 +294,7 @@ function PulseGlow({
       transition={{
         duration: duration / 1000,
         repeat: Infinity,
-        ease: easing,
+        ease: easingFunctions[easing],
       }}
     />
   )
@@ -342,7 +342,7 @@ export function PulseAnimation({
     !prefersReducedMotion
 
   const patternConfig = pulsePatterns[pattern]
-  const variants = customVariants || {
+  const variants: Variants = customVariants || {
     pulse: {
       scale: patternConfig.scale.map(
         (s) => s * (1 + (intensity - 1) * (scale - 1))
@@ -431,7 +431,7 @@ export function PulseAnimation({
           shape={shape}
           active={isActive}
           duration={duration}
-          easing={easingFunctions[easing]}
+          easing={easing}
         />
       )}
 
@@ -445,7 +445,7 @@ export function PulseAnimation({
           shape={shape}
           duration={duration}
           active={isActive}
-          easing={easingFunctions[easing]}
+          easing={easing}
         />
       )}
 
@@ -527,9 +527,11 @@ export const PulsePresets = {
   /**
    * Notification indicator
    */
-  Notification: (props: Omit<PulseAnimationProps, "pattern" | "showRing">) => (
-    <PulseDot pattern="notification" showRing {...props} />
-  ),
+  Notification: (
+    props: Omit<PulseAnimationProps, "children" | "pattern" | "showRing" | "size"> & {
+      size?: number
+    }
+  ) => <PulseDot {...props} />,
 
   /**
    * Loading pulse

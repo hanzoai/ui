@@ -32,6 +32,8 @@ export interface AnimatedListItem {
   id: string | number
   content: React.ReactNode
   data?: any
+  virtualIndex?: number
+  style?: React.CSSProperties
 }
 
 export interface AnimatedListProps {

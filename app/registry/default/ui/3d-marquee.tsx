@@ -168,7 +168,10 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
       const isVertical = direction === "up" || direction === "down"
       const distance = contentWidth + gap
 
-      let animateProps: any = {}
+      let animateProps:
+        | { x: number[] }
+        | { y: number[] }
+        | Record<string, never> = {}
 
       if (direction === "left") {
         animateProps = {
@@ -192,7 +195,7 @@ const Marquee3D = React.forwardRef<HTMLDivElement, Marquee3DProps>(
         animate: animateProps,
         transition: {
           duration,
-          ease: "linear",
+          ease: "linear" as const,
           repeat: Infinity,
         },
       }

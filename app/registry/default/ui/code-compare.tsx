@@ -351,7 +351,9 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current["base"] = ref)}
+              ref={(ref) => {
+                scrollRefs.current["base"] = ref
+              }}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
                 handleScroll("base", target.scrollTop)
@@ -377,7 +379,9 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current["current"] = ref)}
+              ref={(ref) => {
+                scrollRefs.current["current"] = ref
+              }}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
                 handleScroll("current", target.scrollTop)
@@ -403,7 +407,9 @@ const CodeCompare = React.forwardRef<HTMLDivElement, CodeCompareProps>(
             </div>
             <ScrollArea
               className="h-full"
-              ref={(ref) => (scrollRefs.current["incoming"] = ref)}
+              ref={(ref) => {
+                scrollRefs.current["incoming"] = ref
+              }}
               onScrollCapture={(e) => {
                 const target = e.target as HTMLDivElement
                 handleScroll("incoming", target.scrollTop)

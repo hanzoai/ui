@@ -97,7 +97,7 @@ export function CardsShare() {
                     <SelectTrigger
                       className="ml-auto pr-2"
                       aria-label="Edit"
-                      size="sm"
+                     
                     >
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>

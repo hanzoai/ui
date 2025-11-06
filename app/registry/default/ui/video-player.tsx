@@ -42,7 +42,16 @@ export interface SubtitleTrack {
   default?: boolean
 }
 
-export interface VideoPlayerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface VideoPlayerProps
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    | "onPlay"
+    | "onPause"
+    | "onEnded"
+    | "controls"
+    | "onTimeUpdate"
+    | "onVolumeChange"
+  > {
   sources: VideoSource[]
   poster?: string
   subtitles?: SubtitleTrack[]
@@ -114,7 +123,7 @@ const VideoPlayer = React.forwardRef<
     const videoRef = React.useRef<HTMLVideoElement>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
     const progressRef = React.useRef<HTMLDivElement>(null)
-    const controlsTimeoutRef = React.useRef<NodeJS.Timeout>()
+    const controlsTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
 
     // State
     const [isPlaying, setIsPlaying] = React.useState(false)
