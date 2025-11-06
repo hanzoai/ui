@@ -3168,7 +3168,7 @@ export const Index: Record<string, any> = {
       registryDependencies: undefined,
       component: React.lazy(() => import("@/registry/default/example/cards")),
       source: "",
-      files: ["registry/default/example/cards/cards.tsx"],
+      files: ["registry/default/example/cards.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []
