@@ -22,7 +22,7 @@ export async function BlockDisplay({ name }: { name: string }) {
   const tree = item.files ? await createFileTreeForRegistryItemFiles(item.files) : null
 
   const highlightedFiles = await Promise.all(
-    item.files.map(async (file) => ({
+    item.files.map(async (file: z.infer<typeof registryItemFileSchema>) => ({
       ...file,
       highlightedContent: await highlightCode(file.content ?? ""),
     }))
@@ -36,7 +36,7 @@ export async function BlockDisplay({ name }: { name: string }) {
     dependencies: item.dependencies,
     devDependencies: item.devDependencies,
     registryDependencies: item.registryDependencies,
-    files: item.files?.map(f => ({
+    files: item.files?.map((f: z.infer<typeof registryItemFileSchema>) => ({
       path: f.path,
       content: f.content,
       type: f.type,

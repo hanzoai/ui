@@ -18,13 +18,12 @@ export default async function BlocksPage({
   params: Promise<{ categories?: string[] }>
 }) {
   const { categories = [] } = await params
-  const styleName = "default"
-  const blocks = await getAllBlockIds(["registry:block"], categories, styleName)
+  const blocks = await getAllBlockIds(["registry:block"], categories)
 
   return (
     <div className="flex flex-col gap-12 md:gap-24">
       {blocks.map((name) => (
-        <BlockDisplay name={name} key={name} styleName={styleName} />
+        <BlockDisplay name={name} key={name} />
       ))}
     </div>
   )
