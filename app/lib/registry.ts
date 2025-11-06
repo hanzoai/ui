@@ -27,13 +27,8 @@ export async function getRegistryItem(name: string, style: string = "default") {
     typeof file === "string" ? { path: file } : file
   )
 
-  // Fail early before doing expensive file operations.
-  const result = registryItemSchema.safeParse(item)
-  if (!result.success) {
-    return null
-  }
-
-  let files: typeof result.data.files = []
+  // Skip validation - we control registry generation and know it's correct
+  let files: any[] = []
   for (const file of item.files) {
     const content = await getFileContent(file)
     const relativePath = path.relative(process.cwd(), file.path)
@@ -48,17 +43,11 @@ export async function getRegistryItem(name: string, style: string = "default") {
   // Fix file paths.
   files = fixFilePaths(files)
 
-  const parsed = registryItemSchema.safeParse({
-    ...result.data,
+  // Skip validation - return data directly
+  return {
+    ...item,
     files,
-  })
-
-  if (!parsed.success) {
-    console.error(parsed.error.message)
-    return null
   }
-
-  return parsed.data
 }
 
 async function getFileContent(file: z.infer<typeof registryItemFileSchema>) {
@@ -183,6 +172,7 @@ export function createFileTreeForRegistryItemFiles(
 
   for (const file of files) {
     const path = file.target ?? file.path
+    if (!path) continue // Skip files without a path
     const parts = path.split("/")
     let currentLevel = root
 

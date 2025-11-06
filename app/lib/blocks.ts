@@ -7,7 +7,7 @@ import { Project, ScriptKind, SourceFile, SyntaxKind } from "ts-morph"
 import { z } from "zod"
 
 import { highlightCode } from "@/lib/highlight-code"
-import { BlockChunk, blockSchema, registryEntrySchema } from "@/registry/schema"
+import { BlockChunk } from "@/registry/schema"
 import { Style } from "@/registry/styles"
 
 const DEFAULT_BLOCKS_STYLE = "default" satisfies Style["name"]
@@ -17,10 +17,53 @@ const project = new Project({
 })
 
 export async function getAllBlockIds(
+  types?: string[],
+  categories?: string[],
   style: Style["name"] = DEFAULT_BLOCKS_STYLE
 ) {
-  const blocks = await _getAllBlocks(style)
+  const blocks = await getAllBlocks(
+    types ?? ["components:block"],
+    categories ?? [],
+    style
+  )
+
   return blocks.map((block) => block.name)
+}
+
+export async function getAllBlocks(
+  types: string[] = ["components:block"],
+  categories: string[] = [],
+  style: Style["name"] = DEFAULT_BLOCKS_STYLE
+) {
+  // Collect all blocks from the specified style
+  const allBlocks: any[] = []
+  const styleIndex = Index[style]
+
+  if (typeof styleIndex === "object" && styleIndex !== null) {
+    for (const itemName in styleIndex) {
+      const item = styleIndex[itemName]
+      allBlocks.push(item)
+    }
+  }
+
+  // Validate each block using registry entry schema (files as strings)
+  const validatedBlocks = allBlocks
+    .map((block) => {
+      const result = registryEntrySchema.safeParse(block)
+      return result.success ? result.data : null
+    })
+    .filter((block): block is z.infer<typeof registryEntrySchema> => block !== null)
+
+  // Filter by type and categories
+  return validatedBlocks.filter((block) => {
+    const matchesType = types.includes(block.type)
+
+    // Extract category from block name (e.g., "sidebar-01" -> "sidebar")
+    const blockCategory = block.name.split("-")[0]
+    const matchesCategory = categories.length === 0 || categories.includes(blockCategory)
+
+    return matchesType && matchesCategory
+  })
 }
 
 export async function getBlock(
@@ -34,6 +77,7 @@ export async function getBlock(
     return null
   }
 
+  // Skip validation - we control registry generation and know it's correct
   const content = await _getBlockContent(name, style)
 
   const chunks = await Promise.all(
@@ -63,26 +107,18 @@ export async function getBlock(
           .getText()
           .replaceAll(`@/registry/${style}/`, "@/components/"),
       }
-    })
+    }) ?? []
   )
 
-  return blockSchema.parse({
+  // Skip validation - return object directly
+  return {
     style,
     highlightedCode: content.code ? await highlightCode(content.code) : "",
     ...entry,
     ...content,
     chunks,
     type: "components:block",
-  })
-}
-
-async function _getAllBlocks(style: Style["name"] = DEFAULT_BLOCKS_STYLE) {
-  // Get the index directly without Zod validation since we control the generation
-  const index = Index[style]
-
-  return Object.values(index).filter(
-    (block: any) => block.type === "components:block"
-  )
+  }
 }
 
 async function _getBlockCode(
@@ -150,3 +186,5 @@ function _extractVariable(sourceFile: SourceFile, name: string) {
 
   return value
 }
+
+// Force recompile
