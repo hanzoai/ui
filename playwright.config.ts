@@ -16,8 +16,8 @@ export default defineConfig({
   workers: process.env.CI ? 2 : undefined,
   // Reporter to use
   reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results.json' }],
+    ['html', { outputFolder: 'tests/reports/playwright-report' }],
+    ['json', { outputFile: 'tests/reports/test-results.json' }],
     ['list'],
   ],
   // Shared settings for all tests
