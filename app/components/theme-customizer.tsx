@@ -81,7 +81,7 @@ export function ThemeCustomizer({ className }: React.ComponentProps<"div">) {
         >
           <SelectTrigger
             id="theme-selector"
-            size="sm"
+           
             className="justify-start capitalize shadow-none *:data-[slot=select-value]:w-12 *:data-[slot=select-value]:capitalize"
           >
             <span className="font-medium">Theme:</span>

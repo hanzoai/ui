@@ -139,7 +139,7 @@ export interface AIVisionProps extends React.HTMLAttributes<HTMLDivElement> {
 
 // Canvas overlay component for visualizations
 interface CanvasOverlayProps {
-  imageRef: React.RefObject<HTMLImageElement>
+  imageRef: React.RefObject<HTMLImageElement | null>
   results: VisionResults
   showBoundingBoxes: boolean
   showConfidence: boolean
@@ -643,7 +643,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
 }
 
 // Main AI Vision component
-export const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
+const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
   (
     {
       className,

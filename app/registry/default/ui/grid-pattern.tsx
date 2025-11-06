@@ -277,7 +277,7 @@ const GridPattern = React.forwardRef<HTMLDivElement, GridPatternProps>(
           )}
         </svg>
 
-        <style jsx>{`
+        <style>{`
           @keyframes grid-pattern-move {
             0% {
               transform: translate(0, 0);

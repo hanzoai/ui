@@ -311,7 +311,7 @@ export function AnimatedText({
     } else if (
       animation === "letterShuffle" &&
       !shuffleAnimating &&
-      displayText === text
+      shuffleText === text
     ) {
       onComplete()
     }
@@ -320,7 +320,7 @@ export function AnimatedText({
     typewriterComplete,
     shuffleAnimating,
     onComplete,
-    displayText,
+    shuffleText,
     text,
   ])
 
@@ -458,7 +458,7 @@ export function AnimatedText({
   return (
     <>
       {animation === "gradient" && (
-        <style jsx>{`
+        <style>{`
           @keyframes gradientShift {
             0%,
             100% {

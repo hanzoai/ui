@@ -10,6 +10,7 @@ import { Callout } from "@/components/callout"
 import { CodeBlockWrapper } from "@/components/code-block-wrapper"
 import { CodeTabs } from "@/components/code-tabs"
 import { ComponentExample } from "@/components/component-example"
+import { ComponentGrid } from "@/components/component-grid"
 import { ComponentPreview } from "@/components/component-preview"
 import { ComponentSource } from "@/components/component-source"
 import { CopyButton, CopyNpmCommandButton } from "@/components/copy-button"
@@ -167,7 +168,7 @@ export const mdxComponents: MDXComponents = {
       {...props}
     />
   ),
-  pre: ({ ref: _ref, ...props }: React.ComponentPropsWithoutRef<"pre">) => (
+  pre: (props: React.ComponentPropsWithoutRef<"pre">) => (
     <CodeBlock {...props}>
       <Pre>{props.children}</Pre>
     </CodeBlock>
@@ -183,6 +184,7 @@ export const mdxComponents: MDXComponents = {
   ),
   Image,
   Callout,
+  ComponentGrid,
   ComponentPreview,
   ComponentExample,
   ComponentSource,
