@@ -132,6 +132,7 @@ const demoRetentionOffers: RetentionOffer[] = [
     id: "offer_2",
     title: "Free Extra Storage",
     description: "Get an additional 50GB storage for free for 6 months",
+    discount: 0,
     features: [
       "150GB total storage",
       "All Pro features included",
@@ -162,28 +163,6 @@ const demoHistory: SubscriptionHistory[] = [
 ]
 
 export default function SubscriptionPortal01() {
-  // Demo handlers
-  const handleUpgrade = async (planId: string) => {
-    console.log("Upgrading to plan:", planId)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  }
-
-  const handleDowngrade = async (planId: string) => {
-    console.log("Downgrading to plan:", planId)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  }
-
-  const handleCancel = async (reason: string, feedback?: string) => {
-    console.log("Canceling subscription:", { reason, feedback })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  }
-
-  const handleAcceptOffer = async (offerId: string) => {
-    console.log("Accepting retention offer:", offerId)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  }
-
   return (
     <div className="mx-auto max-w-7xl p-6">
       <div className="mb-8">
@@ -195,18 +174,7 @@ export default function SubscriptionPortal01() {
         </p>
       </div>
 
-      <SubscriptionPortal
-        subscription={demoSubscription}
-        availablePlans={demoPlans}
-        retentionOffers={demoRetentionOffers}
-        subscriptionHistory={demoHistory}
-        onUpgrade={handleUpgrade}
-        onDowngrade={handleDowngrade}
-        onCancel={handleCancel}
-        onAcceptOffer={handleAcceptOffer}
-        showHistory={true}
-        defaultView="overview"
-      />
+      <SubscriptionPortal />
     </div>
   )
 }
