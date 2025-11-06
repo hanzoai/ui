@@ -6,8 +6,7 @@ export default function ImageCropDemo() {
       <div className="w-full max-w-2xl">
         <ImageCrop
           src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=800&h=600&fit=crop"
-          alt="Sample image for cropping"
-          aspectRatio={16 / 9}
+          aspect={16 / 9}
         />
       </div>
     </div>
