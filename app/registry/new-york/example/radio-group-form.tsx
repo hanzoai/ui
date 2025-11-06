@@ -18,7 +18,7 @@ import { toast } from "@/registry/default/ui/use-toast"
 
 const FormSchema = z.object({
   type: z.enum(["all", "mentions", "none"], {
-    required_error: "You need to select a notification type.",
+    message: "You need to select a notification type.",
   }),
 })
 
