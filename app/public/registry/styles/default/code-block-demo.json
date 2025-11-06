@@ -1,0 +1,13 @@
+{
+  "name": "code-block-demo",
+  "registryDependencies": [
+    "code-block"
+  ],
+  "files": [
+    {
+      "name": "code-block-demo.tsx",
+      "content": "import { CodeBlock } from \"@/registry/default/ui/code-block\"\n\nexport default function CodeBlockDemo() {\n  const sampleCode = `function fibonacci(n) {\n  if (n <= 1) {\n    return n\n  }\n  return fibonacci(n - 1) + fibonacci(n - 2)\n}\n\n// Calculate the 10th Fibonacci number\nconst result = fibonacci(10)\nconsole.log(result) // Output: 55`\n\n  return (\n    <div className=\"w-full\">\n      <CodeBlock\n        code={sampleCode}\n        language=\"javascript\"\n        filename=\"fibonacci.js\"\n        theme=\"dark\"\n        showLineNumbers={true}\n        showCopyButton={true}\n        highlightLines={[6, 7]}\n      />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
