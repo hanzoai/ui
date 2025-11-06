@@ -29,28 +29,49 @@ InvoiceManager.displayName = "InvoiceManager"
 export interface SubscriptionPlan {
   id: string
   name: string
+  description?: string
   price: number
-  interval: string
+  interval?: string
+  billingPeriod?: string
+  features?: string[]
+  limits?: any
+  highlighted?: boolean
+  badge?: string
 }
 
 export interface Subscription {
   id: string
+  customerId?: string
   planId: string
+  plan?: any
   status: string
+  currentPeriodStart?: Date
   currentPeriodEnd: Date
+  cancelAtPeriodEnd?: boolean
+  usage?: any[]
+  upcomingInvoice?: any
 }
 
 export interface SubscriptionHistory {
   id: string
-  date: Date
-  action: string
-  plan: string
+  subscriptionId?: string
+  date?: Date
+  timestamp?: Date
+  action?: string
+  event?: string
+  plan?: string
+  fromPlan?: string
+  toPlan?: string
+  amount?: number
 }
 
 export interface RetentionOffer {
   id: string
+  title?: string
+  description?: string
   discount: number
-  message: string
+  message?: string
+  features?: string[]
 }
 
 export interface SubscriptionPortalProps
