@@ -1,7 +1,7 @@
 "use client"
 
 import { ChartDisplay } from "@/components/chart-display"
-import { Separator } from "@/registry/new-york/ui/separator"
+import { Separator } from "@/registry/default/ui/separator"
 
 import * as Charts from "./charts"
 

@@ -4,8 +4,8 @@ import { IconMinus, IconPlus } from "@tabler/icons-react"
 import { CheckIcon } from "lucide-react"
 
 import { useThemeConfig } from "@/components/active-theme"
-import { Button } from "@/registry/new-york/ui/button"
-import { ButtonGroup } from "@/registry/new-york/ui/button-group"
+import { Button } from "@/registry/default/ui/button"
+import { ButtonGroup } from "@/registry/default/ui/button-group"
 import {
   Field,
   FieldContent,
@@ -16,11 +16,11 @@ import {
   FieldSeparator,
   FieldSet,
   FieldTitle,
-} from "@/registry/new-york/ui/field"
-import { Input } from "@/registry/new-york/ui/input"
-import { Label } from "@/registry/new-york/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group"
-import { Switch } from "@/registry/new-york/ui/switch"
+} from "@/registry/default/ui/field"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/registry/default/ui/radio-group"
+import { Switch } from "@/registry/default/ui/switch"
 
 const accents = [
   {

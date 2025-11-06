@@ -1,6 +1,6 @@
 import Image from "next/image"
 
-import { SidebarInset, SidebarProvider } from "@/registry/new-york/ui/sidebar"
+import { SidebarInset, SidebarProvider } from "@/registry/default/ui/sidebar"
 import { AppSidebar } from "@/app/(app)/examples/dashboard/components/app-sidebar"
 import { ChartAreaInteractive } from "@/app/(app)/examples/dashboard/components/chart-area-interactive"
 import { DataTable } from "@/app/(app)/examples/dashboard/components/data-table"

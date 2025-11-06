@@ -3,14 +3,14 @@
 import * as React from "react"
 import { ChevronDownIcon } from "lucide-react"
 
-import { Button } from "@/registry/new-york/ui/button"
-import { Calendar } from "@/registry/new-york/ui/calendar"
-import { Label } from "@/registry/new-york/ui/label"
+import { Button } from "@/registry/default/ui/button"
+import { Calendar } from "@/registry/default/ui/calendar"
+import { Label } from "@/registry/default/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/default/ui/popover"
 
 export default function Calendar22() {
   const [open, setOpen] = React.useState(false)

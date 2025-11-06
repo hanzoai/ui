@@ -13,7 +13,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/tabs"
 import { getActiveStyle, styles, type Style } from "@/registry/styles"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -75,7 +75,7 @@ export function ComponentPreview({
           className="bg-background absolute top-0 left-0 z-20 hidden w-[970px] max-w-none sm:w-[1280px] md:hidden dark:block md:dark:hidden"
         />
         <div className="bg-background absolute inset-0 hidden w-[1600px] md:block">
-          <iframe src={`/view/${style}/${name}`} className="size-full" />
+          <iframe src={`/view/${name}`} className="size-full" />
         </div>
       </div>
     )
@@ -84,7 +84,8 @@ export function ComponentPreview({
   const Codes = React.Children.toArray(children) as React.ReactElement[]
   const Code = Codes[index]
 
-  const Component = Index[activeStyle][name]?.component
+  // Single theme system - no style nesting in Index
+  const Component = Index[name]?.component
 
   if (!Component) {
     return (

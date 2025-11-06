@@ -4,13 +4,13 @@ import Link from "next/link"
 
 import { docsConfig } from "@/config/docs"
 import { cn } from "@/lib/utils"
-import { Badge } from "@/registry/new-york/ui/badge"
+import { Badge } from "@/registry/default/ui/badge"
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 
 export function ComponentGrid() {
   // Get all component sections from sidebar config
