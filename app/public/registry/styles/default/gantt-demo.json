@@ -1,0 +1,13 @@
+{
+  "name": "gantt-demo",
+  "registryDependencies": [
+    "gantt"
+  ],
+  "files": [
+    {
+      "name": "gantt-demo.tsx",
+      "content": "import { Gantt } from \"@/registry/default/ui/gantt\"\n\nexport default function GanttDemo() {\n  const sampleTasks = [\n    {\n      id: \"1\",\n      name: \"Project Planning\",\n      start: new Date(2024, 0, 1),\n      end: new Date(2024, 0, 15),\n      progress: 100,\n    },\n    {\n      id: \"2\",\n      name: \"Design Phase\",\n      start: new Date(2024, 0, 10),\n      end: new Date(2024, 1, 5),\n      progress: 75,\n    },\n    {\n      id: \"3\",\n      name: \"Development\",\n      start: new Date(2024, 1, 1),\n      end: new Date(2024, 3, 30),\n      progress: 45,\n    },\n    {\n      id: \"4\",\n      name: \"Testing\",\n      start: new Date(2024, 3, 15),\n      end: new Date(2024, 4, 15),\n      progress: 0,\n    },\n  ]\n\n  return (\n    <div className=\"w-full max-w-3xl\">\n      <Gantt tasks={sampleTasks} />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

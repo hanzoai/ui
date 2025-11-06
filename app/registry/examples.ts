@@ -1297,4 +1297,34 @@ export const examples: Registry = [
     type: "components:example",
     files: ["example/video-player-demo.tsx"],
   },
+  {
+    name: "android-demo",
+    type: "components:example",
+    registryDependencies: ["android"],
+    files: ["example/android-demo.tsx"],
+  },
+  {
+    name: "gantt-demo",
+    type: "components:example",
+    registryDependencies: ["gantt"],
+    files: ["example/gantt-demo.tsx"],
+  },
+  {
+    name: "sandbox-demo",
+    type: "components:example",
+    registryDependencies: ["sandbox"],
+    files: ["example/sandbox-demo.tsx"],
+  },
+  {
+    name: "code-block-demo",
+    type: "components:example",
+    registryDependencies: ["code-block"],
+    files: ["example/code-block-demo.tsx"],
+  },
+  {
+    name: "code-tabs-demo",
+    type: "components:example",
+    registryDependencies: ["code-tabs"],
+    files: ["example/code-tabs-demo.tsx"],
+  },
 ]
