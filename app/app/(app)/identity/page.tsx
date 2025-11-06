@@ -32,7 +32,8 @@ import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
 import { Separator } from "@/registry/default/ui/separator"
 
-export default function IdentityPage() {
+// Separate component that uses Wagmi hooks
+function IdentityForm() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
   const [identityName, setIdentityName] = useState("")
@@ -458,4 +459,33 @@ export default function IdentityPage() {
       </div>
     </div>
   )
+}
+
+// Main page component - only renders IdentityForm after client mount
+export default function IdentityPage() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="container mx-auto max-w-4xl py-8 px-4">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold mb-2">Register Identity</h1>
+          <p className="text-muted-foreground">
+            Claim your unique identity across Hanzo, Lux, and Zoo networks
+          </p>
+        </div>
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">Loading Web3...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return <IdentityForm />
 }
