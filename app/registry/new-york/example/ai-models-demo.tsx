@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-import { AIModels } from "@/registry/default/ui/ai-models"
+import { AIModels } from "@/registry/new-york/ui/ai-models"
 
 const models = [
   // OpenAI Models
