@@ -149,10 +149,13 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
                     (child) =>
                       child.type === "element" && child.tagName === "code"
                   )
-                  if (codeElement) {
-                    return codeElement.children
+                  if (
+                    codeElement &&
+                    "children" in codeElement &&
+                    codeElement.children
+                  ) {
+                    node.children = codeElement.children
                   }
-                  return node.children
                 },
               },
             ],
