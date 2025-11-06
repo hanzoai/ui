@@ -1,20 +1,14 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { CodeBlock } from "./code-block"
 
 // Mock shiki
-jest.mock("shiki", () => ({
-  codeToHtml: jest
+vi.mock("shiki", () => ({
+  codeToHtml: vi
     .fn()
     .mockResolvedValue('<pre><code>const test = "hello"</code></pre>'),
 }))
-
-// Mock clipboard API
-Object.assign(navigator, {
-  clipboard: {
-    writeText: jest.fn().mockResolvedValue(undefined),
-  },
-})
 
 describe("CodeBlock", () => {
   const defaultProps = {
@@ -23,7 +17,7 @@ describe("CodeBlock", () => {
   }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   it("renders code block with basic props", async () => {
