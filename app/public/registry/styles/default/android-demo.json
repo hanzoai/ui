@@ -1,0 +1,13 @@
+{
+  "name": "android-demo",
+  "registryDependencies": [
+    "android"
+  ],
+  "files": [
+    {
+      "name": "android-demo.tsx",
+      "content": "import { Android } from \"@/registry/default/ui/android\"\n\nexport default function AndroidDemo() {\n  return (\n    <div className=\"flex min-h-[200px] items-center justify-center\">\n      <Android size=\"xl\" color=\"#3DDC84\" />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

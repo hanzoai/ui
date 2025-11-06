@@ -1,0 +1,13 @@
+{
+  "name": "sandbox-demo",
+  "registryDependencies": [
+    "sandbox"
+  ],
+  "files": [
+    {
+      "name": "sandbox-demo.tsx",
+      "content": "import { Sandbox } from \"@/registry/default/ui/sandbox\"\n\nexport default function SandboxDemo() {\n  const sampleCode = `// Simple JavaScript calculator\nconst add = (a, b) => a + b\nconst result = add(5, 3)\nconsole.log(\"5 + 3 =\", result)\nresult`\n\n  return (\n    <div className=\"w-full max-w-3xl\">\n      <Sandbox code={sampleCode} language=\"javascript\" editable />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}
