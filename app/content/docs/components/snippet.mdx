@@ -1,10 +1,10 @@
 ---
-title: Snippet
-description: Snippet component for Hanzo UI
+title: Code Snippet
+description: A syntax-highlighted code snippet component with copy, expand, and line number features.
 component: true
 ---
 
-<ComponentPreview name="snippet-demo" />
+<ComponentPreview name="code-snippet-demo" />
 
 ## Installation
 
@@ -22,7 +22,7 @@ component: true
 <Step>Run the following command:</Step>
 
 ```bash
-npx @hanzo/ui@latest add snippet
+npx @hanzo/ui@latest add code-snippet
 ```
 
 </Steps>
@@ -35,7 +35,7 @@ npx @hanzo/ui@latest add snippet
 
 <Step>Copy and paste the following code into your project</Step>
 
-<ComponentSource name="snippet" />
+<ComponentSource name="code-snippet" />
 
 <Step>Update the import paths to match your project setup</Step>
 
@@ -48,10 +48,16 @@ npx @hanzo/ui@latest add snippet
 ## Usage
 
 ```tsx
-import { Snippet } from "@/registry/default/ui/snippet"
+import { CodeSnippet } from "@/registry/default/ui/code-snippet"
 
 export default function Example() {
-  return <Snippet />
+  return (
+    <CodeSnippet
+      code={`function hello() {\n  console.log("Hello, world!");\n}`}
+      language="javascript"
+      filename="hello.js"
+    />
+  )
 }
 ```
 
@@ -59,7 +65,7 @@ export default function Example() {
 
 ### Default
 
-<ComponentPreview name="snippet-demo" />
+<ComponentPreview name="code-snippet-demo" />
 
 ## API
 
