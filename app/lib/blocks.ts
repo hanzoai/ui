@@ -93,7 +93,7 @@ export async function getBlock(name: string) {
         ...chunk,
         code: sourceFile
           .getText()
-          .replaceAll(`@/registry/${style}/`, "@/components/"),
+          .replaceAll(`@/registry/default/`, "@/components/"),
       }
     }) ?? []
   )

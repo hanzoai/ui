@@ -64,8 +64,8 @@ export function ThemesTabs() {
         </div>
       ) : (
         <ThemeWrapper>
-          {config.style === "new-york" && <CardsNewYork />}
-          {config.style === "default" && <CardsDefault />}
+          {/* Single theme system - always use default */}
+          <CardsDefault />
         </ThemeWrapper>
       )}
     </div>

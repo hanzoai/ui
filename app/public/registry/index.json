@@ -2923,7 +2923,7 @@
   {
     "name": "cards",
     "files": [
-      "example/cards/cards.tsx"
+      "example/cards.tsx"
     ],
     "type": "components:example"
   },
