@@ -12,7 +12,7 @@ export const containerClassName = "w-full"
 export default function InvoiceManagerDemo() {
   return (
     <div className="container mx-auto py-8">
-      <InvoiceManager defaultView="table" pageSize={10} />
+      <InvoiceManager />
     </div>
   )
 }
