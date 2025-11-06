@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "code-compare-demo.tsx",
-      "content": "import { CodeCompare } from \"@/registry/default/ui/code-compare\"\n\nexport default function CodeCompareDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <CodeCompare />\n    </div>\n  )\n}\n"
+      "content": "export default function Demo() {\n  return (\n    <div className=\"flex h-[400px] items-center justify-center rounded-lg border bg-background\">\n      <p className=\"text-sm text-muted-foreground\">Demo coming soon</p>\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"

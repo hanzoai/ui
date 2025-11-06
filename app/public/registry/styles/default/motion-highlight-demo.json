@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "motion-highlight-demo.tsx",
-      "content": "import { MotionHighlight } from \"@/registry/default/ui/motion-highlight\"\n\nexport default function MotionHighlightDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n      <MotionHighlight />\n    </div>\n  )\n}\n"
+      "content": "import { MotionHighlight } from \"@/registry/default/ui/motion-highlight\"\n\nexport default function MotionHighlightDemo() {\n  return (\n    <div className=\"w-full min-h-[400px] flex items-center justify-center p-8\">\n      <div className=\"space-y-6 max-w-2xl\">\n        <MotionHighlight>\n          <h2 className=\"text-3xl font-bold\">Interactive Highlight Effect</h2>\n        </MotionHighlight>\n        <MotionHighlight>\n          <p className=\"text-lg\">\n            Hover over this text to see the smooth highlight animation following your cursor.\n          </p>\n        </MotionHighlight>\n      </div>\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"
