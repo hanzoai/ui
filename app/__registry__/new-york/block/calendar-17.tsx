@@ -2,10 +2,10 @@
 
 import * as React from "react"
 
-import { Calendar } from "@/registry/new-york/ui/calendar"
-import { Card, CardContent, CardFooter } from "@/registry/new-york/ui/card"
-import { Input } from "@/registry/new-york/ui/input"
-import { Label } from "@/registry/new-york/ui/label"
+import { Calendar } from "@/registry/default/ui/calendar"
+import { Card, CardContent, CardFooter } from "@/registry/default/ui/card"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
 
 export default function Calendar17() {
   const [date, setDate] = React.useState<Date | undefined>(

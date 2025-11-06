@@ -7,7 +7,7 @@ import {
   type ThemeProviderProps,
 } from "next-themes"
 
-import { TooltipProvider } from "@/registry/new-york/ui/tooltip"
+import { TooltipProvider } from "@/registry/default/ui/tooltip"
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (

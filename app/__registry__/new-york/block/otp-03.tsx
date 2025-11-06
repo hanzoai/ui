@@ -1,24 +1,24 @@
 "use client"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/registry/new-york/ui/field"
+} from "@/registry/default/ui/field"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/registry/new-york/ui/input-otp"
+} from "@/registry/default/ui/input-otp"
 
 export default function OTPPage() {
   return (

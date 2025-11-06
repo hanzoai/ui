@@ -4,15 +4,15 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/new-york/ui/avatar"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/registry/default/ui/avatar"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
+} from "@/registry/default/ui/card"
 import {
   Command,
   CommandEmpty,
@@ -20,12 +20,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/new-york/ui/command"
+} from "@/registry/default/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/default/ui/popover"
 
 export function DemoTeamMembers() {
   return (

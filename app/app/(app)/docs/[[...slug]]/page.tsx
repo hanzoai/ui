@@ -11,8 +11,8 @@ import { findNeighbour } from "fumadocs-core/server"
 import { source } from "@/lib/source"
 import { absoluteUrl } from "@/lib/utils"
 import { DocsTableOfContents } from "@/components/toc"
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Button } from "@/registry/new-york/ui/button"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
 
 export const revalidate = false
 // For static export, we cannot use dynamicParams

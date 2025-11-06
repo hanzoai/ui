@@ -2,8 +2,8 @@
 
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
-import { Button } from "@/registry/new-york/ui/button"
-import { ButtonGroup } from "@/registry/new-york/ui/button-group"
+import { Button } from "@/registry/default/ui/button"
+import { ButtonGroup } from "@/registry/default/ui/button-group"
 
 export function ButtonGroupNested() {
   return (

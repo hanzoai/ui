@@ -2,7 +2,7 @@
 
 import { Area, AreaChart, Line, LineChart } from "recharts"
 
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/default/ui/button"
 import {
   Card,
   CardAction,
@@ -10,8 +10,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/new-york/ui/card"
-import { ChartConfig, ChartContainer } from "@/registry/new-york/ui/chart"
+} from "@/registry/default/ui/card"
+import { ChartConfig, ChartContainer } from "@/registry/default/ui/chart"
 
 const data = [
   {
