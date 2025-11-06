@@ -28,9 +28,30 @@ export async function BlockDisplay({ name }: { name: string }) {
     }))
   )
 
+  // Serialize item to ensure no functions are passed to client component
+  const serializedItem = {
+    name: item.name,
+    type: item.type,
+    description: item.description,
+    dependencies: item.dependencies,
+    devDependencies: item.devDependencies,
+    registryDependencies: item.registryDependencies,
+    files: item.files?.map(f => ({
+      path: f.path,
+      content: f.content,
+      type: f.type,
+      target: f.target,
+    })),
+    meta: item.meta ? {
+      iframeHeight: item.meta.iframeHeight,
+      containerClassName: item.meta.containerClassName,
+      container: item.meta.container,
+    } : undefined,
+  }
+
   return (
     <BlockViewer
-      item={item}
+      item={serializedItem}
       tree={tree}
       highlightedFiles={highlightedFiles}
       styleName="default"
