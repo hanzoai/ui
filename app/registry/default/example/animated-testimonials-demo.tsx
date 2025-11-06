@@ -30,7 +30,11 @@ const testimonials = [
 export default function AnimatedTestimonialsDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
-      <AnimatedTestimonials testimonials={testimonials} autoPlay duration={5000} />
+      <AnimatedTestimonials
+        testimonials={testimonials}
+        autoPlay
+        duration={5000}
+      />
     </div>
   )
 }

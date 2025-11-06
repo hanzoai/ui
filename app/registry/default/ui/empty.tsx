@@ -15,7 +15,10 @@ function Empty({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   )
 }
 
-function EmptyHeader({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function EmptyHeader({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="empty-header"
@@ -47,7 +50,8 @@ function EmptyMedia({
   className,
   variant = "default",
   ...props
-}: React.ComponentPropsWithoutRef<"div"> & VariantProps<typeof emptyMediaVariants>) {
+}: React.ComponentPropsWithoutRef<"div"> &
+  VariantProps<typeof emptyMediaVariants>) {
   return (
     <div
       data-slot="empty-icon"
@@ -58,7 +62,10 @@ function EmptyMedia({
   )
 }
 
-function EmptyTitle({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function EmptyTitle({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="empty-title"
@@ -68,7 +75,10 @@ function EmptyTitle({ className, ...props }: React.ComponentPropsWithoutRef<"div
   )
 }
 
-function EmptyDescription({ className, ...props }: React.ComponentPropsWithoutRef<"p">) {
+function EmptyDescription({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"p">) {
   return (
     <div
       data-slot="empty-description"
@@ -81,7 +91,10 @@ function EmptyDescription({ className, ...props }: React.ComponentPropsWithoutRe
   )
 }
 
-function EmptyContent({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function EmptyContent({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="empty-content"

@@ -1,21 +1,28 @@
 "use client"
 
 import Link from "next/link"
+
 import { docsConfig } from "@/config/docs"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/registry/new-york/ui/card"
-import { Badge } from "@/registry/new-york/ui/badge"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/new-york/ui/badge"
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york/ui/card"
 
 export function ComponentGrid() {
   // Get all component sections from sidebar config
-  const componentSections = docsConfig.sidebarNav.filter((section) =>
-    section.title !== "Getting Started" &&
-    section.title !== "Blocks" &&
-    section.title !== "Charts" &&
-    section.title !== "Frameworks" &&
-    section.title !== "Packages" &&
-    section.title !== "Testing" &&
-    section.title !== "White-Label"
+  const componentSections = docsConfig.sidebarNav.filter(
+    (section) =>
+      section.title !== "Getting Started" &&
+      section.title !== "Blocks" &&
+      section.title !== "Charts" &&
+      section.title !== "Frameworks" &&
+      section.title !== "Packages" &&
+      section.title !== "Testing" &&
+      section.title !== "White-Label"
   )
 
   return (
@@ -23,7 +30,9 @@ export function ComponentGrid() {
       {componentSections.map((section) => (
         <div key={section.title} className="space-y-4">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight">{section.title}</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {section.title}
+            </h2>
             <p className="text-muted-foreground">
               {getSectionDescription(section.title)}
             </p>
@@ -56,7 +65,10 @@ export function ComponentGrid() {
         <h3 className="text-lg font-semibold">Can't find what you need?</h3>
         <p className="mt-2 text-sm text-muted-foreground">
           Try the{" "}
-          <Link href="/docs/registry" className="font-medium underline underline-offset-4">
+          <Link
+            href="/docs/registry"
+            className="font-medium underline underline-offset-4"
+          >
             registry directory
           </Link>{" "}
           for community-maintained components.
@@ -68,7 +80,7 @@ export function ComponentGrid() {
 
 function getSectionDescription(title: string): string {
   const descriptions: Record<string, string> = {
-    "Components": "Re-usable components built using Radix UI and Tailwind CSS.",
+    Components: "Re-usable components built using Radix UI and Tailwind CSS.",
     "Code Components": "Components for displaying and editing code.",
     "Project Management": "Components for managing projects and tasks.",
     "Device Mockups": "Realistic device mockups for showcasing your work.",
@@ -79,7 +91,7 @@ function getSectionDescription(title: string): string {
     "UI Elements": "Essential UI building blocks.",
     "Navigation Bars": "Navigation bars for different use cases.",
     "Utility Components": "Helpful utility components.",
-    "AI Components": "AI-powered interactive components."
+    "AI Components": "AI-powered interactive components.",
   }
   return descriptions[title] || ""
 }

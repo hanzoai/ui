@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Home, Mail, Search, Settings, User } from "lucide-react"
 
 import { Dock, DockItem } from "@/registry/default/ui/macos-dock"

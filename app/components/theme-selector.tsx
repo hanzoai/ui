@@ -25,7 +25,6 @@ export function ThemeSelector({ className }: React.ComponentProps<"div">) {
       <Select value={activeTheme} onValueChange={setActiveTheme}>
         <SelectTrigger
           id="theme-selector"
-         
           className="bg-secondary text-secondary-foreground border-secondary justify-start shadow-none *:data-[slot=select-value]:w-12"
         >
           <span className="font-medium">Theme:</span>

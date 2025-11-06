@@ -1,6 +1,6 @@
 import fs from "fs"
-
 import { Index } from "@/__registry__"
+
 import { type Style } from "@/registry/styles"
 
 export function processMdxForLLMs(content: string, style: Style["name"]) {

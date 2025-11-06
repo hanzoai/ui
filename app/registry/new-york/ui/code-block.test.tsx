@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { beforeEach, describe, expect, it, vi } from "vitest"
 import { codeToHtml } from "shiki"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { CodeBlock } from "./code-block"
 

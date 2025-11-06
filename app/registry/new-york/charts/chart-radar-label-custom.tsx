@@ -75,7 +75,7 @@ export default function Component() {
                 return (
                   <text
                     x={x}
-                    y={index === 0 ? (y || 0) - 10 : (y || 0)}
+                    y={index === 0 ? (y || 0) - 10 : y || 0}
                     textAnchor={textAnchor}
                     fontSize={13}
                     fontWeight={500}

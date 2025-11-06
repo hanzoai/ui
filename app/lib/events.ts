@@ -15,7 +15,10 @@ const eventSchema = z.object({
   ]),
   // declare type AllowedPropertyValues = string | number | boolean | null
   properties: z
-    .record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()]))
+    .record(
+      z.string(),
+      z.union([z.string(), z.number(), z.boolean(), z.null()])
+    )
     .optional(),
 })
 
@@ -24,6 +27,11 @@ export type Event = z.infer<typeof eventSchema>
 export function trackEvent(input: Event): void {
   const event = eventSchema.parse(input)
   if (event) {
-    va.track(event.name, event.properties as Record<string, string | number | boolean | null> | undefined)
+    va.track(
+      event.name,
+      event.properties as
+        | Record<string, string | number | boolean | null>
+        | undefined
+    )
   }
 }

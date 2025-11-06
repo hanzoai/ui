@@ -1,6 +1,39 @@
 "use client"
 
 // WebSpeech API type declarations
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import {
+  Mic,
+  MicOff,
+  Pause,
+  Play,
+  RotateCcw,
+  Settings,
+  Square,
+  Volume2,
+  VolumeX,
+} from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/default/ui/badge"
+import { Button } from "@/registry/default/ui/button"
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/default/ui/select"
+import { Slider } from "@/registry/default/ui/slider"
+import { Switch } from "@/registry/default/ui/switch"
+import { Textarea } from "@/registry/default/ui/textarea"
+
 declare global {
   interface Window {
     SpeechRecognition: typeof SpeechRecognition
@@ -53,39 +86,6 @@ declare global {
     new (): SpeechRecognition
   }
 }
-
-import React, { useCallback, useEffect, useRef, useState } from "react"
-import {
-  Mic,
-  MicOff,
-  Pause,
-  Play,
-  RotateCcw,
-  Settings,
-  Square,
-  Volume2,
-  VolumeX,
-} from "lucide-react"
-
-import { cn } from "@/lib/utils"
-import { Badge } from "@/registry/default/ui/badge"
-import { Button } from "@/registry/default/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/registry/default/ui/card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/default/ui/select"
-import { Slider } from "@/registry/default/ui/slider"
-import { Switch } from "@/registry/default/ui/switch"
-import { Textarea } from "@/registry/default/ui/textarea"
 
 interface VoiceProfile {
   id: string

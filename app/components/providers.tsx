@@ -2,7 +2,10 @@
 
 import * as React from "react"
 import { Provider as JotaiProvider } from "jotai"
-import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from "next-themes"
+import {
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps,
+} from "next-themes"
 
 import { TooltipProvider } from "@/registry/new-york/ui/tooltip"
 

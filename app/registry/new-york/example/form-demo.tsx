@@ -1,5 +1,5 @@
-import { Form } from "@/registry/new-york/ui/form"
 import { Button } from "@/registry/new-york/ui/button"
+import { Form } from "@/registry/new-york/ui/form"
 
 export default function FormDemo() {
   return (

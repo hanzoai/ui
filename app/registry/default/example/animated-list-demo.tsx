@@ -10,7 +10,9 @@ const listItems = [
         </div>
         <div>
           <div className="font-semibold">Task Completed</div>
-          <div className="text-sm text-muted-foreground">Project documentation updated</div>
+          <div className="text-sm text-muted-foreground">
+            Project documentation updated
+          </div>
         </div>
       </div>
     ),
@@ -24,7 +26,9 @@ const listItems = [
         </div>
         <div>
           <div className="font-semibold">New Message</div>
-          <div className="text-sm text-muted-foreground">You have 3 unread messages</div>
+          <div className="text-sm text-muted-foreground">
+            You have 3 unread messages
+          </div>
         </div>
       </div>
     ),
@@ -38,7 +42,9 @@ const listItems = [
         </div>
         <div>
           <div className="font-semibold">Payment Received</div>
-          <div className="text-sm text-muted-foreground">$1,234.56 deposited</div>
+          <div className="text-sm text-muted-foreground">
+            $1,234.56 deposited
+          </div>
         </div>
       </div>
     ),

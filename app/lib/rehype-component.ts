@@ -1,9 +1,9 @@
 import fs from "fs"
 import path from "path"
 import { UnistNode, UnistTree } from "types/unist"
+import type { Node as UnistBaseNode } from "unist"
 import { u } from "unist-builder"
 import { visit } from "unist-util-visit"
-import type { Node as UnistBaseNode } from "unist"
 
 import { Index } from "../__registry__"
 import { styles } from "../registry/styles"
