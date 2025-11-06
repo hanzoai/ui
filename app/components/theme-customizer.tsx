@@ -65,7 +65,7 @@ export function ThemeCustomizer({ className }: React.ComponentProps<"div">) {
               className="text-muted-foreground hover:text-primary data-[active=true]:text-primary flex h-7 cursor-pointer items-center justify-center px-4 text-center text-base font-medium capitalize transition-colors hover:no-underline"
               onClick={() => setActiveTheme(theme.name)}
             >
-              {theme.name === "neutral" ? "Default" : theme.name}
+              {theme.name}
             </Button>
           ))}
         </div>
@@ -76,7 +76,7 @@ export function ThemeCustomizer({ className }: React.ComponentProps<"div">) {
           Theme
         </Label>
         <Select
-          value={activeTheme === "default" ? "neutral" : activeTheme}
+          value={activeTheme}
           onValueChange={setActiveTheme}
         >
           <SelectTrigger
