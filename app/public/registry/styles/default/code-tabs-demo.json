@@ -1,0 +1,13 @@
+{
+  "name": "code-tabs-demo",
+  "registryDependencies": [
+    "code-tabs"
+  ],
+  "files": [
+    {
+      "name": "code-tabs-demo.tsx",
+      "content": "import { CodeTabs } from \"@/registry/default/ui/code-tabs\"\n\nexport default function CodeTabsDemo() {\n  const tabs = [\n    {\n      label: \"JavaScript\",\n      language: \"javascript\",\n      code: `function greet(name) {\n  return \\`Hello, \\${name}!\\`\n}\n\nconsole.log(greet(\"World\"))`,\n    },\n    {\n      label: \"TypeScript\",\n      language: \"typescript\",\n      code: `function greet(name: string): string {\n  return \\`Hello, \\${name}!\\`\n}\n\nconsole.log(greet(\"World\"))`,\n    },\n    {\n      label: \"Python\",\n      language: \"python\",\n      code: `def greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"World\"))`,\n    },\n  ]\n\n  return (\n    <div className=\"w-full max-w-3xl\">\n      <CodeTabs tabs={tabs} />\n    </div>\n  )\n}\n"
+    }
+  ],
+  "type": "components:example"
+}

@@ -31,9 +31,9 @@ class ErrorBoundary extends React.Component<
 }
 
 export function BuilderPreview({ name, type, scale = 1 }: BuilderPreviewProps) {
-  // Get the component from the registry
+  // Get the component from the registry (flat structure)
   const registryKey = name
-  const registryItem = Index.default?.[registryKey]
+  const registryItem = Index[registryKey]
 
   if (!registryItem || !registryItem.component) {
     return <PreviewPlaceholder name={name} type={type} error />

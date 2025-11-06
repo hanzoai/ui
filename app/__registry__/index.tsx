@@ -16,6 +16,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "android": {
+      name: "android",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/android")),
+      source: "",
+      files: ["registry/default/ui/android.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "alert": {
       name: "alert",
       type: "components:ui",
@@ -137,6 +148,28 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "code-block": {
+      name: "code-block",
+      type: "components:ui",
+      registryDependencies: ["badge","button","skeleton"],
+      component: React.lazy(() => import("@/registry/default/ui/code-block")),
+      source: "",
+      files: ["registry/default/ui/code-block.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "code-tabs": {
+      name: "code-tabs",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/code-tabs")),
+      source: "",
+      files: ["registry/default/ui/code-tabs.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "collapsible": {
       name: "collapsible",
       type: "components:ui",
@@ -199,6 +232,17 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/default/ui/dropdown-menu")),
       source: "",
       files: ["registry/default/ui/dropdown-menu.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "gantt": {
+      name: "gantt",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/gantt")),
+      source: "",
+      files: ["registry/default/ui/gantt.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []
@@ -342,6 +386,17 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/default/ui/resizable")),
       source: "",
       files: ["registry/default/ui/resizable.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "sandbox": {
+      name: "sandbox",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/sandbox")),
+      source: "",
+      files: ["registry/default/ui/sandbox.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []
@@ -4115,6 +4170,61 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/default/example/video-player-demo")),
       source: "",
       files: ["registry/default/example/video-player-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "android-demo": {
+      name: "android-demo",
+      type: "components:example",
+      registryDependencies: ["android"],
+      component: React.lazy(() => import("@/registry/default/example/android-demo")),
+      source: "",
+      files: ["registry/default/example/android-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "gantt-demo": {
+      name: "gantt-demo",
+      type: "components:example",
+      registryDependencies: ["gantt"],
+      component: React.lazy(() => import("@/registry/default/example/gantt-demo")),
+      source: "",
+      files: ["registry/default/example/gantt-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "sandbox-demo": {
+      name: "sandbox-demo",
+      type: "components:example",
+      registryDependencies: ["sandbox"],
+      component: React.lazy(() => import("@/registry/default/example/sandbox-demo")),
+      source: "",
+      files: ["registry/default/example/sandbox-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "code-block-demo": {
+      name: "code-block-demo",
+      type: "components:example",
+      registryDependencies: ["code-block"],
+      component: React.lazy(() => import("@/registry/default/example/code-block-demo")),
+      source: "",
+      files: ["registry/default/example/code-block-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "code-tabs-demo": {
+      name: "code-tabs-demo",
+      type: "components:example",
+      registryDependencies: ["code-tabs"],
+      component: React.lazy(() => import("@/registry/default/example/code-tabs-demo")),
+      source: "",
+      files: ["registry/default/example/code-tabs-demo.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []

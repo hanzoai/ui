@@ -10,6 +10,13 @@
     "type": "components:ui"
   },
   {
+    "name": "android",
+    "files": [
+      "ui/android.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
     "name": "alert",
     "files": [
       "ui/alert.tsx"
@@ -122,6 +129,29 @@
     "type": "components:ui"
   },
   {
+    "name": "code-block",
+    "dependencies": [
+      "shiki",
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "badge",
+      "button",
+      "skeleton"
+    ],
+    "files": [
+      "ui/code-block.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "code-tabs",
+    "files": [
+      "ui/code-tabs.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
     "name": "collapsible",
     "dependencies": [
       "@radix-ui/react-collapsible"
@@ -182,6 +212,13 @@
     ],
     "files": [
       "ui/dropdown-menu.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "gantt",
+    "files": [
+      "ui/gantt.tsx"
     ],
     "type": "components:ui"
   },
@@ -318,6 +355,13 @@
     ],
     "files": [
       "ui/resizable.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
+    "name": "sandbox",
+    "files": [
+      "ui/sandbox.tsx"
     ],
     "type": "components:ui"
   },
@@ -3568,6 +3612,56 @@
     "name": "video-player-demo",
     "files": [
       "example/video-player-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "android-demo",
+    "registryDependencies": [
+      "android"
+    ],
+    "files": [
+      "example/android-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "gantt-demo",
+    "registryDependencies": [
+      "gantt"
+    ],
+    "files": [
+      "example/gantt-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "sandbox-demo",
+    "registryDependencies": [
+      "sandbox"
+    ],
+    "files": [
+      "example/sandbox-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-block-demo",
+    "registryDependencies": [
+      "code-block"
+    ],
+    "files": [
+      "example/code-block-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "code-tabs-demo",
+    "registryDependencies": [
+      "code-tabs"
+    ],
+    "files": [
+      "example/code-tabs-demo.tsx"
     ],
     "type": "components:example"
   },
