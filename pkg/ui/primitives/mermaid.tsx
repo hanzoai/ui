@@ -1,6 +1,7 @@
 // import { save } from '@tauri-apps/plugin-dialog'; // Not available in web environment
 // import * as fs from '@tauri-apps/plugin-fs'; // Not available in web environment
 import { RotateCcw, Download } from 'lucide-react';
+// @ts-ignore - mermaid is an optional peerDependency
 import mermaid from 'mermaid';
 import { FC, useEffect, useRef, useState, useCallback } from 'react';
 import { toast } from 'sonner';
