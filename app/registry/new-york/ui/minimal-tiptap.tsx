@@ -5,10 +5,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface MinimalTiptapProps
-  extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    "onChange"
-  > {
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange"> {
   value?: string
   onChange?: (value: string) => void
 }

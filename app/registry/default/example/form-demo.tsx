@@ -1,5 +1,5 @@
-import { Form } from "@/registry/default/ui/form"
 import { Button } from "@/registry/default/ui/button"
+import { Form } from "@/registry/default/ui/form"
 
 export default function FormDemo() {
   return (

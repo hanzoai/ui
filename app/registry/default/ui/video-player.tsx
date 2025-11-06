@@ -123,7 +123,9 @@ const VideoPlayer = React.forwardRef<
     const videoRef = React.useRef<HTMLVideoElement>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
     const progressRef = React.useRef<HTMLDivElement>(null)
-    const controlsTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
+    const controlsTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(
+      undefined
+    )
 
     // State
     const [isPlaying, setIsPlaying] = React.useState(false)

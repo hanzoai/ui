@@ -127,7 +127,6 @@ function DragHandle({ id }: { id: number }) {
       {...attributes}
       {...listeners}
       variant="ghost"
-     
       className="text-muted-foreground size-7 hover:bg-transparent"
     >
       <IconGripVertical className="text-muted-foreground size-3" />
@@ -269,7 +268,6 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           <Select>
             <SelectTrigger
               className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
-             
               id={`${row.original.id}-reviewer`}
             >
               <SelectValue placeholder="Assign reviewer" />
@@ -413,7 +411,6 @@ export function DataTable({
         <Select defaultValue="outline">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
-           
             id="view-selector"
           >
             <SelectValue placeholder="Select a view" />

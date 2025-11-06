@@ -1,3 +1,5 @@
+"use client"
+
 import { Dock, DockItem } from "@/registry/default/ui/dock"
 
 export default function DockCustomIconsDemo() {

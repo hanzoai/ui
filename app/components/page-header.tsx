@@ -46,7 +46,10 @@ function PageHeaderDescription({
   )
 }
 
-function PageActions({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function PageActions({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       className={cn(

@@ -4,8 +4,9 @@ import { BlockDisplay } from "@/components/block-display"
 import { Button } from "@/registry/default/ui/button"
 import { getActiveStyle } from "@/registry/styles"
 
-export const dynamic = "force-static"
-export const revalidate = false
+// Temporarily disabled force-static to fix build issues
+// export const dynamic = "force-static"
+// export const revalidate = false
 
 const FEATURED_BLOCKS = [
   "dashboard-01",

@@ -528,7 +528,10 @@ export const PulsePresets = {
    * Notification indicator
    */
   Notification: (
-    props: Omit<PulseAnimationProps, "children" | "pattern" | "showRing" | "size"> & {
+    props: Omit<
+      PulseAnimationProps,
+      "children" | "pattern" | "showRing" | "size"
+    > & {
       size?: number
     }
   ) => <PulseDot {...props} />,
