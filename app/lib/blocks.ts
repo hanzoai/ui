@@ -52,7 +52,8 @@ export async function getAllBlocks(
 
     // Extract category from block name (e.g., "sidebar-01" -> "sidebar")
     const blockCategory = block.name.split("-")[0]
-    const matchesCategory = categories.length === 0 || categories.includes(blockCategory)
+    const matchesCategory =
+      categories.length === 0 || categories.includes(blockCategory)
 
     return matchesType && matchesCategory
   })

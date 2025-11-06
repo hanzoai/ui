@@ -104,7 +104,8 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
-interface ChartTooltipContentProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ChartTooltipContentProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   active?: boolean
   payload?: Array<any>
   label?: React.ReactNode
