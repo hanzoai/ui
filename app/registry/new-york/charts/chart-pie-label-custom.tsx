@@ -74,7 +74,7 @@ export default function Component() {
               data={chartData}
               dataKey="visitors"
               labelLine={false}
-              label={({ payload, ...props }) => {
+              label={({ payload, ...props }: any) => {
                 return (
                   <text
                     cx={props.cx}

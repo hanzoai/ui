@@ -76,8 +76,8 @@ export default function Component() {
                 className="fill-background"
                 stroke="none"
                 fontSize={12}
-                formatter={(value: keyof typeof chartConfig) =>
-                  chartConfig[value]?.label
+                formatter={(value: any) =>
+                  chartConfig[value as keyof typeof chartConfig]?.label
                 }
               />
             </Pie>

@@ -139,7 +139,7 @@ export default function Component() {
               nameKey="month"
               innerRadius={60}
               strokeWidth={5}
-              activeIndex={activeIndex}
+              activeIndex={activeIndex as any}
               activeShape={({
                 outerRadius = 0,
                 ...props
