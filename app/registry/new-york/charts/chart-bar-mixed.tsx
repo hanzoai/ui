@@ -86,7 +86,7 @@ export default function Component() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar dataKey="visitors" radius={5} />
           </BarChart>
         </ChartContainer>
       </CardContent>
