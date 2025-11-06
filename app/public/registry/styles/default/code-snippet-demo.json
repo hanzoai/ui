@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "code-snippet-demo.tsx",
-      "content": "export default function Demo() {\n  return (\n    <div className=\"flex h-[400px] items-center justify-center rounded-lg border bg-background\">\n      <p className=\"text-sm text-muted-foreground\">Demo coming soon</p>\n    </div>\n  )\n}\n"
+      "content": "\"use client\"\n\nimport { CodeSnippet } from \"@/registry/default/ui/code-snippet\"\n\nconst exampleCode = `function fibonacci(n: number): number {\n  if (n <= 1) return n;\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\n// Calculate the 10th Fibonacci number\nconst result = fibonacci(10);\nconsole.log(\\`Fibonacci(10) = \\${result}\\`);`\n\nexport default function CodeSnippetDemo() {\n  return (\n    <div className=\"w-full space-y-6\">\n      <CodeSnippet\n        code={exampleCode}\n        language=\"typescript\"\n        filename=\"fibonacci.ts\"\n        showLineNumbers\n        showCopyButton\n        showLanguageBadge\n      />\n    </div>\n  )\n}\n"
     }
   ],
   "type": "components:example"
