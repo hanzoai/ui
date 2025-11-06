@@ -81,14 +81,12 @@ export function ComponentExample({
               classNames={extractedClassNames}
               className="absolute right-4 top-20"
             />
-          ) : (
-            codeString ? (
-              <CopyButton
-                value={codeString}
-                className="absolute right-4 top-20"
-              />
-            ) : null
-          )}
+          ) : codeString ? (
+            <CopyButton
+              value={codeString}
+              className="absolute right-4 top-20"
+            />
+          ) : null}
         </div>
         <TabsContent value="preview" className="rounded-md border">
           <div

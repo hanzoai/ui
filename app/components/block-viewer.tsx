@@ -17,11 +17,11 @@ import {
   Terminal,
 } from "lucide-react"
 import { ImperativePanelHandle } from "react-resizable-panels"
-import { registryItemFileSchema, registryItemSchema } from "@/lib/schemas"
 import { z } from "zod"
 
 import { trackEvent } from "@/lib/events"
 import { createFileTreeForRegistryItemFiles, FileTree } from "@/lib/registry"
+import { registryItemFileSchema, registryItemSchema } from "@/lib/schemas"
 import { cn } from "@/lib/utils"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 import { getIconForLanguageExtension } from "@/components/icons"

@@ -1,6 +1,9 @@
 "use client"
 
-import { PaymentMethodManager, type PaymentMethod } from "@/registry/new-york/ui/billing"
+import {
+  PaymentMethodManager,
+  type PaymentMethod,
+} from "@/registry/new-york/ui/billing"
 
 export const description =
   "Payment method management interface for adding, removing, and setting default payment methods."

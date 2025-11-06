@@ -21,7 +21,9 @@ import { toast } from "@/registry/new-york/ui/use-toast"
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], { message: "Please select a theme." }),
-  font: z.enum(["inter", "manrope", "system"], { message: "Please select a font." }),
+  font: z.enum(["inter", "manrope", "system"], {
+    message: "Please select a font.",
+  }),
 })
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>

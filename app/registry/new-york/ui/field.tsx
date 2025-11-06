@@ -7,7 +7,10 @@ import { cn } from "@/lib/utils"
 import { Label } from "@/registry/new-york/ui/label"
 import { Separator } from "@/registry/new-york/ui/separator"
 
-function FieldSet({ className, ...props }: React.ComponentPropsWithoutRef<"fieldset">) {
+function FieldSet({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"fieldset">) {
   return (
     <fieldset
       data-slot="field-set"
@@ -25,7 +28,9 @@ function FieldLegend({
   className,
   variant = "legend",
   ...props
-}: React.ComponentPropsWithoutRef<"legend"> & { variant?: "legend" | "label" }) {
+}: React.ComponentPropsWithoutRef<"legend"> & {
+  variant?: "legend" | "label"
+}) {
   return (
     <legend
       data-slot="field-legend"
@@ -41,7 +46,10 @@ function FieldLegend({
   )
 }
 
-function FieldGroup({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function FieldGroup({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="field-group"
@@ -94,7 +102,10 @@ function Field({
   )
 }
 
-function FieldContent({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function FieldContent({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="field-content"
@@ -125,7 +136,10 @@ function FieldLabel({
   )
 }
 
-function FieldTitle({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+function FieldTitle({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   return (
     <div
       data-slot="field-label"
@@ -138,7 +152,10 @@ function FieldTitle({ className, ...props }: React.ComponentPropsWithoutRef<"div
   )
 }
 
-function FieldDescription({ className, ...props }: React.ComponentPropsWithoutRef<"p">) {
+function FieldDescription({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"p">) {
   return (
     <p
       data-slot="field-description"
