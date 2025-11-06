@@ -3,6 +3,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { CodeBlock } from "./code-block"
 
+// Mock clipboard
+const mockWriteText = vi.fn().mockResolvedValue(undefined)
+Object.defineProperty(navigator, "clipboard", {
+  value: {
+    writeText: mockWriteText,
+    readText: vi.fn().mockResolvedValue(""),
+  },
+  writable: true,
+})
+
 // Mock shiki
 vi.mock("shiki", () => ({
   codeToHtml: vi
@@ -76,9 +86,7 @@ describe("CodeBlock", () => {
       fireEvent.click(copyButton)
     })
 
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      defaultProps.code
-    )
+    expect(mockWriteText).toHaveBeenCalledWith(defaultProps.code)
   })
 
   it("shows success state after copying", async () => {
