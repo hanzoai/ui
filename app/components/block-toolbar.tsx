@@ -10,20 +10,20 @@ import { useLiftMode } from "@/hooks/use-lift-mode"
 import { BlockCopyButton } from "@/components/block-copy-button"
 import { StyleSwitcher } from "@/components/style-switcher"
 import { V0Button } from "@/components/v0-button"
-import { Badge } from "@/registry/new-york/ui/badge"
-import { Label } from "@/registry/new-york/ui/label"
+import { Badge } from "@/registry/default/ui/badge"
+import { Label } from "@/registry/default/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
-import { Separator } from "@/registry/new-york/ui/separator"
-import { Switch } from "@/registry/new-york/ui/switch"
-import { TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/popover"
+import { Separator } from "@/registry/default/ui/separator"
+import { Switch } from "@/registry/default/ui/switch"
+import { TabsList, TabsTrigger } from "@/registry/default/ui/tabs"
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from "@/registry/new-york/ui/toggle-group"
+} from "@/registry/default/ui/toggle-group"
 import { Block } from "@/registry/schema"
 
 export function BlockToolbar({

@@ -1,5 +1,5 @@
-import { Checkbox } from "@/registry/new-york/ui/checkbox"
-import { Field, FieldLabel } from "@/registry/new-york/ui/field"
+import { Checkbox } from "@/registry/default/ui/checkbox"
+import { Field, FieldLabel } from "@/registry/default/ui/field"
 
 export function FieldCheckbox() {
   return (

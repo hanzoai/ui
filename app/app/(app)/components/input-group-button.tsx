@@ -8,13 +8,13 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/registry/new-york/ui/input-group"
-import { Label } from "@/registry/new-york/ui/label"
+} from "@/registry/default/ui/input-group"
+import { Label } from "@/registry/default/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/default/ui/popover"
 
 export function InputGroupButtonExample() {
   const [isFavorite, setIsFavorite] = React.useState(false)

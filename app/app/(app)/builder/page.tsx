@@ -19,24 +19,24 @@ import { CSS } from "@dnd-kit/utilities"
 import { Download, GripVertical, Plus, Settings2, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
-import { Button } from "@/registry/new-york/ui/button"
-import { Card } from "@/registry/new-york/ui/card"
-import { Input } from "@/registry/new-york/ui/input"
-import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
+import { Button } from "@/registry/default/ui/button"
+import { Card } from "@/registry/default/ui/card"
+import { Input } from "@/registry/default/ui/input"
+import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york/ui/select"
-import { Separator } from "@/registry/new-york/ui/separator"
+} from "@/registry/default/ui/select"
+import { Separator } from "@/registry/default/ui/separator"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york/ui/tabs"
+} from "@/registry/default/ui/tabs"
 
 interface PageItem {
   id: string

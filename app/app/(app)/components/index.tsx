@@ -1,4 +1,4 @@
-import { FieldSeparator } from "@/registry/new-york/ui/field"
+import { FieldSeparator } from "@/registry/default/ui/field"
 
 import { AppearanceSettings } from "./appearance-settings"
 import { ButtonGroupDemo } from "./button-group-demo"

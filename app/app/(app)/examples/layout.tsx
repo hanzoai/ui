@@ -15,7 +15,7 @@ import {
 } from "@/components/page-header"
 import { PageNav } from "@/components/page-nav"
 import { ThemeSelector } from "@/components/theme-selector"
-import { buttonVariants } from "@/registry/new-york/ui/button"
+import { buttonVariants } from "@/registry/default/ui/button"
 
 interface ExamplesLayoutProps {
   children: React.ReactNode
