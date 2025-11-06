@@ -5,7 +5,7 @@ import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
-interface AnimatedBeamProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AnimatedBeamProps extends React.SVGAttributes<SVGSVGElement> {
   duration?: number
   delay?: number
   pathColor?: string
@@ -17,7 +17,7 @@ interface AnimatedBeamProps extends React.HTMLAttributes<HTMLDivElement> {
   toRef?: React.RefObject<HTMLElement>
 }
 
-const AnimatedBeam = React.forwardRef<HTMLDivElement, AnimatedBeamProps>(
+const AnimatedBeam = React.forwardRef<SVGSVGElement, AnimatedBeamProps>(
   (
     {
       className,

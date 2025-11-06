@@ -206,8 +206,8 @@ function useRevealAnimation(
 ) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, {
-    threshold,
-    margin: rootMargin,
+    amount: threshold,
+    margin: rootMargin as any,
     once: triggerOnce,
   })
   const controls = useAnimation()

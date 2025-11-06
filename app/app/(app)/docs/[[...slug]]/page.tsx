@@ -69,7 +69,6 @@ export default async function Page(props: {
   const neighbours = await findNeighbour(source.pageTree, page.url)
 
   // Get the MDX content - Fumadocs exports the component directly as body
-  // @ts-expect-error - revisit fumadocs types.
   const MDXContent = page.data.body
 
   return (

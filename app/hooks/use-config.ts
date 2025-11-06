@@ -8,6 +8,7 @@ type Config = {
   style: Style["name"]
   theme: Theme["name"]
   radius: number
+  installationType?: "cli" | "manual"
 }
 
 const configAtom = atomWithStorage<Config>("config", {

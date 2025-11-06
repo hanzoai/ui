@@ -20,13 +20,8 @@ import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group"
 import { toast } from "@/registry/new-york/ui/use-toast"
 
 const appearanceFormSchema = z.object({
-  theme: z.enum(["light", "dark"], {
-    required_error: "Please select a theme.",
-  }),
-  font: z.enum(["inter", "manrope", "system"], {
-    invalid_type_error: "Select a font",
-    required_error: "Please select a font.",
-  }),
+  theme: z.enum(["light", "dark"], { message: "Please select a theme." }),
+  font: z.enum(["inter", "manrope", "system"], { message: "Please select a font." }),
 })
 
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>

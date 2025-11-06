@@ -62,7 +62,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/registry/default/ui/resizable"
-import { ScrollArea } from "@/registry/default/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/registry/default/ui/scroll-area"
 import { Separator } from "@/registry/default/ui/separator"
 import {
   Tabs,
@@ -114,7 +114,8 @@ export interface SecurityIssue {
   fix?: string
 }
 
-export interface AICodeProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface AICodeProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   value?: string
   defaultValue?: string
   language?: string
@@ -544,7 +545,7 @@ const FileTabs = React.forwardRef<
         )}
         {...props}
       >
-        <ScrollArea orientation="horizontal" className="flex-1">
+        <ScrollArea className="flex-1">
           <div className="flex items-center gap-1 py-1">
             {files.map((file) => (
               <Button
@@ -572,6 +573,7 @@ const FileTabs = React.forwardRef<
               </Button>
             ))}
           </div>
+          <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
         {onFileCreate && (
@@ -765,7 +767,7 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
 
         // Setup code actions for suggestions
         monaco.languages.registerCodeActionProvider(currentLanguage, {
-          provideCodeActions: (model, range) => {
+          provideCodeActions: (model, range, context, token) => {
             const actions = suggestions
               .filter(
                 (s) =>
@@ -797,7 +799,7 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
                   : undefined,
               }))
 
-            return { actions, dispose: () => {} }
+            return { actions, dispose: () => {} } as any
           },
         })
       },
@@ -1317,11 +1319,4 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
 
 AICode.displayName = "AICode"
 
-export {
-  AICode,
-  type AICodeProps,
-  type CodeFeature,
-  type Explanation,
-  type CodeSuggestion,
-  type SecurityIssue,
-}
+export { AICode }

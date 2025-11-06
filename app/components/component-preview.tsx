@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { Index } from "@/__registry__"
 
 import { cn } from "@/lib/utils"
@@ -16,7 +17,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs"
-import { styles } from "@/registry/styles"
+import { styles, type Style } from "@/registry/styles"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
@@ -24,6 +25,19 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   extractedClassNames?: string
   align?: "center" | "start" | "end"
   description?: string
+  type?: "block" | "component" | "example"
+  hideCode?: boolean
+  styleName?: Style["name"]
+}
+
+interface CodeBlockProps {
+  "data-rehype-pretty-code-fragment"?: string
+  children?: React.ReactNode
+}
+
+interface CodeButtonProps {
+  value?: string
+  __rawString__?: string
 }
 
 export function ComponentPreview({
@@ -34,40 +48,72 @@ export function ComponentPreview({
   extractedClassNames,
   align = "center",
   description,
+  type,
+  hideCode = false,
+  styleName,
   ...props
 }: ComponentPreviewProps) {
   const [config] = useConfig()
   const index = styles.findIndex((style) => style.name === config.style)
 
+  // Render blocks with static images for mobile, iframe for desktop
+  // This matches shadcn's approach and avoids chunk loading issues
+  if (type === "block") {
+    const style = styleName || config.style
+    return (
+      <div className="relative aspect-[4/2.5] w-full overflow-hidden rounded-md border md:-mx-1">
+        <Image
+          src={`/r/styles/${style}/${name}-light.png`}
+          alt={name}
+          width={1440}
+          height={900}
+          className="bg-background absolute top-0 left-0 z-20 w-[970px] max-w-none sm:w-[1280px] md:hidden dark:hidden md:dark:hidden"
+        />
+        <Image
+          src={`/r/styles/${style}/${name}-dark.png`}
+          alt={name}
+          width={1440}
+          height={900}
+          className="bg-background absolute top-0 left-0 z-20 hidden w-[970px] max-w-none sm:w-[1280px] md:hidden dark:block md:dark:hidden"
+        />
+        <div className="bg-background absolute inset-0 hidden w-[1600px] md:block">
+          <iframe src={`/view/${style}/${name}`} className="size-full" />
+        </div>
+      </div>
+    )
+  }
+
   const Codes = React.Children.toArray(children) as React.ReactElement[]
   const Code = Codes[index]
 
+  const Component = Index[config.style][name]?.component
+
+  if (!Component) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        Component{" "}
+        <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
+          {name}
+        </code>{" "}
+        not found in registry.
+      </p>
+    )
+  }
+
   const Preview = React.useMemo(() => {
-    const Component = Index[config.style][name]?.component
-
-    if (!Component) {
-      return (
-        <p className="text-sm text-muted-foreground">
-          Component{" "}
-          <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
-            {name}
-          </code>{" "}
-          not found in registry.
-        </p>
-      )
-    }
-
     return <Component />
-  }, [name, config.style])
+  }, [Component])
 
   const codeString = React.useMemo(() => {
+    const codeProps = Code?.props as CodeBlockProps | undefined
     if (
-      typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
+      typeof codeProps?.["data-rehype-pretty-code-fragment"] !== "undefined"
     ) {
       const [Button] = React.Children.toArray(
-        Code.props.children
+        codeProps.children
       ) as React.ReactElement[]
-      return Button?.props?.value || Button?.props?.__rawString__ || null
+      const buttonProps = Button?.props as CodeButtonProps | undefined
+      return buttonProps?.value || buttonProps?.__rawString__ || null
     }
   }, [Code])
 
@@ -97,7 +143,7 @@ export function ComponentPreview({
           <div className="flex items-center justify-between p-4">
             <StyleSwitcher />
             <div className="flex items-center gap-2">
-              {config.style === "default" && description ? (
+              {config.style === "default" && description && codeString ? (
                 <V0Button
                   block={{
                     code: codeString,
@@ -107,11 +153,13 @@ export function ComponentPreview({
                   }}
                 />
               ) : null}
-              <CopyButton
-                value={codeString}
-                variant="outline"
-                className="h-7 w-7 text-foreground opacity-100 hover:bg-muted hover:text-foreground [&_svg]:size-3.5"
-              />
+              {codeString ? (
+                <CopyButton
+                  value={codeString}
+                  variant="outline"
+                  className="h-7 w-7 text-foreground opacity-100 hover:bg-muted hover:text-foreground [&_svg]:size-3.5"
+                />
+              ) : null}
             </div>
           </div>
           <ThemeWrapper defaultTheme="zinc">
