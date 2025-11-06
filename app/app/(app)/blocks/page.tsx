@@ -2,11 +2,9 @@ import Link from "next/link"
 
 import { BlockDisplay } from "@/components/block-display"
 import { Button } from "@/registry/default/ui/button"
-import { getActiveStyle } from "@/registry/styles"
 
-// Temporarily disabled force-static to fix build issues
-// export const dynamic = "force-static"
-// export const revalidate = false
+export const dynamic = "force-static"
+export const revalidate = false
 
 const FEATURED_BLOCKS = [
   "dashboard-01",
@@ -16,13 +14,12 @@ const FEATURED_BLOCKS = [
   "login-04",
 ]
 
+// Single theme system - no style parameter needed
 export default function BlocksPage() {
-  const activeStyle = getActiveStyle()
-
   return (
     <div className="flex flex-col gap-12 md:gap-24">
       {FEATURED_BLOCKS.map((name) => (
-        <BlockDisplay name={name} key={name} styleName={activeStyle.name} />
+        <BlockDisplay name={name} key={name} />
       ))}
       <div className="container-wrapper">
         <div className="container flex justify-center py-6">

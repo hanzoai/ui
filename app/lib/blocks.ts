@@ -16,15 +16,14 @@ const project = new Project({
   compilerOptions: {},
 })
 
+// Single theme system - no style parameter needed
 export async function getAllBlockIds(
   types?: string[],
-  categories?: string[],
-  style: Style["name"] = DEFAULT_BLOCKS_STYLE
+  categories?: string[]
 ) {
   const blocks = await getAllBlocks(
     types ?? ["components:block"],
-    categories ?? [],
-    style
+    categories ?? []
   )
 
   return blocks.map((block) => block.name)
@@ -32,16 +31,14 @@ export async function getAllBlockIds(
 
 export async function getAllBlocks(
   types: string[] = ["components:block"],
-  categories: string[] = [],
-  style: Style["name"] = DEFAULT_BLOCKS_STYLE
+  categories: string[] = []
 ) {
-  // Collect all blocks from the specified style
+  // Collect all blocks (single theme system)
   const allBlocks: any[] = []
-  const styleIndex = Index[style]
 
-  if (typeof styleIndex === "object" && styleIndex !== null) {
-    for (const itemName in styleIndex) {
-      const item = styleIndex[itemName]
+  if (typeof Index === "object" && Index !== null) {
+    for (const itemName in Index) {
+      const item = Index[itemName]
       allBlocks.push(item)
     }
   }
@@ -59,11 +56,9 @@ export async function getAllBlocks(
   })
 }
 
-export async function getBlock(
-  name: string,
-  style: Style["name"] = DEFAULT_BLOCKS_STYLE
-) {
-  const entry = Index[style][name]
+// Single theme system - no style parameter needed
+export async function getBlock(name: string) {
+  const entry = Index[name]
 
   // Return null if block doesn't exist
   if (!entry) {
@@ -71,7 +66,7 @@ export async function getBlock(
   }
 
   // Skip validation - we control registry generation and know it's correct
-  const content = await _getBlockContent(name, style)
+  const content = await _getBlockContent(name)
 
   const chunks = await Promise.all(
     entry.chunks?.map(async (chunk: BlockChunk) => {
@@ -105,7 +100,7 @@ export async function getBlock(
 
   // Skip validation - return object directly
   return {
-    style,
+    style: "default", // Single theme system
     highlightedCode: content.code ? await highlightCode(content.code) : "",
     ...entry,
     ...content,
@@ -114,11 +109,9 @@ export async function getBlock(
   }
 }
 
-async function _getBlockCode(
-  name: string,
-  style: Style["name"] = DEFAULT_BLOCKS_STYLE
-) {
-  const entry = Index[style][name]
+// Single theme system - no style parameter needed
+async function _getBlockCode(name: string) {
+  const entry = Index[name]
 
   if (!entry?.source) {
     return ""
@@ -137,8 +130,9 @@ async function createTempSourceFile(filename: string) {
   return path.join(dir, filename)
 }
 
-async function _getBlockContent(name: string, style: Style["name"]) {
-  const raw = await _getBlockCode(name, style)
+// Single theme system - no style parameter needed
+async function _getBlockContent(name: string) {
+  const raw = await _getBlockCode(name)
 
   const tempFile = await createTempSourceFile(`${name}.tsx`)
   const sourceFile = project.createSourceFile(tempFile, raw, {
@@ -152,7 +146,7 @@ async function _getBlockContent(name: string, style: Style["name"]) {
 
   // Format the code.
   let code = sourceFile.getText()
-  code = code.replaceAll(`@/registry/${style}/`, "@/components/")
+  code = code.replaceAll(`@/registry/default/`, "@/components/")
   code = code.replaceAll("export default", "export")
 
   return {
