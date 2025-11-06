@@ -10,12 +10,13 @@ import {
   registryItemSchema,
 } from "@/lib/schemas"
 
-export function getRegistryComponent(name: string, style: string = "default") {
-  return Index[style]?.[name]?.component
+// Single theme system - style parameter no longer needed
+export function getRegistryComponent(name: string) {
+  return Index[name]?.component
 }
 
-export async function getRegistryItem(name: string, style: string = "default") {
-  const item = Index[style]?.[name]
+export async function getRegistryItem(name: string) {
+  const item = Index[name]
 
   if (!item) {
     return null
