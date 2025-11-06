@@ -481,7 +481,7 @@ ${setupConfig.description || "Follow any additional setup instructions provided 
         content: [
           {
             type: "text",
-            text: `Invalid input: ${JSON.stringify(error.errors)}`,
+            text: `Invalid input: ${JSON.stringify(error.issues || error)}`,
           },
         ],
       }

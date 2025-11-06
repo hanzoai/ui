@@ -8,10 +8,12 @@
     "noEmit": false,
     "composite": false,
     "incremental": false,
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["./*"],
       "@/app/*": ["../../app/*"],
-      "@/registry/*": ["../../app/registry/*"]
+      "@/registry/*": ["../../app/registry/*"],
+      "@/lib/*": ["../../app/lib/*"]
     }
   },
   "include": [
@@ -33,6 +35,18 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "src/button.ts",
+    "primitives/sidebar.tsx",
+    "primitives/chat/**/*",
+    "primitives/background-beams.tsx",
+    "primitives/mermaid.tsx",
+    "primitives/markdown-preview.tsx",
+    "primitives/qr-code.tsx",
+    "primitives/pagination.tsx",
+    "primitives/index.ts",
+    "primitives/index-selective.ts",
+    "src/primitives-export.ts",
+    "blocks/**/*"
   ]
 }
