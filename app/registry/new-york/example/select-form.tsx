@@ -27,7 +27,7 @@ import { toast } from "@/registry/default/ui/use-toast"
 const FormSchema = z.object({
   email: z
     .string({
-      required_error: "Please select an email to display.",
+      message: "Please select an email to display.",
     })
     .email(),
 })
