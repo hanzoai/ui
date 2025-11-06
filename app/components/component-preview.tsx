@@ -1,11 +1,8 @@
-"use client"
-
 import * as React from "react"
 import Image from "next/image"
 import { Index } from "@/__registry__"
 
 import { cn } from "@/lib/utils"
-import { useConfig } from "@/hooks/use-config"
 import { CopyButton, CopyWithClassNames } from "@/components/copy-button"
 import { Icons } from "@/components/icons"
 import { StyleSwitcher } from "@/components/style-switcher"
@@ -17,7 +14,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york/ui/tabs"
-import { styles, type Style } from "@/registry/styles"
+import { getActiveStyle, styles, type Style } from "@/registry/styles"
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
@@ -53,13 +50,14 @@ export function ComponentPreview({
   styleName,
   ...props
 }: ComponentPreviewProps) {
-  const [config] = useConfig()
-  const index = styles.findIndex((style) => style.name === config.style)
+  // Use provided styleName or default to active style
+  const activeStyle = styleName || getActiveStyle().name
+  const index = styles.findIndex((style) => style.name === activeStyle)
 
   // Render blocks with static images for mobile, iframe for desktop
   // This matches shadcn's approach and avoids chunk loading issues
   if (type === "block") {
-    const style = styleName || config.style
+    const style = activeStyle
     return (
       <div className="relative aspect-[4/2.5] w-full overflow-hidden rounded-md border md:-mx-1">
         <Image
@@ -86,7 +84,7 @@ export function ComponentPreview({
   const Codes = React.Children.toArray(children) as React.ReactElement[]
   const Code = Codes[index]
 
-  const Component = Index[config.style][name]?.component
+  const Component = Index[activeStyle][name]?.component
 
   if (!Component) {
     return (
@@ -143,12 +141,12 @@ export function ComponentPreview({
           <div className="flex items-center justify-between p-4">
             <StyleSwitcher />
             <div className="flex items-center gap-2">
-              {config.style === "default" && description && codeString ? (
+              {activeStyle === "default" && description && codeString ? (
                 <V0Button
                   block={{
                     code: codeString,
                     name,
-                    style: config.style,
+                    style: activeStyle,
                     description,
                   }}
                 />
