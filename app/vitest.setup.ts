@@ -36,8 +36,10 @@ global.ResizeObserver = class ResizeObserver {
 } as any
 
 // Mock clipboard API
-Object.assign(navigator, {
-  clipboard: {
+Object.defineProperty(navigator, "clipboard", {
+  value: {
     writeText: vi.fn().mockResolvedValue(undefined),
+    readText: vi.fn().mockResolvedValue(""),
   },
+  writable: true,
 })
