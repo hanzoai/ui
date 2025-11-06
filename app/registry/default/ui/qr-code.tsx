@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { QRCodeSVG } from "qrcode.react"
+import { QRCodeSVG, type ImageSettings } from "qrcode.react"
 
 import { cn } from "@/lib/utils"
 
@@ -12,12 +12,7 @@ interface QRCodeProps extends React.HTMLAttributes<HTMLDivElement> {
   bgColor?: string
   fgColor?: string
   includeMargin?: boolean
-  imageSettings?: {
-    src: string
-    height: number
-    width: number
-    excavate?: boolean
-  }
+  imageSettings?: ImageSettings
 }
 
 const QRCode = React.forwardRef<HTMLDivElement, QRCodeProps>(
