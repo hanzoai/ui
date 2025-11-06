@@ -69,13 +69,13 @@ export default function Component() {
             />
             <PolarAngleAxis
               dataKey="month"
-              tick={({ x, y, textAnchor, value, index, ...props }) => {
-                const data = chartData[index]
+              tick={({ x, y, textAnchor, value, index, ...props }: any) => {
+                const data = chartData[index as number]
 
                 return (
                   <text
                     x={x}
-                    y={index === 0 ? y - 10 : y}
+                    y={index === 0 ? (y || 0) - 10 : (y || 0)}
                     textAnchor={textAnchor}
                     fontSize={13}
                     fontWeight={500}

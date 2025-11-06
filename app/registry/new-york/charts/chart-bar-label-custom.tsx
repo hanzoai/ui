@@ -77,7 +77,6 @@ export default function Component() {
             />
             <Bar
               dataKey="desktop"
-              layout="vertical"
               fill="var(--color-desktop)"
               radius={4}
             >
