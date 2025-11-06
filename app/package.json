@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack --port 3333",
-    "build": "pnpm registry:build && pnpm registry:capture && next build",
+    "build": "pnpm registry:build && (pnpm registry:capture || echo 'Skipping screenshots in CI') && next build",
     "start": "next start --port 3001",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
