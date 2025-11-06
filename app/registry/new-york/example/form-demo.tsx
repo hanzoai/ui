@@ -4,7 +4,7 @@ import { Button } from "@/registry/new-york/ui/button"
 export default function FormDemo() {
   return (
     <div className="w-full min-h-[400px] flex items-center justify-center p-8">
-      <Form className="w-full max-w-md space-y-4">
+      <div className="w-full max-w-md space-y-4 p-6 border rounded-lg">
         <div className="space-y-2">
           <label className="text-sm font-medium">Email</label>
           <input
@@ -24,7 +24,7 @@ export default function FormDemo() {
         <Button type="submit" className="w-full">
           Submit
         </Button>
-      </Form>
+      </div>
     </div>
   )
 }
