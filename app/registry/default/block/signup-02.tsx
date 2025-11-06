@@ -13,7 +13,10 @@ import {
 } from "@/registry/default/ui/field"
 import { Input } from "@/registry/default/ui/input"
 
-function SignupForm({ className, ...props }: React.ComponentPropsWithoutRef<"form">) {
+function SignupForm({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"form">) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)

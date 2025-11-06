@@ -1,20 +1,34 @@
-'use client'
+"use client"
 
-import '@rainbow-me/rainbowkit/styles.css'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider } from 'wagmi'
-import { config } from '@/lib/wagmi'
+import "@rainbow-me/rainbowkit/styles.css"
+
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { type ReactNode, useEffect, useState } from "react"
+import { WagmiProvider } from "wagmi"
+import { type Config } from "wagmi"
 
 const queryClient = new QueryClient()
 
-export function Web3Provider({ children }: { children: React.ReactNode }) {
+export function Web3Provider({ children }: { children: ReactNode }) {
+  const [config, setConfig] = useState<Config | null>(null)
+
+  useEffect(() => {
+    // Dynamically import wagmi config only on client side
+    import("@/lib/wagmi").then((mod) => {
+      setConfig(mod.getConfig())
+    })
+  }, [])
+
+  // Don't render until config is loaded
+  if (!config) {
+    return <>{children}</>
+  }
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider modalSize="compact">
-          {children}
-        </RainbowKitProvider>
+        <RainbowKitProvider modalSize="compact">{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )

@@ -9,7 +9,8 @@ export default function MotionHighlightDemo() {
         </MotionHighlight>
         <MotionHighlight>
           <p className="text-lg">
-            Hover over this text to see the smooth highlight animation following your cursor.
+            Hover over this text to see the smooth highlight animation following
+            your cursor.
           </p>
         </MotionHighlight>
       </div>

@@ -495,7 +495,9 @@ export function KanbanBoard({
   const [activeCard, setActiveCard] = React.useState<KanbanCard | null>(null)
   const [searchQuery, setSearchQuery] = React.useState("")
   const [cardFormOpen, setCardFormOpen] = React.useState(false)
-  const [editingCard, setEditingCard] = React.useState<KanbanCard | undefined>(undefined)
+  const [editingCard, setEditingCard] = React.useState<KanbanCard | undefined>(
+    undefined
+  )
   const [activeColumnId, setActiveColumnId] = React.useState<string>("")
 
   const sensors = useSensors(

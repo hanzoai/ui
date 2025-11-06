@@ -75,11 +75,7 @@ export default function Component() {
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
-            <Bar
-              dataKey="desktop"
-              fill="var(--color-desktop)"
-              radius={4}
-            >
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4}>
               <LabelList
                 dataKey="month"
                 position="insideLeft"
