@@ -61,13 +61,19 @@ export async function generateStaticParams() {
   const { Index } = await import("@/__registry__")
   const params: Array<{ name: string }> = []
 
+  // Components with known SSR issues (event handlers, client-only features)
+  const skipComponents = new Set([
+    "macos-dock-demo", // Has onClick handlers that can't be serialized
+  ])
+
   // Single theme system - iterate directly over Index
   for (const itemName in Index) {
     const item = Index[itemName]
     if (
-      item.type === "components:block" ||
+      (item.type === "components:block" ||
       item.type === "components:component" ||
-      item.type === "components:example"
+      item.type === "components:example") &&
+      !skipComponents.has(item.name)
     ) {
       params.push({
         name: item.name,
