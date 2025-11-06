@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
+import { codeToHtml } from "shiki"
 
 import { CodeBlock } from "./code-block"
 
@@ -15,9 +16,11 @@ Object.defineProperty(navigator, "clipboard", {
 
 // Mock shiki
 vi.mock("shiki", () => ({
-  codeToHtml: vi
-    .fn()
-    .mockResolvedValue('<pre><code>const test = "hello"</code></pre>'),
+  codeToHtml: vi.fn().mockImplementation(async (code: string) => {
+    // Return just the code content with preserved line breaks
+    // The component expects raw code, not wrapped in pre/code tags
+    return code
+  }),
 }))
 
 describe("CodeBlock", () => {
@@ -152,7 +155,11 @@ describe("CodeBlock", () => {
       removed: [2],
     }
 
-    render(<CodeBlock {...defaultProps} diff={diff} />)
+    const multiLineCode = `line one
+line two
+line three`
+
+    render(<CodeBlock code={multiLineCode} language="text" diff={diff} />)
 
     await waitFor(() => {
       // Should render diff indicators
@@ -162,20 +169,40 @@ describe("CodeBlock", () => {
   })
 
   it("handles highlighted lines correctly", async () => {
-    render(<CodeBlock {...defaultProps} highlightLines={[1, 3]} />)
+    const multiLineCode = `first line
+second line
+third line`
+
+    render(
+      <CodeBlock code={multiLineCode} language="text" highlightLines={[1, 3]} />
+    )
 
     await waitFor(() => {
-      const lines = screen.getAllByText(/const test/)
-      expect(lines[0].closest("div")).toHaveClass(
-        "bg-blue-500/10",
-        "border-l-blue-500"
-      )
+      // Check line 1 (should be highlighted)
+      const firstLine = screen.getByText("first line")
+      const lineDiv1 = firstLine.closest(".group")
+      expect(lineDiv1).toHaveClass("bg-blue-500/10")
+      expect(lineDiv1).toHaveClass("border-l-2")
+      expect(lineDiv1).toHaveClass("border-l-blue-500")
+
+      // Check line 3 (should be highlighted)
+      const thirdLine = screen.getByText("third line")
+      const lineDiv3 = thirdLine.closest(".group")
+      expect(lineDiv3).toHaveClass("bg-blue-500/10")
+      expect(lineDiv3).toHaveClass("border-l-2")
+      expect(lineDiv3).toHaveClass("border-l-blue-500")
+
+      // Check line 2 (should NOT be highlighted)
+      const secondLine = screen.getByText("second line")
+      const lineDiv2 = secondLine.closest(".group")
+      expect(lineDiv2).not.toHaveClass("bg-blue-500/10")
     })
   })
 
   it("handles errors gracefully during syntax highlighting", async () => {
-    const { codeToHtml } = require("shiki")
-    codeToHtml.mockRejectedValueOnce(new Error("Syntax highlighting failed"))
+    vi.mocked(codeToHtml).mockRejectedValueOnce(
+      new Error("Syntax highlighting failed")
+    )
 
     render(<CodeBlock {...defaultProps} />)
 

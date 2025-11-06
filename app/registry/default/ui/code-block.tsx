@@ -187,9 +187,7 @@ const CodeBlock = React.forwardRef<HTMLDivElement, CodeBlockProps>(
       }
     }, [code])
 
-    const lines = highlightedCode
-      .split("\n")
-      .filter((line) => line.trim() !== "")
+    const lines = highlightedCode.split("\n")
 
     return (
       <div
