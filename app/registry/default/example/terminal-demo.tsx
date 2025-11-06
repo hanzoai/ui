@@ -1,3 +1,5 @@
+"use client"
+
 import { Terminal } from "@/registry/default/ui/terminal"
 
 export default function TerminalDemo() {
