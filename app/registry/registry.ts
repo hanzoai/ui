@@ -1,9 +1,9 @@
-import { ai } from "@/registry/ai"
-import { blocks } from "@/registry/blocks"
-import { examples } from "@/registry/examples"
-import { extended } from "@/registry/extended"
-import { Registry } from "@/registry/schema"
-import { ui } from "@/registry/ui"
+import { ai } from "./ai"
+import { blocks } from "./blocks"
+import { examples } from "./examples"
+import { extended } from "./extended"
+import { Registry } from "./schema"
+import { ui } from "./ui"
 
 export const registry: Registry = [
   ...ui,
