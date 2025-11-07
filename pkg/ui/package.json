@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "5.1.7",
+  "version": "5.1.8",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -62,7 +62,6 @@
     "test:frameworks": "jest test/multi-framework.test.js --verbose"
   },
   "bin": {
-    "@hanzo/ui": "./bin/cli.js",
     "hanzo-ui": "./bin/cli.js"
   },
   "exports": {

@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { IconCheck, IconCopy } from "@tabler/icons-react"
-import { Eta } from "eta"
 
 import { THEMES } from "@/lib/themes"
 import { cn } from "@/lib/utils"
@@ -651,18 +650,71 @@ function getThemeCodeOKLCH(theme: BaseColorOKLCH | undefined, radius: number) {
   return rootSection
 }
 
-// Create eta instance for template rendering
-const eta = new Eta()
-
 function getThemeCode(theme: BaseColor | undefined, radius: number) {
   if (!theme) {
     return ""
   }
 
-  return eta.renderString(BASE_STYLES_WITH_VARIABLES, {
-    colors: theme.cssVars,
-    radius: radius.toString(),
-  })
+  // Generate Tailwind v3 theme code with string templates
+  const light = theme.cssVars.light
+  const dark = theme.cssVars.dark
+
+  return `@layer base {
+  :root {
+    --background: ${light["background"]};
+    --foreground: ${light["foreground"]};
+    --card: ${light["card"]};
+    --card-foreground: ${light["card-foreground"]};
+    --popover: ${light["popover"]};
+    --popover-foreground: ${light["popover-foreground"]};
+    --primary: ${light["primary"]};
+    --primary-foreground: ${light["primary-foreground"]};
+    --secondary: ${light["secondary"]};
+    --secondary-foreground: ${light["secondary-foreground"]};
+    --muted: ${light["muted"]};
+    --muted-foreground: ${light["muted-foreground"]};
+    --accent: ${light["accent"]};
+    --accent-foreground: ${light["accent-foreground"]};
+    --destructive: ${light["destructive"]};
+    --destructive-foreground: ${light["destructive-foreground"]};
+    --border: ${light["border"]};
+    --input: ${light["input"]};
+    --ring: ${light["ring"]};
+    --radius: ${radius}rem;
+    --chart-1: ${light["chart-1"]};
+    --chart-2: ${light["chart-2"]};
+    --chart-3: ${light["chart-3"]};
+    --chart-4: ${light["chart-4"]};
+    --chart-5: ${light["chart-5"]};
+  }
+
+  .dark {
+    --background: ${dark["background"]};
+    --foreground: ${dark["foreground"]};
+    --card: ${dark["card"]};
+    --card-foreground: ${dark["card-foreground"]};
+    --popover: ${dark["popover"]};
+    --popover-foreground: ${dark["popover-foreground"]};
+    --primary: ${dark["primary"]};
+    --primary-foreground: ${dark["primary-foreground"]};
+    --secondary: ${dark["secondary"]};
+    --secondary-foreground: ${dark["secondary-foreground"]};
+    --muted: ${dark["muted"]};
+    --muted-foreground: ${dark["muted-foreground"]};
+    --accent: ${dark["accent"]};
+    --accent-foreground: ${dark["accent-foreground"]};
+    --destructive: ${dark["destructive"]};
+    --destructive-foreground: ${dark["destructive-foreground"]};
+    --border: ${dark["border"]};
+    --input: ${dark["input"]};
+    --ring: ${dark["ring"]};
+    --chart-1: ${dark["chart-1"]};
+    --chart-2: ${dark["chart-2"]};
+    --chart-3: ${dark["chart-3"]};
+    --chart-4: ${dark["chart-4"]};
+    --chart-5: ${dark["chart-5"]};
+  }
+}`
 }
 
 function getThemeCodeHSLV4(theme: BaseColor | undefined, radius: number) {
@@ -685,62 +737,3 @@ function getThemeCodeHSLV4(theme: BaseColor | undefined, radius: number) {
 
   return rootSection
 }
-
-const BASE_STYLES_WITH_VARIABLES = `
-@layer base {
-  :root {
-    --background: <%= it.colors.light["background"] %>;
-    --foreground: <%= it.colors.light["foreground"] %>;
-    --card: <%= it.colors.light["card"] %>;
-    --card-foreground: <%= it.colors.light["card-foreground"] %>;
-    --popover: <%= it.colors.light["popover"] %>;
-    --popover-foreground: <%= it.colors.light["popover-foreground"] %>;
-    --primary: <%= it.colors.light["primary"] %>;
-    --primary-foreground: <%= it.colors.light["primary-foreground"] %>;
-    --secondary: <%= it.colors.light["secondary"] %>;
-    --secondary-foreground: <%= it.colors.light["secondary-foreground"] %>;
-    --muted: <%= it.colors.light["muted"] %>;
-    --muted-foreground: <%= it.colors.light["muted-foreground"] %>;
-    --accent: <%= it.colors.light["accent"] %>;
-    --accent-foreground: <%= it.colors.light["accent-foreground"] %>;
-    --destructive: <%= it.colors.light["destructive"] %>;
-    --destructive-foreground: <%= it.colors.light["destructive-foreground"] %>;
-    --border: <%= it.colors.light["border"] %>;
-    --input: <%= it.colors.light["input"] %>;
-    --ring: <%= it.colors.light["ring"] %>;
-    --radius: <%= it.radius %>rem;
-    --chart-1: <%= it.colors.light["chart-1"] %>;
-    --chart-2: <%= it.colors.light["chart-2"] %>;
-    --chart-3: <%= it.colors.light["chart-3"] %>;
-    --chart-4: <%= it.colors.light["chart-4"] %>;
-    --chart-5: <%= it.colors.light["chart-5"] %>;
-  }
-
-  .dark {
-    --background: <%= it.colors.dark["background"] %>;
-    --foreground: <%= it.colors.dark["foreground"] %>;
-    --card: <%= it.colors.dark["card"] %>;
-    --card-foreground: <%= it.colors.dark["card-foreground"] %>;
-    --popover: <%= it.colors.dark["popover"] %>;
-    --popover-foreground: <%= it.colors.dark["popover-foreground"] %>;
-    --primary: <%= it.colors.dark["primary"] %>;
-    --primary-foreground: <%= it.colors.dark["primary-foreground"] %>;
-    --secondary: <%= it.colors.dark["secondary"] %>;
-    --secondary-foreground: <%= it.colors.dark["secondary-foreground"] %>;
-    --muted: <%= it.colors.dark["muted"] %>;
-    --muted-foreground: <%= it.colors.dark["muted-foreground"] %>;
-    --accent: <%= it.colors.dark["accent"] %>;
-    --accent-foreground: <%= it.colors.dark["accent-foreground"] %>;
-    --destructive: <%= it.colors.dark["destructive"] %>;
-    --destructive-foreground: <%= it.colors.dark["destructive-foreground"] %>;
-    --border: <%= it.colors.dark["border"] %>;
-    --input: <%= it.colors.dark["input"] %>;
-    --ring: <%= it.colors.dark["ring"] %>;
-    --chart-1: <%= it.colors.dark["chart-1"] %>;
-    --chart-2: <%= it.colors.dark["chart-2"] %>;
-    --chart-3: <%= it.colors.dark["chart-3"] %>;
-    --chart-4: <%= it.colors.dark["chart-4"] %>;
-    --chart-5: <%= it.colors.dark["chart-5"] %>;
-  }
-}
-`
