@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { IconCheck, IconCopy } from "@tabler/icons-react"
-import template from "lodash/template"
+import { Eta } from "eta"
 
 import { THEMES } from "@/lib/themes"
 import { cn } from "@/lib/utils"
@@ -651,12 +651,15 @@ function getThemeCodeOKLCH(theme: BaseColorOKLCH | undefined, radius: number) {
   return rootSection
 }
 
+// Create eta instance for template rendering
+const eta = new Eta()
+
 function getThemeCode(theme: BaseColor | undefined, radius: number) {
   if (!theme) {
     return ""
   }
 
-  return template(BASE_STYLES_WITH_VARIABLES)({
+  return eta.renderString(BASE_STYLES_WITH_VARIABLES, {
     colors: theme.cssVars,
     radius: radius.toString(),
   })
@@ -686,58 +689,58 @@ function getThemeCodeHSLV4(theme: BaseColor | undefined, radius: number) {
 const BASE_STYLES_WITH_VARIABLES = `
 @layer base {
   :root {
-    --background: <%- colors.light["background"] %>;
-    --foreground: <%- colors.light["foreground"] %>;
-    --card: <%- colors.light["card"] %>;
-    --card-foreground: <%- colors.light["card-foreground"] %>;
-    --popover: <%- colors.light["popover"] %>;
-    --popover-foreground: <%- colors.light["popover-foreground"] %>;
-    --primary: <%- colors.light["primary"] %>;
-    --primary-foreground: <%- colors.light["primary-foreground"] %>;
-    --secondary: <%- colors.light["secondary"] %>;
-    --secondary-foreground: <%- colors.light["secondary-foreground"] %>;
-    --muted: <%- colors.light["muted"] %>;
-    --muted-foreground: <%- colors.light["muted-foreground"] %>;
-    --accent: <%- colors.light["accent"] %>;
-    --accent-foreground: <%- colors.light["accent-foreground"] %>;
-    --destructive: <%- colors.light["destructive"] %>;
-    --destructive-foreground: <%- colors.light["destructive-foreground"] %>;
-    --border: <%- colors.light["border"] %>;
-    --input: <%- colors.light["input"] %>;
-    --ring: <%- colors.light["ring"] %>;
-    --radius: <%- radius %>rem;
-    --chart-1: <%- colors.light["chart-1"] %>;
-    --chart-2: <%- colors.light["chart-2"] %>;
-    --chart-3: <%- colors.light["chart-3"] %>;
-    --chart-4: <%- colors.light["chart-4"] %>;
-    --chart-5: <%- colors.light["chart-5"] %>;
+    --background: <%= it.colors.light["background"] %>;
+    --foreground: <%= it.colors.light["foreground"] %>;
+    --card: <%= it.colors.light["card"] %>;
+    --card-foreground: <%= it.colors.light["card-foreground"] %>;
+    --popover: <%= it.colors.light["popover"] %>;
+    --popover-foreground: <%= it.colors.light["popover-foreground"] %>;
+    --primary: <%= it.colors.light["primary"] %>;
+    --primary-foreground: <%= it.colors.light["primary-foreground"] %>;
+    --secondary: <%= it.colors.light["secondary"] %>;
+    --secondary-foreground: <%= it.colors.light["secondary-foreground"] %>;
+    --muted: <%= it.colors.light["muted"] %>;
+    --muted-foreground: <%= it.colors.light["muted-foreground"] %>;
+    --accent: <%= it.colors.light["accent"] %>;
+    --accent-foreground: <%= it.colors.light["accent-foreground"] %>;
+    --destructive: <%= it.colors.light["destructive"] %>;
+    --destructive-foreground: <%= it.colors.light["destructive-foreground"] %>;
+    --border: <%= it.colors.light["border"] %>;
+    --input: <%= it.colors.light["input"] %>;
+    --ring: <%= it.colors.light["ring"] %>;
+    --radius: <%= it.radius %>rem;
+    --chart-1: <%= it.colors.light["chart-1"] %>;
+    --chart-2: <%= it.colors.light["chart-2"] %>;
+    --chart-3: <%= it.colors.light["chart-3"] %>;
+    --chart-4: <%= it.colors.light["chart-4"] %>;
+    --chart-5: <%= it.colors.light["chart-5"] %>;
   }
 
   .dark {
-    --background: <%- colors.dark["background"] %>;
-    --foreground: <%- colors.dark["foreground"] %>;
-    --card: <%- colors.dark["card"] %>;
-    --card-foreground: <%- colors.dark["card-foreground"] %>;
-    --popover: <%- colors.dark["popover"] %>;
-    --popover-foreground: <%- colors.dark["popover-foreground"] %>;
-    --primary: <%- colors.dark["primary"] %>;
-    --primary-foreground: <%- colors.dark["primary-foreground"] %>;
-    --secondary: <%- colors.dark["secondary"] %>;
-    --secondary-foreground: <%- colors.dark["secondary-foreground"] %>;
-    --muted: <%- colors.dark["muted"] %>;
-    --muted-foreground: <%- colors.dark["muted-foreground"] %>;
-    --accent: <%- colors.dark["accent"] %>;
-    --accent-foreground: <%- colors.dark["accent-foreground"] %>;
-    --destructive: <%- colors.dark["destructive"] %>;
-    --destructive-foreground: <%- colors.dark["destructive-foreground"] %>;
-    --border: <%- colors.dark["border"] %>;
-    --input: <%- colors.dark["input"] %>;
-    --ring: <%- colors.dark["ring"] %>;
-    --chart-1: <%- colors.dark["chart-1"] %>;
-    --chart-2: <%- colors.dark["chart-2"] %>;
-    --chart-3: <%- colors.dark["chart-3"] %>;
-    --chart-4: <%- colors.dark["chart-4"] %>;
-    --chart-5: <%- colors.dark["chart-5"] %>;
+    --background: <%= it.colors.dark["background"] %>;
+    --foreground: <%= it.colors.dark["foreground"] %>;
+    --card: <%= it.colors.dark["card"] %>;
+    --card-foreground: <%= it.colors.dark["card-foreground"] %>;
+    --popover: <%= it.colors.dark["popover"] %>;
+    --popover-foreground: <%= it.colors.dark["popover-foreground"] %>;
+    --primary: <%= it.colors.dark["primary"] %>;
+    --primary-foreground: <%= it.colors.dark["primary-foreground"] %>;
+    --secondary: <%= it.colors.dark["secondary"] %>;
+    --secondary-foreground: <%= it.colors.dark["secondary-foreground"] %>;
+    --muted: <%= it.colors.dark["muted"] %>;
+    --muted-foreground: <%= it.colors.dark["muted-foreground"] %>;
+    --accent: <%= it.colors.dark["accent"] %>;
+    --accent-foreground: <%= it.colors.dark["accent-foreground"] %>;
+    --destructive: <%= it.colors.dark["destructive"] %>;
+    --destructive-foreground: <%= it.colors.dark["destructive-foreground"] %>;
+    --border: <%= it.colors.dark["border"] %>;
+    --input: <%= it.colors.dark["input"] %>;
+    --ring: <%= it.colors.dark["ring"] %>;
+    --chart-1: <%= it.colors.dark["chart-1"] %>;
+    --chart-2: <%= it.colors.dark["chart-2"] %>;
+    --chart-3: <%= it.colors.dark["chart-3"] %>;
+    --chart-4: <%= it.colors.dark["chart-4"] %>;
+    --chart-5: <%= it.colors.dark["chart-5"] %>;
   }
 }
 `
