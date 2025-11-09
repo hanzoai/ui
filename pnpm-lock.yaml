@@ -751,6 +751,31 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
 
+  pkg/finance:
+    dependencies:
+      lucide-react:
+        specifier: 0.456.0
+        version: 0.456.0(react@19.2.0)
+      next:
+        specifier: '>=14.2.25'
+        version: 16.0.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react:
+        specifier: 19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: 19.2.0
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: 18.3.12
+        version: 18.3.12
+      '@types/react-dom':
+        specifier: 18.3.1
+        version: 18.3.1
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+
   pkg/react:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -17265,7 +17290,7 @@ snapshots:
 
   '@types/react-dom@18.3.1':
     dependencies:
-      '@types/react': 18.3.12
+      '@types/react': 19.2.2
 
   '@types/react-dom@19.2.2(@types/react@19.2.2)':
     dependencies:
