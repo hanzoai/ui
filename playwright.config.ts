@@ -82,7 +82,7 @@ export default defineConfig({
 
   // Run local dev server before starting the tests
   webServer: {
-    command: 'cd app && rm -f .next/dev/lock && pnpm dev',
+    command: 'cd app && rm -f .next/dev/lock && E2E_TEST=true pnpm dev',
     port: 3003,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
