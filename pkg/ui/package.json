@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "5.1.8",
+  "version": "5.2.0",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -31,6 +31,9 @@
     "analytics",
     "ai",
     "chat",
+    "finance",
+    "trading",
+    "tradingview",
     "hanzo",
     "hanzo-ai",
     "hanzoai",
@@ -244,6 +247,14 @@
     "./billing": {
       "types": "./src/billing/index.ts",
       "import": "./src/billing/index.ts"
+    },
+    "./finance": {
+      "types": "./finance/index.ts",
+      "import": "./finance/index.ts"
+    },
+    "./finance/*": {
+      "types": "./finance/components/*.tsx",
+      "import": "./finance/components/*.tsx"
     },
     "./sonner": {
       "types": "./dist/sonner.d.ts",
