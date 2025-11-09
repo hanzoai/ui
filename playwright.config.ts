@@ -82,7 +82,7 @@ export default defineConfig({
 
   // Run local dev server before starting the tests
   webServer: {
-    command: 'cd app && pnpm dev',
+    command: 'cd app && rm -f .next/dev/lock && pnpm dev',
     port: 3003,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
