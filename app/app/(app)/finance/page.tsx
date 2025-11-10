@@ -3,21 +3,23 @@
 import { Separator } from "@/registry/default/ui/separator"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/default/ui/card"
 
-import AdvancedChart from "@hanzo/ui/finance/components/AdvancedChart"
-import MarketOverview from "@hanzo/ui/finance/components/MarketOverview"
-import TickerTape from "@hanzo/ui/finance/components/TickerTape"
-import StockScreener from "@hanzo/ui/finance/components/StockScreener"
-import CryptoScreener from "@hanzo/ui/finance/components/CryptoScreener"
-import ForexScreener from "@hanzo/ui/finance/components/ForexScreener"
-import SymbolInfo from "@hanzo/ui/finance/components/SymbolInfo"
-import CompanyProfile from "@hanzo/ui/finance/components/CompanyProfile"
-import Financials from "@hanzo/ui/finance/components/Financials"
-import TechnicalAnalysis from "@hanzo/ui/finance/components/TechnicalAnalysis"
-import NewsTimeline from "@hanzo/ui/finance/components/NewsTimeline"
-import { TradingPanel } from "@hanzo/ui/finance/components/TradingPanel"
-import { OrderEntry } from "@hanzo/ui/finance/components/OrderEntry"
-import { PositionsList } from "@hanzo/ui/finance/components/PositionsList"
-import { OrdersHistory } from "@hanzo/ui/finance/components/OrdersHistory"
+import { 
+  AdvancedChart,
+  MarketOverview,
+  TickerTape,
+  StockScreener,
+  CryptoScreener,
+  ForexScreener,
+  SymbolInfo,
+  CompanyProfile,
+  Financials,
+  TechnicalAnalysis,
+  NewsTimeline,
+} from "@hanzo/ui/finance"
+import { TradingPanel } from "@hanzo/ui/finance"
+import { OrderEntry } from "@hanzo/ui/finance"
+import { PositionsList } from "@hanzo/ui/finance"
+import { OrdersHistory } from "@hanzo/ui/finance"
 import { useState } from "react"
 
 export default function FinancePage() {
@@ -30,14 +32,22 @@ export default function FinancePage() {
     },
   ])
 
-  const [orders, setOrders] = useState([
+  const [orders, setOrders] = useState<Array<{
+    id: string
+    symbol: string
+    type: 'buy' | 'sell'
+    shares: number
+    price: number
+    status: 'open' | 'filled' | 'cancelled' | 'pending'
+    timestamp: number
+  }>>([
     {
       id: '1',
       symbol: 'NASDAQ:AAPL',
-      type: 'buy' as const,
+      type: 'buy',
       shares: 10,
       price: 150,
-      status: 'filled' as const,
+      status: 'filled',
       timestamp: Date.now() - 86400000,
     },
   ])
@@ -46,10 +56,10 @@ export default function FinancePage() {
     const newOrder = {
       id: String(Date.now()),
       symbol: order.symbol,
-      type: order.side,
+      type: order.side as 'buy' | 'sell',
       shares: order.shares,
       price: order.limitPrice || 0,
-      status: 'pending' as const,
+      status: 'pending' as 'open' | 'filled' | 'cancelled' | 'pending',
       timestamp: Date.now(),
     }
     setOrders([newOrder, ...orders])
@@ -234,7 +244,7 @@ export default function FinancePage() {
             <CardContent>
               <div style={{ height: '400px' }}>
                 <NewsTimeline />
-              </CardContent>
+              </div>
             </CardContent>
           </Card>
         </section>
@@ -255,7 +265,7 @@ export default function FinancePage() {
                 <CardDescription>Demo trading panel with portfolio tracking</CardDescription>
               </CardHeader>
               <CardContent>
-                <TradingPanel />
+                <TradingPanel symbol="NASDAQ:AAPL" currentPrice={175} />
               </CardContent>
             </Card>
 
@@ -292,7 +302,7 @@ export default function FinancePage() {
                   orders={orders}
                   onCancelOrder={(id) => {
                     setOrders(orders.map(o => 
-                      o.id === id ? { ...o, status: 'cancelled' as const } : o
+                      o.id === id ? { ...o, status: 'cancelled' } : o
                     ))
                   }}
                 />
