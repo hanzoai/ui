@@ -1,4 +1,5 @@
-'use client'
+"use client"
 
-export { OrderEntry } from '@hanzo/ui/finance'
-export type { OrderEntryProps } from '@hanzo/ui/finance'
+import { OrderEntry } from "@hanzo/ui/finance"
+
+export default OrderEntry

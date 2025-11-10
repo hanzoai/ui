@@ -1,4 +1,5 @@
-'use client'
+"use client"
 
-export { TradingPanel } from '@hanzo/ui/finance'
-export type { TradingPanelProps } from '@hanzo/ui/finance'
+import { TradingPanel } from "@hanzo/ui/finance"
+
+export default TradingPanel

@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { TickerTape } from '@hanzo/ui/finance'
+import { TickerTape } from "@hanzo/ui/finance"
+
+export default TickerTape

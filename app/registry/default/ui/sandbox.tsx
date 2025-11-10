@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
 
 export interface SandboxProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -10,7 +11,16 @@ export interface SandboxProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Sandbox = React.forwardRef<HTMLDivElement, SandboxProps>(
-  ({ className, code = "", language = "javascript", editable = false, ...props }, ref) => {
+  (
+    {
+      className,
+      code = "",
+      language = "javascript",
+      editable = false,
+      ...props
+    },
+    ref
+  ) => {
     const [value, setValue] = React.useState(code)
     const [output, setOutput] = React.useState<string>("")
 
@@ -20,7 +30,9 @@ const Sandbox = React.forwardRef<HTMLDivElement, SandboxProps>(
         const result = eval(value)
         setOutput(String(result))
       } catch (error) {
-        setOutput(`Error: ${error instanceof Error ? error.message : String(error)}`)
+        setOutput(
+          `Error: ${error instanceof Error ? error.message : String(error)}`
+        )
       }
     }
 

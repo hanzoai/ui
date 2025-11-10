@@ -54,23 +54,18 @@ npm install @hanzo/ui
 import { Financials } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <Financials
-      symbol="NASDAQ:AAPL"
-      displayMode="adaptive"
-    />
-  )
+  return <Financials symbol="NASDAQ:AAPL" displayMode="adaptive" />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
-| width | string \| number | "100%" | Widget width |
-| height | string \| number | 800 | Widget height |
-| locale | string | "en" | Language locale |
-| colorTheme | "light" \| "dark" | "dark" | Color theme |
-| isTransparent | boolean | false | Transparent background |
-| displayMode | "adaptive" \| "regular" \| "compact" | "adaptive" | Layout mode |
+| Prop          | Type                                 | Default       | Description               |
+| ------------- | ------------------------------------ | ------------- | ------------------------- |
+| symbol        | string                               | "NASDAQ:AAPL" | Trading symbol to display |
+| width         | string \| number                     | "100%"        | Widget width              |
+| height        | string \| number                     | 800           | Widget height             |
+| locale        | string                               | "en"          | Language locale           |
+| colorTheme    | "light" \| "dark"                    | "dark"        | Color theme               |
+| isTransparent | boolean                              | false         | Transparent background    |
+| displayMode   | "adaptive" \| "regular" \| "compact" | "adaptive"    | Layout mode               |

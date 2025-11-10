@@ -54,29 +54,23 @@ npm install @hanzo/ui
 import { AdvancedChart } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <AdvancedChart
-      symbol="NASDAQ:AAPL"
-      interval="D"
-      theme="dark"
-    />
-  )
+  return <AdvancedChart symbol="NASDAQ:AAPL" interval="D" theme="dark" />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
-| interval | string | "D" | Chart interval (1, 5, 15, 30, 60, D, W, M) |
-| theme | "light" \| "dark" | "dark" | Color theme |
-| width | string \| number | "100%" | Chart width |
-| height | string \| number | 500 | Chart height |
-| autosize | boolean | true | Auto-resize to container |
-| hideTopToolbar | boolean | false | Hide top toolbar |
-| hideSideToolbar | boolean | false | Hide side toolbar |
-| saveImage | boolean | true | Enable save image |
+| Prop            | Type              | Default       | Description                                |
+| --------------- | ----------------- | ------------- | ------------------------------------------ |
+| symbol          | string            | "NASDAQ:AAPL" | Trading symbol to display                  |
+| interval        | string            | "D"           | Chart interval (1, 5, 15, 30, 60, D, W, M) |
+| theme           | "light" \| "dark" | "dark"        | Color theme                                |
+| width           | string \| number  | "100%"        | Chart width                                |
+| height          | string \| number  | 500           | Chart height                               |
+| autosize        | boolean           | true          | Auto-resize to container                   |
+| hideTopToolbar  | boolean           | false         | Hide top toolbar                           |
+| hideSideToolbar | boolean           | false         | Hide side toolbar                          |
+| saveImage       | boolean           | true          | Enable save image                          |
 
 ## Examples
 
