@@ -1,0 +1,82 @@
+---
+title: Positions List
+description: Display current trading positions with P&L tracking.
+component: true
+---
+
+<ComponentPreview
+  name="positions-list"
+  description="Active positions display"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add positions-list
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="positions-list" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { PositionsList } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  const positions = [
+    {
+      id: '1',
+      symbol: 'AAPL',
+      side: 'buy',
+      shares: 100,
+      entryPrice: 150.00,
+      currentPrice: 175.50,
+      pnl: 2550,
+      pnlPercent: 17.0
+    }
+  ]
+
+  return (
+    <PositionsList positions={positions} />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| positions | Position[] | [] | Array of position objects |
+| onClose | function | - | Callback when position closed |
+| showPnL | boolean | true | Show profit/loss column |
