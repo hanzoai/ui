@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import Image from "next/image"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Index } from "@/__registry__"
 
 import { cn } from "@/lib/utils"
@@ -231,9 +233,19 @@ export function ComponentPreview({
             <div className="w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
               {Code ||
                 (codeString && (
-                  <pre className="overflow-x-auto rounded-lg border bg-zinc-950 p-4 dark:bg-zinc-900">
-                    <code className="text-sm text-zinc-50">{codeString}</code>
-                  </pre>
+                  <SyntaxHighlighter
+                    language="tsx"
+                    style={vscDarkPlus}
+                    customStyle={{
+                      margin: 0,
+                      borderRadius: "0.5rem",
+                      fontSize: "0.875rem",
+                      padding: "1rem",
+                    }}
+                    showLineNumbers={false}
+                  >
+                    {codeString}
+                  </SyntaxHighlighter>
                 ))}
             </div>
           </div>
