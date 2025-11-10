@@ -221,9 +221,7 @@ export function ComponentPreview({
                   </div>
                 }
               >
-                <div className={cn(isFinanceComponent ? "w-full" : "")}>
-                  {Preview}
-                </div>
+                {Preview}
               </React.Suspense>
             </div>
           </ThemeWrapper>
