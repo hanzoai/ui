@@ -1,4 +1,4 @@
 'use client'
 
-export { default as Financials } from '@hanzo/ui/finance/components/Financials'
+export { Financials } from '@hanzo/ui/finance'
 export type { FinancialsProps } from '@hanzo/ui/finance'
