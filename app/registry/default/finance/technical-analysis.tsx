@@ -1,4 +1,5 @@
-'use client'
+"use client"
 
-export { TechnicalAnalysis } from '@hanzo/ui/finance'
-export type { TechnicalAnalysisProps } from '@hanzo/ui/finance'
+import { TechnicalAnalysis } from "@hanzo/ui/finance"
+
+export default TechnicalAnalysis

@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { CryptoScreener } from '@hanzo/ui/finance'
+import { CryptoScreener } from "@hanzo/ui/finance"
+
+export default CryptoScreener

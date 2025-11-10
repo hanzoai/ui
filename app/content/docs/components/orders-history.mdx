@@ -4,10 +4,7 @@ description: Display historical trading orders with status tracking.
 component: true
 ---
 
-<ComponentPreview
-  name="orders-history"
-  description="Order history display"
-/>
+<ComponentPreview name="orders-history" description="Order history display" />
 
 ## Installation
 
@@ -56,26 +53,24 @@ import { OrdersHistory } from "@hanzo/ui/finance"
 export default function Demo() {
   const orders = [
     {
-      id: '1',
-      symbol: 'AAPL',
-      type: 'buy',
+      id: "1",
+      symbol: "AAPL",
+      type: "buy",
       shares: 100,
-      price: 175.50,
-      status: 'filled',
-      timestamp: Date.now()
-    }
+      price: 175.5,
+      status: "filled",
+      timestamp: Date.now(),
+    },
   ]
 
-  return (
-    <OrdersHistory orders={orders} />
-  )
+  return <OrdersHistory orders={orders} />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| orders | Order[] | [] | Array of order objects |
-| onCancel | function | - | Callback when order cancelled |
-| showFilters | boolean | true | Show status filters |
+| Prop        | Type     | Default | Description                   |
+| ----------- | -------- | ------- | ----------------------------- |
+| orders      | Order[]  | []      | Array of order objects        |
+| onCancel    | function | -       | Callback when order cancelled |
+| showFilters | boolean  | true    | Show status filters           |

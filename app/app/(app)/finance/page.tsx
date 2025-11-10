@@ -1,53 +1,61 @@
 "use client"
 
-import { Separator } from "@/registry/default/ui/separator"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/registry/default/ui/card"
-
-import { 
-  AdvancedChart,
-  MarketOverview,
-  TickerTape,
-  StockScreener,
-  CryptoScreener,
-  ForexScreener,
-  SymbolInfo,
-  CompanyProfile,
-  Financials,
-  TechnicalAnalysis,
-  NewsTimeline,
-} from "@hanzo/ui/finance"
-import { TradingPanel } from "@hanzo/ui/finance"
-import { OrderEntry } from "@hanzo/ui/finance"
-import { PositionsList } from "@hanzo/ui/finance"
-import { OrdersHistory } from "@hanzo/ui/finance"
 import { useState } from "react"
+import {
+  AdvancedChart,
+  CompanyProfile,
+  CryptoScreener,
+  Financials,
+  ForexScreener,
+  MarketOverview,
+  NewsTimeline,
+  OrderEntry,
+  OrdersHistory,
+  PositionsList,
+  StockScreener,
+  SymbolInfo,
+  TechnicalAnalysis,
+  TickerTape,
+  TradingPanel,
+} from "@hanzo/ui/finance"
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import { Separator } from "@/registry/default/ui/separator"
 
 export default function FinancePage() {
   const [positions, setPositions] = useState([
     {
-      symbol: 'NASDAQ:AAPL',
+      symbol: "NASDAQ:AAPL",
       shares: 10,
       avgPrice: 150,
       currentPrice: 175,
     },
   ])
 
-  const [orders, setOrders] = useState<Array<{
-    id: string
-    symbol: string
-    type: 'buy' | 'sell'
-    shares: number
-    price: number
-    status: 'open' | 'filled' | 'cancelled' | 'pending'
-    timestamp: number
-  }>>([
+  const [orders, setOrders] = useState<
+    Array<{
+      id: string
+      symbol: string
+      type: "buy" | "sell"
+      shares: number
+      price: number
+      status: "open" | "filled" | "cancelled" | "pending"
+      timestamp: number
+    }>
+  >([
     {
-      id: '1',
-      symbol: 'NASDAQ:AAPL',
-      type: 'buy',
+      id: "1",
+      symbol: "NASDAQ:AAPL",
+      type: "buy",
       shares: 10,
       price: 150,
-      status: 'filled',
+      status: "filled",
       timestamp: Date.now() - 86400000,
     },
   ])
@@ -56,23 +64,26 @@ export default function FinancePage() {
     const newOrder = {
       id: String(Date.now()),
       symbol: order.symbol,
-      type: order.side as 'buy' | 'sell',
+      type: order.side as "buy" | "sell",
       shares: order.shares,
       price: order.limitPrice || 0,
-      status: 'pending' as 'open' | 'filled' | 'cancelled' | 'pending',
+      status: "pending" as "open" | "filled" | "cancelled" | "pending",
       timestamp: Date.now(),
     }
     setOrders([newOrder, ...orders])
-    console.log('Order placed:', order)
+    console.log("Order placed:", order)
   }
 
   return (
     <div className="container mx-auto py-10">
       <div className="space-y-8">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">Finance Components</h1>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Finance Components
+          </h1>
           <p className="text-muted-foreground mt-2">
-            TradingView-powered widgets and trading interface components. Copy and paste into your financial applications.
+            TradingView-powered widgets and trading interface components. Copy
+            and paste into your financial applications.
           </p>
         </div>
 
@@ -82,17 +93,21 @@ export default function FinancePage() {
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-semibold">TradingView Charts</h2>
-            <p className="text-sm text-muted-foreground">Interactive financial charts and market data</p>
+            <p className="text-sm text-muted-foreground">
+              Interactive financial charts and market data
+            </p>
           </div>
-          
+
           <div className="grid gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Advanced Chart</CardTitle>
-                <CardDescription>Full-featured interactive chart with symbol switching</CardDescription>
+                <CardDescription>
+                  Full-featured interactive chart with symbol switching
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '500px' }}>
+                <div style={{ height: "500px" }}>
                   <AdvancedChart symbol="NASDAQ:AAPL" />
                 </div>
               </CardContent>
@@ -101,7 +116,9 @@ export default function FinancePage() {
             <Card>
               <CardHeader>
                 <CardTitle>Ticker Tape</CardTitle>
-                <CardDescription>Scrolling ticker with major market indices</CardDescription>
+                <CardDescription>
+                  Scrolling ticker with major market indices
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <TickerTape />
@@ -111,10 +128,12 @@ export default function FinancePage() {
             <Card>
               <CardHeader>
                 <CardTitle>Market Overview</CardTitle>
-                <CardDescription>Multi-asset market overview with tabs</CardDescription>
+                <CardDescription>
+                  Multi-asset market overview with tabs
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '450px' }}>
+                <div style={{ height: "450px" }}>
                   <MarketOverview />
                 </div>
               </CardContent>
@@ -128,16 +147,18 @@ export default function FinancePage() {
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-semibold">Market Screeners</h2>
-            <p className="text-sm text-muted-foreground">Asset screeners for stocks, crypto, and forex</p>
+            <p className="text-sm text-muted-foreground">
+              Asset screeners for stocks, crypto, and forex
+            </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Stock Screener</CardTitle>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '400px' }}>
+                <div style={{ height: "400px" }}>
                   <StockScreener />
                 </div>
               </CardContent>
@@ -148,7 +169,7 @@ export default function FinancePage() {
                 <CardTitle>Crypto Screener</CardTitle>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '400px' }}>
+                <div style={{ height: "400px" }}>
                   <CryptoScreener />
                 </div>
               </CardContent>
@@ -159,7 +180,7 @@ export default function FinancePage() {
                 <CardTitle>Forex Screener</CardTitle>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '400px' }}>
+                <div style={{ height: "400px" }}>
                   <ForexScreener />
                 </div>
               </CardContent>
@@ -173,17 +194,21 @@ export default function FinancePage() {
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-semibold">Symbol Analysis</h2>
-            <p className="text-sm text-muted-foreground">Comprehensive symbol information and analysis tools</p>
+            <p className="text-sm text-muted-foreground">
+              Comprehensive symbol information and analysis tools
+            </p>
           </div>
-          
+
           <div className="grid gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Symbol Info</CardTitle>
-                <CardDescription>Real-time symbol details and price information</CardDescription>
+                <CardDescription>
+                  Real-time symbol details and price information
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '140px' }}>
+                <div style={{ height: "140px" }}>
                   <SymbolInfo symbol="NASDAQ:AAPL" />
                 </div>
               </CardContent>
@@ -195,7 +220,7 @@ export default function FinancePage() {
                   <CardTitle>Company Profile</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div style={{ height: '400px' }}>
+                  <div style={{ height: "400px" }}>
                     <CompanyProfile symbol="NASDAQ:AAPL" />
                   </div>
                 </CardContent>
@@ -206,7 +231,7 @@ export default function FinancePage() {
                   <CardTitle>Technical Analysis</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div style={{ height: '400px' }}>
+                  <div style={{ height: "400px" }}>
                     <TechnicalAnalysis symbol="NASDAQ:AAPL" />
                   </div>
                 </CardContent>
@@ -216,10 +241,12 @@ export default function FinancePage() {
             <Card>
               <CardHeader>
                 <CardTitle>Financials</CardTitle>
-                <CardDescription>Financial statements and fundamental data</CardDescription>
+                <CardDescription>
+                  Financial statements and fundamental data
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div style={{ height: '500px' }}>
+                <div style={{ height: "500px" }}>
                   <Financials symbol="NASDAQ:AAPL" />
                 </div>
               </CardContent>
@@ -233,16 +260,18 @@ export default function FinancePage() {
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-semibold">News & Timeline</h2>
-            <p className="text-sm text-muted-foreground">Financial news feed and updates</p>
+            <p className="text-sm text-muted-foreground">
+              Financial news feed and updates
+            </p>
           </div>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>News Timeline</CardTitle>
               <CardDescription>Real-time financial news feed</CardDescription>
             </CardHeader>
             <CardContent>
-              <div style={{ height: '400px' }}>
+              <div style={{ height: "400px" }}>
                 <NewsTimeline />
               </div>
             </CardContent>
@@ -255,14 +284,18 @@ export default function FinancePage() {
         <section className="space-y-4">
           <div>
             <h2 className="text-2xl font-semibold">Trading Interface</h2>
-            <p className="text-sm text-muted-foreground">Order entry, positions, and order management components</p>
+            <p className="text-sm text-muted-foreground">
+              Order entry, positions, and order management components
+            </p>
           </div>
-          
+
           <div className="grid gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Trading Panel</CardTitle>
-                <CardDescription>Demo trading panel with portfolio tracking</CardDescription>
+                <CardDescription>
+                  Demo trading panel with portfolio tracking
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <TradingPanel symbol="NASDAQ:AAPL" currentPrice={175} />
@@ -301,9 +334,11 @@ export default function FinancePage() {
                 <OrdersHistory
                   orders={orders}
                   onCancelOrder={(id) => {
-                    setOrders(orders.map(o => 
-                      o.id === id ? { ...o, status: 'cancelled' } : o
-                    ))
+                    setOrders(
+                      orders.map((o) =>
+                        o.id === id ? { ...o, status: "cancelled" } : o
+                      )
+                    )
                   }}
                 />
               </CardContent>

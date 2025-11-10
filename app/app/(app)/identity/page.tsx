@@ -2,10 +2,7 @@
 
 import dynamic from "next/dynamic"
 
-import {
-  Card,
-  CardContent,
-} from "@/registry/default/ui/card"
+import { Card, CardContent } from "@/registry/default/ui/card"
 
 // Dynamically import the form component to avoid SSR issues with Wagmi
 const IdentityForm = dynamic(

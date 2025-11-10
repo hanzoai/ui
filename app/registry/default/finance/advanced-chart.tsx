@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { AdvancedChart } from '@hanzo/ui/finance'
+import { AdvancedChart } from "@hanzo/ui/finance"
+
+export default AdvancedChart

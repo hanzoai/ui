@@ -4,10 +4,7 @@ description: Trading order entry form with buy/sell functionality.
 component: true
 ---
 
-<ComponentPreview
-  name="order-entry"
-  description="Trading order form"
-/>
+<ComponentPreview name="order-entry" description="Trading order form" />
 
 ## Installation
 
@@ -55,13 +52,13 @@ import { OrderEntry } from "@hanzo/ui/finance"
 
 export default function Demo() {
   const handleOrderSubmit = (order) => {
-    console.log('Order submitted:', order)
+    console.log("Order submitted:", order)
   }
 
   return (
     <OrderEntry
       symbol="AAPL"
-      currentPrice={175.50}
+      currentPrice={175.5}
       onSubmit={handleOrderSubmit}
     />
   )
@@ -70,10 +67,10 @@ export default function Demo() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| symbol | string | - | Trading symbol (required) |
-| currentPrice | number | - | Current market price (required) |
-| onSubmit | function | - | Callback when order submitted |
-| defaultSide | "buy" \| "sell" | "buy" | Default order side |
-| defaultOrderType | "market" \| "limit" \| "stop" | "market" | Default order type |
+| Prop             | Type                          | Default  | Description                     |
+| ---------------- | ----------------------------- | -------- | ------------------------------- |
+| symbol           | string                        | -        | Trading symbol (required)       |
+| currentPrice     | number                        | -        | Current market price (required) |
+| onSubmit         | function                      | -        | Callback when order submitted   |
+| defaultSide      | "buy" \| "sell"               | "buy"    | Default order side              |
+| defaultOrderType | "market" \| "limit" \| "stop" | "market" | Default order type              |
