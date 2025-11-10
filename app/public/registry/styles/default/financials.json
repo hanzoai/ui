@@ -1,0 +1,16 @@
+{
+  "name": "financials",
+  "description": "Financial statements and fundamental data visualization",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "financials.tsx",
+      "content": "'use client'\n\nexport { Financials } from '@hanzo/ui/finance'\nexport type { FinancialsProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "analysis"
+}

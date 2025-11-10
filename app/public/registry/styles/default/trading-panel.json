@@ -1,0 +1,16 @@
+{
+  "name": "trading-panel",
+  "description": "Demo trading panel with buy/sell functionality and portfolio tracking",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "trading-panel.tsx",
+      "content": "'use client'\n\nexport { TradingPanel } from '@hanzo/ui/finance'\nexport type { TradingPanelProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "trading"
+}

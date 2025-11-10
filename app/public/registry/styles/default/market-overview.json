@@ -1,0 +1,16 @@
+{
+  "name": "market-overview",
+  "description": "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "market-overview.tsx",
+      "content": "'use client'\n\nexport { MarketOverview } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "charts"
+}

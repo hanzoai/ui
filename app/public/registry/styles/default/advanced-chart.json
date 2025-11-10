@@ -1,0 +1,16 @@
+{
+  "name": "advanced-chart",
+  "description": "Full-featured TradingView chart with symbol switching and timeframes",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "advanced-chart.tsx",
+      "content": "'use client'\n\nexport { AdvancedChart } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "charts"
+}
