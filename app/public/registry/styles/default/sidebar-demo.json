@@ -3,7 +3,7 @@
   "files": [
     {
       "name": "sidebar-demo.tsx",
-      "content": "import {\n  Sidebar,\n  SidebarProvider,\n} from \"@/registry/default/ui/sidebar\"\n\nexport default function SidebarDemo() {\n  return (\n    <SidebarProvider>\n      <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n        <Sidebar />\n      </div>\n    </SidebarProvider>\n  )\n}\n"
+      "content": "import { Sidebar, SidebarProvider } from \"@/registry/default/ui/sidebar\"\n\nexport default function SidebarDemo() {\n  return (\n    <SidebarProvider>\n      <div className=\"w-full min-h-[400px] flex items-center justify-center\">\n        <Sidebar />\n      </div>\n    </SidebarProvider>\n  )\n}\n"
     }
   ],
   "type": "components:example"

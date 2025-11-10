@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "crypto-screener.tsx",
-      "content": "'use client'\n\nexport { CryptoScreener } from '@hanzo/ui/finance'\n"
+      "content": "\"use client\"\n\nexport { CryptoScreener } from \"@hanzo/ui/finance\"\n"
     }
   ],
   "type": "components:finance",

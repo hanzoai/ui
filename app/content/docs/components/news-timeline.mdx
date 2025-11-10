@@ -4,10 +4,7 @@ description: Display live financial news and market updates.
 component: true
 ---
 
-<ComponentPreview
-  name="news-timeline"
-  description="Financial news timeline"
-/>
+<ComponentPreview name="news-timeline" description="Financial news timeline" />
 
 ## Installation
 
@@ -54,24 +51,19 @@ npm install @hanzo/ui
 import { NewsTimeline } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <NewsTimeline
-      feedMode="all_symbols"
-      colorTheme="dark"
-    />
-  )
+  return <NewsTimeline feedMode="all_symbols" colorTheme="dark" />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| feedMode | string | "all_symbols" | News feed filter mode |
-| market | string | "crypto" | Market to display news for |
-| symbol | string | - | Specific symbol for news (optional) |
-| width | string \| number | "100%" | Widget width |
-| height | string \| number | 400 | Widget height |
-| colorTheme | "light" \| "dark" | "dark" | Color theme |
-| locale | string | "en" | Language locale |
-| isTransparent | boolean | false | Transparent background |
+| Prop          | Type              | Default       | Description                         |
+| ------------- | ----------------- | ------------- | ----------------------------------- |
+| feedMode      | string            | "all_symbols" | News feed filter mode               |
+| market        | string            | "crypto"      | Market to display news for          |
+| symbol        | string            | -             | Specific symbol for news (optional) |
+| width         | string \| number  | "100%"        | Widget width                        |
+| height        | string \| number  | 400           | Widget height                       |
+| colorTheme    | "light" \| "dark" | "dark"        | Color theme                         |
+| locale        | string            | "en"          | Language locale                     |
+| isTransparent | boolean           | false         | Transparent background              |

@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "technical-analysis.tsx",
-      "content": "'use client'\n\nexport { TechnicalAnalysis } from '@hanzo/ui/finance'\nexport type { TechnicalAnalysisProps } from '@hanzo/ui/finance'\n"
+      "content": "\"use client\"\n\nexport { TechnicalAnalysis } from \"@hanzo/ui/finance\"\nexport type { TechnicalAnalysisProps } from \"@hanzo/ui/finance\"\n"
     }
   ],
   "type": "components:finance",

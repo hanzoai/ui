@@ -4,10 +4,7 @@ description: Display forex market overview with major currency pairs.
 component: true
 ---
 
-<ComponentPreview
-  name="market-overview"
-  description="Forex market overview"
-/>
+<ComponentPreview name="market-overview" description="Forex market overview" />
 
 ## Installation
 
@@ -54,11 +51,6 @@ npm install @hanzo/ui
 import { MarketOverview } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <MarketOverview
-      tabs={["forex"]}
-      colorTheme="dark"
-    />
-  )
+  return <MarketOverview tabs={["forex"]} colorTheme="dark" />
 }
 ```

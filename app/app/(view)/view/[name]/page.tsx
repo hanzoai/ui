@@ -71,8 +71,8 @@ export async function generateStaticParams() {
     const item = Index[itemName]
     if (
       (item.type === "components:block" ||
-      item.type === "components:component" ||
-      item.type === "components:example") &&
+        item.type === "components:component" ||
+        item.type === "components:example") &&
       !skipComponents.has(item.name)
     ) {
       params.push({

@@ -54,23 +54,18 @@ npm install @hanzo/ui
 import { MarketOverview } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <MarketOverview
-      colorTheme="dark"
-      showFloatingTooltip
-    />
-  )
+  return <MarketOverview colorTheme="dark" showFloatingTooltip />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| colorTheme | "light" \| "dark" | "dark" | Color theme |
-| width | string \| number | "100%" | Widget width |
-| height | string \| number | 400 | Widget height |
-| showFloatingTooltip | boolean | false | Show tooltip on hover |
-| locale | string | "en" | Language locale |
-| isTransparent | boolean | false | Transparent background |
-| tabs | string[] | ["indices", "futures", "bonds", "forex"] | Visible tabs |
+| Prop                | Type              | Default                                  | Description            |
+| ------------------- | ----------------- | ---------------------------------------- | ---------------------- |
+| colorTheme          | "light" \| "dark" | "dark"                                   | Color theme            |
+| width               | string \| number  | "100%"                                   | Widget width           |
+| height              | string \| number  | 400                                      | Widget height          |
+| showFloatingTooltip | boolean           | false                                    | Show tooltip on hover  |
+| locale              | string            | "en"                                     | Language locale        |
+| isTransparent       | boolean           | false                                    | Transparent background |
+| tabs                | string[]          | ["indices", "futures", "bonds", "forex"] | Visible tabs           |

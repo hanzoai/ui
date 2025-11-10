@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "stock-screener.tsx",
-      "content": "'use client'\n\nexport { StockScreener } from '@hanzo/ui/finance'\n"
+      "content": "\"use client\"\n\nexport { StockScreener } from \"@hanzo/ui/finance\"\n"
     }
   ],
   "type": "components:finance",

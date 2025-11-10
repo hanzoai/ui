@@ -36,7 +36,7 @@ export const registryEntrySchema = z.object({
     "components:special-effects",
     "components:text-effects",
     "components:visualization",
-      "components:finance",
+    "components:finance",
   ]),
   category: z.string().optional(),
   subcategory: z.string().optional(),

@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { ForexScreener } from '@hanzo/ui/finance'
+import { ForexScreener } from "@hanzo/ui/finance"
+
+export default ForexScreener

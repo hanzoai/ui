@@ -4,10 +4,7 @@ description: Filter and discover stocks based on various criteria.
 component: true
 ---
 
-<ComponentPreview
-  name="stock-screener"
-  description="Stock screening tool"
-/>
+<ComponentPreview name="stock-screener" description="Stock screening tool" />
 
 ## Installation
 
@@ -54,25 +51,20 @@ npm install @hanzo/ui
 import { StockScreener } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <StockScreener
-      market="america"
-      colorTheme="dark"
-    />
-  )
+  return <StockScreener market="america" colorTheme="dark" />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| width | string \| number | "100%" | Widget width |
-| height | string \| number | 500 | Widget height |
-| defaultColumn | string | "overview" | Default column view |
-| defaultScreen | string | "general" | Default screening filter |
-| market | string | "america" | Market region |
-| showToolbar | boolean | true | Show toolbar |
-| colorTheme | "light" \| "dark" | "dark" | Color theme |
-| locale | string | "en" | Language locale |
-| isTransparent | boolean | false | Transparent background |
+| Prop          | Type              | Default    | Description              |
+| ------------- | ----------------- | ---------- | ------------------------ |
+| width         | string \| number  | "100%"     | Widget width             |
+| height        | string \| number  | 500        | Widget height            |
+| defaultColumn | string            | "overview" | Default column view      |
+| defaultScreen | string            | "general"  | Default screening filter |
+| market        | string            | "america"  | Market region            |
+| showToolbar   | boolean           | true       | Show toolbar             |
+| colorTheme    | "light" \| "dark" | "dark"     | Color theme              |
+| locale        | string            | "en"       | Language locale          |
+| isTransparent | boolean           | false      | Transparent background   |
