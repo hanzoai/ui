@@ -1,0 +1,16 @@
+{
+  "name": "ticker-tape",
+  "description": "Scrolling ticker tape with major market indices and stocks",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "ticker-tape.tsx",
+      "content": "'use client'\n\nexport { TickerTape } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "charts"
+}

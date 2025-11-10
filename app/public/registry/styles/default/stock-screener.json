@@ -1,0 +1,16 @@
+{
+  "name": "stock-screener",
+  "description": "Stock market screener with filtering and sorting capabilities",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "stock-screener.tsx",
+      "content": "'use client'\n\nexport { StockScreener } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "screeners"
+}

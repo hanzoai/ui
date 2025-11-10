@@ -1,0 +1,16 @@
+{
+  "name": "technical-analysis",
+  "description": "Technical indicator summary with configurable intervals",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "technical-analysis.tsx",
+      "content": "'use client'\n\nexport { TechnicalAnalysis } from '@hanzo/ui/finance'\nexport type { TechnicalAnalysisProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "analysis"
+}

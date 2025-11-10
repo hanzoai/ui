@@ -1,0 +1,16 @@
+{
+  "name": "crypto-screener",
+  "description": "Cryptocurrency market screener for digital assets",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "crypto-screener.tsx",
+      "content": "'use client'\n\nexport { CryptoScreener } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "screeners"
+}

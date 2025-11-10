@@ -1,0 +1,16 @@
+{
+  "name": "company-profile",
+  "description": "Company profile with business description and key information",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "company-profile.tsx",
+      "content": "'use client'\n\nexport { CompanyProfile } from '@hanzo/ui/finance'\nexport type { CompanyProfileProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "analysis"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "orders-history",
+  "description": "Order history view with status badges and cancel functionality",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "orders-history.tsx",
+      "content": "'use client'\n\nexport { OrdersHistory } from '@hanzo/ui/finance'\nexport type { OrdersHistoryProps, Order } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "trading"
+}

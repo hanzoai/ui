@@ -1,0 +1,16 @@
+{
+  "name": "forex-screener",
+  "description": "Foreign exchange market screener for currency pairs",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "forex-screener.tsx",
+      "content": "'use client'\n\nexport { ForexScreener } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "screeners"
+}
