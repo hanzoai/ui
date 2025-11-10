@@ -17,10 +17,7 @@ const project = new Project({
 })
 
 // Single theme system - no style parameter needed
-export async function getAllBlockIds(
-  types?: string[],
-  categories?: string[]
-) {
+export async function getAllBlockIds(types?: string[], categories?: string[]) {
   const blocks = await getAllBlocks(
     types ?? ["components:block"],
     categories ?? []

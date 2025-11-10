@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { NewsTimeline } from '@hanzo/ui/finance'
+import { NewsTimeline } from "@hanzo/ui/finance"
+
+export default NewsTimeline

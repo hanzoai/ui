@@ -4,10 +4,7 @@ description: Filter and discover forex pairs based on technical indicators.
 component: true
 ---
 
-<ComponentPreview
-  name="forex-screener"
-  description="Forex screening tool"
-/>
+<ComponentPreview name="forex-screener" description="Forex screening tool" />
 
 ## Installation
 
@@ -54,11 +51,6 @@ npm install @hanzo/ui
 import { ForexScreener } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <ForexScreener
-      market="forex"
-      colorTheme="dark"
-    />
-  )
+  return <ForexScreener market="forex" colorTheme="dark" />
 }
 ```

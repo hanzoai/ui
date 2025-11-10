@@ -1,3 +1,5 @@
-'use client'
+"use client"
 
-export { MarketOverview } from '@hanzo/ui/finance'
+import { MarketOverview } from "@hanzo/ui/finance"
+
+export default MarketOverview

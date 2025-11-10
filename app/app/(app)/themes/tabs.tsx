@@ -5,8 +5,8 @@ import * as React from "react"
 import { useConfig } from "@/hooks/use-config"
 import { ThemeWrapper } from "@/components/theme-wrapper"
 import CardsDefault from "@/registry/default/example/cards"
-import { Skeleton } from "@/registry/default/ui/skeleton"
 import CardsNewYork from "@/registry/default/example/cards"
+import { Skeleton } from "@/registry/default/ui/skeleton"
 
 export function ThemesTabs() {
   const [mounted, setMounted] = React.useState(false)

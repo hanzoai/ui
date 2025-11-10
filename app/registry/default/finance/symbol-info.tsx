@@ -1,4 +1,5 @@
-'use client'
+"use client"
 
-export { SymbolInfo } from '@hanzo/ui/finance'
-export type { SymbolInfoProps } from '@hanzo/ui/finance'
+import { SymbolInfo } from "@hanzo/ui/finance"
+
+export default SymbolInfo

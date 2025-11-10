@@ -892,18 +892,6 @@ export const docsConfig: DocsConfig = {
           label: "New",
         },
         {
-          title: "Mini Chart",
-          href: "/docs/components/mini-chart",
-          items: [],
-          label: "New",
-        },
-        {
-          title: "Symbol Overview",
-          href: "/docs/components/symbol-overview",
-          items: [],
-          label: "New",
-        },
-        {
           title: "Stock Market",
           href: "/docs/components/stock-market",
           items: [],

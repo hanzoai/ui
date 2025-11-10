@@ -112,8 +112,8 @@ export function ComponentPreview({
     // Only fetch if no children were provided
     if (!Code) {
       fetch(`/registry/styles/${activeStyle}/${name}.json`)
-        .then(res => res.ok ? res.json() : null)
-        .then(data => {
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
           if (data?.files?.[0]?.content) {
             setRegistryCode(data.files[0].content)
           }
@@ -134,7 +134,8 @@ export function ComponentPreview({
         codeProps.children
       ) as React.ReactElement[]
       const buttonProps = Button?.props as CodeButtonProps | undefined
-      const childrenCode = buttonProps?.value || buttonProps?.__rawString__ || null
+      const childrenCode =
+        buttonProps?.value || buttonProps?.__rawString__ || null
       if (childrenCode) return childrenCode
     }
 
@@ -214,11 +215,12 @@ export function ComponentPreview({
         <TabsContent value="code">
           <div className="flex flex-col space-y-4">
             <div className="w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
-              {Code || (codeString && (
-                <pre className="overflow-x-auto rounded-lg border bg-zinc-950 p-4 dark:bg-zinc-900">
-                  <code className="text-sm text-zinc-50">{codeString}</code>
-                </pre>
-              ))}
+              {Code ||
+                (codeString && (
+                  <pre className="overflow-x-auto rounded-lg border bg-zinc-950 p-4 dark:bg-zinc-900">
+                    <code className="text-sm text-zinc-50">{codeString}</code>
+                  </pre>
+                ))}
             </div>
           </div>
         </TabsContent>

@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "advanced-chart.tsx",
-      "content": "'use client'\n\nexport { AdvancedChart } from '@hanzo/ui/finance'\n"
+      "content": "\"use client\"\n\nexport { AdvancedChart } from \"@hanzo/ui/finance\"\n"
     }
   ],
   "type": "components:finance",

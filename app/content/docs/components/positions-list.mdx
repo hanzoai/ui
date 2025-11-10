@@ -56,27 +56,25 @@ import { PositionsList } from "@hanzo/ui/finance"
 export default function Demo() {
   const positions = [
     {
-      id: '1',
-      symbol: 'AAPL',
-      side: 'buy',
+      id: "1",
+      symbol: "AAPL",
+      side: "buy",
       shares: 100,
-      entryPrice: 150.00,
-      currentPrice: 175.50,
+      entryPrice: 150.0,
+      currentPrice: 175.5,
       pnl: 2550,
-      pnlPercent: 17.0
-    }
+      pnlPercent: 17.0,
+    },
   ]
 
-  return (
-    <PositionsList positions={positions} />
-  )
+  return <PositionsList positions={positions} />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| positions | Position[] | [] | Array of position objects |
-| onClose | function | - | Callback when position closed |
-| showPnL | boolean | true | Show profit/loss column |
+| Prop      | Type       | Default | Description                   |
+| --------- | ---------- | ------- | ----------------------------- |
+| positions | Position[] | []      | Array of position objects     |
+| onClose   | function   | -       | Callback when position closed |
+| showPnL   | boolean    | true    | Show profit/loss column       |

@@ -14,10 +14,6 @@ import {
 } from "lucide-react"
 
 import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/registry/default/ui/dropdown-menu"
-import {
   Avatar,
   AvatarFallback,
   AvatarImage,
@@ -26,6 +22,8 @@ import { Button } from "@/registry/default/ui/button"
 import { Calendar } from "@/registry/default/ui/calendar"
 import {
   DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/registry/default/ui/dropdown-menu"
 import { Label } from "@/registry/default/ui/label"

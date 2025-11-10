@@ -1,16 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { formatEther } from "viem"
 import {
   useAccount,
   useChainId,
   useReadContract,
-  useWriteContract,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi"
 
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+import {
+  AI_TOKEN_ABI,
+  CONTRACT_ADDRESSES,
+  HANZO_REGISTRY_ABI,
+  NETWORK_NAMES,
+} from "@/lib/contracts"
 import { Alert, AlertDescription } from "@/registry/default/ui/alert"
 import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
@@ -25,13 +31,6 @@ import {
 import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
 import { Separator } from "@/registry/default/ui/separator"
-
-import {
-  HANZO_REGISTRY_ABI,
-  AI_TOKEN_ABI,
-  CONTRACT_ADDRESSES,
-  NETWORK_NAMES,
-} from "@/lib/contracts"
 
 export function IdentityForm() {
   const { address, isConnected } = useAccount()
