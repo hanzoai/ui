@@ -234,3 +234,49 @@
     display: none;
   }
 }
+
+/* Syntax highlighting for code blocks (rehype-pretty-code) */
+@layer base {
+  pre {
+    @apply overflow-x-auto rounded-lg border bg-muted px-4 py-3 font-mono text-sm;
+  }
+
+  pre > code {
+    @apply grid;
+    counter-reset: line;
+  }
+
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
+  }
+
+  pre > code > [data-line] {
+    @apply px-1;
+  }
+
+  pre > code > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply mr-4 inline-block w-4 text-right text-muted-foreground;
+  }
+
+  pre code[data-line-numbers-max-digits="2"] > [data-line]::before {
+    @apply w-8;
+  }
+
+  pre code[data-line-numbers-max-digits="3"] > [data-line]::before {
+    @apply w-12;
+  }
+
+  code[data-highlighted-line] {
+    @apply bg-muted-foreground/10;
+  }
+
+  [data-highlighted-chars] {
+    @apply bg-primary/20 rounded;
+  }
+
+  [data-chars-id] {
+    @apply border-b-2 p-1 shadow-none;
+  }
+}
