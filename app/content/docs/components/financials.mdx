@@ -1,0 +1,76 @@
+---
+title: Financials
+description: Display financial statements and fundamental data.
+component: true
+---
+
+<ComponentPreview
+  name="financials"
+  description="Financial statements and metrics"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add financials
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="financials" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Financials } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  return (
+    <Financials
+      symbol="NASDAQ:AAPL"
+      displayMode="adaptive"
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
+| width | string \| number | "100%" | Widget width |
+| height | string \| number | 800 | Widget height |
+| locale | string | "en" | Language locale |
+| colorTheme | "light" \| "dark" | "dark" | Color theme |
+| isTransparent | boolean | false | Transparent background |
+| displayMode | "adaptive" \| "regular" \| "compact" | "adaptive" | Layout mode |
