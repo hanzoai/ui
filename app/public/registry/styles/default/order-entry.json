@@ -1,0 +1,16 @@
+{
+  "name": "order-entry",
+  "description": "Order entry form with buy/sell toggle and market/limit orders",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "order-entry.tsx",
+      "content": "'use client'\n\nexport { OrderEntry } from '@hanzo/ui/finance'\nexport type { OrderEntryProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "trading"
+}
