@@ -1,0 +1,79 @@
+---
+title: Order Entry
+description: Trading order entry form with buy/sell functionality.
+component: true
+---
+
+<ComponentPreview
+  name="order-entry"
+  description="Trading order form"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add order-entry
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="order-entry" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { OrderEntry } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  const handleOrderSubmit = (order) => {
+    console.log('Order submitted:', order)
+  }
+
+  return (
+    <OrderEntry
+      symbol="AAPL"
+      currentPrice={175.50}
+      onSubmit={handleOrderSubmit}
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| symbol | string | - | Trading symbol (required) |
+| currentPrice | number | - | Current market price (required) |
+| onSubmit | function | - | Callback when order submitted |
+| defaultSide | "buy" \| "sell" | "buy" | Default order side |
+| defaultOrderType | "market" \| "limit" \| "stop" | "market" | Default order type |
