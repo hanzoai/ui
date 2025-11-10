@@ -19,6 +19,10 @@ export const docsConfig: DocsConfig = {
       title: "AI",
       href: "/docs/ai",
     },
+      {
+        title: "Finance",
+        href: "/finance",
+      },
     {
       title: "Blocks",
       href: "/blocks",
