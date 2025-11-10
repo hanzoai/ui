@@ -23,7 +23,7 @@ export default defineConfig({
   // Shared settings for all tests
   use: {
     // Base URL for the application
-    baseURL: 'http://localhost:3003',
+    baseURL: 'http://localhost:3333',
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
     // Take screenshot on failure
@@ -83,7 +83,7 @@ export default defineConfig({
   // Run local dev server before starting the tests
   webServer: {
     command: 'cd app && rm -rf .next && E2E_TEST=true pnpm dev',
-    port: 3003,
+    port: 3333,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
