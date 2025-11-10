@@ -4,7 +4,7 @@ export const finance: Registry = [
   // TradingView Chart Widgets
   {
     name: "advanced-chart",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/advanced-chart.tsx"],
     description: "Full-featured TradingView chart with symbol switching and timeframes",
@@ -13,7 +13,7 @@ export const finance: Registry = [
   },
   {
     name: "market-overview",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/market-overview.tsx"],
     description: "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
@@ -22,7 +22,7 @@ export const finance: Registry = [
   },
   {
     name: "ticker-tape",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/ticker-tape.tsx"],
     description: "Scrolling ticker tape with major market indices and stocks",
@@ -33,7 +33,7 @@ export const finance: Registry = [
   // Market Screeners
   {
     name: "stock-screener",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/stock-screener.tsx"],
     description: "Stock market screener with filtering and sorting capabilities",
@@ -42,7 +42,7 @@ export const finance: Registry = [
   },
   {
     name: "crypto-screener",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/crypto-screener.tsx"],
     description: "Cryptocurrency market screener for digital assets",
@@ -51,7 +51,7 @@ export const finance: Registry = [
   },
   {
     name: "forex-screener",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/forex-screener.tsx"],
     description: "Foreign exchange market screener for currency pairs",
@@ -62,7 +62,7 @@ export const finance: Registry = [
   // Symbol Analysis Widgets
   {
     name: "symbol-info",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/symbol-info.tsx"],
     description: "Real-time symbol information with price and basic details",
@@ -71,7 +71,7 @@ export const finance: Registry = [
   },
   {
     name: "company-profile",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/company-profile.tsx"],
     description: "Company profile with business description and key information",
@@ -80,7 +80,7 @@ export const finance: Registry = [
   },
   {
     name: "financials",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/financials.tsx"],
     description: "Financial statements and fundamental data visualization",
@@ -89,7 +89,7 @@ export const finance: Registry = [
   },
   {
     name: "technical-analysis",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/technical-analysis.tsx"],
     description: "Technical indicator summary with configurable intervals",
@@ -100,7 +100,7 @@ export const finance: Registry = [
   // News and Information
   {
     name: "news-timeline",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/news-timeline.tsx"],
     description: "Financial news timeline widget with real-time updates",
@@ -111,7 +111,7 @@ export const finance: Registry = [
   // Trading Interface
   {
     name: "trading-panel",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/trading-panel.tsx"],
     description: "Demo trading panel with buy/sell functionality and portfolio tracking",
@@ -120,7 +120,7 @@ export const finance: Registry = [
   },
   {
     name: "order-entry",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/order-entry.tsx"],
     description: "Order entry form with buy/sell toggle and market/limit orders",
@@ -129,7 +129,7 @@ export const finance: Registry = [
   },
   {
     name: "positions-list",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/positions-list.tsx"],
     description: "Real-time positions list with P&L tracking and percentage changes",
@@ -138,7 +138,7 @@ export const finance: Registry = [
   },
   {
     name: "orders-history",
-    type: "components:component",
+    type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/orders-history.tsx"],
     description: "Order history view with status badges and cancel functionality",

@@ -10,7 +10,7 @@
       "content": "'use client'\n\nexport { ForexScreener } from '@hanzo/ui/finance'\n"
     }
   ],
-  "type": "components:component",
+  "type": "components:finance",
   "category": "finance",
   "subcategory": "screeners"
 }
