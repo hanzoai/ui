@@ -619,7 +619,7 @@
     "files": [
       "finance/advanced-chart.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "charts"
   },
@@ -632,7 +632,7 @@
     "files": [
       "finance/market-overview.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "charts"
   },
@@ -645,7 +645,7 @@
     "files": [
       "finance/ticker-tape.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "charts"
   },
@@ -658,7 +658,7 @@
     "files": [
       "finance/stock-screener.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "screeners"
   },
@@ -671,7 +671,7 @@
     "files": [
       "finance/crypto-screener.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "screeners"
   },
@@ -684,7 +684,7 @@
     "files": [
       "finance/forex-screener.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "screeners"
   },
@@ -697,7 +697,7 @@
     "files": [
       "finance/symbol-info.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "analysis"
   },
@@ -710,7 +710,7 @@
     "files": [
       "finance/company-profile.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "analysis"
   },
@@ -723,7 +723,7 @@
     "files": [
       "finance/financials.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "analysis"
   },
@@ -736,7 +736,7 @@
     "files": [
       "finance/technical-analysis.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "analysis"
   },
@@ -749,7 +749,7 @@
     "files": [
       "finance/news-timeline.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "news"
   },
@@ -762,7 +762,7 @@
     "files": [
       "finance/trading-panel.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "trading"
   },
@@ -775,7 +775,7 @@
     "files": [
       "finance/order-entry.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "trading"
   },
@@ -788,7 +788,7 @@
     "files": [
       "finance/positions-list.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "trading"
   },
@@ -801,7 +801,7 @@
     "files": [
       "finance/orders-history.tsx"
     ],
-    "type": "components:component",
+    "type": "components:finance",
     "category": "finance",
     "subcategory": "trading"
   },

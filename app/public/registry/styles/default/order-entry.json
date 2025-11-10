@@ -10,7 +10,7 @@
       "content": "'use client'\n\nexport { OrderEntry } from '@hanzo/ui/finance'\nexport type { OrderEntryProps } from '@hanzo/ui/finance'\n"
     }
   ],
-  "type": "components:component",
+  "type": "components:finance",
   "category": "finance",
   "subcategory": "trading"
 }
