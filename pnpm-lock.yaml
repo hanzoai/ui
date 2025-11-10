@@ -237,6 +237,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.0.0
         version: 10.1.0
+      '@hanzo/logo':
+        specifier: ^1.0.3
+        version: 1.0.3(react@19.2.0)
       '@hanzo/ui':
         specifier: workspace:^
         version: link:../pkg/ui
@@ -360,6 +363,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.10.2
         version: 3.10.2
+      '@types/react-syntax-highlighter':
+        specifier: ^15.5.13
+        version: 15.5.13
       '@vercel/analytics':
         specifier: ^1.5.0
         version: 1.5.0(next@16.0.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
@@ -465,6 +471,9 @@ importers:
       react-resizable-panels:
         specifier: ^3.0.6
         version: 3.0.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react-syntax-highlighter:
+        specifier: ^15.6.6
+        version: 15.6.6(react@19.2.0)
       react-wrap-balancer:
         specifier: ^1.1.1
         version: 1.1.1(react@19.2.0)
@@ -2162,6 +2171,14 @@ packages:
       react: 19.2.0
       react-hook-form: 7.51.4
       zod: 4.1.12
+
+  '@hanzo/logo@1.0.3':
+    resolution: {integrity: sha512-9vF6PMezztUjbZIZjrabu065qfgxQIT6lI3TJVz03Zb/31emnkhhnVIkLiSU6TBAe6Jxcba3WLBHBIVnbYFtfQ==}
+    peerDependencies:
+      react: 19.2.0
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@hanzo/react-drawer@0.1.8':
     resolution: {integrity: sha512-yX+sUFTvFFpbwM2SJyO3r6qqTrKKUHrmiFf0bL1+VJ2tGTgy/R20cIhTZDHC/NSIJPjLG/J9CKbOlTL5PbBlpg==}
@@ -13707,6 +13724,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@hanzo/logo@1.0.3(react@19.2.0)':
+    dependencies:
+      sharp: 0.34.4
+    optionalDependencies:
+      react: 19.2.0
 
   '@hanzo/react-drawer@0.1.8(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
