@@ -9,8 +9,8 @@
     "url": "https://x.com/hanzoai"
   },
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "app",
+    "pkg/*"
   ],
   "scripts": {
     "build": "turbo run build",
