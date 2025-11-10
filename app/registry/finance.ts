@@ -7,7 +7,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/advanced-chart.tsx"],
-    description: "Full-featured TradingView chart with symbol switching and timeframes",
+    description:
+      "Full-featured TradingView chart with symbol switching and timeframes",
     category: "finance",
     subcategory: "charts",
   },
@@ -16,7 +17,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/market-overview.tsx"],
-    description: "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
+    description:
+      "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
     category: "finance",
     subcategory: "charts",
   },
@@ -29,14 +31,15 @@ export const finance: Registry = [
     category: "finance",
     subcategory: "charts",
   },
-  
+
   // Market Screeners
   {
     name: "stock-screener",
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/stock-screener.tsx"],
-    description: "Stock market screener with filtering and sorting capabilities",
+    description:
+      "Stock market screener with filtering and sorting capabilities",
     category: "finance",
     subcategory: "screeners",
   },
@@ -58,7 +61,7 @@ export const finance: Registry = [
     category: "finance",
     subcategory: "screeners",
   },
-  
+
   // Symbol Analysis Widgets
   {
     name: "symbol-info",
@@ -74,7 +77,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/company-profile.tsx"],
-    description: "Company profile with business description and key information",
+    description:
+      "Company profile with business description and key information",
     category: "finance",
     subcategory: "analysis",
   },
@@ -96,7 +100,7 @@ export const finance: Registry = [
     category: "finance",
     subcategory: "analysis",
   },
-  
+
   // News and Information
   {
     name: "news-timeline",
@@ -107,14 +111,15 @@ export const finance: Registry = [
     category: "finance",
     subcategory: "news",
   },
-  
+
   // Trading Interface
   {
     name: "trading-panel",
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/trading-panel.tsx"],
-    description: "Demo trading panel with buy/sell functionality and portfolio tracking",
+    description:
+      "Demo trading panel with buy/sell functionality and portfolio tracking",
     category: "finance",
     subcategory: "trading",
   },
@@ -123,7 +128,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/order-entry.tsx"],
-    description: "Order entry form with buy/sell toggle and market/limit orders",
+    description:
+      "Order entry form with buy/sell toggle and market/limit orders",
     category: "finance",
     subcategory: "trading",
   },
@@ -132,7 +138,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/positions-list.tsx"],
-    description: "Real-time positions list with P&L tracking and percentage changes",
+    description:
+      "Real-time positions list with P&L tracking and percentage changes",
     category: "finance",
     subcategory: "trading",
   },
@@ -141,7 +148,8 @@ export const finance: Registry = [
     type: "components:finance",
     dependencies: ["@hanzo/ui"],
     files: ["finance/orders-history.tsx"],
-    description: "Order history view with status badges and cancel functionality",
+    description:
+      "Order history view with status badges and cancel functionality",
     category: "finance",
     subcategory: "trading",
   },

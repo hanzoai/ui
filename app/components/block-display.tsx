@@ -19,7 +19,9 @@ export async function BlockDisplay({ name }: { name: string }) {
     return null
   }
 
-  const tree = item.files ? await createFileTreeForRegistryItemFiles(item.files) : null
+  const tree = item.files
+    ? await createFileTreeForRegistryItemFiles(item.files)
+    : null
 
   const highlightedFiles = await Promise.all(
     item.files.map(async (file: z.infer<typeof registryItemFileSchema>) => ({
@@ -42,11 +44,13 @@ export async function BlockDisplay({ name }: { name: string }) {
       type: f.type,
       target: f.target,
     })),
-    meta: item.meta ? {
-      iframeHeight: item.meta.iframeHeight,
-      containerClassName: item.meta.containerClassName,
-      container: item.meta.container,
-    } : undefined,
+    meta: item.meta
+      ? {
+          iframeHeight: item.meta.iframeHeight,
+          containerClassName: item.meta.containerClassName,
+          container: item.meta.container,
+        }
+      : undefined,
   }
 
   return (

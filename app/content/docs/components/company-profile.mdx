@@ -54,22 +54,17 @@ npm install @hanzo/ui
 import { CompanyProfile } from "@hanzo/ui/finance"
 
 export default function Demo() {
-  return (
-    <CompanyProfile
-      symbol="NASDAQ:AAPL"
-      colorTheme="dark"
-    />
-  )
+  return <CompanyProfile symbol="NASDAQ:AAPL" colorTheme="dark" />
 }
 ```
 
 ## Props
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
-| width | string \| number | "100%" | Widget width |
-| height | string \| number | 400 | Widget height |
-| locale | string | "en" | Language locale |
-| colorTheme | "light" \| "dark" | "dark" | Color theme |
-| isTransparent | boolean | false | Transparent background |
+| Prop          | Type              | Default       | Description               |
+| ------------- | ----------------- | ------------- | ------------------------- |
+| symbol        | string            | "NASDAQ:AAPL" | Trading symbol to display |
+| width         | string \| number  | "100%"        | Widget width              |
+| height        | string \| number  | 400           | Widget height             |
+| locale        | string            | "en"          | Language locale           |
+| colorTheme    | "light" \| "dark" | "dark"        | Color theme               |
+| isTransparent | boolean           | false         | Transparent background    |

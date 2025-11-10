@@ -1,7 +1,4 @@
-import {
-  Sidebar,
-  SidebarProvider,
-} from "@/registry/default/ui/sidebar"
+import { Sidebar, SidebarProvider } from "@/registry/default/ui/sidebar"
 
 export default function SidebarDemo() {
   return (
