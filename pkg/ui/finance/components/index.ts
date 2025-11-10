@@ -19,6 +19,12 @@ export { default as NewsTimeline } from './NewsTimeline'
 
 // Trading Interface
 export { TradingPanel } from './TradingPanel'
+export { OrderEntry } from './OrderEntry'
+export { PositionsList } from './PositionsList'
+export { OrdersHistory } from './OrdersHistory'
 
-// Type exports for TradingPanel
+// Type exports
 export type { TradingPanelProps } from './TradingPanel'
+export type { OrderEntryProps } from './OrderEntry'
+export type { PositionsListProps, Position } from './PositionsList'
+export type { OrdersHistoryProps, Order } from './OrdersHistory'
