@@ -1,0 +1,148 @@
+import { Registry } from "@/registry/schema"
+
+export const finance: Registry = [
+  // TradingView Chart Widgets
+  {
+    name: "advanced-chart",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/advanced-chart.tsx"],
+    description: "Full-featured TradingView chart with symbol switching and timeframes",
+    category: "finance",
+    subcategory: "charts",
+  },
+  {
+    name: "market-overview",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/market-overview.tsx"],
+    description: "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
+    category: "finance",
+    subcategory: "charts",
+  },
+  {
+    name: "ticker-tape",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/ticker-tape.tsx"],
+    description: "Scrolling ticker tape with major market indices and stocks",
+    category: "finance",
+    subcategory: "charts",
+  },
+  
+  // Market Screeners
+  {
+    name: "stock-screener",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/stock-screener.tsx"],
+    description: "Stock market screener with filtering and sorting capabilities",
+    category: "finance",
+    subcategory: "screeners",
+  },
+  {
+    name: "crypto-screener",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/crypto-screener.tsx"],
+    description: "Cryptocurrency market screener for digital assets",
+    category: "finance",
+    subcategory: "screeners",
+  },
+  {
+    name: "forex-screener",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/forex-screener.tsx"],
+    description: "Foreign exchange market screener for currency pairs",
+    category: "finance",
+    subcategory: "screeners",
+  },
+  
+  // Symbol Analysis Widgets
+  {
+    name: "symbol-info",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/symbol-info.tsx"],
+    description: "Real-time symbol information with price and basic details",
+    category: "finance",
+    subcategory: "analysis",
+  },
+  {
+    name: "company-profile",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/company-profile.tsx"],
+    description: "Company profile with business description and key information",
+    category: "finance",
+    subcategory: "analysis",
+  },
+  {
+    name: "financials",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/financials.tsx"],
+    description: "Financial statements and fundamental data visualization",
+    category: "finance",
+    subcategory: "analysis",
+  },
+  {
+    name: "technical-analysis",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/technical-analysis.tsx"],
+    description: "Technical indicator summary with configurable intervals",
+    category: "finance",
+    subcategory: "analysis",
+  },
+  
+  // News and Information
+  {
+    name: "news-timeline",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/news-timeline.tsx"],
+    description: "Financial news timeline widget with real-time updates",
+    category: "finance",
+    subcategory: "news",
+  },
+  
+  // Trading Interface
+  {
+    name: "trading-panel",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/trading-panel.tsx"],
+    description: "Demo trading panel with buy/sell functionality and portfolio tracking",
+    category: "finance",
+    subcategory: "trading",
+  },
+  {
+    name: "order-entry",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/order-entry.tsx"],
+    description: "Order entry form with buy/sell toggle and market/limit orders",
+    category: "finance",
+    subcategory: "trading",
+  },
+  {
+    name: "positions-list",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/positions-list.tsx"],
+    description: "Real-time positions list with P&L tracking and percentage changes",
+    category: "finance",
+    subcategory: "trading",
+  },
+  {
+    name: "orders-history",
+    type: "components:component",
+    dependencies: ["@hanzo/ui"],
+    files: ["finance/orders-history.tsx"],
+    description: "Order history view with status badges and cancel functionality",
+    category: "finance",
+    subcategory: "trading",
+  },
+]
