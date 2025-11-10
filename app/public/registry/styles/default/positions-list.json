@@ -1,0 +1,16 @@
+{
+  "name": "positions-list",
+  "description": "Real-time positions list with P&L tracking and percentage changes",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "positions-list.tsx",
+      "content": "'use client'\n\nexport { PositionsList } from '@hanzo/ui/finance'\nexport type { PositionsListProps, Position } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "trading"
+}
