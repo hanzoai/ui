@@ -1,0 +1,16 @@
+{
+  "name": "symbol-info",
+  "description": "Real-time symbol information with price and basic details",
+  "dependencies": [
+    "@hanzo/ui"
+  ],
+  "files": [
+    {
+      "name": "symbol-info.tsx",
+      "content": "'use client'\n\nexport { SymbolInfo } from '@hanzo/ui/finance'\nexport type { SymbolInfoProps } from '@hanzo/ui/finance'\n"
+    }
+  ],
+  "type": "components:component",
+  "category": "finance",
+  "subcategory": "analysis"
+}
