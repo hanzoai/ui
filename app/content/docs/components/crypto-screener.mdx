@@ -1,0 +1,64 @@
+---
+title: Crypto Screener
+description: Filter and discover cryptocurrencies based on various criteria.
+component: true
+---
+
+<ComponentPreview
+  name="crypto-screener"
+  description="Cryptocurrency screening tool"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add crypto-screener
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="crypto-screener" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { CryptoScreener } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  return (
+    <CryptoScreener
+      market="crypto"
+      colorTheme="dark"
+    />
+  )
+}
+```

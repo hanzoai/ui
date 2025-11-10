@@ -1,0 +1,107 @@
+---
+title: Advanced Chart
+description: Full-featured TradingView chart with symbol switching and timeframes.
+component: true
+---
+
+<ComponentPreview
+  name="advanced-chart"
+  description="Interactive financial chart with advanced features"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add advanced-chart
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="advanced-chart" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { AdvancedChart } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  return (
+    <AdvancedChart
+      symbol="NASDAQ:AAPL"
+      interval="D"
+      theme="dark"
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
+| interval | string | "D" | Chart interval (1, 5, 15, 30, 60, D, W, M) |
+| theme | "light" \| "dark" | "dark" | Color theme |
+| width | string \| number | "100%" | Chart width |
+| height | string \| number | 500 | Chart height |
+| autosize | boolean | true | Auto-resize to container |
+| hideTopToolbar | boolean | false | Hide top toolbar |
+| hideSideToolbar | boolean | false | Hide side toolbar |
+| saveImage | boolean | true | Enable save image |
+
+## Examples
+
+### Basic Usage
+
+```tsx
+<AdvancedChart symbol="NASDAQ:AAPL" />
+```
+
+### Custom Styling
+
+```tsx
+<AdvancedChart
+  symbol="BINANCE:BTCUSDT"
+  theme="light"
+  height={600}
+  hideTopToolbar={true}
+/>
+```
+
+### Multiple Symbols
+
+```tsx
+<div className="grid gap-4">
+  <AdvancedChart symbol="NASDAQ:AAPL" />
+  <AdvancedChart symbol="NASDAQ:GOOGL" />
+</div>
+```

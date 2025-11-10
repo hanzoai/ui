@@ -1,0 +1,74 @@
+---
+title: Symbol Info
+description: Display real-time symbol information and key metrics.
+component: true
+---
+
+<ComponentPreview
+  name="symbol-info"
+  description="Symbol overview with price and details"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add symbol-info
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @hanzo/ui
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="symbol-info" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { SymbolInfo } from "@hanzo/ui/finance"
+
+export default function Demo() {
+  return (
+    <SymbolInfo
+      symbol="NASDAQ:AAPL"
+      colorTheme="dark"
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| symbol | string | "NASDAQ:AAPL" | Trading symbol to display |
+| width | string \| number | "100%" | Widget width |
+| locale | string | "en" | Language locale |
+| colorTheme | "light" \| "dark" | "dark" | Color theme |
+| isTransparent | boolean | false | Transparent background |
