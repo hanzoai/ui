@@ -1,4 +1,4 @@
 'use client'
 
-export { default as TechnicalAnalysis } from '@hanzo/ui/finance/components/TechnicalAnalysis'
+export { TechnicalAnalysis } from '@hanzo/ui/finance'
 export type { TechnicalAnalysisProps } from '@hanzo/ui/finance'
