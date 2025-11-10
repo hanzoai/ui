@@ -27,6 +27,7 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: "block" | "component" | "example"
   hideCode?: boolean
   styleName?: Style["name"]
+  minHeight?: string
 }
 
 interface CodeBlockProps {
@@ -50,11 +51,22 @@ export function ComponentPreview({
   type,
   hideCode = false,
   styleName,
+  minHeight,
   ...props
 }: ComponentPreviewProps) {
   // Use provided styleName or default to active style
   const activeStyle = styleName || getActiveStyle().name
   const index = styles.findIndex((style) => style.name === activeStyle)
+
+  // Check if this is a finance component - they need more height
+  const isFinanceComponent = name.includes('chart') || name.includes('market') ||
+    name.includes('screener') || name.includes('trading') || name.includes('order') ||
+    name.includes('position') || name.includes('symbol') || name.includes('company') ||
+    name.includes('financial') || name.includes('technical') || name.includes('news')
+
+  // Set default min height based on component type
+  const defaultMinHeight = isFinanceComponent ? "600px" : "350px"
+  const previewMinHeight = minHeight || defaultMinHeight
 
   // Render blocks with static images for mobile, iframe for desktop
   // This matches shadcn's approach and avoids chunk loading issues
@@ -191,13 +203,15 @@ export function ComponentPreview({
           <ThemeWrapper defaultTheme="zinc">
             <div
               className={cn(
-                "preview flex min-h-[350px] w-full justify-center p-10",
+                "preview flex w-full justify-center",
+                isFinanceComponent ? "p-4" : "p-10",
                 {
                   "items-center": align === "center",
                   "items-start": align === "start",
                   "items-end": align === "end",
                 }
               )}
+              style={{ minHeight: previewMinHeight }}
             >
               <React.Suspense
                 fallback={
@@ -207,7 +221,9 @@ export function ComponentPreview({
                   </div>
                 }
               >
-                {Preview}
+                <div className={cn(isFinanceComponent ? "w-full" : "")}>
+                  {Preview}
+                </div>
               </React.Suspense>
             </div>
           </ThemeWrapper>
