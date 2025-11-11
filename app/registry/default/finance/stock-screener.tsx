@@ -1,5 +1,1 @@
-"use client"
-
-import { StockScreener } from "@hanzo/ui/finance"
-
-export default StockScreener
+export * from "../ui/stock-screener"
