@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { codeToHtml } from "shiki"
+import { codeToHtml } from "shiki/dist/index.mjs"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { CodeBlock } from "./code-block"
@@ -15,7 +15,7 @@ Object.defineProperty(navigator, "clipboard", {
 })
 
 // Mock shiki
-vi.mock("shiki", () => ({
+vi.mock("shiki/dist/index.mjs", () => ({
   codeToHtml: vi.fn().mockImplementation(async (code: string) => {
     // Return just the code content with preserved line breaks
     // The component expects raw code, not wrapped in pre/code tags
