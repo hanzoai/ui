@@ -17,6 +17,7 @@
     "dist",
     "style",
     "bin",
+    "finance",
     "README.md",
     "LICENSE"
   ],
@@ -46,8 +47,9 @@
     "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
     "tc": "tsc --project tsconfig.build.json",
-    "build": "npm run clean && npm run build:tsup",
-    "build:tsup": "tsup --config tsup.config.minimal.ts",
+    "build": "npm run clean && npm run build:minimal",
+    "build:minimal": "tsup --config tsup.config.minimal.ts",
+    "build:namespaces": "tsup --config tsup.config.namespaces.ts",
     "build:full": "tsup --config tsup.config.production.ts",
     "build:frameworks": "npm run build",
     "build:watch": "tsup --watch",
@@ -249,8 +251,21 @@
       "import": "./src/billing/index.ts"
     },
     "./finance": {
-      "types": "./finance/index.ts",
-      "import": "./finance/index.ts"
+      "types": "./dist/finance/index.d.ts",
+      "import": "./dist/finance/index.mjs",
+      "require": "./dist/finance/index.js"
+    },
+    "./finance/components": {
+      "types": "./finance/components/index.ts",
+      "import": "./finance/components/index.ts"
+    },
+    "./finance/AdvancedChart": {
+      "types": "./finance/components/AdvancedChart.tsx",
+      "import": "./finance/components/AdvancedChart.tsx"
+    },
+    "./finance/TickerTape": {
+      "types": "./finance/components/TickerTape.tsx",
+      "import": "./finance/components/TickerTape.tsx"
     },
     "./finance/*": {
       "types": "./finance/components/*.tsx",
@@ -392,6 +407,106 @@
       "types": "./dist/frameworks/react-native/index.d.ts",
       "import": "./dist/frameworks/react-native/index.mjs",
       "require": "./dist/frameworks/react-native/index.js"
+    },
+    "./code": {
+      "types": "./dist/code/index.d.ts",
+      "import": "./dist/code/index.mjs",
+      "require": "./dist/code/index.js"
+    },
+    "./code/*": {
+      "types": "./dist/code/*.d.ts",
+      "import": "./dist/code/*.mjs",
+      "require": "./dist/code/*.js"
+    },
+    "./3d": {
+      "types": "./dist/3d/index.d.ts",
+      "import": "./dist/3d/index.mjs",
+      "require": "./dist/3d/index.js"
+    },
+    "./3d/*": {
+      "types": "./dist/3d/*.d.ts",
+      "import": "./dist/3d/*.mjs",
+      "require": "./dist/3d/*.js"
+    },
+    "./animation": {
+      "types": "./dist/animation/index.d.ts",
+      "import": "./dist/animation/index.mjs",
+      "require": "./dist/animation/index.js"
+    },
+    "./animation/*": {
+      "types": "./dist/animation/*.d.ts",
+      "import": "./dist/animation/*.mjs",
+      "require": "./dist/animation/*.js"
+    },
+    "./pattern": {
+      "types": "./dist/pattern/index.d.ts",
+      "import": "./dist/pattern/index.mjs",
+      "require": "./dist/pattern/index.js"
+    },
+    "./pattern/*": {
+      "types": "./dist/pattern/*.d.ts",
+      "import": "./dist/pattern/*.mjs",
+      "require": "./dist/pattern/*.js"
+    },
+    "./navigation": {
+      "types": "./dist/navigation/index.d.ts",
+      "import": "./dist/navigation/index.mjs",
+      "require": "./dist/navigation/index.js"
+    },
+    "./navigation/*": {
+      "types": "./dist/navigation/*.d.ts",
+      "import": "./dist/navigation/*.mjs",
+      "require": "./dist/navigation/*.js"
+    },
+    "./form": {
+      "types": "./dist/form/index.d.ts",
+      "import": "./dist/form/index.mjs",
+      "require": "./dist/form/index.js"
+    },
+    "./form/*": {
+      "types": "./dist/form/*.d.ts",
+      "import": "./dist/form/*.mjs",
+      "require": "./dist/form/*.js"
+    },
+    "./device": {
+      "types": "./dist/device/index.d.ts",
+      "import": "./dist/device/index.mjs",
+      "require": "./dist/device/index.js"
+    },
+    "./device/*": {
+      "types": "./dist/device/*.d.ts",
+      "import": "./dist/device/*.mjs",
+      "require": "./dist/device/*.js"
+    },
+    "./dock": {
+      "types": "./dist/dock/index.d.ts",
+      "import": "./dist/dock/index.mjs",
+      "require": "./dist/dock/index.js"
+    },
+    "./dock/*": {
+      "types": "./dist/dock/*.d.ts",
+      "import": "./dist/dock/*.mjs",
+      "require": "./dist/dock/*.js"
+    },
+    "./project": {
+      "types": "./dist/project/index.d.ts",
+      "import": "./dist/project/index.mjs",
+      "require": "./dist/project/index.js"
+    },
+    "./project/*": {
+      "types": "./dist/project/*.d.ts",
+      "import": "./dist/project/*.mjs",
+      "require": "./dist/project/*.js"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "import": "./dist/ui/index.mjs",
+      "require": "./dist/ui/index.js"
+    },
+    "./ui/*": {
+      "types": "./dist/ui/*.d.ts",
+      "import": "./dist/ui/*.mjs",
+      "require": "./dist/ui/*.js"
     }
   },
   "dependencies": {
