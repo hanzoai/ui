@@ -1,4 +1,4 @@
-import { AnimatedList } from "@/registry/default/ui/animated-list"
+import { AnimatedList } from "@hanzo/ui/animation/animated-list"
 
 const listItems = [
   {

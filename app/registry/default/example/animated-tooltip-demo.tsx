@@ -1,4 +1,5 @@
-import { AnimatedTooltip } from "@/registry/default/ui/animated-tooltip"
+import { AnimatedTooltip } from "@hanzo/ui/animation/animated-tooltip"
+
 import { Button } from "@/registry/default/ui/button"
 
 export default function AnimatedTooltipDemo() {
