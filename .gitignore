@@ -62,6 +62,7 @@ app/.source
 tests/reports/
 tests/artifacts/
 
-# block screenshots (generated at build time)
-app/public/r/styles/*/
+# Note: Block screenshots are pre-generated and committed
+# They cannot be generated in CI (requires display/browser)
+# app/public/r/styles/*/ -- REMOVED to allow committing screenshots
 
