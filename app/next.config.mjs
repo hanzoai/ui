@@ -3,7 +3,7 @@ import { createMDX } from "fumadocs-mdx/next"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Transpile packages that might have issues with pnpm symlinks
-  transpilePackages: ["chrono-node"],
+  transpilePackages: ["chrono-node", "@hanzo/ui"],
 
   // Enable static export for GitHub Pages deployment (but not for E2E tests)
   output: process.env.GITHUB_ACTIONS && !process.env.E2E_TEST ? "export" : undefined,
