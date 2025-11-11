@@ -4,6 +4,8 @@ import * as React from "react"
 import Image from "next/image"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { vs } from "react-syntax-highlighter/dist/esm/styles/prism"
+import { useTheme } from "next-themes"
 import { Index } from "@/__registry__"
 
 import { cn } from "@/lib/utils"
@@ -56,6 +58,8 @@ export function ComponentPreview({
   minHeight,
   ...props
 }: ComponentPreviewProps) {
+  const { theme, resolvedTheme } = useTheme()
+  
   // Use provided styleName or default to active style
   const activeStyle = styleName || getActiveStyle().name
   const index = styles.findIndex((style) => style.name === activeStyle)
@@ -235,7 +239,7 @@ export function ComponentPreview({
                 (codeString && (
                   <SyntaxHighlighter
                     language="tsx"
-                    style={vscDarkPlus}
+                    style={resolvedTheme === "dark" ? vscDarkPlus : vs}
                     customStyle={{
                       margin: 0,
                       borderRadius: "0.5rem",
@@ -243,8 +247,9 @@ export function ComponentPreview({
                       padding: "1rem",
                     }}
                     showLineNumbers={false}
+                    PreTag="div"
                   >
-                    {codeString}
+                    {codeString.trim()}
                   </SyntaxHighlighter>
                 ))}
             </div>
