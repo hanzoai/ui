@@ -1,4 +1,4 @@
-import { AnimatedText } from "@/registry/default/ui/animated-text"
+import { AnimatedText } from "@hanzo/ui/animation/animated-text"
 
 export default function AnimatedTextDemo() {
   return (

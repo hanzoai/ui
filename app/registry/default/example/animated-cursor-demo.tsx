@@ -1,4 +1,4 @@
-import { AnimatedCursor } from "@/registry/default/ui/animated-cursor"
+import { AnimatedCursor } from "@hanzo/ui/animation/animated-cursor"
 
 export default function AnimatedCursorDemo() {
   return (

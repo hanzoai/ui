@@ -1,4 +1,4 @@
-import { AnimatedTestimonials } from "@/registry/default/ui/animated-testimonials"
+import { AnimatedTestimonials } from "@hanzo/ui/animation/animated-testimonials"
 
 const testimonials = [
   {
