@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation"
 
 import { getColors } from "@/lib/colors"
 import { cn } from "@/lib/utils"
-import { ScrollArea, ScrollBar } from "@/registry/default/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/registry/new-york-v4/ui/scroll-area"
 
 export function ColorsNav({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: React.ComponentProps<"div">) {
   const pathname = usePathname()
   const colors = getColors()
 
