@@ -1,4 +1,4 @@
-import { AnimatedBeam } from "@/registry/default/ui/animated-beam"
+import { AnimatedBeam } from "@hanzo/ui/animation/animated-beam"
 
 export default function AnimatedBeamDemo() {
   return (
