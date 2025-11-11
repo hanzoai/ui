@@ -1,5 +1,1 @@
-"use client"
-
-import { TechnicalAnalysis } from "@hanzo/ui/finance"
-
-export default TechnicalAnalysis
+export * from "../ui/technical-analysis"
