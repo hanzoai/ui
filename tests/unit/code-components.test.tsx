@@ -1,15 +1,15 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 
-import { CodeCompare } from "./code-compare"
-import { CodeDiff } from "./code-diff"
-import { CodeExplorer } from "./code-explorer"
-import { CodePreview } from "./code-preview"
-import { CodeSnippet, InlineCode } from "./code-snippet"
-import { CodeTerminal } from "./code-terminal"
+import { CodeCompare } from "@/app/registry/default/ui/code-compare"
+import { CodeDiff } from "@/app/registry/default/ui/code-diff"
+import { CodeExplorer } from "@/app/registry/default/ui/code-explorer"
+import { CodePreview } from "@/app/registry/default/ui/code-preview"
+import { CodeSnippet, InlineCode } from "@/app/registry/default/ui/code-snippet"
+import { CodeTerminal } from "@/app/registry/default/ui/code-terminal"
 
 // Mock Shiki
-vi.mock("shiki", () => ({
+vi.mock("shiki/dist/index.mjs", () => ({
   codeToHtml: vi.fn().mockResolvedValue("<span>mocked code</span>"),
 }))
 
