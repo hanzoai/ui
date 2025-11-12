@@ -11,6 +11,10 @@ export default function AnimatedNumberDemo() {
           prefix="$"
           className="text-5xl font-bold"
           duration={2000}
+          onComplete={() => {}}
+          style={{}}
+          separator=","
+          hoverValue={150000}
         />
       </div>
     </div>

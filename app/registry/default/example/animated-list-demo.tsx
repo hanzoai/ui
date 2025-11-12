@@ -55,7 +55,17 @@ export default function AnimatedListDemo() {
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
       <div className="w-full max-w-md">
-        <AnimatedList items={listItems} animation="slide" />
+        <AnimatedList
+          items={listItems}
+          animation="slide"
+          className="space-y-3"
+          itemClassName="transform transition-all"
+          style={{}}
+          onReorder={() => {}}
+          onItemClick={() => {}}
+          onAnimationComplete={() => {}}
+          customVariants={{}}
+        />
       </div>
     </div>
   )
