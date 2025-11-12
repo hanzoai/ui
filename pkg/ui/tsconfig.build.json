@@ -37,6 +37,8 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "src/button.ts",
+    "src/code/**/*",
+    "src/animation/**/*",
     "primitives/sidebar.tsx",
     "primitives/chat/**/*",
     "primitives/background-beams.tsx",
