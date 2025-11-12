@@ -39,15 +39,15 @@ export function ColorFormatSelector({
         <span className="font-medium">Format: </span>
         <span className="text-muted-foreground font-mono">{format}</span>
       </SelectTrigger>
-      <SelectContent align="end" className="rounded-xl">
+      <SelectContent align="end" className="rounded-xl max-h-[300px]">
         {Object.entries(formats).map(([format, value]) => (
           <SelectItem
             key={format}
             value={format}
             className="gap-2 rounded-lg [&>span]:flex [&>span]:items-center [&>span]:gap-2"
           >
-            <span className="font-medium">{format}</span>
-            <span className="text-muted-foreground font-mono text-xs">
+            <span className="font-medium min-w-[80px]">{format}</span>
+            <span className="text-muted-foreground font-mono text-xs max-w-[200px] truncate">
               {value}
             </span>
           </SelectItem>
