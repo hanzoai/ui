@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "symbol-info.tsx",
-      "content": "\"use client\"\n\nexport { SymbolInfo } from \"@hanzo/ui/finance\"\nexport type { SymbolInfoProps } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/symbol-info\"\n"
     }
   ],
   "type": "components:finance",

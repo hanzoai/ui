@@ -2,18 +2,17 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
-import { vs } from "react-syntax-highlighter/dist/esm/styles/prism"
-import { useTheme } from "next-themes"
 import { Index } from "@/__registry__"
+import { useTheme } from "next-themes"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { vs, vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 
 import { cn } from "@/lib/utils"
 import { CopyButton, CopyWithClassNames } from "@/components/copy-button"
 import { Icons } from "@/components/icons"
 import { StyleSwitcher } from "@/components/style-switcher"
 import { ThemeWrapper } from "@/components/theme-wrapper"
-import { V0Button } from "@/components/v0-button"
+import { HanzoButton } from "@/components/hanzo-button"
 import {
   Tabs,
   TabsContent,
@@ -59,16 +58,24 @@ export function ComponentPreview({
   ...props
 }: ComponentPreviewProps) {
   const { theme, resolvedTheme } = useTheme()
-  
+
   // Use provided styleName or default to active style
   const activeStyle = styleName || getActiveStyle().name
   const index = styles.findIndex((style) => style.name === activeStyle)
 
   // Check if this is a finance component - they need more height
-  const isFinanceComponent = name.includes('chart') || name.includes('market') ||
-    name.includes('screener') || name.includes('trading') || name.includes('order') ||
-    name.includes('position') || name.includes('symbol') || name.includes('company') ||
-    name.includes('financial') || name.includes('technical') || name.includes('news')
+  const isFinanceComponent =
+    name.includes("chart") ||
+    name.includes("market") ||
+    name.includes("screener") ||
+    name.includes("trading") ||
+    name.includes("order") ||
+    name.includes("position") ||
+    name.includes("symbol") ||
+    name.includes("company") ||
+    name.includes("financial") ||
+    name.includes("technical") ||
+    name.includes("news")
 
   // Set default min height based on component type
   const defaultMinHeight = isFinanceComponent ? "600px" : "350px"
@@ -143,6 +150,37 @@ export function ComponentPreview({
   }, [activeStyle, name, Code])
 
   const codeString = React.useMemo(() => {
+    /**
+     * Transform registry imports to namespaced @hanzo/ui imports
+     * Patterns:
+     * - @/registry/default/ui/* → @hanzo/ui/*
+     * - @/registry/code/* → @hanzo/ui/code/*
+     * - @/registry/3d/* → @hanzo/ui/3d/*
+     * - @/registry/animation/* → @hanzo/ui/animation/*
+     * - @/registry/pattern/* → @hanzo/ui/pattern/*
+     * - @/registry/navigation/* → @hanzo/ui/navigation/*
+     * - @/registry/form/* → @hanzo/ui/form/*
+     * - @/registry/device/* → @hanzo/ui/device/*
+     * - @/registry/dock/* → @hanzo/ui/dock/*
+     * - @/registry/project/* → @hanzo/ui/project/*
+     * - @/registry/ui/* → @hanzo/ui/ui/*
+     */
+    const transformImports = (code: string) => {
+      return (
+        code
+          // Transform core components: @/registry/default/ui/* → @hanzo/ui/*
+          .replace(
+            /from ["']@\/registry\/default\/ui\/([^"']+)["']/g,
+            'from "@hanzo/ui/$1"'
+          )
+          // Transform namespaced imports: @/registry/{namespace}/* → @hanzo/ui/{namespace}/*
+          .replace(
+            /from ["']@\/registry\/(code|3d|animation|pattern|navigation|form|device|dock|project|ui)\/([^"']+)["']/g,
+            'from "@hanzo/ui/$1/$2"'
+          )
+      )
+    }
+
     // First try to get code from MDX children (backward compatibility)
     const codeProps = Code?.props as CodeBlockProps | undefined
     if (
@@ -154,10 +192,16 @@ export function ComponentPreview({
       const buttonProps = Button?.props as CodeButtonProps | undefined
       const childrenCode =
         buttonProps?.value || buttonProps?.__rawString__ || null
-      if (childrenCode) return childrenCode
+      if (childrenCode) {
+        return transformImports(childrenCode)
+      }
     }
 
-    // Fall back to registry code
+    // Fall back to registry code and transform imports
+    if (registryCode) {
+      return transformImports(registryCode)
+    }
+
     return registryCode
   }, [Code, registryCode])
 
@@ -188,7 +232,7 @@ export function ComponentPreview({
             <StyleSwitcher />
             <div className="flex items-center gap-2">
               {activeStyle === "default" && description && codeString ? (
-                <V0Button
+                <HanzoButton
                   block={{
                     code: codeString,
                     name,
@@ -234,23 +278,37 @@ export function ComponentPreview({
         </TabsContent>
         <TabsContent value="code">
           <div className="flex flex-col space-y-4">
-            <div className="w-full rounded-md [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
+            <div className="w-full rounded-md border [&_pre]:my-0 [&_pre]:max-h-[350px] [&_pre]:overflow-auto">
               {Code ||
                 (codeString && (
-                  <SyntaxHighlighter
-                    language="tsx"
-                    style={resolvedTheme === "dark" ? vscDarkPlus : vs}
-                    customStyle={{
-                      margin: 0,
-                      borderRadius: "0.5rem",
-                      fontSize: "0.875rem",
-                      padding: "1rem",
-                    }}
-                    showLineNumbers={false}
-                    PreTag="div"
-                  >
-                    {codeString.trim()}
-                  </SyntaxHighlighter>
+                  <div className="relative">
+                    <div className="absolute right-4 top-4 z-10">
+                      <CopyButton
+                        value={codeString}
+                        variant="ghost"
+                        className="h-7 w-7 text-foreground opacity-70 hover:bg-muted hover:opacity-100 [&_svg]:size-3.5"
+                      />
+                    </div>
+                    <SyntaxHighlighter
+                      language="tsx"
+                      style={resolvedTheme === "dark" ? vscDarkPlus : vs}
+                      customStyle={{
+                        margin: 0,
+                        borderRadius: "0.5rem",
+                        fontSize: "0.875rem",
+                        lineHeight: "1.5",
+                        padding: "1.5rem",
+                        background:
+                          resolvedTheme === "dark" ? "#1e1e1e" : "#ffffff",
+                      }}
+                      showLineNumbers={false}
+                      PreTag="div"
+                      wrapLines={false}
+                      wrapLongLines={false}
+                    >
+                      {codeString.trim()}
+                    </SyntaxHighlighter>
+                  </div>
                 ))}
             </div>
           </div>

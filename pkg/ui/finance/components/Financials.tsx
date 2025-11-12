@@ -16,7 +16,7 @@ export interface FinancialsProps {
 export default function Financials({
   symbol = 'NASDAQ:AAPL',
   width = '100%',
-  height = '100%',
+  height = '500',
   locale = 'en',
   colorTheme = 'dark',
   isTransparent = false,
@@ -27,6 +27,14 @@ export default function Financials({
 
   useEffect(() => {
     if (!containerRef.current) return
+
+    // Check if widget is already initialized using data attribute
+    if (containerRef.current.dataset.initialized === 'true') {
+      return // Widget already initialized, skip
+    }
+
+    // Mark as initialized before adding script
+    containerRef.current.dataset.initialized = 'true'
 
     const script = document.createElement('script')
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'
@@ -46,14 +54,18 @@ export default function Financials({
 
     return () => {
       if (containerRef.current) {
-        containerRef.current.innerHTML = ''
+        // Remove initialization flag on unmount
+        delete containerRef.current.dataset.initialized
+        // Remove all scripts
+        const scripts = containerRef.current.querySelectorAll('script')
+        scripts.forEach((s) => s.remove())
       }
     }
   }, [symbol, width, height, locale, colorTheme, isTransparent, displayMode, largeChartUrl])
 
   return (
-    <div className="tradingview-widget-container" ref={containerRef}>
-      <div className="tradingview-widget-container__widget"></div>
+    <div className="tradingview-widget-container w-full h-[500px]" ref={containerRef}>
+      <div className="tradingview-widget-container__widget h-full"></div>
     </div>
   )
 }

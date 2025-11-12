@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { useLiftMode } from "@/hooks/use-lift-mode"
 import { BlockCopyButton } from "@/components/block-copy-button"
-import { V0Button } from "@/components/v0-button"
+import { HanzoButton } from "@/components/hanzo-button"
 import { Block, type BlockChunk } from "@/registry/schema"
 
 export function BlockChunk({
@@ -46,7 +46,7 @@ export function BlockChunk({
                   name={chunk.name}
                   code={chunk.code}
                 />
-                <V0Button
+                <HanzoButton
                   size="icon"
                   block={{
                     name: chunk.name,
