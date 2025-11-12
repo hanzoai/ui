@@ -321,7 +321,10 @@ export default function FinancePage() {
                   <CardTitle>Positions</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <PositionsList positions={positions} />
+                  <PositionsList
+                    positions={positions}
+                    onPositionClick={() => {}}
+                  />
                 </CardContent>
               </Card>
             </div>
@@ -333,7 +336,8 @@ export default function FinancePage() {
               <CardContent>
                 <OrdersHistory
                   orders={orders}
-                  onCancelOrder={(id) => {
+                  onOrderClick={() => {}}
+                  onCancelOrder={(id: string) => {
                     setOrders(
                       orders.map((o) =>
                         o.id === id ? { ...o, status: "cancelled" } : o
