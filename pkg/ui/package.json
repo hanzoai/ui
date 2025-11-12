@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "5.2.1",
+  "version": "5.3.0",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -237,9 +237,9 @@
       "require": "./dist/carousel.js"
     },
     "./form": {
-      "types": "./dist/form.d.ts",
-      "import": "./dist/form.mjs",
-      "require": "./dist/form.js"
+      "types": "./dist/form/index.d.ts",
+      "import": "./dist/form/index.mjs",
+      "require": "./dist/form/index.js"
     },
     "./drawer": {
       "types": "./dist/drawer.d.ts",
@@ -457,11 +457,6 @@
       "types": "./dist/navigation/*.d.ts",
       "import": "./dist/navigation/*.mjs",
       "require": "./dist/navigation/*.js"
-    },
-    "./form": {
-      "types": "./dist/form/index.d.ts",
-      "import": "./dist/form/index.mjs",
-      "require": "./dist/form/index.js"
     },
     "./form/*": {
       "types": "./dist/form/*.d.ts",
