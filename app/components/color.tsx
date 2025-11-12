@@ -10,7 +10,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
 
 export function Color({ color }: { color: Color }) {
   const { format, setLastCopied, lastCopied } = useColors()
-  const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 0 })
+  const { isCopied, copyToClipboard } = useCopyToClipboard()
 
   return (
     <button
