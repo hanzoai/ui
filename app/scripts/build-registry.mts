@@ -44,7 +44,19 @@ export const Index: Record<string, any> = {
       const resolveFiles = item.files.map(
         (file) => `registry/${style.name}/${file}`
       )
-      const type = item.type.split(":")[1]
+
+      // Extract namespace from type (e.g., "components:3d" -> namespace="3d", type="ui")
+      // Standard types like "components:ui" have no namespace
+      const typeParts = item.type.split(":")
+      const baseType = typeParts[0] // "components"
+      const typeVariant = typeParts[1] // "ui", "3d", "ai", etc.
+
+      // Determine if this is a namespaced component type
+      const namespacedTypes = ["3d", "ai", "code", "animation", "layout", "marketing", "navigation", "special-effects", "text-effects", "visualization", "finance"]
+      const isNamespaced = namespacedTypes.includes(typeVariant)
+      const namespace = isNamespaced ? typeVariant : undefined
+      const type = isNamespaced ? "ui" : typeVariant
+
       let sourceFilename = ""
 
       let chunks: any = []
@@ -184,19 +196,24 @@ export const Index: Record<string, any> = {
             }`
 
             const targetFile = file.replace(item.name, `${chunkName}`)
+            const targetDir = namespace ? `${namespace}/${chunkName}` : `${type}/${chunkName}`
             const targetFilePath = path.join(
               cwd(),
-              `registry/${style.name}/${type}/${chunkName}.tsx`
+              `registry/${style.name}/${targetDir}.tsx`
             )
 
             // Write component file.
             rimraf.sync(targetFilePath)
             await fs.writeFile(targetFilePath, code, "utf8")
 
+            const componentPath = namespace
+              ? `@/registry/${style.name}/${namespace}/${chunkName}`
+              : `@/registry/${style.name}/${type}/${chunkName}`
+
             return {
               name: chunkName,
               description,
-              component: `React.lazy(() => import("@/registry/${style.name}/${type}/${chunkName}")),`,
+              component: `React.lazy(() => import("${componentPath}")),`,
               file: targetFile,
               container: {
                 className: containerClassName,
@@ -206,14 +223,34 @@ export const Index: Record<string, any> = {
         )
 
         // // Write the source file for blocks only.
-        sourceFilename = `__registry__/${style.name}/${type}/${item.name}.tsx`
+        const sourceDir = namespace ? `${namespace}/${item.name}` : `${type}/${item.name}`
+        sourceFilename = `__registry__/${style.name}/${sourceDir}.tsx`
         const sourcePath = path.join(process.cwd(), sourceFilename)
-        if (!existsSync(sourcePath)) {
-          await fs.mkdir(sourcePath, { recursive: true })
+        const sourceParentDir = path.dirname(sourcePath)
+        if (!existsSync(sourceParentDir)) {
+          await fs.mkdir(sourceParentDir, { recursive: true })
         }
 
         rimraf.sync(sourcePath)
         await fs.writeFile(sourcePath, sourceFile.getText())
+      }
+
+      // Construct import path based on namespace
+      const componentImportPath = namespace
+        ? `@/registry/${style.name}/${namespace}/${item.name}`
+        : `@/registry/${style.name}/${type}/${item.name}`
+
+      // Generate re-export file for namespaced components
+      if (namespace && item.type !== "components:block") {
+        const namespaceDir = path.join(process.cwd(), `registry/${style.name}/${namespace}`)
+        if (!existsSync(namespaceDir)) {
+          await fs.mkdir(namespaceDir, { recursive: true })
+        }
+
+        const reexportPath = path.join(namespaceDir, `${item.name}.tsx`)
+        const reexportContent = `export * from "../ui/${item.name}"\n`
+
+        await fs.writeFile(reexportPath, reexportContent, "utf8")
       }
 
       index += `
@@ -221,9 +258,7 @@ export const Index: Record<string, any> = {
       name: "${item.name}",
       type: "${item.type}",
       registryDependencies: ${JSON.stringify(item.registryDependencies)},
-      component: React.lazy(() => import("@/registry/${style.name}/${type}/${
-        item.name
-      }")),
+      component: React.lazy(() => import("${componentImportPath}")),
       source: "${sourceFilename}",
       files: [${resolveFiles.map((file) => `"${file}"`)}],
       category: "${item.category}",

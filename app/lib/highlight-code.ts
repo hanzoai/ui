@@ -2,9 +2,10 @@
 import { promises as fs } from "fs"
 import path from "path"
 
-// Highlighting is disabled for static exports due to Shiki compatibility issues
-// Return plain code wrapped in pre/code tags for static builds
-const highlightCodeEnabled = false
+// Enable syntax highlighting in development
+// For static exports, we can use client-side highlighting instead
+const highlightCodeEnabled =
+  process.env.NODE_ENV === "development" || !process.env.GITHUB_ACTIONS
 
 export async function highlightCode(code: string) {
   if (!highlightCodeEnabled) {
