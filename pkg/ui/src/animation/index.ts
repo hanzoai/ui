@@ -1,7 +1,12 @@
 // Animation components
+export { AnimatedBackground } from './background'
 export { AnimatedBeam } from './beam'
 export { AnimatedCursor } from './cursor'
 export type { AnimatedCursorProps, CursorPosition, CursorState } from './cursor'
+export { AnimatedIcon } from './icon'
+export { AnimatedList } from './list'
+export { AnimatedNumber } from './number'
+export type { AnimatedNumberProps } from './number'
 export { AnimatedTestimonials } from './testimonials'
 export type { Testimonial } from './testimonials'
 export { AnimatedTooltip } from './tooltip'
