@@ -83,6 +83,8 @@
   --sidebar-ring: oklch(0.708 0 0);
   --code: oklch(0.97 0 0);
   --code-foreground: oklch(0.145 0 0);
+  --code-highlight: oklch(0.96 0 0);
+  --code-number: oklch(0.56 0 0);
 }
 
 .dark {
@@ -119,6 +121,8 @@
   --sidebar-ring: oklch(0.556 0 0);
   --code: oklch(0.205 0 0);
   --code-foreground: oklch(0.985 0 0);
+  --code-highlight: oklch(0.27 0 0);
+  --code-number: oklch(0.72 0 0);
 }
 
 /* Hanzo Brand Theme - Purple/Blue */
@@ -156,6 +160,8 @@
   --sidebar-ring: oklch(0.708 0 0);
   --code: oklch(0.967 0.001 286.375);
   --code-foreground: oklch(0.141 0.005 285.823);
+  --code-highlight: oklch(0.96 0 0);
+  --code-number: oklch(0.56 0 0);
 }
 
 .theme-hanzo.dark {
@@ -192,6 +198,8 @@
   --sidebar-ring: oklch(0.439 0 0);
   --code: oklch(0.21 0.006 285.885);
   --code-foreground: oklch(0.985 0 0);
+  --code-highlight: oklch(0.27 0 0);
+  --code-number: oklch(0.72 0 0);
 }
 
 @layer base {
@@ -236,47 +244,119 @@
 }
 
 /* Syntax highlighting for code blocks (rehype-pretty-code) */
-@layer base {
-  pre {
-    @apply overflow-x-auto rounded-lg border bg-muted px-4 py-3 font-mono text-sm;
+@layer components {
+  /* Override Fumadocs bg-fd-card and make code blocks transparent */
+  figure.shiki,
+  [data-rehype-pretty-code-figure] {
+    background-color: transparent !important;
+    margin-top: 1.5rem;
+    overflow: hidden;
+    font-size: 0.875rem;
+    outline: none;
+    position: relative;
   }
 
-  pre > code {
-    @apply grid;
+  figure.shiki pre,
+  [data-rehype-pretty-code-figure] pre {
+    background-color: transparent !important;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  /* Override bg-muted on code elements inside pre */
+  figure.shiki pre code,
+  [data-rehype-pretty-code-figure] code {
+    background-color: transparent !important;
+    display: block;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  [data-rehype-pretty-code-title] {
+    border-bottom: 1px solid var(--border);
+    padding-block: 0.625rem;
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+    font-family: var(--font-mono);
+    color: var(--code-foreground);
+  }
+
+  [data-line-numbers] {
+    display: grid;
+    min-width: 100%;
+    white-space: pre;
+    border: 0;
+    background: transparent;
+    padding: 0;
     counter-reset: line;
+    box-decoration-break: clone;
   }
 
-  code {
-    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
-  }
-
-  pre > code > [data-line] {
-    @apply px-1;
-  }
-
-  pre > code > [data-line]::before {
+  [data-line-numbers] [data-line]::before {
+    font-size: 0.875rem;
     counter-increment: line;
     content: counter(line);
-    @apply mr-4 inline-block w-4 text-right text-muted-foreground;
+    display: inline-block;
+    width: 4rem;
+    padding-right: 1.5rem;
+    text-align: right;
+    color: var(--code-number);
+    background-color: var(--code);
+    position: sticky;
+    left: 0;
   }
 
-  pre code[data-line-numbers-max-digits="2"] > [data-line]::before {
-    @apply w-8;
+  [data-line-numbers] [data-highlighted-line][data-line]::before {
+    background-color: var(--code-highlight);
   }
 
-  pre code[data-line-numbers-max-digits="3"] > [data-line]::before {
-    @apply w-12;
+  [data-line] {
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
+    min-height: 0.25rem;
+    width: 100%;
+    display: inline-block;
   }
 
-  code[data-highlighted-line] {
-    @apply bg-muted-foreground/10;
+  /* CRITICAL: Apply Shiki token colors */
+  [data-line] span,
+  .line span {
+    color: var(--shiki-light);
+  }
+
+  .dark [data-line] span,
+  .dark .line span {
+    color: var(--shiki-dark) !important;
+  }
+
+  [data-highlighted-line],
+  [data-highlighted-chars] {
+    position: relative;
+    background-color: var(--code-highlight);
+  }
+
+  [data-highlighted-line]::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    content: "";
+    background-color: var(--muted-foreground);
+    opacity: 0.5;
   }
 
   [data-highlighted-chars] {
-    @apply bg-primary/20 rounded;
+    border-radius: var(--radius-sm);
+    padding-inline: 0.3rem;
+    padding-block: 0.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
   }
 
-  [data-chars-id] {
-    @apply border-b-2 p-1 shadow-none;
+  /* Inline code (not in code blocks) */
+  :not(pre) > code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
   }
 }

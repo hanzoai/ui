@@ -4,29 +4,25 @@ import { useEffect, useRef, memo } from 'react'
 
 function AdvancedChart({ symbol = 'NASDAQ:AAPL' }: { symbol?: string }) {
   const container = useRef<HTMLDivElement>(null)
-  const scriptLoaded = useRef(false)
 
   useEffect(() => {
     if (!container.current) return
 
-    // Check if widget already exists with the same symbol (in case of StrictMode double-render)
-    const existingWidget = container.current.querySelector('.tradingview-widget-container__widget')
-    if (existingWidget && existingWidget.querySelector('iframe')) {
-      // Widget already exists, only reload if symbol changed
-      if (scriptLoaded.current) {
-        return
-      }
+    // Check if widget is already initialized using data attribute
+    if (container.current.dataset.initialized === 'true') {
+      return // Widget already initialized, skip
     }
 
-    // Mark as loaded to prevent duplicate execution in React StrictMode
-    scriptLoaded.current = true
+    // Mark as initialized before adding script
+    container.current.dataset.initialized = 'true'
 
     const script = document.createElement('script')
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js'
     script.type = 'text/javascript'
     script.async = true
     script.innerHTML = JSON.stringify({
-      autosize: true,
+      width: '100%',
+      height: '600',
       symbol,
       interval: 'D',
       timezone: 'Etc/UTC',
@@ -39,6 +35,17 @@ function AdvancedChart({ symbol = 'NASDAQ:AAPL' }: { symbol?: string }) {
     })
 
     container.current.appendChild(script)
+
+    // Cleanup function
+    return () => {
+      if (container.current) {
+        // Remove initialization flag on unmount
+        delete container.current.dataset.initialized
+        // Remove all scripts
+        const scripts = container.current.querySelectorAll('script')
+        scripts.forEach((s) => s.remove())
+      }
+    }
   }, [symbol])
 
   return (

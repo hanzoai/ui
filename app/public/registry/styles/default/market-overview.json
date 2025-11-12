@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "market-overview.tsx",
-      "content": "\"use client\"\n\nexport { MarketOverview } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/market-overview\"\n"
     }
   ],
   "type": "components:finance",

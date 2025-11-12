@@ -11,9 +11,9 @@ import {
 } from "@/components/page-header"
 import { Button } from "@/registry/default/ui/button"
 
-const title = "Tailwind Colors in Every Format"
+const title = "Colors in Every Format"
 const description =
-  "The complete Tailwind color palette in HEX, RGB, HSL, CSS variables, and classes. Ready to copy and paste into your project."
+  "Complete color palettes in HEX, RGB, HSL, CSS, and Tailwind. Ready to copy and paste into your project."
 
 export const metadata: Metadata = {
   title,

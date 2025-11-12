@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "ticker-tape.tsx",
-      "content": "\"use client\"\n\nexport { TickerTape } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/ticker-tape\"\n"
     }
   ],
   "type": "components:finance",

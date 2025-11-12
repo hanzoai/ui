@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "orders-history.tsx",
-      "content": "\"use client\"\n\nexport { OrdersHistory } from \"@hanzo/ui/finance\"\nexport type { OrdersHistoryProps, Order } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/orders-history\"\n"
     }
   ],
   "type": "components:finance",

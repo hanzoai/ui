@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "news-timeline.tsx",
-      "content": "\"use client\"\n\nexport { NewsTimeline } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/news-timeline\"\n"
     }
   ],
   "type": "components:finance",
