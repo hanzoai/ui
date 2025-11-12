@@ -15,12 +15,14 @@
     "reporter": [
       [
         "html",
-        null
+        {
+          "outputFolder": "tests/reports/playwright-report"
+        }
       ],
       [
         "json",
         {
-          "outputFile": "test-results.json"
+          "outputFile": "tests/reports/test-results.json"
         }
       ],
       [
@@ -125,8 +127,8 @@
     "version": "1.56.1",
     "workers": 5,
     "webServer": {
-      "command": "cd app && pnpm dev",
-      "port": 3003,
+      "command": "cd app && rm -rf .next && E2E_TEST=true pnpm dev",
+      "port": 3333,
       "reuseExistingServer": true,
       "timeout": 120000
     }
@@ -134,13 +136,21 @@
   "suites": [],
   "errors": [
     {
-      "message": "Error: Timed out waiting 120000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 120000ms from config.webServer."
+      "message": "Error: Cannot find package 'shiki' imported from /Users/z/work/hanzo/ui/tests/unit/code-block.test.tsx",
+      "stack": "Error: Cannot find package 'shiki' imported from /Users/z/work/hanzo/ui/tests/unit/code-block.test.tsx"
+    },
+    {
+      "message": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/code-components.test.tsx\nDid you mean to import \"file:///Users/z/work/hanzo/ui/pkg/ui/dist/code/compare.js\"?",
+      "stack": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/code-components.test.tsx\nDid you mean to import \"file:///Users/z/work/hanzo/ui/pkg/ui/dist/code/compare.js\"?"
+    },
+    {
+      "message": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/grid-pattern.test.tsx",
+      "stack": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/grid-pattern.test.tsx"
     }
   ],
   "stats": {
-    "startTime": "2025-11-05T07:11:03.140Z",
-    "duration": 120033.59700000001,
+    "startTime": "2025-11-12T21:18:04.721Z",
+    "duration": 533.5349999999999,
     "expected": 0,
     "skipped": 0,
     "unexpected": 0,

@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { CodeEditor } from "@/registry/default/ui/code-editor"
 
 import { Button } from "@/registry/default/ui/button"
+import { CodeEditor } from "@/registry/default/ui/code-editor"
 
 export default function CodeEditorControlledDemo() {
   const [code, setCode] = React.useState(`// Type some code here

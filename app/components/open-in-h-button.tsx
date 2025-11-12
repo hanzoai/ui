@@ -15,7 +15,10 @@ export function OpenInHButton({
     <Button
       size="sm"
       asChild
-      className={cn("h-[1.8rem] gap-1.5 bg-black text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-white", className)}
+      className={cn(
+        "h-[1.8rem] gap-1.5 bg-black text-white hover:bg-black dark:bg-white dark:text-black dark:hover:bg-white",
+        className
+      )}
       {...props}
     >
       <Link href={`https://hanzo.app/builder?block=${name}`} target="_blank">
