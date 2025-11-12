@@ -71,14 +71,14 @@ export default defineConfig({
     'animation/index': 'src/animation/index.ts',
     'animation/apple-cards-carousel': 'src/animation/apple-cards-carousel.tsx',
     'animation/apple-hello-effect': 'src/animation/apple-hello-effect.tsx',
-    'animation/background': 'src/animation/background.tsx',
-    'animation/beam': 'src/animation/beam.tsx',
-    'animation/cursor': 'src/animation/cursor.tsx',
-    'animation/icon': 'src/animation/icon.tsx',
-    'animation/list': 'src/animation/list.tsx',
-    'animation/number': 'src/animation/number.tsx',
-    'animation/testimonials': 'src/animation/testimonials.tsx',
-    'animation/tooltip': 'src/animation/tooltip.tsx',
+    'animation/animated-background': 'src/animation/background.tsx',
+    'animation/animated-beam': 'src/animation/beam.tsx',
+    'animation/animated-cursor': 'src/animation/cursor.tsx',
+    'animation/animated-icon': 'src/animation/icon.tsx',
+    'animation/animated-list': 'src/animation/list.tsx',
+    'animation/animated-number': 'src/animation/number.tsx',
+    'animation/animated-testimonials': 'src/animation/testimonials.tsx',
+    'animation/animated-tooltip': 'src/animation/tooltip.tsx',
 
     // Code components
     'code/index': 'src/code/index.ts',
@@ -94,7 +94,7 @@ export default defineConfig({
 
     // Pattern components
     'pattern/index': 'src/pattern/index.ts',
-    'pattern/grid': 'src/pattern/grid.tsx',
+    'pattern/grid-pattern': 'src/pattern/grid.tsx',
 
     // Navigation components
     'navigation/index': 'src/navigation/index.ts',
