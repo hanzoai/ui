@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 import { useLiftMode } from "@/hooks/use-lift-mode"
 import { BlockCopyButton } from "@/components/block-copy-button"
 import { StyleSwitcher } from "@/components/style-switcher"
-import { V0Button } from "@/components/v0-button"
+import { HanzoButton } from "@/components/hanzo-button"
 import { Badge } from "@/registry/default/ui/badge"
 import { Label } from "@/registry/default/ui/label"
 import {
@@ -181,8 +181,8 @@ export function BlockToolbar({
             code={block.code}
             disabled={isLiftMode}
           />
-          <V0Button
-            id={`v0-button-${block.name}`}
+          <HanzoButton
+            id={`hanzo-button-${block.name}`}
             disabled={isLiftMode}
             block={{
               name: block.name,

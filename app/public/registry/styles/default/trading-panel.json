@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "trading-panel.tsx",
-      "content": "\"use client\"\n\nexport { TradingPanel } from \"@hanzo/ui/finance\"\nexport type { TradingPanelProps } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/trading-panel\"\n"
     }
   ],
   "type": "components:finance",

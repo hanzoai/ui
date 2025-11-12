@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "order-entry.tsx",
-      "content": "\"use client\"\n\nexport { OrderEntry } from \"@hanzo/ui/finance\"\nexport type { OrderEntryProps } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/order-entry\"\n"
     }
   ],
   "type": "components:finance",

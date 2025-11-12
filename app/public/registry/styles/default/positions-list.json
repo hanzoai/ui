@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "positions-list.tsx",
-      "content": "\"use client\"\n\nexport { PositionsList } from \"@hanzo/ui/finance\"\nexport type { PositionsListProps, Position } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/positions-list\"\n"
     }
   ],
   "type": "components:finance",

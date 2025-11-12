@@ -1,8 +1,37 @@
 import { baseColors } from "@/registry/base-colors"
 
-// Real color schemes only (no grays, no hanzo)
-const COLOR_SCHEMES = ["blue", "green", "neutral", "orange", "red", "rose", "violet", "yellow"]
+// All Tailwind colors in hue order (matching /colors page)
+const COLOR_SCHEMES = [
+  "zen",      // zinc renamed to zen (default Hanzo theme)
+  "neutral",
+  "stone",
+  "slate",
+  "gray",
+  "red",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "green",
+  "emerald",
+  "teal",
+  "cyan",
+  "sky",
+  "blue",
+  "indigo",
+  "violet",
+  "purple",
+  "fuchsia",
+  "pink",
+  "rose"
+]
 
-export const THEMES = baseColors.filter((theme) =>
-  COLOR_SCHEMES.includes(theme.name)
-)
+export const THEMES = baseColors
+  .map(theme => {
+    // Rename zinc to zen
+    if (theme.name === "zinc") {
+      return { ...theme, name: "zen", label: "Zen" }
+    }
+    return theme
+  })
+  .filter((theme) => COLOR_SCHEMES.includes(theme.name))
