@@ -71,8 +71,12 @@ export default defineConfig({
     'animation/index': 'src/animation/index.ts',
     'animation/apple-cards-carousel': 'src/animation/apple-cards-carousel.tsx',
     'animation/apple-hello-effect': 'src/animation/apple-hello-effect.tsx',
+    'animation/background': 'src/animation/background.tsx',
     'animation/beam': 'src/animation/beam.tsx',
     'animation/cursor': 'src/animation/cursor.tsx',
+    'animation/icon': 'src/animation/icon.tsx',
+    'animation/list': 'src/animation/list.tsx',
+    'animation/number': 'src/animation/number.tsx',
     'animation/testimonials': 'src/animation/testimonials.tsx',
     'animation/tooltip': 'src/animation/tooltip.tsx',
 
