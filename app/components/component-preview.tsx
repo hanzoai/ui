@@ -9,10 +9,10 @@ import { vs, vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism"
 
 import { cn } from "@/lib/utils"
 import { CopyButton, CopyWithClassNames } from "@/components/copy-button"
+import { HanzoButton } from "@/components/hanzo-button"
 import { Icons } from "@/components/icons"
 import { StyleSwitcher } from "@/components/style-switcher"
 import { ThemeWrapper } from "@/components/theme-wrapper"
-import { HanzoButton } from "@/components/hanzo-button"
 import {
   Tabs,
   TabsContent,

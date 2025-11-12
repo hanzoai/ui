@@ -6,7 +6,6 @@ import {
   Card3DHeader,
   Card3DTitle,
 } from "@/registry/default/ui/3d-card"
-
 import { Button } from "@/registry/default/ui/button"
 
 export default function ThreeDCardDemo() {

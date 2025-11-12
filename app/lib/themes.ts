@@ -2,7 +2,7 @@ import { baseColors } from "@/registry/base-colors"
 
 // All Tailwind colors in hue order (matching /colors page)
 const COLOR_SCHEMES = [
-  "zen",      // zinc renamed to zen (default Hanzo theme)
+  "zen", // zinc renamed to zen (default Hanzo theme)
   "neutral",
   "stone",
   "slate",
@@ -23,11 +23,11 @@ const COLOR_SCHEMES = [
   "purple",
   "fuchsia",
   "pink",
-  "rose"
+  "rose",
 ]
 
 export const THEMES = baseColors
-  .map(theme => {
+  .map((theme) => {
     // Rename zinc to zen
     if (theme.name === "zinc") {
       return { ...theme, name: "zen", label: "Zen" }
