@@ -85,6 +85,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build UI package
+        run: cd pkg/ui && pnpm run build
+
       - name: Run type checking
         run: |
           cd app && pnpm run typecheck
