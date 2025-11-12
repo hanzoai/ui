@@ -1,12 +1,12 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 
-import { CodeCompare } from "@/app/registry/default/ui/code-compare"
-import { CodeDiff } from "@/app/registry/default/ui/code-diff"
-import { CodeExplorer } from "@/app/registry/default/ui/code-explorer"
-import { CodePreview } from "@/app/registry/default/ui/code-preview"
-import { CodeSnippet, InlineCode } from "@/app/registry/default/ui/code-snippet"
-import { CodeTerminal } from "@/app/registry/default/ui/code-terminal"
+import { CodeCompare } from "@hanzo/ui/code/compare"
+import { CodeDiff } from "@hanzo/ui/code/diff"
+import { CodeExplorer } from "@hanzo/ui/code/explorer"
+import { CodePreview } from "@hanzo/ui/code/preview"
+import { CodeSnippet, InlineCode } from "@hanzo/ui/code/snippet"
+import { CodeTerminal } from "@hanzo/ui/code/terminal"
 
 // Mock Shiki
 vi.mock("shiki/dist/index.mjs", () => ({

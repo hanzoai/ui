@@ -22,6 +22,14 @@ export default function SymbolInfo({
   useEffect(() => {
     if (!containerRef.current) return
 
+    // Check if widget is already initialized using data attribute
+    if (containerRef.current.dataset.initialized === 'true') {
+      return // Widget already initialized, skip
+    }
+
+    // Mark as initialized before adding script
+    containerRef.current.dataset.initialized = 'true'
+
     const script = document.createElement('script')
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js'
     script.async = true
@@ -37,7 +45,11 @@ export default function SymbolInfo({
 
     return () => {
       if (containerRef.current) {
-        containerRef.current.innerHTML = ''
+        // Remove initialization flag on unmount
+        delete containerRef.current.dataset.initialized
+        // Remove all scripts
+        const scripts = containerRef.current.querySelectorAll('script')
+        scripts.forEach((s) => s.remove())
       }
     }
   }, [symbol, width, locale, colorTheme, isTransparent])

@@ -1,1 +1,54 @@
-export * from "../ui/news-timeline"
+'use client'
+
+import { useEffect, useRef, memo } from 'react'
+
+function NewsTimeline() {
+  const container = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!container.current) return
+
+    // Check if widget is already initialized using data attribute
+    if (container.current.dataset.initialized === 'true') {
+      return // Widget already initialized, skip
+    }
+
+    // Mark as initialized before adding script
+    container.current.dataset.initialized = 'true'
+
+    const script = document.createElement('script')
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js'
+    script.type = 'text/javascript'
+    script.async = true
+    script.innerHTML = JSON.stringify({
+      displayMode: 'regular',
+      feedMode: 'all_symbols',
+      colorTheme: 'dark',
+      isTransparent: false,
+      locale: 'en',
+      width: '100%',
+      height: 550,
+    })
+
+    container.current.appendChild(script)
+
+    // Cleanup function
+    return () => {
+      if (container.current) {
+        // Remove initialization flag on unmount
+        delete container.current.dataset.initialized
+        // Remove all scripts
+        const scripts = container.current.querySelectorAll('script')
+        scripts.forEach((s) => s.remove())
+      }
+    }
+  }, [])
+
+  return (
+    <div className="tradingview-widget-container w-full" ref={container}>
+      <div className="tradingview-widget-container__widget"></div>
+    </div>
+  )
+}
+
+export default memo(NewsTimeline)

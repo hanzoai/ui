@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { codeToHtml } from "shiki/dist/index.mjs"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { CodeBlock } from "./code-block"
+import { CodeBlock } from "@hanzo/ui/code/block"
 
 // Mock clipboard
 const mockWriteText = vi.fn().mockResolvedValue(undefined)

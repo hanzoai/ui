@@ -1,6 +1,6 @@
 import React from "react"
 import { render, screen } from "@testing-library/react"
-import { GridPattern, GridPatternPresets } from "@/app/registry/default/ui/grid-pattern"
+import { GridPattern, GridPatternPresets } from "@hanzo/ui/pattern/grid"
 
 describe("GridPattern", () => {
   it("renders without crashing", () => {

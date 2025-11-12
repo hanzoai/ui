@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "financials.tsx",
-      "content": "\"use client\"\n\nexport { Financials } from \"@hanzo/ui/finance\"\nexport type { FinancialsProps } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/financials\"\n"
     }
   ],
   "type": "components:finance",

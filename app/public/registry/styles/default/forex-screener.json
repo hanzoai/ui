@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "forex-screener.tsx",
-      "content": "\"use client\"\n\nexport { ForexScreener } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/forex-screener\"\n"
     }
   ],
   "type": "components:finance",

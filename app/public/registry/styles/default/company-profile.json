@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "company-profile.tsx",
-      "content": "\"use client\"\n\nexport { CompanyProfile } from \"@hanzo/ui/finance\"\nexport type { CompanyProfileProps } from \"@hanzo/ui/finance\"\n"
+      "content": "export * from \"../ui/company-profile\"\n"
     }
   ],
   "type": "components:finance",

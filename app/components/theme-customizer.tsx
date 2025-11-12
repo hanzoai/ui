@@ -49,7 +49,7 @@ interface BaseColorOKLCH {
 }
 
 export function ThemeCustomizer({ className }: React.ComponentProps<"div">) {
-  const { activeTheme = "neutral", setActiveTheme } = useThemeConfig()
+  const { activeTheme = "zen", setActiveTheme } = useThemeConfig()
 
   return (
     <div className={cn("flex w-full items-center gap-2", className)}>
@@ -106,8 +106,8 @@ export function CopyCodeButton({
   className,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  let { activeTheme: activeThemeName = "neutral" } = useThemeConfig()
-  activeThemeName = activeThemeName === "default" ? "neutral" : activeThemeName
+  let { activeTheme: activeThemeName = "zen" } = useThemeConfig()
+  activeThemeName = activeThemeName === "default" ? "zen" : activeThemeName
 
   return (
     <>

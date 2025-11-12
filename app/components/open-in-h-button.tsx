@@ -1,5 +1,5 @@
-import Image from "next/image"
 import Link from "next/link"
+import { HanzoLogo } from "@hanzo/logo"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
@@ -20,13 +20,7 @@ export function OpenInHButton({
     >
       <Link href={`https://hanzo.app/builder?block=${name}`} target="_blank">
         <span className="font-medium">Open in</span>
-        <Image
-          src="/hanzo-logo.svg"
-          alt="Hanzo"
-          width={16}
-          height={16}
-          className="size-4"
-        />
+        <HanzoLogo className="size-4 shrink-0 [&_svg]:fill-current" />
       </Link>
     </Button>
   )

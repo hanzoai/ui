@@ -1,6 +1,0 @@
-$b9c3f798-fadf-46d2-84dd-f742bf6be678²‚*
-project_id ÿÿÿÿÿÿÿÿÿ*string8Zdefault)user_id ÿÿÿÿÿÿÿÿÿ*string8Zdefault&name ÿÿÿÿÿÿÿÿÿ*string8Zdefault-description ÿÿÿÿÿÿÿÿÿ*string8Zdefault*metadata ÿÿÿÿÿÿÿÿÿ*string8Zdefault,
-created_at ÿÿÿÿÿÿÿÿÿ*string8Zdefault,
-updated_at ÿÿÿÿÿÿÿÿÿ*string8Zdefault"'
-lance.auto_cleanup.older_than14days"!
-lance.auto_cleanup.interval20
