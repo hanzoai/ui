@@ -31,7 +31,7 @@ export function ColorFormatSelector({
     <Select value={format} onValueChange={setFormat}>
       <SelectTrigger
         className={cn(
-          "bg-secondary text-secondary-foreground border-secondary shadow-none h-8 text-sm",
+          "bg-secondary text-secondary-foreground border-secondary shadow-none h-8 text-sm w-auto",
           className
         )}
         {...props}
