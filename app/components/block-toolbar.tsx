@@ -63,8 +63,9 @@ export function BlockToolbar({
           <PopoverTrigger
             disabled={isLiftMode}
             className="hidden text-muted-foreground hover:text-foreground disabled:opacity-50 sm:flex"
+            title="Style information"
           >
-            <CircleHelp className="h-3.5 w-3.5" />
+            <CircleHelp className="h-4 w-4" />
             <span className="sr-only">Block description</span>
           </PopoverTrigger>
           <PopoverContent
@@ -153,21 +154,24 @@ export function BlockToolbar({
             >
               <ToggleGroupItem
                 value="100"
-                className="h-[22px] w-[22px] rounded-sm p-0"
+                className="h-[22px] w-[22px] rounded-sm p-0 flex items-center justify-center"
+                title="Desktop view"
               >
-                <Monitor className="h-3.5 w-3.5" />
+                <Monitor className="h-4 w-4" />
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="60"
-                className="h-[22px] w-[22px] rounded-sm p-0"
+                className="h-[22px] w-[22px] rounded-sm p-0 flex items-center justify-center"
+                title="Tablet view"
               >
-                <Tablet className="h-3.5 w-3.5" />
+                <Tablet className="h-4 w-4" />
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="30"
-                className="h-[22px] w-[22px] rounded-sm p-0"
+                className="h-[22px] w-[22px] rounded-sm p-0 flex items-center justify-center"
+                title="Mobile view"
               >
-                <Smartphone className="h-3.5 w-3.5" />
+                <Smartphone className="h-4 w-4" />
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
