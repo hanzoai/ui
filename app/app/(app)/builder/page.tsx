@@ -586,32 +586,49 @@ ${renderItems(pageItems, 3)}
           </div>
           <div className="flex items-center gap-1">
             {/* Viewport Controls */}
-            <div className="flex rounded-lg border">
+            <div className="flex rounded-md border h-7">
               <Button
                 variant={viewport === "mobile" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("mobile")}
-                className="rounded-r-none h-7 text-[10px]"
+                className="h-6 w-6 rounded-r-none"
+                title="Mobile (375px)"
               >
-                Mobile
+                <Smartphone className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant={viewport === "tablet" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("tablet")}
-                className="rounded-none border-x h-7 text-[10px]"
+                className="h-6 w-6 rounded-none border-x"
+                title="Tablet (768px)"
               >
-                Tablet
+                <Tablet className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant={viewport === "desktop" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("desktop")}
-                className="rounded-l-none h-7 text-[10px]"
+                className="h-6 w-6 rounded-l-none"
+                title="Desktop (100%)"
               >
-                Desktop
+                <Monitor className="h-3.5 w-3.5" />
               </Button>
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              className="h-7 w-7"
+            >
+              {isFullscreen ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )}
+            </Button>
+            <Separator orientation="vertical" className="h-6" />
             <div className="flex gap-1">
               <Button
                 variant="outline"
@@ -639,13 +656,14 @@ ${renderItems(pageItems, 3)}
         </div>
 
         <ScrollArea className="h-[calc(100vh-160px)] rounded-lg border bg-background">
-          <div className="flex min-h-full items-start justify-center p-4">
+          <div className="flex min-h-full items-start justify-center px-16 py-4">
             <div
               style={{
                 width: viewportWidths[viewport],
                 maxWidth: "100%",
                 transition: "width 0.3s ease",
               }}
+              className="relative"
             >
               <DndContext
                 collisionDetection={closestCenter}
@@ -950,13 +968,13 @@ function SortableItem({
       className="group relative"
       onClick={onSelect}
     >
-      <div className="absolute left-0 top-0 z-10 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 p-1">
+      <div className="absolute -left-14 top-2 z-10 flex flex-col items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab rounded bg-card/90 p-0.5 shadow-sm hover:shadow backdrop-blur active:cursor-grabbing"
+          className="cursor-grab rounded bg-card p-1 shadow-sm hover:shadow backdrop-blur active:cursor-grabbing"
         >
-          <GripVertical className="h-3 w-3 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
         </button>
         <Button
           variant="ghost"
@@ -965,18 +983,14 @@ function SortableItem({
             e.stopPropagation()
             onRemove()
           }}
-          className="h-5 w-5 bg-card/90 backdrop-blur"
+          className="h-6 w-6 bg-destructive/10 hover:bg-destructive/20 backdrop-blur"
         >
-          <Trash2 className="h-2.5 w-2.5" />
+          <Trash2 className="h-3 w-3 text-destructive" />
         </Button>
         {isSelected && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-5 w-5 bg-primary/90 text-primary-foreground backdrop-blur"
-          >
-            <Settings2 className="h-2.5 w-2.5" />
-          </Button>
+          <div className="h-6 w-6 flex items-center justify-center rounded bg-primary/20 backdrop-blur">
+            <Settings2 className="h-3 w-3 text-primary" />
+          </div>
         )}
       </div>
 
