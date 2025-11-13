@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { Box, ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Link2, Link2Off, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -46,6 +46,19 @@ import {
   TabsTrigger,
 } from "@/registry/default/ui/tabs"
 
+interface BoxModelValue {
+  top?: string
+  right?: string
+  bottom?: string
+  left?: string
+}
+
+interface BoxModel {
+  margin?: BoxModelValue
+  padding?: BoxModelValue
+  border?: BoxModelValue
+}
+
 interface PageItem {
   id: string
   name: string
@@ -54,7 +67,15 @@ interface PageItem {
   layoutType?: "flex" | "grid" | "stack"
   children?: PageItem[]
   props?: Record<string, any>
+  boxModel?: BoxModel
 }
+
+// Tailwind spacing scale
+const SPACING_SCALE = [
+  "0", "px", "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "7", "8",
+  "9", "10", "11", "12", "14", "16", "20", "24", "28", "32", "36", "40", "44",
+  "48", "52", "56", "60", "64", "72", "80", "96"
+]
 
 export default function EnhancedBuilder() {
   const [blocks, setBlocks] = React.useState<string[]>([])
@@ -70,6 +91,11 @@ export default function EnhancedBuilder() {
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = React.useState(false)
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = React.useState(false)
+
+  // Box model link states
+  const [marginLinked, setMarginLinked] = React.useState(true)
+  const [paddingLinked, setPaddingLinked] = React.useState(true)
+  const [borderLinked, setBorderLinked] = React.useState(true)
 
   React.useEffect(() => {
     // Get blocks from registry
@@ -382,6 +408,37 @@ ${renderItems(pageItems, 3)}
   ) => {
     setPageItems((items) =>
       items.map((item) => (item.id === id ? { ...item, ...settings } : item))
+    )
+  }
+
+  const updateBoxModel = (
+    id: string,
+    property: "margin" | "padding" | "border",
+    side: "top" | "right" | "bottom" | "left" | "all",
+    value: string
+  ) => {
+    setPageItems((items) =>
+      items.map((item) => {
+        if (item.id !== id) return item
+
+        const currentBoxModel = item.boxModel || {}
+        const currentProperty = currentBoxModel[property] || {}
+
+        let newProperty: BoxModelValue
+        if (side === "all") {
+          newProperty = { top: value, right: value, bottom: value, left: value }
+        } else {
+          newProperty = { ...currentProperty, [side]: value }
+        }
+
+        return {
+          ...item,
+          boxModel: {
+            ...currentBoxModel,
+            [property]: newProperty
+          }
+        }
+      })
     )
   }
 
@@ -794,6 +851,281 @@ ${renderItems(pageItems, 3)}
                     <p className="text-xs text-muted-foreground">
                       Add Tailwind CSS classes
                     </p>
+                  </div>
+                </div>
+
+                {/* Box Model */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Box className="h-4 w-4" />
+                    Box Model
+                  </h3>
+
+                  {/* Margin */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Margin
+                      </label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setMarginLinked(!marginLinked)}
+                        className="h-6 w-6 p-0"
+                      >
+                        {marginLinked ? (
+                          <Link2 className="h-3 w-3" />
+                        ) : (
+                          <Link2Off className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
+
+                    {marginLinked ? (
+                      <Select
+                        value={selectedItemData.boxModel?.margin?.top || "0"}
+                        onValueChange={(value) =>
+                          updateBoxModel(selectedItemData.id, "margin", "all", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select spacing" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SPACING_SCALE.map((scale) => (
+                            <SelectItem key={scale} value={scale}>
+                              {scale}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-xs text-muted-foreground">Top</label>
+                          <Select
+                            value={selectedItemData.boxModel?.margin?.top || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "margin", "top", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Right</label>
+                          <Select
+                            value={selectedItemData.boxModel?.margin?.right || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "margin", "right", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Bottom</label>
+                          <Select
+                            value={selectedItemData.boxModel?.margin?.bottom || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "margin", "bottom", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Left</label>
+                          <Select
+                            value={selectedItemData.boxModel?.margin?.left || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "margin", "left", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Padding */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Padding
+                      </label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setPaddingLinked(!paddingLinked)}
+                        className="h-6 w-6 p-0"
+                      >
+                        {paddingLinked ? (
+                          <Link2 className="h-3 w-3" />
+                        ) : (
+                          <Link2Off className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
+
+                    {paddingLinked ? (
+                      <Select
+                        value={selectedItemData.boxModel?.padding?.top || "0"}
+                        onValueChange={(value) =>
+                          updateBoxModel(selectedItemData.id, "padding", "all", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select spacing" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SPACING_SCALE.map((scale) => (
+                            <SelectItem key={scale} value={scale}>
+                              {scale}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-xs text-muted-foreground">Top</label>
+                          <Select
+                            value={selectedItemData.boxModel?.padding?.top || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "padding", "top", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Right</label>
+                          <Select
+                            value={selectedItemData.boxModel?.padding?.right || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "padding", "right", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Bottom</label>
+                          <Select
+                            value={selectedItemData.boxModel?.padding?.bottom || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "padding", "bottom", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <label className="text-xs text-muted-foreground">Left</label>
+                          <Select
+                            value={selectedItemData.boxModel?.padding?.left || "0"}
+                            onValueChange={(value) =>
+                              updateBoxModel(selectedItemData.id, "padding", "left", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {SPACING_SCALE.map((scale) => (
+                                <SelectItem key={scale} value={scale}>
+                                  {scale}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Visual Box Model Diagram */}
+                  <div className="rounded-lg border bg-muted/50 p-4">
+                    <div className="space-y-1 text-center">
+                      <div className="text-xs font-medium text-orange-500">
+                        Margin: {selectedItemData.boxModel?.margin?.top || "0"}
+                      </div>
+                      <div className="rounded border-2 border-orange-200 bg-orange-50 p-3 dark:border-orange-900 dark:bg-orange-950/20">
+                        <div className="text-xs font-medium text-blue-500">
+                          Padding: {selectedItemData.boxModel?.padding?.top || "0"}
+                        </div>
+                        <div className="mt-1 rounded border-2 border-blue-200 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950/20">
+                          <div className="text-xs font-medium text-foreground">
+                            Content
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
