@@ -67,9 +67,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "rm -f app/.next/dev/lock && pnpm dev",
+    command: "rm -f .next/dev/lock && pnpm dev",
     url: "http://localhost:3003",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
     timeout: 120000,
   },
 })
