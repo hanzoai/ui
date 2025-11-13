@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Play, Plus, Settings2, Smartphone, Sparkles, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -45,6 +45,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/default/ui/tabs"
+import { Slider } from "@/registry/default/ui/slider"
+import { Label } from "@/registry/default/ui/label"
 
 interface PageItem {
   id: string
@@ -54,6 +56,15 @@ interface PageItem {
   layoutType?: "flex" | "grid" | "stack"
   children?: PageItem[]
   props?: Record<string, any>
+  animation?: {
+    entrance?: string
+    exit?: string
+    hover?: string
+    scroll?: string
+    duration?: number
+    delay?: number
+    easing?: string
+  }
 }
 
 export default function EnhancedBuilder() {
@@ -794,6 +805,242 @@ ${renderItems(pageItems, 3)}
                     <p className="text-xs text-muted-foreground">
                       Add Tailwind CSS classes
                     </p>
+                  </div>
+                </div>
+
+                {/* Animations */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Animations
+                  </h3>
+                  <div className="space-y-3">
+                    {/* Entrance Animation */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Entrance Animation
+                      </Label>
+                      <Select
+                        value={selectedItemData.animation?.entrance || "none"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              entrance: value === "none" ? undefined : value,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select animation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="fadeIn">Fade In</SelectItem>
+                          <SelectItem value="slideInUp">Slide In Up</SelectItem>
+                          <SelectItem value="slideInDown">Slide In Down</SelectItem>
+                          <SelectItem value="slideInLeft">Slide In Left</SelectItem>
+                          <SelectItem value="slideInRight">Slide In Right</SelectItem>
+                          <SelectItem value="scaleIn">Scale In</SelectItem>
+                          <SelectItem value="rotateIn">Rotate In</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Exit Animation */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Exit Animation
+                      </Label>
+                      <Select
+                        value={selectedItemData.animation?.exit || "none"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              exit: value === "none" ? undefined : value,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select animation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="fadeOut">Fade Out</SelectItem>
+                          <SelectItem value="slideOutUp">Slide Out Up</SelectItem>
+                          <SelectItem value="slideOutDown">Slide Out Down</SelectItem>
+                          <SelectItem value="slideOutLeft">Slide Out Left</SelectItem>
+                          <SelectItem value="slideOutRight">Slide Out Right</SelectItem>
+                          <SelectItem value="scaleOut">Scale Out</SelectItem>
+                          <SelectItem value="rotateOut">Rotate Out</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Hover Animation */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Hover Animation
+                      </Label>
+                      <Select
+                        value={selectedItemData.animation?.hover || "none"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              hover: value === "none" ? undefined : value,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select animation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="animate-bounce">Bounce</SelectItem>
+                          <SelectItem value="animate-pulse">Pulse</SelectItem>
+                          <SelectItem value="animate-ping">Ping</SelectItem>
+                          <SelectItem value="animate-spin">Spin</SelectItem>
+                          <SelectItem value="shake">Shake</SelectItem>
+                          <SelectItem value="grow">Grow</SelectItem>
+                          <SelectItem value="shrink">Shrink</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Scroll Animation */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Scroll Animation
+                      </Label>
+                      <Select
+                        value={selectedItemData.animation?.scroll || "none"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              scroll: value === "none" ? undefined : value,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select animation" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="parallax">Parallax</SelectItem>
+                          <SelectItem value="reveal">Reveal</SelectItem>
+                          <SelectItem value="fadeInScroll">Fade In on Scroll</SelectItem>
+                          <SelectItem value="slideInScroll">Slide In on Scroll</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Duration Control */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Duration (ms)
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.animation?.duration || 300}ms
+                        </span>
+                      </div>
+                      <Slider
+                        min={100}
+                        max={2000}
+                        step={100}
+                        value={[selectedItemData.animation?.duration || 300]}
+                        onValueChange={([value]) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              duration: value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+
+                    {/* Delay Control */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Delay (ms)
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.animation?.delay || 0}ms
+                        </span>
+                      </div>
+                      <Slider
+                        min={0}
+                        max={2000}
+                        step={100}
+                        value={[selectedItemData.animation?.delay || 0]}
+                        onValueChange={([value]) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              delay: value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+
+                    {/* Easing Function */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Easing Function
+                      </Label>
+                      <Select
+                        value={selectedItemData.animation?.easing || "ease"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            animation: {
+                              ...selectedItemData.animation,
+                              easing: value,
+                            },
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select easing" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="linear">Linear</SelectItem>
+                          <SelectItem value="ease">Ease</SelectItem>
+                          <SelectItem value="ease-in">Ease In</SelectItem>
+                          <SelectItem value="ease-out">Ease Out</SelectItem>
+                          <SelectItem value="ease-in-out">Ease In Out</SelectItem>
+                          <SelectItem value="cubic-bezier(0.68, -0.55, 0.265, 1.55)">Bounce</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Preview Button */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        // Trigger animation preview
+                        const element = document.getElementById(`item-${selectedItemData.id}`)
+                        if (element) {
+                          element.classList.add('animate-preview')
+                          setTimeout(() => {
+                            element.classList.remove('animate-preview')
+                          }, selectedItemData.animation?.duration || 300)
+                        }
+                      }}
+                    >
+                      <Play className="mr-2 h-4 w-4" />
+                      Preview Animation
+                    </Button>
                   </div>
                 </div>
 
