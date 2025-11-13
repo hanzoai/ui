@@ -16,7 +16,24 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Copy as CopyIcon, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import {
+  Copy as CopyIcon,
+  Download,
+  Eye,
+  GripVertical,
+  Maximize2,
+  Minimize2,
+  Monitor,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
+  Plus,
+  Settings2,
+  Smartphone,
+  Tablet,
+  Trash2,
+} from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -45,6 +62,7 @@ interface PageItem {
   type: "block" | "component" | "container"
   containerType?: "div" | "section" | "article"
   layoutType?: "flex" | "grid" | "stack"
+  gridClass?: string
   children?: PageItem[]
   props?: Record<string, any>
 }
@@ -175,14 +193,19 @@ export default function EnhancedBuilder() {
     )
   }, [filteredComponents])
 
-  const addItem = (name: string, type: "block" | "component" | "container") => {
+  const addItem = (
+    name: string,
+    type: "block" | "component" | "container",
+    gridClass?: string
+  ) => {
     const newItem: PageItem = {
       id: crypto.randomUUID(),
       name,
       type,
       children: type === "container" ? [] : undefined,
       containerType: type === "container" ? "div" : undefined,
-      layoutType: type === "container" ? "flex" : undefined,
+      layoutType: type === "container" ? "grid" : undefined,
+      gridClass: gridClass || undefined,
     }
     setPageItems([...pageItems, newItem])
   }
@@ -281,11 +304,12 @@ export default function EnhancedBuilder() {
           } else if (item.type === "container") {
             const Tag = item.containerType || "div"
             const layoutClass =
-              item.layoutType === "flex"
+              item.gridClass ||
+              (item.layoutType === "flex"
                 ? "flex flex-col gap-4"
                 : item.layoutType === "grid"
                   ? "grid grid-cols-1 md:grid-cols-2 gap-4"
-                  : "space-y-4"
+                  : "space-y-4")
 
             const customClass = item.props?.className || ""
             const fullClassName = [layoutClass, customClass]
@@ -403,59 +427,74 @@ ${renderItems(pageItems, 3)}
 
   const selectedItemData = pageItems.find((item) => item.id === selectedItem)
 
+  const layoutTemplates = [
+    { name: "Single Column", grid: "grid grid-cols-1 gap-1", icon: "▭" },
+    { name: "Two Columns", grid: "grid grid-cols-2 gap-1", icon: "▭▭" },
+    { name: "Three Columns", grid: "grid grid-cols-3 gap-1", icon: "▭▭▭" },
+    {
+      name: "Sidebar Left",
+      grid: "grid grid-cols-[250px_1fr] gap-1",
+      icon: "▌▭",
+    },
+    {
+      name: "Sidebar Right",
+      grid: "grid grid-cols-[1fr_250px] gap-1",
+      icon: "▭▐",
+    },
+    { name: "Hero + 2 Col", grid: "grid grid-cols-1 gap-0", icon: "▬" },
+  ]
+
   return (
-    <div className="flex h-screen max-h-screen gap-4 p-6">
+    <div className="flex h-screen max-h-screen gap-1 p-2">
       {/* Left Sidebar - Component/Block Library */}
-      <div className="w-80 space-y-4">
+      <div className="w-64 space-y-1">
         <div>
-          <h2 className="text-lg font-semibold">Component Library</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-sm font-semibold">Component Library</h2>
+          <p className="text-[10px] text-muted-foreground">
             Add blocks, components, and layouts
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="blocks">Blocks</TabsTrigger>
-            <TabsTrigger value="components">Components</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 h-7">
+            <TabsTrigger value="blocks" className="text-[10px]">
+              Blocks
+            </TabsTrigger>
+            <TabsTrigger value="components" className="text-[10px]">
+              Components
+            </TabsTrigger>
+            <TabsTrigger value="layouts" className="text-[10px]">
+              Layouts
+            </TabsTrigger>
           </TabsList>
 
-          <div className="mt-4 space-y-4">
+          <div className="mt-1 space-y-1">
             <Input
               placeholder={`Filter ${activeTab}...`}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
+              className="h-7 text-xs"
             />
 
-            <div className="space-y-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => addItem("container", "container")}
-                className="w-full"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Container
-              </Button>
-            </div>
-
-            <ScrollArea className="h-[calc(100vh-320px)]">
-              <TabsContent value="blocks" className="mt-0 space-y-2 pr-2">
+            <ScrollArea className="h-[calc(100vh-160px)]">
+              <TabsContent value="blocks" className="mt-0 space-y-1 pr-2">
                 {filteredBlocks.map((block) => (
                   <Card
                     key={block}
                     className="group cursor-pointer overflow-hidden border transition-all hover:border-primary/50 hover:shadow-sm"
                     onClick={() => addItem(block, "block")}
                   >
-                    <div className="border-b px-2 py-1.5 bg-muted/30">
-                      <p className="truncate text-[11px] font-medium">{block}</p>
+                    <div className="border-b px-2 py-1 bg-muted/30">
+                      <p className="truncate text-[10px] font-medium">
+                        {block}
+                      </p>
                     </div>
-                    <div className="relative h-20 overflow-hidden bg-background flex items-center justify-center">
-                      <div className="text-xs text-muted-foreground">
+                    <div className="relative h-16 overflow-hidden bg-background flex items-center justify-center">
+                      <div className="text-[10px] text-muted-foreground">
                         {block} preview
                       </div>
                       <div className="absolute inset-0 flex items-center justify-center bg-primary/0 opacity-0 transition-all group-hover:bg-primary/10 group-hover:opacity-100">
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-3.5 w-3.5" />
                       </div>
                     </div>
                   </Card>
@@ -463,11 +502,19 @@ ${renderItems(pageItems, 3)}
               </TabsContent>
 
               <TabsContent value="components" className="mt-0 pr-2">
-                <div className="columns-1 gap-2 space-y-2">
+                <div className="columns-1 gap-1 space-y-1">
                   {filteredComponents.map((component) => {
-                    // Determine size based on component type
-                    const isFullWidth = component.includes('nav') || component.includes('header') || component.includes('footer') || component.includes('bar')
-                    const isSmall = component.includes('button') || component.includes('badge') || component.includes('avatar') || component.includes('switch') || component.includes('checkbox')
+                    const isFullWidth =
+                      component.includes("nav") ||
+                      component.includes("header") ||
+                      component.includes("footer") ||
+                      component.includes("bar")
+                    const isSmall =
+                      component.includes("button") ||
+                      component.includes("badge") ||
+                      component.includes("avatar") ||
+                      component.includes("switch") ||
+                      component.includes("checkbox")
 
                     return (
                       <Card
@@ -475,21 +522,51 @@ ${renderItems(pageItems, 3)}
                         className="group cursor-pointer break-inside-avoid overflow-hidden border transition-all hover:border-primary/50 hover:shadow-sm"
                         onClick={() => addItem(component, "component")}
                       >
-                        <div className="border-b px-2 py-1.5 bg-muted/30">
-                          <p className="truncate text-[11px] font-medium">{component}</p>
+                        <div className="border-b px-2 py-1 bg-muted/30">
+                          <p className="truncate text-[10px] font-medium">
+                            {component}
+                          </p>
                         </div>
-                        <div className={`relative overflow-hidden bg-background flex items-center justify-center ${isFullWidth ? 'h-16' : isSmall ? 'h-12' : 'h-14'}`}>
-                          <div className="text-xs text-muted-foreground">
+                        <div
+                          className={`relative overflow-hidden bg-background flex items-center justify-center ${isFullWidth ? "h-14" : isSmall ? "h-10" : "h-12"}`}
+                        >
+                          <div className="text-[10px] text-muted-foreground">
                             {component}
                           </div>
                           <div className="absolute inset-0 flex items-center justify-center bg-primary/0 opacity-0 transition-all group-hover:bg-primary/10 group-hover:opacity-100">
-                            <Plus className="h-3.5 w-3.5" />
+                            <Plus className="h-3 w-3" />
                           </div>
                         </div>
                       </Card>
                     )
                   })}
                 </div>
+              </TabsContent>
+
+              <TabsContent value="layouts" className="mt-0 space-y-1 pr-2">
+                {layoutTemplates.map((layout) => (
+                  <Card
+                    key={layout.name}
+                    className="group cursor-pointer overflow-hidden border transition-all hover:border-primary/50 hover:shadow-sm"
+                    onClick={() =>
+                      addItem(layout.name, "container", layout.grid)
+                    }
+                  >
+                    <div className="border-b px-2 py-1 bg-muted/30">
+                      <p className="truncate text-[10px] font-medium">
+                        {layout.name}
+                      </p>
+                    </div>
+                    <div className="relative h-16 overflow-hidden bg-background flex items-center justify-center">
+                      <div className="text-2xl text-muted-foreground/50">
+                        {layout.icon}
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-primary/0 opacity-0 transition-all group-hover:bg-primary/10 group-hover:opacity-100">
+                        <Plus className="h-3.5 w-3.5" />
+                      </div>
+                    </div>
+                  </Card>
+                ))}
               </TabsContent>
             </ScrollArea>
           </div>
@@ -499,22 +576,22 @@ ${renderItems(pageItems, 3)}
       <Separator orientation="vertical" />
 
       {/* Center - Page Builder Canvas */}
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-1">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Page Builder</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="text-sm font-semibold">Page Builder</h2>
+            <p className="text-[10px] text-muted-foreground">
               {pageItems.length} items in page
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {/* Viewport Controls */}
             <div className="flex rounded-lg border">
               <Button
                 variant={viewport === "mobile" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewport("mobile")}
-                className="rounded-r-none"
+                className="rounded-r-none h-7 text-[10px]"
               >
                 Mobile
               </Button>
@@ -522,7 +599,7 @@ ${renderItems(pageItems, 3)}
                 variant={viewport === "tablet" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewport("tablet")}
-                className="rounded-none border-x"
+                className="rounded-none border-x h-7 text-[10px]"
               >
                 Tablet
               </Button>
@@ -530,12 +607,11 @@ ${renderItems(pageItems, 3)}
                 variant={viewport === "desktop" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewport("desktop")}
-                className="rounded-l-none"
+                className="rounded-l-none h-7 text-[10px]"
               >
                 Desktop
               </Button>
             </div>
-            <Separator orientation="vertical" className="h-6" />
             <div className="flex gap-1">
               <Button
                 variant="outline"
@@ -545,7 +621,7 @@ ${renderItems(pageItems, 3)}
                 title="Copy code"
                 className="h-7 w-7"
               >
-                <CopyIcon className="h-3.5 w-3.5" />
+                <CopyIcon className="h-3 w-3" />
               </Button>
               <Button
                 variant="outline"
@@ -555,15 +631,14 @@ ${renderItems(pageItems, 3)}
                 title="Download"
                 className="h-7 w-7"
               >
-                <Download className="h-3.5 w-3.5" />
+                <Download className="h-3 w-3" />
               </Button>
             </div>
-            <Separator orientation="vertical" className="h-6" />
             <OpenInHButton name="builder" />
           </div>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-140px)] rounded-lg border bg-background">
+        <ScrollArea className="h-[calc(100vh-160px)] rounded-lg border bg-background">
           <div className="flex min-h-full items-start justify-center p-4">
             <div
               style={{
@@ -581,14 +656,14 @@ ${renderItems(pageItems, 3)}
                   items={pageItems.map((item) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  <div className="relative min-h-[600px] bg-background pl-16">
+                  <div className="relative min-h-[600px] bg-background">
                     {pageItems.length === 0 ? (
-                      <div className="flex h-96 items-center justify-center rounded-lg border border-dashed text-center -ml-16">
-                        <div className="space-y-2">
-                          <p className="text-sm text-muted-foreground">
+                      <div className="flex h-96 items-center justify-center rounded-lg border border-dashed text-center">
+                        <div className="space-y-1">
+                          <p className="text-xs text-muted-foreground">
                             Your page is empty
                           </p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-[10px] text-muted-foreground">
                             Add blocks, components, or containers from the left
                           </p>
                         </div>
@@ -626,11 +701,11 @@ ${renderItems(pageItems, 3)}
       {selectedItemData && (
         <>
           <Separator orientation="vertical" />
-          <div className="w-80 space-y-4">
+          <div className="w-64 space-y-1">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-lg font-semibold">Properties</h2>
-                <p className="text-sm text-muted-foreground">
+                <h2 className="text-sm font-semibold">Properties</h2>
+                <p className="text-[10px] text-muted-foreground">
                   {selectedItemData.name}
                 </p>
               </div>
@@ -638,43 +713,44 @@ ${renderItems(pageItems, 3)}
                 variant="ghost"
                 size="sm"
                 onClick={() => setSelectedItem(null)}
+                className="h-7 text-[10px]"
               >
                 Close
               </Button>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-120px)]">
-              <div className="space-y-6 pr-4">
+            <ScrollArea className="h-[calc(100vh-160px)]">
+              <div className="space-y-1 pr-2">
                 {/* Basic Settings */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold">Basic Settings</h3>
-                  <div className="space-y-2">
+                <div className="space-y-1">
+                  <h3 className="text-xs font-semibold">Basic Settings</h3>
+                  <div className="space-y-1">
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground">
+                      <label className="text-[10px] font-medium text-muted-foreground">
                         Type
                       </label>
-                      <p className="text-sm capitalize">
+                      <p className="text-xs capitalize">
                         {selectedItemData.type}
                       </p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-muted-foreground">
+                      <label className="text-[10px] font-medium text-muted-foreground">
                         Name
                       </label>
-                      <p className="text-sm">{selectedItemData.name}</p>
+                      <p className="text-xs">{selectedItemData.name}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Container Settings */}
                 {selectedItemData.type === "container" && (
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-semibold">
+                  <div className="space-y-1">
+                    <h3 className="text-xs font-semibold">
                       Container Settings
                     </h3>
-                    <div className="space-y-3">
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">
+                    <div className="space-y-1">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-muted-foreground">
                           HTML Tag
                         </label>
                         <Select
@@ -688,7 +764,7 @@ ${renderItems(pageItems, 3)}
                             })
                           }
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="h-7 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -699,8 +775,8 @@ ${renderItems(pageItems, 3)}
                         </Select>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-muted-foreground">
                           Layout Type
                         </label>
                         <Select
@@ -711,7 +787,7 @@ ${renderItems(pageItems, 3)}
                             })
                           }
                         >
-                          <SelectTrigger>
+                          <SelectTrigger className="h-7 text-xs">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -728,10 +804,10 @@ ${renderItems(pageItems, 3)}
                 )}
 
                 {/* Styling */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold">Styling</h3>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium text-muted-foreground">
+                <div className="space-y-1">
+                  <h3 className="text-xs font-semibold">Styling</h3>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-medium text-muted-foreground">
                       Custom Classes
                     </label>
                     <Input
@@ -742,74 +818,23 @@ ${renderItems(pageItems, 3)}
                           className: e.target.value,
                         })
                       }
+                      className="h-7 text-xs"
                     />
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-[10px] text-muted-foreground">
                       Add Tailwind CSS classes
                     </p>
                   </div>
                 </div>
 
-                {/* Container Children */}
-                {selectedItemData.type === "container" && (
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-semibold">
-                      Container Children (
-                      {selectedItemData.children?.length || 0})
-                    </h3>
-                    {selectedItemData.children &&
-                    selectedItemData.children.length > 0 ? (
-                      <div className="space-y-2">
-                        {selectedItemData.children.map((child, index) => (
-                          <div
-                            key={child.id}
-                            className="flex items-center justify-between rounded-md border bg-card p-2"
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs text-muted-foreground">
-                                #{index + 1}
-                              </span>
-                              <div>
-                                <p className="text-sm font-medium">
-                                  {child.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground capitalize">
-                                  {child.type}
-                                </p>
-                              </div>
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                removeChildFromContainer(
-                                  selectedItemData.id,
-                                  child.id
-                                )
-                              }
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-xs text-muted-foreground">
-                        No children yet. Children can be added in a future
-                        update.
-                      </p>
-                    )}
-                  </div>
-                )}
-
                 {/* Component Props */}
                 {selectedItemData.type === "component" && (
-                  <div className="space-y-3">
-                    <h3 className="text-sm font-semibold">
+                  <div className="space-y-1">
+                    <h3 className="text-xs font-semibold">
                       Component Properties
                     </h3>
-                    <div className="space-y-3">
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">
+                    <div className="space-y-1">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-muted-foreground">
                           Variant
                         </label>
                         <Input
@@ -820,10 +845,11 @@ ${renderItems(pageItems, 3)}
                               variant: e.target.value,
                             })
                           }
+                          className="h-7 text-xs"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-medium text-muted-foreground">
                           Size
                         </label>
                         <Input
@@ -834,6 +860,7 @@ ${renderItems(pageItems, 3)}
                               size: e.target.value,
                             })
                           }
+                          className="h-7 text-xs"
                         />
                       </div>
                     </div>
@@ -841,13 +868,13 @@ ${renderItems(pageItems, 3)}
                 )}
 
                 {/* Advanced */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold">Advanced</h3>
-                  <div className="space-y-2">
+                <div className="space-y-1">
+                  <h3 className="text-xs font-semibold">Advanced</h3>
+                  <div className="space-y-1">
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full"
+                      className="w-full h-7 text-[10px]"
                       onClick={() => {
                         const code = JSON.stringify(selectedItemData, null, 2)
                         navigator.clipboard.writeText(code)
@@ -858,22 +885,22 @@ ${renderItems(pageItems, 3)}
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full text-destructive hover:text-destructive"
+                      className="w-full h-7 text-[10px] text-destructive hover:text-destructive"
                       onClick={() => {
                         removeItem(selectedItemData.id)
                         setSelectedItem(null)
                       }}
                     >
-                      <Trash2 className="mr-2 h-4 w-4" />
+                      <Trash2 className="mr-1 h-3 w-3" />
                       Delete Item
                     </Button>
                   </div>
                 </div>
 
                 {/* Component Info */}
-                <div className="rounded-lg border bg-muted/50 p-3 text-xs">
+                <div className="rounded-lg border bg-muted/50 p-2 text-[10px]">
                   <p className="font-medium">About this item:</p>
-                  <ul className="mt-2 space-y-1 text-muted-foreground">
+                  <ul className="mt-1 space-y-0.5 text-muted-foreground">
                     <li>• ID: {selectedItemData.id.slice(0, 8)}...</li>
                     <li>• Type: {selectedItemData.type}</li>
                     {selectedItemData.children && (
@@ -920,16 +947,16 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
+      className="group relative"
       onClick={onSelect}
     >
-      <div className="absolute -left-12 top-2 z-10 flex flex-col items-center gap-2">
+      <div className="absolute left-0 top-0 z-10 flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 p-1">
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab rounded bg-card p-1 shadow-sm hover:shadow active:cursor-grabbing"
+          className="cursor-grab rounded bg-card/90 p-0.5 shadow-sm hover:shadow backdrop-blur active:cursor-grabbing"
         >
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
+          <GripVertical className="h-3 w-3 text-muted-foreground" />
         </button>
         <Button
           variant="ghost"
@@ -938,47 +965,47 @@ function SortableItem({
             e.stopPropagation()
             onRemove()
           }}
-          className="h-6 w-6 bg-background/80 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
+          className="h-5 w-5 bg-card/90 backdrop-blur"
         >
-          <Trash2 className="h-3 w-3" />
+          <Trash2 className="h-2.5 w-2.5" />
         </Button>
         {isSelected && (
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6 bg-background/80 backdrop-blur"
+            className="h-5 w-5 bg-primary/90 text-primary-foreground backdrop-blur"
           >
-            <Settings2 className="h-3 w-3" />
+            <Settings2 className="h-2.5 w-2.5" />
           </Button>
         )}
       </div>
 
-      <div className="relative overflow-hidden border-b last:border-b-0">
+      <div className="relative overflow-hidden">
         {item.type === "container" ? (
-          <div className="min-h-[100px] bg-muted/20 p-4">
-            <div className="mb-2 flex items-center gap-2 border-b border-dashed pb-2">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                Container ({item.containerType || "div"}) -{" "}
-                {item.layoutType || "flex"}
+          <div className="min-h-[100px] bg-muted/10 p-2">
+            <div className="mb-1 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
+                {item.name}
               </p>
             </div>
             {item.children && item.children.length > 0 ? (
               <div
                 className={
-                  item.layoutType === "flex"
-                    ? "flex flex-col gap-4"
+                  item.gridClass ||
+                  (item.layoutType === "flex"
+                    ? "flex flex-col gap-1"
                     : item.layoutType === "grid"
-                      ? "grid grid-cols-1 md:grid-cols-2 gap-4"
-                      : "space-y-4"
+                      ? "grid grid-cols-1 md:grid-cols-2 gap-1"
+                      : "space-y-1")
                 }
               >
                 {item.children.map((child) => (
                   <div
                     key={child.id}
-                    className="border-l-2 border-primary/50 pl-3"
+                    className="border-l border-primary/30 pl-1"
                   >
                     {child.type === "container" ? (
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-[10px] text-muted-foreground">
                         Nested Container: {child.name}
                       </div>
                     ) : (
@@ -993,8 +1020,8 @@ function SortableItem({
               </div>
             ) : (
               <div className="flex min-h-[80px] items-center justify-center">
-                <p className="text-xs text-muted-foreground">
-                  Empty container - Add items from the left sidebar
+                <p className="text-[10px] text-muted-foreground">
+                  Empty container
                 </p>
               </div>
             )}
