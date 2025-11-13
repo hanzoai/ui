@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Download, GripVertical, Plus, Settings2, Trash2 } from "lucide-react"
+import { Copy as CopyIcon, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -535,36 +535,31 @@ ${renderItems(pageItems, 3)}
                 Desktop
               </Button>
             </div>
-            <Separator orientation="vertical" className="h-8" />
-            <OpenInHButton name="builder" />
-            <Separator orientation="vertical" className="h-8" />
-            <div className="flex gap-2">
+            <Separator orientation="vertical" className="h-6" />
+            <div className="flex gap-1">
               <Button
                 variant="outline"
-                size="sm"
+                size="icon"
                 onClick={copyCode}
                 disabled={pageItems.length === 0}
+                title="Copy code"
+                className="h-7 w-7"
               >
-                Copy Code
+                <CopyIcon className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant="outline"
-                size="sm"
+                size="icon"
                 onClick={downloadCode}
                 disabled={pageItems.length === 0}
+                title="Download"
+                className="h-7 w-7"
               >
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={deployWithHanzo}
-                disabled={pageItems.length === 0}
-              >
-                Deploy with Hanzo
+                <Download className="h-3.5 w-3.5" />
               </Button>
             </div>
+            <Separator orientation="vertical" className="h-6" />
+            <OpenInHButton name="builder" />
           </div>
         </div>
 
