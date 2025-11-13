@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { AlignCenter, AlignJustify, AlignLeft, AlignRight, ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2, Type, Underline } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -39,12 +39,17 @@ import {
   SelectValue,
 } from "@/registry/default/ui/select"
 import { Separator } from "@/registry/default/ui/separator"
+import { Slider } from "@/registry/default/ui/slider"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/registry/default/ui/tabs"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/registry/default/ui/toggle-group"
 
 interface PageItem {
   id: string
@@ -794,6 +799,285 @@ ${renderItems(pageItems, 3)}
                     <p className="text-xs text-muted-foreground">
                       Add Tailwind CSS classes
                     </p>
+                  </div>
+                </div>
+
+                {/* Typography */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Type className="h-4 w-4" />
+                    Typography
+                  </h3>
+
+                  <div className="space-y-3">
+                    {/* Font Family */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Font Family
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.fontFamily || "default"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            fontFamily: value === "default" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select font" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="default">Default</SelectItem>
+                          <SelectItem value="font-sans">Sans Serif</SelectItem>
+                          <SelectItem value="font-serif">Serif</SelectItem>
+                          <SelectItem value="font-mono">Monospace</SelectItem>
+                          <SelectItem value="font-inter">Inter</SelectItem>
+                          <SelectItem value="font-roboto">Roboto</SelectItem>
+                          <SelectItem value="font-open-sans">Open Sans</SelectItem>
+                          <SelectItem value="font-lato">Lato</SelectItem>
+                          <SelectItem value="font-montserrat">Montserrat</SelectItem>
+                          <SelectItem value="font-poppins">Poppins</SelectItem>
+                          <SelectItem value="font-playfair">Playfair Display</SelectItem>
+                          <SelectItem value="font-merriweather">Merriweather</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Font Size */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Font Size
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.fontSize || "text-base"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            fontSize: value === "text-base" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="text-xs">Extra Small (xs)</SelectItem>
+                          <SelectItem value="text-sm">Small (sm)</SelectItem>
+                          <SelectItem value="text-base">Base</SelectItem>
+                          <SelectItem value="text-lg">Large (lg)</SelectItem>
+                          <SelectItem value="text-xl">Extra Large (xl)</SelectItem>
+                          <SelectItem value="text-2xl">2XL</SelectItem>
+                          <SelectItem value="text-3xl">3XL</SelectItem>
+                          <SelectItem value="text-4xl">4XL</SelectItem>
+                          <SelectItem value="text-5xl">5XL</SelectItem>
+                          <SelectItem value="text-6xl">6XL</SelectItem>
+                          <SelectItem value="text-7xl">7XL</SelectItem>
+                          <SelectItem value="text-8xl">8XL</SelectItem>
+                          <SelectItem value="text-9xl">9XL</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Font Weight */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Font Weight
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.fontWeight || "font-normal"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            fontWeight: value === "font-normal" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="font-thin">Thin (100)</SelectItem>
+                          <SelectItem value="font-extralight">Extra Light (200)</SelectItem>
+                          <SelectItem value="font-light">Light (300)</SelectItem>
+                          <SelectItem value="font-normal">Normal (400)</SelectItem>
+                          <SelectItem value="font-medium">Medium (500)</SelectItem>
+                          <SelectItem value="font-semibold">Semibold (600)</SelectItem>
+                          <SelectItem value="font-bold">Bold (700)</SelectItem>
+                          <SelectItem value="font-extrabold">Extra Bold (800)</SelectItem>
+                          <SelectItem value="font-black">Black (900)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Line Height */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Line Height
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.lineHeight || "leading-normal"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            lineHeight: value === "leading-normal" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="leading-none">None (1)</SelectItem>
+                          <SelectItem value="leading-tight">Tight (1.25)</SelectItem>
+                          <SelectItem value="leading-snug">Snug (1.375)</SelectItem>
+                          <SelectItem value="leading-normal">Normal (1.5)</SelectItem>
+                          <SelectItem value="leading-relaxed">Relaxed (1.625)</SelectItem>
+                          <SelectItem value="leading-loose">Loose (2)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Letter Spacing */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Letter Spacing
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.letterSpacing || "tracking-normal"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            letterSpacing: value === "tracking-normal" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="tracking-tighter">Tighter (-0.05em)</SelectItem>
+                          <SelectItem value="tracking-tight">Tight (-0.025em)</SelectItem>
+                          <SelectItem value="tracking-normal">Normal (0)</SelectItem>
+                          <SelectItem value="tracking-wide">Wide (0.025em)</SelectItem>
+                          <SelectItem value="tracking-wider">Wider (0.05em)</SelectItem>
+                          <SelectItem value="tracking-widest">Widest (0.1em)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Text Alignment */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Text Alignment
+                      </label>
+                      <ToggleGroup
+                        type="single"
+                        value={selectedItemData.props?.textAlign || "text-left"}
+                        onValueChange={(value) => {
+                          if (value) {
+                            updateItemProps(selectedItemData.id, {
+                              textAlign: value === "text-left" ? undefined : value,
+                            })
+                          }
+                        }}
+                        className="justify-start"
+                      >
+                        <ToggleGroupItem value="text-left" aria-label="Align left">
+                          <AlignLeft className="h-4 w-4" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="text-center" aria-label="Align center">
+                          <AlignCenter className="h-4 w-4" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="text-right" aria-label="Align right">
+                          <AlignRight className="h-4 w-4" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="text-justify" aria-label="Justify">
+                          <AlignJustify className="h-4 w-4" />
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+
+                    {/* Text Transform */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Text Transform
+                      </label>
+                      <Select
+                        value={selectedItemData.props?.textTransform || "normal-case"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            textTransform: value === "normal-case" ? undefined : value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="normal-case">Normal Case</SelectItem>
+                          <SelectItem value="uppercase">UPPERCASE</SelectItem>
+                          <SelectItem value="lowercase">lowercase</SelectItem>
+                          <SelectItem value="capitalize">Capitalize</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Text Decoration */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Text Decoration
+                      </label>
+                      <ToggleGroup
+                        type="single"
+                        value={selectedItemData.props?.textDecoration || "no-underline"}
+                        onValueChange={(value) => {
+                          if (value) {
+                            updateItemProps(selectedItemData.id, {
+                              textDecoration: value === "no-underline" ? undefined : value,
+                            })
+                          }
+                        }}
+                        className="justify-start"
+                      >
+                        <ToggleGroupItem value="no-underline" aria-label="No decoration">
+                          None
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="underline" aria-label="Underline">
+                          <Underline className="h-4 w-4" />
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="line-through" aria-label="Line through">
+                          <span className="text-sm">Strike</span>
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+
+                    {/* Font Color */}
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Font Color
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="color"
+                          value={selectedItemData.props?.color || "#000000"}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              color: e.target.value,
+                            })
+                          }
+                          className="h-10 w-20"
+                        />
+                        <Input
+                          placeholder="e.g. text-primary"
+                          value={selectedItemData.props?.textColor || ""}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              textColor: e.target.value,
+                            })
+                          }
+                          className="flex-1"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Use color picker or Tailwind class
+                      </p>
+                    </div>
                   </div>
                 </div>
 
