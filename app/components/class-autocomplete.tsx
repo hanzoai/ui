@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, X, Search, Tag } from "lucide-react"
+import { Check, Search, Tag, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/registry/default/ui/badge"
@@ -401,10 +401,7 @@ export function ClassAutocomplete({ value, onChange }: ClassAutocompleteProps) {
 
   // Get all classes
   const allClasses = React.useMemo(
-    () =>
-      Object.values(TAILWIND_CLASSES)
-        .flat()
-        .sort(),
+    () => Object.values(TAILWIND_CLASSES).flat().sort(),
     []
   )
 
