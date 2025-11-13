@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Download, GripVertical, Plus, Settings2, Trash2 } from "lucide-react"
+import { Download, GripVertical, Maximize2, Minimize2, Plus, Settings2, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -60,6 +60,7 @@ export default function EnhancedBuilder() {
     "desktop" | "tablet" | "mobile"
   >("desktop")
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null)
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
 
   React.useEffect(() => {
     // Get blocks from registry
@@ -406,7 +407,7 @@ ${renderItems(pageItems, 3)}
   return (
     <div className="flex h-screen max-h-screen gap-4 p-6">
       {/* Left Sidebar - Component/Block Library */}
-      <div className="w-80 space-y-4">
+      <div className={`w-80 space-y-4 ${isFullscreen ? "hidden" : ""}`}>
         <div>
           <h2 className="text-lg font-semibold">Component Library</h2>
           <p className="text-sm text-muted-foreground">
@@ -495,7 +496,7 @@ ${renderItems(pageItems, 3)}
         </Tabs>
       </div>
 
-      <Separator orientation="vertical" />
+      <Separator orientation="vertical" className={isFullscreen ? "hidden" : ""} />
 
       {/* Center - Page Builder Canvas */}
       <div className="flex-1 space-y-4">
@@ -514,6 +515,7 @@ ${renderItems(pageItems, 3)}
                 size="sm"
                 onClick={() => setViewport("mobile")}
                 className="rounded-r-none"
+                title="Mobile view (375px)"
               >
                 Mobile
               </Button>
@@ -522,6 +524,7 @@ ${renderItems(pageItems, 3)}
                 size="sm"
                 onClick={() => setViewport("tablet")}
                 className="rounded-none border-x"
+                title="Tablet view (768px)"
               >
                 Tablet
               </Button>
@@ -530,10 +533,23 @@ ${renderItems(pageItems, 3)}
                 size="sm"
                 onClick={() => setViewport("desktop")}
                 className="rounded-l-none"
+                title="Desktop view (100%)"
               >
                 Desktop
               </Button>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            >
+              {isFullscreen ? (
+                <Minimize2 className="h-4 w-4" />
+              ) : (
+                <Maximize2 className="h-4 w-4" />
+              )}
+            </Button>
             <Separator orientation="vertical" className="h-8" />
             <OpenInHButton name="builder" />
             <Separator orientation="vertical" className="h-8" />
@@ -627,7 +643,7 @@ ${renderItems(pageItems, 3)}
       </div>
 
       {/* Right Sidebar - Property Editor */}
-      {selectedItemData && (
+      {selectedItemData && !isFullscreen && (
         <>
           <Separator orientation="vertical" />
           <div className="w-80 space-y-4">
