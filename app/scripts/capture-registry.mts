@@ -206,8 +206,13 @@ try {
     // Always stop the dev server
     console.log("🛑 Stopping dev server...")
     server.stop()
+    // Kill any remaining processes to ensure clean exit
+    killExistingServers()
+    console.log("✅ Cleanup complete")
   }
 } catch (error) {
   console.error("❌ Error:", error)
+  // Ensure cleanup on error too
+  killExistingServers()
   process.exit(1)
 }
