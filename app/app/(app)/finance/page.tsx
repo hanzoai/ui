@@ -1,23 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import {
-  AdvancedChart,
-  CompanyProfile,
-  CryptoScreener,
-  Financials,
-  ForexScreener,
-  MarketOverview,
-  NewsTimeline,
-  OrderEntry,
-  OrdersHistory,
-  PositionsList,
-  StockScreener,
-  SymbolInfo,
-  TechnicalAnalysis,
-  TickerTape,
-  TradingPanel,
-} from "@hanzo/ui/finance"
+import { AdvancedChart } from "@/registry/default/ui/advanced-chart"
+// import { CompanyProfile } from "@/registry/default/ui/company-profile" // TODO: Create this component
+// import { CryptoScreener } from "@/registry/default/ui/crypto-screener" // TODO: Create this component
+// import { Financials } from "@/registry/default/ui/financials" // TODO: Create this component
+// import { ForexScreener } from "@/registry/default/ui/forex-screener" // TODO: Create this component
+// import { MarketOverview } from "@/registry/default/ui/market-overview" // TODO: Create this component
+// import { NewsTimeline } from "@/registry/default/ui/news-timeline" // TODO: Create this component
+// import { OrderEntry } from "@/registry/default/ui/order-entry" // TODO: Create this component
+// import { OrdersHistory } from "@/registry/default/ui/orders-history" // TODO: Create this component
+// import { PositionsList } from "@/registry/default/ui/positions-list" // TODO: Create this component
+import { StockScreener } from "@/registry/default/ui/stock-screener"
+// import { SymbolInfo } from "@/registry/default/ui/symbol-info" // TODO: Create this component
+// import { TechnicalAnalysis } from "@/registry/default/ui/technical-analysis" // TODO: Create this component
+// import { TickerTape } from "@/registry/default/ui/ticker-tape" // TODO: Create this component
+import { TradingPanel } from "@/registry/default/ui/trading-panel"
 
 import {
   Card,
@@ -113,31 +111,7 @@ export default function FinancePage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Ticker Tape</CardTitle>
-                <CardDescription>
-                  Scrolling ticker with major market indices
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <TickerTape />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Market Overview</CardTitle>
-                <CardDescription>
-                  Multi-asset market overview with tabs
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: "450px" }}>
-                  <MarketOverview />
-                </div>
-              </CardContent>
-            </Card>
+            {/* TODO: Add TickerTape and MarketOverview components */}
           </div>
         </section>
 
@@ -148,11 +122,11 @@ export default function FinancePage() {
           <div>
             <h2 className="text-2xl font-semibold">Market Screeners</h2>
             <p className="text-sm text-muted-foreground">
-              Asset screeners for stocks, crypto, and forex
+              Asset screeners for stocks (crypto and forex coming soon)
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Stock Screener</CardTitle>
@@ -163,119 +137,7 @@ export default function FinancePage() {
                 </div>
               </CardContent>
             </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Crypto Screener</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: "400px" }}>
-                  <CryptoScreener />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Forex Screener</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: "400px" }}>
-                  <ForexScreener />
-                </div>
-              </CardContent>
-            </Card>
           </div>
-        </section>
-
-        <Separator />
-
-        {/* Symbol Analysis */}
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-semibold">Symbol Analysis</h2>
-            <p className="text-sm text-muted-foreground">
-              Comprehensive symbol information and analysis tools
-            </p>
-          </div>
-
-          <div className="grid gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Symbol Info</CardTitle>
-                <CardDescription>
-                  Real-time symbol details and price information
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: "140px" }}>
-                  <SymbolInfo symbol="NASDAQ:AAPL" />
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Company Profile</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div style={{ height: "400px" }}>
-                    <CompanyProfile symbol="NASDAQ:AAPL" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Technical Analysis</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div style={{ height: "400px" }}>
-                    <TechnicalAnalysis symbol="NASDAQ:AAPL" />
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Financials</CardTitle>
-                <CardDescription>
-                  Financial statements and fundamental data
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div style={{ height: "500px" }}>
-                  <Financials symbol="NASDAQ:AAPL" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        <Separator />
-
-        {/* News */}
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-semibold">News & Timeline</h2>
-            <p className="text-sm text-muted-foreground">
-              Financial news feed and updates
-            </p>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>News Timeline</CardTitle>
-              <CardDescription>Real-time financial news feed</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div style={{ height: "400px" }}>
-                <NewsTimeline />
-              </div>
-            </CardContent>
-          </Card>
         </section>
 
         <Separator />
@@ -285,7 +147,7 @@ export default function FinancePage() {
           <div>
             <h2 className="text-2xl font-semibold">Trading Interface</h2>
             <p className="text-sm text-muted-foreground">
-              Order entry, positions, and order management components
+              Trading panel component (order entry and position management coming soon)
             </p>
           </div>
 
@@ -299,52 +161,6 @@ export default function FinancePage() {
               </CardHeader>
               <CardContent>
                 <TradingPanel symbol="NASDAQ:AAPL" currentPrice={175} />
-              </CardContent>
-            </Card>
-
-            <div className="grid lg:grid-cols-3 gap-6">
-              <Card className="lg:col-span-1">
-                <CardHeader>
-                  <CardTitle>Order Entry</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <OrderEntry
-                    symbol="NASDAQ:AAPL"
-                    accountBalance={10000}
-                    onPlaceOrder={handlePlaceOrder}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle>Positions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <PositionsList
-                    positions={positions}
-                    onPositionClick={() => {}}
-                  />
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Orders History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <OrdersHistory
-                  orders={orders}
-                  onOrderClick={() => {}}
-                  onCancelOrder={(id: string) => {
-                    setOrders(
-                      orders.map((o) =>
-                        o.id === id ? { ...o, status: "cancelled" } : o
-                      )
-                    )
-                  }}
-                />
               </CardContent>
             </Card>
           </div>
