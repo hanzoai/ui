@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test"
+import { expect, Page, test } from "@playwright/test"
 
 test.describe("Blocks and Builder Pages", () => {
   test.describe("Blocks Page", () => {
@@ -20,7 +20,13 @@ test.describe("Blocks and Builder Pages", () => {
       await page.waitForTimeout(1000)
 
       // Check for featured blocks
-      const featuredBlocks = ["dashboard-01", "sidebar-07", "sidebar-03", "login-03", "login-04"]
+      const featuredBlocks = [
+        "dashboard-01",
+        "sidebar-07",
+        "sidebar-03",
+        "login-03",
+        "login-04",
+      ]
 
       for (const block of featuredBlocks) {
         // Try different selector patterns
@@ -53,7 +59,7 @@ test.describe("Blocks and Builder Pages", () => {
     test("should render without console errors", async ({ page }) => {
       const consoleErrors: string[] = []
 
-      page.on("console", msg => {
+      page.on("console", (msg) => {
         if (msg.type() === "error") {
           consoleErrors.push(msg.text())
         }
@@ -66,7 +72,7 @@ test.describe("Blocks and Builder Pages", () => {
       // Log any errors found
       if (consoleErrors.length > 0) {
         console.warn("Console errors found:")
-        consoleErrors.forEach(error => console.warn(error))
+        consoleErrors.forEach((error) => console.warn(error))
       }
     })
 
@@ -125,7 +131,9 @@ test.describe("Blocks and Builder Pages", () => {
       const buttons = await page.locator("button").count()
       const inputs = await page.locator("input").count()
 
-      console.log(`Builder has ${links} links, ${buttons} buttons, ${inputs} inputs`)
+      console.log(
+        `Builder has ${links} links, ${buttons} buttons, ${inputs} inputs`
+      )
 
       // Should have at least some interactive elements
       expect(links + buttons + inputs).toBeGreaterThan(0)
@@ -137,7 +145,11 @@ test.describe("Blocks and Builder Pages", () => {
       await page.waitForTimeout(2000)
 
       // Look for block/component items
-      const blockItems = await page.locator('[class*="block"], [class*="component"], [data-block], [data-component]').count()
+      const blockItems = await page
+        .locator(
+          '[class*="block"], [class*="component"], [data-block], [data-component]'
+        )
+        .count()
 
       console.log(`Found ${blockItems} block/component items`)
 
@@ -149,7 +161,7 @@ test.describe("Blocks and Builder Pages", () => {
       const consoleErrors: string[] = []
       const consoleWarnings: string[] = []
 
-      page.on("console", msg => {
+      page.on("console", (msg) => {
         if (msg.type() === "error") {
           consoleErrors.push(msg.text())
         }
@@ -165,12 +177,12 @@ test.describe("Blocks and Builder Pages", () => {
       // Log any errors found
       if (consoleErrors.length > 0) {
         console.warn("Console errors found:")
-        consoleErrors.forEach(error => console.warn(`  - ${error}`))
+        consoleErrors.forEach((error) => console.warn(`  - ${error}`))
       }
 
       if (consoleWarnings.length > 0) {
         console.warn("Console warnings found:")
-        consoleWarnings.forEach(warning => console.warn(`  - ${warning}`))
+        consoleWarnings.forEach((warning) => console.warn(`  - ${warning}`))
       }
     })
 
@@ -211,7 +223,7 @@ test.describe("Blocks and Builder Pages", () => {
       // Take screenshot for comparison
       await expect(page).toHaveScreenshot("blocks-page.png", {
         fullPage: true,
-        maxDiffPixels: 100
+        maxDiffPixels: 100,
       })
     })
 
@@ -223,7 +235,7 @@ test.describe("Blocks and Builder Pages", () => {
       // Take screenshot for comparison
       await expect(page).toHaveScreenshot("builder-page.png", {
         fullPage: true,
-        maxDiffPixels: 100
+        maxDiffPixels: 100,
       })
     })
   })

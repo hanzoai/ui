@@ -16,20 +16,12 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { AlignCenter, AlignJustify, AlignLeft, AlignRight, Box, ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Layout, Link2, Link2Off, Maximize2, Minimize2, Monitor, Moon, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Play, Plus, Settings2, Smartphone, Sparkles, Sun, Tablet, Trash2, Type, Underline, Wand2 } from "lucide-react"
+import { Download, GripVertical, Plus, Settings2, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
-import { ClassAutocomplete } from "@/components/class-autocomplete"
 import { OpenInHButton } from "@/components/open-in-h-button"
 import { Button } from "@/registry/default/ui/button"
 import { Card } from "@/registry/default/ui/card"
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuTrigger,
-} from "@/registry/default/ui/context-menu"
 import { Input } from "@/registry/default/ui/input"
 import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import {
@@ -40,32 +32,12 @@ import {
   SelectValue,
 } from "@/registry/default/ui/select"
 import { Separator } from "@/registry/default/ui/separator"
-import { Label } from "@/registry/default/ui/label"
-import { Slider } from "@/registry/default/ui/slider"
-import { Switch } from "@/registry/default/ui/switch"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/registry/default/ui/tabs"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/registry/default/ui/toggle-group"
-
-interface BoxModelValue {
-  top?: string
-  right?: string
-  bottom?: string
-  left?: string
-}
-
-interface BoxModel {
-  margin?: BoxModelValue
-  padding?: BoxModelValue
-  border?: BoxModelValue
-}
 
 interface PageItem {
   id: string
@@ -75,119 +47,7 @@ interface PageItem {
   layoutType?: "flex" | "grid" | "stack"
   children?: PageItem[]
   props?: Record<string, any>
-  layout?: {
-    display?: "block" | "inline-block" | "flex" | "grid" | "inline-flex"
-    flexDirection?: "row" | "row-reverse" | "col" | "col-reverse"
-    flexWrap?: "wrap" | "wrap-reverse" | "nowrap"
-    justifyContent?: "start" | "end" | "center" | "between" | "around" | "evenly"
-    alignItems?: "start" | "end" | "center" | "baseline" | "stretch"
-    gap?: string
-    gridCols?: string
-    gridRows?: string
-    gridTemplate?: string
-    position?: "static" | "relative" | "absolute" | "fixed" | "sticky"
-    zIndex?: number
-    width?: string
-    height?: string
-    minWidth?: string
-    minHeight?: string
-    maxWidth?: string
-    maxHeight?: string
-    overflow?: "auto" | "hidden" | "scroll" | "visible"
-    overflowX?: "auto" | "hidden" | "scroll" | "visible"
-    overflowY?: "auto" | "hidden" | "scroll" | "visible"
-  }
-  boxModel?: BoxModel
-  animation?: {
-    entrance?: string
-    exit?: string
-    hover?: string
-    scroll?: string
-    duration?: number
-    delay?: number
-    easing?: string
-  }
-  effects?: {
-    blur?: string
-    shadow?: string
-    opacity?: number
-    rotate?: number
-    scale?: number
-    grayscale?: number
-    sepia?: number
-    hueRotate?: number
-    blendMode?: string
-  }
-  typography?: {
-    fontFamily?: string
-    fontSize?: string
-    fontWeight?: string
-    lineHeight?: string
-    letterSpacing?: string
-    textAlign?: string
-    textTransform?: string
-    textDecoration?: string
-    color?: string
-    textColor?: string
-  }
 }
-
-interface ThemeColor {
-  l: number  // Lightness (0-100)
-  c: number  // Chroma (0-0.4)
-  h: number  // Hue (0-360)
-}
-
-interface ThemeColors {
-  background: ThemeColor
-  foreground: ThemeColor
-  primary: ThemeColor
-  secondary: ThemeColor
-  accent: ThemeColor
-  border: ThemeColor
-}
-
-const presetSchemes = {
-  ocean: {
-    background: { l: 98, c: 0.01, h: 220 },
-    foreground: { l: 15, c: 0.02, h: 220 },
-    primary: { l: 55, c: 0.20, h: 220 },
-    secondary: { l: 90, c: 0.02, h: 220 },
-    accent: { l: 70, c: 0.15, h: 200 },
-    border: { l: 88, c: 0.01, h: 220 },
-  },
-  forest: {
-    background: { l: 98, c: 0.01, h: 140 },
-    foreground: { l: 15, c: 0.02, h: 140 },
-    primary: { l: 45, c: 0.18, h: 145 },
-    secondary: { l: 90, c: 0.02, h: 140 },
-    accent: { l: 60, c: 0.12, h: 120 },
-    border: { l: 88, c: 0.01, h: 140 },
-  },
-  sunset: {
-    background: { l: 98, c: 0.01, h: 30 },
-    foreground: { l: 15, c: 0.02, h: 30 },
-    primary: { l: 60, c: 0.22, h: 25 },
-    secondary: { l: 90, c: 0.02, h: 30 },
-    accent: { l: 70, c: 0.18, h: 340 },
-    border: { l: 88, c: 0.01, h: 30 },
-  },
-  monochrome: {
-    background: { l: 100, c: 0, h: 0 },
-    foreground: { l: 14.5, c: 0, h: 0 },
-    primary: { l: 20.5, c: 0, h: 0 },
-    secondary: { l: 97, c: 0, h: 0 },
-    accent: { l: 70, c: 0, h: 0 },
-    border: { l: 92.2, c: 0, h: 0 },
-  },
-}
-
-// Tailwind spacing scale
-const SPACING_SCALE = [
-  "0", "px", "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "7", "8",
-  "9", "10", "11", "12", "14", "16", "20", "24", "28", "32", "36", "40", "44",
-  "48", "52", "56", "60", "64", "72", "80", "96"
-]
 
 export default function EnhancedBuilder() {
   const [blocks, setBlocks] = React.useState<string[]>([])
@@ -200,19 +60,6 @@ export default function EnhancedBuilder() {
     "desktop" | "tablet" | "mobile"
   >("desktop")
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null)
-  const [isFullscreen, setIsFullscreen] = React.useState(false)
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = React.useState(false)
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = React.useState(false)
-
-  // Theme state
-  const [isDarkMode, setIsDarkMode] = React.useState(false)
-  const [themeColors, setThemeColors] = React.useState<ThemeColors>(presetSchemes.ocean)
-  const [colorMode, setColorMode] = React.useState<"oklch" | "hsl" | "hex">("oklch")
-
-  // Box model link states
-  const [marginLinked, setMarginLinked] = React.useState(true)
-  const [paddingLinked, setPaddingLinked] = React.useState(true)
-  const [borderLinked, setBorderLinked] = React.useState(true)
 
   React.useEffect(() => {
     // Get blocks from registry
@@ -528,37 +375,6 @@ ${renderItems(pageItems, 3)}
     )
   }
 
-  const updateBoxModel = (
-    id: string,
-    property: "margin" | "padding" | "border",
-    side: "top" | "right" | "bottom" | "left" | "all",
-    value: string
-  ) => {
-    setPageItems((items) =>
-      items.map((item) => {
-        if (item.id !== id) return item
-
-        const currentBoxModel = item.boxModel || {}
-        const currentProperty = currentBoxModel[property] || {}
-
-        let newProperty: BoxModelValue
-        if (side === "all") {
-          newProperty = { top: value, right: value, bottom: value, left: value }
-        } else {
-          newProperty = { ...currentProperty, [side]: value }
-        }
-
-        return {
-          ...item,
-          boxModel: {
-            ...currentBoxModel,
-            [property]: newProperty
-          }
-        }
-      })
-    )
-  }
-
   const addChildToContainer = (containerId: string, child: PageItem) => {
     setPageItems((items) =>
       items.map((item) =>
@@ -585,87 +401,495 @@ ${renderItems(pageItems, 3)}
     )
   }
 
-  // Theme helper functions
-  const oklchToString = (color: ThemeColor) => {
-    return `oklch(${(color.l / 100).toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`
-  }
-
-  const oklchToHsl = (color: ThemeColor) => {
-    const h = color.h
-    const s = Math.round(color.c * 100)
-    const l = Math.round(color.l)
-    return `hsl(${h}, ${s}%, ${l}%)`
-  }
-
-  const oklchToHex = (color: ThemeColor) => {
-    const l = color.l / 100
-    const c = color.c
-    const h = color.h
-    const a = c * Math.cos(h * Math.PI / 180)
-    const b = c * Math.sin(h * Math.PI / 180)
-    let r = l + 0.3963377774 * a + 0.2158037573 * b
-    let g = l - 0.1055613458 * a - 0.0638541728 * b
-    let b_val = l - 0.0894841775 * a - 1.2914855480 * b
-    r = Math.max(0, Math.min(1, r))
-    g = Math.max(0, Math.min(1, g))
-    b_val = Math.max(0, Math.min(1, b_val))
-    const toHex = (n: number) => Math.round(n * 255).toString(16).padStart(2, '0')
-    return `#${toHex(r)}${toHex(g)}${toHex(b_val)}`
-  }
-
-  const applyTheme = React.useCallback(() => {
-    const root = document.documentElement
-    if (isDarkMode) {
-      root.classList.add('dark')
-    } else {
-      root.classList.remove('dark')
-    }
-    Object.entries(themeColors).forEach(([key, color]) => {
-      root.style.setProperty(`--${key}`, oklchToString(color))
-    })
-  }, [isDarkMode, themeColors])
-
-  React.useEffect(() => {
-    applyTheme()
-  }, [applyTheme])
-
-  const updateColor = (colorName: keyof ThemeColors, property: keyof ThemeColor, value: number) => {
-    setThemeColors(prev => ({
-      ...prev,
-      [colorName]: {
-        ...prev[colorName],
-        [property]: value
-      }
-    }))
-  }
-
-  const loadPreset = (presetName: keyof typeof presetSchemes) => {
-    setThemeColors(presetSchemes[presetName])
-  }
-
-  const exportTheme = () => {
-    const theme = {
-      isDarkMode,
-      colors: themeColors,
-      cssVariables: Object.entries(themeColors).reduce((acc, [key, color]) => {
-        acc[`--${key}`] = oklchToString(color)
-        return acc
-      }, {} as Record<string, string>)
-    }
-    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'theme.json'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
   const selectedItemData = pageItems.find((item) => item.id === selectedItem)
 
   return (
-    <div className="flex h-screen max-h-screen">
-      {/* Left sidebar, center canvas, and right sidebar code truncated for brevity - continues with full implementation... */}
+    <div className="flex h-screen max-h-screen gap-4 p-6">
+      {/* Left Sidebar - Component/Block Library */}
+      <div className="w-80 space-y-4">
+        <div>
+          <h2 className="text-lg font-semibold">Component Library</h2>
+          <p className="text-sm text-muted-foreground">
+            Add blocks, components, and layouts
+          </p>
+        </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="blocks">Blocks</TabsTrigger>
+            <TabsTrigger value="components">Components</TabsTrigger>
+          </TabsList>
+
+          <div className="mt-4 space-y-4">
+            <Input
+              placeholder={`Filter ${activeTab}...`}
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => addItem("container", "container")}
+                className="w-full"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Container
+              </Button>
+            </div>
+
+            <ScrollArea className="h-[calc(100vh-320px)]">
+              <TabsContent value="blocks" className="mt-0 space-y-4">
+                {filteredBlocks.map((block) => (
+                  <Card
+                    key={block}
+                    className="cursor-pointer overflow-hidden transition-colors hover:bg-muted"
+                    onClick={() => addItem(block, "block")}
+                  >
+                    <div className="relative h-32 overflow-hidden bg-muted/50">
+                      <div className="pointer-events-none">
+                        <BuilderPreview
+                          name={block}
+                          type="block"
+                          scale={0.25}
+                        />
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity hover:bg-background/80 hover:opacity-100">
+                        <div className="flex items-center gap-2">
+                          <Plus className="h-5 w-5" />
+                          <span className="text-sm font-medium">
+                            Add to page
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t p-2">
+                      <p className="truncate text-xs font-medium">{block}</p>
+                    </div>
+                  </Card>
+                ))}
+              </TabsContent>
+
+              <TabsContent value="components" className="mt-0 space-y-2">
+                {filteredComponents.map((component) => (
+                  <Card
+                    key={component}
+                    className="cursor-pointer p-3 transition-colors hover:bg-muted"
+                    onClick={() => addItem(component, "component")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">{component}</p>
+                        <p className="text-xs text-muted-foreground">
+                          UI Component
+                        </p>
+                      </div>
+                      <Plus className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </Card>
+                ))}
+              </TabsContent>
+            </ScrollArea>
+          </div>
+        </Tabs>
+      </div>
+
+      <Separator orientation="vertical" />
+
+      {/* Center - Page Builder Canvas */}
+      <div className="flex-1 space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Page Builder</h2>
+            <p className="text-sm text-muted-foreground">
+              {pageItems.length} items in page
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {/* Viewport Controls */}
+            <div className="flex rounded-lg border">
+              <Button
+                variant={viewport === "mobile" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewport("mobile")}
+                className="rounded-r-none"
+              >
+                Mobile
+              </Button>
+              <Button
+                variant={viewport === "tablet" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewport("tablet")}
+                className="rounded-none border-x"
+              >
+                Tablet
+              </Button>
+              <Button
+                variant={viewport === "desktop" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewport("desktop")}
+                className="rounded-l-none"
+              >
+                Desktop
+              </Button>
+            </div>
+            <Separator orientation="vertical" className="h-8" />
+            <OpenInHButton name="builder" />
+            <Separator orientation="vertical" className="h-8" />
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={copyCode}
+                disabled={pageItems.length === 0}
+              >
+                Copy Code
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadCode}
+                disabled={pageItems.length === 0}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={deployWithHanzo}
+                disabled={pageItems.length === 0}
+              >
+                Deploy with Hanzo
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <ScrollArea className="h-[calc(100vh-140px)] rounded-lg border bg-background">
+          <div className="flex min-h-full items-start justify-center p-4">
+            <div
+              style={{
+                width: viewportWidths[viewport],
+                maxWidth: "100%",
+                transition: "width 0.3s ease",
+              }}
+            >
+              <DndContext
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={pageItems.map((item) => item.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="relative min-h-[600px] bg-background pl-16">
+                    {pageItems.length === 0 ? (
+                      <div className="flex h-96 items-center justify-center rounded-lg border border-dashed text-center -ml-16">
+                        <div className="space-y-2">
+                          <p className="text-sm text-muted-foreground">
+                            Your page is empty
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Add blocks, components, or containers from the left
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      pageItems.map((item) => (
+                        <SortableItem
+                          key={item.id}
+                          item={item}
+                          onRemove={() => removeItem(item.id)}
+                          onSelect={() => setSelectedItem(item.id)}
+                          isSelected={selectedItem === item.id}
+                        />
+                      ))
+                    )}
+                  </div>
+                </SortableContext>
+
+                <DragOverlay>
+                  {activeId ? (
+                    <div className="rounded-lg border bg-card p-4 shadow-lg">
+                      <p className="text-sm font-medium">
+                        {pageItems.find((item) => item.id === activeId)?.name}
+                      </p>
+                    </div>
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            </div>
+          </div>
+        </ScrollArea>
+      </div>
+
+      {/* Right Sidebar - Property Editor */}
+      {selectedItemData && (
+        <>
+          <Separator orientation="vertical" />
+          <div className="w-80 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">Properties</h2>
+                <p className="text-sm text-muted-foreground">
+                  {selectedItemData.name}
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedItem(null)}
+              >
+                Close
+              </Button>
+            </div>
+
+            <ScrollArea className="h-[calc(100vh-120px)]">
+              <div className="space-y-6 pr-4">
+                {/* Basic Settings */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Basic Settings</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Type
+                      </label>
+                      <p className="text-sm capitalize">
+                        {selectedItemData.type}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Name
+                      </label>
+                      <p className="text-sm">{selectedItemData.name}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Container Settings */}
+                {selectedItemData.type === "container" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Container Settings
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          HTML Tag
+                        </label>
+                        <Select
+                          value={selectedItemData.containerType || "div"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              containerType: value as
+                                | "div"
+                                | "section"
+                                | "article",
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="div">div</SelectItem>
+                            <SelectItem value="section">section</SelectItem>
+                            <SelectItem value="article">article</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Layout Type
+                        </label>
+                        <Select
+                          value={selectedItemData.layoutType || "flex"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layoutType: value as "flex" | "grid" | "stack",
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="flex">Flex (Column)</SelectItem>
+                            <SelectItem value="grid">Grid (2 cols)</SelectItem>
+                            <SelectItem value="stack">
+                              Stack (Vertical)
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Styling */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Styling</h3>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Custom Classes
+                    </label>
+                    <Input
+                      placeholder="e.g. bg-muted p-8"
+                      value={selectedItemData.props?.className || ""}
+                      onChange={(e) =>
+                        updateItemProps(selectedItemData.id, {
+                          className: e.target.value,
+                        })
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Add Tailwind CSS classes
+                    </p>
+                  </div>
+                </div>
+
+                {/* Container Children */}
+                {selectedItemData.type === "container" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Container Children (
+                      {selectedItemData.children?.length || 0})
+                    </h3>
+                    {selectedItemData.children &&
+                    selectedItemData.children.length > 0 ? (
+                      <div className="space-y-2">
+                        {selectedItemData.children.map((child, index) => (
+                          <div
+                            key={child.id}
+                            className="flex items-center justify-between rounded-md border bg-card p-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-muted-foreground">
+                                #{index + 1}
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium">
+                                  {child.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground capitalize">
+                                  {child.type}
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                removeChildFromContainer(
+                                  selectedItemData.id,
+                                  child.id
+                                )
+                              }
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        No children yet. Children can be added in a future
+                        update.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Component Props */}
+                {selectedItemData.type === "component" && (
+                  <div className="space-y-3">
+                    <h3 className="text-sm font-semibold">
+                      Component Properties
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Variant
+                        </label>
+                        <Input
+                          placeholder="e.g. default, outline"
+                          value={selectedItemData.props?.variant || ""}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              variant: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">
+                          Size
+                        </label>
+                        <Input
+                          placeholder="e.g. sm, md, lg"
+                          value={selectedItemData.props?.size || ""}
+                          onChange={(e) =>
+                            updateItemProps(selectedItemData.id, {
+                              size: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Advanced */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold">Advanced</h3>
+                  <div className="space-y-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        const code = JSON.stringify(selectedItemData, null, 2)
+                        navigator.clipboard.writeText(code)
+                      }}
+                    >
+                      Copy Item JSON
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full text-destructive hover:text-destructive"
+                      onClick={() => {
+                        removeItem(selectedItemData.id)
+                        setSelectedItem(null)
+                      }}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete Item
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Component Info */}
+                <div className="rounded-lg border bg-muted/50 p-3 text-xs">
+                  <p className="font-medium">About this item:</p>
+                  <ul className="mt-2 space-y-1 text-muted-foreground">
+                    <li>• ID: {selectedItemData.id.slice(0, 8)}...</li>
+                    <li>• Type: {selectedItemData.type}</li>
+                    {selectedItemData.children && (
+                      <li>• Children: {selectedItemData.children.length}</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </ScrollArea>
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -697,8 +921,96 @@ function SortableItem({
   }
 
   return (
-    <ContextMenu>
-      {/* SortableItem implementation continues... */}
-    </ContextMenu>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
+      onClick={onSelect}
+    >
+      <div className="absolute -left-12 top-2 z-10 flex flex-col items-center gap-2">
+        <button
+          {...attributes}
+          {...listeners}
+          className="cursor-grab rounded bg-card p-1 shadow-sm hover:shadow active:cursor-grabbing"
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemove()
+          }}
+          className="h-6 w-6 bg-background/80 opacity-0 backdrop-blur transition-opacity group-hover:opacity-100"
+        >
+          <Trash2 className="h-3 w-3" />
+        </Button>
+        {isSelected && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 bg-background/80 backdrop-blur"
+          >
+            <Settings2 className="h-3 w-3" />
+          </Button>
+        )}
+      </div>
+
+      <div className="relative overflow-hidden border-b last:border-b-0">
+        {item.type === "container" ? (
+          <div className="min-h-[100px] bg-muted/20 p-4">
+            <div className="mb-2 flex items-center gap-2 border-b border-dashed pb-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Container ({item.containerType || "div"}) -{" "}
+                {item.layoutType || "flex"}
+              </p>
+            </div>
+            {item.children && item.children.length > 0 ? (
+              <div
+                className={
+                  item.layoutType === "flex"
+                    ? "flex flex-col gap-4"
+                    : item.layoutType === "grid"
+                      ? "grid grid-cols-1 md:grid-cols-2 gap-4"
+                      : "space-y-4"
+                }
+              >
+                {item.children.map((child) => (
+                  <div
+                    key={child.id}
+                    className="border-l-2 border-primary/50 pl-3"
+                  >
+                    {child.type === "container" ? (
+                      <div className="text-xs text-muted-foreground">
+                        Nested Container: {child.name}
+                      </div>
+                    ) : (
+                      <BuilderPreview
+                        name={child.name}
+                        type={child.type as "block" | "component"}
+                        scale={0.75}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex min-h-[80px] items-center justify-center">
+                <p className="text-xs text-muted-foreground">
+                  Empty container - Add items from the left sidebar
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <BuilderPreview
+            name={item.name}
+            type={item.type as "block" | "component"}
+            scale={1}
+          />
+        )}
+      </div>
+    </div>
   )
 }

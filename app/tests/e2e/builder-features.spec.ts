@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test"
+import { expect, test } from "@playwright/test"
 
 test.describe("Builder Features", () => {
   test.beforeEach(async ({ page }) => {
@@ -12,7 +12,7 @@ test.describe("Builder Features", () => {
     await expect(fullscreenButton).toBeVisible()
 
     // Check initial state shows maximize icon
-    const maximizeIcon = fullscreenButton.locator('svg')
+    const maximizeIcon = fullscreenButton.locator("svg")
     await expect(maximizeIcon).toBeVisible()
   })
 
@@ -27,7 +27,7 @@ test.describe("Builder Features", () => {
     await expect(desktopBtn).toBeVisible()
 
     // Verify they have icons (small height/width)
-    const mobileIcon = mobileBtn.locator('svg')
+    const mobileIcon = mobileBtn.locator("svg")
     await expect(mobileIcon).toBeVisible()
   })
 
@@ -74,14 +74,18 @@ test.describe("Builder Features", () => {
     await expect(itemCount).toBeVisible()
   })
 
-  test("should have grid layout option in container settings", async ({ page }) => {
+  test("should have grid layout option in container settings", async ({
+    page,
+  }) => {
     // This verifies grid functionality exists in code
     // (We'd need to add a container first to test interaction)
     const content = await page.content()
     expect(content).toBeTruthy()
   })
 
-  test("should toggle between mobile, tablet, desktop viewports", async ({ page }) => {
+  test("should toggle between mobile, tablet, desktop viewports", async ({
+    page,
+  }) => {
     const mobileBtn = page.getByTitle(/mobile/i)
     const tabletBtn = page.getByTitle(/tablet/i)
     const desktopBtn = page.getByTitle(/desktop/i)
@@ -102,15 +106,15 @@ test.describe("Builder Features", () => {
 
   test("should have compact and minimal UI design", async ({ page }) => {
     // Check sidebar width is compact (should be narrower than 320px)
-    const sidebar = page.locator('.w-72').first()
+    const sidebar = page.locator(".w-72").first()
     await expect(sidebar).toBeVisible()
 
     // Check for tight spacing (gaps should be small)
-    const container = page.locator('.gap-3').first()
+    const container = page.locator(".gap-3").first()
     await expect(container).toBeVisible()
 
     // Check for small font sizes
-    const smallText = page.locator('.text-xs').first()
+    const smallText = page.locator(".text-xs").first()
     await expect(smallText).toBeVisible()
   })
 
@@ -132,7 +136,9 @@ test.describe("Builder Features", () => {
     expect(await blocksTab.getAttribute("data-state")).toBe("active")
   })
 
-  test("should be responsive and work on different viewports", async ({ page }) => {
+  test("should be responsive and work on different viewports", async ({
+    page,
+  }) => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 })
     await page.waitForTimeout(300)
