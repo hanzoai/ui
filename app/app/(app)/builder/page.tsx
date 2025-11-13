@@ -1465,6 +1465,146 @@ ${renderItems(pageItems, 3)}
                   </div>
                 </div>
 
+                {/* Theme Editor */}
+                <div className="space-y-3 border-t pt-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Palette className="h-4 w-4" />
+                    Theme
+                  </h3>
+
+                  {/* Dark Mode Toggle */}
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs font-medium">Dark Mode</Label>
+                    <div className="flex items-center gap-2">
+                      <Sun className="h-3.5 w-3.5 text-muted-foreground" />
+                      <Switch
+                        checked={isDarkMode}
+                        onCheckedChange={setIsDarkMode}
+                      />
+                      <Moon className="h-3.5 w-3.5 text-muted-foreground" />
+                    </div>
+                  </div>
+
+                  {/* Color Mode Selector */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium">Color Format</Label>
+                    <Select value={colorMode} onValueChange={(value: any) => setColorMode(value)}>
+                      <SelectTrigger className="h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="oklch">OKLCH</SelectItem>
+                        <SelectItem value="hsl">HSL</SelectItem>
+                        <SelectItem value="hex">HEX</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Preset Schemes */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium">Preset Schemes</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {Object.keys(presetSchemes).map((preset) => (
+                        <Button
+                          key={preset}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => loadPreset(preset as keyof typeof presetSchemes)}
+                          className="h-8 text-xs capitalize"
+                        >
+                          {preset}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Color Controls */}
+                  <div className="space-y-4">
+                    {Object.entries(themeColors).map(([colorName, color]) => (
+                      <div key={colorName} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-medium capitalize">{colorName}</Label>
+                          <div
+                            className="h-6 w-12 rounded border"
+                            style={{ backgroundColor:
+                              colorMode === 'hex' ? oklchToHex(color) :
+                              colorMode === 'hsl' ? oklchToHsl(color) :
+                              oklchToString(color)
+                            }}
+                          />
+                        </div>
+
+                        {/* Lightness Slider */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground">L: {color.l.toFixed(1)}%</span>
+                          </div>
+                          <Slider
+                            value={[color.l]}
+                            onValueChange={([value]) => updateColor(colorName as keyof ThemeColors, 'l', value)}
+                            min={0}
+                            max={100}
+                            step={0.1}
+                            className="w-full"
+                          />
+                        </div>
+
+                        {/* Chroma Slider */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground">C: {color.c.toFixed(3)}</span>
+                          </div>
+                          <Slider
+                            value={[color.c * 100]}
+                            onValueChange={([value]) => updateColor(colorName as keyof ThemeColors, 'c', value / 100)}
+                            min={0}
+                            max={40}
+                            step={0.1}
+                            className="w-full"
+                          />
+                        </div>
+
+                        {/* Hue Slider */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] text-muted-foreground">H: {color.h.toFixed(1)}°</span>
+                          </div>
+                          <Slider
+                            value={[color.h]}
+                            onValueChange={([value]) => updateColor(colorName as keyof ThemeColors, 'h', value)}
+                            min={0}
+                            max={360}
+                            step={1}
+                            className="w-full"
+                          />
+                        </div>
+
+                        {/* Display color value */}
+                        <Input
+                          value={
+                            colorMode === 'hex' ? oklchToHex(color) :
+                            colorMode === 'hsl' ? oklchToHsl(color) :
+                            oklchToString(color)
+                          }
+                          readOnly
+                          className="h-7 text-xs font-mono"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Export Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={exportTheme}
+                    className="w-full"
+                  >
+                    <Download className="mr-2 h-3.5 w-3.5" />
+                    Export Theme JSON
+                  </Button>
+                </div>
+
                 {/* Component Info */}
                 <div className="rounded-lg border bg-muted/50 p-3 text-xs">
                   <p className="font-medium">About this item:</p>
