@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2, Wand2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -45,6 +45,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/default/ui/tabs"
+import { Slider } from "@/registry/default/ui/slider"
+import { Label } from "@/registry/default/ui/label"
 
 interface PageItem {
   id: string
@@ -257,8 +259,73 @@ export default function EnhancedBuilder() {
     const renderProps = (props?: Record<string, any>) => {
       if (!props || Object.keys(props).length === 0) return ""
 
-      return Object.entries(props)
+      // Extract effects and apply them to className or style
+      const {
+        blur,
+        shadow,
+        opacity,
+        rotate,
+        scale,
+        grayscale,
+        sepia,
+        hueRotate,
+        blendMode,
+        className: customClass,
+        ...otherProps
+      } = props
+
+      // Build className from effects
+      const effectClasses = [
+        blur !== "none" ? blur : "",
+        shadow !== "none" ? shadow : "",
+        blendMode !== "normal" ? blendMode : "",
+        customClass || "",
+      ]
+        .filter(Boolean)
+        .join(" ")
+
+      // Build inline styles for numeric effects
+      const styles: string[] = []
+      if (opacity && opacity !== 100) {
+        styles.push(`opacity: ${opacity / 100}`)
+      }
+
+      const transforms: string[] = []
+      if (rotate && rotate !== 0) {
+        transforms.push(`rotate(${rotate}deg)`)
+      }
+      if (scale && scale !== 100) {
+        transforms.push(`scale(${scale / 100})`)
+      }
+      if (transforms.length > 0) {
+        styles.push(`transform: ${transforms.join(" ")}`)
+      }
+
+      const filters: string[] = []
+      if (grayscale && grayscale > 0) {
+        filters.push(`grayscale(${grayscale}%)`)
+      }
+      if (sepia && sepia > 0) {
+        filters.push(`sepia(${sepia}%)`)
+      }
+      if (hueRotate && hueRotate !== 0) {
+        filters.push(`hue-rotate(${hueRotate}deg)`)
+      }
+      if (filters.length > 0) {
+        styles.push(`filter: ${filters.join(" ")}`)
+      }
+
+      const styleAttr =
+        styles.length > 0 ? `style="${styles.join("; ")}"` : ""
+
+      const classAttr = effectClasses ? `className="${effectClasses}"` : ""
+
+      // Render other props
+      const otherPropsStr = Object.entries(otherProps)
         .map(([key, value]) => {
+          if (key === "blur" || key === "shadow" || key === "opacity" || key === "rotate" || key === "scale" || key === "grayscale" || key === "sepia" || key === "hueRotate" || key === "blendMode") {
+            return "" // Skip effect props, already handled
+          }
           if (typeof value === "string") {
             return `${key}="${value}"`
           } else if (typeof value === "boolean") {
@@ -270,6 +337,8 @@ export default function EnhancedBuilder() {
         })
         .filter(Boolean)
         .join(" ")
+
+      return [classAttr, styleAttr, otherPropsStr].filter(Boolean).join(" ")
     }
 
     const renderItems = (items: PageItem[], indent = 2): string => {
@@ -797,6 +866,254 @@ ${renderItems(pageItems, 3)}
                   </div>
                 </div>
 
+                {/* Effects */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Wand2 className="h-4 w-4" />
+                    Effects
+                  </h3>
+
+                  <div className="space-y-4">
+                    {/* Blur Effect */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Backdrop Blur
+                      </Label>
+                      <Select
+                        value={selectedItemData.props?.blur || "none"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            blur: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="backdrop-blur-sm">Small</SelectItem>
+                          <SelectItem value="backdrop-blur">Medium</SelectItem>
+                          <SelectItem value="backdrop-blur-md">Medium+</SelectItem>
+                          <SelectItem value="backdrop-blur-lg">Large</SelectItem>
+                          <SelectItem value="backdrop-blur-xl">Extra Large</SelectItem>
+                          <SelectItem value="backdrop-blur-2xl">2XL</SelectItem>
+                          <SelectItem value="backdrop-blur-3xl">3XL</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Drop Shadow */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Drop Shadow
+                      </Label>
+                      <Select
+                        value={selectedItemData.props?.shadow || "none"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            shadow: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          <SelectItem value="shadow-sm">Small</SelectItem>
+                          <SelectItem value="shadow">Default</SelectItem>
+                          <SelectItem value="shadow-md">Medium</SelectItem>
+                          <SelectItem value="shadow-lg">Large</SelectItem>
+                          <SelectItem value="shadow-xl">Extra Large</SelectItem>
+                          <SelectItem value="shadow-2xl">2XL</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Opacity */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Opacity
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.props?.opacity || 100}%
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.opacity || 100]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            opacity: value,
+                          })
+                        }
+                        min={0}
+                        max={100}
+                        step={5}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Transform - Rotate */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Rotate
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.props?.rotate || 0}°
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.rotate || 0]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            rotate: value,
+                          })
+                        }
+                        min={-180}
+                        max={180}
+                        step={15}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Transform - Scale */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Scale
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {(selectedItemData.props?.scale || 100) / 100}x
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.scale || 100]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            scale: value,
+                          })
+                        }
+                        min={50}
+                        max={200}
+                        step={10}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Filter - Grayscale */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Grayscale
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.props?.grayscale || 0}%
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.grayscale || 0]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            grayscale: value,
+                          })
+                        }
+                        min={0}
+                        max={100}
+                        step={10}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Filter - Sepia */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Sepia
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.props?.sepia || 0}%
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.sepia || 0]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            sepia: value,
+                          })
+                        }
+                        min={0}
+                        max={100}
+                        step={10}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Filter - Hue Rotate */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-medium text-muted-foreground">
+                          Hue Rotate
+                        </Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.props?.hueRotate || 0}°
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.props?.hueRotate || 0]}
+                        onValueChange={([value]) =>
+                          updateItemProps(selectedItemData.id, {
+                            hueRotate: value,
+                          })
+                        }
+                        min={0}
+                        max={360}
+                        step={30}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Mix Blend Mode */}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
+                        Mix Blend Mode
+                      </Label>
+                      <Select
+                        value={selectedItemData.props?.blendMode || "normal"}
+                        onValueChange={(value) =>
+                          updateItemProps(selectedItemData.id, {
+                            blendMode: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="normal">Normal</SelectItem>
+                          <SelectItem value="mix-blend-multiply">Multiply</SelectItem>
+                          <SelectItem value="mix-blend-screen">Screen</SelectItem>
+                          <SelectItem value="mix-blend-overlay">Overlay</SelectItem>
+                          <SelectItem value="mix-blend-darken">Darken</SelectItem>
+                          <SelectItem value="mix-blend-lighten">Lighten</SelectItem>
+                          <SelectItem value="mix-blend-color-dodge">Color Dodge</SelectItem>
+                          <SelectItem value="mix-blend-color-burn">Color Burn</SelectItem>
+                          <SelectItem value="mix-blend-hard-light">Hard Light</SelectItem>
+                          <SelectItem value="mix-blend-soft-light">Soft Light</SelectItem>
+                          <SelectItem value="mix-blend-difference">Difference</SelectItem>
+                          <SelectItem value="mix-blend-exclusion">Exclusion</SelectItem>
+                          <SelectItem value="mix-blend-hue">Hue</SelectItem>
+                          <SelectItem value="mix-blend-saturation">Saturation</SelectItem>
+                          <SelectItem value="mix-blend-color">Color</SelectItem>
+                          <SelectItem value="mix-blend-luminosity">Luminosity</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Container Children */}
                 {selectedItemData.type === "container" && (
                   <div className="space-y-3">
@@ -958,10 +1275,54 @@ function SortableItem({
     isDragging,
   } = useSortable({ id: item.id })
 
+  // Apply visual effects from props
+  const effectStyles: React.CSSProperties = {}
+  const effectClasses: string[] = []
+
+  if (item.props?.blur && item.props.blur !== "none") {
+    effectClasses.push(item.props.blur)
+  }
+  if (item.props?.shadow && item.props.shadow !== "none") {
+    effectClasses.push(item.props.shadow)
+  }
+  if (item.props?.blendMode && item.props.blendMode !== "normal") {
+    effectClasses.push(item.props.blendMode)
+  }
+
+  if (item.props?.opacity && item.props.opacity !== 100) {
+    effectStyles.opacity = item.props.opacity / 100
+  }
+
+  const transforms: string[] = []
+  if (item.props?.rotate && item.props.rotate !== 0) {
+    transforms.push(`rotate(${item.props.rotate}deg)`)
+  }
+  if (item.props?.scale && item.props.scale !== 100) {
+    transforms.push(`scale(${item.props.scale / 100})`)
+  }
+  if (transforms.length > 0) {
+    effectStyles.transform = transforms.join(" ")
+  }
+
+  const filters: string[] = []
+  if (item.props?.grayscale && item.props.grayscale > 0) {
+    filters.push(`grayscale(${item.props.grayscale}%)`)
+  }
+  if (item.props?.sepia && item.props.sepia > 0) {
+    filters.push(`sepia(${item.props.sepia}%)`)
+  }
+  if (item.props?.hueRotate && item.props.hueRotate !== 0) {
+    filters.push(`hue-rotate(${item.props.hueRotate}deg)`)
+  }
+  if (filters.length > 0) {
+    effectStyles.filter = filters.join(" ")
+  }
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.5 : effectStyles.opacity || 1,
+    ...effectStyles,
   }
 
   return (
@@ -970,7 +1331,7 @@ function SortableItem({
         <div
           ref={setNodeRef}
           style={style}
-          className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
+          className={`group relative ${isSelected ? "ring-2 ring-primary" : ""} ${effectClasses.join(" ")}`}
           onClick={onSelect}
         >
       <div className="absolute -left-12 top-2 z-10 flex flex-col items-center gap-2">
