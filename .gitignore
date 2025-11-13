@@ -66,3 +66,9 @@ tests/artifacts/
 # They cannot be generated in CI (requires display/browser)
 # app/public/r/styles/*/ -- REMOVED to allow committing screenshots
 
+
+# Test artifacts
+test-results/
+playwright-report/
+*BADGE_INSPECTION*.md
+*BADGE_INSPECTION*.txt
