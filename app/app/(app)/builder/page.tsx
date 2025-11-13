@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
@@ -68,6 +68,8 @@ export default function EnhancedBuilder() {
   >("desktop")
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = React.useState(false)
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = React.useState(false)
 
   React.useEffect(() => {
     // Get blocks from registry
@@ -412,9 +414,9 @@ ${renderItems(pageItems, 3)}
   const selectedItemData = pageItems.find((item) => item.id === selectedItem)
 
   return (
-    <div className="flex h-screen max-h-screen gap-3 p-3">
+    <div className="flex h-screen max-h-screen">
       {/* Left Sidebar - Component/Block Library */}
-      <div className={`w-72 space-y-3 ${isFullscreen ? "hidden" : ""}`}>
+      <div className={`relative flex-shrink-0 transition-all duration-200 ${isFullscreen || leftSidebarCollapsed ? "w-0" : "w-72"} ${isFullscreen || leftSidebarCollapsed ? "hidden" : "border-r p-3 space-y-3"}`}>
         <div className="space-y-1">
           <h2 className="text-base font-semibold">Library</h2>
           <p className="text-xs text-muted-foreground">
@@ -494,11 +496,10 @@ ${renderItems(pageItems, 3)}
         </Tabs>
       </div>
 
-      <Separator orientation="vertical" className={isFullscreen ? "hidden" : ""} />
-
       {/* Center - Page Builder Canvas */}
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center justify-between">
+      <div className="flex-1 flex flex-col">
+        {/* Header - Hidden in fullscreen */}
+        <div className={`flex items-center justify-between border-b px-3 py-2 ${isFullscreen ? "hidden" : ""}`}>
           <div className="flex items-baseline gap-2">
             <h2 className="text-sm font-semibold">Canvas</h2>
             <p className="text-xs text-muted-foreground">
@@ -506,6 +507,21 @@ ${renderItems(pageItems, 3)}
             </p>
           </div>
           <div className="flex items-center gap-1.5">
+            {/* Sidebar Collapse Buttons */}
+            {!isFullscreen && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
+                  className="h-7 w-7"
+                  title={leftSidebarCollapsed ? "Show library" : "Hide library"}
+                >
+                  {leftSidebarCollapsed ? <PanelLeftOpen className="h-3.5 w-3.5" /> : <PanelLeftClose className="h-3.5 w-3.5" />}
+                </Button>
+                <Separator orientation="vertical" className="h-6" />
+              </>
+            )}
             {/* Viewport Controls */}
             <div className="flex rounded-md border h-7">
               <Button
@@ -550,6 +566,20 @@ ${renderItems(pageItems, 3)}
               )}
             </Button>
             <Separator orientation="vertical" className="h-6" />
+            {!isFullscreen && selectedItemData && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
+                  className="h-7 w-7"
+                  title={rightSidebarCollapsed ? "Show properties" : "Hide properties"}
+                >
+                  {rightSidebarCollapsed ? <PanelRightOpen className="h-3.5 w-3.5" /> : <PanelRightClose className="h-3.5 w-3.5" />}
+                </Button>
+                <Separator orientation="vertical" className="h-6" />
+              </>
+            )}
             <OpenInHButton name="builder" />
             <Separator orientation="vertical" className="h-8" />
             <div className="flex gap-2">
@@ -582,8 +612,8 @@ ${renderItems(pageItems, 3)}
           </div>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-140px)] rounded-lg border bg-background">
-          <div className="flex min-h-full items-start justify-center p-4">
+        <ScrollArea className={`flex-1 bg-background ${isFullscreen ? "" : "border-t"}`}>
+          <div className="flex min-h-full items-start justify-center">
             <div
               style={{
                 width: viewportWidths[viewport],
@@ -600,7 +630,7 @@ ${renderItems(pageItems, 3)}
                   items={pageItems.map((item) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
-                  <div className="relative min-h-[600px] bg-background pl-16">
+                  <div className="relative min-h-screen bg-background pl-16">
                     {pageItems.length === 0 ? (
                       <div className="flex h-96 items-center justify-center rounded-lg border border-dashed text-center -ml-16">
                         <div className="space-y-2">
@@ -642,10 +672,9 @@ ${renderItems(pageItems, 3)}
       </div>
 
       {/* Right Sidebar - Property Editor */}
-      {selectedItemData && !isFullscreen && (
+      {selectedItemData && !isFullscreen && !rightSidebarCollapsed && (
         <>
-          <Separator orientation="vertical" />
-          <div className="w-80 space-y-4">
+          <div className="relative flex-shrink-0 w-80 border-l p-3 space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold">Properties</h2>
