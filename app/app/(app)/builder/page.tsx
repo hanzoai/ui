@@ -16,9 +16,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Copy, Download, Eye, GripVertical, Layout, Maximize2, Minimize2, Monitor, Moon, Palette, PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, Plus, Settings2, Smartphone, Sun, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
+import { ClassAutocomplete } from "@/components/class-autocomplete"
 import { OpenInHButton } from "@/components/open-in-h-button"
 import { Button } from "@/registry/default/ui/button"
 import { Card } from "@/registry/default/ui/card"
@@ -39,6 +40,10 @@ import {
   SelectValue,
 } from "@/registry/default/ui/select"
 import { Separator } from "@/registry/default/ui/separator"
+import { Label } from "@/registry/default/ui/label"
+import { Slider } from "@/registry/default/ui/slider"
+import { Slider } from "@/registry/default/ui/slider"
+import { Switch } from "@/registry/default/ui/switch"
 import {
   Tabs,
   TabsContent,
@@ -54,6 +59,78 @@ interface PageItem {
   layoutType?: "flex" | "grid" | "stack"
   children?: PageItem[]
   props?: Record<string, any>
+  layout?: {
+    display?: "block" | "inline-block" | "flex" | "grid" | "inline-flex"
+    flexDirection?: "row" | "row-reverse" | "col" | "col-reverse"
+    flexWrap?: "wrap" | "wrap-reverse" | "nowrap"
+    justifyContent?: "start" | "end" | "center" | "between" | "around" | "evenly"
+    alignItems?: "start" | "end" | "center" | "baseline" | "stretch"
+    gap?: string
+    gridCols?: string
+    gridRows?: string
+    gridTemplate?: string
+    position?: "static" | "relative" | "absolute" | "fixed" | "sticky"
+    zIndex?: number
+    width?: string
+    height?: string
+    minWidth?: string
+    minHeight?: string
+    maxWidth?: string
+    maxHeight?: string
+    overflow?: "auto" | "hidden" | "scroll" | "visible"
+    overflowX?: "auto" | "hidden" | "scroll" | "visible"
+    overflowY?: "auto" | "hidden" | "scroll" | "visible"
+  }
+}
+
+interface ThemeColor {
+  l: number  // Lightness (0-100)
+  c: number  // Chroma (0-0.4)
+  h: number  // Hue (0-360)
+}
+
+interface ThemeColors {
+  background: ThemeColor
+  foreground: ThemeColor
+  primary: ThemeColor
+  secondary: ThemeColor
+  accent: ThemeColor
+  border: ThemeColor
+}
+
+const presetSchemes = {
+  ocean: {
+    background: { l: 98, c: 0.01, h: 220 },
+    foreground: { l: 15, c: 0.02, h: 220 },
+    primary: { l: 55, c: 0.20, h: 220 },
+    secondary: { l: 90, c: 0.02, h: 220 },
+    accent: { l: 70, c: 0.15, h: 200 },
+    border: { l: 88, c: 0.01, h: 220 },
+  },
+  forest: {
+    background: { l: 98, c: 0.01, h: 140 },
+    foreground: { l: 15, c: 0.02, h: 140 },
+    primary: { l: 45, c: 0.18, h: 145 },
+    secondary: { l: 90, c: 0.02, h: 140 },
+    accent: { l: 60, c: 0.12, h: 120 },
+    border: { l: 88, c: 0.01, h: 140 },
+  },
+  sunset: {
+    background: { l: 98, c: 0.01, h: 30 },
+    foreground: { l: 15, c: 0.02, h: 30 },
+    primary: { l: 60, c: 0.22, h: 25 },
+    secondary: { l: 90, c: 0.02, h: 30 },
+    accent: { l: 70, c: 0.18, h: 340 },
+    border: { l: 88, c: 0.01, h: 30 },
+  },
+  monochrome: {
+    background: { l: 100, c: 0, h: 0 },
+    foreground: { l: 14.5, c: 0, h: 0 },
+    primary: { l: 20.5, c: 0, h: 0 },
+    secondary: { l: 97, c: 0, h: 0 },
+    accent: { l: 70, c: 0, h: 0 },
+    border: { l: 92.2, c: 0, h: 0 },
+  },
 }
 
 export default function EnhancedBuilder() {
@@ -70,6 +147,11 @@ export default function EnhancedBuilder() {
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = React.useState(false)
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = React.useState(false)
+
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = React.useState(false)
+  const [themeColors, setThemeColors] = React.useState<ThemeColors>(presetSchemes.ocean)
+  const [colorMode, setColorMode] = React.useState<"oklch" | "hsl" | "hex">("oklch")
 
   React.useEffect(() => {
     // Get blocks from registry
@@ -780,20 +862,16 @@ ${renderItems(pageItems, 3)}
                   <h3 className="text-sm font-semibold">Styling</h3>
                   <div className="space-y-2">
                     <label className="text-xs font-medium text-muted-foreground">
-                      Custom Classes
+                      Tailwind Classes
                     </label>
-                    <Input
-                      placeholder="e.g. bg-muted p-8"
+                    <ClassAutocomplete
                       value={selectedItemData.props?.className || ""}
-                      onChange={(e) =>
+                      onChange={(classes) =>
                         updateItemProps(selectedItemData.id, {
-                          className: e.target.value,
+                          className: classes,
                         })
                       }
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Add Tailwind CSS classes
-                    </p>
                   </div>
                 </div>
 
