@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      capture_screenshots:
+        description: 'Capture component screenshots (slow, optional)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -49,6 +55,12 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
 
+      - name: Capture screenshots (optional)
+        if: github.event.inputs.capture_screenshots == 'true'
+        working-directory: ./app
+        run: pnpm capture:registry
+        timeout-minutes: 5
+
       - name: Build documentation
         working-directory: ./app
         run: |
@@ -58,6 +70,7 @@ jobs:
           NODE_ENV: production
           GITHUB_ACTIONS: true
           NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
+          SKIP_SCREENSHOTS: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
