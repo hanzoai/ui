@@ -360,3 +360,12 @@
     @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
   }
 }
+
+/* Custom badge styling for sidebar */
+[data-badge] {
+  @apply bg-background text-foreground border border-border;
+}
+
+.dark [data-badge] {
+  @apply bg-background text-foreground border-border;
+}
