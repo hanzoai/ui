@@ -16,12 +16,19 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { Download, GripVertical, Maximize2, Minimize2, Plus, Settings2, Trash2 } from "lucide-react"
+import { Copy, Download, Eye, GripVertical, Maximize2, Minimize2, Monitor, Palette, Plus, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react"
 
 import { BuilderPreview } from "@/components/builder-preview"
 import { OpenInHButton } from "@/components/open-in-h-button"
 import { Button } from "@/registry/default/ui/button"
 import { Card } from "@/registry/default/ui/card"
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/registry/default/ui/context-menu"
 import { Input } from "@/registry/default/ui/input"
 import { ScrollArea } from "@/registry/default/ui/scroll-area"
 import {
@@ -405,88 +412,79 @@ ${renderItems(pageItems, 3)}
   const selectedItemData = pageItems.find((item) => item.id === selectedItem)
 
   return (
-    <div className="flex h-screen max-h-screen gap-4 p-6">
+    <div className="flex h-screen max-h-screen gap-3 p-3">
       {/* Left Sidebar - Component/Block Library */}
-      <div className={`w-80 space-y-4 ${isFullscreen ? "hidden" : ""}`}>
-        <div>
-          <h2 className="text-lg font-semibold">Component Library</h2>
-          <p className="text-sm text-muted-foreground">
-            Add blocks, components, and layouts
+      <div className={`w-72 space-y-3 ${isFullscreen ? "hidden" : ""}`}>
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold">Library</h2>
+          <p className="text-xs text-muted-foreground">
+            Blocks & Components
           </p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="blocks">Blocks</TabsTrigger>
-            <TabsTrigger value="components">Components</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 h-8">
+            <TabsTrigger value="blocks" className="text-xs">Blocks</TabsTrigger>
+            <TabsTrigger value="components" className="text-xs">Components</TabsTrigger>
           </TabsList>
 
-          <div className="mt-4 space-y-4">
+          <div className="mt-3 space-y-2">
             <Input
-              placeholder={`Filter ${activeTab}...`}
+              placeholder={`Search ${activeTab}...`}
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
+              className="h-8 text-xs"
             />
 
-            <div className="space-y-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => addItem("container", "container")}
-                className="w-full"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Container
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => addItem("container", "container")}
+              className="w-full h-7 text-xs"
+            >
+              <Plus className="mr-1.5 h-3.5 w-3.5" />
+              Container
+            </Button>
 
-            <ScrollArea className="h-[calc(100vh-320px)]">
-              <TabsContent value="blocks" className="mt-0 space-y-4">
+            <ScrollArea className="h-[calc(100vh-200px)]">
+              <TabsContent value="blocks" className="mt-0 space-y-2">
                 {filteredBlocks.map((block) => (
                   <Card
                     key={block}
-                    className="cursor-pointer overflow-hidden transition-colors hover:bg-muted"
+                    className="group cursor-pointer overflow-hidden transition-all hover:border-primary/50 hover:shadow-sm"
                     onClick={() => addItem(block, "block")}
                   >
-                    <div className="relative h-32 overflow-hidden bg-muted/50">
-                      <div className="pointer-events-none">
+                    <div className="relative h-24 overflow-hidden bg-muted/30">
+                      <div className="pointer-events-none scale-75">
                         <BuilderPreview
                           name={block}
                           type="block"
-                          scale={0.25}
+                          scale={0.2}
                         />
                       </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity hover:bg-background/80 hover:opacity-100">
-                        <div className="flex items-center gap-2">
-                          <Plus className="h-5 w-5" />
-                          <span className="text-sm font-medium">
-                            Add to page
-                          </span>
-                        </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity group-hover:bg-background/90 group-hover:opacity-100">
+                        <Plus className="h-4 w-4" />
                       </div>
                     </div>
-                    <div className="border-t p-2">
-                      <p className="truncate text-xs font-medium">{block}</p>
+                    <div className="border-t px-2 py-1.5">
+                      <p className="truncate text-[11px] font-medium">{block}</p>
                     </div>
                   </Card>
                 ))}
               </TabsContent>
 
-              <TabsContent value="components" className="mt-0 space-y-2">
+              <TabsContent value="components" className="mt-0 space-y-1.5">
                 {filteredComponents.map((component) => (
                   <Card
                     key={component}
-                    className="cursor-pointer p-3 transition-colors hover:bg-muted"
+                    className="group cursor-pointer px-2.5 py-2 transition-all hover:border-primary/50 hover:shadow-sm"
                     onClick={() => addItem(component, "component")}
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{component}</p>
-                        <p className="text-xs text-muted-foreground">
-                          UI Component
-                        </p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium truncate">{component}</p>
                       </div>
-                      <Plus className="h-4 w-4 text-muted-foreground" />
+                      <Plus className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2" />
                     </div>
                   </Card>
                 ))}
@@ -499,58 +497,59 @@ ${renderItems(pageItems, 3)}
       <Separator orientation="vertical" className={isFullscreen ? "hidden" : ""} />
 
       {/* Center - Page Builder Canvas */}
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-2">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold">Page Builder</h2>
-            <p className="text-sm text-muted-foreground">
-              {pageItems.length} items in page
+          <div className="flex items-baseline gap-2">
+            <h2 className="text-sm font-semibold">Canvas</h2>
+            <p className="text-xs text-muted-foreground">
+              {pageItems.length} {pageItems.length === 1 ? 'item' : 'items'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {/* Viewport Controls */}
-            <div className="flex rounded-lg border">
+            <div className="flex rounded-md border h-7">
               <Button
                 variant={viewport === "mobile" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("mobile")}
-                className="rounded-r-none"
-                title="Mobile view (375px)"
+                className="h-6 w-6 rounded-r-none"
+                title="Mobile (375px)"
               >
-                Mobile
+                <Smartphone className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant={viewport === "tablet" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("tablet")}
-                className="rounded-none border-x"
-                title="Tablet view (768px)"
+                className="h-6 w-6 rounded-none border-x"
+                title="Tablet (768px)"
               >
-                Tablet
+                <Tablet className="h-3.5 w-3.5" />
               </Button>
               <Button
                 variant={viewport === "desktop" ? "default" : "ghost"}
-                size="sm"
+                size="icon"
                 onClick={() => setViewport("desktop")}
-                className="rounded-l-none"
-                title="Desktop view (100%)"
+                className="h-6 w-6 rounded-l-none"
+                title="Desktop (100%)"
               >
-                Desktop
+                <Monitor className="h-3.5 w-3.5" />
               </Button>
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="icon"
               onClick={() => setIsFullscreen(!isFullscreen)}
               title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              className="h-7 w-7"
             >
               {isFullscreen ? (
-                <Minimize2 className="h-4 w-4" />
+                <Minimize2 className="h-3.5 w-3.5" />
               ) : (
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-3.5 w-3.5" />
               )}
             </Button>
-            <Separator orientation="vertical" className="h-8" />
+            <Separator orientation="vertical" className="h-6" />
             <OpenInHButton name="builder" />
             <Separator orientation="vertical" className="h-8" />
             <div className="flex gap-2">
@@ -937,12 +936,14 @@ function SortableItem({
   }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
-      onClick={onSelect}
-    >
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div
+          ref={setNodeRef}
+          style={style}
+          className={`group relative ${isSelected ? "ring-2 ring-primary" : ""}`}
+          onClick={onSelect}
+        >
       <div className="absolute -left-12 top-2 z-10 flex flex-col items-center gap-2">
         <button
           {...attributes}
@@ -1028,5 +1029,37 @@ function SortableItem({
         )}
       </div>
     </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent className="w-56">
+        <ContextMenuItem onClick={onSelect}>
+          <Eye className="mr-2 h-4 w-4" />
+          Inspect Element
+        </ContextMenuItem>
+        <ContextMenuItem onClick={onSelect}>
+          <Palette className="mr-2 h-4 w-4" />
+          Edit Styles
+        </ContextMenuItem>
+        <ContextMenuItem
+          onClick={() => {
+            const code = JSON.stringify(item, null, 2)
+            navigator.clipboard.writeText(code)
+          }}
+        >
+          <Copy className="mr-2 h-4 w-4" />
+          Copy JSON
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem
+          onClick={(e) => {
+            e.stopPropagation()
+            onRemove()
+          }}
+          className="text-destructive focus:text-destructive"
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          Delete
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   )
 }
