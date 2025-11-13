@@ -42,7 +42,6 @@ import {
 import { Separator } from "@/registry/default/ui/separator"
 import { Label } from "@/registry/default/ui/label"
 import { Slider } from "@/registry/default/ui/slider"
-import { Slider } from "@/registry/default/ui/slider"
 import { Switch } from "@/registry/default/ui/switch"
 import {
   Tabs,
@@ -493,6 +492,84 @@ ${renderItems(pageItems, 3)}
     )
   }
 
+
+  // Theme helper functions
+  const oklchToString = (color: ThemeColor) => {
+    return `oklch(${(color.l / 100).toFixed(3)} ${color.c.toFixed(3)} ${color.h.toFixed(1)})`
+  }
+
+  const oklchToHsl = (color: ThemeColor) => {
+    const h = color.h
+    const s = Math.round(color.c * 100)
+    const l = Math.round(color.l)
+    return `hsl(${h}, ${s}%, ${l}%)`
+  }
+
+  const oklchToHex = (color: ThemeColor) => {
+    const l = color.l / 100
+    const c = color.c
+    const h = color.h
+    const a = c * Math.cos(h * Math.PI / 180)
+    const b = c * Math.sin(h * Math.PI / 180)
+    let r = l + 0.3963377774 * a + 0.2158037573 * b
+    let g = l - 0.1055613458 * a - 0.0638541728 * b
+    let b_val = l - 0.0894841775 * a - 1.2914855480 * b
+    r = Math.max(0, Math.min(1, r))
+    g = Math.max(0, Math.min(1, g))
+    b_val = Math.max(0, Math.min(1, b_val))
+    const toHex = (n: number) => Math.round(n * 255).toString(16).padStart(2, '0')
+    return `#${toHex(r)}${toHex(g)}${toHex(b_val)}`
+  }
+
+  const applyTheme = React.useCallback(() => {
+    const root = document.documentElement
+    if (isDarkMode) {
+      root.classList.add('dark')
+    } else {
+      root.classList.remove('dark')
+    }
+    Object.entries(themeColors).forEach(([key, color]) => {
+      root.style.setProperty(`--${key}`, oklchToString(color))
+    })
+  }, [isDarkMode, themeColors])
+
+  React.useEffect(() => {
+    applyTheme()
+  }, [applyTheme])
+
+  const updateColor = (colorName: keyof ThemeColors, property: keyof ThemeColor, value: number) => {
+    setThemeColors(prev => ({
+      ...prev,
+      [colorName]: {
+        ...prev[colorName],
+        [property]: value
+      }
+    }))
+  }
+
+  const loadPreset = (presetName: keyof typeof presetSchemes) => {
+    setThemeColors(presetSchemes[presetName])
+  }
+
+  const exportTheme = () => {
+    const theme = {
+      isDarkMode,
+      colors: themeColors,
+      cssVariables: Object.entries(themeColors).reduce((acc, [key, color]) => {
+        acc[`--${key}`] = oklchToString(color)
+        return acc
+      }, {} as Record<string, string>)
+    }
+    const blob = new Blob([JSON.stringify(theme, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'theme.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+
   const selectedItemData = pageItems.find((item) => item.id === selectedItem)
 
   return (
@@ -792,6 +869,398 @@ ${renderItems(pageItems, 3)}
                         Name
                       </label>
                       <p className="text-sm">{selectedItemData.name}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Layout Controls */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Layout className="h-4 w-4" />
+                    Layout
+                  </h3>
+                  <div className="space-y-3">
+                    {/* Display Mode */}
+                    <div className="space-y-2">
+                      <Label className="text-xs">Display</Label>
+                      <Select
+                        value={selectedItemData.layout?.display || "block"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            layout: { ...selectedItemData.layout, display: value as any },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="block">Block</SelectItem>
+                          <SelectItem value="inline-block">Inline Block</SelectItem>
+                          <SelectItem value="flex">Flex</SelectItem>
+                          <SelectItem value="grid">Grid</SelectItem>
+                          <SelectItem value="inline-flex">Inline Flex</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Flex Controls */}
+                    {(selectedItemData.layout?.display === "flex" || selectedItemData.layout?.display === "inline-flex") && (
+                      <>
+                        <div className="space-y-2">
+                          <Label className="text-xs">Flex Direction</Label>
+                          <Select
+                            value={selectedItemData.layout?.flexDirection || "row"}
+                            onValueChange={(value) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, flexDirection: value as any },
+                              })
+                            }
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="row">Row</SelectItem>
+                              <SelectItem value="row-reverse">Row Reverse</SelectItem>
+                              <SelectItem value="col">Column</SelectItem>
+                              <SelectItem value="col-reverse">Column Reverse</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Flex Wrap</Label>
+                          <Select
+                            value={selectedItemData.layout?.flexWrap || "nowrap"}
+                            onValueChange={(value) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, flexWrap: value as any },
+                              })
+                            }
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="nowrap">No Wrap</SelectItem>
+                              <SelectItem value="wrap">Wrap</SelectItem>
+                              <SelectItem value="wrap-reverse">Wrap Reverse</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Justify Content</Label>
+                          <Select
+                            value={selectedItemData.layout?.justifyContent || "start"}
+                            onValueChange={(value) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, justifyContent: value as any },
+                              })
+                            }
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="start">Start</SelectItem>
+                              <SelectItem value="end">End</SelectItem>
+                              <SelectItem value="center">Center</SelectItem>
+                              <SelectItem value="between">Between</SelectItem>
+                              <SelectItem value="around">Around</SelectItem>
+                              <SelectItem value="evenly">Evenly</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Align Items</Label>
+                          <Select
+                            value={selectedItemData.layout?.alignItems || "stretch"}
+                            onValueChange={(value) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, alignItems: value as any },
+                              })
+                            }
+                          >
+                            <SelectTrigger className="h-8">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="start">Start</SelectItem>
+                              <SelectItem value="end">End</SelectItem>
+                              <SelectItem value="center">Center</SelectItem>
+                              <SelectItem value="baseline">Baseline</SelectItem>
+                              <SelectItem value="stretch">Stretch</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Gap</Label>
+                          <Input
+                            placeholder="e.g. 4, 1rem"
+                            value={selectedItemData.layout?.gap || ""}
+                            onChange={(e) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, gap: e.target.value },
+                              })
+                            }
+                            className="h-8"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Grid Controls */}
+                    {selectedItemData.layout?.display === "grid" && (
+                      <>
+                        <div className="space-y-2">
+                          <Label className="text-xs">Grid Columns</Label>
+                          <Input
+                            placeholder="e.g. 3, repeat(3, 1fr)"
+                            value={selectedItemData.layout?.gridCols || ""}
+                            onChange={(e) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, gridCols: e.target.value },
+                              })
+                            }
+                            className="h-8"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Grid Rows</Label>
+                          <Input
+                            placeholder="e.g. 2, repeat(2, 1fr)"
+                            value={selectedItemData.layout?.gridRows || ""}
+                            onChange={(e) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, gridRows: e.target.value },
+                              })
+                            }
+                            className="h-8"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-xs">Gap</Label>
+                          <Input
+                            placeholder="e.g. 4, 1rem"
+                            value={selectedItemData.layout?.gap || ""}
+                            onChange={(e) =>
+                              updateItemSettings(selectedItemData.id, {
+                                layout: { ...selectedItemData.layout, gap: e.target.value },
+                              })
+                            }
+                            className="h-8"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    {/* Position */}
+                    <div className="space-y-2">
+                      <Label className="text-xs">Position</Label>
+                      <Select
+                        value={selectedItemData.layout?.position || "static"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            layout: { ...selectedItemData.layout, position: value as any },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="static">Static</SelectItem>
+                          <SelectItem value="relative">Relative</SelectItem>
+                          <SelectItem value="absolute">Absolute</SelectItem>
+                          <SelectItem value="fixed">Fixed</SelectItem>
+                          <SelectItem value="sticky">Sticky</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Z-Index */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs">Z-Index</Label>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedItemData.layout?.zIndex || 0}
+                        </span>
+                      </div>
+                      <Slider
+                        value={[selectedItemData.layout?.zIndex || 0]}
+                        onValueChange={([value]) =>
+                          updateItemSettings(selectedItemData.id, {
+                            layout: { ...selectedItemData.layout, zIndex: value },
+                          })
+                        }
+                        min={-10}
+                        max={100}
+                        step={1}
+                        className="w-full"
+                      />
+                    </div>
+
+                    {/* Width/Height */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label className="text-xs">Width</Label>
+                        <Input
+                          placeholder="auto, 100%, 20rem"
+                          value={selectedItemData.layout?.width || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, width: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs">Height</Label>
+                        <Input
+                          placeholder="auto, 100vh"
+                          value={selectedItemData.layout?.height || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, height: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Min/Max Width/Height */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label className="text-xs">Min Width</Label>
+                        <Input
+                          placeholder="0, 20rem"
+                          value={selectedItemData.layout?.minWidth || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, minWidth: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs">Max Width</Label>
+                        <Input
+                          placeholder="100%, 80rem"
+                          value={selectedItemData.layout?.maxWidth || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, maxWidth: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label className="text-xs">Min Height</Label>
+                        <Input
+                          placeholder="0, 10rem"
+                          value={selectedItemData.layout?.minHeight || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, minHeight: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs">Max Height</Label>
+                        <Input
+                          placeholder="100vh, 50rem"
+                          value={selectedItemData.layout?.maxHeight || ""}
+                          onChange={(e) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, maxHeight: e.target.value },
+                            })
+                          }
+                          className="h-8"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Overflow Controls */}
+                    <div className="space-y-2">
+                      <Label className="text-xs">Overflow</Label>
+                      <Select
+                        value={selectedItemData.layout?.overflow || "visible"}
+                        onValueChange={(value) =>
+                          updateItemSettings(selectedItemData.id, {
+                            layout: { ...selectedItemData.layout, overflow: value as any },
+                          })
+                        }
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="visible">Visible</SelectItem>
+                          <SelectItem value="auto">Auto</SelectItem>
+                          <SelectItem value="hidden">Hidden</SelectItem>
+                          <SelectItem value="scroll">Scroll</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-2">
+                        <Label className="text-xs">Overflow X</Label>
+                        <Select
+                          value={selectedItemData.layout?.overflowX || "visible"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, overflowX: value as any },
+                            })
+                          }
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="visible">Visible</SelectItem>
+                            <SelectItem value="auto">Auto</SelectItem>
+                            <SelectItem value="hidden">Hidden</SelectItem>
+                            <SelectItem value="scroll">Scroll</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs">Overflow Y</Label>
+                        <Select
+                          value={selectedItemData.layout?.overflowY || "visible"}
+                          onValueChange={(value) =>
+                            updateItemSettings(selectedItemData.id, {
+                              layout: { ...selectedItemData.layout, overflowY: value as any },
+                            })
+                          }
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="visible">Visible</SelectItem>
+                            <SelectItem value="auto">Auto</SelectItem>
+                            <SelectItem value="hidden">Hidden</SelectItem>
+                            <SelectItem value="scroll">Scroll</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
                   </div>
                 </div>
