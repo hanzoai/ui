@@ -440,55 +440,56 @@ ${renderItems(pageItems, 3)}
             </div>
 
             <ScrollArea className="h-[calc(100vh-320px)]">
-              <TabsContent value="blocks" className="mt-0 space-y-4">
+              <TabsContent value="blocks" className="mt-0 space-y-2 pr-2">
                 {filteredBlocks.map((block) => (
                   <Card
                     key={block}
-                    className="cursor-pointer overflow-hidden transition-colors hover:bg-muted"
+                    className="group cursor-pointer overflow-hidden border transition-all hover:border-primary/50 hover:shadow-sm"
                     onClick={() => addItem(block, "block")}
                   >
-                    <div className="relative h-32 overflow-hidden bg-muted/50">
-                      <div className="pointer-events-none">
-                        <BuilderPreview
-                          name={block}
-                          type="block"
-                          scale={0.25}
-                        />
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center bg-background/0 opacity-0 transition-opacity hover:bg-background/80 hover:opacity-100">
-                        <div className="flex items-center gap-2">
-                          <Plus className="h-5 w-5" />
-                          <span className="text-sm font-medium">
-                            Add to page
-                          </span>
-                        </div>
-                      </div>
+                    <div className="border-b px-2 py-1.5 bg-muted/30">
+                      <p className="truncate text-[11px] font-medium">{block}</p>
                     </div>
-                    <div className="border-t p-2">
-                      <p className="truncate text-xs font-medium">{block}</p>
+                    <div className="relative h-20 overflow-hidden bg-background flex items-center justify-center">
+                      <div className="text-xs text-muted-foreground">
+                        {block} preview
+                      </div>
+                      <div className="absolute inset-0 flex items-center justify-center bg-primary/0 opacity-0 transition-all group-hover:bg-primary/10 group-hover:opacity-100">
+                        <Plus className="h-4 w-4" />
+                      </div>
                     </div>
                   </Card>
                 ))}
               </TabsContent>
 
-              <TabsContent value="components" className="mt-0 space-y-2">
-                {filteredComponents.map((component) => (
-                  <Card
-                    key={component}
-                    className="cursor-pointer p-3 transition-colors hover:bg-muted"
-                    onClick={() => addItem(component, "component")}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{component}</p>
-                        <p className="text-xs text-muted-foreground">
-                          UI Component
-                        </p>
-                      </div>
-                      <Plus className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                  </Card>
-                ))}
+              <TabsContent value="components" className="mt-0 pr-2">
+                <div className="columns-1 gap-2 space-y-2">
+                  {filteredComponents.map((component) => {
+                    // Determine size based on component type
+                    const isFullWidth = component.includes('nav') || component.includes('header') || component.includes('footer') || component.includes('bar')
+                    const isSmall = component.includes('button') || component.includes('badge') || component.includes('avatar') || component.includes('switch') || component.includes('checkbox')
+
+                    return (
+                      <Card
+                        key={component}
+                        className="group cursor-pointer break-inside-avoid overflow-hidden border transition-all hover:border-primary/50 hover:shadow-sm"
+                        onClick={() => addItem(component, "component")}
+                      >
+                        <div className="border-b px-2 py-1.5 bg-muted/30">
+                          <p className="truncate text-[11px] font-medium">{component}</p>
+                        </div>
+                        <div className={`relative overflow-hidden bg-background flex items-center justify-center ${isFullWidth ? 'h-16' : isSmall ? 'h-12' : 'h-14'}`}>
+                          <div className="text-xs text-muted-foreground">
+                            {component}
+                          </div>
+                          <div className="absolute inset-0 flex items-center justify-center bg-primary/0 opacity-0 transition-all group-hover:bg-primary/10 group-hover:opacity-100">
+                            <Plus className="h-3.5 w-3.5" />
+                          </div>
+                        </div>
+                      </Card>
+                    )
+                  })}
+                </div>
               </TabsContent>
             </ScrollArea>
           </div>
