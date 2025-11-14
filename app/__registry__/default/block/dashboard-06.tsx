@@ -256,6 +256,7 @@ export default function Dashboard() {
                   height={36}
                   alt="Avatar"
                   className="overflow-hidden rounded-full"
+                  loading="lazy"
                 />
               </Button>
             </DropdownMenuTrigger>
@@ -356,6 +357,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -401,6 +403,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -446,6 +449,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -491,6 +495,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -536,6 +541,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">
@@ -581,6 +587,7 @@ export default function Dashboard() {
                             height="64"
                             src="/placeholder.svg"
                             width="64"
+                            loading="lazy"
                           />
                         </TableCell>
                         <TableCell className="font-medium">

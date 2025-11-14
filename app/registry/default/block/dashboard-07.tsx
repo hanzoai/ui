@@ -259,6 +259,7 @@ export default function Dashboard() {
                   src="/placeholder-user.jpg"
                   width={36}
                   height={36}
+                  loading="lazy"
                   alt="Avatar"
                   className="overflow-hidden rounded-full"
                 />
@@ -552,24 +553,27 @@ export default function Dashboard() {
                         height="300"
                         src="/placeholder.svg"
                         width="300"
+                        loading="lazy"
                       />
                       <div className="grid grid-cols-3 gap-2">
                         <button>
                           <Image
-                            alt="Product image"
+                            alt="Product thumbnail image"
                             className="aspect-square w-full rounded-md object-cover"
                             height="84"
                             src="/placeholder.svg"
                             width="84"
+                            loading="lazy"
                           />
                         </button>
                         <button>
                           <Image
-                            alt="Product image"
+                            alt="Product thumbnail image"
                             className="aspect-square w-full rounded-md object-cover"
                             height="84"
                             src="/placeholder.svg"
                             width="84"
+                            loading="lazy"
                           />
                         </button>
                         <button className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed">
