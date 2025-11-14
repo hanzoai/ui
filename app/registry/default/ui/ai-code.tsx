@@ -33,6 +33,7 @@ import {
   Zap,
 } from "lucide-react"
 import { useTheme } from "next-themes"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import {
@@ -858,6 +859,13 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
           }
         } catch (error) {
           console.error("Failed to generate code:", error)
+          toast.error("Failed to generate code", {
+            description: "Please try again",
+            action: {
+              label: "Retry",
+              onClick: () => handleGenerate(prompt),
+            },
+          })
         } finally {
           setIsProcessing(false)
           setProgress(0)
@@ -877,6 +885,9 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
           setSidePanelTab("suggestions")
         } catch (error) {
           console.error("Failed to explain code:", error)
+          toast.error("Failed to explain code", {
+            description: "Please try again",
+          })
         } finally {
           setIsProcessing(false)
         }
@@ -974,6 +985,9 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
         setSidePanelTab("security")
       } catch (error) {
         console.error("Failed to scan for security issues:", error)
+        toast.error("Security scan failed", {
+          description: "Please try again",
+        })
       } finally {
         setIsProcessing(false)
       }

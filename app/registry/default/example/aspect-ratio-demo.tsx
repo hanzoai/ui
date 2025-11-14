@@ -10,6 +10,7 @@ export default function AspectRatioDemo() {
         alt="Photo by Drew Beamer"
         fill
         className="rounded-md object-cover"
+        loading="lazy"
       />
     </AspectRatio>
   )

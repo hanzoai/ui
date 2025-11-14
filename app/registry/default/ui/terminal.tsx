@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Check, Copy } from "lucide-react"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 
@@ -260,8 +261,10 @@ export function Terminal({
       await navigator.clipboard.writeText(text)
       setCopied(text)
       setTimeout(() => setCopied(null), 2000)
+      toast.success("Command copied to clipboard")
     } catch (err) {
       console.error("Failed to copy:", err)
+      toast.error("Failed to copy command")
     }
   }
 
@@ -272,6 +275,7 @@ export function Terminal({
       inputRef.current?.focus()
     } catch (err) {
       console.error("Failed to paste:", err)
+      toast.error("Failed to paste from clipboard")
     }
   }
 
