@@ -7,9 +7,7 @@ import { SkeletonCard } from "@/components/skeleton-card"
 // Dynamically import the color picker library and theme generator
 const ThemeGeneratorClient = dynamic(
   () =>
-    import("./theme-generator-client").then(
-      (mod) => mod.ThemeGeneratorClient
-    ),
+    import("./theme-generator-client").then((mod) => mod.ThemeGeneratorClient),
   {
     loading: () => (
       <div className="container max-w-[1600px] py-6">
