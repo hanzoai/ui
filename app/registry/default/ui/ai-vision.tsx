@@ -24,6 +24,7 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/registry/default/ui/badge"
@@ -794,12 +795,16 @@ const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
 
       // Validate file
       if (!acceptedFormats.includes(file.type)) {
-        alert(`Unsupported format. Please use: ${acceptedFormats.join(", ")}`)
+        toast.error("Unsupported file format", {
+          description: `Please use: ${acceptedFormats.join(", ")}`,
+        })
         return
       }
 
       if (file.size > maxFileSize) {
-        alert(`File too large. Maximum size: ${maxFileSize / 1024 / 1024}MB`)
+        toast.error("File too large", {
+          description: `Maximum size: ${maxFileSize / 1024 / 1024}MB`,
+        })
         return
       }
 
@@ -814,7 +819,13 @@ const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
         onAnalysis?.(results)
       } catch (error) {
         console.error("Analysis failed:", error)
-        alert("Failed to analyze image. Please try again.")
+        toast.error("Failed to analyze image", {
+          description: "Please try again",
+          action: {
+            label: "Retry",
+            onClick: () => handleFileUpload(files),
+          },
+        })
       }
     }
 
@@ -831,7 +842,13 @@ const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
         setResults(results)
         onAnalysis?.(results)
       } catch (error) {
-        alert("Invalid URL or failed to load image")
+        toast.error("Invalid URL or failed to load image", {
+          description: "Please check the URL and try again",
+          action: {
+            label: "Retry",
+            onClick: () => handleUrlSubmit(),
+          },
+        })
       }
     }
 
@@ -846,7 +863,9 @@ const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
           setIsCameraActive(true)
         }
       } catch (error) {
-        alert("Failed to access camera")
+        toast.error("Failed to access camera", {
+          description: "Please check camera permissions",
+        })
       }
     }
 
@@ -925,9 +944,14 @@ const AIVision = React.forwardRef<HTMLDivElement, AIVisionProps>(
         link.download = "vision-analysis.json"
         link.click()
         URL.revokeObjectURL(url)
+        toast.success("Analysis exported", {
+          description: "JSON file has been downloaded",
+        })
       } else if (format === "pdf") {
         // PDF export would require a library like jsPDF
-        alert("PDF export not implemented in this demo")
+        toast.info("PDF export not available", {
+          description: "This feature is not implemented in the demo",
+        })
       }
     }
 

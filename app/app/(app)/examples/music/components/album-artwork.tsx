@@ -45,6 +45,7 @@ export function AlbumArtwork({
                 "h-auto w-auto object-cover transition-all hover:scale-105",
                 aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
               )}
+              loading="lazy"
             />
           </div>
         </ContextMenuTrigger>

@@ -4,6 +4,7 @@ import * as React from "react"
 import Editor, { OnChange, OnMount } from "@monaco-editor/react"
 import { Check, ChevronDown, Copy } from "lucide-react"
 import { useTheme } from "next-themes"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/default/ui/button"
@@ -125,8 +126,10 @@ const CodeEditor = React.forwardRef<HTMLDivElement, CodeEditorProps>(
         await navigator.clipboard.writeText(editorValue)
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
+        toast.success("Code copied to clipboard")
       } catch (err) {
         console.error("Failed to copy:", err)
+        toast.error("Failed to copy code")
       }
     }, [editorValue])
 
