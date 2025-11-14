@@ -332,7 +332,7 @@ export function AnimatedList({
     return {
       ...variants,
       visible: (i: number) => {
-        // eslint-disable-next-line
+         
         const original = variants.visible as (i: number) => any
         const originalResult = original(i)
         return {

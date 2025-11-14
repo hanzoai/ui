@@ -216,6 +216,19 @@
     "type": "components:ui"
   },
   {
+    "name": "empty-state",
+    "dependencies": [
+      "lucide-react"
+    ],
+    "registryDependencies": [
+      "button"
+    ],
+    "files": [
+      "ui/empty-state.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
     "name": "gantt",
     "files": [
       "ui/gantt.tsx"

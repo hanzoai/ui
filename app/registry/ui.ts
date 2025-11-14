@@ -128,6 +128,13 @@ export const ui: Registry = [
     files: ["ui/dropdown-menu.tsx"],
   },
   {
+    name: "empty-state",
+    type: "components:ui",
+    dependencies: ["lucide-react"],
+    registryDependencies: ["button"],
+    files: ["ui/empty-state.tsx"],
+  },
+  {
     name: "gantt",
     type: "components:ui",
     files: ["ui/gantt.tsx"],
