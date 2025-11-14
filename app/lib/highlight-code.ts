@@ -1,19 +1,27 @@
 // Removed "use server" for static export compatibility
 import { promises as fs } from "fs"
 import path from "path"
+import type { Highlighter } from "shiki"
 
 // Enable syntax highlighting in development
 // For static exports, we can use client-side highlighting instead
 const highlightCodeEnabled =
   process.env.NODE_ENV === "development" || !process.env.GITHUB_ACTIONS
 
-export async function highlightCode(code: string) {
-  if (!highlightCodeEnabled) {
-    // Return code wrapped in basic HTML for static export
-    return `<pre><code class="language-typescript">${escapeHtml(code)}</code></pre>`
+// Singleton highlighter instance to prevent memory leaks
+let highlighterInstance: Highlighter | null = null
+let highlighterPromise: Promise<Highlighter> | null = null
+
+async function getHighlighter(): Promise<Highlighter> {
+  if (highlighterInstance) {
+    return highlighterInstance
   }
 
-  try {
+  if (highlighterPromise) {
+    return highlighterPromise
+  }
+
+  highlighterPromise = (async () => {
     const { createHighlighter } = await import("shiki")
 
     const editorTheme = await fs.readFile(
@@ -26,6 +34,22 @@ export async function highlightCode(code: string) {
       themes: [JSON.parse(editorTheme)],
     })
 
+    highlighterInstance = highlighter
+    return highlighter
+  })()
+
+  return highlighterPromise
+}
+
+export async function highlightCode(code: string) {
+  if (!highlightCodeEnabled) {
+    // Return code wrapped in basic HTML for static export
+    return `<pre><code class="language-typescript">${escapeHtml(code)}</code></pre>`
+  }
+
+  try {
+    const highlighter = await getHighlighter()
+
     const html = await highlighter.codeToHtml(code, {
       lang: "typescript",
       theme: "Lambda Studio — Blackout",
@@ -36,6 +60,16 @@ export async function highlightCode(code: string) {
     console.error("Syntax highlighting failed:", error)
     return `<pre><code class="language-typescript">${escapeHtml(code)}</code></pre>`
   }
+}
+
+// Clean up highlighter on process exit (for server)
+if (typeof process !== "undefined") {
+  process.on("exit", () => {
+    if (highlighterInstance) {
+      highlighterInstance.dispose()
+      highlighterInstance = null
+    }
+  })
 }
 
 function escapeHtml(unsafe: string): string {
