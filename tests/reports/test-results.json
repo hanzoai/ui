@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 5
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -40,7 +42,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -54,7 +58,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -68,7 +74,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -82,7 +90,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -96,7 +106,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -110,7 +122,9 @@
         "outputDir": "/Users/z/work/hanzo/ui/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 5
+        },
         "id": "visual",
         "name": "visual",
         "testDir": "/Users/z/work/hanzo/ui/tests",
@@ -133,27 +147,752 @@
       "timeout": 120000
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Cannot find package 'shiki' imported from /Users/z/work/hanzo/ui/tests/unit/code-block.test.tsx",
-      "stack": "Error: Cannot find package 'shiki' imported from /Users/z/work/hanzo/ui/tests/unit/code-block.test.tsx"
-    },
-    {
-      "message": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/code-components.test.tsx\nDid you mean to import \"file:///Users/z/work/hanzo/ui/pkg/ui/dist/code/compare.js\"?",
-      "stack": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/code-components.test.tsx\nDid you mean to import \"file:///Users/z/work/hanzo/ui/pkg/ui/dist/code/compare.js\"?"
-    },
-    {
-      "message": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/grid-pattern.test.tsx",
-      "stack": "Error: Cannot find package '@hanzo/ui' imported from /Users/z/work/hanzo/ui/tests/unit/grid-pattern.test.tsx"
+      "title": "ux-review.spec.ts",
+      "file": "ux-review.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "UI/UX Comprehensive Review",
+          "file": "ux-review.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Homepage - First Impressions & Hero Section",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 29309,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('a[href*=\"docs\"], button').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('a[href*=\"docs\"], button').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <button data-issues-open=\"true\" aria-label=\"Open issues overlay\">…</button>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('a[href*=\"docs\"], button').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('a[href*=\"docs\"], button').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <button data-issues-open=\"true\" aria-label=\"Open issues overlay\">…</button>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:40:23",
+                        "location": {
+                          "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                          "column": 23,
+                          "line": 40
+                        },
+                        "snippet": "  38 |     // Check for call-to-action\n  39 |     const cta = page.locator('a[href*=\"docs\"], button').first()\n> 40 |     await expect(cta).toBeVisible()\n     |                       ^\n  41 |\n  42 |     // Analyze navigation\n  43 |     const nav = page.locator('header, nav').first()"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                            "column": 23,
+                            "line": 40
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('a[href*=\"docs\"], button').first()\nExpected: visible\nReceived: hidden\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('a[href*=\"docs\"], button').first()\u001b[22m\n\u001b[2m    9 × locator resolved to <button data-issues-open=\"true\" aria-label=\"Open issues overlay\">…</button>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n\n  38 |     // Check for call-to-action\n  39 |     const cta = page.locator('a[href*=\"docs\"], button').first()\n> 40 |     await expect(cta).toBeVisible()\n     |                       ^\n  41 |\n  42 |     // Analyze navigation\n  43 |     const nav = page.locator('header, nav').first()\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:40:23"
+                        }
+                      ],
+                      "stdout": [
+                        {
+                          "text": "🎯 Hero Heading: Hanzo UI Component Library\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:26.373Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-98528-st-Impressions-Hero-Section-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-98528-st-Impressions-Hero-Section-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-98528-st-Impressions-Hero-Section-chromium/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                        "column": 23,
+                        "line": 40
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-e245f63f7e2ae286e7d7",
+              "file": "ux-review.spec.ts",
+              "line": 18,
+              "column": 3
+            },
+            {
+              "title": "Homepage - Visual Hierarchy & Spacing",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 24808,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📐 Found 3 sections\n"
+                        },
+                        {
+                          "text": "Section 1: height=378.796875px, y=57px\n"
+                        },
+                        {
+                          "text": "Section 2: height=1048.5px, y=435.796875px\n"
+                        },
+                        {
+                          "text": "Section 3: height=0px, y=1801.296875px\n"
+                        },
+                        {
+                          "text": "🎨 Body background: lab(100 0 0)\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:26.360Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-370573a800a542c48049",
+              "file": "ux-review.spec.ts",
+              "line": 59,
+              "column": 3
+            },
+            {
+              "title": "Components Page - Browse Experience",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "timedOut",
+                      "duration": 41424,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                            "column": 16,
+                            "line": 89
+                          },
+                          "message": "Error: page.goto: net::ERR_ABORTED; maybe frame was detached?\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3333/docs/components\", waiting until \"load\"\u001b[22m\n\n\n  87 |\n  88 |   test('Components Page - Browse Experience', async ({ page }) => {\n> 89 |     await page.goto('http://localhost:3333/docs/components')\n     |                ^\n  90 |     await page.waitForLoadState('networkidle')\n  91 |\n  92 |     await page.screenshot({\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:89:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:26.392Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-94ab7-ts-Page---Browse-Experience-chromium/video.webm"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-42c05e0811655fcdfdc9",
+              "file": "ux-review.spec.ts",
+              "line": 88,
+              "column": 3
+            },
+            {
+              "title": "Individual Component Page - Documentation Quality",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "timedOut",
+                      "duration": 42364,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                            "column": 16,
+                            "line": 118
+                          },
+                          "message": "Error: page.goto: net::ERR_ABORTED; maybe frame was detached?\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3333/docs/components/button\", waiting until \"load\"\u001b[22m\n\n\n  116 |\n  117 |   test('Individual Component Page - Documentation Quality', async ({ page }) => {\n> 118 |     await page.goto('http://localhost:3333/docs/components/button')\n      |                ^\n  119 |     await page.waitForLoadState('networkidle')\n  120 |\n  121 |     await page.screenshot({\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:118:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:26.373Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-c7f71-age---Documentation-Quality-chromium/video.webm"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-b45dba67ed90e6762504",
+              "file": "ux-review.spec.ts",
+              "line": 117,
+              "column": 3
+            },
+            {
+              "title": "Blocks Page - Gallery Experience",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "timedOut",
+                      "duration": 40235,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                            "column": 16,
+                            "line": 146
+                          },
+                          "message": "Error: page.goto: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3333/blocks\", waiting until \"load\"\u001b[22m\n\n\n  144 |\n  145 |   test('Blocks Page - Gallery Experience', async ({ page }) => {\n> 146 |     await page.goto('http://localhost:3333/blocks')\n      |                ^\n  147 |     await page.waitForLoadState('networkidle')\n  148 |     await page.waitForTimeout(2000)\n  149 |\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:146:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:26.374Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-e2f83-s-Page---Gallery-Experience-chromium/video.webm"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-88b9375c3378a35c4ade",
+              "file": "ux-review.spec.ts",
+              "line": 145,
+              "column": 3
+            },
+            {
+              "title": "Builder Page - Interface Usability",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 31767,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/z/work/hanzo/ui/tests/ux-review.spec.ts",
+                            "column": 16,
+                            "line": 185
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n  183 |   test('Builder Page - Interface Usability', async ({ page }) => {\n  184 |     await page.goto('http://localhost:3333/builder')\n> 185 |     await page.waitForLoadState('networkidle')\n      |                ^\n  186 |     await page.waitForTimeout(1000)\n  187 |\n  188 |     await page.screenshot({\n    at /Users/z/work/hanzo/ui/tests/ux-review.spec.ts:185:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:22:54.001Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-b5ed3--Page---Interface-Usability-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-b5ed3--Page---Interface-Usability-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/z/work/hanzo/ui/test-results/ux-review-UI-UX-Comprehens-b5ed3--Page---Interface-Usability-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-5e50a1215c8de93daa70",
+              "file": "ux-review.spec.ts",
+              "line": 183,
+              "column": 3
+            },
+            {
+              "title": "Mobile Responsiveness - Homepage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2958,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📱 Mobile navigation: ✗ Missing\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:00.794Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-b64ebb9ce6c5992dbb76",
+              "file": "ux-review.spec.ts",
+              "line": 233,
+              "column": 3
+            },
+            {
+              "title": "Tablet Responsiveness - Builder",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 24182,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "📱 Tablet viewport (768x1024) - Builder page\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:04.537Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-9cc8b2fd9b9cc9c0cb0e",
+              "file": "ux-review.spec.ts",
+              "line": 261,
+              "column": 3
+            },
+            {
+              "title": "Accessibility Audit - Interactive Elements",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 17032,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "♿ Images with alt text: 3/3\n"
+                        },
+                        {
+                          "text": "♿ Buttons with labels: 19/20\n"
+                        },
+                        {
+                          "text": "♿ Skip links: ✗ Missing\n"
+                        },
+                        {
+                          "text": "♿ Heading hierarchy: H1=1, H2=0, H3=4\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:11.102Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-f9064db9df8f9d3030aa",
+              "file": "ux-review.spec.ts",
+              "line": 274,
+              "column": 3
+            },
+            {
+              "title": "Performance - Load Time Analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 15898,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "⚡ Page load time: 14726ms\n"
+                        },
+                        {
+                          "text": "⚡ Loading indicators: 0\n"
+                        },
+                        {
+                          "text": "⚡ Paint metrics:\n"
+                        },
+                        {
+                          "text": "  first-paint: 7980.00ms\n"
+                        },
+                        {
+                          "text": "  first-contentful-paint: 8428.00ms\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:11.449Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-fffe58ad00d67ec53c4e",
+              "file": "ux-review.spec.ts",
+              "line": 308,
+              "column": 3
+            },
+            {
+              "title": "Color Contrast & Theme - Dark/Light Mode",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 14579,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🌓 Theme switcher: ✓ Available\n"
+                        },
+                        {
+                          "text": "🎨 Dark mode colors: { color: \u001b[32m'rgb(255, 255, 255)'\u001b[39m, background: \u001b[32m'lab(2.75381 0 0)'\u001b[39m }\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:13.242Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-dd6a8d2dbb7a2355113b",
+              "file": "ux-review.spec.ts",
+              "line": 331,
+              "column": 3
+            },
+            {
+              "title": "Interactive Elements - Hover States",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 3499,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "🎯 Captured hover state transitions\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:26.935Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-b5e9e523e4067c1ad396",
+              "file": "ux-review.spec.ts",
+              "line": 371,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "UX Issues & Improvement Recommendations",
+          "file": "ux-review.spec.ts",
+          "line": 398,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Compile Findings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 579,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "\n\n================================================================================\n"
+                        },
+                        {
+                          "text": "UI/UX REVIEW SUMMARY\n"
+                        },
+                        {
+                          "text": "================================================================================\n\n"
+                        },
+                        {
+                          "text": "🎨 IMPROVEMENT OPPORTUNITIES:\n\n"
+                        },
+                        {
+                          "text": "1. [HIGH] Navigation\n"
+                        },
+                        {
+                          "text": "   Issue: Verify if navigation hierarchy is clear at first glance\n"
+                        },
+                        {
+                          "text": "   Recommendation: Ensure primary navigation items are prominent with clear labels and visual hierarchy\n\n"
+                        },
+                        {
+                          "text": "2. [MEDIUM] Component Gallery\n"
+                        },
+                        {
+                          "text": "   Issue: Check if filtering/search is immediately discoverable\n"
+                        },
+                        {
+                          "text": "   Recommendation: Place search prominently with placeholder text that guides users\n\n"
+                        },
+                        {
+                          "text": "3. [MEDIUM] Builder Interface\n"
+                        },
+                        {
+                          "text": "   Issue: Verify if drag-and-drop affordances are clear\n"
+                        },
+                        {
+                          "text": "   Recommendation: Add visual cues (cursor changes, hover states, drop zones) to guide users\n\n"
+                        },
+                        {
+                          "text": "4. [LOW] Mobile Experience\n"
+                        },
+                        {
+                          "text": "   Issue: Ensure touch targets meet minimum size (44x44px)\n"
+                        },
+                        {
+                          "text": "   Recommendation: Increase button/link padding on mobile viewports\n\n"
+                        },
+                        {
+                          "text": "5. [MEDIUM] Performance\n"
+                        },
+                        {
+                          "text": "   Issue: Assess if loading states provide adequate feedback\n"
+                        },
+                        {
+                          "text": "   Recommendation: Add skeleton screens or progress indicators for async operations\n\n"
+                        },
+                        {
+                          "text": "\n📸 Screenshots saved to: tests/reports/ux-review\n"
+                        },
+                        {
+                          "text": "================================================================================\n\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-13T23:23:27.982Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3f1d50ab9fae84ce920e-1ba49e29ccbd45ce94f6",
+              "file": "ux-review.spec.ts",
+              "line": 420,
+              "column": 3
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-11-12T21:18:04.721Z",
-    "duration": 533.5349999999999,
-    "expected": 0,
+    "startTime": "2025-11-13T23:22:25.664Z",
+    "duration": 65661.697,
+    "expected": 8,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 5,
     "flaky": 0
   }
 }

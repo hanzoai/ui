@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { ActiveThemeProvider } from "@/components/active-theme"
 import { Analytics } from "@/components/analytics"
 import { ThemeProvider } from "@/components/providers"
+import { SkipLinks } from "@/components/skip-links"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 import { Web3Provider } from "@/components/web3-provider"
@@ -103,6 +104,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           >
             <Web3Provider>
               <ActiveThemeProvider initialTheme="neutral">
+                <SkipLinks />
                 <div vaul-drawer-wrapper="">
                   <div className="relative flex min-h-svh flex-col bg-background">
                     {children}

@@ -1,6 +1,8 @@
+import { Suspense } from "react"
 import Link from "next/link"
 
 import { BlockDisplay } from "@/components/block-display"
+import { SkeletonCardGrid } from "@/components/skeleton-card"
 import { Button } from "@/registry/default/ui/button"
 
 export const dynamic = "force-static"
@@ -18,9 +20,11 @@ const FEATURED_BLOCKS = [
 export default function BlocksPage() {
   return (
     <div className="flex flex-col gap-12 md:gap-24">
-      {FEATURED_BLOCKS.map((name) => (
-        <BlockDisplay name={name} key={name} />
-      ))}
+      <Suspense fallback={<SkeletonCardGrid count={5} />}>
+        {FEATURED_BLOCKS.map((name) => (
+          <BlockDisplay name={name} key={name} />
+        ))}
+      </Suspense>
       <div className="container-wrapper">
         <div className="container flex justify-center py-6">
           <Button asChild variant="outline">

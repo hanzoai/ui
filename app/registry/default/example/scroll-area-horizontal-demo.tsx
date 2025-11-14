@@ -36,6 +36,7 @@ export default function ScrollAreaHorizontalDemo() {
                 className="aspect-[3/4] h-fit w-fit object-cover"
                 width={300}
                 height={400}
+                loading="lazy"
               />
             </div>
             <figcaption className="pt-2 text-xs text-muted-foreground">

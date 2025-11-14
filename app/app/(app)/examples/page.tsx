@@ -69,15 +69,19 @@ export default function ExamplesPage() {
           className="group relative overflow-hidden rounded-lg border bg-background transition-colors hover:bg-muted/50"
         >
           <div className="aspect-video overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={example.image}
-              alt={example.name}
+              alt={`${example.name} - Light mode preview`}
               className="block h-full w-full object-cover transition-transform group-hover:scale-105 dark:hidden"
+              loading="lazy"
             />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={example.imageDark}
-              alt={example.name}
+              alt={`${example.name} - Dark mode preview`}
               className="hidden h-full w-full object-cover transition-transform group-hover:scale-105 dark:block"
+              loading="lazy"
             />
           </div>
           <div className="p-4">

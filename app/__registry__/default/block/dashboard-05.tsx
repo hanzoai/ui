@@ -267,6 +267,7 @@ export default function Dashboard() {
                   height={36}
                   alt="Avatar"
                   className="overflow-hidden rounded-full"
+                  loading="lazy"
                 />
               </Button>
             </DropdownMenuTrigger>

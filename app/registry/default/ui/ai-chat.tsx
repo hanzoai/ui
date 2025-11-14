@@ -12,6 +12,7 @@ import {
   Send,
   User,
 } from "lucide-react"
+import { toast } from "sonner"
 
 import { cn } from "@/lib/utils"
 import {
@@ -412,8 +413,10 @@ const AIChat = React.forwardRef<HTMLDivElement, AIChatProps>(
       try {
         await navigator.clipboard.writeText(content)
         onCopyMessage?.(content)
+        toast.success("Message copied to clipboard")
       } catch (err) {
         console.error("Failed to copy message:", err)
+        toast.error("Failed to copy message")
       }
     }
 

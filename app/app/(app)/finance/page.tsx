@@ -1,7 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import { AdvancedChart } from "@/registry/default/ui/advanced-chart"
+
+import AdvancedChart from "@/registry/default/ui/advanced-chart"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/registry/default/ui/card"
+import { Separator } from "@/registry/default/ui/separator"
 // import { CompanyProfile } from "@/registry/default/ui/company-profile" // TODO: Create this component
 // import { CryptoScreener } from "@/registry/default/ui/crypto-screener" // TODO: Create this component
 // import { Financials } from "@/registry/default/ui/financials" // TODO: Create this component
@@ -11,20 +20,11 @@ import { AdvancedChart } from "@/registry/default/ui/advanced-chart"
 // import { OrderEntry } from "@/registry/default/ui/order-entry" // TODO: Create this component
 // import { OrdersHistory } from "@/registry/default/ui/orders-history" // TODO: Create this component
 // import { PositionsList } from "@/registry/default/ui/positions-list" // TODO: Create this component
-import { StockScreener } from "@/registry/default/ui/stock-screener"
+import StockScreener from "@/registry/default/ui/stock-screener"
 // import { SymbolInfo } from "@/registry/default/ui/symbol-info" // TODO: Create this component
 // import { TechnicalAnalysis } from "@/registry/default/ui/technical-analysis" // TODO: Create this component
 // import { TickerTape } from "@/registry/default/ui/ticker-tape" // TODO: Create this component
 import { TradingPanel } from "@/registry/default/ui/trading-panel"
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/registry/default/ui/card"
-import { Separator } from "@/registry/default/ui/separator"
 
 export default function FinancePage() {
   const [positions, setPositions] = useState([
@@ -147,7 +147,8 @@ export default function FinancePage() {
           <div>
             <h2 className="text-2xl font-semibold">Trading Interface</h2>
             <p className="text-sm text-muted-foreground">
-              Trading panel component (order entry and position management coming soon)
+              Trading panel component (order entry and position management
+              coming soon)
             </p>
           </div>
 
