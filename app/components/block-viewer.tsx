@@ -174,13 +174,13 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
             className="gap-1 *:data-[slot=toggle-group-item]:!size-6 *:data-[slot=toggle-group-item]:!rounded-sm"
           >
             <ToggleGroupItem value="100" title="Desktop">
-              <Monitor />
+              <Monitor className="h-3.5 w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="60" title="Tablet">
-              <Tablet />
+              <Tablet className="h-3.5 w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="30" title="Mobile">
-              <Smartphone />
+              <Smartphone className="h-3.5 w-3.5" />
             </ToggleGroupItem>
             <Separator orientation="vertical" className="!h-4" />
             <Button
@@ -190,9 +190,9 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
               asChild
               title="Open in New Tab"
             >
-              <Link href={`/view/${styleName}/${item.name}`} target="_blank">
+              <Link href={`/view/${item.name}`} target="_blank">
                 <span className="sr-only">Open in New Tab</span>
-                <Fullscreen />
+                <Fullscreen className="h-3.5 w-3.5" />
               </Link>
             </Button>
             <Separator orientation="vertical" className="!h-4" />
@@ -207,7 +207,7 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
                 }
               }}
             >
-              <RotateCw />
+              <RotateCw className="h-3.5 w-3.5" />
               <span className="sr-only">Refresh Preview</span>
             </Button>
           </ToggleGroup>
@@ -221,7 +221,7 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
             copyToClipboard(`npx hanzo-ui@latest add ${item.name}`)
           }}
         >
-          {isCopied ? <Check /> : <Terminal />}
+          {isCopied ? <Check className="h-3.5 w-3.5" /> : <Terminal className="h-3.5 w-3.5" />}
           <span>npx hanzo-ui add {item.name}</span>
         </Button>
         <Separator orientation="vertical" className="mx-1 !h-4" />
@@ -243,7 +243,7 @@ function BlockViewerIframe({
   return (
     <iframe
       key={iframeKey}
-      src={`/view/${styleName}/${item.name}`}
+      src={`/view/${item.name}`}
       height={item.meta?.iframeHeight ?? 930}
       loading="lazy"
       className={cn(
