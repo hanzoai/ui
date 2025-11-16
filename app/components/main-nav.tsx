@@ -51,15 +51,15 @@ export function MainNav() {
           AI
         </Link>
         <Link
-          href="/blocks"
+          href="/builder"
           className={cn(
             "transition-colors hover:text-foreground/80",
-            pathname?.startsWith("/blocks")
+            pathname?.startsWith("/builder")
               ? "text-foreground"
               : "text-foreground/80"
           )}
         >
-          Blocks
+          Builder
         </Link>
         <Link
           href="/charts"
