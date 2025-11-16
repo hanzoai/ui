@@ -174,13 +174,13 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
             className="gap-1 *:data-[slot=toggle-group-item]:!size-6 *:data-[slot=toggle-group-item]:!rounded-sm"
           >
             <ToggleGroupItem value="100" title="Desktop">
-              <Monitor className="h-3.5 w-3.5" />
+              <Monitor className="!h-3.5 !w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="60" title="Tablet">
-              <Tablet className="h-3.5 w-3.5" />
+              <Tablet className="!h-3.5 !w-3.5" />
             </ToggleGroupItem>
             <ToggleGroupItem value="30" title="Mobile">
-              <Smartphone className="h-3.5 w-3.5" />
+              <Smartphone className="!h-3.5 !w-3.5" />
             </ToggleGroupItem>
             <Separator orientation="vertical" className="!h-4" />
             <Button
@@ -192,7 +192,7 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
             >
               <Link href={`/view/${item.name}`} target="_blank">
                 <span className="sr-only">Open in New Tab</span>
-                <Fullscreen className="h-3.5 w-3.5" />
+                <Fullscreen className="!h-3.5 !w-3.5" />
               </Link>
             </Button>
             <Separator orientation="vertical" className="!h-4" />
@@ -207,7 +207,7 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
                 }
               }}
             >
-              <RotateCw className="h-3.5 w-3.5" />
+              <RotateCw className="!h-3.5 !w-3.5" />
               <span className="sr-only">Refresh Preview</span>
             </Button>
           </ToggleGroup>
@@ -221,7 +221,7 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
             copyToClipboard(`npx hanzo-ui@latest add ${item.name}`)
           }}
         >
-          {isCopied ? <Check className="h-3.5 w-3.5" /> : <Terminal className="h-3.5 w-3.5" />}
+          {isCopied ? <Check className="!h-3.5 !w-3.5" /> : <Terminal className="!h-3.5 !w-3.5" />}
           <span>npx hanzo-ui add {item.name}</span>
         </Button>
         <Separator orientation="vertical" className="mx-1 !h-4" />
