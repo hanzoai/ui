@@ -149,13 +149,13 @@
   },
   "suites": [
     {
-      "title": "capture-blocks-loading.spec.ts",
-      "file": "capture-blocks-loading.spec.ts",
+      "title": "review-builder-scroll.spec.ts",
+      "file": "review-builder-scroll.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [
         {
-          "title": "Capture blocks page with loading previews",
+          "title": "Review builder page with scrolling screenshots",
           "ok": true,
           "tags": [],
           "tests": [
@@ -170,52 +170,67 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10232,
+                  "duration": 7791,
                   "errors": [],
                   "stdout": [
                     {
-                      "text": "📸 Capturing blocks page with loaded previews...\n\n"
+                      "text": "\n🔍 BUILDER PAGE REVIEW TEST\n"
                     },
                     {
-                      "text": "✅ Iframes detected\n"
+                      "text": "============================================================\n"
                     },
                     {
-                      "text": "✅ Waiting for content to load...\n"
+                      "text": "\n📸 Capturing screenshots at different scroll positions...\n\n"
                     },
                     {
-                      "text": "📸 Full page screenshot saved: blocks-with-previews-FULL.png\n"
+                      "text": "✓ Captured: review-builder-top.png\n"
                     },
                     {
-                      "text": "📸 Viewport screenshot saved: blocks-with-previews-VIEWPORT.png\n"
+                      "text": "✓ Captured: review-builder-scroll-500.png\n"
                     },
                     {
-                      "text": "📸 Middle section screenshot saved: blocks-with-previews-MIDDLE.png\n"
+                      "text": "✓ Captured: review-builder-scroll-1500.png\n"
                     },
                     {
-                      "text": "📸 Bottom section screenshot saved: blocks-with-previews-BOTTOM.png\n"
+                      "text": "✓ Captured: review-builder-scroll-2500.png\n"
                     },
                     {
-                      "text": "\n✅ 5 block previews captured\n"
+                      "text": "✓ Captured: review-builder-middle.png\n"
                     },
                     {
-                      "text": "\n📁 Screenshots saved in tests/ directory:\n"
+                      "text": "✓ Captured: review-builder-bottom.png\n"
                     },
                     {
-                      "text": "  • blocks-with-previews-FULL.png (complete page)\n"
+                      "text": "✓ Captured: review-builder-FULL.png (complete page)\n"
                     },
                     {
-                      "text": "  • blocks-with-previews-VIEWPORT.png (above the fold)\n"
+                      "text": "\n============================================================\n"
                     },
                     {
-                      "text": "  • blocks-with-previews-MIDDLE.png (middle section)\n"
+                      "text": "📊 PAGE ANALYSIS:\n"
                     },
                     {
-                      "text": "  • blocks-with-previews-BOTTOM.png (bottom section)\n"
+                      "text": "============================================================\n"
+                    },
+                    {
+                      "text": "Header: Blocks\n"
+                    },
+                    {
+                      "text": "Count Display: 80 blocks\n"
+                    },
+                    {
+                      "text": "Actual Iframes: 80\n"
+                    },
+                    {
+                      "text": "\n✅ All screenshots captured in tests/ directory\n"
+                    },
+                    {
+                      "text": "============================================================\n"
                     }
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-11-16T06:58:31.196Z",
+                  "startTime": "2025-11-16T07:38:07.132Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -223,8 +238,8 @@
               "status": "expected"
             }
           ],
-          "id": "53c3194bcd906f906406-14ae329e559360431107",
-          "file": "capture-blocks-loading.spec.ts",
+          "id": "77562e6deb6e4d1063f6-4b9f052a42fe5600378b",
+          "file": "review-builder-scroll.spec.ts",
           "line": 3,
           "column": 1
         }
@@ -233,8 +248,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-11-16T06:58:30.773Z",
-    "duration": 10915.765,
+    "startTime": "2025-11-16T07:38:06.701Z",
+    "duration": 8520.823,
     "expected": 1,
     "skipped": 0,
     "unexpected": 0,
