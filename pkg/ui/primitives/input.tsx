@@ -2,7 +2,7 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import * as React from 'react';
 import { useEffect, useImperativeHandle, useRef } from 'react';
 
-import { RefCallBack } from 'react-hook-form';
+import type { RefCallBack } from 'react-hook-form';
 import { cn } from '../src/utils';
 import { Badge } from './badge';
 import { Button } from './button';

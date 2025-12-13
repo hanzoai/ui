@@ -11,12 +11,15 @@ import { Check } from 'lucide-react'
 
 import { 
   Button, 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
   Input 
 } from '@hanzo/ui/primitives'
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+} from '@hanzo/ui/form'
 
 import { useCommerce } from '../../../service/context'
 import type { Promo } from '../../../types'

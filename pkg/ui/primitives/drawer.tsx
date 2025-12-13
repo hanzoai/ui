@@ -20,6 +20,8 @@ const DrawerPortal = DrawerPrimitive.Portal;
 
 const DrawerClose = DrawerPrimitive.Close;
 
+const DrawerHandle = DrawerPrimitive.Handle;
+
 const DrawerOverlay = ({
   className,
   ...props
@@ -102,6 +104,7 @@ export {
   DrawerOverlay,
   DrawerTrigger,
   DrawerClose,
+  DrawerHandle,
   DrawerContent,
   DrawerHeader,
   DrawerFooter,

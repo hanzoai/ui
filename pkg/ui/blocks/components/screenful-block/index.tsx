@@ -1,15 +1,26 @@
 'use client'
 
-import React from 'react'
-import dynamic from 'next/dynamic'
+import React, { useState, useEffect } from 'react'
 
 import type { Block, ScreenfulBlock, VideoBlock } from '../../def'
 import { containsToken, cn } from '../../../util'
-import { ApplyTypography } from '../../../primitives/index-common'
+import { ApplyTypography } from '../../../primitives/index-blocks'
 
 import Poster from './poster-background'
 import Content from './content'
-const Video = dynamic(() => import('./video-background'), { ssr: false, loading: () => <></> })
+import VideoBG from './video-background'
+
+// Client-only wrapper to prevent SSR hydration issues with video
+const Video: React.FC<{
+  block: VideoBlock
+  className?: string
+  initialInView?: boolean
+}> = (props) => {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+  if (!mounted) return null
+  return <VideoBG {...props} />
+}
 
 const ScreenfulComponent: React.FC<{
   block: Block
