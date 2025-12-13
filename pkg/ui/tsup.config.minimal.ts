@@ -51,6 +51,9 @@ export default defineConfig({
     'util/index': 'util/index-client.ts',
     'lib/utils': 'src/utils.ts',
 
+    // Blocks components
+    'blocks/index': 'blocks/index.ts',
+
     // Core types
     'types/index': 'types/index.ts',
 
