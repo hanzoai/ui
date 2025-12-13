@@ -7,13 +7,16 @@ import { useForm } from 'react-hook-form'
  
 import {
   Button,
+  Input
+} from '@hanzo/ui/primitives'
+
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  Input
-} from '@hanzo/ui/primitives'
+} from '@hanzo/ui/form'
 
 import { cn } from '@hanzo/ui/util'
  
