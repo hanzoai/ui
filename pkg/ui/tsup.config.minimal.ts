@@ -2,8 +2,8 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig({
   entry: {
-    // CORE - Ultra minimal, < 30KB target
-    'index': 'primitives/index-core.ts',
+    // Main exports - standard primitives (excludes heavy deps like react-dropzone)
+    'index': 'primitives/index-standard.ts',
 
     // Individual components - import as needed
     'accordion': 'primitives/accordion.tsx',
@@ -47,12 +47,13 @@ export default defineConfig({
     'resizable': 'primitives/resizable.tsx',
 
     // Re-exports for package compatibility
-    'primitives/index': 'primitives/index-core.ts',
+    'primitives-export': 'primitives/index-standard.ts',
+    'primitives/index': 'primitives/index-standard.ts',
     'util/index': 'util/index-client.ts',
     'lib/utils': 'src/utils.ts',
 
-    // Blocks components
-    'blocks/index': 'blocks/index.ts',
+    // Blocks components (core only, excludes sidebar/dashboard/calendar/auth for compatibility)
+    'blocks/index': 'blocks/index-core.ts',
 
     // Core types
     'types/index': 'types/index.ts',
@@ -163,7 +164,7 @@ export default defineConfig({
     // Only bundle local relative imports
     /^\./,
   ],
-  splitting: true,
+  splitting: false,
   clean: true,
   target: 'es2020',
   outDir: 'dist',

@@ -1,7 +1,7 @@
 import React, {type ElementType} from 'react'
 
 import type { EnhHeadingBlock } from '../def'
-import { ApplyTypography } from '../../primitives/index-common'
+import { ApplyTypography } from '../../primitives/index-blocks'
 import { cn, containsToken } from '../../util'
 
 import type BlockComponentProps from './block-component-props'
