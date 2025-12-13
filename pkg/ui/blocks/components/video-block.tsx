@@ -6,7 +6,7 @@ import Image from 'next/image'
 import type { Dimensions, TShirtSize, TShirtDimensions } from '../../types'
 import { constrain, asNum, cn } from '../../util'
 import type { VideoBlock } from '../def'
-import { VideoPlayer } from '../../primitives/index-common'
+import { VideoPlayer } from '../../primitives/index-blocks'
 
 import type BlockComponentProps from './block-component-props'
 

@@ -33,11 +33,6 @@ declare module '@hanzo/ui/primitives' {
   export const SelectItem: any
   export const SelectTrigger: any
   export const SelectValue: any
-  export const Form: any
-  export const FormControl: any
-  export const FormField: any
-  export const FormItem: any
-  export const FormMessage: any
   export const RadioGroup: any
   export const ScrollArea: any
   export const ApplyTypography: any
@@ -55,6 +50,17 @@ declare module '@hanzo/ui/primitives' {
   export const TabsContent: any
   export const TabsList: any
   export const TabsTrigger: any
+}
+
+declare module '@hanzo/ui/form' {
+  export const Form: any
+  export const FormControl: any
+  export const FormField: any
+  export const FormItem: any
+  export const FormLabel: any
+  export const FormMessage: any
+  export const FormDescription: any
+  export const useFormField: any
 }
 
 declare module '@hanzo/ui/util' {

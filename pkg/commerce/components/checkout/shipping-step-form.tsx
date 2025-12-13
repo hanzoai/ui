@@ -4,20 +4,23 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { 
-  Input, 
-  Button, 
+import {
+  Input,
+  Button,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@hanzo/ui/primitives'
+
+import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@hanzo/ui/primitives'
+} from '@hanzo/ui/form'
 
 import { useCommerce } from '../../service/context'
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RefCallBack } from 'react-hook-form';
+import type { RefCallBack } from 'react-hook-form';
 import { cn } from '../src/utils';
 import {
   FormControl,
