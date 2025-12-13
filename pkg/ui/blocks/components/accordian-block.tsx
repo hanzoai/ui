@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   ApplyTypography
-} from '../../primitives/index-common'
+} from '../../primitives/index-blocks'
 
 import { cn } from '../../util'
 

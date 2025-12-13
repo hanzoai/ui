@@ -1,7 +1,7 @@
 import React from 'react'
 
 import type { HeadingBlock } from '../def'
-import { ApplyTypography } from '../../primitives/index-common'
+import { ApplyTypography } from '../../primitives/index-blocks'
 
 import type BlockComponentProps from './block-component-props'
 

@@ -1,0 +1,78 @@
+name: Publish Packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pkg/*/package.json'
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.changed.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed packages
+        id: changed
+        run: |
+          CHANGED_PACKAGES=()
+          for pkg_json in pkg/*/package.json; do
+            pkg_dir=$(dirname "$pkg_json")
+            pkg_name=$(basename "$pkg_dir")
+
+            # Check if package.json version changed
+            if git diff HEAD~1 HEAD --quiet "$pkg_json" 2>/dev/null; then
+              continue
+            fi
+
+            # Get old and new versions
+            OLD_VERSION=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
+            NEW_VERSION=$(jq -r '.version' "$pkg_json")
+
+            if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
+              echo "Version change detected: $pkg_name ($OLD_VERSION -> $NEW_VERSION)"
+              CHANGED_PACKAGES+=("$pkg_name")
+            fi
+          done
+
+          if [ ${#CHANGED_PACKAGES[@]} -eq 0 ]; then
+            echo "packages=[]" >> $GITHUB_OUTPUT
+          else
+            JSON=$(printf '%s\n' "${CHANGED_PACKAGES[@]}" | jq -R . | jq -s -c .)
+            echo "packages=$JSON" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.packages != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm --filter ${{ matrix.package }} build
+
+      - name: Publish package
+        run: pnpm --filter ${{ matrix.package }} publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

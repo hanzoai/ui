@@ -3,7 +3,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-} from '../../../primitives/index-common'
+} from '../../../primitives/index-blocks'
 import { cn } from '../../../util'
 import Content from '../content'
 
