@@ -9,7 +9,7 @@ import { ApplyTypography } from '../../../primitives/index-common'
 
 import Poster from './poster-background'
 import Content from './content'
-const Video = dynamic(() => (import('./video-background')), {ssr: false, loading: () => (<></>)})
+const Video = dynamic(() => import('./video-background'), { ssr: false, loading: () => <></> })
 
 const ScreenfulComponent: React.FC<{
   block: Block
