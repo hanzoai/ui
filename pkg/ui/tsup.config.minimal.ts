@@ -1,4 +1,39 @@
 import { defineConfig } from 'tsup'
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs'
+import { join } from 'path'
+
+// Directories/files that should NOT have 'use client' (server-compatible utilities)
+const SERVER_SAFE_PATHS = [
+  'util/',      // Utility functions like cn() should work on server
+  'types/',     // Type definitions
+  'tailwind/',  // Tailwind config
+  'lib/',       // Library utilities
+]
+
+// Post-build: Add 'use client' directive to JS/MJS files that need it
+function addUseClientDirective(dir: string, relativePath = '') {
+  const files = readdirSync(dir)
+  for (const file of files) {
+    const filePath = join(dir, file)
+    const currentRelativePath = relativePath ? `${relativePath}/${file}` : file
+    const stat = statSync(filePath)
+
+    if (stat.isDirectory()) {
+      addUseClientDirective(filePath, currentRelativePath)
+    } else if (file.endsWith('.js') || file.endsWith('.mjs')) {
+      // Skip files in server-safe directories
+      const isServerSafe = SERVER_SAFE_PATHS.some(path => currentRelativePath.startsWith(path))
+      if (isServerSafe) {
+        continue
+      }
+
+      const content = readFileSync(filePath, 'utf-8')
+      if (!content.startsWith('"use client"')) {
+        writeFileSync(filePath, '"use client";\n' + content)
+      }
+    }
+  }
+}
 
 export default defineConfig({
   entry: {
@@ -169,10 +204,15 @@ export default defineConfig({
   target: 'es2020',
   outDir: 'dist',
   treeshake: true,
-  minify: true, // Minify to reduce size
+  minify: false, // Disabled to preserve 'use client' banner
   esbuildOptions(options) {
     options.jsx = 'automatic'
     options.platform = 'neutral'
     options.keepNames = true
+  },
+  onSuccess() {
+    // Add 'use client' directive to all output files
+    addUseClientDirective('./dist')
+    console.log('Added "use client" directive to all output files')
   },
 })
