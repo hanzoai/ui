@@ -330,3 +330,12 @@ export { default as YouTubeEmbed } from './next/youtube-embed'
 
 // Re-export assets for compatibility
 export * from '../assets'
+
+// Docs components - re-exported from @hanzo/ui/docs/* for convenience
+export { DocsLayout } from '../docs/layouts/docs'
+export { HomeLayout } from '../docs/layouts/home'
+export { NotebookLayout } from '../docs/layouts/notebook'
+export { DocsPage, DocsBody, DocsTitle, DocsDescription } from '../docs/page'
+export { default as defaultMdxComponents } from '../docs/mdx'
+export { RootProvider } from '../docs/provider/next'
+export { loader } from '../docs/source'
