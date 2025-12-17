@@ -1,9 +1,11 @@
-@tailwind base;
-/* see https://stackoverflow.com/questions/69746121/using-nextjs-how-can-you-import-in-css-using-tailwind-css */
+/**
+ * Hanzo UI - Default Color Theme
+ * Tailwind CSS 4 compatible with shadcn/ui color system
+ */
 
 @layer base {
-
   :root, .hanzo-ui-light-theme {
+    /* Hanzo UI legacy colors */
     --hz-ui-fg-0: hsl(0 0% 0%);
     --hz-ui-fg-body: hsl(0 0% 10%);
     --hz-ui-fg-1: hsl(0 0% 20%);
@@ -17,17 +19,15 @@
     --hz-ui-bg-2: hsl(0 0% 75%);
     --hz-ui-bg-3: hsl(0 0% 55%);
 
-    --hz-ui-bg-overlay: hsla(0 0% 100% 0.60);
-
+    --hz-ui-bg-overlay: hsla(0 0% 100% / 60%);
     --hz-ui-bg-inverted: var(--hz-ui-fg-0);
-    --hz-ui-bg-inverted-hover:  hsla(0 0% 0% 0.85);
-
+    --hz-ui-bg-inverted-hover: hsla(0 0% 0% / 85%);
     --hz-ui-fg-inverted: var(--hz-ui-bg-0);
 
-    --hz-ui-secondary-0: hsl(266, 79%, 80%);
-    --hz-ui-secondary-1: hsl(266, 79%, 70%);
-    --hz-ui-secondary-2: hsl(266, 79%, 60%);
-    --hz-ui-secondary-3: hsl(266, 79%, 50%);
+    --hz-ui-secondary-0: hsl(266 79% 80%);
+    --hz-ui-secondary-1: hsl(266 79% 70%);
+    --hz-ui-secondary-2: hsl(266 79% 60%);
+    --hz-ui-secondary-3: hsl(266 79% 50%);
 
     --hz-ui-primary: var(--hz-ui-bg-inverted);
     --hz-ui-primary-hover: var(--hz-ui-bg-inverted-hover);
@@ -46,14 +46,48 @@
     --hz-ui-destructive-fg: hsl(0 0% 100%);
 
     --hz-ui-ring: var(--hz-ui-fg-2);
-
     --hz-ui-radius: 0.5rem;
-  }
- 
-  .hanzo-ui-dark-theme {
 
+    /* shadcn/ui compatible color system */
+    --radius: 0.5rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.97 0.01 17);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: var(--color-blue-300);
+    --chart-2: var(--color-blue-500);
+    --chart-3: var(--color-blue-600);
+    --chart-4: var(--color-blue-700);
+    --chart-5: var(--color-blue-800);
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+
+  .dark, .hanzo-ui-dark-theme {
+    /* Hanzo UI legacy colors */
     --hz-ui-fg-0: hsl(0 0% 100%);
-    --hz-ui-fg-body: hsl(0, 0%, 97%);
+    --hz-ui-fg-body: hsl(0 0% 97%);
     --hz-ui-fg-1: hsl(0 0% 85%);
     --hz-ui-fg-2: hsl(0 0% 70%);
     --hz-ui-fg-3: hsl(0 0% 55%);
@@ -61,22 +95,53 @@
     --hz-ui-fg-5: hsl(0 0% 25%);
 
     --hz-ui-bg-inverted: var(--hz-ui-fg-0);
-    --hz-ui-bg-inverted-hover:  hsla(0, 0%, 100%, 0.85);
+    --hz-ui-bg-inverted-hover: hsla(0 0% 100% / 85%);
 
     --hz-ui-bg-3: hsl(0 0% 25%);
     --hz-ui-bg-2: hsl(0 0% 18%);
     --hz-ui-bg-1: hsl(0 0% 12%);
     --hz-ui-bg-0: hsl(0 0% 0%);
 
-    --hz-ui-bg-overlay: hsla(0 0% 0% 0.60);
-
+    --hz-ui-bg-overlay: hsla(0 0% 0% / 60%);
     --hz-ui-fg-inverted: var(--hz-ui-bg-0);
 
-    --hz-ui-secondary-0: hsl(266, 79%, 40%);
-    --hz-ui-secondary-1: hsl(266, 79%, 50%);
-    --hz-ui-secondary-2: hsl(266, 79%, 60%);
-    --hz-ui-secondary-3: hsl(266, 79%, 70%);
+    --hz-ui-secondary-0: hsl(266 79% 40%);
+    --hz-ui-secondary-1: hsl(266 79% 50%);
+    --hz-ui-secondary-2: hsl(266 79% 60%);
+    --hz-ui-secondary-3: hsl(266 79% 70%);
+
+    /* shadcn/ui compatible color system */
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.269 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.371 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --destructive-foreground: oklch(0.58 0.22 27);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: var(--color-blue-300);
+    --chart-2: var(--color-blue-500);
+    --chart-3: var(--color-blue-600);
+    --chart-4: var(--color-blue-700);
+    --chart-5: var(--color-blue-800);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.439 0 0);
   }
-
 }
-

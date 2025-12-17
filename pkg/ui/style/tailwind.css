@@ -1,17 +1,18 @@
 /**
- * Hanzo UI - Global Styles
- * Tailwind CSS 4 compatible
+ * Hanzo UI - Tailwind CSS 4 Config
+ * Import this file to get all Hanzo UI styles including:
+ * - Theme configuration (colors, radius, fonts)
+ * - Animation keyframes
+ * - Custom variants for data-* attributes
+ * - Utility classes
+ *
+ * Usage:
+ * @import "@hanzo/ui/style/tailwind.css";
+ *
+ * Or with globals:
+ * @import "tailwindcss";
+ * @import "@hanzo/ui/style/tailwind.css";
  */
-
-@import "tailwindcss";
-@import "tw-animate-css";
-
-/* Hanzo UI custom styles */
-@import "./hanzo-common.css";
-@import "./hanzo-default-colors.css";
-
-/* Custom variant for dark mode */
-@custom-variant dark (&:is(.dark *));
 
 /* Theme configuration */
 @theme inline {
@@ -22,6 +23,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 
   /* Color mappings */
   --color-background: var(--background);
@@ -57,7 +59,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Keyframes */
+  /* Animation keyframes */
   @keyframes accordion-down {
     from { height: 0; }
     to { height: var(--radix-accordion-content-height, var(--accordion-panel-height, auto)); }
@@ -72,9 +74,61 @@
     0%, 70%, 100% { opacity: 1; }
     20%, 50% { opacity: 0; }
   }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  @keyframes slide-in-from-top {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes slide-out-to-top {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+  }
+
+  @keyframes slide-in-from-bottom {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes slide-out-to-bottom {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+  }
+
+  @keyframes slide-in-from-left {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slide-out-to-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+
+  @keyframes slide-in-from-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes slide-out-to-right {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+  }
 }
 
-/* Custom data-state variants (shadcn/ui compatibility) */
+/* Custom variants */
+@custom-variant dark (&:is(.dark *));
+
 @custom-variant data-open {
   &:where([data-state="open"]),
   &:where([data-open]:not([data-open="false"])) {
