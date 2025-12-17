@@ -1,14 +1,16 @@
-@tailwind base;
-/* see https://stackoverflow.com/questions/69746121/using-nextjs-how-can-you-import-in-css-using-tailwind-css */
+/**
+ * Hanzo UI - Common Base Styles
+ * Tailwind CSS 4 compatible
+ */
 
 @layer base {
-  
   * {
     box-sizing: inherit;
+    @apply border-border outline-ring/50;
   }
 
   /*
-    using this approach: 
+    using this approach:
     https://stackoverflow.com/a/76066443/11645689
     see src/app/(home)/scroll-snap
   */
@@ -16,16 +18,14 @@
   html {
     scroll-snap-type: y mandatory;
     height: 100vh;
-
     overflow-y: scroll;
     box-sizing: border-box;
-
     scrollbar-width: none;
   }
 
   body {
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-size: 16px; 
+    font-size: 16px;
     letter-spacing: 0.15px;
   }
 }
