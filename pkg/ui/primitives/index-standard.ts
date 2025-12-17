@@ -339,3 +339,6 @@ export { DocsPage, DocsBody, DocsTitle, DocsDescription } from '../docs/page'
 export { default as defaultMdxComponents } from '../docs/mdx'
 export { RootProvider } from '../docs/provider/next'
 export { loader } from '../docs/source'
+
+// MDX components - import from @hanzo/ui/docs/components for Tab, Tabs, Card, etc.
+// These are intentionally NOT re-exported here to avoid conflicts with primitives
