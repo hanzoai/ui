@@ -502,6 +502,56 @@
       "types": "./dist/ui/*.d.ts",
       "import": "./dist/ui/*.mjs",
       "require": "./dist/ui/*.js"
+    },
+    "./docs/style.css": "./docs/css/style.css",
+    "./docs/css/*": "./docs/css/*",
+    "./docs/page": {
+      "types": "./docs/page.tsx",
+      "import": "./docs/page.tsx"
+    },
+    "./docs/mdx": {
+      "types": "./docs/mdx.tsx",
+      "import": "./docs/mdx.tsx"
+    },
+    "./docs/og": {
+      "types": "./docs/og.tsx",
+      "import": "./docs/og.tsx"
+    },
+    "./docs/i18n": {
+      "types": "./docs/i18n.tsx",
+      "import": "./docs/i18n.tsx"
+    },
+    "./docs/layouts/docs": {
+      "types": "./docs/layouts/docs/index.tsx",
+      "import": "./docs/layouts/docs/index.tsx"
+    },
+    "./docs/layouts/home": {
+      "types": "./docs/layouts/home/index.tsx",
+      "import": "./docs/layouts/home/index.tsx"
+    },
+    "./docs/layouts/notebook": {
+      "types": "./docs/layouts/notebook/index.tsx",
+      "import": "./docs/layouts/notebook/index.tsx"
+    },
+    "./docs/provider/next": {
+      "types": "./docs/provider/next.tsx",
+      "import": "./docs/provider/next.tsx"
+    },
+    "./docs/provider/*": {
+      "types": "./docs/provider/*.tsx",
+      "import": "./docs/provider/*.tsx"
+    },
+    "./docs/components/*": {
+      "types": "./docs/components/*.tsx",
+      "import": "./docs/components/*.tsx"
+    },
+    "./docs/contexts/*": {
+      "types": "./docs/contexts/*.tsx",
+      "import": "./docs/contexts/*.tsx"
+    },
+    "./docs/utils/*": {
+      "types": "./docs/utils/*.ts",
+      "import": "./docs/utils/*.ts"
     }
   },
   "dependencies": {
@@ -665,7 +715,9 @@
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
-    "tailwindcss": "3.4.14",
+    "@tailwindcss/postcss": "^4.1.16",
+    "tailwindcss": "^4.1.16",
+    "tw-animate-css": "^1.2.9",
     "tsup": "^8.5.0",
     "typescript": "5.6.3",
     "vitest": "4.0.6"
