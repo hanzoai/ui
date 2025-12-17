@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "5.3.25",
+  "version": "5.3.26",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -407,6 +407,10 @@
       "types": "./dist/frameworks/react-native/index.d.ts",
       "import": "./dist/frameworks/react-native/index.mjs",
       "require": "./dist/frameworks/react-native/index.js"
+    },
+    "./content": {
+      "types": "./content/index.ts",
+      "import": "./content/index.ts"
     },
     "./code": {
       "types": "./dist/code/index.d.ts",
