@@ -1,4 +1,9 @@
-// Minimal PostCSS config for testing - no plugins to avoid resolution issues
+/**
+ * PostCSS Configuration for Tailwind CSS 4
+ * @hanzo/ui
+ */
 module.exports = {
-  plugins: []
+  plugins: {
+    '@tailwindcss/postcss': {},
+  },
 }
