@@ -1,9 +1,7 @@
-// MDX components barrel export
-// Import from @hanzo/ui/docs/components for documentation-specific components
+// Documentation-specific components
+// For general content components (Card, Tabs, Steps, Callout, Accordion),
+// use @hanzo/ui/content instead
 
-export { Tab, Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'
-export { Card, Cards } from './card'
-export { Step, Steps } from './steps'
-export { Callout, CalloutContainer, CalloutTitle, CalloutDescription } from './callout'
-export { Accordion, Accordions } from './accordion'
+// TypeTable is truly docs-specific (API reference tables)
 export { TypeTable } from './type-table'
+export type { TypeNode, ParameterNode } from './type-table'
