@@ -8,7 +8,7 @@ import type { VideoBlock } from '../../def'
 const VideoBG: React.FC<{
   block: VideoBlock,
   className?: string,
-  initialInView: boolean
+  initialInView?: boolean
 }> = ({
   block,
   className='',
