@@ -331,14 +331,12 @@ export { default as YouTubeEmbed } from './next/youtube-embed'
 // Re-export assets for compatibility
 export * from '../assets'
 
-// Docs components - re-exported from @hanzo/ui/docs/* for convenience
-export { DocsLayout } from '../docs/layouts/docs'
-export { HomeLayout } from '../docs/layouts/home'
-export { NotebookLayout } from '../docs/layouts/notebook'
-export { DocsPage, DocsBody, DocsTitle, DocsDescription } from '../docs/page'
-export { default as defaultMdxComponents } from '../docs/mdx'
-export { RootProvider } from '../docs/provider/next'
-export { loader } from '../docs/source'
-
-// MDX components - import from @hanzo/ui/docs/components for Tab, Tabs, Card, etc.
-// These are intentionally NOT re-exported here to avoid conflicts with primitives
+// NOTE: Docs components are NOT re-exported here to avoid path alias resolution issues
+// during build. Import directly from @hanzo/ui/docs/* if needed:
+//   - DocsLayout: @hanzo/ui/docs/layouts/docs
+//   - HomeLayout: @hanzo/ui/docs/layouts/home
+//   - NotebookLayout: @hanzo/ui/docs/layouts/notebook
+//   - DocsPage, DocsBody, DocsTitle, DocsDescription: @hanzo/ui/docs/page
+//   - defaultMdxComponents: @hanzo/ui/docs/mdx
+//   - RootProvider: @hanzo/ui/docs/provider/next
+//   - loader: @hanzo/ui/docs/source
