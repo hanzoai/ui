@@ -642,7 +642,7 @@ importers:
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.9.0
-        version: 3.10.0(react-hook-form@7.51.4(react@19.2.0))
+        version: 3.10.0(react-hook-form@7.66.0(react@19.2.0))
       firebase:
         specifier: ^10.8.0
         version: 10.14.1
@@ -650,8 +650,8 @@ importers:
         specifier: ^12.1.0
         version: 12.7.0
       lucide-react:
-        specifier: 0.456.0
-        version: 0.456.0(react@19.2.0)
+        specifier: '>=0.456.0'
+        version: 0.544.0(react@19.2.0)
       mobx:
         specifier: ^6.12.3
         version: 6.15.0
@@ -665,8 +665,8 @@ importers:
         specifier: 19.2.0
         version: 19.2.0
       react-hook-form:
-        specifier: 7.51.4
-        version: 7.51.4(react@19.2.0)
+        specifier: '>=7.51.4'
+        version: 7.66.0(react@19.2.0)
       zod:
         specifier: 4.1.12
         version: 4.1.12
@@ -696,14 +696,14 @@ importers:
   pkg/commerce:
     dependencies:
       '@hanzo/auth':
-        specifier: 2.5.4
-        version: 2.5.4(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.51.4(react@19.2.0)))(firebase@10.14.1)(lucide-react@0.456.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.51.4(react@19.2.0))(react@19.2.0)(zod@4.1.12)
+        specifier: '>=2.5.4'
+        version: 2.5.4(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.66.0(react@19.2.0)))(firebase@10.14.1)(lucide-react@0.544.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.66.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)
       '@hanzo/ui':
         specifier: workspace:*
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^3.9.0
-        version: 3.10.0(react-hook-form@7.51.4(react@19.2.0))
+        version: 3.10.0(react-hook-form@7.66.0(react@19.2.0))
       '@radix-ui/react-radio-group':
         specifier: ^1.1.3
         version: 1.3.8(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -714,8 +714,8 @@ importers:
         specifier: ^10.8.0
         version: 10.14.1
       lucide-react:
-        specifier: 0.456.0
-        version: 0.456.0(react@19.2.0)
+        specifier: '>=0.456.0'
+        version: 0.544.0(react@19.2.0)
       mobx:
         specifier: ^6.12.3
         version: 6.15.0
@@ -738,8 +738,8 @@ importers:
         specifier: 19.2.0
         version: 19.2.0(react@19.2.0)
       react-hook-form:
-        specifier: 7.51.4
-        version: 7.51.4(react@19.2.0)
+        specifier: '>=7.51.4'
+        version: 7.66.0(react@19.2.0)
       react-square-web-payments-sdk:
         specifier: ^3.2.1
         version: 3.2.3(react@19.2.0)
@@ -10238,12 +10238,6 @@ packages:
     peerDependencies:
       react: 19.2.0
 
-  react-hook-form@7.51.4:
-    resolution: {integrity: sha512-V14i8SEkh+V1gs6YtD0hdHYnoL4tp/HX/A45wWQN15CYr9bFRmmRdYStSO5L65lCCZRF+kYiSKhm9alqbcdiVA==}
-    engines: {node: '>=12.22.0'}
-    peerDependencies:
-      react: 19.2.0
-
   react-hook-form@7.66.0:
     resolution: {integrity: sha512-xXBqsWGKrY46ZqaHDo+ZUYiMUgi8suYu5kdrS20EG8KiL7VRQitEbNjm+UcrDYrNi1YLyfpmAeGjCZYXLT9YBw==}
     engines: {node: '>=18.0.0'}
@@ -13566,18 +13560,18 @@ snapshots:
       yargs: 17.7.2
     optional: true
 
-  '@hanzo/auth@2.5.4(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.51.4(react@19.2.0)))(firebase@10.14.1)(lucide-react@0.456.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.51.4(react@19.2.0))(react@19.2.0)(zod@4.1.12)':
+  '@hanzo/auth@2.5.4(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.66.0(react@19.2.0)))(firebase@10.14.1)(lucide-react@0.544.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.66.0(react@19.2.0))(react@19.2.0)(zod@4.1.12)':
     dependencies:
       '@hanzo/ui': link:pkg/ui
-      '@hookform/resolvers': 3.10.0(react-hook-form@7.51.4(react@19.2.0))
+      '@hookform/resolvers': 3.10.0(react-hook-form@7.66.0(react@19.2.0))
       firebase: 10.14.1
       firebase-admin: 12.7.0
-      lucide-react: 0.456.0(react@19.2.0)
+      lucide-react: 0.544.0(react@19.2.0)
       mobx: 6.15.0
       mobx-react-lite: 4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       next: 16.0.0(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react: 19.2.0
-      react-hook-form: 7.51.4(react@19.2.0)
+      react-hook-form: 7.66.0(react@19.2.0)
       zod: 4.1.12
     transitivePeerDependencies:
       - encoding
@@ -13634,10 +13628,6 @@ snapshots:
   '@hapi/topo@6.0.2':
     dependencies:
       '@hapi/hoek': 11.0.7
-
-  '@hookform/resolvers@3.10.0(react-hook-form@7.51.4(react@19.2.0))':
-    dependencies:
-      react-hook-form: 7.51.4(react@19.2.0)
 
   '@hookform/resolvers@3.10.0(react-hook-form@7.66.0(react@19.2.0))':
     dependencies:
@@ -24232,10 +24222,6 @@ snapshots:
       attr-accept: 2.2.5
       file-selector: 2.1.2
       prop-types: 15.8.1
-      react: 19.2.0
-
-  react-hook-form@7.51.4(react@19.2.0):
-    dependencies:
       react: 19.2.0
 
   react-hook-form@7.66.0(react@19.2.0):
