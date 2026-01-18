@@ -13,7 +13,6 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
 
 const emptyStateVariants = cva(
   "flex flex-col items-center justify-center text-center gap-6 p-8 rounded-md border border-dashed animate-in fade-in-50 duration-500",
