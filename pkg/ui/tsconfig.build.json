@@ -49,6 +49,7 @@
     "primitives/index.ts",
     "primitives/index-selective.ts",
     "src/primitives-export.ts",
-    "blocks/**/*"
+    "blocks/**/*",
+    "docs/**/*"
   ]
 }
