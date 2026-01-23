@@ -55,8 +55,6 @@ export default defineConfig({
     // Dependencies from package.json
     '@modelcontextprotocol/sdk',
     '@next/third-parties',
-    '@splinetool/react-spline',
-    '@splinetool/runtime',
     '@tailwindcss/container-queries',
     'class-variance-authority',
     'clsx',

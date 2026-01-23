@@ -4,71 +4,82 @@ import * as React from 'react';
 import { cn } from '../src/utils';
 
 const alertVariants = cva(
-  '[&>svg]:text-text-default relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:top-4 [&>svg]:left-4 [&>svg+div]:translate-y-[-3px] [&>svg~*]:pl-7',
+  'group/alert relative w-full rounded-lg border p-4 [&>svg]:absolute [&>svg]:top-4 [&>svg]:left-4 [&>svg+div]:translate-y-[-3px] [&>svg~*]:pl-7 [&>svg]:size-4',
   {
     variants: {
       variant: {
-        default: 'bg-bg-tertiary text-text-default',
-        info: 'text-text-secondary [&>svg]:text-text-secondary bg-gray-250 border-gray-100 border-gray-200',
+        default: 'bg-background text-foreground [&>svg]:text-foreground',
         destructive:
-          'border-[#4d0408] bg-[#2d0607] text-[#ff9ea1] [&>svg]:text-[#ff9ea1]',
+          'border-destructive/50 text-destructive bg-destructive/10 dark:border-destructive [&>svg]:text-destructive',
+        // Hanzo-specific variants for backward compatibility
+        info: 'text-muted-foreground bg-muted border-border [&>svg]:text-muted-foreground',
         warning:
-          'border-yellow-800 bg-yellow-900 text-yellow-400 [&>svg]:text-yellow-400',
+          'border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 [&>svg]:text-yellow-600 dark:[&>svg]:text-yellow-400',
         success:
-          'border-green-800 bg-green-900 text-green-400 [&>svg]:text-green-400',
+          'border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400 [&>svg]:text-green-600 dark:[&>svg]:text-green-400',
         download:
-          'border-gray-800 bg-gray-900 text-cyan-400 [&>svg]:text-cyan-400',
+          'border-cyan-500/50 bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 [&>svg]:text-cyan-600 dark:[&>svg]:text-cyan-400',
       },
     },
     defaultVariants: {
       variant: 'default',
     },
-  },
+  }
 );
 
-type AlertProps = React.HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof alertVariants> & {
-    ref?: React.RefObject<HTMLDivElement>;
-  };
-
-const Alert = ({ className, variant, ref, ...props }: AlertProps) => (
-  <div
-    className={cn(alertVariants({ variant }), className)}
-    ref={ref}
-    role="alert"
-    {...props}
-  />
-);
-Alert.displayName = 'Alert';
-
-type AlertTitleProps = React.HTMLAttributes<HTMLHeadingElement> & {
-  ref?: React.RefObject<HTMLParagraphElement>;
-};
-
-const AlertTitle = ({ className, ref, ...props }: AlertTitleProps) => (
-  <h5
-    className={cn('mb-1 leading-none font-medium tracking-tight', className)}
-    ref={ref}
-    {...props}
-  />
-);
-AlertTitle.displayName = 'AlertTitle';
-
-type AlertDescriptionProps = React.HTMLAttributes<HTMLParagraphElement> & {
-  ref?: React.RefObject<HTMLParagraphElement>;
-};
-
-const AlertDescription = ({
+function Alert({
   className,
-  ref,
+  variant = 'default',
   ...props
-}: AlertDescriptionProps) => (
-  <div
-    className={cn('text-sm [&_p]:leading-relaxed', className)}
-    ref={ref}
-    {...props}
-  />
-);
-AlertDescription.displayName = 'AlertDescription';
+}: React.ComponentProps<'div'> & VariantProps<typeof alertVariants>) {
+  return (
+    <div
+      data-slot="alert"
+      data-variant={variant}
+      role="alert"
+      className={cn(alertVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
 
-export { Alert, AlertTitle, AlertDescription };
+function AlertTitle({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="alert-title"
+      className={cn(
+        'mb-1 leading-none font-medium tracking-tight [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertDescription({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="alert-description"
+      className={cn(
+        'text-sm [&_p]:leading-relaxed [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+function AlertAction({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="alert-action"
+      className={cn('mt-3 flex items-center gap-2', className)}
+      {...props}
+    />
+  );
+}
+
+export { Alert, AlertTitle, AlertDescription, AlertAction, alertVariants };

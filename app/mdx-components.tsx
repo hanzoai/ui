@@ -1,8 +1,8 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { CodeBlock, Pre } from "fumadocs-ui/components/codeblock"
-import defaultComponents from "fumadocs-ui/mdx"
+import { CodeBlock, Pre } from "@hanzo/docs-ui/components/codeblock"
+import defaultComponents from "@hanzo/docs-ui/mdx"
 import type { MDXComponents } from "mdx/types"
 
 import { cn } from "@/lib/utils"

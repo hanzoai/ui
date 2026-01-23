@@ -24,7 +24,9 @@ export {
 export {
   Alert,
   AlertTitle,
-  AlertDescription
+  AlertDescription,
+  AlertAction,
+  alertVariants,
 } from './alert'
 
 export {
@@ -54,9 +56,17 @@ export {
   CardHeader,
   CardFooter,
   CardTitle,
+  CardAction,
   CardDescription,
-  CardContent
+  CardContent,
 } from './card'
+
+export {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+  buttonGroupVariants,
+} from './button-group'
 
 export {
   type CarouselApi,
@@ -120,6 +130,7 @@ export {
 
 export {
   Dialog,
+  DialogClose,
   DialogPortal,
   DialogOverlay,
   DialogTrigger,
@@ -129,6 +140,15 @@ export {
   DialogTitle,
   DialogDescription,
 } from './dialog'
+
+export {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent,
+} from './empty'
 
 export {
   DropdownMenu,
@@ -171,6 +191,28 @@ export {
   InputOTPSeparator,
   InputOTPSlot,
 } from './input-otp'
+
+export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupText,
+  InputGroupInput,
+  InputGroupTextarea,
+} from './input-group'
+
+export {
+  Item,
+  ItemMedia,
+  ItemContent,
+  ItemActions,
+  ItemGroup,
+  ItemSeparator,
+  ItemTitle,
+  ItemDescription,
+  ItemHeader,
+  ItemFooter,
+} from './item'
 
 export {
   Kbd,
@@ -261,7 +303,8 @@ export {
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent
+  TabsContent,
+  tabsListVariants,
 } from './tabs'
 
 export * from './tooltip'
@@ -280,6 +323,7 @@ export { default as Label } from './label'
 export type { default as ListAdaptor } from './list-adaptor'
 export { default as ListBox } from './list-box'
 export { default as LoadingSpinner } from './loading-spinner'
+export { NativeSelect, NativeSelectOption, NativeSelectOptGroup } from './native-select'
 export { default as Progress } from './progress'
 export { RadioGroup, RadioGroupItem } from './radio-group'
 export { ScrollArea, ScrollBar } from './scroll-area'
@@ -287,6 +331,7 @@ export { SearchInput } from './search-input'
 export { default as Separator } from './separator'
 export { default as Slider } from './slider'
 export { default as Skeleton } from './skeleton'
+export { Spinner } from './spinner'
 export { default as StepIndicator } from './step-indicator'
 export { default as Switch } from './switch'
 export { Textarea } from './textarea'
@@ -327,6 +372,7 @@ export { default as MDXLink } from './next/mdx-link'
 export { default as MediaStack } from './next/media-stack'
 export { default as NavItems } from './next/nav-items'
 export { default as YouTubeEmbed } from './next/youtube-embed'
+export { YouTubePipPlayer, youtubePipPlayerVariants } from './youtube-pip-player'
 
 // Re-export assets for compatibility
 export * from '../assets'
