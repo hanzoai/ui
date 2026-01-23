@@ -1,8 +1,6 @@
 'use client'
 import React from 'react'
 
-import Spline from '@splinetool/react-spline'
-
 import { cn, constrain, spreadToTransform } from '../../util'
 import type { MediaStackDef, Dimensions } from '../../types'
 
@@ -18,46 +16,32 @@ const MediaStack: React.FC<{
   constrainTo: cnst = {w: 250, h: 250},
   clx=''
 }) => {
-  const {img, video, animation, mediaTransform} = media
+  const {img, video, mediaTransform} = media
 
   const transform = mediaTransform ?? {}
 
-    // Order of precedence: 3D > MP4 > Image
-  if (animation) {
-    return ( 
-      <Spline
-        scene={animation}
-        className={cn(clx, 'pointer-events-none')} 
-        data-vaul-no-drag 
-        style={{
-            // // !aspect-[12/10] 
-          width: (6/5 * (typeof cnst.h === 'number' ? cnst.h as number : parseInt(cnst.h as string)) ),
-          height: cnst.h,
-          ...spreadToTransform(transform)
-        }}
-      />
-    )
-  } 
+  // Order of precedence: MP4 > Image
+  // For 3D/Spline support, use @hanzo/ui/spline MediaStack instead
   if (video) {
     const dim = constrain(video.dim.md, cnst)
     return (
-      <VideoPlayer 
-        className={clx} 
-        sources={video.sources} 
-        width={dim.w} 
-        height={dim.h} 
+      <VideoPlayer
+        className={clx}
+        sources={video.sources}
+        width={dim.w}
+        height={dim.h}
         style={{
-          minHeight: dim.h, // prevents layout jumps
+          minHeight: dim.h,
           ...spreadToTransform(transform)
         }}
-        {...video.videoProps} 
+        {...video.videoProps}
       />
     )
-  } 
-  return img ? ( 
+  }
+  return img ? (
     <Image
       def={img}
-      constrainTo={cnst} 
+      constrainTo={cnst}
       className={clx}
       transform={transform}
     />

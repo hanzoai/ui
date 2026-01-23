@@ -19,7 +19,7 @@
     "registry:build": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.mts",
     "registry:capture": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/capture-registry.mts",
     "validate:registries": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/validate-registries.mts",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "docs-mdx source.config.ts .source"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^4.2.0",
@@ -83,10 +83,12 @@
     "embla-carousel-autoplay": "8.6.0",
     "embla-carousel-react": "8.6.0",
     "framer-motion": "^12.23.22",
-    "fumadocs-core": "15.8.3",
-    "fumadocs-docgen": "3.0.3",
-    "fumadocs-mdx": "12.0.2",
-    "fumadocs-ui": "15.8.3",
+    "@hanzo/docs-core": "16.2.6",
+    "@hanzo/docs-docgen": "3.0.4",
+    "@hanzo/docs-mdx": "14.3.0",
+    "@hanzo/docs-ui": "16.2.6",
+    "fumadocs-core": "^16.4.8",
+    "fumadocs-mdx": "^14.2.6",
     "geist": "^1.5.1",
     "input-otp": "^1.4.2",
     "jotai": "^2.15.0",

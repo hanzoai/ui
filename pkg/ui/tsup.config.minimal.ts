@@ -106,6 +106,23 @@ export default defineConfig({
     '3d/marquee': 'src/3d/marquee.tsx',
     '3d/pin': 'src/3d/pin.tsx',
 
+    // Spline components (requires @splinetool/react-spline)
+    'spline/index': 'src/spline/index.ts',
+    'spline/media-stack': 'src/spline/media-stack.tsx',
+    'spline/player': 'src/spline/player.tsx',
+
+    // Charts components (requires recharts)
+    'charts/index': 'src/charts/index.ts',
+
+    // Kanban components (requires @dnd-kit/*)
+    'kanban/index': 'src/kanban/index.ts',
+
+    // Mermaid components (requires mermaid)
+    'mermaid/index': 'src/mermaid/index.ts',
+
+    // Extended calendar (requires react-day-picker, date-fns, chrono-node)
+    'calendar-ext/index': 'src/calendar-ext/index.ts',
+
     // Animation components
     'animation/index': 'src/animation/index.ts',
     'animation/apple-cards-carousel': 'src/animation/apple-cards-carousel.tsx',
@@ -151,6 +168,12 @@ export default defineConfig({
     'dock/macos': 'src/dock/macos.tsx',
     'dock/menu': 'src/dock/menu.tsx',
     'dock/message': 'src/dock/message.tsx',
+
+    // Desktop components (macOS-style window management)
+    'desktop/index': 'src/desktop/index.ts',
+    'desktop/window': 'src/desktop/window.tsx',
+    'desktop/spotlight': 'src/desktop/spotlight.tsx',
+    'desktop/hooks': 'src/desktop/hooks.ts',
 
     // Project components
     'project/index': 'src/project/index.ts',
