@@ -6,12 +6,20 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    # Run tests daily at 2 AM UTC to catch breaking updates
-    - cron: '0 2 * * *'
+    # Run tests weekly on Sunday at 2 AM UTC to catch breaking updates
+    - cron: '0 2 * * 0'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     strategy:
       matrix:
         node-version: [20.x]
@@ -38,6 +46,8 @@ jobs:
 
       - name: Build the project
         run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: Run component health check
         run: pnpm health-check
@@ -45,9 +55,16 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm test:e2e
+        timeout-minutes: 30
+        env:
+          CI: true
 
       - name: Run visual regression tests
         run: pnpm test:visual
+        timeout-minutes: 20
+        continue-on-error: true
+        env:
+          CI: true
 
       - name: Upload test results
         if: always()

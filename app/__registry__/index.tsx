@@ -1798,6 +1798,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "youtube-pip-player": {
+      name: "youtube-pip-player",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/youtube-pip-player")),
+      source: "",
+      files: ["registry/default/ui/youtube-pip-player.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "music-player": {
       name: "music-player",
       type: "components:ui",
@@ -4346,6 +4357,17 @@ export const Index: Record<string, any> = {
       component: React.lazy(() => import("@/registry/default/example/video-player-demo")),
       source: "",
       files: ["registry/default/example/video-player-demo.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "youtube-pip-player-demo": {
+      name: "youtube-pip-player-demo",
+      type: "components:example",
+      registryDependencies: ["youtube-pip-player"],
+      component: React.lazy(() => import("@/registry/default/example/youtube-pip-player-demo")),
+      source: "",
+      files: ["registry/default/example/youtube-pip-player-demo.tsx"],
       category: "undefined",
       subcategory: "undefined",
       chunks: []

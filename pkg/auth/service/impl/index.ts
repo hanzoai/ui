@@ -214,8 +214,9 @@ class AuthServiceImpl implements AuthService {
   }
 
   logout = async (): Promise<{ success: boolean }> => {
-
-    await fbAuth.signOut()
+    if (fbAuth) {
+      await fbAuth.signOut()
+    }
     this._hzUser.clear()
     return await logoutBackend()
   }
