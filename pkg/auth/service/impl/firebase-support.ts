@@ -8,11 +8,12 @@ import {
   type User,
   signInWithEmailAndPassword,
   signInWithCustomToken,
+  type Auth,
 } from 'firebase/auth'
 
-import { initializeApp, getApps, FirebaseError } from "firebase/app"
+import { initializeApp, getApps, FirebaseError, type FirebaseApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, type Firestore } from 'firebase/firestore'
 
 import type APIResponse from '../../types/api-response'
 
@@ -25,12 +26,32 @@ export const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-export const auth = getAuth(firebaseApp)
-// :aa TODO should be in module conf in host app
-export const db = getFirestore(firebaseApp, 'accounts')
+// Check if Firebase is configured
+const isFirebaseConfigured = () => {
+  return firebaseConfig.apiKey && firebaseConfig.projectId
+}
+
+// Initialize Firebase only if configured
+let firebaseApp: FirebaseApp | null = null
+let auth: Auth | null = null
+let db: Firestore | null = null
+
+if (isFirebaseConfigured()) {
+  firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+  auth = getAuth(firebaseApp)
+  db = getFirestore(firebaseApp, 'accounts')
+} else {
+  console.warn('Firebase is not configured. Auth features will not work.')
+}
+
+export { auth, db }
 
 export async function loginWithProvider(provider: string): Promise<{ success: boolean, user: User | null }> {
+  if (!auth) {
+    console.warn('Firebase auth not configured')
+    return { success: false, user: null }
+  }
+
   const authProvider = (() => {
     switch (provider) {
       case 'google':
@@ -60,8 +81,7 @@ export async function loginWithProvider(provider: string): Promise<{ success: bo
     const resBody = (await response.json()) as unknown as APIResponse<string>
 
     if (response.ok && resBody.success) {
-      //      const walletAddress = await getAssociatedWalletAddress(userCreds.user.email ?? '')
-      return { success: true, user: userCreds.user /*.email ? {email: userCreds.user.email, displayName: userCreds.user.displayName ?? undefined, walletAddress: walletAddress.result}: null */ }
+      return { success: true, user: userCreds.user }
     }
     else {
       return { success: false, user: null }
@@ -73,25 +93,6 @@ export async function loginWithProvider(provider: string): Promise<{ success: bo
   }
 }
 
-// https://github.com/JonDotsoy/firebase-sign-in-with-ethereum
-/*
-export async function signInWithEthereum(opts?: { siteName?: string }): Promise<{success: boolean, user?: HanzoUserInfo | null}> {
-  const {account, signed} = await connectWalletAddress(opts?.siteName)
-
-  let fragment = signed.slice(-10)
-
-  const email = `${account}.${fragment}.3@${auth.app.options.authDomain}`
-  const password = signed
-
-  try {
-    const res = await signInWithEmailPassword(email, password, account)
-    associateWalletAddressWithAccount(email, account)
-    return {success: true, user: res.user}
-  } catch (e) {
-    return {success: false}
-  }
-}
-*/
 const isAuthUserNotFound = (e: any) => (
   typeof e === 'object' &&
   e !== null &&
@@ -103,6 +104,9 @@ export async function signupWithEmailAndPassword(
   email: string,
   password: string
 ): Promise<{ success: boolean, user?: User, message?: string }> {
+  if (!auth) {
+    return { success: false, message: 'Firebase auth not configured' }
+  }
 
   let user: User | undefined = undefined
   try {
@@ -144,6 +148,9 @@ export async function loginWithEmailAndPassword(
   email: string,
   password: string
 ): Promise<{ success: boolean, user?: User, message?: string }> {
+  if (!auth) {
+    return { success: false, message: 'Firebase auth not configured' }
+  }
 
   let user: User | undefined = undefined
   try {
@@ -183,6 +190,9 @@ export async function loginWithEmailAndPassword(
 export async function loginWithCustomToken(
   token: string,
 ): Promise<{ success: boolean, user?: User }> {
+  if (!auth) {
+    return { success: false }
+  }
 
   let user: User | undefined = undefined
   const userCredential = await signInWithCustomToken(auth, token)
@@ -229,4 +239,3 @@ export async function logoutBackend(): Promise<{ success: boolean }> {
     return { success: false }
   }
 }
-

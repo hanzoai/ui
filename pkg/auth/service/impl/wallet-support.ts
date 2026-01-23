@@ -18,6 +18,10 @@ async function connectWalletAddress(siteName?: string) {
     throw new Error('No ethereum provider found')
   }
 
+  if (!auth) {
+    throw new Error('Firebase auth not configured')
+  }
+
   const [account] = await ethereum.request<string[]>({ method: 'eth_requestAccounts' })
 
   if (!account) {
@@ -43,8 +47,12 @@ async function connectWalletAddress(siteName?: string) {
   return {account, signed}
 }
   
-export async function associateWalletAddressWithAccount(userEmail: string, siteName?: string) {  
+export async function associateWalletAddressWithAccount(userEmail: string, siteName?: string) {
   const {account} = await connectWalletAddress(siteName)
+
+  if (!db) {
+    return { result: null, error: new Error('Firebase Firestore not configured') }
+  }
 
   let result = null
   let error = null
@@ -66,11 +74,14 @@ export async function associateWalletAddressWithAccount(userEmail: string, siteN
   return { result, error }  
 }
 
-export async function getAssociatedWalletAddress(userEmail: string) : Promise<{error: any, result?: string}> {  
-  
+export async function getAssociatedWalletAddress(userEmail: string) : Promise<{error: any, result?: string}> {
+  if (!db) {
+    return { error: new Error('Firebase Firestore not configured'), result: undefined }
+  }
+
   let result = undefined
   let error = null
-  try {  
+  try {
     try {
       const docRef = await getDoc(doc(db, USER_INFO_COLLECTION, userEmail))
       result = docRef.data() ? docRef.data()!.walletAddress as string : undefined

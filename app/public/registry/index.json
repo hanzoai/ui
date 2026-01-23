@@ -1708,6 +1708,18 @@
     "type": "components:ui"
   },
   {
+    "name": "youtube-pip-player",
+    "description": "YouTube embed with scroll-based Picture-in-Picture, draggable window, and TV effects",
+    "dependencies": [
+      "lucide-react",
+      "class-variance-authority"
+    ],
+    "files": [
+      "ui/youtube-pip-player.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
     "name": "music-player",
     "description": "Advanced music player with playlist support",
     "dependencies": [
@@ -3820,6 +3832,16 @@
     "name": "video-player-demo",
     "files": [
       "example/video-player-demo.tsx"
+    ],
+    "type": "components:example"
+  },
+  {
+    "name": "youtube-pip-player-demo",
+    "registryDependencies": [
+      "youtube-pip-player"
+    ],
+    "files": [
+      "example/youtube-pip-player-demo.tsx"
     ],
     "type": "components:example"
   },

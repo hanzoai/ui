@@ -613,6 +613,13 @@ export const extended: Registry = [
     description: "Advanced video player component",
   },
   {
+    name: "youtube-pip-player",
+    type: "components:ui",
+    dependencies: ["lucide-react", "class-variance-authority"],
+    files: ["ui/youtube-pip-player.tsx"],
+    description: "YouTube embed with scroll-based Picture-in-Picture, draggable window, and TV effects",
+  },
+  {
     name: "music-player",
     type: "components:ui",
     dependencies: ["react-h5-audio-player"],
