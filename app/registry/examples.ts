@@ -1298,6 +1298,12 @@ export const examples: Registry = [
     files: ["example/video-player-demo.tsx"],
   },
   {
+    name: "youtube-pip-player-demo",
+    type: "components:example",
+    registryDependencies: ["youtube-pip-player"],
+    files: ["example/youtube-pip-player-demo.tsx"],
+  },
+  {
     name: "android-demo",
     type: "components:example",
     registryDependencies: ["android"],

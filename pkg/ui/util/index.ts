@@ -92,3 +92,8 @@ export function asNum(value: any, defaultValue = 0): number {
   const num = Number(value);
   return isNaN(num) ? defaultValue : num;
 }
+
+export function capitalize(str: string): string {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

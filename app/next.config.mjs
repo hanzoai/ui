@@ -1,4 +1,4 @@
-import { createMDX } from "fumadocs-mdx/next"
+import { createMDX } from "@hanzo/docs-mdx/next"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -106,6 +106,8 @@ const nextConfig = {
 }
 
 const withMDX = createMDX({
+  configPath: "source.config.ts",
+  outDir: ".source",
   mdxOptions: {
     rehypeCodeOptions: {
       themes: {
