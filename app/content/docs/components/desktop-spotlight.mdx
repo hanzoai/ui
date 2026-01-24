@@ -1,0 +1,215 @@
+---
+title: Desktop Spotlight
+description: A macOS Spotlight-style search dialog with keyboard navigation and category grouping
+component: true
+---
+
+<ComponentPreview name="desktop-spotlight-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx @hanzo/ui@latest add desktop
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion lucide-react
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="desktop-spotlight" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Spotlight, SpotlightItem } from "@hanzo/ui/desktop"
+
+const items: SpotlightItem[] = [
+  { id: 'settings', title: 'Settings', category: 'Applications', icon: <Settings /> },
+  { id: 'documents', title: 'Documents', category: 'Folders', icon: <Folder /> },
+  { id: 'music', title: 'Music', category: 'Applications', icon: <Music /> },
+]
+
+export function SpotlightDemo() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open Spotlight</button>
+
+      <Spotlight
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        items={items}
+        onSelect={(item) => {
+          console.log('Selected:', item)
+          setIsOpen(false)
+        }}
+      />
+    </>
+  )
+}
+```
+
+## Props
+
+### Spotlight
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isOpen` | `boolean` | - | Controls visibility of the spotlight dialog |
+| `onClose` | `() => void` | - | Callback when spotlight is closed |
+| `items` | `SpotlightItem[]` | - | Array of searchable items |
+| `onSelect` | `(item: SpotlightItem) => void` | - | Callback when an item is selected |
+| `placeholder` | `string` | `'Search...'` | Search input placeholder text |
+
+### SpotlightItem
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `string` | Unique identifier for the item |
+| `title` | `string` | Display title |
+| `subtitle` | `string` | Optional subtitle/description text |
+| `icon` | `ReactNode` | Optional icon to display |
+| `category` | `string` | Category for grouping |
+| `keywords` | `string[]` | Optional search keywords |
+| `action` | `() => void` | Optional action callback |
+
+## Features
+
+- **Fuzzy Search**: Real-time filtering as you type
+- **Category Grouping**: Items organized by category headers
+- **Keyboard Navigation**: Arrow keys to navigate, Enter to select, Escape to close
+- **Focus Management**: Auto-focus on open, proper focus trap
+- **Smooth Animations**: Fade and scale transitions
+
+## Examples
+
+### Application Launcher
+
+```tsx
+import { Spotlight, SpotlightItem, useKeyboardShortcuts } from "@hanzo/ui/desktop"
+import {
+  Terminal,
+  Chrome,
+  Mail,
+  Calendar,
+  Music,
+  Settings,
+  Folder
+} from "lucide-react"
+
+const apps: SpotlightItem[] = [
+  { id: 'terminal', label: 'Terminal', category: 'Applications', icon: <Terminal className="h-5 w-5" /> },
+  { id: 'safari', label: 'Safari', category: 'Applications', icon: <Chrome className="h-5 w-5" /> },
+  { id: 'mail', label: 'Mail', category: 'Applications', icon: <Mail className="h-5 w-5" /> },
+  { id: 'calendar', label: 'Calendar', category: 'Applications', icon: <Calendar className="h-5 w-5" /> },
+  { id: 'music', label: 'Music', category: 'Applications', icon: <Music className="h-5 w-5" /> },
+  { id: 'settings', label: 'System Preferences', category: 'Applications', icon: <Settings className="h-5 w-5" /> },
+  { id: 'documents', label: 'Documents', category: 'Folders', icon: <Folder className="h-5 w-5" /> },
+  { id: 'downloads', label: 'Downloads', category: 'Folders', icon: <Folder className="h-5 w-5" /> },
+]
+
+export function AppLauncher() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  // ⌘+Space to open (like macOS)
+  useKeyboardShortcuts([
+    { key: ' ', meta: true, action: () => setIsOpen(true) }
+  ])
+
+  return (
+    <Spotlight
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      items={apps}
+      placeholder="Search applications..."
+      onSelect={(item) => {
+        console.log('Launch:', item.label)
+        setIsOpen(false)
+      }}
+    />
+  )
+}
+```
+
+### Command Palette
+
+```tsx
+import { Spotlight, SpotlightItem } from "@hanzo/ui/desktop"
+import {
+  Save,
+  Copy,
+  Scissors,
+  Clipboard,
+  Undo,
+  Redo
+} from "lucide-react"
+
+const commands: SpotlightItem[] = [
+  { id: 'save', label: 'Save', category: 'File', icon: <Save />, shortcut: '⌘S' },
+  { id: 'copy', label: 'Copy', category: 'Edit', icon: <Copy />, shortcut: '⌘C' },
+  { id: 'cut', label: 'Cut', category: 'Edit', icon: <Scissors />, shortcut: '⌘X' },
+  { id: 'paste', label: 'Paste', category: 'Edit', icon: <Clipboard />, shortcut: '⌘V' },
+  { id: 'undo', label: 'Undo', category: 'Edit', icon: <Undo />, shortcut: '⌘Z' },
+  { id: 'redo', label: 'Redo', category: 'Edit', icon: <Redo />, shortcut: '⌘⇧Z' },
+]
+
+export function CommandPalette() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <Spotlight
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      items={commands}
+      placeholder="Type a command..."
+      onSelect={(item) => {
+        console.log('Execute:', item.id)
+        setIsOpen(false)
+      }}
+    />
+  )
+}
+```
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `↑` / `↓` | Navigate between items |
+| `Enter` | Select highlighted item |
+| `Escape` | Close spotlight |
+| `⌘K` / `⌘Space` | Open spotlight (when configured) |

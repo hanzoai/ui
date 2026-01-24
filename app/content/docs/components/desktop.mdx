@@ -1,0 +1,126 @@
+---
+title: Desktop
+description: macOS-style desktop components for building OS-like interfaces with windows, spotlight search, dock, and more
+component: true
+---
+
+The Desktop namespace provides components and hooks for building macOS-style desktop interfaces. These components work together to create a cohesive desktop experience with window management, application launching, and settings.
+
+## Components
+
+| Component | Description |
+|-----------|-------------|
+| [Window](/docs/components/desktop-window) | Draggable, resizable window with minimize, maximize, and close controls |
+| [Spotlight](/docs/components/desktop-spotlight) | macOS Spotlight-style search and command palette |
+
+## Hooks
+
+| Hook | Description |
+|------|-------------|
+| `useWindowManager` | Manage multiple windows with open/close/toggle state |
+| `useDesktopSettings` | Persist desktop settings like theme, dock position |
+| `useOverlayManager` | Manage overlay states (spotlight, about dialog, etc.) |
+| `useKeyboardShortcuts` | Register keyboard shortcuts (⌘+Space, ⌘+Q, etc.) |
+
+See [Desktop Hooks](/docs/components/desktop-hooks) for detailed hook documentation.
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add desktop
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+```bash
+npm install @hanzo/ui framer-motion lucide-react
+```
+
+Then import from the desktop namespace:
+
+```tsx
+import {
+  Window,
+  Spotlight,
+  useWindowManager,
+  useDesktopSettings,
+  useOverlayManager,
+  useKeyboardShortcuts
+} from "@hanzo/ui/desktop"
+```
+
+</TabsContent>
+
+</Tabs>
+
+## Quick Start
+
+```tsx
+import {
+  Window,
+  Spotlight,
+  useWindowManager,
+  useKeyboardShortcuts
+} from "@hanzo/ui/desktop"
+import { Dock, DockItem } from "@hanzo/ui/dock"
+
+export function MyDesktop() {
+  const windows = useWindowManager()
+  const [showSpotlight, setShowSpotlight] = useState(false)
+
+  useKeyboardShortcuts([
+    { key: ' ', meta: true, action: () => setShowSpotlight(true) },
+  ])
+
+  return (
+    <div className="h-screen relative">
+      {/* Windows */}
+      {windows.isOpen('Settings') && (
+        <Window
+          title="Settings"
+          onClose={() => windows.closeWindow('Settings')}
+        >
+          <div className="p-4">Settings content</div>
+        </Window>
+      )}
+
+      {/* Spotlight */}
+      <Spotlight
+        isOpen={showSpotlight}
+        onClose={() => setShowSpotlight(false)}
+        items={[
+          { id: 'settings', title: 'Settings', category: 'Apps' },
+        ]}
+        onSelect={(item) => {
+          windows.openWindow(item.title)
+          setShowSpotlight(false)
+        }}
+      />
+
+      {/* Dock */}
+      <Dock position="bottom">
+        <DockItem
+          tooltip="Settings"
+          onClick={() => windows.toggleWindow('Settings')}
+        />
+      </Dock>
+    </div>
+  )
+}
+```
+
+## Related Components
+
+- [Dock](/docs/components/dock) - macOS-style dock with magnification
+- [macOS Dock](/docs/components/macos-dock) - Full macOS dock variant
