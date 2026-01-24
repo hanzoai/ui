@@ -284,6 +284,65 @@ NEXT_PUBLIC_APP_URL=http://localhost:3003
 
 ## Recent Updates
 
+### 2025-01-24 - Firebase Made Optional (@hanzo/auth-firebase)
+**Issue**: Firebase was a required dependency for @hanzo/auth, but most apps don't need it
+**Solution**: Split Firebase into a separate optional package
+
+**Changes Made**:
+1. **Created `@hanzo/auth-firebase` package** (`pkg/auth-firebase/`)
+   - Contains all Firebase-specific auth implementation
+   - Exports `FirebaseAuthService`, `isFirebaseConfigured()`
+   - Server exports at `@hanzo/auth-firebase/server`
+   - Service exports at `@hanzo/auth-firebase/service`
+
+2. **Updated `@hanzo/auth` to v2.6.0**
+   - Removed `firebase-admin` from dependencies
+   - Made `firebase` and `firebase-admin` optional peer dependencies
+   - Added `StubAuthService` for when no provider is configured
+   - Created pluggable provider registry (`registerAuthProvider()`)
+   - Created `index.ts` with all exports
+
+3. **Updated `@hanzo/commerce` to v7.4.0**
+   - Made `firebase` peer dependency optional via `peerDependenciesMeta`
+
+**New Usage Pattern**:
+```typescript
+// Without Firebase (works out of the box)
+import { useAuth, AuthServiceProvider } from '@hanzo/auth'
+// Auth operations return graceful failures
+
+// With Firebase (opt-in)
+import { FirebaseAuthService, isFirebaseConfigured } from '@hanzo/auth-firebase'
+import { registerAuthProvider } from '@hanzo/auth'
+
+if (isFirebaseConfigured()) {
+  registerAuthProvider('firebase', FirebaseAuthService)
+}
+```
+
+**Files Created**:
+- `pkg/auth-firebase/package.json`
+- `pkg/auth-firebase/index.ts`
+- `pkg/auth-firebase/tsconfig.json`
+- `pkg/auth-firebase/README.md`
+- `pkg/auth-firebase/service/firebase-support.ts`
+- `pkg/auth-firebase/service/firebase-auth-service.ts`
+- `pkg/auth-firebase/service/wallet-support.ts`
+- `pkg/auth-firebase/service/index.ts`
+- `pkg/auth-firebase/server/firebase-support.ts`
+- `pkg/auth-firebase/server/index.ts`
+- `pkg/auth/index.ts`
+- `pkg/auth/service/provider-registry.ts`
+- `pkg/auth/service/impl/stub-auth-service.ts`
+- `pkg/auth/server/stub-server.ts`
+
+**Files Modified**:
+- `pkg/auth/package.json` - v2.6.0, optional Firebase
+- `pkg/auth/service/index.ts` - Export new provider registry
+- `pkg/auth/service/get-singleton.ts` - Use pluggable providers
+- `pkg/auth/server/index.ts` - Export stub functions
+- `pkg/commerce/package.json` - v7.4.0, optional Firebase
+
 ### 2025-10-19 - Registry Structure Fix & Build Issues (IN PROGRESS)
 **Issue**: Deployment failing due to registry access pattern and build errors
 **Root Causes**:
