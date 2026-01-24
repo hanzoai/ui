@@ -1,0 +1,199 @@
+---
+title: Desktop Window
+description: A macOS-style draggable, resizable window component with minimize, maximize, and close controls
+component: true
+---
+
+<ComponentPreview name="desktop-window-demo" />
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx @hanzo/ui@latest add desktop
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion lucide-react
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="desktop-window" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { Window } from "@hanzo/ui/desktop"
+
+export function WindowDemo() {
+  return (
+    <Window
+      title="My Application"
+      onClose={() => console.log("Window closed")}
+      initialPosition={{ x: 100, y: 100 }}
+      initialSize={{ width: 600, height: 400 }}
+    >
+      <div className="p-4">
+        <h1>Window Content</h1>
+        <p>Your content goes here...</p>
+      </div>
+    </Window>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | - | Window title displayed in the title bar |
+| `onClose` | `() => void` | - | Callback when the close button is clicked |
+| `initialPosition` | `{ x: number, y: number }` | `{ x: 100, y: 100 }` | Initial window position |
+| `initialSize` | `{ width: number, height: number }` | `{ width: 800, height: 600 }` | Initial window dimensions |
+| `minWidth` | `number` | `200` | Minimum window width |
+| `minHeight` | `number` | `150` | Minimum window height |
+| `windowType` | `'default' \| 'dark' \| 'light' \| 'transparent'` | `'default'` | Window style variant |
+| `className` | `string` | - | Additional CSS classes for the window |
+| `children` | `ReactNode` | - | Window content |
+
+## Variants
+
+### Default Window
+
+```tsx
+<Window title="Default" windowType="default">
+  <div className="p-4">Default window style</div>
+</Window>
+```
+
+### Dark Window
+
+```tsx
+<Window title="Dark Mode" windowType="dark">
+  <div className="p-4 text-white">Dark themed window</div>
+</Window>
+```
+
+### Transparent Window
+
+```tsx
+<Window title="Transparent" windowType="transparent">
+  <div className="p-4">Transparent background window</div>
+</Window>
+```
+
+## Features
+
+- **Draggable**: Click and drag the title bar to move the window
+- **Resizable**: Drag edges or corners to resize
+- **Traffic Lights**: macOS-style close, minimize, and maximize buttons
+- **Maximize Toggle**: Double-click title bar or click maximize button
+- **Keyboard Support**: Escape key to close (when focused)
+- **Smooth Animations**: Powered by Framer Motion
+
+## Examples
+
+### Application Window
+
+```tsx
+import { Window } from "@hanzo/ui/desktop"
+import { Settings, User, Bell } from "lucide-react"
+
+export function SettingsWindow() {
+  const [isOpen, setIsOpen] = useState(true)
+
+  if (!isOpen) return null
+
+  return (
+    <Window
+      title="Settings"
+      onClose={() => setIsOpen(false)}
+      initialSize={{ width: 500, height: 400 }}
+    >
+      <div className="flex h-full">
+        <nav className="w-48 border-r p-4">
+          <button className="flex items-center gap-2 p-2 w-full hover:bg-gray-100 rounded">
+            <User className="h-4 w-4" />
+            Profile
+          </button>
+          <button className="flex items-center gap-2 p-2 w-full hover:bg-gray-100 rounded">
+            <Bell className="h-4 w-4" />
+            Notifications
+          </button>
+        </nav>
+        <main className="flex-1 p-4">
+          <h2 className="text-lg font-semibold">Settings Content</h2>
+        </main>
+      </div>
+    </Window>
+  )
+}
+```
+
+### Multiple Windows
+
+```tsx
+import { Window, useWindowManager } from "@hanzo/ui/desktop"
+
+export function MultiWindowDemo() {
+  const windows = useWindowManager()
+
+  return (
+    <div className="relative h-screen">
+      {windows.isOpen('Settings') && (
+        <Window
+          title="Settings"
+          onClose={() => windows.close('Settings')}
+          initialPosition={{ x: 100, y: 100 }}
+        >
+          <div className="p-4">Settings content</div>
+        </Window>
+      )}
+
+      {windows.isOpen('Editor') && (
+        <Window
+          title="Editor"
+          onClose={() => windows.close('Editor')}
+          initialPosition={{ x: 200, y: 150 }}
+        >
+          <div className="p-4">Editor content</div>
+        </Window>
+      )}
+
+      <button onClick={() => windows.open('Settings')}>Open Settings</button>
+      <button onClick={() => windows.open('Editor')}>Open Editor</button>
+    </div>
+  )
+}
+```
