@@ -1,7 +1,7 @@
 {
-  "name": "@hanzo/auth",
-  "version": "2.6.0",
-  "description": "Pluggable authentication library. Firebase support via @hanzo/auth-firebase (optional).",
+  "name": "@hanzo/auth-firebase",
+  "version": "1.0.0",
+  "description": "Firebase authentication provider for @hanzo/auth",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -12,46 +12,39 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/react-sdk.git",
-    "directory": "pkg/auth"
+    "directory": "pkg/auth-firebase"
   },
   "keywords": [
     "auth",
+    "firebase",
     "hanzoai",
     "hanzo"
   ],
   "main": "index.ts",
   "scripts": {
-    "lat": "npm show @hanzo/auth version",
+    "lat": "npm show @hanzo/auth-firebase version",
     "pub": "npm publish",
     "tc": "tsc",
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
-  "dependencies": {},
+  "exports": {
+    ".": "./index.ts",
+    "./server": "./server/index.ts",
+    "./service": "./service/index.ts"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.1.0"
+  },
   "peerDependencies": {
-    "@hanzo/ui": "workspace:*",
-    "@hookform/resolvers": "^3.3.4",
-    "lucide-react": ">=0.456.0",
+    "@hanzo/auth": "workspace:*",
+    "firebase": "^10.8.0",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
-    "next": ">=14.2.16",
-    "react": "^18.0.0 || ^19.0.0",
-    "react-hook-form": ">=7.51.4",
-    "zod": "^3.23.8"
-  },
-  "peerDependenciesMeta": {
-    "firebase": {
-      "optional": true
-    },
-    "firebase-admin": {
-      "optional": true
-    }
+    "next": ">=14.2.16"
   },
   "devDependencies": {
     "@types/node": "^24.4.0",
     "@types/react": "^19.0.0",
-    "cross-fetch": "^4.0.0",
-    "firebase": "^10.8.0",
-    "firebase-admin": "^12.1.0",
     "typescript": "5.6.3"
   }
 }

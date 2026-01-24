@@ -2,40 +2,33 @@ import { enableStaticRendering } from 'mobx-react-lite'
 
 import type AuthService from './auth-service'
 import type { AuthServiceConf, HanzoUserInfoValue } from '../types'
-import AuthServiceImpl from './impl'
+import { getActiveProvider } from './provider-registry'
+import { StubAuthService } from './impl/stub-auth-service'
 
 enableStaticRendering(typeof window === "undefined")
 
-  // https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
-let instance: AuthServiceImpl | undefined =  undefined
-
-/* PLEASE LEAVE
-const _log = (s: string) => {
-  const d = new Date()
-  console.log(`TIMESTAMPED: ${d.getUTCMinutes()}:${d.getUTCSeconds()}:${d.getUTCMilliseconds()}`)
-  console.log(s)
-}
-*/
+// https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
+let instance: AuthService | undefined = undefined
 
 const getSingleton = (
-  conf: AuthServiceConf, 
+  conf: AuthServiceConf,
   serverSideUser: HanzoUserInfoValue | null
 ): AuthService => {
 
-    // For server side rendering always create a new store
+  // Get the registered auth provider, or use stub if none configured
+  const AuthServiceClass = getActiveProvider() ?? StubAuthService
+
+  // For server side rendering always create a new store
   if (typeof window === "undefined") {
-    //_log("NEW INSTANCE FOR SERVER")
-    return new AuthServiceImpl(conf, serverSideUser)
+    return new AuthServiceClass(conf, serverSideUser)
   }
 
-    // Client side, create the store only once in the client
+  // Client side, create the store only once in the client
   if (!instance) {
-    //_log("NEW INSTANCE FOR CLIENT")
-    instance = new AuthServiceImpl(conf, serverSideUser)
-  }  
-  else {
-    //_log("INSTANCE EXISTS ON CLIENT")
-    instance.setServerSideUser(serverSideUser) 
+    instance = new AuthServiceClass(conf, serverSideUser)
+  }
+  else if ('setServerSideUser' in instance && typeof instance.setServerSideUser === 'function') {
+    instance.setServerSideUser(serverSideUser)
   }
 
   return instance
