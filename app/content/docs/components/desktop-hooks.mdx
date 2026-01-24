@@ -1,0 +1,357 @@
+---
+title: Desktop Hooks
+description: React hooks for building macOS-style desktop interfaces with window management, settings, and keyboard shortcuts
+component: true
+---
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx @hanzo/ui@latest add desktop
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="desktop-hooks" />
+
+<Step>Update the import paths to match your project setup</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Hooks
+
+### useWindowManager
+
+Manages multiple windows with open/close state, built on React's useReducer pattern.
+
+```tsx
+import { useWindowManager } from "@hanzo/ui/desktop"
+
+function Desktop() {
+  const windows = useWindowManager()
+
+  return (
+    <div>
+      <button onClick={() => windows.openWindow('Settings')}>Open Settings</button>
+      <button onClick={() => windows.toggleWindow('Terminal')}>Toggle Terminal</button>
+      <button onClick={() => windows.closeAllWindows()}>Close All</button>
+
+      {windows.isOpen('Settings') && (
+        <Window title="Settings" onClose={() => windows.closeWindow('Settings')}>
+          ...
+        </Window>
+      )}
+
+      {windows.isOpen('Terminal') && (
+        <Window title="Terminal" onClose={() => windows.closeWindow('Terminal')}>
+          ...
+        </Window>
+      )}
+    </div>
+  )
+}
+```
+
+#### API
+
+| Method | Type | Description |
+|--------|------|-------------|
+| `isOpen` | `(id: string) => boolean` | Check if a window is open |
+| `openWindow` | `(id: string) => void` | Open a window |
+| `closeWindow` | `(id: string) => void` | Close a window |
+| `toggleWindow` | `(id: string) => void` | Toggle a window's open state |
+| `closeAllWindows` | `() => void` | Close all windows |
+| `focusWindow` | `(id: string) => void` | Focus/activate a window |
+| `activeWindow` | `string \| null` | Currently active window |
+| `openWindows` | `string[]` | List of all open window IDs |
+| `windows` | `Record<string, boolean>` | Window state map |
+
+---
+
+### useDesktopSettings
+
+Manages desktop settings with localStorage persistence.
+
+```tsx
+import { useDesktopSettings } from "@hanzo/ui/desktop"
+
+function SettingsPanel() {
+  const settings = useDesktopSettings()
+
+  return (
+    <div>
+      <label>
+        Theme
+        <select
+          value={settings.theme}
+          onChange={(e) => settings.setTheme(e.target.value)}
+        >
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">System</option>
+        </select>
+      </label>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={settings.showDock}
+          onChange={(e) => settings.setShowDock(e.target.checked)}
+        />
+        Show Dock
+      </label>
+
+      <label>
+        Dock Position
+        <select
+          value={settings.dockPosition}
+          onChange={(e) => settings.setDockPosition(e.target.value)}
+        >
+          <option value="bottom">Bottom</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </label>
+    </div>
+  )
+}
+```
+
+#### API
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `theme` | `'light' \| 'dark' \| 'system'` | Current theme |
+| `setTheme` | `(theme) => void` | Set theme |
+| `colorScheme` | `string` | Color scheme name |
+| `setColorScheme` | `(scheme) => void` | Set color scheme |
+| `showDock` | `boolean` | Whether dock is visible |
+| `setShowDock` | `(show) => void` | Toggle dock visibility |
+| `dockPosition` | `'bottom' \| 'left' \| 'right'` | Dock position |
+| `setDockPosition` | `(position) => void` | Set dock position |
+| `dockMagnification` | `boolean` | Dock magnification enabled |
+| `setDockMagnification` | `(enabled) => void` | Toggle magnification |
+| `fontSize` | `number` | Base font size |
+| `setFontSize` | `(size) => void` | Set font size |
+| `windowTransparency` | `number` | Window transparency (0-1) |
+| `setWindowTransparency` | `(opacity) => void` | Set transparency |
+| `resetToDefaults` | `() => void` | Reset all settings |
+
+---
+
+### useOverlayManager
+
+Manages overlay/modal states like spotlight, about dialog, etc.
+
+```tsx
+import { useOverlayManager } from "@hanzo/ui/desktop"
+
+function Desktop() {
+  const overlays = useOverlayManager()
+
+  return (
+    <div>
+      <button onClick={() => overlays.open('spotlight')}>
+        Open Spotlight (⌘+Space)
+      </button>
+
+      <button onClick={() => overlays.open('about')}>
+        About This Mac
+      </button>
+
+      {overlays.isOpen('spotlight') && (
+        <Spotlight onClose={() => overlays.close('spotlight')} />
+      )}
+
+      {overlays.isOpen('about') && (
+        <AboutDialog onClose={() => overlays.close('about')} />
+      )}
+    </div>
+  )
+}
+```
+
+#### API
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `overlays` | `OverlayState` | Current overlay states |
+| `isOpen` | `(id: string) => boolean` | Check if an overlay is open |
+| `open` | `(id: string) => void` | Open an overlay by id |
+| `close` | `(id: string) => void` | Close an overlay by id |
+| `toggle` | `(id: string) => void` | Toggle an overlay |
+| `closeAll` | `() => void` | Close all overlays |
+
+Built-in overlay IDs: `spotlight`, `contextMenu`, `modal`, `drawer`
+
+---
+
+### useKeyboardShortcuts
+
+Register keyboard shortcuts for your desktop application.
+
+```tsx
+import { useKeyboardShortcuts } from "@hanzo/ui/desktop"
+
+function Desktop() {
+  const windows = useWindowManager()
+  const overlays = useOverlayManager()
+
+  useKeyboardShortcuts([
+    // ⌘+Space: Open Spotlight
+    { key: ' ', meta: true, action: overlays.openSpotlight },
+
+    // ⌘+Q: Quit active app
+    { key: 'q', meta: true, action: () => windows.close(windows.activeWindow) },
+
+    // ⌘+W: Close window
+    { key: 'w', meta: true, action: () => windows.close(windows.activeWindow) },
+
+    // ⌘+N: New window
+    { key: 'n', meta: true, action: () => windows.open('NewDocument') },
+
+    // ⌘+,: Preferences
+    { key: ',', meta: true, action: () => windows.open('Settings') },
+
+    // ⌘+Tab: App switcher
+    { key: 'Tab', meta: true, action: overlays.openAppSwitcher },
+
+    // ⌘+⌥+Esc: Force Quit
+    { key: 'Escape', meta: true, alt: true, action: overlays.openForceQuit },
+  ])
+
+  return (
+    // ... desktop content
+  )
+}
+```
+
+#### Shortcut Definition
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `key` | `string` | Key to listen for |
+| `meta` | `boolean` | Require ⌘ (Mac) / Ctrl (Windows) |
+| `alt` | `boolean` | Require Alt/Option |
+| `shift` | `boolean` | Require Shift |
+| `ctrl` | `boolean` | Require Control |
+| `action` | `() => void` | Callback when triggered |
+
+## Complete Example
+
+```tsx
+import {
+  Window,
+  Spotlight,
+  useWindowManager,
+  useDesktopSettings,
+  useOverlayManager,
+  useKeyboardShortcuts
+} from "@hanzo/ui/desktop"
+import { Dock, DockItem } from "@hanzo/ui/dock"
+
+const apps = ['Finder', 'Terminal', 'Safari', 'Mail', 'Calendar', 'Settings']
+
+export function Desktop() {
+  const windows = useWindowManager()
+  const settings = useDesktopSettings()
+  const overlays = useOverlayManager()
+
+  // Register keyboard shortcuts
+  useKeyboardShortcuts([
+    { key: ' ', meta: true, action: overlays.openSpotlight },
+    { key: 'q', meta: true, action: () => windows.close(windows.activeWindow) },
+    { key: ',', meta: true, action: () => windows.open('Settings') },
+  ])
+
+  return (
+    <div
+      className="h-screen w-screen relative"
+      style={{
+        opacity: settings.windowTransparency,
+        fontSize: settings.fontSize
+      }}
+    >
+      {/* Desktop Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600" />
+
+      {/* Windows */}
+      {apps.map(app => windows.isOpen(app) && (
+        <Window
+          key={app}
+          title={app}
+          onClose={() => windows.close(app)}
+          windowType={settings.theme === 'dark' ? 'dark' : 'default'}
+        >
+          <div className="p-4">{app} content</div>
+        </Window>
+      ))}
+
+      {/* Spotlight */}
+      {overlays.spotlight && (
+        <Spotlight
+          isOpen={true}
+          onClose={overlays.closeSpotlight}
+          items={apps.map(app => ({
+            id: app.toLowerCase(),
+            label: app,
+            category: 'Applications'
+          }))}
+          onSelect={(item) => {
+            windows.open(item.label)
+            overlays.closeSpotlight()
+          }}
+        />
+      )}
+
+      {/* Dock */}
+      {settings.showDock && (
+        <Dock
+          position={settings.dockPosition}
+          magnification={settings.dockMagnification ? 60 : 0}
+        >
+          {apps.map(app => (
+            <DockItem
+              key={app}
+              tooltip={app}
+              onClick={() => windows.toggle(app)}
+              isActive={windows.isOpen(app)}
+            />
+          ))}
+        </Dock>
+      )}
+    </div>
+  )
+}
+```
