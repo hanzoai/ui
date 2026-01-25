@@ -82,8 +82,12 @@ jobs:
           publish_package() {
             local pkg_dir=$1
             cd $pkg_dir
-            npm version ${{ github.event.inputs.version_bump }}
-            pnpm publish --access public --no-git-checks
+            # Bump version without git commit
+            pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+            # Pack to resolve workspace protocol, then publish the tarball
+            pnpm pack
+            npm publish *.tgz --access public
+            rm -f *.tgz
             cd -
           }
           
