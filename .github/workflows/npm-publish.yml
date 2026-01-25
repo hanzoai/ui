@@ -12,6 +12,7 @@ on:
           - ui-mcp
           - auth
           - commerce
+          - checkout
           - brand
           - react
           - all
@@ -58,6 +59,10 @@ jobs:
             cd pkg/commerce && pnpm build
             cd ../..
           fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "checkout" ]; then
+            cd pkg/checkout && pnpm build
+            cd ../..
+          fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "brand" ]; then
             cd pkg/brand && pnpm build
             cd ../..
@@ -94,6 +99,9 @@ jobs:
             commerce)
               publish_package "pkg/commerce"
               ;;
+            checkout)
+              publish_package "pkg/checkout"
+              ;;
             brand)
               publish_package "pkg/brand"
               ;;
@@ -105,6 +113,7 @@ jobs:
               publish_package "pkg/ui-mcp"
               publish_package "pkg/auth"
               publish_package "pkg/commerce"
+              publish_package "pkg/checkout"
               publish_package "pkg/brand"
               publish_package "pkg/react"
               ;;
