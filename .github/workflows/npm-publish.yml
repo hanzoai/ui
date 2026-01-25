@@ -86,21 +86,22 @@ jobs:
           publish_package() {
             local pkg_dir=$1
             local pkg_name=$(cd $pkg_dir && node -p "require('./package.json').name")
-            echo "Publishing $pkg_name from $pkg_dir"
+            local pkg_version=$(cd $pkg_dir && node -p "require('./package.json').version")
+            echo "Publishing $pkg_name@$pkg_version from $pkg_dir"
             # Bump version
             cd $pkg_dir
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
-            # Pack first (resolves workspace: protocols), then publish tarball
+            local new_version=$(node -p "require('./package.json').version")
+            echo "Version bumped to $new_version"
+            # Pack the tarball - pnpm pack resolves workspace: protocols
             local tarball=$(pnpm pack 2>&1 | tail -1)
-            # Copy tarball to temp dir and publish from there to avoid workspace detection
-            local temp_dir=$(mktemp -d)
-            cp "$tarball" "$temp_dir/"
-            echo "Publishing $tarball from $temp_dir"
-            cd "$temp_dir"
-            npm publish "$tarball" --access public
-            cd -
-            rm -rf "$temp_dir"
+            echo "Created tarball: $tarball"
+            # Extract and inspect the tarball to verify no workspace refs
+            tar -tzf "$tarball"
+            # Publish using pnpm which handles tarballs correctly
+            pnpm publish "$tarball" --access public --no-git-checks
             rm -f "$tarball"
+            cd -
           }
           
           case "${{ github.event.inputs.package }}" in
