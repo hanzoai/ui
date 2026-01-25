@@ -255,7 +255,7 @@ export class HanzoCheckout {
   /**
    * Normalize API response to CheckoutSession
    */
-  private normalizeSession(data: Record<string, unknown>): CheckoutSession {
+  private normalizeSession(data: CheckoutSession | Record<string, unknown>): CheckoutSession {
     return {
       id: data.id as string,
       status: data.status as CheckoutSession['status'],
