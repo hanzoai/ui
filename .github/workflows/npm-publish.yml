@@ -51,6 +51,10 @@ jobs:
             cd pkg/ui && pnpm build
             cd ../..
           fi
+          if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "ui-mcp" ]; then
+            cd pkg/ui-mcp && pnpm build
+            cd ../..
+          fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "auth" ]; then
             cd pkg/auth && pnpm build
             cd ../..
@@ -82,12 +86,13 @@ jobs:
           publish_package() {
             local pkg_dir=$1
             local pkg_name=$(cd $pkg_dir && node -p "require('./package.json').name")
-            # Bump version in package
+            echo "Publishing $pkg_name from $pkg_dir"
+            # Bump version and publish from within package directory
+            # This allows pnpm to properly resolve workspace protocols
             cd $pkg_dir
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+            pnpm publish --access public --no-git-checks
             cd -
-            # Use pnpm's filter to publish specific package (handles workspace protocol)
-            pnpm --filter "$pkg_name" publish --access public --no-git-checks
           }
           
           case "${{ github.event.inputs.package }}" in
