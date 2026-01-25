@@ -255,7 +255,8 @@ export class HanzoCheckout {
   /**
    * Normalize API response to CheckoutSession
    */
-  private normalizeSession(data: CheckoutSession | Record<string, unknown>): CheckoutSession {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private normalizeSession(data: any): CheckoutSession {
     return {
       id: data.id as string,
       status: data.status as CheckoutSession['status'],
