@@ -75,14 +75,15 @@ jobs:
       - name: Bump version and publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         run: |
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
-          
+
           publish_package() {
             local pkg_dir=$1
             cd $pkg_dir
             npm version ${{ github.event.inputs.version_bump }}
-            npm publish --access public
+            pnpm publish --access public --no-git-checks
             cd -
           }
           
