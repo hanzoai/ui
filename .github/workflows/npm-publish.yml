@@ -81,7 +81,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
         run: |
+          # Set up npm and pnpm auth
           npm config set //registry.npmjs.org/:_authToken $NODE_AUTH_TOKEN
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
 
           publish_package() {
             local pkg_dir=$1
@@ -93,13 +95,22 @@ jobs:
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
             local new_version=$(node -p "require('./package.json').version")
             echo "Version bumped to $new_version"
-            # Pack the tarball - pnpm pack resolves workspace: protocols
-            local tarball=$(pnpm pack 2>&1 | tail -1)
+            # Pack the tarball - this resolves workspace: protocols to real versions
+            echo "Running pnpm pack..."
+            pnpm pack
+            local tarball=$(ls -t *.tgz | head -1)
             echo "Created tarball: $tarball"
-            # Extract and inspect the tarball to verify no workspace refs
-            tar -tzf "$tarball"
-            # Publish using pnpm which handles tarballs correctly
-            pnpm publish "$tarball" --access public --no-git-checks
+            # Extract and inspect the tarball package.json
+            echo "Inspecting tarball package.json..."
+            tar -xzf "$tarball" -O package/package.json | head -60
+            # Create a temp directory completely outside the workspace
+            local temp_publish_dir="/tmp/npm-publish-$$"
+            mkdir -p "$temp_publish_dir"
+            cp "$tarball" "$temp_publish_dir/"
+            # Publish from temp dir using npm directly
+            echo "Publishing from $temp_publish_dir..."
+            (cd "$temp_publish_dir" && npm publish "$tarball" --access public)
+            rm -rf "$temp_publish_dir"
             rm -f "$tarball"
             cd -
           }
