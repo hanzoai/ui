@@ -87,11 +87,14 @@ jobs:
             local pkg_dir=$1
             local pkg_name=$(cd $pkg_dir && node -p "require('./package.json').name")
             echo "Publishing $pkg_name from $pkg_dir"
-            # Bump version and publish from within package directory
-            # This allows pnpm to properly resolve workspace protocols
+            # Bump version
             cd $pkg_dir
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
-            pnpm publish --access public --no-git-checks
+            # Pack first (resolves workspace: protocols), then publish tarball
+            local tarball=$(pnpm pack | tail -1)
+            echo "Publishing tarball: $tarball"
+            npm publish "$tarball" --access public
+            rm -f "$tarball"
             cd -
           }
           
