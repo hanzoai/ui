@@ -81,14 +81,13 @@ jobs:
 
           publish_package() {
             local pkg_dir=$1
+            local pkg_name=$(cd $pkg_dir && node -p "require('./package.json').name")
+            # Bump version in package
             cd $pkg_dir
-            # Bump version without git commit
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
-            # Pack to resolve workspace protocol, then publish the tarball
-            pnpm pack
-            npm publish *.tgz --access public
-            rm -f *.tgz
             cd -
+            # Use pnpm's filter to publish specific package (handles workspace protocol)
+            pnpm --filter "$pkg_name" publish --access public --no-git-checks
           }
           
           case "${{ github.event.inputs.package }}" in
