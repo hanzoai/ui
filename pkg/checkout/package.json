@@ -39,9 +39,9 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@hanzo/auth": "workspace:*",
-    "@hanzo/commerce": "workspace:*",
-    "@hanzo/ui": "workspace:*",
+    "@hanzo/auth": "^2.5.0",
+    "@hanzo/commerce": "^7.3.0",
+    "@hanzo/ui": "^5.3.0",
     "lucide-react": ">=0.456.0",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
