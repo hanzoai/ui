@@ -91,9 +91,10 @@ jobs:
             cd $pkg_dir
             pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
             # Pack first (resolves workspace: protocols), then publish tarball
-            local tarball=$(pnpm pack | tail -1)
+            local tarball=$(pnpm pack 2>&1 | tail -1)
             echo "Publishing tarball: $tarball"
-            npm publish "$tarball" --access public
+            # Use --workspaces false to prevent npm from detecting the workspace root
+            npm publish "$tarball" --access public --workspaces false
             rm -f "$tarball"
             cd -
           }
