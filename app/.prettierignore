@@ -4,3 +4,5 @@ node_modules
 build
 .contentlayer
 apps/web/pages/api/registry.json
+**/fixtures
+deprecated
