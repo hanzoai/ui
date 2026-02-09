@@ -92,8 +92,6 @@ export function getThemeDocs() {
   return THEMES.map((theme) => ({
     name: theme.name,
     title: theme.title,
-    style: theme.style,
-    baseColor: theme.baseColor,
   }))
 }
 
@@ -177,7 +175,7 @@ export function toDocsRegistry(): {
             return { type: "components", path: f }
           }
           return {
-            type: f.type.replace("registry:", ""),
+            type: (f.type ?? "registry:component").replace("registry:", ""),
             path: f.path,
             target: f.target,
           }
