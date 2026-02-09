@@ -1,5 +1,5 @@
 // @hanzo/ui/mermaid - Mermaid diagram rendering
 // Requires: npm install mermaid
 
-export { default as Mermaid } from '../../primitives/mermaid'
-export * from '../../primitives/mermaid'
+export { MermaidDiagram as Mermaid, MermaidDiagram } from '../../primitives/mermaid'
+export type { MermaidDiagramProps } from '../../primitives/mermaid'
