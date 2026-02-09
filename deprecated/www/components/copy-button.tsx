@@ -7,11 +7,7 @@ import { NpmCommands } from "types/unist"
 
 import { Event, trackEvent } from "@/lib/events"
 import { cn } from "@/lib/utils"
-<<<<<<<< HEAD:app/components/copy-button.tsx
-import { Button, ButtonProps } from "@/registry/default/ui/button"
-========
 import { Button, ButtonProps } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/components/copy-button.tsx
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -53,11 +49,7 @@ export function CopyButton({
       size="icon"
       variant={variant}
       className={cn(
-<<<<<<<< HEAD:app/components/copy-button.tsx
-        "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50 [&_svg]:size-3",
-========
         "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50 [&_svg]:h-3 [&_svg]:w-3",
->>>>>>>> shadcn/main:deprecated/www/components/copy-button.tsx
         className
       )}
       onClick={() => {

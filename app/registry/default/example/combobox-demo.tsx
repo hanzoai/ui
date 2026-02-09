@@ -64,7 +64,6 @@ export default function ComboboxDemo() {
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search framework..." />
-<<<<<<<< HEAD:app/registry/default/example/combobox-demo.tsx
           <CommandEmpty>No framework found.</CommandEmpty>
           <CommandGroup>
             {frameworks.map((framework) => (
@@ -86,31 +85,6 @@ export default function ComboboxDemo() {
               </CommandItem>
             ))}
           </CommandGroup>
-========
-          <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
-              {frameworks.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  {framework.label}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
->>>>>>>> shadcn/main:deprecated/www/registry/default/examples/combobox-demo.tsx
         </Command>
       </PopoverContent>
     </Popover>

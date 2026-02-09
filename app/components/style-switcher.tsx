@@ -11,13 +11,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-<<<<<<<< HEAD:app/components/style-switcher.tsx
 } from "@/registry/default/ui/select"
 import { Style, styles } from "@/registry/styles"
-========
-} from "@/registry/new-york/ui/select"
-import { Style, styles } from "@/registry/registry-styles"
->>>>>>>> shadcn/main:deprecated/www/components/style-switcher.tsx
 
 export function StyleSwitcher({ className, ...props }: SelectTriggerProps) {
   const [config, setConfig] = useConfig()

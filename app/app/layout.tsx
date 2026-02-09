@@ -1,20 +1,13 @@
 import "@/styles/globals.css"
-<<<<<<<< HEAD:app/app/layout.tsx
 
 import { Metadata, Viewport } from "next"
 
 import { siteConfig } from "@/config/site"
-========
-import { Metadata, Viewport } from "next"
-
-import { META_THEME_COLORS, siteConfig } from "@/config/site"
->>>>>>>> shadcn/main:deprecated/www/app/layout.tsx
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { ActiveThemeProvider } from "@/components/active-theme"
 import { Analytics } from "@/components/analytics"
 import { ThemeProvider } from "@/components/providers"
-<<<<<<<< HEAD:app/app/layout.tsx
 import { SkipLinks } from "@/components/skip-links"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeSwitcher } from "@/components/theme-switcher"
@@ -24,13 +17,6 @@ import {
   Toaster as DefaultToaster,
   Toaster as NewYorkToaster,
 } from "@/registry/default/ui/toaster"
-========
-import { TailwindIndicator } from "@/components/tailwind-indicator"
-import { ThemeSwitcher } from "@/components/theme-switcher"
-import { Toaster as DefaultToaster } from "@/registry/default/ui/toaster"
-import { Toaster as NewYorkSonner } from "@/registry/new-york/ui/sonner"
-import { Toaster as NewYorkToaster } from "@/registry/new-york/ui/toaster"
->>>>>>>> shadcn/main:deprecated/www/app/layout.tsx
 
 export const metadata: Metadata = {
   title: {
@@ -52,11 +38,7 @@ export const metadata: Metadata = {
       url: "https://hanzo.ai",
     },
   ],
-<<<<<<<< HEAD:app/app/layout.tsx
   creator: "hanzo",
-========
-  creator: "shadcn",
->>>>>>>> shadcn/main:deprecated/www/app/layout.tsx
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -92,14 +74,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-<<<<<<<< HEAD:app/app/layout.tsx
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-========
-  themeColor: META_THEME_COLORS.light,
->>>>>>>> shadcn/main:deprecated/www/app/layout.tsx
 }
 
 interface RootLayoutProps {
@@ -137,7 +115,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             disableTransitionOnChange
             enableColorScheme
           >
-<<<<<<<< HEAD:app/app/layout.tsx
             <Web3Provider>
               <ActiveThemeProvider initialTheme="neutral">
                 <SkipLinks />
@@ -154,19 +131,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <NewYorkSonner />
               </ActiveThemeProvider>
             </Web3Provider>
-========
-            <div vaul-drawer-wrapper="">
-              <div className="relative flex min-h-svh flex-col bg-background">
-                {children}
-              </div>
-            </div>
-            <TailwindIndicator />
-            <ThemeSwitcher />
-            <Analytics />
-            <NewYorkToaster />
-            <DefaultToaster />
-            <NewYorkSonner />
->>>>>>>> shadcn/main:deprecated/www/app/layout.tsx
           </ThemeProvider>
         </body>
       </html>

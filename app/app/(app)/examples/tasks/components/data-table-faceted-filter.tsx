@@ -111,11 +111,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : "border-input [&_svg]:invisible"
                       )}
                     >
-<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
                       <Check className="text-primary-foreground size-3.5" />
-========
-                      <Check />
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
                     </div>
                     {option.icon && (
                       <option.icon className="text-muted-foreground size-4" />

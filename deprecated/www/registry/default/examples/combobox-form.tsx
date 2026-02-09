@@ -97,30 +97,6 @@ export default function ComboboxForm() {
                 <PopoverContent className="w-[200px] p-0">
                   <Command>
                     <CommandInput placeholder="Search language..." />
-<<<<<<<< HEAD:app/registry/default/example/combobox-form.tsx
-                    <CommandEmpty>No language found.</CommandEmpty>
-                    <CommandGroup>
-                      {languages.map((language) => (
-                        <CommandItem
-                          value={language.label}
-                          key={language.value}
-                          onSelect={() => {
-                            form.setValue("language", language.value)
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              language.value === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {language.label}
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-========
                     <CommandList>
                       <CommandEmpty>No language found.</CommandEmpty>
                       <CommandGroup>
@@ -145,7 +121,6 @@ export default function ComboboxForm() {
                         ))}
                       </CommandGroup>
                     </CommandList>
->>>>>>>> shadcn/main:deprecated/www/registry/default/examples/combobox-form.tsx
                   </Command>
                 </PopoverContent>
               </Popover>

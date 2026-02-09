@@ -7,26 +7,15 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { cn } from "@/lib/utils"
-<<<<<<<< HEAD:app/app/(app)/examples/forms/account/account-form.tsx
 import { Button } from "@/registry/default/ui/button"
 import { Calendar } from "@/registry/default/ui/calendar"
-========
-import { toast } from "@/registry/new-york/hooks/use-toast"
-import { Button } from "@/registry/new-york/ui/button"
-import { Calendar } from "@/registry/new-york/ui/calendar"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/account/account-form.tsx
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-<<<<<<<< HEAD:app/app/(app)/examples/forms/account/account-form.tsx
 } from "@/registry/default/ui/command"
-========
-  CommandList,
-} from "@/registry/new-york/ui/command"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/account/account-form.tsx
 import {
   Form,
   FormControl,
@@ -41,12 +30,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-<<<<<<<< HEAD:app/app/(app)/examples/forms/account/account-form.tsx
 } from "@/registry/default/ui/popover"
 import { toast } from "@/registry/default/ui/use-toast"
-========
-} from "@/registry/new-york/ui/popover"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/account/account-form.tsx
 
 const languages = [
   { label: "English", value: "en" },

@@ -1,11 +1,7 @@
 import { Metadata } from "next"
 import Image from "next/image"
 
-<<<<<<<< HEAD:app/app/(app)/examples/forms/layout.tsx
-import { Separator } from "@/registry/default/ui/separator"
-========
 import { Separator } from "@/registry/new-york/ui/separator"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/layout.tsx
 import { SidebarNav } from "@/app/(app)/examples/forms/components/sidebar-nav"
 
 export const metadata: Metadata = {

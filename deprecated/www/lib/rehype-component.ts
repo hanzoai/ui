@@ -10,11 +10,7 @@ import { styles } from "../registry/registry-styles"
 
 export function rehypeComponent() {
   return async (tree: UnistTree) => {
-<<<<<<<< HEAD:app/lib/rehype-component.ts
-    visit(tree as unknown as UnistBaseNode, (node: UnistNode) => {
-========
     visit(tree, (node: UnistNode) => {
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-component.ts
       // src prop overrides both name and fileName.
       const { value: srcPath } =
         (getNodeAttributeByName(node, "src") as {
@@ -38,19 +34,6 @@ export function rehypeComponent() {
             let src: string
 
             if (srcPath) {
-<<<<<<<< HEAD:app/lib/rehype-component.ts
-              src = srcPath
-            } else {
-              const component = Index[style.name][name]
-              src = fileName
-                ? component.files.find((file: string) => {
-                    return (
-                      file.endsWith(`${fileName}.tsx`) ||
-                      file.endsWith(`${fileName}.ts`)
-                    )
-                  }) || component.files[0]
-                : component.files[0]
-========
               src = path.join(process.cwd(), srcPath)
             } else {
               const component = Index[style.name][name]
@@ -65,7 +48,6 @@ export function rehypeComponent() {
                     return false
                   }) || component.files[0]?.path
                 : component.files[0]?.path
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-component.ts
             }
 
             // Read the source file.

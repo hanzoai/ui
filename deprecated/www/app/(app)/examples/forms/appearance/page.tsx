@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/app/(app)/examples/forms/appearance/page.tsx
-import { Separator } from "@/registry/default/ui/separator"
-========
 import { Separator } from "@/registry/new-york/ui/separator"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/appearance/page.tsx
 import { AppearanceForm } from "@/app/(app)/examples/forms/appearance/appearance-form"
 
 export default function SettingsAppearancePage() {

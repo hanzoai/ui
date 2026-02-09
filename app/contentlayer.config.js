@@ -1,9 +1,5 @@
-<<<<<<<< HEAD:app/contentlayer.config.js
 import path from "path"
 import { getHighlighter, loadTheme } from "@shikijs/compat"
-========
-import { getHighlighter } from "@shikijs/compat"
->>>>>>>> shadcn/main:deprecated/www/contentlayer.config.js
 import {
   defineDocumentType,
   defineNestedType,

@@ -3,11 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
-<<<<<<<< HEAD:app/app/(app)/examples/authentication/page.tsx
-import { buttonVariants } from "@/registry/default/ui/button"
-========
 import { buttonVariants } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/authentication/page.tsx
 import { UserAuthForm } from "@/app/(app)/examples/authentication/components/user-auth-form"
 
 export const metadata: Metadata = {

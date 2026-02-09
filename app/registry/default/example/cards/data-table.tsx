@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import {
-<<<<<<<< HEAD:app/registry/default/example/cards/data-table.tsx
   CaretSortIcon,
   ChevronDownIcon,
   DotsHorizontalIcon,
@@ -10,8 +9,6 @@ import {
 import {
   ColumnDef,
   ColumnFiltersState,
-========
->>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -19,14 +16,7 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
-<<<<<<<< HEAD:app/registry/default/example/cards/data-table.tsx
   VisibilityState,
-========
-  type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
-  type VisibilityState,
->>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
 } from "@tanstack/react-table"
 import { MoreHorizontalIcon } from "lucide-react"
 

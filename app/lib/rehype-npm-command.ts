@@ -43,27 +43,6 @@ export function rehypeNpmCommand() {
           "npx",
           "bunx --bun"
         )
-<<<<<<<< HEAD:app/lib/rehype-npm-command.ts
-========
-      }
-
-      // npm create.
-      if (node.properties?.["__rawString__"]?.startsWith("npm create")) {
-        const npmCommand = node.properties?.["__rawString__"]
-        node.properties["__npmCommand__"] = npmCommand
-        node.properties["__yarnCommand__"] = npmCommand.replace(
-          "npm create",
-          "yarn create"
-        )
-        node.properties["__pnpmCommand__"] = npmCommand.replace(
-          "npm create",
-          "pnpm create"
-        )
-        node.properties["__bunCommand__"] = npmCommand.replace(
-          "npm create",
-          "bun create"
-        )
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-npm-command.ts
       }
 
       // npx.
@@ -82,24 +61,6 @@ export function rehypeNpmCommand() {
           "npx",
           "bunx --bun"
         )
-<<<<<<<< HEAD:app/lib/rehype-npm-command.ts
-========
-      }
-
-      // npm run.
-      if (node.properties?.["__rawString__"]?.startsWith("npm run")) {
-        const npmCommand = node.properties?.["__rawString__"]
-        node.properties["__npmCommand__"] = npmCommand
-        node.properties["__yarnCommand__"] = npmCommand.replace(
-          "npm run",
-          "yarn"
-        )
-        node.properties["__pnpmCommand__"] = npmCommand.replace(
-          "npm run",
-          "pnpm"
-        )
-        node.properties["__bunCommand__"] = npmCommand.replace("npm run", "bun")
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-npm-command.ts
       }
     })
   }

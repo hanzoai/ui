@@ -1,12 +1,5 @@
-<<<<<<<< HEAD:pkg/ui/primitives/navigation-menu.tsx
 'use client'
 import React from 'react'
-========
-import * as React from "react"
-import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
-import { cva } from "class-variance-authority"
-import { ChevronDown } from "lucide-react"
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/ui/navigation-menu.tsx
 
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu'
 import { cva } from 'class-variance-authority'
@@ -60,14 +53,10 @@ const NavigationMenuItem = React.forwardRef<
 NavigationMenuItem.displayName = 'NavigationMenuItem'
 
 const navigationMenuTriggerStyle = cva(
-<<<<<<<< HEAD:pkg/ui/primitives/navigation-menu.tsx
   'group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 ' + 
   'text-sm font-medium transition-colors hover:bg-level-1 text-foreground hover:text-accent ' + 
   ' focus:text-accent focus:outline-none disabled:pointer-events-none disabled:opacity-50 ' + 
   'data-[active]:bg-level-1/50 data-[state=open]:bg-level-1/50'
-========
-  "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=open]:text-accent-foreground data-[state=open]:bg-accent/50 data-[state=open]:hover:bg-accent data-[state=open]:focus:bg-accent"
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/ui/navigation-menu.tsx
 )
 
 const NavigationMenuTrigger = React.forwardRef<
@@ -79,17 +68,10 @@ const NavigationMenuTrigger = React.forwardRef<
     className={cn(navigationMenuTriggerStyle(), 'group', className)}
     {...props}
   >
-<<<<<<<< HEAD:pkg/ui/primitives/navigation-menu.tsx
     {children}{' '}
     <ChevronDown
       className='relative top-[1px] ml-1 h-3 w-3 transition duration-200 group-data-[state=open]:rotate-180'
       aria-hidden='true'
-========
-    {children}{" "}
-    <ChevronDown
-      className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
-      aria-hidden="true"
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/ui/navigation-menu.tsx
     />
   </NavigationMenuPrimitive.Trigger>
 ))

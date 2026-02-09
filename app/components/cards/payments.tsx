@@ -13,11 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-<<<<<<<< HEAD:app/components/cards/payments.tsx
 import { MoreHorizontalIcon } from "lucide-react"
-========
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
 
 import { Button } from "@/registry/default/ui/button"
 import {
@@ -70,7 +66,6 @@ const data: Payment[] = [
     amount: 721,
     status: "failed",
     email: "carmella@example.com",
-<<<<<<<< HEAD:app/components/cards/payments.tsx
   },
   {
     id: "k9f2m3n4",
@@ -83,8 +78,6 @@ const data: Payment[] = [
     amount: 1280,
     status: "success",
     email: "sarah23@example.com",
-========
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
   },
 ]
 
@@ -127,21 +120,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "email",
-<<<<<<<< HEAD:app/components/cards/payments.tsx
     header: "Email",
-========
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      )
-    },
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
@@ -170,11 +149,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="size-8 p-0">
               <span className="sr-only">Open menu</span>
-<<<<<<<< HEAD:app/components/cards/payments.tsx
               <MoreHorizontalIcon />
-========
-              <MoreHorizontal />
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -233,47 +208,7 @@ export function CardsPayments() {
           </Button>
         </CardAction>
       </CardHeader>
-<<<<<<<< HEAD:app/components/cards/payments.tsx
       <CardContent className="flex flex-col gap-4">
-========
-      <CardContent>
-        <div className="mb-4 flex items-center gap-4">
-          <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
         <div className="overflow-hidden rounded-md border">
           <Table>
             <TableHeader>

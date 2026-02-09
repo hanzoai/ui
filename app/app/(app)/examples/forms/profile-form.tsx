@@ -6,12 +6,7 @@ import { useFieldArray, useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { cn } from "@/lib/utils"
-<<<<<<<< HEAD:app/app/(app)/examples/forms/profile-form.tsx
 import { Button } from "@/registry/default/ui/button"
-========
-import { toast } from "@/registry/new-york/hooks/use-toast"
-import { Button } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/profile-form.tsx
 import {
   Form,
   FormControl,
@@ -28,14 +23,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-<<<<<<<< HEAD:app/app/(app)/examples/forms/profile-form.tsx
 } from "@/registry/default/ui/select"
 import { Textarea } from "@/registry/default/ui/textarea"
 import { toast } from "@/registry/default/ui/use-toast"
-========
-} from "@/registry/new-york/ui/select"
-import { Textarea } from "@/registry/new-york/ui/textarea"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/profile-form.tsx
 
 const profileFormSchema = z.object({
   username: z

@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/app/(app)/examples/forms/account/page.tsx
 import { Separator } from "@/registry/default/ui/separator"
-========
-import { Separator } from "@/registry/new-york/ui/separator"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/account/page.tsx
 import { AccountForm } from "@/app/(app)/examples/forms/account/account-form"
 
 export default function SettingsAccountPage() {
