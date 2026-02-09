@@ -42,6 +42,11 @@
     "node_modules",
     "./scripts/build-registry.mts",
     ".source/**",
-    "__registry__/**"
+    "__registry__/**",
+    "registry/default/example/cards/**",
+    "registry/colors.ts",
+    "registry/v4/**",
+    "components/pager.tsx",
+    "lib/rehype-component.ts"
   ]
 }
