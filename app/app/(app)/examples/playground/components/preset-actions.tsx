@@ -2,8 +2,9 @@
 
 import * as React from "react"
 import { Dialog } from "@radix-ui/react-dialog"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { MoreHorizontal } from "lucide-react"
 
+import { toast } from "@/registry/new-york/hooks/use-toast"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -40,9 +41,9 @@ export function PresetActions() {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary">
+          <Button variant="secondary" size="icon">
             <span className="sr-only">Actions</span>
-            <DotsHorizontalIcon className="h-4 w-4" />
+            <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

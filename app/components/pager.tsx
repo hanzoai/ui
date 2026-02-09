@@ -21,22 +21,20 @@ export function DocsPager({ doc }: DocsPagerProps) {
   return (
     <div className="flex flex-row items-center justify-between">
       {pager?.prev?.href && (
-        <Link
-          href={pager.prev.href}
-          className={buttonVariants({ variant: "outline" })}
-        >
-          <ChevronLeftIcon className="mr-2 h-4 w-4" />
-          {pager.prev.title}
-        </Link>
+        <Button variant="ghost" asChild>
+          <Link href={pager.prev.href}>
+            <ChevronLeft />
+            {pager.prev.title}
+          </Link>
+        </Button>
       )}
       {pager?.next?.href && (
-        <Link
-          href={pager.next.href}
-          className={cn(buttonVariants({ variant: "outline" }), "ml-auto")}
-        >
-          {pager.next.title}
-          <ChevronRightIcon className="ml-2 h-4 w-4" />
-        </Link>
+        <Button variant="ghost" className="ml-auto" asChild>
+          <Link href={pager.next.href}>
+            {pager.next.title}
+            <ChevronRight />
+          </Link>
+        </Button>
       )}
     </div>
   )
