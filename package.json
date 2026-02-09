@@ -10,6 +10,8 @@
   },
   "workspaces": [
     "app",
+    "apps/*",
+    "packages/*",
     "pkg/*"
   ],
   "scripts": {
@@ -17,7 +19,9 @@
     "build:cli": "turbo --filter=hanzo build",
     "build:registry": "pnpm --filter=app build:registry && pnpm --filter=app lint:fix && pnpm format:write -- --loglevel silent",
     "registry:build": "pnpm --filter=app registry:build && pnpm lint:fix && pnpm format:write -- --loglevel silent",
+    "registry": "turbo run registry",
     "registry:capture": "pnpm --filter=app registry:capture",
+    "examples:build": "pnpm --filter=v4 examples:build",
     "dev": "turbo run dev --parallel",
     "hanzo-ui:dev": "turbo --filter=hanzo-ui dev",
     "hanzo-ui": "pnpm --filter=hanzo-ui start:dev",
@@ -30,6 +34,11 @@
     "hanzo:prod": "pnpm --filter=hanzo start:prod",
     "hanzo:build": "pnpm --filter=hanzo build",
     "hanzo:test": "pnpm --filter=hanzo test",
+    "shadcn:dev": "turbo --filter=shadcn dev",
+    "shadcn": "pnpm --filter=shadcn start:dev",
+    "shadcn:prod": "pnpm --filter=shadcn start:prod",
+    "shadcn:build": "pnpm --filter=shadcn build",
+    "shadcn:test": "pnpm --filter=shadcn test",
     "docs:build": "pnpm --filter=www build:docs",
     "www:dev": "pnpm --filter=www dev",
     "www:build": "pnpm --filter=www build",
@@ -49,6 +58,7 @@
     "test:dev": "turbo run test --filter=!hanzo-ui --force",
     "test": "start-server-and-test v4:dev http://localhost:4000 test:dev",
     "validate:registries": "pnpm --filter=v4 validate:registries",
+    "test:apps": "pnpm --filter=v4 test:apps",
     "health-check": "tsx tests/component-health-check.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -64,7 +74,7 @@
     "@babel/core": "^7.22.1",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.29.7",
-    "@commitlint/cli": "^17.6.3",
+    "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^17.6.3",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -147,10 +157,12 @@
       "vite@>=7.1.0 <=7.1.10": ">=7.1.11",
       "validator@<13.15.20": ">=13.15.20",
       "tar@=7.5.1": ">=7.5.2",
-      "zod": "4.1.12",
+      "zod@>4": "4.1.12",
       "@hookform/resolvers": "^3.9.0",
       "react": "19.2.0",
-      "react-dom": "19.2.0"
+      "react-dom": "19.2.0",
+      "@types/react": "19.2.2",
+      "@types/react-dom": "19.2.2"
     },
     "public-hoist-pattern": [
       "zod",

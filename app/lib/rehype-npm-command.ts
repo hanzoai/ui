@@ -27,7 +27,7 @@ export function rehypeNpmCommand() {
         )
       }
 
-      // npx create.
+      // npx create-.
       if (node.properties?.["__rawString__"]?.startsWith("npx create-")) {
         const npmCommand = node.properties?.["__rawString__"]
         node.properties["__npmCommand__"] = npmCommand
