@@ -2,6 +2,11 @@ import "@/styles/globals.css"
 
 import { Metadata, Viewport } from "next"
 
+const META_THEME_COLORS = {
+  light: "white",
+  dark: "black",
+}
+
 import { siteConfig } from "@/config/site"
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
