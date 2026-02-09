@@ -1,11 +1,11 @@
-# @hanzo/ui monorepo template
+# shadcn/ui monorepo template
 
-This template is for creating a monorepo with @hanzo/ui.
+This template is for creating a monorepo with shadcn/ui.
 
 ## Usage
 
 ```bash
-pnpm dlx hanzo-ui@latest init
+pnpm dlx shadcn@latest init
 ```
 
 ## Adding components
@@ -13,7 +13,7 @@ pnpm dlx hanzo-ui@latest init
 To add components to your app, run the following command at the root of your `web` app:
 
 ```bash
-pnpm dlx hanzo-ui@latest add button -c apps/web
+pnpm dlx shadcn@latest add button -c apps/web
 ```
 
 This will place the ui components in the `packages/ui/src/components` directory.

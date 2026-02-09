@@ -89,30 +89,51 @@ jobs:
             local pkg_dir=$1
             local pkg_name=$(cd $pkg_dir && node -p "require('./package.json').name")
             local pkg_version=$(cd $pkg_dir && node -p "require('./package.json').version")
-            echo "Publishing $pkg_name@$pkg_version from $pkg_dir"
-            # Bump version
-            cd $pkg_dir
-            pnpm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+            echo "=== Publishing $pkg_name@$pkg_version from $pkg_dir ==="
+
+            # Change to package directory
+            pushd "$pkg_dir"
+
+            # Bump version manually using node to avoid any pnpm/npm hooks
+            echo "Bumping version (${{ github.event.inputs.version_bump }})..."
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+              const [major, minor, patch] = pkg.version.split('.').map(Number);
+              const bump = '${{ github.event.inputs.version_bump }}';
+              if (bump === 'major') pkg.version = (major + 1) + '.0.0';
+              else if (bump === 'minor') pkg.version = major + '.' + (minor + 1) + '.0';
+              else pkg.version = major + '.' + minor + '.' + (patch + 1);
+              fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+              console.log('New version:', pkg.version);
+            "
+
             local new_version=$(node -p "require('./package.json').version")
-            echo "Version bumped to $new_version"
-            # Pack the tarball - this resolves workspace: protocols to real versions
+            echo "Version is now: $new_version"
+
+            # Pack the tarball
             echo "Running pnpm pack..."
-            pnpm pack
+            pnpm pack --pack-gzip-level 9
             local tarball=$(ls -t *.tgz | head -1)
             echo "Created tarball: $tarball"
-            # Extract and inspect the tarball package.json
-            echo "Inspecting tarball package.json..."
-            tar -xzf "$tarball" -O package/package.json | head -60
-            # Create a temp directory completely outside the workspace
-            local temp_publish_dir="/tmp/npm-publish-$$"
-            mkdir -p "$temp_publish_dir"
-            cp "$tarball" "$temp_publish_dir/"
-            # Publish from temp dir using npm directly
-            echo "Publishing from $temp_publish_dir..."
-            (cd "$temp_publish_dir" && npm publish "$tarball" --access public)
-            rm -rf "$temp_publish_dir"
-            rm -f "$tarball"
+
+            # Verify tarball contents
+            echo "Tarball package.json:"
+            tar -xzf "$tarball" -O package/package.json
+
+            # Copy to temp dir and publish
+            local temp_dir="/tmp/publish-$$"
+            mkdir -p "$temp_dir"
+            cp "$tarball" "$temp_dir/"
+            echo "Publishing from $temp_dir..."
+            cd "$temp_dir"
+            npm publish "$tarball" --access public
             cd -
+
+            # Cleanup
+            rm -rf "$temp_dir"
+            rm -f "$tarball"
+            popd
           }
           
           case "${{ github.event.inputs.package }}" in
