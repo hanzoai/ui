@@ -14,7 +14,6 @@ export const colors = {
     hsl: "hsl(0,0%,100%)",
     oklch: "oklch(1.00,0.00,0)",
   },
-<<<<<<<< HEAD:app/registry/colors.ts
   slate: [
     {
       scale: 50,
@@ -219,8 +218,6 @@ export const colors = {
       hsl: "hsl(240,10%,3.9%)",
     },
   ],
-========
->>>>>>>> shadcn/main:apps/v4/registry/_legacy-colors.ts
   neutral: [
     {
       scale: 50,

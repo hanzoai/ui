@@ -28,16 +28,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-<<<<<<<< HEAD:app/app/(app)/examples/playground/components/preset-actions.tsx
-} from "@/registry/default/ui/dropdown-menu"
-import { Label } from "@/registry/default/ui/label"
-import { Switch } from "@/registry/default/ui/switch"
-import { toast } from "@/registry/default/ui/use-toast"
-========
 } from "@/registry/new-york/ui/dropdown-menu"
 import { Label } from "@/registry/new-york/ui/label"
 import { Switch } from "@/registry/new-york/ui/switch"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
 
 export function PresetActions() {
   const [open, setIsOpen] = React.useState(false)

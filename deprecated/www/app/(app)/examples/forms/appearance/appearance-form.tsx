@@ -6,12 +6,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { cn } from "@/lib/utils"
-<<<<<<<< HEAD:app/app/(app)/examples/forms/appearance/appearance-form.tsx
-import { Button, buttonVariants } from "@/registry/default/ui/button"
-========
 import { toast } from "@/registry/new-york/hooks/use-toast"
 import { Button, buttonVariants } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/appearance/appearance-form.tsx
 import {
   Form,
   FormControl,
@@ -20,14 +16,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-<<<<<<<< HEAD:app/app/(app)/examples/forms/appearance/appearance-form.tsx
-} from "@/registry/default/ui/form"
-import { RadioGroup, RadioGroupItem } from "@/registry/default/ui/radio-group"
-import { toast } from "@/registry/default/ui/use-toast"
-========
 } from "@/registry/new-york/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/registry/new-york/ui/radio-group"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/appearance/appearance-form.tsx
 
 const appearanceFormSchema = z.object({
   theme: z.enum(["light", "dark"], { message: "Please select a theme." }),

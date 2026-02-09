@@ -10,11 +10,7 @@ links:
 <ComponentPreview
   name="accordion-demo"
   className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
-<<<<<<<< HEAD:app/content/docs/components/accordion.mdx
-  description="An accordion with items"
-========
   description="An accordion with three items"
->>>>>>>> shadcn/main:deprecated/www/content/docs/components/accordion.mdx
 />
 
 ## Installation
@@ -29,45 +25,9 @@ links:
 <TabsContent value="cli">
 
 ```bash
-<<<<<<<< HEAD:app/content/docs/components/accordion.mdx
-npx @hanzo/ui@latest add accordion
-```
-
-<Step>Update `tailwind.config.js`</Step>
-
-Add the following animations to your `tailwind.config.js` file:
-
-```js title="tailwind.config.js" {5-18}
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-    },
-  },
-}
-```
-
-</Steps>
-
-========
 npx shadcn@latest add accordion
 ```
 
->>>>>>>> shadcn/main:deprecated/www/content/docs/components/accordion.mdx
 </TabsContent>
 
 <TabsContent value="manual">

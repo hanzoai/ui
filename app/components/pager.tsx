@@ -1,5 +1,4 @@
 import Link from "next/link"
-<<<<<<<< HEAD:app/components/pager.tsx
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
 // import { Doc } from "contentlayer/generated" // Migrated to Fumadocs
 import { NavItem, NavItemWithChildren } from "types/nav"
@@ -7,14 +6,6 @@ import { NavItem, NavItemWithChildren } from "types/nav"
 import { docsConfig } from "@/config/docs"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/registry/default/ui/button"
-========
-import { Doc } from "contentlayer/generated"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { NavItem, NavItemWithChildren } from "types/nav"
-
-import { docsConfig } from "@/config/docs"
-import { Button } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/components/pager.tsx
 
 interface DocsPagerProps {
   doc: any // TODO: Update to Fumadocs types
@@ -49,16 +40,8 @@ export function DocsPager({ doc }: DocsPagerProps) {
   )
 }
 
-<<<<<<<< HEAD:app/components/pager.tsx
 export function getPagerForDoc(doc: any) {
   const flattenedLinks = [null, ...flatten(docsConfig.sidebarNav), null]
-========
-export function getPagerForDoc(doc: Doc) {
-  const nav = doc.slug.startsWith("/docs/charts")
-    ? docsConfig.chartsNav
-    : docsConfig.sidebarNav
-  const flattenedLinks = [null, ...flatten(nav), null]
->>>>>>>> shadcn/main:deprecated/www/components/pager.tsx
   const activeIndex = flattenedLinks.findIndex(
     (link) => doc.slug === link?.href
   )

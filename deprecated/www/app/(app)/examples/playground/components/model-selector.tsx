@@ -147,23 +147,6 @@ function ModelItem({ model, isSelected, onSelect, onPeek }: ModelItemProps) {
   })
 
   return (
-<<<<<<<< HEAD:app/app/(app)/examples/playground/components/model-selector.tsx
-    <div ref={ref}>
-      <CommandItem
-        key={model.id}
-        onSelect={onSelect}
-        className="aria-selected:bg-primary aria-selected:text-primary-foreground"
-      >
-        {model.name}
-        <CheckIcon
-          className={cn(
-            "ml-auto h-4 w-4",
-            isSelected ? "opacity-100" : "opacity-0"
-          )}
-        />
-      </CommandItem>
-    </div>
-========
     <CommandItem
       key={model.id}
       onSelect={onSelect}
@@ -175,6 +158,5 @@ function ModelItem({ model, isSelected, onSelect, onPeek }: ModelItemProps) {
         className={cn("ml-auto", isSelected ? "opacity-100" : "opacity-0")}
       />
     </CommandItem>
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
   )
 }

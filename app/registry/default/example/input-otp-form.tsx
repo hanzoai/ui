@@ -4,12 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-<<<<<<<< HEAD:app/registry/default/example/input-otp-form.tsx
 import { Button } from "@/registry/default/ui/button"
-========
-import { toast } from "@/registry/new-york/hooks/use-toast"
-import { Button } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/examples/input-form.tsx
 import {
   Form,
   FormControl,
@@ -18,7 +13,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-<<<<<<<< HEAD:app/registry/default/example/input-otp-form.tsx
 } from "@/registry/default/ui/form"
 import {
   InputOTP,
@@ -26,10 +20,6 @@ import {
   InputOTPSlot,
 } from "@/registry/default/ui/input-otp"
 import { toast } from "@/registry/default/ui/use-toast"
-========
-} from "@/registry/new-york/ui/form"
-import { Input } from "@/registry/new-york/ui/input"
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/examples/input-form.tsx
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -41,11 +31,7 @@ export default function InputOTPForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-<<<<<<<< HEAD:app/registry/default/example/input-otp-form.tsx
       pin: "",
-========
-      username: "",
->>>>>>>> shadcn/main:deprecated/www/registry/new-york/examples/input-form.tsx
     },
   })
 

@@ -10,16 +10,11 @@ const eventSchema = z.object({
     "copy_theme_code",
     "copy_block_code",
     "copy_chunk_code",
-<<<<<<<< HEAD:app/lib/events.ts
-    "copy_color",
-    "enable_lift_mode",
-========
     "enable_lift_mode",
     "copy_chart_code",
     "copy_chart_theme",
     "copy_chart_data",
     "copy_color",
->>>>>>>> shadcn/main:deprecated/www/lib/events.ts
   ]),
   // declare type AllowedPropertyValues = string | number | boolean | null
   properties: z

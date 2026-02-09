@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/app/(app)/examples/forms/display/page.tsx
-import { Separator } from "@/registry/default/ui/separator"
-========
 import { Separator } from "@/registry/new-york/ui/separator"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/display/page.tsx
 import { DisplayForm } from "@/app/(app)/examples/forms/display/display-form"
 
 export default function SettingsDisplayPage() {

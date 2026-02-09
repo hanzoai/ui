@@ -47,28 +47,16 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-column-header.tsx
             <ArrowUp />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDown />
-========
-            <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Asc
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/tasks/components/data-table-column-header.tsx
             Desc
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-column-header.tsx
             <EyeOff />
-========
-            <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/tasks/components/data-table-column-header.tsx
             Hide
           </DropdownMenuItem>
         </DropdownMenuContent>

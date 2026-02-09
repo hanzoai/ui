@@ -4,10 +4,7 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
-<<<<<<<< HEAD:app/components/mdx-components.tsx
-========
 import { useMDXComponent } from "next-contentlayer2/hooks"
->>>>>>>> shadcn/main:deprecated/www/components/mdx-components.tsx
 import { NpmCommands } from "types/unist"
 
 import { Event } from "@/lib/events"
@@ -33,26 +30,16 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-<<<<<<<< HEAD:app/components/mdx-components.tsx
-} from "@/registry/default/ui/alert"
-import { AspectRatio } from "@/registry/default/ui/aspect-ratio"
-========
 } from "@/registry/new-york/ui/alert"
 import { AspectRatio } from "@/registry/new-york/ui/aspect-ratio"
 import { Button } from "@/registry/new-york/ui/button"
->>>>>>>> shadcn/main:deprecated/www/components/mdx-components.tsx
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-<<<<<<<< HEAD:app/components/mdx-components.tsx
-} from "@/registry/default/ui/tabs"
-import { Style } from "@/registry/styles"
-========
 } from "@/registry/new-york/ui/tabs"
 import { Style } from "@/registry/registry-styles"
->>>>>>>> shadcn/main:deprecated/www/components/mdx-components.tsx
 
 const components = {
   Accordion,
@@ -247,23 +234,6 @@ const components = {
             className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
           />
         )}
-<<<<<<<< HEAD:app/components/mdx-components.tsx
-        {__npmCommand__ &&
-          __yarnCommand__ &&
-          __pnpmCommand__ &&
-          __bunCommand__ && (
-            <CopyNpmCommandButton
-              commands={{
-                __npmCommand__,
-                __yarnCommand__,
-                __pnpmCommand__,
-                __bunCommand__,
-              }}
-              className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
-            />
-          )}
-========
->>>>>>>> shadcn/main:deprecated/www/components/mdx-components.tsx
       </StyleWrapper>
     )
   },

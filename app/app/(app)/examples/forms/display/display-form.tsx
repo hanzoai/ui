@@ -4,14 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-<<<<<<<< HEAD:app/app/(app)/examples/forms/display/display-form.tsx
 import { Button } from "@/registry/default/ui/button"
 import { Checkbox } from "@/registry/default/ui/checkbox"
-========
-import { toast } from "@/registry/new-york/hooks/use-toast"
-import { Button } from "@/registry/new-york/ui/button"
-import { Checkbox } from "@/registry/new-york/ui/checkbox"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/display/display-form.tsx
 import {
   Form,
   FormControl,
@@ -20,12 +14,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-<<<<<<<< HEAD:app/app/(app)/examples/forms/display/display-form.tsx
 } from "@/registry/default/ui/form"
 import { toast } from "@/registry/default/ui/use-toast"
-========
-} from "@/registry/new-york/ui/form"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/display/display-form.tsx
 
 const items = [
   {

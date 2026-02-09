@@ -123,11 +123,7 @@ export function CardsChat() {
                   className="ml-auto size-8 rounded-full"
                   onClick={() => setOpen(true)}
                 >
-<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
                   <Plus className="h-4 w-4" />
-========
-                  <PlusIcon />
->>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
                   <span className="sr-only">New message</span>
                 </Button>
               </TooltipTrigger>
@@ -168,7 +164,6 @@ export function CardsChat() {
             }}
             className="relative w-full"
           >
-<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
             <Input
               id="message"
               placeholder="Type your message..."
@@ -181,27 +176,6 @@ export function CardsChat() {
               <Send className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
-========
-            <InputGroup>
-              <InputGroupInput
-                id="message"
-                placeholder="Type your message..."
-                autoComplete="off"
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-              />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                  type="submit"
-                  size="icon-xs"
-                  className="rounded-full"
-                >
-                  <ArrowUpIcon />
-                  <span className="sr-only">Send</span>
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
->>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
           </form>
         </CardFooter>
       </Card>

@@ -13,12 +13,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-<<<<<<<< HEAD:app/app/(app)/examples/playground/components/preset-selector.tsx
 } from "@/registry/default/ui/command"
-========
-  CommandList,
-} from "@/registry/new-york/ui/command"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/playground/components/preset-selector.tsx
 import {
   Popover,
   PopoverContent,

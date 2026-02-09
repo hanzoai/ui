@@ -36,19 +36,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-<<<<<<<< HEAD:app/tsconfig.json
-    ".next/dev/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "./scripts/build-registry.mts",
-    ".source/**",
-    "__registry__/**"
-  ]
-========
     ".contentlayer/generated",
     "./scripts/**/*.ts"
   ],
   "exclude": ["node_modules", "__registry__"]
->>>>>>>> shadcn/main:deprecated/www/tsconfig.json
 }

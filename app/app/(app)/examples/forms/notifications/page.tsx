@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/app/(app)/examples/forms/notifications/page.tsx
 import { Separator } from "@/registry/default/ui/separator"
-========
-import { Separator } from "@/registry/new-york/ui/separator"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/forms/notifications/page.tsx
 import { NotificationsForm } from "@/app/(app)/examples/forms/notifications/notifications-form"
 
 export default function SettingsNotificationsPage() {

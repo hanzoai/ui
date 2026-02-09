@@ -1,11 +1,7 @@
 "use client"
 
 import * as React from "react"
-<<<<<<<< HEAD:app/components/cards/chat.tsx
 import { ArrowUpIcon, CheckIcon, PlusIcon } from "lucide-react"
-========
-import { Check, Plus, Send } from "lucide-react"
->>>>>>>> shadcn/main:deprecated/www/components/cards/chat.tsx
 
 import { cn } from "@/lib/utils"
 import {
@@ -127,11 +123,7 @@ export function CardsChat() {
                   className="ml-auto size-8 rounded-full"
                   onClick={() => setOpen(true)}
                 >
-<<<<<<<< HEAD:app/components/cards/chat.tsx
                   <PlusIcon />
-========
-                  <Plus />
->>>>>>>> shadcn/main:deprecated/www/components/cards/chat.tsx
                   <span className="sr-only">New message</span>
                 </Button>
               </TooltipTrigger>
@@ -172,7 +164,6 @@ export function CardsChat() {
             }}
             className="relative w-full"
           >
-<<<<<<<< HEAD:app/components/cards/chat.tsx
             <InputGroup>
               <InputGroupInput
                 id="message"
@@ -192,20 +183,6 @@ export function CardsChat() {
                 </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
-========
-            <Input
-              id="message"
-              placeholder="Type your message..."
-              className="flex-1"
-              autoComplete="off"
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-            />
-            <Button type="submit" size="icon" disabled={inputLength === 0}>
-              <Send />
-              <span className="sr-only">Send</span>
-            </Button>
->>>>>>>> shadcn/main:deprecated/www/components/cards/chat.tsx
           </form>
         </CardFooter>
       </Card>
@@ -257,11 +234,7 @@ export function CardsChat() {
                       </p>
                     </div>
                     {selectedUsers.includes(user) ? (
-<<<<<<<< HEAD:app/components/cards/chat.tsx
                       <CheckIcon className="text-primary ml-auto flex size-4" />
-========
-                      <Check className="ml-auto flex h-5 w-5 text-primary" />
->>>>>>>> shadcn/main:deprecated/www/components/cards/chat.tsx
                     ) : null}
                   </CommandItem>
                 ))}

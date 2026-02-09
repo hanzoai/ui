@@ -13,11 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table"
-<<<<<<<< HEAD:app/components/cards/payments.tsx
-import { MoreHorizontalIcon } from "lucide-react"
-========
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
 
 import { Button } from "@/registry/default/ui/button"
 import {
@@ -70,21 +66,6 @@ const data: Payment[] = [
     amount: 721,
     status: "failed",
     email: "carmella@example.com",
-<<<<<<<< HEAD:app/components/cards/payments.tsx
-  },
-  {
-    id: "k9f2m3n4",
-    amount: 450,
-    status: "pending",
-    email: "jason78@example.com",
-  },
-  {
-    id: "p5q6r7s8",
-    amount: 1280,
-    status: "success",
-    email: "sarah23@example.com",
-========
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
   },
 ]
 
@@ -127,9 +108,6 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "email",
-<<<<<<<< HEAD:app/components/cards/payments.tsx
-    header: "Email",
-========
     header: ({ column }) => {
       return (
         <Button
@@ -141,7 +119,6 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       )
     },
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
@@ -170,11 +147,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="size-8 p-0">
               <span className="sr-only">Open menu</span>
-<<<<<<<< HEAD:app/components/cards/payments.tsx
-              <MoreHorizontalIcon />
-========
               <MoreHorizontal />
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -233,9 +206,6 @@ export function CardsPayments() {
           </Button>
         </CardAction>
       </CardHeader>
-<<<<<<<< HEAD:app/components/cards/payments.tsx
-      <CardContent className="flex flex-col gap-4">
-========
       <CardContent>
         <div className="mb-4 flex items-center gap-4">
           <Input
@@ -273,7 +243,6 @@ export function CardsPayments() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
->>>>>>>> shadcn/main:deprecated/www/components/cards/data-table.tsx
         <div className="overflow-hidden rounded-md border">
           <Table>
             <TableHeader>

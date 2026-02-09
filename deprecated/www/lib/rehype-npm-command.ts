@@ -43,8 +43,6 @@ export function rehypeNpmCommand() {
           "npx",
           "bunx --bun"
         )
-<<<<<<<< HEAD:app/lib/rehype-npm-command.ts
-========
       }
 
       // npm create.
@@ -63,7 +61,6 @@ export function rehypeNpmCommand() {
           "npm create",
           "bun create"
         )
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-npm-command.ts
       }
 
       // npx.
@@ -82,8 +79,6 @@ export function rehypeNpmCommand() {
           "npx",
           "bunx --bun"
         )
-<<<<<<<< HEAD:app/lib/rehype-npm-command.ts
-========
       }
 
       // npm run.
@@ -99,7 +94,6 @@ export function rehypeNpmCommand() {
           "pnpm"
         )
         node.properties["__bunCommand__"] = npmCommand.replace("npm run", "bun")
->>>>>>>> shadcn/main:deprecated/www/lib/rehype-npm-command.ts
       }
     })
   }

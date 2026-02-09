@@ -3,13 +3,8 @@
 import { Table } from "@tanstack/react-table"
 import { X } from "lucide-react"
 
-<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-toolbar.tsx
 import { Button } from "@/registry/default/ui/button"
 import { Input } from "@/registry/default/ui/input"
-========
-import { Button } from "@/registry/new-york/ui/button"
-import { Input } from "@/registry/new-york/ui/input"
->>>>>>>> shadcn/main:deprecated/www/app/(app)/examples/tasks/components/data-table-toolbar.tsx
 import { DataTableViewOptions } from "@/app/(app)/examples/tasks/components/data-table-view-options"
 
 import { priorities, statuses } from "../data/data"
