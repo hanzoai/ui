@@ -417,8 +417,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           {
             type: "text",
             text: dedent`Invalid input parameters:
-              ${(error.issues ?? (error as any).errors ?? [])
-                .map((e: any) => `- ${e.path.join(".")}: ${e.message}`)
+              ${((error as any).issues ?? (error as any).errors ?? [])
+                .map((e: { path: string[]; message: string }) => `- ${e.path.join(".")}: ${e.message}`)
                 .join("\n")}
               `,
           },
