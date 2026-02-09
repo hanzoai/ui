@@ -78,6 +78,36 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./system": {
+      "types": "./dist/system/index.d.ts",
+      "import": "./dist/system/index.mjs",
+      "require": "./dist/system/index.js"
+    },
+    "./system/*": {
+      "types": "./dist/system/*.d.ts",
+      "import": "./dist/system/*.mjs",
+      "require": "./dist/system/*.js"
+    },
+    "./registry": {
+      "types": "./dist/registry/index.d.ts",
+      "import": "./dist/registry/index.mjs",
+      "require": "./dist/registry/index.js"
+    },
+    "./registry/*": {
+      "types": "./dist/registry/*.d.ts",
+      "import": "./dist/registry/*.mjs",
+      "require": "./dist/registry/*.js"
+    },
+    "./primitives/bases/tamagui": {
+      "types": "./dist/primitives/bases/tamagui/index.d.ts",
+      "import": "./dist/primitives/bases/tamagui/index.mjs",
+      "require": "./dist/primitives/bases/tamagui/index.js"
+    },
+    "./primitives/bases/tamagui/*": {
+      "types": "./dist/primitives/bases/tamagui/*.d.ts",
+      "import": "./dist/primitives/bases/tamagui/*.mjs",
+      "require": "./dist/primitives/bases/tamagui/*.js"
+    },
     "./calendar": {
       "types": "./dist/calendar.d.ts",
       "import": "./dist/calendar.mjs",
@@ -674,10 +704,6 @@
     "@tanstack/react-table": "^8.0.0",
     "chrono-node": "^2.0.0",
     "date-fns": "^3.0.0",
-    "react-day-picker": "^9.0.0",
-    "react-hook-form": "^7.0.0",
-    "react-resizable-panels": "^1.0.0",
-    "recharts": "^2.0.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "0.456.0",
     "mermaid": "^10.0.0",
@@ -685,12 +711,20 @@
     "next": ">=14.2.16",
     "next-themes": "^0.2.1 || ^0.3.0 || ^0.4.0",
     "react": "^18.0.0 || ^19.0.0",
+    "react-day-picker": "^9.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
+    "react-hook-form": "^7.0.0",
     "react-qrcode-logo": "^2.0.0",
+    "react-resizable-panels": "^1.0.0",
+    "recharts": "^2.0.0",
     "sql.js": "^1.0.0",
+    "styled-components": "^6.0.0",
     "validator": "^13.11.0"
   },
   "peerDependenciesMeta": {
+    "styled-components": {
+      "optional": true
+    },
     "@dnd-kit/core": {
       "optional": true
     },
@@ -769,6 +803,7 @@
     "@mdx-js/react": "^3.0.0",
     "@radix-ui/react-primitive": "^2.1.3",
     "@splinetool/react-spline": "^4.0.0",
+    "@tailwindcss/postcss": "^4.1.16",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/facebook-pixel": "^0.0.30",
@@ -779,6 +814,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "@types/styled-components": "^5.1.36",
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/coverage-v8": "^4.0.6",
     "@vitest/ui": "^4.0.6",
@@ -793,10 +829,10 @@
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
-    "@tailwindcss/postcss": "^4.1.16",
+    "styled-components": "^6.3.8",
     "tailwindcss": "^4.1.16",
-    "tw-animate-css": "^1.2.9",
     "tsup": "^8.5.0",
+    "tw-animate-css": "^1.2.9",
     "typescript": "5.6.3",
     "vitest": "4.0.6"
   }

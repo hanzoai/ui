@@ -72,3 +72,9 @@ test-results/
 playwright-report/
 *BADGE_INSPECTION*.md
 *BADGE_INSPECTION*.txt
+
+# ide
+.idea
+.fleet
+
+.notes
