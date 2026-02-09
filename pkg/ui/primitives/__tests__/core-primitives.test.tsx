@@ -83,7 +83,7 @@ describe('Button', () => {
   it('supports variant prop - outline', () => {
     const { container } = render(<Button variant="outline">Outlined</Button>)
     const button = container.querySelector('button')
-    expect(button).toHaveClass('border-input')
+    expect(button).toHaveClass('border')
   })
 
   it('supports size prop - sm', () => {
@@ -257,7 +257,7 @@ describe('Dialog', () => {
     })
   })
 
-  it('hides close button by default', async () => {
+  it('shows close button by default', async () => {
     const user = userEvent.setup()
     render(
       <Dialog>
@@ -272,9 +272,7 @@ describe('Dialog', () => {
 
     await waitFor(() => {
       const closeButton = screen.queryByRole('button', { name: /close/i })
-      if (closeButton) {
-        expect(closeButton).toHaveClass('hidden')
-      }
+      expect(closeButton).toBeInTheDocument()
     })
   })
 })

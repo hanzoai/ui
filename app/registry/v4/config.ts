@@ -98,16 +98,16 @@ export const designSystemConfigSchema = z
       .default("default"),
     template: z.enum(["next", "start", "vite"]).default("next").optional(),
   })
-  .refine(
-    (data) => {
-      const availableThemes = getThemesForBaseColor(data.baseColor)
-      return availableThemes.some((t) => t.name === data.theme)
-    },
-    (data) => ({
-      message: `Theme "${data.theme}" is not available for base color "${data.baseColor}"`,
-      path: ["theme"],
-    })
-  )
+  .superRefine((data, ctx) => {
+    const availableThemes = getThemesForBaseColor(data.baseColor)
+    if (!availableThemes.some((t) => t.name === data.theme)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Theme "${data.theme}" is not available for base color "${data.baseColor}"`,
+        path: ["theme"],
+      })
+    }
+  })
 
 export type DesignSystemConfig = z.infer<typeof designSystemConfigSchema>
 
