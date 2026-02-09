@@ -7,3 +7,4 @@ packages:
   - "!**/fixtures/**"
   - "!**/temp/**"
   - "!packages/tests/temp/**"
+  - "!deprecated/**"

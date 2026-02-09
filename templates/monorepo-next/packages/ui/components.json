@@ -1,6 +1,6 @@
 {
-  "$schema": "https://ui.hanzo.ai/schema.json",
-  "style": "new-york",
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "radix-nova",
   "rsc": true,
   "tsx": true,
   "tailwind": {

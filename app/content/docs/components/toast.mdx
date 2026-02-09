@@ -7,11 +7,18 @@ links:
   api: https://www.radix-ui.com/docs/primitives/components/toast#api-reference
 ---
 
+<Callout>
+
+We're deprecating the `toast` component in favor of `sonner` in projects using Tailwind v4 and React 19.
+[Read more](https://ui.shadcn.com/docs/tailwind-v4#whats-new)
+
+</Callout>
+
 <ComponentPreview name="toast-demo" />
 
 ## Installation
 
-<Tabs defaultValue="cli">
+<CodeTabs>
 
 <TabsList>
   <TabsTrigger value="cli">CLI</TabsTrigger>
@@ -97,14 +104,14 @@ export default function RootLayout({ children }) {
 
 </TabsContent>
 
-</Tabs>
+</CodeTabs>
 
 ## Usage
 
 The `useToast` hook returns a `toast` function that you can use to display a toast.
 
 ```tsx
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 ```
 
 ```tsx {2,7-10}

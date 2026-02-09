@@ -4,7 +4,10 @@ description: Autocomplete input and command palette with a list of suggestions.
 component: true
 ---
 
-<ComponentPreview name="combobox-demo" />
+<ComponentPreview
+  name="combobox-demo"
+  description="A combobox with a list of frameworks."
+/>
 
 ## Installation
 
@@ -28,6 +31,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command"
 import {
   Popover,
@@ -112,7 +116,10 @@ export function ComboboxDemo() {
 
 ### Combobox
 
-<ComponentPreview name="combobox-demo" />
+<ComponentPreview
+  name="combobox-demo"
+  description="A combobox with a list of frameworks."
+/>
 
 ### Popover
 
@@ -120,7 +127,16 @@ export function ComboboxDemo() {
 
 ### Dropdown menu
 
-<ComponentPreview name="combobox-dropdown-menu" />
+<ComponentPreview
+  name="combobox-dropdown-menu"
+  description="A combobox in a dropdown menu"
+/>
+
+### Responsive
+
+You can create a responsive combobox by using the `<Popover />` on desktop and the `<Drawer />` components on mobile.
+
+<ComponentPreview name="combobox-responsive" />
 
 ### Responsive
 
