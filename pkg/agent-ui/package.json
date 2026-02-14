@@ -1,0 +1,131 @@
+{
+  "name": "@hanzo/agent-ui",
+  "version": "0.1.0",
+  "description": "Hanzo Agent Cloud UI components — dashboard, nodes, workflows, executions, identity, compute",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI, Inc.",
+  "license": "BSD-3-Clause",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "style",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/react-sdk.git",
+    "directory": "pkg/agent-ui"
+  },
+  "keywords": [
+    "agents",
+    "ai",
+    "hanzo",
+    "control-plane",
+    "workflows",
+    "dashboard",
+    "did",
+    "verifiable-credentials",
+    "compute",
+    "vm"
+  ],
+  "scripts": {
+    "build": "npm run clean && tsup --config tsup.config.ts && tsc --emitDeclarationOnly --declaration --outDir dist",
+    "build:watch": "tsup --watch",
+    "clean": "rm -rf dist",
+    "tc": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./dashboard": {
+      "types": "./dist/dashboard/index.d.ts",
+      "import": "./dist/dashboard/index.mjs",
+      "require": "./dist/dashboard/index.js"
+    },
+    "./nodes": {
+      "types": "./dist/nodes/index.d.ts",
+      "import": "./dist/nodes/index.mjs",
+      "require": "./dist/nodes/index.js"
+    },
+    "./workflows": {
+      "types": "./dist/workflows/index.d.ts",
+      "import": "./dist/workflows/index.mjs",
+      "require": "./dist/workflows/index.js"
+    },
+    "./executions": {
+      "types": "./dist/executions/index.d.ts",
+      "import": "./dist/executions/index.mjs",
+      "require": "./dist/executions/index.js"
+    },
+    "./identity": {
+      "types": "./dist/identity/index.d.ts",
+      "import": "./dist/identity/index.mjs",
+      "require": "./dist/identity/index.js"
+    },
+    "./compute": {
+      "types": "./dist/compute/index.d.ts",
+      "import": "./dist/compute/index.mjs",
+      "require": "./dist/compute/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    },
+    "./services": {
+      "types": "./dist/services/index.d.ts",
+      "import": "./dist/services/index.mjs",
+      "require": "./dist/services/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    },
+    "./lib": {
+      "types": "./dist/lib/index.d.ts",
+      "import": "./dist/lib/index.mjs",
+      "require": "./dist/lib/index.js"
+    },
+    "./style/*": "./style/*"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "@hanzo/ui": "^5.0.0",
+    "@xyflow/react": "^12.0.0",
+    "lucide-react": ">=0.400.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "recharts": "^2.0.0 || ^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@xyflow/react": {
+      "optional": true
+    },
+    "recharts": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "5.6.3"
+  }
+}
