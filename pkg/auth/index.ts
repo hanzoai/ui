@@ -44,8 +44,10 @@ export {
   LoginPanel,
   EmailPasswordForm,
   AuthWidget,
-  SignupPanel
+  SignupPanel,
+  OrgProjectSwitcher
 } from './components'
+export type { OrgProjectSwitcherProps } from './components'
 
 // Icons
 export * from './icons'
