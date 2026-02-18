@@ -2,8 +2,9 @@ import { enableStaticRendering } from 'mobx-react-lite'
 
 import type AuthService from './auth-service'
 import type { AuthServiceConf, HanzoUserInfoValue } from '../types'
-import { getActiveProvider } from './provider-registry'
+import { getActiveProvider, hasAuthProvider, registerAuthProvider } from './provider-registry'
 import { StubAuthService } from './impl/stub-auth-service'
+import { IamAuthService } from './impl/iam-auth-service'
 
 enableStaticRendering(typeof window === "undefined")
 
@@ -14,6 +15,11 @@ const getSingleton = (
   conf: AuthServiceConf,
   serverSideUser: HanzoUserInfoValue | null
 ): AuthService => {
+
+  // Auto-register IAM provider when IAM config is present
+  if (conf.iamServerUrl && conf.iamClientId && !hasAuthProvider()) {
+    registerAuthProvider('iam', IamAuthService)
+  }
 
   // Get the registered auth provider, or use stub if none configured
   const AuthServiceClass = getActiveProvider() ?? StubAuthService
