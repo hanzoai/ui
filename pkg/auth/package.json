@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/auth",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "Pluggable authentication library. Firebase support via @hanzo/auth-firebase (optional).",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
