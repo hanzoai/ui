@@ -1,19 +1,26 @@
 /**
  * @hanzo/auth
  *
- * Pluggable authentication library.
- * Firebase support available via @hanzo/auth-firebase (optional).
+ * Pluggable authentication library for the Hanzo platform.
  *
- * Usage without Firebase:
- * The auth system works out of the box with a stub implementation.
- * All auth operations will return graceful failures.
+ * IAM-first: When `iamServerUrl` and `iamClientId` are provided in
+ * AuthServiceConf, the IAM provider auto-registers as the default.
+ * All identity providers (Google, GitHub, etc.) are configured in IAM,
+ * not client-side.
  *
- * Usage with Firebase:
+ * Firebase support is available via @hanzo/auth-firebase (optional legacy).
+ *
+ * Usage with IAM (recommended):
  * ```ts
- * import { FirebaseAuthService } from '@hanzo/auth-firebase'
- * import { registerAuthProvider } from '@hanzo/auth'
+ * <AuthServiceProvider conf={{ iamServerUrl: 'https://id.hanzo.ai', iamClientId: 'my-app' }} user={null}>
+ *   <App />
+ * </AuthServiceProvider>
+ * ```
  *
- * registerAuthProvider('firebase', FirebaseAuthService)
+ * Usage with custom provider:
+ * ```ts
+ * import { registerAuthProvider } from '@hanzo/auth'
+ * registerAuthProvider('custom', MyCustomAuthService)
  * ```
  */
 
@@ -35,7 +42,8 @@ export {
   getActiveProvider,
   hasAuthProvider,
   getRegisteredProviders,
-  StubAuthService
+  StubAuthService,
+  IamAuthService
 } from './service'
 export type { AuthServiceFactory } from './service'
 
