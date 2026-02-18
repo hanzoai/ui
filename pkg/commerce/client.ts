@@ -6,9 +6,9 @@
  *
  * @example
  * ```ts
- * import { CommerceClient } from '@hanzo/commerce/client'
+ * import { Commerce } from '@hanzo/commerce'
  *
- * const commerce = new CommerceClient({
+ * const commerce = new Commerce({
  *   commerceUrl: 'https://commerce.hanzo.ai',
  *   token: iamAccessToken,
  * })
@@ -38,8 +38,6 @@ export type CommerceClientConfig = {
   token?: string
 }
 
-/** @deprecated Use CommerceClientConfig */
-export type CommerceConfig = CommerceClientConfig
 
 // ---------------------------------------------------------------------------
 // Types
@@ -124,7 +122,7 @@ export type UsageRecord = {
 
 const DEFAULT_TIMEOUT_MS = 10_000
 
-export class CommerceClient {
+export class Commerce {
   private readonly baseUrl: string
   private token: string | undefined
 
@@ -295,8 +293,6 @@ export class CommerceClient {
   }
 }
 
-/** @deprecated Use CommerceClient */
-export const BillingClient = CommerceClient
 
 // ---------------------------------------------------------------------------
 // Error
