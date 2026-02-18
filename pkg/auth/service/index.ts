@@ -9,3 +9,4 @@ export {
   type AuthServiceFactory
 } from './provider-registry'
 export { StubAuthService } from './impl/stub-auth-service'
+export { IamAuthService } from './impl/iam-auth-service'
