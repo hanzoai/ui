@@ -11,7 +11,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hanzoai/react-sdk.git",
+    "url": "git+https://github.com/hanzoai/ui.git",
     "directory": "pkg/commerce"
   },
   "keywords": [
