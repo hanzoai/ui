@@ -28,6 +28,7 @@
   "exports": {
     ".": "./index.ts",
     "./types": "./types/index.ts",
+    "./client": "./client.ts",
     "./billing": "./billing.ts",
     "./debug": "./service/debug.ts"
   },
