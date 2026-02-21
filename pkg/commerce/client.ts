@@ -278,6 +278,22 @@ export class Commerce {
     return this.request<Payment>(`/api/v1/refund/${paymentId}`, { method: 'POST', token })
   }
 
+  /**
+   * Issue a billing refund (correction deposit) for an overcharge.
+   * Creates a deposit tagged "refund" linked to the original transaction.
+   */
+  async billingRefund(params: {
+    user: string
+    amount: number
+    originalTransactionId: string
+    currency?: string
+    notes?: string
+  }, token?: string): Promise<Transaction> {
+    return this.request<Transaction>('/api/v1/billing/refund', {
+      method: 'POST', body: params, token,
+    })
+  }
+
   // -----------------------------------------------------------------------
   // Plans
   // -----------------------------------------------------------------------
