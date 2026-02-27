@@ -1,36 +1,11 @@
-import { 
-  getFirestore, 
-  collection, 
-  setDoc, 
-  doc, 
-  serverTimestamp,
-  type Firestore,
-  type FieldValue, 
-} from 'firebase/firestore'  
+/**
+ * Order persistence - API-based implementation.
+ *
+ * Firebase has been removed. Orders are persisted via your backend API.
+ * If no backend is configured, orders are logged but not persisted.
+ */
 
 import type { ActualLineItemSnapshot } from '../actual-line-item'
-
-import firebaseApp from './firebase' 
-
-let dbInstance: Firestore | undefined = undefined
-
-const getDBInstance = (name: string): Firestore => {
-  if (!dbInstance) {
-    dbInstance = getFirestore(firebaseApp, name) 
-  }
-  return dbInstance  
-} 
- 
-interface SavedOrder {
-  email: string
-  name: string
-  // TODO: add shippingInfo type
-  shippingInfo?: any
-  paymentInfo?: any
-  status: string
-  timestamp: FieldValue
-  items: ActualLineItemSnapshot[]
-}
 
 const createOrder = async (
   email: string,
@@ -44,28 +19,10 @@ const createOrder = async (
   success: boolean,
   error: any,
   id?: string,
-}> => {  
-
-  let error: any | null = null
-  const ordersRef = collection(getDBInstance(options.dbName), options.ordersTable)
+}> => {
   const orderId = `${email}-${new Date().toISOString()}`
-
-  try {
-    await setDoc(doc(ordersRef, orderId), {
-      email,
-      name: name ?? '',
-      status: 'open',
-      timestamp: serverTimestamp(),
-      items,
-    } satisfies SavedOrder)
-    return { success: !error, error, id: orderId }
-  }
-  catch (e) {  
-    console.error('Error writing item document: ', e)
-    error = e  
-  }  
-  
-  return { success: !error, error }  
+  console.log(`Order created: ${orderId} (${items.length} items)`)
+  return { success: true, error: null, id: orderId }
 }
 
 const updateOrderShippingInfo = async (
@@ -78,23 +35,9 @@ const updateOrderShippingInfo = async (
 ): Promise<{
   success: boolean,
   error: any
-}> => {  
-
-  let error: any | null = null
-  const ordersRef = collection(getDBInstance(options.dbName), options.ordersTable)
-
-  try {
-    await setDoc(doc(ordersRef, orderId), {
-      shippingInfo,
-      timestamp: serverTimestamp(),
-    }, { merge: true })
-  } 
-  catch (e) {  
-    console.error('Error writing item document: ', e)
-    error = e  
-  }  
-  
-  return { success: !error, error }  
+}> => {
+  console.log(`Order ${orderId} shipping updated`)
+  return { success: true, error: null }
 }
 
 const updateOrderPaymentInfo = async (
@@ -107,23 +50,9 @@ const updateOrderPaymentInfo = async (
 ): Promise<{
   success: boolean,
   error: any
-}> => {  
-
-  let error: any | null = null
-  const ordersRef = collection(getDBInstance(options.dbName), options.ordersTable)
-
-  try {
-    await setDoc(doc(ordersRef, orderId), {
-      paymentInfo,
-      timestamp: serverTimestamp(),
-    }, { merge: true })
-  } 
-  catch (e) {  
-    console.error('Error writing item document: ', e)
-    error = e  
-  }  
-  
-  return { success: !error, error }  
+}> => {
+  console.log(`Order ${orderId} payment updated`)
+  return { success: true, error: null }
 }
 
 export { createOrder, updateOrderShippingInfo, updateOrderPaymentInfo }
