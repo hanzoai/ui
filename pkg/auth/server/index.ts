@@ -1,14 +1,9 @@
-// Server-side auth functions - use Firebase if configured, otherwise stub
-// For Firebase support, also install @hanzo/auth-firebase
-export { getUserServerSide, generateCustomToken, createSessionCookie, revokeAllSessions } from './firebase-support'
+// Server-side auth stubs. Firebase has been removed from @hanzo/auth.
+// For Firebase support, install @hanzo/auth-firebase.
+// For Hanzo IAM, configure your IAM provider directly.
+export { getUserServerSide, generateCustomToken, createSessionCookie, revokeAllSessions } from './stub-server'
 export {
   handleLogin as handleLoginApiRequest,
   handleLogout as handleLogoutApiRequest
 } from './rest-api-handlers'
 export type { APIResponse } from '../types'
-
-// Re-export stub for explicit use
-export {
-  getUserServerSide as stubGetUserServerSide,
-  generateCustomToken as stubGenerateCustomToken
-} from './stub-server'

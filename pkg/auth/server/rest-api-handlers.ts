@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { createSessionCookie, revokeAllSessions } from './firebase-support'
-import type { APIResponse } from '../types'  
+import { createSessionCookie, revokeAllSessions } from './stub-server'
+import type { APIResponse } from '../types'
 
 export async function handleLogin(request: NextRequest) {
   const reqBody = (await request.json()) as { idToken: string }

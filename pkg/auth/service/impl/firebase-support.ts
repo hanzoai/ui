@@ -1,241 +1,49 @@
-
-import {
-  FacebookAuthProvider,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  type User,
-  signInWithEmailAndPassword,
-  signInWithCustomToken,
-  type Auth,
-} from 'firebase/auth'
-
-import { initializeApp, getApps, FirebaseError, type FirebaseApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore, type Firestore } from 'firebase/firestore'
+/**
+ * Stub auth support — Firebase has been removed from @hanzo/auth.
+ * Use @hanzo/auth-firebase for Firebase, or Hanzo IAM.
+ */
 
 import type APIResponse from '../../types/api-response'
 
-export const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+export const auth = null
+export const db = null
+
+interface StubUser {
+  email: string | null
+  displayName: string | null
+  getIdToken: () => Promise<string>
 }
 
-// Check if Firebase is configured
-const isFirebaseConfigured = () => {
-  return firebaseConfig.apiKey && firebaseConfig.projectId
+export async function loginWithProvider(_provider: string): Promise<{ success: boolean, user: StubUser | null }> {
+  return { success: false, user: null }
 }
-
-// Initialize Firebase only if configured
-let firebaseApp: FirebaseApp | null = null
-let auth: Auth | null = null
-let db: Firestore | null = null
-
-if (isFirebaseConfigured()) {
-  firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-  auth = getAuth(firebaseApp)
-  db = getFirestore(firebaseApp, 'accounts')
-} else {
-  console.warn('Firebase is not configured. Auth features will not work.')
-}
-
-export { auth, db }
-
-export async function loginWithProvider(provider: string): Promise<{ success: boolean, user: User | null }> {
-  if (!auth) {
-    console.warn('Firebase auth not configured')
-    return { success: false, user: null }
-  }
-
-  const authProvider = (() => {
-    switch (provider) {
-      case 'google':
-        return new GoogleAuthProvider()
-      case 'facebook':
-        return new FacebookAuthProvider()
-      case 'github':
-        return new GithubAuthProvider()
-      default:
-        return null
-    }
-  })()
-
-  if (!authProvider) {
-    return { success: false, user: null }
-  }
-
-  try {
-    const userCreds = await signInWithPopup(auth, authProvider)
-    const idToken = await userCreds.user.getIdToken()
-
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
-    })
-    const resBody = (await response.json()) as unknown as APIResponse<string>
-
-    if (response.ok && resBody.success) {
-      return { success: true, user: userCreds.user }
-    }
-    else {
-      return { success: false, user: null }
-    }
-  }
-  catch (error) {
-    console.error('Error signing in with Google', error)
-    return { success: false, user: null }
-  }
-}
-
-const isAuthUserNotFound = (e: any) => (
-  typeof e === 'object' &&
-  e !== null &&
-  e.hasOwnProperty('code') &&
-  e.code === 'auth/user-not-found'
-)
 
 export async function signupWithEmailAndPassword(
-  email: string,
-  password: string
-): Promise<{ success: boolean, user?: User, message?: string }> {
-  if (!auth) {
-    return { success: false, message: 'Firebase auth not configured' }
-  }
-
-  let user: User | undefined = undefined
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    user = userCredential.user
-  }
-  catch (error) {
-    if (error instanceof FirebaseError) {
-      console.error(error.code)
-      return {success: false, message: error.code as string}
-    }
-    return {success: false, message: error as string}
-  }
-
-  try {
-    const idToken = await user.getIdToken()
-
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
-    })
-    const resBody = (await response.json()) as unknown as APIResponse<string>
-
-    if (response.ok && resBody.success) {
-      return { success: true, user }
-    }
-    else {
-      return { success: false }
-    }
-  }
-  catch (error) {
-    console.error('Error signing in with Firebase auth', error)
-    return { success: false }
-  }
+  _email: string,
+  _password: string
+): Promise<{ success: boolean, user?: StubUser | null, message?: string }> {
+  return { success: false, user: null, message: 'Auth provider not configured' }
 }
 
 export async function loginWithEmailAndPassword(
-  email: string,
-  password: string
-): Promise<{ success: boolean, user?: User, message?: string }> {
-  if (!auth) {
-    return { success: false, message: 'Firebase auth not configured' }
-  }
-
-  let user: User | undefined = undefined
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    user = userCredential.user
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      console.error(error.code)
-      return {success: false, message: error.code as string}
-    }
-    return {success: false, message: error as string}
-  }
-
-  try {
-    const idToken = await user.getIdToken()
-
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
-    })
-    const resBody = (await response.json()) as unknown as APIResponse<string>
-
-    if (response.ok && resBody.success) {
-      return { success: true, user, message: "Login Successfully!" }
-    }
-    else {
-      return { success: false , message: "Login API Failed"}
-    }
-  }
-  catch (error) {
-    console.error('Error signing in with Firebase auth', error)
-    return { success: false, message: "Error signing in with Firebase auth" }
-  }
+  _email: string,
+  _password: string
+): Promise<{ success: boolean, user?: StubUser | null, message?: string }> {
+  return { success: false, user: null, message: 'Auth provider not configured' }
 }
 
 export async function loginWithCustomToken(
-  token: string,
-): Promise<{ success: boolean, user?: User }> {
-  if (!auth) {
-    return { success: false }
-  }
-
-  let user: User | undefined = undefined
-  const userCredential = await signInWithCustomToken(auth, token)
-  user = userCredential.user
-
-  try {
-    const idToken = await user.getIdToken()
-
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken }),
-    })
-    const resBody = (await response.json()) as unknown as APIResponse<string>
-
-    if (response.ok && resBody.success) {
-      return { success: true, user }
-    }
-    else {
-      return { success: false }
-    }
-  }
-  catch (error) {
-    console.error('Error signing in with Firebase auth', error)
-    return { success: false }
-  }
+  _token: string,
+): Promise<{ success: boolean, user?: StubUser | null }> {
+  return { success: false, user: null }
 }
 
 export async function logoutBackend(): Promise<{ success: boolean }> {
-
   try {
     const response = await fetch('/api/auth/logout', { headers: { 'Content-Type': 'application/json' } })
     const resBody = (await response.json()) as unknown as APIResponse<string>
-    if (response.ok && resBody.success) {
-      return { success: true }
-    }
-    else {
-      return { success: false }
-    }
-  }
-
-  catch (error) {
-    console.error('Error logging on on server with Firebase', error)
+    return { success: response.ok && resBody.success }
+  } catch {
     return { success: false }
   }
 }
