@@ -3,13 +3,12 @@ import { makeAutoObservable, makeObservable, computed  } from 'mobx'
 import type AuthService from '../auth-service'
 import type { AuthServiceConf, HanzoUserInfo, HanzoUserInfoValue } from '../../types'
 
-import { 
-  auth as fbAuth, 
+import {
   signupWithEmailAndPassword,
-  loginWithCustomToken, 
+  loginWithCustomToken,
   loginWithEmailAndPassword,
   loginWithProvider,
-  logoutBackend 
+  logoutBackend
 } from './firebase-support'
 import { associateWalletAddressWithAccount, getAssociatedWalletAddress } from './wallet-support'
 
@@ -48,12 +47,17 @@ class HanzoUserInfoStore implements HanzoUserInfo {
   }
 
   get isValid(): boolean {
-    return (this._email.length > 0)  
+    return (this._email.length > 0)
   }
 }
 
-
-
+/**
+ * Default AuthService implementation.
+ *
+ * Without an auth provider (Firebase, IAM, etc.), all operations
+ * return graceful failures. Register a provider via the provider
+ * registry for actual authentication.
+ */
 class AuthServiceImpl implements AuthService {
 
   private _hzUser = new HanzoUserInfoStore()
@@ -64,7 +68,6 @@ class AuthServiceImpl implements AuthService {
       loggedIn: computed,
       user: computed
     })
-      // ignore conf for now
     if (user) {
       this._hzUser.set(user)
     }
@@ -75,13 +78,11 @@ class AuthServiceImpl implements AuthService {
   }
 
   get loggedIn(): boolean {
-    return (
-      /*!!fbAuth.currentUser &&*/ this._hzUser.isValid
-    )
+    return this._hzUser.isValid
   }
 
   signupEmailAndPassword = async (
-    email: string, 
+    email: string,
     password: string
    ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null, message?: string}> => {
 
@@ -109,13 +110,13 @@ class AuthServiceImpl implements AuthService {
       }
     }
     catch (e) {
-      console.error('Error signing in with Firebase auth', e)
-      return {success: false, userInfo: null, message: 'Error signing in with Firebase auth'}
+      console.error('Auth error:', e)
+      return {success: false, userInfo: null, message: 'Auth provider not configured'}
     }
   }
 
   loginEmailAndPassword = async (
-    email: string, 
+    email: string,
     password: string
    ):  Promise<{success: boolean, userInfo: HanzoUserInfo | null, message?: string}> => {
 
@@ -143,8 +144,8 @@ class AuthServiceImpl implements AuthService {
       }
     }
     catch (e) {
-      console.error('Error signing in with Firebase auth', e)
-      return {success: false, userInfo: null, message: 'Error signing in with Firebase auth'}
+      console.error('Auth error:', e)
+      return {success: false, userInfo: null, message: 'Auth provider not configured'}
     }
   }
 
@@ -174,7 +175,7 @@ class AuthServiceImpl implements AuthService {
       }
     }
     catch (e) {
-      console.error('Error signing in with Firebase auth', e)
+      console.error('Auth error:', e)
       return {success: false, userInfo: null}
     }
   }
@@ -205,7 +206,7 @@ class AuthServiceImpl implements AuthService {
       }
     }
     catch (e) {
-      console.error('Error signing in with Firebase auth', e)
+      console.error('Auth error:', e)
       return {success: false, userInfo: null}
     }
   }
@@ -214,17 +215,12 @@ class AuthServiceImpl implements AuthService {
     if (this._hzUser.isValid) {
       const res = await associateWalletAddressWithAccount(this._hzUser.email)
       if (!res.error) {
-        //runInAction(() => {
-          this._hzUser._walletAddress = res.result ?? null
-        //})
+        this._hzUser._walletAddress = res.result ?? null
       }
     }
   }
 
   logout = async (): Promise<{ success: boolean }> => {
-    if (fbAuth) {
-      await fbAuth.signOut()
-    }
     this._hzUser.clear()
     return await logoutBackend()
   }
