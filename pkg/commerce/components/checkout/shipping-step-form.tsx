@@ -45,7 +45,7 @@ const ShippingStepForm: React.FC<CheckoutStepComponentProps> = ({
   const cmmc = useCommerce()
   
   const shippingForm = useForm<z.infer<typeof shippingFormSchema>>({
-    resolver: zodResolver(shippingFormSchema),
+    resolver: zodResolver(shippingFormSchema as any),
     defaultValues: {
       addressLine1: '',
       addressLine2: '',
