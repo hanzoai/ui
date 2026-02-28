@@ -35,7 +35,7 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   }
 
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
-    resolver: zodResolver(contactFormSchema),
+    resolver: zodResolver(contactFormSchema as any),
     defaultValues: {
       name: auth?.user?.displayName ?? '',
       email: auth?.user?.email ?? '',
@@ -111,7 +111,7 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
             transactionStatus={transactionStatus}
             setTransactionStatus={setTransactionStatus}
             storePaymentInfo={storePaymentInfo}
-            contactForm={contactForm}
+            contactForm={contactForm as any}
           />
         </TabsContent>
       ))}

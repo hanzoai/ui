@@ -49,7 +49,7 @@
     "lat": "npm show @hanzo/ui version",
     "pub": "npm publish",
     "tc": "tsc --project tsconfig.build.json",
-    "build": "npm run clean && npm run build:minimal",
+    "build": "npm run clean && npm run build:minimal && npm run tc",
     "build:minimal": "tsup --config tsup.config.minimal.ts",
     "build:namespaces": "tsup --config tsup.config.namespaces.ts",
     "build:full": "tsup --config tsup.config.production.ts",

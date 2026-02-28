@@ -27,21 +27,29 @@ class HanzoUserInfoStore implements HanzoUserInfo {
   _email: string = ''
   _displayName: string | null = null
   _walletAddress: string | null = null
+  _avatar: string | null = null
+  _organization: string | null = null
 
   get email(): string { return this._email}
   get displayName(): string | null { return this._displayName}
   get walletAddress(): string | null { return this._walletAddress}
+  get avatar(): string | null { return this._avatar}
+  get organization(): string | null { return this._organization}
 
   clear():void  {
     this._email = ''
     this._displayName = null
     this._walletAddress = null
+    this._avatar = null
+    this._organization = null
   }
 
   set(v: HanzoUserInfoValue):void {
     this._email = v.email
     this._displayName = v.displayName
     this._walletAddress = v.walletAddress
+    this._avatar = v.avatar ?? null
+    this._organization = v.organization ?? null
   }
 
   get isValid(): boolean {
