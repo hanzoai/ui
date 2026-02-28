@@ -1,0 +1,12 @@
+{
+  "name": "@hanzo/og",
+  "version": "1.0.0",
+  "description": "Programmatic OpenGraph image generation for Hanzo sites",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0"
+  },
+  "keywords": ["og", "opengraph", "social", "seo", "hanzo"]
+}
