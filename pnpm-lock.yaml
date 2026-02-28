@@ -1121,12 +1121,6 @@ importers:
       cross-fetch:
         specifier: ^4.0.0
         version: 4.1.0
-      firebase:
-        specifier: ^10.8.0
-        version: 10.14.1
-      firebase-admin:
-        specifier: ^12.1.0
-        version: 12.7.0
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -1175,7 +1169,7 @@ importers:
     dependencies:
       '@hanzo/auth':
         specifier: ^2.5.0
-        version: link:../auth
+        version: 2.7.1(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.71.1(react@19.2.0)))(lucide-react@0.544.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.71.1(react@19.2.0))(react@19.2.0)(zod@4.3.6)
       '@hanzo/commerce':
         specifier: ^7.3.0
         version: link:../commerce
@@ -3014,6 +3008,26 @@ packages:
     resolution: {integrity: sha512-rc1hOQtjIWGxcxpb9aHAfLpIctjEnsDehj0DAiVfBlmT84uvR0uUtN2hEi/ecvWVjXUGf5qPF4qEgiLOx1YIMQ==}
     engines: {node: '>=6'}
     hasBin: true
+
+  '@hanzo/auth@2.7.1':
+    resolution: {integrity: sha512-OGMFc17DdGZWa1sk0OAvcB4Il4WMMPiulOJqnhXPCYiuwyxkUe9RcRPA44/JSMaY/jduXXRF7l8abTk45hJNxg==}
+    peerDependencies:
+      '@hanzo/ui': 5.3.34
+      '@hookform/resolvers': ^3.9.0
+      firebase: '*'
+      firebase-admin: '*'
+      lucide-react: '>=0.456.0'
+      mobx: ^6.12.3
+      mobx-react-lite: ^4.0.7
+      next: '>=14.2.25'
+      react: 19.2.0
+      react-hook-form: '>=7.51.4'
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      firebase:
+        optional: true
+      firebase-admin:
+        optional: true
 
   '@hanzo/docs-core@16.2.6':
     resolution: {integrity: sha512-zSf99sBBZ/5KOmyugv7jMq4sk0lmEbAwbsiJMK3KJ+bDMPWUvfM4BpeHC6JtmgO68g+VB9CsZqtIQjZKrNG6BQ==}
@@ -15892,6 +15906,18 @@ snapshots:
       yargs: 17.7.2
     optional: true
 
+  '@hanzo/auth@2.7.1(@hanzo/ui@pkg+ui)(@hookform/resolvers@3.10.0(react-hook-form@7.71.1(react@19.2.0)))(lucide-react@0.544.0(react@19.2.0))(mobx-react-lite@4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(mobx@6.15.0)(next@16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-hook-form@7.71.1(react@19.2.0))(react@19.2.0)(zod@4.3.6)':
+    dependencies:
+      '@hanzo/ui': link:pkg/ui
+      '@hookform/resolvers': 3.10.0(react-hook-form@7.71.1(react@19.2.0))
+      lucide-react: 0.544.0(react@19.2.0)
+      mobx: 6.15.0
+      mobx-react-lite: 4.1.1(mobx@6.15.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      next: 16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react: 19.2.0
+      react-hook-form: 7.71.1(react@19.2.0)
+      zod: 4.3.6
+
   '@hanzo/docs-core@16.2.6(@types/react@19.2.2)(lucide-react@0.456.0(react@19.2.0))(next@16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@3.25.76)':
     dependencies:
       '@formatjs/intl-localematcher': 0.6.2
@@ -20500,7 +20526,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@22.19.10)(@vitest/ui@4.0.18)(happy-dom@20.5.3(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@1.8.0)(bufferutil@4.1.0)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(msw@2.10.4(@types/node@22.19.10)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.12)(@vitest/ui@4.0.18)(happy-dom@20.5.3(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@1.8.0)(bufferutil@4.1.0)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(msw@2.10.4(@types/node@24.10.12)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.1)
 
   '@vitest/ui@4.0.18(vitest@4.0.6)':
     dependencies:
