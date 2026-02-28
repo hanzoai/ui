@@ -78,3 +78,4 @@ playwright-report/
 .fleet
 
 .notes
+.claude/settings.local.json
