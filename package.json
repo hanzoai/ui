@@ -158,7 +158,7 @@
       "validator@<13.15.20": ">=13.15.20",
       "tar@=7.5.1": ">=7.5.2",
       "zod@>4": "4.1.12",
-      "@hookform/resolvers": "^3.9.0",
+      "@hookform/resolvers": "3.9.0",
       "react": "19.2.0",
       "react-dom": "19.2.0",
       "@types/react": "19.2.2",
