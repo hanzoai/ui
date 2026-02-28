@@ -81,9 +81,7 @@ export default defineConfig({
     'input-otp': 'primitives/input-otp.tsx',
     'resizable': 'primitives/resizable.tsx',
 
-    // Re-exports for package compatibility
-    'primitives-export': 'primitives/index-standard.ts',
-    'primitives/index': 'primitives/index-standard.ts',
+    // Utilities
     'util/index': 'util/index-client.ts',
     'lib/utils': 'src/utils.ts',
 
@@ -227,7 +225,7 @@ export default defineConfig({
   target: 'es2020',
   outDir: 'dist',
   treeshake: true,
-  minify: false, // Disabled to preserve 'use client' banner
+  minify: true, // Safe: 'use client' banner added post-build in onSuccess
   esbuildOptions(options) {
     options.jsx = 'automatic'
     options.platform = 'neutral'
