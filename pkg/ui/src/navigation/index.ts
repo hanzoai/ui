@@ -1,3 +1,7 @@
+// Hanzo Shell – shared header/nav for billing, account, console, chat, platform
+export { HanzoHeader, AppSwitcher, UserOrgDropdown, useHanzoAuth, DEFAULT_HANZO_APPS } from './hanzo-shell'
+export type { HanzoApp, HanzoOrg, HanzoUser, HanzoShellProps } from './hanzo-shell'
+
 // Navigation bar components
 export { default as AdvancedNavigationBar } from "./advanced-navigation-bar"
 export { default as AIModelSelectorNavigationBar } from "./ai-model-selector-navigation-bar"
