@@ -31,6 +31,7 @@ export default defineConfig({
     'src/utils': 'src/utils.ts',
     'src/registry/index': 'src/registry/index.ts',
     'src/mcp/index': 'src/mcp/index.ts',
+    'src/models/index': 'src/models/index.ts',
     'src/hooks/index': 'src/hooks/index.ts',
     'style/theme-provider': 'style/theme-provider.tsx',
 
