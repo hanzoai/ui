@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { observer } from 'mobx-react-lite'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,7 +7,6 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hanzo/ui/primitives'
-import { useAuth } from '@hanzo/auth/service'
 
 import { useCommerce } from '../../../service/context'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
@@ -26,28 +25,16 @@ const PaymentStepForm: React.FC<CheckoutStepComponentProps> = observer(({
   setOrderId
 }) => {
   const cmmc = useCommerce()
-  const auth = useAuth() // may be null in some cases
 
   const [transactionStatus, setTransactionStatus] = useState<TransactionStatus>('unpaid')
-
-  if (!auth) {
-    console.log("PAYMENT STEP FORM:  auth service is null! ")
-  }
 
   const contactForm = useForm<z.infer<typeof contactFormSchema>>({
     resolver: zodResolver(contactFormSchema as any),
     defaultValues: {
-      name: auth?.user?.displayName ?? '',
-      email: auth?.user?.email ?? '',
+      name: '',
+      email: '',
     },
   })
-
-  useEffect(() => {
-    if (auth?.loggedIn) {
-      contactForm.setValue('name', auth!.user?.displayName ?? '')
-      contactForm.setValue('email', auth!.user?.email ?? '')
-    }
-  }, [auth?.loggedIn])
 
   const storePaymentInfo = async (paymentInfo: any) => {
     const {name, email} = contactForm.getValues()
