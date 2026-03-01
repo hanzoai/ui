@@ -39,7 +39,6 @@
     "square": "^35.1.0"
   },
   "peerDependencies": {
-    "@hanzo/auth": ">=2.5.0",
     "@hanzo/ui": ">=5.0.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-radio-group": "^1.1.3",
