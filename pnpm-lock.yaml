@@ -875,6 +875,15 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
 
+  packages/og:
+    dependencies:
+      next:
+        specifier: '>=14.2.25'
+        version: 16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.0))(react@19.2.0)
+      react:
+        specifier: 19.2.0
+        version: 19.2.0
+
   packages/shadcn:
     dependencies:
       '@antfu/ni':
@@ -27101,8 +27110,8 @@ snapshots:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/curves': 1.9.6
       '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.6.2
-      '@scure/bip39': 1.5.4
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
       abitype: 1.0.8(typescript@5.9.3)(zod@4.1.12)
       eventemitter3: 5.0.1
     optionalDependencies:
