@@ -179,6 +179,9 @@ export default defineConfig({
     'project/kanban': 'src/project/kanban.tsx',
     'project/list': 'src/project/list.tsx',
 
+    // Model components (Zen model cards, tables, library, ZenEnso logo)
+    'models/index': 'src/models/index.ts',
+
     // UI components
     'ui/index': 'src/ui/index.ts',
     'ui/announcement': 'src/ui/announcement.tsx',
