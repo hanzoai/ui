@@ -414,6 +414,11 @@
       "import": "./dist/src/mcp/index.mjs",
       "require": "./dist/src/mcp/index.js"
     },
+    "./models": {
+      "types": "./dist/src/models/index.d.ts",
+      "import": "./dist/models/index.mjs",
+      "require": "./dist/models/index.js"
+    },
     "./react": {
       "types": "./dist/frameworks/react/index.d.ts",
       "import": "./dist/frameworks/react/index.mjs",
