@@ -637,8 +637,8 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
       unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: ^5.1.0
+        version: 5.1.0
       vitest:
         specifier: ^4.0.7
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@24.10.12)(@vitest/ui@4.0.18)(happy-dom@20.5.3(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.6.1)(jsdom@27.4.0(@noble/hashes@1.8.0)(bufferutil@4.1.0)(utf-8-validate@5.0.10))(lightningcss@1.30.2)(msw@2.10.4(@types/node@24.10.12)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.1)
@@ -872,8 +872,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       unist-util-visit:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^5.1.0
+        version: 5.1.0
 
   packages/shadcn:
     dependencies:
@@ -2018,6 +2018,10 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.6':
+    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -3792,7 +3796,7 @@ packages:
   '@next/third-parties@15.5.12':
     resolution: {integrity: sha512-1wVoarmu7CHc2+lhHdMHqfenbIopkppTscgyVym6eUD78JBDp1VCYQif+LiSUKJL2xMUwN8GvnAqsSrDTamvtg==}
     peerDependencies:
-      next: '>=14.2.25'
+      next: '>=14.2.32'
       react: 19.2.0
 
   '@noble/ciphers@1.2.1':
@@ -5616,7 +5620,7 @@ packages:
     resolution: {integrity: sha512-Y379gm17gw+1nxT/YXTCJnVIWuu7tsUH1tp/YxsYb0pZnc9Gljk7Om4Kpq7WPq0bZ4zidVCxf6xn6jgDcbHifQ==}
     peerDependencies:
       '@splinetool/runtime': '*'
-      next: '>=14.2.25'
+      next: '>=14.2.32'
       react: 19.2.0
       react-dom: 19.2.0
     peerDependenciesMeta:
@@ -12485,6 +12489,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.4:
+    resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@1.2.1:
     resolution: {integrity: sha512-1gnZf7DFcoIcajTjTwjwuDjzuz4PPcY2StKPlsGAQ1+YH20IRVrBaXSWmdjowTJ6u8Rc01PoYOGHXfP1mYcZNQ==}
     engines: {node: '>= 18'}
@@ -13362,11 +13371,8 @@ packages:
   unist-util-find-after@5.0.0:
     resolution: {integrity: sha512-amQa0Ep2m6hE2g72AugUItjbuM8X8cGQnFoHk0pGfrFeT9GZhzN5SW8nRsiGKK7Aif4CrACPENkA6P/Lw6fHGQ==}
 
-  unist-util-is@5.2.1:
-    resolution: {integrity: sha512-u9njyyfEh43npf1M+yGKDGVPbY/JWEemg5nH05ncKPfi+kBbKBJoTdsogMu33uhytuLlv9y0O7GH7fEdwLdLQw==}
-
-  unist-util-is@6.0.0:
-    resolution: {integrity: sha512-2qCTHimwdxLfz+YzdGfkqNlH0tLi9xjTnHddPmJwtIG9MGsdbutfTc4P+haPD7l7Cjxf/WZj+we5qfVPvvxfYw==}
+  unist-util-is@6.0.1:
+    resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
 
   unist-util-position-from-estree@2.0.0:
     resolution: {integrity: sha512-KaFVRjoqLyF6YXCbVLNad/eS4+OfPQQn2yOd7zF/h5T/CSL2v8NpN6a5TPvtbXthAGw5nG+PuTtq+DdIZr+cRQ==}
@@ -13383,17 +13389,11 @@ packages:
   unist-util-stringify-position@4.0.0:
     resolution: {integrity: sha512-0ASV06AAoKCDkS2+xw5RXJywruurpbC4JZSm7nr7MOt1ojAzvyyaO+UxZf18j8FCF6kmzCZKcAgN/yu2gm2XgQ==}
 
-  unist-util-visit-parents@5.1.3:
-    resolution: {integrity: sha512-x6+y8g7wWMyQhL1iZfhIPhDAs7Xwbn9nRosDXl7qoPTSCy0yNxnKc+hWokFifWQIDGi154rdUqKvbCa4+1kLhg==}
-
   unist-util-visit-parents@6.0.1:
     resolution: {integrity: sha512-L/PqWzfTP9lzzEa6CKs0k2nARxTdZduw3zyh8d2NVBnsyvHjSX4TWse388YrrQKbvI8w20fGjGlhgT96WwKykw==}
 
-  unist-util-visit@4.1.2:
-    resolution: {integrity: sha512-MSd8OUGISqHdVvfY9TPhyK2VdUrPgxkUtWSuMHF6XAAFuL4LokseigBnZtPnJMu+FbynTkFNnFlyjxpVKujMRg==}
-
-  unist-util-visit@5.0.0:
-    resolution: {integrity: sha512-MR04uvD+07cwl/yhVuVWAtw+3GOR/knlL55Nd/wAdblk27GCVt3lqpTivy/tkJcZoNPzTwS1Y+KMojlLDhoTzg==}
+  unist-util-visit-parents@6.0.2:
+    resolution: {integrity: sha512-goh1s1TBrqSqukSc8wrjwWhL0hiJxgA8m4kFxGlQ+8FYQ3C/m11FcTs4YYem7V664AhHVvgoQLk890Ssdsr2IQ==}
 
   unist-util-visit@5.1.0:
     resolution: {integrity: sha512-m+vIdyeCOpdr/QeQCu2EzxX/ohgS8KbnPDgFni4dQsfSCtpz8UqDyY5GjRru8PDKuYn7Fq19j1CQ+nJSsGKOzg==}
@@ -13659,7 +13659,7 @@ packages:
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
-      vite: '>=7.1.11'
+      vite: '>=5.4.21'
     peerDependenciesMeta:
       vite:
         optional: true
@@ -14621,6 +14621,8 @@ snapshots:
   '@babel/runtime@7.28.2': {}
 
   '@babel/runtime@7.28.4': {}
+
+  '@babel/runtime@7.28.6': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -15905,7 +15907,7 @@ snapshots:
       remark-rehype: 11.1.2
       scroll-into-view-if-needed: 3.1.0
       shiki: 3.22.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
     optionalDependencies:
       '@types/react': 19.2.2
       lucide-react: 0.456.0(react@19.2.0)
@@ -15935,7 +15937,7 @@ snapshots:
       remark-rehype: 11.1.2
       scroll-into-view-if-needed: 3.1.0
       shiki: 3.22.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
     optionalDependencies:
       '@types/react': 19.2.2
       lucide-react: 0.544.0(react@19.2.0)
@@ -15953,7 +15955,7 @@ snapshots:
       estree-util-value-to-estree: 3.5.0
       npm-to-yarn: 3.0.1
       oxc-transform: 0.102.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zod: 4.3.6
 
   '@hanzo/docs-mdx@14.3.0(@hanzo/docs-core@16.2.6(@types/react@19.2.2)(lucide-react@0.544.0(react@19.2.0))(next@16.0.1(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(zod@4.1.12))(@types/react@19.2.2)(next@16.0.1(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(vite@7.3.1(@types/node@24.10.12)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1))':
@@ -15973,7 +15975,7 @@ snapshots:
       tinyglobby: 0.2.15
       unified: 11.0.5
       unist-util-remove-position: 5.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
       zod: 4.3.6
     optionalDependencies:
@@ -16644,7 +16646,7 @@ snapshots:
       unified: 11.0.5
       unist-util-position-from-estree: 2.0.0
       unist-util-stringify-position: 4.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -16807,7 +16809,7 @@ snapshots:
       '@ethereumjs/tx': 4.2.0
       '@types/debug': 4.1.12
       debug: 4.4.3
-      semver: 7.7.3
+      semver: 7.7.4
       superstruct: 1.0.4
     transitivePeerDependencies:
       - supports-color
@@ -16835,7 +16837,7 @@ snapshots:
       '@types/debug': 4.1.12
       debug: 4.4.3
       pony-cause: 2.1.11
-      semver: 7.7.3
+      semver: 7.7.4
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -18544,7 +18546,7 @@ snapshots:
       hast-util-to-string: 3.0.1
       shiki: 3.14.0
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   '@shikijs/rehype@3.22.0':
     dependencies:
@@ -19262,7 +19264,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.29.0
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -23880,7 +23882,7 @@ snapshots:
       remark-rehype: 11.1.2
       scroll-into-view-if-needed: 3.1.0
       shiki: 3.22.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
     optionalDependencies:
       '@types/react': 19.2.2
       lucide-react: 0.474.0(react@19.2.0)
@@ -23934,7 +23936,7 @@ snapshots:
       estree-util-value-to-estree: 3.4.0
       npm-to-yarn: 3.0.1
       oxc-transform: 0.53.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zod: 3.25.76
 
   fumadocs-mdx@13.0.2(fumadocs-core@16.0.5(@types/react@19.2.2)(lucide-react@0.474.0(react@19.2.0))(next@16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(next@16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)(vite@7.3.1(@types/node@20.19.10)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.1)):
@@ -23955,7 +23957,7 @@ snapshots:
       tinyglobby: 0.2.15
       unified: 11.0.5
       unist-util-remove-position: 5.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zod: 4.1.12
     optionalDependencies:
       next: 16.1.4(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -25737,8 +25739,8 @@ snapshots:
     dependencies:
       '@types/mdast': 4.0.4
       escape-string-regexp: 5.0.0
-      unist-util-is: 6.0.0
-      unist-util-visit-parents: 6.0.1
+      unist-util-is: 6.0.1
+      unist-util-visit-parents: 6.0.2
 
   mdast-util-from-markdown@1.3.1:
     dependencies:
@@ -25895,7 +25897,7 @@ snapshots:
   mdast-util-phrasing@4.1.0:
     dependencies:
       '@types/mdast': 4.0.4
-      unist-util-is: 6.0.0
+      unist-util-is: 6.0.1
 
   mdast-util-to-hast@13.2.0:
     dependencies:
@@ -25906,7 +25908,7 @@ snapshots:
       micromark-util-sanitize-uri: 2.0.1
       trim-lines: 3.0.1
       unist-util-position: 5.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
 
   mdast-util-to-markdown@2.1.2:
@@ -25918,7 +25920,7 @@ snapshots:
       mdast-util-to-string: 4.0.0
       micromark-util-classify-character: 2.0.1
       micromark-util-decode-string: 2.0.1
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       zwitch: 2.0.4
 
   mdast-util-to-string@3.2.0:
@@ -27950,7 +27952,7 @@ snapshots:
       remark-parse: 11.0.0
       remark-rehype: 11.1.2
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
@@ -28280,7 +28282,7 @@ snapshots:
       rehype-parse: 9.0.1
       shiki: 1.29.2
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   rehype-pretty-code@0.14.1(shiki@3.22.0):
     dependencies:
@@ -28290,7 +28292,7 @@ snapshots:
       rehype-parse: 9.0.1
       shiki: 3.22.0
       unified: 11.0.5
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   rehype-recma@1.0.0:
     dependencies:
@@ -28560,6 +28562,8 @@ snapshots:
   semver@7.7.2: {}
 
   semver@7.7.3: {}
+
+  semver@7.7.4: {}
 
   send@1.2.1:
     dependencies:
@@ -29639,13 +29643,9 @@ snapshots:
   unist-util-find-after@5.0.0:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-is: 6.0.0
+      unist-util-is: 6.0.1
 
-  unist-util-is@5.2.1:
-    dependencies:
-      '@types/unist': 2.0.11
-
-  unist-util-is@6.0.0:
+  unist-util-is@6.0.1:
     dependencies:
       '@types/unist': 3.0.3
 
@@ -29660,7 +29660,7 @@ snapshots:
   unist-util-remove-position@5.0.0:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   unist-util-stringify-position@3.0.3:
     dependencies:
@@ -29670,33 +29670,21 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  unist-util-visit-parents@5.1.3:
-    dependencies:
-      '@types/unist': 2.0.11
-      unist-util-is: 5.2.1
-
   unist-util-visit-parents@6.0.1:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-is: 6.0.0
+      unist-util-is: 6.0.1
 
-  unist-util-visit@4.1.2:
-    dependencies:
-      '@types/unist': 2.0.11
-      unist-util-is: 5.2.1
-      unist-util-visit-parents: 5.1.3
-
-  unist-util-visit@5.0.0:
+  unist-util-visit-parents@6.0.2:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-is: 6.0.0
-      unist-util-visit-parents: 6.0.1
+      unist-util-is: 6.0.1
 
   unist-util-visit@5.1.0:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-is: 6.0.0
-      unist-util-visit-parents: 6.0.1
+      unist-util-is: 6.0.1
+      unist-util-visit-parents: 6.0.2
 
   universalify@0.1.2: {}
 
