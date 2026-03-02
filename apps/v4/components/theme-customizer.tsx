@@ -198,7 +198,7 @@ function CustomizerCode({ themeName }: { themeName: string }) {
         <TabsContent value="v4-oklch">
           <figure
             data-rehype-pretty-code-figure
-            className="!mx-0 mt-0 rounded-lg"
+            className="mx-0! mt-0 rounded-lg"
           >
             <figcaption
               className="flex items-center gap-2 text-code-foreground [&_svg]:size-4 [&_svg]:text-code-foreground [&_svg]:opacity-70"
@@ -278,7 +278,7 @@ function CustomizerCode({ themeName }: { themeName: string }) {
         <TabsContent value="v4-hsl">
           <figure
             data-rehype-pretty-code-figure
-            className="!mx-0 mt-0 rounded-lg"
+            className="mx-0! mt-0 rounded-lg"
           >
             <figcaption
               className="flex items-center gap-2 text-code-foreground [&_svg]:size-4 [&_svg]:text-code-foreground [&_svg]:opacity-70"
@@ -362,7 +362,7 @@ function CustomizerCode({ themeName }: { themeName: string }) {
         <TabsContent value="v3">
           <figure
             data-rehype-pretty-code-figure
-            className="!mx-0 mt-0 rounded-lg"
+            className="mx-0! mt-0 rounded-lg"
           >
             <figcaption
               className="flex items-center gap-2 text-code-foreground [&_svg]:size-4 [&_svg]:text-code-foreground [&_svg]:opacity-70"

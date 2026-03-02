@@ -37,7 +37,7 @@ export function ChartToolbar({
         />
         <Separator
           orientation="vertical"
-          className="mx-0 hidden !h-4 md:flex"
+          className="mx-0 hidden h-4! md:flex"
         />
         <ChartCodeViewer chart={chart}>{children}</ChartCodeViewer>
       </div>

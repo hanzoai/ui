@@ -75,7 +75,7 @@ export function ChartTooltipDemo() {
           className="w-[8rem]"
         />
       </div>
-      <div className="!hidden md:!flex">
+      <div className="hidden! md:flex!">
         <TooltipDemo
           label="Page Views"
           payload={[{ name: "Desktop", value: 12486, fill: "var(--chart-3)" }]}
@@ -83,7 +83,7 @@ export function ChartTooltipDemo() {
           indicator="line"
         />
       </div>
-      <div className="!items-start !justify-start">
+      <div className="items-start! justify-start!">
         <div className="absolute top-[60px] left-[50px] z-10 text-sm font-medium">
           Indicator
         </div>

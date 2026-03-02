@@ -185,7 +185,7 @@ export function CommandMenu({
     return (
       <CommandGroup
         heading="Pages"
-        className="!p-0 [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:!p-3 [&_[cmdk-group-heading]]:!pb-1"
+        className="p-0! [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:p-3! [&_[cmdk-group-heading]]:pb-1!"
       >
         {navItems.map((item) => (
           <CommandMenuItem
@@ -230,7 +230,7 @@ export function CommandMenu({
         <CommandGroup
           key={group.$id}
           heading={group.name}
-          className="!p-0 [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:!p-3 [&_[cmdk-group-heading]]:!pb-1"
+          className="p-0! [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:p-3! [&_[cmdk-group-heading]]:pb-1!"
         >
           {pages.map((item) => {
             const isComponent = item.url.includes("/components/")
@@ -268,7 +268,7 @@ export function CommandMenu({
         heading={
           colorPalette.name.charAt(0).toUpperCase() + colorPalette.name.slice(1)
         }
-        className="!p-0 [&_[cmdk-group-heading]]:!p-3"
+        className="p-0! [&_[cmdk-group-heading]]:p-3!"
       >
         {colorPalette.colors.map((color) => (
           <CommandMenuItem
@@ -307,7 +307,7 @@ export function CommandMenu({
     return (
       <CommandGroup
         heading="Blocks"
-        className="!p-0 [&_[cmdk-group-heading]]:!p-3"
+        className="p-0! [&_[cmdk-group-heading]]:p-3!"
       >
         {blocks.map((block) => (
           <CommandMenuItem
@@ -406,7 +406,7 @@ export function CommandMenu({
           <DialogDescription>Search for a command to run...</DialogDescription>
         </DialogHeader>
         <Command
-          className="rounded-none bg-transparent **:data-[slot=command-input]:!h-9 **:data-[slot=command-input]:py-0 **:data-[slot=command-input-wrapper]:mb-0 **:data-[slot=command-input-wrapper]:!h-9 **:data-[slot=command-input-wrapper]:rounded-md **:data-[slot=command-input-wrapper]:border **:data-[slot=command-input-wrapper]:border-input **:data-[slot=command-input-wrapper]:bg-input/50"
+          className="rounded-none bg-transparent **:data-[slot=command-input]:h-9! **:data-[slot=command-input]:py-0 **:data-[slot=command-input-wrapper]:mb-0 **:data-[slot=command-input-wrapper]:h-9! **:data-[slot=command-input-wrapper]:rounded-md **:data-[slot=command-input-wrapper]:border **:data-[slot=command-input-wrapper]:border-input **:data-[slot=command-input-wrapper]:bg-input/50"
           filter={commandFilter}
         >
           <div className="relative">
@@ -451,7 +451,7 @@ export function CommandMenu({
           </div>
           {copyPayload && (
             <>
-              <Separator orientation="vertical" className="!h-4" />
+              <Separator orientation="vertical" className="h-4!" />
               <div className="flex items-center gap-1">
                 <CommandMenuKbd>⌘</CommandMenuKbd>
                 <CommandMenuKbd>C</CommandMenuKbd>
@@ -493,7 +493,7 @@ function CommandMenuItem({
     <CommandItem
       ref={ref}
       className={cn(
-        "h-9 rounded-md border border-transparent !px-3 font-medium data-[selected=true]:border-input data-[selected=true]:bg-input/50",
+        "h-9 rounded-md border border-transparent px-3! font-medium data-[selected=true]:border-input data-[selected=true]:bg-input/50",
         className
       )}
       {...props}
@@ -555,7 +555,7 @@ function SearchResults({
 
   return (
     <CommandGroup
-      className="!px-0 [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:!p-3 [&_[cmdk-group-heading]]:!pb-1"
+      className="px-0! [&_[cmdk-group-heading]]:scroll-mt-16 [&_[cmdk-group-heading]]:p-3! [&_[cmdk-group-heading]]:pb-1!"
       heading="Search Results"
     >
       {uniqueResults.map((item) => {
@@ -567,7 +567,7 @@ function SearchResults({
               router.push(item.url)
               setOpen(false)
             }}
-            className="h-9 rounded-md border border-transparent !px-3 font-normal data-[selected=true]:border-input data-[selected=true]:bg-input/50"
+            className="h-9 rounded-md border border-transparent px-3! font-normal data-[selected=true]:border-input data-[selected=true]:bg-input/50"
             keywords={[item.content]}
             value={`${item.content} ${item.type}`}
           >

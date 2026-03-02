@@ -270,7 +270,7 @@ export function NotionPromptForm() {
                     key={mention}
                     size="sm"
                     variant="secondary"
-                    className="rounded-full !pl-2"
+                    className="rounded-full pl-2!"
                     onClick={() => {
                       setMentions((prev) => prev.filter((m) => m !== mention))
                     }}
