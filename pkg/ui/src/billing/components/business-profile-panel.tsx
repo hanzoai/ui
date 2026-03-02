@@ -9,6 +9,8 @@ export interface BusinessProfilePanelProps {
   onSave?: (profile: BusinessProfile) => Promise<void>
 }
 
+const INPUT_CLASS = 'w-full rounded-lg border border-border bg-bg-input px-3 py-2 text-sm text-text outline-none transition focus:border-brand'
+
 export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
   const { profile, onSave } = props
   const [draft, setDraft] = React.useState<BusinessProfile>(profile)
@@ -34,69 +36,69 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
-        <div className="border-b border-zinc-200 p-4">
-          <h3 className="text-lg font-semibold text-zinc-900">Business profile</h3>
-          <p className="text-sm text-zinc-500">
+      <div className="overflow-hidden rounded-xl border border-border bg-bg-card">
+        <div className="border-b border-border p-4">
+          <h3 className="text-lg font-semibold text-text">Business profile</h3>
+          <p className="text-sm text-text-muted">
             Keep your legal and support details accurate for invoices, tax, and compliance workflows.
           </p>
         </div>
 
         <div className="grid gap-4 p-4 md:grid-cols-2">
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Legal name</span>
+            <span className="font-medium text-text-secondary">Legal name</span>
             <input
               value={draft.legalName}
               onChange={(e) => setDraft((prev) => ({ ...prev, legalName: e.target.value }))}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Display name</span>
+            <span className="font-medium text-text-secondary">Display name</span>
             <input
               value={draft.displayName}
               onChange={(e) => setDraft((prev) => ({ ...prev, displayName: e.target.value }))}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Website</span>
+            <span className="font-medium text-text-secondary">Website</span>
             <input
               value={draft.website || ''}
               onChange={(e) => setDraft((prev) => ({ ...prev, website: e.target.value }))}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Support email</span>
+            <span className="font-medium text-text-secondary">Support email</span>
             <input
               value={draft.supportEmail || ''}
               onChange={(e) => setDraft((prev) => ({ ...prev, supportEmail: e.target.value }))}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Statement descriptor</span>
+            <span className="font-medium text-text-secondary">Statement descriptor</span>
             <input
               value={draft.statementDescriptor || ''}
               onChange={(e) =>
                 setDraft((prev) => ({ ...prev, statementDescriptor: e.target.value }))
               }
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
           <label className="space-y-1 text-sm">
-            <span className="font-medium text-zinc-700">Tax ID</span>
+            <span className="font-medium text-text-secondary">Tax ID</span>
             <input
               value={draft.taxId || ''}
               onChange={(e) => setDraft((prev) => ({ ...prev, taxId: e.target.value }))}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-900"
+              className={INPUT_CLASS}
             />
           </label>
         </div>
 
-        <div className="border-t border-zinc-200 bg-zinc-50 p-4">
-          <p className="mb-2 text-sm font-medium text-zinc-700">Registered address</p>
+        <div className="border-t border-border bg-bg-elevated p-4">
+          <p className="mb-2 text-sm font-medium text-text-secondary">Registered address</p>
           <div className="grid gap-3 md:grid-cols-2">
             <input
               value={draft.registeredAddress.line1}
@@ -107,7 +109,7 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="Line 1"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
             <input
               value={draft.registeredAddress.line2 || ''}
@@ -118,7 +120,7 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="Line 2"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
             <input
               value={draft.registeredAddress.city}
@@ -129,7 +131,7 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="City"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
             <input
               value={draft.registeredAddress.state || ''}
@@ -140,7 +142,7 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="State/Province"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
             <input
               value={draft.registeredAddress.zip}
@@ -151,7 +153,7 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="Postal code"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
             <input
               value={draft.registeredAddress.country}
@@ -162,13 +164,13 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
                 }))
               }
               placeholder="Country"
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none transition focus:border-zinc-900"
+              className={`${INPUT_CLASS} text-sm`}
             />
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 p-4">
-          <p className="text-xs text-zinc-500">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border p-4">
+          <p className="text-xs text-text-muted">
             {hasFinanceAndLegal
               ? 'Finance and legal contacts are configured.'
               : 'Tip: add at least one finance or legal contact for smooth audits.'}
@@ -177,9 +179,9 @@ export function BusinessProfilePanel(props: BusinessProfilePanelProps) {
             type="button"
             onClick={handleSave}
             disabled={!onSave || saving}
-            className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-text px-3 py-2 text-sm font-medium text-bg transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {saving ? 'Saving…' : 'Save profile'}
+            {saving ? 'Saving\u2026' : 'Save profile'}
           </button>
         </div>
       </div>
