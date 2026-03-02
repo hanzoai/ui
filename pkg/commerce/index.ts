@@ -13,5 +13,28 @@ export {
 export * from './util/selection-ui-specifiers'
 
 // Commerce API client
-export { Commerce, CommerceApiError } from './client'
-export type { CommerceClientConfig, Balance, Transaction, Subscription, Plan, Payment, UsageRecord } from './client'
+export { Commerce, CommerceApiError, hanzoCommerce } from './client'
+export type {
+  CommerceClientConfig,
+  Balance,
+  Transaction,
+  Subscription,
+  Plan,
+  Payment,
+  UsageRecord,
+  Coupon,
+  CouponType,
+  CouponValidateResult,
+  Discount,
+  CheckoutItem,
+  CheckoutSessionRequest,
+  CheckoutSessionResponse,
+  CardTokenizeRequest,
+  CardTokenizeResult,
+  PaymentMethod,
+  PaymentMethodType,
+  Referral,
+  Referrer,
+  Affiliate,
+  CreditGrant,
+} from './client'
