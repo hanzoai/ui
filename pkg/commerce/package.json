@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.5.1",
+  "version": "7.6.0",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -34,9 +34,7 @@
   },
   "dependencies": {
     "ethers": "^6.12.0",
-    "next-usequerystate": "^1.17.1",
-    "react-square-web-payments-sdk": "^3.2.1",
-    "square": "^35.1.0"
+    "next-usequerystate": "^1.17.1"
   },
   "peerDependencies": {
     "@hanzo/ui": ">=5.0.0",
