@@ -127,7 +127,7 @@ export function ComponentPreviewTabs({
           {isMobileCodeVisible ? (
             <>
               {direction === "rtl" && (
-                <div className="bg-code text-muted-foreground no-scrollbar relative z-10 overflow-x-auto border-t p-6 font-mono text-sm">
+                <div className="relative z-10 no-scrollbar overflow-x-auto border-t bg-code p-6 font-mono text-sm text-muted-foreground">
                   <pre>{`// You will notice this example uses dir and data-lang attributes.
 // This is because this site is not RTL by default.
 // In your application, you won't need these.`}</pre>
@@ -160,7 +160,7 @@ export function ComponentPreviewTabs({
                   type="button"
                   size="sm"
                   variant="outline"
-                  className="bg-background text-foreground dark:bg-background dark:text-foreground hover:bg-muted dark:hover:bg-muted relative z-10 rounded-lg shadow-none"
+                  className="relative z-10 rounded-lg bg-background text-foreground shadow-none hover:bg-muted dark:bg-background dark:text-foreground dark:hover:bg-muted"
                   onClick={() => {
                     setIsMobileCodeVisible(true)
                   }}

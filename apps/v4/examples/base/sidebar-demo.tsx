@@ -220,7 +220,7 @@ function TeamSwitcher({
               />
             }
           >
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <activeTeam.logo className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -236,7 +236,7 @@ function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-muted-foreground text-xs">
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
                 Teams
               </DropdownMenuLabel>
               {teams.map((team, index) => (
@@ -259,7 +259,7 @@ function TeamSwitcher({
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <Plus className="size-4" />
                 </div>
-                <div className="text-muted-foreground font-medium">
+                <div className="font-medium text-muted-foreground">
                   Add team
                 </div>
               </DropdownMenuItem>

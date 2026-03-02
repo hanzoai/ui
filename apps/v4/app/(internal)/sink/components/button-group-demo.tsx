@@ -377,7 +377,7 @@ export function ButtonGroupDemo() {
           <Button
             variant="outline"
             asChild
-            className="text-muted-foreground pointer-events-none px-2"
+            className="pointer-events-none px-2 text-muted-foreground"
           >
             <span>1.2K</span>
           </Button>
