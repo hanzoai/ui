@@ -46,7 +46,7 @@ export function InputGroupButtonExample() {
             <p>You should not enter any sensitive information on this site.</p>
           </PopoverContent>
         </Popover>
-        <InputGroupAddon className="text-muted-foreground !pl-1">
+        <InputGroupAddon className="!pl-1 text-muted-foreground">
           https://
         </InputGroupAddon>
         <InputGroupAddon align="inline-end">

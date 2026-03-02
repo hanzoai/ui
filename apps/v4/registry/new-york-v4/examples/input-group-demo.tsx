@@ -88,7 +88,7 @@ export default function InputGroupDemo() {
       <InputGroup>
         <InputGroupInput placeholder="@shadcn" />
         <InputGroupAddon align="inline-end">
-          <div className="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
+          <div className="flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
             <IconCheck className="size-3" />
           </div>
         </InputGroupAddon>
