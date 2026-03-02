@@ -270,6 +270,17 @@ export type PaymentMethod = {
     expMonth: number
     expYear: number
   }
+  bank_account?: {
+    bankName?: string
+    last4?: string
+    accountType?: 'checking' | 'savings'
+    routingNumber?: string
+  }
+  crypto?: {
+    chain: string
+    address: string
+    label?: string
+  }
   providerRef?: string
   providerType?: string
   createdAt?: string
@@ -685,6 +696,73 @@ export class Commerce {
   ): Promise<Transaction> {
     return this.request<Transaction>('/v1/billing/refund', {
       method: 'POST', body: params, token,
+    })
+  }
+
+  // -----------------------------------------------------------------------
+  // Crypto wallet deposit address
+  // -----------------------------------------------------------------------
+
+  /**
+   * Get or create a deposit address for a given chain.
+   * Used for crypto top-up — user sends funds to this address.
+   */
+  async getWalletAddress(params: { chain: string; userId: string }, token?: string): Promise<{ address: string; chain: string; qrCode?: string }> {
+    return this.request<{ address: string; chain: string; qrCode?: string }>('/api/wallet/account', {
+      method: 'POST',
+      body: { name: `${params.userId}-${params.chain}`, blockchainType: params.chain },
+      token,
+    })
+  }
+
+  // -----------------------------------------------------------------------
+  // Bank account (ACH) and crypto payment methods
+  // -----------------------------------------------------------------------
+
+  /**
+   * Add a bank account payment method (ACH).
+   * plaidToken from Plaid Link or Square bank OAuth.
+   */
+  async addBankAccount(
+    params: {
+      customerId: string
+      plaidToken?: string  // Plaid public token
+      bankName?: string
+      accountType?: 'checking' | 'savings'
+    },
+    token?: string,
+  ): Promise<PaymentMethod> {
+    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+      method: 'POST',
+      body: { customerId: params.customerId, type: 'bank_account', plaidToken: params.plaidToken, bankName: params.bankName, accountType: params.accountType },
+      token,
+    })
+  }
+
+  async addCryptoWallet(
+    params: { customerId: string; chain: string; address: string; label?: string },
+    token?: string,
+  ): Promise<PaymentMethod> {
+    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+      method: 'POST',
+      body: { customerId: params.customerId, type: 'crypto', chain: params.chain, address: params.address, label: params.label },
+      token,
+    })
+  }
+
+  // -----------------------------------------------------------------------
+  // Top-up
+  // -----------------------------------------------------------------------
+
+  /**
+   * Convenience: charge a saved payment method and deposit credits.
+   * amount is in cents.
+   */
+  async topup(params: { userId: string; paymentMethodId: string; amountCents: number; currency?: string }, token?: string): Promise<Transaction> {
+    return this.request<Transaction>('/v1/billing/topup', {
+      method: 'POST',
+      body: params,
+      token,
     })
   }
 }
