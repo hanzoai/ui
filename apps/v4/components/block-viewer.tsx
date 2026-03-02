@@ -346,7 +346,7 @@ function BlockViewerCode() {
       </div>
       <figure
         data-rehype-pretty-code-figure=""
-        className="!mx-0 mt-0 flex min-w-0 flex-1 flex-col rounded-xl border-none"
+        className="mx-0! mt-0 flex min-w-0 flex-1 flex-col rounded-xl border-none"
       >
         <figcaption
           className="flex h-12 shrink-0 items-center gap-2 border-b px-4 py-2 text-code-foreground [&_svg]:size-4 [&_svg]:text-code-foreground [&_svg]:opacity-70"
@@ -376,7 +376,7 @@ export function BlockViewerFileTree() {
   }
 
   return (
-    <SidebarProvider className="flex !min-h-full flex-col border-r">
+    <SidebarProvider className="flex min-h-full! flex-col border-r">
       <Sidebar collapsible="none" className="w-full flex-1">
         <SidebarGroupLabel className="h-12 rounded-none border-b px-4 text-sm">
           Files

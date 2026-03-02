@@ -34,12 +34,12 @@ export function CodeCollapsibleWrapper({
           >
             {isOpened ? "Collapse" : "Expand"}
           </Button>
-          <Separator orientation="vertical" className="mx-1.5 !h-4" />
+          <Separator orientation="vertical" className="mx-1.5 h-4!" />
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent
         forceMount
-        className="relative mt-6 overflow-hidden data-[state=closed]:max-h-64 data-[state=closed]:[content-visibility:auto] [&>figure]:mt-0 [&>figure]:md:!mx-0"
+        className="relative mt-6 overflow-hidden data-[state=closed]:max-h-64 data-[state=closed]:[content-visibility:auto] [&>figure]:mt-0 [&>figure]:md:mx-0!"
       >
         {children}
       </CollapsibleContent>

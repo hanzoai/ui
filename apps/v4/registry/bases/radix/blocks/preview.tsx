@@ -669,7 +669,7 @@ function InputGroupExamples() {
           <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
         </InputGroup>
         <InputGroup>
-          <InputGroupInput placeholder="example.com" className="!pl-1" />
+          <InputGroupInput placeholder="example.com" className="pl-1!" />
           <InputGroupAddon>
             <InputGroupText>https://</InputGroupText>
           </InputGroupAddon>
@@ -699,7 +699,7 @@ function InputGroupExamples() {
             Input Secure
           </Label>
           <InputGroup>
-            <InputGroupInput id="input-secure-19" className="!pl-0.5" />
+            <InputGroupInput id="input-secure-19" className="pl-0.5!" />
             <Popover>
               <PopoverTrigger asChild>
                 <InputGroupAddon>
@@ -729,7 +729,7 @@ function InputGroupExamples() {
                 </p>
               </PopoverContent>
             </Popover>
-            <InputGroupAddon className="!pl-1 text-muted-foreground">
+            <InputGroupAddon className="pl-1! text-muted-foreground">
               https://
             </InputGroupAddon>
             <InputGroupAddon align="inline-end">
@@ -831,7 +831,7 @@ function InputGroupExamples() {
               </DropdownMenuContent>
             </DropdownMenu>
             <InputGroupText className="ml-auto">52% used</InputGroupText>
-            <Separator orientation="vertical" className="!h-4" />
+            <Separator orientation="vertical" className="h-4!" />
             <InputGroupButton
               variant="default"
               className="rounded-full style-lyra:rounded-none"

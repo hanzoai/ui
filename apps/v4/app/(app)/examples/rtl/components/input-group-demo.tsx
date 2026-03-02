@@ -116,7 +116,7 @@ export function InputGroupDemo() {
             </DropdownMenuContent>
           </DropdownMenu>
           <InputGroupText className="ms-auto">{t.used}</InputGroupText>
-          <Separator orientation="vertical" className="!h-4" />
+          <Separator orientation="vertical" className="h-4!" />
           <InputGroupButton
             variant="default"
             className="rounded-full"
