@@ -390,13 +390,13 @@ export class Commerce {
   // -----------------------------------------------------------------------
 
   async getBalance(user: string, currency = 'usd', token?: string): Promise<Balance> {
-    return this.request<Balance>('/api/v1/billing/balance', {
+    return this.request<Balance>('/v1/billing/balance', {
       params: { user, currency }, token,
     })
   }
 
   async getAllBalances(user: string, token?: string): Promise<Record<string, Balance>> {
-    return this.request<Record<string, Balance>>('/api/v1/billing/balance/all', {
+    return this.request<Record<string, Balance>>('/v1/billing/balance/all', {
       params: { user }, token,
     })
   }
@@ -406,13 +406,13 @@ export class Commerce {
   // -----------------------------------------------------------------------
 
   async addUsageRecord(record: UsageRecord, token?: string): Promise<Transaction> {
-    return this.request<Transaction>('/api/v1/billing/usage', {
+    return this.request<Transaction>('/v1/billing/usage', {
       method: 'POST', body: record, token,
     })
   }
 
   async getUsageRecords(user: string, currency = 'usd', token?: string): Promise<Transaction[]> {
-    return this.request<Transaction[]>('/api/v1/billing/usage', {
+    return this.request<Transaction[]>('/v1/billing/usage', {
       params: { user, currency }, token,
     })
   }
@@ -425,13 +425,13 @@ export class Commerce {
     params: { user: string; currency?: string; amount: number; notes?: string; tags?: string[]; expiresIn?: string },
     token?: string,
   ): Promise<Transaction> {
-    return this.request<Transaction>('/api/v1/billing/deposit', {
+    return this.request<Transaction>('/v1/billing/deposit', {
       method: 'POST', body: params, token,
     })
   }
 
   async grantStarterCredit(user: string, token?: string): Promise<Transaction> {
-    return this.request<Transaction>('/api/v1/billing/credit', {
+    return this.request<Transaction>('/v1/billing/credit', {
       method: 'POST', body: { user }, token,
     })
   }
@@ -441,12 +441,12 @@ export class Commerce {
   // -----------------------------------------------------------------------
 
   async getPlans(token?: string): Promise<Plan[]> {
-    return this.request<Plan[]>('/api/v1/billing/plans', { token })
+    return this.request<Plan[]>('/v1/billing/plans', { token })
   }
 
   async getPlan(planId: string, token?: string): Promise<Plan | null> {
     try {
-      return await this.request<Plan>(`/api/v1/billing/plans/${planId}`, { token })
+      return await this.request<Plan>(`/v1/billing/plans/${planId}`, { token })
     } catch { return null }
   }
 
@@ -458,37 +458,37 @@ export class Commerce {
     params: { planId: string; userId?: string; customerId?: string; paymentMethodId?: string; couponCode?: string; trialDays?: number },
     token?: string,
   ): Promise<Subscription> {
-    return this.request<Subscription>('/api/v1/billing/subscriptions', {
+    return this.request<Subscription>('/v1/billing/subscriptions', {
       method: 'POST', body: params, token,
     })
   }
 
   async getSubscription(subscriptionId: string, token?: string): Promise<Subscription | null> {
     try {
-      return await this.request<Subscription>(`/api/v1/billing/subscriptions/${subscriptionId}`, { token })
+      return await this.request<Subscription>(`/v1/billing/subscriptions/${subscriptionId}`, { token })
     } catch { return null }
   }
 
   async listSubscriptions(params?: { customerId?: string }, token?: string): Promise<Subscription[]> {
-    return this.request<Subscription[]>('/api/v1/billing/subscriptions', {
+    return this.request<Subscription[]>('/v1/billing/subscriptions', {
       params: params as Record<string, string> | undefined, token,
     })
   }
 
   async updateSubscription(subscriptionId: string, update: Partial<Subscription>, token?: string): Promise<Subscription> {
-    return this.request<Subscription>(`/api/v1/billing/subscriptions/${subscriptionId}`, {
+    return this.request<Subscription>(`/v1/billing/subscriptions/${subscriptionId}`, {
       method: 'PATCH', body: update, token,
     })
   }
 
   async cancelSubscription(subscriptionId: string, immediately = false, token?: string): Promise<Subscription> {
-    return this.request<Subscription>(`/api/v1/billing/subscriptions/${subscriptionId}/cancel`, {
+    return this.request<Subscription>(`/v1/billing/subscriptions/${subscriptionId}/cancel`, {
       method: 'POST', body: { immediately }, token,
     })
   }
 
   async reactivateSubscription(subscriptionId: string, token?: string): Promise<Subscription> {
-    return this.request<Subscription>(`/api/v1/billing/subscriptions/${subscriptionId}/reactivate`, {
+    return this.request<Subscription>(`/v1/billing/subscriptions/${subscriptionId}/reactivate`, {
       method: 'POST', token,
     })
   }
@@ -506,7 +506,7 @@ export class Commerce {
     params: CheckoutSessionRequest,
     token?: string,
   ): Promise<CheckoutSessionResponse> {
-    return this.request<CheckoutSessionResponse>('/api/v1/checkout/sessions', {
+    return this.request<CheckoutSessionResponse>('/v1/checkout/sessions', {
       method: 'POST', body: params, token,
     })
   }
@@ -522,7 +522,7 @@ export class Commerce {
    * tokenizes via the configured payment provider (Stripe).
    */
   async tokenizeCard(card: CardTokenizeRequest, token?: string): Promise<CardTokenizeResult> {
-    return this.request<CardTokenizeResult>('/api/v1/billing/card/tokenize', {
+    return this.request<CardTokenizeResult>('/v1/billing/card/tokenize', {
       method: 'POST',
       body: {
         number: card.number.replace(/\s/g, ''),
@@ -550,25 +550,25 @@ export class Commerce {
     },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/api/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
       method: 'POST', body: params, token,
     })
   }
 
   async listPaymentMethods(customerId: string, token?: string): Promise<PaymentMethod[]> {
-    return this.request<PaymentMethod[]>('/api/v1/billing/payment-methods', {
+    return this.request<PaymentMethod[]>('/v1/billing/payment-methods', {
       params: { customerId }, token,
     })
   }
 
   async removePaymentMethod(paymentMethodId: string, token?: string): Promise<void> {
-    await this.request<void>(`/api/v1/billing/payment-methods/${paymentMethodId}`, {
+    await this.request<void>(`/v1/billing/payment-methods/${paymentMethodId}`, {
       method: 'DELETE', token,
     })
   }
 
   async setDefaultPaymentMethod(customerId: string, paymentMethodId: string, token?: string): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>(`/api/v1/billing/customers/${customerId}/default-payment-method`, {
+    return this.request<PaymentMethod>(`/v1/billing/customers/${customerId}/default-payment-method`, {
       method: 'POST', body: { paymentMethodId }, token,
     })
   }
@@ -583,7 +583,7 @@ export class Commerce {
    */
   async validateCoupon(code: string, subtotalCents?: number, token?: string): Promise<CouponValidateResult> {
     try {
-      const result = await this.request<Coupon>('/api/v1/coupon/validate', {
+      const result = await this.request<Coupon>('/v1/coupon/validate', {
         method: 'POST',
         body: { code: code.toUpperCase().trim(), subtotalCents },
         token,
@@ -599,7 +599,7 @@ export class Commerce {
    * Redeem a coupon for a user. Creates credit grant records.
    */
   async redeemCoupon(code: string, userId: string, token?: string): Promise<CreditGrant[]> {
-    return this.request<CreditGrant[]>('/api/v1/coupon/redeem', {
+    return this.request<CreditGrant[]>('/v1/coupon/redeem', {
       method: 'POST',
       body: { code: code.toUpperCase().trim(), userId },
       token,
@@ -615,17 +615,17 @@ export class Commerce {
    * Returns the referral code/link the user can share.
    */
   async getOrCreateReferrer(userId: string, token?: string): Promise<Referrer> {
-    return this.request<Referrer>('/api/v1/referrer', {
+    return this.request<Referrer>('/v1/referrer', {
       method: 'POST', body: { userId }, token,
     })
   }
 
   async getReferrals(userId: string, token?: string): Promise<Referral[]> {
-    return this.request<Referral[]>(`/api/v1/user/${userId}/referrals`, { token })
+    return this.request<Referral[]>(`/v1/user/${userId}/referrals`, { token })
   }
 
   async getReferrers(userId: string, token?: string): Promise<Referrer[]> {
-    return this.request<Referrer[]>(`/api/v1/user/${userId}/referrers`, { token })
+    return this.request<Referrer[]>(`/v1/user/${userId}/referrers`, { token })
   }
 
   /**
@@ -633,7 +633,7 @@ export class Commerce {
    */
   async getAffiliate(userId: string, token?: string): Promise<Affiliate | null> {
     try {
-      return await this.request<Affiliate>(`/api/v1/user/${userId}/affiliate`, { token })
+      return await this.request<Affiliate>(`/v1/user/${userId}/affiliate`, { token })
     } catch { return null }
   }
 
@@ -642,21 +642,21 @@ export class Commerce {
    * After creation, user can connect their bank via the returnedconnectUrl.
    */
   async createAffiliate(userId: string, token?: string): Promise<Affiliate> {
-    return this.request<Affiliate>('/api/v1/affiliate', {
+    return this.request<Affiliate>('/v1/affiliate', {
       method: 'POST', body: { userId }, token,
     })
   }
 
   async getAffiliateReferrals(affiliateId: string, token?: string): Promise<Referral[]> {
-    return this.request<Referral[]>(`/api/v1/affiliate/${affiliateId}/referrals`, { token })
+    return this.request<Referral[]>(`/v1/affiliate/${affiliateId}/referrals`, { token })
   }
 
   async getAffiliateOrders(affiliateId: string, token?: string): Promise<unknown[]> {
-    return this.request<unknown[]>(`/api/v1/affiliate/${affiliateId}/orders`, { token })
+    return this.request<unknown[]>(`/v1/affiliate/${affiliateId}/orders`, { token })
   }
 
   async getAffiliateTransactions(affiliateId: string, token?: string): Promise<Transaction[]> {
-    return this.request<Transaction[]>(`/api/v1/affiliate/${affiliateId}/transactions`, { token })
+    return this.request<Transaction[]>(`/v1/affiliate/${affiliateId}/transactions`, { token })
   }
 
   // -----------------------------------------------------------------------
@@ -664,26 +664,26 @@ export class Commerce {
   // -----------------------------------------------------------------------
 
   async authorize(orderId: string, token?: string): Promise<Payment> {
-    return this.request<Payment>(`/api/v1/authorize/${orderId}`, { method: 'POST', token })
+    return this.request<Payment>(`/v1/authorize/${orderId}`, { method: 'POST', token })
   }
 
   async capture(orderId: string, token?: string): Promise<Payment> {
-    return this.request<Payment>(`/api/v1/capture/${orderId}`, { method: 'POST', token })
+    return this.request<Payment>(`/v1/capture/${orderId}`, { method: 'POST', token })
   }
 
   async charge(orderId: string, token?: string): Promise<Payment> {
-    return this.request<Payment>(`/api/v1/charge/${orderId}`, { method: 'POST', token })
+    return this.request<Payment>(`/v1/charge/${orderId}`, { method: 'POST', token })
   }
 
   async refund(paymentId: string, token?: string): Promise<Payment> {
-    return this.request<Payment>(`/api/v1/refund/${paymentId}`, { method: 'POST', token })
+    return this.request<Payment>(`/v1/refund/${paymentId}`, { method: 'POST', token })
   }
 
   async billingRefund(
     params: { user: string; amount: number; originalTransactionId: string; currency?: string; notes?: string },
     token?: string,
   ): Promise<Transaction> {
-    return this.request<Transaction>('/api/v1/billing/refund', {
+    return this.request<Transaction>('/v1/billing/refund', {
       method: 'POST', body: params, token,
     })
   }
