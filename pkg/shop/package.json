@@ -1,0 +1,50 @@
+{
+  "name": "@hanzo/shop",
+  "version": "1.0.0",
+  "description": "Unified embeddable payment topup widget for Hanzo apps",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI, Inc.",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/react-sdk.git",
+    "directory": "pkg/shop"
+  },
+  "keywords": [
+    "topup",
+    "payments",
+    "commerce",
+    "square",
+    "crypto",
+    "ach",
+    "widget",
+    "hanzoai",
+    "hanzo"
+  ],
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts",
+    "./topup": "./components/HanzoTopup.tsx"
+  },
+  "scripts": {
+    "lat": "npm show @hanzo/shop version",
+    "pub": "npm publish",
+    "tc": "tsc --noEmit",
+    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@hanzo/commerce": ">=7.6.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "5.6.3"
+  }
+}
