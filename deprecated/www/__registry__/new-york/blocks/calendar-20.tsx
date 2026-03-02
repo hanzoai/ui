@@ -65,7 +65,7 @@ export default function Calendar20() {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex flex-col gap-4 border-t py-5! px-6 md:flex-row">
+      <CardFooter className="flex flex-col gap-4 border-t !py-5 px-6 md:flex-row">
         <div className="text-sm">
           {date && selectedTime ? (
             <>

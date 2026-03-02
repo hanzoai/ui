@@ -118,7 +118,7 @@ ${Object.entries(themesConfig?.activeTheme.cssVars.dark || {})
               dangerouslySetInnerHTML={{
                 __html: chart.highlightedCode,
               }}
-              className="w-full overflow-hidden [&_pre]:overflow-auto [&_pre]:bg-black! [&_pre]:py-6 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed"
+              className="w-full overflow-hidden [&_pre]:overflow-auto [&_pre]:!bg-black [&_pre]:py-6 [&_pre]:font-mono [&_pre]:text-sm [&_pre]:leading-relaxed"
             />
           </div>
         </TabsContent>

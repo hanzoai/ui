@@ -145,7 +145,7 @@ export function Customizer() {
                         "flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[--theme-primary]"
                       )}
                     >
-                      {isActive && <Check className="size-2.5! text-white" />}
+                      {isActive && <Check className="!size-2.5 text-white" />}
                     </span>
                     <span className="hidden xl:block">
                       {theme.label === "Zinc" ? "Default" : theme.label}
