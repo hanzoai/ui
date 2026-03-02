@@ -48,6 +48,7 @@ jobs:
         run: pnpm build
         env:
           NODE_OPTIONS: --max-old-space-size=8192
+          NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
 
       - name: Run component health check
         run: pnpm health-check
