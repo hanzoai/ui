@@ -92,7 +92,7 @@
     "little-date": "^1.0.0",
     "motion": "^12.12.1",
     "postcss": "^8.4.24",
-    "puppeteer": "^23.6.0",
+    "puppeteer": "^24.37.5",
     "recharts": "^3.3.0",
     "tailwindcss-animate": "^1.0.5",
     "tsx": "^4.20.6",
