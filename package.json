@@ -168,5 +168,8 @@
       "zod",
       "@hookform/resolvers"
     ]
+  },
+  "optionalDependencies": {
+    "react-resizable-panels": "^4.7.0"
   }
 }
