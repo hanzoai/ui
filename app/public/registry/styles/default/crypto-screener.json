@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "crypto-screener.tsx",
-      "content": "export * from \"../ui/crypto-screener\"\n"
+      "content": "export { default } from \"../ui/crypto-screener\"\nexport * from \"../ui/crypto-screener\"\n"
     }
   ],
   "type": "components:finance",

@@ -1,0 +1,100 @@
+---
+title: Svelte
+description: Using @hanzo/ui components in Svelte and SvelteKit applications.
+---
+
+# Svelte Guide (Beta)
+
+@hanzo/ui provides Svelte 5 components with full TypeScript support. This integration is currently in beta.
+
+## Installation
+
+<Steps>
+
+### Install the package
+
+```bash
+npm install @hanzo/ui
+# or
+pnpm add @hanzo/ui
+```
+
+### Install Svelte and dependencies
+
+```bash
+npm install svelte
+npm install -D tailwindcss postcss autoprefixer
+```
+
+### Configure Tailwind
+
+```js title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{html,js,svelte,ts}",
+    "./node_modules/@hanzo/ui/**/*.{js,ts,svelte}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+</Steps>
+
+## Usage
+
+```svelte
+<script lang="ts">
+  import { Button, Card, Input } from '@hanzo/ui/svelte'
+
+  let count = $state(0)
+</script>
+
+<Card>
+  <Button onclick={() => count++}>
+    Clicked {count} times
+  </Button>
+  <Input bind:value={count} type="number" />
+</Card>
+```
+
+## SvelteKit Integration
+
+```svelte
+<!-- src/routes/+page.svelte -->
+<script lang="ts">
+  import { Button, Card } from '@hanzo/ui/svelte'
+</script>
+
+<Card>
+  <h1>Welcome to SvelteKit</h1>
+  <Button>Click me</Button>
+</Card>
+```
+
+## Component Coverage
+
+**Available:**
+
+- Button, Card, Input, Label, Badge
+- Checkbox, Dialog, Select, Separator
+- Tabs, Toggle, Tooltip
+
+**In Progress:**
+
+- Form components
+- Data Table
+- Advanced animations
+
+## Status
+
+This integration is in **beta**. Some components may have limited functionality compared to the React version. Please report issues on [GitHub](https://github.com/hanzoai/ui/issues).
+
+## Next Steps
+
+- [View all components](/docs/components)
+- [React Guide](/docs/frameworks/react) (stable)
+- [Vue Guide](/docs/frameworks/vue) (stable)

@@ -1,0 +1,60 @@
+---
+title: Line Chart
+description: Line charts for showing continuous data trends and comparisons.
+---
+
+<ComponentPreview name="chart-demo" description="Line chart example" />
+
+## Overview
+
+Line charts connect data points with straight or curved lines, ideal for showing trends and changes over continuous intervals.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+
+const data = [
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+]
+
+const config = {
+  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
+  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
+}
+
+export function LineChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <LineChart data={data}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Line dataKey="desktop" stroke="var(--color-desktop)" strokeWidth={2} />
+        <Line dataKey="mobile" stroke="var(--color-mobile)" strokeWidth={2} />
+      </LineChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### With Dots
+
+Show data point markers on the line.
+
+### Custom Dots
+
+Use custom shapes for data point markers.
+
+### Linear vs Curved
+
+Toggle between `type="linear"` and `type="monotone"` interpolation.
+
+### Interactive
+
+Add hover interactions and clickable data points.
