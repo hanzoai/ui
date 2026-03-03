@@ -1,0 +1,52 @@
+---
+title: Pie Chart
+description: Pie and donut charts for showing proportional data and distributions.
+---
+
+## Overview
+
+Pie charts display data as proportional slices of a circle, ideal for showing parts of a whole.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { Pie, PieChart } from "recharts"
+
+const data = [
+  { browser: "Chrome", visitors: 275, fill: "var(--color-chrome)" },
+  { browser: "Safari", visitors: 200, fill: "var(--color-safari)" },
+  { browser: "Firefox", visitors: 187, fill: "var(--color-firefox)" },
+]
+
+const config = {
+  chrome: { label: "Chrome", color: "hsl(var(--chart-1))" },
+  safari: { label: "Safari", color: "hsl(var(--chart-2))" },
+  firefox: { label: "Firefox", color: "hsl(var(--chart-3))" },
+}
+
+export function PieChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <PieChart>
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Pie data={data} dataKey="visitors" nameKey="browser" />
+      </PieChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### Donut Chart
+
+Use `innerRadius` and `outerRadius` to create donut charts.
+
+### With Labels
+
+Add labels inside or outside slices.
+
+### Interactive
+
+Highlight slices on hover with `activeIndex`.

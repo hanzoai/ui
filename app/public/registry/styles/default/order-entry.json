@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "order-entry.tsx",
-      "content": "export * from \"../ui/order-entry\"\n"
+      "content": "export { default } from \"../ui/order-entry\"\nexport * from \"../ui/order-entry\"\n"
     }
   ],
   "type": "components:finance",

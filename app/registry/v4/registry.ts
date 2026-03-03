@@ -5,20 +5,18 @@
  * Supports both Radix UI and Base UI bases, plus Hanzo extensions.
  */
 
-import { type RegistryItem, type Registry, registryItemSchema } from "./schema"
 import { type BaseName } from "./bases"
-import { type StyleName } from "./styles"
-
+import { baseRegistry } from "./bases/base/registry"
 // Import base registries
 import { radixRegistry } from "./bases/radix/registry"
-import { baseRegistry } from "./bases/base/registry"
-
+import { hanzo3DRegistry } from "./hanzo/3d"
 // Import Hanzo extension registries
 import { hanzoAiRegistry } from "./hanzo/ai"
-import { hanzoFinanceRegistry } from "./hanzo/finance"
-import { hanzo3DRegistry } from "./hanzo/3d"
 import { hanzoAnimationRegistry } from "./hanzo/animation"
 import { hanzoCodeRegistry } from "./hanzo/code"
+import { hanzoFinanceRegistry } from "./hanzo/finance"
+import { registryItemSchema, type Registry, type RegistryItem } from "./schema"
+import { type StyleName } from "./styles"
 
 // Registry index type
 export interface RegistryIndex {

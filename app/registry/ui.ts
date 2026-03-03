@@ -110,6 +110,12 @@ export const ui: Registry = [
     files: ["ui/context-menu.tsx"],
   },
   {
+    name: "direction",
+    type: "components:ui",
+    dependencies: ["@radix-ui/react-direction"],
+    files: ["ui/direction.tsx"],
+  },
+  {
     name: "dialog",
     type: "components:ui",
     dependencies: ["@radix-ui/react-dialog"],

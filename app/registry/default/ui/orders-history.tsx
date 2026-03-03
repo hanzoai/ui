@@ -18,10 +18,10 @@ export interface OrdersHistoryProps {
 }
 
 export function OrdersHistory({
-  orders,
+  orders = [],
   onCancelOrder,
   onOrderClick,
-}: OrdersHistoryProps) {
+}: Partial<OrdersHistoryProps>) {
   const getTickerFromSymbol = (symbol: string) => {
     return symbol.split(":")[1] || symbol
   }

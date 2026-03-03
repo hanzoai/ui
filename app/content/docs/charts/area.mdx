@@ -1,0 +1,64 @@
+---
+title: Area Chart
+description: Area charts for visualizing trends and cumulative values over time.
+---
+
+<ComponentPreview name="chart-demo" description="Area chart example" />
+
+## Overview
+
+Area charts are used to show trends over time or across categories. They combine line charts with filled areas beneath the line to emphasize volume.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+
+const data = [
+  { month: "Jan", desktop: 186, mobile: 80 },
+  { month: "Feb", desktop: 305, mobile: 200 },
+  { month: "Mar", desktop: 237, mobile: 120 },
+]
+
+const config = {
+  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
+  mobile: { label: "Mobile", color: "hsl(var(--chart-2))" },
+}
+
+export function AreaChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <AreaChart data={data}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Area
+          dataKey="desktop"
+          fill="var(--color-desktop)"
+          stroke="var(--color-desktop)"
+        />
+        <Area
+          dataKey="mobile"
+          fill="var(--color-mobile)"
+          stroke="var(--color-mobile)"
+        />
+      </AreaChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### Stacked Area
+
+Stack multiple areas to show cumulative totals.
+
+### Gradient Fill
+
+Apply gradient fills for visual depth.
+
+### Step Area
+
+Use `type="step"` for discrete step transitions.

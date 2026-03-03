@@ -185,6 +185,16 @@
     "type": "components:ui"
   },
   {
+    "name": "direction",
+    "dependencies": [
+      "@radix-ui/react-direction"
+    ],
+    "files": [
+      "ui/direction.tsx"
+    ],
+    "type": "components:ui"
+  },
+  {
     "name": "dialog",
     "dependencies": [
       "@radix-ui/react-dialog"

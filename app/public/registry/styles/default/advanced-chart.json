@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "advanced-chart.tsx",
-      "content": "export * from \"../ui/advanced-chart\"\n"
+      "content": "export { default } from \"../ui/advanced-chart\"\nexport * from \"../ui/advanced-chart\"\n"
     }
   ],
   "type": "components:finance",

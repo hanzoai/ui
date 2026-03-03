@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "financials.tsx",
-      "content": "export * from \"../ui/financials\"\n"
+      "content": "export { default } from \"../ui/financials\"\nexport * from \"../ui/financials\"\n"
     }
   ],
   "type": "components:finance",

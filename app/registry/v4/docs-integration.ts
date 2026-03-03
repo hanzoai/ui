@@ -5,10 +5,10 @@
  * This module exports utilities to generate documentation from registry items.
  */
 
-import { type RegistryItem, type Registry } from "./schema"
-import { registry } from "./registry"
-import { STYLES } from "./styles"
 import { BASES } from "./bases"
+import { registry } from "./registry"
+import { type Registry, type RegistryItem } from "./schema"
+import { STYLES } from "./styles"
 import { THEMES } from "./themes"
 
 /**
@@ -194,7 +194,8 @@ export const CATEGORY_DOCS = {
   },
   ai: {
     title: "AI Components",
-    description: "AI-specific components for chat, agents, vision, voice, and code",
+    description:
+      "AI-specific components for chat, agents, vision, voice, and code",
   },
   finance: {
     title: "Finance Components",

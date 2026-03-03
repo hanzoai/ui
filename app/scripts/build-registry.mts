@@ -248,7 +248,16 @@ export const Index: Record<string, any> = {
         }
 
         const reexportPath = path.join(namespaceDir, `${item.name}.tsx`)
-        const reexportContent = `export * from "../ui/${item.name}"\n`
+        // Check if the source UI file has a default export
+        const sourceUiPath = path.join(process.cwd(), `registry/${style.name}/ui/${item.name}.tsx`)
+        let hasDefaultExport = false
+        try {
+          const sourceContent = readFileSync(sourceUiPath, "utf8")
+          hasDefaultExport = /export\s+default\s/.test(sourceContent)
+        } catch {}
+        const reexportContent = hasDefaultExport
+          ? `export { default } from "../ui/${item.name}"\nexport * from "../ui/${item.name}"\n`
+          : `export * from "../ui/${item.name}"\n`
 
         await fs.writeFile(reexportPath, reexportContent, "utf8")
       }

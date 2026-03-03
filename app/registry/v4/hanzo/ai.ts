@@ -12,7 +12,8 @@ const ai: RegistryItem[] = [
     name: "ai-playground",
     type: "registry:ai",
     title: "AI Playground",
-    description: "Interactive AI model testing environment with adjustable parameters",
+    description:
+      "Interactive AI model testing environment with adjustable parameters",
     dependencies: ["@hanzo/ui"],
     files: [{ path: "ai/ai-playground.tsx", type: "registry:ai" }],
     category: "ai",

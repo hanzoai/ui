@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { AlertCircle, RefreshCw } from "lucide-react"
 import { Index } from "@/__registry__"
+import { AlertCircle, RefreshCw } from "lucide-react"
+
 import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
 import { Card } from "@/registry/default/ui/card"
@@ -64,24 +65,21 @@ function BlockPreview({ blockName }: { blockName: string }) {
     setState({ loaded: true, error: true, showContent: true })
   }, [])
 
-  const handleRetry = React.useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setState({ loaded: false, error: false, showContent: false })
-      if (iframeRef.current) {
-        // Force reload by resetting src
-        const src = iframeRef.current.src
-        iframeRef.current.src = ""
-        setTimeout(() => {
-          if (iframeRef.current) {
-            iframeRef.current.src = src
-          }
-        }, 0)
-      }
-    },
-    []
-  )
+  const handleRetry = React.useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setState({ loaded: false, error: false, showContent: false })
+    if (iframeRef.current) {
+      // Force reload by resetting src
+      const src = iframeRef.current.src
+      iframeRef.current.src = ""
+      setTimeout(() => {
+        if (iframeRef.current) {
+          iframeRef.current.src = src
+        }
+      }, 0)
+    }
+  }, [])
 
   React.useEffect(() => {
     return () => {
@@ -92,7 +90,10 @@ function BlockPreview({ blockName }: { blockName: string }) {
   }, [])
 
   return (
-    <div ref={containerRef} className="relative aspect-[4/3] min-h-[400px] bg-muted/50">
+    <div
+      ref={containerRef}
+      className="relative aspect-[4/3] min-h-[400px] bg-muted/50"
+    >
       {/* Loading skeleton */}
       {!state.showContent && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -273,15 +274,14 @@ export default function BuilderPage() {
                         <h3 className="text-base font-semibold leading-tight">
                           {blockName}
                         </h3>
-                        {block?.category &&
-                          block?.category !== "undefined" && (
-                            <Badge
-                              variant="outline"
-                              className="shrink-0 text-xs font-medium"
-                            >
-                              {block.category}
-                            </Badge>
-                          )}
+                        {block?.category && block?.category !== "undefined" && (
+                          <Badge
+                            variant="outline"
+                            className="shrink-0 text-xs font-medium"
+                          >
+                            {block.category}
+                          </Badge>
+                        )}
                       </div>
                       {block?.subcategory &&
                         block?.subcategory !== "undefined" && (
