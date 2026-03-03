@@ -12,21 +12,21 @@ import { BASE_COLORS, BUILTIN_REGISTRIES } from "@/src/registry/constants"
 import { clearRegistryContext } from "@/src/registry/context"
 import { rawConfigSchema } from "@/src/schema"
 import { addComponents } from "@/src/utils/add-components"
-import { TEMPLATES, createProject } from "@/src/utils/create-project"
+import { createProject, TEMPLATES } from "@/src/utils/create-project"
 import { loadEnvFiles } from "@/src/utils/env-loader"
 import * as ERRORS from "@/src/utils/errors"
 import {
-  FILE_BACKUP_SUFFIX,
   createFileBackup,
   deleteFileBackup,
+  FILE_BACKUP_SUFFIX,
   restoreFileBackup,
 } from "@/src/utils/file-helper"
 import {
+  createConfig,
   DEFAULT_COMPONENTS,
   DEFAULT_TAILWIND_CONFIG,
   DEFAULT_TAILWIND_CSS,
   DEFAULT_UTILS,
-  createConfig,
   getConfig,
   resolveConfigPaths,
   type Config,

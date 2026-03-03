@@ -203,6 +203,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "direction": {
+      name: "direction",
+      type: "components:ui",
+      registryDependencies: undefined,
+      component: React.lazy(() => import("@/registry/default/ui/direction")),
+      source: "",
+      files: ["registry/default/ui/direction.tsx"],
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "dialog": {
       name: "dialog",
       type: "components:ui",

@@ -1,0 +1,108 @@
+---
+title: Charts
+description: Beautiful, composable chart components built on Recharts.
+---
+
+## Overview
+
+@hanzo/ui provides a set of chart components built on top of [Recharts](https://recharts.org/). The chart components are designed to be composable and work with Tailwind CSS theming.
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @hanzo/ui@latest add chart
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install recharts:</Step>
+
+```bash
+pnpm add recharts
+```
+
+<Step>Copy the chart components into your project.</Step>
+
+<ComponentSource name="chart" />
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Components
+
+The chart package includes the following components:
+
+- **ChartContainer** - Responsive container that handles theming and sizing
+- **ChartTooltip** - Styled tooltip component
+- **ChartTooltipContent** - Content renderer for tooltips
+- **ChartLegend** - Chart legend component
+- **ChartLegendContent** - Content renderer for legends
+
+## Chart Types
+
+- [Area Chart](/docs/charts/area) - For showing trends over time
+- [Bar Chart](/docs/charts/bar) - For comparing categorical data
+- [Line Chart](/docs/charts/line) - For showing continuous data
+- [Pie Chart](/docs/charts/pie) - For showing proportional data
+- [Radar Chart](/docs/charts/radar) - For multivariate data comparison
+- [Radial Chart](/docs/charts/radial) - For circular data visualization
+- [Tooltip](/docs/charts/tooltip) - Shared tooltip component
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { Bar, BarChart, XAxis } from "recharts"
+
+const data = [
+  { month: "Jan", value: 186 },
+  { month: "Feb", value: 305 },
+  { month: "Mar", value: 237 },
+]
+
+const config = {
+  value: { label: "Value", color: "hsl(var(--chart-1))" },
+}
+
+export function MyChart() {
+  return (
+    <ChartContainer config={config}>
+      <BarChart data={data}>
+        <XAxis dataKey="month" />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Bar dataKey="value" fill="var(--color-value)" />
+      </BarChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Theming
+
+Charts use CSS variables for theming. Define chart colors in your CSS:
+
+```css
+:root {
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+}
+```

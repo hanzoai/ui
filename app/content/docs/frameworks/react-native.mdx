@@ -1,0 +1,119 @@
+---
+title: React Native
+description: Using @hanzo/ui components in React Native and Expo applications.
+---
+
+# React Native Guide (Beta)
+
+@hanzo/ui provides React Native components built on top of React Native's core primitives and NativeWind for styling. This integration is currently in beta.
+
+## Installation
+
+<Steps>
+
+### Install the package
+
+```bash
+npm install @hanzo/ui
+# or
+pnpm add @hanzo/ui
+```
+
+### Install NativeWind
+
+```bash
+npm install nativewind
+npm install -D tailwindcss
+```
+
+### Configure Tailwind
+
+```js title="tailwind.config.js"
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./App.{js,jsx,ts,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@hanzo/ui/**/*.{js,ts,jsx,tsx}",
+  ],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+</Steps>
+
+## Usage
+
+```tsx
+import { useState } from "react"
+import { Button, Card, Input } from "@hanzo/ui/native"
+
+export default function App() {
+  const [count, setCount] = useState(0)
+
+  return (
+    <Card>
+      <Button onPress={() => setCount((c) => c + 1)}>
+        Clicked {count} times
+      </Button>
+      <Input value={String(count)} />
+    </Card>
+  )
+}
+```
+
+## Expo Integration
+
+```tsx
+// app/(tabs)/index.tsx
+import { Button, Card } from "@hanzo/ui/native"
+
+export default function HomeScreen() {
+  return (
+    <Card>
+      <Button>Click me</Button>
+    </Card>
+  )
+}
+```
+
+## Component Coverage
+
+**Available:**
+
+- Button, Card, Input, Label, Badge
+- Checkbox, Switch, Separator
+- Tabs, Avatar
+
+**In Progress:**
+
+- Dialog and Sheet (modal-based)
+- Select and Popover
+- Navigation components
+
+**Not Available:**
+
+- 3D components
+- Browser-specific components (Safari mockup, etc.)
+- Chart components
+
+## Platform Differences
+
+Some components behave differently on native platforms:
+
+- **Dialog** uses React Native's `Modal` component
+- **Sheet** uses bottom sheet gestures via `react-native-gesture-handler`
+- **Animations** use `react-native-reanimated` instead of Framer Motion
+
+## Status
+
+This integration is in **beta**. Component coverage is limited compared to the web version. Please report issues on [GitHub](https://github.com/hanzoai/ui/issues).
+
+## Next Steps
+
+- [View all components](/docs/components)
+- [React Guide](/docs/frameworks/react) (stable)

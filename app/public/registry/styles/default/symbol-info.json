@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "symbol-info.tsx",
-      "content": "export * from \"../ui/symbol-info\"\n"
+      "content": "export { default } from \"../ui/symbol-info\"\nexport * from \"../ui/symbol-info\"\n"
     }
   ],
   "type": "components:finance",

@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "technical-analysis.tsx",
-      "content": "export * from \"../ui/technical-analysis\"\n"
+      "content": "export { default } from \"../ui/technical-analysis\"\nexport * from \"../ui/technical-analysis\"\n"
     }
   ],
   "type": "components:finance",

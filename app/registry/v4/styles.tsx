@@ -127,7 +127,8 @@ export const STYLES = [
   {
     name: "hanzo",
     title: "Hanzo",
-    description: "Dark-first design optimized for developer tools and AI interfaces.",
+    description:
+      "Dark-first design optimized for developer tools and AI interfaces.",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
