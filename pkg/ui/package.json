@@ -639,7 +639,7 @@
     }
   },
   "dependencies": {
-    "@next/third-parties": "^15.3.3",
+    "@next/third-parties": "^16.1.6",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
