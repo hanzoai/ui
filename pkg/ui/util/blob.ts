@@ -24,5 +24,5 @@ export const dataUrlToFile = (
   }
   const mime = mimeArr[1];
   const buff = Buffer.from(arr[1], 'base64');
-  return new File([buff], filename, { type: mime });
+  return new File([new Uint8Array(buff)], filename, { type: mime });
 };
