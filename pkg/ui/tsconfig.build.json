@@ -48,6 +48,7 @@
     "primitives/index.ts",
     "primitives/index-selective.ts",
     "src/primitives-export.ts",
+    "tailwind/typo-plugin/**/*",
     "blocks/**/*",
     "docs/**/*",
     "content/**/*"
