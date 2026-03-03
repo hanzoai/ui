@@ -1,0 +1,45 @@
+---
+title: Direction
+description: Provider and hook for RTL/LTR text direction support.
+---
+
+## Overview
+
+The Direction component provides RTL (right-to-left) and LTR (left-to-right) text direction support through a React context provider and hook. Useful for internationalization and bidirectional text layouts.
+
+## Usage
+
+```tsx
+import { DirectionProvider, useDirection } from "@hanzo/ui"
+
+export function App() {
+  return (
+    <DirectionProvider direction="rtl">
+      <MyComponent />
+    </DirectionProvider>
+  )
+}
+
+function MyComponent() {
+  const direction = useDirection()
+  return <div>Current direction: {direction}</div>
+}
+```
+
+## Props
+
+### DirectionProvider
+
+| Prop      | Type           | Default | Description     |
+| --------- | -------------- | ------- | --------------- |
+| dir       | "ltr" \| "rtl" | -       | Text direction  |
+| direction | "ltr" \| "rtl" | -       | Alias for `dir` |
+| children  | ReactNode      | -       | Child elements  |
+
+### useDirection
+
+Returns the current direction from the nearest `DirectionProvider`.
+
+```tsx
+const direction = useDirection() // "ltr" | "rtl"
+```

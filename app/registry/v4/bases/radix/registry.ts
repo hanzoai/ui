@@ -263,7 +263,14 @@ const ui: RegistryItem[] = [
   {
     name: "sidebar",
     type: "registry:ui",
-    registryDependencies: ["button", "input", "separator", "sheet", "skeleton", "tooltip"],
+    registryDependencies: [
+      "button",
+      "input",
+      "separator",
+      "sheet",
+      "skeleton",
+      "tooltip",
+    ],
     files: [{ path: "ui/sidebar.tsx", type: "registry:ui" }],
   },
   {

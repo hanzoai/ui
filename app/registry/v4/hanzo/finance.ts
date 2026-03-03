@@ -13,7 +13,8 @@ const finance: RegistryItem[] = [
     name: "advanced-chart",
     type: "registry:finance",
     title: "Advanced Chart",
-    description: "Full-featured TradingView chart with symbol switching and timeframes",
+    description:
+      "Full-featured TradingView chart with symbol switching and timeframes",
     dependencies: ["@hanzo/ui"],
     files: [{ path: "finance/advanced-chart.tsx", type: "registry:finance" }],
     category: "finance",
@@ -23,7 +24,8 @@ const finance: RegistryItem[] = [
     name: "market-overview",
     type: "registry:finance",
     title: "Market Overview",
-    description: "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
+    description:
+      "Multi-asset market overview with tabs for indices, futures, bonds, and forex",
     dependencies: ["@hanzo/ui"],
     files: [{ path: "finance/market-overview.tsx", type: "registry:finance" }],
     category: "finance",
@@ -55,7 +57,8 @@ const finance: RegistryItem[] = [
     name: "stock-screener",
     type: "registry:finance",
     title: "Stock Screener",
-    description: "Stock market screener with filtering and sorting capabilities",
+    description:
+      "Stock market screener with filtering and sorting capabilities",
     dependencies: ["@hanzo/ui"],
     files: [{ path: "finance/stock-screener.tsx", type: "registry:finance" }],
     category: "finance",
@@ -97,7 +100,8 @@ const finance: RegistryItem[] = [
     name: "company-profile",
     type: "registry:finance",
     title: "Company Profile",
-    description: "Company profile with business description and key information",
+    description:
+      "Company profile with business description and key information",
     dependencies: ["@hanzo/ui"],
     files: [{ path: "finance/company-profile.tsx", type: "registry:finance" }],
     category: "finance",
@@ -119,7 +123,9 @@ const finance: RegistryItem[] = [
     title: "Technical Analysis",
     description: "Technical indicator summary with configurable intervals",
     dependencies: ["@hanzo/ui"],
-    files: [{ path: "finance/technical-analysis.tsx", type: "registry:finance" }],
+    files: [
+      { path: "finance/technical-analysis.tsx", type: "registry:finance" },
+    ],
     category: "finance",
     subcategory: "analysis",
   },
@@ -141,7 +147,9 @@ const finance: RegistryItem[] = [
     title: "Economic Calendar",
     description: "Economic events calendar with impact levels",
     dependencies: ["@hanzo/ui"],
-    files: [{ path: "finance/economic-calendar.tsx", type: "registry:finance" }],
+    files: [
+      { path: "finance/economic-calendar.tsx", type: "registry:finance" },
+    ],
     category: "finance",
     subcategory: "news",
   },
@@ -151,7 +159,8 @@ const finance: RegistryItem[] = [
     name: "trading-panel",
     type: "registry:finance",
     title: "Trading Panel",
-    description: "Demo trading panel with buy/sell functionality and portfolio tracking",
+    description:
+      "Demo trading panel with buy/sell functionality and portfolio tracking",
     dependencies: ["@hanzo/ui"],
     registryDependencies: ["button", "input", "tabs"],
     files: [{ path: "finance/trading-panel.tsx", type: "registry:finance" }],
@@ -162,7 +171,8 @@ const finance: RegistryItem[] = [
     name: "order-entry",
     type: "registry:finance",
     title: "Order Entry",
-    description: "Order entry form with buy/sell toggle and market/limit orders",
+    description:
+      "Order entry form with buy/sell toggle and market/limit orders",
     dependencies: ["@hanzo/ui"],
     registryDependencies: ["button", "input", "select", "toggle-group"],
     files: [{ path: "finance/order-entry.tsx", type: "registry:finance" }],
@@ -173,7 +183,8 @@ const finance: RegistryItem[] = [
     name: "positions-list",
     type: "registry:finance",
     title: "Positions List",
-    description: "Real-time positions list with P&L tracking and percentage changes",
+    description:
+      "Real-time positions list with P&L tracking and percentage changes",
     dependencies: ["@hanzo/ui"],
     registryDependencies: ["table", "badge"],
     files: [{ path: "finance/positions-list.tsx", type: "registry:finance" }],
@@ -184,7 +195,8 @@ const finance: RegistryItem[] = [
     name: "orders-history",
     type: "registry:finance",
     title: "Orders History",
-    description: "Order history view with status badges and cancel functionality",
+    description:
+      "Order history view with status badges and cancel functionality",
     dependencies: ["@hanzo/ui"],
     registryDependencies: ["table", "badge", "button"],
     files: [{ path: "finance/orders-history.tsx", type: "registry:finance" }],
@@ -200,7 +212,9 @@ const finance: RegistryItem[] = [
     description: "Portfolio summary with total value and allocation",
     dependencies: ["@hanzo/ui"],
     registryDependencies: ["card", "chart"],
-    files: [{ path: "finance/portfolio-overview.tsx", type: "registry:finance" }],
+    files: [
+      { path: "finance/portfolio-overview.tsx", type: "registry:finance" },
+    ],
     category: "finance",
     subcategory: "portfolio",
   },

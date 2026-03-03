@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "orders-history.tsx",
-      "content": "export * from \"../ui/orders-history\"\n"
+      "content": "export { default } from \"../ui/orders-history\"\nexport * from \"../ui/orders-history\"\n"
     }
   ],
   "type": "components:finance",

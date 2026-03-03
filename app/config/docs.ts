@@ -97,6 +97,82 @@ export const docsConfig: DocsConfig = {
           href: "/docs/changelog",
           items: [],
         },
+        {
+          title: "MCP Server",
+          href: "/docs/mcp",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "About",
+          href: "/docs/about",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Installation",
+      items: [
+        {
+          title: "Next.js",
+          href: "/docs/installation/next",
+          items: [],
+        },
+        {
+          title: "Vite",
+          href: "/docs/installation/vite",
+          items: [],
+        },
+        {
+          title: "Remix",
+          href: "/docs/installation/remix",
+          items: [],
+        },
+        {
+          title: "Astro",
+          href: "/docs/installation/astro",
+          items: [],
+        },
+        {
+          title: "Gatsby",
+          href: "/docs/installation/gatsby",
+          items: [],
+        },
+        {
+          title: "Laravel",
+          href: "/docs/installation/laravel",
+          items: [],
+        },
+        {
+          title: "Manual",
+          href: "/docs/installation/manual",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Dark Mode",
+      items: [
+        {
+          title: "Next.js",
+          href: "/docs/dark-mode/next",
+          items: [],
+        },
+        {
+          title: "Vite",
+          href: "/docs/dark-mode/vite",
+          items: [],
+        },
+        {
+          title: "Remix",
+          href: "/docs/dark-mode/remix",
+          items: [],
+        },
+        {
+          title: "Astro",
+          href: "/docs/dark-mode/astro",
+          items: [],
+        },
       ],
     },
     {
@@ -144,6 +220,12 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "Button Group",
+          href: "/docs/components/button-group",
+          items: [],
+          label: "New",
+        },
+        {
           title: "Calendar",
           href: "/docs/components/calendar",
           items: [],
@@ -189,6 +271,30 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "Desktop",
+          href: "/docs/components/desktop",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Desktop Hooks",
+          href: "/docs/components/desktop-hooks",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Desktop Spotlight",
+          href: "/docs/components/desktop-spotlight",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Desktop Window",
+          href: "/docs/components/desktop-window",
+          items: [],
+          label: "New",
+        },
+        {
           title: "Date Picker",
           href: "/docs/components/date-picker",
           items: [],
@@ -199,6 +305,12 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "Direction",
+          href: "/docs/components/direction",
+          items: [],
+          label: "New",
+        },
+        {
           title: "Drawer",
           href: "/docs/components/drawer",
           items: [],
@@ -207,6 +319,18 @@ export const docsConfig: DocsConfig = {
           title: "Dropdown Menu",
           href: "/docs/components/dropdown-menu",
           items: [],
+        },
+        {
+          title: "Empty State",
+          href: "/docs/components/empty",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Field",
+          href: "/docs/components/field",
+          items: [],
+          label: "New",
         },
         {
           title: "Form",
@@ -224,8 +348,20 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "Input Group",
+          href: "/docs/components/input-group",
+          items: [],
+          label: "New",
+        },
+        {
           title: "Input OTP",
           href: "/docs/components/input-otp",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Item",
+          href: "/docs/components/item",
           items: [],
           label: "New",
         },
@@ -610,6 +746,24 @@ export const docsConfig: DocsConfig = {
         {
           title: "Particles",
           href: "/docs/components/particles",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Particles Background",
+          href: "/docs/components/particles-background",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Grid Pattern",
+          href: "/docs/components/grid-pattern",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Timeline",
+          href: "/docs/components/timeline",
           items: [],
           label: "New",
         },
@@ -1028,6 +1182,18 @@ export const docsConfig: DocsConfig = {
           items: [],
           label: "New",
         },
+        {
+          title: "AI Code",
+          href: "/docs/ai/code",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "AI Voice",
+          href: "/docs/ai/voice",
+          items: [],
+          label: "New",
+        },
       ],
     },
     {
@@ -1171,6 +1337,40 @@ export const docsConfig: DocsConfig = {
           href: "/docs/frameworks/react-native",
           items: [],
           label: "Beta",
+        },
+      ],
+    },
+    {
+      title: "Guides",
+      items: [
+        {
+          title: "Page Builder",
+          href: "/docs/guides/page-builder",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Visual Workflows",
+          href: "/docs/guides/visual-workflows",
+          items: [],
+          label: "New",
+        },
+      ],
+    },
+    {
+      title: "Hanzo React",
+      items: [
+        {
+          title: "Getting Started",
+          href: "/docs/hanzo-react/getting-started",
+          items: [],
+          label: "New",
+        },
+        {
+          title: "Hooks",
+          href: "/docs/hanzo-react/hooks",
+          items: [],
+          label: "New",
         },
       ],
     },

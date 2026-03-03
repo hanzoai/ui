@@ -8,19 +8,19 @@ The Desktop namespace provides components and hooks for building macOS-style des
 
 ## Components
 
-| Component | Description |
-|-----------|-------------|
-| [Window](/docs/components/desktop-window) | Draggable, resizable window with minimize, maximize, and close controls |
-| [Spotlight](/docs/components/desktop-spotlight) | macOS Spotlight-style search and command palette |
+| Component                                       | Description                                                             |
+| ----------------------------------------------- | ----------------------------------------------------------------------- |
+| [Window](/docs/components/desktop-window)       | Draggable, resizable window with minimize, maximize, and close controls |
+| [Spotlight](/docs/components/desktop-spotlight) | macOS Spotlight-style search and command palette                        |
 
 ## Hooks
 
-| Hook | Description |
-|------|-------------|
-| `useWindowManager` | Manage multiple windows with open/close/toggle state |
-| `useDesktopSettings` | Persist desktop settings like theme, dock position |
-| `useOverlayManager` | Manage overlay states (spotlight, about dialog, etc.) |
-| `useKeyboardShortcuts` | Register keyboard shortcuts (⌘+Space, ⌘+Q, etc.) |
+| Hook                   | Description                                           |
+| ---------------------- | ----------------------------------------------------- |
+| `useWindowManager`     | Manage multiple windows with open/close/toggle state  |
+| `useDesktopSettings`   | Persist desktop settings like theme, dock position    |
+| `useOverlayManager`    | Manage overlay states (spotlight, about dialog, etc.) |
+| `useKeyboardShortcuts` | Register keyboard shortcuts (⌘+Space, ⌘+Q, etc.)      |
 
 See [Desktop Hooks](/docs/components/desktop-hooks) for detailed hook documentation.
 
@@ -51,12 +51,12 @@ Then import from the desktop namespace:
 
 ```tsx
 import {
-  Window,
   Spotlight,
-  useWindowManager,
   useDesktopSettings,
+  useKeyboardShortcuts,
   useOverlayManager,
-  useKeyboardShortcuts
+  useWindowManager,
+  Window,
 } from "@hanzo/ui/desktop"
 ```
 
@@ -68,10 +68,10 @@ import {
 
 ```tsx
 import {
-  Window,
   Spotlight,
+  useKeyboardShortcuts,
   useWindowManager,
-  useKeyboardShortcuts
+  Window,
 } from "@hanzo/ui/desktop"
 import { Dock, DockItem } from "@hanzo/ui/dock"
 
@@ -80,16 +80,16 @@ export function MyDesktop() {
   const [showSpotlight, setShowSpotlight] = useState(false)
 
   useKeyboardShortcuts([
-    { key: ' ', meta: true, action: () => setShowSpotlight(true) },
+    { key: " ", meta: true, action: () => setShowSpotlight(true) },
   ])
 
   return (
     <div className="h-screen relative">
       {/* Windows */}
-      {windows.isOpen('Settings') && (
+      {windows.isOpen("Settings") && (
         <Window
           title="Settings"
-          onClose={() => windows.closeWindow('Settings')}
+          onClose={() => windows.closeWindow("Settings")}
         >
           <div className="p-4">Settings content</div>
         </Window>
@@ -99,9 +99,7 @@ export function MyDesktop() {
       <Spotlight
         isOpen={showSpotlight}
         onClose={() => setShowSpotlight(false)}
-        items={[
-          { id: 'settings', title: 'Settings', category: 'Apps' },
-        ]}
+        items={[{ id: "settings", title: "Settings", category: "Apps" }]}
         onSelect={(item) => {
           windows.openWindow(item.title)
           setShowSpotlight(false)
@@ -112,7 +110,7 @@ export function MyDesktop() {
       <Dock position="bottom">
         <DockItem
           tooltip="Settings"
-          onClick={() => windows.toggleWindow('Settings')}
+          onClick={() => windows.toggleWindow("Settings")}
         />
       </Dock>
     </div>
