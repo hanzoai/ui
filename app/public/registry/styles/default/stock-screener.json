@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "stock-screener.tsx",
-      "content": "export * from \"../ui/stock-screener\"\n"
+      "content": "export { default } from \"../ui/stock-screener\"\nexport * from \"../ui/stock-screener\"\n"
     }
   ],
   "type": "components:finance",

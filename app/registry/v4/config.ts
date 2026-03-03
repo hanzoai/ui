@@ -11,12 +11,12 @@
 
 import { z } from "zod"
 
-import { BASES, type Base, type BaseName } from "./bases"
-import { STYLES, type Style, type StyleName } from "./styles"
-import { THEMES, type Theme, type ThemeName } from "./themes"
 import { BASE_COLORS, type BaseColor, type BaseColorName } from "./base-colors"
+import { BASES, type Base, type BaseName } from "./bases"
 import { fonts } from "./fonts"
 import { iconLibraries, type IconLibrary, type IconLibraryName } from "./icons"
+import { STYLES, type Style, type StyleName } from "./styles"
+import { THEMES, type Theme, type ThemeName } from "./themes"
 
 // Re-exports
 export { BASES, type Base, type BaseName }

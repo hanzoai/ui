@@ -222,7 +222,11 @@ function BlockViewerToolbar({ styleName }: { styleName: Style["name"] }) {
           }}
           title="Copy install command"
         >
-          {isCopied ? <Check className="!h-3.5 !w-3.5" /> : <Clipboard className="!h-3.5 !w-3.5" />}
+          {isCopied ? (
+            <Check className="!h-3.5 !w-3.5" />
+          ) : (
+            <Clipboard className="!h-3.5 !w-3.5" />
+          )}
           <span className="sr-only">Copy install command</span>
         </Button>
         <Separator orientation="vertical" className="mx-1 !h-4" />

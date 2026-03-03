@@ -75,17 +75,17 @@ export function WindowDemo() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `string` | - | Window title displayed in the title bar |
-| `onClose` | `() => void` | - | Callback when the close button is clicked |
-| `initialPosition` | `{ x: number, y: number }` | `{ x: 100, y: 100 }` | Initial window position |
-| `initialSize` | `{ width: number, height: number }` | `{ width: 800, height: 600 }` | Initial window dimensions |
-| `minWidth` | `number` | `200` | Minimum window width |
-| `minHeight` | `number` | `150` | Minimum window height |
-| `windowType` | `'default' \| 'dark' \| 'light' \| 'transparent'` | `'default'` | Window style variant |
-| `className` | `string` | - | Additional CSS classes for the window |
-| `children` | `ReactNode` | - | Window content |
+| Prop              | Type                                              | Default                       | Description                               |
+| ----------------- | ------------------------------------------------- | ----------------------------- | ----------------------------------------- |
+| `title`           | `string`                                          | -                             | Window title displayed in the title bar   |
+| `onClose`         | `() => void`                                      | -                             | Callback when the close button is clicked |
+| `initialPosition` | `{ x: number, y: number }`                        | `{ x: 100, y: 100 }`          | Initial window position                   |
+| `initialSize`     | `{ width: number, height: number }`               | `{ width: 800, height: 600 }` | Initial window dimensions                 |
+| `minWidth`        | `number`                                          | `200`                         | Minimum window width                      |
+| `minHeight`       | `number`                                          | `150`                         | Minimum window height                     |
+| `windowType`      | `'default' \| 'dark' \| 'light' \| 'transparent'` | `'default'`                   | Window style variant                      |
+| `className`       | `string`                                          | -                             | Additional CSS classes for the window     |
+| `children`        | `ReactNode`                                       | -                             | Window content                            |
 
 ## Variants
 
@@ -128,7 +128,7 @@ export function WindowDemo() {
 
 ```tsx
 import { Window } from "@hanzo/ui/desktop"
-import { Settings, User, Bell } from "lucide-react"
+import { Bell, Settings, User } from "lucide-react"
 
 export function SettingsWindow() {
   const [isOpen, setIsOpen] = useState(true)
@@ -164,35 +164,35 @@ export function SettingsWindow() {
 ### Multiple Windows
 
 ```tsx
-import { Window, useWindowManager } from "@hanzo/ui/desktop"
+import { useWindowManager, Window } from "@hanzo/ui/desktop"
 
 export function MultiWindowDemo() {
   const windows = useWindowManager()
 
   return (
     <div className="relative h-screen">
-      {windows.isOpen('Settings') && (
+      {windows.isOpen("Settings") && (
         <Window
           title="Settings"
-          onClose={() => windows.close('Settings')}
+          onClose={() => windows.close("Settings")}
           initialPosition={{ x: 100, y: 100 }}
         >
           <div className="p-4">Settings content</div>
         </Window>
       )}
 
-      {windows.isOpen('Editor') && (
+      {windows.isOpen("Editor") && (
         <Window
           title="Editor"
-          onClose={() => windows.close('Editor')}
+          onClose={() => windows.close("Editor")}
           initialPosition={{ x: 200, y: 150 }}
         >
           <div className="p-4">Editor content</div>
         </Window>
       )}
 
-      <button onClick={() => windows.open('Settings')}>Open Settings</button>
-      <button onClick={() => windows.open('Editor')}>Open Editor</button>
+      <button onClick={() => windows.open("Settings")}>Open Settings</button>
+      <button onClick={() => windows.open("Editor")}>Open Editor</button>
     </div>
   )
 }

@@ -22,7 +22,8 @@ const code: RegistryItem[] = [
     name: "code-editor",
     type: "registry:code",
     title: "Code Editor",
-    description: "Full-featured code editor with syntax highlighting and IntelliSense",
+    description:
+      "Full-featured code editor with syntax highlighting and IntelliSense",
     dependencies: ["@hanzo/ui", "@monaco-editor/react"],
     files: [{ path: "code/code-editor.tsx", type: "registry:code" }],
     category: "code",
@@ -94,7 +95,12 @@ const code: RegistryItem[] = [
     type: "registry:code",
     title: "Terminal",
     description: "Full terminal emulator component",
-    dependencies: ["@hanzo/ui", "xterm", "xterm-addon-fit", "xterm-addon-web-links"],
+    dependencies: [
+      "@hanzo/ui",
+      "xterm",
+      "xterm-addon-fit",
+      "xterm-addon-web-links",
+    ],
     files: [{ path: "code/terminal.tsx", type: "registry:code" }],
     category: "code",
     subcategory: "terminal",

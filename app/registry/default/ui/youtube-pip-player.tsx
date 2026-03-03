@@ -6,10 +6,10 @@ import {
   Maximize,
   Maximize2,
   Minimize2,
+  Play,
   Volume2,
   VolumeX,
   X,
-  Play,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -40,9 +40,18 @@ export interface YouTubePipPlayerProps
 }
 
 const pipPositionStyles = {
-  "bottom-right": { defaultX: (w: number, pipW: number) => w - pipW - 24, defaultY: (h: number, pipH: number) => h - pipH - 24 },
-  "bottom-left": { defaultX: () => 24, defaultY: (h: number, pipH: number) => h - pipH - 24 },
-  "top-right": { defaultX: (w: number, pipW: number) => w - pipW - 24, defaultY: () => 24 },
+  "bottom-right": {
+    defaultX: (w: number, pipW: number) => w - pipW - 24,
+    defaultY: (h: number, pipH: number) => h - pipH - 24,
+  },
+  "bottom-left": {
+    defaultX: () => 24,
+    defaultY: (h: number, pipH: number) => h - pipH - 24,
+  },
+  "top-right": {
+    defaultX: (w: number, pipW: number) => w - pipW - 24,
+    defaultY: () => 24,
+  },
   "top-left": { defaultX: () => 24, defaultY: () => 24 },
 }
 
@@ -102,7 +111,9 @@ const YouTubePipPlayer = React.forwardRef<
     const [isMuted, setIsMuted] = React.useState(defaultMuted)
     const [isPip, setIsPip] = React.useState(false)
     const [showPip, setShowPip] = React.useState(true)
-    const [pipSize, setPipSize] = React.useState<"normal" | "double" | "fullscreen">("normal")
+    const [pipSize, setPipSize] = React.useState<
+      "normal" | "double" | "fullscreen"
+    >("normal")
     const [isMobile, setIsMobile] = React.useState(false)
     const [isHovered, setIsHovered] = React.useState(false)
     const [isPipHovered, setIsPipHovered] = React.useState(false)
@@ -131,7 +142,8 @@ const YouTubePipPlayer = React.forwardRef<
     const getYouTubeEmbedUrl = React.useCallback(
       (forPip = false) => {
         const currentId = videoIds[currentVideoIndex]
-        const muteParam = forPip && isPip ? (isMuted ? "1" : "0") : (isMuted ? "1" : "0")
+        const muteParam =
+          forPip && isPip ? (isMuted ? "1" : "0") : isMuted ? "1" : "0"
         return `https://www.youtube.com/embed/${currentId}?autoplay=1&mute=${muteParam}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`
       },
       [videoIds, currentVideoIndex, isMuted, isPip]
@@ -193,7 +205,7 @@ const YouTubePipPlayer = React.forwardRef<
     React.useEffect(() => {
       if (typeof window === "undefined") return
       const pipWidth = getCurrentPipWidth()
-      const pipHeight = pipWidth * 9 / 16
+      const pipHeight = (pipWidth * 9) / 16
       const pos = pipPositionStyles[pipPosition]
       setPipPos({
         x: pos.defaultX(window.innerWidth, pipWidth),
@@ -205,7 +217,7 @@ const YouTubePipPlayer = React.forwardRef<
     React.useEffect(() => {
       if (pipSize === "fullscreen" || typeof window === "undefined") return
       const pipWidth = getCurrentPipWidth()
-      const pipHeight = pipWidth * 9 / 16
+      const pipHeight = (pipWidth * 9) / 16
       const pos = pipPositionStyles[pipPosition]
       setPipPos({
         x: pos.defaultX(window.innerWidth, pipWidth),
@@ -214,40 +226,48 @@ const YouTubePipPlayer = React.forwardRef<
     }, [pipSize, getCurrentPipWidth, pipPosition])
 
     // Dragging handlers
-    const handleMouseDown = React.useCallback((e: React.MouseEvent) => {
-      if (pipSize === "fullscreen") return
-      setIsDragging(true)
-      setHasDragged(false)
-      setDragStart({
-        x: e.clientX - pipPos.x,
-        y: e.clientY - pipPos.y,
-      })
-    }, [pipSize, pipPos])
+    const handleMouseDown = React.useCallback(
+      (e: React.MouseEvent) => {
+        if (pipSize === "fullscreen") return
+        setIsDragging(true)
+        setHasDragged(false)
+        setDragStart({
+          x: e.clientX - pipPos.x,
+          y: e.clientY - pipPos.y,
+        })
+      },
+      [pipSize, pipPos]
+    )
 
-    const handleMouseMove = React.useCallback((e: MouseEvent) => {
-      if (!isDragging || pipSize === "fullscreen") return
+    const handleMouseMove = React.useCallback(
+      (e: MouseEvent) => {
+        if (!isDragging || pipSize === "fullscreen") return
 
-      const newX = e.clientX - dragStart.x
-      const newY = e.clientY - dragStart.y
+        const newX = e.clientX - dragStart.x
+        const newY = e.clientY - dragStart.y
 
-      const distanceMoved = Math.sqrt(Math.pow(newX - pipPos.x, 2) + Math.pow(newY - pipPos.y, 2))
-      if (distanceMoved > 5) setHasDragged(true)
+        const distanceMoved = Math.sqrt(
+          Math.pow(newX - pipPos.x, 2) + Math.pow(newY - pipPos.y, 2)
+        )
+        if (distanceMoved > 5) setHasDragged(true)
 
-      const pipWidth = getCurrentPipWidth()
-      const maxX = window.innerWidth - pipWidth - PIP_MARGIN
-      const maxY = window.innerHeight - (pipWidth * 9 / 16) - PIP_MARGIN
+        const pipWidth = getCurrentPipWidth()
+        const maxX = window.innerWidth - pipWidth - PIP_MARGIN
+        const maxY = window.innerHeight - (pipWidth * 9) / 16 - PIP_MARGIN
 
-      setPipPos({
-        x: Math.max(PIP_MARGIN, Math.min(newX, maxX)),
-        y: Math.max(PIP_MARGIN, Math.min(newY, maxY)),
-      })
-    }, [isDragging, pipSize, dragStart, pipPos, getCurrentPipWidth])
+        setPipPos({
+          x: Math.max(PIP_MARGIN, Math.min(newX, maxX)),
+          y: Math.max(PIP_MARGIN, Math.min(newY, maxY)),
+        })
+      },
+      [isDragging, pipSize, dragStart, pipPos, getCurrentPipWidth]
+    )
 
     const handleMouseUp = React.useCallback(() => {
       if (isDragging && hasDragged) {
         // Snap to corner
         const pipWidth = getCurrentPipWidth()
-        const pipHeight = pipWidth * 9 / 16
+        const pipHeight = (pipWidth * 9) / 16
         const pos = pipPositionStyles[pipPosition]
         setPipPos({
           x: pos.defaultX(window.innerWidth, pipWidth),
@@ -270,12 +290,15 @@ const YouTubePipPlayer = React.forwardRef<
     }, [isDragging, handleMouseMove, handleMouseUp])
 
     // Toggle mute
-    const toggleMute = React.useCallback((e: React.MouseEvent) => {
-      e.stopPropagation()
-      const newMuted = !isMuted
-      setIsMuted(newMuted)
-      onMuteChange?.(newMuted)
-    }, [isMuted, onMuteChange])
+    const toggleMute = React.useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation()
+        const newMuted = !isMuted
+        setIsMuted(newMuted)
+        onMuteChange?.(newMuted)
+      },
+      [isMuted, onMuteChange]
+    )
 
     // Cycle PIP size
     const cyclePipSize = React.useCallback((e: React.MouseEvent) => {
@@ -333,7 +356,8 @@ const YouTubePipPlayer = React.forwardRef<
             <div
               className="absolute inset-0 rounded-[30px] border-2 border-white/10 bg-gradient-to-b from-white/5 to-transparent"
               style={{
-                boxShadow: "inset 0 2px 20px rgba(255,255,255,0.1), inset 0 -2px 20px rgba(0,0,0,0.5)",
+                boxShadow:
+                  "inset 0 2px 20px rgba(255,255,255,0.1), inset 0 -2px 20px rgba(0,0,0,0.5)",
               }}
             />
           </div>
@@ -375,7 +399,8 @@ const YouTubePipPlayer = React.forwardRef<
               <div
                 className="h-full w-full"
                 style={{
-                  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.05) 2px, rgba(255,255,255,0.05) 4px)",
+                  backgroundImage:
+                    "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.05) 2px, rgba(255,255,255,0.05) 4px)",
                 }}
               />
             </div>
@@ -392,7 +417,11 @@ const YouTubePipPlayer = React.forwardRef<
               onClick={toggleMute}
               className="flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full hover:bg-black transition-all duration-300 border border-white/10"
             >
-              {isMuted ? <VolumeX className="h-4 w-4 text-white" /> : <Volume2 className="h-4 w-4 text-white" />}
+              {isMuted ? (
+                <VolumeX className="h-4 w-4 text-white" />
+              ) : (
+                <Volume2 className="h-4 w-4 text-white" />
+              )}
               <span className="text-xs text-white/90 font-medium tracking-wider uppercase">
                 {isMuted ? "Unmute" : "Mute"}
               </span>
@@ -403,7 +432,9 @@ const YouTubePipPlayer = React.forwardRef<
               className="flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full hover:bg-black transition-all duration-300 border border-white/10"
             >
               <Maximize className="h-4 w-4 text-white" />
-              <span className="text-xs text-white/90 font-medium tracking-wider uppercase">Fullscreen</span>
+              <span className="text-xs text-white/90 font-medium tracking-wider uppercase">
+                Fullscreen
+              </span>
             </button>
           </div>
 
@@ -411,7 +442,9 @@ const YouTubePipPlayer = React.forwardRef<
           {showLiveIndicator && (
             <div className="absolute top-6 left-6 flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 z-30">
               <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
-              <span className="text-xs text-white/90 font-medium tracking-widest uppercase">Live</span>
+              <span className="text-xs text-white/90 font-medium tracking-widest uppercase">
+                Live
+              </span>
             </div>
           )}
         </div>
@@ -425,20 +458,22 @@ const YouTubePipPlayer = React.forwardRef<
               pipSize === "fullscreen"
                 ? "inset-0 bg-black/98 backdrop-blur-xl duration-500"
                 : isDragging
-                ? "duration-75"
-                : "duration-300",
+                  ? "duration-75"
+                  : "duration-300",
               isDragging
                 ? "cursor-grabbing scale-105 shadow-2xl"
                 : pipSize === "fullscreen"
-                ? ""
-                : "cursor-grab hover:scale-105"
+                  ? ""
+                  : "cursor-grab hover:scale-105"
             )}
             style={
               pipSize !== "fullscreen"
                 ? {
                     left: `${pipPos.x}px`,
                     top: `${pipPos.y}px`,
-                    filter: isDragging ? "brightness(1.1) drop-shadow(0 20px 40px rgba(0,0,0,0.5))" : "brightness(1)",
+                    filter: isDragging
+                      ? "brightness(1.1) drop-shadow(0 20px 40px rgba(0,0,0,0.5))"
+                      : "brightness(1)",
                   }
                 : {}
             }
@@ -452,8 +487,8 @@ const YouTubePipPlayer = React.forwardRef<
                 pipSize === "fullscreen"
                   ? "w-full h-full"
                   : pipSize === "double"
-                  ? "aspect-video rounded-2xl"
-                  : "w-96 aspect-video rounded-2xl"
+                    ? "aspect-video rounded-2xl"
+                    : "w-96 aspect-video rounded-2xl"
               )}
               style={pipSize === "double" ? { width: "768px" } : {}}
             >
@@ -466,7 +501,8 @@ const YouTubePipPlayer = React.forwardRef<
                     <div
                       className="absolute inset-0 rounded-2xl border-2 border-white/10 bg-gradient-to-b from-white/5 to-transparent"
                       style={{
-                        boxShadow: "inset 0 2px 20px rgba(255,255,255,0.1), inset 0 -2px 20px rgba(0,0,0,0.5)",
+                        boxShadow:
+                          "inset 0 2px 20px rgba(255,255,255,0.1), inset 0 -2px 20px rgba(0,0,0,0.5)",
                       }}
                     />
                   </div>
@@ -474,7 +510,8 @@ const YouTubePipPlayer = React.forwardRef<
                     <div
                       className="h-full w-full animate-scan"
                       style={{
-                        backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)",
+                        backgroundImage:
+                          "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)",
                       }}
                     />
                   </div>
@@ -502,7 +539,9 @@ const YouTubePipPlayer = React.forwardRef<
               <div
                 className={cn(
                   "absolute flex items-center gap-2 z-30 transition-opacity duration-300",
-                  pipSize === "fullscreen" ? "bottom-10 right-10" : "bottom-3 right-3",
+                  pipSize === "fullscreen"
+                    ? "bottom-10 right-10"
+                    : "bottom-3 right-3",
                   isPipHovered ? "opacity-100" : "opacity-0"
                 )}
               >
@@ -511,13 +550,23 @@ const YouTubePipPlayer = React.forwardRef<
                   className="relative p-2.5 bg-black/90 backdrop-blur-md rounded-full hover:bg-black transition-all duration-300 shadow-lg hover:scale-110 border border-white/10"
                   title={isMuted ? "Unmute" : "Mute"}
                 >
-                  {isMuted ? <VolumeX className="h-4 w-4 text-white" /> : <Volume2 className="h-4 w-4 text-white" />}
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4 text-white" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-white" />
+                  )}
                 </button>
 
                 <button
                   onClick={cyclePipSize}
                   className="relative p-2.5 bg-black/90 backdrop-blur-md rounded-full hover:bg-black transition-all duration-300 shadow-lg hover:scale-110 border border-white/10"
-                  title={pipSize === "fullscreen" ? "Normal Size" : pipSize === "double" ? "Fullscreen" : "Double Size"}
+                  title={
+                    pipSize === "fullscreen"
+                      ? "Normal Size"
+                      : pipSize === "double"
+                        ? "Fullscreen"
+                        : "Double Size"
+                  }
                 >
                   {pipSize === "fullscreen" ? (
                     <Minimize2 className="h-4 w-4 text-white" />
@@ -540,7 +589,9 @@ const YouTubePipPlayer = React.forwardRef<
                 <div className="absolute top-3 right-3 z-20">
                   <div className="flex items-center gap-2 bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
                     <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
-                    <span className="text-[10px] text-white/80 font-medium tracking-widest uppercase">Live</span>
+                    <span className="text-[10px] text-white/80 font-medium tracking-widest uppercase">
+                      Live
+                    </span>
                   </div>
                 </div>
               )}

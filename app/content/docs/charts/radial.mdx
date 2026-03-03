@@ -1,0 +1,52 @@
+---
+title: Radial Chart
+description: Radial bar charts for circular data visualization and progress indicators.
+---
+
+## Overview
+
+Radial charts display data in a circular layout, useful for progress indicators, gauges, and circular comparisons.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { RadialBar, RadialBarChart } from "recharts"
+
+const data = [
+  { name: "Chrome", visitors: 275, fill: "var(--color-chrome)" },
+  { name: "Safari", visitors: 200, fill: "var(--color-safari)" },
+  { name: "Firefox", visitors: 187, fill: "var(--color-firefox)" },
+]
+
+const config = {
+  chrome: { label: "Chrome", color: "hsl(var(--chart-1))" },
+  safari: { label: "Safari", color: "hsl(var(--chart-2))" },
+  firefox: { label: "Firefox", color: "hsl(var(--chart-3))" },
+}
+
+export function RadialChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <RadialBarChart data={data} innerRadius={30} outerRadius={110}>
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <RadialBar dataKey="visitors" />
+      </RadialBarChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### Stacked Radial
+
+Stack multiple radial bars concentrically.
+
+### With Labels
+
+Add labels to radial segments for clarity.
+
+### Progress Gauge
+
+Use a single radial bar as a progress or gauge indicator.

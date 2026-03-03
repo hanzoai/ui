@@ -15,9 +15,9 @@ export interface PositionsListProps {
 }
 
 export function PositionsList({
-  positions,
+  positions = [],
   onPositionClick,
-}: PositionsListProps) {
+}: Partial<PositionsListProps>) {
   const getTickerFromSymbol = (symbol: string) => {
     return symbol.split(":")[1] || symbol
   }

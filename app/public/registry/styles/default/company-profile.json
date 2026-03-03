@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "company-profile.tsx",
-      "content": "export * from \"../ui/company-profile\"\n"
+      "content": "export { default } from \"../ui/company-profile\"\nexport * from \"../ui/company-profile\"\n"
     }
   ],
   "type": "components:finance",

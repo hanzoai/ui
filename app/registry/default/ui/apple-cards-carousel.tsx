@@ -1,14 +1,14 @@
 "use client"
 
 import * as React from "react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   AnimatePresence,
   motion,
   PanInfo,
   useMotionValue,
   useTransform,
-} from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+} from "motion/react"
 
 import { cn } from "@/lib/utils"
 
