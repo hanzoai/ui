@@ -79,3 +79,4 @@ playwright-report/
 
 .notes
 .claude/settings.local.json
+pkg/ui/dist-test/
