@@ -186,8 +186,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
                 For example: \`${await npxShadcn(
                   "view @shadcn"
                 )}\` or \`${await npxShadcn(
-                "view @shadcn @acme"
-              )}\` to view multiple registries.
+                  "view @shadcn @acme"
+                )}\` to view multiple registries.
                 `,
             },
           ],
@@ -418,7 +418,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             type: "text",
             text: dedent`Invalid input parameters:
               ${((error as any).issues ?? (error as any).errors ?? [])
-                .map((e: { path: string[]; message: string }) => `- ${e.path.join(".")}: ${e.message}`)
+                .map(
+                  (e: { path: string[]; message: string }) =>
+                    `- ${e.path.join(".")}: ${e.message}`
+                )
                 .join("\n")}
               `,
           },

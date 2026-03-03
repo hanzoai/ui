@@ -2,11 +2,6 @@ import "@/styles/globals.css"
 
 import { Metadata, Viewport } from "next"
 
-const META_THEME_COLORS = {
-  light: "white",
-  dark: "black",
-}
-
 import { siteConfig } from "@/config/site"
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
@@ -22,6 +17,11 @@ import {
   Toaster as DefaultToaster,
   Toaster as NewYorkToaster,
 } from "@/registry/default/ui/toaster"
+
+const META_THEME_COLORS = {
+  light: "white",
+  dark: "black",
+}
 
 export const metadata: Metadata = {
   title: {

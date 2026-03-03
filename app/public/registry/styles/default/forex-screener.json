@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "forex-screener.tsx",
-      "content": "export * from \"../ui/forex-screener\"\n"
+      "content": "export { default } from \"../ui/forex-screener\"\nexport * from \"../ui/forex-screener\"\n"
     }
   ],
   "type": "components:finance",

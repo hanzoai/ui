@@ -57,9 +57,19 @@ npm install framer-motion lucide-react
 import { Spotlight, SpotlightItem } from "@hanzo/ui/desktop"
 
 const items: SpotlightItem[] = [
-  { id: 'settings', title: 'Settings', category: 'Applications', icon: <Settings /> },
-  { id: 'documents', title: 'Documents', category: 'Folders', icon: <Folder /> },
-  { id: 'music', title: 'Music', category: 'Applications', icon: <Music /> },
+  {
+    id: "settings",
+    title: "Settings",
+    category: "Applications",
+    icon: <Settings />,
+  },
+  {
+    id: "documents",
+    title: "Documents",
+    category: "Folders",
+    icon: <Folder />,
+  },
+  { id: "music", title: "Music", category: "Applications", icon: <Music /> },
 ]
 
 export function SpotlightDemo() {
@@ -74,7 +84,7 @@ export function SpotlightDemo() {
         onClose={() => setIsOpen(false)}
         items={items}
         onSelect={(item) => {
-          console.log('Selected:', item)
+          console.log("Selected:", item)
           setIsOpen(false)
         }}
       />
@@ -87,25 +97,25 @@ export function SpotlightDemo() {
 
 ### Spotlight
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `isOpen` | `boolean` | - | Controls visibility of the spotlight dialog |
-| `onClose` | `() => void` | - | Callback when spotlight is closed |
-| `items` | `SpotlightItem[]` | - | Array of searchable items |
-| `onSelect` | `(item: SpotlightItem) => void` | - | Callback when an item is selected |
-| `placeholder` | `string` | `'Search...'` | Search input placeholder text |
+| Prop          | Type                            | Default       | Description                                 |
+| ------------- | ------------------------------- | ------------- | ------------------------------------------- |
+| `isOpen`      | `boolean`                       | -             | Controls visibility of the spotlight dialog |
+| `onClose`     | `() => void`                    | -             | Callback when spotlight is closed           |
+| `items`       | `SpotlightItem[]`               | -             | Array of searchable items                   |
+| `onSelect`    | `(item: SpotlightItem) => void` | -             | Callback when an item is selected           |
+| `placeholder` | `string`                        | `'Search...'` | Search input placeholder text               |
 
 ### SpotlightItem
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `id` | `string` | Unique identifier for the item |
-| `title` | `string` | Display title |
-| `subtitle` | `string` | Optional subtitle/description text |
-| `icon` | `ReactNode` | Optional icon to display |
-| `category` | `string` | Category for grouping |
-| `keywords` | `string[]` | Optional search keywords |
-| `action` | `() => void` | Optional action callback |
+| Property   | Type         | Description                        |
+| ---------- | ------------ | ---------------------------------- |
+| `id`       | `string`     | Unique identifier for the item     |
+| `title`    | `string`     | Display title                      |
+| `subtitle` | `string`     | Optional subtitle/description text |
+| `icon`     | `ReactNode`  | Optional icon to display           |
+| `category` | `string`     | Category for grouping              |
+| `keywords` | `string[]`   | Optional search keywords           |
+| `action`   | `() => void` | Optional action callback           |
 
 ## Features
 
@@ -120,26 +130,70 @@ export function SpotlightDemo() {
 ### Application Launcher
 
 ```tsx
-import { Spotlight, SpotlightItem, useKeyboardShortcuts } from "@hanzo/ui/desktop"
 import {
-  Terminal,
-  Chrome,
-  Mail,
+  Spotlight,
+  SpotlightItem,
+  useKeyboardShortcuts,
+} from "@hanzo/ui/desktop"
+import {
   Calendar,
+  Chrome,
+  Folder,
+  Mail,
   Music,
   Settings,
-  Folder
+  Terminal,
 } from "lucide-react"
 
 const apps: SpotlightItem[] = [
-  { id: 'terminal', label: 'Terminal', category: 'Applications', icon: <Terminal className="h-5 w-5" /> },
-  { id: 'safari', label: 'Safari', category: 'Applications', icon: <Chrome className="h-5 w-5" /> },
-  { id: 'mail', label: 'Mail', category: 'Applications', icon: <Mail className="h-5 w-5" /> },
-  { id: 'calendar', label: 'Calendar', category: 'Applications', icon: <Calendar className="h-5 w-5" /> },
-  { id: 'music', label: 'Music', category: 'Applications', icon: <Music className="h-5 w-5" /> },
-  { id: 'settings', label: 'System Preferences', category: 'Applications', icon: <Settings className="h-5 w-5" /> },
-  { id: 'documents', label: 'Documents', category: 'Folders', icon: <Folder className="h-5 w-5" /> },
-  { id: 'downloads', label: 'Downloads', category: 'Folders', icon: <Folder className="h-5 w-5" /> },
+  {
+    id: "terminal",
+    label: "Terminal",
+    category: "Applications",
+    icon: <Terminal className="h-5 w-5" />,
+  },
+  {
+    id: "safari",
+    label: "Safari",
+    category: "Applications",
+    icon: <Chrome className="h-5 w-5" />,
+  },
+  {
+    id: "mail",
+    label: "Mail",
+    category: "Applications",
+    icon: <Mail className="h-5 w-5" />,
+  },
+  {
+    id: "calendar",
+    label: "Calendar",
+    category: "Applications",
+    icon: <Calendar className="h-5 w-5" />,
+  },
+  {
+    id: "music",
+    label: "Music",
+    category: "Applications",
+    icon: <Music className="h-5 w-5" />,
+  },
+  {
+    id: "settings",
+    label: "System Preferences",
+    category: "Applications",
+    icon: <Settings className="h-5 w-5" />,
+  },
+  {
+    id: "documents",
+    label: "Documents",
+    category: "Folders",
+    icon: <Folder className="h-5 w-5" />,
+  },
+  {
+    id: "downloads",
+    label: "Downloads",
+    category: "Folders",
+    icon: <Folder className="h-5 w-5" />,
+  },
 ]
 
 export function AppLauncher() {
@@ -147,7 +201,7 @@ export function AppLauncher() {
 
   // ⌘+Space to open (like macOS)
   useKeyboardShortcuts([
-    { key: ' ', meta: true, action: () => setIsOpen(true) }
+    { key: " ", meta: true, action: () => setIsOpen(true) },
   ])
 
   return (
@@ -157,7 +211,7 @@ export function AppLauncher() {
       items={apps}
       placeholder="Search applications..."
       onSelect={(item) => {
-        console.log('Launch:', item.label)
+        console.log("Launch:", item.label)
         setIsOpen(false)
       }}
     />
@@ -169,22 +223,51 @@ export function AppLauncher() {
 
 ```tsx
 import { Spotlight, SpotlightItem } from "@hanzo/ui/desktop"
-import {
-  Save,
-  Copy,
-  Scissors,
-  Clipboard,
-  Undo,
-  Redo
-} from "lucide-react"
+import { Clipboard, Copy, Redo, Save, Scissors, Undo } from "lucide-react"
 
 const commands: SpotlightItem[] = [
-  { id: 'save', label: 'Save', category: 'File', icon: <Save />, shortcut: '⌘S' },
-  { id: 'copy', label: 'Copy', category: 'Edit', icon: <Copy />, shortcut: '⌘C' },
-  { id: 'cut', label: 'Cut', category: 'Edit', icon: <Scissors />, shortcut: '⌘X' },
-  { id: 'paste', label: 'Paste', category: 'Edit', icon: <Clipboard />, shortcut: '⌘V' },
-  { id: 'undo', label: 'Undo', category: 'Edit', icon: <Undo />, shortcut: '⌘Z' },
-  { id: 'redo', label: 'Redo', category: 'Edit', icon: <Redo />, shortcut: '⌘⇧Z' },
+  {
+    id: "save",
+    label: "Save",
+    category: "File",
+    icon: <Save />,
+    shortcut: "⌘S",
+  },
+  {
+    id: "copy",
+    label: "Copy",
+    category: "Edit",
+    icon: <Copy />,
+    shortcut: "⌘C",
+  },
+  {
+    id: "cut",
+    label: "Cut",
+    category: "Edit",
+    icon: <Scissors />,
+    shortcut: "⌘X",
+  },
+  {
+    id: "paste",
+    label: "Paste",
+    category: "Edit",
+    icon: <Clipboard />,
+    shortcut: "⌘V",
+  },
+  {
+    id: "undo",
+    label: "Undo",
+    category: "Edit",
+    icon: <Undo />,
+    shortcut: "⌘Z",
+  },
+  {
+    id: "redo",
+    label: "Redo",
+    category: "Edit",
+    icon: <Redo />,
+    shortcut: "⌘⇧Z",
+  },
 ]
 
 export function CommandPalette() {
@@ -197,7 +280,7 @@ export function CommandPalette() {
       items={commands}
       placeholder="Type a command..."
       onSelect={(item) => {
-        console.log('Execute:', item.id)
+        console.log("Execute:", item.id)
         setIsOpen(false)
       }}
     />
@@ -207,9 +290,9 @@ export function CommandPalette() {
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `↑` / `↓` | Navigate between items |
-| `Enter` | Select highlighted item |
-| `Escape` | Close spotlight |
+| Shortcut        | Action                           |
+| --------------- | -------------------------------- |
+| `↑` / `↓`       | Navigate between items           |
+| `Enter`         | Select highlighted item          |
+| `Escape`        | Close spotlight                  |
 | `⌘K` / `⌘Space` | Open spotlight (when configured) |

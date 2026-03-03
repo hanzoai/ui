@@ -8,7 +8,10 @@ export interface TradingPanelProps {
   currentPrice: number
 }
 
-export function TradingPanel({ symbol, currentPrice }: TradingPanelProps) {
+export function TradingPanel({
+  symbol = "NASDAQ:AAPL",
+  currentPrice = 175.5,
+}: Partial<TradingPanelProps>) {
   const [orderType, setOrderType] = useState<"buy" | "sell">("buy")
   const [quantity, setQuantity] = useState("")
   const [portfolio, setPortfolio] = useState<any>(null)
