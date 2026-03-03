@@ -1,0 +1,58 @@
+---
+title: Bar Chart
+description: Bar charts for comparing categorical data and distributions.
+---
+
+<ComponentPreview name="chart-demo" description="Bar chart example" />
+
+## Overview
+
+Bar charts display data with rectangular bars proportional to their values. They are ideal for comparing quantities across categories.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+
+const data = [
+  { month: "Jan", desktop: 186 },
+  { month: "Feb", desktop: 305 },
+  { month: "Mar", desktop: 237 },
+]
+
+const config = {
+  desktop: { label: "Desktop", color: "hsl(var(--chart-1))" },
+}
+
+export function BarChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <BarChart data={data}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="month" />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+      </BarChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### Horizontal Bar
+
+Use `layout="vertical"` for horizontal orientation.
+
+### Stacked Bar
+
+Stack multiple bars to show composition within categories.
+
+### Mixed Bar
+
+Combine different bar styles and data series.
+
+### With Labels
+
+Add data labels directly on bars using custom label components.

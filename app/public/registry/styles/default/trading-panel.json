@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "trading-panel.tsx",
-      "content": "export * from \"../ui/trading-panel\"\n"
+      "content": "export { default } from \"../ui/trading-panel\"\nexport * from \"../ui/trading-panel\"\n"
     }
   ],
   "type": "components:finance",

@@ -2,7 +2,7 @@ import { existsSync, promises as fs } from "fs"
 import path from "path"
 import { RegistryFontItem, registryResolvedItemsTreeSchema } from "@/src/schema"
 import { Config } from "@/src/utils/get-config"
-import { ProjectInfo, getProjectInfo } from "@/src/utils/get-project-info"
+import { getProjectInfo, ProjectInfo } from "@/src/utils/get-project-info"
 import { highlighter } from "@/src/utils/highlighter"
 import { spinner } from "@/src/utils/spinner"
 import {
@@ -36,9 +36,8 @@ export async function massageTreeForFonts(
     projectInfo.framework.name === "next-app" ||
     projectInfo.framework.name === "next-pages"
   ) {
-    tree.cssVars.theme[
-      fontSans.font.variable
-    ] = `var(${fontSans.font.variable})`
+    tree.cssVars.theme[fontSans.font.variable] =
+      `var(${fontSans.font.variable})`
     return tree
   }
 

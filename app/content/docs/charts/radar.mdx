@@ -1,0 +1,53 @@
+---
+title: Radar Chart
+description: Radar charts for multivariate data comparison and analysis.
+---
+
+## Overview
+
+Radar charts display multivariate data on axes starting from the same point, useful for comparing multiple quantitative variables.
+
+## Usage
+
+```tsx
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
+
+const data = [
+  { subject: "Math", A: 120, B: 110 },
+  { subject: "Chinese", A: 98, B: 130 },
+  { subject: "English", A: 86, B: 130 },
+  { subject: "Geography", A: 99, B: 100 },
+  { subject: "Physics", A: 85, B: 90 },
+  { subject: "History", A: 65, B: 85 },
+]
+
+const config = {
+  A: { label: "Student A", color: "hsl(var(--chart-1))" },
+  B: { label: "Student B", color: "hsl(var(--chart-2))" },
+}
+
+export function RadarChartDemo() {
+  return (
+    <ChartContainer config={config}>
+      <RadarChart data={data}>
+        <PolarGrid />
+        <PolarAngleAxis dataKey="subject" />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <Radar dataKey="A" fill="var(--color-A)" fillOpacity={0.6} />
+        <Radar dataKey="B" fill="var(--color-B)" fillOpacity={0.6} />
+      </RadarChart>
+    </ChartContainer>
+  )
+}
+```
+
+## Variants
+
+### Filled Radar
+
+Use `fillOpacity` to create filled radar areas.
+
+### Multiple Series
+
+Compare multiple datasets on the same radar.

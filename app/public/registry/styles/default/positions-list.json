@@ -7,7 +7,7 @@
   "files": [
     {
       "name": "positions-list.tsx",
-      "content": "export * from \"../ui/positions-list\"\n"
+      "content": "export { default } from \"../ui/positions-list\"\nexport * from \"../ui/positions-list\"\n"
     }
   ],
   "type": "components:finance",

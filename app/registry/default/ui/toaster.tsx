@@ -1,6 +1,5 @@
 "use client"
 
-import { useToast } from "@/registry/default/ui/use-toast"
 import {
   Toast,
   ToastClose,
@@ -9,6 +8,7 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/registry/default/ui/toast"
+import { useToast } from "@/registry/default/ui/use-toast"
 
 export function Toaster() {
   const { toasts } = useToast()

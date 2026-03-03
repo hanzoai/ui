@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { YouTubePipPlayer } from "@/registry/default/ui/youtube-pip-player"
 
@@ -6,10 +6,13 @@ export function YouTubePipPlayerDemo() {
   return (
     <div className="space-y-8 p-6 bg-black min-h-screen">
       <section>
-        <h2 className="text-2xl font-bold mb-4 text-white">YouTube PIP Player - Hero Section</h2>
+        <h2 className="text-2xl font-bold mb-4 text-white">
+          YouTube PIP Player - Hero Section
+        </h2>
         <p className="text-white/60 mb-4">
-          Scroll down to see the video transition into a draggable Picture-in-Picture window.
-          The PIP window can be resized (normal → double → fullscreen) and closed.
+          Scroll down to see the video transition into a draggable
+          Picture-in-Picture window. The PIP window can be resized (normal →
+          double → fullscreen) and closed.
         </p>
         <YouTubePipPlayer
           videoId="dQw4w9WgXcQ"
@@ -41,7 +44,9 @@ export function YouTubePipPlayerDemo() {
         </section>
 
         <section className="max-w-2xl mx-auto">
-          <h3 className="text-xl font-bold text-white mb-4">Multiple Videos (Auto-Rotate)</h3>
+          <h3 className="text-xl font-bold text-white mb-4">
+            Multiple Videos (Auto-Rotate)
+          </h3>
           <YouTubePipPlayer
             videoId={["dQw4w9WgXcQ", "jNQXAC9IVRw", "9bZkp7q19f0"]}
             rotationInterval={15000}
@@ -53,7 +58,9 @@ export function YouTubePipPlayerDemo() {
         </section>
 
         <section className="max-w-2xl mx-auto">
-          <h3 className="text-xl font-bold text-white mb-4">Without TV Effects</h3>
+          <h3 className="text-xl font-bold text-white mb-4">
+            Without TV Effects
+          </h3>
           <YouTubePipPlayer
             videoId="dQw4w9WgXcQ"
             size="sm"

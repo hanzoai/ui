@@ -16,11 +16,11 @@ export interface OrderEntryProps {
 }
 
 export function OrderEntry({
-  symbol,
-  accountBalance,
-  onPlaceOrder,
+  symbol = "NASDAQ:AAPL",
+  accountBalance = 10000,
+  onPlaceOrder = () => {},
   disabled = false,
-}: OrderEntryProps) {
+}: Partial<OrderEntryProps>) {
   const [orderType, setOrderType] = useState<"market" | "limit">("market")
   const [orderSide, setOrderSide] = useState<"buy" | "sell">("buy")
   const [shares, setShares] = useState("")

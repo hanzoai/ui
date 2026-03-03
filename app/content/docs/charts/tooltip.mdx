@@ -1,0 +1,61 @@
+---
+title: Chart Tooltip
+description: Customizable tooltip component for all chart types.
+---
+
+## Overview
+
+The chart tooltip component provides a consistent, themed tooltip across all chart types. It integrates with the chart config system for automatic label and color resolution.
+
+## Usage
+
+```tsx
+import { ChartTooltip, ChartTooltipContent } from "@hanzo/ui"
+
+// Inside any chart component:
+;<ChartTooltip content={<ChartTooltipContent />} />
+```
+
+## Props
+
+### ChartTooltipContent
+
+| Prop          | Type                        | Default | Description               |
+| ------------- | --------------------------- | ------- | ------------------------- |
+| hideLabel     | boolean                     | false   | Hide the label in tooltip |
+| hideIndicator | boolean                     | false   | Hide the color indicator  |
+| indicator     | "line" \| "dot" \| "dashed" | "dot"   | Indicator style           |
+| nameKey       | string                      | -       | Key for item names        |
+| labelKey      | string                      | -       | Key for labels            |
+
+## Customization
+
+### Custom Formatter
+
+```tsx
+<ChartTooltip
+  content={
+    <ChartTooltipContent
+      formatter={(value, name) => (
+        <span>
+          {name}: ${value.toLocaleString()}
+        </span>
+      )}
+    />
+  }
+/>
+```
+
+### Custom Label
+
+```tsx
+<ChartTooltip
+  content={<ChartTooltipContent labelFormatter={(label) => `Date: ${label}`} />}
+/>
+```
+
+## Indicator Styles
+
+- **dot** - Small colored circle (default)
+- **line** - Colored line indicator
+- **dashed** - Dashed line indicator
