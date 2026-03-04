@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import type { HanzoUser, HanzoOrg } from './types'
+import { UserAvatar } from './UserAvatar'
 
 interface UserOrgDropdownProps {
   user?: HanzoUser
@@ -9,22 +10,6 @@ interface UserOrgDropdownProps {
   currentOrgId?: string
   onOrgSwitch?: (orgId: string) => void
   onSignOut?: () => void
-}
-
-function Initials({ name, email }: { name?: string; email?: string }) {
-  const seed = name || email || 'U'
-  const initials = seed
-    .split(/[\s@._-]/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('')
-
-  return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-800 text-[11px] font-semibold text-white/70">
-      {initials}
-    </span>
-  )
 }
 
 export function UserOrgDropdown({
@@ -56,15 +41,12 @@ export function UserOrgDropdown({
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-white/[0.06] transition-colors"
       >
-        {user.avatar ? (
-          <img
-            src={user.avatar}
-            alt={user.name || user.email}
-            className="h-7 w-7 rounded-full object-cover"
-          />
-        ) : (
-          <Initials name={user.name} email={user.email} />
-        )}
+        <UserAvatar
+          src={user.avatar}
+          email={user.email}
+          name={user.name}
+          size={28}
+        />
         <div className="hidden flex-col items-start sm:flex">
           {user.name && (
             <span className="text-[12px] font-medium text-white/70 leading-none">{user.name}</span>
