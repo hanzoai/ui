@@ -514,6 +514,16 @@
       "import": "./dist/pattern/*.mjs",
       "require": "./dist/pattern/*.js"
     },
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "import": "./dist/auth/index.mjs",
+      "require": "./dist/auth/index.js"
+    },
+    "./auth/*": {
+      "types": "./dist/auth/*.d.ts",
+      "import": "./dist/auth/*.mjs",
+      "require": "./dist/auth/*.js"
+    },
     "./navigation": {
       "types": "./dist/navigation/index.d.ts",
       "import": "./dist/navigation/index.mjs",
