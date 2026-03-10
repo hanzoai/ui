@@ -4,7 +4,7 @@ import React from 'react'
 import { HanzoMark } from './HanzoMark'
 import { AppSwitcher } from './AppSwitcher'
 import { UserOrgDropdown } from './UserOrgDropdown'
-import { DEFAULT_HANZO_APPS, type HanzoShellProps } from './types'
+import { DEFAULT_HANZO_APPS, ORG_DOMAINS, getAppsForOrg, type HanzoShellProps } from './types'
 
 /**
  * HanzoHeader — shared top navigation bar for all Hanzo properties.
@@ -48,9 +48,15 @@ export function HanzoHeader({
   currentOrgId,
   onOrgSwitch,
   onSignOut,
-  apps = DEFAULT_HANZO_APPS,
+  apps,
   headerRight,
 }: Omit<HanzoShellProps, 'children'>) {
+  // Resolve current org slug for white-label domain routing
+  const currentOrg = organizations?.find((o) => o.id === currentOrgId)
+  const orgSlug = currentOrg?.slug || 'hanzo'
+  const resolvedApps = apps || getAppsForOrg(orgSlug)
+  const domains = ORG_DOMAINS[orgSlug] || ORG_DOMAINS.hanzo
+
   return (
     <header
       className="sticky top-0 z-50 flex h-14 w-full items-center justify-between border-b border-white/[0.07] bg-[#09090b]/90 px-4 backdrop-blur-xl"
@@ -59,9 +65,9 @@ export function HanzoHeader({
       {/* ── Left: logo · breadcrumb · app switcher ── */}
       <div className="flex min-w-0 items-center gap-2.5">
         <a
-          href="https://hanzo.id/account"
+          href={`${domains.iam}/account`}
           className="flex-shrink-0 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
-          aria-label="Hanzo Account"
+          aria-label="Account"
         >
           <HanzoMark size={22} brandMenu animate />
         </a>
@@ -70,7 +76,7 @@ export function HanzoHeader({
 
         <span className="truncate text-[13px] font-medium text-white/50">{currentApp}</span>
 
-        <AppSwitcher apps={apps} currentAppId={currentAppId} />
+        <AppSwitcher apps={resolvedApps} currentAppId={currentAppId} />
       </div>
 
       {/* ── Right: extra slot + user/org ── */}
