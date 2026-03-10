@@ -41,7 +41,7 @@ export { AccountMembers } from './account-members'
 export type { AccountMembersProps } from './account-members'
 
 export { StatusBar } from './status-bar'
-export type { StatusBarProps } from './status-bar'
+export type { StatusBarProps, BillingSection } from './status-bar'
 
 export { OverviewDashboard } from './overview-dashboard'
 export type { OverviewDashboardProps } from './overview-dashboard'
