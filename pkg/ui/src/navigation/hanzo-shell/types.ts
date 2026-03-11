@@ -46,6 +46,14 @@ export type HanzoShellProps = {
   apps?: HanzoApp[]
   /** Extra content rendered in header right-side */
   headerRight?: React.ReactNode
+  /** Settings URL (defaults to IAM /account) */
+  settingsHref?: string
+  /** Called when settings icon is clicked (overrides href navigation) */
+  onSettingsClick?: () => void
+  /** Hide the hard-refresh button */
+  hideHardRefresh?: boolean
+  /** Hide the settings button */
+  hideSettings?: boolean
   /** Sidebar content */
   children?: React.ReactNode
 }
