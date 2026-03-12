@@ -3,9 +3,10 @@
 import type { Subscription, SubscriptionPlan, PaymentMethod } from '../types'
 
 export type BillingSection =
-  | 'overview' | 'usage' | 'invoices' | 'pricing'
+  | 'overview' | 'usage' | 'cost' | 'invoices' | 'pricing'
   | 'credits' | 'transactions' | 'alerts'
-  | 'payment' | 'team' | 'settings'
+  | 'payment' | 'members' | 'team' | 'settings'
+  | 'business' | 'tax'
 
 export interface StatusBarProps {
   subscription: Subscription
