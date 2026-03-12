@@ -180,6 +180,9 @@ export default defineConfig({
     'project/kanban': 'src/project/kanban.tsx',
     'project/list': 'src/project/list.tsx',
 
+    // Billing components
+    'billing/index': 'src/billing/index.ts',
+
     // Model components (Zen model cards, tables, library, ZenEnso logo)
     'models/index': 'src/models/index.ts',
 
