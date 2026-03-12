@@ -152,6 +152,7 @@ export default defineConfig({
 
     // Navigation components
     'navigation/index': 'src/navigation/index.ts',
+    'navigation/hanzo-shell': 'src/navigation/hanzo-shell/index.ts',
 
     // Form components
     'form/index': 'src/form/index.ts',
