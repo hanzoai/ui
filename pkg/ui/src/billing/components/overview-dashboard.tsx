@@ -163,76 +163,10 @@ export function OverviewDashboard(props: OverviewDashboardProps) {
         </FadeIn>
       )}
 
-      {/* -- Hero: AI Power stats -- */}
-      <FadeIn delay={0}>
-        <div className={`rounded-2xl border border-white/[0.08] bg-[#141419] overflow-hidden transition-all ${tier.glow}`}>
-          <div className="p-6">
-            <div className="flex items-start justify-between mb-5">
-              <div>
-                <div className="flex items-center gap-2.5 mb-1">
-                  <span className={`text-[11px] font-semibold uppercase tracking-widest ${tier.color}`}>
-                    {tier.label} Plan
-                  </span>
-                  {hasActivePlan && (
-                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">Active</span>
-                  )}
-                </div>
-                <h2 className="text-2xl font-bold text-white">
-                  {tokensThisPeriod > 0
-                    ? <><AnimatedNumber value={tokensThisPeriod} /> tokens</>
-                    : props.usageLoading ? 'Loading\u2026' : '\u2014 tokens'
-                  }
-                </h2>
-                <p className="text-[13px] text-white/40 mt-1">processed this billing period</p>
-              </div>
-              <div className="text-right">
-                <p className="text-[11px] text-white/30 mb-1">API spend</p>
-                <p className="text-xl font-semibold text-white tabular-nums">{fmt(mtdSpend, currency)}</p>
-                <p className="text-[12px] text-white/30 mt-1">{daysLeft}d until renewal</p>
-              </div>
-            </div>
-
-            {/* Mini bar chart */}
-            <div className="h-10 flex items-end gap-[2px]">
-              {barHeights.map((h, i) => (
-                <div
-                  key={i}
-                  className={`flex-1 rounded-sm transition-all duration-700 ${
-                    mtdSpend > 0 ? 'bg-white/[0.12]' : 'bg-white/[0.04]'
-                  }`}
-                  style={{ height: `${h}%`, transitionDelay: `${i * 20}ms` }}
-                />
-              ))}
-            </div>
-
-            {/* Stats row */}
-            <div className="mt-5 grid grid-cols-3 gap-3">
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-                <p className="text-[11px] text-white/30 mb-1">Tokens / period</p>
-                <p className="text-base font-semibold text-white tabular-nums">
-                  {tokensThisPeriod > 0 ? fmtTokens(tokensThisPeriod) : '\u2014'}
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-                <p className="text-[11px] text-white/30 mb-1">API calls</p>
-                <p className="text-base font-semibold text-white tabular-nums">
-                  {apiCallsThisPeriod > 0 ? fmtTokens(apiCallsThisPeriod) : '\u2014'}
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-                <p className="text-[11px] text-white/30 mb-1">Credits left</p>
-                <p className="text-base font-semibold text-white tabular-nums">{fmt(totalCreditsRemaining)}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </FadeIn>
-
-      {/* -- Upgrade CTA (when on free plan or no subscription) -- */}
+      {/* -- Upgrade CTA (top priority when not subscribed) -- */}
       {!hasActivePlan && !isTrialing && recommendedPlan && (
-        <FadeIn delay={60}>
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.12] bg-gradient-to-br from-[#1a1a2e] to-[#141419] p-6">
-            {/* Subtle glow accent */}
+        <FadeIn delay={0}>
+          <div className="relative overflow-hidden rounded-2xl border border-sky-500/20 bg-gradient-to-br from-[#1a1a2e] to-[#141419] p-6">
             <div className="pointer-events-none absolute -top-12 left-1/2 h-32 w-64 -translate-x-1/2 rounded-full bg-sky-500/10 blur-2xl" />
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
@@ -273,6 +207,75 @@ export function OverviewDashboard(props: OverviewDashboardProps) {
           </div>
         </FadeIn>
       )}
+
+      {/* -- Hero: AI Power stats -- */}
+      <FadeIn delay={0}>
+        <div className={`rounded-2xl border border-white/[0.08] bg-[#141419] overflow-hidden transition-all ${tier.glow}`}>
+          <div className="p-6">
+            <div className="flex items-start justify-between mb-5">
+              <div>
+                <div className="flex items-center gap-2.5 mb-1">
+                  <span className={`text-[11px] font-semibold uppercase tracking-widest ${tier.color}`}>
+                    {tier.label} Plan
+                  </span>
+                  {hasActivePlan && (
+                    <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">Active</span>
+                  )}
+                </div>
+                <h2 className="text-2xl font-bold text-white">
+                  {tokensThisPeriod > 0
+                    ? <><AnimatedNumber value={tokensThisPeriod} /> tokens</>
+                    : props.usageLoading ? 'Loading\u2026' : <span className="text-white/40">No usage yet</span>
+                  }
+                </h2>
+                <p className="text-[13px] text-white/40 mt-1">
+                  {tokensThisPeriod > 0 ? 'processed this billing period' : 'Start using Hanzo AI to see stats'}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-[11px] text-white/30 mb-1">{mtdSpend > 0 ? 'API spend' : 'Credits available'}</p>
+                <p className="text-xl font-semibold text-white tabular-nums">
+                  {mtdSpend > 0 ? fmt(mtdSpend, currency) : totalCreditsRemaining > 0 ? fmt(totalCreditsRemaining, currency) : fmt(0, currency)}
+                </p>
+                <p className="text-[12px] text-white/30 mt-1">{daysLeft}d until renewal</p>
+              </div>
+            </div>
+
+            {/* Mini bar chart */}
+            <div className="h-10 flex items-end gap-[2px]">
+              {barHeights.map((h, i) => (
+                <div
+                  key={i}
+                  className={`flex-1 rounded-sm transition-all duration-700 ${
+                    mtdSpend > 0 ? 'bg-white/[0.12]' : 'bg-white/[0.04]'
+                  }`}
+                  style={{ height: `${h}%`, transitionDelay: `${i * 20}ms` }}
+                />
+              ))}
+            </div>
+
+            {/* Stats row */}
+            <div className="mt-5 grid grid-cols-3 gap-3">
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                <p className="text-[11px] text-white/30 mb-1">Tokens / period</p>
+                <p className="text-base font-semibold text-white tabular-nums">
+                  {tokensThisPeriod > 0 ? fmtTokens(tokensThisPeriod) : '\u2014'}
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                <p className="text-[11px] text-white/30 mb-1">API calls</p>
+                <p className="text-base font-semibold text-white tabular-nums">
+                  {apiCallsThisPeriod > 0 ? fmtTokens(apiCallsThisPeriod) : '\u2014'}
+                </p>
+              </div>
+              <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+                <p className="text-[11px] text-white/30 mb-1">Credits left</p>
+                <p className="text-base font-semibold text-white tabular-nums">{fmt(totalCreditsRemaining)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
 
       {/* -- Stats row -- */}
       <FadeIn delay={80}>
