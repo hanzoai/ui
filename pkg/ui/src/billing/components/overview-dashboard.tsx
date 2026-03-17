@@ -103,7 +103,7 @@ function AnimatedNumber({ value, duration = 1200 }: { value: number; duration?: 
 
 /* -- Plan tier badge -- */
 const PLAN_TIERS: Record<string, { label: string; color: string; glow: string }> = {
-  'developer': { label: 'Developer', color: 'text-white/50', glow: '' },
+  'developer': { label: 'Pay As You Go', color: 'text-white/50', glow: '' },
   'pro': { label: 'Pro', color: 'text-sky-400', glow: 'shadow-[0_0_20px_rgba(56,189,248,0.15)]' },
   'team': { label: 'Team', color: 'text-violet-400', glow: 'shadow-[0_0_20px_rgba(167,139,250,0.15)]' },
   'enterprise': { label: 'Enterprise', color: 'text-amber-400', glow: 'shadow-[0_0_20px_rgba(251,191,36,0.15)]' },
@@ -314,7 +314,7 @@ export function OverviewDashboard(props: OverviewDashboardProps) {
                 </svg>
               </div>
             </div>
-            <p className={`text-2xl font-bold ${tier.color || 'text-white'}`}>{currentPlan?.name ?? 'Developer'}</p>
+            <p className={`text-2xl font-bold ${tier.color || 'text-white'}`}>{currentPlan?.name ?? 'Pay As You Go'}</p>
             <p className="text-[13px] text-white/35 mt-1.5 group-hover:text-white/50 transition-colors">
               {isTrialing ? `Trial \u00B7 ${trialDaysLeft}d left` : hasActivePlan ? 'Active' : 'Upgrade to unlock all \u2192'}
             </p>
