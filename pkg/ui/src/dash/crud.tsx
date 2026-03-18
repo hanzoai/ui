@@ -2,26 +2,26 @@
 
 import * as React from 'react'
 import { cn } from '../../utils'
-import { DashDataTable, type DashColumn, type DashDataTableProps } from './dash-data-table'
-import { DashForm, type DashFieldDef } from './dash-form'
+import { Table, type Column, type TableProps } from './table'
+import { Form, type FieldDef } from './form'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                             */
 /* ------------------------------------------------------------------ */
 
-export interface DashCrudProps<T> {
+export interface CrudProps<T> {
   /** Resource name (e.g. "User", "API Key") used in UI labels */
   resourceName: string
   /** Plural resource name (defaults to resourceName + "s") */
   resourceNamePlural?: string
   /** Column definitions for the list table */
-  columns: DashColumn<T>[]
+  columns: Column<T>[]
   /** Row data */
   data: T[]
   /** Unique key extractor per row */
   rowKey: (row: T) => string
   /** Field definitions for create/edit form */
-  fields: DashFieldDef[]
+  fields: FieldDef[]
   /** Convert a row to form values for editing */
   rowToValues?: (row: T) => Record<string, unknown>
   /** Called when creating a new record */
@@ -36,8 +36,8 @@ export interface DashCrudProps<T> {
   canEdit?: boolean
   /** Whether delete is available */
   canDelete?: boolean
-  /** Pass-through DataTable props */
-  tableProps?: Partial<DashDataTableProps<T>>
+  /** Pass-through Table props */
+  tableProps?: Partial<TableProps<T>>
   /** Loading state */
   loading?: boolean
   className?: string
@@ -49,7 +49,7 @@ type View = 'list' | 'create' | 'edit'
 /*  Component                                                         */
 /* ------------------------------------------------------------------ */
 
-export function DashCrud<T>({
+export function Crud<T>({
   resourceName,
   resourceNamePlural,
   columns,
@@ -66,7 +66,7 @@ export function DashCrud<T>({
   tableProps,
   loading = false,
   className,
-}: DashCrudProps<T>) {
+}: CrudProps<T>) {
   const plural = resourceNamePlural ?? `${resourceName}s`
   const [view, setView] = React.useState<View>('list')
   const [editingKey, setEditingKey] = React.useState<string | null>(null)
@@ -149,7 +149,7 @@ export function DashCrud<T>({
           )}
         </div>
 
-        <DashDataTable
+        <Table
           columns={columns}
           data={data}
           rowKey={rowKey}
@@ -187,7 +187,7 @@ export function DashCrud<T>({
         Back to {plural}
       </button>
 
-      <DashForm
+      <Form
         title={view === 'create' ? `Create ${resourceName}` : `Edit ${resourceName}`}
         fields={fields}
         values={view === 'edit' ? editValues : undefined}

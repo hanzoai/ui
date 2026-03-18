@@ -7,7 +7,7 @@ import { cn } from '../../utils'
 /*  Types                                                             */
 /* ------------------------------------------------------------------ */
 
-export type DashFieldType =
+export type FieldType =
   | 'text'
   | 'number'
   | 'email'
@@ -19,18 +19,18 @@ export type DashFieldType =
   | 'relation'
   | 'file'
 
-export interface DashFieldOption {
+export interface FieldOption {
   label: string
   value: string
 }
 
-export interface DashFieldDef {
+export interface FieldDef {
   /** Field key (maps to form value key) */
   name: string
   /** Display label */
   label: string
   /** Field type */
-  type: DashFieldType
+  type: FieldType
   /** Placeholder text */
   placeholder?: string
   /** Description shown below field */
@@ -38,7 +38,7 @@ export interface DashFieldDef {
   /** Whether the field is required */
   required?: boolean
   /** Select options (for type=select or type=relation) */
-  options?: DashFieldOption[]
+  options?: FieldOption[]
   /** Default value */
   defaultValue?: unknown
   /** Disabled */
@@ -51,11 +51,11 @@ export interface DashFieldDef {
   validate?: (value: unknown) => string | null
 }
 
-export interface DashFormProps {
+export interface FormProps {
   /** Form title */
   title?: string
   /** Field definitions */
-  fields: DashFieldDef[]
+  fields: FieldDef[]
   /** Initial values */
   values?: Record<string, unknown>
   /** Called on submit with validated values */
@@ -75,7 +75,7 @@ export interface DashFormProps {
 /*  Component                                                         */
 /* ------------------------------------------------------------------ */
 
-export function DashForm({
+export function Form({
   title,
   fields,
   values: initialValues,
@@ -85,7 +85,7 @@ export function DashForm({
   cancelLabel = 'Cancel',
   loading = false,
   className,
-}: DashFormProps) {
+}: FormProps) {
   const [values, setValues] = React.useState<Record<string, unknown>>(() => {
     const init: Record<string, unknown> = {}
     for (const f of fields) {
@@ -204,7 +204,7 @@ function FieldRenderer({
   error,
   onChange,
 }: {
-  field: DashFieldDef
+  field: FieldDef
   value: unknown
   error?: string
   onChange: (value: unknown) => void
