@@ -8,25 +8,25 @@
  */
 
 // Layout
-export { DashLayout } from './dash-layout'
-export type { DashLayoutProps } from './dash-layout'
+export { Layout } from './layout'
+export type { LayoutProps } from './layout'
 
 // Sidebar
-export { DashSidebar } from './dash-sidebar'
-export type { DashSidebarProps, NavItem, NavGroup } from './dash-sidebar'
+export { Sidebar } from './sidebar'
+export type { SidebarProps, NavItem, NavGroup } from './sidebar'
 
 // Header
-export { DashHeader } from './dash-header'
-export type { DashHeaderProps, BreadcrumbItem } from './dash-header'
+export { Header } from './header'
+export type { HeaderProps, BreadcrumbItem } from './header'
 
 // Data Table
-export { DashDataTable } from './dash-data-table'
-export type { DashDataTableProps, DashColumn } from './dash-data-table'
+export { Table } from './table'
+export type { TableProps, Column } from './table'
 
 // Form
-export { DashForm } from './dash-form'
-export type { DashFormProps, DashFieldDef, DashFieldType, DashFieldOption } from './dash-form'
+export { Form } from './form'
+export type { FormProps, FieldDef, FieldType, FieldOption } from './form'
 
 // CRUD
-export { DashCrud } from './dash-crud'
-export type { DashCrudProps } from './dash-crud'
+export { Crud } from './crud'
+export type { CrudProps } from './crud'

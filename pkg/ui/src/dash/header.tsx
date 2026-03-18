@@ -12,7 +12,7 @@ export interface BreadcrumbItem {
   href?: string
 }
 
-export interface DashHeaderProps {
+export interface HeaderProps {
   /** Breadcrumb trail */
   breadcrumbs?: BreadcrumbItem[]
   /** Search input placeholder */
@@ -38,7 +38,7 @@ export interface DashHeaderProps {
 /*  Component                                                         */
 /* ------------------------------------------------------------------ */
 
-export function DashHeader({
+export function Header({
   breadcrumbs,
   searchPlaceholder = 'Search...',
   onSearch,
@@ -49,7 +49,7 @@ export function DashHeader({
   theme = 'dark',
   actions,
   className,
-}: DashHeaderProps) {
+}: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
 

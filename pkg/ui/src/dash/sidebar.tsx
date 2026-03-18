@@ -22,7 +22,7 @@ export interface NavGroup {
   defaultOpen?: boolean
 }
 
-export interface DashSidebarProps {
+export interface SidebarProps {
   /** Logo or brand element rendered at the top */
   logo?: React.ReactNode
   /** Navigation groups */
@@ -63,7 +63,7 @@ function HanzoMark({ size = 28 }: { size?: number }) {
 /*  Component                                                         */
 /* ------------------------------------------------------------------ */
 
-export function DashSidebar({
+export function Sidebar({
   logo,
   groups,
   userMenu,
@@ -71,7 +71,7 @@ export function DashSidebar({
   onToggleCollapse,
   onNavigate,
   className,
-}: DashSidebarProps) {
+}: SidebarProps) {
   return (
     <nav
       className={cn(
