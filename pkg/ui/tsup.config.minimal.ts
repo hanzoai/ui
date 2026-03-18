@@ -182,12 +182,12 @@ export default defineConfig({
 
     // Dash components (shared dashboard UI)
     'dash/index': 'src/dash/index.ts',
-    'dash/dash-layout': 'src/dash/dash-layout.tsx',
-    'dash/dash-sidebar': 'src/dash/dash-sidebar.tsx',
-    'dash/dash-header': 'src/dash/dash-header.tsx',
-    'dash/dash-data-table': 'src/dash/dash-data-table.tsx',
-    'dash/dash-form': 'src/dash/dash-form.tsx',
-    'dash/dash-crud': 'src/dash/dash-crud.tsx',
+    'dash/layout': 'src/dash/layout.tsx',
+    'dash/sidebar': 'src/dash/sidebar.tsx',
+    'dash/header': 'src/dash/header.tsx',
+    'dash/table': 'src/dash/table.tsx',
+    'dash/form': 'src/dash/form.tsx',
+    'dash/crud': 'src/dash/crud.tsx',
 
     // Billing components
     'billing/index': 'src/billing/index.ts',
