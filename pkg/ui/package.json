@@ -278,6 +278,17 @@
       "import": "./dist/drawer.mjs",
       "require": "./dist/drawer.js"
     },
+    "./dash": {
+      "types": "./dist/dash/index.d.ts",
+      "import": "./dist/dash/index.mjs",
+      "require": "./dist/dash/index.js"
+    },
+    "./dash/tokens.css": "./src/dash/tokens.css",
+    "./dash/*": {
+      "types": "./dist/dash/*.d.ts",
+      "import": "./dist/dash/*.mjs",
+      "require": "./dist/dash/*.js"
+    },
     "./billing": {
       "types": "./dist/billing/index.d.ts",
       "import": "./dist/billing/index.mjs",
