@@ -3,10 +3,10 @@
 import * as React from 'react'
 import { cn } from '../../utils'
 
-export interface DashLayoutProps {
-  /** Sidebar element (use DashSidebar) */
+export interface LayoutProps {
+  /** Sidebar element (use Sidebar) */
   sidebar: React.ReactNode
-  /** Top header element (use DashHeader) */
+  /** Top header element (use Header) */
   header?: React.ReactNode
   /** Main content */
   children: React.ReactNode
@@ -17,14 +17,14 @@ export interface DashLayoutProps {
   className?: string
 }
 
-export function DashLayout({
+export function Layout({
   sidebar,
   header,
   children,
   sidebarCollapsed = false,
   onSidebarCollapse,
   className,
-}: DashLayoutProps) {
+}: LayoutProps) {
   return (
     <div
       className={cn(
