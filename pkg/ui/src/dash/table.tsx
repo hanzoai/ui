@@ -7,7 +7,7 @@ import { cn } from '../../utils'
 /*  Types                                                             */
 /* ------------------------------------------------------------------ */
 
-export interface DashColumn<T> {
+export interface Column<T> {
   id: string
   header: string
   /** Render cell content. Falls back to (row as any)[id]. */
@@ -20,9 +20,9 @@ export interface DashColumn<T> {
   align?: 'left' | 'center' | 'right'
 }
 
-export interface DashDataTableProps<T> {
+export interface TableProps<T> {
   /** Column definitions */
-  columns: DashColumn<T>[]
+  columns: Column<T>[]
   /** Row data */
   data: T[]
   /** Unique key extractor per row */
@@ -62,7 +62,7 @@ type SortState = { column: string; direction: 'asc' | 'desc' } | null
 /*  Component                                                         */
 /* ------------------------------------------------------------------ */
 
-export function DashDataTable<T>({
+export function Table<T>({
   columns,
   data,
   rowKey,
@@ -80,7 +80,7 @@ export function DashDataTable<T>({
   loading = false,
   emptyMessage = 'No data',
   className,
-}: DashDataTableProps<T>) {
+}: TableProps<T>) {
   const [search, setSearch] = React.useState('')
   const [sort, setSort] = React.useState<SortState>(null)
 
@@ -150,7 +150,7 @@ export function DashDataTable<T>({
   }
 
   const allColumns = actions
-    ? [...columns, { id: '__actions', header: '', width: 'auto' } as DashColumn<T>]
+    ? [...columns, { id: '__actions', header: '', width: 'auto' } as Column<T>]
     : columns
 
   return (
