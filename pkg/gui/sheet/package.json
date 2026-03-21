@@ -1,0 +1,96 @@
+{
+  "name": "@hanzo/gui-sheet",
+  "version": "2.0.0-rc.29",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "types": "./types/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "setup-gesture-handler": [
+        "./types/setupGestureHandler.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./types/index.d.ts",
+      "react-native": "./dist/esm/index.native.js",
+      "browser": "./dist/esm/index.mjs",
+      "module": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.mjs"
+    },
+    "./controller": {
+      "types": "./types/controller.d.ts",
+      "react-native": "./dist/esm/controller.native.js",
+      "browser": "./dist/esm/controller.mjs",
+      "module": "./dist/esm/controller.mjs",
+      "import": "./dist/esm/controller.mjs",
+      "require": "./dist/cjs/controller.cjs",
+      "default": "./dist/cjs/controller.native.js"
+    },
+    "./setup-gesture-handler": {
+      "types": "./types/setupGestureHandler.d.ts",
+      "react-native": "./dist/esm/setupGestureHandler.native.js",
+      "browser": "./dist/esm/setupGestureHandler.mjs",
+      "module": "./dist/esm/setupGestureHandler.mjs",
+      "import": "./dist/esm/setupGestureHandler.mjs",
+      "require": "./dist/cjs/setupGestureHandler.cjs",
+      "default": "./dist/esm/setupGestureHandler.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "hanzo-gui-build",
+    "watch": "hanzo-gui-build --watch",
+    "clean": "hanzo-gui-build clean"
+  },
+  "dependencies": {
+    "@hanzo/gui-adapt": "workspace:*",
+    "@hanzo/gui-animate-presence": "workspace:*",
+    "@hanzo/gui-animations-react-native": "workspace:*",
+    "@hanzo/gui-compose-refs": "workspace:*",
+    "@hanzo/gui-constants": "workspace:*",
+    "@hanzo/gui-core": "workspace:*",
+    "@hanzo/gui-create-context": "workspace:*",
+    "@hanzo/gui-helpers": "workspace:*",
+    "@hanzo/gui-native": "workspace:*",
+    "@hanzo/gui-portal": "workspace:*",
+    "@hanzo/gui-remove-scroll": "workspace:*",
+    "@hanzo/gui-scroll-view": "workspace:*",
+    "@hanzo/gui-stacks": "workspace:*",
+    "@hanzo/gui-use-constant": "workspace:*",
+    "@hanzo/gui-use-controllable-state": "workspace:*",
+    "@hanzo/gui-use-did-finish-ssr": "workspace:*",
+    "@hanzo/gui-use-keyboard-visible": "workspace:*",
+    "@hanzo/gui-z-index-stack": "workspace:*"
+  },
+  "devDependencies": {
+    "@hanzo/gui-build": "workspace:*",
+    "react": ">=19",
+    "react-native": "0.83.2",
+    "react-native-gesture-handler": "~2.30.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-native": "*",
+    "react-native-gesture-handler": ">=2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-native-gesture-handler": {
+      "optional": true
+    }
+  },
+  "module:jsx": "dist/jsx",
+  "removeSideEffects": true
+}
