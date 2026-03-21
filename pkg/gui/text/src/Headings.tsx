@@ -1,0 +1,117 @@
+import type { GetProps } from '@hanzo/gui-web'
+import { styled } from '@hanzo/gui-web'
+
+import { Paragraph } from './Paragraph'
+
+export const Heading = styled(Paragraph, {
+  render: 'span',
+  name: 'Heading',
+  role: 'heading',
+  fontFamily: '$heading',
+  size: '$8',
+  margin: 0,
+})
+
+export type HeadingProps = GetProps<typeof Heading>
+
+export const H1 = styled(Heading, {
+  name: 'H1',
+  render: 'h1',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$10',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
+
+export const H2 = styled(Heading, {
+  name: 'H2',
+  render: 'h2',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$9',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
+
+export const H3 = styled(Heading, {
+  name: 'H3',
+  render: 'h3',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$8',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
+
+export const H4 = styled(Heading, {
+  name: 'H4',
+  render: 'h4',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$7',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
+
+export const H5 = styled(Heading, {
+  name: 'H5',
+  render: 'h5',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$6',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
+
+export const H6 = styled(Heading, {
+  name: 'H6',
+  render: 'h6',
+
+  variants: {
+    unstyled: {
+      false: {
+        size: '$5',
+      },
+    },
+  } as const,
+
+  defaultVariants: {
+    unstyled: process.env.HANZO_GUI_HEADLESS === '1' ? true : false,
+  },
+})
