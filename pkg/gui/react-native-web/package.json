@@ -1,0 +1,47 @@
+{
+  "name": "@hanzo/gui-react-native-web",
+  "version": "2.0.0-rc.29",
+  "files": [
+    "src",
+    "types",
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "react-native": "./dist/esm/index.native.js",
+      "browser": "./dist/esm/index.mjs",
+      "module": "./dist/esm/index.mjs",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "hanzo-gui-build",
+    "watch": "hanzo-gui-build --watch",
+    "clean": "hanzo-gui-build clean",
+    "clean:build": "hanzo-gui-build clean:build",
+    "check": "bun run check-circular-deps",
+    "check-circular-deps": "npx madge --circular ./src/index.ts"
+  },
+  "dependencies": {
+    "@hanzo/gui-react-native-use-pressable": "workspace:*",
+    "@hanzo/gui-react-native-use-responder-events": "workspace:*",
+    "@hanzo/gui-web": "workspace:*"
+  },
+  "devDependencies": {
+    "@hanzo/gui-build": "workspace:*",
+    "react": ">=19"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  }
+}
