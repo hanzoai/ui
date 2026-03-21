@@ -1,0 +1,150 @@
+import { composeEventHandlers } from '@hanzo/gui-helpers'
+import { useControllableState } from '@hanzo/gui-use-controllable-state'
+import type { GetProps, TamaguiElement, ViewStyle } from '@hanzo/gui-web'
+import { styled, View } from '@hanzo/gui-web'
+import * as React from 'react'
+import { context } from './context'
+
+/* -------------------------------------------------------------------------------------------------
+ * Toggle
+ * -----------------------------------------------------------------------------------------------*/
+
+const NAME = 'Toggle'
+
+export const ToggleFrame = styled(
+  View,
+  {
+    name: NAME,
+    render: 'button',
+    context,
+
+    variants: {
+      unstyled: {
+        false: {
+          size: '$true',
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          backgroundColor: '$background',
+          borderColor: '$borderColor',
+          borderWidth: 1,
+          margin: -1,
+          hoverStyle: {
+            backgroundColor: '$backgroundHover',
+            borderColor: '$borderColorHover',
+          },
+          pressStyle: {
+            backgroundColor: '$backgroundPress',
+            borderColor: '$borderColorPress',
+          },
+          focusVisibleStyle: {
+            outlineColor: '$outlineColor',
+            outlineWidth: 2,
+            outlineStyle: 'solid',
+            zIndex: 10,
+          },
+        },
+      },
+
+      size: {
+        '...size': (val, { tokens }) => {
+          if (!val) return
+          return {
+            width: tokens.size[val],
+            height: tokens.size[val],
+          }
+        },
+        ':number': (val) => ({
+          width: val,
+          height: val,
+        }),
+      },
+
+      defaultActiveStyle: {
+        true: {
+          backgroundColor: '$backgroundActive',
+          hoverStyle: {
+            backgroundColor: '$backgroundActive',
+          },
+          focusStyle: {
+            backgroundColor: '$backgroundActive',
+          },
+        },
+      },
+    } as const,
+
+    defaultVariants: {
+      unstyled: process.env.HANZO_GUI_HEADLESS === '1',
+    },
+  },
+  {
+    accept: {
+      activeStyle: 'style',
+    } as const,
+  }
+)
+
+type ToggleFrameProps = GetProps<typeof ToggleFrame>
+
+type ToggleItemExtraProps = {
+  orientation?: 'horizontal' | 'vertical'
+  defaultValue?: string
+  disabled?: boolean
+  active?: boolean
+  defaultActive?: boolean
+  onActiveChange?(active: boolean): void
+  activeStyle?: ViewStyle | null
+  activeTheme?: string | null
+}
+
+export type ToggleProps = ToggleFrameProps & ToggleItemExtraProps
+
+export const Toggle = React.forwardRef<TamaguiElement, ToggleProps>(
+  function Toggle(props, forwardedRef) {
+    const {
+      active: activeProp,
+      activeStyle,
+      defaultActive = false,
+      onActiveChange,
+      activeTheme,
+      unstyled = false,
+      ...buttonProps
+    } = props
+
+    const [active = false, setActive] = useControllableState({
+      prop: activeProp,
+      onChange: onActiveChange,
+      defaultProp: defaultActive,
+    })
+
+    return (
+      <ToggleFrame
+        theme={activeTheme ?? null}
+        aria-pressed={active}
+        data-state={active ? 'on' : 'off'}
+        data-disabled={props.disabled ? '' : undefined}
+        unstyled={unstyled}
+        {...(active &&
+          !activeStyle &&
+          !unstyled && {
+            defaultActiveStyle: true,
+          })}
+        {...(active &&
+          activeStyle && {
+            ...(activeStyle as any),
+            hoverStyle: activeStyle,
+            focusStyle: activeStyle,
+          })}
+        {...buttonProps}
+        ref={forwardedRef}
+        onPress={composeEventHandlers(props.onPress ?? undefined, () => {
+          if (!props.disabled) {
+            setActive((prev) => !prev)
+          }
+        })}
+      />
+    )
+  }
+)
+
+/* ---------------------------------------------------------------------------------------------- */
