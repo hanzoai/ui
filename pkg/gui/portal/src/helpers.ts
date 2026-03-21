@@ -1,0 +1,17 @@
+import { getTokenValue, type ViewProps } from '@hanzo/gui-web'
+import type { PortalProps } from './PortalProps'
+
+export const getStackedZIndexProps = (propsIn: PortalProps) => {
+  return {
+    stackZIndex: propsIn.stackZIndex,
+    zIndex: resolveViewZIndex(propsIn.zIndex),
+  }
+}
+
+export const resolveViewZIndex = (zIndex: ViewProps['zIndex']) => {
+  return typeof zIndex === 'undefined'
+    ? undefined
+    : typeof zIndex === 'number'
+      ? zIndex
+      : getTokenValue(zIndex as any, 'zIndex')
+}
