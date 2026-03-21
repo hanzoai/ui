@@ -3,6 +3,7 @@ packages:
   - "apps/*"
   - "packages/*"
   - "pkg/*"
+  - "pkg/gui/*"
   - "!**/test/**"
   - "!**/fixtures/**"
   - "!**/temp/**"
