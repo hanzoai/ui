@@ -1,0 +1,17 @@
+import React from 'react';
+export declare const useSheetController: () => {
+    controller: SheetControllerContextValue | null;
+    isHidden: boolean | undefined;
+    isShowingNonSheet: boolean | undefined;
+    disableDrag: boolean | undefined;
+};
+export declare const SheetControllerContext: React.Context<SheetControllerContextValue | null>;
+export type SheetControllerContextValue = {
+    id?: string;
+    disableDrag?: boolean;
+    open?: boolean;
+    hidden?: boolean;
+    onOpenChange?: React.Dispatch<React.SetStateAction<boolean>> | ((val: boolean) => void);
+    skipNextAnimation?: boolean;
+};
+//# sourceMappingURL=useSheetController.d.ts.map

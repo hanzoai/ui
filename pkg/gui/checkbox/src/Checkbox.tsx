@@ -1,0 +1,122 @@
+// fork of radix
+// https://github.com/radix-ui/primitives/tree/main/packages/react/checkbox/src/Checkbox.tsx
+
+import { getVariableValue, styled } from '@hanzo/gui-core'
+import { getSize } from '@hanzo/gui-get-token'
+import { YStack } from '@hanzo/gui-stacks'
+
+import { CheckboxStyledContext } from './CheckboxStyledContext'
+
+/* -------------------------------------------------------------------------------------------------
+ * CheckboxIndicator
+ * -----------------------------------------------------------------------------------------------*/
+const INDICATOR_NAME = 'CheckboxIndicator'
+
+export const CheckboxIndicatorFrame = styled(
+  YStack,
+  {
+    // use Checkbox for easier themes
+    name: INDICATOR_NAME,
+    context: CheckboxStyledContext,
+    variants: {
+      unstyled: {
+        false: {},
+      },
+    } as const,
+    defaultVariants: {
+      unstyled: process.env.HANZO_GUI_HEADLESS === '1',
+    },
+  },
+  {
+    accept: {
+      activeStyle: 'style',
+    } as const,
+  }
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * Checkbox
+ * -----------------------------------------------------------------------------------------------*/
+
+const CHECKBOX_NAME = 'Checkbox'
+
+export const CheckboxFrame = styled(
+  YStack,
+  {
+    name: CHECKBOX_NAME,
+    render: 'button',
+
+    context: CheckboxStyledContext,
+    variants: {
+      unstyled: {
+        false: {
+          size: '$true',
+          backgroundColor: '$background',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: 1,
+          borderColor: '$borderColor',
+
+          hoverStyle: {
+            borderColor: '$borderColorHover',
+          },
+
+          pressStyle: {
+            backgroundColor: '$backgroundPress',
+            borderColor: '$borderColorPress',
+          },
+
+          focusStyle: {
+            borderColor: '$borderColorFocus',
+          },
+
+          focusVisibleStyle: {
+            outlineStyle: 'solid',
+            outlineWidth: 2,
+            outlineColor: '$outlineColor',
+          },
+        },
+      },
+
+      disabled: {
+        true: {
+          pointerEvents: 'none',
+          userSelect: 'none',
+          cursor: 'not-allowed',
+
+          hoverStyle: {
+            borderColor: '$borderColor',
+            backgroundColor: '$background',
+          },
+
+          pressStyle: {
+            borderColor: '$borderColor',
+            backgroundColor: '$background',
+          },
+
+          focusStyle: {
+            outlineWidth: 0,
+          },
+        },
+      },
+
+      size: {
+        '...size': (val) => {
+          const radiusToken = getVariableValue(getSize(val)) / 8
+          return {
+            borderRadius: radiusToken,
+          }
+        },
+      },
+    } as const,
+
+    defaultVariants: {
+      unstyled: process.env.HANZO_GUI_HEADLESS === '1',
+    },
+  },
+  {
+    accept: {
+      activeStyle: 'style',
+    } as const,
+  }
+)
