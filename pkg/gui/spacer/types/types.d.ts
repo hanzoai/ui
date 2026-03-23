@@ -1,4 +1,4 @@
-import type { DebugProp, SpaceTokens, SpaceValue } from '@tamagui/web';
+import type { DebugProp, SpaceTokens, SpaceValue } from '@hanzo/gui-web';
 export type SpaceDirection = 'vertical' | 'horizontal' | 'both';
 export type SpacedChildrenProps = {
     isZStack?: boolean;
