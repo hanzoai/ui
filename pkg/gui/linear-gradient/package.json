@@ -36,12 +36,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-native": "workspace:*",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-native": "2.0.0-rc.29",
     "@hanzo/gui-stacks": "workspace:*"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "expo-linear-gradient": "~55.0.8",
     "react": ">=19",
     "react-native": "0.83.2"

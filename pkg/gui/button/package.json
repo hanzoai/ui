@@ -37,18 +37,18 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-config-default": "workspace:*",
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-get-button-sized": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
+    "@hanzo/gui-config-default": "2.0.0-rc.29",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-get-button-sized": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
     "@hanzo/gui-spacer": "workspace:*",
     "@hanzo/gui-stacks": "workspace:*",
     "@hanzo/gui-text": "workspace:*",
-    "@hanzo/gui-font-size": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-font-size": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19",
     "vitest": "4.0.4"
   },
