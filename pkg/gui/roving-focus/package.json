@@ -38,17 +38,17 @@
   },
   "dependencies": {
     "@hanzo/gui-collection": "workspace:*",
-    "@hanzo/gui-compose-refs": "workspace:*",
-    "@hanzo/gui-constants": "workspace:*",
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-create-context": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*",
-    "@hanzo/gui-use-direction": "workspace:*",
-    "@hanzo/gui-use-event": "workspace:*"
+    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
+    "@hanzo/gui-constants": "2.0.0-rc.29",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-create-context": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
+    "@hanzo/gui-use-direction": "2.0.0",
+    "@hanzo/gui-use-event": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {
