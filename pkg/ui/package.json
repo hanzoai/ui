@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "5.5.0",
+  "version": "5.6.0",
   "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -279,18 +279,18 @@
       "require": "./dist/drawer.js"
     },
     "./dash": {
-      "types": "./dist/dash/index.d.ts",
+      "types": "./dist/src/dash/index.d.ts",
       "import": "./dist/dash/index.mjs",
       "require": "./dist/dash/index.js"
     },
     "./dash/tokens.css": "./src/dash/tokens.css",
     "./dash/*": {
-      "types": "./dist/dash/*.d.ts",
+      "types": "./dist/src/dash/*.d.ts",
       "import": "./dist/dash/*.mjs",
       "require": "./dist/dash/*.js"
     },
     "./billing": {
-      "types": "./dist/billing/index.d.ts",
+      "types": "./dist/src/billing/index.d.ts",
       "import": "./dist/billing/index.mjs",
       "require": "./dist/billing/index.js"
     },
@@ -527,22 +527,22 @@
       "require": "./dist/pattern/*.js"
     },
     "./auth": {
-      "types": "./dist/auth/index.d.ts",
+      "types": "./dist/src/auth/index.d.ts",
       "import": "./dist/auth/index.mjs",
       "require": "./dist/auth/index.js"
     },
     "./auth/*": {
-      "types": "./dist/auth/*.d.ts",
+      "types": "./dist/src/auth/*.d.ts",
       "import": "./dist/auth/*.mjs",
       "require": "./dist/auth/*.js"
     },
     "./navigation": {
-      "types": "./dist/navigation/index.d.ts",
+      "types": "./dist/src/navigation/index.d.ts",
       "import": "./dist/navigation/index.mjs",
       "require": "./dist/navigation/index.js"
     },
     "./navigation/*": {
-      "types": "./dist/navigation/*.d.ts",
+      "types": "./dist/src/navigation/*.d.ts",
       "import": "./dist/navigation/*.mjs",
       "require": "./dist/navigation/*.js"
     },
