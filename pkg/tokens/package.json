@@ -1,0 +1,75 @@
+{
+  "name": "@hanzo/tokens",
+  "version": "1.0.0",
+  "description": "Design tokens for Hanzo UI: colors, spacing, radii, typography, themes",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./colors": {
+      "types": "./dist/colors.d.ts",
+      "import": "./dist/colors.mjs",
+      "require": "./dist/colors.js"
+    },
+    "./spacing": {
+      "types": "./dist/spacing.d.ts",
+      "import": "./dist/spacing.mjs",
+      "require": "./dist/spacing.js"
+    },
+    "./radii": {
+      "types": "./dist/radii.d.ts",
+      "import": "./dist/radii.mjs",
+      "require": "./dist/radii.js"
+    },
+    "./typography": {
+      "types": "./dist/typography.d.ts",
+      "import": "./dist/typography.mjs",
+      "require": "./dist/typography.js"
+    },
+    "./themes": {
+      "types": "./dist/themes.d.ts",
+      "import": "./dist/themes.mjs",
+      "require": "./dist/themes.js"
+    },
+    "./css": "./dist/tokens.css",
+    "./tailwind": {
+      "types": "./dist/tailwind.d.ts",
+      "import": "./dist/tailwind.mjs",
+      "require": "./dist/tailwind.js"
+    },
+    "./tamagui": {
+      "types": "./dist/tamagui.d.ts",
+      "import": "./dist/tamagui.mjs",
+      "require": "./dist/tamagui.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "hanzo",
+    "tokens",
+    "design-tokens",
+    "ui",
+    "design-system"
+  ],
+  "author": "Hanzo AI",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
