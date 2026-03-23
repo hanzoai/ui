@@ -34,12 +34,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-helpers": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*",
-    "@hanzo/gui-use-direction": "workspace:*"
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
+    "@hanzo/gui-use-direction": "2.0.0"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

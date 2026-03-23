@@ -36,21 +36,21 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-constants": "workspace:*",
-    "@hanzo/gui-create-context": "workspace:*",
+    "@hanzo/gui-constants": "2.0.0-rc.29",
+    "@hanzo/gui-create-context": "2.0.0-rc.29",
     "@hanzo/gui-focusable": "workspace:*",
-    "@hanzo/gui-get-token": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
+    "@hanzo/gui-get-token": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
     "@hanzo/gui-roving-focus": "workspace:*",
-    "@hanzo/gui-sizable-context": "workspace:*",
+    "@hanzo/gui-sizable-context": "2.0.0-rc.29",
     "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*",
-    "@hanzo/gui-use-direction": "workspace:*",
-    "@hanzo/gui-font-size": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
+    "@hanzo/gui-use-direction": "2.0.0",
+    "@hanzo/gui-font-size": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {
