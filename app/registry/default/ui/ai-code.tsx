@@ -749,7 +749,7 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
 
         // Setup hover providers for explanations
         monaco.languages.registerHoverProvider(currentLanguage, {
-          provideHover: (model, position) => {
+          provideHover: (model: any, position: any) => {
             const line = position.lineNumber
             const explanation = explanations.find((e) => e.line === line)
 
@@ -768,7 +768,7 @@ const AICode = React.forwardRef<HTMLDivElement, AICodeProps>(
 
         // Setup code actions for suggestions
         monaco.languages.registerCodeActionProvider(currentLanguage, {
-          provideCodeActions: (model, range, context, token) => {
+          provideCodeActions: (model: any, range: any, context: any, token: any) => {
             const actions = suggestions
               .filter(
                 (s) =>
