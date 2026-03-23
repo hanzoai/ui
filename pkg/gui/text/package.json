@@ -37,12 +37,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-get-font-sized": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-get-font-sized": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

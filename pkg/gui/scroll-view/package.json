@@ -37,10 +37,10 @@
   },
   "dependencies": {
     "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },
