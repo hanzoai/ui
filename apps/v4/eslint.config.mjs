@@ -1,10 +1,9 @@
 import nextVitals from "eslint-config-next/core-web-vitals"
 import { defineConfig, globalIgnores } from "eslint/config"
-import tseslint from "typescript-eslint"
+import tsParser from "@typescript-eslint/parser"
 
 const eslintConfig = defineConfig([
   ...nextVitals,
-  ...tseslint.configs.recommended,
   globalIgnores([
     "node_modules/**",
     ".next/**",

@@ -1,5 +1,5 @@
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import tsParser from "@typescript-eslint/parser";
 
 export default [
   {
@@ -12,14 +12,16 @@ export default [
       "dist/**",
       ".turbo/**",
       "node_modules/**",
+      "coverage/**",
+      "*.config.js",
+      "*.config.mjs",
     ],
   },
-  // Use only base configs without rules
+  // JavaScript files
   {
     files: ["**/*.{js,jsx,mjs,cjs}"],
     ...js.configs.recommended,
     rules: {
-      // Turn off all rules
       "no-unused-vars": "off",
       "no-undef": "off",
       "no-empty": "off",
@@ -30,26 +32,13 @@ export default [
       "prefer-const": "off",
     },
   },
-  // TypeScript files
+  // TypeScript files - parser only, all rules off (rely on TypeScript compiler)
   {
     files: ["**/*.{ts,tsx,mts}"],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tsParser,
     },
-    plugins: {
-      "@typescript-eslint": tseslint.plugin,
-    },
-    rules: {
-      // Turn off ALL rules - rely on TypeScript compiler
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-require-imports": "off",
-      "@typescript-eslint/no-this-alias": "off",
-      "@typescript-eslint/no-unsafe-function-type": "off",
-      "@typescript-eslint/no-empty-interface": "off",
-    },
+    rules: {},
   },
   // CommonJS files
   {
