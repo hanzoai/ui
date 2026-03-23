@@ -34,14 +34,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "workspace:*",
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
-    "@hanzo/gui-use-escape-keydown": "workspace:*",
-    "@hanzo/gui-use-event": "workspace:*"
+    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
+    "@hanzo/gui-use-escape-keydown": "2.0.0-rc.29",
+    "@hanzo/gui-use-event": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19",
     "react-dom": "*"
   },
