@@ -189,6 +189,9 @@ export default defineConfig({
     'dash/form': 'src/dash/form.tsx',
     'dash/crud': 'src/dash/crud.tsx',
 
+    // Auth components (IAMLoginButton, AuthGuard)
+    'auth/index': 'src/auth/index.ts',
+
     // Billing components
     'billing/index': 'src/billing/index.ts',
 
