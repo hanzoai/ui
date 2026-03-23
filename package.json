@@ -170,6 +170,6 @@
     ]
   },
   "optionalDependencies": {
-    "react-resizable-panels": "^4.7.4"
+    "react-resizable-panels": "^3.0.6"
   }
 }
