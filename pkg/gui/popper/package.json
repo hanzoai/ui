@@ -36,17 +36,17 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "workspace:*",
-    "@hanzo/gui-constants": "workspace:*",
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-floating": "workspace:*",
-    "@hanzo/gui-get-token": "workspace:*",
+    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
+    "@hanzo/gui-constants": "2.0.0-rc.29",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-floating": "2.0.0-rc.29",
+    "@hanzo/gui-get-token": "2.0.0-rc.29",
     "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-start-transition": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*"
+    "@hanzo/gui-start-transition": "2.0.0-rc.29",
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },

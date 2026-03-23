@@ -33,12 +33,12 @@
     "check-circular-deps": "npx madge --circular ./src/index.ts"
   },
   "dependencies": {
-    "@hanzo/gui-react-native-use-pressable": "workspace:*",
-    "@hanzo/gui-react-native-use-responder-events": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-react-native-use-pressable": "2.0.0-rc.29",
+    "@hanzo/gui-react-native-use-responder-events": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {
