@@ -36,22 +36,22 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "workspace:*",
-    "@hanzo/gui-constants": "workspace:*",
-    "@hanzo/gui-core": "workspace:*",
-    "@hanzo/gui-create-context": "workspace:*",
+    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
+    "@hanzo/gui-constants": "2.0.0-rc.29",
+    "@hanzo/gui-core": "2.0.0-rc.29",
+    "@hanzo/gui-create-context": "2.0.0-rc.29",
     "@hanzo/gui-focusable": "workspace:*",
-    "@hanzo/gui-get-token": "workspace:*",
-    "@hanzo/gui-helpers": "workspace:*",
+    "@hanzo/gui-get-token": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
     "@hanzo/gui-label": "workspace:*",
     "@hanzo/gui-radio-headless": "workspace:*",
     "@hanzo/gui-roving-focus": "workspace:*",
     "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*",
-    "@hanzo/gui-use-previous": "workspace:*"
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
+    "@hanzo/gui-use-previous": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

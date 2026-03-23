@@ -38,12 +38,12 @@
   "dependencies": {
     "@hanzo/gui-create-menu": "workspace:*",
     "@hanzo/gui-popover": "workspace:*",
-    "@hanzo/gui-use-callback-ref": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "workspace:*",
-    "@hanzo/gui-web": "workspace:*"
+    "@hanzo/gui-use-callback-ref": "2.0.0",
+    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "workspace:*",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {
