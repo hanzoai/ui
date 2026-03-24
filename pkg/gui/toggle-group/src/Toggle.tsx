@@ -1,7 +1,7 @@
-import { composeEventHandlers } from '@hanzo/gui-helpers'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import type { GetProps, TamaguiElement, ViewStyle } from '@hanzo/gui-web'
-import { styled, View } from '@hanzo/gui-web'
+import { composeEventHandlers } from '@hanzogui/helpers'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import type { GetProps, GuiElement, ViewStyle } from '@hanzogui/web'
+import { styled, View } from '@hanzogui/web'
 import * as React from 'react'
 import { context } from './context'
 
@@ -99,7 +99,7 @@ type ToggleItemExtraProps = {
 
 export type ToggleProps = ToggleFrameProps & ToggleItemExtraProps
 
-export const Toggle = React.forwardRef<TamaguiElement, ToggleProps>(
+export const Toggle = React.forwardRef<GuiElement, ToggleProps>(
   function Toggle(props, forwardedRef) {
     const {
       active: activeProp,

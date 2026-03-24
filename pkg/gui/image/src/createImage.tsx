@@ -1,4 +1,4 @@
-import { getTokenValue, styled } from '@hanzo/gui-web'
+import { getTokenValue, styled } from '@hanzogui/web'
 import type { ComponentType } from 'react'
 import type { ImageResizeMode } from 'react-native'
 import type { ImageProps, ImageType } from './types'
@@ -77,7 +77,7 @@ const defaultTransformSource = (props: {
  * @example
  * Using with expo-image
  * import { Image as ExpoImage } from 'expo-image'
- * import { createImage } from '@hanzo/gui-image'
+ * import { createImage } from '@hanzogui/image'
  *
  * export const Image = createImage({
  *   Component: ExpoImage,
@@ -86,7 +86,7 @@ const defaultTransformSource = (props: {
  * })
  *
  * Now you get all expo-image props (transition, placeholder, etc.)
- * plus Tamagui's unified API (src, objectFit, objectPosition)
+ * plus Gui's unified API (src, objectFit, objectPosition)
  * <Image
  *   src="https://example.com/photo.jpg"
  *   objectFit="cover"
@@ -105,7 +105,7 @@ export function createImage<C extends ComponentType<any>>(
     transformSource = defaultTransformSource,
   } = options
 
-  // Props that should pass directly to the underlying component without Tamagui processing
+  // Props that should pass directly to the underlying component without Gui processing
   const inlinePropsSet = new Set([
     'source',
     'placeholder',
@@ -135,7 +135,7 @@ export function createImage<C extends ComponentType<any>>(
     }
   )
 
-  // Combined props: ImageProps (Tamagui) + Component's native props
+  // Combined props: ImageProps (Gui) + Component's native props
   type CombinedProps = ImageProps & Omit<GetProps<C>, keyof ImageProps>
 
   const ImageComponent = StyledImage.styleable<CombinedProps>((incomingProps, ref) => {

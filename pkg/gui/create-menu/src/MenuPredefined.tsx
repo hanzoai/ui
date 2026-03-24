@@ -1,6 +1,6 @@
-import { Image } from '@hanzo/gui-image'
-import { SizableText } from '@hanzo/gui-text'
-import { styled, View } from '@hanzo/gui-web'
+import { Image } from '@hanzogui/image'
+import { SizableText } from '@hanzogui/text'
+import { styled, View } from '@hanzogui/web'
 
 /* -------------------------------------------------------------------------------------------------
  * MenuGroup

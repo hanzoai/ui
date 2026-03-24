@@ -1,6 +1,6 @@
-import { YStack } from '@hanzo/gui-stacks'
-import type { GetProps, SizeTokens } from '@hanzo/gui-web'
-import { createStyledContext, styled, withStaticProperties } from '@hanzo/gui-web'
+import { YStack } from '@hanzogui/stacks'
+import type { GetProps, SizeTokens } from '@hanzogui/web'
+import { createStyledContext, styled, withStaticProperties } from '@hanzogui/web'
 
 const CardContext = createStyledContext({
   size: '$true' as SizeTokens,

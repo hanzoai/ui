@@ -1,18 +1,18 @@
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
 import type {
   GetProps,
   ViewProps,
-  TamaguiComponent,
-  TamaguiComponentExpectingVariants,
-  TamaguiElement,
-} from '@hanzo/gui-core'
-import { View } from '@hanzo/gui-core'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import { resolveViewZIndex } from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { useDidFinishSSR } from '@hanzo/gui-use-did-finish-ssr'
-import { StackZIndexContext } from '@hanzo/gui-z-index-stack'
+  GuiComponent,
+  GuiComponentExpectingVariants,
+  GuiElement,
+} from '@hanzogui/core'
+import { View } from '@hanzogui/core'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import { resolveViewZIndex } from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { useDidFinishSSR } from '@hanzogui/use-did-finish-ssr'
+import { StackZIndexContext } from '@hanzogui/z-index-stack'
 import type { ForwardRefExoticComponent, FunctionComponent, RefAttributes } from 'react'
 import { forwardRef, memo, useMemo, useEffect, useRef } from 'react'
 import type { View as RNView } from 'react-native'
@@ -32,12 +32,12 @@ type SharedSheetProps = {
 
 type BaseProps = ViewProps & SharedSheetProps
 
-type SheetStyledComponent = TamaguiComponentExpectingVariants<BaseProps, SharedSheetProps>
+type SheetStyledComponent = GuiComponentExpectingVariants<BaseProps, SharedSheetProps>
 
 export function createSheet<
-  H extends TamaguiComponent | SheetStyledComponent,
-  F extends TamaguiComponent | SheetStyledComponent,
-  O extends TamaguiComponent | SheetStyledComponent,
+  H extends GuiComponent | SheetStyledComponent,
+  F extends GuiComponent | SheetStyledComponent,
+  O extends GuiComponent | SheetStyledComponent,
 >({ Handle, Frame, Overlay }: { Handle: H; Frame: F; Overlay: O }) {
   const SheetHandle = Handle.styleable<any>(
     (
@@ -45,7 +45,7 @@ export function createSheet<
       forwardedRef
     ) => {
       const context = useSheetContext(SHEET_HANDLE_NAME, __scopeSheet)
-      const composedRef = useComposedRefs<TamaguiElement>(context.handleRef, forwardedRef)
+      const composedRef = useComposedRefs<GuiElement>(context.handleRef, forwardedRef)
 
       // track if sheet was being dragged to prevent onPress toggle after drag
       const wasDraggingRef = useRef(false)

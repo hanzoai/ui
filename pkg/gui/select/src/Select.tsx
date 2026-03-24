@@ -1,23 +1,23 @@
-import { Adapt, AdaptParent, useAdaptIsActive } from '@hanzo/gui-adapt'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { FontSizeTokens, GetProps, SizeTokens, TamaguiElement } from '@hanzo/gui-core'
+import { Adapt, AdaptParent, useAdaptIsActive } from '@hanzogui/adapt'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { FontSizeTokens, GetProps, SizeTokens, GuiElement } from '@hanzogui/core'
 import {
   createStyledContext,
   getVariableValue,
   styled,
   useEvent,
   useGet,
-} from '@hanzo/gui-core'
-import { FocusScopeController } from '@hanzo/gui-focus-scope'
-import { registerFocusable } from '@hanzo/gui-focusable'
-import { getSpace } from '@hanzo/gui-get-token'
-import { withStaticProperties } from '@hanzo/gui-helpers'
-import { Separator } from '@hanzo/gui-separator'
-import { SheetController } from '@hanzo/gui-sheet/controller'
-import { XStack, YStack } from '@hanzo/gui-stacks'
-import { Paragraph, SizableText } from '@hanzo/gui-text'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/core'
+import { FocusScopeController } from '@hanzogui/focus-scope'
+import { registerFocusable } from '@hanzogui/focusable'
+import { getSpace } from '@hanzogui/get-token'
+import { withStaticProperties } from '@hanzogui/helpers'
+import { Separator } from '@hanzogui/separator'
+import { SheetController } from '@hanzogui/sheet/controller'
+import { XStack, YStack } from '@hanzogui/stacks'
+import { Paragraph, SizableText } from '@hanzogui/text'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import {
   SelectItemParentProvider,
@@ -131,7 +131,7 @@ type SelectItemIndicatorProps = SelectScopedProps<
   GetProps<typeof SelectItemIndicatorFrame>
 >
 
-const SelectItemIndicator = React.forwardRef<TamaguiElement, SelectItemIndicatorProps>(
+const SelectItemIndicator = React.forwardRef<GuiElement, SelectItemIndicatorProps>(
   function SelectItemIndicator(props, forwardedRef) {
     const { scope, ...itemIndicatorProps } = props
     const context = useSelectItemParentContext(scope)
@@ -288,7 +288,7 @@ const NativeSelectFrame = styled(YStack, {
 
 type SelectGroupProps = SelectScopedProps<GetProps<typeof SelectGroupFrame>>
 
-const SelectGroup = React.forwardRef<TamaguiElement, SelectGroupProps>(
+const SelectGroup = React.forwardRef<GuiElement, SelectGroupProps>(
   (props, forwardedRef) => {
     const { scope, ...groupProps } = props
     const groupId = React.useId()

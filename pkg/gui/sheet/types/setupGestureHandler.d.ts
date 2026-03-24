@@ -1,5 +1,5 @@
 /**
- * Legacy setup - prefer `import '@tamagui/native/setup-gesture-handler'` instead.
+ * Legacy setup - prefer `import '@gui/native/setup-gesture-handler'` instead.
  */
 export declare function isGestureHandlerEnabled(): boolean;
 export interface SetupGestureHandlerConfig {

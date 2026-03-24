@@ -1,5 +1,5 @@
-import type { GestureReponderEvent, SizeTokens, TamaguiElement } from '@tamagui/core';
-import type { SizableStackProps } from '@tamagui/stacks';
+import type { GestureReponderEvent, SizeTokens, GuiElement } from '@gui/core';
+import type { SizableStackProps } from '@gui/stacks';
 export type ScopedProps<P> = P & {
     __scopeSlider?: string;
 };
@@ -64,7 +64,7 @@ export type SliderContextValue = {
     max: number;
     values: number[];
     valueIndexToChangeRef: React.MutableRefObject<number>;
-    thumbs: Map<TamaguiElement, number>;
+    thumbs: Map<GuiElement, number>;
     orientation: SliderProps['orientation'];
 };
 export {};

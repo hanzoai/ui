@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-z-index-stack",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/z-index-stack",
+  "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,7 +36,7 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

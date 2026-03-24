@@ -1,4 +1,4 @@
-import type { ListItemProps } from '@tamagui/list-item';
+import type { ListItemProps } from '@gui/list-item';
 import * as React from 'react';
 type SelectItemContextValue = {
     value: string;
@@ -17,18 +17,18 @@ export interface SelectItemExtraProps {
 }
 export interface SelectItemProps extends Omit<ListItemProps, keyof SelectItemExtraProps>, SelectItemExtraProps {
 }
-export declare const SelectItem: import("@tamagui/core").TamaguiComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").StackNonStyleProps, import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+export declare const SelectItem: import("@gui/core").GuiComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").StackNonStyleProps, import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}>, keyof SelectItemExtraProps> & SelectItemExtraProps, import("@tamagui/core").TamaguiElement, import("@tamagui/core").StackNonStyleProps & SelectItemExtraProps, import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+}>, keyof SelectItemExtraProps> & SelectItemExtraProps, import("@gui/core").GuiElement, import("@gui/core").StackNonStyleProps & SelectItemExtraProps, import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 export {};
 //# sourceMappingURL=SelectItem.d.ts.map

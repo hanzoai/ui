@@ -1,4 +1,4 @@
-import type { NativePlatform, NativeValue } from '@tamagui/core';
+import type { NativePlatform, NativeValue } from '@gui/core';
 import React from 'react';
 import type { CreateNativeToastOptions, NativeToastRef } from './types';
 export interface ToastImperativeOptions extends Omit<CreateNativeToastOptions, 'message'> {
@@ -12,7 +12,7 @@ export interface ToastImperativeOptions extends Omit<CreateNativeToastOptions, '
  *
  * e.g.
  * ```ts
- * declare module '@tamagui/toast' {
+ * declare module '@gui/toast' {
  *   interface CustomData {
  *     preset: 'error' | 'success'
  *     isUrgent: true

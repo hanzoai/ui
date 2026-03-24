@@ -1,8 +1,8 @@
-import type { TextContextStyles, TextParentStyles } from '@tamagui/text';
-import type { FontSizeTokens, GetProps, SizeTokens, ThemeableProps } from '@tamagui/web';
+import type { TextContextStyles, TextParentStyles } from '@gui/text';
+import type { FontSizeTokens, GetProps, SizeTokens, ThemeableProps } from '@gui/web';
 import type { FunctionComponent, JSX } from 'react';
 type ButtonVariant = 'outlined';
-export declare const ButtonContext: import("@tamagui/web").StyledContext<Partial<TextContextStyles & {
+export declare const ButtonContext: import("@gui/web").StyledContext<Partial<TextContextStyles & {
     size: SizeTokens;
     variant?: ButtonVariant;
 }>>;
@@ -40,7 +40,7 @@ type ButtonExtraProps = TextParentStyles & ThemeableProps & {
     unstyled?: boolean;
 };
 type ButtonProps = ButtonExtraProps & GetProps<typeof ButtonFrame>;
-declare const ButtonFrame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+declare const ButtonFrame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -52,20 +52,20 @@ declare const ButtonFrame: import("@tamagui/web").TamaguiComponent<import("@tama
     fullscreen?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-declare const ButtonText: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+}, import("@gui/web").StaticConfigPublic>;
+declare const ButtonText: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
     size?: FontSizeTokens | undefined;
     unstyled?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
+}, import("@gui/web").StaticConfigPublic>;
 declare const ButtonIcon: (props: {
     children: React.ReactNode;
     scaleIcon?: number;
 }) => any;
 /**
  * @summary A Button is a clickable element that can be used to trigger actions such as submitting forms, navigating to other pages, or performing other actions.
- * @see — Docs https://tamagui.dev/ui/button
+ * @see — Docs https://gui.dev/ui/button
  */
-declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -78,7 +78,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
 }>, "unstyled" | "icon" | "iconAfter" | "scaleIcon" | keyof TextContextStyles | "textProps" | "noTextWrap" | keyof ThemeableProps | "spaceFlex" | "scaleSpace"> & TextContextStyles & {
-    textProps?: Partial<import("@tamagui/text").SizableTextProps>;
+    textProps?: Partial<import("@gui/text").SizableTextProps>;
     noTextWrap?: boolean;
 } & ThemeableProps & {
     /**
@@ -107,7 +107,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
      * remove default styles
      */
     unstyled?: boolean;
-} & import("react").RefAttributes<import("@tamagui/web").TamaguiElement>> & import("@tamagui/web").StaticComponentObject<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+} & import("react").RefAttributes<import("@gui/web").GuiElement>> & import("@gui/web").StaticComponentObject<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -120,7 +120,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
 }>, "unstyled" | "icon" | "iconAfter" | "scaleIcon" | keyof TextContextStyles | "textProps" | "noTextWrap" | keyof ThemeableProps | "spaceFlex" | "scaleSpace"> & TextContextStyles & {
-    textProps?: Partial<import("@tamagui/text").SizableTextProps>;
+    textProps?: Partial<import("@gui/text").SizableTextProps>;
     noTextWrap?: boolean;
 } & ThemeableProps & {
     /**
@@ -149,8 +149,8 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
      * remove default styles
      */
     unstyled?: boolean;
-}, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & TextContextStyles & {
-    textProps?: Partial<import("@tamagui/text").SizableTextProps>;
+}, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & TextContextStyles & {
+    textProps?: Partial<import("@gui/text").SizableTextProps>;
     noTextWrap?: boolean;
 } & ThemeableProps & {
     /**
@@ -179,7 +179,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
      * remove default styles
      */
     unstyled?: boolean;
-}, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -191,8 +191,8 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
     fullscreen?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic> & Omit<import("@tamagui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic> & Omit<import("@gui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: number | SizeTokens | undefined;
         variant?: "outlined" | undefined;
         elevation?: number | SizeTokens | undefined;
@@ -205,7 +205,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
     }>, "unstyled" | "icon" | "iconAfter" | "scaleIcon" | keyof TextContextStyles | "textProps" | "noTextWrap" | keyof ThemeableProps | "spaceFlex" | "scaleSpace"> & TextContextStyles & {
-        textProps?: Partial<import("@tamagui/text").SizableTextProps>;
+        textProps?: Partial<import("@gui/text").SizableTextProps>;
         noTextWrap?: boolean;
     } & ThemeableProps & {
         /**
@@ -234,8 +234,8 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
          * remove default styles
          */
         unstyled?: boolean;
-    }, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & TextContextStyles & {
-        textProps?: Partial<import("@tamagui/text").SizableTextProps>;
+    }, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & TextContextStyles & {
+        textProps?: Partial<import("@gui/text").SizableTextProps>;
         noTextWrap?: boolean;
     } & ThemeableProps & {
         /**
@@ -264,7 +264,7 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
          * remove default styles
          */
         unstyled?: boolean;
-    }, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StackStyleBase, {
         size?: number | SizeTokens | undefined;
         variant?: "outlined" | undefined;
         elevation?: number | SizeTokens | undefined;
@@ -276,24 +276,24 @@ declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@ta
         fullscreen?: boolean | undefined;
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic];
+    }, import("@gui/web").StaticConfigPublic];
 } & {
-    Text: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    Text: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         size?: FontSizeTokens | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
     Icon: (props: {
         children: React.ReactNode;
         scaleIcon?: number;
     }) => any;
 };
 /**
- * @deprecated Instead of useButton, see the Button docs for the newer and much improved Advanced customization pattern: https://tamagui.dev/docs/components/button
+ * @deprecated Instead of useButton, see the Button docs for the newer and much improved Advanced customization pattern: https://gui.dev/docs/components/button
  */
 declare function useButton<Props extends ButtonProps>({ textProps, ...propsIn }: Props, { Text }?: {
     Text: any;
 }): {
-    spaceSize: number | import("@tamagui/web").UnionableString | "unset" | import("@tamagui/web").Variable<any>;
+    spaceSize: number | import("@gui/web").UnionableString | "unset" | import("@gui/web").Variable<any>;
     isNested: boolean;
     props: Props;
 };

@@ -1,4 +1,4 @@
-import type { SizeTokens } from '@tamagui/core';
+import type { SizeTokens } from '@gui/core';
 import type { TabsProps } from './createTabs';
 export type TabsContextValue = {
     baseId: string;

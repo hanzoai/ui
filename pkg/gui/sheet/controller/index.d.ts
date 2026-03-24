@@ -1,4 +1,4 @@
-// Type declarations for @hanzo/gui-sheet/controller path resolution
+// Type declarations for @hanzogui/sheet/controller path resolution
 // Runtime uses exports field -> dist/esm/controller.mjs
 
 export { SheetController } from '../src/SheetController'
