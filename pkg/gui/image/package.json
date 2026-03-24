@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-image",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/image",
+  "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,12 +36,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-constants": "2.0.0-rc.29",
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-web": "2.0.0-rc.29"
+    "@hanzogui/constants": "2.0.0-rc.29",
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },

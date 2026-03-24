@@ -1,16 +1,16 @@
-import type { GetProps } from '@tamagui/core';
-import type { Scope } from '@tamagui/create-context';
+import type { GetProps } from '@gui/core';
+import type { Scope } from '@gui/create-context';
 import React from 'react';
 type ScopedProps<P> = P & {
     __scopeGroup?: Scope;
 };
-declare const createGroupScope: import("@tamagui/create-context").CreateScope;
-export declare const GroupFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+declare const createGroupScope: import("@gui/create-context").CreateScope;
+export declare const GroupFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 export type GroupExtraProps = {
     orientation?: 'horizontal' | 'vertical';
     disabled?: boolean;
@@ -33,123 +33,123 @@ export declare const useGroupItem: (childrenProps: {
     borderTopRightRadius?: number | undefined;
     disabled: boolean | undefined;
 };
-export declare const Group: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const Group: React.ForwardRefExoticComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-} & React.RefAttributes<import("@tamagui/core").TamaguiElement>> & import("@tamagui/core").StaticComponentObject<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+} & React.RefAttributes<import("@gui/core").GuiElement>> & import("@gui/core").StaticComponentObject<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+}, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
-}, import("@tamagui/core").StaticConfigPublic> & Omit<import("@tamagui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StaticConfigPublic> & Omit<import("@gui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
     }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+    }, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").StackStyleBase, {
+    }, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    }, import("@tamagui/core").StaticConfigPublic];
+    }, import("@gui/core").StaticConfigPublic];
 } & {
     Item: typeof GroupItem;
 };
-export declare const YGroup: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const YGroup: React.ForwardRefExoticComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-} & React.RefAttributes<import("@tamagui/core").TamaguiElement>> & import("@tamagui/core").StaticComponentObject<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+} & React.RefAttributes<import("@gui/core").GuiElement>> & import("@gui/core").StaticComponentObject<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+}, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
-}, import("@tamagui/core").StaticConfigPublic> & Omit<import("@tamagui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StaticConfigPublic> & Omit<import("@gui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
     }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+    }, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").StackStyleBase, {
+    }, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    }, import("@tamagui/core").StaticConfigPublic];
+    }, import("@gui/core").StaticConfigPublic];
 } & {
     Item: typeof GroupItem;
 };
-export declare const XGroup: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const XGroup: React.ForwardRefExoticComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-} & React.RefAttributes<import("@tamagui/core").TamaguiElement>> & import("@tamagui/core").StaticComponentObject<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+} & React.RefAttributes<import("@gui/core").GuiElement>> & import("@gui/core").StaticComponentObject<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
 }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+}, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
     __scopeGroup?: Scope;
-}, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
     size?: any;
-}, import("@tamagui/core").StaticConfigPublic> & Omit<import("@tamagui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StaticConfigPublic> & Omit<import("@gui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
     }>, keyof GroupExtraProps | "__scopeGroup"> & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & GroupExtraProps & {
+    }, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & GroupExtraProps & {
         __scopeGroup?: Scope;
-    }, import("@tamagui/core").StackStyleBase, {
+    }, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    }, import("@tamagui/core").StaticConfigPublic];
+    }, import("@gui/core").StaticConfigPublic];
 } & {
     Item: typeof GroupItem;
 };

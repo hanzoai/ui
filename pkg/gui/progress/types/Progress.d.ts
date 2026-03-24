@@ -1,69 +1,69 @@
-import type { GetProps } from '@tamagui/core';
-declare const createProgressScope: import("@tamagui/create-context").CreateScope;
-export declare const ProgressIndicatorFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+import type { GetProps } from '@gui/core';
+declare const createProgressScope: import("@gui/create-context").CreateScope;
+export declare const ProgressIndicatorFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 export type ProgressIndicatorProps = GetProps<typeof ProgressIndicatorFrame>;
-declare const ProgressIndicator: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+declare const ProgressIndicator: import("@gui/core").GuiComponent<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}>, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & void, import("@tamagui/core").StackStyleBase, {
+}>, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & void, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
-export declare const ProgressFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StaticConfigPublic>;
+export declare const ProgressFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-    size?: import("@tamagui/core").SizeTokens | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+    size?: import("@gui/core").SizeTokens | undefined;
+}, import("@gui/core").StaticConfigPublic>;
 export interface ProgressExtraProps {
     value?: number | null | undefined;
     max?: number;
     getValueLabel?(value: number, max: number): string;
 }
 export type ProgressProps = GetProps<typeof ProgressFrame> & ProgressExtraProps;
-declare const Progress: import("react").ForwardRefExoticComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+declare const Progress: import("react").ForwardRefExoticComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-    size?: import("@tamagui/core").SizeTokens | undefined;
-}>, keyof ProgressExtraProps> & ProgressExtraProps & import("react").RefAttributes<import("@tamagui/core").TamaguiElement>> & import("@tamagui/core").StaticComponentObject<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
+}>, keyof ProgressExtraProps> & ProgressExtraProps & import("react").RefAttributes<import("@gui/core").GuiElement>> & import("@gui/core").StaticComponentObject<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-    size?: import("@tamagui/core").SizeTokens | undefined;
-}>, keyof ProgressExtraProps> & ProgressExtraProps, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & ProgressExtraProps, import("@tamagui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
+}>, keyof ProgressExtraProps> & ProgressExtraProps, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & ProgressExtraProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-    size?: import("@tamagui/core").SizeTokens | undefined;
-}, import("@tamagui/core").StaticConfigPublic> & Omit<import("@tamagui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
+}, import("@gui/core").StaticConfigPublic> & Omit<import("@gui/core").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-        size?: import("@tamagui/core").SizeTokens | undefined;
-    }>, keyof ProgressExtraProps> & ProgressExtraProps, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & ProgressExtraProps, import("@tamagui/core").StackStyleBase, {
+        size?: import("@gui/core").SizeTokens | undefined;
+    }>, keyof ProgressExtraProps> & ProgressExtraProps, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & ProgressExtraProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-        size?: import("@tamagui/core").SizeTokens | undefined;
-    }, import("@tamagui/core").StaticConfigPublic];
+        size?: import("@gui/core").SizeTokens | undefined;
+    }, import("@gui/core").StaticConfigPublic];
 } & {
-    Indicator: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+    Indicator: import("@gui/core").GuiComponent<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }>, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & void, import("@tamagui/core").StackStyleBase, {
+    }>, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & void, import("@gui/core").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+        elevation?: number | import("@gui/core").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/core").StaticConfigPublic>;
+    }, import("@gui/core").StaticConfigPublic>;
 };
 export { createProgressScope, Progress, ProgressIndicator };
 //# sourceMappingURL=Progress.d.ts.map

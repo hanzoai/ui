@@ -1,4 +1,4 @@
-import type { TamaguiElement } from '@tamagui/core';
+import type { GuiElement } from '@gui/core';
 import * as React from 'react';
 import type { SwipeDirection } from './ToastProvider';
 import type { ExternalToast } from './ToastState';
@@ -116,5 +116,5 @@ export interface ToasterProps {
      */
     style?: React.CSSProperties;
 }
-export declare const Toaster: React.ForwardRefExoticComponent<ToasterProps & React.RefAttributes<TamaguiElement>>;
+export declare const Toaster: React.ForwardRefExoticComponent<ToasterProps & React.RefAttributes<GuiElement>>;
 //# sourceMappingURL=Toaster.d.ts.map

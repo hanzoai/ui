@@ -1,8 +1,8 @@
 import React from 'react';
-import type { GetProps, RadiusTokens, SizeTokens, ViewProps, ThemeValueFallback } from '@tamagui/web';
+import type { GetProps, RadiusTokens, SizeTokens, ViewProps, ThemeValueFallback } from '@gui/web';
 import type { FC } from 'react';
 import { Image as RNImage } from 'react-native';
-declare const StyledImage: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, RNImage, import("@tamagui/web").TamaguiComponentPropsBaseBase & import("react-native").ImageProps, import("@tamagui/web").StackStyleBase, {}, import("@tamagui/web").StaticConfigPublic>;
+declare const StyledImage: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, RNImage, import("@gui/web").GuiComponentPropsBaseBase & import("react-native").ImageProps, import("@gui/web").StackStyleBase, {}, import("@gui/web").StaticConfigPublic>;
 type StyledImageProps = Omit<GetProps<typeof StyledImage>, 'borderRadius'> & {
     borderRadius?: RadiusTokens;
 };
@@ -29,7 +29,7 @@ type ImageType = FC<ImageProps> & {
 };
 /**
  * @summary An image is a component that displays an image.
- * @see — Docs https://tamagui.dev/ui/image
+ * @see — Docs https://gui.dev/ui/image
  */
 export declare const Image: ImageType;
 export {};

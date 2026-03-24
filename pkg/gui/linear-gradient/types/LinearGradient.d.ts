@@ -1,4 +1,4 @@
-import type { ColorTokens, GetProps, ThemeTokens } from '@tamagui/core';
+import type { ColorTokens, GetProps, ThemeTokens } from '@gui/core';
 import type { LinearGradientPoint } from './linear-gradient';
 export type LinearGradientExtraProps = {
     colors?: (ColorTokens | ThemeTokens | (string & {}))[];
@@ -6,12 +6,12 @@ export type LinearGradientExtraProps = {
     start?: LinearGradientPoint | null;
     end?: LinearGradientPoint | null;
 };
-export declare const LinearGradient: import("@tamagui/core").TamaguiComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+export declare const LinearGradient: import("@gui/core").GuiComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}>, keyof LinearGradientExtraProps> & LinearGradientExtraProps, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & LinearGradientExtraProps, import("@tamagui/core").StackStyleBase, {
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+}>, keyof LinearGradientExtraProps> & LinearGradientExtraProps, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & LinearGradientExtraProps, import("@gui/core").StackStyleBase, {
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 export type LinearGradientProps = GetProps<typeof LinearGradient>;
 //# sourceMappingURL=LinearGradient.d.ts.map

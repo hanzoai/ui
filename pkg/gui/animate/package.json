@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-animate",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/animate",
+  "version": "2.0.0",
   "license": "MIT",
   "source": "src/index.ts",
   "files": [
@@ -37,10 +37,10 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-animate-presence": "workspace:*"
+    "@hanzogui/animate-presence": "2.0.0"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

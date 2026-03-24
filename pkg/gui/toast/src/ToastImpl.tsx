@@ -1,7 +1,7 @@
-import { useIsPresent } from '@hanzo/gui-animate-presence'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb } from '@hanzo/gui-constants'
-import type { GetProps, TamaguiElement } from '@hanzo/gui-core'
+import { useIsPresent } from '@hanzogui/animate-presence'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb } from '@hanzogui/constants'
+import type { GetProps, GuiElement } from '@hanzogui/core'
 import {
   View,
   Theme,
@@ -10,12 +10,12 @@ import {
   useConfiguration,
   useEvent,
   useThemeName,
-} from '@hanzo/gui-core'
-import type { DismissableProps } from '@hanzo/gui-dismissable'
-import { Dismissable } from '@hanzo/gui-dismissable'
-import { composeEventHandlers } from '@hanzo/gui-helpers'
-import { PortalItem } from '@hanzo/gui-portal'
-import { YStack } from '@hanzo/gui-stacks'
+} from '@hanzogui/core'
+import type { DismissableProps } from '@hanzogui/dismissable'
+import { Dismissable } from '@hanzogui/dismissable'
+import { composeEventHandlers } from '@hanzogui/helpers'
+import { PortalItem } from '@hanzogui/portal'
+import { YStack } from '@hanzogui/stacks'
 import * as React from 'react'
 import type {
   Animated,
@@ -152,7 +152,7 @@ type ToastImplProps = ScopedProps<
   ToastImplPrivateProps & ToastImplFrameProps & ToastExtraProps
 >
 
-const ToastImpl = React.forwardRef<TamaguiElement, ToastImplProps>(
+const ToastImpl = React.forwardRef<GuiElement, ToastImplProps>(
   (props, forwardedRef) => {
     const {
       scope,
@@ -172,7 +172,7 @@ const ToastImpl = React.forwardRef<TamaguiElement, ToastImplProps>(
     } = props
     const isPresent = useIsPresent()
     const context = useToastProviderContext(scope)
-    const [node, setNode] = React.useState<TamaguiElement | null>(null)
+    const [node, setNode] = React.useState<GuiElement | null>(null)
     const composedRefs = useComposedRefs(forwardedRef, setNode)
     const duration = durationProp || context.duration
     const closeTimerStartTimeRef = React.useRef(0)
@@ -261,7 +261,7 @@ const ToastImpl = React.forwardRef<TamaguiElement, ToastImplProps>(
 
     const { animationDriver } = useConfiguration()
     if (!animationDriver) {
-      throw new Error('Must set animations in tamagui.config.ts')
+      throw new Error('Must set animations in gui.config.ts')
     }
 
     const { useAnimatedNumber, useAnimatedNumberStyle } = animationDriver

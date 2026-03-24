@@ -1,4 +1,4 @@
-import { getBurnt } from '@hanzo/gui-native'
+import { getBurnt } from '@hanzogui/native'
 import type { CreateNativeToastsFn, HideNativeToastsFn } from './types'
 
 export const createNativeToast: CreateNativeToastsFn = (
@@ -8,7 +8,7 @@ export const createNativeToast: CreateNativeToastsFn = (
   const burnt = getBurnt()
   if (!burnt.isEnabled) {
     console.warn(
-      `Warning: Must call import '@hanzo/gui-native/setup-burnt' at your app entry point to use native toasts`
+      `Warning: Must call import '@hanzogui/native/setup-burnt' at your app entry point to use native toasts`
     )
     return false
   }
