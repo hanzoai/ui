@@ -22,7 +22,7 @@ export declare function useSwitch<R extends View, P extends SwitchProps>(props: 
 } | {
     switchProps: {
         'aria-labelledby': string | undefined;
-        onPress: import("@tamagui/helpers").EventHandler<GestureResponderEvent> | undefined;
+        onPress: import("@gui/helpers").EventHandler<GestureResponderEvent> | undefined;
         tabIndex?: 0 | undefined;
         'data-state'?: string | undefined;
         'data-disabled'?: string | undefined;

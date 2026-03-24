@@ -100,9 +100,9 @@ export declare function useTab(props: UseTabProps): {
     tabProps: {
         disabled: boolean | undefined;
         tabIndex: number;
-        onKeyDown: import("@tamagui/helpers").EventHandler<React.KeyboardEvent<Element>> | undefined;
-        onPress: import("@tamagui/helpers").EventHandler<any> | undefined;
-        onFocus: import("@tamagui/helpers").EventHandler<React.FocusEvent<Element, Element>> | undefined;
+        onKeyDown: import("@gui/helpers").EventHandler<React.KeyboardEvent<Element>> | undefined;
+        onPress: import("@gui/helpers").EventHandler<any> | undefined;
+        onFocus: import("@gui/helpers").EventHandler<React.FocusEvent<Element, Element>> | undefined;
         'data-disabled'?: "" | undefined;
         ref: React.RefObject<HTMLElement | null>;
         role: "tab";

@@ -1,7 +1,7 @@
-import type { ColorTokens, GetProps, SizeTokens } from '@tamagui/web';
+import type { ColorTokens, GetProps, SizeTokens } from '@gui/web';
 import type { FunctionComponent, JSX } from 'react';
 type ButtonVariant = 'outlined';
-export declare const ButtonContext: import("@tamagui/web").StyledContext<{
+export declare const ButtonContext: import("@gui/web").StyledContext<{
     size?: SizeTokens;
     variant?: ButtonVariant;
     color?: ColorTokens | string;
@@ -25,7 +25,7 @@ type ButtonExtraProps = {
     name?: string;
     value?: string | readonly string[] | number;
 };
-declare const ButtonComponent: import("@tamagui/web").TamaguiComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+declare const ButtonComponent: import("@gui/web").GuiComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -33,7 +33,7 @@ declare const ButtonComponent: import("@tamagui/web").TamaguiComponent<Omit<impo
     chromeless?: boolean | "all" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
-}>, keyof ButtonExtraProps> & ButtonExtraProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps & ButtonExtraProps, import("@tamagui/web").StackStyleBase, {
+}>, keyof ButtonExtraProps> & ButtonExtraProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps & ButtonExtraProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -41,8 +41,8 @@ declare const ButtonComponent: import("@tamagui/web").TamaguiComponent<Omit<impo
     chromeless?: boolean | "all" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-export declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic>;
+export declare const Button: import("react").ForwardRefExoticComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -50,7 +50,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
     chromeless?: boolean | "all" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
-}>, keyof ButtonExtraProps> & ButtonExtraProps & import("react").RefAttributes<import("@tamagui/web").TamaguiElement>> & import("@tamagui/web").StaticComponentObject<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}>, keyof ButtonExtraProps> & ButtonExtraProps & import("react").RefAttributes<import("@gui/web").GuiElement>> & import("@gui/web").StaticComponentObject<Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -58,7 +58,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
     chromeless?: boolean | "all" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
-}>, keyof ButtonExtraProps> & ButtonExtraProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps & ButtonExtraProps, import("@tamagui/web").StackStyleBase, {
+}>, keyof ButtonExtraProps> & ButtonExtraProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps & ButtonExtraProps, import("@gui/web").StackStyleBase, {
     size?: number | SizeTokens | undefined;
     variant?: "outlined" | undefined;
     elevation?: number | SizeTokens | undefined;
@@ -66,8 +66,8 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
     chromeless?: boolean | "all" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic> & Omit<import("@tamagui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic> & Omit<import("@gui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: number | SizeTokens | undefined;
         variant?: "outlined" | undefined;
         elevation?: number | SizeTokens | undefined;
@@ -75,7 +75,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
         chromeless?: boolean | "all" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-    }>, keyof ButtonExtraProps> & ButtonExtraProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps & ButtonExtraProps, import("@tamagui/web").StackStyleBase, {
+    }>, keyof ButtonExtraProps> & ButtonExtraProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps & ButtonExtraProps, import("@gui/web").StackStyleBase, {
         size?: number | SizeTokens | undefined;
         variant?: "outlined" | undefined;
         elevation?: number | SizeTokens | undefined;
@@ -83,7 +83,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
         chromeless?: boolean | "all" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic];
+    }, import("@gui/web").StaticConfigPublic];
 } & {
     Apply: import("react").Provider<{
         size?: SizeTokens;
@@ -99,7 +99,7 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
         children?: import("react").ReactNode;
         scope?: string;
     }>;
-    Frame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    Frame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: number | SizeTokens | undefined;
         variant?: "outlined" | undefined;
         elevation?: number | SizeTokens | undefined;
@@ -107,11 +107,11 @@ export declare const Button: import("react").ForwardRefExoticComponent<Omit<impo
         chromeless?: boolean | "all" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Text: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
-        size?: import("@tamagui/web").FontSizeTokens | undefined;
+    }, import("@gui/web").StaticConfigPublic>;
+    Text: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
+        size?: import("@gui/web").FontSizeTokens | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
     Icon: (props: {
         children: React.ReactNode;
         scaleIcon?: number;

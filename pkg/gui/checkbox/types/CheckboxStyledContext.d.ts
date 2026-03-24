@@ -1,5 +1,5 @@
-import type { SizeTokens } from '@tamagui/core';
-export declare const CheckboxStyledContext: import("@tamagui/core").StyledContext<{
+import type { SizeTokens } from '@gui/core';
+export declare const CheckboxStyledContext: import("@gui/core").StyledContext<{
     size: SizeTokens;
     scaleIcon: number;
     unstyled?: boolean;

@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-progress",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/progress",
+  "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,15 +36,15 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-create-context": "2.0.0-rc.29",
-    "@hanzo/gui-get-token": "2.0.0-rc.29",
-    "@hanzo/gui-helpers": "2.0.0-rc.29",
-    "@hanzo/gui-stacks": "workspace:*"
+    "@hanzogui/compose-refs": "2.0.0-rc.29",
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/create-context": "2.0.0-rc.29",
+    "@hanzogui/get-token": "2.0.0-rc.29",
+    "@hanzogui/helpers": "2.0.0-rc.29",
+    "@hanzogui/stacks": "2.0.0"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },

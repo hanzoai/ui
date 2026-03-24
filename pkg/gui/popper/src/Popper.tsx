@@ -1,18 +1,18 @@
 // adapted from radix-ui popper
 import { flushSync } from 'react-dom'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { SizeTokens, TamaguiElement, ViewProps } from '@hanzo/gui-core'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { SizeTokens, GuiElement, ViewProps } from '@hanzogui/core'
 import {
   LayoutMeasurementController,
-  View as TamaguiView,
+  View as GuiView,
   createStyledContext,
   getVariableValue,
   registerLayoutNode,
   styled,
-} from '@hanzo/gui-core'
-import type { PopupTriggerMap } from '@hanzo/gui-floating'
-import { FloatingOverrideContext } from '@hanzo/gui-floating'
+} from '@hanzogui/core'
+import type { PopupTriggerMap } from '@hanzogui/floating'
+import { FloatingOverrideContext } from '@hanzogui/floating'
 import type {
   Coords,
   Middleware,
@@ -23,7 +23,7 @@ import type {
   SizeOptions,
   Strategy,
   UseFloatingReturn,
-} from '@hanzo/gui-floating'
+} from '@hanzogui/floating'
 import {
   arrow,
   flip,
@@ -33,11 +33,11 @@ import {
   shift,
   size as sizeMiddleware,
   useFloating,
-} from '@hanzo/gui-floating'
-import { getSpace } from '@hanzo/gui-get-token'
-import type { SizableStackProps, YStackProps } from '@hanzo/gui-stacks'
-import { YStack } from '@hanzo/gui-stacks'
-import { startTransition } from '@hanzo/gui-start-transition'
+} from '@hanzogui/floating'
+import { getSpace } from '@hanzogui/get-token'
+import type { SizableStackProps, YStackProps } from '@hanzogui/stacks'
+import { YStack } from '@hanzogui/stacks'
+import { startTransition } from '@hanzogui/start-transition'
 import * as React from 'react'
 import { Keyboard, useWindowDimensions } from 'react-native'
 
@@ -262,10 +262,10 @@ const transformOriginMiddleware = (options: {
   },
 })
 
-// replaces floating-ui's autoUpdate with tamagui's batched IO measurement loop
+// replaces floating-ui's autoUpdate with gui's batched IO measurement loop
 // keeps scroll/resize listeners for immediate response, but replaces per-element
 // ResizeObserver + IntersectionObserver with the shared layoutOnAnimationFrame loop
-function tamaguiAutoUpdate(
+function guiAutoUpdate(
   reference: ReferenceType,
   floating: HTMLElement,
   update: () => void
@@ -286,7 +286,7 @@ function tamaguiAutoUpdate(
     },
   ]
 
-  // watch reference element via tamagui's IO measurement loop
+  // watch reference element via gui's IO measurement loop
   // only watch reference, NOT floating — watching floating causes loops
   // (computePosition sets position → rect changes → update → repeat)
   if (reference instanceof HTMLElement) {
@@ -388,19 +388,19 @@ export function Popper(props: PopperProps) {
               const { width: anchorWidth, height: anchorHeight } = rects.reference
               const contentStyle = elements.floating.style
               contentStyle.setProperty(
-                '--tamagui-popper-available-width',
+                '--gui-popper-available-width',
                 `${availableWidth}px`
               )
               contentStyle.setProperty(
-                '--tamagui-popper-available-height',
+                '--gui-popper-available-height',
                 `${availableHeight}px`
               )
               contentStyle.setProperty(
-                '--tamagui-popper-anchor-width',
+                '--gui-popper-anchor-width',
                 `${anchorWidth}px`
               )
               contentStyle.setProperty(
-                '--tamagui-popper-anchor-height',
+                '--gui-popper-anchor-height',
                 `${anchorHeight}px`
               )
             },
@@ -421,7 +421,7 @@ export function Popper(props: PopperProps) {
     strategy,
     placement,
     sameScrollView: false, // this only takes effect on native
-    whileElementsMounted: !isOpen ? undefined : tamaguiAutoUpdate,
+    whileElementsMounted: !isOpen ? undefined : guiAutoUpdate,
     platform:
       (disableRTL ?? setupOptions.disableRTL)
         ? {
@@ -524,7 +524,7 @@ export function Popper(props: PopperProps) {
  * PopperAnchor
  * -----------------------------------------------------------------------------------------------*/
 
-type PopperAnchorRef = TamaguiElement
+type PopperAnchorRef = GuiElement
 
 export type PopperAnchorExtraProps = {
   virtualRef?: React.RefObject<any>
@@ -586,7 +586,7 @@ export const PopperAnchor = YStack.styleable<PopperAnchorExtraProps>(
     )
 
     return (
-      <TamaguiView
+      <GuiView
         {...rest}
         {...refProps}
         ref={composedRefs}
@@ -627,7 +627,7 @@ export const PopperAnchor = YStack.styleable<PopperAnchorExtraProps>(
  * PopperContent
  * -----------------------------------------------------------------------------------------------*/
 
-type PopperContentElement = TamaguiElement
+type PopperContentElement = GuiElement
 
 export type PopperContentProps = SizableStackProps & {
   scope?: string
@@ -824,7 +824,7 @@ export const PopperContent = React.forwardRef<PopperContentElement, PopperConten
 
     return (
       <LayoutMeasurementController disable={!context.open}>
-        <TamaguiView
+        <GuiView
           passThrough={passThrough}
           ref={contentRefs}
           direction={rest.direction}
@@ -849,7 +849,7 @@ export const PopperContent = React.forwardRef<PopperContentElement, PopperConten
           >
             {children}
           </PopperContentFrame>
-        </TamaguiView>
+        </GuiView>
       </LayoutMeasurementController>
     )
   }
@@ -919,7 +919,7 @@ const opposites = {
 
 type Sides = keyof typeof opposites
 
-export const PopperArrow = React.forwardRef<TamaguiElement, PopperArrowProps>(
+export const PopperArrow = React.forwardRef<GuiElement, PopperArrowProps>(
   function PopperArrow(propsIn, forwardedRef) {
     const { scope, animatePosition, transition, ...rest } = propsIn
     const { offset, size: sizeProp, borderWidth = 0, ...arrowProps } = rest

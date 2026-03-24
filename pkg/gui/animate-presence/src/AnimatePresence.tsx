@@ -1,6 +1,6 @@
 import { useInsertionEffect } from 'react'
-import { useConstant } from '@hanzo/gui-use-constant'
-import { useForceUpdate } from '@hanzo/gui-use-force-update'
+import { useConstant } from '@hanzogui/use-constant'
+import { useForceUpdate } from '@hanzogui/use-force-update'
 import type { FunctionComponent, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { Children, isValidElement, useContext, useMemo, useRef, useState } from 'react'
 import { LayoutGroupContext } from './LayoutGroupContext'
@@ -13,7 +13,7 @@ const getChildKey = (child: ReactElement<any>): ComponentKey => {
   return (
     child.key ||
     (() => {
-      // we can help a bit by falling back to tamagui name or component name
+      // we can help a bit by falling back to gui name or component name
       const ct = child.type
       const defaultName = ct['displayName'] || ct['name'] || ''
       if (ct && typeof ct === 'object' && 'staticConfig' in ct) {

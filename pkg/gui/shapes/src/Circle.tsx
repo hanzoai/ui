@@ -1,5 +1,5 @@
-import type { GetProps } from '@hanzo/gui-web'
-import { styled } from '@hanzo/gui-web'
+import type { GetProps } from '@hanzogui/web'
+import { styled } from '@hanzogui/web'
 
 import { Square } from './Square'
 

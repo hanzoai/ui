@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-remove-scroll",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/remove-scroll",
+  "version": "2.0.0",
   "files": [
     "src",
     "types",
@@ -35,7 +35,7 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

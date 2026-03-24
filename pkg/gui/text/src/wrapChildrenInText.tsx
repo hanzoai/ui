@@ -1,4 +1,4 @@
-import type { SizeTokens } from '@hanzo/gui-web'
+import type { SizeTokens } from '@hanzogui/web'
 import React from 'react'
 
 import type { TextParentStyles } from './types'

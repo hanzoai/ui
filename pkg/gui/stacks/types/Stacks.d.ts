@@ -1,4 +1,4 @@
-import type { GetProps, SizeTokens } from '@tamagui/core';
+import type { GetProps, SizeTokens } from '@gui/core';
 export interface StackVariants {
     /**
      * @deprecated use `inset: 0, position: 'absolute'` instead
@@ -15,28 +15,28 @@ export declare const fullscreenStyle: {
 };
 /**
  * @summary A view that arranges its children in a vertical line.
- * @see — Docs https://tamagui.dev/ui/stacks#xstack-ystack-zstack
+ * @see — Docs https://gui.dev/ui/stacks#xstack-ystack-zstack
  */
-export declare const YStack: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const YStack: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 /**
  * @summary A view that arranges its children in a horizontal line.
- * @see — Docs https://tamagui.dev/ui/stacks#xstack-ystack-zstack
+ * @see — Docs https://gui.dev/ui/stacks#xstack-ystack-zstack
  */
-export declare const XStack: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const XStack: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 /**
  * @summary A view that stacks its children on top of each other.
- * @see — Docs https://tamagui.dev/ui/stacks#xstack-ystack-zstack
+ * @see — Docs https://gui.dev/ui/stacks#xstack-ystack-zstack
  */
-export declare const ZStack: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const ZStack: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic & {
+}, import("@gui/core").StaticConfigPublic & {
     neverFlatten: true;
     isZStack: true;
 }>;

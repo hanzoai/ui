@@ -1,7 +1,7 @@
-import type { AnimatedNumberStrategy, TransitionProp } from '@tamagui/core';
-import type { ScopedProps } from '@tamagui/create-context';
-import type { PortalProps } from '@tamagui/portal';
-import type { RemoveScroll } from '@tamagui/remove-scroll';
+import type { AnimatedNumberStrategy, TransitionProp } from '@gui/core';
+import type { ScopedProps } from '@gui/create-context';
+import type { PortalProps } from '@gui/portal';
+import type { RemoveScroll } from '@gui/remove-scroll';
 import type { ReactNode } from 'react';
 import type React from 'react';
 export type SheetProps = ScopedProps<{

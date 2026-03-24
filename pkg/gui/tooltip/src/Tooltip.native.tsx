@@ -1,4 +1,4 @@
-import { withStaticProperties } from '@hanzo/gui-helpers'
+import { withStaticProperties } from '@hanzogui/helpers'
 
 // no output on native for now
 // could have an option to long-press or similar to show in a context menu/drawer

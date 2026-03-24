@@ -1,11 +1,11 @@
-import { AnimatePresence } from '@hanzo/gui-animate-presence'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb } from '@hanzo/gui-constants'
-import type { GetProps, TamaguiElement } from '@hanzo/gui-core'
-import { styled } from '@hanzo/gui-core'
-import { PortalHost } from '@hanzo/gui-portal'
-import { YStack } from '@hanzo/gui-stacks'
-import { VisuallyHidden } from '@hanzo/gui-visually-hidden'
+import { AnimatePresence } from '@hanzogui/animate-presence'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb } from '@hanzogui/constants'
+import type { GetProps, GuiElement } from '@hanzogui/core'
+import { styled } from '@hanzogui/core'
+import { PortalHost } from '@hanzogui/portal'
+import { YStack } from '@hanzogui/stacks'
+import { VisuallyHidden } from '@hanzogui/visually-hidden'
 import * as React from 'react'
 import { TOAST_CONTEXT } from './constants'
 import { ToastPortal } from './ToastPortal'
@@ -81,7 +81,7 @@ type ToastViewportProps = ToastViewportFrameProps & {
    */
   multipleToasts?: boolean
   /**
-   * When true, uses a portal to render at the very top of the root TamaguiProvider.
+   * When true, uses a portal to render at the very top of the root GuiProvider.
    */
   portalToRoot?: boolean
 }
@@ -106,7 +106,7 @@ const ToastViewport = React.memo(
       const wrapperRef = React.useRef<HTMLDivElement>(null)
       const ref = React.useRef<HTMLDivElement>(null)
       const onViewportChange = React.useCallback(
-        (el: TamaguiElement) => {
+        (el: GuiElement) => {
           if (context.viewports[name] !== el) context.onViewportChange(name, el)
         },
         [name, context.viewports]
@@ -379,7 +379,7 @@ FocusProxy.displayName = FOCUS_PROXY_NAME
 
 /* -----------------------------------------------------------------------------------------------*/
 
-function focusFirst(candidates: TamaguiElement[]) {
+function focusFirst(candidates: GuiElement[]) {
   if (!isWeb) return
   const previouslyFocusedElement = document.activeElement
   return candidates.some((candidate) => {
@@ -400,7 +400,7 @@ function focusFirst(candidates: TamaguiElement[]) {
  * See: https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
  * Credit: https://github.com/discord/focus-layers/blob/master/src/util/wrapFocus.tsx#L1
  */
-function getTabbableCandidates(container: TamaguiElement) {
+function getTabbableCandidates(container: GuiElement) {
   if (!isWeb) return []
   const containerHtml = container as HTMLElement
   const nodes: HTMLElement[] = []

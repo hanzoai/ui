@@ -1,7 +1,7 @@
-import { type SizeTokens } from '@tamagui/core';
+import { type SizeTokens } from '@gui/core';
 import type { Direction, SliderContextValue } from './types';
 export declare const SLIDER_NAME = "Slider";
-export declare const SliderContext: import("@tamagui/core").StyledContext<SliderContextValue>;
+export declare const SliderContext: import("@gui/core").StyledContext<SliderContextValue>;
 export declare const SliderProvider: import("react").Provider<SliderContextValue> & import("react").ProviderExoticComponent<Partial<SliderContextValue> & {
     children?: import("react").ReactNode;
     scope?: string;

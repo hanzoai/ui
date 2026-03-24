@@ -1,6 +1,6 @@
-import { ThemeableStack } from '@hanzo/gui-stacks'
-import type { GetProps } from '@hanzo/gui-web'
-import { styled } from '@hanzo/gui-web'
+import { ThemeableStack } from '@hanzogui/stacks'
+import type { GetProps } from '@hanzogui/web'
+import { styled } from '@hanzogui/web'
 
 import { getShapeSize } from './getShapeSize'
 

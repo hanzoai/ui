@@ -1,4 +1,4 @@
-import type { ColorTokens, TextStyle, TamaguiElementMethods } from '@hanzo/gui-web'
+import type { ColorTokens, TextStyle, GuiElementMethods } from '@hanzogui/web'
 import type { TextInput } from 'react-native'
 import type { InputNativeProps } from './InputNativeProps'
 
@@ -92,12 +92,12 @@ export type InputExtraProps = Omit<
     rows?: number
 
     /**
-     * Placeholder text color - accepts Tamagui color tokens
+     * Placeholder text color - accepts Gui color tokens
      */
     placeholderTextColor?: ColorTokens
 
     /**
-     * Text selection color - accepts Tamagui color tokens
+     * Text selection color - accepts Gui color tokens
      */
     selectionColor?: ColorTokens
 
@@ -134,10 +134,10 @@ export type InputExtraProps = Omit<
 
 /**
  * Cross-platform ref type for Input.
- * On web: HTMLInputElement with Tamagui methods (measure, focus, blur).
+ * On web: HTMLInputElement with Gui methods (measure, focus, blur).
  * On native: TextInput.
  */
-export type InputRef = (HTMLInputElement & TamaguiElementMethods) | TextInput
+export type InputRef = (HTMLInputElement & GuiElementMethods) | TextInput
 
 /**
  * iOS text content types for autofill

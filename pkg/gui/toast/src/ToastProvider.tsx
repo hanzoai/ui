@@ -1,7 +1,7 @@
-import { createCollection } from '@hanzo/gui-collection'
-import type { NativeValue, TamaguiElement } from '@hanzo/gui-core'
-import { createStyledContext } from '@hanzo/gui-core'
-import { startTransition } from '@hanzo/gui-start-transition'
+import { createCollection } from '@hanzogui/collection'
+import type { NativeValue, GuiElement } from '@hanzogui/core'
+import { createStyledContext } from '@hanzogui/core'
+import { startTransition } from '@hanzogui/start-transition'
 import * as React from 'react'
 
 import { TOAST_CONTEXT } from './constants'
@@ -15,7 +15,7 @@ import type { BurntToastOptions } from './types'
 
 const PROVIDER_NAME = 'ToastProvider'
 
-const [Collection, useCollection] = createCollection<TamaguiElement>('Toast')
+const [Collection, useCollection] = createCollection<GuiElement>('Toast')
 
 export type SwipeDirection = 'vertical' | 'up' | 'down' | 'horizontal' | 'left' | 'right'
 
@@ -27,8 +27,8 @@ export type ToastProviderContextValue = {
   swipeDirection: SwipeDirection
   swipeThreshold: number
   toastCount: number
-  viewports: Record<string, TamaguiElement | null>
-  onViewportChange(name: string, viewport: TamaguiElement): void
+  viewports: Record<string, GuiElement | null>
+  onViewportChange(name: string, viewport: GuiElement): void
   onToastAdd(): void
   onToastRemove(): void
   isFocusedToastEscapeKeyDownRef: React.MutableRefObject<boolean>
@@ -114,7 +114,7 @@ const ToastProvider: React.FC<ToastProviderProps> = (
   const isClosePausedRef = React.useRef(false)
 
   const handleViewportChange = React.useCallback(
-    (name: string, viewport: TamaguiElement | null) => {
+    (name: string, viewport: GuiElement | null) => {
       startTransition(() => {
         setViewports((prev) => ({ ...prev, [name]: viewport }))
       })

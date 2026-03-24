@@ -9,7 +9,7 @@ export { useSwitchNative } from './useSwitchNative'
 
 /**
  * @summary A component that displays a switch that can be used to toggle between two states.
- * @see — Docs https://tamagui.dev/ui/switch
+ * @see — Docs https://gui.dev/ui/switch
  *
  * @example
  * ```tsx

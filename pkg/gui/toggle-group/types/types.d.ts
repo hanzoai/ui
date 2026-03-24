@@ -1,4 +1,4 @@
-import type { ViewStyle } from '@tamagui/web';
+import type { ViewStyle } from '@gui/web';
 export type ToggleStylesBase = ViewStyle & {
     color?: string;
 };

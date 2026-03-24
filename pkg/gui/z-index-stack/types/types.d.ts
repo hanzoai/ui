@@ -1,5 +1,5 @@
 /**
- * Tamagui will attempt to stack z-index in a smart way when true, it does this
+ * Gui will attempt to stack z-index in a smart way when true, it does this
  * by automatically increasing z-index both horizontally and vertically in the component tree.
  *
  * Basically - if two stackable items are at the same level, then the order of mounting

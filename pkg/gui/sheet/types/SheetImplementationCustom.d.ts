@@ -15,22 +15,22 @@ export declare const SheetImplementationCustom: React.ForwardRefExoticComponent<
     dismissOnSnapToBottom?: boolean;
     disableRemoveScroll?: boolean;
     forceRemoveScrollEnabled?: boolean;
-    transitionConfig?: import("@tamagui/core").AnimatedNumberStrategy;
+    transitionConfig?: import("@gui/core").AnimatedNumberStrategy;
     preferAdaptParentOpenState?: boolean;
     unmountChildrenWhenHidden?: boolean;
     native?: "ios"[] | boolean;
-    transition?: import("@tamagui/core").TransitionProp;
+    transition?: import("@gui/core").TransitionProp;
     handleDisableScroll?: boolean;
     disableDrag?: boolean;
     modal?: boolean;
     zIndex?: number;
-    portalProps?: import("@tamagui/portal").PortalProps;
+    portalProps?: import("@gui/portal").PortalProps;
     moveOnKeyboardChange?: boolean;
     containerComponent?: React.ComponentType<any>;
     onAnimationComplete?: (info: {
         open: boolean;
     }) => void;
 } & {
-    __scopeSheet?: import("@tamagui/create-context").Scope<any>;
+    __scopeSheet?: import("@gui/create-context").Scope<any>;
 } & React.RefAttributes<View>>;
 //# sourceMappingURL=SheetImplementationCustom.d.ts.map

@@ -1,9 +1,9 @@
-import type { SizeTokens } from '@tamagui/core';
-export declare const SwitchThumb: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/core").InferStyleProps<import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+import type { SizeTokens } from '@gui/core';
+export declare const SwitchThumb: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/core").InferStyleProps<import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/core").StaticConfigPublic>, {
+    }, import("@gui/core").StaticConfigPublic>, {
         accept: {
             readonly activeStyle: "style";
         };
@@ -13,16 +13,16 @@ export declare const SwitchThumb: import("@tamagui/core").TamaguiComponent<impor
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic & {
+}, import("@gui/core").StaticConfigPublic & {
     accept: {
         readonly activeStyle: "style";
     };
 }>;
-export declare const SwitchFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/core").InferStyleProps<import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const SwitchFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/core").InferStyleProps<import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/core").StaticConfigPublic>, {
+    }, import("@gui/core").StaticConfigPublic>, {
         accept: {
             readonly activeStyle: "style";
         };
@@ -32,7 +32,7 @@ export declare const SwitchFrame: import("@tamagui/core").TamaguiComponent<impor
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic & {
+}, import("@gui/core").StaticConfigPublic & {
     accept: {
         readonly activeStyle: "style";
     };

@@ -1,15 +1,15 @@
-import { getFontSize } from '@hanzo/gui-font-size'
-import { getButtonSized } from '@hanzo/gui-get-button-sized'
-import { withStaticProperties } from '@hanzo/gui-helpers'
-import { useGetThemedIcon } from '@hanzo/gui-helpers'
-import { ButtonNestingContext, ThemeableStack } from '@hanzo/gui-stacks'
-import type { TextContextStyles, TextParentStyles } from '@hanzo/gui-text'
-import { SizableText, wrapChildrenInText } from '@hanzo/gui-text'
-import type { FontSizeTokens, GetProps, SizeTokens, ThemeableProps } from '@hanzo/gui-web'
-import { createStyledContext, getVariableValue, styled, useProps } from '@hanzo/gui-web'
+import { getFontSize } from '@hanzogui/font-size'
+import { getButtonSized } from '@hanzogui/get-button-sized'
+import { withStaticProperties } from '@hanzogui/helpers'
+import { useGetThemedIcon } from '@hanzogui/helpers'
+import { ButtonNestingContext, ThemeableStack } from '@hanzogui/stacks'
+import type { TextContextStyles, TextParentStyles } from '@hanzogui/text'
+import { SizableText, wrapChildrenInText } from '@hanzogui/text'
+import type { FontSizeTokens, GetProps, SizeTokens, ThemeableProps } from '@hanzogui/web'
+import { createStyledContext, getVariableValue, styled, useProps } from '@hanzogui/web'
 import type { FunctionComponent, JSX } from 'react'
 import { useContext } from 'react'
-import { spacedChildren } from '@hanzo/gui-spacer'
+import { spacedChildren } from '@hanzogui/spacer'
 
 type ButtonVariant = 'outlined'
 
@@ -191,7 +191,7 @@ const ButtonComponent = ButtonFrame.styleable<ButtonExtraProps>(
 )
 /**
  * @summary A Button is a clickable element that can be used to trigger actions such as submitting forms, navigating to other pages, or performing other actions.
- * @see — Docs https://tamagui.dev/ui/button
+ * @see — Docs https://gui.dev/ui/button
  */
 const Button = withStaticProperties(ButtonComponent, {
   Text: ButtonText,
@@ -199,7 +199,7 @@ const Button = withStaticProperties(ButtonComponent, {
 })
 
 /**
- * @deprecated Instead of useButton, see the Button docs for the newer and much improved Advanced customization pattern: https://tamagui.dev/docs/components/button
+ * @deprecated Instead of useButton, see the Button docs for the newer and much improved Advanced customization pattern: https://gui.dev/docs/components/button
  */
 function useButton<Props extends ButtonProps>(
   { textProps, ...propsIn }: Props,
@@ -304,7 +304,7 @@ function useButton<Props extends ButtonProps>(
       (isNested
         ? 'span'
         : // defaults to <a /> when accessibilityRole = link
-          // see https://github.com/tamagui/tamagui/issues/505
+          // see https://github.com/gui/gui/issues/505
           propsActive.accessibilityRole === 'link' || propsActive.role === 'link'
           ? 'a'
           : 'button'),

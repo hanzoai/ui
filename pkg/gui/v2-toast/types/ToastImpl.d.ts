@@ -1,13 +1,13 @@
-import type { GetProps, TamaguiElement } from '@tamagui/core';
-import type { DismissableProps } from '@tamagui/dismissable';
+import type { GetProps, GuiElement } from '@gui/core';
+import type { DismissableProps } from '@gui/dismissable';
 import * as React from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { ScopedProps } from './ToastProvider';
-declare const ToastImplFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+declare const ToastImplFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 type ToastProps = Omit<ToastImplProps, keyof ToastImplPrivateProps>;
 type SwipeEvent = GestureResponderEvent;
 declare const useToastInteractiveContext: (scope?: string) => {
@@ -89,21 +89,21 @@ export type ToastExtraProps = {
     id?: string;
 };
 type ToastImplProps = ScopedProps<ToastImplPrivateProps & ToastImplFrameProps & ToastExtraProps>;
-declare const ToastImpl: React.ForwardRefExoticComponent<Omit<ToastImplPrivateProps & Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@tamagui/core").StackStyleBase | "fullscreen"> & import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
+declare const ToastImpl: React.ForwardRefExoticComponent<Omit<ToastImplPrivateProps & Omit<import("@gui/core").RNGuiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@gui/core").StackStyleBase | "fullscreen"> & import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>> & import("@tamagui/core").WithPseudoProps<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>> & import("@gui/core").WithPseudoProps<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>>> & import("@tamagui/core").WithMediaProps<import("@tamagui/core").WithThemeShorthandsAndPseudos<import("@tamagui/core").StackStyleBase, {
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>>> & import("@gui/core").WithMediaProps<import("@gui/core").WithThemeShorthandsAndPseudos<import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
 }>> & ToastExtraProps, "scope"> & {
     scope?: import("./ToastProvider").ToastScopes;
-} & React.RefAttributes<TamaguiElement>>;
+} & React.RefAttributes<GuiElement>>;
 export { ToastImpl, ToastImplFrame, useToastInteractiveContext, type ToastImplProps };
 export type { ToastProps };
 //# sourceMappingURL=ToastImpl.d.ts.map

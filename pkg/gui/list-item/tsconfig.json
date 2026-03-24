@@ -17,7 +17,7 @@
       "path": "../../core/helpers"
     },
     {
-      "path": "../../core/helpers-tamagui"
+      "path": "../../core/helpers-gui"
     },
     {
       "path": "../../core/web"
