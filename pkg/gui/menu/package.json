@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-menu",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/menu",
+  "version": "2.0.0",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.tsx",
   "files": [
@@ -37,16 +37,16 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-create-menu": "workspace:*",
-    "@hanzo/gui-helpers": "2.0.0-rc.29",
-    "@hanzo/gui-popover": "workspace:*",
-    "@hanzo/gui-popper": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
-    "@hanzo/gui-web": "2.0.0-rc.29"
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/create-menu": "2.0.0",
+    "@hanzogui/helpers": "2.0.0-rc.29",
+    "@hanzogui/popover": "2.0.0",
+    "@hanzogui/popper": "2.0.0",
+    "@hanzogui/use-controllable-state": "2.0.0-rc.29",
+    "@hanzogui/web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

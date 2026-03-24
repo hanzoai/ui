@@ -1,7 +1,7 @@
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import type { GetProps, TamaguiTextElement } from '@hanzo/gui-core'
-import { styled, useIsomorphicLayoutEffect } from '@hanzo/gui-core'
-import { SizableText } from '@hanzo/gui-text'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import type { GetProps, GuiTextElement } from '@hanzogui/core'
+import { styled, useIsomorphicLayoutEffect } from '@hanzogui/core'
+import { SizableText } from '@hanzogui/text'
 import * as React from 'react'
 
 import { useSelectItemParentContext } from './context'
@@ -42,7 +42,7 @@ export const SelectItemText = SelectItemTextFrame.styleable<SelectItemTextExtraP
     // note: only uses itemParentContext (not selectContext) to avoid re-renders
     // when activeIndex changes on hover
     const itemParentContext = useSelectItemParentContext(scope)
-    const ref = React.useRef<TamaguiTextElement | null>(null)
+    const ref = React.useRef<GuiTextElement | null>(null)
     const composedRefs = useComposedRefs(forwardedRef, ref)
     const itemContext = useSelectItemContext(scope)
     const contents = React.useRef<React.ReactNode>(null)

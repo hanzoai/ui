@@ -1,13 +1,13 @@
 import React from 'react'
-import { isWeb } from '@hanzo/gui-constants'
+import { isWeb } from '@hanzogui/constants'
 import type {
   GetProps,
   RadiusTokens,
   SizeTokens,
   ViewProps,
   ThemeValueFallback,
-} from '@hanzo/gui-web'
-import { styled, usePropsAndStyle } from '@hanzo/gui-web'
+} from '@hanzogui/web'
+import { styled, usePropsAndStyle } from '@hanzogui/web'
 import type { FC } from 'react'
 import { Image as RNImage } from 'react-native'
 
@@ -52,7 +52,7 @@ let hasWarned = false
 
 /**
  * @summary An image is a component that displays an image.
- * @see — Docs https://tamagui.dev/ui/image
+ * @see — Docs https://gui.dev/ui/image
  */
 export const Image = StyledImage.styleable<ImageProps>((inProps, ref) => {
   const [props, style] = usePropsAndStyle(inProps)

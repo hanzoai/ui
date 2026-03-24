@@ -1,14 +1,14 @@
-import type { GetProps, TamaguiElement, ViewStyle } from '@tamagui/web';
+import type { GetProps, GuiElement, ViewStyle } from '@gui/web';
 import * as React from 'react';
-export declare const ToggleFrame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+export declare const ToggleFrame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
 }, {
     unstyled?: boolean | undefined;
-    size?: number | import("@tamagui/web").SizeTokens | undefined;
+    size?: number | import("@gui/web").SizeTokens | undefined;
     defaultActiveStyle?: boolean | undefined;
 }, {
     accept: {
@@ -27,48 +27,48 @@ type ToggleItemExtraProps = {
     activeTheme?: string | null;
 };
 export type ToggleProps = ToggleFrameProps & ToggleItemExtraProps;
-export declare const Toggle: React.ForwardRefExoticComponent<Omit<import("@tamagui/web").StackNonStyleProps, "unstyled" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle" | "defaultActiveStyle"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+export declare const Toggle: React.ForwardRefExoticComponent<Omit<import("@gui/web").StackNonStyleProps, "unstyled" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle" | "defaultActiveStyle"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
 }> & {
     unstyled?: boolean | undefined;
-    size?: number | import("@tamagui/web").SizeTokens | undefined;
+    size?: number | import("@gui/web").SizeTokens | undefined;
     defaultActiveStyle?: boolean | undefined;
-} & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+} & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
-}>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+}>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
 }> & {
     unstyled?: boolean | undefined;
-    size?: number | import("@tamagui/web").SizeTokens | undefined;
+    size?: number | import("@gui/web").SizeTokens | undefined;
     defaultActiveStyle?: boolean | undefined;
-} & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+} & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
-}>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase & {
-    readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>, {
+}>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase & {
+    readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<import("@gui/web").GuiComponent<import("@gui/web").ViewProps, GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>, {
         accept: {
             readonly activeStyle: "style";
         };
     }>> | undefined;
 }, {
     unstyled?: boolean | undefined;
-    size?: number | import("@tamagui/web").SizeTokens | undefined;
+    size?: number | import("@gui/web").SizeTokens | undefined;
     defaultActiveStyle?: boolean | undefined;
-}>> & ToggleItemExtraProps & React.RefAttributes<TamaguiElement>>;
+}>> & ToggleItemExtraProps & React.RefAttributes<GuiElement>>;
 export {};
 //# sourceMappingURL=Toggle.d.ts.map

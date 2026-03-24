@@ -1,4 +1,4 @@
-import { styled, View, type SizeTokens } from '@hanzo/gui-web'
+import { styled, View, type SizeTokens } from '@hanzogui/web'
 
 const getSpacerSize = (size: SizeTokens | number | boolean, { tokens }) => {
   size = size === true ? '$true' : size

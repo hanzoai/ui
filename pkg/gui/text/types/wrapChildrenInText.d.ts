@@ -1,4 +1,4 @@
-import type { SizeTokens } from '@tamagui/web';
+import type { SizeTokens } from '@gui/web';
 import React from 'react';
 import type { TextParentStyles } from './types';
 type Props = TextParentStyles & {

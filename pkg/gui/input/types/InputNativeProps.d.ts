@@ -1,4 +1,4 @@
-import type { ColorTokens } from '@tamagui/web';
+import type { ColorTokens } from '@gui/web';
 /**
  * iOS-specific props for Input/TextArea
  * These have no web equivalent and are ignored on web.

@@ -1,5 +1,5 @@
-import type { ColorTokens, ThemeTokens } from '@tamagui/core';
-import type { YStackProps } from '@tamagui/stacks';
+import type { ColorTokens, ThemeTokens } from '@gui/core';
+import type { YStackProps } from '@gui/stacks';
 import type * as React from 'react';
 export type SpinnerProps = Omit<YStackProps, 'children'> & {
     size?: 'small' | 'large';

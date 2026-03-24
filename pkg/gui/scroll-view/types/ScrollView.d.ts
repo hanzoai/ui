@@ -1,7 +1,7 @@
-import type { GetProps, GetRef } from '@tamagui/web';
+import type { GetProps, GetRef } from '@gui/web';
 import { ScrollView as ScrollViewNative } from 'react-native';
-export declare const ScrollView: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, ScrollViewNative, import("@tamagui/web").TamaguiComponentPropsBaseBase & import("react-native").ScrollViewProps, import("@tamagui/web").StackStyleBase & {
-    readonly contentContainerStyle?: Partial<import("@tamagui/web").InferStyleProps<typeof ScrollViewNative, {
+export declare const ScrollView: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, ScrollViewNative, import("@gui/web").GuiComponentPropsBaseBase & import("react-native").ScrollViewProps, import("@gui/web").StackStyleBase & {
+    readonly contentContainerStyle?: Partial<import("@gui/web").InferStyleProps<typeof ScrollViewNative, {
         accept: {
             readonly contentContainerStyle: "style";
         };

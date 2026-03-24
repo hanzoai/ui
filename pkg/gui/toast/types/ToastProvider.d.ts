@@ -1,4 +1,4 @@
-import type { NativeValue, TamaguiElement } from '@tamagui/core';
+import type { NativeValue, GuiElement } from '@gui/core';
 import * as React from 'react';
 import type { ToastImperativeOptions } from './ToastImperative';
 import type { BurntToastOptions } from './types';
@@ -8,16 +8,16 @@ declare const Collection: {
     } & {
         scope?: any;
     }>;
-    readonly Slot: React.ForwardRefExoticComponent<import("@tamagui/collection").CollectionProps & {
+    readonly Slot: React.ForwardRefExoticComponent<import("@gui/collection").CollectionProps & {
         scope?: any;
-    } & React.RefAttributes<TamaguiElement | undefined>>;
+    } & React.RefAttributes<GuiElement | undefined>>;
     readonly ItemSlot: React.ForwardRefExoticComponent<{
         children: React.ReactNode;
     } & {
         scope?: any;
-    } & React.RefAttributes<TamaguiElement | undefined>>;
+    } & React.RefAttributes<GuiElement | undefined>>;
 }, useCollection: (scope: string) => () => {
-    ref: React.RefObject<TamaguiElement | undefined>;
+    ref: React.RefObject<GuiElement | undefined>;
 }[];
 export type SwipeDirection = 'vertical' | 'up' | 'down' | 'horizontal' | 'left' | 'right';
 export type ToastProviderContextValue = {
@@ -28,8 +28,8 @@ export type ToastProviderContextValue = {
     swipeDirection: SwipeDirection;
     swipeThreshold: number;
     toastCount: number;
-    viewports: Record<string, TamaguiElement | null>;
-    onViewportChange(name: string, viewport: TamaguiElement): void;
+    viewports: Record<string, GuiElement | null>;
+    onViewportChange(name: string, viewport: GuiElement): void;
     onToastAdd(): void;
     onToastRemove(): void;
     isFocusedToastEscapeKeyDownRef: React.MutableRefObject<boolean>;

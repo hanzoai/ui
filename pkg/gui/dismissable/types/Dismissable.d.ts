@@ -1,4 +1,4 @@
-import { TamaguiElement } from '@tamagui/core';
+import { GuiElement } from '@gui/core';
 import * as React from 'react';
 import type { DismissableBranchProps, DismissableProps } from './DismissableProps';
 export declare function dispatchDiscreteCustomEvent<E extends CustomEvent>(target: E['target'], event: E): void;
@@ -30,7 +30,7 @@ export declare function useDismissableLayersAbove(ref: React.RefObject<HTMLEleme
 declare const Dismissable: React.ForwardRefExoticComponent<DismissableProps & {
     asChild?: boolean;
 } & React.RefAttributes<HTMLElement>>;
-declare const DismissableBranch: React.ForwardRefExoticComponent<DismissableBranchProps & React.RefAttributes<TamaguiElement>>;
+declare const DismissableBranch: React.ForwardRefExoticComponent<DismissableBranchProps & React.RefAttributes<GuiElement>>;
 export type PointerDownOutsideEvent = CustomEvent<{
     originalEvent: PointerEvent;
 }>;

@@ -1,6 +1,6 @@
-import { type GetProps, View, styled, useTheme } from '@hanzo/gui-core'
-import { registerFocusable } from '@hanzo/gui-focusable'
-import { useWebRef } from '@hanzo/gui-element'
+import { type GetProps, View, styled, useTheme } from '@hanzogui/core'
+import { registerFocusable } from '@hanzogui/focusable'
+import { useWebRef } from '@hanzogui/element'
 import React from 'react'
 import { styledBody } from './shared'
 import type { InputExtraProps } from './types'
@@ -9,7 +9,7 @@ const StyledInput = styled(View, styledBody[0], styledBody[1])
 
 /**
  * A web-aligned input component.
- * @see — Docs https://tamagui.dev/ui/inputs#input
+ * @see — Docs https://gui.dev/ui/inputs#input
  */
 export const Input = StyledInput.styleable<InputExtraProps>((props, _forwardedRef) => {
   const {

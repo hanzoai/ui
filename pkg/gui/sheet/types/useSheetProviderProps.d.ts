@@ -1,5 +1,5 @@
 import React from 'react';
-import type { TamaguiElement } from '@tamagui/core';
+import type { GuiElement } from '@gui/core';
 import type { ScrollBridge, SheetProps } from './types';
 import type { SheetOpenState } from './useSheetOpenState';
 export type SheetContextValue = ReturnType<typeof useSheetProviderProps> & {
@@ -16,14 +16,14 @@ export declare function useSheetProviderProps(props: SheetProps, state: SheetOpe
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     hidden: boolean;
-    contentRef: React.RefObject<TamaguiElement | null>;
-    handleRef: React.RefObject<TamaguiElement | null>;
+    contentRef: React.RefObject<GuiElement | null>;
+    handleRef: React.RefObject<GuiElement | null>;
     frameSize: number;
     setFrameSize: React.Dispatch<React.SetStateAction<number>>;
     dismissOnOverlayPress: boolean;
     dismissOnSnapToBottom: boolean;
     onOverlayComponent: ((comp: any) => void) | undefined;
-    scope: import("@tamagui/create-context").Scope<any>;
+    scope: import("@gui/create-context").Scope<any>;
     hasFit: boolean;
     position: number;
     snapPoints: (string | number)[];

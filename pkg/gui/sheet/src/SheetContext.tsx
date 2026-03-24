@@ -1,4 +1,4 @@
-import { createContextScope } from '@hanzo/gui-create-context'
+import { createContextScope } from '@hanzogui/create-context'
 
 import { SHEET_NAME } from './constants'
 import type { SheetContextValue } from './useSheetProviderProps'

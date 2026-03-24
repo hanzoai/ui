@@ -4,13 +4,13 @@ import {
   isTouchable,
   isWeb,
   useIsomorphicLayoutEffect,
-} from '@hanzo/gui-constants'
-import type { AllPlatforms, MediaQueryKey } from '@hanzo/gui-core'
-import { createStyledContext, useMedia } from '@hanzo/gui-core'
-import { withStaticProperties } from '@hanzo/gui-helpers'
-import { getPortal } from '@hanzo/gui-native'
-import { PortalHost, PortalItem } from '@hanzo/gui-portal'
-import { StackZIndexContext } from '@hanzo/gui-z-index-stack'
+} from '@hanzogui/constants'
+import type { AllPlatforms, MediaQueryKey } from '@hanzogui/core'
+import { createStyledContext, useMedia } from '@hanzogui/core'
+import { withStaticProperties } from '@hanzogui/helpers'
+import { getPortal } from '@hanzogui/native'
+import { PortalHost, PortalItem } from '@hanzogui/portal'
+import { StackZIndexContext } from '@hanzogui/z-index-stack'
 import React, { createContext, useContext, useId, useMemo } from 'react'
 
 /**
@@ -225,8 +225,8 @@ export const AdaptContents = ({ scope, ...rest }: { scope?: string }) => {
   if (!context?.Contents) {
     throw new Error(
       process.env.NODE_ENV === 'production'
-        ? `tamagui.dev/docs/intro/errors#warning-002`
-        : `You're rendering a Tamagui <Adapt /> component without nesting it inside a parent that is able to adapt.`
+        ? `gui.dev/docs/intro/errors#warning-002`
+        : `You're rendering a Gui <Adapt /> component without nesting it inside a parent that is able to adapt.`
     )
   }
 

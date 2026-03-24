@@ -1,30 +1,30 @@
-export declare const SelectViewportFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+export declare const SelectViewportFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
-export declare const SelectViewport: import("@tamagui/core").TamaguiComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+}, import("@gui/core").StaticConfigPublic>;
+export declare const SelectViewport: import("@gui/core").GuiComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
 }>, "size" | "unstyled" | "scope" | "disableScroll"> & {
-    size?: import("@tamagui/core").SizeTokens;
+    size?: import("@gui/core").SizeTokens;
     disableScroll?: boolean;
     unstyled?: boolean;
 } & {
     scope?: import("./types").SelectScopes;
-}, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & {
-    size?: import("@tamagui/core").SizeTokens;
+}, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps & {
+    size?: import("@gui/core").SizeTokens;
     disableScroll?: boolean;
     unstyled?: boolean;
 } & {
     scope?: import("./types").SelectScopes;
-}, import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+}, import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 //# sourceMappingURL=SelectViewport.d.ts.map

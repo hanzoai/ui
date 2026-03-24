@@ -4,7 +4,7 @@
  * Verifies that:
  * 1. Event handlers are typed with HTMLInputElement (not HTMLDivElement)
  * 2. HTML input-specific props are available (type, placeholder, etc.)
- * 3. Tamagui style props and variants still work
+ * 3. Gui style props and variants still work
  * 4. Cross-platform props (autoCorrect, autoCapitalize) are present
  * 5. InputRef includes both HTMLInputElement and TextInput
  *
@@ -12,7 +12,7 @@
  */
 
 import { expectTypeOf, describe, test } from 'vitest'
-import type { GetProps } from '@hanzo/gui-web'
+import type { GetProps } from '@hanzogui/web'
 import type { TextInput } from 'react-native'
 import {
   Input,
@@ -117,7 +117,7 @@ describe('Input HTML props', () => {
 })
 
 // =============================================================================
-// Test: Tamagui style props still work
+// Test: Gui style props still work
 // =============================================================================
 
 describe('Input style props', () => {

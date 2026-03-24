@@ -1,15 +1,15 @@
-import type { GetProps } from '@hanzo/gui-core'
-import { isWeb, withStaticProperties } from '@hanzo/gui-core'
+import type { GetProps } from '@hanzogui/core'
+import { isWeb, withStaticProperties } from '@hanzogui/core'
 import type {
   RadioGroupContextValue,
   RadioGroupItemContextValue,
-} from '@hanzo/gui-radio-headless'
+} from '@hanzogui/radio-headless'
 import {
   useRadioGroup,
   useRadioGroupItem,
   useRadioGroupItemIndicator,
-} from '@hanzo/gui-radio-headless'
-import { RovingFocusGroup } from '@hanzo/gui-roving-focus'
+} from '@hanzogui/radio-headless'
+import { RovingFocusGroup } from '@hanzogui/roving-focus'
 import React from 'react'
 import {
   RadioGroupFrame,

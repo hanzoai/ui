@@ -1,14 +1,14 @@
-import type { GetProps } from '@tamagui/web';
-export declare const Square: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
-    elevation?: number | import("@tamagui/web").SizeTokens | undefined;
-    size?: number | import("@tamagui/web").SizeTokens | undefined;
+import type { GetProps } from '@gui/web';
+export declare const Square: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
+    elevation?: number | import("@gui/web").SizeTokens | undefined;
+    size?: number | import("@gui/web").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-}, import("@tamagui/web").StaticConfigPublic & {
+}, import("@gui/web").StaticConfigPublic & {
     memo: true;
 }>;
 export type SquareProps = GetProps<typeof Square>;

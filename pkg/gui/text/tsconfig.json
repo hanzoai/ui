@@ -8,7 +8,7 @@
       "path": "../../core/get-font-sized"
     },
     {
-      "path": "../../core/helpers-tamagui"
+      "path": "../../core/helpers-gui"
     },
     {
       "path": "../../core/web"
