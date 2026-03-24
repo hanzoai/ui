@@ -1,8 +1,8 @@
 /**
- * Legacy setup - prefer `import '@hanzo/gui-native/setup-gesture-handler'` instead.
+ * Legacy setup - prefer `import '@hanzogui/native/setup-gesture-handler'` instead.
  */
 
-import { getGestureHandler } from '@hanzo/gui-native'
+import { getGestureHandler } from '@hanzogui/native'
 
 export function isGestureHandlerEnabled(): boolean {
   return getGestureHandler().isEnabled
@@ -16,10 +16,10 @@ export interface SetupGestureHandlerConfig {
 
 export function setupGestureHandler(config: SetupGestureHandlerConfig): void {
   const g = globalThis as any
-  if (g.__tamagui_sheet_gesture_handler_setup) {
+  if (g.__gui_sheet_gesture_handler_setup) {
     return
   }
-  g.__tamagui_sheet_gesture_handler_setup = true
+  g.__gui_sheet_gesture_handler_setup = true
 
   const { Gesture, GestureDetector, ScrollView } = config
 

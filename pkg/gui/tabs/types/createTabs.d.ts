@@ -1,6 +1,6 @@
-import type { GroupProps } from '@tamagui/group';
-import { type RovingFocusGroupProps } from '@tamagui/roving-focus';
-import type { GetProps, TamaguiElement, ViewProps } from '@tamagui/web';
+import type { GroupProps } from '@gui/group';
+import { type RovingFocusGroupProps } from '@gui/roving-focus';
+import type { GetProps, GuiElement, ViewProps } from '@gui/web';
 import * as React from 'react';
 import type { LayoutRectangle } from 'react-native';
 import { DefaultTabsContentFrame, DefaultTabsFrame, DefaultTabsTabFrame } from './Tabs';
@@ -15,87 +15,87 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     ContentFrame: F;
     TabFrame: T;
     TabsFrame: C;
-}): React.ForwardRefExoticComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
-    size?: import("@tamagui/web").SizeTokens | undefined;
+}): React.ForwardRefExoticComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
+    size?: import("@gui/web").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+    elevation?: number | import("@gui/web").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-}>, keyof TabsExtraProps<string>> & TabsExtraProps<string> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
-    size?: import("@tamagui/web").SizeTokens | undefined;
+}>, keyof TabsExtraProps<string>> & TabsExtraProps<string> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
+    size?: import("@gui/web").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+    elevation?: number | import("@gui/web").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-}>, keyof TabsExtraProps<string>> & TabsExtraProps<string>, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & TabsExtraProps<string>, import("@tamagui/web").StackStyleBase, {
-    size?: import("@tamagui/web").SizeTokens | undefined;
+}>, keyof TabsExtraProps<string>> & TabsExtraProps<string>, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & TabsExtraProps<string>, import("@gui/web").StackStyleBase, {
+    size?: import("@gui/web").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+    elevation?: number | import("@gui/web").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-}, import("@tamagui/web").StaticConfigPublic> & Omit<import("@tamagui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
-        size?: import("@tamagui/web").SizeTokens | undefined;
+}, import("@gui/web").StaticConfigPublic> & Omit<import("@gui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
+        size?: import("@gui/web").SizeTokens | undefined;
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         transparent?: boolean | undefined;
         fullscreen?: boolean | undefined;
         circular?: boolean | undefined;
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
         chromeless?: boolean | "all" | undefined;
-    }>, keyof TabsExtraProps<string>> & TabsExtraProps<string>, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & TabsExtraProps<string>, import("@tamagui/web").StackStyleBase, {
-        size?: import("@tamagui/web").SizeTokens | undefined;
+    }>, keyof TabsExtraProps<string>> & TabsExtraProps<string>, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & TabsExtraProps<string>, import("@gui/web").StackStyleBase, {
+        size?: import("@gui/web").SizeTokens | undefined;
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         transparent?: boolean | undefined;
         fullscreen?: boolean | undefined;
         circular?: boolean | undefined;
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
         chromeless?: boolean | "all" | undefined;
-    }, import("@tamagui/web").StaticConfigPublic];
+    }, import("@gui/web").StaticConfigPublic];
 } & {
-    List: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@tamagui/web").StackStyleBase | "size" | "fullscreen"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & {
+    List: React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@gui/web").StackStyleBase | "size" | "fullscreen"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & {
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         fullscreen?: boolean | undefined;
         size?: any;
-    }>> & import("@tamagui/group").GroupExtraProps & {
+    }>> & import("@gui/group").GroupExtraProps & {
         /**
          * Whether to loop over after reaching the end or start of the items
          * @default true
          */
         loop?: boolean;
-    } & React.RefAttributes<TamaguiElement>>;
+    } & React.RefAttributes<GuiElement>>;
     /**
      * @deprecated Use Tabs.Tab instead
      */
-    Trigger: import("@tamagui/web").TamaguiComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    Trigger: import("@gui/web").GuiComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -104,10 +104,10 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    }>, "theme" | "debug" | "style" | `$${string}` | `$${number}` | import("@tamagui/web").GroupMediaKeys | `$theme-${string}` | `$theme-${number}` | "hitSlop" | "children" | "target" | "htmlFor" | "asChild" | "dangerouslySetInnerHTML" | "disabled" | "className" | "themeShallow" | "unstyled" | "id" | "render" | "group" | "untilMeasured" | "componentName" | "tabIndex" | "role" | "disableOptimization" | "forceStyle" | "disableClassName" | "animatedBy" | "onStartShouldSetResponder" | "onScrollShouldSetResponder" | "onScrollShouldSetResponderCapture" | "onSelectionChangeShouldSetResponder" | "onSelectionChangeShouldSetResponderCapture" | "onLayout" | "elevationAndroid" | "rel" | "download" | "onMoveShouldSetResponder" | "onResponderEnd" | "onResponderGrant" | "onResponderReject" | "onResponderMove" | "onResponderRelease" | "onResponderStart" | "onResponderTerminationRequest" | "onResponderTerminate" | "onStartShouldSetResponderCapture" | "onMoveShouldSetResponderCapture" | "onFocus" | "onBlur" | "onPointerCancel" | "onPointerDown" | "onPointerMove" | "onPointerUp" | "needsOffscreenAlphaCompositing" | "removeClippedSubviews" | "testID" | "nativeID" | "collapsable" | "collapsableChildren" | "renderToHardwareTextureAndroid" | "focusable" | "shouldRasterizeIOS" | "isTVSelectable" | "hasTVPreferredFocus" | "tvParallaxShiftDistanceX" | "tvParallaxShiftDistanceY" | "tvParallaxTiltAngle" | "tvParallaxMagnification" | "onTouchStart" | "onTouchMove" | "onTouchEnd" | "onTouchCancel" | "onTouchEndCapture" | "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" | "onPointerMoveCapture" | "onPointerCancelCapture" | "onPointerDownCapture" | "onPointerUpCapture" | "accessible" | "accessibilityActions" | "accessibilityLabel" | "aria-label" | "accessibilityRole" | "accessibilityState" | "aria-busy" | "aria-checked" | "aria-disabled" | "aria-expanded" | "aria-selected" | "accessibilityHint" | "accessibilityValue" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "onAccessibilityAction" | "importantForAccessibility" | "aria-hidden" | "aria-modal" | "accessibilityLabelledBy" | "aria-labelledby" | "accessibilityLiveRegion" | "aria-live" | "screenReaderFocusable" | "accessibilityElementsHidden" | "accessibilityViewIsModal" | "onAccessibilityEscape" | "onAccessibilityTap" | "onMagicTap" | "accessibilityIgnoresInvertColors" | "accessibilityLanguage" | "accessibilityShowsLargeContentViewer" | "accessibilityLargeContentTitle" | "accessibilityRespondsToUserInteraction" | "onPress" | "onLongPress" | "onPressIn" | "onPressOut" | "onMouseEnter" | "onMouseLeave" | "onMouseDown" | "onMouseUp" | "onMouseMove" | "onMouseOver" | "onMouseOut" | "onClick" | "onDoubleClick" | "onContextMenu" | "onWheel" | "onKeyDown" | "onKeyUp" | "onChange" | "onInput" | "onBeforeInput" | "onScroll" | "onCopy" | "onCut" | "onPaste" | "onDrag" | "onDragStart" | "onDragEnd" | "onDragEnter" | "onDragLeave" | "onDragOver" | "onDrop" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle" | "value" | keyof import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    }>, "theme" | "debug" | "style" | `$${string}` | `$${number}` | import("@gui/web").GroupMediaKeys | `$theme-${string}` | `$theme-${number}` | "hitSlop" | "children" | "target" | "htmlFor" | "asChild" | "dangerouslySetInnerHTML" | "disabled" | "className" | "themeShallow" | "unstyled" | "id" | "render" | "group" | "untilMeasured" | "componentName" | "tabIndex" | "role" | "disableOptimization" | "forceStyle" | "disableClassName" | "animatedBy" | "onStartShouldSetResponder" | "onScrollShouldSetResponder" | "onScrollShouldSetResponderCapture" | "onSelectionChangeShouldSetResponder" | "onSelectionChangeShouldSetResponderCapture" | "onLayout" | "elevationAndroid" | "rel" | "download" | "onMoveShouldSetResponder" | "onResponderEnd" | "onResponderGrant" | "onResponderReject" | "onResponderMove" | "onResponderRelease" | "onResponderStart" | "onResponderTerminationRequest" | "onResponderTerminate" | "onStartShouldSetResponderCapture" | "onMoveShouldSetResponderCapture" | "onFocus" | "onBlur" | "onPointerCancel" | "onPointerDown" | "onPointerMove" | "onPointerUp" | "needsOffscreenAlphaCompositing" | "removeClippedSubviews" | "testID" | "nativeID" | "collapsable" | "collapsableChildren" | "renderToHardwareTextureAndroid" | "focusable" | "shouldRasterizeIOS" | "isTVSelectable" | "hasTVPreferredFocus" | "tvParallaxShiftDistanceX" | "tvParallaxShiftDistanceY" | "tvParallaxTiltAngle" | "tvParallaxMagnification" | "onTouchStart" | "onTouchMove" | "onTouchEnd" | "onTouchCancel" | "onTouchEndCapture" | "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" | "onPointerMoveCapture" | "onPointerCancelCapture" | "onPointerDownCapture" | "onPointerUpCapture" | "accessible" | "accessibilityActions" | "accessibilityLabel" | "aria-label" | "accessibilityRole" | "accessibilityState" | "aria-busy" | "aria-checked" | "aria-disabled" | "aria-expanded" | "aria-selected" | "accessibilityHint" | "accessibilityValue" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "onAccessibilityAction" | "importantForAccessibility" | "aria-hidden" | "aria-modal" | "accessibilityLabelledBy" | "aria-labelledby" | "accessibilityLiveRegion" | "aria-live" | "screenReaderFocusable" | "accessibilityElementsHidden" | "accessibilityViewIsModal" | "onAccessibilityEscape" | "onAccessibilityTap" | "onMagicTap" | "accessibilityIgnoresInvertColors" | "accessibilityLanguage" | "accessibilityShowsLargeContentViewer" | "accessibilityLargeContentTitle" | "accessibilityRespondsToUserInteraction" | "onPress" | "onLongPress" | "onPressIn" | "onPressOut" | "onMouseEnter" | "onMouseLeave" | "onMouseDown" | "onMouseUp" | "onMouseMove" | "onMouseOver" | "onMouseOut" | "onClick" | "onDoubleClick" | "onContextMenu" | "onWheel" | "onKeyDown" | "onKeyUp" | "onChange" | "onInput" | "onBeforeInput" | "onScroll" | "onCopy" | "onCut" | "onPaste" | "onDrag" | "onDragStart" | "onDragEnd" | "onDragEnter" | "onDragLeave" | "onDragOver" | "onDrop" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle" | "value" | keyof import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -116,38 +116,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> | "onInteraction" | "activeTheme" | "__scopeTabs"> & Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
-        }, {
-            accept: {
-                readonly activeStyle: "style";
-            };
-        }>> | undefined;
-    }> & {
-        disabled?: boolean | undefined;
-        unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
-        }, {
-            accept: {
-                readonly activeStyle: "style";
-            };
-        }>> | undefined;
-    }>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>>> | "onInteraction" | "activeTheme" | "__scopeTabs"> & Omit<import("@gui/core").RNGuiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -156,18 +136,38 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
+        }, {
+            accept: {
+                readonly activeStyle: "style";
+            };
+        }>> | undefined;
+    }> & {
+        disabled?: boolean | undefined;
+        unstyled?: boolean | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
+        }, {
+            accept: {
+                readonly activeStyle: "style";
+            };
+        }>> | undefined;
+    }>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -176,7 +176,7 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }>> & {
         /** The value for the tabs state to be changed to after activation of the trigger */
         value: string;
@@ -188,9 +188,9 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
         activeTheme?: string | null;
     } & {
         __scopeTabs?: string;
-    }, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & Omit<import("@gui/core").RNGuiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -199,18 +199,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -219,18 +219,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -239,7 +239,7 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }>> & {
         /** The value for the tabs state to be changed to after activation of the trigger */
         value: string;
@@ -251,9 +251,9 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
         activeTheme?: string | null;
     } & {
         __scopeTabs?: string;
-    }, import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }, import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -262,15 +262,15 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }, {
         accept: {
             readonly activeStyle: "style";
         };
     }>;
-    Tab: import("@tamagui/web").TamaguiComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    Tab: import("@gui/web").GuiComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -279,10 +279,10 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    }>, "theme" | "debug" | "style" | `$${string}` | `$${number}` | import("@tamagui/web").GroupMediaKeys | `$theme-${string}` | `$theme-${number}` | "hitSlop" | "children" | "target" | "htmlFor" | "asChild" | "dangerouslySetInnerHTML" | "disabled" | "className" | "themeShallow" | "unstyled" | "id" | "render" | "group" | "untilMeasured" | "componentName" | "tabIndex" | "role" | "disableOptimization" | "forceStyle" | "disableClassName" | "animatedBy" | "onStartShouldSetResponder" | "onScrollShouldSetResponder" | "onScrollShouldSetResponderCapture" | "onSelectionChangeShouldSetResponder" | "onSelectionChangeShouldSetResponderCapture" | "onLayout" | "elevationAndroid" | "rel" | "download" | "onMoveShouldSetResponder" | "onResponderEnd" | "onResponderGrant" | "onResponderReject" | "onResponderMove" | "onResponderRelease" | "onResponderStart" | "onResponderTerminationRequest" | "onResponderTerminate" | "onStartShouldSetResponderCapture" | "onMoveShouldSetResponderCapture" | "onFocus" | "onBlur" | "onPointerCancel" | "onPointerDown" | "onPointerMove" | "onPointerUp" | "needsOffscreenAlphaCompositing" | "removeClippedSubviews" | "testID" | "nativeID" | "collapsable" | "collapsableChildren" | "renderToHardwareTextureAndroid" | "focusable" | "shouldRasterizeIOS" | "isTVSelectable" | "hasTVPreferredFocus" | "tvParallaxShiftDistanceX" | "tvParallaxShiftDistanceY" | "tvParallaxTiltAngle" | "tvParallaxMagnification" | "onTouchStart" | "onTouchMove" | "onTouchEnd" | "onTouchCancel" | "onTouchEndCapture" | "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" | "onPointerMoveCapture" | "onPointerCancelCapture" | "onPointerDownCapture" | "onPointerUpCapture" | "accessible" | "accessibilityActions" | "accessibilityLabel" | "aria-label" | "accessibilityRole" | "accessibilityState" | "aria-busy" | "aria-checked" | "aria-disabled" | "aria-expanded" | "aria-selected" | "accessibilityHint" | "accessibilityValue" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "onAccessibilityAction" | "importantForAccessibility" | "aria-hidden" | "aria-modal" | "accessibilityLabelledBy" | "aria-labelledby" | "accessibilityLiveRegion" | "aria-live" | "screenReaderFocusable" | "accessibilityElementsHidden" | "accessibilityViewIsModal" | "onAccessibilityEscape" | "onAccessibilityTap" | "onMagicTap" | "accessibilityIgnoresInvertColors" | "accessibilityLanguage" | "accessibilityShowsLargeContentViewer" | "accessibilityLargeContentTitle" | "accessibilityRespondsToUserInteraction" | "onPress" | "onLongPress" | "onPressIn" | "onPressOut" | "onMouseEnter" | "onMouseLeave" | "onMouseDown" | "onMouseUp" | "onMouseMove" | "onMouseOver" | "onMouseOut" | "onClick" | "onDoubleClick" | "onContextMenu" | "onWheel" | "onKeyDown" | "onKeyUp" | "onChange" | "onInput" | "onBeforeInput" | "onScroll" | "onCopy" | "onCut" | "onPaste" | "onDrag" | "onDragStart" | "onDragEnd" | "onDragEnter" | "onDragLeave" | "onDragOver" | "onDrop" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle" | "value" | keyof import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    }>, "theme" | "debug" | "style" | `$${string}` | `$${number}` | import("@gui/web").GroupMediaKeys | `$theme-${string}` | `$theme-${number}` | "hitSlop" | "children" | "target" | "htmlFor" | "asChild" | "dangerouslySetInnerHTML" | "disabled" | "className" | "themeShallow" | "unstyled" | "id" | "render" | "group" | "untilMeasured" | "componentName" | "tabIndex" | "role" | "disableOptimization" | "forceStyle" | "disableClassName" | "animatedBy" | "onStartShouldSetResponder" | "onScrollShouldSetResponder" | "onScrollShouldSetResponderCapture" | "onSelectionChangeShouldSetResponder" | "onSelectionChangeShouldSetResponderCapture" | "onLayout" | "elevationAndroid" | "rel" | "download" | "onMoveShouldSetResponder" | "onResponderEnd" | "onResponderGrant" | "onResponderReject" | "onResponderMove" | "onResponderRelease" | "onResponderStart" | "onResponderTerminationRequest" | "onResponderTerminate" | "onStartShouldSetResponderCapture" | "onMoveShouldSetResponderCapture" | "onFocus" | "onBlur" | "onPointerCancel" | "onPointerDown" | "onPointerMove" | "onPointerUp" | "needsOffscreenAlphaCompositing" | "removeClippedSubviews" | "testID" | "nativeID" | "collapsable" | "collapsableChildren" | "renderToHardwareTextureAndroid" | "focusable" | "shouldRasterizeIOS" | "isTVSelectable" | "hasTVPreferredFocus" | "tvParallaxShiftDistanceX" | "tvParallaxShiftDistanceY" | "tvParallaxTiltAngle" | "tvParallaxMagnification" | "onTouchStart" | "onTouchMove" | "onTouchEnd" | "onTouchCancel" | "onTouchEndCapture" | "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" | "onPointerMoveCapture" | "onPointerCancelCapture" | "onPointerDownCapture" | "onPointerUpCapture" | "accessible" | "accessibilityActions" | "accessibilityLabel" | "aria-label" | "accessibilityRole" | "accessibilityState" | "aria-busy" | "aria-checked" | "aria-disabled" | "aria-expanded" | "aria-selected" | "accessibilityHint" | "accessibilityValue" | "aria-valuemax" | "aria-valuemin" | "aria-valuenow" | "aria-valuetext" | "onAccessibilityAction" | "importantForAccessibility" | "aria-hidden" | "aria-modal" | "accessibilityLabelledBy" | "aria-labelledby" | "accessibilityLiveRegion" | "aria-live" | "screenReaderFocusable" | "accessibilityElementsHidden" | "accessibilityViewIsModal" | "onAccessibilityEscape" | "onAccessibilityTap" | "onMagicTap" | "accessibilityIgnoresInvertColors" | "accessibilityLanguage" | "accessibilityShowsLargeContentViewer" | "accessibilityLargeContentTitle" | "accessibilityRespondsToUserInteraction" | "onPress" | "onLongPress" | "onPressIn" | "onPressOut" | "onMouseEnter" | "onMouseLeave" | "onMouseDown" | "onMouseUp" | "onMouseMove" | "onMouseOver" | "onMouseOut" | "onClick" | "onDoubleClick" | "onContextMenu" | "onWheel" | "onKeyDown" | "onKeyUp" | "onChange" | "onInput" | "onBeforeInput" | "onScroll" | "onCopy" | "onCut" | "onPaste" | "onDrag" | "onDragStart" | "onDragEnd" | "onDragEnter" | "onDragLeave" | "onDragOver" | "onDrop" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle" | "value" | keyof import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -291,38 +291,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> | "onInteraction" | "activeTheme" | "__scopeTabs"> & Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
-        }, {
-            accept: {
-                readonly activeStyle: "style";
-            };
-        }>> | undefined;
-    }> & {
-        disabled?: boolean | undefined;
-        unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
-        }, {
-            accept: {
-                readonly activeStyle: "style";
-            };
-        }>> | undefined;
-    }>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>>> | "onInteraction" | "activeTheme" | "__scopeTabs"> & Omit<import("@gui/core").RNGuiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -331,18 +311,38 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
+        }, {
+            accept: {
+                readonly activeStyle: "style";
+            };
+        }>> | undefined;
+    }> & {
+        disabled?: boolean | undefined;
+        unstyled?: boolean | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
+        }, {
+            accept: {
+                readonly activeStyle: "style";
+            };
+        }>> | undefined;
+    }>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -351,7 +351,7 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }>> & {
         /** The value for the tabs state to be changed to after activation of the trigger */
         value: string;
@@ -363,9 +363,9 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
         activeTheme?: string | null;
     } & {
         __scopeTabs?: string;
-    }, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@tamagui/web").StackStyleBase | "size" | "activeStyle"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & Omit<import("@gui/core").RNGuiViewNonStyleProps, "disabled" | "unstyled" | keyof import("@gui/web").StackStyleBase | "size" | "activeStyle"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -374,18 +374,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -394,18 +394,18 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }> & {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
-    } & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+        size?: import("@gui/web").SizeTokens | undefined;
+    } & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
             };
         }>> | undefined;
-    }>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -414,7 +414,7 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }>> & {
         /** The value for the tabs state to be changed to after activation of the trigger */
         value: string;
@@ -426,9 +426,9 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
         activeTheme?: string | null;
     } & {
         __scopeTabs?: string;
-    }, import("@tamagui/web").StackStyleBase & {
-        readonly activeStyle?: Partial<import("@tamagui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, keyof import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {}>> & React.RefAttributes<TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
-            __tama: [import("@tamagui/web").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}];
+    }, import("@gui/web").StackStyleBase & {
+        readonly activeStyle?: Partial<import("@gui/web").InferStyleProps<React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, keyof import("@gui/web").StackStyleBase> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {}>> & React.RefAttributes<GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}> & Omit<{}, "staticConfig" | "styleable"> & {
+            __tama: [import("@gui/web").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {}, {}];
         }, {
             accept: {
                 readonly activeStyle: "style";
@@ -437,29 +437,29 @@ export declare function createTabs<C extends TabsComponent, T extends TabCompone
     }, {
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").SizeTokens | undefined;
+        size?: import("@gui/web").SizeTokens | undefined;
     }, {
         accept: {
             readonly activeStyle: "style";
         };
     }>;
-    Content: import("@tamagui/web").TamaguiComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+    Content: import("@gui/web").GuiComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         transparent?: boolean | undefined;
         fullscreen?: boolean | undefined;
         circular?: boolean | undefined;
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
         chromeless?: boolean | "all" | undefined;
-    }>, keyof TabsContentExtraProps> & TabsContentExtraProps, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & TabsContentExtraProps, import("@tamagui/web").StackStyleBase, {
-        elevation?: number | import("@tamagui/web").SizeTokens | undefined;
+    }>, keyof TabsContentExtraProps> & TabsContentExtraProps, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & TabsContentExtraProps, import("@gui/web").StackStyleBase, {
+        elevation?: number | import("@gui/web").SizeTokens | undefined;
         transparent?: boolean | undefined;
         fullscreen?: boolean | undefined;
         circular?: boolean | undefined;
         elevate?: boolean | undefined;
         bordered?: boolean | undefined;
         chromeless?: boolean | "all" | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
 };
 type TabsFrameProps = GetProps<typeof DefaultTabsFrame>;
 type TabsExtraProps<Tab = string> = {
@@ -518,7 +518,7 @@ type TabsContentExtraProps = {
     value: string;
     /**
      * Used to force mounting when more control is needed. Useful when
-     * controlling animation with Tamagui animations.
+     * controlling animation with Gui animations.
      */
     forceMount?: boolean;
 };

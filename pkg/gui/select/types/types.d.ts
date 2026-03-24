@@ -1,5 +1,5 @@
-import type { NativeValue, SizeTokens } from '@tamagui/core';
-import type { YStackProps } from '@tamagui/stacks';
+import type { NativeValue, SizeTokens } from '@gui/core';
+import type { YStackProps } from '@gui/stacks';
 import type { DispatchWithoutAction, HTMLProps, MutableRefObject, ReactNode, RefObject } from 'react';
 type ContextData = Record<string, any>;
 type ReferenceType = Element;

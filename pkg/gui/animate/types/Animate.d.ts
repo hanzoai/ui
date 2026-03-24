@@ -1,4 +1,4 @@
-import type { AnimatePresenceProps } from "@tamagui/animate-presence";
+import type { AnimatePresenceProps } from "@gui/animate-presence";
 type BaseProps = {
 	children: React.ReactNode;
 	passThrough?: boolean;

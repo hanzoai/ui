@@ -1,6 +1,6 @@
-import { getSpace } from '@hanzo/gui-get-token'
-import type { SizableStackProps } from '@hanzo/gui-stacks'
-import { Paragraph } from '@hanzo/gui-text'
+import { getSpace } from '@hanzogui/get-token'
+import type { SizableStackProps } from '@hanzogui/stacks'
+import { Paragraph } from '@hanzogui/text'
 import * as React from 'react'
 
 import type { TooltipProps } from './Tooltip'

@@ -1,14 +1,14 @@
 // forked from radix https://github.com/radix-ui/primitives/blob/main/packages/react/avatar/src/Avatar.tsx
 
-import type { GetProps, SizeTokens, TamaguiElement } from '@hanzo/gui-core'
-import { getTokens, getVariableValue, styled } from '@hanzo/gui-core'
-import type { Scope } from '@hanzo/gui-create-context'
-import { createContextScope } from '@hanzo/gui-create-context'
-import { withStaticProperties } from '@hanzo/gui-helpers'
-import type { ImageProps } from '@hanzo/gui-image'
-import { Image } from '@hanzo/gui-image'
-import { Square, getShapeSize } from '@hanzo/gui-shapes'
-import { YStack } from '@hanzo/gui-stacks'
+import type { GetProps, SizeTokens, GuiElement } from '@hanzogui/core'
+import { getTokens, getVariableValue, styled } from '@hanzogui/core'
+import type { Scope } from '@hanzogui/create-context'
+import { createContextScope } from '@hanzogui/create-context'
+import { withStaticProperties } from '@hanzogui/helpers'
+import type { ImageProps } from '@hanzogui/image'
+import { Image } from '@hanzogui/image'
+import { Square, getShapeSize } from '@hanzogui/shapes'
+import { YStack } from '@hanzogui/stacks'
 import * as React from 'react'
 
 const AVATAR_NAME = 'Avatar'
@@ -37,7 +37,7 @@ type AvatarImageProps = Partial<ImageProps> & {
   onLoadingStatusChange?: (status: ImageLoadingStatus) => void
 }
 
-const AvatarImage = React.forwardRef<TamaguiElement, AvatarImageProps>(
+const AvatarImage = React.forwardRef<GuiElement, AvatarImageProps>(
   (props: ScopedProps<AvatarImageProps>, forwardedRef) => {
     const {
       __scopeAvatar,
@@ -169,7 +169,7 @@ type AvatarProps = GetProps<typeof AvatarFrame>
 
 /**
  * @summary A component that displays an image or a fallback icon.
- * @see — Docs https://tamagui.dev/ui/avatar
+ * @see — Docs https://gui.dev/ui/avatar
  *
  * @example
  * ```tsx
@@ -183,7 +183,7 @@ type AvatarProps = GetProps<typeof AvatarFrame>
  * ```
  */
 const Avatar = withStaticProperties(
-  React.forwardRef<TamaguiElement, AvatarProps>(
+  React.forwardRef<GuiElement, AvatarProps>(
     (props: ScopedProps<AvatarProps>, forwardedRef) => {
       const { __scopeAvatar, size = '$true', ...avatarProps } = props
       const [imageLoadingStatus, setImageLoadingStatus] =

@@ -1,4 +1,4 @@
-import type { ColorTokens, FontSizeTokens, GetProps, SizeTokens } from '@tamagui/web';
+import type { ColorTokens, FontSizeTokens, GetProps, SizeTokens } from '@gui/web';
 import type { FunctionComponent, JSX, ReactNode } from 'react';
 type IconProp = JSX.Element | FunctionComponent<{
     color?: any;
@@ -14,45 +14,45 @@ export type ListItemExtraProps = {
     iconSize?: SizeTokens;
 };
 export type ListItemProps = GetProps<typeof ListItemFrame> & ListItemExtraProps;
-declare const ListItemFrame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+declare const ListItemFrame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-export declare const ListItem: import("react").ForwardRefExoticComponent<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic>;
+export declare const ListItem: import("react").ForwardRefExoticComponent<Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}>, keyof ListItemExtraProps> & ListItemExtraProps & import("react").RefAttributes<import("@tamagui/web").TamaguiElement>> & import("@tamagui/web").StaticComponentObject<Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}>, keyof ListItemExtraProps> & ListItemExtraProps & import("react").RefAttributes<import("@gui/web").GuiElement>> & import("@gui/web").StaticComponentObject<Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}>, keyof ListItemExtraProps> & ListItemExtraProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps & ListItemExtraProps, import("@tamagui/web").StackStyleBase, {
+}>, keyof ListItemExtraProps> & ListItemExtraProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps & ListItemExtraProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic> & Omit<import("@tamagui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [Omit<import("@tamagui/web").GetFinalProps<import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic> & Omit<import("@gui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [Omit<import("@gui/web").GetFinalProps<import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         variant?: "outlined" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
         active?: boolean | undefined;
-    }>, keyof ListItemExtraProps> & ListItemExtraProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps & ListItemExtraProps, import("@tamagui/web").StackStyleBase, {
+    }>, keyof ListItemExtraProps> & ListItemExtraProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps & ListItemExtraProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         variant?: "outlined" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
         active?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic];
+    }, import("@gui/web").StaticConfigPublic];
 } & {
     Apply: import("react").Provider<{
         size?: SizeTokens;
@@ -66,30 +66,30 @@ export declare const ListItem: import("react").ForwardRefExoticComponent<Omit<im
         children?: ReactNode;
         scope?: string;
     }>;
-    Frame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    Frame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         variant?: "outlined" | undefined;
         disabled?: boolean | undefined;
         unstyled?: boolean | undefined;
         active?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Text: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    Text: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         size?: FontSizeTokens | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Subtitle: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    Subtitle: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         size?: SizeTokens | FontSizeTokens | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
     Icon: (props: {
         children: React.ReactNode;
         size?: SizeTokens;
         scaleIcon?: number;
     }) => any;
-    Title: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    Title: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         size?: FontSizeTokens | undefined;
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
 };
 export {};
 //# sourceMappingURL=ListItem.d.ts.map

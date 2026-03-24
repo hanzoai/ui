@@ -1,5 +1,5 @@
-export declare const Separator: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, import("@tamagui/core").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const Separator: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, import("@gui/core").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
     vertical?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 //# sourceMappingURL=Separator.d.ts.map

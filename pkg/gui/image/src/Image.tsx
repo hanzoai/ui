@@ -1,4 +1,4 @@
-import { View, styled } from '@hanzo/gui-web'
+import { View, styled } from '@hanzogui/web'
 import type { ImageProps, ImageType } from './types'
 
 const StyledImage = styled(View, {

@@ -1,4 +1,4 @@
-import type { SizeVariantSpreadFunction } from '@tamagui/core';
+import type { SizeVariantSpreadFunction } from '@gui/core';
 export declare const defaultStyles: {
     readonly borderColor: "$borderColor";
     readonly backgroundColor: "$background";

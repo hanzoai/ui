@@ -5,11 +5,11 @@ import {
   ProvideAdaptContext,
   useAdaptContext,
   useAdaptIsActive,
-} from '@hanzo/gui-adapt'
-import { Animate } from '@hanzo/gui-animate'
-import { composeRefs, useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { GetProps, TamaguiElement, ViewProps } from '@hanzo/gui-core'
+} from '@hanzogui/adapt'
+import { Animate } from '@hanzogui/animate'
+import { composeRefs, useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { GetProps, GuiElement, ViewProps } from '@hanzogui/core'
 import {
   createStyledContext,
   getExpandedShorthand,
@@ -18,26 +18,26 @@ import {
   Theme,
   useThemeName,
   View,
-} from '@hanzo/gui-core'
-import { createContext } from '@hanzo/gui-create-context'
-import type { DismissableProps } from '@hanzo/gui-dismissable'
-import { Dismissable } from '@hanzo/gui-dismissable'
-import type { FocusScopeProps } from '@hanzo/gui-focus-scope'
-import { FocusScope, FocusScopeController } from '@hanzo/gui-focus-scope'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+} from '@hanzogui/core'
+import { createContext } from '@hanzogui/create-context'
+import type { DismissableProps } from '@hanzogui/dismissable'
+import { Dismissable } from '@hanzogui/dismissable'
+import type { FocusScopeProps } from '@hanzogui/focus-scope'
+import { FocusScope, FocusScopeController } from '@hanzogui/focus-scope'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
 import {
   needsPortalRepropagation,
   Portal,
   PortalItem,
   resolveViewZIndex,
-} from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { SheetController } from '@hanzo/gui-sheet/controller'
-import type { YStackProps } from '@hanzo/gui-stacks'
-import { ButtonNestingContext, ThemeableStack, YStack } from '@hanzo/gui-stacks'
-import { H2, Paragraph } from '@hanzo/gui-text'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { StackZIndexContext } from '@hanzo/gui-z-index-stack'
+} from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { SheetController } from '@hanzogui/sheet/controller'
+import type { YStackProps } from '@hanzogui/stacks'
+import { ButtonNestingContext, ThemeableStack, YStack } from '@hanzogui/stacks'
+import { H2, Paragraph } from '@hanzogui/text'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { StackZIndexContext } from '@hanzogui/z-index-stack'
 import * as React from 'react'
 
 export type DialogScopes = string
@@ -75,8 +75,8 @@ type DialogContextValue = {
   forceMount?: boolean
   keepChildrenMounted?: boolean
   disableRemoveScroll?: boolean
-  triggerRef: React.RefObject<TamaguiElement | null>
-  contentRef: React.RefObject<TamaguiElement | null>
+  triggerRef: React.RefObject<GuiElement | null>
+  contentRef: React.RefObject<GuiElement | null>
   contentId: string
   titleId: string
   descriptionId: string
@@ -218,10 +218,10 @@ const DialogPortalItem = ({
   )
 }
 
-const DialogPortal = React.forwardRef<TamaguiElement, DialogPortalProps>(
+const DialogPortal = React.forwardRef<GuiElement, DialogPortalProps>(
   (props, forwardRef) => {
     const { scope, forceMount, children, ...frameProps } = props
-    const dialogRef = React.useRef<TamaguiElement>(null)
+    const dialogRef = React.useRef<GuiElement>(null)
     const ref = composeRefs(dialogRef, forwardRef)
 
     const context = useDialogContext(scope)
@@ -496,9 +496,9 @@ type DialogContentTypeProps = DialogContentImplProps & {
   context: DialogContextValue
 }
 
-const DialogContentModal = React.forwardRef<TamaguiElement, DialogContentTypeProps>(
+const DialogContentModal = React.forwardRef<GuiElement, DialogContentTypeProps>(
   ({ children, context, ...props }, forwardedRef) => {
-    const contentRef = React.useRef<TamaguiElement>(null)
+    const contentRef = React.useRef<GuiElement>(null)
     const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef)
 
     return (
@@ -543,7 +543,7 @@ const DialogContentModal = React.forwardRef<TamaguiElement, DialogContentTypePro
 
 /* -----------------------------------------------------------------------------------------------*/
 
-const DialogContentNonModal = React.forwardRef<TamaguiElement, DialogContentTypeProps>(
+const DialogContentNonModal = React.forwardRef<GuiElement, DialogContentTypeProps>(
   (props, forwardedRef) => {
     const hasInteractedOutsideRef = React.useRef(false)
 
@@ -615,7 +615,7 @@ type DialogContentImplExtraProps = Omit<DismissableProps, 'onDismiss'> & {
 
 type DialogContentImplProps = DialogContentFrameProps & DialogContentImplExtraProps
 
-const DialogContentImpl = React.forwardRef<TamaguiElement, DialogContentImplProps>(
+const DialogContentImpl = React.forwardRef<GuiElement, DialogContentImplProps>(
   (props, forwardedRef) => {
     const {
       trapFocus,
@@ -630,7 +630,7 @@ const DialogContentImpl = React.forwardRef<TamaguiElement, DialogContentImplProp
       ...contentProps
     } = props
 
-    const contentRef = React.useRef<TamaguiElement>(null)
+    const contentRef = React.useRef<GuiElement>(null)
     const composedRefs = useComposedRefs(forwardedRef, contentRef)
     const isAdapted = useAdaptIsActive(context.adaptScope)
 
@@ -828,7 +828,7 @@ const TitleWarning: React.FC<TitleWarningProps> = ({ titleId }) => {
 const DESCRIPTION_WARNING_NAME = 'DialogDescriptionWarning'
 
 type DescriptionWarningProps = {
-  contentRef: React.RefObject<TamaguiElement>
+  contentRef: React.RefObject<GuiElement>
   descriptionId?: string
 }
 
@@ -889,8 +889,8 @@ const Dialog = withStaticProperties(
       const titleId = `${dialogId}-title`
       const descriptionId = `${dialogId}-description`
 
-      const triggerRef = React.useRef<TamaguiElement>(null)
-      const contentRef = React.useRef<TamaguiElement>(null)
+      const triggerRef = React.useRef<GuiElement>(null)
+      const contentRef = React.useRef<GuiElement>(null)
 
       const [open, setOpen] = useControllableState({
         prop: openProp,

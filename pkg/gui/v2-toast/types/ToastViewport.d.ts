@@ -1,13 +1,13 @@
-import type { GetProps, TamaguiElement } from '@tamagui/core';
+import type { GetProps, GuiElement } from '@gui/core';
 import * as React from 'react';
 declare const VIEWPORT_DEFAULT_HOTKEY: string[];
 declare const VIEWPORT_PAUSE = "toast.viewportPause";
 declare const VIEWPORT_RESUME = "toast.viewportResume";
-declare const ToastViewportFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+declare const ToastViewportFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 type ToastViewportFrameProps = GetProps<typeof ToastViewportFrame>;
 type ToastViewportProps = ToastViewportFrameProps & {
     /**
@@ -30,21 +30,21 @@ type ToastViewportProps = ToastViewportFrameProps & {
      */
     multipleToasts?: boolean;
     /**
-     * When true, uses a portal to render at the very top of the root TamaguiProvider.
+     * When true, uses a portal to render at the very top of the root GuiProvider.
      */
     portalToRoot?: boolean;
 };
-declare const ToastViewport: React.NamedExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@tamagui/core").StackStyleBase | "fullscreen"> & import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
+declare const ToastViewport: React.NamedExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, "unstyled" | "elevation" | keyof import("@gui/core").StackStyleBase | "fullscreen"> & import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>> & import("@tamagui/core").WithPseudoProps<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>> & import("@gui/core").WithPseudoProps<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>>> & import("@tamagui/core").WithMediaProps<import("@tamagui/core").WithThemeShorthandsAndPseudos<import("@tamagui/core").StackStyleBase, {
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>>> & import("@gui/core").WithMediaProps<import("@gui/core").WithThemeShorthandsAndPseudos<import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     fullscreen?: boolean | undefined;
 }>> & {
     /**
@@ -67,7 +67,7 @@ declare const ToastViewport: React.NamedExoticComponent<Omit<import("@tamagui/co
      */
     multipleToasts?: boolean;
     /**
-     * When true, uses a portal to render at the very top of the root TamaguiProvider.
+     * When true, uses a portal to render at the very top of the root GuiProvider.
      */
     portalToRoot?: boolean;
 } & React.RefAttributes<HTMLDivElement>>;
