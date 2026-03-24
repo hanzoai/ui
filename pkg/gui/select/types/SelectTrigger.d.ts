@@ -1,27 +1,27 @@
-import type { TamaguiElement } from '@tamagui/core';
-import type { ListItemProps } from '@tamagui/list-item';
+import type { GuiElement } from '@gui/core';
+import type { ListItemProps } from '@gui/list-item';
 import * as React from 'react';
 import type { SelectScopedProps } from './types';
 export type SelectTriggerProps = SelectScopedProps<ListItemProps>;
-export declare const SelectTrigger: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").StackNonStyleProps, "disabled" | "size" | "unstyled" | keyof import("@tamagui/core").StackStyleBase | "variant" | "active"> & import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+export declare const SelectTrigger: React.ForwardRefExoticComponent<Omit<import("@gui/core").StackNonStyleProps, "disabled" | "size" | "unstyled" | keyof import("@gui/core").StackStyleBase | "variant" | "active"> & import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
+    size?: import("@gui/core").SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>> & import("@tamagui/core").WithPseudoProps<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>> & import("@gui/core").WithPseudoProps<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
+    size?: import("@gui/core").SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>>> & import("@tamagui/core").WithMediaProps<import("@tamagui/core").WithThemeShorthandsAndPseudos<import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>>> & import("@gui/core").WithMediaProps<import("@gui/core").WithThemeShorthandsAndPseudos<import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     variant?: "outlined" | undefined;
     disabled?: boolean | undefined;
     unstyled?: boolean | undefined;
     active?: boolean | undefined;
-}>> & import("@tamagui/list-item").ListItemExtraProps & {
+}>> & import("@gui/list-item").ListItemExtraProps & {
     scope?: import("./types").SelectScopes;
-} & React.RefAttributes<TamaguiElement>>;
+} & React.RefAttributes<GuiElement>>;
 //# sourceMappingURL=SelectTrigger.d.ts.map

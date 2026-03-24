@@ -1,26 +1,26 @@
 // forked from radix-ui
 
-import { composeRefs, useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isIos, isWeb } from '@hanzo/gui-constants'
+import { composeRefs, useComposedRefs } from '@hanzogui/compose-refs'
+import { isIos, isWeb } from '@hanzogui/constants'
 import type {
   GestureReponderEvent,
   GetProps,
   SizeTokens,
-  TamaguiElement,
-} from '@hanzo/gui-core'
+  GuiElement,
+} from '@hanzogui/core'
 import {
   getTokens,
   getVariableValue,
   styled,
   useConfiguration,
   useCreateShallowSetState,
-} from '@hanzo/gui-core'
-import { getSize } from '@hanzo/gui-get-token'
-import { clamp, composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import type { SizableStackProps } from '@hanzo/gui-stacks'
-import { ThemeableStack } from '@hanzo/gui-stacks'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { useDirection } from '@hanzo/gui-use-direction'
+} from '@hanzogui/core'
+import { getSize } from '@hanzogui/get-token'
+import { clamp, composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import type { SizableStackProps } from '@hanzogui/stacks'
+import { ThemeableStack } from '@hanzogui/stacks'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { useDirection } from '@hanzogui/use-direction'
 import * as React from 'react'
 import type { View } from 'react-native'
 
@@ -231,7 +231,7 @@ const SliderVertical = React.forwardRef<View, SliderVerticalProps>(
     const setState = useCreateShallowSetState(setState_)
     const sliderRef = React.useRef<View>(null)
     const configuration = useConfiguration()
-    // these insets are insets passed from TamaguiProvider by useSafeAreaInsets()
+    // these insets are insets passed from GuiProvider by useSafeAreaInsets()
     const insets =
       isIos && configuration.insets ? configuration.insets : { top: 0, bottom: 0 }
 
@@ -299,7 +299,7 @@ const SliderVertical = React.forwardRef<View, SliderVerticalProps>(
  * SliderTrack
  * -----------------------------------------------------------------------------------------------*/
 
-type SliderTrackElement = TamaguiElement
+type SliderTrackElement = GuiElement
 
 export const SliderTrackFrame = styled(SliderFrame, {
   name: 'Slider',
@@ -409,7 +409,7 @@ const SliderActive = React.forwardRef<View, SliderActiveProps>(function SliderAc
  * SliderThumb
  * -----------------------------------------------------------------------------------------------*/
 
-// TODO make this customizable through tamagui
+// TODO make this customizable through gui
 // so we can accurately use it for estimatedSize below
 const getThumbSize = (val?: SizeTokens | number) => {
   const tokens = getTokens()
@@ -475,7 +475,7 @@ const SliderThumb = SliderThumbFrame.styleable<SliderThumbExtraProps>(
     const { __scopeSlider, index = 0, circular, size: sizeProp, ...thumbProps } = props
     const context = useSliderContext(__scopeSlider)
     const orientation = useSliderOrientationContext(__scopeSlider)
-    const [thumb, setThumb] = React.useState<TamaguiElement | null>(null)
+    const [thumb, setThumb] = React.useState<GuiElement | null>(null)
     const composedRefs = useComposedRefs(forwardedRef, setThumb as any)
 
     // We cast because index could be `-1` which would return undefined

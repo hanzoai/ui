@@ -1,7 +1,7 @@
-import type { ColorTokens, ThemeTokens } from '@hanzo/gui-core'
-import { useTheme, variableToString } from '@hanzo/gui-core'
-import type { YStackProps } from '@hanzo/gui-stacks'
-import { YStack } from '@hanzo/gui-stacks'
+import type { ColorTokens, ThemeTokens } from '@hanzogui/core'
+import { useTheme, variableToString } from '@hanzogui/core'
+import type { YStackProps } from '@hanzogui/stacks'
+import { YStack } from '@hanzogui/stacks'
 import type * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 

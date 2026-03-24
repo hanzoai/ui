@@ -1,8 +1,8 @@
-import { getDefaultTamaguiConfig } from '@hanzo/gui-config-default'
-import { createTamagui } from '@hanzo/gui-core'
+import { getDefaultGuiConfig } from '@hanzogui/config-default'
+import { createGui } from '@hanzogui/core'
 import { describe, expect, test } from 'vitest'
 
-const conf = createTamagui(getDefaultTamaguiConfig())
+const conf = createGui(getDefaultGuiConfig())
 
 describe('Button', () => {
   test(`123`, () => {
@@ -11,9 +11,9 @@ describe('Button', () => {
 
   // test(`Adapts to a when given accessibilityRole="link"`, async () => {
   //   const { container } = render(
-  //     <TamaguiProvider config={conf} defaultTheme="light">
+  //     <GuiProvider config={conf} defaultTheme="light">
   //       <Button href="http://google.com" accessibilityRole="link" />
-  //     </TamaguiProvider>
+  //     </GuiProvider>
   //   )
 
   //   expect(container.firstChild).toMatchSnapshot()

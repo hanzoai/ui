@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-accordion",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/accordion",
+  "version": "2.0.0",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
   "files": [
@@ -36,21 +36,21 @@
     "clean": "hanzo-gui-build clean"
   },
   "dependencies": {
-    "@hanzo/gui-collapsible": "workspace:*",
-    "@hanzo/gui-collection": "workspace:*",
-    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
-    "@hanzo/gui-constants": "2.0.0-rc.29",
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-create-context": "2.0.0-rc.29",
-    "@hanzo/gui-helpers": "2.0.0-rc.29",
-    "@hanzo/gui-polyfill-dev": "2.0.0-rc.29",
-    "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-text": "workspace:*",
-    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29",
-    "@hanzo/gui-use-direction": "2.0.0"
+    "@hanzogui/collapsible": "2.0.0",
+    "@hanzogui/collection": "2.0.0",
+    "@hanzogui/compose-refs": "2.0.0-rc.29",
+    "@hanzogui/constants": "2.0.0-rc.29",
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/create-context": "2.0.0-rc.29",
+    "@hanzogui/helpers": "2.0.0-rc.29",
+    "@hanzogui/polyfill-dev": "2.0.0-rc.29",
+    "@hanzogui/stacks": "2.0.0",
+    "@hanzogui/text": "2.0.0",
+    "@hanzogui/use-controllable-state": "2.0.0-rc.29",
+    "@hanzogui/use-direction": "2.0.0"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

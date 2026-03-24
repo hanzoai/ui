@@ -1,4 +1,4 @@
-import type { ViewProps } from '@tamagui/web';
+import type { ViewProps } from '@gui/web';
 import type { ImageResizeMode, ImageSourcePropType, Image as RNImage, ImageProps as RNImageProps } from 'react-native';
 type RNImageType = typeof RNImage;
 type KeyofViewProps = keyof ViewProps;

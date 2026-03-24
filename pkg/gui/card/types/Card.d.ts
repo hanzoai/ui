@@ -1,74 +1,74 @@
-import type { GetProps, SizeTokens } from '@tamagui/web';
-export declare const CardFrame: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+import type { GetProps, SizeTokens } from '@gui/web';
+export declare const CardFrame: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-export declare const CardHeader: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic>;
+export declare const CardHeader: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-export declare const CardFooter: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic>;
+export declare const CardFooter: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
-export declare const CardBackground: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic>;
+export declare const CardBackground: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
+}, import("@gui/web").StaticConfigPublic>;
 export type CardHeaderProps = GetProps<typeof CardHeader>;
 export type CardFooterProps = GetProps<typeof CardFooter>;
 export type CardProps = GetProps<typeof CardFrame>;
-export declare const Card: import("react").ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "size" | "unstyled" | "elevation" | keyof import("@tamagui/web").StackStyleBase | "fullscreen"> & import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & {
+export declare const Card: import("react").ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, "size" | "unstyled" | "elevation" | keyof import("@gui/web").StackStyleBase | "fullscreen"> & import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>> & import("@tamagui/web").WithPseudoProps<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase> & {
+} & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>> & import("@gui/web").WithPseudoProps<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase> & {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-} & import("@tamagui/web").WithShorthands<import("@tamagui/web").WithThemeValues<import("@tamagui/web").StackStyleBase>>> & import("@tamagui/web").WithMediaProps<import("@tamagui/web").WithThemeShorthandsAndPseudos<import("@tamagui/web").StackStyleBase, {
+} & import("@gui/web").WithShorthands<import("@gui/web").WithThemeValues<import("@gui/web").StackStyleBase>>> & import("@gui/web").WithMediaProps<import("@gui/web").WithThemeShorthandsAndPseudos<import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}>> & import("react").RefAttributes<import("@tamagui/web").TamaguiElement>> & import("@tamagui/web").StaticComponentObject<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}>> & import("react").RefAttributes<import("@gui/web").GuiElement>> & import("@gui/web").StaticComponentObject<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/web").StaticConfigPublic> & Omit<import("@tamagui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
-    __tama: [import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+}, import("@gui/web").StaticConfigPublic> & Omit<import("@gui/web").StaticConfigPublic, "staticConfig" | "styleable"> & {
+    __tama: [import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         unstyled?: boolean | undefined;
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic];
+    }, import("@gui/web").StaticConfigPublic];
 } & {
-    Header: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    Header: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         unstyled?: boolean | undefined;
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Footer: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    Footer: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
         size?: SizeTokens | undefined;
         unstyled?: boolean | undefined;
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Background: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    Background: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
         elevation?: number | SizeTokens | undefined;
         fullscreen?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+    }, import("@gui/web").StaticConfigPublic>;
 };
 //# sourceMappingURL=Card.d.ts.map

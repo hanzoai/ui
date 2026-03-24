@@ -4,9 +4,9 @@ import {
   isWeb,
   View,
   withStaticProperties,
-} from '@hanzo/gui-core'
-import { useSwitch } from '@hanzo/gui-switch-headless'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/core'
+import { useSwitch } from '@hanzogui/switch-headless'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 import { SwitchStyledContext } from './StyledContext'
@@ -122,7 +122,7 @@ export function createSwitch<
       const { switchProps, bubbleInput, switchRef } = useSwitch(
         props as any,
         [checked, setChecked],
-        // @ts-ignore TODO tamagui react 19 type error
+        // @ts-ignore TODO gui react 19 type error
         forwardedRef
       )
 

@@ -1,4 +1,4 @@
-import { Portal } from '@hanzo/gui-portal'
+import { Portal } from '@hanzogui/portal'
 import type { ReactNode } from 'react'
 import { Platform } from 'react-native'
 import { ReprogapateToastProvider, type ToastProviderContextValue } from './ToastProvider'

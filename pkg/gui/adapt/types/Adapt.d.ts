@@ -1,4 +1,4 @@
-import type { AllPlatforms, MediaQueryKey } from '@tamagui/core';
+import type { AllPlatforms, MediaQueryKey } from '@gui/core';
 import React from 'react';
 /**
  * Interfaces
@@ -23,7 +23,7 @@ export type AdaptProps = {
     children: React.JSX.Element | ((children: React.ReactNode) => React.ReactNode);
 };
 type Component = (props: any) => any;
-export declare const AdaptContext: import("@tamagui/core").StyledContext<AdaptParentContextI>;
+export declare const AdaptContext: import("@gui/core").StyledContext<AdaptParentContextI>;
 export declare const ProvideAdaptContext: ({ children, ...context }: AdaptParentContextI & {
     children: any;
 }) => import("react/jsx-runtime").JSX.Element;

@@ -1,7 +1,7 @@
-import type { GetProps } from '@tamagui/web';
-export declare const SizableText: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+import type { GetProps } from '@gui/web';
+export declare const SizableText: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
     unstyled?: boolean | undefined;
-    size?: import("@tamagui/web").FontSizeTokens | undefined;
-}, import("@tamagui/web").StaticConfigPublic>;
+    size?: import("@gui/web").FontSizeTokens | undefined;
+}, import("@gui/web").StaticConfigPublic>;
 export type SizableTextProps = GetProps<typeof SizableText>;
 //# sourceMappingURL=SizableText.d.ts.map

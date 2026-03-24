@@ -1,4 +1,4 @@
-import type { ColorTokens, ViewProps, TamaguiComponentPropsBase, TextProps } from '@tamagui/web';
+import type { ColorTokens, ViewProps, GuiComponentPropsBase, TextProps } from '@gui/web';
 import type { TextInputProps, InputModeOptions } from 'react-native';
 type DetailedInputProps = React.DetailedHTMLProps<React.HTMLProps<HTMLInputElement>, HTMLInputElement>;
 export type InputProps = ViewProps & Omit<DetailedInputProps, 'className' | 'children' | 'value' | 'size' | keyof ViewProps> & Pick<TextProps, 'color'> & Omit<DetailedInputProps['style'], 'color'> & Omit<TextInputProps, 'inputMode' | 'secureTextEntry' | 'onChangeText' | 'editable' | 'enterKeyHint' | 'keyboardType' | 'placeholderTextColor' | 'selectionColor' | 'numberOfLines'> & {
@@ -25,7 +25,7 @@ export type InputProps = ViewProps & Omit<DetailedInputProps, 'className' | 'chi
     inputMode?: InputModeOptions;
     placeholderTextColor?: ColorTokens;
     selectionColor?: ColorTokens;
-    render?: TamaguiComponentPropsBase['render'];
+    render?: GuiComponentPropsBase['render'];
     /**
      * @deprecated - use `render='textarea'` instead
      */

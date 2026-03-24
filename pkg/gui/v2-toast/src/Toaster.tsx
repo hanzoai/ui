@@ -1,8 +1,8 @@
-import { AnimatePresence } from '@hanzo/gui-animate-presence'
-import { isWeb } from '@hanzo/gui-constants'
-import type { TamaguiElement } from '@hanzo/gui-core'
-import { Theme, View, styled, useThemeName } from '@hanzo/gui-core'
-import { Portal } from '@hanzo/gui-portal'
+import { AnimatePresence } from '@hanzogui/animate-presence'
+import { isWeb } from '@hanzogui/constants'
+import type { GuiElement } from '@hanzogui/core'
+import { Theme, View, styled, useThemeName } from '@hanzogui/core'
+import { Portal } from '@hanzogui/portal'
 import * as React from 'react'
 import { ToastItem } from './ToastItem'
 import type { SwipeDirection } from './ToastProvider'
@@ -176,7 +176,7 @@ export interface ToasterProps {
   style?: React.CSSProperties
 }
 
-export const Toaster = React.forwardRef<TamaguiElement, ToasterProps>(
+export const Toaster = React.forwardRef<GuiElement, ToasterProps>(
   function Toaster(props, _ref) {
     const {
       position = 'bottom-right',
@@ -206,7 +206,7 @@ export const Toaster = React.forwardRef<TamaguiElement, ToasterProps>(
     const [expanded, setExpanded] = React.useState(false)
     const [interacting, setInteracting] = React.useState(false)
 
-    const listRef = React.useRef<TamaguiElement>(null)
+    const listRef = React.useRef<GuiElement>(null)
     const lastFocusedElementRef = React.useRef<HTMLElement | null>(null)
     const isFocusWithinRef = React.useRef(false)
 

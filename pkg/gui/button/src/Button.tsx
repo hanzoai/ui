@@ -1,9 +1,9 @@
-import { getFontSize } from '@hanzo/gui-font-size'
-import { getButtonSized } from '@hanzo/gui-get-button-sized'
-import { getIcon, useCurrentColor } from '@hanzo/gui-helpers'
-import { ButtonNestingContext, getElevation, themeableVariants } from '@hanzo/gui-stacks'
-import { SizableText, wrapChildrenInText } from '@hanzo/gui-text'
-import type { ColorTokens, GetProps, SizeTokens, Token } from '@hanzo/gui-web'
+import { getFontSize } from '@hanzogui/font-size'
+import { getButtonSized } from '@hanzogui/get-button-sized'
+import { getIcon, useCurrentColor } from '@hanzogui/helpers'
+import { ButtonNestingContext, getElevation, themeableVariants } from '@hanzogui/stacks'
+import { SizableText, wrapChildrenInText } from '@hanzogui/text'
+import type { ColorTokens, GetProps, SizeTokens, Token } from '@hanzogui/web'
 import {
   createStyledContext,
   getTokenValue,
@@ -11,7 +11,7 @@ import {
   useProps,
   View,
   withStaticProperties,
-} from '@hanzo/gui-web'
+} from '@hanzogui/web'
 import type { FunctionComponent, JSX } from 'react'
 import { useContext } from 'react'
 

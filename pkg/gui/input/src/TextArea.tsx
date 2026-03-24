@@ -1,10 +1,10 @@
-import { type GetProps, styled } from '@hanzo/gui-web'
+import { type GetProps, styled } from '@hanzogui/web'
 import { Input } from './Input'
 import { defaultStyles, textAreaSizeVariant } from './shared'
 
 /**
  * A web-aligned textarea component (multi-line input).
- * @see — Docs https://tamagui.dev/ui/inputs#textarea
+ * @see — Docs https://gui.dev/ui/inputs#textarea
  */
 export const TextArea = styled(Input, {
   name: 'TextArea',
