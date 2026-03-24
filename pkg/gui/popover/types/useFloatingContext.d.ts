@@ -1,4 +1,4 @@
-import type { Delay, UseFloatingOptions } from '@tamagui/floating';
+import type { Delay, UseFloatingOptions } from '@gui/floating';
 export type UseFloatingContextOptions = {
     open: boolean;
     setOpen: (val: boolean, type?: string) => void;

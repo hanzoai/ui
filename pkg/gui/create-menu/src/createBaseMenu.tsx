@@ -1,21 +1,21 @@
-import { Animate } from '@hanzo/gui-animate'
-import { AnimatePresence as Presence } from '@hanzo/gui-animate-presence'
-import { createCollection } from '@hanzo/gui-collection'
+import { Animate } from '@hanzogui/animate'
+import { AnimatePresence as Presence } from '@hanzogui/animate-presence'
+import { createCollection } from '@hanzogui/collection'
 import {
   Dismissable as DismissableLayer,
   dispatchDiscreteCustomEvent,
-} from '@hanzo/gui-dismissable'
-import { useFocusGuards } from '@hanzo/gui-focus-guard'
-import { FocusScope } from '@hanzo/gui-focus-scope'
-import type { PopperContentProps } from '@hanzo/gui-popper'
-import * as PopperPrimitive from '@hanzo/gui-popper'
-import { needsPortalRepropagation, Portal as PortalPrimitive } from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import type { RovingFocusGroupProps } from '@hanzo/gui-roving-focus'
-import { RovingFocusGroup } from '@hanzo/gui-roving-focus'
-import { useCallbackRef } from '@hanzo/gui-use-callback-ref'
-import { useDirection } from '@hanzo/gui-use-direction'
-import type { TextProps } from '@hanzo/gui-web'
+} from '@hanzogui/dismissable'
+import { useFocusGuards } from '@hanzogui/focus-guard'
+import { FocusScope } from '@hanzogui/focus-scope'
+import type { PopperContentProps } from '@hanzogui/popper'
+import * as PopperPrimitive from '@hanzogui/popper'
+import { needsPortalRepropagation, Portal as PortalPrimitive } from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import type { RovingFocusGroupProps } from '@hanzogui/roving-focus'
+import { RovingFocusGroup } from '@hanzogui/roving-focus'
+import { useCallbackRef } from '@hanzogui/use-callback-ref'
+import { useDirection } from '@hanzogui/use-direction'
+import type { TextProps } from '@hanzogui/web'
 import {
   type ViewProps,
   composeEventHandlers,
@@ -30,8 +30,8 @@ import {
   useThemeName,
   View,
   withStaticProperties,
-} from '@hanzo/gui-web'
-import type { TamaguiElement } from '@hanzo/gui-web/types'
+} from '@hanzogui/web'
+import type { GuiElement } from '@hanzogui/web/types'
 import * as React from 'react'
 import { useId } from 'react'
 import type { Image, ImageProps } from 'react-native'
@@ -224,7 +224,7 @@ interface MenuItemProps extends Omit<MenuItemImplProps, 'onSelect'> {
   preventCloseOnSelect?: boolean
 }
 
-type MenuItemImplElement = TamaguiElement
+type MenuItemImplElement = GuiElement
 
 interface MenuItemImplProps extends ViewProps {
   disabled?: boolean
@@ -716,7 +716,7 @@ export function createBaseMenu({
     const rootContext = useMenuRootContext(scope)
     const getItems = useCollection(scope)
     const [currentItemId, setCurrentItemId] = React.useState<string | null>(null)
-    const contentRef = React.useRef<TamaguiElement>(null)
+    const contentRef = React.useRef<GuiElement>(null)
     // the actual focusable content element (PopperContentFrame) differs from contentRef
     // due to PopperContent's wrapper structure, so we capture it on mount
     const focusableContentRef = React.useRef<HTMLElement | null>(null)
@@ -765,14 +765,14 @@ export function createBaseMenu({
 
     // capture the actual focusable content element on mount
     // PopperContent has a wrapper structure where the ref points to the outer
-    // TamaguiView but props like tabIndex go to the inner PopperContentFrame
+    // GuiView but props like tabIndex go to the inner PopperContentFrame
     React.useEffect(() => {
       if (!isWeb || !context.open) return
       // use requestAnimationFrame to ensure DOM is ready
       const frame = requestAnimationFrame(() => {
         // scope the query to within this menu's content to avoid grabbing a submenu's element
         const container = contentRef.current as unknown as HTMLElement
-        const el = container?.querySelector('[data-tamagui-menu-content]') as HTMLElement
+        const el = container?.querySelector('[data-gui-menu-content]') as HTMLElement
         if (el) focusableContentRef.current = el
       })
       return () => cancelAnimationFrame(frame)
@@ -822,7 +822,7 @@ export function createBaseMenu({
         })}
         aria-orientation="vertical"
         data-state={getOpenState(context.open)}
-        data-tamagui-menu-content=""
+        data-gui-menu-content=""
         // TODO
         // @ts-ignore
         dir={rootContext.dir}
@@ -836,7 +836,7 @@ export function createBaseMenu({
                 // submenu key events bubble through portals. We only care about keys in this menu.
                 const target = event.target as HTMLElement
                 const isKeyDownInside =
-                  target.closest('[data-tamagui-menu-content]') === event.currentTarget
+                  target.closest('[data-gui-menu-content]') === event.currentTarget
                 const isModifierKey = event.ctrlKey || event.altKey || event.metaKey
                 const isCharacterKey = event.key.length === 1
                 if (isKeyDownInside) {
@@ -848,7 +848,7 @@ export function createBaseMenu({
                 // isKeyDownInside ensures we only handle keys for this menu, not bubbled from submenus
                 // isOnContentFrame ensures we only handle when focused on the content frame, not an item
                 const isOnContentFrame = (event.target as HTMLElement).hasAttribute(
-                  'data-tamagui-menu-content'
+                  'data-gui-menu-content'
                 )
                 if (!isKeyDownInside || !isOnContentFrame) return
                 if (!FIRST_LAST_KEYS.includes(event.key)) return
@@ -927,10 +927,10 @@ export function createBaseMenu({
               // `onEntryFocus` in control of focusing first item
               event.preventDefault()
               // contentRef.current doesn't reliably point to the focusable DOM element
-              // due to how refs propagate through Tamagui's styled component chain,
+              // due to how refs propagate through Gui's styled component chain,
               // so we query for the element directly using the data attribute
               const content = document.querySelector(
-                '[data-tamagui-menu-content]'
+                '[data-gui-menu-content]'
               ) as HTMLElement | null
               content?.focus({ preventScroll: true })
             })}
@@ -998,7 +998,7 @@ export function createBaseMenu({
       iosIconName,
       ...itemProps
     } = props
-    const ref = React.useRef<TamaguiElement>(null)
+    const ref = React.useRef<GuiElement>(null)
     const rootContext = useMenuRootContext(scope)
     const contentContext = useMenuContentContext(scope)
     const composedRefs = useComposedRefs(forwardedRef, ref)
@@ -1095,7 +1095,7 @@ export function createBaseMenu({
       ...itemProps
     } = props
     const contentContext = useMenuContentContext(scope)
-    const ref = React.useRef<TamaguiElement>(null)
+    const ref = React.useRef<GuiElement>(null)
     const composedRefs = useComposedRefs(forwardedRef, ref)
     const [isFocused, setIsFocused] = React.useState(false)
 
@@ -1382,7 +1382,7 @@ export function createBaseMenu({
    * -----------------------------------------------------------------------------------------------*/
 
   // TODO this was styleable but it cant flatten anyways so likely fine just need to check
-  const MenuArrow = React.forwardRef<TamaguiElement, MenuArrowProps>(
+  const MenuArrow = React.forwardRef<GuiElement, MenuArrowProps>(
     function MenuArrow(props, forwardedRef) {
       const {
         scope = MENU_CONTEXT,
@@ -1515,7 +1515,7 @@ export function createBaseMenu({
   const SUB_TRIGGER_NAME = 'MenuSubTrigger'
 
   const MenuSubTrigger = React.forwardRef<
-    TamaguiElement,
+    GuiElement,
     ScopedProps<MenuSubTriggerProps>
   >((props, forwardedRef) => {
     const scope = props.scope || MENU_CONTEXT
@@ -1810,7 +1810,7 @@ export function createBaseMenu({
                   // don't accidentally focus a sibling/parent submenu content
                   const root = ref.current as unknown as HTMLElement
                   const content = root?.querySelector?.(
-                    '[data-tamagui-menu-content]'
+                    '[data-gui-menu-content]'
                   ) as HTMLElement | null
                   ;(content || root)?.focus({ preventScroll: true })
                 }

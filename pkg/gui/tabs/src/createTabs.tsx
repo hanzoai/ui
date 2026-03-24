@@ -1,14 +1,14 @@
-import { composeRefs } from '@hanzo/gui-compose-refs'
-import { isWeb } from '@hanzo/gui-constants'
-import type { GroupProps } from '@hanzo/gui-group'
-import { Group, useGroupItem } from '@hanzo/gui-group'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import { RovingFocusGroup, type RovingFocusGroupProps } from '@hanzo/gui-roving-focus'
-import { SizableContext } from '@hanzo/gui-sizable-context'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { useDirection } from '@hanzo/gui-use-direction'
-import type { GetProps, TamaguiElement, ViewProps } from '@hanzo/gui-web'
-import { useEvent } from '@hanzo/gui-web'
+import { composeRefs } from '@hanzogui/compose-refs'
+import { isWeb } from '@hanzogui/constants'
+import type { GroupProps } from '@hanzogui/group'
+import { Group, useGroupItem } from '@hanzogui/group'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import { RovingFocusGroup, type RovingFocusGroupProps } from '@hanzogui/roving-focus'
+import { SizableContext } from '@hanzogui/sizable-context'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { useDirection } from '@hanzogui/use-direction'
+import type { GetProps, GuiElement, ViewProps } from '@hanzogui/web'
+import { useEvent } from '@hanzogui/web'
 import * as React from 'react'
 import type { LayoutRectangle } from 'react-native'
 import { TabsProvider, useTabsContext } from './StyledContext'
@@ -37,7 +37,7 @@ export function createTabs<
 
   const TAB_LIST_NAME = 'TabsList'
 
-  const TabsList = React.forwardRef<TamaguiElement, TabsListProps>(
+  const TabsList = React.forwardRef<GuiElement, TabsListProps>(
     (props: ScopedProps<TabsListProps>, forwardedRef) => {
       const { __scopeTabs, loop = true, children, ...listProps } = props
       const context = useTabsContext(__scopeTabs)
@@ -94,7 +94,7 @@ export function createTabs<
       const contentId = makeContentId(context.baseId, value)
       const isSelected = value === context.value
       const [layout, setLayout] = React.useState<TabLayout | null>(null)
-      const triggerRef = React.useRef<TamaguiElement>(null)
+      const triggerRef = React.useRef<GuiElement>(null)
       const groupItemProps = useGroupItem({ disabled: !!disabled })
 
       React.useEffect(() => {
@@ -318,7 +318,7 @@ export function createTabs<
   // this broke things outside our repo, but not sure why, all non style props were missing
   // like onPress etc
   // as <Tab = string>(
-  //   props: TabsProps<Tab> & { ref?: React.Ref<TamaguiElement> }
+  //   props: TabsProps<Tab> & { ref?: React.Ref<GuiElement> }
   // ) => React.JSX.Element
 
   return withStaticProperties(TabsComponent, {
@@ -415,7 +415,7 @@ type TabsContentExtraProps = {
 
   /**
    * Used to force mounting when more control is needed. Useful when
-   * controlling animation with Tamagui animations.
+   * controlling animation with Gui animations.
    */
   forceMount?: boolean
 }

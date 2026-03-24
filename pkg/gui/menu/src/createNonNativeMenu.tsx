@@ -1,4 +1,4 @@
-import type * as BaseMenuTypes from '@hanzo/gui-create-menu'
+import type * as BaseMenuTypes from '@hanzogui/create-menu'
 import {
   type MenuArrowProps as BaseMenuArrowProps,
   type MenuCheckboxItemProps as BaseMenuCheckboxItemProps,
@@ -15,10 +15,10 @@ import {
   type MenuSubTriggerProps as BaseMenuSubTriggerProps,
   createBaseMenu,
   type CreateBaseMenuProps,
-} from '@hanzo/gui-create-menu'
-import { usePopperContextSlow } from '@hanzo/gui-popper'
-import { ScrollView, type ScrollViewProps } from '@hanzo/gui-scroll-view'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/create-menu'
+import { usePopperContextSlow } from '@hanzogui/popper'
+import { ScrollView, type ScrollViewProps } from '@hanzogui/scroll-view'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import {
   composeEventHandlers,
   composeRefs,
@@ -27,13 +27,13 @@ import {
   isWeb,
   Slot,
   styled,
-  type TamaguiElement,
+  type GuiElement,
   useEvent,
   useIsTouchDevice,
   View,
   type ViewProps,
   withStaticProperties,
-} from '@hanzo/gui-web'
+} from '@hanzogui/web'
 import * as React from 'react'
 import { useId } from 'react'
 
@@ -51,7 +51,7 @@ type MenuTriggerStateSetter = React.Dispatch<React.SetStateAction<boolean>>
 
 type MenuContextValue = {
   triggerId: string
-  triggerRef: React.RefObject<TamaguiElement | null>
+  triggerRef: React.RefObject<GuiElement | null>
   contentId: string
   openRef: React.RefObject<boolean>
   onOpenChange(open: boolean): void
@@ -131,7 +131,7 @@ type MenuPortalProps = BaseMenuPortalProps
  * MenuContent
  * -----------------------------------------------------------------------------------------------*/
 
-type MenuContentElement = TamaguiElement
+type MenuContentElement = GuiElement
 interface MenuContentProps extends Omit<BaseMenuContentProps, 'onEntryFocus'> {}
 
 /* -------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ type MenuItemProps = BaseMenuItemProps
 
 type MenuCheckboxItemProps = BaseMenuCheckboxItemProps
 
-type MenuRadioGroupElement = TamaguiElement
+type MenuRadioGroupElement = GuiElement
 type MenuRadioGroupProps = BaseMenuRadioGroupProps
 type MenuRadioItemProps = BaseMenuRadioItemProps
 type MenuItemIndicatorProps = BaseMenuItemIndicatorProps
@@ -192,7 +192,7 @@ type MenuSubTriggerProps = BaseMenuSubTriggerProps
  * MenuSubContent
  * -----------------------------------------------------------------------------------------------*/
 
-type MenuSubContentElement = TamaguiElement
+type MenuSubContentElement = GuiElement
 type MenuSubContentProps = BaseMenuSubContentProps
 
 /* -------------------------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ export function createNonNativeMenu(params: CreateBaseMenuProps) {
       modal = true,
       ...rest
     } = props
-    const triggerRef = React.useRef<TamaguiElement>(null)
+    const triggerRef = React.useRef<GuiElement>(null)
     const [open = false, setOpen] = useControllableState({
       prop: openProp,
       defaultProp: defaultOpen!,
@@ -295,7 +295,7 @@ export function createNonNativeMenu(params: CreateBaseMenuProps) {
       const popperCtx = usePopperContextSlow(scope || DROPDOWN_MENU_CONTEXT)
       const Comp = asChild ? Slot : View
       const isTouchDevice = useIsTouchDevice()
-      const triggerElRef = React.useRef<TamaguiElement>(null)
+      const triggerElRef = React.useRef<GuiElement>(null)
 
       // multi-trigger: per-trigger open state
       const triggerId = React.useId()
@@ -472,15 +472,15 @@ export function createNonNativeMenu(params: CreateBaseMenuProps) {
               ? {
                   ...(props.style as object),
                   ...({
-                    '--tamagui-menu-content-transform-origin':
-                      'var(--tamagui-popper-transform-origin)',
-                    '--tamagui-menu-content-available-width':
-                      'var(--tamagui-popper-available-width)',
-                    '--tamagui-menu-content-available-height':
-                      'var(--tamagui-popper-available-height)',
-                    '--tamagui-menu-trigger-width': 'var(--tamagui-popper-anchor-width)',
-                    '--tamagui-menu-trigger-height':
-                      'var(--tamagui-popper-anchor-height)',
+                    '--gui-menu-content-transform-origin':
+                      'var(--gui-popper-transform-origin)',
+                    '--gui-menu-content-available-width':
+                      'var(--gui-popper-available-width)',
+                    '--gui-menu-content-available-height':
+                      'var(--gui-popper-available-height)',
+                    '--gui-menu-trigger-width': 'var(--gui-popper-anchor-width)',
+                    '--gui-menu-trigger-height':
+                      'var(--gui-popper-anchor-height)',
                   } as React.CSSProperties),
                 }
               : props.style
@@ -542,14 +542,14 @@ export function createNonNativeMenu(params: CreateBaseMenuProps) {
             ? {
                 ...(props.style as object),
                 ...({
-                  '--tamagui-menu-content-transform-origin':
-                    'var(--tamagui-popper-transform-origin)',
-                  '--tamagui-menu-content-available-width':
-                    'var(--tamagui-popper-available-width)',
-                  '--tamagui-menu-content-available-height':
-                    'var(--tamagui-popper-available-height)',
-                  '--tamagui-menu-trigger-width': 'var(--tamagui-popper-anchor-width)',
-                  '--tamagui-menu-trigger-height': 'var(--tamagui-popper-anchor-height)',
+                  '--gui-menu-content-transform-origin':
+                    'var(--gui-popper-transform-origin)',
+                  '--gui-menu-content-available-width':
+                    'var(--gui-popper-available-width)',
+                  '--gui-menu-content-available-height':
+                    'var(--gui-popper-available-height)',
+                  '--gui-menu-trigger-width': 'var(--gui-popper-anchor-width)',
+                  '--gui-menu-trigger-height': 'var(--gui-popper-anchor-height)',
                 } as React.CSSProperties),
               }
             : null
@@ -571,7 +571,7 @@ export function createNonNativeMenu(params: CreateBaseMenuProps) {
     showsVerticalScrollIndicator: false,
 
     '$platform-web': {
-      maxHeight: 'var(--tamagui-menu-content-available-height)',
+      maxHeight: 'var(--gui-menu-content-available-height)',
     },
   })
 

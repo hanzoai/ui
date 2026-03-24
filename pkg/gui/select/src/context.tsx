@@ -1,5 +1,5 @@
-import { createStyledContext } from '@hanzo/gui-core'
-import { getPortal } from '@hanzo/gui-native'
+import { createStyledContext } from '@hanzogui/core'
+import { getPortal } from '@hanzogui/native'
 import { createContext } from 'react'
 import type { SelectContextValue, SelectItemParentContextValue } from './types'
 

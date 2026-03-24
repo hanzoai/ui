@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-form",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/form",
+  "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,11 +36,11 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-helpers": "2.0.0-rc.29"
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/helpers": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

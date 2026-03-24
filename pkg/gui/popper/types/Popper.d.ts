@@ -1,8 +1,8 @@
-import type { SizeTokens, TamaguiElement } from '@tamagui/core';
-import type { PopupTriggerMap } from '@tamagui/floating';
-import type { Coords, OffsetOptions, Placement, SizeOptions, Strategy, UseFloatingReturn } from '@tamagui/floating';
-import { flip, shift } from '@tamagui/floating';
-import type { SizableStackProps, YStackProps } from '@tamagui/stacks';
+import type { SizeTokens, GuiElement } from '@gui/core';
+import type { PopupTriggerMap } from '@gui/floating';
+import type { Coords, OffsetOptions, Placement, SizeOptions, Strategy, UseFloatingReturn } from '@gui/floating';
+import { flip, shift } from '@gui/floating';
+import type { SizableStackProps, YStackProps } from '@gui/stacks';
 import * as React from 'react';
 type ShiftProps = typeof shift extends (options: infer Opts) => void ? Opts : never;
 type FlipProps = typeof flip extends (options: infer Opts) => void ? Opts : never;
@@ -22,8 +22,8 @@ export type PopperContextShared = {
     };
 };
 export type PopperContextValue = UseFloatingReturn & PopperContextShared;
-export declare const PopperContextFast: import("@tamagui/core").StyledContext<PopperContextValue>;
-export declare const PopperPositionContext: <VariantProps extends Record<string, any>>(defaultValues?: VariantProps, namespace?: string) => import("@tamagui/core").StyledContext<VariantProps>;
+export declare const PopperContextFast: import("@gui/core").StyledContext<PopperContextValue>;
+export declare const PopperPositionContext: <VariantProps extends Record<string, any>>(defaultValues?: VariantProps, namespace?: string) => import("@gui/core").StyledContext<VariantProps>;
 export declare const usePopperContext: (scope?: string) => PopperContextValue, PopperProviderFast: React.Provider<PopperContextValue> & React.ProviderExoticComponent<Partial<PopperContextValue> & {
     children?: React.ReactNode;
     scope?: string;
@@ -33,7 +33,7 @@ export type PopperContextSlowValue = Pick<UseFloatingReturn, 'getReferenceProps'
     onLeaveReference?: () => void;
     triggerElements?: PopupTriggerMap;
 };
-export declare const PopperContextSlow: import("@tamagui/core").StyledContext<PopperContextSlowValue>;
+export declare const PopperContextSlow: import("@gui/core").StyledContext<PopperContextSlowValue>;
 export declare const usePopperContextSlow: (scope?: string) => PopperContextSlowValue, PopperProviderSlow: React.Provider<PopperContextSlowValue> & React.ProviderExoticComponent<Partial<PopperContextSlowValue> & {
     children?: React.ReactNode;
     scope?: string;
@@ -97,13 +97,13 @@ export type PopperAnchorExtraProps = {
     scope?: string;
 };
 export type PopperAnchorProps = YStackProps;
-export declare const PopperAnchor: import("@tamagui/core").TamaguiComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const PopperAnchor: import("@gui/core").GuiComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}>, keyof PopperAnchorExtraProps> & PopperAnchorExtraProps, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps & PopperAnchorExtraProps, import("@tamagui/core").StackStyleBase, {
+}>, keyof PopperAnchorExtraProps> & PopperAnchorExtraProps, GuiElement, import("@gui/core").RNGuiViewNonStyleProps & PopperAnchorExtraProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
+}, import("@gui/core").StaticConfigPublic>;
 export type PopperContentProps = SizableStackProps & {
     scope?: string;
     /**
@@ -114,36 +114,36 @@ export type PopperContentProps = SizableStackProps & {
     enableAnimationForPositionChange?: boolean | 'even-when-repositioning';
     passThrough?: boolean;
 };
-export declare const PopperContentFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const PopperContentFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     size?: SizeTokens | undefined;
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
-export declare const PopperContent: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").RNTamaguiViewNonStyleProps, "size" | "unstyled" | "elevation" | keyof import("@tamagui/core").StackStyleBase | "fullscreen" | "transparent" | "circular" | "elevate" | "bordered" | "chromeless"> & import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+}, import("@gui/core").StaticConfigPublic>;
+export declare const PopperContent: React.ForwardRefExoticComponent<Omit<import("@gui/core").RNGuiViewNonStyleProps, "size" | "unstyled" | "elevation" | keyof import("@gui/core").StackStyleBase | "fullscreen" | "transparent" | "circular" | "elevate" | "bordered" | "chromeless"> & import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>> & import("@tamagui/core").WithPseudoProps<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase> & {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>> & import("@gui/core").WithPseudoProps<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase> & {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
     elevate?: boolean | undefined;
     bordered?: boolean | undefined;
     chromeless?: boolean | "all" | undefined;
-} & import("@tamagui/core").WithShorthands<import("@tamagui/core").WithThemeValues<import("@tamagui/core").StackStyleBase>>> & import("@tamagui/core").WithMediaProps<import("@tamagui/core").WithThemeShorthandsAndPseudos<import("@tamagui/core").StackStyleBase, {
-    size?: import("@tamagui/core").SizeTokens | undefined;
+} & import("@gui/core").WithShorthands<import("@gui/core").WithThemeValues<import("@gui/core").StackStyleBase>>> & import("@gui/core").WithMediaProps<import("@gui/core").WithThemeShorthandsAndPseudos<import("@gui/core").StackStyleBase, {
+    size?: import("@gui/core").SizeTokens | undefined;
     unstyled?: boolean | undefined;
-    elevation?: number | import("@tamagui/core").SizeTokens | undefined;
+    elevation?: number | import("@gui/core").SizeTokens | undefined;
     transparent?: boolean | undefined;
     fullscreen?: boolean | undefined;
     circular?: boolean | undefined;
@@ -159,7 +159,7 @@ export declare const PopperContent: React.ForwardRefExoticComponent<Omit<import(
     /** @deprecated Use `animatePosition` instead */
     enableAnimationForPositionChange?: boolean | "even-when-repositioning";
     passThrough?: boolean;
-} & React.RefAttributes<TamaguiElement>>;
+} & React.RefAttributes<GuiElement>>;
 export type PopperArrowExtraProps = {
     offset?: number;
     size?: SizeTokens;
@@ -170,14 +170,14 @@ export type PopperArrowExtraProps = {
     animatePosition?: boolean;
 };
 export type PopperArrowProps = YStackProps & PopperArrowExtraProps;
-export declare const PopperArrowFrame: import("@tamagui/core").TamaguiComponent<import("@tamagui/core").TamaDefer, TamaguiElement, import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+export declare const PopperArrowFrame: import("@gui/core").GuiComponent<import("@gui/core").TamaDefer, GuiElement, import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     unstyled?: boolean | undefined;
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}, import("@tamagui/core").StaticConfigPublic>;
-export declare const PopperArrow: React.ForwardRefExoticComponent<Omit<import("@tamagui/core").GetFinalProps<import("@tamagui/core").RNTamaguiViewNonStyleProps, import("@tamagui/core").StackStyleBase, {
+}, import("@gui/core").StaticConfigPublic>;
+export declare const PopperArrow: React.ForwardRefExoticComponent<Omit<import("@gui/core").GetFinalProps<import("@gui/core").RNGuiViewNonStyleProps, import("@gui/core").StackStyleBase, {
     elevation?: number | SizeTokens | undefined;
     fullscreen?: boolean | undefined;
-}>, keyof import("@tamagui/stacks").StackVariants> & import("@tamagui/stacks").StackVariants & PopperArrowExtraProps & React.RefAttributes<TamaguiElement>>;
+}>, keyof import("@gui/stacks").StackVariants> & import("@gui/stacks").StackVariants & PopperArrowExtraProps & React.RefAttributes<GuiElement>>;
 export {};
 //# sourceMappingURL=Popper.d.ts.map

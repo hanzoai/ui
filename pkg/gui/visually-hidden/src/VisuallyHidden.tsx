@@ -1,16 +1,16 @@
 import {
   type TamaDefer,
-  type TamaguiComponent,
-  type TamaguiTextElement,
+  type GuiComponent,
+  type GuiTextElement,
   Text,
   type TextNonStyleProps,
   type TextStylePropsBase,
   styled,
-} from '@hanzo/gui-web'
+} from '@hanzogui/web'
 
-export const VisuallyHidden: TamaguiComponent<
+export const VisuallyHidden: GuiComponent<
   TamaDefer,
-  TamaguiTextElement,
+  GuiTextElement,
   TextNonStyleProps,
   TextStylePropsBase,
   {

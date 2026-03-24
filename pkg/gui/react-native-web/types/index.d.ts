@@ -1,6 +1,6 @@
-export * from '@tamagui/react-native-use-responder-events';
-export * from '@tamagui/react-native-use-pressable';
-export { View, Text } from '@tamagui/web';
+export * from '@gui/react-native-use-responder-events';
+export * from '@gui/react-native-use-pressable';
+export { View, Text } from '@gui/web';
 export * from './Dimensions';
 export declare const Platform: {
     OS: string;
@@ -11,8 +11,8 @@ export declare const StyleSheet: {
 };
 export declare const Pressable: () => null;
 export declare const Animated: {
-    View: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").ViewProps, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {}, {}>;
-    Text: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TextProps, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {}, {}>;
+    View: import("@gui/web").GuiComponent<import("@gui/web").ViewProps, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {}, {}>;
+    Text: import("@gui/web").GuiComponent<import("@gui/web").TextProps, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {}, {}>;
 };
 export declare const ActivityIndicator: () => null;
 export declare const PanResponder: () => null;

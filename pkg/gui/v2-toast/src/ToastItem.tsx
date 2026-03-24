@@ -1,8 +1,8 @@
-import { isWeb } from '@hanzo/gui-constants'
-import type { TamaguiElement } from '@hanzo/gui-core'
-import { styled, useEvent, View } from '@hanzo/gui-core'
-import { XStack, YStack } from '@hanzo/gui-stacks'
-import { SizableText } from '@hanzo/gui-text'
+import { isWeb } from '@hanzogui/constants'
+import type { GuiElement } from '@hanzogui/core'
+import { styled, useEvent, View } from '@hanzogui/core'
+import { XStack, YStack } from '@hanzogui/stacks'
+import { SizableText } from '@hanzogui/text'
 import * as React from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 
@@ -285,7 +285,7 @@ export const ToastItem = React.memo(function ToastItem(props: ToastItemProps) {
   const [removed, setRemoved] = React.useState(false)
   const [swipeOut, setSwipeOut] = React.useState(false)
 
-  const toastRef = React.useRef<TamaguiElement>(null)
+  const toastRef = React.useRef<GuiElement>(null)
   const closeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimerStartRef = React.useRef(0)
   const lastPauseTimeRef = React.useRef(0) // tracks when pause was called to prevent double-counting
@@ -468,7 +468,7 @@ export const ToastItem = React.memo(function ToastItem(props: ToastItemProps) {
 
   const icon = getIcon()
 
-  // calculate values for stacking effect using Tamagui animation props
+  // calculate values for stacking effect using Gui animation props
   const isHorizontalSwipe =
     swipeDirection === 'left' ||
     swipeDirection === 'right' ||
@@ -570,7 +570,7 @@ export const ToastItem = React.memo(function ToastItem(props: ToastItemProps) {
       dataSet={dataSet}
       data-expanded={expanded ? 'true' : 'false'}
       onLayout={handleLayout}
-      // use Tamagui animation system - disable animation while dragging
+      // use Gui animation system - disable animation while dragging
       transition={dragState.isDragging ? undefined : 'quick'}
       // animation props
       y={computedY}

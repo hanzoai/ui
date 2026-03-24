@@ -1,31 +1,31 @@
 export declare const MenuPredefined: {
-    MenuIcon: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    MenuIcon: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    MenuImage: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, unknown, import("@tamagui/web").TamaguiComponentPropsBaseBase & Partial<import("@tamagui/image").ImageProps>, import("@tamagui/web").StackStyleBase, {}, import("@tamagui/web").StaticConfigPublic>;
-    MenuIndicator: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    MenuImage: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, unknown, import("@gui/web").GuiComponentPropsBaseBase & Partial<import("@gui/image").ImageProps>, import("@gui/web").StackStyleBase, {}, import("@gui/web").StaticConfigPublic>;
+    MenuIndicator: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    MenuItem: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    MenuItem: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    Title: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    Title: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").FontSizeTokens | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    SubTitle: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+        size?: import("@gui/web").FontSizeTokens | undefined;
+    }, import("@gui/web").StaticConfigPublic>;
+    SubTitle: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").FontSizeTokens | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    MenuGroup: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+        size?: import("@gui/web").FontSizeTokens | undefined;
+    }, import("@gui/web").StaticConfigPublic>;
+    MenuGroup: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    MenuSeparator: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiElement, import("@tamagui/web").StackNonStyleProps, import("@tamagui/web").StackStyleBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    MenuSeparator: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiElement, import("@gui/web").StackNonStyleProps, import("@gui/web").StackStyleBase, {
         unstyled?: boolean | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
-    MenuLabel: import("@tamagui/web").TamaguiComponent<import("@tamagui/web").TamaDefer, import("@tamagui/web").TamaguiTextElement, import("@tamagui/web").TextNonStyleProps, import("@tamagui/web").TextStylePropsBase, {
+    }, import("@gui/web").StaticConfigPublic>;
+    MenuLabel: import("@gui/web").GuiComponent<import("@gui/web").TamaDefer, import("@gui/web").GuiTextElement, import("@gui/web").TextNonStyleProps, import("@gui/web").TextStylePropsBase, {
         unstyled?: boolean | undefined;
-        size?: import("@tamagui/web").FontSizeTokens | undefined;
-    }, import("@tamagui/web").StaticConfigPublic>;
+        size?: import("@gui/web").FontSizeTokens | undefined;
+    }, import("@gui/web").StaticConfigPublic>;
 };
 //# sourceMappingURL=MenuPredefined.d.ts.map

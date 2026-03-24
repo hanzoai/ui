@@ -2,11 +2,11 @@
  * SliderImpl
  * -----------------------------------------------------------------------------------------------*/
 
-import { isWeb } from '@hanzo/gui-constants'
-import type { TamaguiElement } from '@hanzo/gui-core'
-import { getVariableValue, styled } from '@hanzo/gui-core'
-import { getSize } from '@hanzo/gui-get-token'
-import { YStack } from '@hanzo/gui-stacks'
+import { isWeb } from '@hanzogui/constants'
+import type { GuiElement } from '@hanzogui/core'
+import { getVariableValue, styled } from '@hanzogui/core'
+import { getSize } from '@hanzogui/get-token'
+import { YStack } from '@hanzogui/stacks'
 import * as React from 'react'
 import { View } from 'react-native'
 
@@ -62,8 +62,8 @@ export const SliderImpl = React.forwardRef<View, SliderImplProps>(
     const handleResponderGrant = React.useCallback(
       (event: any) => {
         props.onResponderGrant?.(event)
-        const target = event.target as unknown as TamaguiElement | number
-        const thumbIndex = context.thumbs.get(target as TamaguiElement)
+        const target = event.target as unknown as GuiElement | number
+        const thumbIndex = context.thumbs.get(target as GuiElement)
         const isStartingOnThumb = thumbIndex !== undefined
 
         // Prevent browser focus behaviour because we focus a thumb manually when values change.
@@ -104,7 +104,7 @@ export const SliderImpl = React.forwardRef<View, SliderImplProps>(
     )
 
     return (
-      // wrap with plain RN View for responder events - tamagui views no longer handle responder events on web
+      // wrap with plain RN View for responder events - gui views no longer handle responder events on web
 
       <SliderFrame
         size="$4"

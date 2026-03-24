@@ -3,8 +3,8 @@ import type {
   SizeVariantSpreadFunction,
   ViewProps,
   VariantSpreadExtras,
-} from '@hanzo/gui-core'
-import { getVariableValue, isAndroid, isVariable } from '@hanzo/gui-core'
+} from '@hanzogui/core'
+import { getVariableValue, isAndroid, isVariable } from '@hanzogui/core'
 
 export const getElevation: SizeVariantSpreadFunction<ViewProps> = (size, extras) => {
   if (!size) return

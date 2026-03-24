@@ -1,4 +1,4 @@
-export declare const context: import("@tamagui/web").StyledContext<{
+export declare const context: import("@gui/web").StyledContext<{
     color: string;
     active: boolean;
 }>;

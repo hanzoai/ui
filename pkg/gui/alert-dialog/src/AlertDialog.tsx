@@ -1,16 +1,16 @@
 // forked from radix-ui
 // https://github.com/radix-ui/primitives/blob/main/packages/react/alert-dialog/src/AlertDialog.tsx
 
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { TamaguiElement } from '@hanzo/gui-core'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { GuiElement } from '@hanzogui/core'
 import {
   Slottable,
   View,
   createStyledContext,
-  isTamaguiElement,
+  isGuiElement,
   styled,
-} from '@hanzo/gui-core'
+} from '@hanzogui/core'
 import type {
   DialogCloseProps,
   DialogContentProps,
@@ -21,7 +21,7 @@ import type {
   DialogProps,
   DialogTitleProps,
   DialogTriggerProps,
-} from '@hanzo/gui-dialog'
+} from '@hanzogui/dialog'
 import {
   Dialog,
   DialogClose,
@@ -33,9 +33,9 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogWarningProvider,
-} from '@hanzo/gui-dialog'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/dialog'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import { Alert } from 'react-native'
 
@@ -139,8 +139,8 @@ const AlertDialogOverlay = AlertDialogOverlayFrame.styleable<AlertDialogOverlayP
 const CONTENT_NAME = 'AlertDialogContent'
 
 type AlertDialogContentContextValue = {
-  cancelRef?: React.RefObject<TamaguiElement | null>
-  destructiveRef?: React.RefObject<TamaguiElement | null>
+  cancelRef?: React.RefObject<GuiElement | null>
+  destructiveRef?: React.RefObject<GuiElement | null>
 }
 
 const {
@@ -152,14 +152,14 @@ type AlertDialogContentProps = ScopedProps<
   Omit<DialogContentProps, 'onPointerDownOutside' | 'onInteractOutside'>
 >
 
-const AlertDialogContent = React.forwardRef<TamaguiElement, AlertDialogContentProps>(
+const AlertDialogContent = React.forwardRef<GuiElement, AlertDialogContentProps>(
   function AlertDialogContent(props, forwardedRef) {
     const { scope, children, ...contentProps } = props
     const dialogScope = getAlertDialogScope(scope)
-    const contentRef = React.useRef<TamaguiElement>(null)
+    const contentRef = React.useRef<GuiElement>(null)
     const composedRefs = useComposedRefs(forwardedRef, contentRef)
-    const cancelRef = React.useRef<TamaguiElement | null>(null)
-    const destructiveRef = React.useRef<TamaguiElement | null>(null)
+    const cancelRef = React.useRef<GuiElement | null>(null)
+    const destructiveRef = React.useRef<GuiElement | null>(null)
 
     return (
       <DialogWarningProvider
@@ -331,7 +331,7 @@ const AlertDialogDestructive =
 /* ---------------------------------------------------------------------------------------------- */
 
 type DescriptionWarningProps = {
-  contentRef: React.RefObject<TamaguiElement | null>
+  contentRef: React.RefObject<GuiElement | null>
 }
 
 const DescriptionWarning: React.FC<DescriptionWarningProps> = ({ contentRef }) => {
@@ -349,7 +349,7 @@ const DescriptionWarning: React.FC<DescriptionWarningProps> = ({ contentRef }) =
         
         Alternatively, you can use your own component as a description by assigning it an \`id\` and passing the same value to the \`aria-describedby\` prop in \`${CONTENT_NAME}\`. If the description is confusing or duplicative for sighted users, you can use the \`@radix-ui/react-visually-hidden\` primitive as a wrapper around your description component.
         
-        For more information, see https://tamagui.dev/docs/components/alert-dialog`)
+        For more information, see https://gui.dev/docs/components/alert-dialog`)
       }
     }, [contentRef])
   }
@@ -380,7 +380,7 @@ const AlertDialogInner: React.FC<AlertDialogProps> = (props) => {
 
     forEachChildDeep(React.Children.toArray(props.children), (child) => {
       if (!React.isValidElement(child)) return false
-      const name = isTamaguiElement(child)
+      const name = isGuiElement(child)
         ? child.type.staticConfig.componentName
         : (child.type['displayName'] as string | undefined)
       switch (name) {

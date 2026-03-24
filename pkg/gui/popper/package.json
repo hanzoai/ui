@@ -1,6 +1,6 @@
 {
-  "name": "@hanzo/gui-popper",
-  "version": "2.0.0-rc.29",
+  "name": "@hanzogui/popper",
+  "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,17 +36,17 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
-    "@hanzo/gui-constants": "2.0.0-rc.29",
-    "@hanzo/gui-core": "2.0.0-rc.29",
-    "@hanzo/gui-floating": "2.0.0-rc.29",
-    "@hanzo/gui-get-token": "2.0.0-rc.29",
-    "@hanzo/gui-stacks": "workspace:*",
-    "@hanzo/gui-start-transition": "2.0.0-rc.29",
-    "@hanzo/gui-use-controllable-state": "2.0.0-rc.29"
+    "@hanzogui/compose-refs": "2.0.0-rc.29",
+    "@hanzogui/constants": "2.0.0-rc.29",
+    "@hanzogui/core": "2.0.0-rc.29",
+    "@hanzogui/floating": "2.0.0-rc.29",
+    "@hanzogui/get-token": "2.0.0-rc.29",
+    "@hanzogui/stacks": "2.0.0",
+    "@hanzogui/start-transition": "2.0.0-rc.29",
+    "@hanzogui/use-controllable-state": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.0-rc.29",
+    "@hanzogui/build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },

@@ -1,9 +1,9 @@
 /**
- * Re-export gesture state from @tamagui/native.
+ * Re-export gesture state from @gui/native.
  * Sheet uses this for backward compatibility with existing code.
  */
-import { type GestureState } from '@tamagui/native';
-export type { GestureState as GestureHandlerState } from '@tamagui/native';
+import { type GestureState } from '@gui/native';
+export type { GestureState as GestureHandlerState } from '@gui/native';
 export declare function isGestureHandlerEnabled(): boolean;
 export declare function getGestureHandlerState(): GestureState;
 export declare function setGestureHandlerState(updates: Partial<GestureState>): void;

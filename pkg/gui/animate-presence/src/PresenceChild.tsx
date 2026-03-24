@@ -1,6 +1,6 @@
-import { useConstant } from '@hanzo/gui-use-constant'
-import { PresenceContext } from '@hanzo/gui-use-presence'
-import type { PresenceContextProps } from '@hanzo/gui-web'
+import { useConstant } from '@hanzogui/use-constant'
+import { PresenceContext } from '@hanzogui/use-presence'
+import type { PresenceContextProps } from '@hanzogui/web'
 import * as React from 'react'
 import { useId } from 'react'
 

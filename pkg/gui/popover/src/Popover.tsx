@@ -1,6 +1,6 @@
-import '@hanzo/gui-polyfill-dev'
+import '@hanzogui/polyfill-dev'
 
-import type { UseHoverProps } from '@hanzo/gui-floating'
+import type { UseHoverProps } from '@hanzogui/floating'
 import {
   Adapt,
   AdaptParent,
@@ -8,28 +8,28 @@ import {
   ProvideAdaptContext,
   useAdaptContext,
   useAdaptIsActive,
-} from '@hanzo/gui-adapt'
-import { Animate } from '@hanzo/gui-animate'
-import { ResetPresence } from '@hanzo/gui-animate-presence'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { SizeTokens, TamaguiElement, ViewProps } from '@hanzo/gui-core'
+} from '@hanzogui/adapt'
+import { Animate } from '@hanzogui/animate'
+import { ResetPresence } from '@hanzogui/animate-presence'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { SizeTokens, GuiElement, ViewProps } from '@hanzogui/core'
 import {
   createStyledContext,
   useCreateShallowSetState,
   useEvent,
   useGet,
   View,
-} from '@hanzo/gui-core'
+} from '@hanzogui/core'
 import {
   Dismissable,
   DismissableBranch,
   type DismissableProps,
-} from '@hanzo/gui-dismissable'
-import { FloatingOverrideContext } from '@hanzo/gui-floating'
-import type { FocusScopeProps } from '@hanzo/gui-focus-scope'
-import { FocusScope, FocusScopeController } from '@hanzo/gui-focus-scope'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+} from '@hanzogui/dismissable'
+import { FloatingOverrideContext } from '@hanzogui/floating'
+import type { FocusScopeProps } from '@hanzogui/focus-scope'
+import { FocusScope, FocusScopeController } from '@hanzogui/focus-scope'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
 import {
   Popper,
   PopperAnchor,
@@ -43,14 +43,14 @@ import {
   type PopperProps,
   PopperProvider,
   usePopperContext,
-} from '@hanzo/gui-popper'
-import { needsPortalRepropagation, Portal } from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { ScrollView, type ScrollViewProps } from '@hanzo/gui-scroll-view'
-import { SheetController } from '@hanzo/gui-sheet/controller'
-import type { YStackProps } from '@hanzo/gui-stacks'
-import { YStack } from '@hanzo/gui-stacks'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/popper'
+import { needsPortalRepropagation, Portal } from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { ScrollView, type ScrollViewProps } from '@hanzogui/scroll-view'
+import { SheetController } from '@hanzogui/sheet/controller'
+import type { YStackProps } from '@hanzogui/stacks'
+import { YStack } from '@hanzogui/stacks'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import { useFloatingContext } from './useFloatingContext'
 
@@ -119,11 +119,11 @@ export type PopoverProps = ScopedPopoverProps<PopperProps> & {
    * z-index for the popover portal. Use this when popovers need to appear
    * above other portaled content like dialogs or fixed headers.
    *
-   * By default, Tamagui automatically stacks overlays - later-opened content
+   * By default, Gui automatically stacks overlays - later-opened content
    * appears above earlier content, and nested content appears above its parent.
    * Only set this if you need to override the automatic stacking behavior.
    *
-   * @see https://tamagui.dev/ui/z-index
+   * @see https://gui.dev/ui/z-index
    */
   zIndex?: number
 }
@@ -338,7 +338,7 @@ const voidFn = () => {}
 export type PopoverAnchorProps = ScopedPopoverProps<YStackProps>
 
 export const PopoverAnchor = React.memo(
-  React.forwardRef<TamaguiElement, PopoverAnchorProps>(
+  React.forwardRef<GuiElement, PopoverAnchorProps>(
     function PopoverAnchor(props, forwardedRef) {
       const { scope, ...rest } = props
       const context = usePopoverContext(scope)
@@ -370,14 +370,14 @@ export type PopoverTriggerProps = ScopedPopoverProps<
 >
 
 export const PopoverTrigger = React.memo(
-  React.forwardRef<TamaguiElement, PopoverTriggerProps>(
+  React.forwardRef<GuiElement, PopoverTriggerProps>(
     function PopoverTrigger(props, forwardedRef) {
       const { scope, disablePressTrigger, ...rest } = props
       const triggerContext = usePopoverTriggerContext(scope)
       const triggerId = React.useId()
       const [open, setOpen] = React.useState(false)
       const anchorTo = triggerContext.anchorTo
-      const triggerElRef = React.useRef<TamaguiElement>(null)
+      const triggerElRef = React.useRef<GuiElement>(null)
       const composedTriggerRef = useComposedRefs(forwardedRef, triggerElRef)
 
       const { registerTrigger, unregisterTrigger } = triggerContext
@@ -503,7 +503,7 @@ export const PopoverContent = PopperContentFrame.styleable<PopoverContentProps>(
     const [isFullyHidden, setIsFullyHidden] = React.useState(!open)
 
     // Reset isFullyHidden when popover opens (useEffect avoids render-phase timing issues)
-    // there was a hard to isolate bug in tamagui.dev where moving between /ui docs pages quickly
+    // there was a hard to isolate bug in gui.dev where moving between /ui docs pages quickly
     // caused it to infinite loop, the setState in render (and useLayoutEffect) made it too prone
     // to bug, useEffect maybe fine here because its hidden, ok to be slightly delayed while hidden
     useIsomorphicLayoutEffect(() => {
@@ -854,7 +854,7 @@ const dspContentsStyle = {
 
 export type PopoverCloseProps = ScopedPopoverProps<YStackProps>
 
-export const PopoverClose = React.forwardRef<TamaguiElement, PopoverCloseProps>(
+export const PopoverClose = React.forwardRef<GuiElement, PopoverCloseProps>(
   function PopoverClose(props: ScopedPopoverProps<PopoverCloseProps>, forwardedRef) {
     const { scope, ...rest } = props
     const context = usePopoverContext(scope)
@@ -993,7 +993,7 @@ const PopoverInner = React.forwardRef<
     ...restProps
   } = props
 
-  const triggerRef = React.useRef<TamaguiElement>(null)
+  const triggerRef = React.useRef<GuiElement>(null)
   const [hasCustomAnchor, setHasCustomAnchor] = React.useState(false)
   const viaRef = React.useRef<PopoverVia>(undefined)
 
