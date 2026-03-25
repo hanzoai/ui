@@ -1,5 +1,5 @@
 {
-  "name": @hanzogui/remove-scroll",
+  "name": "@hanzogui/remove-scroll",
   "version": "2.0.4",
   "files": [
     "src",
@@ -35,7 +35,7 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "devDependencies": {
-    @hanzogui/build": "2.0.1",
+    "@hanzogui/build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
