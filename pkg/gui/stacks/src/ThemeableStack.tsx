@@ -1,5 +1,5 @@
-import type { GetProps } from '@hanzogui/core'
-import { styled } from '@hanzogui/core'
+import type { GetProps } from '@hanzo/gui-core'
+import { styled } from '@hanzo/gui-core'
 
 import { YStack } from './Stacks'
 

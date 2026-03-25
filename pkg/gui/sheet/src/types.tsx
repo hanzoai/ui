@@ -1,7 +1,7 @@
-import type { AnimatedNumberStrategy, TransitionProp } from '@hanzogui/core'
-import type { ScopedProps } from '@hanzogui/create-context'
-import type { PortalProps } from '@hanzogui/portal'
-import type { RemoveScroll } from '@hanzogui/remove-scroll'
+import type { AnimatedNumberStrategy, TransitionProp } from '@hanzo/gui-core'
+import type { ScopedProps } from '@hanzo/gui-create-context'
+import type { PortalProps } from '@hanzo/gui-portal'
+import type { RemoveScroll } from '@hanzo/gui-remove-scroll'
 import type { ReactNode } from 'react'
 import type React from 'react'
 

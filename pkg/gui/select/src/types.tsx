@@ -1,5 +1,5 @@
-import type { NativeValue, SizeTokens } from '@hanzogui/core'
-import type { YStackProps } from '@hanzogui/stacks'
+import type { NativeValue, SizeTokens } from '@hanzo/gui-core'
+import type { YStackProps } from '@hanzo/gui-stacks'
 import type {
   DispatchWithoutAction,
   HTMLProps,

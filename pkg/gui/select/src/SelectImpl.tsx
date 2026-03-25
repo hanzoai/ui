@@ -14,9 +14,9 @@ import {
   useTypeahead,
   type FloatingInteractionContext,
   type SideObject,
-} from '@hanzogui/floating'
-import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
-import { useEvent, useIsTouchDevice } from '@hanzogui/core'
+} from '@hanzo/gui-floating'
+import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { useEvent, useIsTouchDevice } from '@hanzo/gui-core'
 import * as React from 'react'
 import { flushSync } from 'react-dom'
 import { SCROLL_ARROW_THRESHOLD, WINDOW_PADDING } from './constants'

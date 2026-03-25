@@ -1,6 +1,6 @@
-import { styled, View } from '@hanzogui/core'
-import { getButtonSized } from '@hanzogui/get-button-sized'
-import { SizableStack, ThemeableStack } from '@hanzogui/stacks'
+import { styled, View } from '@hanzo/gui-core'
+import { getButtonSized } from '@hanzo/gui-get-button-sized'
+import { SizableStack, ThemeableStack } from '@hanzo/gui-stacks'
 
 const TABS_NAME = 'Tabs'
 export const DefaultTabsFrame = styled(SizableStack, {

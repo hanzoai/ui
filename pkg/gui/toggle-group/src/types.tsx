@@ -1,3 +1,3 @@
-import type { ViewStyle } from '@hanzogui/web'
+import type { ViewStyle } from '@hanzo/gui-web'
 
 export type ToggleStylesBase = ViewStyle & { color?: string }

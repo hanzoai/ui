@@ -1,8 +1,8 @@
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { isWeb } from '@hanzogui/constants'
-import { composeEventHandlers } from '@hanzogui/helpers'
-import { useLabelContext } from '@hanzogui/label'
-import { usePrevious } from '@hanzogui/use-previous'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { isWeb } from '@hanzo/gui-constants'
+import { composeEventHandlers } from '@hanzo/gui-helpers'
+import { useLabelContext } from '@hanzo/gui-label'
+import { usePrevious } from '@hanzo/gui-use-previous'
 import * as React from 'react'
 import type { GestureResponderEvent, PressableProps, View, ViewProps } from 'react-native'
 

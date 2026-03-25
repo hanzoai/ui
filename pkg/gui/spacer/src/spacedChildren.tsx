@@ -1,4 +1,4 @@
-import { createComponent } from '@hanzogui/web'
+import { createComponent } from '@hanzo/gui-web'
 import React from 'react'
 import { Spacer } from './Spacer'
 import { isUnspaced } from './Unspaced'

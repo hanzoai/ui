@@ -1,5 +1,5 @@
-import { View } from '@hanzogui/core'
-import { withStaticProperties } from '@hanzogui/helpers'
+import { View } from '@hanzo/gui-core'
+import { withStaticProperties } from '@hanzo/gui-helpers'
 import React from 'react'
 
 import type { RovingFocusGroupProps, RovingFocusItemProps } from './RovingFocusGroup'

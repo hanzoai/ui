@@ -2,11 +2,11 @@
  * SliderImpl
  * -----------------------------------------------------------------------------------------------*/
 
-import { isWeb } from '@hanzogui/constants'
-import type { GuiElement } from '@hanzogui/core'
-import { getVariableValue, styled } from '@hanzogui/core'
-import { getSize } from '@hanzogui/get-token'
-import { YStack } from '@hanzogui/stacks'
+import { isWeb } from '@hanzo/gui-constants'
+import type { GuiElement } from '@hanzo/gui-core'
+import { getVariableValue, styled } from '@hanzo/gui-core'
+import { getSize } from '@hanzo/gui-get-token'
+import { YStack } from '@hanzo/gui-stacks'
 import * as React from 'react'
 import { View } from 'react-native'
 

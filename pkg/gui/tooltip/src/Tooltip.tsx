@@ -1,16 +1,16 @@
-import '@hanzogui/polyfill-dev'
+import '@hanzo/gui-polyfill-dev'
 
-import { FloatingDelayGroup, useDelayGroupContext, type Delay } from '@hanzogui/floating'
-import type { SizeTokens, GuiElement } from '@hanzogui/core'
-import { useEvent } from '@hanzogui/core'
-import { FloatingOverrideContext } from '@hanzogui/floating'
-import { getSize } from '@hanzogui/get-token'
-import { withStaticProperties } from '@hanzogui/helpers'
+import { FloatingDelayGroup, useDelayGroupContext, type Delay } from '@hanzo/gui-floating'
+import type { SizeTokens, GuiElement } from '@hanzo/gui-core'
+import { useEvent } from '@hanzo/gui-core'
+import { FloatingOverrideContext } from '@hanzo/gui-floating'
+import { getSize } from '@hanzo/gui-get-token'
+import { withStaticProperties } from '@hanzo/gui-helpers'
 import type {
   PopoverAnchorProps,
   PopoverContentProps,
   PopoverTriggerProps,
-} from '@hanzogui/popover'
+} from '@hanzo/gui-popover'
 import {
   PopoverAnchor,
   PopoverArrow,
@@ -18,10 +18,10 @@ import {
   PopoverContextProvider,
   PopoverTrigger,
   useFloatingContext,
-} from '@hanzogui/popover'
-import type { PopperArrowProps, PopperProps } from '@hanzogui/popper'
-import { Popper, PopperContentFrame } from '@hanzogui/popper'
-import { useControllableState } from '@hanzogui/use-controllable-state'
+} from '@hanzo/gui-popover'
+import type { PopperArrowProps, PopperProps } from '@hanzo/gui-popper'
+import { Popper, PopperContentFrame } from '@hanzo/gui-popper'
+import { useControllableState } from '@hanzo/gui-use-controllable-state'
 import * as React from 'react'
 
 const TOOLTIP_SCOPE = ''

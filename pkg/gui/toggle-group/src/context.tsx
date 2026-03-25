@@ -1,4 +1,4 @@
-import { createStyledContext } from '@hanzogui/web'
+import { createStyledContext } from '@hanzo/gui-web'
 
 export const context = createStyledContext({
   color: '',

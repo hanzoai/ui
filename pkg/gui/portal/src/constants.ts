@@ -1,5 +1,5 @@
-import { isAndroid, isIos, isWeb } from '@hanzogui/constants'
-import { getPortal } from '@hanzogui/native'
+import { isAndroid, isIos, isWeb } from '@hanzo/gui-constants'
+import { getPortal } from '@hanzo/gui-native'
 
 /**
  * Check if teleport is enabled (best portal option - preserves React context)
