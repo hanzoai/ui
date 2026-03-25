@@ -1,4 +1,4 @@
-import { getTokenValue, styled } from '@hanzogui/web'
+import { getTokenValue, styled } from '@hanzo/gui-web'
 import type { ComponentType } from 'react'
 import type { ImageResizeMode } from 'react-native'
 import type { ImageProps, ImageType } from './types'
@@ -77,7 +77,7 @@ const defaultTransformSource = (props: {
  * @example
  * Using with expo-image
  * import { Image as ExpoImage } from 'expo-image'
- * import { createImage } from '@hanzogui/image'
+ * import { createImage } from '@hanzo/gui-image'
  *
  * export const Image = createImage({
  *   Component: ExpoImage,

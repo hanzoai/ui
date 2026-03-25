@@ -1,4 +1,4 @@
-import { View, styled } from '@hanzogui/core'
+import { View, styled } from '@hanzo/gui-core'
 
 export const Section = styled(View, {
   name: 'Section',

@@ -1,4 +1,4 @@
-import { usePrevious } from '@hanzogui/use-previous'
+import { usePrevious } from '@hanzo/gui-use-previous'
 import * as React from 'react'
 
 import type { CheckedState } from './useCheckbox'

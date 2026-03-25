@@ -1,5 +1,5 @@
-import type { GetProps, SizeTokens } from '@hanzogui/core'
-import { View, styled } from '@hanzogui/core'
+import type { GetProps, SizeTokens } from '@hanzo/gui-core'
+import { View, styled } from '@hanzo/gui-core'
 
 import { getElevation } from './getElevation'
 

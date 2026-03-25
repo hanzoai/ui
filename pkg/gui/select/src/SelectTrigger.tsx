@@ -1,7 +1,7 @@
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import type { GuiElement } from '@hanzogui/core'
-import type { ListItemProps } from '@hanzogui/list-item'
-import { ListItem } from '@hanzogui/list-item'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import type { GuiElement } from '@hanzo/gui-core'
+import type { ListItemProps } from '@hanzo/gui-list-item'
+import { ListItem } from '@hanzo/gui-list-item'
 import * as React from 'react'
 
 import { useSelectContext, useSelectItemParentContext } from './context'

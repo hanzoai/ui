@@ -1,7 +1,7 @@
-import type { SizeTokens } from '@hanzogui/core'
-import { getVariableValue, styled } from '@hanzogui/core'
-import { getSize } from '@hanzogui/get-token'
-import { YStack } from '@hanzogui/stacks'
+import type { SizeTokens } from '@hanzo/gui-core'
+import { getVariableValue, styled } from '@hanzo/gui-core'
+import { getSize } from '@hanzo/gui-get-token'
+import { YStack } from '@hanzo/gui-stacks'
 
 export const SwitchThumb = styled(
   YStack,

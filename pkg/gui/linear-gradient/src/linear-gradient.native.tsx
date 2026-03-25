@@ -1,4 +1,4 @@
-import { getLinearGradient } from '@hanzogui/native'
+import { getLinearGradient } from '@hanzo/gui-native'
 
 export type { LinearGradientProps, LinearGradientPoint } from 'expo-linear-gradient'
 
@@ -9,7 +9,7 @@ export function LinearGradient(props: any) {
     return <ExpoLinearGradient {...props} />
   }
   console.warn(
-    `Warning: Must call import '@hanzogui/native/setup-expo-linear-gradient' at root`
+    `Warning: Must call import '@hanzo/gui-native/setup-expo-linear-gradient' at root`
   )
   return
 }
