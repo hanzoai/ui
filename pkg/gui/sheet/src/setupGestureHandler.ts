@@ -1,8 +1,8 @@
 /**
- * Legacy setup - prefer `import '@hanzogui/native/setup-gesture-handler'` instead.
+ * Legacy setup - prefer `import '@hanzo/gui-native/setup-gesture-handler'` instead.
  */
 
-import { getGestureHandler } from '@hanzogui/native'
+import { getGestureHandler } from '@hanzo/gui-native'
 
 export function isGestureHandlerEnabled(): boolean {
   return getGestureHandler().isEnabled

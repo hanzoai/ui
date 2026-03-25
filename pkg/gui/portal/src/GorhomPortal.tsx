@@ -2,9 +2,9 @@
 // MIT License Copyright (c) 2020 Mo Gorhom
 // fixing SSR issue
 
-import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
-import { getPortal, NativePortalHost, NativePortalProvider } from '@hanzogui/native'
-import { startTransition } from '@hanzogui/start-transition'
+import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { getPortal, NativePortalHost, NativePortalProvider } from '@hanzo/gui-native'
+import { startTransition } from '@hanzo/gui-start-transition'
 import type { ReactNode } from 'react'
 import React, {
   createContext,

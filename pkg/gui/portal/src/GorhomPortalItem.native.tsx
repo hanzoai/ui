@@ -1,9 +1,9 @@
 // from https://github.com/gorhom/react-native-portal
 // MIT License Copyright (c) 2020 Mo Gorhom
 
-import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
-import { useEvent } from '@hanzogui/core'
-import { getPortal, NativePortal } from '@hanzogui/native'
+import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { useEvent } from '@hanzo/gui-core'
+import { getPortal, NativePortal } from '@hanzo/gui-native'
 import { useEffect, useId } from 'react'
 import { usePortal } from './GorhomPortal'
 import type { PortalItemProps } from './types'

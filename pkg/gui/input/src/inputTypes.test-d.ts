@@ -12,7 +12,7 @@
  */
 
 import { expectTypeOf, describe, test } from 'vitest'
-import type { GetProps } from '@hanzogui/web'
+import type { GetProps } from '@hanzo/gui-web'
 import type { TextInput } from 'react-native'
 import {
   Input,

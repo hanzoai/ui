@@ -1,5 +1,5 @@
-import type { GetProps, NativeValue, SizeTokens, ViewProps } from '@hanzogui/core'
-import type { SwitchExtraProps as HeadlessSwitchExtraProps } from '@hanzogui/switch-headless'
+import type { GetProps, NativeValue, SizeTokens, ViewProps } from '@hanzo/gui-core'
+import type { SwitchExtraProps as HeadlessSwitchExtraProps } from '@hanzo/gui-switch-headless'
 import type { SwitchProps as NativeSwitchProps, ViewStyle } from 'react-native'
 import type { SwitchThumb } from './Switch'
 

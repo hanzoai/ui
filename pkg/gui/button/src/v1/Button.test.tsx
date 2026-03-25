@@ -1,5 +1,5 @@
-import { getDefaultGuiConfig } from '@hanzogui/config-default'
-import { createGui } from '@hanzogui/core'
+import { getDefaultGuiConfig } from '@hanzo/gui-config-default'
+import { createGui } from '@hanzo/gui-core'
 import { describe, expect, test } from 'vitest'
 
 const conf = createGui(getDefaultGuiConfig())

@@ -1,5 +1,5 @@
 import React, { useId, useRef } from 'react'
-import { useEvent } from '@hanzogui/core'
+import { useEvent } from '@hanzo/gui-core'
 import type { ReactNode } from 'react'
 
 import type { SheetControllerContextValue } from './useSheetController'

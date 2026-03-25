@@ -1,11 +1,11 @@
 /**
- * Re-export gesture state from @hanzogui/native.
+ * Re-export gesture state from @hanzo/gui-native.
  * Sheet uses this for backward compatibility with existing code.
  */
 
-import { getGestureHandler, type GestureState } from '@hanzogui/native'
+import { getGestureHandler, type GestureState } from '@hanzo/gui-native'
 
-export type { GestureState as GestureHandlerState } from '@hanzogui/native'
+export type { GestureState as GestureHandlerState } from '@hanzo/gui-native'
 
 // backward compat helpers
 export function isGestureHandlerEnabled(): boolean {

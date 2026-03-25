@@ -1,10 +1,10 @@
-import { isWeb } from '@hanzogui/core'
-import { Dismissable } from '@hanzogui/dismissable'
-import type { FocusScopeProps } from '@hanzogui/focus-scope'
-import { FocusScope } from '@hanzogui/focus-scope'
+import { isWeb } from '@hanzo/gui-core'
+import { Dismissable } from '@hanzo/gui-dismissable'
+import type { FocusScopeProps } from '@hanzo/gui-focus-scope'
+import { FocusScope } from '@hanzo/gui-focus-scope'
 
-import { Portal } from '@hanzogui/portal'
-import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { Portal } from '@hanzo/gui-portal'
+import { RemoveScroll } from '@hanzo/gui-remove-scroll'
 import { useContext } from 'react'
 import {
   SelectZIndexContext,

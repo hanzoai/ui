@@ -1,8 +1,8 @@
-import { isWeb } from '@hanzogui/constants'
-import type { GuiElement } from '@hanzogui/core'
-import { styled, useEvent, View } from '@hanzogui/core'
-import { XStack, YStack } from '@hanzogui/stacks'
-import { SizableText } from '@hanzogui/text'
+import { isWeb } from '@hanzo/gui-constants'
+import type { GuiElement } from '@hanzo/gui-core'
+import { styled, useEvent, View } from '@hanzo/gui-core'
+import { XStack, YStack } from '@hanzo/gui-stacks'
+import { SizableText } from '@hanzo/gui-text'
 import * as React from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 

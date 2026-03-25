@@ -2,8 +2,8 @@ import {
   type CreateBaseMenuProps,
   createNativeMenu,
   withNativeMenu,
-} from '@hanzogui/create-menu'
-import { isWeb, withStaticProperties } from '@hanzogui/web'
+} from '@hanzo/gui-create-menu'
+import { isWeb, withStaticProperties } from '@hanzo/gui-web'
 import React from 'react'
 import { DROPDOWN_MENU_CONTEXT, createNonNativeMenu } from './createNonNativeMenu'
 

@@ -1,9 +1,9 @@
 // fork of radix
 // https://github.com/radix-ui/primitives/tree/main/packages/react/checkbox/src/Checkbox.tsx
 
-import { getVariableValue, styled } from '@hanzogui/core'
-import { getSize } from '@hanzogui/get-token'
-import { YStack } from '@hanzogui/stacks'
+import { getVariableValue, styled } from '@hanzo/gui-core'
+import { getSize } from '@hanzo/gui-get-token'
+import { YStack } from '@hanzo/gui-stacks'
 
 import { CheckboxStyledContext } from './CheckboxStyledContext'
 

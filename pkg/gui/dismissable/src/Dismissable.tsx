@@ -1,10 +1,10 @@
 // forked from radix-ui
 // https://github.com/radix-ui/primitives/blob/cfd8dcba5fa6a0e751486af418d05a7b88a7f541/packages/react/dismissable-layer/src/DismissableLayer.tsx#L324
 
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { Slot, GuiElement, View, composeEventHandlers } from '@hanzogui/core'
-import { useEscapeKeydown } from '@hanzogui/use-escape-keydown'
-import { useEvent } from '@hanzogui/use-event'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { Slot, GuiElement, View, composeEventHandlers } from '@hanzo/gui-core'
+import { useEscapeKeydown } from '@hanzo/gui-use-escape-keydown'
+import { useEvent } from '@hanzo/gui-use-event'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 

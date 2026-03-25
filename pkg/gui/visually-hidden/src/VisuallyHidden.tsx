@@ -6,7 +6,7 @@ import {
   type TextNonStyleProps,
   type TextStylePropsBase,
   styled,
-} from '@hanzogui/web'
+} from '@hanzo/gui-web'
 
 export const VisuallyHidden: GuiComponent<
   TamaDefer,
