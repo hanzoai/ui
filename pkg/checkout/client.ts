@@ -225,7 +225,7 @@ export class HanzoCheckout {
     const headers: Record<string, string> = {
       'Authorization': `Bearer ${this.apiKey}`,
       'Content-Type': 'application/json',
-      'X-Hanzo-Client': 'checkout-js/1.0.0'
+      'X-SDK-Client': 'checkout-js/1.0.0'
     }
 
     const response = await fetch(url, {
