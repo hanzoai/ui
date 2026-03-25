@@ -1,9 +1,9 @@
-import type { SizeVariantSpreadFunction } from '@hanzogui/core'
-import { Text } from '@hanzogui/core'
-import { getVariableValue, isWeb } from '@hanzogui/core'
-import { getButtonSized } from '@hanzogui/get-button-sized'
-import { getFontSized } from '@hanzogui/get-font-sized'
-import { getSpace } from '@hanzogui/get-token'
+import type { SizeVariantSpreadFunction } from '@hanzo/gui-core'
+import { Text } from '@hanzo/gui-core'
+import { getVariableValue, isWeb } from '@hanzo/gui-core'
+import { getButtonSized } from '@hanzo/gui-get-button-sized'
+import { getFontSized } from '@hanzo/gui-get-font-sized'
+import { getSpace } from '@hanzo/gui-get-token'
 
 export const defaultStyles = {
   size: '$true',

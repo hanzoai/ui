@@ -1,6 +1,6 @@
 {
-  "name": "@hanzogui/label",
-  "version": "2.0.0",
+  "name": "@hanzo/gui-label",
+  "version": "2.0.1",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,17 +36,17 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.0-rc.29",
-    "@hanzogui/constants": "2.0.0-rc.29",
-    "@hanzogui/create-context": "2.0.0-rc.29",
-    "@hanzogui/focusable": "2.0.0",
-    "@hanzogui/get-button-sized": "2.0.0-rc.29",
-    "@hanzogui/get-font-sized": "2.0.0-rc.29",
-    "@hanzogui/text": "2.0.0",
-    "@hanzogui/web": "2.0.0-rc.29"
+    "@hanzo/gui-compose-refs": "2.0.1",
+    "@hanzo/gui-constants": "2.0.1",
+    "@hanzo/gui-create-context": "2.0.1",
+    "@hanzo/gui-focusable": "2.0.1",
+    "@hanzo/gui-get-button-sized": "2.0.1",
+    "@hanzo/gui-get-font-sized": "2.0.1",
+    "@hanzo/gui-text": "2.0.1",
+    "@hanzo/gui-web": "2.0.1"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.0-rc.29",
+    "@hanzo/gui-build": "2.0.1",
     "react": ">=19",
     "react-native": "0.83.2"
   },

@@ -1,4 +1,4 @@
-import { createStyledContext, type SizeTokens } from '@hanzogui/core'
+import { createStyledContext, type SizeTokens } from '@hanzo/gui-core'
 
 import type { Direction, SliderContextValue } from './types'
 

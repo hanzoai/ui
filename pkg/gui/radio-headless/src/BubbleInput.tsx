@@ -1,5 +1,5 @@
 import React from 'react'
-import { usePrevious } from '@hanzogui/use-previous'
+import { usePrevious } from '@hanzo/gui-use-previous'
 
 interface BubbleInputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'checked'> {
   checked: boolean

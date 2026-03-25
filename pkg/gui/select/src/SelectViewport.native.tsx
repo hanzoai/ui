@@ -1,5 +1,5 @@
-import { AdaptContext, AdaptPortalContents, useAdaptContext } from '@hanzogui/adapt'
-import { Theme, useThemeName } from '@hanzogui/core'
+import { AdaptContext, AdaptPortalContents, useAdaptContext } from '@hanzo/gui-adapt'
+import { Theme, useThemeName } from '@hanzo/gui-core'
 
 import { VIEWPORT_NAME } from './constants'
 import {

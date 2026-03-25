@@ -1,7 +1,7 @@
 import React from 'react'
-import { styled } from '@hanzogui/core'
-import { registerFocusable } from '@hanzogui/focusable'
-import { useNativeInputRef } from '@hanzogui/element'
+import { styled } from '@hanzo/gui-core'
+import { registerFocusable } from '@hanzo/gui-focusable'
+import { useNativeInputRef } from '@hanzo/gui-element'
 
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native'
 import { TextInput } from 'react-native'
@@ -11,7 +11,7 @@ import type { InputProps } from './types'
 const StyledInput = styled(TextInput, styledBody[0], styledBody[1])
 
 /**
- * @deprecated Use the new Input from '@hanzogui/input' instead
+ * @deprecated Use the new Input from '@hanzo/gui-input' instead
  */
 export const Input = StyledInput.styleable<InputProps>((inProps, forwardedRef) => {
   const {

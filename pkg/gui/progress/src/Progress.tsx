@@ -1,13 +1,13 @@
 // forked from Radix UI
 // https://github.com/radix-ui/primitives/blob/main/packages/react/progress/src/Progress.tsx
 
-import type { GetProps } from '@hanzogui/core'
-import { getVariableValue, isWeb, styled } from '@hanzogui/core'
-import type { Scope } from '@hanzogui/create-context'
-import { createContextScope } from '@hanzogui/create-context'
-import { getSize } from '@hanzogui/get-token'
-import { withStaticProperties } from '@hanzogui/helpers'
-import { YStack } from '@hanzogui/stacks'
+import type { GetProps } from '@hanzo/gui-core'
+import { getVariableValue, isWeb, styled } from '@hanzo/gui-core'
+import type { Scope } from '@hanzo/gui-create-context'
+import { createContextScope } from '@hanzo/gui-create-context'
+import { getSize } from '@hanzo/gui-get-token'
+import { withStaticProperties } from '@hanzo/gui-helpers'
+import { YStack } from '@hanzo/gui-stacks'
 import { useState } from 'react'
 
 const PROGRESS_NAME = 'Progress'

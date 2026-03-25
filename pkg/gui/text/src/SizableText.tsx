@@ -1,6 +1,6 @@
-import { getFontSized } from '@hanzogui/get-font-sized'
-import type { GetProps } from '@hanzogui/web'
-import { Text, styled } from '@hanzogui/web'
+import { getFontSized } from '@hanzo/gui-get-font-sized'
+import type { GetProps } from '@hanzo/gui-web'
+import { Text, styled } from '@hanzo/gui-web'
 
 export const SizableText = styled(Text, {
   name: 'SizableText',

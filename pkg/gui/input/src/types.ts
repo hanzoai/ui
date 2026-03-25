@@ -1,4 +1,4 @@
-import type { ColorTokens, TextStyle, GuiElementMethods } from '@hanzogui/web'
+import type { ColorTokens, TextStyle, GuiElementMethods } from '@hanzo/gui-web'
 import type { TextInput } from 'react-native'
 import type { InputNativeProps } from './InputNativeProps'
 
