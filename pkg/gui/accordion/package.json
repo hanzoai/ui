@@ -1,5 +1,5 @@
 {
-  "name": @hanzogui/accordion",
+  "name": "@hanzogui/accordion",
   "version": "2.0.4",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
@@ -36,21 +36,21 @@
     "clean": "hanzo-gui-build clean"
   },
   "dependencies": {
-    @hanzogui/collapsible": "2.0.1",
-    @hanzogui/collection": "2.0.1",
-    @hanzogui/compose-refs": "2.0.1",
-    @hanzogui/constants": "2.0.1",
-    @hanzogui/core": "2.0.1",
-    @hanzogui/create-context": "2.0.1",
-    @hanzogui/helpers": "2.0.1",
-    @hanzogui/polyfill-dev": "2.0.1",
-    @hanzogui/stacks": "2.0.1",
-    @hanzogui/text": "2.0.1",
-    @hanzogui/use-controllable-state": "2.0.1",
-    @hanzogui/use-direction": "2.0.1"
+    "@hanzogui/collapsible": "2.0.1",
+    "@hanzogui/collection": "2.0.1",
+    "@hanzogui/compose-refs": "2.0.1",
+    "@hanzogui/constants": "2.0.1",
+    "@hanzogui/core": "2.0.1",
+    "@hanzogui/create-context": "2.0.1",
+    "@hanzogui/helpers": "2.0.1",
+    "@hanzogui/polyfill-dev": "2.0.1",
+    "@hanzogui/stacks": "2.0.1",
+    "@hanzogui/text": "2.0.1",
+    "@hanzogui/use-controllable-state": "2.0.1",
+    "@hanzogui/use-direction": "2.0.1"
   },
   "devDependencies": {
-    @hanzogui/build": "2.0.1",
+    "@hanzogui/build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {

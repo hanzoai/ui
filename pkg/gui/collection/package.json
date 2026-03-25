@@ -1,5 +1,5 @@
 {
-  "name": @hanzogui/collection",
+  "name": "@hanzogui/collection",
   "version": "2.0.4",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
@@ -37,16 +37,16 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    @hanzogui/compose-refs": "2.0.1",
-    @hanzogui/constants": "2.0.1",
-    @hanzogui/core": "2.0.1",
-    @hanzogui/create-context": "2.0.1",
-    @hanzogui/polyfill-dev": "2.0.1",
-    @hanzogui/stacks": "2.0.1",
-    @hanzogui/use-controllable-state": "2.0.1"
+    "@hanzogui/compose-refs": "2.0.1",
+    "@hanzogui/constants": "2.0.1",
+    "@hanzogui/core": "2.0.1",
+    "@hanzogui/create-context": "2.0.1",
+    "@hanzogui/polyfill-dev": "2.0.1",
+    "@hanzogui/stacks": "2.0.1",
+    "@hanzogui/use-controllable-state": "2.0.1"
   },
   "devDependencies": {
-    @hanzogui/build": "2.0.1",
+    "@hanzogui/build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
