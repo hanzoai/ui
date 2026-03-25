@@ -1,3 +1,4 @@
+import { SHADCN_URL } from "@/src/registry/constants"
 import { z } from "zod"
 
 // Error codes for programmatic error handling
@@ -5,6 +6,7 @@ export const RegistryErrorCode = {
   // Network errors
   NETWORK_ERROR: "NETWORK_ERROR",
   NOT_FOUND: "NOT_FOUND",
+  GONE: "GONE",
   UNAUTHORIZED: "UNAUTHORIZED",
   FORBIDDEN: "FORBIDDEN",
   FETCH_ERROR: "FETCH_ERROR",
@@ -90,6 +92,25 @@ export class RegistryNotFoundError extends RegistryError {
         "Check if the item name is correct and the registry URL is accessible.",
     })
     this.name = "RegistryNotFoundError"
+  }
+}
+
+export class RegistryGoneError extends RegistryError {
+  constructor(
+    public readonly url: string,
+    cause?: unknown
+  ) {
+    const message = `The item at ${url} is no longer available. It may have been removed or expired.`
+
+    super(message, {
+      code: RegistryErrorCode.GONE,
+      statusCode: 410,
+      cause,
+      context: { url },
+      suggestion:
+        "This resource was previously available but has been permanently removed. Check if a newer version exists or contact the registry maintainer.",
+    })
+    this.name = "RegistryGoneError"
   }
 }
 
@@ -224,8 +245,7 @@ export class RegistryParseError extends RegistryError {
       code: RegistryErrorCode.PARSE_ERROR,
       cause: parseError,
       context: { item },
-      suggestion:
-        "The registry item may be corrupted or have an invalid format. Please make sure it returns a valid JSON object. See https://ui.shadcn.com/schema/registry-item.json.",
+      suggestion: `The registry item may be corrupted or have an invalid format. Please make sure it returns a valid JSON object. See ${SHADCN_URL}/schema/registry-item.json.`,
     })
 
     this.parseError = parseError
