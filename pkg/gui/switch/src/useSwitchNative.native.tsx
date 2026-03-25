@@ -1,5 +1,5 @@
-import { shouldRenderNativePlatform } from '@hanzogui/core'
-import { registerFocusable } from '@hanzogui/focusable'
+import { shouldRenderNativePlatform } from '@hanzo/gui-core'
+import { registerFocusable } from '@hanzo/gui-focusable'
 import * as React from 'react'
 import { Switch as NativeSwitch } from 'react-native'
 import type { UseSwitchNativeProps } from './types'

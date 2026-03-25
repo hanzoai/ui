@@ -1,5 +1,5 @@
-import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
-import { GuiRoot, useThemeName } from '@hanzogui/web'
+import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { GuiRoot, useThemeName } from '@hanzo/gui-web'
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
 import { allPortalHosts, portalListeners } from './constants'

@@ -1,10 +1,10 @@
-import type { AnimatePresenceProps } from '@hanzogui/animate-presence'
-import { AnimatePresence, ResetPresence } from '@hanzogui/animate-presence'
-import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
-import type { YStackProps } from '@hanzogui/stacks'
-import { useControllableState } from '@hanzogui/use-controllable-state'
-import type { GetProps, ViewProps, GuiElement } from '@hanzogui/web'
-import { View, createStyledContext, styled } from '@hanzogui/web'
+import type { AnimatePresenceProps } from '@hanzo/gui-animate-presence'
+import { AnimatePresence, ResetPresence } from '@hanzo/gui-animate-presence'
+import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+import type { YStackProps } from '@hanzo/gui-stacks'
+import { useControllableState } from '@hanzo/gui-use-controllable-state'
+import type { GetProps, ViewProps, GuiElement } from '@hanzo/gui-web'
+import { View, createStyledContext, styled } from '@hanzo/gui-web'
 import * as React from 'react'
 
 /* -------------------------------------------------------------------------------------------------

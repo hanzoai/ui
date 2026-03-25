@@ -1,21 +1,21 @@
-import { Animate } from '@hanzogui/animate'
-import { AnimatePresence as Presence } from '@hanzogui/animate-presence'
-import { createCollection } from '@hanzogui/collection'
+import { Animate } from '@hanzo/gui-animate'
+import { AnimatePresence as Presence } from '@hanzo/gui-animate-presence'
+import { createCollection } from '@hanzo/gui-collection'
 import {
   Dismissable as DismissableLayer,
   dispatchDiscreteCustomEvent,
-} from '@hanzogui/dismissable'
-import { useFocusGuards } from '@hanzogui/focus-guard'
-import { FocusScope } from '@hanzogui/focus-scope'
-import type { PopperContentProps } from '@hanzogui/popper'
-import * as PopperPrimitive from '@hanzogui/popper'
-import { needsPortalRepropagation, Portal as PortalPrimitive } from '@hanzogui/portal'
-import { RemoveScroll } from '@hanzogui/remove-scroll'
-import type { RovingFocusGroupProps } from '@hanzogui/roving-focus'
-import { RovingFocusGroup } from '@hanzogui/roving-focus'
-import { useCallbackRef } from '@hanzogui/use-callback-ref'
-import { useDirection } from '@hanzogui/use-direction'
-import type { TextProps } from '@hanzogui/web'
+} from '@hanzo/gui-dismissable'
+import { useFocusGuards } from '@hanzo/gui-focus-guard'
+import { FocusScope } from '@hanzo/gui-focus-scope'
+import type { PopperContentProps } from '@hanzo/gui-popper'
+import * as PopperPrimitive from '@hanzo/gui-popper'
+import { needsPortalRepropagation, Portal as PortalPrimitive } from '@hanzo/gui-portal'
+import { RemoveScroll } from '@hanzo/gui-remove-scroll'
+import type { RovingFocusGroupProps } from '@hanzo/gui-roving-focus'
+import { RovingFocusGroup } from '@hanzo/gui-roving-focus'
+import { useCallbackRef } from '@hanzo/gui-use-callback-ref'
+import { useDirection } from '@hanzo/gui-use-direction'
+import type { TextProps } from '@hanzo/gui-web'
 import {
   type ViewProps,
   composeEventHandlers,
@@ -30,8 +30,8 @@ import {
   useThemeName,
   View,
   withStaticProperties,
-} from '@hanzogui/web'
-import type { GuiElement } from '@hanzogui/web/types'
+} from '@hanzo/gui-web'
+import type { GuiElement } from '@hanzo/gui-web/types'
 import * as React from 'react'
 import { useId } from 'react'
 import type { Image, ImageProps } from 'react-native'

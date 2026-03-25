@@ -1,4 +1,4 @@
-import type { ViewProps } from '@hanzogui/web'
+import type { ViewProps } from '@hanzo/gui-web'
 import type {
   ImageResizeMode,
   ImageSourcePropType,

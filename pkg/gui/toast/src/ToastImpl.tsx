@@ -1,7 +1,7 @@
-import { useIsPresent } from '@hanzogui/animate-presence'
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { isWeb } from '@hanzogui/constants'
-import type { GetProps, GuiElement } from '@hanzogui/core'
+import { useIsPresent } from '@hanzo/gui-animate-presence'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { isWeb } from '@hanzo/gui-constants'
+import type { GetProps, GuiElement } from '@hanzo/gui-core'
 import {
   View,
   Theme,
@@ -10,12 +10,12 @@ import {
   useConfiguration,
   useEvent,
   useThemeName,
-} from '@hanzogui/core'
-import type { DismissableProps } from '@hanzogui/dismissable'
-import { Dismissable } from '@hanzogui/dismissable'
-import { composeEventHandlers } from '@hanzogui/helpers'
-import { PortalItem } from '@hanzogui/portal'
-import { YStack } from '@hanzogui/stacks'
+} from '@hanzo/gui-core'
+import type { DismissableProps } from '@hanzo/gui-dismissable'
+import { Dismissable } from '@hanzo/gui-dismissable'
+import { composeEventHandlers } from '@hanzo/gui-helpers'
+import { PortalItem } from '@hanzo/gui-portal'
+import { YStack } from '@hanzo/gui-stacks'
 import * as React from 'react'
 import type {
   Animated,

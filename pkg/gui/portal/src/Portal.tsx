@@ -1,8 +1,8 @@
-import '@hanzogui/polyfill-dev'
+import '@hanzo/gui-polyfill-dev'
 
-import { isServer } from '@hanzogui/constants'
-import { GuiRoot, useDidFinishSSR, useThemeName } from '@hanzogui/web'
-import { useStackedZIndex, ZIndexHardcodedContext } from '@hanzogui/z-index-stack'
+import { isServer } from '@hanzo/gui-constants'
+import { GuiRoot, useDidFinishSSR, useThemeName } from '@hanzo/gui-web'
+import { useStackedZIndex, ZIndexHardcodedContext } from '@hanzo/gui-z-index-stack'
 import * as React from 'react'
 import { createPortal } from 'react-dom'
 import { getStackedZIndexProps } from './helpers'
