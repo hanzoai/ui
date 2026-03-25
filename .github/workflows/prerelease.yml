@@ -7,10 +7,15 @@ on:
     types: [labeled]
     branches:
       - main
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   prerelease:
     if: |
-      github.repository_owner == 'hanzoai' &&
+      github.repository_owner == 'shadcn-ui' &&
       contains(github.event.pull_request.labels.*.name, '🚀 autorelease')
     name: Build & Publish a beta release to NPM
     runs-on: ubuntu-latest
@@ -18,31 +23,30 @@ jobs:
 
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Use PNPM
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.6.1
+          version: 9.0.6
 
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
+
+      - name: Update npm for OIDC support
+        run: npm install -g npm@latest
 
       - name: Install NPM Dependencies
         run: pnpm install
 
       - name: Modify package.json version
         run: node .github/version-script-beta.js
-
-      - name: Authenticate to NPM
-        run: echo "//registry.npmjs.org/:_authToken=$NPM_ACCESS_TOKEN" >> pkg/cli/.npmrc
-        env:
-          NPM_ACCESS_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
 
       - name: Publish Beta to NPM
         run: pnpm pub:beta
@@ -51,10 +55,10 @@ jobs:
         id: package-version
         uses: martinbeentjes/npm-get-version-action@main
         with:
-          path: pkg/cli
+          path: packages/shadcn
 
       - name: Upload packaged artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: npm-package-hanzoai-ui@${{ steps.package-version.outputs.current-version }}-pr-${{ github.event.number }} # encode the PR number into the artifact name
-          path: pkg/cli/dist/index.js
+          name: npm-package-shadcn@${{ steps.package-version.outputs.current-version }}-pr-${{ github.event.number }} # encode the PR number into the artifact name
+          path: packages/shadcn/dist/index.js
