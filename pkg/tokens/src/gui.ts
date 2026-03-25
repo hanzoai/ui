@@ -1,11 +1,11 @@
 /**
- * Tamagui theme tokens for Hanzo.
+ * Gui theme tokens for Hanzo.
  *
- * Maps Hanzo design tokens to Tamagui's createTokens format.
+ * Maps Hanzo design tokens to Gui's createTokens format.
  *
  * Usage:
- *   import { tamaguiTokens } from "@hanzo/tokens/tamagui"
- *   const config = createTamagui({ tokens: tamaguiTokens, ... })
+ *   import { guiTokens } from "@hanzo/tokens/gui"
+ *   const config = createGui({ tokens: guiTokens, ... })
  */
 
 import { colors, zinc } from "./colors"
@@ -14,7 +14,7 @@ import { radiiPx } from "./radii"
 import { fontSizePx } from "./typography"
 import { dark, light } from "./themes"
 
-export const tamaguiTokens = {
+export const guiTokens = {
   color: {
     ...colors,
     ...Object.fromEntries(
@@ -27,7 +27,7 @@ export const tamaguiTokens = {
   fontSize: fontSizePx,
 } as const
 
-export const tamaguiDarkTheme = {
+export const guiDarkTheme = {
   background: dark.background,
   color: dark.foreground,
   cardBackground: dark.card,
@@ -46,7 +46,7 @@ export const tamaguiDarkTheme = {
   destructiveForeground: dark.destructiveForeground,
 } as const
 
-export const tamaguiLightTheme = {
+export const guiLightTheme = {
   background: light.background,
   color: light.foreground,
   cardBackground: light.card,
