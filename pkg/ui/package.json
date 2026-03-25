@@ -98,15 +98,15 @@
       "import": "./dist/registry/*.mjs",
       "require": "./dist/registry/*.js"
     },
-    "./primitives/bases/tamagui": {
-      "types": "./dist/primitives/bases/tamagui/index.d.ts",
-      "import": "./dist/primitives/bases/tamagui/index.mjs",
-      "require": "./dist/primitives/bases/tamagui/index.js"
+    "./primitives/bases/gui": {
+      "types": "./dist/primitives/bases/gui/index.d.ts",
+      "import": "./dist/primitives/bases/gui/index.mjs",
+      "require": "./dist/primitives/bases/gui/index.js"
     },
-    "./primitives/bases/tamagui/*": {
-      "types": "./dist/primitives/bases/tamagui/*.d.ts",
-      "import": "./dist/primitives/bases/tamagui/*.mjs",
-      "require": "./dist/primitives/bases/tamagui/*.js"
+    "./primitives/bases/gui/*": {
+      "types": "./dist/primitives/bases/gui/*.d.ts",
+      "import": "./dist/primitives/bases/gui/*.mjs",
+      "require": "./dist/primitives/bases/gui/*.js"
     },
     "./calendar": {
       "types": "./dist/calendar.d.ts",

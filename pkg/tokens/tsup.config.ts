@@ -9,7 +9,7 @@ export default defineConfig({
     "src/typography.ts",
     "src/themes.ts",
     "src/tailwind.ts",
-    "src/tamagui.ts",
+    "src/gui.ts",
   ],
   format: ["cjs", "esm"],
   dts: true,
