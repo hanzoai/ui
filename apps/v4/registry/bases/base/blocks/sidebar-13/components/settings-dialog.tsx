@@ -233,7 +233,11 @@ export function SettingsDialog() {
               }).map((_, i) => (
                 <div
                   key={i}
+<<<<<<< HEAD
                   className="bg-muted/50 aspect-video max-w-3xl rounded-xl"
+=======
+                  className="aspect-video max-w-3xl rounded-xl bg-muted/50"
+>>>>>>> shadcn/main
                 />
               ))}
             </div>

@@ -111,7 +111,11 @@ export function CardsChat() {
             </Avatar>
             <div className="flex flex-col gap-0.5">
               <p className="text-sm leading-none font-medium">Sofia Davis</p>
+<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
               <p className="text-muted-foreground text-xs">m@example.com</p>
+========
+              <p className="text-xs text-muted-foreground">m@example.com</p>
+>>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
             </div>
           </div>
           <TooltipProvider delayDuration={0}>
@@ -123,7 +127,11 @@ export function CardsChat() {
                   className="ml-auto size-8 rounded-full"
                   onClick={() => setOpen(true)}
                 >
+<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
+                  <Plus className="h-4 w-4" />
+========
                   <PlusIcon />
+>>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
                   <span className="sr-only">New message</span>
                 </Button>
               </TooltipTrigger>
@@ -164,6 +172,20 @@ export function CardsChat() {
             }}
             className="relative w-full"
           >
+<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
+            <Input
+              id="message"
+              placeholder="Type your message..."
+              className="flex-1"
+              autoComplete="off"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+            <Button type="submit" size="icon" disabled={inputLength === 0}>
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send</span>
+            </Button>
+========
             <InputGroup>
               <InputGroupInput
                 id="message"
@@ -183,6 +205,7 @@ export function CardsChat() {
                 </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
+>>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
           </form>
         </CardFooter>
       </Card>
@@ -234,7 +257,11 @@ export function CardsChat() {
                       </p>
                     </div>
                     {selectedUsers.includes(user) ? (
+<<<<<<<< HEAD:app/registry/default/example/cards/chat.tsx
                       <CheckIcon className="text-primary ml-auto flex size-4" />
+========
+                      <CheckIcon className="ml-auto flex size-4 text-primary" />
+>>>>>>>> shadcn/main:apps/v4/components/cards/chat.tsx
                     ) : null}
                   </CommandItem>
                 ))}

@@ -7,6 +7,9 @@ links:
   doc: https://tanstack.com/table/v8/docs/introduction
 ---
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
+<ComponentPreview name="data-table-demo" className="[&_.preview]:items-start" />
+========
 <ComponentPreview
   styleName="radix-nova"
   name="data-table-demo"
@@ -14,6 +17,7 @@ links:
   previewClassName="items-start h-auto px-4 md:px-8"
   hideCode
 />
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ## Introduction
 
@@ -316,13 +320,13 @@ You can use the same approach to format other cells and headers.
 
 ## Row Actions
 
-Let's add row actions to our table. We'll use a `<Dropdown />` component for this.
+Let's add row actions to our table. We'll use a `<DropdownMenu />` component for this.
 
 <Steps className="mb-0 pt-2">
 
 ### Update columns definition
 
-Update our columns definition to add a new `actions` column. The `actions` cell returns a `<Dropdown />` component.
+Update our columns definition to add a new `actions` column. The `actions` cell returns a `<DropdownMenu />` component.
 
 ```tsx showLineNumbers title="app/payments/columns.tsx" {4,6-14,18-45}
 "use client"
@@ -472,7 +476,7 @@ Let's make the email column sortable.
 
 ### Update `<DataTable>`
 
-```tsx showLineNumbers title="app/payments/data-table.tsx" showLineNumbers {3,6,10,18,25-28}
+```tsx showLineNumbers title="app/payments/data-table.tsx" {3,6,10,18,25-29}
 "use client"
 
 import * as React from "react"
@@ -827,7 +831,7 @@ This adds a checkbox to each row and a checkbox in the header to select all rows
 You can show the number of selected rows using the `table.getFilteredSelectedRowModel()` API.
 
 ```tsx
-<div className="text-muted-foreground flex-1 text-sm">
+<div className="flex-1 text-sm text-muted-foreground">
   {table.getFilteredSelectedRowModel().rows.length} of{" "}
   {table.getFilteredRowModel().rows.length} row(s) selected.
 </div>
@@ -843,10 +847,14 @@ Here are some components you can use to build your data tables. This is from the
 
 Make any column header sortable and hideable.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
+<ComponentSource src="/app/(app)/examples/tasks/components/data-table-column-header.tsx" />
+========
 <ComponentSource
   src="/app/(app)/examples/tasks/components/data-table-column-header.tsx"
   title="components/data-table-column-header.tsx"
 />
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ```tsx showLineNumbers {5}
 export const columns = [
@@ -863,10 +871,14 @@ export const columns = [
 
 Add pagination controls to your table including page size and selection count.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
+<ComponentSource src="/app/(app)/examples/tasks/components/data-table-pagination.tsx" />
+========
 <ComponentSource
   src="/app/(app)/examples/tasks/components/data-table-pagination.tsx"
   styleName="radix-nova"
 />
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ```tsx
 <DataTablePagination table={table} />
@@ -876,10 +888,14 @@ Add pagination controls to your table including page size and selection count.
 
 A component to toggle column visibility.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
+<ComponentSource src="/app/(app)/examples/tasks/components/data-table-view-options.tsx" />
+========
 <ComponentSource
   src="/app/(app)/examples/tasks/components/data-table-view-options.tsx"
   styleName="radix-nova"
 />
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ```tsx
 <DataTableViewOptions table={table} />

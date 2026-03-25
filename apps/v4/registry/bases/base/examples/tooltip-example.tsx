@@ -141,10 +141,15 @@ function TooltipWithKeyboard() {
             remixicon="RiSaveLine"
           />
         </TooltipTrigger>
+<<<<<<< HEAD
         <TooltipContent className="pr-1.5">
           <div className="flex items-center gap-2">
             Save Changes <Kbd>S</Kbd>
           </div>
+=======
+        <TooltipContent>
+          Save Changes <Kbd>S</Kbd>
+>>>>>>> shadcn/main
         </TooltipContent>
       </Tooltip>
     </Example>
@@ -159,7 +164,11 @@ function TooltipOnLink() {
           render={
             <a
               href="#"
+<<<<<<< HEAD
               className="text-primary w-fit text-sm underline-offset-4 hover:underline"
+=======
+              className="w-fit text-sm text-primary underline-offset-4 hover:underline"
+>>>>>>> shadcn/main
               onClick={(e) => e.preventDefault()}
             />
           }

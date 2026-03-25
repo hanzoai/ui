@@ -216,6 +216,13 @@ export async function getTargetStyleFromConfig(cwd: string, fallback: string) {
   return projectInfo?.tailwindVersion === "v4" ? "new-york-v4" : fallback
 }
 
+<<<<<<< HEAD
+=======
+export function getBase(style: string | undefined) {
+  return style?.startsWith("base-") ? "base" : "radix"
+}
+
+>>>>>>> shadcn/main
 export type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
 }

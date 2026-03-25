@@ -84,7 +84,11 @@ function AccordionContent({
     >
       <div
         className={cn(
+<<<<<<< HEAD
           "cn-accordion-content-inner [&_a]:hover:text-foreground h-(--radix-accordion-content-height) [&_a]:underline [&_a]:underline-offset-3 [&_p:not(:last-child)]:mb-4",
+=======
+          "cn-accordion-content-inner h-(--radix-accordion-content-height) [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
+>>>>>>> shadcn/main
           className
         )}
       >

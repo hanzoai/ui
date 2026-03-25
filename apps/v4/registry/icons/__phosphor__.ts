@@ -23,7 +23,10 @@ export { BookmarkIcon } from "@phosphor-icons/react"
 export { CalculatorIcon } from "@phosphor-icons/react"
 export { CalendarBlankIcon } from "@phosphor-icons/react"
 export { CalendarIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { CalendarPlusIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { CameraIcon } from "@phosphor-icons/react"
 export { CaretDoubleLeftIcon } from "@phosphor-icons/react"
 export { CaretDoubleRightIcon } from "@phosphor-icons/react"
@@ -39,7 +42,10 @@ export { ChatCircleIcon } from "@phosphor-icons/react"
 export { CheckCircleIcon } from "@phosphor-icons/react"
 export { CheckIcon } from "@phosphor-icons/react"
 export { CircleDashedIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { CircleIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { ClipboardIcon } from "@phosphor-icons/react"
 export { ClockIcon } from "@phosphor-icons/react"
 export { CloudArrowUpIcon } from "@phosphor-icons/react"
@@ -50,7 +56,10 @@ export { CopyIcon } from "@phosphor-icons/react"
 export { CreditCardIcon } from "@phosphor-icons/react"
 export { CropIcon } from "@phosphor-icons/react"
 export { CubeIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { CurrencyCircleDollarIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { DatabaseIcon } from "@phosphor-icons/react"
 export { DotsSixVerticalIcon } from "@phosphor-icons/react"
 export { DotsThreeIcon } from "@phosphor-icons/react"
@@ -68,10 +77,15 @@ export { FolderIcon } from "@phosphor-icons/react"
 export { FolderOpenIcon } from "@phosphor-icons/react"
 export { FolderPlusIcon } from "@phosphor-icons/react"
 export { GearIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { GitBranchIcon } from "@phosphor-icons/react"
 export { GlobeIcon } from "@phosphor-icons/react"
 export { GridFourIcon } from "@phosphor-icons/react"
 export { HandPointingIcon } from "@phosphor-icons/react"
+=======
+export { GlobeIcon } from "@phosphor-icons/react"
+export { GridFourIcon } from "@phosphor-icons/react"
+>>>>>>> shadcn/main
 export { HardDrivesIcon } from "@phosphor-icons/react"
 export { HeartIcon } from "@phosphor-icons/react"
 export { HouseIcon } from "@phosphor-icons/react"
@@ -80,6 +94,7 @@ export { InfoIcon } from "@phosphor-icons/react"
 export { KeyboardIcon } from "@phosphor-icons/react"
 export { LayoutIcon } from "@phosphor-icons/react"
 export { LifebuoyIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { LightbulbIcon } from "@phosphor-icons/react"
 export { LightningIcon } from "@phosphor-icons/react"
 export { LinkIcon } from "@phosphor-icons/react"
@@ -87,6 +102,12 @@ export { ListIcon } from "@phosphor-icons/react"
 export { ListPlusIcon } from "@phosphor-icons/react"
 export { LockIcon } from "@phosphor-icons/react"
 export { MagicWandIcon } from "@phosphor-icons/react"
+=======
+export { LightningIcon } from "@phosphor-icons/react"
+export { LinkIcon } from "@phosphor-icons/react"
+export { ListIcon } from "@phosphor-icons/react"
+export { LockIcon } from "@phosphor-icons/react"
+>>>>>>> shadcn/main
 export { MagnifyingGlassIcon } from "@phosphor-icons/react"
 export { MagnifyingGlassMinusIcon } from "@phosphor-icons/react"
 export { MagnifyingGlassPlusIcon } from "@phosphor-icons/react"
@@ -97,7 +118,10 @@ export { MonitorIcon } from "@phosphor-icons/react"
 export { MoonIcon } from "@phosphor-icons/react"
 export { PaletteIcon } from "@phosphor-icons/react"
 export { PaperPlaneTiltIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { PaperclipIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { PencilIcon } from "@phosphor-icons/react"
 export { PlusCircleIcon } from "@phosphor-icons/react"
 export { PlusIcon } from "@phosphor-icons/react"
@@ -120,7 +144,10 @@ export { SquaresFourIcon } from "@phosphor-icons/react"
 export { StarIcon } from "@phosphor-icons/react"
 export { SunIcon } from "@phosphor-icons/react"
 export { TableIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { TagIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { TerminalIcon } from "@phosphor-icons/react"
 export { TextBIcon } from "@phosphor-icons/react"
 export { TextItalicIcon } from "@phosphor-icons/react"
@@ -131,7 +158,10 @@ export { TrashIcon } from "@phosphor-icons/react"
 export { TrayIcon } from "@phosphor-icons/react"
 export { TrendDownIcon } from "@phosphor-icons/react"
 export { TrendUpIcon } from "@phosphor-icons/react"
+<<<<<<< HEAD
 export { UploadIcon } from "@phosphor-icons/react"
+=======
+>>>>>>> shadcn/main
 export { UserCircleIcon } from "@phosphor-icons/react"
 export { UserIcon } from "@phosphor-icons/react"
 export { UserMinusIcon } from "@phosphor-icons/react"

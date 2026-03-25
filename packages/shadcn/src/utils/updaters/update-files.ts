@@ -21,6 +21,10 @@ import { transform } from "@/src/utils/transformers"
 import { transformAsChild } from "@/src/utils/transformers/transform-aschild"
 import { transformCleanup } from "@/src/utils/transformers/transform-cleanup"
 import { transformCssVars } from "@/src/utils/transformers/transform-css-vars"
+<<<<<<< HEAD
+=======
+import { transformFont } from "@/src/utils/transformers/transform-font"
+>>>>>>> shadcn/main
 import { transformIcons } from "@/src/utils/transformers/transform-icons"
 import { transformImport } from "@/src/utils/transformers/transform-import"
 import { transformMenu } from "@/src/utils/transformers/transform-menu"
@@ -44,6 +48,10 @@ export async function updateFiles(
     isRemote?: boolean
     isWorkspace?: boolean
     path?: string
+<<<<<<< HEAD
+=======
+    supportedFontMarkers?: string[]
+>>>>>>> shadcn/main
   }
 ) {
   if (!files?.length) {
@@ -117,6 +125,20 @@ export async function updateFiles(
 
     const existingFile = existsSync(filePath)
 
+<<<<<<< HEAD
+=======
+    // TODO: revisit this when we implement utils transform instead of override.
+    if (
+      file.type === "registry:lib" &&
+      basename(file.path) === "utils.ts" &&
+      projectInfo?.framework.name === "laravel" &&
+      existingFile
+    ) {
+      filesSkipped.push(path.relative(config.resolvedPaths.cwd, filePath))
+      continue
+    }
+
+>>>>>>> shadcn/main
     // Check if the path exists and is a directory - we can't write to directories.
     if (existingFile && statSync(filePath).isDirectory()) {
       throw new Error(
@@ -141,6 +163,10 @@ export async function updateFiles(
               baseColor,
               transformJsx: !config.tsx,
               isRemote: options.isRemote,
+<<<<<<< HEAD
+=======
+              supportedFontMarkers: options.supportedFontMarkers,
+>>>>>>> shadcn/main
             },
             [
               transformImport,
@@ -154,6 +180,10 @@ export async function updateFiles(
               ...(_isNext16Middleware(filePath, projectInfo, config)
                 ? [transformNext]
                 : []),
+<<<<<<< HEAD
+=======
+              transformFont,
+>>>>>>> shadcn/main
               transformCleanup,
             ]
           )
@@ -251,19 +281,31 @@ export async function updateFiles(
   // Let's update filesUpdated with the updated files.
   filesUpdated.push(...updatedFiles)
 
+<<<<<<< HEAD
   // If a file is in filesCreated and filesUpdated, we should remove it from filesUpdated.
   filesUpdated = filesUpdated.filter((file) => !filesCreated.includes(file))
+=======
+  // Remove duplicates and filter out files already in filesCreated.
+  filesCreated = Array.from(new Set(filesCreated))
+  filesUpdated = Array.from(
+    new Set(filesUpdated.filter((file) => !filesCreated.includes(file)))
+  )
+  filesSkipped = Array.from(new Set(filesSkipped))
+>>>>>>> shadcn/main
 
   const hasUpdatedFiles = filesCreated.length || filesUpdated.length
   if (!hasUpdatedFiles && !filesSkipped.length) {
     filesCreatedSpinner?.info("No files updated.")
   }
 
+<<<<<<< HEAD
   // Remove duplicates.
   filesCreated = Array.from(new Set(filesCreated))
   filesUpdated = Array.from(new Set(filesUpdated))
   filesSkipped = Array.from(new Set(filesSkipped))
 
+=======
+>>>>>>> shadcn/main
   if (filesCreated.length) {
     filesCreatedSpinner?.succeed(
       `Created ${filesCreated.length} ${
@@ -298,7 +340,11 @@ export async function updateFiles(
   if (filesSkipped.length) {
     spinner(
       `Skipped ${filesSkipped.length} ${
+<<<<<<< HEAD
         filesUpdated.length === 1 ? "file" : "files"
+=======
+        filesSkipped.length === 1 ? "file" : "files"
+>>>>>>> shadcn/main
       }: (files might be identical, use --overwrite to overwrite)`,
       {
         silent: options.silent,
@@ -322,10 +368,13 @@ export async function updateFiles(
     }
   }
 
+<<<<<<< HEAD
   if (!options.silent) {
     logger.break()
   }
 
+=======
+>>>>>>> shadcn/main
   return {
     filesCreated,
     filesUpdated,

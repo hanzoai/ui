@@ -1,10 +1,19 @@
 import * as React from "react"
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 import { Column } from "@tanstack/react-table"
 import { Check, PlusCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/registry/default/ui/badge"
 import { Button } from "@/registry/default/ui/button"
+========
+import { type Column } from "@tanstack/react-table"
+import { Check, PlusCircle } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 import {
   Command,
   CommandEmpty,
@@ -13,13 +22,22 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 } from "@/registry/default/ui/command"
+========
+} from "@/registry/new-york-v4/ui/command"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 } from "@/registry/default/ui/popover"
 import { Separator } from "@/registry/default/ui/separator"
+========
+} from "@/registry/new-york-v4/ui/popover"
+import { Separator } from "@/registry/new-york-v4/ui/separator"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>
@@ -107,6 +125,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       className={cn(
                         "flex size-4 items-center justify-center rounded-[4px] border",
                         isSelected
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
                           ? "bg-primary border-primary text-primary-foreground"
                           : "border-input [&_svg]:invisible"
                       )}
@@ -119,6 +138,20 @@ export function DataTableFacetedFilter<TData, TValue>({
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
                       <span className="text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs">
+========
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-input [&_svg]:invisible"
+                      )}
+                    >
+                      <Check className="size-3.5 text-primary-foreground" />
+                    </div>
+                    {option.icon && (
+                      <option.icon className="size-4 text-muted-foreground" />
+                    )}
+                    <span>{option.label}</span>
+                    {facets?.get(option.value) && (
+                      <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs text-muted-foreground">
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-faceted-filter.tsx
                         {facets.get(option.value)}
                       </span>
                     )}

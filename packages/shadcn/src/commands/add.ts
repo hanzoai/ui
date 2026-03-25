@@ -1,13 +1,29 @@
 import path from "path"
 import { runInit } from "@/src/commands/init"
 import { preFlightAdd } from "@/src/preflights/preflight-add"
+<<<<<<< HEAD
+=======
+import {
+  promptForBase,
+  promptForPreset,
+  resolveRegistryBaseConfig,
+} from "@/src/preset/presets"
+>>>>>>> shadcn/main
 import { getRegistryItems, getShadcnRegistryIndex } from "@/src/registry/api"
 import { DEPRECATED_COMPONENTS } from "@/src/registry/constants"
 import { clearRegistryContext } from "@/src/registry/context"
 import { registryItemTypeSchema } from "@/src/registry/schema"
 import { isUniversalRegistryItem } from "@/src/registry/utils"
+<<<<<<< HEAD
 import { addComponents } from "@/src/utils/add-components"
 import { createProject } from "@/src/utils/create-project"
+=======
+import { getTemplateForFramework } from "@/src/templates/index"
+import { addComponents } from "@/src/utils/add-components"
+import { createProject } from "@/src/utils/create-project"
+import { dryRunComponents } from "@/src/utils/dry-run"
+import { formatDryRunResult } from "@/src/utils/dry-run-formatter"
+>>>>>>> shadcn/main
 import { loadEnvFiles } from "@/src/utils/env-loader"
 import * as ERRORS from "@/src/utils/errors"
 import { createConfig, getConfig } from "@/src/utils/get-config"
@@ -16,6 +32,10 @@ import { handleError } from "@/src/utils/handle-error"
 import { highlighter } from "@/src/utils/highlighter"
 import { logger } from "@/src/utils/logger"
 import { ensureRegistriesInConfig } from "@/src/utils/registries"
+<<<<<<< HEAD
+=======
+import { spinner } from "@/src/utils/spinner"
+>>>>>>> shadcn/main
 import { updateAppIndex } from "@/src/utils/update-app-index"
 import { Command } from "commander"
 import prompts from "prompts"
@@ -29,8 +49,14 @@ export const addOptionsSchema = z.object({
   all: z.boolean(),
   path: z.string().optional(),
   silent: z.boolean(),
+<<<<<<< HEAD
   srcDir: z.boolean().optional(),
   cssVariables: z.boolean(),
+=======
+  dryRun: z.boolean(),
+  diff: z.union([z.string(), z.literal(true)]).optional(),
+  view: z.union([z.string(), z.literal(true)]).optional(),
+>>>>>>> shadcn/main
 })
 
 export const add = new Command()
@@ -47,6 +73,7 @@ export const add = new Command()
   .option("-a, --all", "add all available components", false)
   .option("-p, --path <path>", "the path to add the component to.")
   .option("-s, --silent", "mute output.", false)
+<<<<<<< HEAD
   .option(
     "--src-dir",
     "use the src directory when creating a new project.",
@@ -58,16 +85,31 @@ export const add = new Command()
   )
   .option("--css-variables", "use css variables for theming.", true)
   .option("--no-css-variables", "do not use css variables for theming.")
+=======
+  .option("--dry-run", "preview changes without writing files.", false)
+  .option("--diff [path]", "show diff for a file.")
+  .option("--view [path]", "show file contents.")
+>>>>>>> shadcn/main
   .action(async (components, opts) => {
     try {
       const options = addOptionsSchema.parse({
         components,
+<<<<<<< HEAD
         cwd: path.resolve(opts.cwd),
         ...opts,
+=======
+        ...opts,
+        cwd: path.resolve(opts.cwd),
+>>>>>>> shadcn/main
       })
 
       await loadEnvFiles(options.cwd)
 
+<<<<<<< HEAD
+=======
+      const isDryRun = options.dryRun || options.diff || options.view
+
+>>>>>>> shadcn/main
       let initialConfig = await getConfig(options.cwd)
       if (!initialConfig) {
         initialConfig = createConfig({
@@ -90,12 +132,17 @@ export const add = new Command()
       }
 
       let itemType: z.infer<typeof registryItemTypeSchema> | undefined
+<<<<<<< HEAD
       let shouldInstallBaseStyle = true
+=======
+      let shouldInstallStyleIndex = true
+>>>>>>> shadcn/main
       if (components.length > 0) {
         const [registryItem] = await getRegistryItems([components[0]], {
           config: initialConfig,
         })
         itemType = registryItem?.type
+<<<<<<< HEAD
         shouldInstallBaseStyle =
           itemType !== "registry:theme" && itemType !== "registry:style"
 
@@ -109,6 +156,20 @@ export const add = new Command()
 
         if (
           !options.yes &&
+=======
+        shouldInstallStyleIndex =
+          itemType !== "registry:theme" &&
+          itemType !== "registry:style" &&
+          itemType !== "registry:base"
+
+        if (isUniversalRegistryItem(registryItem) && !isDryRun) {
+          await addComponents(components, initialConfig, options)
+          return
+        }
+        if (
+          !options.yes &&
+          !isDryRun &&
+>>>>>>> shadcn/main
           (itemType === "registry:style" || itemType === "registry:theme")
         ) {
           logger.break()
@@ -170,6 +231,29 @@ export const add = new Command()
           process.exit(1)
         }
 
+<<<<<<< HEAD
+=======
+        // Infer template from project framework.
+        const inferredTemplate = getTemplateForFramework(
+          projectInfo?.framework.name
+        )
+
+        // Prompt for base and preset.
+        const base = await promptForBase()
+        const { url: initUrl } = await promptForPreset({
+          rtl: false,
+          base,
+          template: inferredTemplate,
+        })
+
+        // Resolve registry:base config.
+        const {
+          registryBaseConfig,
+          installStyleIndex,
+          url: cleanInitUrl,
+        } = await resolveRegistryBaseConfig(initUrl, options.cwd)
+
+>>>>>>> shadcn/main
         config = await runInit({
           cwd: options.cwd,
           yes: true,
@@ -178,11 +262,19 @@ export const add = new Command()
           skipPreflight: false,
           silent: options.silent && !hasNewRegistries,
           isNewProject: false,
+<<<<<<< HEAD
           srcDir: options.srcDir,
           cssVariables: options.cssVariables,
           baseStyle: shouldInstallBaseStyle,
           baseColor: shouldInstallBaseStyle ? undefined : "neutral",
           components: options.components,
+=======
+          cssVariables: true,
+          rtl: false,
+          installStyleIndex,
+          components: [cleanInitUrl, ...(options.components ?? [])],
+          registryBaseConfig,
+>>>>>>> shadcn/main
         })
         initHasRun = true
       }
@@ -193,7 +285,10 @@ export const add = new Command()
         const { projectPath, template } = await createProject({
           cwd: options.cwd,
           force: options.overwrite,
+<<<<<<< HEAD
           srcDir: options.srcDir,
+=======
+>>>>>>> shadcn/main
           components: options.components,
         })
         if (!projectPath) {
@@ -202,6 +297,7 @@ export const add = new Command()
         }
         options.cwd = projectPath
 
+<<<<<<< HEAD
         if (template === "next-monorepo") {
           options.cwd = path.resolve(options.cwd, "apps/web")
           config = await getConfig(options.cwd)
@@ -226,6 +322,40 @@ export const add = new Command()
             options.components?.length === 1 &&
             !!options.components[0].match(/\/chat\/b\//)
         }
+=======
+        // Prompt for base and preset.
+        const selectedBase = await promptForBase()
+        const { url: initUrl } = await promptForPreset({
+          rtl: false,
+          base: selectedBase,
+          template,
+        })
+        const {
+          registryBaseConfig,
+          installStyleIndex,
+          url: cleanInitUrl,
+        } = await resolveRegistryBaseConfig(initUrl, options.cwd)
+
+        config = await runInit({
+          cwd: options.cwd,
+          yes: true,
+          force: true,
+          defaults: false,
+          skipPreflight: true,
+          silent: !hasNewRegistries && options.silent,
+          isNewProject: true,
+          cssVariables: true,
+          rtl: false,
+          installStyleIndex,
+          components: [cleanInitUrl, ...(options.components ?? [])],
+          registryBaseConfig,
+        })
+        initHasRun = true
+
+        shouldUpdateAppIndex =
+          options.components?.length === 1 &&
+          !!options.components[0].match(/\/chat\/b\//)
+>>>>>>> shadcn/main
       }
 
       if (!config) {
@@ -239,15 +369,48 @@ export const add = new Command()
         config,
         {
           silent: options.silent || hasNewRegistries,
+<<<<<<< HEAD
+=======
+          writeFile: !isDryRun,
+>>>>>>> shadcn/main
         }
       )
       config = updatedConfig
 
+<<<<<<< HEAD
       if (!initHasRun) {
         await addComponents(options.components, config, {
           ...options,
           baseStyle: shouldInstallBaseStyle,
         })
+=======
+      // Dry-run mode: preview changes without writing files.
+      // --diff and --view imply --dry-run.
+      if (isDryRun) {
+        const dryRunSpinner = spinner("Resolving items.", {
+          silent: options.silent,
+        }).start()
+        const dryRunResult = await dryRunComponents(
+          options.components,
+          config,
+          {
+            overwrite: options.overwrite,
+          }
+        )
+        dryRunSpinner.stop()
+
+        logger.log(
+          formatDryRunResult(dryRunResult, options.components, {
+            diff: options.diff,
+            view: options.view,
+          })
+        )
+        return
+      }
+
+      if (!initHasRun) {
+        await addComponents(options.components, config, options)
+>>>>>>> shadcn/main
       }
 
       // If we're adding a single component and it's from the v0 registry,

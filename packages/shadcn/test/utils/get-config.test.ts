@@ -3,6 +3,10 @@ import { describe, expect, test } from "vitest"
 
 import {
   createConfig,
+<<<<<<< HEAD
+=======
+  getBase,
+>>>>>>> shadcn/main
   getConfig,
   getRawConfig,
 } from "../../src/utils/get-config"
@@ -197,6 +201,25 @@ test("get config", async () => {
   })
 })
 
+<<<<<<< HEAD
+=======
+describe("getBase", () => {
+  test("returns radix for radix styles", () => {
+    expect(getBase("radix-nova")).toBe("radix")
+    expect(getBase("radix-vega")).toBe("radix")
+  })
+
+  test("returns base for base styles", () => {
+    expect(getBase("base-nova")).toBe("base")
+    expect(getBase("base-vega")).toBe("base")
+  })
+
+  test("returns radix for undefined", () => {
+    expect(getBase(undefined)).toBe("radix")
+  })
+})
+
+>>>>>>> shadcn/main
 describe("createConfig", () => {
   test("creates default config when called without arguments", () => {
     const config = createConfig()

@@ -10,6 +10,11 @@
     "variable": "--font-sans",
     "subsets": [
       "latin"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "dependency": "@fontsource-variable/geist"
+>>>>>>> shadcn/main
   }
 }

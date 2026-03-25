@@ -1,10 +1,10 @@
-import { Separator } from "@/registry/default/ui/separator"
+import { Separator } from "@/registry/new-york-v4/ui/separator"
 
 export default function SeparatorDemo() {
   return (
     <div>
       <div className="space-y-1">
-        <h4 className="text-sm font-medium leading-none">Radix Primitives</h4>
+        <h4 className="text-sm leading-none font-medium">Radix Primitives</h4>
         <p className="text-sm text-muted-foreground">
           An open-source UI component library.
         </p>

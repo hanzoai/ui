@@ -4,12 +4,21 @@
   "title": "Outfit",
   "type": "registry:font",
   "font": {
+<<<<<<< HEAD
     "family": "'Outfit', sans-serif",
+=======
+    "family": "'Outfit Variable', sans-serif",
+>>>>>>> shadcn/main
     "provider": "google",
     "import": "Outfit",
     "variable": "--font-sans",
     "subsets": [
       "latin"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "dependency": "@fontsource-variable/outfit"
+>>>>>>> shadcn/main
   }
 }

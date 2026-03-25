@@ -7,9 +7,15 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/maxlength-selector.tsx
+} from "@/registry/default/ui/hover-card"
+import { Label } from "@/registry/default/ui/label"
+import { Slider } from "@/registry/default/ui/slider"
+========
 } from "@/registry/new-york-v4/ui/hover-card"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Slider } from "@/registry/new-york-v4/ui/slider"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/maxlength-selector.tsx
 
 interface MaxLengthSelectorProps {
   defaultValue: React.ComponentProps<
@@ -27,7 +33,7 @@ export function MaxLengthSelector({ defaultValue }: MaxLengthSelectorProps) {
           <div className="grid gap-4">
             <div className="flex items-center justify-between">
               <Label htmlFor="maxlength">Maximum Length</Label>
-              <span className="text-muted-foreground hover:border-border w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm">
+              <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
                 {value}
               </span>
             </div>

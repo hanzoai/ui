@@ -2,16 +2,36 @@
 
 import * as React from "react"
 import {
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:app/registry/default/example/data-table-demo.tsx
+  ColumnDef,
+  ColumnFiltersState,
+========
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/data-table-demo.tsx
+>>>>>>> shadcn/main
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+<<<<<<< HEAD
   useReactTable,
+=======
+  SortingState,
+  useReactTable,
+<<<<<<<< HEAD:app/registry/default/example/data-table-demo.tsx
+  VisibilityState,
+========
+>>>>>>> shadcn/main
   type ColumnDef,
   type ColumnFiltersState,
   type SortingState,
   type VisibilityState,
+<<<<<<< HEAD
+=======
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/data-table-demo.tsx
+>>>>>>> shadcn/main
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
@@ -284,7 +304,11 @@ export default function DataTableDemo() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
+<<<<<<< HEAD
         <div className="text-muted-foreground flex-1 text-sm">
+=======
+        <div className="flex-1 text-sm text-muted-foreground">
+>>>>>>> shadcn/main
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>

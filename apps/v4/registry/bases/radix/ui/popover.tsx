@@ -59,7 +59,11 @@ function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <div
       data-slot="popover-title"
+<<<<<<< HEAD
       className={cn("cn-popover-title", className)}
+=======
+      className={cn("cn-popover-title cn-font-heading", className)}
+>>>>>>> shadcn/main
       {...props}
     />
   )

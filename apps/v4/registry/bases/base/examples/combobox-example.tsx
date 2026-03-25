@@ -1292,7 +1292,11 @@ function ComboboxWithOtherInputs() {
       </Select>
       <Button
         variant="outline"
+<<<<<<< HEAD
         className="text-muted-foreground w-52 justify-between font-normal"
+=======
+        className="w-52 justify-between font-normal text-muted-foreground"
+>>>>>>> shadcn/main
       >
         Select a framework
         <IconPlaceholder

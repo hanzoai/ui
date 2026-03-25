@@ -42,7 +42,11 @@ export default function InputGroupDropdown() {
         <InputGroupAddon align="inline-end">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
+<<<<<<< HEAD
               <InputGroupButton variant="ghost" className="!pr-1.5 text-xs">
+=======
+              <InputGroupButton variant="ghost" className="pr-1.5! text-xs">
+>>>>>>> shadcn/main
                 Search In... <ChevronDownIcon className="size-3" />
               </InputGroupButton>
             </DropdownMenuTrigger>

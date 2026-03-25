@@ -24,7 +24,10 @@ export { BotIcon } from "lucide-react"
 export { Building2Icon } from "lucide-react"
 export { CalculatorIcon } from "lucide-react"
 export { CalendarIcon } from "lucide-react"
+<<<<<<< HEAD
 export { CalendarPlusIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { CameraIcon } from "lucide-react"
 export { CaptionsIcon } from "lucide-react"
 export { ChartBarIcon } from "lucide-react"
@@ -42,15 +45,22 @@ export { ChevronsUpDownIcon } from "lucide-react"
 export { CircleAlertIcon } from "lucide-react"
 export { CircleCheckIcon } from "lucide-react"
 export { CircleDashedIcon } from "lucide-react"
+<<<<<<< HEAD
 export { CircleDollarSignIcon } from "lucide-react"
 export { CircleHelpIcon } from "lucide-react"
 export { CircleIcon } from "lucide-react"
+=======
+export { CircleHelpIcon } from "lucide-react"
+>>>>>>> shadcn/main
 export { CirclePlusIcon } from "lucide-react"
 export { CircleUserRoundIcon } from "lucide-react"
 export { ClipboardPasteIcon } from "lucide-react"
 export { Clock2Icon } from "lucide-react"
+<<<<<<< HEAD
 export { ClockIcon } from "lucide-react"
 export { CloudCogIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { CodeIcon } from "lucide-react"
 export { Columns3Icon } from "lucide-react"
 export { CommandIcon } from "lucide-react"
@@ -77,7 +87,10 @@ export { FolderPlusIcon } from "lucide-react"
 export { FolderSearchIcon } from "lucide-react"
 export { FrameIcon } from "lucide-react"
 export { GalleryVerticalEndIcon } from "lucide-react"
+<<<<<<< HEAD
 export { GitBranchIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { GlobeIcon } from "lucide-react"
 export { GripVerticalIcon } from "lucide-react"
 export { HeartIcon } from "lucide-react"
@@ -94,15 +107,22 @@ export { LayoutGridIcon } from "lucide-react"
 export { LayoutIcon } from "lucide-react"
 export { LifeBuoy } from "lucide-react"
 export { LifeBuoyIcon } from "lucide-react"
+<<<<<<< HEAD
 export { LightbulbIcon } from "lucide-react"
 export { LinkIcon } from "lucide-react"
 export { ListFilterIcon } from "lucide-react"
+=======
+export { LinkIcon } from "lucide-react"
+>>>>>>> shadcn/main
 export { ListIcon } from "lucide-react"
 export { Loader2Icon } from "lucide-react"
 export { LoaderIcon } from "lucide-react"
 export { LockIcon } from "lucide-react"
 export { LogOutIcon } from "lucide-react"
+<<<<<<< HEAD
 export { MailCheckIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { MailIcon } from "lucide-react"
 export { MapIcon } from "lucide-react"
 export { MaximizeIcon } from "lucide-react"
@@ -117,13 +137,19 @@ export { MonitorIcon } from "lucide-react"
 export { MoonIcon } from "lucide-react"
 export { MoreHorizontalIcon } from "lucide-react"
 export { MoreVerticalIcon } from "lucide-react"
+<<<<<<< HEAD
 export { MousePointerIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { OctagonXIcon } from "lucide-react"
 export { PaintbrushIcon } from "lucide-react"
 export { PaletteIcon } from "lucide-react"
 export { PanelLeftIcon } from "lucide-react"
+<<<<<<< HEAD
 export { PaperclipIcon } from "lucide-react"
 export { PenToolIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { PencilIcon } from "lucide-react"
 export { PieChartIcon } from "lucide-react"
 export { PlusIcon } from "lucide-react"
@@ -132,7 +158,10 @@ export { RefreshCwIcon } from "lucide-react"
 export { RotateCwIcon } from "lucide-react"
 export { SaveIcon } from "lucide-react"
 export { ScissorsIcon } from "lucide-react"
+<<<<<<< HEAD
 export { Search } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { SearchIcon } from "lucide-react"
 export { Send } from "lucide-react"
 export { SendIcon } from "lucide-react"
@@ -149,7 +178,10 @@ export { StarIcon } from "lucide-react"
 export { StarOffIcon } from "lucide-react"
 export { SunIcon } from "lucide-react"
 export { TableIcon } from "lucide-react"
+<<<<<<< HEAD
 export { TagIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { TerminalIcon } from "lucide-react"
 export { TerminalSquareIcon } from "lucide-react"
 export { Trash2Icon } from "lucide-react"
@@ -158,7 +190,11 @@ export { TrendingDownIcon } from "lucide-react"
 export { TrendingUpIcon } from "lucide-react"
 export { TriangleAlertIcon } from "lucide-react"
 export { UnderlineIcon } from "lucide-react"
+<<<<<<< HEAD
 export { UploadIcon } from "lucide-react"
+=======
+export { UploadCloudIcon } from "lucide-react"
+>>>>>>> shadcn/main
 export { UserIcon } from "lucide-react"
 export { UserRoundXIcon } from "lucide-react"
 export { UsersIcon } from "lucide-react"
@@ -166,7 +202,10 @@ export { VideoIcon } from "lucide-react"
 export { VolumeOffIcon } from "lucide-react"
 export { VolumeX } from "lucide-react"
 export { WalletIcon } from "lucide-react"
+<<<<<<< HEAD
 export { WandIcon } from "lucide-react"
+=======
+>>>>>>> shadcn/main
 export { XIcon } from "lucide-react"
 export { ZapIcon } from "lucide-react"
 export { ZoomInIcon } from "lucide-react"

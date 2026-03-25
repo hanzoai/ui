@@ -720,7 +720,11 @@ function topologicalSortRegistryItems(
   }
 
   if (sorted.length !== items.length) {
+<<<<<<< HEAD
     console.warn("Circular dependency detected in registry items")
+=======
+    // console.warn("Circular dependency detected in registry items")
+>>>>>>> shadcn/main
     // Return all items even if there are circular dependencies
     // Items not in sorted are part of circular dependencies
     const sortedHashes = new Set(

@@ -770,9 +770,15 @@ describe("resolveRegistryTree - dependency ordering", () => {
     expect(hasCircularB).toBe(true)
 
     // Should have logged a warning about circular dependency
+<<<<<<< HEAD
     expect(consoleSpy).toHaveBeenCalledWith(
       "Circular dependency detected in registry items"
     )
+=======
+    // expect(consoleSpy).toHaveBeenCalledWith(
+    //   "Circular dependency detected in registry items"
+    // )
+>>>>>>> shadcn/main
 
     consoleSpy.mockRestore()
   })

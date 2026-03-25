@@ -1,22 +1,37 @@
-import { Metadata } from "next"
+import { type Metadata } from "next"
 import Image from "next/image"
 import { RotateCcw } from "lucide-react"
 
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
 import { Button } from "@/registry/default/ui/button"
+========
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
 } from "@/registry/default/ui/hover-card"
 import { Label } from "@/registry/default/ui/label"
 import { Separator } from "@/registry/default/ui/separator"
+========
+} from "@/registry/new-york-v4/ui/hover-card"
+import { Label } from "@/registry/new-york-v4/ui/label"
+import { Separator } from "@/registry/new-york-v4/ui/separator"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
 } from "@/registry/default/ui/tabs"
 import { Textarea } from "@/registry/default/ui/textarea"
+========
+} from "@/registry/new-york-v4/ui/tabs"
+import { Textarea } from "@/registry/new-york-v4/ui/textarea"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 
 import { CodeViewer } from "./components/code-viewer"
 import { MaxLengthSelector } from "./components/maxlength-selector"
@@ -54,13 +69,13 @@ export default function PlaygroundPage() {
           className="hidden dark:block"
         />
       </div>
-      <div className="hidden h-full flex-col md:flex">
-        <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
-          <h2 className="text-lg font-semibold">Playground</h2>
-          <div className="ml-auto flex w-full space-x-2 sm:justify-end">
+      <div className="hidden flex-1 flex-col md:flex">
+        <div className="container flex flex-col items-start justify-between gap-2 py-4 sm:flex-row sm:items-center sm:gap-0 md:h-16">
+          <h2 className="pl-0.5 text-lg font-semibold">Playground</h2>
+          <div className="ml-auto flex w-full gap-2 sm:justify-end">
             <PresetSelector presets={presets} />
             <PresetSave />
-            <div className="hidden space-x-2 md:flex">
+            <div className="hidden gap-2 md:flex">
               <CodeViewer />
               <PresetShare />
             </div>
@@ -68,14 +83,14 @@ export default function PlaygroundPage() {
           </div>
         </div>
         <Separator />
-        <Tabs defaultValue="complete" className="flex-1">
-          <div className="container h-full py-6">
-            <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_200px]">
-              <div className="hidden flex-col space-y-4 sm:flex md:order-2">
-                <div className="grid gap-2">
+        <Tabs defaultValue="complete" className="flex flex-1 flex-col">
+          <div className="container flex flex-1 flex-col py-6">
+            <div className="grid flex-1 items-stretch gap-6 md:grid-cols-[1fr_200px]">
+              <div className="hidden flex-col gap-6 sm:flex md:order-2">
+                <div className="grid gap-3">
                   <HoverCard openDelay={200}>
                     <HoverCardTrigger asChild>
-                      <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      <span className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Mode
                       </span>
                     </HoverCardTrigger>
@@ -86,14 +101,13 @@ export default function PlaygroundPage() {
                       instructions to edit it.
                     </HoverCardContent>
                   </HoverCard>
-                  <TabsList className="grid grid-cols-3">
+                  <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="complete">
                       <span className="sr-only">Complete</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="none"
-                        className="h-5 w-5"
                       >
                         <rect
                           x="4"
@@ -254,14 +268,14 @@ export default function PlaygroundPage() {
                 <MaxLengthSelector defaultValue={[256]} />
                 <TopPSelector defaultValue={[0.9]} />
               </div>
-              <div className="md:order-1">
+              <div className="flex flex-1 flex-col *:data-[slot=tab-content]:flex-1 md:order-1">
                 <TabsContent value="complete" className="mt-0 border-0 p-0">
-                  <div className="flex h-full flex-col space-y-4">
+                  <div className="flex h-full flex-col gap-4">
                     <Textarea
                       placeholder="Write a tagline for an ice cream shop"
                       className="min-h-[400px] flex-1 p-4 md:min-h-[700px] lg:min-h-[700px]"
                     />
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <Button>Submit</Button>
                       <Button variant="secondary">
                         <span className="sr-only">Show history</span>
@@ -270,6 +284,7 @@ export default function PlaygroundPage() {
                     </div>
                   </div>
                 </TabsContent>
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
                 <TabsContent value="insert" className="mt-0 border-0 p-0">
                   <div className="flex flex-col space-y-4">
                     <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
@@ -286,28 +301,51 @@ export default function PlaygroundPage() {
                         <RotateCcw />
                       </Button>
                     </div>
+========
+                <TabsContent
+                  value="insert"
+                  className="mt-0 flex flex-col gap-4 border-0 p-0"
+                >
+                  <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
+                    <Textarea
+                      placeholder="We're writing to [inset]. Congrats from OpenAI!"
+                      className="h-full min-h-[300px] p-4 lg:min-h-[700px] xl:min-h-[700px]"
+                    />
+                    <div className="rounded-md border bg-muted"></div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button>Submit</Button>
+                    <Button variant="secondary">
+                      <span className="sr-only">Show history</span>
+                      <RotateCcw />
+                    </Button>
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
                   </div>
                 </TabsContent>
-                <TabsContent value="edit" className="mt-0 border-0 p-0">
-                  <div className="flex flex-col space-y-4">
-                    <div className="grid h-full gap-6 lg:grid-cols-2">
-                      <div className="flex flex-col space-y-4">
-                        <div className="flex flex-1 flex-col space-y-2">
-                          <Label htmlFor="input">Input</Label>
-                          <Textarea
-                            id="input"
-                            placeholder="We is going to the market."
-                            className="flex-1 lg:min-h-[580px]"
-                          />
-                        </div>
-                        <div className="flex flex-col space-y-2">
-                          <Label htmlFor="instructions">Instructions</Label>
-                          <Textarea
-                            id="instructions"
-                            placeholder="Fix the grammar."
-                          />
-                        </div>
+                <TabsContent
+                  value="edit"
+                  className="mt-0 flex flex-col gap-4 border-0 p-0"
+                >
+                  <div className="grid h-full gap-6 lg:grid-cols-2">
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-1 flex-col gap-2">
+                        <Label htmlFor="input" className="sr-only">
+                          Input
+                        </Label>
+                        <Textarea
+                          id="input"
+                          placeholder="We is going to the market."
+                          className="flex-1 p-4 lg:min-h-[580px]"
+                        />
                       </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="instructions">Instructions</Label>
+                        <Textarea
+                          id="instructions"
+                          placeholder="Fix the grammar."
+                        />
+                      </div>
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
                       <div className="mt-[21px] min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
                     </div>
                     <div className="flex items-center space-x-2">
@@ -316,7 +354,17 @@ export default function PlaygroundPage() {
                         <span className="sr-only">Show history</span>
                         <RotateCcw />
                       </Button>
+========
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
                     </div>
+                    <div className="min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button>Submit</Button>
+                    <Button variant="secondary">
+                      <span className="sr-only">Show history</span>
+                      <RotateCcw />
+                    </Button>
                   </div>
                 </TabsContent>
               </div>

@@ -1,10 +1,18 @@
 # Contributing
 
+<<<<<<< HEAD
 Thanks for your interest in contributing to ui.hanzo.com. We're happy to have you here.
 
 Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
 If you need any help, feel free to reach out to [@hanzo](https://x.com/hanzoai).
+=======
+Thanks for your interest in contributing to ui.shadcn.com. We're happy to have you here.
+
+Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
+
+If you need any help, feel free to reach out to [@shadcn](https://twitter.com/shadcn).
+>>>>>>> shadcn/main
 
 ## About this repository
 
@@ -20,11 +28,16 @@ This repository is structured as follows:
 
 ```
 apps
+<<<<<<< HEAD
 └── www
+=======
+└── v4
+>>>>>>> shadcn/main
     ├── app
     ├── components
     ├── content
     └── registry
+<<<<<<< HEAD
         ├── default
         │   ├── example
         │   └── ui
@@ -42,6 +55,22 @@ packages
 | `apps/www/content`    | The content for the website.             |
 | `apps/www/registry`   | The registry for the components.         |
 | `packages/cli`        | The `hanzo-ui` package.                 |
+=======
+        └── new-york-v4
+            ├── example
+            └── ui
+packages
+└── shadcn
+```
+
+| Path                 | Description                              |
+| -------------------- | ---------------------------------------- |
+| `apps/v4/app`        | The Next.js application for the website. |
+| `apps/v4/components` | The React components for the website.    |
+| `apps/v4/content`    | The content for the website.             |
+| `apps/v4/registry`   | The registry for the components.         |
+| `packages/shadcn`    | The `shadcn` package.                    |
+>>>>>>> shadcn/main
 
 ## Development
 
@@ -79,6 +108,7 @@ You can use the `pnpm --filter=[WORKSPACE]` command to start the development pro
 
 #### Examples
 
+<<<<<<< HEAD
 1. To run the `ui.hanzo.com` website:
 
 ```bash
@@ -89,12 +119,25 @@ pnpm --filter=www dev
 
 ```bash
 pnpm --filter=hanzo-ui dev
+=======
+1. To run the `ui.shadcn.com` website:
+
+```bash
+pnpm --filter=v4 dev
+```
+
+2. To run the `shadcn` package:
+
+```bash
+pnpm --filter=shadcn dev
+>>>>>>> shadcn/main
 ```
 
 ## Running the CLI Locally
 
 To run the CLI locally, you can follow the workflow:
 
+<<<<<<< HEAD
 1. Start by running the registry (main site) to make sure the components are up to date:
 
    ```bash
@@ -111,11 +154,24 @@ To run the CLI locally, you can follow the workflow:
 
    ```bash
    pnpm hanzo
+=======
+1. Start by running the dev server:
+
+   ```bash
+   pnpm dev
+   ```
+
+2. In another terminal tab, test the CLI by running:
+
+   ```bash
+   pnpm shadcn
+>>>>>>> shadcn/main
    ```
 
    To test the CLI in a specific app, use a command like:
 
    ```bash
+<<<<<<< HEAD
    pnpm hanzo <init | add | ...> -c ~/Desktop/my-app
    ```
 
@@ -123,12 +179,16 @@ To run the CLI locally, you can follow the workflow:
 
    ```bash
    pnpm --filter=hanzo test
+=======
+   pnpm shadcn <init | add | ...> -c ~/Desktop/my-app
+>>>>>>> shadcn/main
    ```
 
 This workflow ensures that you are running the most recent version of the registry and testing the CLI properly in your local environment.
 
 ## Documentation
 
+<<<<<<< HEAD
 The documentation for this project is located in the `www` workspace. You can run the documentation locally by running the following command:
 
 ```bash
@@ -149,6 +209,25 @@ apps
         │   ├── example
         │   └── ui
         └── new-york
+=======
+The documentation for this project is located in the `v4` workspace. You can run the documentation locally by running the following command:
+
+```bash
+pnpm --filter=v4 dev
+```
+
+Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `apps/v4/content/docs` directory.
+
+## Components
+
+We use a registry system for developing components. You can find the source code for the components under `apps/v4/registry`. The components are organized by styles.
+
+```bash
+apps
+└── v4
+    └── registry
+        └── new-york-v4
+>>>>>>> shadcn/main
             ├── example
             └── ui
 ```
@@ -157,7 +236,11 @@ When adding or modifying components, please ensure that:
 
 1. You make the changes for every style.
 2. You update the documentation.
+<<<<<<< HEAD
 3. You run `pnpm build:registry` to update the registry.
+=======
+3. You run `pnpm registry:build` to update the registry.
+>>>>>>> shadcn/main
 
 ## Commit Convention
 
@@ -196,9 +279,15 @@ If you have a request for a new component, please open a discussion on GitHub. W
 
 ## CLI
 
+<<<<<<< HEAD
 The `hanzo-ui` package is a CLI for adding components to your project. You can find the documentation for the CLI [here](https://ui.hanzo.com/docs/cli).
 
 Any changes to the CLI should be made in the `packages/cli` directory. If you can, it would be great if you could add tests for your changes.
+=======
+The `shadcn` package is a CLI for adding components to your project. You can find the documentation for the CLI [here](https://ui.shadcn.com/docs/cli).
+
+Any changes to the CLI should be made in the `packages/shadcn` directory. If you can, it would be great if you could add tests for your changes.
+>>>>>>> shadcn/main
 
 ## Testing
 

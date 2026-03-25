@@ -54,7 +54,11 @@ function DrawerWithSides() {
                 {Array.from({ length: 10 }).map((_, index) => (
                   <p
                     key={index}
+<<<<<<< HEAD
                     className="style-lyra:mb-2 style-lyra:leading-relaxed mb-4 leading-normal"
+=======
+                    className="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed"
+>>>>>>> shadcn/main
                   >
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                     do eiusmod tempor incididunt ut labore et dolore magna
@@ -97,7 +101,11 @@ function DrawerScrollableContent() {
             {Array.from({ length: 10 }).map((_, index) => (
               <p
                 key={index}
+<<<<<<< HEAD
                 className="style-lyra:mb-2 style-lyra:leading-relaxed mb-4 leading-normal"
+=======
+                className="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed"
+>>>>>>> shadcn/main
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut

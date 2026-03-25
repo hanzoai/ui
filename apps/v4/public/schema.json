@@ -59,7 +59,11 @@
     },
     "menuColor": {
       "type": "string",
+<<<<<<< HEAD
       "enum": ["default", "inverted"]
+=======
+      "enum": ["default", "inverted", "default-translucent", "inverted-translucent"]
+>>>>>>> shadcn/main
     },
     "menuAccent": {
       "type": "string",

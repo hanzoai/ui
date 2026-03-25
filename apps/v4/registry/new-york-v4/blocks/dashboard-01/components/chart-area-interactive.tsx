@@ -180,7 +180,11 @@ export function ChartAreaInteractive() {
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
+<<<<<<< HEAD
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+=======
+            className="hidden *:data-[slot=toggle-group-item]:px-4! @[767px]/card:flex"
+>>>>>>> shadcn/main
           >
             <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
             <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>

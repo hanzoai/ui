@@ -1,8 +1,13 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
 import { Dialog } from "@radix-ui/react-dialog"
 import { MoreHorizontal } from "lucide-react"
+========
+import { MoreHorizontal } from "lucide-react"
+import { toast } from "sonner"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 
 import { toast } from "@/registry/new-york/hooks/use-toast"
 import {
@@ -13,24 +18,41 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
 } from "@/registry/default/ui/alert-dialog"
 import { Button } from "@/registry/default/ui/button"
+========
+} from "@/registry/new-york-v4/ui/alert-dialog"
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 import {
+  Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
 } from "@/registry/default/ui/dialog"
+========
+} from "@/registry/new-york-v4/ui/dialog"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
 } from "@/registry/new-york/ui/dropdown-menu"
 import { Label } from "@/registry/new-york/ui/label"
 import { Switch } from "@/registry/new-york/ui/switch"
+========
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+import { Label } from "@/registry/new-york-v4/ui/label"
+import { Switch } from "@/registry/new-york-v4/ui/switch"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 
 export function PresetActions() {
   const [open, setIsOpen] = React.useState(false)
@@ -72,7 +94,7 @@ export function PresetActions() {
             <h4 className="text-sm text-muted-foreground">
               Playground Warnings
             </h4>
-            <div className="flex items-start justify-between space-x-4 pt-3">
+            <div className="flex items-start justify-between gap-4 pt-3">
               <Switch name="show" id="show" defaultChecked={true} />
               <Label className="grid gap-1 font-normal" htmlFor="show">
                 <span className="font-semibold">
@@ -86,9 +108,9 @@ export function PresetActions() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setIsOpen(false)}>
-              Close
-            </Button>
+            <DialogClose asChild>
+              <Button variant="secondary">Close</Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -107,9 +129,7 @@ export function PresetActions() {
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false)
-                toast({
-                  description: "This preset has been deleted.",
-                })
+                toast.success("This preset has been deleted.")
               }}
             >
               Delete

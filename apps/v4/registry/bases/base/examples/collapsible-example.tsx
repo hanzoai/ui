@@ -97,7 +97,11 @@ function CollapsibleFileTree() {
               <Button
                 variant="ghost"
                 size="sm"
+<<<<<<< HEAD
                 className="group hover:bg-accent hover:text-accent-foreground w-full justify-start transition-none"
+=======
+                className="group w-full justify-start transition-none hover:bg-accent hover:text-accent-foreground"
+>>>>>>> shadcn/main
               />
             }
           >
@@ -118,7 +122,11 @@ function CollapsibleFileTree() {
             />
             {fileItem.name}
           </CollapsibleTrigger>
+<<<<<<< HEAD
           <CollapsibleContent className="style-lyra:ml-4 mt-1 ml-5">
+=======
+          <CollapsibleContent className="mt-1 ml-5 style-lyra:ml-4">
+>>>>>>> shadcn/main
             <div className="flex flex-col gap-1">
               {fileItem.items.map((child) => renderItem(child))}
             </div>
@@ -131,7 +139,11 @@ function CollapsibleFileTree() {
         key={fileItem.name}
         variant="link"
         size="sm"
+<<<<<<< HEAD
         className="text-foreground w-full justify-start gap-2"
+=======
+        className="w-full justify-start gap-2 text-foreground"
+>>>>>>> shadcn/main
       >
         <IconPlaceholder
           lucide="FileIcon"

@@ -4,12 +4,21 @@
   "title": "Public Sans",
   "type": "registry:font",
   "font": {
+<<<<<<< HEAD
     "family": "'Public Sans', sans-serif",
+=======
+    "family": "'Public Sans Variable', sans-serif",
+>>>>>>> shadcn/main
     "provider": "google",
     "import": "Public_Sans",
     "variable": "--font-sans",
     "subsets": [
       "latin"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "dependency": "@fontsource-variable/public-sans"
+>>>>>>> shadcn/main
   }
 }

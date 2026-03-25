@@ -76,7 +76,11 @@ export function ChartRadarRadius() {
             <Radar dataKey="mobile" fill="var(--color-mobile)" />
             <PolarRadiusAxis
               angle={60}
+<<<<<<< HEAD
               stroke="hsla(var(--foreground))"
+=======
+              stroke="var(--foreground)"
+>>>>>>> shadcn/main
               orientation="middle"
               axisLine={false}
             />
@@ -87,7 +91,11 @@ export function ChartRadarRadius() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+        <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           January - June 2024
         </div>
       </CardFooter>

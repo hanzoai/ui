@@ -8,16 +8,26 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+<<<<<<< HEAD
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+=======
+import { Route as rootRouteImport } from "./routes/__root"
+import { Route as IndexRouteImport } from "./routes/index"
+
+const IndexRoute = IndexRouteImport.update({
+  id: "/",
+  path: "/",
+>>>>>>> shadcn/main
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
+<<<<<<< HEAD
   '/': typeof IndexRoute
 }
 export interface FileRoutesByTo {
@@ -33,18 +43,44 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to: '/'
   id: '__root__' | '/'
+=======
+  "/": typeof IndexRoute
+}
+export interface FileRoutesByTo {
+  "/": typeof IndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  "/": typeof IndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: "/"
+  fileRoutesByTo: FileRoutesByTo
+  to: "/"
+  id: "__root__" | "/"
+>>>>>>> shadcn/main
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
 }
 
+<<<<<<< HEAD
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
+=======
+declare module "@tanstack/react-router" {
+  interface FileRoutesByPath {
+    "/": {
+      id: "/"
+      path: "/"
+      fullPath: "/"
+>>>>>>> shadcn/main
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -58,9 +94,15 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
+<<<<<<< HEAD
 import type { getRouter } from './router.tsx'
 import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
+=======
+import type { getRouter } from "./router.tsx"
+import type { createStart } from "@tanstack/react-start"
+declare module "@tanstack/react-start" {
+>>>>>>> shadcn/main
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>

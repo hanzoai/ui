@@ -222,7 +222,11 @@ function CalendarWithTime() {
             className="p-0"
           />
         </CardContent>
+<<<<<<< HEAD
         <CardFooter className="bg-card border-t">
+=======
+        <CardFooter className="border-t bg-card">
+>>>>>>> shadcn/main
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="time-from">Start Time</FieldLabel>

@@ -1,9 +1,16 @@
 "use client"
 
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-row-actions.tsx
 import { Row } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
+========
+import { type Row } from "@tanstack/react-table"
+import { MoreHorizontal } from "lucide-react"
+
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-row-actions.tsx
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +23,11 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-row-actions.tsx
 } from "@/registry/default/ui/dropdown-menu"
+========
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-row-actions.tsx
 
 import { labels } from "../data/data"
 import { taskSchema } from "../data/schema"
@@ -36,7 +47,11 @@ export function DataTableRowActions<TData>({
         <Button
           variant="ghost"
           size="icon"
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-row-actions.tsx
           className="data-[state=open]:bg-muted size-8"
+========
+          className="size-8 data-[state=open]:bg-muted"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-row-actions.tsx
         >
           <MoreHorizontal />
           <span className="sr-only">Open menu</span>
@@ -60,7 +75,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem variant="destructive">
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

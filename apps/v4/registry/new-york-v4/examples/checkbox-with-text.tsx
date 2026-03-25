@@ -13,7 +13,11 @@ export default function CheckboxWithText() {
         >
           Accept terms and conditions
         </label>
+<<<<<<< HEAD
         <p className="text-muted-foreground text-sm">
+=======
+        <p className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
           You agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

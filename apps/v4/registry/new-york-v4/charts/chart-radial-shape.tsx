@@ -53,8 +53,13 @@ export function ChartRadialShape() {
           <RadialBarChart
             data={chartData}
             endAngle={100}
+<<<<<<< HEAD
             innerRadius={80}
             outerRadius={140}
+=======
+            innerRadius={65}
+            outerRadius={95}
+>>>>>>> shadcn/main
           >
             <PolarGrid
               gridType="circle"
@@ -102,7 +107,11 @@ export function ChartRadialShape() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

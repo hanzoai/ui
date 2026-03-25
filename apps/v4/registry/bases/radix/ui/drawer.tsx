@@ -92,7 +92,11 @@ function DrawerTitle({
   return (
     <DrawerPrimitive.Title
       data-slot="drawer-title"
+<<<<<<< HEAD
       className={cn("cn-drawer-title", className)}
+=======
+      className={cn("cn-drawer-title cn-font-heading", className)}
+>>>>>>> shadcn/main
       {...props}
     />
   )

@@ -13,7 +13,11 @@ import {
 
 export default function EmptyMuted() {
   return (
+<<<<<<< HEAD
     <Empty className="from-muted/50 to-background h-full bg-gradient-to-b from-30%">
+=======
+    <Empty className="h-full bg-gradient-to-b from-muted/50 from-30% to-background">
+>>>>>>> shadcn/main
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <IconBell />

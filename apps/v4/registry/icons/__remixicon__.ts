@@ -14,7 +14,10 @@ export { RiArrowRightUpLine } from "@remixicon/react"
 export { RiArrowUpDownLine } from "@remixicon/react"
 export { RiArrowUpLine } from "@remixicon/react"
 export { RiArrowUpSLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiAttachmentLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiBankCardLine } from "@remixicon/react"
 export { RiBankLine } from "@remixicon/react"
 export { RiBarChartLine } from "@remixicon/react"
@@ -25,14 +28,20 @@ export { RiBookmarkLine } from "@remixicon/react"
 export { RiBox1Line } from "@remixicon/react"
 export { RiBox3Line } from "@remixicon/react"
 export { RiCalculatorLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiCalendarEventLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiCalendarLine } from "@remixicon/react"
 export { RiCameraLine } from "@remixicon/react"
 export { RiChat1Line } from "@remixicon/react"
 export { RiCheckLine } from "@remixicon/react"
 export { RiCheckboxCircleFill } from "@remixicon/react"
 export { RiCheckboxCircleLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiCircleLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiClipboardLine } from "@remixicon/react"
 export { RiCloseCircleLine } from "@remixicon/react"
 export { RiCloseLine } from "@remixicon/react"
@@ -62,12 +71,18 @@ export { RiFolderAddLine } from "@remixicon/react"
 export { RiFolderLine } from "@remixicon/react"
 export { RiFolderOpenLine } from "@remixicon/react"
 export { RiGalleryLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiGitBranchLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiGlobalLine } from "@remixicon/react"
 export { RiGlobeLine } from "@remixicon/react"
 export { RiGridLine } from "@remixicon/react"
 export { RiGroupLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiHand } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiHardDriveLine } from "@remixicon/react"
 export { RiHeartLine } from "@remixicon/react"
 export { RiHomeLine } from "@remixicon/react"
@@ -80,7 +95,10 @@ export { RiLayoutColumnLine } from "@remixicon/react"
 export { RiLayoutLeftLine } from "@remixicon/react"
 export { RiLayoutLine } from "@remixicon/react"
 export { RiLifebuoyLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiLightbulbLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiLineChartLine } from "@remixicon/react"
 export { RiLinksLine } from "@remixicon/react"
 export { RiListUnordered } from "@remixicon/react"
@@ -88,12 +106,18 @@ export { RiLoader4Line } from "@remixicon/react"
 export { RiLoaderLine } from "@remixicon/react"
 export { RiLockLine } from "@remixicon/react"
 export { RiLogoutBoxLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiMagicLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiMailLine } from "@remixicon/react"
 export { RiMapLine } from "@remixicon/react"
 export { RiMenuLine } from "@remixicon/react"
 export { RiMicLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiMoneyDollarCircleLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiMoonLine } from "@remixicon/react"
 export { RiMore2Line } from "@remixicon/react"
 export { RiMoreLine } from "@remixicon/react"
@@ -102,8 +126,11 @@ export { RiNotificationLine } from "@remixicon/react"
 export { RiPaletteLine } from "@remixicon/react"
 export { RiPencilLine } from "@remixicon/react"
 export { RiPieChartLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiPlayListAddLine } from "@remixicon/react"
 export { RiPriceTagLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiPulseLine } from "@remixicon/react"
 export { RiQuestionLine } from "@remixicon/react"
 export { RiRecordCircleLine } from "@remixicon/react"
@@ -135,7 +162,10 @@ export { RiTimeLine } from "@remixicon/react"
 export { RiTranslate } from "@remixicon/react"
 export { RiUnderline } from "@remixicon/react"
 export { RiUploadCloudLine } from "@remixicon/react"
+<<<<<<< HEAD
 export { RiUploadLine } from "@remixicon/react"
+=======
+>>>>>>> shadcn/main
 export { RiUserLine } from "@remixicon/react"
 export { RiUserUnfollowLine } from "@remixicon/react"
 export { RiVideoLine } from "@remixicon/react"

@@ -12,10 +12,17 @@ export function ScrollAreaDemo() {
       <div className="p-4">
         <h4 className="mb-4 text-sm leading-none font-medium">Tags</h4>
         {tags.map((tag) => (
+<<<<<<<< HEAD:app/registry/default/example/scroll-area-demo.tsx
+          <>
+            <div key={tag} className="text-sm">
+              {tag}
+            </div>
+========
           <React.Fragment key={tag}>
             <div className="text-sm">{tag}</div>
+>>>>>>>> shadcn/main:apps/v4/examples/base/scroll-area-demo.tsx
             <Separator className="my-2" />
-          </React.Fragment>
+          </>
         ))}
       </div>
     </ScrollArea>

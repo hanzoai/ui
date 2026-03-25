@@ -44,7 +44,11 @@ function DropdownMenuContent({
         sideOffset={sideOffset}
         align={align}
         className={cn(
+<<<<<<< HEAD
           "cn-dropdown-menu-content cn-menu-target z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden",
+=======
+          "cn-dropdown-menu-content cn-menu-target cn-menu-translucent z-50 max-h-(--radix-dropdown-menu-content-available-height) w-(--radix-dropdown-menu-trigger-width) origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden",
+>>>>>>> shadcn/main
           className
         )}
         {...props}
@@ -259,7 +263,11 @@ function DropdownMenuSubContent({
     <DropdownMenuPrimitive.SubContent
       data-slot="dropdown-menu-sub-content"
       className={cn(
+<<<<<<< HEAD
         "cn-dropdown-menu-sub-content cn-menu-target z-50 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden",
+=======
+        "cn-dropdown-menu-sub-content cn-menu-target cn-menu-translucent z-50 origin-(--radix-dropdown-menu-content-transform-origin) overflow-hidden",
+>>>>>>> shadcn/main
         className
       )}
       {...props}

@@ -63,7 +63,11 @@ export default function FormRhfSelect() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     toast("You submitted the following values:", {
       description: (
+<<<<<<< HEAD
         <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
+=======
+        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+>>>>>>> shadcn/main
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),

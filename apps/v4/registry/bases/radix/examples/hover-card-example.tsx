@@ -40,7 +40,11 @@ function HoverCardSides() {
               </Button>
             </HoverCardTrigger>
             <HoverCardContent side={side} className="w-64">
+<<<<<<< HEAD
               <div className="style-lyra:gap-1 style-nova:gap-1.5 style-vega:gap-2 style-maia:gap-2 style-mira:gap-1 flex flex-col">
+=======
+              <div className="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1">
+>>>>>>> shadcn/main
                 <h4 className="font-medium">Hover Card</h4>
                 <p>
                   This hover card appears on the {side} side of the trigger.
@@ -75,7 +79,11 @@ function HoverCardInDialog() {
               </Button>
             </HoverCardTrigger>
             <HoverCardContent className="w-64">
+<<<<<<< HEAD
               <div className="style-lyra:gap-1 style-nova:gap-1.5 style-vega:gap-2 style-maia:gap-2 style-mira:gap-1 flex flex-col">
+=======
+              <div className="flex flex-col style-vega:gap-2 style-nova:gap-1.5 style-lyra:gap-1 style-maia:gap-2 style-mira:gap-1">
+>>>>>>> shadcn/main
                 <h4 className="font-medium">Hover Card</h4>
                 <p>
                   This hover card appears inside a dialog. Hover over the button

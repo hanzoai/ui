@@ -1,7 +1,18 @@
 import path from "path"
 import { addOptionsSchema } from "@/src/commands/add"
+<<<<<<< HEAD
 import * as ERRORS from "@/src/utils/errors"
 import { getConfig } from "@/src/utils/get-config"
+=======
+import { SHADCN_URL } from "@/src/registry/constants"
+import * as ERRORS from "@/src/utils/errors"
+import { getConfig } from "@/src/utils/get-config"
+import {
+  formatMonorepoMessage,
+  getMonorepoTargets,
+  isMonorepoRoot,
+} from "@/src/utils/get-monorepo-info"
+>>>>>>> shadcn/main
 import { highlighter } from "@/src/utils/highlighter"
 import { logger } from "@/src/utils/logger"
 import fs from "fs-extra"
@@ -25,6 +36,18 @@ export async function preFlightAdd(options: z.infer<typeof addOptionsSchema>) {
 
   // Check for existing components.json file.
   if (!fs.existsSync(path.resolve(options.cwd, "components.json"))) {
+<<<<<<< HEAD
+=======
+    // Check if we're in a monorepo root.
+    if (await isMonorepoRoot(options.cwd)) {
+      const targets = await getMonorepoTargets(options.cwd)
+      if (targets.length > 0) {
+        formatMonorepoMessage("add [component]", targets)
+        process.exit(1)
+      }
+    }
+
+>>>>>>> shadcn/main
     errors[ERRORS.MISSING_CONFIG] = true
     return {
       errors,
@@ -51,9 +74,13 @@ export async function preFlightAdd(options: z.infer<typeof addOptionsSchema>) {
       )} file by running the ${highlighter.info("init")} command.`
     )
     logger.error(
+<<<<<<< HEAD
       `Learn more at ${highlighter.info(
         "https://ui.shadcn.com/docs/components-json"
       )}.`
+=======
+      `Learn more at ${highlighter.info(`${SHADCN_URL}/docs/components-json`)}.`
+>>>>>>> shadcn/main
     )
     logger.break()
     process.exit(1)

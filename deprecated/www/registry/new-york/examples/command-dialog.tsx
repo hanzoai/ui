@@ -19,9 +19,9 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/registry/new-york/ui/command"
+} from "@/registry/new-york-v4/ui/command"
 
-export default function CommandDialogDemo() {
+export function CommandDemo() {
   const [open, setOpen] = React.useState(false)
 
   React.useEffect(() => {
@@ -40,7 +40,7 @@ export default function CommandDialogDemo() {
     <>
       <p className="text-sm text-muted-foreground">
         Press{" "}
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+        <kbd className="pointer-events-none inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 select-none">
           <span className="text-xs">⌘</span>J
         </kbd>
       </p>

@@ -64,7 +64,11 @@ export function ChartPieLabelList() {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
+<<<<<<< HEAD
           className="[&_.recharts-text]:fill-background mx-auto aspect-square max-h-[250px]"
+=======
+          className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
+>>>>>>> shadcn/main
         >
           <PieChart>
             <ChartTooltip
@@ -76,8 +80,13 @@ export function ChartPieLabelList() {
                 className="fill-background"
                 stroke="none"
                 fontSize={12}
+<<<<<<< HEAD
                 formatter={(value: keyof typeof chartConfig) =>
                   chartConfig[value]?.label
+=======
+                formatter={(value) =>
+                  chartConfig[value as keyof typeof chartConfig]?.label
+>>>>>>> shadcn/main
                 }
               />
             </Pie>
@@ -88,7 +97,11 @@ export function ChartPieLabelList() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

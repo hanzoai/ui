@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Calendar, MoreHorizontal, Tags, Trash, User } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 
-import { Button } from "@/registry/default/ui/button"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -11,7 +11,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/registry/default/ui/command"
+} from "@/registry/new-york-v4/ui/command"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/registry/default/ui/dropdown-menu"
+} from "@/registry/new-york-v4/ui/dropdown-menu"
 
 const labels = [
   "feature",
@@ -42,7 +42,7 @@ export default function ComboboxDropdownMenu() {
 
   return (
     <div className="flex w-full flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
-      <p className="text-sm font-medium leading-none">
+      <p className="text-sm leading-none font-medium">
         <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">
           {label}
         </span>
@@ -57,6 +57,7 @@ export default function ComboboxDropdownMenu() {
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
+<<<<<<<< HEAD:app/registry/default/example/combobox-dropdown-menu.tsx
             <DropdownMenuItem>
               <User />
               Assign to...
@@ -71,11 +72,19 @@ export default function ComboboxDropdownMenu() {
                 <Tags />
                 Apply label
               </DropdownMenuSubTrigger>
+========
+            <DropdownMenuItem>Assign to...</DropdownMenuItem>
+            <DropdownMenuItem>Set due date...</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Apply label</DropdownMenuSubTrigger>
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/combobox-dropdown-menu.tsx
               <DropdownMenuSubContent className="p-0">
                 <Command>
                   <CommandInput
                     placeholder="Filter label..."
                     autoFocus={true}
+                    className="h-9"
                   />
                   <CommandList>
                     <CommandEmpty>No label found.</CommandEmpty>
@@ -99,7 +108,10 @@ export default function ComboboxDropdownMenu() {
             </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600">
+<<<<<<<< HEAD:app/registry/default/example/combobox-dropdown-menu.tsx
               <Trash />
+========
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/combobox-dropdown-menu.tsx
               Delete
               <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
             </DropdownMenuItem>

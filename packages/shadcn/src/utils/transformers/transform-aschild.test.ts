@@ -63,7 +63,11 @@ export function Component() {
   })
 
   describe("DialogTrigger with non-Button child", () => {
+<<<<<<< HEAD
     test("transforms asChild to render prop with nativeButton={false}", async () => {
+=======
+    test("transforms asChild to render prop without nativeButton", async () => {
+>>>>>>> shadcn/main
       expect(
         await transform(
           {
@@ -86,7 +90,11 @@ export function Component() {
 
         export function Component() {
           return (
+<<<<<<< HEAD
             <DialogTrigger render={<a href="#" />} nativeButton={false}>Open Dialog</DialogTrigger>
+=======
+            <DialogTrigger render={<a href="#" />}>Open Dialog</DialogTrigger>
+>>>>>>> shadcn/main
           )
         }"
       `)
@@ -186,7 +194,11 @@ export function Component() {
     })
   })
 
+<<<<<<< HEAD
   describe("component with Link child", () => {
+=======
+  describe("Button with Link child", () => {
+>>>>>>> shadcn/main
     test("transforms asChild to render prop with nativeButton={false}", async () => {
       expect(
         await transform(
@@ -390,6 +402,176 @@ export function Component() {
     })
   })
 
+<<<<<<< HEAD
+=======
+  describe("nested asChild", () => {
+    test("transforms inner asChild first, then outer", async () => {
+      expect(
+        await transform(
+          {
+            filename: "test.tsx",
+            raw: `import * as React from "react"
+
+export function Component() {
+  return (
+    <Collapsible asChild>
+      <SidebarMenuButton asChild>
+        <a href="#">Home</a>
+      </SidebarMenuButton>
+    </Collapsible>
+  )
+}`,
+            config: testConfig,
+          },
+          [transformAsChild]
+        )
+      ).toMatchInlineSnapshot(`
+        "import * as React from "react"
+
+        export function Component() {
+          return (
+            <Collapsible render={<SidebarMenuButton render={<a href="#" />} />}>Home</Collapsible>
+          )
+        }"
+      `)
+    })
+
+    test("adds nativeButton={false} only on nested Button", async () => {
+      expect(
+        await transform(
+          {
+            filename: "test.tsx",
+            raw: `import * as React from "react"
+
+export function Component() {
+  return (
+    <DialogTrigger asChild>
+      <Button asChild>
+        <a href="#">Open</a>
+      </Button>
+    </DialogTrigger>
+  )
+}`,
+            config: testConfig,
+          },
+          [transformAsChild]
+        )
+      ).toMatchInlineSnapshot(`
+        "import * as React from "react"
+
+        export function Component() {
+          return (
+            <DialogTrigger render={<Button render={<a href="#" />} nativeButton={false} />}>Open</DialogTrigger>
+          )
+        }"
+      `)
+    })
+
+    test("transforms nested with sibling asChild elements", async () => {
+      expect(
+        await transform(
+          {
+            filename: "test.tsx",
+            raw: `import * as React from "react"
+
+export function Component() {
+  return (
+    <div>
+      <Collapsible asChild>
+        <SidebarMenuButton asChild>
+          <a href="#">Home</a>
+        </SidebarMenuButton>
+      </Collapsible>
+      <DialogTrigger asChild>
+        <Button variant="outline">Edit</Button>
+      </DialogTrigger>
+    </div>
+  )
+}`,
+            config: testConfig,
+          },
+          [transformAsChild]
+        )
+      ).toMatchInlineSnapshot(`
+        "import * as React from "react"
+
+        export function Component() {
+          return (
+            <div>
+              <Collapsible render={<SidebarMenuButton render={<a href="#" />} />}>Home</Collapsible>
+              <DialogTrigger render={<Button variant="outline" />}>Edit</DialogTrigger>
+            </div>
+          )
+        }"
+      `)
+    })
+
+    test("transforms nested with self-closing inner child", async () => {
+      expect(
+        await transform(
+          {
+            filename: "test.tsx",
+            raw: `import * as React from "react"
+
+export function Component() {
+  return (
+    <Collapsible asChild>
+      <SidebarMenuButton asChild>
+        <Icon className="size-4" />
+      </SidebarMenuButton>
+    </Collapsible>
+  )
+}`,
+            config: testConfig,
+          },
+          [transformAsChild]
+        )
+      ).toMatchInlineSnapshot(`
+        "import * as React from "react"
+
+        export function Component() {
+          return (
+            <Collapsible render={<SidebarMenuButton render={<Icon className="size-4" />} />}></Collapsible>
+          )
+        }"
+      `)
+    })
+
+    test("transforms triple-nested asChild", async () => {
+      expect(
+        await transform(
+          {
+            filename: "test.tsx",
+            raw: `import * as React from "react"
+
+export function Component() {
+  return (
+    <TooltipTrigger asChild>
+      <Collapsible asChild>
+        <SidebarMenuButton asChild>
+          <a href="#">Home</a>
+        </SidebarMenuButton>
+      </Collapsible>
+    </TooltipTrigger>
+  )
+}`,
+            config: testConfig,
+          },
+          [transformAsChild]
+        )
+      ).toMatchInlineSnapshot(`
+        "import * as React from "react"
+
+        export function Component() {
+          return (
+            <TooltipTrigger render={<Collapsible render={<SidebarMenuButton render={<a href="#" />} />} />}>Home</TooltipTrigger>
+          )
+        }"
+      `)
+    })
+  })
+
+>>>>>>> shadcn/main
   describe("idempotency", () => {
     test("running twice produces same output", async () => {
       const input = `import * as React from "react"

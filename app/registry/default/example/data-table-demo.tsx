@@ -2,8 +2,11 @@
 
 import * as React from "react"
 import {
+<<<<<<<< HEAD:app/registry/default/example/data-table-demo.tsx
   ColumnDef,
   ColumnFiltersState,
+========
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/data-table-demo.tsx
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -11,12 +14,19 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+<<<<<<<< HEAD:app/registry/default/example/data-table-demo.tsx
   VisibilityState,
+========
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/data-table-demo.tsx
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
-import { Button } from "@/registry/default/ui/button"
-import { Checkbox } from "@/registry/default/ui/checkbox"
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -25,8 +35,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/default/ui/dropdown-menu"
-import { Input } from "@/registry/default/ui/input"
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+import { Input } from "@/registry/new-york-v4/ui/input"
 import {
   Table,
   TableBody,
@@ -34,7 +44,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/default/ui/table"
+} from "@/registry/new-york-v4/ui/table"
 
 const data: Payment[] = [
   {

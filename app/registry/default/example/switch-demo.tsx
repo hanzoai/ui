@@ -1,7 +1,7 @@
-import { Label } from "@/registry/default/ui/label"
-import { Switch } from "@/registry/default/ui/switch"
+import { Label } from "@/examples/base/ui/label"
+import { Switch } from "@/examples/base/ui/switch"
 
-export default function SwitchDemo() {
+export function SwitchDemo() {
   return (
     <div className="flex items-center space-x-2">
       <Switch id="airplane-mode" />

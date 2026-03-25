@@ -1,12 +1,21 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
+import { PopoverProps } from "@radix-ui/react-popover"
+import { Check, ChevronsUpDown } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { useMutationObserver } from "@/hooks/use-mutation-observer"
+import { Button } from "@/registry/default/ui/button"
+========
 import { Check, ChevronsUpDown } from "lucide-react"
 import type { Popover as PopoverPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { useMutationObserver } from "@/hooks/use-mutation-observer"
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   Command,
   CommandEmpty,
@@ -14,18 +23,31 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
+} from "@/registry/default/ui/command"
+========
 } from "@/registry/new-york-v4/ui/command"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
+} from "@/registry/default/ui/hover-card"
+import { Label } from "@/registry/default/ui/label"
+========
 } from "@/registry/new-york-v4/ui/hover-card"
 import { Label } from "@/registry/new-york-v4/ui/label"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
+} from "@/registry/default/ui/popover"
+========
 } from "@/registry/new-york-v4/ui/popover"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 
 import { type Model, type ModelType } from "../data/models"
 
@@ -65,7 +87,11 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
             className="w-full justify-between"
           >
             {selectedModel ? selectedModel.name : "Select a model..."}
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
+            <ChevronsUpDown className="opacity-50" />
+========
             <ChevronsUpDown className="text-muted-foreground" />
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
@@ -78,7 +104,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
             >
               <div className="grid gap-2">
                 <h4 className="leading-none font-medium">{peekedModel.name}</h4>
-                <div className="text-muted-foreground text-sm">
+                <div className="text-sm text-muted-foreground">
                   {peekedModel.description}
                 </div>
                 {peekedModel.strengths ? (
@@ -86,7 +112,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
                     <h5 className="text-sm leading-none font-medium">
                       Strengths
                     </h5>
-                    <ul className="text-muted-foreground text-sm">
+                    <ul className="text-sm text-muted-foreground">
                       {peekedModel.strengths}
                     </ul>
                   </div>

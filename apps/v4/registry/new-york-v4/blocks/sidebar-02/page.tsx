@@ -19,7 +19,11 @@ export default function Page() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
+<<<<<<< HEAD
         <header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4">
+=======
+        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+>>>>>>> shadcn/main
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb>
@@ -38,7 +42,11 @@ export default function Page() {
           {Array.from({ length: 24 }).map((_, index) => (
             <div
               key={index}
+<<<<<<< HEAD
               className="bg-muted/50 aspect-video h-12 w-full rounded-lg"
+=======
+              className="aspect-video h-12 w-full rounded-lg bg-muted/50"
+>>>>>>> shadcn/main
             />
           ))}
         </div>

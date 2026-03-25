@@ -30,7 +30,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/accordion",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/accordion-example.tsx",
+          api: "https://www.radix-ui.com/primitives/docs/components/accordion.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     alert: {
       name: "alert",
@@ -55,7 +66,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/alert",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "alert-dialog": {
       name: "alert-dialog",
@@ -80,7 +101,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/alert-dialog",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-dialog-example.tsx",
+          api: "https://www.radix-ui.com/primitives/docs/components/alert-dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "aspect-ratio": {
       name: "aspect-ratio",
@@ -105,7 +137,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/aspect-ratio",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/aspect-ratio-example.tsx",
+          api: "https://www.radix-ui.com/primitives/docs/components/aspect-ratio.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     avatar: {
       name: "avatar",
@@ -130,7 +173,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/avatar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/avatar-example.tsx",
+          api: "https://www.radix-ui.com/primitives/docs/components/avatar.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     badge: {
       name: "badge",
@@ -155,7 +209,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/badge",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/badge-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     breadcrumb: {
       name: "breadcrumb",
@@ -180,7 +244,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/breadcrumb",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/breadcrumb-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     button: {
       name: "button",
@@ -205,7 +279,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/button",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "button-group": {
       name: "button-group",
@@ -230,7 +314,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/button-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-group-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     calendar: {
       name: "calendar",
@@ -255,7 +349,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/calendar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/calendar-example.tsx",
+          api: "https://react-day-picker.js.org",
+        },
+      },
+>>>>>>> shadcn/main
     },
     card: {
       name: "card",
@@ -280,7 +385,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/card",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/card-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     carousel: {
       name: "carousel",
@@ -305,7 +420,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/carousel",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/carousel-example.tsx",
+          api: "https://www.embla-carousel.com/get-started/react",
+        },
+      },
+>>>>>>> shadcn/main
     },
     chart: {
       name: "chart",
@@ -330,7 +456,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/chart",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/chart-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     checkbox: {
       name: "checkbox",
@@ -355,7 +491,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/checkbox",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/checkbox-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/checkbox.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     collapsible: {
       name: "collapsible",
@@ -380,7 +527,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/collapsible",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/collapsible-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/collapsible.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     combobox: {
       name: "combobox",
@@ -405,7 +563,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/combobox",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/combobox-example.tsx",
+          api: "https://base-ui.com/react/components/combobox",
+        },
+      },
+>>>>>>> shadcn/main
     },
     command: {
       name: "command",
@@ -430,7 +599,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/command",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/command-example.tsx",
+          api: "https://github.com/dip/cmdk",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "context-menu": {
       name: "context-menu",
@@ -455,7 +635,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/context-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/context-menu-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/context-menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     dialog: {
       name: "dialog",
@@ -480,7 +671,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/dialog",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dialog-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     drawer: {
       name: "drawer",
@@ -505,7 +707,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/drawer",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/drawer-example.tsx",
+          api: "https://vaul.emilkowal.ski/getting-started",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "dropdown-menu": {
       name: "dropdown-menu",
@@ -530,7 +743,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/dropdown-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dropdown-menu-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/dropdown-menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     empty: {
       name: "empty",
@@ -555,7 +779,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/empty",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/empty-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     field: {
       name: "field",
@@ -580,7 +814,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/field",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/field-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "hover-card": {
       name: "hover-card",
@@ -605,7 +849,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/hover-card",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/hover-card-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/hover-card.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     input: {
       name: "input",
@@ -630,7 +885,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/input",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "input-group": {
       name: "input-group",
@@ -655,7 +920,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/input-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-group-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "input-otp": {
       name: "input-otp",
@@ -680,7 +955,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/input-otp",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-otp-example.tsx",
+          api: "https://input-otp.rodz.dev",
+        },
+      },
+>>>>>>> shadcn/main
     },
     item: {
       name: "item",
@@ -705,7 +991,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/item",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/item-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     label: {
       name: "label",
@@ -730,7 +1026,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/label",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/label-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/label.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     menubar: {
       name: "menubar",
@@ -755,7 +1062,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/menubar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/menubar-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/menubar.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "navigation-menu": {
       name: "navigation-menu",
@@ -782,7 +1100,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/navigation-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/navigation-menu-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/navigation-menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     pagination: {
       name: "pagination",
@@ -807,7 +1136,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/pagination",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/pagination-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     popover: {
       name: "popover",
@@ -832,7 +1171,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/popover",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/popover-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/popover.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     progress: {
       name: "progress",
@@ -857,7 +1207,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/progress",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/progress-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/progress.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "radio-group": {
       name: "radio-group",
@@ -882,7 +1243,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/radio-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/radio-group-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/radio-group.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     resizable: {
       name: "resizable",
@@ -907,7 +1279,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/resizable",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/resizable-example.tsx",
+          api: "https://github.com/bvaughn/react-resizable-panels",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "scroll-area": {
       name: "scroll-area",
@@ -932,7 +1315,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/scroll-area",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/scroll-area-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/scroll-area.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     select: {
       name: "select",
@@ -957,7 +1351,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/select",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/select-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/select.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     separator: {
       name: "separator",
@@ -982,7 +1387,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/separator",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/separator-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/separator.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sheet: {
       name: "sheet",
@@ -1007,7 +1423,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/sheet",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sheet-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sidebar: {
       name: "sidebar",
@@ -1040,7 +1467,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/sidebar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sidebar-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     skeleton: {
       name: "skeleton",
@@ -1065,7 +1502,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/skeleton",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/skeleton-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     slider: {
       name: "slider",
@@ -1090,7 +1537,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/slider",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/slider-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/slider.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sonner: {
       name: "sonner",
@@ -1115,7 +1573,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/sonner",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sonner-example.tsx",
+          api: "https://sonner.emilkowal.ski",
+        },
+      },
+>>>>>>> shadcn/main
     },
     spinner: {
       name: "spinner",
@@ -1140,7 +1609,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/spinner",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/spinner-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     switch: {
       name: "switch",
@@ -1165,7 +1644,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/switch",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/switch-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/switch.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     table: {
       name: "table",
@@ -1190,7 +1680,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/table",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/table-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     tabs: {
       name: "tabs",
@@ -1215,7 +1715,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/tabs",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tabs-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/tabs.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     textarea: {
       name: "textarea",
@@ -1240,7 +1751,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/textarea",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/textarea-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     toggle: {
       name: "toggle",
@@ -1265,7 +1786,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/toggle",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/toggle.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "toggle-group": {
       name: "toggle-group",
@@ -1290,7 +1822,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/toggle-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-group-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/toggle-group.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     tooltip: {
       name: "tooltip",
@@ -1315,7 +1858,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/tooltip",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tooltip-example.tsx",
+          api: "https://www.radix-ui.com/docs/primitives/components/tooltip.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     kbd: {
       name: "kbd",
@@ -1340,7 +1894,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/kbd",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/kbd-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "native-select": {
       name: "native-select",
@@ -1365,7 +1929,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/native-select",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/native-select-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     direction: {
       name: "direction",
@@ -1390,7 +1964,16 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/radix/direction",
+          api: "https://www.radix-ui.com/primitives/docs/utilities/direction-provider.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "accordion-example": {
       name: "accordion-example",
@@ -3106,6 +3689,49 @@ export const Index: Record<string, Record<string, any>> = {
       categories: undefined,
       meta: undefined,
     },
+<<<<<<< HEAD
+=======
+    demo: {
+      name: "demo",
+      title: "Demo",
+      description: "",
+      type: "registry:example",
+      registryDependencies: [
+        "alert-dialog",
+        "badge",
+        "button",
+        "button-group",
+        "card",
+        "checkbox",
+        "dropdown-menu",
+        "field",
+        "input-group",
+        "item",
+        "radio-group",
+        "slider",
+        "switch",
+        "textarea",
+      ],
+      files: [
+        {
+          path: "registry/bases/radix/examples/demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/bases/radix/examples/demo.tsx")
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || item.name
+        return { default: mod.default || mod[exportName] }
+      }),
+      categories: undefined,
+      meta: undefined,
+    },
+>>>>>>> shadcn/main
     "component-example": {
       name: "component-example",
       title: "Example",
@@ -3199,7 +3825,11 @@ export const Index: Record<string, Record<string, any>> = {
     },
     preview: {
       name: "preview",
+<<<<<<< HEAD
       title: "Home",
+=======
+      title: "Preview",
+>>>>>>> shadcn/main
       description: "",
       type: "registry:block",
       registryDependencies: [
@@ -3232,12 +3862,17 @@ export const Index: Record<string, Record<string, any>> = {
       ],
       files: [
         {
+<<<<<<< HEAD
           path: "registry/bases/radix/blocks/preview.tsx",
+=======
+          path: "registry/bases/radix/blocks/preview/index.tsx",
+>>>>>>> shadcn/main
           type: "registry:block",
           target: "",
         },
       ],
       component: React.lazy(async () => {
+<<<<<<< HEAD
         const mod = await import("@/registry/bases/radix/blocks/preview.tsx")
         const exportName =
           Object.keys(mod).find(
@@ -3394,6 +4029,11 @@ export const Index: Record<string, Record<string, any>> = {
       ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/bases/radix/blocks/chatgpt.tsx")
+=======
+        const mod = await import(
+          "@/registry/bases/radix/blocks/preview/index.tsx"
+        )
+>>>>>>> shadcn/main
         const exportName =
           Object.keys(mod).find(
             (key) =>
@@ -4668,7 +5308,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/accordion",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/accordion-example.tsx",
+          api: "https://base-ui.com/react/components/accordion.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     alert: {
       name: "alert",
@@ -4693,7 +5344,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/alert",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/alert-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "alert-dialog": {
       name: "alert-dialog",
@@ -4718,7 +5379,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/alert-dialog",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/alert-dialog-example.tsx",
+          api: "https://base-ui.com/react/components/alert-dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "aspect-ratio": {
       name: "aspect-ratio",
@@ -4743,7 +5415,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/aspect-ratio",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/aspect-ratio-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     avatar: {
       name: "avatar",
@@ -4768,7 +5450,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/avatar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/avatar-example.tsx",
+          api: "https://base-ui.com/react/components/avatar.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     badge: {
       name: "badge",
@@ -4793,7 +5486,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/badge",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/badge-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     breadcrumb: {
       name: "breadcrumb",
@@ -4818,7 +5521,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/breadcrumb",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/breadcrumb-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     button: {
       name: "button",
@@ -4843,7 +5556,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/button",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/button-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "button-group": {
       name: "button-group",
@@ -4868,7 +5591,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/button-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/button-group-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     calendar: {
       name: "calendar",
@@ -4893,7 +5626,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/calendar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/calendar-example.tsx",
+          api: "https://react-day-picker.js.org",
+        },
+      },
+>>>>>>> shadcn/main
     },
     card: {
       name: "card",
@@ -4918,7 +5662,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/card",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/card-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     carousel: {
       name: "carousel",
@@ -4943,7 +5697,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/carousel",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/carousel-example.tsx",
+          api: "https://www.embla-carousel.com/get-started/react",
+        },
+      },
+>>>>>>> shadcn/main
     },
     chart: {
       name: "chart",
@@ -4968,7 +5733,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/chart",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/chart-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     checkbox: {
       name: "checkbox",
@@ -4993,7 +5768,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/checkbox",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/checkbox-example.tsx",
+          api: "https://base-ui.com/react/components/checkbox.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     collapsible: {
       name: "collapsible",
@@ -5018,7 +5804,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/collapsible",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/collapsible-example.tsx",
+          api: "https://base-ui.com/react/components/collapsible.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     combobox: {
       name: "combobox",
@@ -5043,7 +5840,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/combobox",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/combobox-example.tsx",
+          api: "https://base-ui.com/react/components/combobox.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     command: {
       name: "command",
@@ -5068,7 +5876,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/command",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/command-example.tsx",
+          api: "https://github.com/dip/cmdk",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "context-menu": {
       name: "context-menu",
@@ -5093,7 +5912,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/context-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/context-menu-example.tsx",
+          api: "https://base-ui.com/react/components/context-menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     dialog: {
       name: "dialog",
@@ -5118,7 +5948,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/dialog",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/dialog-example.tsx",
+          api: "https://base-ui.com/react/components/dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     drawer: {
       name: "drawer",
@@ -5143,7 +5984,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/drawer",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/drawer-example.tsx",
+          api: "https://vaul.emilkowal.ski/getting-started",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "dropdown-menu": {
       name: "dropdown-menu",
@@ -5168,7 +6020,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/dropdown-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/dropdown-menu-example.tsx",
+          api: "https://base-ui.com/react/components/menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     empty: {
       name: "empty",
@@ -5193,7 +6056,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/empty",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/empty-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     field: {
       name: "field",
@@ -5218,7 +6091,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/field",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/field-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "hover-card": {
       name: "hover-card",
@@ -5243,7 +6126,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/hover-card",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/hover-card-example.tsx",
+          api: "https://base-ui.com/react/components/hover-card.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     input: {
       name: "input",
@@ -5268,7 +6162,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/input",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "input-group": {
       name: "input-group",
@@ -5293,7 +6197,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/input-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-group-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "input-otp": {
       name: "input-otp",
@@ -5318,7 +6232,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/input-otp",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-otp-example.tsx",
+          api: "https://input-otp.rodz.dev",
+        },
+      },
+>>>>>>> shadcn/main
     },
     item: {
       name: "item",
@@ -5343,7 +6268,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/item",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/item-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     label: {
       name: "label",
@@ -5368,7 +6303,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/label",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/label-example.tsx",
+          api: "https://base-ui.com/react/components/label.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     menubar: {
       name: "menubar",
@@ -5393,7 +6339,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/menubar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/menubar-example.tsx",
+          api: "https://base-ui.com/react/components/menubar.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "navigation-menu": {
       name: "navigation-menu",
@@ -5418,7 +6375,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/navigation-menu",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/navigation-menu-example.tsx",
+          api: "https://base-ui.com/react/components/navigation-menu.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     pagination: {
       name: "pagination",
@@ -5443,7 +6411,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/pagination",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/pagination-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     popover: {
       name: "popover",
@@ -5468,7 +6446,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/popover",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/popover-example.tsx",
+          api: "https://base-ui.com/react/components/popover.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     progress: {
       name: "progress",
@@ -5493,7 +6482,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/progress",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/progress-example.tsx",
+          api: "https://base-ui.com/react/components/progress.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "radio-group": {
       name: "radio-group",
@@ -5518,7 +6518,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/radio-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/radio-group-example.tsx",
+          api: "https://base-ui.com/react/components/radio-group.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     resizable: {
       name: "resizable",
@@ -5543,7 +6554,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/resizable",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/resizable-example.tsx",
+          api: "https://github.com/bvaughn/react-resizable-panels",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "scroll-area": {
       name: "scroll-area",
@@ -5568,7 +6590,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/scroll-area",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/scroll-area-example.tsx",
+          api: "https://base-ui.com/react/components/scroll-area.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     select: {
       name: "select",
@@ -5593,7 +6626,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/select",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/select-example.tsx",
+          api: "https://base-ui.com/react/components/select.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     separator: {
       name: "separator",
@@ -5618,7 +6662,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/separator",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/separator-example.tsx",
+          api: "https://base-ui.com/react/components/separator.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sheet: {
       name: "sheet",
@@ -5643,7 +6698,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/sheet",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sheet-example.tsx",
+          api: "https://base-ui.com/react/components/dialog.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sidebar: {
       name: "sidebar",
@@ -5676,7 +6742,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/sidebar",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sidebar-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     skeleton: {
       name: "skeleton",
@@ -5701,7 +6777,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/skeleton",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/skeleton-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     slider: {
       name: "slider",
@@ -5726,7 +6812,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/slider",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/slider-example.tsx",
+          api: "https://base-ui.com/react/components/slider.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     sonner: {
       name: "sonner",
@@ -5751,7 +6848,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/sonner",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sonner-example.tsx",
+          api: "https://sonner.emilkowal.ski",
+        },
+      },
+>>>>>>> shadcn/main
     },
     spinner: {
       name: "spinner",
@@ -5776,7 +6884,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/spinner",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/spinner-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     switch: {
       name: "switch",
@@ -5801,7 +6919,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/switch",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/switch-example.tsx",
+          api: "https://base-ui.com/react/components/switch.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     table: {
       name: "table",
@@ -5826,7 +6955,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/table",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/table-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     tabs: {
       name: "tabs",
@@ -5851,7 +6990,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/tabs",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/tabs-example.tsx",
+          api: "https://base-ui.com/react/components/tabs.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     textarea: {
       name: "textarea",
@@ -5876,7 +7026,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/textarea",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/textarea-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     toggle: {
       name: "toggle",
@@ -5901,7 +7061,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/toggle",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/toggle-example.tsx",
+          api: "https://base-ui.com/react/components/toggle.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "toggle-group": {
       name: "toggle-group",
@@ -5926,7 +7097,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/toggle-group",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/toggle-group-example.tsx",
+          api: "https://base-ui.com/react/components/toggle-group.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     tooltip: {
       name: "tooltip",
@@ -5951,7 +7133,18 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/tooltip",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/tooltip-example.tsx",
+          api: "https://base-ui.com/react/components/tooltip.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     kbd: {
       name: "kbd",
@@ -5976,7 +7169,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/kbd",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/kbd-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "native-select": {
       name: "native-select",
@@ -6001,7 +7204,17 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/native-select",
+          examples:
+            "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/native-select-example.tsx",
+        },
+      },
+>>>>>>> shadcn/main
     },
     direction: {
       name: "direction",
@@ -6026,7 +7239,16 @@ export const Index: Record<string, Record<string, any>> = {
         return { default: mod.default || mod[exportName] }
       }),
       categories: undefined,
+<<<<<<< HEAD
       meta: undefined,
+=======
+      meta: {
+        links: {
+          docs: "https://ui.shadcn.com/docs/components/base/direction",
+          api: "https://base-ui.com/react/utils/direction-provider.md",
+        },
+      },
+>>>>>>> shadcn/main
     },
     "accordion-example": {
       name: "accordion-example",
@@ -7742,6 +8964,49 @@ export const Index: Record<string, Record<string, any>> = {
       categories: undefined,
       meta: undefined,
     },
+<<<<<<< HEAD
+=======
+    demo: {
+      name: "demo",
+      title: "Demo",
+      description: "",
+      type: "registry:example",
+      registryDependencies: [
+        "alert-dialog",
+        "badge",
+        "button",
+        "button-group",
+        "card",
+        "checkbox",
+        "dropdown-menu",
+        "field",
+        "input-group",
+        "item",
+        "radio-group",
+        "slider",
+        "switch",
+        "textarea",
+      ],
+      files: [
+        {
+          path: "registry/bases/base/examples/demo.tsx",
+          type: "registry:example",
+          target: "",
+        },
+      ],
+      component: React.lazy(async () => {
+        const mod = await import("@/registry/bases/base/examples/demo.tsx")
+        const exportName =
+          Object.keys(mod).find(
+            (key) =>
+              typeof mod[key] === "function" || typeof mod[key] === "object"
+          ) || item.name
+        return { default: mod.default || mod[exportName] }
+      }),
+      categories: undefined,
+      meta: undefined,
+    },
+>>>>>>> shadcn/main
     "component-example": {
       name: "component-example",
       title: "Example",
@@ -7833,7 +9098,11 @@ export const Index: Record<string, Record<string, any>> = {
     },
     preview: {
       name: "preview",
+<<<<<<< HEAD
       title: "Home",
+=======
+      title: "Preview",
+>>>>>>> shadcn/main
       description: "",
       type: "registry:block",
       registryDependencies: [
@@ -7843,6 +9112,10 @@ export const Index: Record<string, Record<string, any>> = {
         "button",
         "button-group",
         "card",
+<<<<<<< HEAD
+=======
+        "chart",
+>>>>>>> shadcn/main
         "checkbox",
         "combobox",
         "dropdown-menu",
@@ -7866,12 +9139,17 @@ export const Index: Record<string, Record<string, any>> = {
       ],
       files: [
         {
+<<<<<<< HEAD
           path: "registry/bases/base/blocks/preview.tsx",
+=======
+          path: "registry/bases/base/blocks/preview/index.tsx",
+>>>>>>> shadcn/main
           type: "registry:block",
           target: "",
         },
       ],
       component: React.lazy(async () => {
+<<<<<<< HEAD
         const mod = await import("@/registry/bases/base/blocks/preview.tsx")
         const exportName =
           Object.keys(mod).find(
@@ -8028,6 +9306,11 @@ export const Index: Record<string, Record<string, any>> = {
       ],
       component: React.lazy(async () => {
         const mod = await import("@/registry/bases/base/blocks/chatgpt.tsx")
+=======
+        const mod = await import(
+          "@/registry/bases/base/blocks/preview/index.tsx"
+        )
+>>>>>>> shadcn/main
         const exportName =
           Object.keys(mod).find(
             (key) =>

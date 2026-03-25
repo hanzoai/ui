@@ -90,19 +90,33 @@ export function ChartTooltipAdvanced() {
                       />
                       {chartConfig[name as keyof typeof chartConfig]?.label ||
                         name}
+<<<<<<< HEAD
                       <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                         {value}
                         <span className="text-muted-foreground font-normal">
+=======
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium text-foreground tabular-nums">
+                        {value}
+                        <span className="font-normal text-muted-foreground">
+>>>>>>> shadcn/main
                           kcal
                         </span>
                       </div>
                       {/* Add this after the last item */}
                       {index === 1 && (
+<<<<<<< HEAD
                         <div className="text-foreground mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium">
                           Total
                           <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                             {item.payload.running + item.payload.swimming}
                             <span className="text-muted-foreground font-normal">
+=======
+                        <div className="mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium text-foreground">
+                          Total
+                          <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium text-foreground tabular-nums">
+                            {item.payload.running + item.payload.swimming}
+                            <span className="font-normal text-muted-foreground">
+>>>>>>> shadcn/main
                               kcal
                             </span>
                           </div>

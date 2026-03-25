@@ -64,6 +64,10 @@ export default function ChartExample() {
       <ChartAreaExample />
       <ChartBarExample />
       <ChartLineExample />
+<<<<<<< HEAD
+=======
+      <ChartPieExample />
+>>>>>>> shadcn/main
       <ChartRadialExample />
       <ChartRadarExample />
     </ExampleWrapper>
@@ -126,7 +130,11 @@ function ChartAreaExample() {
                   className="size-4"
                 />
               </div>
+<<<<<<< HEAD
               <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+              <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
                 January - June 2024
               </div>
             </div>
@@ -197,7 +205,11 @@ function ChartBarExample() {
               className="size-4"
             />
           </div>
+<<<<<<< HEAD
           <div className="text-muted-foreground leading-none">
+=======
+          <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
             Showing total visitors for the last 6 months
           </div>
         </CardFooter>
@@ -284,7 +296,11 @@ function ChartLineExample() {
                   className="size-4"
                 />
               </div>
+<<<<<<< HEAD
               <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+              <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
                 Showing total visitors for the last 6 months
               </div>
             </div>
@@ -403,7 +419,11 @@ function ChartPieExample() {
               className="size-4"
             />
           </div>
+<<<<<<< HEAD
           <div className="text-muted-foreground leading-none">
+=======
+          <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
             Showing total visitors for the last 6 months
           </div>
         </CardFooter>
@@ -475,7 +495,11 @@ function ChartRadarExample() {
               className="size-4"
             />
           </div>
+<<<<<<< HEAD
           <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+          <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
             January - June 2024
           </div>
         </CardFooter>
@@ -514,8 +538,13 @@ function ChartRadialExample() {
             <RadialBarChart
               data={radialChartData}
               endAngle={100}
+<<<<<<< HEAD
               innerRadius={80}
               outerRadius={140}
+=======
+              innerRadius={64}
+              outerRadius={94}
+>>>>>>> shadcn/main
             >
               <PolarGrid
                 gridType="circle"
@@ -571,7 +600,11 @@ function ChartRadialExample() {
               className="size-4"
             />
           </div>
+<<<<<<< HEAD
           <div className="text-muted-foreground leading-none">
+=======
+          <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
             Showing total visitors for the last 6 months
           </div>
         </CardFooter>

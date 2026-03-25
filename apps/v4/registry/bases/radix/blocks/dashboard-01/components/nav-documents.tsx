@@ -45,7 +45,11 @@ export function NavDocuments({
               <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
+<<<<<<< HEAD
                   className="data-[state=open]:bg-accent rounded-sm"
+=======
+                  className="rounded-sm data-[state=open]:bg-accent"
+>>>>>>> shadcn/main
                 >
                   <IconPlaceholder
                     lucide="MoreHorizontalIcon"

@@ -75,7 +75,16 @@ export function ChartLineDotsCustom() {
               stroke="var(--color-desktop)"
               strokeWidth={2}
               dot={({ cx, cy, payload }) => {
+<<<<<<< HEAD
                 const r = 24
+=======
+                if (cx == null || cy == null) {
+                  return null
+                }
+
+                const r = 24
+
+>>>>>>> shadcn/main
                 return (
                   <GitCommitVertical
                     key={payload.month}
@@ -96,7 +105,11 @@ export function ChartLineDotsCustom() {
         <div className="flex gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

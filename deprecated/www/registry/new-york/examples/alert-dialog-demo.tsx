@@ -8,10 +8,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/registry/new-york/ui/alert-dialog"
-import { Button } from "@/registry/new-york/ui/button"
+} from "@/examples/radix/ui/alert-dialog"
+import { Button } from "@/examples/radix/ui/button"
 
-export default function AlertDialogDemo() {
+export function AlertDialogBasic() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

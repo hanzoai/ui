@@ -417,11 +417,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           {
             type: "text",
             text: dedent`Invalid input parameters:
+<<<<<<< HEAD
               ${((error as any).issues ?? (error as any).errors ?? [])
                 .map(
                   (e: { path: string[]; message: string }) =>
                     `- ${e.path.join(".")}: ${e.message}`
                 )
+=======
+              ${error.errors
+                .map((e) => `- ${e.path.join(".")}: ${e.message}`)
+>>>>>>> shadcn/main
                 .join("\n")}
               `,
           },

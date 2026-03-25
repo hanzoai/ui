@@ -51,9 +51,15 @@ const fieldVariants = cva("cn-field group/field flex w-full", {
       vertical:
         "cn-field-orientation-vertical flex-col *:w-full [&>.sr-only]:w-auto",
       horizontal:
+<<<<<<< HEAD
         "cn-field-orientation-horizontal flex-row items-center *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
       responsive:
         "cn-field-orientation-responsive flex-col *:w-full [&>.sr-only]:w-auto @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:*:data-[slot=field-label]:flex-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+=======
+        "cn-field-orientation-horizontal flex-row items-center has-[>[data-slot=field-content]]:items-start *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+      responsive:
+        "cn-field-orientation-responsive flex-col *:w-full @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:*:data-[slot=field-label]:flex-auto [&>.sr-only]:w-auto @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px",
+>>>>>>> shadcn/main
     },
   },
   defaultVariants: {
@@ -127,7 +133,11 @@ function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
       className={cn(
         "cn-field-description leading-normal font-normal group-has-data-horizontal/field:text-balance",
         "last:mt-0 nth-last-2:-mt-1",
+<<<<<<< HEAD
         "[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
+=======
+        "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
+>>>>>>> shadcn/main
         className
       )}
       {...props}
@@ -152,7 +162,11 @@ function FieldSeparator({
       <Separator className="absolute inset-0 top-1/2" />
       {children && (
         <span
+<<<<<<< HEAD
           className="cn-field-separator-content bg-background relative mx-auto block w-fit"
+=======
+          className="cn-field-separator-content relative mx-auto block w-fit bg-background"
+>>>>>>> shadcn/main
           data-slot="field-separator-content"
         >
           {children}

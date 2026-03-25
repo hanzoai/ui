@@ -62,7 +62,29 @@ export default function NavigationMenuDemo() {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
           <NavigationMenuContent>
+<<<<<<<< HEAD:app/registry/default/example/navigation-menu-demo.tsx
+            <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+              <li className="row-span-3">
+                <NavigationMenuLink asChild>
+                  <a
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                    href="/"
+                  >
+                    <Icons.logo className="h-6 w-6" />
+                    <div className="mb-2 mt-4 text-lg font-medium">
+                      hanzo/ui
+                    </div>
+                    <p className="text-sm leading-tight text-muted-foreground">
+                      Beautifully designed components that you can copy and
+                      paste into your apps. Accessible. Customizable. Open
+                      Source.
+                    </p>
+                  </a>
+                </NavigationMenuLink>
+              </li>
+========
             <ul className="w-96">
+>>>>>>>> shadcn/main:apps/v4/examples/base/navigation-menu-demo.tsx
               <ListItem href="/docs" title="Introduction">
                 Re-usable components built with Tailwind CSS.
               </ListItem>
@@ -148,7 +170,7 @@ function ListItem({
       <NavigationMenuLink render={<Link href={href} />}>
         <div className="flex flex-col gap-1 text-sm">
           <div className="leading-none font-medium">{title}</div>
-          <div className="text-muted-foreground line-clamp-2">{children}</div>
+          <div className="line-clamp-2 text-muted-foreground">{children}</div>
         </div>
       </NavigationMenuLink>
     </li>

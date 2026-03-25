@@ -2,21 +2,36 @@ import { type Metadata } from "next"
 import Image from "next/image"
 import { RotateCcw } from "lucide-react"
 
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
+import { Button } from "@/registry/default/ui/button"
+========
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
+} from "@/registry/default/ui/hover-card"
+import { Label } from "@/registry/default/ui/label"
+import { Separator } from "@/registry/default/ui/separator"
+========
 } from "@/registry/new-york-v4/ui/hover-card"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Separator } from "@/registry/new-york-v4/ui/separator"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
+} from "@/registry/default/ui/tabs"
+import { Textarea } from "@/registry/default/ui/textarea"
+========
 } from "@/registry/new-york-v4/ui/tabs"
 import { Textarea } from "@/registry/new-york-v4/ui/textarea"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
 
 import { CodeViewer } from "./components/code-viewer"
 import { MaxLengthSelector } from "./components/maxlength-selector"
@@ -269,6 +284,24 @@ export default function PlaygroundPage() {
                     </div>
                   </div>
                 </TabsContent>
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
+                <TabsContent value="insert" className="mt-0 border-0 p-0">
+                  <div className="flex flex-col space-y-4">
+                    <div className="grid h-full grid-rows-2 gap-6 lg:grid-cols-2 lg:grid-rows-1">
+                      <Textarea
+                        placeholder="We're writing to [inset]. Congrats from OpenAI!"
+                        className="h-full min-h-[300px] lg:min-h-[700px] xl:min-h-[700px]"
+                      />
+                      <div className="rounded-md border bg-muted"></div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Button>Submit</Button>
+                      <Button variant="secondary">
+                        <span className="sr-only">Show history</span>
+                        <RotateCcw />
+                      </Button>
+                    </div>
+========
                 <TabsContent
                   value="insert"
                   className="mt-0 flex flex-col gap-4 border-0 p-0"
@@ -278,7 +311,7 @@ export default function PlaygroundPage() {
                       placeholder="We're writing to [inset]. Congrats from OpenAI!"
                       className="h-full min-h-[300px] p-4 lg:min-h-[700px] xl:min-h-[700px]"
                     />
-                    <div className="bg-muted rounded-md border"></div>
+                    <div className="rounded-md border bg-muted"></div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button>Submit</Button>
@@ -286,6 +319,7 @@ export default function PlaygroundPage() {
                       <span className="sr-only">Show history</span>
                       <RotateCcw />
                     </Button>
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
                   </div>
                 </TabsContent>
                 <TabsContent
@@ -311,8 +345,19 @@ export default function PlaygroundPage() {
                           placeholder="Fix the grammar."
                         />
                       </div>
+<<<<<<<< HEAD:app/app/(app)/examples/playground/page.tsx
+                      <div className="mt-[21px] min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
                     </div>
-                    <div className="bg-muted min-h-[400px] rounded-md border lg:min-h-[700px]" />
+                    <div className="flex items-center space-x-2">
+                      <Button>Submit</Button>
+                      <Button variant="secondary">
+                        <span className="sr-only">Show history</span>
+                        <RotateCcw />
+                      </Button>
+========
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/page.tsx
+                    </div>
+                    <div className="min-h-[400px] rounded-md border bg-muted lg:min-h-[700px]" />
                   </div>
                   <div className="flex items-center gap-2">
                     <Button>Submit</Button>

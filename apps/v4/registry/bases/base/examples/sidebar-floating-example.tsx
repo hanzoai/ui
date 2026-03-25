@@ -244,7 +244,11 @@ export default function SidebarFloatingExample() {
                   <Field>
                     <SidebarInput type="email" placeholder="Email" />
                     <Button
+<<<<<<< HEAD
                       className="bg-sidebar-primary text-sidebar-primary-foreground w-full"
+=======
+                      className="w-full bg-sidebar-primary text-sidebar-primary-foreground"
+>>>>>>> shadcn/main
                       size="sm"
                     >
                       Subscribe
@@ -263,11 +267,19 @@ export default function SidebarFloatingExample() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+<<<<<<< HEAD
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
           </div>
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+=======
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+          </div>
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+>>>>>>> shadcn/main
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { SHADCN_URL } from "@/src/registry/constants"
+>>>>>>> shadcn/main
 import { RegistryItem } from "@/src/schema"
 import { Config } from "@/src/utils/get-config"
 import { getPackageInfo } from "@/src/utils/get-package-info"
@@ -40,7 +44,11 @@ export async function updateDependencies(
     } else {
       dependenciesSpinner.stopAndPersist()
       logger.warn(
+<<<<<<< HEAD
         "\nIt looks like you are using React 19. \nSome packages may fail to install due to peer dependency issues in npm (see https://ui.shadcn.com/react-19).\n"
+=======
+        `\nIt looks like you are using React 19. \nSome packages may fail to install due to peer dependency issues in npm (see ${SHADCN_URL}/react-19).\n`
+>>>>>>> shadcn/main
       )
       const confirmation = await prompts([
         {

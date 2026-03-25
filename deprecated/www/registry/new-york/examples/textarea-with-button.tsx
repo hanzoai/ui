@@ -1,7 +1,7 @@
-import { Button } from "@/registry/new-york/ui/button"
-import { Textarea } from "@/registry/new-york/ui/textarea"
+import { Button } from "@/examples/base/ui/button"
+import { Textarea } from "@/examples/base/ui/textarea"
 
-export default function TextareaWithButton() {
+export function TextareaButton() {
   return (
     <div className="grid w-full gap-2">
       <Textarea placeholder="Type your message here." />

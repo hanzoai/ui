@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-pagination.tsx
 import { Table } from "@tanstack/react-table"
+========
+import { type Table } from "@tanstack/react-table"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-pagination.tsx
 import {
   ChevronLeft,
   ChevronRight,
@@ -6,14 +10,22 @@ import {
   ChevronsRight,
 } from "lucide-react"
 
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-pagination.tsx
 import { Button } from "@/registry/default/ui/button"
+========
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-pagination.tsx
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-pagination.tsx
 } from "@/registry/default/ui/select"
+========
+} from "@/registry/new-york-v4/ui/select"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-pagination.tsx
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>

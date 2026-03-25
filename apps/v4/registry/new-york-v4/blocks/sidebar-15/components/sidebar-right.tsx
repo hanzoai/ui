@@ -48,7 +48,11 @@ export function SidebarRight({
       className="sticky top-0 hidden h-svh border-l lg:flex"
       {...props}
     >
+<<<<<<< HEAD
       <SidebarHeader className="border-sidebar-border h-16 border-b">
+=======
+      <SidebarHeader className="h-16 border-b border-sidebar-border">
+>>>>>>> shadcn/main
         <NavUser user={data.user} />
       </SidebarHeader>
       <SidebarContent>

@@ -92,7 +92,11 @@ export default function DrawerDemo() {
                 <div className="text-7xl font-bold tracking-tighter">
                   {goal}
                 </div>
+<<<<<<< HEAD
                 <div className="text-muted-foreground text-[0.70rem] uppercase">
+=======
+                <div className="text-[0.70rem] text-muted-foreground uppercase">
+>>>>>>> shadcn/main
                   Calories/day
                 </div>
               </div>

@@ -9,16 +9,36 @@ import {
   SyntaxKind,
 } from "ts-morph"
 
+<<<<<<< HEAD
 // Regex to match cn-* marker classes (e.g., cn-rtl-flip, cn-logical-sides).
 const CN_MARKER_REGEX = /\bcn-[a-z-]+\b/
 const CN_MARKER_REGEX_GLOBAL = /\bcn-[a-z-]+\b/g
+=======
+// Generic cleanup should leave font markers alone until transformFont runs.
+const PRESERVED_CN_MARKERS = new Set(["cn-font-heading"])
+const CN_MARKER_REGEX = /\bcn-[a-z-]+\b/
+
+function isRemovableCnMarker(token: string) {
+  return CN_MARKER_REGEX.test(token) && !PRESERVED_CN_MARKERS.has(token)
+}
+>>>>>>> shadcn/main
 
 // Helper to strip all cn-* marker classes from a className string.
 export function stripCnMarkers(className: string) {
   return className
+<<<<<<< HEAD
     .replace(CN_MARKER_REGEX_GLOBAL, "")
     .replace(/\s+/g, " ")
     .trim()
+=======
+    .split(/\s+/)
+    .filter((token) => token.length > 0 && !isRemovableCnMarker(token))
+    .join(" ")
+}
+
+function hasRemovableCnMarker(className: string) {
+  return className.split(/\s+/).some(isRemovableCnMarker)
+>>>>>>> shadcn/main
 }
 
 type StringLikeLiteral = StringLiteral | NoSubstitutionTemplateLiteral
@@ -26,7 +46,11 @@ type StringLikeLiteral = StringLiteral | NoSubstitutionTemplateLiteral
 // Processes a string-like literal and strips cn-* markers.
 function processStringLiteral(node: StringLikeLiteral) {
   const currentValue = node.getLiteralValue()
+<<<<<<< HEAD
   if (!CN_MARKER_REGEX.test(currentValue)) {
+=======
+  if (!hasRemovableCnMarker(currentValue)) {
+>>>>>>> shadcn/main
     return
   }
 
@@ -67,7 +91,11 @@ export function applyCleanup(sourceFile: SourceFile) {
     // className="..."
     if (initializer?.isKind(SyntaxKind.StringLiteral)) {
       const currentValue = initializer.getLiteralValue()
+<<<<<<< HEAD
       if (CN_MARKER_REGEX.test(currentValue)) {
+=======
+      if (hasRemovableCnMarker(currentValue)) {
+>>>>>>> shadcn/main
         const newValue = stripCnMarkers(currentValue)
         if (newValue === "") {
           // Remove the entire attribute if className becomes empty.

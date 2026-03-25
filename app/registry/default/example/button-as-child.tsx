@@ -1,6 +1,5 @@
 import Link from "next/link"
-
-import { Button } from "@/registry/default/ui/button"
+import { Button } from "@/examples/radix/ui/button"
 
 export default function ButtonAsChild() {
   return (

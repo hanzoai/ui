@@ -34,7 +34,11 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
+<<<<<<< HEAD
       className={cn("cn-card-title", className)}
+=======
+      className={cn("cn-card-title cn-font-heading", className)}
+>>>>>>> shadcn/main
       {...props}
     />
   )

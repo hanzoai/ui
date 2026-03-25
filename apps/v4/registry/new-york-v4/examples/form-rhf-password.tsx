@@ -109,7 +109,11 @@ export default function FormRhfPassword() {
   function onSubmit(data: z.infer<typeof formSchema>) {
     toast("You submitted the following values:", {
       description: (
+<<<<<<< HEAD
         <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
+=======
+        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+>>>>>>> shadcn/main
           <code>{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
@@ -182,7 +186,11 @@ export default function FormRhfPassword() {
                               className={
                                 isMet
                                   ? "size-4 text-green-500"
+<<<<<<< HEAD
                                   : "text-muted-foreground size-4"
+=======
+                                  : "size-4 text-muted-foreground"
+>>>>>>> shadcn/main
                               }
                             />
                             <span

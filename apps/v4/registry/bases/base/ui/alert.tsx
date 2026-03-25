@@ -3,7 +3,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/registry/bases/base/lib/utils"
 
+<<<<<<< HEAD
 const alertVariants = cva("cn-alert w-full relative group/alert", {
+=======
+const alertVariants = cva("cn-alert group/alert relative w-full", {
+>>>>>>> shadcn/main
   variants: {
     variant: {
       default: "cn-alert-variant-default",
@@ -35,7 +39,11 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="alert-title"
       className={cn(
+<<<<<<< HEAD
         "cn-alert-title [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
+=======
+        "cn-alert-title cn-font-heading [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+>>>>>>> shadcn/main
         className
       )}
       {...props}
@@ -51,7 +59,11 @@ function AlertDescription({
     <div
       data-slot="alert-description"
       className={cn(
+<<<<<<< HEAD
         "cn-alert-description [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
+=======
+        "cn-alert-description [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground",
+>>>>>>> shadcn/main
         className
       )}
       {...props}

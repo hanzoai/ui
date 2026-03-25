@@ -83,7 +83,11 @@ export function ChartPieLabelCustom() {
                     y={props.y}
                     textAnchor={props.textAnchor}
                     dominantBaseline={props.dominantBaseline}
+<<<<<<< HEAD
                     fill="hsla(var(--foreground))"
+=======
+                    fill="var(--foreground)"
+>>>>>>> shadcn/main
                   >
                     {payload.visitors}
                   </text>
@@ -98,7 +102,11 @@ export function ChartPieLabelCustom() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

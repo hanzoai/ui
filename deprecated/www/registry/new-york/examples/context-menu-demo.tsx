@@ -1,3 +1,5 @@
+import { Code2Icon, PlusIcon, TrashIcon } from "lucide-react"
+
 import {
   ContextMenu,
   ContextMenuCheckboxItem,
@@ -12,9 +14,9 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from "@/registry/new-york/ui/context-menu"
+} from "@/registry/new-york-v4/ui/context-menu"
 
-export default function ContextMenuDemo() {
+export function ContextMenuDemo() {
   return (
     <ContextMenu>
       <ContextMenuTrigger className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm">
@@ -36,14 +38,25 @@ export default function ContextMenuDemo() {
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>More Tools</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            <ContextMenuItem>
-              Save Page As...
+            <ContextMenuItem inset>
+              Save Page...
               <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
             </ContextMenuItem>
-            <ContextMenuItem>Create Shortcut...</ContextMenuItem>
-            <ContextMenuItem>Name Window...</ContextMenuItem>
+            <ContextMenuItem>
+              <PlusIcon />
+              Create Shortcut...
+            </ContextMenuItem>
+            <ContextMenuItem inset>Name Window...</ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem>Developer Tools</ContextMenuItem>
+            <ContextMenuItem>
+              <Code2Icon />
+              Developer Tools
+            </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem variant="destructive">
+              <TrashIcon />
+              Delete
+            </ContextMenuItem>
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSeparator />
@@ -55,7 +68,6 @@ export default function ContextMenuDemo() {
         <ContextMenuSeparator />
         <ContextMenuRadioGroup value="pedro">
           <ContextMenuLabel inset>People</ContextMenuLabel>
-          <ContextMenuSeparator />
           <ContextMenuRadioItem value="pedro">
             Pedro Duarte
           </ContextMenuRadioItem>

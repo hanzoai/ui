@@ -598,7 +598,11 @@ function DropdownMenuWithAvatar() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">shadcn</span>
+<<<<<<< HEAD
                 <span className="text-muted-foreground truncate text-xs">
+=======
+                <span className="truncate text-xs text-muted-foreground">
+>>>>>>> shadcn/main
                   shadcn@example.com
                 </span>
               </div>
@@ -608,7 +612,11 @@ function DropdownMenuWithAvatar() {
                 hugeicons="UnfoldMoreIcon"
                 phosphor="CaretUpDownIcon"
                 remixicon="RiArrowUpDownLine"
+<<<<<<< HEAD
                 className="text-muted-foreground ml-auto"
+=======
+                className="ml-auto text-muted-foreground"
+>>>>>>> shadcn/main
               />
             </Button>
           </DropdownMenuTrigger>
@@ -830,7 +838,11 @@ function DropdownMenuComplex() {
             Complex Menu
           </Button>
         </DropdownMenuTrigger>
+<<<<<<< HEAD
         <DropdownMenuContent className="style-maia:w-56 style-mira:w-48 style-nova:w-48 style-vega:w-56 style-lyra:w-48">
+=======
+        <DropdownMenuContent className="style-vega:w-56 style-nova:w-48 style-lyra:w-48 style-maia:w-56 style-mira:w-48">
+>>>>>>> shadcn/main
           <DropdownMenuGroup>
             <DropdownMenuLabel>File</DropdownMenuLabel>
             <DropdownMenuItem>

@@ -9,6 +9,10 @@ import { TEMP_DIR } from "./setup"
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const FIXTURES_DIR = path.join(__dirname, "../../fixtures")
 const SHADCN_CLI_PATH = path.join(__dirname, "../../../shadcn/dist/index.js")
+<<<<<<< HEAD
+=======
+const TEMPLATES_DIR = path.join(__dirname, "../../../../templates")
+>>>>>>> shadcn/main
 
 export function getRegistryUrl() {
   return process.env.REGISTRY_URL || "http://localhost:4000/r"
@@ -32,6 +36,10 @@ export async function runCommand(
   options?: {
     env?: Record<string, string>
     input?: string
+<<<<<<< HEAD
+=======
+    timeout?: number
+>>>>>>> shadcn/main
   }
 ) {
   try {
@@ -45,7 +53,11 @@ export async function runCommand(
       },
       input: options?.input,
       reject: false,
+<<<<<<< HEAD
       timeout: 30000,
+=======
+      timeout: options?.timeout ?? 60000,
+>>>>>>> shadcn/main
     })
 
     const result = await childProcess
@@ -69,14 +81,27 @@ export async function npxShadcn(
   args: string[],
   {
     debug = false,
+<<<<<<< HEAD
   }: {
     debug?: boolean
+=======
+    timeout,
+  }: {
+    debug?: boolean
+    timeout?: number
+>>>>>>> shadcn/main
   } = {}
 ) {
   const result = await runCommand(cwd, args, {
     env: {
       REGISTRY_URL: getRegistryUrl(),
+<<<<<<< HEAD
     },
+=======
+      SHADCN_TEMPLATE_DIR: TEMPLATES_DIR,
+    },
+    timeout,
+>>>>>>> shadcn/main
   })
 
   if (debug) {

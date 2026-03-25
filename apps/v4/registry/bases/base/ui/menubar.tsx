@@ -78,7 +78,11 @@ function MenubarContent({
       alignOffset={alignOffset}
       sideOffset={sideOffset}
       className={cn(
+<<<<<<< HEAD
         "cn-menubar-content cn-menubar-content-logical cn-menu-target",
+=======
+        "cn-menubar-content cn-menubar-content-logical cn-menu-target cn-menu-translucent",
+>>>>>>> shadcn/main
         className
       )}
       {...props}
@@ -252,7 +256,14 @@ function MenubarSubContent({
   return (
     <DropdownMenuSubContent
       data-slot="menubar-sub-content"
+<<<<<<< HEAD
       className={cn("cn-menubar-sub-content", className)}
+=======
+      className={cn(
+        "cn-menubar-sub-content cn-menu-target cn-menu-translucent",
+        className
+      )}
+>>>>>>> shadcn/main
       {...props}
     />
   )

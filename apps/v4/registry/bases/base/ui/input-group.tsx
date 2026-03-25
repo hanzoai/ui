@@ -64,7 +64,11 @@ function InputGroupAddon({
 }
 
 const inputGroupButtonVariants = cva(
+<<<<<<< HEAD
   "cn-input-group-button shadow-none flex items-center",
+=======
+  "cn-input-group-button flex items-center shadow-none",
+>>>>>>> shadcn/main
   {
     variants: {
       size: {

@@ -22,7 +22,11 @@ export function SignupForm({
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Create your account</h1>
+<<<<<<< HEAD
                 <p className="text-muted-foreground text-sm text-balance">
+=======
+                <p className="text-sm text-balance text-muted-foreground">
+>>>>>>> shadcn/main
                   Enter your email below to create your account
                 </p>
               </div>
@@ -96,7 +100,11 @@ export function SignupForm({
               </FieldDescription>
             </FieldGroup>
           </form>
+<<<<<<< HEAD
           <div className="bg-muted relative hidden md:block">
+=======
+          <div className="relative hidden bg-muted md:block">
+>>>>>>> shadcn/main
             <img
               src="/placeholder.svg"
               alt="Image"

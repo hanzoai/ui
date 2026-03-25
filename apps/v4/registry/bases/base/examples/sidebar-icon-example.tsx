@@ -326,6 +326,7 @@ export default function SidebarIconExample() {
                   key={item.title}
                   defaultOpen={item.isActive}
                   className="group/collapsible"
+<<<<<<< HEAD
                   render={<SidebarMenuItem />}
                 >
                   <SidebarMenuButton
@@ -356,6 +357,38 @@ export default function SidebarIconExample() {
                       ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
+=======
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger
+                      render={<SidebarMenuButton tooltip={item.title} />}
+                    >
+                      {item.icon}
+                      <span>{item.title}</span>
+                      <IconPlaceholder
+                        lucide="ChevronRightIcon"
+                        tabler="IconChevronRight"
+                        hugeicons="ArrowRight01Icon"
+                        phosphor="CaretRightIcon"
+                        remixicon="RiArrowRightSLine"
+                        className="ml-auto transition-transform duration-100 group-data-open/collapsible:rotate-90"
+                      />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton
+                              render={<a href={subItem.url} />}
+                            >
+                              {subItem.title}
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+>>>>>>> shadcn/main
                 </Collapsible>
               ))}
             </SidebarMenu>
@@ -449,11 +482,19 @@ export default function SidebarIconExample() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+<<<<<<< HEAD
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
           </div>
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+=======
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+          </div>
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+>>>>>>> shadcn/main
         </div>
       </SidebarInset>
     </SidebarProvider>

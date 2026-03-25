@@ -19,17 +19,25 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+<<<<<<< HEAD
     timeout-minutes: 60
     strategy:
       matrix:
         node-version: [20.x]
 
+=======
+    name: pnpm test
+    env:
+      NEXT_PUBLIC_APP_URL: http://localhost:4000
+      NEXT_PUBLIC_V0_URL: https://v0.dev
+>>>>>>> shadcn/main
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
+<<<<<<< HEAD
           version: 9.0.6
 
       - name: Setup Node.js ${{ matrix.node-version }}
@@ -37,6 +45,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+=======
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 9.0.6
+          run_install: false
+>>>>>>> shadcn/main
 
       - name: Install dependencies
         run: pnpm install

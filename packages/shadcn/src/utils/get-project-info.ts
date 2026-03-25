@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 import path from "path"
+=======
+import { promises as fsPromises } from "fs"
+import path from "path"
+import { getShadcnRegistryIndex } from "@/src/registry/api"
+import { SHADCN_URL } from "@/src/registry/constants"
+>>>>>>> shadcn/main
 import { rawConfigSchema } from "@/src/schema"
 import { Framework, FRAMEWORKS } from "@/src/utils/frameworks"
 import { Config, getConfig, resolveConfigPaths } from "@/src/utils/get-config"
@@ -36,7 +43,14 @@ const TS_CONFIG_SCHEMA = z.object({
   }),
 })
 
+<<<<<<< HEAD
 export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
+=======
+export async function getProjectInfo(
+  cwd: string,
+  opts?: { configCssFile?: string }
+): Promise<ProjectInfo | null> {
+>>>>>>> shadcn/main
   const [
     configFiles,
     isSrcDir,
@@ -58,7 +72,11 @@ export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
     fs.pathExists(path.resolve(cwd, "src")),
     isTypeScriptProject(cwd),
     getTailwindConfigFile(cwd),
+<<<<<<< HEAD
     getTailwindCssFile(cwd),
+=======
+    getTailwindCssFile(cwd, opts?.configCssFile),
+>>>>>>> shadcn/main
     getTailwindVersion(cwd),
     getTsConfigAliasPrefix(cwd),
     getPackageInfo(cwd, false),
@@ -240,7 +258,19 @@ export async function getTailwindVersion(
   return "v4"
 }
 
+<<<<<<< HEAD
 export async function getTailwindCssFile(cwd: string) {
+=======
+export async function getTailwindCssFile(cwd: string, configCssFile?: string) {
+  // If the existing config has a known CSS file, check it first.
+  if (configCssFile) {
+    const resolvedPath = path.resolve(cwd, configCssFile)
+    if (await fs.pathExists(resolvedPath)) {
+      return configCssFile
+    }
+  }
+
+>>>>>>> shadcn/main
   const [files, tailwindVersion] = await Promise.all([
     fg.glob(["**/*.css", "**/*.scss"], {
       cwd,
@@ -410,3 +440,28 @@ export async function getProjectTailwindVersionFromConfig(config: {
 
   return projectInfo.tailwindVersion
 }
+<<<<<<< HEAD
+=======
+
+export async function getProjectComponents(cwd: string) {
+  const existingConfig = await getConfig(cwd)
+  if (!existingConfig) {
+    return []
+  }
+
+  const resolvedConfig = await resolveConfigPaths(cwd, existingConfig)
+  const uiDir = resolvedConfig.resolvedPaths.ui
+  if (!fs.existsSync(uiDir)) {
+    return []
+  }
+
+  const registryIndex = await getShadcnRegistryIndex()
+  const registryNames = new Set(registryIndex?.map((item) => item.name) ?? [])
+
+  const files = await fsPromises.readdir(uiDir)
+  return files
+    .filter((f) => /\.(tsx|jsx)$/.test(f))
+    .map((f) => path.basename(f, path.extname(f)))
+    .filter((name) => registryNames.has(name))
+}
+>>>>>>> shadcn/main

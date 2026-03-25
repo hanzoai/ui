@@ -17,7 +17,11 @@ export default function Page() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
+<<<<<<< HEAD
         <header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4">
+=======
+        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+>>>>>>> shadcn/main
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
@@ -34,7 +38,11 @@ export default function Page() {
         <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 md:grid-cols-5">
             {Array.from({ length: 20 }).map((_, i) => (
+<<<<<<< HEAD
               <div key={i} className="bg-muted/50 aspect-square rounded-xl" />
+=======
+              <div key={i} className="aspect-square rounded-xl bg-muted/50" />
+>>>>>>> shadcn/main
             ))}
           </div>
         </div>

@@ -1,17 +1,29 @@
 "use client"
 
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-view-options.tsx
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { Table } from "@tanstack/react-table"
 import { Settings2 } from "lucide-react"
 
 import { Button } from "@/registry/default/ui/button"
+========
+import { type Table } from "@tanstack/react-table"
+import { Settings2 } from "lucide-react"
+
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-view-options.tsx
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-view-options.tsx
 } from "@/registry/default/ui/dropdown-menu"
+========
+  DropdownMenuTrigger,
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-view-options.tsx
 
 export function DataTableViewOptions<TData>({
   table,

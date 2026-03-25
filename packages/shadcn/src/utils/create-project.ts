@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os from "os"
 import path from "path"
 import { initOptionsSchema } from "@/src/commands/init"
@@ -8,10 +9,19 @@ import { highlighter } from "@/src/utils/highlighter"
 import { logger } from "@/src/utils/logger"
 import { spinner } from "@/src/utils/spinner"
 import { execa } from "execa"
+=======
+import path from "path"
+import { initOptionsSchema } from "@/src/commands/init"
+import { resolveTemplate, templates } from "@/src/templates/index"
+import { getPackageManager } from "@/src/utils/get-package-manager"
+import { highlighter } from "@/src/utils/highlighter"
+import { logger } from "@/src/utils/logger"
+>>>>>>> shadcn/main
 import fs from "fs-extra"
 import prompts from "prompts"
 import { z } from "zod"
 
+<<<<<<< HEAD
 const GITHUB_TEMPLATE_URL =
   "https://codeload.github.com/shadcn-ui/ui/tar.gz/main"
 
@@ -45,11 +55,29 @@ export async function createProject(
       ? "my-app"
       : "my-monorepo")
   let nextVersion = "latest"
+=======
+export async function createProject(
+  options: Pick<
+    z.infer<typeof initOptionsSchema>,
+    "cwd" | "name" | "force" | "components" | "template" | "monorepo"
+  >
+) {
+  let template: keyof typeof templates =
+    options.template && options.template in templates
+      ? (options.template as keyof typeof templates)
+      : "next"
+
+  const resolved = resolveTemplate(templates[template], {
+    monorepo: options.monorepo,
+  })
+  let projectName: string = options.name ?? resolved.defaultProjectName
+>>>>>>> shadcn/main
 
   const isRemoteComponent =
     options.components?.length === 1 &&
     !!options.components[0].match(/\/chat\/b\//)
 
+<<<<<<< HEAD
   if (options.components && isRemoteComponent) {
     try {
       const [result] = await fetchRegistry(options.components)
@@ -68,6 +96,11 @@ export async function createProject(
       logger.break()
       handleError(error)
     }
+=======
+  // Force template to next for remote components.
+  if (isRemoteComponent) {
+    template = "next"
+>>>>>>> shadcn/main
   }
 
   if (!options.force) {
@@ -78,12 +111,20 @@ export async function createProject(
         message: `The path ${highlighter.info(
           options.cwd
         )} does not contain a package.json file.\n  Would you like to start a new project?`,
+<<<<<<< HEAD
         choices: [
           { title: "Next.js", value: "next" },
           { title: "Next.js (Monorepo)", value: "next-monorepo" },
           { title: "Vite", value: "vite" },
           { title: "TanStack Start", value: "start" },
         ],
+=======
+        choices: Object.entries(templates).map(([key, t]) => ({
+          title: t.title,
+          value: key,
+          description: t.description,
+        })),
+>>>>>>> shadcn/main
         initial: 0,
       },
       {
@@ -103,11 +144,23 @@ export async function createProject(
     projectName = name ?? projectName
   }
 
+<<<<<<< HEAD
+=======
+  // Re-resolve after potential template change from prompt.
+  const effectiveTemplate = resolveTemplate(templates[template], {
+    monorepo: options.monorepo,
+  })
+
+>>>>>>> shadcn/main
   const packageManager = await getPackageManager(options.cwd, {
     withFallback: true,
   })
 
+<<<<<<< HEAD
   const projectPath = `${options.cwd}/${projectName}`
+=======
+  const projectPath = path.join(options.cwd, projectName)
+>>>>>>> shadcn/main
 
   // Check if path is writable.
   try {
@@ -134,6 +187,7 @@ export async function createProject(
     process.exit(1)
   }
 
+<<<<<<< HEAD
   if (template === TEMPLATES.next) {
     await createNextProject(projectPath, {
       version: nextVersion,
@@ -160,6 +214,13 @@ export async function createProject(
       packageManager,
     })
   }
+=======
+  await effectiveTemplate.scaffold({
+    projectPath,
+    packageManager,
+    cwd: options.cwd,
+  })
+>>>>>>> shadcn/main
 
   return {
     projectPath,
@@ -167,6 +228,7 @@ export async function createProject(
     template,
   }
 }
+<<<<<<< HEAD
 
 async function createNextProject(
   projectPath: string,
@@ -434,3 +496,5 @@ async function createStartProject(
     handleError(error)
   }
 }
+=======
+>>>>>>> shadcn/main

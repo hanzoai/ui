@@ -63,6 +63,11 @@ export function ChartRadarIcons() {
             margin={{
               top: -40,
               bottom: -10,
+<<<<<<< HEAD
+=======
+              left: 0,
+              right: 0,
+>>>>>>> shadcn/main
             }}
           >
             <ChartTooltip
@@ -85,7 +90,11 @@ export function ChartRadarIcons() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+        <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           January - June 2024
         </div>
       </CardFooter>

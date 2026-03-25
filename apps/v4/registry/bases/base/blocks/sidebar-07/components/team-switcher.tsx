@@ -46,7 +46,11 @@ export function TeamSwitcher({
               />
             }
           >
+<<<<<<< HEAD
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+=======
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+>>>>>>> shadcn/main
               {activeTeam.logo}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -69,7 +73,11 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuGroup>
+<<<<<<< HEAD
               <DropdownMenuLabel className="text-muted-foreground text-xs">
+=======
+              <DropdownMenuLabel className="text-xs text-muted-foreground">
+>>>>>>> shadcn/main
                 Teams
               </DropdownMenuLabel>
               {teams.map((team, index) => (
@@ -99,7 +107,11 @@ export function TeamSwitcher({
                     className="size-4"
                   />
                 </div>
+<<<<<<< HEAD
                 <div className="text-muted-foreground font-medium">
+=======
+                <div className="font-medium text-muted-foreground">
+>>>>>>> shadcn/main
                   Add team
                 </div>
               </DropdownMenuItem>

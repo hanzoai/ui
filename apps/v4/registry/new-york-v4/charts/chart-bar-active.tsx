@@ -2,6 +2,10 @@
 
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, Rectangle, XAxis } from "recharts"
+<<<<<<< HEAD
+=======
+import type { BarShapeProps } from "recharts/types/cartesian/Bar"
+>>>>>>> shadcn/main
 
 import {
   Card,
@@ -54,6 +58,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+<<<<<<< HEAD
+=======
+const ACTIVE_INDEX = 2
+
+>>>>>>> shadcn/main
 export function ChartBarActive() {
   return (
     <Card>
@@ -82,9 +91,14 @@ export function ChartBarActive() {
               dataKey="visitors"
               strokeWidth={2}
               radius={8}
+<<<<<<< HEAD
               activeIndex={2}
               activeBar={({ ...props }) => {
                 return (
+=======
+              shape={({ index, ...props }: BarShapeProps) =>
+                index === ACTIVE_INDEX ? (
+>>>>>>> shadcn/main
                   <Rectangle
                     {...props}
                     fillOpacity={0.8}
@@ -92,8 +106,15 @@ export function ChartBarActive() {
                     strokeDasharray={4}
                     strokeDashoffset={4}
                   />
+<<<<<<< HEAD
                 )
               }}
+=======
+                ) : (
+                  <Rectangle {...props} />
+                )
+              }
+>>>>>>> shadcn/main
             />
           </BarChart>
         </ChartContainer>
@@ -102,7 +123,11 @@ export function ChartBarActive() {
         <div className="flex gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

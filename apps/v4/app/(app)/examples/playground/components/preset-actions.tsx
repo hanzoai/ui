@@ -1,9 +1,15 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
+import { Dialog } from "@radix-ui/react-dialog"
+import { MoreHorizontal } from "lucide-react"
+========
 import { MoreHorizontal } from "lucide-react"
 import { toast } from "sonner"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 
+import { toast } from "@/registry/new-york/hooks/use-toast"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,8 +18,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
+} from "@/registry/default/ui/alert-dialog"
+import { Button } from "@/registry/default/ui/button"
+========
 } from "@/registry/new-york-v4/ui/alert-dialog"
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 import {
   Dialog,
   DialogClose,
@@ -22,16 +33,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
+} from "@/registry/default/ui/dialog"
+========
 } from "@/registry/new-york-v4/ui/dialog"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/preset-actions.tsx
+} from "@/registry/new-york/ui/dropdown-menu"
+import { Label } from "@/registry/new-york/ui/label"
+import { Switch } from "@/registry/new-york/ui/switch"
+========
 } from "@/registry/new-york-v4/ui/dropdown-menu"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-actions.tsx
 
 export function PresetActions() {
   const [open, setIsOpen] = React.useState(false)
@@ -70,7 +91,7 @@ export function PresetActions() {
             </DialogDescription>
           </DialogHeader>
           <div className="py-6">
-            <h4 className="text-muted-foreground text-sm">
+            <h4 className="text-sm text-muted-foreground">
               Playground Warnings
             </h4>
             <div className="flex items-start justify-between gap-4 pt-3">
@@ -79,7 +100,7 @@ export function PresetActions() {
                 <span className="font-semibold">
                   Show a warning when content is flagged
                 </span>
-                <span className="text-muted-foreground text-sm">
+                <span className="text-sm text-muted-foreground">
                   A warning will be shown when sexual, hateful, violent or
                   self-harm content is detected.
                 </span>

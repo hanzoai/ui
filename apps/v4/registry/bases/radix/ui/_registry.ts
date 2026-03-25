@@ -10,6 +10,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/accordion",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/accordion-example.tsx",
+        api: "https://www.radix-ui.com/primitives/docs/components/accordion.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "alert",
@@ -20,6 +31,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/alert",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "alert-dialog",
@@ -31,6 +52,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/alert-dialog",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-dialog-example.tsx",
+        api: "https://www.radix-ui.com/primitives/docs/components/alert-dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "aspect-ratio",
@@ -41,6 +73,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/aspect-ratio",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/aspect-ratio-example.tsx",
+        api: "https://www.radix-ui.com/primitives/docs/components/aspect-ratio.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "avatar",
@@ -51,6 +94,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/avatar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/avatar-example.tsx",
+        api: "https://www.radix-ui.com/primitives/docs/components/avatar.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "badge",
@@ -61,6 +115,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/badge",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/badge-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "breadcrumb",
@@ -71,6 +135,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/breadcrumb",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/breadcrumb-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "button",
@@ -81,6 +155,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/button",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "button-group",
@@ -92,6 +176,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/button-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-group-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "calendar",
@@ -104,6 +198,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/calendar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/calendar-example.tsx",
+        api: "https://react-day-picker.js.org",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "card",
@@ -114,6 +219,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/card",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/card-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "carousel",
@@ -126,6 +241,17 @@ export const ui: Registry["items"] = [
     ],
     registryDependencies: ["button"],
     dependencies: ["embla-carousel-react"],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/carousel",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/carousel-example.tsx",
+        api: "https://www.embla-carousel.com/get-started/react",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "chart",
@@ -136,7 +262,18 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
     dependencies: ["recharts@2.15.4"],
+=======
+    dependencies: ["recharts@3.8.0"],
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/chart",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/chart-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "checkbox",
@@ -147,6 +284,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/checkbox",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/checkbox-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/checkbox.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "collapsible",
@@ -157,6 +305,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/collapsible",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/collapsible-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/collapsible.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "combobox",
@@ -169,6 +328,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/combobox",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/combobox-example.tsx",
+        api: "https://base-ui.com/react/components/combobox",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "command",
@@ -181,6 +351,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/command",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/command-example.tsx",
+        api: "https://github.com/dip/cmdk",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "context-menu",
@@ -191,6 +372,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/context-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/context-menu-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/context-menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "dialog",
@@ -202,6 +394,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/dialog",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dialog-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "drawer",
@@ -213,6 +416,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/drawer",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/drawer-example.tsx",
+        api: "https://vaul.emilkowal.ski/getting-started",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "dropdown-menu",
@@ -223,6 +437,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/dropdown-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dropdown-menu-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/dropdown-menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "empty",
@@ -233,6 +458,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/empty",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/empty-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "field",
@@ -244,6 +479,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/field",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/field-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "form",
@@ -258,6 +503,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/hover-card",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/hover-card-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/hover-card.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input",
@@ -268,6 +524,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/input",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input-group",
@@ -279,6 +545,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/input-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-group-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input-otp",
@@ -290,6 +566,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/input-otp",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-otp-example.tsx",
+        api: "https://input-otp.rodz.dev",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "item",
@@ -301,6 +588,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/item",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/item-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "label",
@@ -311,6 +608,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/label",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/label-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/label.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "menubar",
@@ -321,6 +629,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/menubar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/menubar-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/menubar.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "navigation-menu",
@@ -331,6 +650,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/navigation-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/navigation-menu-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/navigation-menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "pagination",
@@ -342,6 +672,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/pagination",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/pagination-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "popover",
@@ -352,6 +692,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/popover",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/popover-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/popover.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "progress",
@@ -362,6 +713,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/progress",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/progress-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/progress.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "radio-group",
@@ -372,6 +734,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/radio-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/radio-group-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/radio-group.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "resizable",
@@ -383,6 +756,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/resizable",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/resizable-example.tsx",
+        api: "https://github.com/bvaughn/react-resizable-panels",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "scroll-area",
@@ -393,6 +777,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/scroll-area",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/scroll-area-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/scroll-area.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "select",
@@ -403,6 +798,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/select",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/select-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/select.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "separator",
@@ -413,6 +819,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/separator",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/separator-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/separator.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sheet",
@@ -424,6 +841,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/sheet",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sheet-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sidebar",
@@ -443,6 +871,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/sidebar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sidebar-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "skeleton",
@@ -453,6 +891,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/skeleton",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/skeleton-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "slider",
@@ -463,6 +911,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/slider",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/slider-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/slider.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sonner",
@@ -474,6 +933,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/sonner",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sonner-example.tsx",
+        api: "https://sonner.emilkowal.ski",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "spinner",
@@ -484,6 +954,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/spinner",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/spinner-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "switch",
@@ -494,6 +974,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/switch",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/switch-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/switch.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "table",
@@ -504,6 +995,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/table",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/table-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "tabs",
@@ -514,6 +1015,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/tabs",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tabs-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/tabs.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "textarea",
@@ -524,6 +1036,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/textarea",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/textarea-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "toggle",
@@ -534,6 +1056,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/toggle",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/toggle.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "toggle-group",
@@ -545,6 +1078,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/toggle-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-group-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/toggle-group.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "tooltip",
@@ -571,6 +1115,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/tooltip",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tooltip-example.tsx",
+        api: "https://www.radix-ui.com/docs/primitives/components/tooltip.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "kbd",
@@ -581,6 +1136,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/kbd",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/kbd-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "native-select",
@@ -591,6 +1156,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/native-select",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/native-select-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "direction",
@@ -601,5 +1176,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/radix/direction",
+        api: "https://www.radix-ui.com/primitives/docs/utilities/direction-provider.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
 ]
