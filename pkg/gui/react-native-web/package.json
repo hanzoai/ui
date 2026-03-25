@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/gui-react-native-web",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "files": [
     "src",
     "types",
