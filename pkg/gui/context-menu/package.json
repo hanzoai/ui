@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/gui-context-menu",
+  "name": @hanzogui/context-menu",
   "version": "2.0.4",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
@@ -36,14 +36,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-create-menu": "2.0.1",
-    "@hanzo/gui-popover": "2.0.1",
-    "@hanzo/gui-use-callback-ref": "2.0.1",
-    "@hanzo/gui-use-controllable-state": "2.0.1",
-    "@hanzo/gui-web": "2.0.1"
+    @hanzogui/create-menu": "2.0.1",
+    @hanzogui/popover": "2.0.1",
+    @hanzogui/use-callback-ref": "2.0.1",
+    @hanzogui/use-controllable-state": "2.0.1",
+    @hanzogui/web": "2.0.1"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.1",
+    @hanzogui/build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {

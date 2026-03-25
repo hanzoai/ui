@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/gui-focus-guard",
+  "name": @hanzogui/focus-guard",
   "version": "2.0.4",
   "source": "src/index.ts",
   "type": "module",
@@ -33,11 +33,11 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-compose-refs": "2.0.1",
-    "@hanzo/gui-use-event": "2.0.1"
+    @hanzogui/compose-refs": "2.0.1",
+    @hanzogui/use-event": "2.0.1"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.1",
+    @hanzogui/build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
