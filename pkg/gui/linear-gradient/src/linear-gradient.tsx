@@ -6,7 +6,7 @@
  * Copyright (c) 2015-present 650 Industries, Inc. (aka Expo)
  */
 
-import { normalizeColor } from '@hanzogui/core'
+import { normalizeColor } from '@hanzo/gui-core'
 import type {
   LinearGradientPoint,
   LinearGradientProps,

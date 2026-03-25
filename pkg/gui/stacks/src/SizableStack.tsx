@@ -1,6 +1,6 @@
-import { styled } from '@hanzogui/core'
-import { getButtonSized } from '@hanzogui/get-button-sized'
-import type { GetProps } from '@hanzogui/web'
+import { styled } from '@hanzo/gui-core'
+import { getButtonSized } from '@hanzo/gui-get-button-sized'
+import type { GetProps } from '@hanzo/gui-web'
 import { ThemeableStack } from './ThemeableStack'
 import { bordered, circular, elevate } from './variants'
 

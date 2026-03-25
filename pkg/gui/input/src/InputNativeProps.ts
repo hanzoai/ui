@@ -1,4 +1,4 @@
-import type { ColorTokens } from '@hanzogui/web'
+import type { ColorTokens } from '@hanzo/gui-web'
 
 /**
  * iOS-specific props for Input/TextArea

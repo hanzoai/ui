@@ -1,5 +1,5 @@
-import type { SizeTokens } from '@hanzogui/core'
-import { createStyledContext } from '@hanzogui/core'
+import type { SizeTokens } from '@hanzo/gui-core'
+import { createStyledContext } from '@hanzo/gui-core'
 
 export const RadioGroupStyledContext = createStyledContext(
   {

@@ -1,5 +1,5 @@
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { usePrevious } from '@hanzogui/use-previous'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { usePrevious } from '@hanzo/gui-use-previous'
 import * as React from 'react'
 
 /* -----------------------------------------------------------------------------------------------*/

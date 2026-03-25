@@ -1,4 +1,4 @@
-import { YStack } from '@hanzogui/stacks'
+import { YStack } from '@hanzo/gui-stacks'
 import type { FunctionComponent } from 'react'
 import { useEffect, useRef } from 'react'
 import { View } from 'react-native'

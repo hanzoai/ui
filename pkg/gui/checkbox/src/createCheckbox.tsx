@@ -1,9 +1,9 @@
 import type {
   CheckedState,
   CheckboxExtraProps as HeadlessCheckboxExtraProps,
-} from '@hanzogui/checkbox-headless'
-import { isIndeterminate, useCheckbox } from '@hanzogui/checkbox-headless'
-import type { GetProps, NativeValue, SizeTokens, ViewProps } from '@hanzogui/core'
+} from '@hanzo/gui-checkbox-headless'
+import { isIndeterminate, useCheckbox } from '@hanzo/gui-checkbox-headless'
+import type { GetProps, NativeValue, SizeTokens, ViewProps } from '@hanzo/gui-core'
 import {
   getVariableValue,
   isWeb,
@@ -11,12 +11,12 @@ import {
   useProps,
   useTheme,
   withStaticProperties,
-} from '@hanzogui/core'
-import { registerFocusable } from '@hanzogui/focusable'
-import { getFontSize } from '@hanzogui/font-size'
-import { getSize } from '@hanzogui/get-token'
-import { useGetThemedIcon } from '@hanzogui/helpers'
-import { useControllableState } from '@hanzogui/use-controllable-state'
+} from '@hanzo/gui-core'
+import { registerFocusable } from '@hanzo/gui-focusable'
+import { getFontSize } from '@hanzo/gui-font-size'
+import { getSize } from '@hanzo/gui-get-token'
+import { useGetThemedIcon } from '@hanzo/gui-helpers'
+import { useControllableState } from '@hanzo/gui-use-controllable-state'
 import React, { useMemo } from 'react'
 
 import { CheckboxFrame, CheckboxIndicatorFrame } from './Checkbox'
