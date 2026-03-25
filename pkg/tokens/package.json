@@ -42,10 +42,10 @@
       "import": "./dist/tailwind.mjs",
       "require": "./dist/tailwind.js"
     },
-    "./tamagui": {
-      "types": "./dist/tamagui.d.ts",
-      "import": "./dist/tamagui.mjs",
-      "require": "./dist/tamagui.js"
+    "./gui": {
+      "types": "./dist/gui.d.ts",
+      "import": "./dist/gui.mjs",
+      "require": "./dist/gui.js"
     }
   },
   "files": [
