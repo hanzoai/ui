@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   release:
-    if: ${{ github.repository_owner == 'hanzoai-ui' }}
+    if: ${{ github.repository_owner == 'shadcn-ui' }}
     name: Create a PR for release workflow
     runs-on: ubuntu-latest
     steps:
