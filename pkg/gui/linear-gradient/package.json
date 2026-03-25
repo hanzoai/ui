@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/gui-linear-gradient",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "source": "src/index.ts",
   "files": [
     "src",

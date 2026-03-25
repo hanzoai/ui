@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/gui-adapt",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "files": [
     "src",
     "types",
