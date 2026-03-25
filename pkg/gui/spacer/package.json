@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/gui-spacer",
+  "name": @hanzogui/spacer",
   "version": "2.0.4",
   "files": [
     "src",
@@ -33,10 +33,10 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzo/gui-web": "2.0.1"
+    @hanzogui/web": "2.0.1"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.1",
+    @hanzogui/build": "2.0.1",
     "react": ">=19",
     "react-native": "0.83.2"
   },
