@@ -1,8 +1,8 @@
 // adapted from radix-ui popper
 import { flushSync } from 'react-dom'
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
-import type { SizeTokens, GuiElement, ViewProps } from '@hanzogui/core'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import type { SizeTokens, GuiElement, ViewProps } from '@hanzo/gui-core'
 import {
   LayoutMeasurementController,
   View as GuiView,
@@ -10,9 +10,9 @@ import {
   getVariableValue,
   registerLayoutNode,
   styled,
-} from '@hanzogui/core'
-import type { PopupTriggerMap } from '@hanzogui/floating'
-import { FloatingOverrideContext } from '@hanzogui/floating'
+} from '@hanzo/gui-core'
+import type { PopupTriggerMap } from '@hanzo/gui-floating'
+import { FloatingOverrideContext } from '@hanzo/gui-floating'
 import type {
   Coords,
   Middleware,
@@ -23,7 +23,7 @@ import type {
   SizeOptions,
   Strategy,
   UseFloatingReturn,
-} from '@hanzogui/floating'
+} from '@hanzo/gui-floating'
 import {
   arrow,
   flip,
@@ -33,11 +33,11 @@ import {
   shift,
   size as sizeMiddleware,
   useFloating,
-} from '@hanzogui/floating'
-import { getSpace } from '@hanzogui/get-token'
-import type { SizableStackProps, YStackProps } from '@hanzogui/stacks'
-import { YStack } from '@hanzogui/stacks'
-import { startTransition } from '@hanzogui/start-transition'
+} from '@hanzo/gui-floating'
+import { getSpace } from '@hanzo/gui-get-token'
+import type { SizableStackProps, YStackProps } from '@hanzo/gui-stacks'
+import { YStack } from '@hanzo/gui-stacks'
+import { startTransition } from '@hanzo/gui-start-transition'
 import * as React from 'react'
 import { Keyboard, useWindowDimensions } from 'react-native'
 

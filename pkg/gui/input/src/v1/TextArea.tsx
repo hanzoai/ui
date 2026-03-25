@@ -1,9 +1,9 @@
-import { styled } from '@hanzogui/web'
+import { styled } from '@hanzo/gui-web'
 import { Input } from './Input'
 import { defaultStyles, textAreaSizeVariant } from '../shared'
 
 /**
- * @deprecated Use the new TextArea from '@hanzogui/input' instead
+ * @deprecated Use the new TextArea from '@hanzo/gui-input' instead
  * @summary A text area is a multi-line input field that allows users to enter text.
  * @see — Docs https://gui.dev/ui/inputs#textarea
  */

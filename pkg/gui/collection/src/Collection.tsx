@@ -1,7 +1,7 @@
-import { useComposedRefs } from '@hanzogui/compose-refs'
-import { isWeb } from '@hanzogui/constants'
-import type { GuiElement } from '@hanzogui/core'
-import { Slot, createStyledContext } from '@hanzogui/core'
+import { useComposedRefs } from '@hanzo/gui-compose-refs'
+import { isWeb } from '@hanzo/gui-constants'
+import type { GuiElement } from '@hanzo/gui-core'
+import { Slot, createStyledContext } from '@hanzo/gui-core'
 import React from 'react'
 
 type SlotProps = React.ComponentPropsWithoutRef<typeof Slot>

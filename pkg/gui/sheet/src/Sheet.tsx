@@ -1,5 +1,5 @@
-import { styled } from '@hanzogui/core'
-import { XStack, YStack } from '@hanzogui/stacks'
+import { styled } from '@hanzo/gui-core'
+import { XStack, YStack } from '@hanzo/gui-stacks'
 
 import { SHEET_HANDLE_NAME, SHEET_NAME, SHEET_OVERLAY_NAME } from './constants'
 import { createSheet } from './createSheet'

@@ -1,4 +1,4 @@
-import { isWeb } from '@hanzogui/web'
+import { isWeb } from '@hanzo/gui-web'
 
 type GetProps<T> = T extends React.ComponentType<infer P> ? P : never
 

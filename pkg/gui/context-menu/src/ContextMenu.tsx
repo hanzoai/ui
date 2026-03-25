@@ -2,9 +2,9 @@ import type {
   CreateBaseMenuProps,
   NativeMenuItemIconProps,
   NativeMenuSubTriggerProps,
-} from '@hanzogui/create-menu'
-import { createNativeMenu, withNativeMenu } from '@hanzogui/create-menu'
-import { withStaticProperties } from '@hanzogui/web'
+} from '@hanzo/gui-create-menu'
+import { createNativeMenu, withNativeMenu } from '@hanzo/gui-create-menu'
+import { withStaticProperties } from '@hanzo/gui-web'
 import React from 'react'
 
 import {

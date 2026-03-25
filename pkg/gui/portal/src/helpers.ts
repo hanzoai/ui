@@ -1,4 +1,4 @@
-import { getTokenValue, type ViewProps } from '@hanzogui/web'
+import { getTokenValue, type ViewProps } from '@hanzo/gui-web'
 import type { PortalProps } from './PortalProps'
 
 export const getStackedZIndexProps = (propsIn: PortalProps) => {

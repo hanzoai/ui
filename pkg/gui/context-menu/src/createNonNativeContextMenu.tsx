@@ -1,6 +1,6 @@
-import type BaseMenuTypes from '@hanzogui/create-menu'
-import { createBaseMenu, type CreateBaseMenuProps } from '@hanzogui/create-menu'
-import { useControllableState } from '@hanzogui/use-controllable-state'
+import type BaseMenuTypes from '@hanzo/gui-create-menu'
+import { createBaseMenu, type CreateBaseMenuProps } from '@hanzo/gui-create-menu'
+import { useControllableState } from '@hanzo/gui-use-controllable-state'
 import {
   composeEventHandlers,
   composeRefs,
@@ -12,7 +12,7 @@ import {
   View,
   type ViewProps,
   withStaticProperties,
-} from '@hanzogui/web'
+} from '@hanzo/gui-web'
 import React, { useId } from 'react'
 
 type Direction = 'ltr' | 'rtl'

@@ -1,6 +1,6 @@
 {
-  "name": "@hanzogui/v2-toast",
-  "version": "2.0.0",
+  "name": "@hanzo/gui-v2-toast",
+  "version": "2.0.1",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,25 +36,25 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/animate-presence": "2.0.0",
-    "@hanzogui/collection": "2.0.0",
-    "@hanzogui/compose-refs": "2.0.0-rc.29",
-    "@hanzogui/constants": "2.0.0-rc.29",
-    "@hanzogui/core": "2.0.0-rc.29",
-    "@hanzogui/create-context": "2.0.0-rc.29",
-    "@hanzogui/dismissable": "2.0.0",
-    "@hanzogui/helpers": "2.0.0-rc.29",
-    "@hanzogui/native": "2.0.0-rc.29",
-    "@hanzogui/polyfill-dev": "2.0.0-rc.29",
-    "@hanzogui/portal": "2.0.0",
-    "@hanzogui/stacks": "2.0.0",
-    "@hanzogui/start-transition": "2.0.0-rc.29",
-    "@hanzogui/text": "2.0.0",
-    "@hanzogui/use-controllable-state": "2.0.0-rc.29",
-    "@hanzogui/visually-hidden": "2.0.0"
+    "@hanzo/gui-animate-presence": "2.0.1",
+    "@hanzo/gui-collection": "2.0.1",
+    "@hanzo/gui-compose-refs": "2.0.1",
+    "@hanzo/gui-constants": "2.0.1",
+    "@hanzo/gui-core": "2.0.1",
+    "@hanzo/gui-create-context": "2.0.1",
+    "@hanzo/gui-dismissable": "2.0.1",
+    "@hanzo/gui-helpers": "2.0.1",
+    "@hanzo/gui-native": "2.0.1",
+    "@hanzo/gui-polyfill-dev": "2.0.1",
+    "@hanzo/gui-portal": "2.0.1",
+    "@hanzo/gui-stacks": "2.0.1",
+    "@hanzo/gui-start-transition": "2.0.1",
+    "@hanzo/gui-text": "2.0.1",
+    "@hanzo/gui-use-controllable-state": "2.0.1",
+    "@hanzo/gui-visually-hidden": "2.0.1"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.0-rc.29",
+    "@hanzo/gui-build": "2.0.1",
     "react": ">=19",
     "react-native": "0.83.2"
   },

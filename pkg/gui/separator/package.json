@@ -1,6 +1,6 @@
 {
-  "name": "@hanzogui/separator",
-  "version": "2.0.0",
+  "name": "@hanzo/gui-separator",
+  "version": "2.0.1",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,11 +36,11 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/constants": "2.0.0-rc.29",
-    "@hanzogui/core": "2.0.0-rc.29"
+    "@hanzo/gui-constants": "2.0.1",
+    "@hanzo/gui-core": "2.0.1"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.0-rc.29",
+    "@hanzo/gui-build": "2.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
