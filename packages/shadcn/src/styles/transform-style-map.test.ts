@@ -657,7 +657,11 @@ function Menu({ className, ...props }: React.ComponentProps<"div">) {
 
       function Menu({ className, ...props }: React.ComponentProps<"div">) {
         return (
+<<<<<<< HEAD
           <div className={cn("z-50 origin-top cn-menu-target", className)} {...props} />
+=======
+          <div className={cn("cn-menu-target", className)} {...props} />
+>>>>>>> shadcn/main
         )
       }
       "

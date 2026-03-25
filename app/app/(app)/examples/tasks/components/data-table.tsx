@@ -2,8 +2,11 @@
 
 import * as React from "react"
 import {
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table.tsx
   ColumnDef,
   ColumnFiltersState,
+========
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table.tsx
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -13,7 +16,14 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table.tsx
   VisibilityState,
+========
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table.tsx
 } from "@tanstack/react-table"
 
 import {
@@ -23,7 +33,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table.tsx
 } from "@/registry/default/ui/table"
+========
+} from "@/registry/new-york-v4/ui/table"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table.tsx
 
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"

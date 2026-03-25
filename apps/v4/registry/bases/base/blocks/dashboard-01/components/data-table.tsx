@@ -115,7 +115,11 @@ function DragHandle({ id }: { id: number }) {
       {...listeners}
       variant="ghost"
       size="icon"
+<<<<<<< HEAD
       className="text-muted-foreground size-7 hover:bg-transparent"
+=======
+      className="size-7 text-muted-foreground hover:bg-transparent"
+>>>>>>> shadcn/main
     >
       <IconPlaceholder
         lucide="GripVerticalIcon"
@@ -123,7 +127,11 @@ function DragHandle({ id }: { id: number }) {
         hugeicons="DragDropVerticalIcon"
         phosphor="DotsSixVerticalIcon"
         remixicon="RiDraggable"
+<<<<<<< HEAD
         className="text-muted-foreground size-3"
+=======
+        className="size-3 text-muted-foreground"
+>>>>>>> shadcn/main
       />
       <span className="sr-only">Drag to reorder</span>
     </Button>
@@ -175,7 +183,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     header: "Section Type",
     cell: ({ row }) => (
       <div className="w-32">
+<<<<<<< HEAD
         <Badge variant="outline" className="text-muted-foreground px-1.5">
+=======
+        <Badge variant="outline" className="px-1.5 text-muted-foreground">
+>>>>>>> shadcn/main
           {row.original.type}
         </Badge>
       </div>
@@ -185,7 +197,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
+<<<<<<< HEAD
       <Badge variant="outline" className="text-muted-foreground px-1.5">
+=======
+      <Badge variant="outline" className="px-1.5 text-muted-foreground">
+>>>>>>> shadcn/main
         {row.original.status === "Done" ? (
           <IconPlaceholder
             lucide="CircleCheckIcon"
@@ -226,7 +242,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           Target
         </Label>
         <Input
+<<<<<<< HEAD
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+=======
+          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:hover:bg-input/30 dark:focus-visible:bg-input/30"
+>>>>>>> shadcn/main
           defaultValue={row.original.target}
           id={`${row.original.id}-target`}
         />
@@ -251,7 +271,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           Limit
         </Label>
         <Input
+<<<<<<< HEAD
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
+=======
+          className="h-8 w-16 border-transparent bg-transparent text-right shadow-none hover:bg-input/30 focus-visible:border focus-visible:bg-background dark:bg-transparent dark:hover:bg-input/30 dark:focus-visible:bg-input/30"
+>>>>>>> shadcn/main
           defaultValue={row.original.limit}
           id={`${row.original.id}-limit`}
         />
@@ -305,7 +329,11 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
           render={
             <Button
               variant="ghost"
+<<<<<<< HEAD
               className="data-open:bg-muted text-muted-foreground flex size-8"
+=======
+              className="flex size-8 text-muted-foreground data-open:bg-muted"
+>>>>>>> shadcn/main
               size="icon"
             />
           }
@@ -448,7 +476,11 @@ export function DataTable({
             </SelectGroup>
           </SelectContent>
         </Select>
+<<<<<<< HEAD
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
+=======
+        <TabsList className="hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:bg-muted-foreground/30 **:data-[slot=badge]:px-1 @4xl/main:flex">
+>>>>>>> shadcn/main
           <TabsTrigger value="outline">Outline</TabsTrigger>
           <TabsTrigger value="past-performance">
             Past Performance <Badge variant="secondary">3</Badge>
@@ -530,7 +562,11 @@ export function DataTable({
             id={sortableId}
           >
             <Table>
+<<<<<<< HEAD
               <TableHeader className="bg-muted sticky top-0 z-10">
+=======
+              <TableHeader className="sticky top-0 z-10 bg-muted">
+>>>>>>> shadcn/main
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
@@ -573,7 +609,11 @@ export function DataTable({
           </DndContext>
         </div>
         <div className="flex items-center justify-between px-4">
+<<<<<<< HEAD
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+=======
+          <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
+>>>>>>> shadcn/main
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>
@@ -745,7 +785,11 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
   return (
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
+<<<<<<< HEAD
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
+=======
+        <Button variant="link" className="w-fit px-0 text-left text-foreground">
+>>>>>>> shadcn/main
           {item.header}
         </Button>
       </DrawerTrigger>

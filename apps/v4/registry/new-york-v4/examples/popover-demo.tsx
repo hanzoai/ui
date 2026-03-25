@@ -17,7 +17,11 @@ export default function PopoverDemo() {
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="leading-none font-medium">Dimensions</h4>
+<<<<<<< HEAD
             <p className="text-muted-foreground text-sm">
+=======
+            <p className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
               Set the dimensions for the layer.
             </p>
           </div>

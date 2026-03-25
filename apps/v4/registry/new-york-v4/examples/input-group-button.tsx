@@ -59,7 +59,11 @@ export default function InputGroupButtonExample() {
             <p>You should not enter any sensitive information on this site.</p>
           </PopoverContent>
         </Popover>
+<<<<<<< HEAD
         <InputGroupAddon className="text-muted-foreground pl-1.5">
+=======
+        <InputGroupAddon className="pl-1.5 text-muted-foreground">
+>>>>>>> shadcn/main
           https://
         </InputGroupAddon>
         <InputGroupInput id="input-secure-19" />

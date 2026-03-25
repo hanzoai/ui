@@ -1,5 +1,5 @@
 {
-  "name": "@hanzogui/react-native-web",
+  "name": "@hanzo/gui-react-native-web",
   "version": "2.0.0",
   "files": [
     "src",
@@ -33,12 +33,12 @@
     "check-circular-deps": "npx madge --circular ./src/index.ts"
   },
   "dependencies": {
-    "@hanzogui/react-native-use-pressable": "2.0.0-rc.29",
-    "@hanzogui/react-native-use-responder-events": "2.0.0-rc.29",
-    "@hanzogui/web": "2.0.0-rc.29"
+    "@hanzo/gui-react-native-use-pressable": "2.0.0-rc.29",
+    "@hanzo/gui-react-native-use-responder-events": "2.0.0-rc.29",
+    "@hanzo/gui-web": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.0-rc.29",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19"
   },
   "peerDependencies": {

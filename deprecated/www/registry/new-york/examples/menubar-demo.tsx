@@ -1,7 +1,10 @@
+import { HelpCircleIcon, SettingsIcon, Trash2Icon } from "lucide-react"
+
 import {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
+  MenubarGroup,
   MenubarItem,
   MenubarMenu,
   MenubarRadioGroup,
@@ -12,9 +15,9 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/registry/new-york/ui/menubar"
+} from "@/registry/new-york-v4/ui/menubar"
 
-export default function MenubarDemo() {
+export function MenubarDemo() {
   return (
     <Menubar>
       <MenubarMenu>
@@ -100,6 +103,26 @@ export default function MenubarDemo() {
           <MenubarItem inset>Edit...</MenubarItem>
           <MenubarSeparator />
           <MenubarItem inset>Add Profile...</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>More</MenubarTrigger>
+        <MenubarContent>
+          <MenubarGroup>
+            <MenubarItem>
+              <SettingsIcon />
+              Settings
+            </MenubarItem>
+            <MenubarItem>
+              <HelpCircleIcon />
+              Help
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem variant="destructive">
+              <Trash2Icon />
+              Delete
+            </MenubarItem>
+          </MenubarGroup>
         </MenubarContent>
       </MenubarMenu>
     </Menubar>

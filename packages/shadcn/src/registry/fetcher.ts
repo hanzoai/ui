@@ -6,6 +6,10 @@ import { getRegistryHeadersFromContext } from "@/src/registry/context"
 import {
   RegistryFetchError,
   RegistryForbiddenError,
+<<<<<<< HEAD
+=======
+  RegistryGoneError,
+>>>>>>> shadcn/main
   RegistryLocalFileError,
   RegistryNotFoundError,
   RegistryParseError,
@@ -93,6 +97,13 @@ export async function fetchRegistry(
               throw new RegistryNotFoundError(url, messageFromServer)
             }
 
+<<<<<<< HEAD
+=======
+            if (response.status === 410) {
+              throw new RegistryGoneError(url, messageFromServer)
+            }
+
+>>>>>>> shadcn/main
             if (response.status === 403) {
               throw new RegistryForbiddenError(url, messageFromServer)
             }

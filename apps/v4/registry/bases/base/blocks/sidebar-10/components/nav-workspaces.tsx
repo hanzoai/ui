@@ -45,7 +45,11 @@ export function NavWorkspaces({
                 </SidebarMenuButton>
                 <SidebarMenuAction
                   render={<CollapsibleTrigger />}
+<<<<<<< HEAD
                   className="bg-sidebar-accent text-sidebar-accent-foreground left-2 data-open:rotate-90"
+=======
+                  className="left-2 bg-sidebar-accent text-sidebar-accent-foreground data-open:rotate-90"
+>>>>>>> shadcn/main
                   showOnHover
                 >
                   <IconPlaceholder

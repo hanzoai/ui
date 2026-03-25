@@ -1,4 +1,4 @@
-import { Checkbox } from "@/registry/default/ui/checkbox"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 
 export default function CheckboxDisabled() {
   return (
@@ -6,7 +6,7 @@ export default function CheckboxDisabled() {
       <Checkbox id="terms2" disabled />
       <label
         htmlFor="terms2"
-        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         Accept terms and conditions
       </label>

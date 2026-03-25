@@ -4,9 +4,12 @@ import { configDefaults, defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
+<<<<<<< HEAD
     globals: true,
     environment: "jsdom",
     setupFiles: ["./vitest.setup.ts"],
+=======
+>>>>>>> shadcn/main
     exclude: [
       ...configDefaults.exclude,
       "**/node_modules/**",
@@ -16,7 +19,10 @@ export default defineConfig({
     ],
   },
   plugins: [
+<<<<<<< HEAD
     react(),
+=======
+>>>>>>> shadcn/main
     tsconfigPaths({
       ignoreConfigErrors: true,
     }),

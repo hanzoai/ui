@@ -1,6 +1,10 @@
 import * as fs from "fs/promises"
 import * as path from "path"
 import { preFlightBuild } from "@/src/preflights/preflight-build"
+<<<<<<< HEAD
+=======
+import { SHADCN_URL } from "@/src/registry/constants"
+>>>>>>> shadcn/main
 import { registryItemSchema, registrySchema } from "@/src/schema"
 import { handleError } from "@/src/utils/handle-error"
 import { highlighter } from "@/src/utils/highlighter"

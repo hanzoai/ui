@@ -1,10 +1,18 @@
 "use client"
 
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/tasks/components/data-table-toolbar.tsx
 import { Table } from "@tanstack/react-table"
 import { X } from "lucide-react"
 
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
+========
+import { type Table } from "@tanstack/react-table"
+import { X } from "lucide-react"
+
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Input } from "@/registry/new-york-v4/ui/input"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-toolbar.tsx
 import { DataTableViewOptions } from "@/app/(app)/examples/tasks/components/data-table-view-options"
 
 import { priorities, statuses } from "../data/data"

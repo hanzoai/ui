@@ -51,7 +51,10 @@
       "hex": "#cbd5e1",
       "rgb": "rgb(203,213,225)",
       "hsl": "hsl(212.7,26.8%,83.9%)",
+<<<<<<<< HEAD:deprecated/www/public/registry/colors/index.json
+========
       "oklch": "oklch(0.87,0.02,253)",
+>>>>>>>> shadcn/main:apps/v4/public/r/colors/index.json
       "rgbChannel": "203 213 225",
       "hslChannel": "212.7 26.8% 83.9%"
     },

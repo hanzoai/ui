@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/code-viewer.tsx
+import { Button } from "@/registry/default/ui/button"
+========
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/code-viewer.tsx
 import {
   Dialog,
   DialogContent,
@@ -6,7 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/code-viewer.tsx
+} from "@/registry/default/ui/dialog"
+========
 } from "@/registry/new-york-v4/ui/dialog"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/code-viewer.tsx
 
 export function CodeViewer() {
   return (
@@ -76,7 +84,7 @@ export function CodeViewer() {
             </pre>
           </div>
           <div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               Your API Key can be found here. You should use environment
               variables or a secret management tool to expose your key to your
               applications.

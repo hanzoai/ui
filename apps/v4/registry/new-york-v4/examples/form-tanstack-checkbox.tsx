@@ -62,7 +62,11 @@ export default function FormTanstackCheckbox() {
     onSubmit: async ({ value }) => {
       toast("You submitted the following values:", {
         description: (
+<<<<<<< HEAD
           <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
+=======
+          <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+>>>>>>> shadcn/main
             <code>{JSON.stringify(value, null, 2)}</code>
           </pre>
         ),
@@ -98,6 +102,7 @@ export default function FormTanstackCheckbox() {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
+<<<<<<< HEAD
                   <FieldSet>
                     <FieldLegend variant="label">Responses</FieldLegend>
                     <FieldDescription>
@@ -127,6 +132,42 @@ export default function FormTanstackCheckbox() {
                       <FieldError errors={field.state.meta.errors} />
                     )}
                   </FieldSet>
+=======
+                  <div>
+                    <FieldSet>
+                      <FieldLegend variant="label">Responses</FieldLegend>
+                      <FieldDescription>
+                        Get notified for requests that take time, like research
+                        or image generation.
+                      </FieldDescription>
+                      <FieldGroup data-slot="checkbox-group">
+                        <Field
+                          orientation="horizontal"
+                          data-invalid={isInvalid}
+                        >
+                          <Checkbox
+                            id="form-tanstack-checkbox-responses"
+                            name={field.name}
+                            checked={field.state.value}
+                            onCheckedChange={(checked) =>
+                              field.handleChange(checked === true)
+                            }
+                            disabled
+                          />
+                          <FieldLabel
+                            htmlFor="form-tanstack-checkbox-responses"
+                            className="font-normal"
+                          >
+                            Push notifications
+                          </FieldLabel>
+                        </Field>
+                      </FieldGroup>
+                    </FieldSet>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </div>
+>>>>>>> shadcn/main
                 )
               }}
             />
@@ -138,6 +179,7 @@ export default function FormTanstackCheckbox() {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
+<<<<<<< HEAD
                   <FieldSet>
                     <FieldLegend variant="label">Tasks</FieldLegend>
                     <FieldDescription>
@@ -179,6 +221,54 @@ export default function FormTanstackCheckbox() {
                       <FieldError errors={field.state.meta.errors} />
                     )}
                   </FieldSet>
+=======
+                  <FieldGroup>
+                    <FieldSet data-invalid={isInvalid}>
+                      <FieldLegend variant="label">Tasks</FieldLegend>
+                      <FieldDescription>
+                        Get notified when tasks you&apos;ve created have
+                        updates.
+                      </FieldDescription>
+                      <FieldGroup data-slot="checkbox-group">
+                        {tasks.map((task) => (
+                          <Field
+                            key={task.id}
+                            orientation="horizontal"
+                            data-invalid={isInvalid}
+                          >
+                            <Checkbox
+                              id={`form-tanstack-checkbox-${task.id}`}
+                              name={field.name}
+                              aria-invalid={isInvalid}
+                              checked={field.state.value.includes(task.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  field.pushValue(task.id)
+                                } else {
+                                  const index = field.state.value.indexOf(
+                                    task.id
+                                  )
+                                  if (index > -1) {
+                                    field.removeValue(index)
+                                  }
+                                }
+                              }}
+                            />
+                            <FieldLabel
+                              htmlFor={`form-tanstack-checkbox-${task.id}`}
+                              className="font-normal"
+                            >
+                              {task.label}
+                            </FieldLabel>
+                          </Field>
+                        ))}
+                      </FieldGroup>
+                    </FieldSet>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
+                  </FieldGroup>
+>>>>>>> shadcn/main
                 )
               }}
             />

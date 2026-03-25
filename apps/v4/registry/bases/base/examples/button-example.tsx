@@ -1,8 +1,17 @@
+<<<<<<< HEAD
+=======
+"use client"
+
+>>>>>>> shadcn/main
 import {
   Example,
   ExampleWrapper,
 } from "@/registry/bases/base/components/example"
+<<<<<<< HEAD
 import { Button } from "@/registry/bases/base/ui/button"
+=======
+import { Button, buttonVariants } from "@/registry/bases/base/ui/button"
+>>>>>>> shadcn/main
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
 
 export default function ButtonExample() {
@@ -906,9 +915,15 @@ function ButtonExamples() {
             />
           </Button>
         </div>
+<<<<<<< HEAD
         <Button render={<a href="#" />} nativeButton={false}>
           Link
         </Button>
+=======
+        <a href="#" className={buttonVariants()}>
+          Link
+        </a>
+>>>>>>> shadcn/main
       </div>
     </Example>
   )

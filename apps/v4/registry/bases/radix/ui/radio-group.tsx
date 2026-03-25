@@ -4,7 +4,10 @@ import * as React from "react"
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
 
 import { cn } from "@/registry/bases/radix/lib/utils"
+<<<<<<< HEAD
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+=======
+>>>>>>> shadcn/main
 
 function RadioGroup({
   className,
@@ -36,6 +39,7 @@ function RadioGroupItem({
         data-slot="radio-group-indicator"
         className="cn-radio-group-indicator"
       >
+<<<<<<< HEAD
         <IconPlaceholder
           lucide="CircleIcon"
           tabler="IconCircle"
@@ -44,6 +48,9 @@ function RadioGroupItem({
           remixicon="RiCircleLine"
           className="cn-radio-group-indicator-icon"
         />
+=======
+        <span className="cn-radio-group-indicator-icon" />
+>>>>>>> shadcn/main
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

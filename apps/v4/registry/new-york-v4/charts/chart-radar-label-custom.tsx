@@ -69,13 +69,23 @@ export function ChartRadarLabelCustom() {
             />
             <PolarAngleAxis
               dataKey="month"
+<<<<<<< HEAD
               tick={({ x, y, textAnchor, value, index, ...props }) => {
                 const data = chartData[index]
+=======
+              tick={({ x, y, textAnchor, index, ...props }) => {
+                const data = chartData[index]
+                const yValue = typeof y === "number" ? y : 0
+>>>>>>> shadcn/main
 
                 return (
                   <text
                     x={x}
+<<<<<<< HEAD
                     y={index === 0 ? y - 10 : y}
+=======
+                    y={yValue + (index === 0 ? -10 : 0)}
+>>>>>>> shadcn/main
                     textAnchor={textAnchor}
                     fontSize={13}
                     fontWeight={500}
@@ -111,7 +121,11 @@ export function ChartRadarLabelCustom() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+        <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           January - June 2024
         </div>
       </CardFooter>

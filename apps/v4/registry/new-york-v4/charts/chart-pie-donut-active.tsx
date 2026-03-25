@@ -2,7 +2,11 @@
 
 import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart, Sector } from "recharts"
+<<<<<<< HEAD
 import { type PieSectorDataItem } from "recharts/types/polar/Pie"
+=======
+import type { PieSectorShapeProps } from "recharts/types/polar/Pie"
+>>>>>>> shadcn/main
 
 import {
   Card,
@@ -55,6 +59,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+<<<<<<< HEAD
+=======
+const ACTIVE_INDEX = 0
+
+>>>>>>> shadcn/main
 export function ChartPieDonutActive() {
   return (
     <Card className="flex flex-col">
@@ -78,6 +87,7 @@ export function ChartPieDonutActive() {
               nameKey="browser"
               innerRadius={60}
               strokeWidth={5}
+<<<<<<< HEAD
               activeIndex={0}
               activeShape={({
                 outerRadius = 0,
@@ -85,6 +95,19 @@ export function ChartPieDonutActive() {
               }: PieSectorDataItem) => (
                 <Sector {...props} outerRadius={outerRadius + 10} />
               )}
+=======
+              shape={({
+                index,
+                outerRadius = 0,
+                ...props
+              }: PieSectorShapeProps) =>
+                index === ACTIVE_INDEX ? (
+                  <Sector {...props} outerRadius={outerRadius + 10} />
+                ) : (
+                  <Sector {...props} outerRadius={outerRadius} />
+                )
+              }
+>>>>>>> shadcn/main
             />
           </PieChart>
         </ChartContainer>
@@ -93,7 +116,11 @@ export function ChartPieDonutActive() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

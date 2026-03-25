@@ -18,9 +18,13 @@ export default function KbdTooltip() {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
+<<<<<<< HEAD
             <div className="flex items-center gap-2">
               Save Changes <Kbd>S</Kbd>
             </div>
+=======
+            Save Changes <Kbd>S</Kbd>
+>>>>>>> shadcn/main
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -30,6 +34,7 @@ export default function KbdTooltip() {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
+<<<<<<< HEAD
             <div className="flex items-center gap-2">
               Print Document{" "}
               <KbdGroup>
@@ -37,6 +42,13 @@ export default function KbdTooltip() {
                 <Kbd>P</Kbd>
               </KbdGroup>
             </div>
+=======
+            Print Document{" "}
+            <KbdGroup>
+              <Kbd>Ctrl</Kbd>
+              <Kbd>P</Kbd>
+            </KbdGroup>
+>>>>>>> shadcn/main
           </TooltipContent>
         </Tooltip>
       </ButtonGroup>

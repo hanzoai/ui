@@ -1,7 +1,17 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
+<<<<<<< HEAD
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
+=======
+import {
+  Label,
+  PolarGrid,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+} from "recharts"
+>>>>>>> shadcn/main
 
 import {
   Card,
@@ -20,7 +30,11 @@ import {
 
 export const description = "A radial chart with stacked sections"
 
+<<<<<<< HEAD
 const chartData = [{ month: "january", desktop: 1260, mobile: 570 }]
+=======
+const chartData = [{ month: "january", mobile: 570, desktop: 1260 }]
+>>>>>>> shadcn/main
 
 const chartConfig = {
   desktop: {
@@ -51,8 +65,27 @@ export function ChartRadialStacked() {
             data={chartData}
             endAngle={180}
             innerRadius={80}
+<<<<<<< HEAD
             outerRadius={130}
           >
+=======
+            outerRadius={110}
+          >
+            <RadialBar
+              dataKey="mobile"
+              fill="var(--color-mobile)"
+              stackId="a"
+              cornerRadius={5}
+              className="stroke-transparent stroke-2"
+            />
+            <RadialBar
+              dataKey="desktop"
+              stackId="a"
+              cornerRadius={5}
+              fill="var(--color-desktop)"
+              className="stroke-transparent stroke-2"
+            />
+>>>>>>> shadcn/main
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
@@ -83,6 +116,7 @@ export function ChartRadialStacked() {
                 }}
               />
             </PolarRadiusAxis>
+<<<<<<< HEAD
             <RadialBar
               dataKey="desktop"
               stackId="a"
@@ -97,6 +131,8 @@ export function ChartRadialStacked() {
               cornerRadius={5}
               className="stroke-transparent stroke-2"
             />
+=======
+>>>>>>> shadcn/main
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
@@ -104,7 +140,11 @@ export function ChartRadialStacked() {
         <div className="flex items-center gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

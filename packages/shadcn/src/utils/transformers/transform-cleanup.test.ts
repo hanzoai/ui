@@ -181,4 +181,24 @@ export function Component() {
     expect(result).toContain("icon-placeholder")
     expect(result).toContain("size-4")
   })
+<<<<<<< HEAD
+=======
+
+  test("preserves cn-font-heading for transformFont", async () => {
+    const result = await transform(
+      {
+        filename: "test.tsx",
+        raw: `import * as React from "react"
+export function Component() {
+  return <h2 className="cn-font-heading cn-rtl-flip text-xl" />
+}`,
+        config: testConfig,
+      },
+      [transformCleanup]
+    )
+
+    expect(result).toContain('className="cn-font-heading text-xl"')
+    expect(result).not.toContain("cn-rtl-flip")
+  })
+>>>>>>> shadcn/main
 })

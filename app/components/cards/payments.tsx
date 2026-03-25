@@ -2,8 +2,11 @@
 
 import * as React from "react"
 import {
+<<<<<<<< HEAD:app/components/cards/payments.tsx
   ColumnDef,
   ColumnFiltersState,
+========
+>>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -11,11 +14,18 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+<<<<<<<< HEAD:app/components/cards/payments.tsx
   VisibilityState,
+========
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
+>>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
 } from "@tanstack/react-table"
 import { MoreHorizontalIcon } from "lucide-react"
 
-import { Button } from "@/registry/default/ui/button"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Card,
   CardAction,
@@ -23,8 +33,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/registry/default/ui/card"
-import { Checkbox } from "@/registry/default/ui/checkbox"
+} from "@/registry/new-york-v4/ui/card"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +42,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+<<<<<<<< HEAD:app/components/cards/payments.tsx
 } from "@/registry/default/ui/dropdown-menu"
+========
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+>>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
 import {
   Table,
   TableBody,
@@ -40,7 +54,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/default/ui/table"
+} from "@/registry/new-york-v4/ui/table"
 
 const data: Payment[] = [
   {
@@ -268,7 +282,11 @@ export function CardsPayments() {
           </Table>
         </div>
         <div className="flex items-center justify-end gap-2">
+<<<<<<<< HEAD:app/components/cards/payments.tsx
           <div className="text-muted-foreground flex-1 text-sm">
+========
+          <div className="flex-1 text-sm text-muted-foreground">
+>>>>>>>> shadcn/main:apps/v4/components/cards/payments.tsx
             {table.getFilteredSelectedRowModel().rows.length} of{" "}
             {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>

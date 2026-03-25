@@ -2,10 +2,16 @@ packages:
   - "app"
   - "apps/*"
   - "packages/*"
+<<<<<<< HEAD
   - "pkg/*"
   - "pkg/gui/*"
+=======
+>>>>>>> shadcn/main
   - "!**/test/**"
   - "!**/fixtures/**"
   - "!**/temp/**"
   - "!packages/tests/temp/**"
+<<<<<<< HEAD
   - "!deprecated/**"
+=======
+>>>>>>> shadcn/main

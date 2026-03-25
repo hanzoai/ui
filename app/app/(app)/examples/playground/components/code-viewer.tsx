@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/code-viewer.tsx
 import { Button } from "@/registry/default/ui/button"
+========
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/code-viewer.tsx
 import {
   Dialog,
   DialogContent,
@@ -6,7 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/code-viewer.tsx
 } from "@/registry/default/ui/dialog"
+========
+} from "@/registry/new-york-v4/ui/dialog"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/code-viewer.tsx
 
 export function CodeViewer() {
   return (
@@ -14,7 +22,7 @@ export function CodeViewer() {
       <DialogTrigger asChild>
         <Button variant="secondary">View code</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>View code</DialogTitle>
           <DialogDescription>
@@ -25,7 +33,7 @@ export function CodeViewer() {
         <div className="grid gap-4">
           <div className="rounded-md bg-black p-6">
             <pre>
-              <code className="grid gap-1 text-sm text-muted-foreground [&_span]:h-4">
+              <code className="grid gap-1 text-sm text-white [&_span]:h-4">
                 <span>
                   <span className="text-sky-300">import</span> os
                 </span>

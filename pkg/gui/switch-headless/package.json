@@ -1,5 +1,5 @@
 {
-  "name": "@hanzogui/switch-headless",
+  "name": "@hanzo/gui-switch-headless",
   "version": "2.0.0",
   "source": "src/index.ts",
   "files": [
@@ -36,14 +36,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.0-rc.29",
-    "@hanzogui/constants": "2.0.0-rc.29",
-    "@hanzogui/helpers": "2.0.0-rc.29",
-    "@hanzogui/label": "2.0.0",
-    "@hanzogui/use-previous": "2.0.0-rc.29"
+    "@hanzo/gui-compose-refs": "2.0.0-rc.29",
+    "@hanzo/gui-constants": "2.0.0-rc.29",
+    "@hanzo/gui-helpers": "2.0.0-rc.29",
+    "@hanzo/gui-label": "2.0.0",
+    "@hanzo/gui-use-previous": "2.0.0-rc.29"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.0-rc.29",
+    "@hanzo/gui-build": "2.0.0-rc.29",
     "react": ">=19",
     "react-native": "0.83.2"
   },

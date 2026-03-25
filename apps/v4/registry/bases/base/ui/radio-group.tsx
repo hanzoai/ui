@@ -4,7 +4,10 @@ import { Radio as RadioPrimitive } from "@base-ui/react/radio"
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group"
 
 import { cn } from "@/registry/bases/base/lib/utils"
+<<<<<<< HEAD
 import { IconPlaceholder } from "@/app/(create)/components/icon-placeholder"
+=======
+>>>>>>> shadcn/main
 
 function RadioGroup({ className, ...props }: RadioGroupPrimitive.Props) {
   return (
@@ -30,6 +33,7 @@ function RadioGroupItem({ className, ...props }: RadioPrimitive.Root.Props) {
         data-slot="radio-group-indicator"
         className="cn-radio-group-indicator"
       >
+<<<<<<< HEAD
         <IconPlaceholder
           lucide="CircleIcon"
           tabler="IconCircle"
@@ -38,6 +42,9 @@ function RadioGroupItem({ className, ...props }: RadioPrimitive.Root.Props) {
           remixicon="RiCircleLine"
           className="cn-radio-group-indicator-icon"
         />
+=======
+        <span className="cn-radio-group-indicator-icon" />
+>>>>>>> shadcn/main
       </RadioPrimitive.Indicator>
     </RadioPrimitive.Root>
   )

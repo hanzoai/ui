@@ -89,7 +89,11 @@ export function ChartLineMultiple() {
             <div className="flex items-center gap-2 leading-none font-medium">
               Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
             </div>
+<<<<<<< HEAD
             <div className="text-muted-foreground flex items-center gap-2 leading-none">
+=======
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+>>>>>>> shadcn/main
               Showing total visitors for the last 6 months
             </div>
           </div>

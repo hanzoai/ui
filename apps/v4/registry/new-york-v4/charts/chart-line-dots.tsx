@@ -88,7 +88,11 @@ export function ChartLineDots() {
         <div className="flex gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

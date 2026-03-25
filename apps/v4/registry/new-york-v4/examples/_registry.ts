@@ -951,6 +951,50 @@ export const examples: Registry["items"] = [
     ],
   },
   {
+<<<<<<< HEAD
+=======
+    name: "form-next-demo",
+    type: "registry:example",
+    registryDependencies: [
+      "field",
+      "input",
+      "textarea",
+      "button",
+      "card",
+      "spinner",
+    ],
+    files: [
+      {
+        path: "examples/form-next-demo.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+    name: "form-next-complex",
+    type: "registry:example",
+    registryDependencies: [
+      "field",
+      "input",
+      "textarea",
+      "button",
+      "card",
+      "spinner",
+      "checkbox",
+      "dialog",
+      "radio-group",
+      "select",
+      "switch",
+    ],
+    files: [
+      {
+        path: "examples/form-next-complex.tsx",
+        type: "registry:example",
+      },
+    ],
+  },
+  {
+>>>>>>> shadcn/main
     name: "form-rhf-demo",
     type: "registry:example",
     registryDependencies: ["field", "input", "input-group", "button", "card"],

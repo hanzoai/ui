@@ -1,16 +1,16 @@
-import { CalendarDays } from "lucide-react"
+import { CalendarIcon } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/registry/default/ui/avatar"
-import { Button } from "@/registry/default/ui/button"
+} from "@/registry/new-york-v4/ui/avatar"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/registry/default/ui/hover-card"
+} from "@/registry/new-york-v4/ui/hover-card"
 
 export default function HoverCardDemo() {
   return (
@@ -19,7 +19,7 @@ export default function HoverCardDemo() {
         <Button variant="link">@nextjs</Button>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-between gap-4">
           <Avatar>
             <AvatarImage src="https://github.com/vercel.png" />
             <AvatarFallback>VC</AvatarFallback>
@@ -29,11 +29,8 @@ export default function HoverCardDemo() {
             <p className="text-sm">
               The React Framework – created and maintained by @vercel.
             </p>
-            <div className="flex items-center pt-2">
-              <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
-              <span className="text-xs text-muted-foreground">
-                Joined December 2021
-              </span>
+            <div className="text-xs text-muted-foreground">
+              Joined December 2021
             </div>
           </div>
         </div>

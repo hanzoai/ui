@@ -195,7 +195,11 @@ function InputGroupWithAddons() {
                 hugeicons="AlertCircleIcon"
                 phosphor="InfoIcon"
                 remixicon="RiInformationLine"
+<<<<<<< HEAD
                 className="text-muted-foreground ml-auto"
+=======
+                className="ml-auto text-muted-foreground"
+>>>>>>> shadcn/main
               />
             </InputGroupAddon>
           </InputGroup>
@@ -212,7 +216,11 @@ function InputGroupWithAddons() {
                 hugeicons="AlertCircleIcon"
                 phosphor="InfoIcon"
                 remixicon="RiInformationLine"
+<<<<<<< HEAD
                 className="text-muted-foreground ml-auto"
+=======
+                className="ml-auto text-muted-foreground"
+>>>>>>> shadcn/main
               />
             </InputGroupAddon>
           </InputGroup>
@@ -458,7 +466,11 @@ function InputGroupWithTooltip({
                 </PopoverHeader>
               </PopoverContent>
             </Popover>
+<<<<<<< HEAD
             <InputGroupAddon className="text-muted-foreground pl-1">
+=======
+            <InputGroupAddon className="pl-1 text-muted-foreground">
+>>>>>>> shadcn/main
               https://
             </InputGroupAddon>
             <InputGroupInput id="input-secure-19" />
@@ -805,7 +817,11 @@ function InputGroupTextareaExamples() {
                 hugeicons="AlertCircleIcon"
                 phosphor="InfoIcon"
                 remixicon="RiInformationLine"
+<<<<<<< HEAD
                 className="text-muted-foreground ml-auto"
+=======
+                className="ml-auto text-muted-foreground"
+>>>>>>> shadcn/main
               />
             </InputGroupAddon>
           </InputGroup>

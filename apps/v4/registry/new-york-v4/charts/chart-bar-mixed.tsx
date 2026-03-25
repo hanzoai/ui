@@ -86,7 +86,11 @@ export function ChartBarMixed() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
+<<<<<<< HEAD
             <Bar dataKey="visitors" layout="vertical" radius={5} />
+=======
+            <Bar dataKey="visitors" radius={5} />
+>>>>>>> shadcn/main
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -94,7 +98,11 @@ export function ChartBarMixed() {
         <div className="flex gap-2 leading-none font-medium">
           Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
         </div>
+<<<<<<< HEAD
         <div className="text-muted-foreground leading-none">
+=======
+        <div className="leading-none text-muted-foreground">
+>>>>>>> shadcn/main
           Showing total visitors for the last 6 months
         </div>
       </CardFooter>

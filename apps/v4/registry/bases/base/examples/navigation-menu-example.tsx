@@ -175,9 +175,15 @@ function ListItem({
   return (
     <li {...props}>
       <NavigationMenuLink render={<Link href={href} />}>
+<<<<<<< HEAD
         <div className="style-vega:text-sm style-maia:text-sm style-nova:text-sm style-lyra:text-xs style-mira:text-xs flex flex-col gap-1">
           <div className="leading-none font-medium">{title}</div>
           <div className="text-muted-foreground line-clamp-2">{children}</div>
+=======
+        <div className="flex flex-col gap-1 style-vega:text-sm style-nova:text-sm style-lyra:text-xs style-maia:text-sm style-mira:text-xs">
+          <div className="leading-none font-medium">{title}</div>
+          <div className="line-clamp-2 text-muted-foreground">{children}</div>
+>>>>>>> shadcn/main
         </div>
       </NavigationMenuLink>
     </li>

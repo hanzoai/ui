@@ -4,12 +4,21 @@
   "title": "DM Sans",
   "type": "registry:font",
   "font": {
+<<<<<<< HEAD
     "family": "'DM Sans', sans-serif",
+=======
+    "family": "'DM Sans Variable', sans-serif",
+>>>>>>> shadcn/main
     "provider": "google",
     "import": "DM_Sans",
     "variable": "--font-sans",
     "subsets": [
       "latin"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "dependency": "@fontsource-variable/dm-sans"
+>>>>>>> shadcn/main
   }
 }

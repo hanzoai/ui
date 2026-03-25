@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/preset-save.tsx
+import { Button } from "@/registry/default/ui/button"
+========
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-save.tsx
 import {
   Dialog,
   DialogContent,
@@ -7,10 +11,16 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/preset-save.tsx
+} from "@/registry/default/ui/dialog"
+import { Input } from "@/registry/default/ui/input"
+import { Label } from "@/registry/default/ui/label"
+========
 } from "@/registry/new-york-v4/ui/dialog"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import { Textarea } from "@/registry/new-york-v4/ui/textarea"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/preset-save.tsx
 
 export function PresetSave() {
   return (

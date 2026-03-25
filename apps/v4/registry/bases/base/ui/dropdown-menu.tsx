@@ -42,7 +42,11 @@ function DropdownMenuContent({
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
           className={cn(
+<<<<<<< HEAD
             "cn-dropdown-menu-content cn-dropdown-menu-content-logical cn-menu-target z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
+=======
+            "cn-dropdown-menu-content cn-dropdown-menu-content-logical cn-menu-target cn-menu-translucent z-50 max-h-(--available-height) w-(--anchor-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none data-closed:overflow-hidden",
+>>>>>>> shadcn/main
             className
           )}
           {...props}
@@ -113,7 +117,11 @@ function DropdownMenuSubTrigger({
       data-slot="dropdown-menu-sub-trigger"
       data-inset={inset}
       className={cn(
+<<<<<<< HEAD
         "cn-dropdown-menu-sub-trigger data-popup-open:bg-accent data-popup-open:text-accent-foreground flex cursor-default items-center outline-hidden select-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+=======
+        "cn-dropdown-menu-sub-trigger flex cursor-default items-center outline-hidden select-none data-popup-open:bg-accent data-popup-open:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0",
+>>>>>>> shadcn/main
         className
       )}
       {...props}
@@ -142,7 +150,14 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuContent
       data-slot="dropdown-menu-sub-content"
+<<<<<<< HEAD
       className={cn("cn-dropdown-menu-sub-content w-auto", className)}
+=======
+      className={cn(
+        "cn-dropdown-menu-sub-content cn-menu-target cn-menu-translucent w-auto",
+        className
+      )}
+>>>>>>> shadcn/main
       align={align}
       alignOffset={alignOffset}
       side={side}

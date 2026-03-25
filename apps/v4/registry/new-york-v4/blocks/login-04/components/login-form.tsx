@@ -22,7 +22,11 @@ export function LoginForm({
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
+<<<<<<< HEAD
                 <p className="text-muted-foreground text-balance">
+=======
+                <p className="text-balance text-muted-foreground">
+>>>>>>> shadcn/main
                   Login to your Acme Inc account
                 </p>
               </div>
@@ -87,7 +91,11 @@ export function LoginForm({
               </FieldDescription>
             </FieldGroup>
           </form>
+<<<<<<< HEAD
           <div className="bg-muted relative hidden md:block">
+=======
+          <div className="relative hidden bg-muted md:block">
+>>>>>>> shadcn/main
             <img
               src="/placeholder.svg"
               alt="Image"

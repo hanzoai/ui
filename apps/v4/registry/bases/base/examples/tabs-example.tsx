@@ -195,7 +195,11 @@ function TabsWithContent() {
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
+<<<<<<< HEAD
         <div className="style-nova:p-4 style-vega:p-6 style-maia:p-6 style-mira:p-4 style-lyra:p-4 style-nova:rounded-lg style-vega:rounded-lg style-maia:rounded-xl style-mira:rounded-md style-lyra:rounded-none border">
+=======
+        <div className="border style-vega:rounded-lg style-vega:p-6 style-nova:rounded-lg style-nova:p-4 style-lyra:rounded-none style-lyra:p-4 style-maia:rounded-xl style-maia:p-6 style-mira:rounded-md style-mira:p-4">
+>>>>>>> shadcn/main
           <TabsContent value="account">
             Manage your account preferences and profile information.
           </TabsContent>
@@ -220,7 +224,11 @@ function TabsLineWithContent() {
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
+<<<<<<< HEAD
         <div className="style-nova:p-4 style-vega:p-6 style-maia:p-6 style-mira:p-4 style-lyra:p-4 style-nova:rounded-lg style-vega:rounded-lg style-maia:rounded-xl style-mira:rounded-md style-lyra:rounded-none border">
+=======
+        <div className="border style-vega:rounded-lg style-vega:p-6 style-nova:rounded-lg style-nova:p-4 style-lyra:rounded-none style-lyra:p-4 style-maia:rounded-xl style-maia:p-6 style-mira:rounded-md style-mira:p-4">
+>>>>>>> shadcn/main
           <TabsContent value="account">
             Manage your account preferences and profile information.
           </TabsContent>
@@ -284,7 +292,11 @@ function TabsWithDropdown() {
           </DropdownMenu>
         </div>
 
+<<<<<<< HEAD
         <div className="style-nova:p-4 style-vega:p-6 style-maia:p-6 style-mira:p-4 style-lyra:p-4 style-nova:rounded-lg style-vega:rounded-lg style-maia:rounded-xl style-mira:rounded-md style-lyra:rounded-none border">
+=======
+        <div className="border style-vega:rounded-lg style-vega:p-6 style-nova:rounded-lg style-nova:p-4 style-lyra:rounded-none style-lyra:p-4 style-maia:rounded-xl style-maia:p-6 style-mira:rounded-md style-mira:p-4">
+>>>>>>> shadcn/main
           <TabsContent value="overview">
             View your dashboard metrics and key performance indicators.
           </TabsContent>
@@ -309,7 +321,11 @@ function TabsVertical() {
           <TabsTrigger value="password">Password</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
         </TabsList>
+<<<<<<< HEAD
         <div className="style-nova:p-4 style-vega:p-6 style-maia:p-6 style-mira:p-4 style-lyra:p-4 style-nova:rounded-lg style-vega:rounded-lg style-maia:rounded-xl style-mira:rounded-md style-lyra:rounded-none border">
+=======
+        <div className="border style-vega:rounded-lg style-vega:p-6 style-nova:rounded-lg style-nova:p-4 style-lyra:rounded-none style-lyra:p-4 style-maia:rounded-xl style-maia:p-6 style-mira:rounded-md style-mira:p-4">
+>>>>>>> shadcn/main
           <TabsContent value="account">
             Manage your account preferences and profile information.
           </TabsContent>
@@ -342,7 +358,11 @@ function TabsWithInputAndButton() {
             <Button>Action</Button>
           </div>
         </div>
+<<<<<<< HEAD
         <div className="style-nova:p-4 style-vega:p-6 style-maia:p-6 style-mira:p-4 style-lyra:p-4 style-nova:rounded-lg style-vega:rounded-lg style-maia:rounded-xl style-mira:rounded-md style-lyra:rounded-none border">
+=======
+        <div className="border style-vega:rounded-lg style-vega:p-6 style-nova:rounded-lg style-nova:p-4 style-lyra:rounded-none style-lyra:p-4 style-maia:rounded-xl style-maia:p-6 style-mira:rounded-md style-mira:p-4">
+>>>>>>> shadcn/main
           <TabsContent value="overview">
             View your dashboard metrics and key performance indicators.
           </TabsContent>

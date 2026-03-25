@@ -8,5 +8,14 @@
       "type": "registry:ui"
     }
   ],
+<<<<<<< HEAD
+=======
+  "meta": {
+    "links": {
+      "docs": "https://ui.shadcn.com/docs/components/radix/direction",
+      "api": "https://www.radix-ui.com/primitives/docs/utilities/direction-provider.md"
+    }
+  },
+>>>>>>> shadcn/main
   "type": "registry:ui"
 }

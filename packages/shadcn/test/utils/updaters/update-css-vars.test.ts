@@ -728,6 +728,7 @@ describe("transformCssVarsV4", () => {
       }
 
       @theme inline {
+<<<<<<< HEAD
           --radius-sm: calc(var(--radius) - 4px);
           --radius-md: calc(var(--radius) - 2px);
           --radius-lg: var(--radius);
@@ -735,6 +736,15 @@ describe("transformCssVarsV4", () => {
           --radius-2xl: calc(var(--radius) + 8px);
           --radius-3xl: calc(var(--radius) + 12px);
           --radius-4xl: calc(var(--radius) + 16px);
+=======
+          --radius-sm: calc(var(--radius) * 0.6);
+          --radius-md: calc(var(--radius) * 0.8);
+          --radius-lg: var(--radius);
+          --radius-xl: calc(var(--radius) * 1.4);
+          --radius-2xl: calc(var(--radius) * 1.8);
+          --radius-3xl: calc(var(--radius) * 2.2);
+          --radius-4xl: calc(var(--radius) * 2.6);
+>>>>>>> shadcn/main
       }
               "
     `)
@@ -774,9 +784,15 @@ describe("transformCssVarsV4", () => {
               --radius-md: calc(var(--radius) - 2px);
               --radius-lg: var(--radius);
               --radius-xl: calc(var(--radius) + 4px);
+<<<<<<< HEAD
               --radius-2xl: calc(var(--radius) + 8px);
               --radius-3xl: calc(var(--radius) + 12px);
               --radius-4xl: calc(var(--radius) + 16px);
+=======
+              --radius-2xl: calc(var(--radius) * 1.8);
+              --radius-3xl: calc(var(--radius) * 2.2);
+              --radius-4xl: calc(var(--radius) * 2.6);
+>>>>>>> shadcn/main
             }
               "
     `)

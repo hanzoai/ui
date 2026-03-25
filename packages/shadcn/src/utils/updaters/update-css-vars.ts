@@ -5,7 +5,10 @@ import {
   registryItemTailwindSchema,
 } from "@/src/schema"
 import { Config } from "@/src/utils/get-config"
+<<<<<<< HEAD
 import { getPackageInfo } from "@/src/utils/get-package-info"
+=======
+>>>>>>> shadcn/main
 import { TailwindVersion } from "@/src/utils/get-project-info"
 import { highlighter } from "@/src/utils/highlighter"
 import { spinner } from "@/src/utils/spinner"
@@ -21,7 +24,10 @@ export async function updateCssVars(
   options: {
     cleanupDefaultNextStyles?: boolean
     overwriteCssVars?: boolean
+<<<<<<< HEAD
     initIndex?: boolean
+=======
+>>>>>>> shadcn/main
     silent?: boolean
     tailwindVersion?: TailwindVersion
     tailwindConfig?: z.infer<typeof registryItemTailwindSchema>["config"]
@@ -36,7 +42,10 @@ export async function updateCssVars(
     silent: false,
     tailwindVersion: "v3",
     overwriteCssVars: false,
+<<<<<<< HEAD
     initIndex: true,
+=======
+>>>>>>> shadcn/main
     ...options,
   }
   const cssFilepath = config.resolvedPaths.tailwindCss
@@ -56,7 +65,10 @@ export async function updateCssVars(
     tailwindVersion: options.tailwindVersion,
     tailwindConfig: options.tailwindConfig,
     overwriteCssVars: options.overwriteCssVars,
+<<<<<<< HEAD
     initIndex: options.initIndex,
+=======
+>>>>>>> shadcn/main
   })
   await fs.writeFile(cssFilepath, output, "utf8")
   cssVarsSpinner.succeed()
@@ -71,13 +83,19 @@ export async function transformCssVars(
     tailwindVersion?: TailwindVersion
     tailwindConfig?: z.infer<typeof registryItemTailwindSchema>["config"]
     overwriteCssVars?: boolean
+<<<<<<< HEAD
     initIndex?: boolean
+=======
+>>>>>>> shadcn/main
   } = {
     cleanupDefaultNextStyles: false,
     tailwindVersion: "v3",
     tailwindConfig: undefined,
     overwriteCssVars: false,
+<<<<<<< HEAD
     initIndex: false,
+=======
+>>>>>>> shadcn/main
   }
 ) {
   options = {
@@ -85,7 +103,10 @@ export async function transformCssVars(
     tailwindVersion: "v3",
     tailwindConfig: undefined,
     overwriteCssVars: false,
+<<<<<<< HEAD
     initIndex: false,
+=======
+>>>>>>> shadcn/main
     ...options,
   }
 
@@ -98,6 +119,7 @@ export async function transformCssVars(
   if (options.tailwindVersion === "v4") {
     plugins = []
 
+<<<<<<< HEAD
     // Only add tw-animate-css if project does not have tailwindcss-animate
     if (config.resolvedPaths?.cwd) {
       const packageInfo = getPackageInfo(config.resolvedPaths.cwd)
@@ -110,6 +132,8 @@ export async function transformCssVars(
       }
     }
 
+=======
+>>>>>>> shadcn/main
     plugins.push(addCustomVariant({ params: "dark (&:is(.dark *))" }))
 
     if (options.cleanupDefaultNextStyles) {
@@ -130,12 +154,15 @@ export async function transformCssVars(
     }
   }
 
+<<<<<<< HEAD
   if (config.tailwind.cssVariables && options.initIndex) {
     plugins.push(
       updateBaseLayerPlugin({ tailwindVersion: options.tailwindVersion })
     )
   }
 
+=======
+>>>>>>> shadcn/main
   const result = await postcss(plugins).process(input, {
     from: undefined,
   })
@@ -151,6 +178,7 @@ export async function transformCssVars(
   return output
 }
 
+<<<<<<< HEAD
 function updateBaseLayerPlugin({
   tailwindVersion,
 }: {
@@ -226,6 +254,8 @@ function updateBaseLayerPlugin({
   }
 }
 
+=======
+>>>>>>> shadcn/main
 function updateCssVarsPlugin(
   cssVars: z.infer<typeof registryItemCssVarsSchema>
 ) {
@@ -530,6 +560,7 @@ function updateThemePlugin(cssVars: z.infer<typeof registryItemCssVarsSchema>) {
 
         if (variable === "radius") {
           const radiusVariables = {
+<<<<<<< HEAD
             sm: "calc(var(--radius) - 4px)",
             md: "calc(var(--radius) - 2px)",
             lg: "var(--radius)",
@@ -537,6 +568,15 @@ function updateThemePlugin(cssVars: z.infer<typeof registryItemCssVarsSchema>) {
             "2xl": "calc(var(--radius) + 8px)",
             "3xl": "calc(var(--radius) + 12px)",
             "4xl": "calc(var(--radius) + 16px)",
+=======
+            sm: "calc(var(--radius) * 0.6)",
+            md: "calc(var(--radius) * 0.8)",
+            lg: "var(--radius)",
+            xl: "calc(var(--radius) * 1.4)",
+            "2xl": "calc(var(--radius) * 1.8)",
+            "3xl": "calc(var(--radius) * 2.2)",
+            "4xl": "calc(var(--radius) * 2.6)",
+>>>>>>> shadcn/main
           }
           for (const [key, value] of Object.entries(radiusVariables)) {
             const cssVarNode = postcss.decl({
@@ -662,13 +702,21 @@ function addCustomImport({ params }: { params: string }) {
           node.type === "atrule" && node.name === "import"
       )
 
+<<<<<<< HEAD
       // Find custom variant node (to ensure we insert before it)
+=======
+      // Find custom variant node (to ensure we insert before it).
+>>>>>>> shadcn/main
       const customVariantNode = root.nodes.find(
         (node): node is AtRule =>
           node.type === "atrule" && node.name === "custom-variant"
       )
 
+<<<<<<< HEAD
       // Check if our specific import already exists
+=======
+      // Check if our specific import already exists.
+>>>>>>> shadcn/main
       const hasImport = importNodes.some(
         (node) => node.params.replace(/["']/g, "") === params
       )
@@ -681,18 +729,30 @@ function addCustomImport({ params }: { params: string }) {
         })
 
         if (importNodes.length > 0) {
+<<<<<<< HEAD
           // If there are existing imports, add after the last import
           const lastImport = importNodes[importNodes.length - 1]
           root.insertAfter(lastImport, importNode)
         } else if (customVariantNode) {
           // If no imports but has custom-variant, insert before it
+=======
+          // If there are existing imports, add after the last import.
+          const lastImport = importNodes[importNodes.length - 1]
+          root.insertAfter(lastImport, importNode)
+        } else if (customVariantNode) {
+          // If no imports but has custom-variant, insert before it.
+>>>>>>> shadcn/main
           root.insertBefore(customVariantNode, importNode)
           root.insertBefore(
             customVariantNode,
             postcss.comment({ text: "---break---" })
           )
         } else {
+<<<<<<< HEAD
           // If no imports and no custom-variant, insert at the start
+=======
+          // If no imports and no custom-variant, insert at the start.
+>>>>>>> shadcn/main
           root.prepend(importNode)
           root.insertAfter(importNode, postcss.comment({ text: "---break---" }))
         }

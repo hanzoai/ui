@@ -4,7 +4,7 @@ import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/new-york/ui/button"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -12,12 +12,16 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+<<<<<<<< HEAD:deprecated/www/registry/new-york/examples/combobox-demo.tsx
 } from "@/registry/new-york/ui/command"
+========
+} from "@/registry/new-york-v4/ui/command"
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/combobox-demo.tsx
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/registry/new-york-v4/ui/popover"
 
 const frameworks = [
   {

@@ -59,7 +59,11 @@ function NavigationMenuItem({
 }
 
 const navigationMenuTriggerStyle = cva(
+<<<<<<< HEAD
   "cn-navigation-menu-trigger group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center disabled:pointer-events-none outline-none"
+=======
+  "cn-navigation-menu-trigger group/navigation-menu-trigger inline-flex h-9 w-max items-center justify-center outline-none disabled:pointer-events-none"
+>>>>>>> shadcn/main
 )
 
 function NavigationMenuTrigger({

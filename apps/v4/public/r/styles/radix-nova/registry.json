@@ -3,6 +3,51 @@
   "homepage": "https://ui.shadcn.com",
   "items": [
     {
+<<<<<<< HEAD
+=======
+      "name": "index",
+      "dependencies": ["class-variance-authority", "lucide-react", "radix-ui"],
+      "devDependencies": ["tw-animate-css", "shadcn"],
+      "registryDependencies": ["utils"],
+      "files": [],
+      "cssVars": {},
+      "css": {
+        "@import \"tw-animate-css\"": {},
+        "@import \"shadcn/tailwind.css\"": {},
+        "@layer base": {
+          "*": {
+            "@apply border-border outline-ring/50": {}
+          },
+          "body": {
+            "@apply bg-background text-foreground": {}
+          }
+        }
+      },
+      "type": "registry:style"
+    },
+    {
+      "name": "style",
+      "dependencies": ["class-variance-authority", "lucide-react", "radix-ui"],
+      "devDependencies": ["tw-animate-css", "shadcn"],
+      "registryDependencies": ["utils"],
+      "files": [],
+      "cssVars": {},
+      "css": {
+        "@import \"tw-animate-css\"": {},
+        "@import \"shadcn/tailwind.css\"": {},
+        "@layer base": {
+          "*": {
+            "@apply border-border outline-ring/50": {}
+          },
+          "body": {
+            "@apply bg-background text-foreground": {}
+          }
+        }
+      },
+      "type": "registry:style"
+    },
+    {
+>>>>>>> shadcn/main
       "name": "accordion",
       "files": [
         {
@@ -10,6 +55,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/accordion",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/accordion-example.tsx",
+          "api": "https://www.radix-ui.com/primitives/docs/components/accordion.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -20,19 +75,42 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/alert",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "alert-dialog",
+<<<<<<< HEAD
       "registryDependencies": [
         "button"
       ],
+=======
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/alert-dialog.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/alert-dialog",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/alert-dialog-example.tsx",
+          "api": "https://www.radix-ui.com/primitives/docs/components/alert-dialog.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -43,6 +121,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/aspect-ratio",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/aspect-ratio-example.tsx",
+          "api": "https://www.radix-ui.com/primitives/docs/components/aspect-ratio.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -53,6 +141,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/avatar",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/avatar-example.tsx",
+          "api": "https://www.radix-ui.com/primitives/docs/components/avatar.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -63,6 +161,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/badge",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/badge-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -73,6 +180,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/breadcrumb",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/breadcrumb-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -83,23 +199,46 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/button",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "button-group",
+<<<<<<< HEAD
       "registryDependencies": [
         "separator"
       ],
+=======
+      "registryDependencies": ["separator"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/button-group.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/button-group",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/button-group-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "calendar",
+<<<<<<< HEAD
       "dependencies": [
         "react-day-picker@latest",
         "date-fns"
@@ -107,12 +246,26 @@
       "registryDependencies": [
         "button"
       ],
+=======
+      "dependencies": ["react-day-picker@latest", "date-fns"],
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/calendar.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/calendar",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/calendar-example.tsx",
+          "api": "https://react-day-picker.js.org"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -123,35 +276,72 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/card",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/card-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "carousel",
+<<<<<<< HEAD
       "dependencies": [
         "embla-carousel-react"
       ],
       "registryDependencies": [
         "button"
       ],
+=======
+      "dependencies": ["embla-carousel-react"],
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/carousel.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/carousel",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/carousel-example.tsx",
+          "api": "https://www.embla-carousel.com/get-started/react"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "chart",
+<<<<<<< HEAD
       "dependencies": [
         "recharts@2.15.4"
       ],
+=======
+      "dependencies": ["recharts@3.8.0"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/chart.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/chart",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/chart-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -162,6 +352,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/checkbox",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/checkbox-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/checkbox.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -172,10 +372,21 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/collapsible",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/collapsible-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/collapsible.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "combobox",
+<<<<<<< HEAD
       "dependencies": [
         "@base-ui/react"
       ],
@@ -183,16 +394,31 @@
         "button",
         "input-group"
       ],
+=======
+      "dependencies": ["@base-ui/react"],
+      "registryDependencies": ["button", "input-group"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/combobox.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/combobox",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/combobox-example.tsx",
+          "api": "https://base-ui.com/react/components/combobox"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "command",
+<<<<<<< HEAD
       "dependencies": [
         "cmdk"
       ],
@@ -200,12 +426,26 @@
         "dialog",
         "input-group"
       ],
+=======
+      "dependencies": ["cmdk"],
+      "registryDependencies": ["dialog", "input-group"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/command.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/command",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/command-example.tsx",
+          "api": "https://github.com/dip/cmdk"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -216,32 +456,70 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/context-menu",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/context-menu-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/context-menu.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "dialog",
+<<<<<<< HEAD
       "registryDependencies": [
         "button"
       ],
+=======
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/dialog.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/dialog",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dialog-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/dialog.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "drawer",
+<<<<<<< HEAD
       "dependencies": [
         "vaul"
       ],
+=======
+      "dependencies": ["vaul"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/drawer.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/drawer",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/drawer-example.tsx",
+          "api": "https://vaul.emilkowal.ski/getting-started"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -252,6 +530,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/dropdown-menu",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/dropdown-menu-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/dropdown-menu.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -262,20 +550,42 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/empty",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/empty-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "field",
+<<<<<<< HEAD
       "registryDependencies": [
         "label",
         "separator"
       ],
+=======
+      "registryDependencies": ["label", "separator"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/field.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/field",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/field-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -290,6 +600,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/hover-card",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/hover-card-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/hover-card.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -300,47 +620,96 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/input",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "input-group",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "input",
         "textarea"
       ],
+=======
+      "registryDependencies": ["button", "input", "textarea"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/input-group.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/input-group",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-group-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "input-otp",
+<<<<<<< HEAD
       "dependencies": [
         "input-otp"
       ],
+=======
+      "dependencies": ["input-otp"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/input-otp.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/input-otp",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/input-otp-example.tsx",
+          "api": "https://input-otp.rodz.dev"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "item",
+<<<<<<< HEAD
       "registryDependencies": [
         "separator"
       ],
+=======
+      "registryDependencies": ["separator"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/item.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/item",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/item-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -351,6 +720,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/label",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/label-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/label.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -361,6 +740,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/menubar",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/menubar-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/menubar.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -371,19 +760,42 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/navigation-menu",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/navigation-menu-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/navigation-menu.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "pagination",
+<<<<<<< HEAD
       "registryDependencies": [
         "button"
       ],
+=======
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/pagination.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/pagination",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/pagination-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -394,6 +806,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/popover",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/popover-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/popover.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -404,6 +826,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/progress",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/progress-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/progress.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -414,19 +846,43 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/radio-group",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/radio-group-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/radio-group.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "resizable",
+<<<<<<< HEAD
       "dependencies": [
         "react-resizable-panels"
       ],
+=======
+      "dependencies": ["react-resizable-panels"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/resizable.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/resizable",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/resizable-example.tsx",
+          "api": "https://github.com/bvaughn/react-resizable-panels"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -437,6 +893,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/scroll-area",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/scroll-area-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/scroll-area.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -447,6 +913,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/select",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/select-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/select.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -457,19 +933,43 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/separator",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/separator-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/separator.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "sheet",
+<<<<<<< HEAD
       "registryDependencies": [
         "button"
       ],
+=======
+      "registryDependencies": ["button"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/sheet.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/sheet",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sheet-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/dialog.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -489,6 +989,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/sidebar",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sidebar-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -499,6 +1008,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/skeleton",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/skeleton-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -509,20 +1027,44 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/slider",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/slider-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/slider.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "sonner",
+<<<<<<< HEAD
       "dependencies": [
         "sonner",
         "next-themes"
       ],
+=======
+      "dependencies": ["sonner", "next-themes"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/sonner.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/sonner",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/sonner-example.tsx",
+          "api": "https://sonner.emilkowal.ski"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -533,6 +1075,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/spinner",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/spinner-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -543,6 +1094,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/switch",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/switch-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/switch.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -553,6 +1114,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/table",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/table-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -563,6 +1133,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/tabs",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tabs-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/tabs.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -573,6 +1153,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/textarea",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/textarea-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -583,19 +1172,43 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/toggle",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/toggle.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "toggle-group",
+<<<<<<< HEAD
       "registryDependencies": [
         "toggle"
       ],
+=======
+      "registryDependencies": ["toggle"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/ui/toggle-group.tsx",
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/toggle-group",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/toggle-group-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/toggle-group.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -606,6 +1219,16 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/tooltip",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/tooltip-example.tsx",
+          "api": "https://www.radix-ui.com/docs/primitives/components/tooltip.md"
+        }
+      },
+>>>>>>> shadcn/main
       "docs": "The `tooltip` component has been added. Remember to wrap your app with the `TooltipProvider` component.\n\n```tsx title=\"app/layout.tsx\"\nimport { TooltipProvider } from \"@/components/ui/tooltip\"\n\nexport default function RootLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <html lang=\"en\">\n      <body>\n        <TooltipProvider>{children}</TooltipProvider>\n      </body>\n    </html>\n  )\n}\n```\n",
       "type": "registry:ui"
     },
@@ -617,6 +1240,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/kbd",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/kbd-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -627,6 +1259,15 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/native-select",
+          "examples": "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/radix/examples/native-select-example.tsx"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
@@ -637,17 +1278,30 @@
           "type": "registry:ui"
         }
       ],
+<<<<<<< HEAD
+=======
+      "meta": {
+        "links": {
+          "docs": "https://ui.shadcn.com/docs/components/radix/direction",
+          "api": "https://www.radix-ui.com/primitives/docs/utilities/direction-provider.md"
+        }
+      },
+>>>>>>> shadcn/main
       "type": "registry:ui"
     },
     {
       "name": "accordion-example",
       "title": "Accordion",
+<<<<<<< HEAD
       "registryDependencies": [
         "accordion",
         "button",
         "card",
         "example"
       ],
+=======
+      "registryDependencies": ["accordion", "button", "card", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/accordion-example.tsx",
@@ -659,12 +1313,16 @@
     {
       "name": "alert-example",
       "title": "Alert",
+<<<<<<< HEAD
       "registryDependencies": [
         "alert",
         "badge",
         "button",
         "example"
       ],
+=======
+      "registryDependencies": ["alert", "badge", "button", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/alert-example.tsx",
@@ -676,12 +1334,16 @@
     {
       "name": "alert-dialog-example",
       "title": "Alert Dialog",
+<<<<<<< HEAD
       "registryDependencies": [
         "alert-dialog",
         "button",
         "dialog",
         "example"
       ],
+=======
+      "registryDependencies": ["alert-dialog", "button", "dialog", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/alert-dialog-example.tsx",
@@ -693,10 +1355,14 @@
     {
       "name": "aspect-ratio-example",
       "title": "Aspect Ratio",
+<<<<<<< HEAD
       "registryDependencies": [
         "aspect-ratio",
         "example"
       ],
+=======
+      "registryDependencies": ["aspect-ratio", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/aspect-ratio-example.tsx",
@@ -708,12 +1374,16 @@
     {
       "name": "avatar-example",
       "title": "Avatar",
+<<<<<<< HEAD
       "registryDependencies": [
         "avatar",
         "button",
         "empty",
         "example"
       ],
+=======
+      "registryDependencies": ["avatar", "button", "empty", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/avatar-example.tsx",
@@ -725,11 +1395,15 @@
     {
       "name": "badge-example",
       "title": "Badge",
+<<<<<<< HEAD
       "registryDependencies": [
         "badge",
         "spinner",
         "example"
       ],
+=======
+      "registryDependencies": ["badge", "spinner", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/badge-example.tsx",
@@ -741,11 +1415,15 @@
     {
       "name": "breadcrumb-example",
       "title": "Breadcrumb",
+<<<<<<< HEAD
       "registryDependencies": [
         "breadcrumb",
         "dropdown-menu",
         "example"
       ],
+=======
+      "registryDependencies": ["breadcrumb", "dropdown-menu", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/breadcrumb-example.tsx",
@@ -757,10 +1435,14 @@
     {
       "name": "button-example",
       "title": "Button",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/button-example.tsx",
@@ -836,11 +1518,15 @@
     {
       "name": "carousel-example",
       "title": "Carousel",
+<<<<<<< HEAD
       "registryDependencies": [
         "card",
         "carousel",
         "example"
       ],
+=======
+      "registryDependencies": ["card", "carousel", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/carousel-example.tsx",
@@ -852,11 +1538,15 @@
     {
       "name": "chart-example",
       "title": "Chart",
+<<<<<<< HEAD
       "registryDependencies": [
         "chart",
         "card",
         "example"
       ],
+=======
+      "registryDependencies": ["chart", "card", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/chart-example.tsx",
@@ -868,12 +1558,16 @@
     {
       "name": "checkbox-example",
       "title": "Checkbox",
+<<<<<<< HEAD
       "registryDependencies": [
         "checkbox",
         "field",
         "table",
         "example"
       ],
+=======
+      "registryDependencies": ["checkbox", "field", "table", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/checkbox-example.tsx",
@@ -928,11 +1622,15 @@
     {
       "name": "command-example",
       "title": "Command",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "command",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "command", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/command-example.tsx",
@@ -944,12 +1642,16 @@
     {
       "name": "context-menu-example",
       "title": "Context Menu",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "context-menu",
         "dialog",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "context-menu", "dialog", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/context-menu-example.tsx",
@@ -988,10 +1690,14 @@
     {
       "name": "drawer-example",
       "title": "Drawer",
+<<<<<<< HEAD
       "registryDependencies": [
         "drawer",
         "example"
       ],
+=======
+      "registryDependencies": ["drawer", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/drawer-example.tsx",
@@ -1064,12 +1770,16 @@
     {
       "name": "hover-card-example",
       "title": "Hover Card",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "dialog",
         "hover-card",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "dialog", "hover-card", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/hover-card-example.tsx",
@@ -1144,11 +1854,15 @@
     {
       "name": "item-example",
       "title": "Item",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "item",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "item", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/item-example.tsx",
@@ -1197,12 +1911,16 @@
     {
       "name": "menubar-example",
       "title": "Menubar",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "dialog",
         "menubar",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "dialog", "menubar", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/menubar-example.tsx",
@@ -1214,11 +1932,15 @@
     {
       "name": "native-select-example",
       "title": "Native Select",
+<<<<<<< HEAD
       "registryDependencies": [
         "field",
         "native-select",
         "example"
       ],
+=======
+      "registryDependencies": ["field", "native-select", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/native-select-example.tsx",
@@ -1247,12 +1969,16 @@
     {
       "name": "pagination-example",
       "title": "Pagination",
+<<<<<<< HEAD
       "registryDependencies": [
         "field",
         "pagination",
         "select",
         "example"
       ],
+=======
+      "registryDependencies": ["field", "pagination", "select", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/pagination-example.tsx",
@@ -1301,11 +2027,15 @@
     {
       "name": "radio-group-example",
       "title": "Radio Group",
+<<<<<<< HEAD
       "registryDependencies": [
         "field",
         "radio-group",
         "example"
       ],
+=======
+      "registryDependencies": ["field", "radio-group", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/radio-group-example.tsx",
@@ -1317,10 +2047,14 @@
     {
       "name": "resizable-example",
       "title": "Resizable",
+<<<<<<< HEAD
       "registryDependencies": [
         "resizable",
         "example"
       ],
+=======
+      "registryDependencies": ["resizable", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/resizable-example.tsx",
@@ -1332,11 +2066,15 @@
     {
       "name": "scroll-area-example",
       "title": "Scroll Area",
+<<<<<<< HEAD
       "registryDependencies": [
         "scroll-area",
         "separator",
         "example"
       ],
+=======
+      "registryDependencies": ["scroll-area", "separator", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/scroll-area-example.tsx",
@@ -1369,10 +2107,14 @@
     {
       "name": "separator-example",
       "title": "Separator",
+<<<<<<< HEAD
       "registryDependencies": [
         "separator",
         "example"
       ],
+=======
+      "registryDependencies": ["separator", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/separator-example.tsx",
@@ -1384,6 +2126,7 @@
     {
       "name": "sheet-example",
       "title": "Sheet",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "field",
@@ -1391,6 +2134,9 @@
         "sheet",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "field", "input", "sheet", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/sheet-example.tsx",
@@ -1441,11 +2187,15 @@
     {
       "name": "sidebar-inset-example",
       "title": "Sidebar (Inset)",
+<<<<<<< HEAD
       "registryDependencies": [
         "collapsible",
         "sidebar",
         "example"
       ],
+=======
+      "registryDependencies": ["collapsible", "sidebar", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/sidebar-inset-example.tsx",
@@ -1477,10 +2227,14 @@
     {
       "name": "skeleton-example",
       "title": "Skeleton",
+<<<<<<< HEAD
       "registryDependencies": [
         "skeleton",
         "example"
       ],
+=======
+      "registryDependencies": ["skeleton", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/skeleton-example.tsx",
@@ -1492,11 +2246,15 @@
     {
       "name": "slider-example",
       "title": "Slider",
+<<<<<<< HEAD
       "registryDependencies": [
         "label",
         "slider",
         "example"
       ],
+=======
+      "registryDependencies": ["label", "slider", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/slider-example.tsx",
@@ -1508,10 +2266,14 @@
     {
       "name": "sonner-example",
       "title": "Sonner",
+<<<<<<< HEAD
       "registryDependencies": [
         "sonner",
         "example"
       ],
+=======
+      "registryDependencies": ["sonner", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/sonner-example.tsx",
@@ -1543,12 +2305,16 @@
     {
       "name": "switch-example",
       "title": "Switch",
+<<<<<<< HEAD
       "registryDependencies": [
         "field",
         "label",
         "switch",
         "example"
       ],
+=======
+      "registryDependencies": ["field", "label", "switch", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/switch-example.tsx",
@@ -1579,12 +2345,16 @@
     {
       "name": "tabs-example",
       "title": "Tabs",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "dropdown-menu",
         "tabs",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "dropdown-menu", "tabs", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/tabs-example.tsx",
@@ -1596,11 +2366,15 @@
     {
       "name": "textarea-example",
       "title": "Textarea",
+<<<<<<< HEAD
       "registryDependencies": [
         "field",
         "textarea",
         "example"
       ],
+=======
+      "registryDependencies": ["field", "textarea", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/textarea-example.tsx",
@@ -1612,10 +2386,14 @@
     {
       "name": "toggle-example",
       "title": "Toggle",
+<<<<<<< HEAD
       "registryDependencies": [
         "toggle",
         "example"
       ],
+=======
+      "registryDependencies": ["toggle", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/toggle-example.tsx",
@@ -1627,12 +2405,16 @@
     {
       "name": "toggle-group-example",
       "title": "Toggle Group",
+<<<<<<< HEAD
       "registryDependencies": [
         "input",
         "select",
         "toggle-group",
         "example"
       ],
+=======
+      "registryDependencies": ["input", "select", "toggle-group", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/toggle-group-example.tsx",
@@ -1644,12 +2426,16 @@
     {
       "name": "tooltip-example",
       "title": "Tooltip",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "kbd",
         "tooltip",
         "example"
       ],
+=======
+      "registryDependencies": ["button", "kbd", "tooltip", "example"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/examples/tooltip-example.tsx",
@@ -1659,6 +2445,36 @@
       "type": "registry:example"
     },
     {
+<<<<<<< HEAD
+=======
+      "name": "demo",
+      "title": "Demo",
+      "registryDependencies": [
+        "alert-dialog",
+        "badge",
+        "button",
+        "button-group",
+        "card",
+        "checkbox",
+        "dropdown-menu",
+        "field",
+        "input-group",
+        "item",
+        "radio-group",
+        "slider",
+        "switch",
+        "textarea"
+      ],
+      "files": [
+        {
+          "path": "registry/radix-nova/examples/demo.tsx",
+          "type": "registry:example"
+        }
+      ],
+      "type": "registry:example"
+    },
+    {
+>>>>>>> shadcn/main
       "name": "component-example",
       "title": "Example",
       "registryDependencies": [
@@ -1684,10 +2500,14 @@
     },
     {
       "name": "utils",
+<<<<<<< HEAD
       "dependencies": [
         "clsx",
         "tailwind-merge"
       ],
+=======
+      "dependencies": ["clsx", "tailwind-merge"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/lib/utils.ts",
@@ -1709,7 +2529,11 @@
     },
     {
       "name": "preview",
+<<<<<<< HEAD
       "title": "Home",
+=======
+      "title": "Preview",
+>>>>>>> shadcn/main
       "registryDependencies": [
         "alert-dialog",
         "avatar",
@@ -1740,6 +2564,7 @@
       ],
       "files": [
         {
+<<<<<<< HEAD
           "path": "registry/radix-nova/blocks/preview.tsx",
           "type": "registry:block"
         }
@@ -1848,6 +2673,9 @@
       "files": [
         {
           "path": "registry/radix-nova/blocks/chatgpt.tsx",
+=======
+          "path": "registry/radix-nova/blocks/preview/index.tsx",
+>>>>>>> shadcn/main
           "type": "registry:block"
         }
       ],
@@ -1857,6 +2685,7 @@
       "name": "login-01",
       "title": "Login 01",
       "description": "A simple login form.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
@@ -1864,6 +2693,9 @@
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/login-01/page.tsx",
@@ -1875,22 +2707,30 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "login"
       ],
+=======
+      "categories": ["authentication", "login"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "login-02",
       "title": "Login 02",
       "description": "A two column login page with a cover image.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "input",
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/login-02/page.tsx",
@@ -1902,16 +2742,21 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "login"
       ],
+=======
+      "categories": ["authentication", "login"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "login-03",
       "title": "Login 03",
       "description": "A login page with a muted background color.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
@@ -1919,6 +2764,9 @@
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/login-03/page.tsx",
@@ -1930,16 +2778,21 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "login"
       ],
+=======
+      "categories": ["authentication", "login"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "login-04",
       "title": "Login 04",
       "description": "A login page with form and image.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
@@ -1947,6 +2800,9 @@
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/login-04/page.tsx",
@@ -1958,22 +2814,30 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "login"
       ],
+=======
+      "categories": ["authentication", "login"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "login-05",
       "title": "Login 05",
       "description": "A simple email-only login page.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "input",
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/login-05/page.tsx",
@@ -1985,22 +2849,30 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "login"
       ],
+=======
+      "categories": ["authentication", "login"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "signup-01",
       "title": "Signup 01",
       "description": "A simple signup form.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
         "input",
         "label"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/signup-01/page.tsx",
@@ -2012,22 +2884,30 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "signup"
       ],
+=======
+      "categories": ["authentication", "signup"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "signup-02",
       "title": "Signup 02",
       "description": "A two column signup page with a cover image.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "input",
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/signup-02/page.tsx",
@@ -2039,16 +2919,21 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "signup"
       ],
+=======
+      "categories": ["authentication", "signup"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "signup-03",
       "title": "Signup 03",
       "description": "A signup page with a muted background color.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
@@ -2056,6 +2941,9 @@
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/signup-03/page.tsx",
@@ -2067,16 +2955,21 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "signup"
       ],
+=======
+      "categories": ["authentication", "signup"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "signup-04",
       "title": "Signup 04",
       "description": "A signup page with form and image.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "card",
@@ -2084,6 +2977,9 @@
         "label",
         "field"
       ],
+=======
+      "registryDependencies": ["button", "card", "input", "label", "field"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/signup-04/page.tsx",
@@ -2095,21 +2991,29 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "signup"
       ],
+=======
+      "categories": ["authentication", "signup"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "signup-05",
       "title": "Signup 05",
       "description": "A simple signup form with social providers.",
+<<<<<<< HEAD
       "registryDependencies": [
         "button",
         "input",
         "label"
       ],
+=======
+      "registryDependencies": ["button", "input", "label"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/signup-05/page.tsx",
@@ -2121,10 +3025,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "authentication",
         "signup"
       ],
+=======
+      "categories": ["authentication", "signup"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2211,9 +3119,13 @@
       "meta": {
         "iframeHeight": "1000px"
       },
+<<<<<<< HEAD
       "categories": [
         "dashboard"
       ],
+=======
+      "categories": ["dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2246,10 +3158,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2282,20 +3198,28 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "sidebar-03",
       "title": "Sidebar 03",
       "description": "A sidebar with submenus.",
+<<<<<<< HEAD
       "registryDependencies": [
         "sidebar",
         "breadcrumb"
       ],
+=======
+      "registryDependencies": ["sidebar", "breadcrumb"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/sidebar-03/page.tsx",
@@ -2307,21 +3231,29 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "sidebar-04",
       "title": "Sidebar 04",
       "description": "A floating sidebar with submenus.",
+<<<<<<< HEAD
       "registryDependencies": [
         "sidebar",
         "breadcrumb",
         "separator"
       ],
+=======
+      "registryDependencies": ["sidebar", "breadcrumb", "separator"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/sidebar-04/page.tsx",
@@ -2333,10 +3265,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2365,10 +3301,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2401,10 +3341,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2446,10 +3390,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2491,10 +3439,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2526,10 +3478,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2579,10 +3535,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2606,10 +3566,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2648,22 +3612,30 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "sidebar-13",
       "title": "Sidebar 13",
       "description": "A sidebar in a dialog.",
+<<<<<<< HEAD
       "registryDependencies": [
         "sidebar",
         "breadcrumb",
         "button",
         "dialog"
       ],
+=======
+      "registryDependencies": ["sidebar", "breadcrumb", "button", "dialog"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/sidebar-13/page.tsx",
@@ -2675,20 +3647,28 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
       "name": "sidebar-14",
       "title": "Sidebar 14",
       "description": "A sidebar on the right.",
+<<<<<<< HEAD
       "registryDependencies": [
         "sidebar",
         "breadcrumb"
       ],
+=======
+      "registryDependencies": ["sidebar", "breadcrumb"],
+>>>>>>> shadcn/main
       "files": [
         {
           "path": "registry/radix-nova/blocks/sidebar-14/page.tsx",
@@ -2700,10 +3680,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2767,10 +3751,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2822,10 +3810,14 @@
           "type": "registry:component"
         }
       ],
+<<<<<<< HEAD
       "categories": [
         "sidebar",
         "dashboard"
       ],
+=======
+      "categories": ["sidebar", "dashboard"],
+>>>>>>> shadcn/main
       "type": "registry:block"
     },
     {
@@ -2847,9 +3839,14 @@
         "provider": "google",
         "import": "Geist",
         "variable": "--font-sans",
+<<<<<<< HEAD
         "subsets": [
           "latin"
         ]
+=======
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/geist"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2861,9 +3858,14 @@
         "provider": "google",
         "import": "Inter",
         "variable": "--font-sans",
+<<<<<<< HEAD
         "subsets": [
           "latin"
         ]
+=======
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/inter"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2874,7 +3876,13 @@
         "family": "'Noto Sans Variable', sans-serif",
         "provider": "google",
         "import": "Noto_Sans",
+<<<<<<< HEAD
         "variable": "--font-sans"
+=======
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-sans"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2885,7 +3893,13 @@
         "family": "'Nunito Sans Variable', sans-serif",
         "provider": "google",
         "import": "Nunito_Sans",
+<<<<<<< HEAD
         "variable": "--font-sans"
+=======
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/nunito-sans"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2897,9 +3911,14 @@
         "provider": "google",
         "import": "Figtree",
         "variable": "--font-sans",
+<<<<<<< HEAD
         "subsets": [
           "latin"
         ]
+=======
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/figtree"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2907,6 +3926,7 @@
       "title": "Roboto",
       "type": "registry:font",
       "font": {
+<<<<<<< HEAD
         "family": "'Roboto', sans-serif",
         "provider": "google",
         "import": "Roboto",
@@ -2914,6 +3934,14 @@
         "subsets": [
           "latin"
         ]
+=======
+        "family": "'Roboto Variable', sans-serif",
+        "provider": "google",
+        "import": "Roboto",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/roboto"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2921,6 +3949,7 @@
       "title": "Raleway",
       "type": "registry:font",
       "font": {
+<<<<<<< HEAD
         "family": "'Raleway', sans-serif",
         "provider": "google",
         "import": "Raleway",
@@ -2928,6 +3957,14 @@
         "subsets": [
           "latin"
         ]
+=======
+        "family": "'Raleway Variable', sans-serif",
+        "provider": "google",
+        "import": "Raleway",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/raleway"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2935,6 +3972,7 @@
       "title": "DM Sans",
       "type": "registry:font",
       "font": {
+<<<<<<< HEAD
         "family": "'DM Sans', sans-serif",
         "provider": "google",
         "import": "DM_Sans",
@@ -2942,6 +3980,14 @@
         "subsets": [
           "latin"
         ]
+=======
+        "family": "'DM Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "DM_Sans",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/dm-sans"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2949,6 +3995,7 @@
       "title": "Public Sans",
       "type": "registry:font",
       "font": {
+<<<<<<< HEAD
         "family": "'Public Sans', sans-serif",
         "provider": "google",
         "import": "Public_Sans",
@@ -2956,6 +4003,14 @@
         "subsets": [
           "latin"
         ]
+=======
+        "family": "'Public Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Public_Sans",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/public-sans"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2963,6 +4018,7 @@
       "title": "Outfit",
       "type": "registry:font",
       "font": {
+<<<<<<< HEAD
         "family": "'Outfit', sans-serif",
         "provider": "google",
         "import": "Outfit",
@@ -2970,6 +4026,105 @@
         "subsets": [
           "latin"
         ]
+=======
+        "family": "'Outfit Variable', sans-serif",
+        "provider": "google",
+        "import": "Outfit",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/outfit"
+      }
+    },
+    {
+      "name": "font-oxanium",
+      "title": "Oxanium",
+      "type": "registry:font",
+      "font": {
+        "family": "'Oxanium Variable', sans-serif",
+        "provider": "google",
+        "import": "Oxanium",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/oxanium"
+      }
+    },
+    {
+      "name": "font-manrope",
+      "title": "Manrope",
+      "type": "registry:font",
+      "font": {
+        "family": "'Manrope Variable', sans-serif",
+        "provider": "google",
+        "import": "Manrope",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/manrope"
+      }
+    },
+    {
+      "name": "font-space-grotesk",
+      "title": "Space Grotesk",
+      "type": "registry:font",
+      "font": {
+        "family": "'Space Grotesk Variable', sans-serif",
+        "provider": "google",
+        "import": "Space_Grotesk",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/space-grotesk"
+      }
+    },
+    {
+      "name": "font-montserrat",
+      "title": "Montserrat",
+      "type": "registry:font",
+      "font": {
+        "family": "'Montserrat Variable', sans-serif",
+        "provider": "google",
+        "import": "Montserrat",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/montserrat"
+      }
+    },
+    {
+      "name": "font-ibm-plex-sans",
+      "title": "IBM Plex Sans",
+      "type": "registry:font",
+      "font": {
+        "family": "'IBM Plex Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "IBM_Plex_Sans",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/ibm-plex-sans"
+      }
+    },
+    {
+      "name": "font-source-sans-3",
+      "title": "Source Sans 3",
+      "type": "registry:font",
+      "font": {
+        "family": "'Source Sans 3 Variable', sans-serif",
+        "provider": "google",
+        "import": "Source_Sans_3",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/source-sans-3"
+      }
+    },
+    {
+      "name": "font-instrument-sans",
+      "title": "Instrument Sans",
+      "type": "registry:font",
+      "font": {
+        "family": "'Instrument Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Instrument_Sans",
+        "variable": "--font-sans",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/instrument-sans"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2980,10 +4135,16 @@
         "family": "'JetBrains Mono Variable', monospace",
         "provider": "google",
         "import": "JetBrains_Mono",
+<<<<<<< HEAD
         "variable": "--font-sans",
         "subsets": [
           "latin"
         ]
+=======
+        "variable": "--font-mono",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/jetbrains-mono"
+>>>>>>> shadcn/main
       }
     },
     {
@@ -2995,6 +4156,7 @@
         "provider": "google",
         "import": "Geist_Mono",
         "variable": "--font-mono",
+<<<<<<< HEAD
         "subsets": [
           "latin"
         ]
@@ -3002,3 +4164,388 @@
     }
   ]
 }
+=======
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/geist-mono"
+      }
+    },
+    {
+      "name": "font-noto-serif",
+      "title": "Noto Serif",
+      "type": "registry:font",
+      "font": {
+        "family": "'Noto Serif Variable', serif",
+        "provider": "google",
+        "import": "Noto_Serif",
+        "variable": "--font-serif",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-serif"
+      }
+    },
+    {
+      "name": "font-roboto-slab",
+      "title": "Roboto Slab",
+      "type": "registry:font",
+      "font": {
+        "family": "'Roboto Slab Variable', serif",
+        "provider": "google",
+        "import": "Roboto_Slab",
+        "variable": "--font-serif",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/roboto-slab"
+      }
+    },
+    {
+      "name": "font-merriweather",
+      "title": "Merriweather",
+      "type": "registry:font",
+      "font": {
+        "family": "'Merriweather Variable', serif",
+        "provider": "google",
+        "import": "Merriweather",
+        "variable": "--font-serif",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/merriweather"
+      }
+    },
+    {
+      "name": "font-lora",
+      "title": "Lora",
+      "type": "registry:font",
+      "font": {
+        "family": "'Lora Variable', serif",
+        "provider": "google",
+        "import": "Lora",
+        "variable": "--font-serif",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/lora"
+      }
+    },
+    {
+      "name": "font-playfair-display",
+      "title": "Playfair Display",
+      "type": "registry:font",
+      "font": {
+        "family": "'Playfair Display Variable', serif",
+        "provider": "google",
+        "import": "Playfair_Display",
+        "variable": "--font-serif",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/playfair-display"
+      }
+    },
+    {
+      "name": "font-heading-geist",
+      "title": "Geist (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Geist Variable', sans-serif",
+        "provider": "google",
+        "import": "Geist",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/geist"
+      }
+    },
+    {
+      "name": "font-heading-inter",
+      "title": "Inter (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Inter Variable', sans-serif",
+        "provider": "google",
+        "import": "Inter",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/inter"
+      }
+    },
+    {
+      "name": "font-heading-noto-sans",
+      "title": "Noto Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Noto Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Noto_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-sans"
+      }
+    },
+    {
+      "name": "font-heading-nunito-sans",
+      "title": "Nunito Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Nunito Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Nunito_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/nunito-sans"
+      }
+    },
+    {
+      "name": "font-heading-figtree",
+      "title": "Figtree (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Figtree Variable', sans-serif",
+        "provider": "google",
+        "import": "Figtree",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/figtree"
+      }
+    },
+    {
+      "name": "font-heading-roboto",
+      "title": "Roboto (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Roboto Variable', sans-serif",
+        "provider": "google",
+        "import": "Roboto",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/roboto"
+      }
+    },
+    {
+      "name": "font-heading-raleway",
+      "title": "Raleway (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Raleway Variable', sans-serif",
+        "provider": "google",
+        "import": "Raleway",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/raleway"
+      }
+    },
+    {
+      "name": "font-heading-dm-sans",
+      "title": "DM Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'DM Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "DM_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/dm-sans"
+      }
+    },
+    {
+      "name": "font-heading-public-sans",
+      "title": "Public Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Public Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Public_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/public-sans"
+      }
+    },
+    {
+      "name": "font-heading-outfit",
+      "title": "Outfit (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Outfit Variable', sans-serif",
+        "provider": "google",
+        "import": "Outfit",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/outfit"
+      }
+    },
+    {
+      "name": "font-heading-oxanium",
+      "title": "Oxanium (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Oxanium Variable', sans-serif",
+        "provider": "google",
+        "import": "Oxanium",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/oxanium"
+      }
+    },
+    {
+      "name": "font-heading-manrope",
+      "title": "Manrope (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Manrope Variable', sans-serif",
+        "provider": "google",
+        "import": "Manrope",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/manrope"
+      }
+    },
+    {
+      "name": "font-heading-space-grotesk",
+      "title": "Space Grotesk (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Space Grotesk Variable', sans-serif",
+        "provider": "google",
+        "import": "Space_Grotesk",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/space-grotesk"
+      }
+    },
+    {
+      "name": "font-heading-montserrat",
+      "title": "Montserrat (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Montserrat Variable', sans-serif",
+        "provider": "google",
+        "import": "Montserrat",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/montserrat"
+      }
+    },
+    {
+      "name": "font-heading-ibm-plex-sans",
+      "title": "IBM Plex Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'IBM Plex Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "IBM_Plex_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/ibm-plex-sans"
+      }
+    },
+    {
+      "name": "font-heading-source-sans-3",
+      "title": "Source Sans 3 (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Source Sans 3 Variable', sans-serif",
+        "provider": "google",
+        "import": "Source_Sans_3",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/source-sans-3"
+      }
+    },
+    {
+      "name": "font-heading-instrument-sans",
+      "title": "Instrument Sans (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Instrument Sans Variable', sans-serif",
+        "provider": "google",
+        "import": "Instrument_Sans",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/instrument-sans"
+      }
+    },
+    {
+      "name": "font-heading-jetbrains-mono",
+      "title": "JetBrains Mono (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'JetBrains Mono Variable', monospace",
+        "provider": "google",
+        "import": "JetBrains_Mono",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/jetbrains-mono"
+      }
+    },
+    {
+      "name": "font-heading-geist-mono",
+      "title": "Geist Mono (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Geist Mono Variable', monospace",
+        "provider": "google",
+        "import": "Geist_Mono",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/geist-mono"
+      }
+    },
+    {
+      "name": "font-heading-noto-serif",
+      "title": "Noto Serif (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Noto Serif Variable', serif",
+        "provider": "google",
+        "import": "Noto_Serif",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/noto-serif"
+      }
+    },
+    {
+      "name": "font-heading-roboto-slab",
+      "title": "Roboto Slab (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Roboto Slab Variable', serif",
+        "provider": "google",
+        "import": "Roboto_Slab",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/roboto-slab"
+      }
+    },
+    {
+      "name": "font-heading-merriweather",
+      "title": "Merriweather (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Merriweather Variable', serif",
+        "provider": "google",
+        "import": "Merriweather",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/merriweather"
+      }
+    },
+    {
+      "name": "font-heading-lora",
+      "title": "Lora (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Lora Variable', serif",
+        "provider": "google",
+        "import": "Lora",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/lora"
+      }
+    },
+    {
+      "name": "font-heading-playfair-display",
+      "title": "Playfair Display (Heading)",
+      "type": "registry:font",
+      "font": {
+        "family": "'Playfair Display Variable', serif",
+        "provider": "google",
+        "import": "Playfair_Display",
+        "variable": "--font-heading",
+        "subsets": ["latin"],
+        "dependency": "@fontsource-variable/playfair-display"
+      }
+    }
+  ]
+}
+>>>>>>> shadcn/main

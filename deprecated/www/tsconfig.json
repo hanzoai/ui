@@ -1,4 +1,5 @@
 {
+<<<<<<<< HEAD:deprecated/www/tsconfig.json
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
@@ -7,37 +8,57 @@
       "dom.iterable",
       "esnext"
     ],
+========
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+>>>>>>>> shadcn/main:apps/v4/tsconfig.json
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
+<<<<<<<< HEAD:deprecated/www/tsconfig.json
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ]
     },
+========
+    "incremental": true,
+>>>>>>>> shadcn/main:apps/v4/tsconfig.json
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+<<<<<<<< HEAD:deprecated/www/tsconfig.json
     ".contentlayer/generated",
     "./scripts/**/*.ts"
   ],
   "exclude": ["node_modules", "__registry__"]
+========
+    "scripts/build-registry.mts",
+    "next.config.mjs",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+>>>>>>>> shadcn/main:apps/v4/tsconfig.json
 }

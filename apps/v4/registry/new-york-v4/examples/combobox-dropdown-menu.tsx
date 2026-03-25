@@ -43,7 +43,11 @@ export default function ComboboxDropdownMenu() {
   return (
     <div className="flex w-full flex-col items-start justify-between rounded-md border px-4 py-3 sm:flex-row sm:items-center">
       <p className="text-sm leading-none font-medium">
+<<<<<<< HEAD
         <span className="bg-primary text-primary-foreground mr-2 rounded-lg px-2 py-1 text-xs">
+=======
+        <span className="mr-2 rounded-lg bg-primary px-2 py-1 text-xs text-primary-foreground">
+>>>>>>> shadcn/main
           {label}
         </span>
         <span className="text-muted-foreground">Create a new project</span>
@@ -57,11 +61,34 @@ export default function ComboboxDropdownMenu() {
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:app/registry/default/example/combobox-dropdown-menu.tsx
+            <DropdownMenuItem>
+              <User />
+              Assign to...
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Calendar />
+              Set due date...
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <Tags />
+                Apply label
+              </DropdownMenuSubTrigger>
+========
+>>>>>>> shadcn/main
             <DropdownMenuItem>Assign to...</DropdownMenuItem>
             <DropdownMenuItem>Set due date...</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Apply label</DropdownMenuSubTrigger>
+<<<<<<< HEAD
+=======
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/combobox-dropdown-menu.tsx
+>>>>>>> shadcn/main
               <DropdownMenuSubContent className="p-0">
                 <Command>
                   <CommandInput
@@ -91,6 +118,13 @@ export default function ComboboxDropdownMenu() {
             </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-600">
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:app/registry/default/example/combobox-dropdown-menu.tsx
+              <Trash />
+========
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/combobox-dropdown-menu.tsx
+>>>>>>> shadcn/main
               Delete
               <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
             </DropdownMenuItem>

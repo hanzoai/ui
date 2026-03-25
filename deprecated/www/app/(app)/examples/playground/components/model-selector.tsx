@@ -1,12 +1,21 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
 import { PopoverProps } from "@radix-ui/react-popover"
 import { Check, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { useMutationObserver } from "@/hooks/use-mutation-observer"
 import { Button } from "@/registry/default/ui/button"
+========
+import { Check, ChevronsUpDown } from "lucide-react"
+import type { Popover as PopoverPrimitive } from "radix-ui"
+
+import { cn } from "@/lib/utils"
+import { useMutationObserver } from "@/hooks/use-mutation-observer"
+import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   Command,
   CommandEmpty,
@@ -14,22 +23,36 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
 } from "@/registry/default/ui/command"
+========
+} from "@/registry/new-york-v4/ui/command"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
 } from "@/registry/default/ui/hover-card"
 import { Label } from "@/registry/default/ui/label"
+========
+} from "@/registry/new-york-v4/ui/hover-card"
+import { Label } from "@/registry/new-york-v4/ui/label"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
 } from "@/registry/default/ui/popover"
+========
+} from "@/registry/new-york-v4/ui/popover"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
 
-import { Model, ModelType } from "../data/models"
+import { type Model, type ModelType } from "../data/models"
 
-interface ModelSelectorProps extends PopoverProps {
+interface ModelSelectorProps
+  extends React.ComponentProps<typeof PopoverPrimitive.Root> {
   types: readonly ModelType[]
   models: Model[]
 }
@@ -40,7 +63,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
   const [peekedModel, setPeekedModel] = React.useState<Model>(models[0])
 
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-3">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
           <Label htmlFor="model">Model</Label>
@@ -64,7 +87,11 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
             className="w-full justify-between"
           >
             {selectedModel ? selectedModel.name : "Select a model..."}
+<<<<<<<< HEAD:deprecated/www/app/(app)/examples/playground/components/model-selector.tsx
             <ChevronsUpDown className="opacity-50" />
+========
+            <ChevronsUpDown className="text-muted-foreground" />
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/model-selector.tsx
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[250px] p-0">
@@ -76,13 +103,13 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
               className="min-h-[280px]"
             >
               <div className="grid gap-2">
-                <h4 className="font-medium leading-none">{peekedModel.name}</h4>
+                <h4 className="leading-none font-medium">{peekedModel.name}</h4>
                 <div className="text-sm text-muted-foreground">
                   {peekedModel.description}
                 </div>
                 {peekedModel.strengths ? (
                   <div className="mt-4 grid gap-2">
-                    <h5 className="text-sm font-medium leading-none">
+                    <h5 className="text-sm leading-none font-medium">
                       Strengths
                     </h5>
                     <ul className="text-sm text-muted-foreground">
@@ -93,7 +120,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
               </div>
             </HoverCardContent>
             <Command loop>
-              <CommandList className="h-[var(--cmdk-list-height)] max-h-[400px]">
+              <CommandList className="h-(--cmdk-list-height) max-h-[400px]">
                 <CommandInput placeholder="Search Models..." />
                 <CommandEmpty>No Models found.</CommandEmpty>
                 <HoverCardTrigger />

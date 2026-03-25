@@ -1602,7 +1602,11 @@ function ItemFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             Last updated 2 hours ago
           </span>
         </ItemFooter>
@@ -1616,7 +1620,11 @@ function ItemFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             Created by Sarah Chen
           </span>
         </ItemFooter>
@@ -1630,7 +1638,11 @@ function ItemFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">12 comments</span>
+=======
+          <span className="text-sm text-muted-foreground">12 comments</span>
+>>>>>>> shadcn/main
         </ItemFooter>
       </Item>
     </Example>
@@ -1652,7 +1664,11 @@ function ItemHeaderAndFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             Updated 5 minutes ago
           </span>
         </ItemFooter>
@@ -1669,7 +1685,11 @@ function ItemHeaderAndFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             Status: In Progress
           </span>
         </ItemFooter>
@@ -1686,7 +1706,11 @@ function ItemHeaderAndFooterExamples() {
           </ItemDescription>
         </ItemContent>
         <ItemFooter>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             Category: Technical • 3 attachments
           </span>
         </ItemFooter>

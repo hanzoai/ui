@@ -10,6 +10,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/accordion",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/accordion-example.tsx",
+        api: "https://base-ui.com/react/components/accordion.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "alert",
@@ -20,6 +31,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/alert",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/alert-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "alert-dialog",
@@ -31,6 +52,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/alert-dialog",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/alert-dialog-example.tsx",
+        api: "https://base-ui.com/react/components/alert-dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "aspect-ratio",
@@ -41,6 +73,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/aspect-ratio",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/aspect-ratio-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "avatar",
@@ -51,6 +93,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/avatar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/avatar-example.tsx",
+        api: "https://base-ui.com/react/components/avatar.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "badge",
@@ -61,6 +114,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/badge",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/badge-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "breadcrumb",
@@ -71,6 +134,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/breadcrumb",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/breadcrumb-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "button",
@@ -81,6 +154,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/button",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/button-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "button-group",
@@ -92,6 +175,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/button-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/button-group-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "calendar",
@@ -104,6 +197,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/calendar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/calendar-example.tsx",
+        api: "https://react-day-picker.js.org",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "card",
@@ -114,6 +218,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/card",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/card-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "carousel",
@@ -126,6 +240,17 @@ export const ui: Registry["items"] = [
     ],
     registryDependencies: ["button"],
     dependencies: ["embla-carousel-react"],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/carousel",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/carousel-example.tsx",
+        api: "https://www.embla-carousel.com/get-started/react",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "chart",
@@ -137,7 +262,18 @@ export const ui: Registry["items"] = [
       },
     ],
     registryDependencies: ["card"],
+<<<<<<< HEAD
     dependencies: ["recharts@2.15.4"],
+=======
+    dependencies: ["recharts@3.8.0"],
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/chart",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/chart-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "checkbox",
@@ -148,6 +284,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/checkbox",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/checkbox-example.tsx",
+        api: "https://base-ui.com/react/components/checkbox.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "collapsible",
@@ -158,6 +305,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/collapsible",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/collapsible-example.tsx",
+        api: "https://base-ui.com/react/components/collapsible.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "combobox",
@@ -170,6 +328,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/combobox",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/combobox-example.tsx",
+        api: "https://base-ui.com/react/components/combobox.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "command",
@@ -182,6 +351,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/command",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/command-example.tsx",
+        api: "https://github.com/dip/cmdk",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "context-menu",
@@ -192,6 +372,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/context-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/context-menu-example.tsx",
+        api: "https://base-ui.com/react/components/context-menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "dialog",
@@ -203,6 +394,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/dialog",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/dialog-example.tsx",
+        api: "https://base-ui.com/react/components/dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "drawer",
@@ -214,6 +416,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/drawer",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/drawer-example.tsx",
+        api: "https://vaul.emilkowal.ski/getting-started",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "dropdown-menu",
@@ -224,6 +437,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/dropdown-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/dropdown-menu-example.tsx",
+        api: "https://base-ui.com/react/components/menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "empty",
@@ -234,6 +458,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/empty",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/empty-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "field",
@@ -245,6 +479,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/field",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/field-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "form",
@@ -259,6 +503,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/hover-card",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/hover-card-example.tsx",
+        api: "https://base-ui.com/react/components/hover-card.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input",
@@ -269,6 +524,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/input",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input-group",
@@ -280,6 +545,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/input-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-group-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "input-otp",
@@ -291,6 +566,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/input-otp",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/input-otp-example.tsx",
+        api: "https://input-otp.rodz.dev",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "item",
@@ -302,6 +588,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/item",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/item-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "label",
@@ -312,6 +608,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/label",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/label-example.tsx",
+        api: "https://base-ui.com/react/components/label.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "menubar",
@@ -323,6 +630,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/menubar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/menubar-example.tsx",
+        api: "https://base-ui.com/react/components/menubar.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "navigation-menu",
@@ -333,6 +651,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/navigation-menu",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/navigation-menu-example.tsx",
+        api: "https://base-ui.com/react/components/navigation-menu.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "pagination",
@@ -344,6 +673,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/pagination",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/pagination-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "popover",
@@ -354,6 +693,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/popover",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/popover-example.tsx",
+        api: "https://base-ui.com/react/components/popover.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "progress",
@@ -364,6 +714,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/progress",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/progress-example.tsx",
+        api: "https://base-ui.com/react/components/progress.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "radio-group",
@@ -374,6 +735,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/radio-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/radio-group-example.tsx",
+        api: "https://base-ui.com/react/components/radio-group.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "resizable",
@@ -385,6 +757,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/resizable",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/resizable-example.tsx",
+        api: "https://github.com/bvaughn/react-resizable-panels",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "scroll-area",
@@ -395,6 +778,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/scroll-area",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/scroll-area-example.tsx",
+        api: "https://base-ui.com/react/components/scroll-area.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "select",
@@ -405,6 +799,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/select",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/select-example.tsx",
+        api: "https://base-ui.com/react/components/select.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "separator",
@@ -415,6 +820,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/separator",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/separator-example.tsx",
+        api: "https://base-ui.com/react/components/separator.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sheet",
@@ -426,6 +842,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/sheet",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sheet-example.tsx",
+        api: "https://base-ui.com/react/components/dialog.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sidebar",
@@ -445,6 +872,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/sidebar",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sidebar-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "skeleton",
@@ -455,6 +892,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/skeleton",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/skeleton-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "slider",
@@ -465,6 +912,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/slider",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/slider-example.tsx",
+        api: "https://base-ui.com/react/components/slider.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "sonner",
@@ -476,6 +934,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/sonner",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/sonner-example.tsx",
+        api: "https://sonner.emilkowal.ski",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "spinner",
@@ -486,6 +955,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/spinner",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/spinner-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "switch",
@@ -496,6 +975,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/switch",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/switch-example.tsx",
+        api: "https://base-ui.com/react/components/switch.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "table",
@@ -506,6 +996,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/table",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/table-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "tabs",
@@ -516,6 +1016,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/tabs",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/tabs-example.tsx",
+        api: "https://base-ui.com/react/components/tabs.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "textarea",
@@ -526,6 +1037,16 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/textarea",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/textarea-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "toggle",
@@ -536,6 +1057,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/toggle",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/toggle-example.tsx",
+        api: "https://base-ui.com/react/components/toggle.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "toggle-group",
@@ -547,6 +1079,17 @@ export const ui: Registry["items"] = [
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/toggle-group",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/toggle-group-example.tsx",
+        api: "https://base-ui.com/react/components/toggle-group.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "tooltip",
@@ -573,6 +1116,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/tooltip",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/tooltip-example.tsx",
+        api: "https://base-ui.com/react/components/tooltip.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "kbd",
@@ -583,6 +1137,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/kbd",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/kbd-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "native-select",
@@ -593,6 +1157,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/native-select",
+        examples:
+          "https://raw.githubusercontent.com/shadcn-ui/ui/refs/heads/main/apps/v4/registry/bases/base/examples/native-select-example.tsx",
+      },
+    },
+>>>>>>> shadcn/main
   },
   {
     name: "direction",
@@ -604,5 +1178,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         type: "registry:ui",
       },
     ],
+<<<<<<< HEAD
+=======
+    meta: {
+      links: {
+        docs: "https://ui.shadcn.com/docs/components/base/direction",
+        api: "https://base-ui.com/react/utils/direction-provider.md",
+      },
+    },
+>>>>>>> shadcn/main
   },
 ]

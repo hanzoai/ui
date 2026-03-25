@@ -1,18 +1,26 @@
 "use client"
 
 import * as React from "react"
-import { SliderProps } from "@radix-ui/react-slider"
+import type { Slider as SliderPrimitive } from "radix-ui"
 
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/playground/components/top-p-selector.tsx
 } from "@/registry/default/ui/hover-card"
 import { Label } from "@/registry/default/ui/label"
 import { Slider } from "@/registry/default/ui/slider"
+========
+} from "@/registry/new-york-v4/ui/hover-card"
+import { Label } from "@/registry/new-york-v4/ui/label"
+import { Slider } from "@/registry/new-york-v4/ui/slider"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/playground/components/top-p-selector.tsx
 
 interface TopPSelectorProps {
-  defaultValue: SliderProps["defaultValue"]
+  defaultValue: React.ComponentProps<
+    typeof SliderPrimitive.Root
+  >["defaultValue"]
 }
 
 export function TopPSelector({ defaultValue }: TopPSelectorProps) {
@@ -35,7 +43,6 @@ export function TopPSelector({ defaultValue }: TopPSelectorProps) {
               defaultValue={value}
               step={0.1}
               onValueChange={setValue}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
               aria-label="Top P"
             />
           </div>

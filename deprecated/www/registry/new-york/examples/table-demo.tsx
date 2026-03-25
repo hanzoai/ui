@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york/ui/table"
+} from "@/examples/base/ui/table"
 
 const invoices = [
   {
@@ -54,7 +54,7 @@ const invoices = [
   },
 ]
 
-export default function TableDemo() {
+export function TableDemo() {
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>

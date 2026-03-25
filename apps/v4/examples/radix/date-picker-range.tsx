@@ -1,9 +1,19 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/registry/new-york/examples/date-picker-with-range.tsx
+import { addDays, format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/new-york/ui/button"
+import { Calendar } from "@/registry/new-york/ui/calendar"
+========
 import { Button } from "@/examples/radix/ui/button"
 import { Calendar } from "@/examples/radix/ui/calendar"
 import { Field, FieldLabel } from "@/examples/radix/ui/field"
+>>>>>>>> shadcn/main:apps/v4/examples/radix/date-picker-range.tsx
 import {
   Popover,
   PopoverContent,

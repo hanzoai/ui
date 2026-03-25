@@ -76,12 +76,21 @@ export function ChartTooltipFormatter() {
                 <ChartTooltipContent
                   hideLabel
                   formatter={(value, name) => (
+<<<<<<< HEAD
                     <div className="text-muted-foreground flex min-w-[130px] items-center text-xs">
                       {chartConfig[name as keyof typeof chartConfig]?.label ||
                         name}
                       <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                         {value}
                         <span className="text-muted-foreground font-normal">
+=======
+                    <div className="flex min-w-[130px] items-center text-xs text-muted-foreground">
+                      {chartConfig[name as keyof typeof chartConfig]?.label ||
+                        name}
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium text-foreground tabular-nums">
+                        {value}
+                        <span className="font-normal text-muted-foreground">
+>>>>>>> shadcn/main
                           kcal
                         </span>
                       </div>

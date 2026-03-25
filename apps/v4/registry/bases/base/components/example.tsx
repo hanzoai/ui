@@ -2,7 +2,11 @@ import { cn } from "@/registry/bases/base/lib/utils"
 
 function ExampleWrapper({ className, ...props }: React.ComponentProps<"div">) {
   return (
+<<<<<<< HEAD
     <div className="bg-background w-full">
+=======
+    <div className="w-full bg-muted dark:bg-background">
+>>>>>>> shadcn/main
       <div
         data-slot="example-wrapper"
         className={cn(
@@ -36,14 +40,22 @@ function Example({
       {...props}
     >
       {title && (
+<<<<<<< HEAD
         <div className="text-muted-foreground px-1.5 py-2 text-xs font-medium">
+=======
+        <div className="px-1.5 py-2 text-xs font-medium text-muted-foreground">
+>>>>>>> shadcn/main
           {title}
         </div>
       )}
       <div
         data-slot="example-content"
         className={cn(
+<<<<<<< HEAD
           "bg-background text-foreground flex min-w-0 flex-1 flex-col items-start gap-6 border border-dashed p-4 sm:p-6 *:[div:not([class*='w-'])]:w-full",
+=======
+          "flex min-w-0 flex-1 flex-col items-start gap-6 rounded-xl bg-card p-12 text-foreground *:[div:not([class*='w-'])]:w-full",
+>>>>>>> shadcn/main
           className
         )}
       >

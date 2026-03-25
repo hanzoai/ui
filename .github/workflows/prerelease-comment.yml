@@ -28,8 +28,13 @@ jobs:
 
             for (const artifact of allArtifacts.data.artifacts) {
               // Extract the PR number and package version from the artifact name
+<<<<<<< HEAD
               const match = /^npm-package-hanzoai-ui@(.*?)-pr-(\d+)/.exec(artifact.name);
               
+=======
+              const match = /^npm-package-shadcn@(.*?)-pr-(\d+)/.exec(artifact.name);
+
+>>>>>>> shadcn/main
               if (match) {
                 require("fs").appendFileSync(
                   process.env.GITHUB_ENV,
@@ -49,7 +54,11 @@ jobs:
             A new prerelease is available for testing:
 
             ```sh
+<<<<<<< HEAD
             npx hanzoai-ui@${{ env.BETA_PACKAGE_VERSION }}
+=======
+            pnpm dlx shadcn@${{ env.BETA_PACKAGE_VERSION }}
+>>>>>>> shadcn/main
             ```
 
       - name: "Remove the autorelease label once published"

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import { fetchRegistry } from "@/src/registry/fetcher"
+=======
+>>>>>>> shadcn/main
 import { spinner } from "@/src/utils/spinner"
 import { execa } from "execa"
 import fs from "fs-extra"
@@ -13,13 +16,20 @@ import {
   type MockInstance,
 } from "vitest"
 
+<<<<<<< HEAD
 import { createProject, TEMPLATES } from "./create-project"
+=======
+import { createProject } from "./create-project"
+>>>>>>> shadcn/main
 
 // Mock dependencies
 vi.mock("fs-extra")
 vi.mock("execa")
 vi.mock("prompts")
+<<<<<<< HEAD
 vi.mock("@/src/registry/fetcher")
+=======
+>>>>>>> shadcn/main
 vi.mock("@/src/utils/get-package-manager", () => ({
   getPackageManager: vi.fn().mockResolvedValue("npm"),
 }))
@@ -46,7 +56,11 @@ describe("createProject", () => {
     vi.mocked(fs.move).mockResolvedValue(undefined)
     vi.mocked(fs.remove).mockResolvedValue(undefined)
 
+<<<<<<< HEAD
     // Mock execa to resolve immediately without actual execution
+=======
+    // Mock execa for git clone and package manager install.
+>>>>>>> shadcn/main
     vi.mocked(execa).mockResolvedValue({
       stdout: "",
       stderr: "",
@@ -61,6 +75,7 @@ describe("createProject", () => {
       killed: false,
     } as any)
 
+<<<<<<< HEAD
     // Mock fetch for monorepo template
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -73,6 +88,11 @@ describe("createProject", () => {
     // Reset registry mock
     vi.mocked(fetchRegistry).mockResolvedValue([])
 
+=======
+    // Reset prompts mock
+    vi.mocked(prompts).mockResolvedValue({ type: "next", name: "my-app" })
+
+>>>>>>> shadcn/main
     // Mock spinner function
     const mockSpinner = {
       start: vi.fn().mockReturnThis(),
@@ -101,7 +121,10 @@ describe("createProject", () => {
   afterEach(() => {
     vi.resetAllMocks()
     mockExit?.mockRestore()
+<<<<<<< HEAD
     delete (global as any).fetch
+=======
+>>>>>>> shadcn/main
   })
 
   it("should create a Next.js project with default options", async () => {
@@ -110,12 +133,16 @@ describe("createProject", () => {
     const result = await createProject({
       cwd: "/test",
       force: false,
+<<<<<<< HEAD
       srcDir: false,
+=======
+>>>>>>> shadcn/main
     })
 
     expect(result).toEqual({
       projectPath: "/test/my-app",
       projectName: "my-app",
+<<<<<<< HEAD
       template: TEMPLATES.next,
     })
 
@@ -129,18 +156,32 @@ describe("createProject", () => {
   it("should create a monorepo project when selected", async () => {
     vi.mocked(prompts).mockResolvedValue({
       type: "next-monorepo",
+=======
+      template: "next",
+    })
+  })
+
+  it("should create a monorepo project with --monorepo flag", async () => {
+    vi.mocked(prompts).mockResolvedValue({
+      type: "next",
+>>>>>>> shadcn/main
       name: "my-monorepo",
     })
 
     const result = await createProject({
       cwd: "/test",
       force: false,
+<<<<<<< HEAD
       srcDir: false,
+=======
+      monorepo: true,
+>>>>>>> shadcn/main
     })
 
     expect(result).toEqual({
       projectPath: "/test/my-monorepo",
       projectName: "my-monorepo",
+<<<<<<< HEAD
       template: TEMPLATES["next-monorepo"],
     })
   })
@@ -152,13 +193,24 @@ describe("createProject", () => {
       },
     ])
 
+=======
+      template: "next",
+    })
+  })
+
+  it("should force next template for remote components", async () => {
+>>>>>>> shadcn/main
     const result = await createProject({
       cwd: "/test",
       force: true,
       components: ["/chat/b/some-component"],
     })
 
+<<<<<<< HEAD
     expect(result.template).toBe(TEMPLATES.next)
+=======
+    expect(result.template).toBe("next")
+>>>>>>> shadcn/main
   })
 
   it("should throw error if project path already exists", async () => {
@@ -195,6 +247,7 @@ describe("createProject", () => {
 
     expect(mockExit).toHaveBeenCalledWith(1)
   })
+<<<<<<< HEAD
 
   it("should include --no-react-compiler flag for Next.js (latest)", async () => {
     vi.mocked(prompts).mockResolvedValue({ type: "next", name: "my-app" })
@@ -211,4 +264,6 @@ describe("createProject", () => {
       expect.any(Object)
     )
   })
+=======
+>>>>>>> shadcn/main
 })

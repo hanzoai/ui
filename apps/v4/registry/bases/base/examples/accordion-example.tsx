@@ -132,17 +132,30 @@ function AccordionWithBorders() {
 
   return (
     <Example title="With Borders">
+<<<<<<< HEAD
       <Accordion className="style-lyra:gap-2 style-vega:gap-2 style-nova:gap-2 mx-auto max-w-lg">
+=======
+      <Accordion className="mx-auto max-w-lg style-vega:gap-2 style-nova:gap-2 style-lyra:gap-2">
+>>>>>>> shadcn/main
         {items.map((item) => (
           <AccordionItem
             key={item.value}
             value={item.value}
+<<<<<<< HEAD
             className="style-vega:border style-nova:border style-lyra:border style-vega:rounded-lg style-nova:rounded-lg"
           >
             <AccordionTrigger className="style-nova:px-2.5 style-nova:text-sm style-vega:text-sm style-maia:text-sm style-mira:text-xs style-lyra:px-2 style-lyra:text-xs style-vega:px-4 font-medium">
               {item.trigger}
             </AccordionTrigger>
             <AccordionContent className="text-muted-foreground style-nova:px-2.5 style-nova:text-sm style-lyra:px-2 style-lyra:text-xs style-vega:px-4 style-maia:px-0 style-mira:px-0">
+=======
+            className="style-vega:rounded-lg style-vega:border style-nova:rounded-lg style-nova:border style-lyra:border"
+          >
+            <AccordionTrigger className="font-medium style-vega:px-4 style-vega:text-sm style-nova:px-2.5 style-nova:text-sm style-lyra:px-2 style-lyra:text-xs style-maia:text-sm style-mira:text-xs">
+              {item.trigger}
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground style-vega:px-4 style-nova:px-2.5 style-nova:text-sm style-lyra:px-2 style-lyra:text-xs style-maia:px-0 style-mira:px-0">
+>>>>>>> shadcn/main
               {item.content}
             </AccordionContent>
           </AccordionItem>
@@ -314,18 +327,31 @@ function AccordionWithDisabled() {
 
   return (
     <Example title="With Disabled">
+<<<<<<< HEAD
       <Accordion className="style-lyra:rounded-none style-vega:rounded-lg style-nova:rounded-lg style-maia:rounded-lg style-mira:rounded-lg mx-auto max-w-lg overflow-hidden border">
+=======
+      <Accordion className="mx-auto max-w-lg overflow-hidden border style-vega:rounded-lg style-nova:rounded-lg style-lyra:rounded-none style-maia:rounded-lg style-mira:rounded-lg">
+>>>>>>> shadcn/main
         {items.map((item) => (
           <AccordionItem
             key={item.value}
             value={item.value}
             disabled={item.disabled}
+<<<<<<< HEAD
             className="data-open:bg-muted/50 p-1"
           >
             <AccordionTrigger className="style-nova:px-2.5 style-lyra:px-2 style-vega:px-4">
               {item.trigger}
             </AccordionTrigger>
             <AccordionContent className="style-nova:px-2.5 style-lyra:px-2 style-vega:px-4">
+=======
+            className="p-1 data-open:bg-muted/50"
+          >
+            <AccordionTrigger className="style-vega:px-4 style-nova:px-2.5 style-lyra:px-2">
+              {item.trigger}
+            </AccordionTrigger>
+            <AccordionContent className="style-vega:px-4 style-nova:px-2.5 style-lyra:px-2">
+>>>>>>> shadcn/main
               {item.content}
             </AccordionContent>
           </AccordionItem>

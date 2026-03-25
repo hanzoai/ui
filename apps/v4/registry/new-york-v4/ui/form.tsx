@@ -7,7 +7,14 @@ import {
   Controller,
   FormProvider,
   useFormContext,
+<<<<<<< HEAD
   useFormState,
+=======
+<<<<<<<< HEAD:app/registry/default/ui/form.tsx
+========
+  useFormState,
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/ui/form.tsx
+>>>>>>> shadcn/main
   type ControllerProps,
   type FieldPath,
   type FieldValues,
@@ -25,9 +32,13 @@ type FormFieldContextValue<
   name: TName
 }
 
+<<<<<<< HEAD
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue
 )
+=======
+const FormFieldContext = React.createContext<FormFieldContextValue | null>(null)
+>>>>>>> shadcn/main
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -45,14 +56,33 @@ const FormField = <
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext)
   const itemContext = React.useContext(FormItemContext)
+<<<<<<< HEAD
   const { getFieldState } = useFormContext()
   const formState = useFormState({ name: fieldContext.name })
   const fieldState = getFieldState(fieldContext.name, formState)
+=======
+<<<<<<<< HEAD:app/registry/default/ui/form.tsx
+  const { getFieldState, formState } = useFormContext()
+========
+  const { getFieldState } = useFormContext()
+  const formState = useFormState({ name: fieldContext.name })
+  const fieldState = getFieldState(fieldContext.name, formState)
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/ui/form.tsx
+>>>>>>> shadcn/main
 
   if (!fieldContext) {
     throw new Error("useFormField should be used within <FormField>")
   }
 
+<<<<<<< HEAD
+=======
+  if (!itemContext) {
+    throw new Error("useFormField should be used within <FormItem>")
+  }
+
+  const fieldState = getFieldState(fieldContext.name, formState)
+
+>>>>>>> shadcn/main
   const { id } = itemContext
 
   return {
@@ -69,9 +99,13 @@ type FormItemContextValue = {
   id: string
 }
 
+<<<<<<< HEAD
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
 )
+=======
+const FormItemContext = React.createContext<FormItemContextValue | null>(null)
+>>>>>>> shadcn/main
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   const id = React.useId()
@@ -129,7 +163,11 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={formDescriptionId}
+<<<<<<< HEAD
       className={cn("text-muted-foreground text-sm", className)}
+=======
+      className={cn("text-sm text-muted-foreground", className)}
+>>>>>>> shadcn/main
       {...props}
     />
   )
@@ -137,7 +175,15 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField()
+<<<<<<< HEAD
   const body = error ? String(error?.message ?? "") : props.children
+=======
+<<<<<<<< HEAD:app/registry/default/ui/form.tsx
+  const body = error ? String(error?.message ?? "") : children
+========
+  const body = error ? String(error?.message ?? "") : props.children
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/ui/form.tsx
+>>>>>>> shadcn/main
 
   if (!body) {
     return null
@@ -147,7 +193,11 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
+<<<<<<< HEAD
       className={cn("text-destructive text-sm", className)}
+=======
+      className={cn("text-sm text-destructive", className)}
+>>>>>>> shadcn/main
       {...props}
     >
       {body}

@@ -113,7 +113,11 @@ function AlertDialogTitle({
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
+<<<<<<< HEAD
       className={cn("cn-alert-dialog-title", className)}
+=======
+      className={cn("cn-alert-dialog-title cn-font-heading", className)}
+>>>>>>> shadcn/main
       {...props}
     />
   )

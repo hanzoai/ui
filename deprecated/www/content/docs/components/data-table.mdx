@@ -1,12 +1,23 @@
 ---
 title: Data Table
 description: Powerful table and datagrids built using TanStack Table.
+base: base
 component: true
 links:
   doc: https://tanstack.com/table/v8/docs/introduction
 ---
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
 <ComponentPreview name="data-table-demo" className="[&_.preview]:items-start" />
+========
+<ComponentPreview
+  styleName="radix-nova"
+  name="data-table-demo"
+  align="start"
+  previewClassName="items-start h-auto px-4 md:px-8"
+  hideCode
+/>
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ## Introduction
 
@@ -102,7 +113,7 @@ I'm using a Next.js example here but this works for any other React framework.
 
 Let's start by building a basic table.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Column Definitions
 
@@ -279,7 +290,7 @@ export default async function DemoPage() {
 
 Let's format the amount cell to display the dollar amount. We'll also align the cell to the right.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update columns definition
 
@@ -309,13 +320,13 @@ You can use the same approach to format other cells and headers.
 
 ## Row Actions
 
-Let's add row actions to our table. We'll use a `<Dropdown />` component for this.
+Let's add row actions to our table. We'll use a `<DropdownMenu />` component for this.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update columns definition
 
-Update our columns definition to add a new `actions` column. The `actions` cell returns a `<Dropdown />` component.
+Update our columns definition to add a new `actions` column. The `actions` cell returns a `<DropdownMenu />` component.
 
 ```tsx showLineNumbers title="app/payments/columns.tsx" {4,6-14,18-45}
 "use client"
@@ -375,7 +386,7 @@ You can access the row data using `row.original` in the `cell` function. Use thi
 
 Next, we'll add pagination to our table.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update `<DataTable>`
 
@@ -461,11 +472,11 @@ See [Reusable Components](#reusable-components) section for a more advanced pagi
 
 Let's make the email column sortable.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update `<DataTable>`
 
-```tsx showLineNumbers title="app/payments/data-table.tsx" showLineNumbers {3,6,10,18,25-28}
+```tsx showLineNumbers title="app/payments/data-table.tsx" {3,6,10,18,25-29}
 "use client"
 
 import * as React from "react"
@@ -543,7 +554,7 @@ This will automatically sort the table (asc and desc) when the user toggles on t
 
 Let's add a search input to filter emails in our table.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update `<DataTable>`
 
@@ -618,7 +629,7 @@ Filtering is now enabled for the `email` column. You can add filters to other co
 
 Adding column visibility is fairly simple using `@tanstack/react-table` visibility API.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update `<DataTable>`
 
@@ -731,7 +742,7 @@ This adds a dropdown menu that you can use to toggle column visibility.
 
 Next, we're going to add row selection to our table.
 
-<Steps>
+<Steps className="mb-0 pt-2">
 
 ### Update column definitions
 
@@ -836,9 +847,16 @@ Here are some components you can use to build your data tables. This is from the
 
 Make any column header sortable and hideable.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
 <ComponentSource src="/app/(app)/examples/tasks/components/data-table-column-header.tsx" />
+========
+<ComponentSource
+  src="/app/(app)/examples/tasks/components/data-table-column-header.tsx"
+  title="components/data-table-column-header.tsx"
+/>
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
-```tsx {5}
+```tsx showLineNumbers {5}
 export const columns = [
   {
     accessorKey: "email",
@@ -853,7 +871,14 @@ export const columns = [
 
 Add pagination controls to your table including page size and selection count.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
 <ComponentSource src="/app/(app)/examples/tasks/components/data-table-pagination.tsx" />
+========
+<ComponentSource
+  src="/app/(app)/examples/tasks/components/data-table-pagination.tsx"
+  styleName="radix-nova"
+/>
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ```tsx
 <DataTablePagination table={table} />
@@ -863,8 +888,27 @@ Add pagination controls to your table including page size and selection count.
 
 A component to toggle column visibility.
 
+<<<<<<<< HEAD:deprecated/www/content/docs/components/data-table.mdx
 <ComponentSource src="/app/(app)/examples/tasks/components/data-table-view-options.tsx" />
+========
+<ComponentSource
+  src="/app/(app)/examples/tasks/components/data-table-view-options.tsx"
+  styleName="radix-nova"
+/>
+>>>>>>>> shadcn/main:apps/v4/content/docs/components/base/data-table.mdx
 
 ```tsx
 <DataTableViewOptions table={table} />
 ```
+
+## RTL
+
+To enable RTL support in shadcn/ui, see the [RTL configuration guide](/docs/rtl).
+
+<ComponentPreview
+  styleName="base-nova"
+  name="data-table-rtl"
+  direction="rtl"
+  previewClassName="items-start h-auto px-4 md:px-8"
+  hideCode
+/>

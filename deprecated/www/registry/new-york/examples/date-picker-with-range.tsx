@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+<<<<<<<< HEAD:deprecated/www/registry/new-york/examples/date-picker-with-range.tsx
 import { addDays, format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
@@ -8,31 +9,35 @@ import { DateRange } from "react-day-picker"
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york/ui/button"
 import { Calendar } from "@/registry/new-york/ui/calendar"
+========
+import { Button } from "@/examples/radix/ui/button"
+import { Calendar } from "@/examples/radix/ui/calendar"
+import { Field, FieldLabel } from "@/examples/radix/ui/field"
+>>>>>>>> shadcn/main:apps/v4/examples/radix/date-picker-range.tsx
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/registry/new-york/ui/popover"
+} from "@/examples/radix/ui/popover"
+import { addDays, format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { type DateRange } from "react-day-picker"
 
-export default function DatePickerWithRange({
-  className,
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function DatePickerWithRange() {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: new Date(new Date().getFullYear(), 0, 20),
+    to: addDays(new Date(new Date().getFullYear(), 0, 20), 20),
   })
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <Field className="mx-auto w-60">
+      <FieldLabel htmlFor="date-picker-range">Date Picker Range</FieldLabel>
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            id="date"
-            variant={"outline"}
-            className={cn(
-              "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
-            )}
+            variant="outline"
+            id="date-picker-range"
+            className="justify-start px-2.5 font-normal"
           >
             <CalendarIcon />
             {date?.from ? (
@@ -51,7 +56,6 @@ export default function DatePickerWithRange({
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
-            initialFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}
@@ -60,6 +64,6 @@ export default function DatePickerWithRange({
           />
         </PopoverContent>
       </Popover>
-    </div>
+    </Field>
   )
 }

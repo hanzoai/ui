@@ -30,6 +30,7 @@ yarn-error.log*
 .turbo
 
 .contentlayer
+<<<<<<< HEAD
 **/tsconfig.tsbuildinfo
 
 # build
@@ -72,11 +73,22 @@ test-results/
 playwright-report/
 *BADGE_INSPECTION*.md
 *BADGE_INSPECTION*.txt
+=======
+tsconfig.tsbuildinfo
+>>>>>>> shadcn/main
 
 # ide
 .idea
 .fleet
+<<<<<<< HEAD
 
 .notes
 .claude/settings.local.json
 pkg/ui/dist-test/
+=======
+.vscode
+
+.notes
+.playwright-mcp
+shadcn-workspace
+>>>>>>> shadcn/main

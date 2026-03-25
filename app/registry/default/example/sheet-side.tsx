@@ -1,8 +1,14 @@
 "use client"
 
+<<<<<<<< HEAD:app/registry/default/example/sheet-side.tsx
 import { Button } from "@/registry/default/ui/button"
 import { Input } from "@/registry/default/ui/input"
 import { Label } from "@/registry/default/ui/label"
+========
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Input } from "@/registry/new-york-v4/ui/input"
+import { Label } from "@/registry/new-york-v4/ui/label"
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/sheet-side.tsx
 import {
   Sheet,
   SheetClose,
@@ -12,7 +18,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+<<<<<<<< HEAD:app/registry/default/example/sheet-side.tsx
 } from "@/registry/default/ui/sheet"
+========
+} from "@/registry/new-york-v4/ui/sheet"
+>>>>>>>> shadcn/main:apps/v4/registry/new-york-v4/examples/sheet-side.tsx
 
 const SHEET_SIDES = ["top", "right", "bottom", "left"] as const
 
@@ -30,7 +40,8 @@ export default function SheetSide() {
             <SheetHeader>
               <SheetTitle>Edit profile</SheetTitle>
               <SheetDescription>
-                Make changes to your profile here. Click save when you're done.
+                Make changes to your profile here. Click save when you&apos;re
+                done.
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">

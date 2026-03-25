@@ -29,7 +29,11 @@ export default function HoverCardDemo() {
             <p className="text-sm">
               The React Framework – created and maintained by @vercel.
             </p>
+<<<<<<< HEAD
             <div className="text-muted-foreground text-xs">
+=======
+            <div className="text-xs text-muted-foreground">
+>>>>>>> shadcn/main
               Joined December 2021
             </div>
           </div>

@@ -1,4 +1,5 @@
 import {
+<<<<<<<< HEAD:deprecated/www/registry/new-york/examples/command-demo.tsx
   Calculator,
   Calendar,
   CreditCard,
@@ -8,6 +9,8 @@ import {
 } from "lucide-react"
 
 import {
+========
+>>>>>>>> shadcn/main:apps/v4/examples/base/command-demo.tsx
   Command,
   CommandEmpty,
   CommandGroup,
@@ -16,11 +19,23 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "@/registry/new-york/ui/command"
+} from "@/examples/base/ui/command"
+import {
+  Calculator,
+  Calendar,
+  CreditCard,
+  Settings,
+  Smile,
+  User,
+} from "lucide-react"
 
-export default function CommandDemo() {
+export function CommandDemo() {
   return (
+<<<<<<<< HEAD:deprecated/www/registry/new-york/examples/command-demo.tsx
     <Command className="rounded-lg border shadow-md md:min-w-[450px]">
+========
+    <Command className="max-w-sm rounded-lg border">
+>>>>>>>> shadcn/main:apps/v4/examples/base/command-demo.tsx
       <CommandInput placeholder="Type a command or search..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

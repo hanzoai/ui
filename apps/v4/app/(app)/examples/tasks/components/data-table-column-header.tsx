@@ -1,15 +1,27 @@
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-column-header.tsx
+import { Column } from "@tanstack/react-table"
+import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/registry/default/ui/button"
+========
 import { type Column } from "@tanstack/react-table"
 import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york-v4/ui/button"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-column-header.tsx
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+<<<<<<<< HEAD:app/app/(app)/examples/tasks/components/data-table-column-header.tsx
+} from "@/registry/default/ui/dropdown-menu"
+========
 } from "@/registry/new-york-v4/ui/dropdown-menu"
+>>>>>>>> shadcn/main:apps/v4/app/(app)/examples/tasks/components/data-table-column-header.tsx
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {

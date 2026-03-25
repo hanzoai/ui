@@ -4,12 +4,21 @@
   "title": "Roboto",
   "type": "registry:font",
   "font": {
+<<<<<<< HEAD
     "family": "'Roboto', sans-serif",
+=======
+    "family": "'Roboto Variable', sans-serif",
+>>>>>>> shadcn/main
     "provider": "google",
     "import": "Roboto",
     "variable": "--font-sans",
     "subsets": [
       "latin"
+<<<<<<< HEAD
     ]
+=======
+    ],
+    "dependency": "@fontsource-variable/roboto"
+>>>>>>> shadcn/main
   }
 }

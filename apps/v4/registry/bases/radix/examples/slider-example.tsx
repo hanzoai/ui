@@ -77,7 +77,11 @@ function SliderControlled() {
       <div className="grid w-full gap-3">
         <div className="flex items-center justify-between gap-2">
           <Label htmlFor="slider-demo-temperature">Temperature</Label>
+<<<<<<< HEAD
           <span className="text-muted-foreground text-sm">
+=======
+          <span className="text-sm text-muted-foreground">
+>>>>>>> shadcn/main
             {value.join(", ")}
           </span>
         </div>

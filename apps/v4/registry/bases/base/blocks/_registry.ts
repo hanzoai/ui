@@ -3,7 +3,11 @@ import { type Registry } from "shadcn/schema"
 export const blocks: Registry["items"] = [
   {
     name: "preview",
+<<<<<<< HEAD
     title: "Home",
+=======
+    title: "Preview",
+>>>>>>> shadcn/main
     type: "registry:block",
     registryDependencies: [
       "alert-dialog",
@@ -12,6 +16,10 @@ export const blocks: Registry["items"] = [
       "button",
       "button-group",
       "card",
+<<<<<<< HEAD
+=======
+      "chart",
+>>>>>>> shadcn/main
       "checkbox",
       "combobox",
       "dropdown-menu",
@@ -35,6 +43,7 @@ export const blocks: Registry["items"] = [
     ],
     files: [
       {
+<<<<<<< HEAD
         path: "blocks/preview.tsx",
         type: "registry:block",
       },
@@ -139,6 +148,9 @@ export const blocks: Registry["items"] = [
     files: [
       {
         path: "blocks/chatgpt.tsx",
+=======
+        path: "blocks/preview/index.tsx",
+>>>>>>> shadcn/main
         type: "registry:block",
       },
     ],

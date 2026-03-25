@@ -2,6 +2,10 @@ import { REGISTRY_URL } from "@/src/registry/constants"
 import {
   RegistryFetchError,
   RegistryForbiddenError,
+<<<<<<< HEAD
+=======
+  RegistryGoneError,
+>>>>>>> shadcn/main
   RegistryNotFoundError,
   RegistryUnauthorizedError,
 } from "@/src/registry/errors"
@@ -30,6 +34,12 @@ const server = setupServer(
   http.get(`${REGISTRY_URL}/forbidden.json`, () => {
     return new HttpResponse(null, { status: 403 })
   }),
+<<<<<<< HEAD
+=======
+  http.get(`${REGISTRY_URL}/gone.json`, () => {
+    return new HttpResponse(null, { status: 410 })
+  }),
+>>>>>>> shadcn/main
   http.get("https://external.com/component.json", () => {
     return HttpResponse.json({
       name: "external",
@@ -123,6 +133,15 @@ describe("fetchRegistry", () => {
     )
   })
 
+<<<<<<< HEAD
+=======
+  it("should handle 410 errors", async () => {
+    await expect(fetchRegistry(["gone.json"])).rejects.toThrow(
+      RegistryGoneError
+    )
+  })
+
+>>>>>>> shadcn/main
   it("should handle network errors", async () => {
     await expect(fetchRegistry(["error.json"])).rejects.toThrow()
   })

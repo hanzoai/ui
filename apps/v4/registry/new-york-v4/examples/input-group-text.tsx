@@ -22,7 +22,11 @@ export default function InputGroupTextExample() {
         <InputGroupAddon>
           <InputGroupText>https://</InputGroupText>
         </InputGroupAddon>
+<<<<<<< HEAD
         <InputGroupInput placeholder="example.com" className="!pl-0.5" />
+=======
+        <InputGroupInput placeholder="example.com" className="pl-0.5!" />
+>>>>>>> shadcn/main
         <InputGroupAddon align="inline-end">
           <InputGroupText>.com</InputGroupText>
         </InputGroupAddon>
@@ -36,7 +40,11 @@ export default function InputGroupTextExample() {
       <InputGroup>
         <InputGroupTextarea placeholder="Enter your message" />
         <InputGroupAddon align="block-end">
+<<<<<<< HEAD
           <InputGroupText className="text-muted-foreground text-xs">
+=======
+          <InputGroupText className="text-xs text-muted-foreground">
+>>>>>>> shadcn/main
             120 characters left
           </InputGroupText>
         </InputGroupAddon>

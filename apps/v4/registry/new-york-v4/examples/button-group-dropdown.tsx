@@ -28,7 +28,11 @@ export default function ButtonGroupDropdown() {
       <Button variant="outline">Follow</Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
+<<<<<<< HEAD
           <Button variant="outline" className="!pl-2">
+=======
+          <Button variant="outline" className="pl-2!">
+>>>>>>> shadcn/main
             <ChevronDownIcon />
           </Button>
         </DropdownMenuTrigger>

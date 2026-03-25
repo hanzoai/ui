@@ -1,14 +1,31 @@
 import { promises as fs } from "fs"
 import path from "path"
+<<<<<<< HEAD
 import { registryItemCssSchema } from "@/src/schema"
 import { Config } from "@/src/utils/get-config"
 import { highlighter } from "@/src/utils/highlighter"
 import { spinner } from "@/src/utils/spinner"
+=======
+import {
+  registryItemCssSchema,
+  registryItemCssVarsSchema,
+  registryItemTailwindSchema,
+} from "@/src/schema"
+import { Config } from "@/src/utils/get-config"
+import { TailwindVersion } from "@/src/utils/get-project-info"
+import { highlighter } from "@/src/utils/highlighter"
+import { spinner } from "@/src/utils/spinner"
+import { transformCssVars } from "@/src/utils/updaters/update-css-vars"
+>>>>>>> shadcn/main
 import postcss from "postcss"
 import AtRule from "postcss/lib/at-rule"
 import Declaration from "postcss/lib/declaration"
 import Root from "postcss/lib/root"
 import Rule from "postcss/lib/rule"
+<<<<<<< HEAD
+=======
+import { twMerge } from "tailwind-merge"
+>>>>>>> shadcn/main
 import { z } from "zod"
 
 export async function updateCss(
@@ -16,6 +33,7 @@ export async function updateCss(
   config: Config,
   options: {
     silent?: boolean
+<<<<<<< HEAD
   }
 ) {
   if (
@@ -23,6 +41,19 @@ export async function updateCss(
     !css ||
     Object.keys(css).length === 0
   ) {
+=======
+    cssVars?: z.infer<typeof registryItemCssVarsSchema>
+    cleanupDefaultNextStyles?: boolean
+    overwriteCssVars?: boolean
+    tailwindVersion?: TailwindVersion
+    tailwindConfig?: z.infer<typeof registryItemTailwindSchema>["config"]
+  }
+) {
+  const hasCss = css && Object.keys(css).length > 0
+  const hasCssVars = Object.keys(options.cssVars ?? {}).length > 0
+
+  if (!config.resolvedPaths.tailwindCss || (!hasCss && !hasCssVars)) {
+>>>>>>> shadcn/main
     return
   }
 
@@ -43,8 +74,28 @@ export async function updateCss(
     }
   ).start()
 
+<<<<<<< HEAD
   const raw = await fs.readFile(cssFilepath, "utf8")
   let output = await transformCss(raw, css)
+=======
+  let output = await fs.readFile(cssFilepath, "utf8")
+
+  // Apply CSS vars transform first if provided.
+  if (hasCssVars) {
+    output = await transformCssVars(output, options.cssVars!, config, {
+      cleanupDefaultNextStyles: options.cleanupDefaultNextStyles,
+      tailwindVersion: options.tailwindVersion,
+      tailwindConfig: options.tailwindConfig,
+      overwriteCssVars: options.overwriteCssVars,
+    })
+  }
+
+  // Apply CSS transform if provided.
+  if (hasCss) {
+    output = await transformCss(output, css!)
+  }
+
+>>>>>>> shadcn/main
   await fs.writeFile(cssFilepath, output, "utf8")
   cssSpinner.succeed()
 }
@@ -317,7 +368,11 @@ function updateCssPlugin(css: z.infer<typeof registryItemCssSchema>) {
                 postcss.comment({ text: "---break---" })
               )
 
+<<<<<<< HEAD
               // Add declarations with their values preserved
+=======
+              // Add declarations with their values preserved.
+>>>>>>> shadcn/main
               if (typeof properties === "object") {
                 for (const [prop, value] of Object.entries(properties)) {
                   if (typeof value === "string") {
@@ -327,13 +382,45 @@ function updateCssPlugin(css: z.infer<typeof registryItemCssSchema>) {
                       raws: { semicolon: true, before: "\n    " },
                     })
                     atRule.append(decl)
+<<<<<<< HEAD
+=======
+                  } else if (
+                    prop.startsWith("@") &&
+                    typeof value === "object" &&
+                    value !== null &&
+                    Object.keys(value as Record<string, unknown>).length === 0
+                  ) {
+                    // Handle at-rules with no body (e.g., @apply).
+                    const atRuleMatch = prop.match(/@([a-zA-Z-]+)\s*(.*)/)
+                    if (atRuleMatch) {
+                      const [, atRuleName, atRuleParams] = atRuleMatch
+                      const existingAtRule = atRule.nodes?.find(
+                        (node): node is AtRule =>
+                          node.type === "atrule" &&
+                          node.name === atRuleName &&
+                          node.params === atRuleParams
+                      )
+                      if (!existingAtRule) {
+                        const newAtRule = postcss.atRule({
+                          name: atRuleName,
+                          params: atRuleParams,
+                          raws: { semicolon: true, before: "\n    " },
+                        })
+                        atRule.append(newAtRule)
+                      }
+                    }
+>>>>>>> shadcn/main
                   } else if (typeof value === "object") {
                     processRule(atRule, prop, value)
                   }
                 }
               }
             } else {
+<<<<<<< HEAD
               // Update existing utility class
+=======
+              // Update existing utility class.
+>>>>>>> shadcn/main
               if (typeof properties === "object") {
                 for (const [prop, value] of Object.entries(properties)) {
                   if (typeof value === "string") {
@@ -351,6 +438,34 @@ function updateCssPlugin(css: z.infer<typeof registryItemCssSchema>) {
                     existingDecl
                       ? existingDecl.replaceWith(decl)
                       : utilityAtRule.append(decl)
+<<<<<<< HEAD
+=======
+                  } else if (
+                    prop.startsWith("@") &&
+                    typeof value === "object" &&
+                    value !== null &&
+                    Object.keys(value as Record<string, unknown>).length === 0
+                  ) {
+                    // Handle at-rules with no body (e.g., @apply).
+                    const atRuleMatch = prop.match(/@([a-zA-Z-]+)\s*(.*)/)
+                    if (atRuleMatch) {
+                      const [, atRuleName, atRuleParams] = atRuleMatch
+                      const existingAtRule = utilityAtRule.nodes?.find(
+                        (node): node is AtRule =>
+                          node.type === "atrule" &&
+                          node.name === atRuleName &&
+                          node.params === atRuleParams
+                      )
+                      if (!existingAtRule) {
+                        const newAtRule = postcss.atRule({
+                          name: atRuleName,
+                          params: atRuleParams,
+                          raws: { semicolon: true, before: "\n    " },
+                        })
+                        utilityAtRule.append(newAtRule)
+                      }
+                    }
+>>>>>>> shadcn/main
                   } else if (typeof value === "object") {
                     processRule(utilityAtRule, prop, value)
                   }
@@ -472,12 +587,46 @@ function processRule(parent: Root | AtRule, selector: string, properties: any) {
         const atRuleMatch = prop.match(/@([a-zA-Z-]+)\s*(.*)/)
         if (atRuleMatch) {
           const [, atRuleName, atRuleParams] = atRuleMatch
+<<<<<<< HEAD
           const atRule = postcss.atRule({
             name: atRuleName,
             params: atRuleParams,
             raws: { semicolon: true, before: "\n    " },
           })
           rule.append(atRule)
+=======
+
+          // Check if this at-rule already exists in the rule.
+          const existingAtRule = rule.nodes?.find(
+            (node): node is AtRule =>
+              node.type === "atrule" &&
+              node.name === atRuleName &&
+              node.params === atRuleParams
+          )
+
+          if (!existingAtRule) {
+            // For @apply, merge with existing @apply instead of creating a duplicate.
+            if (atRuleName === "apply") {
+              const existingApply = rule.nodes?.find(
+                (node): node is AtRule =>
+                  node.type === "atrule" && node.name === "apply"
+              )
+              if (existingApply) {
+                existingApply.params = twMerge(
+                  existingApply.params,
+                  atRuleParams
+                )
+                continue
+              }
+            }
+            const atRule = postcss.atRule({
+              name: atRuleName,
+              params: atRuleParams,
+              raws: { semicolon: true, before: "\n    " },
+            })
+            rule.append(atRule)
+          }
+>>>>>>> shadcn/main
         }
       } else if (typeof value === "string") {
         const decl = postcss.decl({

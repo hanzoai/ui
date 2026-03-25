@@ -33,7 +33,11 @@ export default function InputGroupDemo() {
         <InputGroupAddon align="inline-end">12 results</InputGroupAddon>
       </InputGroup>
       <InputGroup>
+<<<<<<< HEAD
         <InputGroupInput placeholder="example.com" className="!pl-1" />
+=======
+        <InputGroupInput placeholder="example.com" className="pl-1!" />
+>>>>>>> shadcn/main
         <InputGroupAddon>
           <InputGroupText>https://</InputGroupText>
         </InputGroupAddon>
@@ -73,7 +77,11 @@ export default function InputGroupDemo() {
             </DropdownMenuContent>
           </DropdownMenu>
           <InputGroupText className="ml-auto">52% used</InputGroupText>
+<<<<<<< HEAD
           <Separator orientation="vertical" className="!h-4" />
+=======
+          <Separator orientation="vertical" className="h-4!" />
+>>>>>>> shadcn/main
           <InputGroupButton
             variant="default"
             className="rounded-full"
@@ -88,7 +96,11 @@ export default function InputGroupDemo() {
       <InputGroup>
         <InputGroupInput placeholder="@shadcn" />
         <InputGroupAddon align="inline-end">
+<<<<<<< HEAD
           <div className="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
+=======
+          <div className="flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+>>>>>>> shadcn/main
             <IconCheck className="size-3" />
           </div>
         </InputGroupAddon>

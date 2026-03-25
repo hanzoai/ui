@@ -41,7 +41,11 @@ function SheetWithForm() {
               done.
             </SheetDescription>
           </SheetHeader>
+<<<<<<< HEAD
           <div className="style-vega:px-4 style-maia:px-6 style-mira:px-6 style-lyra:px-4 style-nova:px-4">
+=======
+          <div className="style-vega:px-4 style-nova:px-4 style-lyra:px-4 style-maia:px-6 style-mira:px-6">
+>>>>>>> shadcn/main
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="sheet-demo-name">Name</FieldLabel>
@@ -110,11 +114,19 @@ function SheetWithSides() {
                   done.
                 </SheetDescription>
               </SheetHeader>
+<<<<<<< HEAD
               <div className="no-scrollbar style-vega:px-4 style-maia:px-6 style-mira:px-6 style-lyra:px-4 style-nova:px-4 overflow-y-auto">
                 {Array.from({ length: 10 }).map((_, index) => (
                   <p
                     key={index}
                     className="style-lyra:mb-2 style-lyra:leading-relaxed mb-4 leading-normal"
+=======
+              <div className="no-scrollbar overflow-y-auto style-vega:px-4 style-nova:px-4 style-lyra:px-4 style-maia:px-6 style-mira:px-6">
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <p
+                    key={index}
+                    className="mb-4 leading-normal style-lyra:mb-2 style-lyra:leading-relaxed"
+>>>>>>> shadcn/main
                   >
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
                     do eiusmod tempor incididunt ut labore et dolore magna

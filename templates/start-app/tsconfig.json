@@ -1,6 +1,10 @@
 {
   "include": ["**/*.ts", "**/*.tsx", "eslint.config.js", "prettier.config.js", "vite.config.js"],
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> shadcn/main
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
@@ -11,7 +15,11 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+<<<<<<< HEAD
     "verbatimModuleSyntax": false,
+=======
+    "verbatimModuleSyntax": true,
+>>>>>>> shadcn/main
     "noEmit": true,
 
     /* Linting */
@@ -21,6 +29,10 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+<<<<<<< HEAD
+=======
+    "allowJs": true,
+>>>>>>> shadcn/main
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
