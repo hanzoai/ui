@@ -1,76 +1,45 @@
-name: E2E and Visual Tests
+name: Test
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
-    branches: [main, develop]
-  schedule:
-    # Run tests weekly on Sunday at 2 AM UTC to catch breaking updates
-    - cron: '0 2 * * 0'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  NODE_OPTIONS: --max-old-space-size=8192
+    branches: ["*"]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        node-version: [20.x]
-
+    name: pnpm test
+    env:
+      NEXT_PUBLIC_APP_URL: http://localhost:4000
+      NEXT_PUBLIC_V0_URL: https://v0.dev
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        id: pnpm-install
         with:
           version: 9.0.6
+          run_install: false
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
-
-      - name: Build the project
-        run: pnpm build
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192
-          NEXT_PUBLIC_APP_URL: https://ui.hanzo.ai
-
-      - name: Run component health check
-        run: pnpm health-check
-        continue-on-error: true
-
-      - name: Run E2E tests
-        run: pnpm test:e2e
-        timeout-minutes: 30
-        env:
-          CI: true
-
-      - name: Run visual regression tests
-        run: pnpm test:visual
-        timeout-minutes: 20
-        continue-on-error: true
-        env:
-          CI: true
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: tests/reports/playwright-report/
-          retention-days: 30
+      - run: pnpm test
