@@ -1,5 +1,5 @@
 {
-  "name": @hanzogui/dismissable",
+  "name": "@hanzogui/dismissable",
   "version": "2.0.4",
   "source": "src/index.ts",
   "files": [
@@ -34,14 +34,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    @hanzogui/compose-refs": "2.0.1",
-    @hanzogui/core": "2.0.1",
-    @hanzogui/helpers": "2.0.1",
-    @hanzogui/use-escape-keydown": "2.0.1",
-    @hanzogui/use-event": "2.0.1"
+    "@hanzogui/compose-refs": "2.0.1",
+    "@hanzogui/core": "2.0.1",
+    "@hanzogui/helpers": "2.0.1",
+    "@hanzogui/use-escape-keydown": "2.0.1",
+    "@hanzogui/use-event": "2.0.1"
   },
   "devDependencies": {
-    @hanzogui/build": "2.0.1",
+    "@hanzogui/build": "2.0.1",
     "react": ">=19",
     "react-dom": "*"
   },
