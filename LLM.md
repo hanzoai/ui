@@ -10,7 +10,7 @@ React component library (shadcn/ui fork). 161 components, 24+ blocks, two themes
 
 ```
 ui/
-  app/                   Documentation site (Next.js 15.3.1, React 19)
+  app/                   Hanzo documentation site (Next.js 15.3.1, React 19)
     registry/            Component registry (SOURCE OF TRUTH)
       default/ui/        150+ components
       default/example/   Usage demos
@@ -18,13 +18,26 @@ ui/
       new-york/          Alternative theme
     content/docs/        MDX documentation
     scripts/             Build scripts
+  apps/
+    v4/                  Upstream shadcn v4 docs/registry app (port 4000)
+  packages/
+    shadcn/              shadcn CLI v4.1.0 (font system, chart colors, scaffold)
+    tests/               Integration tests for shadcn CLI
+    og/                  OG image generation (Hanzo-only)
   pkg/
     ui/                  Core library (npm)
-    auth/                Auth components (Firebase optional since v2.6.0)
-    auth-firebase/       Firebase auth (opt-in package)
-    commerce/            E-commerce components
+    react/               React primitives
     brand/               Branding system
-  brands/                White-label configs (Zoo, Lux)
+    commerce/            E-commerce components
+    checkout/            Checkout flow
+    shop/                Shop components
+    agent-ui/            AI agent UI components
+    gui/                 GUI component packages (@hanzogui/*)
+    tokens/              Design tokens
+  skills/
+    shadcn/              AI skill definitions for shadcn CLI
+  templates/             Project templates (next, vite, astro, react-router, start + monorepo variants)
+  template/next/         Hanzo-customized Next.js template
 ```
 
 ## Critical: Build Order
@@ -78,7 +91,19 @@ import { cn } from '@hanzo/ui/lib/utils'
 
 ## Tech Stack
 
-React 18.3.1 (19 experimental), Next.js 15.3.1, Tailwind CSS (OKLCH colors), Radix UI, Turborepo + pnpm, Fumadocs (MDX), class-variance-authority.
+React 19, Next.js 15.3+, Tailwind CSS 4 (OKLCH colors), Radix UI, Turborepo + pnpm, Fumadocs (MDX), class-variance-authority.
+
+## Upstream Sync
+
+Remote `shadcn` points to `/Users/z/work/shadcn/ui` (local clone of shadcn-ui/ui).
+hanzoai/ui is NOT a GitHub fork -- no shared object store, so large merges can fail on push.
+
+Last sync: 2026-03-24 (shadcn@4.1.0, commit 8bec9c123)
+Strategy: file-level checkout from shadcn/main for specific directories (not git merge).
+- Take theirs: packages/shadcn/, packages/tests/, apps/, templates/, scripts/, skills/
+- Keep ours: app/, pkg/, demo/, docs/, template/next/, pnpm-workspace.yaml, package.json
+- Remove: deprecated/ (upstream deleted it)
+- Regenerate: pnpm-lock.yaml after sync
 
 ## Key Features
 
@@ -95,11 +120,12 @@ React 18.3.1 (19 experimental), Next.js 15.3.1, Tailwind CSS (OKLCH colors), Rad
 - Firebase split to optional `@hanzo/auth-firebase` package (Jan 2025)
 - `@hanzo/auth` v2.6.0 uses pluggable provider registry: `registerAuthProvider('firebase', FirebaseAuthService)`
 
-## Component Stats (2025-10-18)
+## Component Stats
 
 - 161 total files, ~127 implemented, ~34 stubs
 - Unique: 9 3D components, 12 AI components, 13 animation components, 15 nav variants
 - 3x more components than upstream shadcn/ui (161 vs 58)
+- shadcn CLI: v4.1.0 with font transformers, chart color picker, scaffold from github
 
 ## Rules
 
