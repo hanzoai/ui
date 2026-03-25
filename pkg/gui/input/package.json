@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/gui-input",
+  "name": @hanzogui/input",
   "version": "2.0.4",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
@@ -38,20 +38,20 @@
     "test:web": "vitest --typecheck --run"
   },
   "dependencies": {
-    "@hanzo/gui-core": "2.0.1",
-    "@hanzo/gui-element": "2.0.1",
-    "@hanzo/gui-focusable": "2.0.1",
-    "@hanzo/gui-get-button-sized": "2.0.1",
-    "@hanzo/gui-get-font-sized": "2.0.1",
-    "@hanzo/gui-get-token": "2.0.1",
-    "@hanzo/gui-helpers": "2.0.1",
-    "@hanzo/gui-stacks": "2.0.1",
-    "@hanzo/gui-text": "2.0.1",
-    "@hanzo/gui-font-size": "2.0.1",
-    "@hanzo/gui-web": "2.0.1"
+    @hanzogui/core": "2.0.1",
+    @hanzogui/element": "2.0.1",
+    @hanzogui/focusable": "2.0.1",
+    @hanzogui/get-button-sized": "2.0.1",
+    @hanzogui/get-font-sized": "2.0.1",
+    @hanzogui/get-token": "2.0.1",
+    @hanzogui/helpers": "2.0.1",
+    @hanzogui/stacks": "2.0.1",
+    @hanzogui/text": "2.0.1",
+    @hanzogui/font-size": "2.0.1",
+    @hanzogui/web": "2.0.1"
   },
   "devDependencies": {
-    "@hanzo/gui-build": "2.0.1",
+    @hanzogui/build": "2.0.1",
     "react": ">=19",
     "react-native": "0.83.2",
     "vitest": "4.0.4"
