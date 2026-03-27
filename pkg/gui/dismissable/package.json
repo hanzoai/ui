@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/dismissable",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -34,11 +34,11 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
-    "@hanzogui/use-escape-keydown": "2.0.1",
-    "@hanzogui/use-event": "2.0.1"
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/helpers": "2.0.5",
+    "@hanzogui/use-escape-keydown": "2.0.5",
+    "@hanzogui/use-event": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

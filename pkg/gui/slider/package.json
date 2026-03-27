@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/slider",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,16 +36,16 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/get-token": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
-    "@hanzogui/stacks": "2.0.1",
-    "@hanzogui/use-controllable-state": "2.0.1",
-    "@hanzogui/use-debounce": "2.0.1",
-    "@hanzogui/use-direction": "2.0.1"
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/get-token": "2.0.5",
+    "@hanzogui/helpers": "2.0.5",
+    "@hanzogui/stacks": "2.0.7",
+    "@hanzogui/use-controllable-state": "2.0.5",
+    "@hanzogui/use-debounce": "2.0.5",
+    "@hanzogui/use-direction": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
