@@ -1,16 +1,16 @@
 // forked from radix-ui
 // https://github.com/radix-ui/primitives/blob/main/packages/react/alert-dialog/src/AlertDialog.tsx
 
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { GuiElement } from '@hanzo/gui-core'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { GuiElement } from '@hanzogui/core'
 import {
   Slottable,
   View,
   createStyledContext,
   isGuiElement,
   styled,
-} from '@hanzo/gui-core'
+} from '@hanzogui/core'
 import type {
   DialogCloseProps,
   DialogContentProps,
@@ -21,7 +21,7 @@ import type {
   DialogProps,
   DialogTitleProps,
   DialogTriggerProps,
-} from '@hanzo/gui-dialog'
+} from '@hanzogui/dialog'
 import {
   Dialog,
   DialogClose,
@@ -33,9 +33,9 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogWarningProvider,
-} from '@hanzo/gui-dialog'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/dialog'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import { Alert } from 'react-native'
 

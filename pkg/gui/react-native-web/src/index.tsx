@@ -1,9 +1,9 @@
 // TODO
 
-export * from '@hanzo/gui-react-native-use-responder-events'
-export * from '@hanzo/gui-react-native-use-pressable'
-export { View, Text } from '@hanzo/gui-web'
-import { View, Text } from '@hanzo/gui-web'
+export * from '@hanzogui/react-native-use-responder-events'
+export * from '@hanzogui/react-native-use-pressable'
+export { View, Text } from '@hanzogui/web'
+import { View, Text } from '@hanzogui/web'
 
 export * from './Dimensions'
 

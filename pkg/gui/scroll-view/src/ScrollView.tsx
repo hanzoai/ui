@@ -1,6 +1,6 @@
-import { fullscreenStyle } from '@hanzo/gui-stacks'
-import type { GetProps, GetRef } from '@hanzo/gui-web'
-import { styled } from '@hanzo/gui-web'
+import { fullscreenStyle } from '@hanzogui/stacks'
+import type { GetProps, GetRef } from '@hanzogui/web'
+import { styled } from '@hanzogui/web'
 import { ScrollView as ScrollViewNative } from 'react-native'
 
 export const ScrollView = styled(
