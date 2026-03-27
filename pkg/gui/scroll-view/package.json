@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/scroll-view",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,8 +36,8 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/stacks": "2.0.1",
-    "@hanzogui/web": "2.0.1"
+    "@hanzogui/stacks": "2.0.7",
+    "@hanzogui/web": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

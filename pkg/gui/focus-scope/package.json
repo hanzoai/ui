@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/focus-scope",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -34,12 +34,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
     "@hanzogui/start-transition": "2.0.1",
     "@hanzogui/use-async": "2.0.1",
-    "@hanzogui/use-event": "2.0.1"
+    "@hanzogui/use-event": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
