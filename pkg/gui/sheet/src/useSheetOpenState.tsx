@@ -1,4 +1,4 @@
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 
 import type { SheetProps } from './types'
 import { useSheetController } from './useSheetController'

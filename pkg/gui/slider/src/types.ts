@@ -1,6 +1,6 @@
-import type { GestureReponderEvent, SizeTokens, GuiElement } from '@hanzo/gui-core'
-import type { Scope } from '@hanzo/gui-create-context'
-import type { SizableStackProps } from '@hanzo/gui-stacks'
+import type { GestureReponderEvent, SizeTokens, GuiElement } from '@hanzogui/core'
+import type { Scope } from '@hanzogui/create-context'
+import type { SizableStackProps } from '@hanzogui/stacks'
 
 export type ScopedProps<P> = P & { __scopeSlider?: string }
 

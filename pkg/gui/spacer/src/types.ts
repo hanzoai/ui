@@ -1,4 +1,4 @@
-import type { DebugProp, SpaceTokens, SpaceValue } from '@hanzo/gui-web'
+import type { DebugProp, SpaceTokens, SpaceValue } from '@hanzogui/web'
 
 export type SpaceDirection = 'vertical' | 'horizontal' | 'both'
 

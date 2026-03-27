@@ -1,8 +1,8 @@
 import React from 'react'
 import { TextInput, type TextInputProps as RNTextInputProps } from 'react-native'
-import { styled } from '@hanzo/gui-core'
-import { registerFocusable } from '@hanzo/gui-focusable'
-import { useNativeInputRef } from '@hanzo/gui-element'
+import { styled } from '@hanzogui/core'
+import { registerFocusable } from '@hanzogui/focusable'
+import { useNativeInputRef } from '@hanzogui/element'
 import { styledBody } from './shared'
 import type { InputExtraProps } from './types'
 

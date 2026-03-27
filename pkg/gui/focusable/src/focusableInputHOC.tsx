@@ -1,5 +1,5 @@
-import { composeRefs } from '@hanzo/gui-compose-refs'
-import { useEvent } from '@hanzo/gui-web'
+import { composeRefs } from '@hanzogui/compose-refs'
+import { useEvent } from '@hanzogui/web'
 import type { MutableRefObject } from 'react'
 import React from 'react'
 

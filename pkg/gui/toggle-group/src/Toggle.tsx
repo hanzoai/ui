@@ -1,7 +1,7 @@
-import { composeEventHandlers } from '@hanzo/gui-helpers'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import type { GetProps, GuiElement, ViewStyle } from '@hanzo/gui-web'
-import { styled, View } from '@hanzo/gui-web'
+import { composeEventHandlers } from '@hanzogui/helpers'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import type { GetProps, GuiElement, ViewStyle } from '@hanzogui/web'
+import { styled, View } from '@hanzogui/web'
 import * as React from 'react'
 import { context } from './context'
 
