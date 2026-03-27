@@ -1,7 +1,7 @@
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import type { GetProps, GuiTextElement } from '@hanzo/gui-core'
-import { styled, useIsomorphicLayoutEffect } from '@hanzo/gui-core'
-import { SizableText } from '@hanzo/gui-text'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import type { GetProps, GuiTextElement } from '@hanzogui/core'
+import { styled, useIsomorphicLayoutEffect } from '@hanzogui/core'
+import { SizableText } from '@hanzogui/text'
 import * as React from 'react'
 
 import { useSelectItemParentContext } from './context'

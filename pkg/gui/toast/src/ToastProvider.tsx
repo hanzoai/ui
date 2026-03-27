@@ -1,7 +1,7 @@
-import { createCollection } from '@hanzo/gui-collection'
-import type { NativeValue, GuiElement } from '@hanzo/gui-core'
-import { createStyledContext } from '@hanzo/gui-core'
-import { startTransition } from '@hanzo/gui-start-transition'
+import { createCollection } from '@hanzogui/collection'
+import type { NativeValue, GuiElement } from '@hanzogui/core'
+import { createStyledContext } from '@hanzogui/core'
+import { startTransition } from '@hanzogui/start-transition'
 import * as React from 'react'
 
 import { TOAST_CONTEXT } from './constants'

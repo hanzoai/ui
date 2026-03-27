@@ -1,6 +1,6 @@
-import type { ViewProps } from '@hanzo/gui-core'
-import { View, createStyledContext, styled } from '@hanzo/gui-core'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+import type { ViewProps } from '@hanzogui/core'
+import { View, createStyledContext, styled } from '@hanzogui/core'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
 
 const FORM_NAME = 'Form'
 

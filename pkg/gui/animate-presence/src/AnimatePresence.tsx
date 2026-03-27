@@ -1,6 +1,6 @@
 import { useInsertionEffect } from 'react'
-import { useConstant } from '@hanzo/gui-use-constant'
-import { useForceUpdate } from '@hanzo/gui-use-force-update'
+import { useConstant } from '@hanzogui/use-constant'
+import { useForceUpdate } from '@hanzogui/use-force-update'
 import type { FunctionComponent, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { Children, isValidElement, useContext, useMemo, useRef, useState } from 'react'
 import { LayoutGroupContext } from './LayoutGroupContext'

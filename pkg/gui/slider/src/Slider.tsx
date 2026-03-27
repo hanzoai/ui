@@ -1,26 +1,26 @@
 // forked from radix-ui
 
-import { composeRefs, useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isIos, isWeb } from '@hanzo/gui-constants'
+import { composeRefs, useComposedRefs } from '@hanzogui/compose-refs'
+import { isIos, isWeb } from '@hanzogui/constants'
 import type {
   GestureReponderEvent,
   GetProps,
   SizeTokens,
   GuiElement,
-} from '@hanzo/gui-core'
+} from '@hanzogui/core'
 import {
   getTokens,
   getVariableValue,
   styled,
   useConfiguration,
   useCreateShallowSetState,
-} from '@hanzo/gui-core'
-import { getSize } from '@hanzo/gui-get-token'
-import { clamp, composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import type { SizableStackProps } from '@hanzo/gui-stacks'
-import { ThemeableStack } from '@hanzo/gui-stacks'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { useDirection } from '@hanzo/gui-use-direction'
+} from '@hanzogui/core'
+import { getSize } from '@hanzogui/get-token'
+import { clamp, composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import type { SizableStackProps } from '@hanzogui/stacks'
+import { ThemeableStack } from '@hanzogui/stacks'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { useDirection } from '@hanzogui/use-direction'
 import * as React from 'react'
 import type { View } from 'react-native'
 

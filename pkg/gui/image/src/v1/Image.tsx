@@ -1,13 +1,13 @@
 import React from 'react'
-import { isWeb } from '@hanzo/gui-constants'
+import { isWeb } from '@hanzogui/constants'
 import type {
   GetProps,
   RadiusTokens,
   SizeTokens,
   ViewProps,
   ThemeValueFallback,
-} from '@hanzo/gui-web'
-import { styled, usePropsAndStyle } from '@hanzo/gui-web'
+} from '@hanzogui/web'
+import { styled, usePropsAndStyle } from '@hanzogui/web'
 import type { FC } from 'react'
 import { Image as RNImage } from 'react-native'
 

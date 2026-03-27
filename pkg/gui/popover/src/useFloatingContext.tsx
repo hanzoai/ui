@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Delay, UseFloatingOptions } from '@hanzo/gui-floating'
+import type { Delay, UseFloatingOptions } from '@hanzogui/floating'
 import {
   createFloatingEvents,
   safePolygon,
@@ -11,7 +11,7 @@ import {
   useRole,
   PopupTriggerMap,
   type FloatingInteractionContext,
-} from '@hanzo/gui-floating'
+} from '@hanzogui/floating'
 
 // custom floating context for hoverable popovers and tooltips.
 //

@@ -1,7 +1,7 @@
-import { autoUpdate, offset, useFloatingRaw as useFloating } from '@hanzo/gui-floating'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import type { GuiElement } from '@hanzo/gui-core'
-import { YStack } from '@hanzo/gui-stacks'
+import { autoUpdate, offset, useFloatingRaw as useFloating } from '@hanzogui/floating'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import type { GuiElement } from '@hanzogui/core'
+import { YStack } from '@hanzogui/stacks'
 import * as React from 'react'
 import { flushSync } from 'react-dom'
 
