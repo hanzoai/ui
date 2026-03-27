@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/visually-hidden",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,10 +36,10 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/web": "2.0.5"
+    "@hanzogui/web": "3.0.0"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.1",
+    "@hanzogui/build": "3.0.0",
     "react": ">=19"
   },
   "peerDependencies": {
