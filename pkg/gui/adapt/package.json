@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/adapt",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "files": [
     "src",
     "types",
@@ -35,14 +35,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/constants": "3.0.0",
-    "@hanzogui/core": "3.0.0",
-    "@hanzogui/helpers": "3.0.0",
-    "@hanzogui/portal": "3.0.0",
-    "@hanzogui/z-index-stack": "3.0.0"
+    "@hanzogui/constants": "3.0.1",
+    "@hanzogui/core": "3.0.1",
+    "@hanzogui/helpers": "3.0.1",
+    "@hanzogui/portal": "3.0.1",
+    "@hanzogui/z-index-stack": "3.0.1"
   },
   "devDependencies": {
-    "@hanzogui/build": "3.0.0",
+    "@hanzogui/build": "3.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
