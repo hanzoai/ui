@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/react-native-web",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "files": [
     "src",
     "types",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@hanzogui/react-native-use-pressable": "2.0.1",
     "@hanzogui/react-native-use-responder-events": "2.0.1",
-    "@hanzogui/web": "2.0.1"
+    "@hanzogui/web": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
