@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/focus-guard",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "source": "src/index.ts",
   "type": "module",
   "files": [
