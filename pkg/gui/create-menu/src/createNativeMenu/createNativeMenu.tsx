@@ -5,8 +5,8 @@
  * Native: lazily resolves Zeego at render time so importing the package doesn't warn/error
  */
 
-import { getZeego, NativeMenuContext } from '@hanzo/gui-native'
-import { isWeb, withStaticProperties, isIos } from '@hanzo/gui-web'
+import { getZeego, NativeMenuContext } from '@hanzogui/native'
+import { isWeb, withStaticProperties, isIos } from '@hanzogui/web'
 import type { FC } from 'react'
 import React from 'react'
 import type {
@@ -181,7 +181,7 @@ export const createNativeMenu = (
       if (!warned) {
         warned = true
         console.warn(
-          `Warning: Must call import '@hanzo/gui-native/setup-zeego' at your app entry point to use native menus`
+          `Warning: Must call import '@hanzogui/native/setup-zeego' at your app entry point to use native menus`
         )
       }
       return null

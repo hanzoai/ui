@@ -1,5 +1,5 @@
-import type { SizableStackProps } from '@hanzo/gui-stacks'
-import type { SizeVariantSpreadFunction } from '@hanzo/gui-web'
+import type { SizableStackProps } from '@hanzogui/stacks'
+import type { SizeVariantSpreadFunction } from '@hanzogui/web'
 
 export const getShapeSize: SizeVariantSpreadFunction<SizableStackProps> = (
   size,

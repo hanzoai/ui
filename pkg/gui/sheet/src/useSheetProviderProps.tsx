@@ -1,8 +1,8 @@
 import React from 'react'
-import type { GuiElement } from '@hanzo/gui-core'
-import { useConfiguration } from '@hanzo/gui-core'
-import { useConstant } from '@hanzo/gui-use-constant'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+import type { GuiElement } from '@hanzogui/core'
+import { useConfiguration } from '@hanzogui/core'
+import { useConstant } from '@hanzogui/use-constant'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 
 import type { ScrollBridge, SheetProps } from './types'
 import type { SheetOpenState } from './useSheetOpenState'

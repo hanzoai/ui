@@ -1,4 +1,4 @@
-import { type GetProps, styled } from '@hanzo/gui-web'
+import { type GetProps, styled } from '@hanzogui/web'
 import { Input } from './Input'
 import { defaultStyles, textAreaSizeVariant } from './shared'
 

@@ -1,6 +1,6 @@
-import { View, styled, useEvent, useTheme } from '@hanzo/gui-core'
-import { registerFocusable } from '@hanzo/gui-focusable'
-import { useWebRef } from '@hanzo/gui-element'
+import { View, styled, useEvent, useTheme } from '@hanzogui/core'
+import { registerFocusable } from '@hanzogui/focusable'
+import { useWebRef } from '@hanzogui/element'
 import React, { type HTMLAttributes, type HTMLInputTypeAttribute } from 'react'
 import { styledBody } from '../shared'
 import type { InputProps } from './types'
@@ -8,7 +8,7 @@ import type { InputProps } from './types'
 const StyledInput = styled(View, styledBody[0], styledBody[1])
 
 /**
- * @deprecated Use the new Input from '@hanzo/gui-input' instead
+ * @deprecated Use the new Input from '@hanzogui/input' instead
  * @summary An input is a text field that allows users to enter text.
  * @see — Docs https://gui.dev/ui/inputs#input
  */

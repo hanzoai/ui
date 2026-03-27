@@ -1,6 +1,6 @@
-import '@hanzo/gui-polyfill-dev'
+import '@hanzogui/polyfill-dev'
 
-import { MenuPredefined } from '@hanzo/gui-create-menu'
+import { MenuPredefined } from '@hanzogui/create-menu'
 
 import { createMenu } from './Menu'
 

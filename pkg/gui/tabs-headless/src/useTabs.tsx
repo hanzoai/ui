@@ -1,6 +1,6 @@
-import { composeEventHandlers } from '@hanzo/gui-helpers'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { useDirection } from '@hanzo/gui-use-direction'
+import { composeEventHandlers } from '@hanzogui/helpers'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { useDirection } from '@hanzogui/use-direction'
 import * as React from 'react'
 import { useCallback, useId, useRef, useState } from 'react'
 
