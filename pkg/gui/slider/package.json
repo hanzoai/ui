@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/slider",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,19 +36,19 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.5",
-    "@hanzogui/constants": "2.0.5",
-    "@hanzogui/core": "2.0.5",
-    "@hanzogui/create-context": "2.0.5",
-    "@hanzogui/get-token": "2.0.5",
-    "@hanzogui/helpers": "2.0.5",
-    "@hanzogui/stacks": "2.0.7",
-    "@hanzogui/use-controllable-state": "2.0.5",
-    "@hanzogui/use-debounce": "2.0.5",
-    "@hanzogui/use-direction": "2.0.5"
+    "@hanzogui/compose-refs": "3.0.0",
+    "@hanzogui/constants": "3.0.0",
+    "@hanzogui/core": "3.0.0",
+    "@hanzogui/create-context": "3.0.0",
+    "@hanzogui/get-token": "3.0.0",
+    "@hanzogui/helpers": "3.0.0",
+    "@hanzogui/stacks": "3.0.0",
+    "@hanzogui/use-controllable-state": "3.0.0",
+    "@hanzogui/use-debounce": "3.0.0",
+    "@hanzogui/use-direction": "3.0.0"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.1",
+    "@hanzogui/build": "3.0.0",
     "react": ">=19",
     "react-native": "0.83.2"
   },

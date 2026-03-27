@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/switch",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,20 +36,20 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.5",
-    "@hanzogui/constants": "2.0.5",
-    "@hanzogui/core": "2.0.5",
-    "@hanzogui/focusable": "2.0.5",
-    "@hanzogui/get-token": "2.0.5",
-    "@hanzogui/helpers": "2.0.5",
-    "@hanzogui/label": "2.0.7",
-    "@hanzogui/stacks": "2.0.7",
-    "@hanzogui/switch-headless": "2.0.1",
-    "@hanzogui/use-controllable-state": "2.0.5",
-    "@hanzogui/use-previous": "2.0.5"
+    "@hanzogui/compose-refs": "3.0.0",
+    "@hanzogui/constants": "3.0.0",
+    "@hanzogui/core": "3.0.0",
+    "@hanzogui/focusable": "3.0.0",
+    "@hanzogui/get-token": "3.0.0",
+    "@hanzogui/helpers": "3.0.0",
+    "@hanzogui/label": "3.0.0",
+    "@hanzogui/stacks": "3.0.0",
+    "@hanzogui/switch-headless": "3.0.0",
+    "@hanzogui/use-controllable-state": "3.0.0",
+    "@hanzogui/use-previous": "3.0.0"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.1",
+    "@hanzogui/build": "3.0.0",
     "react": ">=19",
     "react-native": "0.83.2"
   },
