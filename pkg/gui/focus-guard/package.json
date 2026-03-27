@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/focus-guard",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "source": "src/index.ts",
   "type": "module",
   "files": [
@@ -33,11 +33,11 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "3.0.0",
-    "@hanzogui/use-event": "3.0.0"
+    "@hanzogui/compose-refs": "3.0.1",
+    "@hanzogui/use-event": "3.0.1"
   },
   "devDependencies": {
-    "@hanzogui/build": "3.0.0",
+    "@hanzogui/build": "3.0.1",
     "react": ">=19"
   },
   "peerDependencies": {
