@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/avatar",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,13 +36,13 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
-    "@hanzogui/image": "2.0.1",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/helpers": "2.0.5",
+    "@hanzogui/image": "2.0.7",
     "@hanzogui/shapes": "2.0.1",
-    "@hanzogui/stacks": "2.0.1",
-    "@hanzogui/text": "2.0.1"
+    "@hanzogui/stacks": "2.0.7",
+    "@hanzogui/text": "2.0.7"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

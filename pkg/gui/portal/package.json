@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/portal",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,13 +36,13 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/core": "2.0.1",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/core": "2.0.5",
     "@hanzogui/native": "2.0.1",
     "@hanzogui/start-transition": "2.0.1",
-    "@hanzogui/use-event": "2.0.1",
-    "@hanzogui/web": "2.0.1",
-    "@hanzogui/z-index-stack": "2.0.1"
+    "@hanzogui/use-event": "2.0.5",
+    "@hanzogui/web": "2.0.5",
+    "@hanzogui/z-index-stack": "2.0.7"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

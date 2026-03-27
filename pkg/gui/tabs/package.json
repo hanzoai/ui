@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/tabs",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
   "files": [
@@ -37,20 +37,20 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/element": "2.0.1",
-    "@hanzogui/get-button-sized": "2.0.1",
-    "@hanzogui/group": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
-    "@hanzogui/roving-focus": "2.0.1",
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/element": "2.0.5",
+    "@hanzogui/get-button-sized": "2.0.5",
+    "@hanzogui/group": "2.0.7",
+    "@hanzogui/helpers": "2.0.5",
+    "@hanzogui/roving-focus": "2.0.7",
     "@hanzogui/sizable-context": "2.0.1",
-    "@hanzogui/stacks": "2.0.1",
-    "@hanzogui/use-controllable-state": "2.0.1",
-    "@hanzogui/use-direction": "2.0.1",
-    "@hanzogui/web": "2.0.1"
+    "@hanzogui/stacks": "2.0.7",
+    "@hanzogui/use-controllable-state": "2.0.5",
+    "@hanzogui/use-direction": "2.0.5",
+    "@hanzogui/web": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

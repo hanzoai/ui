@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/animate-presence",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "license": "MIT",
   "source": "src/index.ts",
@@ -38,12 +38,12 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/helpers": "2.0.5",
     "@hanzogui/use-constant": "2.0.1",
-    "@hanzogui/use-force-update": "2.0.1",
+    "@hanzogui/use-force-update": "2.0.5",
     "@hanzogui/use-presence": "2.0.1",
-    "@hanzogui/web": "2.0.1"
+    "@hanzogui/web": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
