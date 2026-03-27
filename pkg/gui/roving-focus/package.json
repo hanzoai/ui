@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/roving-focus",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
   "files": [
@@ -37,15 +37,15 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/collection": "2.0.1",
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
-    "@hanzogui/use-controllable-state": "2.0.1",
-    "@hanzogui/use-direction": "2.0.1",
-    "@hanzogui/use-event": "2.0.1"
+    "@hanzogui/collection": "2.0.7",
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/helpers": "2.0.5",
+    "@hanzogui/use-controllable-state": "2.0.5",
+    "@hanzogui/use-direction": "2.0.5",
+    "@hanzogui/use-event": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
