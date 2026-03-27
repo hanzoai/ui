@@ -3,7 +3,7 @@ import type {
   ViewProps,
   GuiComponentPropsBase,
   TextProps,
-} from '@hanzo/gui-web'
+} from '@hanzogui/web'
 import type { TextInputProps, InputModeOptions } from 'react-native'
 
 type DetailedInputProps = React.DetailedHTMLProps<

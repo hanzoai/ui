@@ -1,6 +1,6 @@
-import { getVariableValue, styled } from '@hanzo/gui-core'
-import { getSize } from '@hanzo/gui-get-token'
-import { YStack } from '@hanzo/gui-stacks'
+import { getVariableValue, styled } from '@hanzogui/core'
+import { getSize } from '@hanzogui/get-token'
+import { YStack } from '@hanzogui/stacks'
 
 const RADIO_GROUP_ITEM_NAME = 'RadioGroupItem'
 

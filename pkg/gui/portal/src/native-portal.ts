@@ -1,5 +1,5 @@
 // native portal setup - must be explicitly imported to avoid RN 0.81+ compatibility issues
-// usage: import { setupNativePortal } from '@hanzo/gui-portal/native-portal'
+// usage: import { setupNativePortal } from '@hanzogui/portal/native-portal'
 // call setupNativePortal() early in your app to enable native portals
 
 const IS_FABRIC =

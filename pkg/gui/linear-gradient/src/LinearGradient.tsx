@@ -1,6 +1,6 @@
-import type { ColorTokens, GetProps, ThemeTokens } from '@hanzo/gui-core'
-import { normalizeColor, styled, useProps, useTheme } from '@hanzo/gui-core'
-import { YStack } from '@hanzo/gui-stacks'
+import type { ColorTokens, GetProps, ThemeTokens } from '@hanzogui/core'
+import { normalizeColor, styled, useProps, useTheme } from '@hanzogui/core'
+import { YStack } from '@hanzogui/stacks'
 import type { ViewStyle } from 'react-native'
 
 import type { LinearGradientPoint } from './linear-gradient'

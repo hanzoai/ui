@@ -1,5 +1,5 @@
-import type { NativePlatform, NativeValue } from '@hanzo/gui-core'
-import { isAndroid, isIos, isWeb } from '@hanzo/gui-core'
+import type { NativePlatform, NativeValue } from '@hanzogui/core'
+import { isAndroid, isIos, isWeb } from '@hanzogui/core'
 import React from 'react'
 import { createNativeToast } from './createNativeToast'
 import type { CreateNativeToastOptions, NativeToastRef } from './types'
@@ -19,7 +19,7 @@ export interface ToastImperativeOptions extends Omit<
  *
  * e.g.
  * ```ts
- * declare module '@hanzo/gui-toast' {
+ * declare module '@hanzogui/toast' {
  *   interface CustomData {
  *     preset: 'error' | 'success'
  *     isUrgent: true

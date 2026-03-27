@@ -1,18 +1,18 @@
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { useIsomorphicLayoutEffect } from '@hanzogui/constants'
 import type {
   GetProps,
   ViewProps,
   GuiComponent,
   GuiComponentExpectingVariants,
   GuiElement,
-} from '@hanzo/gui-core'
-import { View } from '@hanzo/gui-core'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
-import { resolveViewZIndex } from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { useDidFinishSSR } from '@hanzo/gui-use-did-finish-ssr'
-import { StackZIndexContext } from '@hanzo/gui-z-index-stack'
+} from '@hanzogui/core'
+import { View } from '@hanzogui/core'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
+import { resolveViewZIndex } from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { useDidFinishSSR } from '@hanzogui/use-did-finish-ssr'
+import { StackZIndexContext } from '@hanzogui/z-index-stack'
 import type { ForwardRefExoticComponent, FunctionComponent, RefAttributes } from 'react'
 import { forwardRef, memo, useMemo, useEffect, useRef } from 'react'
 import type { View as RNView } from 'react-native'

@@ -1,5 +1,5 @@
-import type { AnimatePresenceProps } from '@hanzo/gui-animate-presence'
-import { AnimatePresence, PresenceChild } from '@hanzo/gui-animate-presence'
+import type { AnimatePresenceProps } from '@hanzogui/animate-presence'
+import { AnimatePresence, PresenceChild } from '@hanzogui/animate-presence'
 import { startTransition, useEffect, useState } from 'react'
 
 type BaseProps = {
