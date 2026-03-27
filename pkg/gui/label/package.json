@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/label",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,14 +36,14 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/focusable": "2.0.1",
-    "@hanzogui/get-button-sized": "2.0.1",
-    "@hanzogui/get-font-sized": "2.0.1",
-    "@hanzogui/text": "2.0.1",
-    "@hanzogui/web": "2.0.1"
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/focusable": "2.0.5",
+    "@hanzogui/get-button-sized": "2.0.5",
+    "@hanzogui/get-font-sized": "2.0.5",
+    "@hanzogui/text": "2.0.7",
+    "@hanzogui/web": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",

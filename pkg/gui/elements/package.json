@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/elements",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,7 +36,7 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/core": "2.0.1"
+    "@hanzogui/core": "2.0.5"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
