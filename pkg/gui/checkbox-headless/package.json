@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/checkbox-headless",
-  "version": "2.0.5",
+  "version": "2.0.7",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
   "files": [
