@@ -1,5 +1,5 @@
-import { getDefaultGuiConfig } from '@hanzo/gui-config-default'
-import { createGui } from '@hanzo/gui-core'
+import { getDefaultGuiConfig } from '@hanzogui/config-default'
+import { createGui } from '@hanzogui/core'
 import { describe, expect, test } from 'vitest'
 import { Button } from './Button'
 

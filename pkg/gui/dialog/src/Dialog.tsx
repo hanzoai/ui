@@ -5,11 +5,11 @@ import {
   ProvideAdaptContext,
   useAdaptContext,
   useAdaptIsActive,
-} from '@hanzo/gui-adapt'
-import { Animate } from '@hanzo/gui-animate'
-import { composeRefs, useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { GetProps, GuiElement, ViewProps } from '@hanzo/gui-core'
+} from '@hanzogui/adapt'
+import { Animate } from '@hanzogui/animate'
+import { composeRefs, useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { GetProps, GuiElement, ViewProps } from '@hanzogui/core'
 import {
   createStyledContext,
   getExpandedShorthand,
@@ -18,26 +18,26 @@ import {
   Theme,
   useThemeName,
   View,
-} from '@hanzo/gui-core'
-import { createContext } from '@hanzo/gui-create-context'
-import type { DismissableProps } from '@hanzo/gui-dismissable'
-import { Dismissable } from '@hanzo/gui-dismissable'
-import type { FocusScopeProps } from '@hanzo/gui-focus-scope'
-import { FocusScope, FocusScopeController } from '@hanzo/gui-focus-scope'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+} from '@hanzogui/core'
+import { createContext } from '@hanzogui/create-context'
+import type { DismissableProps } from '@hanzogui/dismissable'
+import { Dismissable } from '@hanzogui/dismissable'
+import type { FocusScopeProps } from '@hanzogui/focus-scope'
+import { FocusScope, FocusScopeController } from '@hanzogui/focus-scope'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
 import {
   needsPortalRepropagation,
   Portal,
   PortalItem,
   resolveViewZIndex,
-} from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { SheetController } from '@hanzo/gui-sheet/controller'
-import type { YStackProps } from '@hanzo/gui-stacks'
-import { ButtonNestingContext, ThemeableStack, YStack } from '@hanzo/gui-stacks'
-import { H2, Paragraph } from '@hanzo/gui-text'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
-import { StackZIndexContext } from '@hanzo/gui-z-index-stack'
+} from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { SheetController } from '@hanzogui/sheet/controller'
+import type { YStackProps } from '@hanzogui/stacks'
+import { ButtonNestingContext, ThemeableStack, YStack } from '@hanzogui/stacks'
+import { H2, Paragraph } from '@hanzogui/text'
+import { useControllableState } from '@hanzogui/use-controllable-state'
+import { StackZIndexContext } from '@hanzogui/z-index-stack'
 import * as React from 'react'
 
 export type DialogScopes = string

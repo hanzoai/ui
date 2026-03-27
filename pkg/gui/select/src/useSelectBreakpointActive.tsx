@@ -1,4 +1,4 @@
-import { useAdaptIsActive } from '@hanzo/gui-adapt'
+import { useAdaptIsActive } from '@hanzogui/adapt'
 import type { SelectContextValue } from './types'
 
 export const useShowSelectSheet = (context: SelectContextValue) => {

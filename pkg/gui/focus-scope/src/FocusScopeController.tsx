@@ -1,5 +1,5 @@
-import { createContextScope } from '@hanzo/gui-create-context'
-import { useEvent } from '@hanzo/gui-use-event'
+import { createContextScope } from '@hanzogui/create-context'
+import { useEvent } from '@hanzogui/use-event'
 import * as React from 'react'
 import type { FocusScopeProps } from './types'
 import type { ScopedProps } from './types'

@@ -4,7 +4,7 @@ import { createCheckbox } from './createCheckbox'
 export * from './createCheckbox'
 export * from './Checkbox'
 export * from './CheckboxStyledContext'
-export type { CheckedState } from '@hanzo/gui-checkbox-headless'
+export type { CheckedState } from '@hanzogui/checkbox-headless'
 
 export const Checkbox = createCheckbox({
   Frame: CheckboxFrame,
