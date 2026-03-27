@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/button",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "gitHead": "a49cc7ea6b93ba384e77a4880ae48ac4a5635c14",
   "source": "src/index.ts",
   "files": [
@@ -37,18 +37,18 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/config-default": "2.0.5",
-    "@hanzogui/core": "2.0.5",
-    "@hanzogui/get-button-sized": "2.0.5",
-    "@hanzogui/helpers": "2.0.5",
-    "@hanzogui/spacer": "2.0.7",
-    "@hanzogui/stacks": "2.0.7",
-    "@hanzogui/text": "2.0.7",
-    "@hanzogui/font-size": "2.0.5",
-    "@hanzogui/web": "2.0.5"
+    "@hanzogui/config-default": "3.0.0",
+    "@hanzogui/core": "3.0.0",
+    "@hanzogui/get-button-sized": "3.0.0",
+    "@hanzogui/helpers": "3.0.0",
+    "@hanzogui/spacer": "3.0.0",
+    "@hanzogui/stacks": "3.0.0",
+    "@hanzogui/text": "3.0.0",
+    "@hanzogui/font-size": "3.0.0",
+    "@hanzogui/web": "3.0.0"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.1",
+    "@hanzogui/build": "3.0.0",
     "react": ">=19",
     "vitest": "4.0.4"
   },

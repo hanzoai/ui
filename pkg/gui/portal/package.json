@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/portal",
-  "version": "2.0.8",
+  "version": "3.0.0",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,16 +36,16 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/constants": "2.0.5",
-    "@hanzogui/core": "2.0.5",
-    "@hanzogui/native": "2.0.1",
-    "@hanzogui/start-transition": "2.0.1",
-    "@hanzogui/use-event": "2.0.5",
-    "@hanzogui/web": "2.0.5",
-    "@hanzogui/z-index-stack": "2.0.7"
+    "@hanzogui/constants": "3.0.0",
+    "@hanzogui/core": "3.0.0",
+    "@hanzogui/native": "3.0.0",
+    "@hanzogui/start-transition": "3.0.0",
+    "@hanzogui/use-event": "3.0.0",
+    "@hanzogui/web": "3.0.0",
+    "@hanzogui/z-index-stack": "3.0.0"
   },
   "devDependencies": {
-    "@hanzogui/build": "2.0.1",
+    "@hanzogui/build": "3.0.0",
     "react": ">=19",
     "react-dom": "*",
     "react-native": "0.83.2"
