@@ -1,6 +1,6 @@
 {
   "name": "@hanzogui/dialog",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "source": "src/index.ts",
   "files": [
     "src",
@@ -36,24 +36,24 @@
     "clean:build": "hanzo-gui-build clean:build"
   },
   "dependencies": {
-    "@hanzogui/adapt": "2.0.1",
+    "@hanzogui/adapt": "2.0.7",
     "@hanzogui/animate": "2.0.1",
-    "@hanzogui/animate-presence": "2.0.1",
-    "@hanzogui/compose-refs": "2.0.1",
-    "@hanzogui/constants": "2.0.1",
-    "@hanzogui/core": "2.0.1",
-    "@hanzogui/create-context": "2.0.1",
-    "@hanzogui/dismissable": "2.0.1",
-    "@hanzogui/focus-scope": "2.0.1",
-    "@hanzogui/helpers": "2.0.1",
+    "@hanzogui/animate-presence": "2.0.5",
+    "@hanzogui/compose-refs": "2.0.5",
+    "@hanzogui/constants": "2.0.5",
+    "@hanzogui/core": "2.0.5",
+    "@hanzogui/create-context": "2.0.5",
+    "@hanzogui/dismissable": "2.0.7",
+    "@hanzogui/focus-scope": "2.0.7",
+    "@hanzogui/helpers": "2.0.5",
     "@hanzogui/polyfill-dev": "2.0.1",
-    "@hanzogui/portal": "2.0.1",
-    "@hanzogui/remove-scroll": "2.0.1",
-    "@hanzogui/sheet": "2.0.1",
-    "@hanzogui/stacks": "2.0.1",
-    "@hanzogui/text": "2.0.1",
-    "@hanzogui/use-controllable-state": "2.0.1",
-    "@hanzogui/z-index-stack": "2.0.1"
+    "@hanzogui/portal": "2.0.7",
+    "@hanzogui/remove-scroll": "2.0.7",
+    "@hanzogui/sheet": "2.0.7",
+    "@hanzogui/stacks": "2.0.7",
+    "@hanzogui/text": "2.0.7",
+    "@hanzogui/use-controllable-state": "2.0.5",
+    "@hanzogui/z-index-stack": "2.0.7"
   },
   "devDependencies": {
     "@hanzogui/build": "2.0.1",
