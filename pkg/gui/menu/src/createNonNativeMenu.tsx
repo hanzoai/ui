@@ -1,4 +1,4 @@
-import type * as BaseMenuTypes from '@hanzo/gui-create-menu'
+import type * as BaseMenuTypes from '@hanzogui/create-menu'
 import {
   type MenuArrowProps as BaseMenuArrowProps,
   type MenuCheckboxItemProps as BaseMenuCheckboxItemProps,
@@ -15,10 +15,10 @@ import {
   type MenuSubTriggerProps as BaseMenuSubTriggerProps,
   createBaseMenu,
   type CreateBaseMenuProps,
-} from '@hanzo/gui-create-menu'
-import { usePopperContextSlow } from '@hanzo/gui-popper'
-import { ScrollView, type ScrollViewProps } from '@hanzo/gui-scroll-view'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/create-menu'
+import { usePopperContextSlow } from '@hanzogui/popper'
+import { ScrollView, type ScrollViewProps } from '@hanzogui/scroll-view'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import {
   composeEventHandlers,
   composeRefs,
@@ -33,7 +33,7 @@ import {
   View,
   type ViewProps,
   withStaticProperties,
-} from '@hanzo/gui-web'
+} from '@hanzogui/web'
 import * as React from 'react'
 import { useId } from 'react'
 

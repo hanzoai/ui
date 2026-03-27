@@ -1,4 +1,4 @@
-import { styled, Text } from '@hanzo/gui-web'
+import { styled, Text } from '@hanzogui/web'
 
 export const Strong = styled(Text, {
   render: 'strong',

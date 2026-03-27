@@ -1,7 +1,7 @@
-import { ProvideAdaptContext, useAdaptContext } from '@hanzo/gui-adapt'
-import { AnimatePresence } from '@hanzo/gui-animate-presence'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
+import { ProvideAdaptContext, useAdaptContext } from '@hanzogui/adapt'
+import { AnimatePresence } from '@hanzogui/animate-presence'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
 import {
   LayoutMeasurementController,
   View as GuiView,
@@ -9,9 +9,9 @@ import {
   useDidFinishSSR,
   useEvent,
   useThemeName,
-} from '@hanzo/gui-core'
-import { getSafeArea } from '@hanzo/gui-native'
-import { needsPortalRepropagation, Portal } from '@hanzo/gui-portal'
+} from '@hanzogui/core'
+import { getSafeArea } from '@hanzogui/native'
+import { needsPortalRepropagation, Portal } from '@hanzogui/portal'
 import React, { useState } from 'react'
 import type {
   Animated,
@@ -37,7 +37,7 @@ const hiddenSize = 10_000.1
 let _cachedSafeAreaTop: number | undefined
 function getSafeAreaTopInset(): number {
   if (_cachedSafeAreaTop !== undefined) return _cachedSafeAreaTop
-  // use @hanzo/gui-native abstraction - returns 0 when not enabled
+  // use @hanzogui/native abstraction - returns 0 when not enabled
   _cachedSafeAreaTop = getSafeArea().getInsets().top
   return _cachedSafeAreaTop
 }

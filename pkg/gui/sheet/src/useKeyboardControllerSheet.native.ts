@@ -21,11 +21,11 @@ let isKeyboardControllerEnabled: () => boolean = () => false
 let getKeyboardControllerState: () => any = () => ({})
 
 try {
-  const nativeModule = require('@hanzo/gui-native')
+  const nativeModule = require('@hanzogui/native')
   isKeyboardControllerEnabled = nativeModule.isKeyboardControllerEnabled
   getKeyboardControllerState = nativeModule.getKeyboardControllerState
 } catch {
-  // @hanzo/gui-native not available
+  // @hanzogui/native not available
 }
 
 export function useKeyboardControllerSheet(

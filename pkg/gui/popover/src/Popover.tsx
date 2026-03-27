@@ -1,6 +1,6 @@
-import '@hanzo/gui-polyfill-dev'
+import '@hanzogui/polyfill-dev'
 
-import type { UseHoverProps } from '@hanzo/gui-floating'
+import type { UseHoverProps } from '@hanzogui/floating'
 import {
   Adapt,
   AdaptParent,
@@ -8,28 +8,28 @@ import {
   ProvideAdaptContext,
   useAdaptContext,
   useAdaptIsActive,
-} from '@hanzo/gui-adapt'
-import { Animate } from '@hanzo/gui-animate'
-import { ResetPresence } from '@hanzo/gui-animate-presence'
-import { useComposedRefs } from '@hanzo/gui-compose-refs'
-import { isWeb, useIsomorphicLayoutEffect } from '@hanzo/gui-constants'
-import type { SizeTokens, GuiElement, ViewProps } from '@hanzo/gui-core'
+} from '@hanzogui/adapt'
+import { Animate } from '@hanzogui/animate'
+import { ResetPresence } from '@hanzogui/animate-presence'
+import { useComposedRefs } from '@hanzogui/compose-refs'
+import { isWeb, useIsomorphicLayoutEffect } from '@hanzogui/constants'
+import type { SizeTokens, GuiElement, ViewProps } from '@hanzogui/core'
 import {
   createStyledContext,
   useCreateShallowSetState,
   useEvent,
   useGet,
   View,
-} from '@hanzo/gui-core'
+} from '@hanzogui/core'
 import {
   Dismissable,
   DismissableBranch,
   type DismissableProps,
-} from '@hanzo/gui-dismissable'
-import { FloatingOverrideContext } from '@hanzo/gui-floating'
-import type { FocusScopeProps } from '@hanzo/gui-focus-scope'
-import { FocusScope, FocusScopeController } from '@hanzo/gui-focus-scope'
-import { composeEventHandlers, withStaticProperties } from '@hanzo/gui-helpers'
+} from '@hanzogui/dismissable'
+import { FloatingOverrideContext } from '@hanzogui/floating'
+import type { FocusScopeProps } from '@hanzogui/focus-scope'
+import { FocusScope, FocusScopeController } from '@hanzogui/focus-scope'
+import { composeEventHandlers, withStaticProperties } from '@hanzogui/helpers'
 import {
   Popper,
   PopperAnchor,
@@ -43,14 +43,14 @@ import {
   type PopperProps,
   PopperProvider,
   usePopperContext,
-} from '@hanzo/gui-popper'
-import { needsPortalRepropagation, Portal } from '@hanzo/gui-portal'
-import { RemoveScroll } from '@hanzo/gui-remove-scroll'
-import { ScrollView, type ScrollViewProps } from '@hanzo/gui-scroll-view'
-import { SheetController } from '@hanzo/gui-sheet/controller'
-import type { YStackProps } from '@hanzo/gui-stacks'
-import { YStack } from '@hanzo/gui-stacks'
-import { useControllableState } from '@hanzo/gui-use-controllable-state'
+} from '@hanzogui/popper'
+import { needsPortalRepropagation, Portal } from '@hanzogui/portal'
+import { RemoveScroll } from '@hanzogui/remove-scroll'
+import { ScrollView, type ScrollViewProps } from '@hanzogui/scroll-view'
+import { SheetController } from '@hanzogui/sheet/controller'
+import type { YStackProps } from '@hanzogui/stacks'
+import { YStack } from '@hanzogui/stacks'
+import { useControllableState } from '@hanzogui/use-controllable-state'
 import * as React from 'react'
 import { useFloatingContext } from './useFloatingContext'
 

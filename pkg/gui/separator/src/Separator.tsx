@@ -1,5 +1,5 @@
-import { isWeb } from '@hanzo/gui-constants'
-import { View, styled } from '@hanzo/gui-core'
+import { isWeb } from '@hanzogui/constants'
+import { View, styled } from '@hanzogui/core'
 
 export const Separator = styled(View, {
   name: 'Separator',
