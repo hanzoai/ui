@@ -1,0 +1,1 @@
+{"name":"icon-navigation-bar","description":"Icon-based navigation","files":[{"name":"icon-navigation-bar.tsx","content":"export * from \"../icon-navigation-bar\"\n"}],"type":"components:ui"}
