@@ -1,0 +1,1 @@
+{"name":"context-switcher-navigation-bar","description":"Navigation with context switcher","files":[{"name":"context-switcher-navigation-bar.tsx","content":"export * from \"../context-switcher-navigation-bar\"\n"}],"type":"components:ui"}

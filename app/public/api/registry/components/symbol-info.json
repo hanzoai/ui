@@ -1,0 +1,1 @@
+{"name":"symbol-info","description":"Real-time symbol information with price and basic details","dependencies":["@hanzo/ui"],"files":[{"name":"symbol-info.tsx","content":"export { default } from \"../ui/symbol-info\"\nexport * from \"../ui/symbol-info\"\n"}],"type":"components:finance","category":"finance","subcategory":"analysis"}
