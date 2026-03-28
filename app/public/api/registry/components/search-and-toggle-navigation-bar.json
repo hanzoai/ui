@@ -1,1 +1,0 @@
-{"name":"search-and-toggle-navigation-bar","description":"Navigation with search and toggle","files":[{"name":"search-and-toggle-navigation-bar.tsx","content":"export * from \"../search-and-toggle-navigation-bar\"\n"}],"type":"components:ui"}

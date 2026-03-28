@@ -1,1 +1,0 @@
-{"name":"news-timeline","description":"Financial news timeline widget with real-time updates","dependencies":["@hanzo/ui"],"files":[{"name":"news-timeline.tsx","content":"export { default } from \"../ui/news-timeline\"\nexport * from \"../ui/news-timeline\"\n"}],"type":"components:finance","category":"finance","subcategory":"news"}

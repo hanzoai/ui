@@ -1,1 +1,0 @@
-{"name":"ai-model-selector-navigation-bar","description":"Navigation with AI model selector","files":[{"name":"ai-model-selector-navigation-bar.tsx","content":"export * from \"../ai-model-selector-navigation-bar\"\n"}],"type":"components:ui"}
