@@ -1,0 +1,1 @@
+{"name":"advanced-navigation-bar","description":"Advanced navigation with dropdowns","files":[{"name":"advanced-navigation-bar.tsx","content":"export * from \"../advanced-navigation-bar\"\n"}],"type":"components:ui"}
