@@ -8,6 +8,8 @@
 import { NextResponse } from "next/server"
 import { getFullManifest } from "../lib"
 
+export const dynamic = "force-static"
+
 export async function GET() {
   const manifest = getFullManifest()
 
