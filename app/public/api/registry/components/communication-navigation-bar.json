@@ -1,0 +1,1 @@
+{"name":"communication-navigation-bar","description":"Communication app navigation","files":[{"name":"communication-navigation-bar.tsx","content":"export * from \"../communication-navigation-bar\"\n"}],"type":"components:ui"}

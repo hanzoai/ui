@@ -1,0 +1,1 @@
+{"name":"financials","description":"Financial statements and fundamental data visualization","dependencies":["@hanzo/ui"],"files":[{"name":"financials.tsx","content":"export { default } from \"../ui/financials\"\nexport * from \"../ui/financials\"\n"}],"type":"components:finance","category":"finance","subcategory":"analysis"}
