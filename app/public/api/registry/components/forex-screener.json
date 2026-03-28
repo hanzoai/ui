@@ -1,0 +1,1 @@
+{"name":"forex-screener","description":"Foreign exchange market screener for currency pairs","dependencies":["@hanzo/ui"],"files":[{"name":"forex-screener.tsx","content":"export { default } from \"../ui/forex-screener\"\nexport * from \"../ui/forex-screener\"\n"}],"type":"components:finance","category":"finance","subcategory":"screeners"}
