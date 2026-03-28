@@ -1,0 +1,1 @@
+{"name":"company-profile","description":"Company profile with business description and key information","dependencies":["@hanzo/ui"],"files":[{"name":"company-profile.tsx","content":"export { default } from \"../ui/company-profile\"\nexport * from \"../ui/company-profile\"\n"}],"type":"components:finance","category":"finance","subcategory":"analysis"}

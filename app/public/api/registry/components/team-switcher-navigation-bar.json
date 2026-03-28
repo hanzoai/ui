@@ -1,0 +1,1 @@
+{"name":"team-switcher-navigation-bar","description":"Navigation with team switcher","files":[{"name":"team-switcher-navigation-bar.tsx","content":"export * from \"../team-switcher-navigation-bar\"\n"}],"type":"components:ui"}

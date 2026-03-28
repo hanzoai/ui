@@ -1,0 +1,1 @@
+{"name":"breadcrumb-and-filters-navigation-bar","description":"Navigation with breadcrumbs and filters","files":[{"name":"breadcrumb-and-filters-navigation-bar.tsx","content":"export * from \"../breadcrumb-and-filters-navigation-bar\"\n"}],"type":"components:ui"}
