@@ -1,1 +1,0 @@
-{"name":"dashboard-navigation-bar","description":"Dashboard navigation layout","files":[{"name":"dashboard-navigation-bar.tsx","content":"export * from \"../dashboard-navigation-bar\"\n"}],"type":"components:ui"}

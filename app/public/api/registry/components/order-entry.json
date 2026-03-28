@@ -1,1 +1,0 @@
-{"name":"order-entry","description":"Order entry form with buy/sell toggle and market/limit orders","dependencies":["@hanzo/ui"],"files":[{"name":"order-entry.tsx","content":"export { default } from \"../ui/order-entry\"\nexport * from \"../ui/order-entry\"\n"}],"type":"components:finance","category":"finance","subcategory":"trading"}
