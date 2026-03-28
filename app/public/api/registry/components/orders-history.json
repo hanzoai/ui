@@ -1,0 +1,1 @@
+{"name":"orders-history","description":"Order history view with status badges and cancel functionality","dependencies":["@hanzo/ui"],"files":[{"name":"orders-history.tsx","content":"export { default } from \"../ui/orders-history\"\nexport * from \"../ui/orders-history\"\n"}],"type":"components:finance","category":"finance","subcategory":"trading"}
