@@ -1,1 +1,0 @@
-{"name":"breadcrumb-navigation-bar","description":"Breadcrumb navigation","files":[{"name":"breadcrumb-navigation-bar.tsx","content":"export * from \"../breadcrumb-navigation-bar\"\n"}],"type":"components:ui"}
