@@ -2,26 +2,19 @@
  * GET /api/registry/search?q=button — Search components.
  */
 
-import { NextRequest, NextResponse } from "next/server"
-import { searchComponents } from "../lib"
+import { NextResponse } from "next/server"
+import { getIndex } from "../lib"
 
-export async function GET(req: NextRequest) {
-  const query = req.nextUrl.searchParams.get("q")
+export const dynamic = "force-static"
 
-  if (!query) {
-    return NextResponse.json(
-      { error: "Query parameter 'q' is required" },
-      { status: 400 }
-    )
-  }
-
-  const results = searchComponents(query)
+export async function GET() {
+  // Static export: return full index (client-side filtering)
+  const items = getIndex()
 
   return NextResponse.json(
     {
-      query,
-      total: results.length,
-      results: results.map((item) => ({
+      total: items.length,
+      results: items.map((item) => ({
         name: item.name,
         type: item.type,
         dependencies: item.dependencies,
