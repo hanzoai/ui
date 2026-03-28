@@ -1,1 +1,0 @@
-{"name":"technical-analysis","description":"Technical indicator summary with configurable intervals","dependencies":["@hanzo/ui"],"files":[{"name":"technical-analysis.tsx","content":"export { default } from \"../ui/technical-analysis\"\nexport * from \"../ui/technical-analysis\"\n"}],"type":"components:finance","category":"finance","subcategory":"analysis"}

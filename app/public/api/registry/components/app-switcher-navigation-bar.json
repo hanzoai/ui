@@ -1,1 +1,0 @@
-{"name":"app-switcher-navigation-bar","description":"Navigation with app switcher","files":[{"name":"app-switcher-navigation-bar.tsx","content":"export * from \"../app-switcher-navigation-bar\"\n"}],"type":"components:ui"}
