@@ -1,1 +1,0 @@
-{"name":"ticker-tape","description":"Scrolling ticker tape with major market indices and stocks","dependencies":["@hanzo/ui"],"files":[{"name":"ticker-tape.tsx","content":"export { default } from \"../ui/ticker-tape\"\nexport * from \"../ui/ticker-tape\"\n"}],"type":"components:finance","category":"finance","subcategory":"charts"}
