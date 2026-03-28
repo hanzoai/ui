@@ -1,1 +1,0 @@
-{"name":"underline-navigation-bar","description":"Navigation with underline animation","files":[{"name":"underline-navigation-bar.tsx","content":"export * from \"../underline-navigation-bar\"\n"}],"type":"components:ui"}

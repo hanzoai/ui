@@ -1,1 +1,0 @@
-{"name":"centered-logo-navigation-bar","description":"Navigation with centered logo","files":[{"name":"centered-logo-navigation-bar.tsx","content":"export * from \"../centered-logo-navigation-bar\"\n"}],"type":"components:ui"}
