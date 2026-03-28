@@ -1,1 +1,0 @@
-{"name":"collaboration-navigation-bar","description":"Collaboration tools navigation","files":[{"name":"collaboration-navigation-bar.tsx","content":"export * from \"../collaboration-navigation-bar\"\n"}],"type":"components:ui"}
