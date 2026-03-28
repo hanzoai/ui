@@ -5,43 +5,13 @@
  * Client-side code hits this route instead of Cloud directly.
  */
 
-import { NextRequest, NextResponse } from 'next/server'
-import { searchEndpoint, searchIndex, publishableKey } from '@/lib/search'
+import { NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
-  const body = await req.json()
-  const { query, limit = 10, tags } = body
+export const dynamic = "force-static"
 
-  if (!query) {
-    return NextResponse.json({ error: 'query is required' }, { status: 400 })
-  }
-
-  const resp = await fetch(searchEndpoint, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${publishableKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-      index: searchIndex,
-      limit,
-      ...(tags ? { tags } : {}),
-    }),
-  })
-
-  if (!resp.ok) {
-    return NextResponse.json(
-      { error: 'Search failed', status: resp.status },
-      { status: resp.status },
-    )
-  }
-
-  const data = await resp.json()
-  return NextResponse.json(data, {
-    headers: {
-      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-      'Access-Control-Allow-Origin': '*',
-    },
-  })
+export async function GET() {
+  return NextResponse.json(
+    { error: 'Search requires a server runtime. Use client-side search.' },
+    { status: 501 },
+  )
 }
