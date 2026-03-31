@@ -6,6 +6,7 @@ import { useAccount, useChainId } from 'wagmi'
 
 import type { PaymentMethod, PaymentMethodType, CryptoNetwork } from '../types'
 import { AnimatedCard } from './animated-card'
+import { SquareCardForm } from './square-card-form'
 
 export interface PaymentMethodManagerProps {
   paymentMethods?: PaymentMethod[]
@@ -212,9 +213,19 @@ export function PaymentMethodManager(props: PaymentMethodManagerProps) {
             </div>
 
             {activeTab === 'card' && (
-              <CardForm
-                onAdd={addMethod}
-                setError={setError}
+              <SquareCardForm
+                onToken={async (sourceId) => {
+                  const method: PaymentMethod = {
+                    id: `pm_${Math.random().toString(36).slice(2, 12)}`,
+                    type: 'card',
+                    is_default: false,
+                    isDefault: false,
+                    created_at: new Date().toISOString(),
+                    _sourceToken: sourceId,
+                    card: { brand: 'card', last4: '••••', exp_month: 0, exp_year: 0, funding: 'credit' },
+                  }
+                  await addMethod(method)
+                }}
               />
             )}
             {activeTab === 'crypto' && <CryptoForm onAdd={addMethod} setError={setError} />}
