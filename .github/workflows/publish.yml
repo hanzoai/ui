@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'pkg/*/package.json'
+      - 'packages/*/package.json'
 
 jobs:
   detect-changes:
@@ -19,30 +20,40 @@ jobs:
       - name: Detect changed packages
         id: changed
         run: |
-          CHANGED_PACKAGES=()
-          for pkg_json in pkg/*/package.json; do
+          CHANGED=()
+          for pkg_json in pkg/*/package.json packages/*/package.json; do
+            [ ! -f "$pkg_json" ] && continue
             pkg_dir=$(dirname "$pkg_json")
-            pkg_name=$(basename "$pkg_dir")
 
-            # Check if package.json version changed
+            # Skip private packages
+            IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")
+            [ "$IS_PRIVATE" = "true" ] && continue
+
+            # Only publish @hanzo/* or @hanzogui/* packages
+            PKG_NAME=$(jq -r '.name' "$pkg_json")
+            case "$PKG_NAME" in
+              @hanzo/*|@hanzogui/*) ;;
+              *) continue ;;
+            esac
+
+            # Check version changed
             if git diff HEAD~1 HEAD --quiet "$pkg_json" 2>/dev/null; then
               continue
             fi
 
-            # Get old and new versions
-            OLD_VERSION=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
-            NEW_VERSION=$(jq -r '.version' "$pkg_json")
+            OLD=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
+            NEW=$(jq -r '.version' "$pkg_json")
 
-            if [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
-              echo "Version change detected: $pkg_name ($OLD_VERSION -> $NEW_VERSION)"
-              CHANGED_PACKAGES+=("$pkg_name")
+            if [ "$OLD" != "$NEW" ]; then
+              echo "Version change: $PKG_NAME ($OLD -> $NEW)"
+              CHANGED+=("$(basename "$pkg_dir")")
             fi
           done
 
-          if [ ${#CHANGED_PACKAGES[@]} -eq 0 ]; then
+          if [ ${#CHANGED[@]} -eq 0 ]; then
             echo "packages=[]" >> $GITHUB_OUTPUT
           else
-            JSON=$(printf '%s\n' "${CHANGED_PACKAGES[@]}" | jq -R . | jq -s -c .)
+            JSON=$(printf '%s\n' "${CHANGED[@]}" | jq -R . | jq -s -c .)
             echo "packages=$JSON" >> $GITHUB_OUTPUT
           fi
 
