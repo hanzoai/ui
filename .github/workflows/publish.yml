@@ -29,10 +29,10 @@ jobs:
             IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")
             [ "$IS_PRIVATE" = "true" ] && continue
 
-            # Only publish @hanzo/* or @hanzogui/* packages
+            # Only publish @hanzo/* packages
             PKG_NAME=$(jq -r '.name' "$pkg_json")
             case "$PKG_NAME" in
-              @hanzo/*|@hanzogui/*) ;;
+              @hanzo/*) ;;
               *) continue ;;
             esac
 
