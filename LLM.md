@@ -32,7 +32,6 @@ ui/
     checkout/            Checkout flow
     shop/                Shop components
     agent-ui/            AI agent UI components
-    gui/                 GUI component packages (@hanzogui/*)
     tokens/              Design tokens
   skills/
     shadcn/              AI skill definitions for shadcn CLI
