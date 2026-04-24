@@ -2,7 +2,7 @@
  * Shared types for brand configuration.
  */
 
-export type OrgId = 'hanzo' | 'lux' | 'zoo' | 'pars'
+export type OrgId = 'hanzo'
 
 export type ColorMode = 'light' | 'dark'
 

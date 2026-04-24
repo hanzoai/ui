@@ -1,16 +1,12 @@
 /**
- * @hanzo/brand
+ * @hanzo/brand — Hanzo brand only.
  *
- * Brand assets and configuration for Hanzo, Lux, Zoo, and Pars organizations.
- *
- * Exports:
- *   - SVG strings (mark, wordmark, favicon) in dark/light/currentColor variants
- *   - Per-org BrandConfig objects
- *   - TypeScript types for brand configuration
- *   - svgToDataUri helper
+ * Each org owns its own brand package. Do NOT add other orgs here.
+ *   Zoo       → @zooai/brand
+ *   Lux       → @luxfi/brand
+ *   Liquidity → @liquidityio/brand
  */
 
-// Types
 export type {
   OrgId,
   ColorMode,
@@ -21,7 +17,6 @@ export type {
   BrandConfig,
 } from './types'
 
-// SVG strings
 export {
   hanzoMark,
   hanzoMarkDark,
@@ -33,15 +28,5 @@ export {
   svgToDataUri,
 } from './svg'
 
-// Per-org configs
-export {
-  hanzo,
-  lux,
-  zoo,
-  pars,
-  orgs,
-  getOrg,
-} from './orgs'
-
-// Default brand (backward compat with v1.0.0 stub)
+export { hanzo, orgs, getOrg } from './orgs'
 export { hanzo as defaultBrand } from './orgs'
