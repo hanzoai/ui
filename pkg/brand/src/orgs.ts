@@ -126,7 +126,7 @@ export const zoo: BrandConfig = {
   id: 'zoo',
   name: 'Zoo',
   orgName: 'Zoo Labs Foundation',
-  orgHandle: 'zoolabs',
+  orgHandle: 'zoo',
   tagline: 'Open AI research network',
   description: 'Decentralized AI and decentralized science research through community-driven governance.',
 
@@ -134,7 +134,7 @@ export const zoo: BrandConfig = {
 
   domain: 'zoo.ngo',
   iamDomain: 'zoo.id',
-  githubOrg: 'zoolabs',
+  githubOrg: 'zooai',
   docsUrl: 'https://docs.zoo.ngo',
 
   logo: {
@@ -159,8 +159,8 @@ export const zoo: BrandConfig = {
   },
 
   social: {
-    twitter: '@zoolabs',
-    github: 'https://github.com/zoolabs',
+    twitter: '@zoo_labs',
+    github: 'https://github.com/zooai',
   },
 
   seo: {
