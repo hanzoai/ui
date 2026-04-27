@@ -9,7 +9,7 @@
 
 throw new Error(
   '@hanzo/ui/primitives/bases/vue is not yet implemented. ' +
-    'Use @hanzo/ui/primitives/bases/admin (Tamagui v7) or @hanzo/ui/primitives/bases/gui (hanzogui umbrella) ' +
+    'Use @hanzo/ui/primitives/bases/admin (Hanzo GUI v7 admin chrome) or @hanzo/ui/primitives/bases/gui (hanzogui umbrella) ' +
     'until the Vue port lands.',
 )
 
