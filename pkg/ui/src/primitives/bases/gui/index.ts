@@ -1,8 +1,8 @@
-// @hanzo/ui/primitives/bases/gui — Tamagui v7 base.
+// @hanzo/ui/primitives/bases/gui — Hanzo GUI v7 base.
 //
 // Source of truth: `hanzogui` (the workspace umbrella in
 // ~/work/hanzo/gui/code/ui/hanzogui). This file is a passthrough
-// re-export so consumers of @hanzo/ui can pull Tamagui v7 components
+// re-export so consumers of @hanzo/ui can pull Hanzo GUI v7 components
 // without depending on hanzogui directly. Subpath resolution makes
 // `@hanzo/ui/primitives/bases/gui` equivalent to `hanzogui` from a
 // caller's perspective, but going through @hanzo/ui keeps the import
