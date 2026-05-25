@@ -4,7 +4,7 @@
  * Separation of concerns: this file owns ONLY Hanzo's identity.
  *   @zooai/brand       → Zoo (github.com/zooai/brand)
  *   @luxfi/brand       → Lux (github.com/luxfi/brand)
- *   @/brand → Liquidity (github.com//brand)
+ *   @<tenant>/brand → Tenant (github.com/<tenant>/brand)
  *
  * Never add other orgs' identities here.
  */
