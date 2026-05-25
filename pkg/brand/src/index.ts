@@ -4,7 +4,7 @@
  * Each org owns its own brand package. Do NOT add other orgs here.
  *   Zoo       → @zooai/brand
  *   Lux       → @luxfi/brand
- *   Liquidity → @/brand
+ *   Tenant → @<tenant>/brand
  */
 
 export type {
