@@ -6,8 +6,8 @@
 
 | Subpath | Base | Source of truth | Status |
 |---|---|---|---|
-| `@hanzo/ui/primitives/bases/admin` | Hanzo GUI v7 admin chrome (Sidebar, TopBar, AdminApp, PageShell, primitives, IAM pages, data hooks) | `@hanzogui/admin` (`~/work/hanzo/gui/code/ui-admin/`) | canonical |
-| `@hanzo/ui/primitives/bases/gui` | Hanzo GUI v7 base primitives umbrella (XStack, YStack, Text, Input, Button, etc.) | `hanzogui` (`~/work/hanzo/gui/code/ui/hanzogui/`) | canonical |
+| `@hanzo/ui/primitives/bases/admin` | Hanzo GUI v7 admin chrome (Sidebar, TopBar, AdminApp, PageShell, primitives, IAM pages, data hooks) | `@hanzogui/admin` (`~/work/hanzo/gui/pkgs/ui-admin/`) | canonical |
+| `@hanzo/ui/primitives/bases/gui` | Hanzo GUI v7 base primitives umbrella (XStack, YStack, Text, Input, Button, etc.) | `hanzogui` (`~/work/hanzo/gui/pkgs/ui/hanzogui/`) | canonical |
 | `@hanzo/ui` (root) | shadcn/ui React + Radix + Tailwind component registry | `~/work/hanzo/ui/app/registry/default/ui/` | existing |
 | `@hanzo/ui/primitives/bases/svelte` | Svelte adapter | not yet authored | placeholder, throws on import |
 | `@hanzo/ui/primitives/bases/vue` | Vue adapter | not yet authored | placeholder, throws on import |
@@ -35,7 +35,7 @@ Component names stay identical across bases by contract.
 
 ## Adding a new base
 
-1. Author the framework port at `~/work/hanzo/gui/code/ui-admin-<framework>/` exporting the same component names with the same API.
+1. Author the framework port at `~/work/hanzo/gui/pkgs/ui-admin-<framework>/` exporting the same component names with the same API.
 2. Wire its package as a peer-dep in `@hanzo/ui` `package.json`.
 3. Update the matching `src/primitives/bases/<framework>/index.ts` to re-export from it.
 4. Update this doc's status table.
@@ -52,7 +52,7 @@ The authoritative source files still live in `~/work/hanzo/gui/`. `@hanzo/ui` do
 ## Brand layer
 
 Each consumer applies its own brand at the theme/token layer:
-- `@hanzo/tasks` (the SPA at `~/work/hanzo/gui/code/admin-tasks/`) → Hanzo brand
+- `@hanzo/tasks` (the SPA at `~/work/hanzo/gui/apps/admin-tasks/`) → Hanzo brand
 - `~/work/liquidity/superadmin` → Liquidity brand (separate repo, separate registry)
 - `@hanzo/ui` bases ship brand-neutral — never include a `<HanzoMark/>` in the bases themselves.
 
