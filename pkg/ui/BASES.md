@@ -53,6 +53,7 @@ The authoritative source files still live in `~/work/hanzo/gui/`. `@hanzo/ui` do
 
 Each consumer applies its own brand at the theme/token layer:
 - `@hanzo/tasks` (the SPA at `~/work/hanzo/gui/apps/admin-tasks/`) → Hanzo brand
+- Downstream tenants ship their own brand via separate repos with separate registries
 - `@hanzo/ui` bases ship brand-neutral — never include a `<HanzoMark/>` in the bases themselves.
 
 See `~/work/hanzo/HANZO_BINARY.md` for the Go binary architecture (one binary + go:embed UI) that consumes these bases.
