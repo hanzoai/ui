@@ -9,7 +9,7 @@ on:
 
 jobs:
   detect-changes:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     outputs:
       packages: ${{ steps.changed.outputs.packages }}
     steps:
@@ -60,7 +60,7 @@ jobs:
   publish:
     needs: detect-changes
     if: needs.detect-changes.outputs.packages != '[]'
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     strategy:
       matrix:
         package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
