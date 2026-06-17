@@ -18,7 +18,7 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,7 +54,7 @@ jobs:
 
   typecheck:
     name: Type Check
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -144,7 +144,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -195,7 +195,7 @@ jobs:
 
   deploy-preview:
     name: Deploy Preview
-    runs-on: ubuntu-latest
+    runs-on: hanzo-deploy-linux-amd64
     needs: [lint, typecheck, build]
     if: github.event_name == 'pull_request'
     steps:
@@ -244,7 +244,7 @@ jobs:
 
   status:
     name: CI Status
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     needs: [lint, typecheck, build, test]
     if: always()
     steps:
