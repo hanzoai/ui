@@ -139,6 +139,12 @@ export const DEFAULT_HANZO_APPS: HanzoApp[] = [
     description: 'Cloud infrastructure',
   },
   {
+    id: 'web3',
+    label: 'Web3',
+    href: 'https://web3.hanzo.ai',
+    description: 'Deploy & manage blockchain validators across Bitcoin, Ethereum, Solana, Lux, and any Lux-derived L1',
+  },
+  {
     id: 'storage',
     label: 'Storage',
     href: 'https://s3.hanzo.ai',
@@ -252,6 +258,7 @@ export type OrgDomains = {
   analytics: string
   // Infrastructure
   platform: string
+  web3: string
   storage: string
   s3: string
   kms: string
@@ -279,6 +286,7 @@ export const ORG_DOMAINS: Record<string, OrgDomains> = {
     billing: 'https://billing.hanzo.ai',
     console: 'https://console.hanzo.ai',
     cloud: 'https://cloud.hanzo.ai',
+    web3: 'https://web3.hanzo.ai',
     chat: 'https://hanzo.chat',
     flow: 'https://flow.hanzo.ai',
     bot: 'https://hanzo.bot',
@@ -309,6 +317,7 @@ export const ORG_DOMAINS: Record<string, OrgDomains> = {
     billing: 'https://billing.lux.network',
     console: 'https://console.lux.network',
     cloud: 'https://cloud.lux.network',
+    web3: 'https://web3.lux.network',
     chat: 'https://lux.chat',
     flow: 'https://flow.lux.network',
     bot: 'https://bot.lux.network',
@@ -339,6 +348,7 @@ export const ORG_DOMAINS: Record<string, OrgDomains> = {
     billing: 'https://billing.zoo.ngo',
     console: 'https://console.zoo.ngo',
     cloud: 'https://cloud.zoo.network',
+    web3: 'https://web3.zoo.ngo',
     chat: 'https://chat.zoo.ngo',
     flow: 'https://flow.zoo.ngo',
     bot: 'https://bot.zoo.ngo',
@@ -369,6 +379,7 @@ export const ORG_DOMAINS: Record<string, OrgDomains> = {
     billing: 'https://billing.pars.network',
     console: 'https://console.pars.network',
     cloud: 'https://cloud.pars.network',
+    web3: 'https://web3.pars.network',
     chat: 'https://chat.pars.network',
     flow: 'https://flow.pars.network',
     bot: 'https://bot.pars.network',
@@ -415,6 +426,7 @@ export function getAppsForOrg(orgSlug: string): HanzoApp[] {
     // Infrastructure
     { id: 'platform', label: 'Platform', href: d.platform, description: 'Deploy & scale services' },
     { id: 'cloud', label: 'Cloud', href: d.cloud, description: 'Cloud infrastructure' },
+    { id: 'web3', label: 'Web3', href: d.web3, description: 'Deploy & manage blockchain validators across Bitcoin, Ethereum, Solana, Lux, and any Lux-derived L1' },
     { id: 'storage', label: 'Storage', href: d.storage, description: 'S3 object storage' },
     { id: 'kms', label: 'KMS', href: d.kms, description: 'Secrets & key management' },
     { id: 'dns', label: 'DNS', href: d.dns, description: 'DNS management' },
