@@ -17,6 +17,7 @@ export { Commerce, CommerceApiError, hanzoCommerce } from './client'
 export type {
   CommerceClientConfig,
   Balance,
+  TierResponse,
   Transaction,
   Subscription,
   Plan,
@@ -38,3 +39,19 @@ export type {
   Affiliate,
   CreditGrant,
 } from './client'
+
+// Server-side usage metering (the one way every product meters to commerce)
+export {
+  Metering,
+  DEFAULT_COMMERCE_URL,
+  identityFromHeaders,
+  HEADER_USER_ID,
+  HEADER_ORG_ID,
+} from './metering'
+export type {
+  MeteringConfig,
+  MeteringIdentity,
+  UsageEvent,
+  RecordResult,
+  AuthDecision,
+} from './metering'
