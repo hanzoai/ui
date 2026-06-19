@@ -47,7 +47,7 @@
   ],
   "scripts": {
     "lat": "npm show @hanzo/ui version",
-    "pub": "npm publish",
+    "pub": "./scripts/publish.sh",
     "tc": "tsc --project tsconfig.build.json",
     "build": "npm run clean && npm run build:minimal && npm run tc",
     "build:minimal": "tsup --config tsup.config.minimal.ts",
