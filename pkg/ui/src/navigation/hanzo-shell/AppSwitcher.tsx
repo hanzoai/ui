@@ -8,7 +8,7 @@ const APP_GROUPS: { label: string; ids: string[] }[] = [
   { label: 'Core', ids: ['account', 'billing', 'console'] },
   { label: 'AI', ids: ['chat', 'flow', 'bot'] },
   { label: 'Observability', ids: ['o11y', 'sentry', 'insights', 'analytics'] },
-  { label: 'Infrastructure', ids: ['platform', 'cloud', 'storage', 'kms', 'dns', 'registry'] },
+  { label: 'Infrastructure', ids: ['platform', 'cloud', 'web3', 'storage', 'kms', 'dns', 'registry'] },
   { label: 'Apps', ids: ['commerce', 'base', 'search', 'auto'] },
   { label: 'Business', ids: ['team', 'sign', 'dataroom', 'captable'] },
   { label: 'Resources', ids: ['docs', 'status'] },
