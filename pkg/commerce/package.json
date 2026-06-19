@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.6.1",
+  "version": "7.6.2",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -30,6 +30,7 @@
     "./types": "./types/index.ts",
     "./client": "./client.ts",
     "./billing": "./billing.ts",
+    "./metering": "./metering.ts",
     "./debug": "./service/debug.ts"
   },
   "dependencies": {
