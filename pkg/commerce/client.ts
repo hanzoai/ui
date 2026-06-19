@@ -67,6 +67,29 @@ export type Balance = {
   available: number
 }
 
+/**
+ * Tier-aware balance from GET /v1/billing/tier. effectiveAvailable folds the
+ * tenant's included plan allotment (e.g. the free-tier daily credit) into the
+ * prepaid available balance — gate on this to honor included usage first.
+ */
+export type TierResponse = {
+  user: string
+  tier: {
+    name: string
+    displayName?: string
+    maxAgents?: number
+    unlimitedAgents?: boolean
+    dailyCreditsCents?: number
+    allowedModels?: string[]
+  }
+  balance: {
+    currency: string
+    prepaidAvailable: number
+    dailyRemaining: number
+    effectiveAvailable: number
+  }
+}
+
 export type Transaction = {
   id?: string
   owner?: string
@@ -360,6 +383,8 @@ export class Commerce {
       body?: unknown
       token?: string
       params?: Record<string, string>
+      /** Extra request headers, e.g. X-IAM-Org-Id for S2S calls. */
+      headers?: Record<string, string>
     },
   ): Promise<T> {
     const url = new URL(path, this.baseUrl)
@@ -376,6 +401,7 @@ export class Commerce {
     const authToken = opts?.token ?? this.token
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`
     if (opts?.body) headers['Content-Type'] = 'application/json'
+    if (opts?.headers) Object.assign(headers, opts.headers)
 
     try {
       const res = await fetch(url.toString(), {
@@ -400,9 +426,9 @@ export class Commerce {
   // Balance
   // -----------------------------------------------------------------------
 
-  async getBalance(user: string, currency = 'usd', token?: string): Promise<Balance> {
+  async getBalance(user: string, currency = 'usd', token?: string, headers?: Record<string, string>): Promise<Balance> {
     return this.request<Balance>('/v1/billing/balance', {
-      params: { user, currency }, token,
+      params: { user, currency }, token, headers,
     })
   }
 
@@ -412,13 +438,25 @@ export class Commerce {
     })
   }
 
+  /**
+   * Tier-aware balance: prepaid available plus the tenant's included plan
+   * allotment (effectiveAvailable). Use this for the metering gate when you
+   * want included usage (e.g. free-tier daily credit) honored before prepaid
+   * funds are drawn down.
+   */
+  async getTier(user: string, opts?: { token?: string; headers?: Record<string, string> }): Promise<TierResponse> {
+    return this.request<TierResponse>('/v1/billing/tier', {
+      params: { user }, token: opts?.token, headers: opts?.headers,
+    })
+  }
+
   // -----------------------------------------------------------------------
   // Usage
   // -----------------------------------------------------------------------
 
-  async addUsageRecord(record: UsageRecord, token?: string): Promise<Transaction> {
+  async addUsageRecord(record: UsageRecord, token?: string, headers?: Record<string, string>): Promise<Transaction> {
     return this.request<Transaction>('/v1/billing/usage', {
-      method: 'POST', body: record, token,
+      method: 'POST', body: record, token, headers,
     })
   }
 
