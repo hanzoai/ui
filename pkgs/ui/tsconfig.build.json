@@ -1,0 +1,51 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "composite": false,
+    "incremental": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*",
+    "primitives/**/*",
+    "components/**/*",
+    "assets/**/*",
+    "blocks/**/*",
+    "types/**/*",
+    "util/**/*",
+    "tailwind/**/*",
+    "style/**/*",
+    "frameworks/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "src/button.ts",
+    "src/code/**/*",
+    "src/animation/**/*",
+    "primitives/sidebar.tsx",
+    "primitives/chat/**/*",
+    "primitives/background-beams.tsx",
+    "primitives/mermaid.tsx",
+    "primitives/markdown-preview.tsx",
+    "primitives/qr-code.tsx",
+    "primitives/pagination.tsx",
+    "primitives/index.ts",
+    "primitives/index-selective.ts",
+    "src/primitives-export.ts",
+    "tailwind/typo-plugin/**/*",
+    "blocks/**/*",
+    "docs/**/*",
+    "content/**/*"
+  ]
+}
