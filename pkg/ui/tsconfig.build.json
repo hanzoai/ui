@@ -8,12 +8,7 @@
     "noEmit": false,
     "composite": false,
     "incremental": false,
-    "skipLibCheck": true,
-    "paths": {
-      "@/app/*": ["../../app/*"],
-      "@/registry/*": ["../../app/registry/*"],
-      "@/lib/*": ["../../app/lib/*"]
-    }
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*",

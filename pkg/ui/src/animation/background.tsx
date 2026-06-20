@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "motion/react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "../utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion

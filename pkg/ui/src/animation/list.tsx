@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { AnimatePresence, motion, Reorder, Variants } from "motion/react"
 
-import { cn } from "@/lib/utils"
+import { cn } from "../utils"
 
 /**
  * Custom hook to detect prefers-reduced-motion
