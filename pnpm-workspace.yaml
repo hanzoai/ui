@@ -1,10 +1,9 @@
 packages:
   - "app"
   - "apps/*"
-  - "packages/*"
-  - "pkg/*"
+  - "pkgs/*"
   - "!**/test/**"
   - "!**/fixtures/**"
   - "!**/temp/**"
-  - "!packages/tests/temp/**"
+  - "!pkgs/tests/temp/**"
   - "!deprecated/**"
