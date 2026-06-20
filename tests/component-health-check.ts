@@ -66,7 +66,7 @@ async function checkComponent(component: any): Promise<ComponentStatus> {
         `app/registry/default/${file}`,
         `app/registry/new-york/${file}`,
         `app/__registry__/default/${file}`,
-        `packages/ui/src/${file}`
+        `pkgs/ui/src/${file}`
       ]
 
       let found = false
