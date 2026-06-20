@@ -57,7 +57,7 @@ jobs:
 
       - name: Build @hanzo/ui package
         run: |
-          cd pkg/ui && pnpm build
+          cd pkgs/ui && pnpm build
 
       - name: Capture screenshots (optional)
         if: github.event.inputs.capture_screenshots == 'true'

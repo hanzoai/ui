@@ -5,7 +5,7 @@
  * contract, mirroring github.com/hanzoai/go-sdk/metering's tests so the two
  * clients gate on the identical balance source. Runnable standalone with:
  *
- *   npx -y -p typescript@5.9.3 -p tsx tsx pkg/commerce/metering.test.ts
+ *   npx -y -p typescript@5.9.3 -p tsx tsx pkgs/commerce/metering.test.ts
  *
  * It uses no test-runner dependency (the package ships none); a tiny harness
  * below prints PASS/FAIL and exits non-zero on failure.

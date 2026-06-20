@@ -21,7 +21,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/react-sdk.git",
-    "directory": "pkg/agent-ui"
+    "directory": "pkgs/agent-ui"
   },
   "keywords": [
     "agents",

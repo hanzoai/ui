@@ -12,7 +12,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/ui.git",
-    "directory": "pkg/commerce"
+    "directory": "pkgs/commerce"
   },
   "keywords": [
     "cart",
