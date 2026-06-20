@@ -1,6 +1,6 @@
 'use client'
 
-import { ExternalLink, MessageSquare, Github, FileText } from 'lucide-react'
+import { ExternalLink, MessageSquare, Code, FileText } from 'lucide-react'
 import type { ZenModelLike } from './types'
 
 function fmtCtx(ctx: number | undefined): string {
@@ -170,7 +170,7 @@ export function ModelCard({
             onClick={(e) => { e.stopPropagation() }}
             className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:underline"
           >
-            <Github className="h-2.5 w-2.5" /> Repo
+            <Code className="h-2.5 w-2.5" /> Repo
           </a>
         )}
         {model.paper && (
