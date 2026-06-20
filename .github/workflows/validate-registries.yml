@@ -15,7 +15,7 @@ on:
 jobs:
   check-registry-sync:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     name: check-registry-sync
     permissions:
       contents: read
@@ -52,7 +52,7 @@ jobs:
           exit 1
 
   validate:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     name: pnpm validate:registries
     permissions:
       contents: read

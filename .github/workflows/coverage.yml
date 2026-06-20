@@ -9,7 +9,7 @@ on:
 jobs:
   coverage:
     name: Test Coverage
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
 
     steps:
       - name: Checkout
