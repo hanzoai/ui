@@ -49,7 +49,8 @@
     "lat": "npm show @hanzo/ui version",
     "pub": "./scripts/publish.sh",
     "tc": "tsc --project tsconfig.build.json",
-    "build": "npm run clean && npm run build:minimal && npm run tc",
+    "check:no-hanzogui": "bash scripts/check-no-hanzogui.sh",
+    "build": "npm run check:no-hanzogui && npm run clean && npm run build:minimal && npm run tc",
     "build:minimal": "tsup --config tsup.config.minimal.ts",
     "build:namespaces": "tsup --config tsup.config.namespaces.ts",
     "build:full": "tsup --config tsup.config.production.ts",
@@ -97,36 +98,6 @@
       "types": "./dist/registry/*.d.ts",
       "import": "./dist/registry/*.mjs",
       "require": "./dist/registry/*.js"
-    },
-    "./primitives/bases/gui": {
-      "types": "./dist/primitives/bases/gui/index.d.ts",
-      "import": "./dist/primitives/bases/gui/index.mjs",
-      "require": "./dist/primitives/bases/gui/index.js"
-    },
-    "./primitives/bases/gui/*": {
-      "types": "./dist/primitives/bases/gui/*.d.ts",
-      "import": "./dist/primitives/bases/gui/*.mjs",
-      "require": "./dist/primitives/bases/gui/*.js"
-    },
-    "./primitives/bases/admin": {
-      "types": "./dist/primitives/bases/admin/index.d.ts",
-      "import": "./dist/primitives/bases/admin/index.mjs",
-      "require": "./dist/primitives/bases/admin/index.js"
-    },
-    "./primitives/bases/admin/*": {
-      "types": "./dist/primitives/bases/admin/*.d.ts",
-      "import": "./dist/primitives/bases/admin/*.mjs",
-      "require": "./dist/primitives/bases/admin/*.js"
-    },
-    "./primitives/bases/svelte": {
-      "types": "./dist/primitives/bases/svelte/index.d.ts",
-      "import": "./dist/primitives/bases/svelte/index.mjs",
-      "require": "./dist/primitives/bases/svelte/index.js"
-    },
-    "./primitives/bases/vue": {
-      "types": "./dist/primitives/bases/vue/index.d.ts",
-      "import": "./dist/primitives/bases/vue/index.mjs",
-      "require": "./dist/primitives/bases/vue/index.js"
     },
     "./calendar": {
       "types": "./dist/calendar.d.ts",
@@ -740,9 +711,6 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.0",
     "@hanzo/docs-core": "^16.0.0",
-    "@hanzogui/admin": ">=0.3.0",
-    "@hanzogui/lucide-icons-2": ">=7.0.0",
-    "hanzogui": ">=7.0.0",
     "@hookform/resolvers": "^3.3.2",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@rainbow-me/rainbowkit": "^2.0.0",
@@ -785,15 +753,6 @@
       "optional": true
     },
     "@hanzo/docs-core": {
-      "optional": true
-    },
-    "@hanzogui/admin": {
-      "optional": true
-    },
-    "@hanzogui/lucide-icons-2": {
-      "optional": true
-    },
-    "hanzogui": {
       "optional": true
     },
     "@modelcontextprotocol/sdk": {
