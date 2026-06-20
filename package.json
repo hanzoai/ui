@@ -51,7 +51,7 @@
     "format:write": "turbo run format:write",
     "format:check": "turbo run format:check",
     "sync:templates": "./scripts/sync-templates.sh \"templates/*\"",
-    "check": "turbo lint typecheck format:check",
+    "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check",
     "release": "changeset version",
     "pub:beta": "cd packages/hanzo && pnpm pub:beta",
     "pub:release": "cd packages/hanzo && pnpm pub:release",
