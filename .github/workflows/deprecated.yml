@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   deprecated:
-    runs-on: ubuntu-latest
+    runs-on: hanzo-build-linux-amd64
     steps:
       - name: Checkout PR
         uses: actions/checkout@v4
