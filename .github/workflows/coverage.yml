@@ -26,15 +26,15 @@ jobs:
           version: 9
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run tests with coverage
-        run: cd pkg/ui && pnpm test:coverage
+        run: cd pkgs/ui && pnpm test:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          files: ./pkg/ui/coverage/lcov.info
+          files: ./pkgs/ui/coverage/lcov.info
           flags: unit
           name: hanzo-ui-coverage
 
@@ -44,7 +44,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const coverage = JSON.parse(fs.readFileSync('./pkg/ui/coverage/coverage-summary.json', 'utf8'));
+            const coverage = JSON.parse(fs.readFileSync('./pkgs/ui/coverage/coverage-summary.json', 'utf8'));
             const total = coverage.total;
             const comment = `## Test Coverage Report\n\n` +
               `Lines: ${total.lines.pct}%\n` +

@@ -55,11 +55,11 @@ if [ -f "app/package.json" ]; then
   rm app/package.json.bak
 fi
 
-# Update pkg/ui package.json
-if [ -f "pkg/ui/package.json" ]; then
-  sed -i.bak "s/@hanzo/$NEW_IMPORTS/g" pkg/ui/package.json
-  sed -i.bak "s/\"name\": \"@hanzo\/ui\"/\"name\": \"$NPM_ORG\/ui\"/g" pkg/ui/package.json
-  rm pkg/ui/package.json.bak
+# Update pkgs/ui package.json
+if [ -f "pkgs/ui/package.json" ]; then
+  sed -i.bak "s/@hanzo/$NEW_IMPORTS/g" pkgs/ui/package.json
+  sed -i.bak "s/\"name\": \"@hanzo\/ui\"/\"name\": \"$NPM_ORG\/ui\"/g" pkgs/ui/package.json
+  rm pkgs/ui/package.json.bak
 fi
 
 echo "🔄 Updating imports in source files..."

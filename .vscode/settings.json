@@ -4,8 +4,8 @@
   "typescript.preferences.quoteStyle": "single",
   "eslint.workingDirectories": [
     { "pattern": "apps/*/" },
-    { "pattern": "packages/*/" },
-    { "pattern": "pkg/*/" }
+    { "pattern": "pkgs/*/" },
+    { "pattern": "pkgs/*/" }
   ],
   "tailwindCSS.classFunctions": ["cva", "cn"],
   "vitest.debugExclude": [
@@ -19,6 +19,6 @@
   "search.exclude": {
     "apps/v4/registry/radix-*": true,
     "apps/v4/public/r/*": true,
-    "packages/shadcn/test/fixtures/*": true
+    "pkgs/shadcn/test/fixtures/*": true
   }
 }
