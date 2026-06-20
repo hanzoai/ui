@@ -11,8 +11,7 @@
   "workspaces": [
     "app",
     "apps/*",
-    "packages/*",
-    "pkg/*"
+    "pkgs/*"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -51,10 +50,10 @@
     "format:write": "turbo run format:write",
     "format:check": "turbo run format:check",
     "sync:templates": "./scripts/sync-templates.sh \"templates/*\"",
-    "check": "turbo lint typecheck format:check",
+    "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check",
     "release": "changeset version",
-    "pub:beta": "cd packages/hanzo && pnpm pub:beta",
-    "pub:release": "cd packages/hanzo && pnpm pub:release",
+    "pub:beta": "cd pkgs/hanzo && pnpm pub:beta",
+    "pub:release": "cd pkgs/hanzo && pnpm pub:release",
     "test:dev": "turbo run test --filter=!hanzo-ui --force",
     "test": "start-server-and-test v4:dev http://localhost:4000 test:dev",
     "validate:registries": "pnpm --filter=v4 validate:registries",

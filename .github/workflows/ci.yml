@@ -47,7 +47,7 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run linting
         run: pnpm run lint
@@ -83,15 +83,15 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build UI package
-        run: cd pkg/ui && pnpm run build
+        run: cd pkgs/ui && pnpm run build
 
       - name: Run type checking
         run: |
           cd app && pnpm run typecheck
-          cd ../pkg/ui && pnpm run tc --noEmit
+          cd ../pkgs/ui && pnpm run tc --noEmit
 
   build:
     name: Build
@@ -124,10 +124,10 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build UI package
-        run: cd pkg/ui && pnpm run build:full
+        run: cd pkgs/ui && pnpm run build:full
 
       - name: Build app
         run: cd app && pnpm run build
@@ -140,7 +140,7 @@ jobs:
           name: build-artifacts
           path: |
             app/.next
-            pkg/ui/dist
+            pkgs/ui/dist
 
   test:
     name: Test
@@ -173,10 +173,10 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
-      - name: Run pkg/ui tests
-        run: cd pkg/ui && pnpm test -- --run
+      - name: Run pkgs/ui tests
+        run: cd pkgs/ui && pnpm test -- --run
 
       - name: Run app tests
         run: |
@@ -190,7 +190,7 @@ jobs:
         if: always()
         uses: codecov/codecov-action@v3
         with:
-          files: ./pkg/ui/coverage/lcov.info
+          files: ./pkgs/ui/coverage/lcov.info
           flags: unit
 
   deploy-preview:

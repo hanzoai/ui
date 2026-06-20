@@ -42,8 +42,8 @@ describe("@hanzo/ui namespace imports - Type Resolution", () => {
  * import { GridPattern } from '@hanzo/ui/pattern/grid'
  * ```
  *
- * The package exports are properly configured in pkg/ui/package.json.
- * Build artifacts exist in pkg/ui/dist/{code,3d,pattern}/.
+ * The package exports are properly configured in pkgs/ui/package.json.
+ * Build artifacts exist in pkgs/ui/dist/{code,3d,pattern}/.
  *
  * Vitest runtime resolution fails due to internal cross-package imports
  * (e.g., CodeBlock imports from @hanzo/ui/lib/utils), which require

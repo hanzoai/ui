@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'pkg/*/package.json'
-      - 'packages/*/package.json'
+      - 'pkgs/*/package.json'
+      - 'pkgs/*/package.json'
 
 jobs:
   detect-changes:
@@ -21,7 +21,7 @@ jobs:
         id: changed
         run: |
           CHANGED=()
-          for pkg_json in pkg/*/package.json packages/*/package.json; do
+          for pkg_json in pkgs/*/package.json pkgs/*/package.json; do
             [ ! -f "$pkg_json" ] && continue
             pkg_dir=$(dirname "$pkg_json")
 
