@@ -6,14 +6,14 @@ console.log('Testing @hanzo/ui package imports...\n');
 async function testImports() {
   try {
     // Test 1: Top-level import with cn utility
-    const { Button, Card, cn } = await import('./pkg/ui/components/index.ts');
+    const { Button, Card, cn } = await import('./pkgs/ui/components/index.ts');
     console.log('✅ Top-level import works:');
     console.log('   - Button:', typeof Button === 'object' ? 'loaded' : 'missing');
     console.log('   - Card:', typeof Card === 'object' ? 'loaded' : 'missing');
     console.log('   - cn:', typeof cn === 'function' ? 'function' : 'missing');
 
     // Test 2: Utils import
-    const utils = await import('./pkg/ui/src/utils.ts');
+    const utils = await import('./pkgs/ui/src/utils.ts');
     console.log('\n✅ Utils import works:');
     console.log('   - cn from utils:', typeof utils.cn === 'function' ? 'function' : 'missing');
 

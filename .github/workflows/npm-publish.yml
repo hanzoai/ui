@@ -52,31 +52,31 @@ jobs:
       - name: Build packages
         run: |
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "ui" ]; then
-            cd pkg/ui && pnpm build
+            cd pkgs/ui && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "ui-mcp" ]; then
-            cd pkg/ui-mcp && pnpm build
+            cd pkgs/ui-mcp && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "auth" ]; then
-            cd pkg/auth && pnpm build
+            cd pkgs/auth && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "commerce" ]; then
-            cd pkg/commerce && pnpm build
+            cd pkgs/commerce && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "checkout" ]; then
-            cd pkg/checkout && pnpm build
+            cd pkgs/checkout && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "brand" ]; then
-            cd pkg/brand && pnpm build
+            cd pkgs/brand && pnpm build
             cd ../..
           fi
           if [ "${{ github.event.inputs.package }}" = "all" ] || [ "${{ github.event.inputs.package }}" = "react" ]; then
-            cd pkg/react && pnpm build
+            cd pkgs/react && pnpm build
             cd ../..
           fi
 
@@ -142,34 +142,34 @@ jobs:
           
           case "${{ github.event.inputs.package }}" in
             ui)
-              publish_package "pkg/ui"
+              publish_package "pkgs/ui"
               ;;
             ui-mcp)
-              publish_package "pkg/ui-mcp"
+              publish_package "pkgs/ui-mcp"
               ;;
             auth)
-              publish_package "pkg/auth"
+              publish_package "pkgs/auth"
               ;;
             commerce)
-              publish_package "pkg/commerce"
+              publish_package "pkgs/commerce"
               ;;
             checkout)
-              publish_package "pkg/checkout"
+              publish_package "pkgs/checkout"
               ;;
             brand)
-              publish_package "pkg/brand"
+              publish_package "pkgs/brand"
               ;;
             react)
-              publish_package "pkg/react"
+              publish_package "pkgs/react"
               ;;
             all)
-              publish_package "pkg/ui"
-              publish_package "pkg/ui-mcp"
-              publish_package "pkg/auth"
-              publish_package "pkg/commerce"
-              publish_package "pkg/checkout"
-              publish_package "pkg/brand"
-              publish_package "pkg/react"
+              publish_package "pkgs/ui"
+              publish_package "pkgs/ui-mcp"
+              publish_package "pkgs/auth"
+              publish_package "pkgs/commerce"
+              publish_package "pkgs/checkout"
+              publish_package "pkgs/brand"
+              publish_package "pkgs/react"
               ;;
           esac
 
