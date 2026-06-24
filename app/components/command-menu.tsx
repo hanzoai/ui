@@ -62,7 +62,15 @@ export function CommandMenu({ ...props }: DialogProps) {
   const { recentSearches, addRecentSearch, clearRecentSearches } =
     useRecentSearches()
 
-  const modKey = React.useMemo(() => (isMacOS() ? "⌘" : "Ctrl"), [])
+  // SSR renders without `window`, so the first client (hydration) render MUST
+  // also produce "Ctrl" — computing the platform-specific glyph during render
+  // makes the hydrated text ("⌘" on macOS) diverge from the server text
+  // ("Ctrl") → React #418 (hydration text mismatch). Start from the SSR-stable
+  // value and upgrade to the platform glyph after mount (client-only effect).
+  const [modKey, setModKey] = React.useState("Ctrl")
+  React.useEffect(() => {
+    if (isMacOS()) setModKey("⌘")
+  }, [])
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
