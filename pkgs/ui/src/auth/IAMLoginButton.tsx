@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback, useState } from 'react'
+import { startIamLogin } from './iam'
 
 export interface IAMLoginButtonProps {
   /** IAM server URL (e.g., https://hanzo.id) */
@@ -33,17 +34,10 @@ export function IAMLoginButton({
 
   const handleClick = useCallback(() => {
     setLoading(true)
-    const redirect = redirectUri || `${window.location.origin}/auth/callback`
-    const state = crypto.randomUUID()
-
-    const url = new URL(`${iamUrl}/login/oauth/authorize`)
-    url.searchParams.set('client_id', clientId)
-    url.searchParams.set('response_type', 'code')
-    url.searchParams.set('redirect_uri', redirect)
-    url.searchParams.set('scope', 'openid profile email')
-    url.searchParams.set('state', state)
-
-    window.location.href = url.toString()
+    // Canonical IAM authorization-code + PKCE-S256 flow (HIP-0111).
+    void startIamLogin({ serverUrl: iamUrl, clientId, redirectUri }).catch(() => {
+      setLoading(false)
+    })
   }, [iamUrl, clientId, redirectUri])
 
   const baseStyles = 'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
