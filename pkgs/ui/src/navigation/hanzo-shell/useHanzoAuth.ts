@@ -50,8 +50,8 @@ export function useHanzoAuth() {
         } catch { /* ignore */ }
       }
 
-      // Fetch fresh from IAM
-      const res = await fetch(`${IAM_ENDPOINT}/api/userinfo`, {
+      // Fetch fresh from IAM — canonical OIDC userinfo (HIP-0111), never /api/.
+      const res = await fetch(`${IAM_ENDPOINT}/v1/iam/oauth/userinfo`, {
         headers: { Authorization: `Bearer ${storedToken}` },
       })
 
