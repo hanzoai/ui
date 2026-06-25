@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react'
 import { useHanzoAuth } from '../navigation/hanzo-shell/useHanzoAuth'
+import { startIamLogin } from './iam'
 
 export interface AuthGuardProps {
   /** Where to redirect when not authenticated (defaults to IAM login) */
@@ -30,13 +31,8 @@ export function AuthGuard({
       if (loginUrl) {
         window.location.href = loginUrl
       } else if (clientId) {
-        const redirect = `${window.location.origin}/auth/callback`
-        const url = new URL('https://hanzo.id/login/oauth/authorize')
-        url.searchParams.set('client_id', clientId)
-        url.searchParams.set('response_type', 'code')
-        url.searchParams.set('redirect_uri', redirect)
-        url.searchParams.set('scope', 'openid profile email')
-        window.location.href = url.toString()
+        // Canonical IAM authorization-code + PKCE-S256 flow (HIP-0111).
+        void startIamLogin({ serverUrl: 'https://hanzo.id', clientId })
       } else {
         window.location.href = 'https://hanzo.id'
       }
