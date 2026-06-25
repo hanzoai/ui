@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback, useState } from 'react'
+import { cn } from '../utils'
 import { startIamLogin } from './iam'
 
 export interface IAMLoginButtonProps {
@@ -10,6 +11,12 @@ export interface IAMLoginButtonProps {
   clientId: string
   /** OAuth redirect URI (defaults to current origin + /auth/callback) */
   redirectUri?: string
+  /**
+   * Provider hint. Omit for the IAM login page (the default "Sign in" button);
+   * pass `'google'`/`'github'`/… to jump straight to a provider. Prefer
+   * `<SignIn providers>` / `<SocialButton>` for multi-method surfaces.
+   */
+  provider?: string
   /** Button label */
   label?: string
   /** Additional CSS classes */
@@ -19,43 +26,44 @@ export interface IAMLoginButtonProps {
 }
 
 /**
- * "Sign in with Hanzo" button that initiates IAM OAuth flow.
- * Zero-dependency — works in any React app.
+ * Single "Sign in" button that initiates the canonical IAM authorization-code +
+ * PKCE-S256 flow (HIP-0111). Brand-neutral — colors come from CSS tokens
+ * (`bg-primary`, `border-input`, `bg-background`), never literals.
  */
 export function IAMLoginButton({
   iamUrl = 'https://hanzo.id',
   clientId,
   redirectUri,
-  label = 'Sign in with Hanzo',
-  className = '',
+  provider,
+  label = 'Sign in',
+  className,
   variant = 'default',
 }: IAMLoginButtonProps) {
   const [loading, setLoading] = useState(false)
 
   const handleClick = useCallback(() => {
     setLoading(true)
-    // Canonical IAM authorization-code + PKCE-S256 flow (HIP-0111).
-    void startIamLogin({ serverUrl: iamUrl, clientId, redirectUri }).catch(() => {
+    void startIamLogin({ serverUrl: iamUrl, clientId, redirectUri, provider }).catch(() => {
       setLoading(false)
     })
-  }, [iamUrl, clientId, redirectUri])
-
-  const baseStyles = 'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-  const variantStyles = variant === 'outline'
-    ? 'border border-[#333] bg-transparent text-white hover:bg-[#1a1a1f]'
-    : 'bg-white text-black hover:bg-[#e5e5e5]'
+  }, [iamUrl, clientId, redirectUri, provider])
 
   return (
     <button
       type="button"
-      className={`${baseStyles} ${variantStyles} ${className}`}
+      className={cn(
+        'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium transition-colors',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'disabled:pointer-events-none disabled:opacity-50',
+        variant === 'outline'
+          ? 'border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground'
+          : 'bg-primary text-primary-foreground hover:bg-primary/90',
+        className,
+      )}
       onClick={handleClick}
       disabled={loading}
     >
-      <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-        <text x="4" y="26" fontFamily="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif" fontSize="28" fontWeight="700" fill="currentColor">H</text>
-      </svg>
-      {loading ? 'Redirecting...' : label}
+      {loading ? 'Redirecting…' : label}
     </button>
   )
 }
