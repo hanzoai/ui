@@ -59,14 +59,23 @@ export interface StartIamLoginOptions {
   redirectUri?: string
   /** Scopes; defaults to `openid profile email`. */
   scope?: string
+  /**
+   * Social/web3 provider hint (e.g. "google", "github", "web3"). The ONE knob
+   * that selects a method — omit it for the IAM login page, or name a provider
+   * to delegate the social hop to IAM's shared org-level OAuth client. It rides
+   * as `&provider=<name>` on `/v1/iam/oauth/authorize`; the app NEVER registers
+   * a per-app Google/GitHub client. Same shape as `@hanzo/iam`'s `startLogin`.
+   */
+  provider?: string
 }
 
 /**
- * Begin the canonical IAM authorization-code + PKCE-S256 flow by redirecting
- * the browser to `/v1/iam/oauth/authorize`. The verifier + state are stashed in
- * `sessionStorage` for the callback to consume.
+ * Build the canonical IAM authorization-code + PKCE-S256 authorize URL and
+ * stash the verifier + state in `sessionStorage` for the callback. Returned
+ * without redirecting — useful for `<a href>` or tests. `provider` (if given)
+ * rides as `&provider=<name>`; one flow, parameterized.
  */
-export async function startIamLogin(opts: StartIamLoginOptions): Promise<void> {
+export async function buildIamAuthorizeUrl(opts: StartIamLoginOptions): Promise<string> {
   const redirectUri = opts.redirectUri || `${window.location.origin}/auth/callback`
   const verifier = randomVerifier()
   const challenge = await challengeFor(verifier)
@@ -83,6 +92,16 @@ export async function startIamLogin(opts: StartIamLoginOptions): Promise<void> {
   url.searchParams.set('state', state)
   url.searchParams.set('code_challenge', challenge)
   url.searchParams.set('code_challenge_method', 'S256')
+  if (opts.provider) url.searchParams.set('provider', opts.provider)
 
-  window.location.href = url.toString()
+  return url.toString()
+}
+
+/**
+ * Begin the canonical IAM authorization-code + PKCE-S256 flow by redirecting
+ * the browser to `/v1/iam/oauth/authorize`. The verifier + state are stashed in
+ * `sessionStorage` for the callback to consume. `provider` selects the method.
+ */
+export async function startIamLogin(opts: StartIamLoginOptions): Promise<void> {
+  window.location.href = await buildIamAuthorizeUrl(opts)
 }
