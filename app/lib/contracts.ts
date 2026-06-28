@@ -165,22 +165,42 @@ export const AI_TOKEN_ABI = [
 // Contract addresses by chain ID
 export const CONTRACT_ADDRESSES: Record<
   number,
-  { registry: `0x${string}`; token: `0x${string}` }
+  {
+    registry: `0x${string}`;
+    token: `0x${string}`;
+    chainConfig?: `0x${string}`;
+    husd?: `0x${string}`;
+    faucet?: `0x${string}`;
+  }
 > = {
   // Local Testnet (31337)
   31337: {
     registry: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
     token: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
   },
-  // Hanzo Mainnet (36963)
+  // Hanzo Mainnet (36963) — sovereign L1, deployed 2026-06
   36963: {
-    registry: "0x0000000000000000000000000000000000000000", // Deploy and update
-    token: "0x0000000000000000000000000000000000000000", // Deploy and update
+    registry: "0xf3df584A4a996b5D215E740B2240886d42C7307a",
+    token: "0x799586e3637E68250449e840F22F8a1a01d6E934", // AIToken (AI)
+    chainConfig: "0x25C806e07bA1c7B5c3495a8C57E6b8fd346092E1",
+    husd: "0xe9e32EF8aaECB68794Da3E1E9191b0a64CeC2c83", // HUSD (LUSD)
+    faucet: "0xd27d8049A575A63b54aAbbC4C41dBa5963cedF56",
   },
-  // Hanzo Testnet (36962)
+  // Hanzo Testnet (36962) — sovereign L1, deployed 2026-06
   36962: {
-    registry: "0x0000000000000000000000000000000000000000", // Deploy and update
-    token: "0x0000000000000000000000000000000000000000", // Deploy and update
+    registry: "0x6EA9D7C669DAC51830219ff5d4391872a25AB147",
+    token: "0x9Adf4583DDB3aFF5fA08a6788fc203e9d9908F4F", // AIToken (AI)
+    chainConfig: "0x6162A52F71a1C8F0F1F86FE8D17d6DDedaEdaC3c",
+    husd: "0xc57b7eCE2Ce2E74ef3Bc08Cfd5f5Fb41B6Ad4D66", // HUSD (LUSD)
+    faucet: "0x88810C4F376aF0018641e98Fcc06f0b7Ba529937",
+  },
+  // Hanzo Devnet (36964) — sovereign L1, deployed 2026-06
+  36964: {
+    registry: "0xDeA8179dEc51eA55E03fbe257d51c6d0f5908E3F",
+    token: "0x486809dD1bac9A17f18a1a640cdEf014C7DD809a", // AIToken (AI)
+    chainConfig: "0xf911b6e4952781949Db84B478582Ca05817fECB4",
+    husd: "0xBf92c933774daDF112159Be4b29e6BDc3ffAa2B1", // HUSD (LUSD)
+    faucet: "0x0B2B0BF9f423C03151480e1bB63caCd4cB3B6343",
   },
   // Lux Mainnet (96369)
   96369: {
@@ -208,6 +228,7 @@ export const NETWORK_NAMES: Record<number, string> = {
   31337: "localhost",
   36963: "hanzo",
   36962: "hanzo-testnet",
+  36964: "hanzo-devnet",
   96369: "lux",
   96368: "lux-testnet",
   200200: "zoo",
