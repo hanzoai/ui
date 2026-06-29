@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="ui" width="880"></p>
+
 # @hanzo/ui
 
 Accessible and customizable components for React, Vue, Svelte, and React Native. **Built on shadcn/ui with multi-framework support, 3D components, AI components, and advanced features.**
