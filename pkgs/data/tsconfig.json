@@ -17,8 +17,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "react-native": ["react-native-web"]
     }
   },
-  "include": ["src", "gui.config.ts"]
+  "include": ["src", "gui.config.ts", "gui.d.ts"]
 }
