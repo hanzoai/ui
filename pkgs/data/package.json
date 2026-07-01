@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/data",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Hanzo Data \u2014 cross-platform, metadata-driven data-app components (typed fields, record table, record card) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop.",
   "exports": {
@@ -19,7 +19,8 @@
   "scripts": {
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true"
+    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true",
+    "test": "bun test"
   },
   "peerDependencies": {
     "@hanzo/gui": ">=7.2.2",
