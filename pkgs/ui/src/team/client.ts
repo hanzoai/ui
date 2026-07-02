@@ -1,10 +1,12 @@
 /**
  * @hanzo/ui/team — TeamClient: the single typed client for IAM team/roles.
  *
- * Every call targets the canonical `/v1/iam/*` surface (nothing before /v1/),
- * carries the caller's session bearer token, and is org-scoped by the caller's
- * own org. IAM enforces app-scope, rank, and cross-org server-side; this client
- * never assumes it is trusted.
+ * Reaches IAM two ways, same contract: directly at the canonical `/v1/iam/*`
+ * with the caller's session bearer (billing), or through a same-origin,
+ * session-gated, org-pinning proxy prefix like `/org/iam` (console2) that
+ * forwards to `/v1/iam/*` server-side. Nothing precedes /v1/ at the IAM edge.
+ * Every call is org-scoped by the caller's own org; IAM enforces app-scope,
+ * rank, and cross-org server-side — this client never assumes it is trusted.
  */
 
 import type { RoleKey, TeamApp } from './catalog'
@@ -25,9 +27,18 @@ export interface TeamMember {
 export interface TeamClientOptions {
   /** Caller's org (from the session). All operations are scoped to it. */
   org: string
-  /** API origin. Default '' → same-origin `/v1/iam/*`. Never include a path. */
+  /** API origin. Default '' → same-origin. Never include a path. */
   apiBase?: string
-  /** Returns the caller's IAM access token (bearer). */
+  /**
+   * IAM path prefix appended after apiBase, before the action. Default
+   * '/v1/iam' — the canonical direct surface (billing uses this with a bearer).
+   * Surfaces that front IAM with a same-origin, session-gated, org-pinning proxy
+   * (e.g. console2's '/org/iam') set this to that prefix and omit getToken; the
+   * proxy attaches the upstream credential and enforces org scope. Either way
+   * nothing precedes /v1/ at the IAM edge.
+   */
+  iamPath?: string
+  /** Returns the caller's IAM access token (bearer). Omit when a proxy authenticates. */
   getToken?: () => string | Promise<string> | undefined
   /** Injectable fetch for testing; defaults to global fetch. */
   fetchImpl?: typeof fetch
@@ -65,6 +76,7 @@ export class TeamError extends Error {
 export class TeamClient {
   private readonly org: string
   private readonly base: string
+  private readonly iamPath: string
   private readonly getToken: () => string | Promise<string> | undefined
   private readonly doFetch: typeof fetch
 
@@ -72,6 +84,8 @@ export class TeamClient {
     if (!opts.org) throw new TeamError('TeamClient requires an org')
     this.org = opts.org
     this.base = (opts.apiBase ?? '').replace(/\/$/, '')
+    // Normalize to a single leading slash, no trailing slash: '/v1/iam'.
+    this.iamPath = `/${(opts.iamPath ?? '/v1/iam').replace(/^\/+|\/+$/g, '')}`
     this.getToken = opts.getToken ?? (() => undefined)
     this.doFetch = opts.fetchImpl ?? globalThis.fetch?.bind(globalThis)
     if (!this.doFetch) throw new TeamError('no fetch implementation available')
@@ -88,7 +102,7 @@ export class TeamClient {
 
   private async get<T>(path: string, query: Record<string, string>): Promise<T> {
     const qs = new URLSearchParams(query).toString()
-    const url = `${this.base}/v1/iam/${path}${qs ? `?${qs}` : ''}`
+    const url = `${this.base}${this.iamPath}/${path}${qs ? `?${qs}` : ''}`
     const res = await this.doFetch(url, {
       method: 'GET',
       headers: await this.authHeaders(),
@@ -99,7 +113,7 @@ export class TeamClient {
 
   private async post<T>(path: string, body: unknown, query: Record<string, string> = {}): Promise<T> {
     const qs = new URLSearchParams(query).toString()
-    const url = `${this.base}/v1/iam/${path}${qs ? `?${qs}` : ''}`
+    const url = `${this.base}${this.iamPath}/${path}${qs ? `?${qs}` : ''}`
     const res = await this.doFetch(url, {
       method: 'POST',
       headers: await this.authHeaders(),
