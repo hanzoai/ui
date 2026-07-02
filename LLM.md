@@ -78,7 +78,19 @@ import { Button, Card } from '@hanzo/ui'
 import { Button } from '@hanzo/ui/components'
 import * as Dialog from '@hanzo/ui/primitives/dialog'
 import { cn } from '@hanzo/ui/lib/utils'
+import { TeamManagement } from '@hanzo/ui/team'   // IAM-powered team/roles (billing + console)
 ```
+
+## @hanzo/ui/team — shared IAM team/roles surface
+
+The ONE shared team-management component (member list + invite + app-scoped role
+picker + change/remove), wired to Hanzo IAM over `/v1/iam` (or a proxy prefix via
+`iamPath`, e.g. console2's `/org/iam`). App-scoped roles — `billing:{viewer,admin}`,
+`console:{viewer,admin,owner}`, `org:owner` — are enforced SERVER-SIDE by IAM's pure
+`teamrole` guard (cross-org denial + app-scope + rank ceiling + org-owner orphan
+protection). `src/team/catalog.ts` is an EXACT client mirror of that guard for UX
+gating only; the server is authoritative. `<TeamManagement app org currentUserRoles
+isGlobalAdmin isOrgAdmin getToken iamPath />`. Used by `@hanzo/ui/billing`'s Team tab.
 
 ## Adding a Component
 
