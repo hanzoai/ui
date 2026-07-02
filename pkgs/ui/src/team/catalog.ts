@@ -81,25 +81,30 @@ export function effectiveRank(callerKeys: readonly string[], targetApp: TeamApp)
 }
 
 /**
- * Whether a caller holding callerKeys could assign targetKey (within their own
- * org). Mirrors the org-equal branch of teamrole.CheckAssignment: superuser →
- * always; else need admin+ authority in the target app AND target rank ≤
- * caller's effective rank. (Cross-org is impossible in the UI — the component
- * only ever operates on the caller's own org — so it is not modeled here; the
- * server still enforces it.)
+ * Whether a caller could assign targetKey within their own org. Mirrors the
+ * org-equal branch of teamrole.CheckAssignment: superuser OR org-admin → always
+ * (an org admin owns their org's team); else need admin+ authority in the
+ * target app AND target rank ≤ caller's effective rank. (Cross-org is
+ * impossible in the UI — the component only ever operates on the caller's own
+ * org — so it is not modeled here; the server still enforces it.)
  */
-export function canAssign(callerKeys: readonly string[], targetKey: string, isGlobalAdmin = false): boolean {
+export function canAssign(
+  callerKeys: readonly string[],
+  targetKey: string,
+  isGlobalAdmin = false,
+  isOrgAdmin = false,
+): boolean {
   const target = BY_KEY.get(targetKey)
   if (!target) return false
-  if (isGlobalAdmin) return true
+  if (isGlobalAdmin || isOrgAdmin) return true
   const eff = effectiveRank(callerKeys, target.app)
   if (eff < RANK_ADMIN) return false
   return target.rank <= eff
 }
 
 /** The catalog keys a caller may assign, in canonical order. Mirrors AssignableKeys. */
-export function assignableKeys(callerKeys: readonly string[], isGlobalAdmin = false): RoleKey[] {
-  return TEAM_CATALOG.filter((r) => canAssign(callerKeys, r.key, isGlobalAdmin)).map((r) => r.key)
+export function assignableKeys(callerKeys: readonly string[], isGlobalAdmin = false, isOrgAdmin = false): RoleKey[] {
+  return TEAM_CATALOG.filter((r) => canAssign(callerKeys, r.key, isGlobalAdmin, isOrgAdmin)).map((r) => r.key)
 }
 
 /**
@@ -107,14 +112,24 @@ export function assignableKeys(callerKeys: readonly string[], isGlobalAdmin = fa
  * which an org owner assigns from any surface). This is what the role picker on
  * the billing/console surface renders.
  */
-export function assignableKeysForApp(callerKeys: readonly string[], app: TeamApp, isGlobalAdmin = false): RoleKey[] {
-  return assignableKeys(callerKeys, isGlobalAdmin).filter((k) => {
+export function assignableKeysForApp(
+  callerKeys: readonly string[],
+  app: TeamApp,
+  isGlobalAdmin = false,
+  isOrgAdmin = false,
+): RoleKey[] {
+  return assignableKeys(callerKeys, isGlobalAdmin, isOrgAdmin).filter((k) => {
     const r = BY_KEY.get(k)!
     return r.app === app || r.app === 'org'
   })
 }
 
 /** Whether the caller can manage the team on a given app surface at all. */
-export function canManageApp(callerKeys: readonly string[], app: TeamApp, isGlobalAdmin = false): boolean {
-  return isGlobalAdmin || effectiveRank(callerKeys, app) >= RANK_ADMIN
+export function canManageApp(
+  callerKeys: readonly string[],
+  app: TeamApp,
+  isGlobalAdmin = false,
+  isOrgAdmin = false,
+): boolean {
+  return isGlobalAdmin || isOrgAdmin || effectiveRank(callerKeys, app) >= RANK_ADMIN
 }
