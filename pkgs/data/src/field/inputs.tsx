@@ -166,3 +166,120 @@ export function RatingInput({ field, value, onChange }: FieldInputProps) {
     </XStack>
   )
 }
+
+// ── relation (record picker — single or to-many over host-injected options) ───
+// The host injects candidate records as metadata.options ({value:id, label}).
+// maxSelect>1 (or 0/undefined with an array value) = to-many → array of ids;
+// otherwise a single id (or null when cleared by re-tapping).
+export function RelationInput({ field, value, onChange }: FieldInputProps) {
+  const meta = (field.metadata ?? {}) as { options?: SelectOption[]; maxSelect?: number }
+  const options = meta.options ?? []
+  const multi = (meta.maxSelect ?? 1) !== 1 || Array.isArray(value)
+  const selected = new Set(multi ? asArray(value) : [asStr(value)].filter(Boolean))
+  const tap = (v: string) => {
+    if (multi) {
+      const next = new Set(selected)
+      next.has(v) ? next.delete(v) : next.add(v)
+      onChange([...next])
+    } else {
+      onChange(selected.has(v) ? null : v) // re-tap clears
+    }
+  }
+  if (options.length === 0) {
+    // No candidates injected — fall back to raw id entry so the field is still editable.
+    return (
+      <Input
+        value={multi ? asArray(value).join(', ') : asStr(value)}
+        onChangeText={(t: string) => onChange(multi ? t.split(',').map((s) => s.trim()).filter(Boolean) : (t || null))}
+        placeholder="record id"
+      />
+    )
+  }
+  return (
+    <XStack gap={6} items="center" style={{ flexWrap: 'wrap' }}>
+      {options.map((o) => (
+        <Button key={o.value} size="$2" theme={selected.has(o.value) ? 'blue' : undefined} onPress={() => tap(o.value)}>
+          {o.label}
+        </Button>
+      ))}
+    </XStack>
+  )
+}
+
+// ── files (filename/URL list — add + remove; upload is a host concern) ────────
+export function FilesInput({ value, onChange }: FieldInputProps) {
+  const files = asArray(value)
+  const add = (t: string) => { const v = t.trim(); if (v) onChange([...files, v]) }
+  const remove = (i: number) => onChange(files.filter((_, idx) => idx !== i))
+  return (
+    <XStack gap={6} items="center" style={{ flexWrap: 'wrap' }}>
+      {files.map((f, i) => (
+        <Button key={`${f}-${i}`} size="$2" onPress={() => remove(i)}>
+          {shortName(f)} ✕
+        </Button>
+      ))}
+      <Input placeholder="Add file URL/ref…" onSubmitEditing={(e: { nativeEvent: { text: string } }) => add(e.nativeEvent.text)} />
+    </XStack>
+  )
+}
+
+// ── links (url list — add + remove) ───────────────────────────────────────────
+export function LinksInput({ value, onChange }: FieldInputProps) {
+  const links = asArray(value)
+  const add = (t: string) => { const v = t.trim(); if (v) onChange([...links, v]) }
+  const remove = (i: number) => onChange(links.filter((_, idx) => idx !== i))
+  return (
+    <XStack gap={6} items="center" style={{ flexWrap: 'wrap' }}>
+      {links.map((l, i) => (
+        <Button key={`${l}-${i}`} size="$2" onPress={() => remove(i)}>{l} ✕</Button>
+      ))}
+      <Input placeholder="Add link…" onSubmitEditing={(e: { nativeEvent: { text: string } }) => add(e.nativeEvent.text)} />
+    </XStack>
+  )
+}
+
+// ── json (raw text; parses on change, keeps text on invalid so typing isn't lost)
+export function JsonInput({ value, onChange }: FieldInputProps) {
+  const text = typeof value === 'string' ? value : value == null ? '' : safeStringify(value)
+  return (
+    <Input
+      value={text}
+      onChangeText={(t: string) => { try { onChange(JSON.parse(t)) } catch { onChange(t) } }}
+      placeholder='{ }'
+    />
+  )
+}
+
+// ── fullName (first + last sub-fields → { first, last }) ──────────────────────
+export function FullNameInput({ value, onChange }: FieldInputProps) {
+  const v = (value ?? {}) as { first?: string; last?: string }
+  return (
+    <XStack gap={8} items="center">
+      <Input value={asStr(v.first)} placeholder="First" onChangeText={(t: string) => onChange({ ...v, first: t })} />
+      <Input value={asStr(v.last)} placeholder="Last" onChangeText={(t: string) => onChange({ ...v, last: t })} />
+    </XStack>
+  )
+}
+
+// ── address (street/city/state/postal sub-fields) ─────────────────────────────
+export function AddressInput({ value, onChange }: FieldInputProps) {
+  const v = (value ?? {}) as { street?: string; city?: string; state?: string; postalCode?: string }
+  const set = (k: string, t: string) => onChange({ ...v, [k]: t })
+  return (
+    <XStack gap={6} items="center" style={{ flexWrap: 'wrap' }}>
+      <Input value={asStr(v.street)} placeholder="Street" onChangeText={(t: string) => set('street', t)} />
+      <Input value={asStr(v.city)} placeholder="City" onChangeText={(t: string) => set('city', t)} />
+      <Input value={asStr(v.state)} placeholder="State" onChangeText={(t: string) => set('state', t)} />
+      <Input value={asStr(v.postalCode)} placeholder="ZIP" onChangeText={(t: string) => set('postalCode', t)} />
+    </XStack>
+  )
+}
+
+// ── helpers ───────────────────────────────────────────────────────────────────
+const shortName = (s: string): string => {
+  const base = s.split(/[/\\]/).pop() || s
+  return base.length > 24 ? base.slice(0, 21) + '…' : base
+}
+const safeStringify = (v: unknown): string => {
+  try { return JSON.stringify(v) } catch { return String(v) }
+}
