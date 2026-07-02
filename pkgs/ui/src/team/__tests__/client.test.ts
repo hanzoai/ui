@@ -146,4 +146,16 @@ describe('TeamClient — /v1/iam contract', () => {
     await client.listMembers('billing')
     expect(calls[0].headers.Authorization).toBeUndefined()
   })
+
+  it('routes through a proxy prefix (console2 /org/iam) instead of /v1/iam', async () => {
+    const { impl, calls } = makeFetch({})
+    // Proxied surface: no bearer, custom prefix; the proxy authenticates.
+    const client = new TeamClient({ org: 'acme', iamPath: '/org/iam', fetchImpl: impl })
+    await client.listMembers('console')
+    for (const c of calls) {
+      expect(c.url).toContain('/org/iam/')
+      expect(c.url).not.toContain('/v1/iam/')
+      expect(c.headers.Authorization).toBeUndefined()
+    }
+  })
 })
