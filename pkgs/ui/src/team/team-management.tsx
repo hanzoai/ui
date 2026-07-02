@@ -27,9 +27,15 @@ export interface TeamManagementProps {
   isGlobalAdmin?: boolean
   /** Pre-built client (tests inject a mock). Else built from the fields below. */
   client?: TeamClient
-  /** API origin. Default '' → same-origin `/v1/iam`. */
+  /** API origin. Default '' → same-origin. */
   apiBase?: string
-  /** Returns the caller's IAM bearer token. */
+  /**
+   * IAM path prefix. Default '/v1/iam' (billing, direct + bearer). A proxied
+   * surface like console2 sets '/org/iam' and omits getToken (the proxy
+   * authenticates + pins the org).
+   */
+  iamPath?: string
+  /** Returns the caller's IAM bearer token. Omit when a proxy authenticates. */
   getToken?: TeamClientOptions['getToken']
   /** Reported on any load/mutation failure. */
   onError?: (err: Error) => void
@@ -59,6 +65,7 @@ export function TeamManagement({
   isGlobalAdmin = false,
   client,
   apiBase,
+  iamPath,
   getToken,
   onError,
   title,
@@ -66,8 +73,8 @@ export function TeamManagement({
   // Build the client only when we have an org (a signed-in caller). Without one
   // we render a fail-safe prompt rather than throwing or fetching.
   const teamClient = React.useMemo(
-    () => client ?? (org ? new TeamClient({ org, apiBase, getToken }) : null),
-    [client, org, apiBase, getToken],
+    () => client ?? (org ? new TeamClient({ org, apiBase, iamPath, getToken }) : null),
+    [client, org, apiBase, iamPath, getToken],
   )
 
   const canManage = canManageApp(currentUserRoles, app, isGlobalAdmin)
