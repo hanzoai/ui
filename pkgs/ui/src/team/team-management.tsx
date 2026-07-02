@@ -25,6 +25,8 @@ export interface TeamManagementProps {
   currentUserRoles: string[]
   /** Platform superuser — unlocks all roles (server still authoritative). */
   isGlobalAdmin?: boolean
+  /** Org admin of `org` — org-wide authority in their own org (server re-checks). */
+  isOrgAdmin?: boolean
   /** Pre-built client (tests inject a mock). Else built from the fields below. */
   client?: TeamClient
   /** API origin. Default '' → same-origin. */
@@ -63,6 +65,7 @@ export function TeamManagement({
   org,
   currentUserRoles,
   isGlobalAdmin = false,
+  isOrgAdmin = false,
   client,
   apiBase,
   iamPath,
@@ -77,10 +80,10 @@ export function TeamManagement({
     [client, org, apiBase, iamPath, getToken],
   )
 
-  const canManage = canManageApp(currentUserRoles, app, isGlobalAdmin)
+  const canManage = canManageApp(currentUserRoles, app, isGlobalAdmin, isOrgAdmin)
   const assignable = React.useMemo(
-    () => assignableKeysForApp(currentUserRoles, app, isGlobalAdmin),
-    [currentUserRoles, app, isGlobalAdmin],
+    () => assignableKeysForApp(currentUserRoles, app, isGlobalAdmin, isOrgAdmin),
+    [currentUserRoles, app, isGlobalAdmin, isOrgAdmin],
   )
 
   const [members, setMembers] = React.useState<TeamMember[]>([])
