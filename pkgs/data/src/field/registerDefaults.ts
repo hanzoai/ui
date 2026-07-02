@@ -1,8 +1,8 @@
 // Wire the built-in field types to their renderers. Importing this module (the
-// barrel does) registers everything. Read-only types (uuid, position, actor,
-// json, files, address, relation, links) omit an Input until a richer editor
-// (record picker, file upload, calendar) is registered over them — the table
-// and detail views already work with display-only types.
+// barrel does) registers everything. Every non-system type is now fully
+// EDITABLE — relation (record picker), files, links, json, fullName, address
+// have Inputs alongside their Displays. Only the truly system/read-only types
+// (uuid, position, actor) stay display-only.
 import { registerField } from './registry'
 import {
   TextDisplay, LongTextDisplay, NumberDisplay, PercentDisplay, CurrencyDisplay,
@@ -14,6 +14,7 @@ import {
   TextInput, LongTextInput, NumberInput, PercentInput, CurrencyInput,
   BooleanInput, SelectInput, MultiSelectInput, DateInput, EmailInput,
   UrlInput, PhoneInput, RatingInput,
+  RelationInput, FilesInput, LinksInput, JsonInput, FullNameInput, AddressInput,
 } from './inputs'
 
 let done = false
@@ -38,13 +39,14 @@ export function registerDefaultFields(): void {
   registerField('url', { Display: UrlDisplay, Input: UrlInput })
   registerField('phone', { Display: PhoneDisplay, Input: PhoneInput })
   registerField('rating', { Display: RatingDisplay, Input: RatingInput })
-  registerField('links', { Display: LinksDisplay })
-  registerField('relation', { Display: RelationDisplay })
-  registerField('json', { Display: JsonDisplay })
+  registerField('links', { Display: LinksDisplay, Input: LinksInput })
+  registerField('relation', { Display: RelationDisplay, Input: RelationInput })
+  registerField('json', { Display: JsonDisplay, Input: JsonInput })
+  registerField('fullName', { Display: FallbackDisplay, Input: FullNameInput })
+  registerField('address', { Display: FallbackDisplay, Input: AddressInput })
+  registerField('files', { Display: FallbackDisplay, Input: FilesInput })
+  // System / read-only types (never edited directly).
   registerField('uuid', { Display: FallbackDisplay })
-  registerField('fullName', { Display: FallbackDisplay })
-  registerField('address', { Display: FallbackDisplay })
-  registerField('files', { Display: FallbackDisplay })
   registerField('position', { Display: NumberDisplay })
   registerField('actor', { Display: FallbackDisplay })
 }
