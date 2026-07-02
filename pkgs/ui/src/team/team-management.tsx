@@ -63,8 +63,10 @@ export function TeamManagement({
   onError,
   title,
 }: TeamManagementProps) {
+  // Build the client only when we have an org (a signed-in caller). Without one
+  // we render a fail-safe prompt rather than throwing or fetching.
   const teamClient = React.useMemo(
-    () => client ?? new TeamClient({ org, apiBase, getToken }),
+    () => client ?? (org ? new TeamClient({ org, apiBase, getToken }) : null),
     [client, org, apiBase, getToken],
   )
 
@@ -92,6 +94,10 @@ export function TeamManagement({
   )
 
   const refresh = React.useCallback(async () => {
+    if (!teamClient) {
+      setLoading(false)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -112,7 +118,7 @@ export function TeamManagement({
   }, [assignable, inviteRole])
 
   const handleInvite = React.useCallback(async () => {
-    if (!inviteEmail.includes('@') || !inviteRole) return
+    if (!teamClient || !inviteEmail.includes('@') || !inviteRole) return
     setInviting(true)
     setError(null)
     try {
@@ -128,6 +134,7 @@ export function TeamManagement({
 
   const handleChangeRole = React.useCallback(
     async (memberId: string, roleKey: RoleKey) => {
+      if (!teamClient) return
       setBusyId(memberId)
       setError(null)
       try {
@@ -144,6 +151,7 @@ export function TeamManagement({
 
   const handleRemove = React.useCallback(
     async (memberId: string) => {
+      if (!teamClient) return
       setBusyId(memberId)
       setError(null)
       try {
@@ -222,7 +230,9 @@ export function TeamManagement({
 
         {/* Members */}
         <div className="divide-y divide-border">
-          {loading ? (
+          {!teamClient ? (
+            <div className="p-6 text-sm text-text-muted">Sign in to manage your team.</div>
+          ) : loading ? (
             <div className="p-6 text-sm text-text-muted">Loading team…</div>
           ) : members.length === 0 ? (
             <div className="p-6 text-sm text-text-muted">No members yet.</div>
