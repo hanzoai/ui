@@ -83,12 +83,14 @@ export interface FieldMetadataMap {
   links: Record<string, never>
   phone: { placeholder?: string }
   rating: { max?: number }
-  relation: { objectName?: string; labelField?: string }
+  // objectName/labelField name the target; options are the candidate records the
+  // host injects ({value: id, label: display}); maxSelect>1 (or 0) = to-many.
+  relation: { objectName?: string; labelField?: string; options?: SelectOption[]; maxSelect?: number }
   json: Record<string, never>
   uuid: Record<string, never>
   fullName: Record<string, never>
   address: Record<string, never>
-  files: Record<string, never>
+  files: { accept?: string; maxSelect?: number }
   richText: Record<string, never>
   position: Record<string, never>
   actor: Record<string, never>
