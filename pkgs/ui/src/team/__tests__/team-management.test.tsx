@@ -93,6 +93,13 @@ describe('<TeamManagement>', () => {
     await waitFor(() => expect(client.remove).toHaveBeenCalledWith('billing', 'acme/carol'))
   })
 
+  it('fails safe with no org: shows a sign-in prompt, no fetch, no throw', async () => {
+    render(<TeamManagement app="billing" org="" currentUserRoles={[]} />)
+    await waitFor(() => expect(screen.getByText(/Sign in to manage your team/i)).toBeInTheDocument())
+    // no invite controls without an org
+    expect(screen.queryByPlaceholderText('colleague@company.com')).not.toBeInTheDocument()
+  })
+
   it('surfaces client errors', async () => {
     const client = {
       listMembers: vi.fn(async () => {
