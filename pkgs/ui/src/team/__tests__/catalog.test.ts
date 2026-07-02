@@ -131,5 +131,17 @@ describe('assignableKeys / assignableKeysForApp / canManageApp', () => {
     expect(canManageApp(['billing:admin'], 'console')).toBe(false)
     expect(canManageApp(['org:owner'], 'console')).toBe(true)
     expect(canManageApp([], 'billing', true)).toBe(true) // superuser
+    expect(canManageApp([], 'billing', false, true)).toBe(true) // org admin
+    expect(canManageApp([], 'console', false, true)).toBe(true) // org admin, any app
+  })
+
+  it('org admin (no catalog role) can manage + assign everything in own org', () => {
+    // Mirrors iam/teamrole CheckAssignment CallerIsOrgAdmin branch.
+    expect(canAssign([], 'org:owner', false, true)).toBe(true)
+    expect(canAssign([], 'console:admin', false, true)).toBe(true)
+    expect(assignableKeys([], false, true)).toEqual([
+      'billing:viewer', 'billing:admin', 'console:viewer', 'console:admin', 'console:owner', 'org:owner',
+    ])
+    expect(assignableKeysForApp([], 'billing', false, true)).toEqual(['billing:viewer', 'billing:admin', 'org:owner'])
   })
 })

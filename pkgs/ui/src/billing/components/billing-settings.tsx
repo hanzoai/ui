@@ -36,6 +36,7 @@ export interface BillingSettingsProps {
   teamGetToken?: () => string | Promise<string> | undefined
   teamCurrentUserRoles?: string[]
   teamIsGlobalAdmin?: boolean
+  teamIsOrgAdmin?: boolean
   teamApiBase?: string
   /** @deprecated commerce-backed members — superseded by IAM (teamOrg + <TeamManagement>). */
   accountMembers?: BillingAccountMember[]
@@ -106,6 +107,7 @@ export function BillingSettings(props: BillingSettingsProps) {
           apiBase={props.teamApiBase}
           currentUserRoles={props.teamCurrentUserRoles ?? []}
           isGlobalAdmin={props.teamIsGlobalAdmin}
+          isOrgAdmin={props.teamIsOrgAdmin}
         />
       )}
       {active === 'business' && (
