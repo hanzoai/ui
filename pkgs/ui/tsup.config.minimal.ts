@@ -195,6 +195,9 @@ export default defineConfig({
     // Billing components
     'billing/index': 'src/billing/index.ts',
 
+    // Team / roles management (shared: billing + console, IAM-powered)
+    'team/index': 'src/team/index.ts',
+
     // Model components (Zen model cards, tables, library, ZenEnso logo)
     'models/index': 'src/models/index.ts',
 
