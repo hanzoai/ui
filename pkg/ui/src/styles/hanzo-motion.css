@@ -1,0 +1,136 @@
+/* @hanzo/ui motion primitives — the calm, restrained animation vocabulary the
+   Hanzo surfaces share. One place defines the easing; components apply the class.
+   `className` forwards to the underlying DOM node on web, so the browser
+   transitions the Gui-driven inline width/transform/opacity. Every animation is
+   guarded by `prefers-reduced-motion: reduce`.
+
+   Import once at the app root:  import '@hanzo/ui/styles/motion.css'  */
+
+/* Fade-up entrance — <FadeIn> applies the class + a per-item stagger delay.
+   ~0.4s ease-out, small upward travel (matches the hanzo.ai marketing feel). */
+@keyframes hz-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hz-fade-up {
+  animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-fade-up {
+    animation: none;
+  }
+}
+
+/* Shell chrome motion — sidebar collapse (width) and the Linear-style two-level
+   nav slide (transform); backdrop cross-fade behind a SlideOver / dialog. */
+.hz-collapse {
+  transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: width;
+}
+
+.hz-slide {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.hz-fade {
+  transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+/* Drag-to-reorder — a pinned row while it is being dragged (pointer DnD). The
+   lifted row gets a subtle lift; siblings ease into place via `.hz-slide`. */
+.hz-drag-item {
+  touch-action: none;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hz-drag-item[data-dragging='true'] {
+  transition: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  opacity: 0.96;
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-collapse,
+  .hz-slide,
+  .hz-fade,
+  .hz-drag-item {
+    transition: none;
+  }
+}
+
+/* Living-overview motion — the "videogame-like" living dashboard. The count-up +
+   live sparkline are driven in JS (rAF, gated by prefers-reduced-motion in the
+   hooks); these are the pure-CSS bits: a loading shimmer, a live-feed pulse, and
+   a brief highlight when a freshly-arrived row lands. */
+
+/* Skeleton shimmer — an honest "loading", never fabricated content. */
+@keyframes hz-shimmer {
+  0% {
+    background-position: -160px 0;
+  }
+  100% {
+    background-position: 160px 0;
+  }
+}
+
+.hz-skeleton {
+  background-color: var(--color3, rgba(148, 163, 184, 0.14));
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color4, rgba(148, 163, 184, 0.22)) 50%,
+    transparent 100%
+  );
+  background-size: 160px 100%;
+  background-repeat: no-repeat;
+  animation: hz-shimmer 1.2s ease-in-out infinite;
+}
+
+/* Live-feed pulse — the "Live" dot on a streaming panel. */
+@keyframes hz-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
+@keyframes hz-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hz-row-in {
+  animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-skeleton {
+    animation: none;
+  }
+  .hz-row-in {
+    animation: none;
+  }
+}
