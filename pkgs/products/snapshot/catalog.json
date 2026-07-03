@@ -19,6 +19,44 @@
     "gcp": "Cloud overview"
   },
   {
+    "id": "open-edition",
+    "name": "Open Edition",
+    "category": "Observe",
+    "brandColor": "green",
+    "iconKey": "TrendingUp",
+    "slug": "open-edition",
+    "route": "/open-edition",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/open-edition",
+    "apiPath": "/v1/billing/usage",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/cloud",
+    "admin": false,
+    "status": "enabled",
+    "gcp": "Marketplace / pay-as-you-go"
+  },
+  {
+    "id": "analytics",
+    "name": "Analytics",
+    "category": "Observe",
+    "brandColor": "indigo",
+    "iconKey": "BarChart3",
+    "slug": "analytics",
+    "route": "/analytics",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/analytics",
+    "apiPath": "/v1/analytics/overview",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/analytics",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
     "id": "models",
     "name": "Models",
     "category": "AI",
@@ -416,6 +454,25 @@
     "admin": false,
     "status": "enabled",
     "gcp": "Firestore"
+  },
+  {
+    "id": "records",
+    "name": "Records",
+    "category": "Data",
+    "brandColor": "violet",
+    "iconKey": "Boxes",
+    "slug": "records",
+    "route": "/records",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/records",
+    "apiPath": "/v1/collections",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/base",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
   },
   {
     "id": "gateway",
@@ -834,6 +891,28 @@
     "admin": false,
     "status": "enabled",
     "gcp": null
+  },
+  {
+    "id": "apps",
+    "name": "Apps",
+    "category": "Platform",
+    "brandColor": "rose",
+    "iconKey": "AppWindow",
+    "slug": "apps",
+    "route": "/apps",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/apps",
+    "apiPath": "/v1/projects",
+    "pricingId": null,
+    "brands": [
+      "hanzo",
+      "lux",
+      "zoo",
+      "pars"
+    ],
+    "repo": "hanzoai/cloud",
+    "admin": false,
+    "status": "enabled",
+    "gcp": "Firebase Hosting"
   },
   {
     "id": "playground",
@@ -1544,6 +1623,120 @@
       "hanzo"
     ],
     "repo": "hanzoai/console",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "crm",
+    "name": "CRM",
+    "category": "Apps",
+    "brandColor": "orange",
+    "iconKey": "Building2",
+    "slug": "crm",
+    "route": "/crm",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/crm",
+    "apiPath": "/v1/crm",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/cloud",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "cms",
+    "name": "Content",
+    "category": "Apps",
+    "brandColor": "sky",
+    "iconKey": "FileText",
+    "slug": "cms",
+    "route": "/cms",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/cms",
+    "apiPath": "/v1/cms",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/cms",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "erp",
+    "name": "ERP",
+    "category": "Apps",
+    "brandColor": "pink",
+    "iconKey": "Boxes",
+    "slug": "erp",
+    "route": "/erp",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/erp",
+    "apiPath": "/v1/erp",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/erp",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "helpdesk",
+    "name": "Help Center",
+    "category": "Apps",
+    "brandColor": "lime",
+    "iconKey": "LifeBuoy",
+    "slug": "helpdesk",
+    "route": "/helpdesk",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/helpdesk",
+    "apiPath": "/v1/helpdesk",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/helpdesk",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "accessibility",
+    "name": "Accessibility",
+    "category": "Apps",
+    "brandColor": "rose",
+    "iconKey": "Accessibility",
+    "slug": "accessibility",
+    "route": "/accessibility",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/accessibility",
+    "apiPath": "/v1/accessibility",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/console",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
+    "id": "templates",
+    "name": "Templates",
+    "category": "Apps",
+    "brandColor": "lime",
+    "iconKey": "Blocks",
+    "slug": "templates",
+    "route": "/templates",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/templates",
+    "apiPath": "/v1/templates",
+    "pricingId": null,
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/gallery",
     "admin": false,
     "status": "enabled",
     "gcp": null
