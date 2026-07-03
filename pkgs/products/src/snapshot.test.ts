@@ -8,8 +8,8 @@ import { brandsForCategory } from "./brands"
 // If any of these fail, the catalog is malformed BEFORE it ever reaches commerce.
 
 describe("snapshot integrity", () => {
-  it("holds the full 92-product catalog", () => {
-    expect(SNAPSHOT.length).toBe(92)
+  it("holds the full 102-product catalog", () => {
+    expect(SNAPSHOT.length).toBe(102)
   })
 
   it("every id and slug is unique", () => {
