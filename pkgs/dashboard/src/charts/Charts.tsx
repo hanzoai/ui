@@ -165,7 +165,7 @@ function axisTicks(data: ChartPoint[]): { i: number; label: string; anchor: 'sta
 
 // ── Line chart (a value over time) ───────────────────────────────────────────
 
-export function LineChart({
+export function Line({
   data,
   height = 210,
   color = ACCENT,
@@ -228,9 +228,9 @@ export function LineChart({
   )
 }
 
-// ── Bar chart (a value over time, vertical bars) ─────────────────────────────
+// ── Columns (a value over time, vertical bars) ───────────────────────────────
 
-export function BarChart({
+export function Columns({
   data,
   height = 210,
   color = ACCENT,
@@ -439,9 +439,9 @@ function annularArc(cx: number, cy: number, rOuter: number, rInner: number, a0: 
   return `M${x0},${y0} A${rOuter},${rOuter} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${rInner},${rInner} 0 ${large} 0 ${x3},${y3} Z`
 }
 
-// ── Bar rows (a ranked distribution, horizontal, token-native) ───────────────
+// ── Bars (a ranked distribution, horizontal, token-native) ───────────────────
 
-export function BarRows({ bars }: { bars: Slice[] }) {
+export function Bars({ bars }: { bars: Slice[] }) {
   const max = Math.max(0, ...bars.map((b) => b.value))
   if (max <= 0) {
     return (
