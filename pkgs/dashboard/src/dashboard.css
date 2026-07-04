@@ -110,22 +110,21 @@
   }
 }
 
-/* RailwayPipeline — the deployment pipeline. A smooth flowing gradient marches
-   along the active leg of the track (stroke-dashoffset), a soft halo pulses out
-   from the current station, and the status dot breathes. All reduced-motion-
-   guarded (→ static). One place defines the easing; RailwayPipeline applies the
-   classes. */
-@keyframes hz-rail-flow {
+/* Pipeline — the deploy-stage line. A smooth flowing gradient marches along the
+   active leg of the track (stroke-dashoffset), a soft halo pulses out from the
+   current stage, and the status dot breathes. All reduced-motion-guarded (→
+   static). One place defines the easing; Pipeline applies the classes. */
+@keyframes hz-pipe-flow {
   to {
     stroke-dashoffset: -28;
   }
 }
-.hz-rail-flow {
+.hz-pipe-flow {
   stroke-dasharray: 5 9;
-  animation: hz-rail-flow 0.85s linear infinite;
+  animation: hz-pipe-flow 0.85s linear infinite;
 }
 
-@keyframes hz-rail-pulse {
+@keyframes hz-pipe-pulse {
   0% {
     transform: scale(1);
     opacity: 0.34;
@@ -139,20 +138,20 @@
     opacity: 0;
   }
 }
-.hz-rail-pulse {
+.hz-pipe-pulse {
   transform-box: fill-box;
   transform-origin: center;
-  animation: hz-rail-pulse 1.7s ease-out infinite;
+  animation: hz-pipe-pulse 1.7s ease-out infinite;
 }
 
-.hz-rail-dot {
+.hz-pipe-dot {
   animation: hz-pulse 1.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-rail-flow,
-  .hz-rail-pulse,
-  .hz-rail-dot {
+  .hz-pipe-flow,
+  .hz-pipe-pulse,
+  .hz-pipe-dot {
     animation: none;
   }
 }
