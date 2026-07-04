@@ -3,7 +3,7 @@
  *
  * Import ONCE in a consumer app (e.g. `import '@hanzo/dashboard/dashboard.css'`).
  * It ships the CSS the dashboard layer's JS-driven motion pairs with: the loading
- * shimmer, the live-feed pulse, the fade-up entrance, the RailwayPipeline track
+ * shimmer, the live-feed pulse, the fade-up entrance, the deploy-Pipeline track
  * animations, and the tabular-numeral face for metric values.
  *
  * Every animation here is reduced-motion-guarded (→ static) — the count-up + live
@@ -44,7 +44,7 @@
   }
 }
 
-/* LivingOverview motion — the "videogame-like" living dashboard. The count-up +
+/* Overview motion — the "videogame-like" live dashboard. The count-up +
    live sparkline are driven in JS (rAF, gated by prefers-reduced-motion in the
    hooks); these are the pure-CSS bits: a loading shimmer, a live-feed pulse, and
    a brief highlight when a tile's number changes. */

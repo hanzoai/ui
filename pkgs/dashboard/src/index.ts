@@ -29,7 +29,7 @@ export {
 export { easeOutCubic, countUpValue, progress, pushSample, shouldTick, effectiveInterval } from './motion/motion'
 export { useReducedMotion, usePageHidden, useCountUp, usePoll } from './motion/hooks'
 
-// ── Overview: the videogame-like living dashboard ────────────────────────────
+// ── Overview: the videogame-like dashboard ────────────────────────────
 export { Overview } from './overview/Overview'
 export { Tile } from './overview/tiles'
 export { Kpi, Feed, Board, Panel, SkeletonBar, EmptyPanel, PanelSpinner, LiveDot } from './overview/primitives'
