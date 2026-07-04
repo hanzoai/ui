@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * LivingOverview React hooks — the thin rAF/interval drivers on top of the pure
+ * Overview React hooks — the thin rAF/interval drivers on top of the pure
  * `motion.ts` math. Each hook owns exactly one browser concern (animation frames,
  * the poll clock, reduced-motion, tab visibility) and cleans itself up on unmount
  * (no leaked intervals/frames).

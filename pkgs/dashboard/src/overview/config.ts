@@ -1,8 +1,8 @@
 /**
- * LivingOverview config — the DECLARATIVE contract that makes one overview
+ * Overview config — the DECLARATIVE contract that makes one overview
  * component serve every product. A product declares WHICH tiles it has and WHERE
- * their data comes from; `LivingOverview` renders + animates them. No product
- * writes overview UI — it writes a `LivingOverviewConfig`.
+ * their data comes from; `Overview` renders + animates them. No product
+ * writes overview UI — it writes a `OverviewConfig`.
  *
  * Orthogonal by design:
  *   - a `LoadOverview` is the ONE async that fetches a product's REAL data and

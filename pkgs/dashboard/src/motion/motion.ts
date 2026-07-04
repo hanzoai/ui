@@ -1,5 +1,5 @@
 /**
- * LivingOverview motion — the PURE math behind the "videogame-like" feel, kept
+ * Overview motion — the PURE math behind the "videogame-like" feel, kept
  * out of the React components so it is unit-testable in the node env (no jsdom).
  * The `.tsx` tiles are thin wrappers that drive `requestAnimationFrame` with these
  * functions.
