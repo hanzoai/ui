@@ -9,3 +9,7 @@ import type { Conf } from './gui.config'
 declare module '@hanzogui/web' {
   interface GuiCustomConfig extends Conf {}
 }
+
+declare module '@hanzogui/core' {
+  interface GuiCustomConfig extends Conf {}
+}
