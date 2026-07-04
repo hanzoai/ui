@@ -1,5 +1,5 @@
 /**
- * LivingOverview tile logic — the PURE decisions behind every tile, so the honest
+ * Overview tile logic — the PURE decisions behind every tile, so the honest
  * empty/loading/error/reduced-motion behavior is unit-testable in the node env and
  * the `.tsx` tiles stay thin.
  *

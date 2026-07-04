@@ -3,8 +3,8 @@
 /**
  * Charts — the ONE way to draw a trend, a series, a share, or a distribution.
  * Dependency-free: inline SVG for the data-dense temporal charts (Sparkline /
- * LineChart / BarChart) and @hanzo/gui primitives for the token-native ones
- * (BarRows, and the Donut's optional legend), so everything themes to the shell.
+ * Line / Columns) and @hanzo/gui primitives for the token-native ones
+ * (Bars, and the Donut's optional legend), so everything themes to the shell.
  *
  * Color is data-driven, not a mode flag: a `Slice` is drawn in its own `color`
  * when it has one (categorical/polychrome — e.g. spend-by-model) and in a
@@ -13,7 +13,7 @@
  * richer legend (amounts, click targets) leaves `legend` off and composes its own.
  *
  * Honest by construction: a Sparkline with fewer than two points renders nothing
- * (no invented trend); Donut / BarRows with no positive value render an em-dash.
+ * (no invented trend); Donut / Bars with no positive value render an em-dash.
  * Callers pass REAL series — these never fabricate data.
  *
  * SVG marks can't read Tamagui tokens, so concrete colors for SVG come from the
@@ -39,10 +39,10 @@ const ACCENT = CHART_PALETTE[0]
 const GRID = 'rgba(148,163,184,0.16)'
 const AXIS = 'rgba(148,163,184,0.85)'
 
-/** A point on a temporal/sequential axis (LineChart / BarChart). */
+/** A point on a temporal/sequential axis (Line / Columns). */
 export type ChartPoint = { label: string; value: number }
 
-/** A labelled magnitude in a categorical chart (Donut / BarRows). */
+/** A labelled magnitude in a categorical chart (Donut / Bars). */
 export type Slice = { label: string; value: number; color?: string; hint?: string }
 
 type Themed = ReturnType<typeof useTheme>
@@ -105,7 +105,7 @@ export function Sparkline({
   )
 }
 
-// ── Shared hover read-out (LineChart / BarChart) ─────────────────────────────
+// ── Shared hover read-out (Line / Columns) ─────────────────────────────
 
 function Tooltip({ x, height, label, value }: { x: number; height: number; label: string; value: string }) {
   // Keep the box on-screen near the guide line.
