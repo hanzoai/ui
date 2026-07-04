@@ -1,0 +1,158 @@
+/**
+ * @hanzo/dashboard motion + numeric-face stylesheet.
+ *
+ * Import ONCE in a consumer app (e.g. `import '@hanzo/dashboard/dashboard.css'`).
+ * It ships the CSS the dashboard layer's JS-driven motion pairs with: the loading
+ * shimmer, the live-feed pulse, the fade-up entrance, the RailwayPipeline track
+ * animations, and the tabular-numeral face for metric values.
+ *
+ * Every animation here is reduced-motion-guarded (→ static) — the count-up + live
+ * sparkline are driven in JS and gated by `prefers-reduced-motion` in the hooks;
+ * these are the pure-CSS bits. One place defines the easing; components apply the
+ * classes. Extracted verbatim from the Hanzo Cloud Console so the "videogame-like"
+ * feel is identical across apps.
+ */
+
+/* Tabular numerals — metric values, prices, counts and IDs align on a fixed
+   advance width so columns of numbers read cleanly (the dashboard-grade detail). */
+.hz-tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Motion — a single fade-up entrance (~0.4s ease-out, small upward travel,
+   staggered by the consumer). One place defines it; <FadeIn> applies the class. */
+@keyframes hz-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hz-fade-up {
+  animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-fade-up {
+    animation: none;
+  }
+}
+
+/* LivingOverview motion — the "videogame-like" living dashboard. The count-up +
+   live sparkline are driven in JS (rAF, gated by prefers-reduced-motion in the
+   hooks); these are the pure-CSS bits: a loading shimmer, a live-feed pulse, and
+   a brief highlight when a tile's number changes. */
+
+/* Skeleton shimmer — an honest "loading", never fabricated content. */
+@keyframes hz-shimmer {
+  0% {
+    background-position: -160px 0;
+  }
+  100% {
+    background-position: 160px 0;
+  }
+}
+
+.hz-skeleton {
+  background-color: var(--color3, rgba(148, 163, 184, 0.14));
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color4, rgba(148, 163, 184, 0.22)) 50%,
+    transparent 100%
+  );
+  background-size: 160px 100%;
+  background-repeat: no-repeat;
+  animation: hz-shimmer 1.2s ease-in-out infinite;
+}
+
+/* Live-feed pulse — the "Live" dot on a streaming panel. */
+@keyframes hz-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
+@keyframes hz-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hz-row-in {
+  animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-skeleton {
+    animation: none;
+  }
+  .hz-row-in {
+    animation: none;
+  }
+}
+
+/* RailwayPipeline — the deployment pipeline. A smooth flowing gradient marches
+   along the active leg of the track (stroke-dashoffset), a soft halo pulses out
+   from the current station, and the status dot breathes. All reduced-motion-
+   guarded (→ static). One place defines the easing; RailwayPipeline applies the
+   classes. */
+@keyframes hz-rail-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.hz-rail-flow {
+  stroke-dasharray: 5 9;
+  animation: hz-rail-flow 0.85s linear infinite;
+}
+
+@keyframes hz-rail-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.34;
+  }
+  70% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+.hz-rail-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hz-rail-pulse 1.7s ease-out infinite;
+}
+
+.hz-rail-dot {
+  animation: hz-pulse 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-rail-flow,
+  .hz-rail-pulse,
+  .hz-rail-dot {
+    animation: none;
+  }
+}
