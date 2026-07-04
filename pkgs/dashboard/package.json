@@ -1,0 +1,51 @@
+{
+  "name": "@hanzo/dashboard",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Hanzo Dashboard — the reusable dashboard layer on @hanzo/gui: monochrome SVG charts, a videogame-like LivingOverview (count-up KPIs, live sparklines, streaming feed, health), the ProductLanding kit, and a RailwayPipeline deploy animation. Pure (data via props/loaders), typed, reduced-motion-guarded. Extracted from the Hanzo Cloud Console so every Hanzo app composes ONE dashboard system.",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./dashboard.css": "./src/dashboard.css"
+  },
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@hanzo/gui": ">=7.2.2",
+    "@hanzogui/lucide-icons-2": ">=7.2.2",
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@hanzo/gui": "7.3.0",
+    "@hanzogui/config": "7.3.0",
+    "@hanzogui/lucide-icons-2": "7.3.0",
+    "@types/react": "^19.1.10",
+    "react": "^19.0.0",
+    "typescript": "^5.7.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/dashboard"
+  }
+}
