@@ -55,3 +55,6 @@ export * from './StatusTag'
 export * from './ThemeToggle'
 export * from './Toast'
 export * from './color'
+
+// Usage — the shared AI-quota surface (meter bar → provider card → dashboard).
+export * from './usage'
