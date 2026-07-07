@@ -25,6 +25,9 @@ export type { UsagePanelProps } from './usage-panel'
 export { CreditsPanel } from './credits-panel'
 export type { CreditsPanelProps } from './credits-panel'
 
+export { CreditModal } from './credit-modal'
+export type { CreditModalProps } from './credit-modal'
+
 export { TransactionsPanel } from './transactions-panel'
 export type { TransactionsPanelProps } from './transactions-panel'
 
