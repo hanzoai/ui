@@ -1,0 +1,8 @@
+# Keep the published tarball lean — ship src, not tests or dev type-check config.
+**/*.test.ts
+**/*.test.tsx
+tsconfig.json
+vitest.config.ts
+gui.config.ts
+gui.d.ts
+node_modules
