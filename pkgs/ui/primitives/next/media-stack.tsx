@@ -21,7 +21,7 @@ const MediaStack: React.FC<{
   const transform = mediaTransform ?? {}
 
   // Order of precedence: MP4 > Image
-  // For 3D/Spline support, use @hanzo/ui/spline MediaStack instead
+  // For 3D/Spline support, use @hanzo/ui-shadcn/spline MediaStack instead
   if (video) {
     const dim = constrain(video.dim.md, cnst)
     return (

@@ -5,10 +5,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Check, Copy, FileText, Maximize2, Minimize2 } from "lucide-react"
 import { bundledLanguages, codeToHtml } from "shiki"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Badge } from "@hanzo/ui/badge"
-import { Button } from "@hanzo/ui/button"
-import { Skeleton } from "@hanzo/ui/skeleton"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Badge } from "@hanzo/ui-shadcn/badge"
+import { Button } from "@hanzo/ui-shadcn/button"
+import { Skeleton } from "@hanzo/ui-shadcn/skeleton"
 
 const codeSnippetVariants = cva("relative group", {
   variants: {
