@@ -35,10 +35,10 @@ function trio() {
 // Column 3: a fictitious customer brand — override --world-* to inherit host tokens.
 const brand = [
   '--world-surface:#101725', '--world-bg:#0b0f1a', '--world-border:#22304a',
-  '--world-text:#e6edf7', '--world-text-muted:#8aa0c0', '--world-text-dim:#5b7characters',
+  '--world-text:#e6edf7', '--world-text-muted:#8aa0c0', '--world-text-dim:#5b7096',
   '--world-accent:#4f8cff', '--world-up:#22c55e', '--world-down:#f43f5e',
   '--world-radius:0.9rem', "--world-font-sans:'Inter',system-ui,sans-serif",
-].join(';').replace('#5b7characters', '#5b7096')
+].join(';')
 
 const body = h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 } },
   h('div', null, h('div', { className: 'lbl' }, 'default — Geist / black (world.hanzo.ai)'), h('div', {}, trio())),
