@@ -1,4 +1,4 @@
-// @hanzo/ui/charts - Chart components powered by Recharts
+// @hanzo/ui-shadcn/charts - Chart components powered by Recharts
 // Requires: npm install recharts
 
 // Core chart primitives
