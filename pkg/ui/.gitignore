@@ -1,0 +1,6 @@
+# Build artifacts — declarations are emitted by `pnpm run build` at pack time.
+types/
+*.tsbuildinfo
+# Standalone install (this package is not in the root pnpm workspace).
+node_modules/
+pnpm-lock.yaml
