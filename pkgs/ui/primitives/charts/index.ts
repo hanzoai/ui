@@ -8,5 +8,5 @@ export * from './radial'
 export * from './tooltip'
 
 // Note: Chart primitives (ChartContainer, ChartConfig, etc.) should be imported directly:
-// import { ChartContainer } from '@hanzo/ui/primitives/chart'
+// import { ChartContainer } from '@hanzo/ui-shadcn/primitives/chart'
 // Not from charts/index to avoid circular dependencies

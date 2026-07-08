@@ -231,9 +231,9 @@ export type { InputProps } from './input'
  * These are NOT exported here to avoid loading their dependencies
  * Users should import them specifically when needed:
  * 
- * import { Calendar } from '@hanzo/ui/calendar'
- * import { Command } from '@hanzo/ui/command'
- * import { Carousel } from '@hanzo/ui/carousel'
- * import { Form } from '@hanzo/ui/form'
+ * import { Calendar } from '@hanzo/ui-shadcn/calendar'
+ * import { Command } from '@hanzo/ui-shadcn/command'
+ * import { Carousel } from '@hanzo/ui-shadcn/carousel'
+ * import { Form } from '@hanzo/ui-shadcn/form'
  * etc.
  */

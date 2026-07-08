@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 export interface AnimatedCursorProps {
   /**

@@ -16,18 +16,18 @@ import {
   X,
 } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Badge } from "@hanzo/ui/badge"
-import { Button } from "@hanzo/ui/button"
-import { CodeSnippet } from "@hanzo/ui/code/snippet"
-import { Separator } from "@hanzo/ui/separator"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Badge } from "@hanzo/ui-shadcn/badge"
+import { Button } from "@hanzo/ui-shadcn/button"
+import { CodeSnippet } from "@hanzo/ui-shadcn/code/snippet"
+import { Separator } from "@hanzo/ui-shadcn/separator"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@hanzo/ui/tabs"
-import { Toggle } from "@hanzo/ui/toggle"
+} from "@hanzo/ui-shadcn/tabs"
+import { Toggle } from "@hanzo/ui-shadcn/toggle"
 
 const codePreviewVariants = cva(
   "relative overflow-hidden rounded-lg border bg-background",
