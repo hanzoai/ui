@@ -20,6 +20,8 @@
     "style",
     "bin",
     "finance",
+    "src/dash/tokens.css",
+    "src/world/tokens.css",
     "README.md",
     "LICENSE"
   ],
@@ -279,6 +281,17 @@
       "types": "./dist/src/dash/*.d.ts",
       "import": "./dist/dash/*.mjs",
       "require": "./dist/dash/*.js"
+    },
+    "./world": {
+      "types": "./dist/src/world/index.d.ts",
+      "import": "./dist/world/index.mjs",
+      "require": "./dist/world/index.js"
+    },
+    "./world/tokens.css": "./src/world/tokens.css",
+    "./world/*": {
+      "types": "./dist/src/world/*.d.ts",
+      "import": "./dist/world/*.mjs",
+      "require": "./dist/world/*.js"
     },
     "./billing": {
       "types": "./dist/src/billing/index.d.ts",
