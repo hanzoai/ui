@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion } from "motion/react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 interface AnimatedBeamProps extends React.SVGAttributes<SVGSVGElement> {
   duration?: number
