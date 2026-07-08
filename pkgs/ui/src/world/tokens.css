@@ -1,102 +1,59 @@
 /*
- * @hanzo/ui/world - Design tokens
+ * @hanzo/ui/world — Design tokens (ALIAS layer).
  *
- * Framework-agnostic CSS custom properties for World data components
- * (NewsStream, MarketTicker, InstabilityScore, PredictionMarket, ...).
+ * The world data components (NewsStream, MarketTicker, InstabilityScore,
+ * PredictionMarket, …) read `--world-*` custom properties. Those are now thin
+ * aliases of the canonical `--hz-*` set — the ONE source of truth in
+ * `@hanzo/ui/style/tokens.css` (the world.hanzo.ai look lives there). This keeps
+ * the world component API stable while unifying values across every surface.
  *
- * DEFAULT THEME = the world.hanzo.ai look: black monochrome surfaces,
- * Geist Sans (UI) + Geist Mono (data/numeric), sentence case, light weights —
- * the clean Vercel/Geist aesthetic.
+ * Importing `@hanzo/ui/world/tokens.css` alone still works: it pulls the
+ * canonical layer first, then maps the `--world-*` names onto it.
  *
- * THEMING — one way: every visible style reads a `--world-*` custom property.
- * To re-skin the components on top of a host app's design system, override any
- * `--world-*` property in your own `:root` (or a scoped ancestor). Point them at
- * your host tokens to unify, e.g.:
- *
- *   :root {
- *     --world-bg:      var(--background);
- *     --world-surface: var(--card);
- *     --world-text:    var(--foreground);
- *     --world-accent:  var(--primary);
- *     --world-font-sans: var(--font-sans);
- *   }
- *
- * The Geist fonts are NOT bundled — host apps self-host 'Geist' / 'Geist Mono'
- * (the tokens fall back to system-ui / SF Mono when the faces are absent).
+ * To re-skin world components on top of a host design system, override the
+ * `--hz-*` values (preferred) or point specific `--world-*` at your own tokens.
  */
+
+@import '../../style/tokens.css';
 
 :root {
-  /* Surfaces — black monochrome (matches hanzo.ai / world.hanzo.ai) */
-  --world-bg: #000;
-  --world-surface: #0a0a0a;
-  --world-surface-hover: #161616;
-  --world-surface-active: #1c1c1c;
+  /* Surfaces */
+  --world-bg: var(--hz-bg);
+  --world-surface: var(--hz-surface);
+  --world-surface-hover: var(--hz-surface-hover);
+  --world-surface-active: var(--hz-surface-active);
 
-  /* Borders — neutral monochrome grey (no tint) */
-  --world-border: #1e1e1e;
-  --world-border-strong: #3a3a3a;
+  /* Borders */
+  --world-border: var(--hz-border);
+  --world-border-strong: var(--hz-border-strong);
 
   /* Text */
-  --world-text: #e8e8e8;
-  --world-text-muted: #888;
-  --world-text-dim: #666;
-  --world-accent: #fff;
+  --world-text: var(--hz-text);
+  --world-text-muted: var(--hz-text-muted);
+  --world-text-dim: var(--hz-text-dim);
+  --world-accent: var(--hz-accent);
 
-  /* Severity — instability / threat / alert level */
-  --world-critical: #ff4444;
-  --world-high: #ff8800;
-  --world-elevated: #ffaa00;
-  --world-normal: #44aa44;
-  --world-info: #3b82f6;
+  /* Severity */
+  --world-critical: var(--hz-critical);
+  --world-high: var(--hz-high);
+  --world-elevated: var(--hz-elevated);
+  --world-normal: var(--hz-normal);
+  --world-info: var(--hz-info);
 
-  /* Directional — price up / down, escalation */
-  --world-up: #44ff88;
-  --world-down: #ff4444;
+  /* Directional */
+  --world-up: var(--hz-up);
+  --world-down: var(--hz-down);
 
   /* Status dot */
-  --world-live: #44ff88;
-  --world-stale: #ffaa00;
+  --world-live: var(--hz-live);
+  --world-stale: var(--hz-stale);
 
-  /* Typography — Geist Sans for UI, Geist Mono for data/numeric */
-  --world-font-sans: 'Geist', system-ui, -apple-system, sans-serif;
-  --world-font-mono: 'Geist Mono', 'SF Mono', 'Monaco', ui-monospace, monospace;
+  /* Typography */
+  --world-font-sans: var(--hz-font-sans);
+  --world-font-mono: var(--hz-font-mono);
 
   /* Sizing */
-  --world-radius: 0.5rem;
-  --world-radius-sm: 0.375rem;
-  --world-transition: 150ms ease;
-}
-
-/*
- * Light theme override. Applies when a host marks the tree with
- * data-theme="light" or a `.light` class (matching world.hanzo.ai and the
- * common next-themes conventions). Bright dark-mode accents are darkened so
- * they stay legible on light surfaces.
- */
-[data-theme='light'],
-.light {
-  --world-bg: #ffffff;
-  --world-surface: #f8f9fa;
-  --world-surface-hover: #f0f0f0;
-  --world-surface-active: #e8e8e8;
-
-  --world-border: #e4e4e7;
-  --world-border-strong: #d4d4d8;
-
-  --world-text: #18181b;
-  --world-text-muted: #52525b;
-  --world-text-dim: #71717a;
-  --world-accent: #000;
-
-  --world-critical: #dc2626;
-  --world-high: #ea580c;
-  --world-elevated: #d97706;
-  --world-normal: #16a34a;
-  --world-info: #2563eb;
-
-  --world-up: #16a34a;
-  --world-down: #dc2626;
-
-  --world-live: #16a34a;
-  --world-stale: #d97706;
+  --world-radius: var(--hz-radius);
+  --world-radius-sm: var(--hz-radius-sm);
+  --world-transition: var(--hz-transition);
 }
