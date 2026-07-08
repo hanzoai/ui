@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/ui-shadcn",
-  "version": "5.7.1",
-  "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage. (Formerly @hanzo/ui ≤5.x; @hanzo/ui@8+ is the @hanzo/gui-based unified lib.)",
+  "version": "5.7.4",
+  "description": "Multi-framework UI library with React, Vue, Svelte, and React Native support. Based on shadcn/ui with comprehensive framework coverage. (Formerly @hanzo/ui \u22645.x; @hanzo/ui@8+ is the @hanzo/gui-based unified lib.)",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -526,6 +526,16 @@
       "types": "./dist/src/auth/*.d.ts",
       "import": "./dist/auth/*.mjs",
       "require": "./dist/auth/*.js"
+    },
+    "./network": {
+      "types": "./dist/src/network/index.d.ts",
+      "import": "./dist/network/index.mjs",
+      "require": "./dist/network/index.js"
+    },
+    "./wallet": {
+      "types": "./dist/src/wallet/index.d.ts",
+      "import": "./dist/wallet/index.mjs",
+      "require": "./dist/wallet/index.js"
     },
     "./navigation": {
       "types": "./dist/src/navigation/index.d.ts",

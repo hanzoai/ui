@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 export interface GanttProps extends React.HTMLAttributes<HTMLDivElement> {
   tasks?: Array<{

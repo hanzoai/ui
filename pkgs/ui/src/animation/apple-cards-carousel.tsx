@@ -10,7 +10,7 @@ import {
 } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 import { Button } from "@hanzo/ui"
 import { Card } from "@hanzo/ui"
 

@@ -1,6 +1,6 @@
 // Component exports
 // This file provides a central import point for all UI components
-// Usage: import { Button, Card, cn } from '@hanzo/ui/components'
+// Usage: import { Button, Card, cn } from '@hanzo/ui-shadcn/components'
 
 // Export commonly used utilities
 export { cn, formatDate, absoluteUrl } from '../src/utils'

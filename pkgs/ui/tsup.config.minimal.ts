@@ -192,6 +192,12 @@ export default defineConfig({
     // Auth components (IAMLoginButton, AuthGuard)
     'auth/index': 'src/auth/index.ts',
 
+    // Network components (the ONE hanzo.network selector + model)
+    'network/index': 'src/network/index.ts',
+
+    // Wallet components (WalletMenu + adapters; custody stays per-surface)
+    'wallet/index': 'src/wallet/index.ts',
+
     // Billing components
     'billing/index': 'src/billing/index.ts',
 

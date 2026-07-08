@@ -26,8 +26,8 @@ export { cn } from '../src/utils'
  * 
  * For more components, import them individually:
  * 
- * import { Dialog } from '@hanzo/ui/dialog'
- * import { Select } from '@hanzo/ui/select'
- * import { Badge } from '@hanzo/ui/badge'
+ * import { Dialog } from '@hanzo/ui-shadcn/dialog'
+ * import { Select } from '@hanzo/ui-shadcn/select'
+ * import { Badge } from '@hanzo/ui-shadcn/badge'
  * etc.
  */

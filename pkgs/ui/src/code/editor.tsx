@@ -5,14 +5,14 @@ import Editor, { OnChange, OnMount } from "@monaco-editor/react"
 import { Check, ChevronDown, Copy } from "lucide-react"
 import { useTheme } from "next-themes"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Button } from "@hanzo/ui/button"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Button } from "@hanzo/ui-shadcn/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@hanzo/ui/dropdown-menu"
+} from "@hanzo/ui-shadcn/dropdown-menu"
 
 export interface CodeEditorProps {
   value?: string

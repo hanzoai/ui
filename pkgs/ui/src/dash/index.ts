@@ -1,5 +1,5 @@
 /**
- * @hanzo/ui/dash
+ * @hanzo/ui-shadcn/dash
  *
  * Shared dash UI foundation. Dark-themed layout, navigation,
  * data table, form builder, and CRUD components.
