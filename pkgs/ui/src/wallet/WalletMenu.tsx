@@ -24,10 +24,12 @@ export interface WalletMenuProps {
   adapter: WalletAdapter
   /** Connect (auto-provision on custodial surfaces) on first mount. */
   autoConnect?: boolean
+  /** Where the menu opens relative to the trigger (headers: bottom; footers: top). */
+  menuSide?: 'top' | 'bottom'
   className?: string
 }
 
-export function WalletMenu({ adapter, autoConnect = false, className = '' }: WalletMenuProps) {
+export function WalletMenu({ adapter, autoConnect = false, menuSide = 'bottom', className = '' }: WalletMenuProps) {
   const state = useWalletState(adapter)
   const { network } = useNetwork()
   const [open, setOpen] = React.useState(false)
@@ -116,7 +118,7 @@ export function WalletMenu({ adapter, autoConnect = false, className = '' }: Wal
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-1.5 w-72 rounded-lg border border-border bg-popover p-2 text-popover-foreground shadow-md"
+          className={`absolute right-0 z-50 w-72 rounded-lg border border-border bg-popover p-2 text-popover-foreground shadow-md ${menuSide === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5'}`}
         >
           <div className="px-1 pb-2">
             {account.label && <p className="text-xs font-semibold">{account.label}</p>}
