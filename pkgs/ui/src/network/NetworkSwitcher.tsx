@@ -27,6 +27,8 @@ const ENV_DOT: Record<NetworkEnv, string> = {
 export interface NetworkSwitcherProps {
   /** Called after the selection changes (endpoint rewiring is automatic). */
   onChange?: (network: Network) => void
+  /** Where the menu opens relative to the trigger (headers: bottom; footers: top). */
+  menuSide?: 'top' | 'bottom'
   className?: string
 }
 
@@ -39,7 +41,7 @@ interface CustomDraft {
 
 const EMPTY_DRAFT: CustomDraft = { label: '', chainID: '', rpcEndpoint: '', apiEndpoint: '' }
 
-export function NetworkSwitcher({ onChange, className = '' }: NetworkSwitcherProps) {
+export function NetworkSwitcher({ onChange, menuSide = 'bottom', className = '' }: NetworkSwitcherProps) {
   const { network, networks, select, selectCustom } = useNetwork()
   const [open, setOpen] = React.useState(false)
   const [customOpen, setCustomOpen] = React.useState(false)
@@ -118,7 +120,7 @@ export function NetworkSwitcher({ onChange, className = '' }: NetworkSwitcherPro
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-50 mt-1.5 w-64 rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md"
+          className={`absolute right-0 z-50 w-64 rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-md ${menuSide === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5'}`}
         >
           {networks.map((n) => (
             <button
