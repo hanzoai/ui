@@ -1,5 +1,5 @@
 /**
- * @hanzo/ui/billing
+ * @hanzo/ui-shadcn/billing
  * Billing, subscription, payment, and invoice management components
  */
 

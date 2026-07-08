@@ -31,10 +31,10 @@ import {
   X,
 } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Badge } from "@hanzo/ui/primitives/badge"
-import { Button } from "@hanzo/ui/primitives/button"
-import { Card, CardContent, CardHeader } from "@hanzo/ui/primitives/card"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Badge } from "@hanzo/ui-shadcn/primitives/badge"
+import { Button } from "@hanzo/ui-shadcn/primitives/button"
+import { Card, CardContent, CardHeader } from "@hanzo/ui-shadcn/primitives/card"
 import {
   Dialog,
   DialogContent,
@@ -43,23 +43,23 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@hanzo/ui/primitives/dialog"
+} from "@hanzo/ui-shadcn/primitives/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@hanzo/ui/primitives/dropdown-menu"
-import { Input } from "@hanzo/ui/primitives/input"
-import { Label } from "@hanzo/ui/primitives/label"
+} from "@hanzo/ui-shadcn/primitives/dropdown-menu"
+import { Input } from "@hanzo/ui-shadcn/primitives/input"
+import { Label } from "@hanzo/ui-shadcn/primitives/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@hanzo/ui/primitives/select"
-import { Textarea } from "@hanzo/ui/primitives/textarea"
+} from "@hanzo/ui-shadcn/primitives/select"
+import { Textarea } from "@hanzo/ui-shadcn/primitives/textarea"
 
 // Types
 export interface KanbanCard {

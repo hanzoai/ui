@@ -1,4 +1,4 @@
-// @hanzo/ui/calendar-ext - Extended calendar components
+// @hanzo/ui-shadcn/calendar-ext - Extended calendar components
 // Requires: npm install react-day-picker date-fns chrono-node
 
 // Re-export base calendar

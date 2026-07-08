@@ -176,7 +176,7 @@ export {
   FieldSeparator,
 } from './field'
 
-// Form components available via '@hanzo/ui/form' - NOT bundled here due to
+// Form components available via '@hanzo/ui-shadcn/form' - NOT bundled here due to
 // react-hook-form ESM/CJS interop issues with Next.js 15 when bundled
 
 export {
@@ -335,7 +335,7 @@ export { Spinner } from './spinner'
 export { default as StepIndicator } from './step-indicator'
 export { default as Switch } from './switch'
 export { Textarea } from './textarea'
-// TextField available via @hanzo/ui/form - requires react-hook-form
+// TextField available via @hanzo/ui-shadcn/form - requires react-hook-form
 export { Toaster, toast } from './sonner'
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
@@ -378,11 +378,11 @@ export { YouTubePipPlayer, youtubePipPlayerVariants } from './youtube-pip-player
 export * from '../assets'
 
 // NOTE: Docs components are NOT re-exported here to avoid path alias resolution issues
-// during build. Import directly from @hanzo/ui/docs/* if needed:
-//   - DocsLayout: @hanzo/ui/docs/layouts/docs
-//   - HomeLayout: @hanzo/ui/docs/layouts/home
-//   - NotebookLayout: @hanzo/ui/docs/layouts/notebook
-//   - DocsPage, DocsBody, DocsTitle, DocsDescription: @hanzo/ui/docs/page
-//   - defaultMdxComponents: @hanzo/ui/docs/mdx
-//   - RootProvider: @hanzo/ui/docs/provider/next
-//   - loader: @hanzo/ui/docs/source
+// during build. Import directly from @hanzo/ui-shadcn/docs/* if needed:
+//   - DocsLayout: @hanzo/ui-shadcn/docs/layouts/docs
+//   - HomeLayout: @hanzo/ui-shadcn/docs/layouts/home
+//   - NotebookLayout: @hanzo/ui-shadcn/docs/layouts/notebook
+//   - DocsPage, DocsBody, DocsTitle, DocsDescription: @hanzo/ui-shadcn/docs/page
+//   - defaultMdxComponents: @hanzo/ui-shadcn/docs/mdx
+//   - RootProvider: @hanzo/ui-shadcn/docs/provider/next
+//   - loader: @hanzo/ui-shadcn/docs/source

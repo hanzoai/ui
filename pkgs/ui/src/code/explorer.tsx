@@ -15,10 +15,10 @@ import {
   X,
 } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Button } from "@hanzo/ui/button"
-import { Input } from "@hanzo/ui/input"
-import { ScrollArea } from "@hanzo/ui/scroll-area"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Button } from "@hanzo/ui-shadcn/button"
+import { Input } from "@hanzo/ui-shadcn/input"
+import { ScrollArea } from "@hanzo/ui-shadcn/scroll-area"
 
 const codeExplorerVariants = cva(
   "relative flex flex-col overflow-hidden rounded-lg border bg-background",

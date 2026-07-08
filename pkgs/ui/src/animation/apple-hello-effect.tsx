@@ -3,7 +3,7 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 interface AppleHelloEffectProps extends React.HTMLAttributes<HTMLDivElement> {
   text?: string
