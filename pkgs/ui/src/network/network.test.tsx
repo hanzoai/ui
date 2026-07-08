@@ -33,9 +33,9 @@ describe('network model', () => {
 
   it('mirrors the hanzo CLI env ids', () => {
     expect(networkByEnv(HANZO_NETWORKS, 'mainnet')?.evmChainID).toBe(36963)
-    expect(networkByEnv(HANZO_NETWORKS, 'testnet')?.evmChainID).toBe(36964)
-    expect(networkByEnv(HANZO_NETWORKS, 'devnet')?.evmChainID).toBe(36965)
-    expect(networkByEnv(HANZO_NETWORKS, 'local')?.evmChainID).toBe(31337)
+    expect(networkByEnv(HANZO_NETWORKS, 'testnet')?.evmChainID).toBe(36962)
+    expect(networkByEnv(HANZO_NETWORKS, 'devnet')?.evmChainID).toBe(36964)
+    expect(networkByEnv(HANZO_NETWORKS, 'local')?.evmChainID).toBe(1337)
   })
 
   it('public envs share the one cloud API', () => {
@@ -46,7 +46,7 @@ describe('network model', () => {
 
   it('encodes the EIP-3085 hex chain id', () => {
     expect(chainIdHex(networkByEnv(HANZO_NETWORKS, 'mainnet')!)).toBe('0x9063')
-    expect(chainIdHex(networkByEnv(HANZO_NETWORKS, 'local')!)).toBe('0x7a69')
+    expect(chainIdHex(networkByEnv(HANZO_NETWORKS, 'local')!)).toBe('0x539')
   })
 })
 
@@ -54,8 +54,8 @@ describe('network store', () => {
   it('defaults to mainnet and switches envs', () => {
     expect(getNetwork().env).toBe('mainnet')
     selectNetwork('testnet')
-    expect(getNetwork().evmChainID).toBe(36964)
-    expect(getNetwork().rpcEndpoint).toBe('https://rpc.hanzo-test.network')
+    expect(getNetwork().evmChainID).toBe(36962)
+    expect(getNetwork().rpcEndpoint).toBe('https://rpc.testnet.hanzo.network')
   })
 
   it('persists only the selection, notifies subscribers', () => {
