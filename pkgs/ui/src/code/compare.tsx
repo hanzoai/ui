@@ -14,25 +14,25 @@ import {
   SplitSquareHorizontal,
 } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Badge } from "@hanzo/ui/badge"
-import { Button } from "@hanzo/ui/button"
-import { CodeDiff } from "@hanzo/ui/code/diff"
-import { CodeSnippet } from "@hanzo/ui/code/snippet"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Badge } from "@hanzo/ui-shadcn/badge"
+import { Button } from "@hanzo/ui-shadcn/button"
+import { CodeDiff } from "@hanzo/ui-shadcn/code/diff"
+import { CodeSnippet } from "@hanzo/ui-shadcn/code/snippet"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@hanzo/ui/dropdown-menu"
-import { ScrollArea } from "@hanzo/ui/scroll-area"
-import { Separator } from "@hanzo/ui/separator"
+} from "@hanzo/ui-shadcn/dropdown-menu"
+import { ScrollArea } from "@hanzo/ui-shadcn/scroll-area"
+import { Separator } from "@hanzo/ui-shadcn/separator"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@hanzo/ui/tabs"
+} from "@hanzo/ui-shadcn/tabs"
 
 const codeCompareVariants = cva(
   "relative flex flex-col overflow-hidden rounded-lg border bg-background",
