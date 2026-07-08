@@ -6,10 +6,12 @@
  *   (env, label, networkID, evmChainID, rpcEndpoint, apiEndpoint)
  *
  * Hanzo is a sovereign L1 — its primary networkID EQUALS its EVM chainID,
- * one ID per environment. Public environments share the one cloud API
- * (api.hanzo.ai); RPC + explorer are per-env fabrics (hanzo.network /
- * hanzo-test.network / hanzo-dev.network). `local` is a self-hosted node;
- * `custom` is user-supplied endpoints.
+ * one ID per environment. IDs + RPC hosts come from genesis
+ * (lux/genesis/configs/hanzo-*), byte-identical to `hanzo network list`
+ * and the console selector: mainnet 36963, testnet 36962, devnet 36964;
+ * local is the 1337 localnet convention. Public environments share the
+ * one cloud API (api.hanzo.ai); RPC + explorer are per-env fabrics
+ * (rpc[.testnet|.devnet].hanzo.network). `custom` is user-supplied.
  */
 
 export type NetworkEnv = 'mainnet' | 'testnet' | 'devnet' | 'local' | 'custom'
@@ -46,29 +48,29 @@ export const HANZO_NETWORKS: readonly Network[] = [
   {
     env: 'testnet',
     label: 'Hanzo Testnet',
-    networkID: 36964,
-    evmChainID: 36964,
-    rpcEndpoint: 'https://rpc.hanzo-test.network',
+    networkID: 36962,
+    evmChainID: 36962,
+    rpcEndpoint: 'https://rpc.testnet.hanzo.network',
     apiEndpoint: 'https://api.hanzo.ai',
-    explorerEndpoint: 'https://explorer.hanzo-test.network',
+    explorerEndpoint: 'https://explorer.testnet.hanzo.network',
     currency: 'AI',
   },
   {
     env: 'devnet',
     label: 'Hanzo Devnet',
-    networkID: 36965,
-    evmChainID: 36965,
-    rpcEndpoint: 'https://rpc.hanzo-dev.network',
+    networkID: 36964,
+    evmChainID: 36964,
+    rpcEndpoint: 'https://rpc.devnet.hanzo.network',
     apiEndpoint: 'https://api.hanzo.ai',
-    explorerEndpoint: 'https://explorer.hanzo-dev.network',
+    explorerEndpoint: 'https://explorer.devnet.hanzo.network',
     currency: 'AI',
   },
   {
     env: 'local',
-    label: 'Local',
-    networkID: 31337,
-    evmChainID: 31337,
-    rpcEndpoint: 'http://localhost:9650/ext/bc/C/rpc',
+    label: 'Hanzo Local',
+    networkID: 1337,
+    evmChainID: 1337,
+    rpcEndpoint: 'http://localhost:9630/v1/bc/C/rpc',
     apiEndpoint: 'http://localhost:3690',
     currency: 'AI',
   },
