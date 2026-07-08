@@ -13,15 +13,15 @@ import {
 } from "lucide-react"
 import { codeToHtml } from "shiki"
 
-import { cn } from "@hanzo/ui/lib/utils"
-import { Badge } from "@hanzo/ui/badge"
-import { Button } from "@hanzo/ui/button"
-import { Separator } from "@hanzo/ui/separator"
-import { Skeleton } from "@hanzo/ui/skeleton"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
+import { Badge } from "@hanzo/ui-shadcn/badge"
+import { Button } from "@hanzo/ui-shadcn/button"
+import { Separator } from "@hanzo/ui-shadcn/separator"
+import { Skeleton } from "@hanzo/ui-shadcn/skeleton"
 import {
   ToggleGroup,
   ToggleGroupItem,
-} from "@hanzo/ui/toggle-group"
+} from "@hanzo/ui-shadcn/toggle-group"
 
 const codeDiffVariants = cva(
   "relative overflow-hidden rounded-lg border bg-muted/50",
