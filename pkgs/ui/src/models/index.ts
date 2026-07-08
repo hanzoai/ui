@@ -1,5 +1,5 @@
 /**
- * @hanzo/ui/models — Shared Zen model UI components
+ * @hanzo/ui-shadcn/models — Shared Zen model UI components
  *
  * Components are data-agnostic: they accept any data compatible with
  * ZenModelLike / ModelFamilyLike types, making them reusable across
@@ -8,7 +8,7 @@
  * Data source: @hanzo/zen-models (the canonical Zen model registry)
  *
  * Usage:
- *   import { ModelCard, ModelLibrary, ModelTable, ZenEnso } from '@hanzo/ui/models'
+ *   import { ModelCard, ModelLibrary, ModelTable, ZenEnso } from '@hanzo/ui-shadcn/models'
  *   import { allModels, families } from '@hanzo/zen-models'
  *   <ModelLibrary allModels={allModels} families={families} />
  */
