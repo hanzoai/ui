@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 interface Carousel3DItem {
   id: string

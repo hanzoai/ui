@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 
 const List = React.forwardRef<
   HTMLUListElement,

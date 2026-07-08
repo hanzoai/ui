@@ -3,12 +3,12 @@
 import * as React from "react"
 import { AnimatePresence, motion } from "motion/react"
 
-import { cn } from "@hanzo/ui/lib/utils"
+import { cn } from "@hanzo/ui-shadcn/lib/utils"
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@hanzo/ui/primitives/avatar"
+} from "@hanzo/ui-shadcn/primitives/avatar"
 import { Card, CardContent } from "@hanzo/ui"
 
 interface Testimonial {
