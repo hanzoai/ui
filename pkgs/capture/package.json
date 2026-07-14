@@ -1,5 +1,5 @@
 {
-  "name": "@hanzo/analytics",
+  "name": "@hanzo/capture",
   "version": "0.1.0",
   "description": "Hanzo Analytics — tiny, batched product-analytics capture client. Emits pageview/event/identify/group to Hanzo Cloud (/v1/analytics + /v1/tracker) with first-touch UTM/referrer/refCode attribution, beacon-on-unload, and a shared event + goal vocabulary.",
   "publishConfig": {
@@ -22,7 +22,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/ui.git",
-    "directory": "pkgs/analytics"
+    "directory": "pkgs/capture"
   },
   "keywords": [
     "analytics",
