@@ -51,7 +51,6 @@
     "format:check": "turbo run format:check",
     "sync:templates": "./scripts/sync-templates.sh \"templates/*\"",
     "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check",
-    "release": "changeset version",
     "pub:beta": "cd pkgs/hanzo && pnpm pub:beta",
     "pub:release": "cd pkgs/hanzo && pnpm pub:release",
     "test:dev": "turbo run test --filter=!hanzo-ui --force",
@@ -71,8 +70,6 @@
   "packageManager": "pnpm@9.0.6",
   "dependencies": {
     "@babel/core": "^7.29.7",
-    "@changesets/changelog-github": "^0.7.0",
-    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "@dnd-kit/core": "^6.3.1",
