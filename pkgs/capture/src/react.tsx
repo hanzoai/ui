@@ -1,10 +1,10 @@
-// React bindings for @hanzo/analytics — a provider, an accessor hook, and a
+// React bindings for @hanzo/capture — a provider, an accessor hook, and a
 // route-change pageview hook. Framework-neutral: it takes the current path as an
 // argument (the Next app wires usePathname(); a Vite/router app passes its own),
 // so this file never imports next/*.
 //
 //   'use client'
-//   import { AnalyticsProvider, useAnalytics, usePageview } from '@hanzo/analytics/react'
+//   import { AnalyticsProvider, useAnalytics, usePageview } from '@hanzo/capture/react'
 //
 //   <AnalyticsProvider config={{ product: 'console' }}>…</AnalyticsProvider>
 //   const a = useAnalytics(); usePageview(usePathname())
