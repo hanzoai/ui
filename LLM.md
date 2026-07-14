@@ -58,8 +58,14 @@ pnpm lint              # Lint all workspaces
 pnpm typecheck         # Type checking
 pnpm test              # Unit tests
 pnpm test:e2e          # Playwright E2E
-pnpm changeset         # Create changeset for publishing
 ```
+
+## Publishing
+
+One way: bump a package's `version` in its `package.json` and merge to `main`.
+`.github/workflows/publish.yml` detects the changed `@hanzo/*` package and
+publishes it to npm (needs the repo `NPM_TOKEN` secret). No changesets, no
+version-PR bot — the semver bump is the trigger.
 
 ## Three-Layer Architecture
 
