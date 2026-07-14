@@ -56,5 +56,6 @@ export * from './ThemeToggle'
 export * from './Toast'
 export * from './color'
 
-// Usage — the shared AI-quota surface (meter bar → provider card → dashboard).
-export * from './usage'
+// Usage — the canonical AI-usage surface (totals, chart, spend-by-model, activity)
+// now lives in ONE home: `@hanzo/usage/react` (<UsagePanel>). The former meter/card/
+// dashboard kit here was orphaned (zero consumers) and folded into it.
