@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/capture",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hanzo Analytics — tiny, batched product-analytics capture client. Emits pageview/event/identify/group to Hanzo Cloud (/v1/analytics + /v1/tracker) with first-touch UTM/referrer/refCode attribution, beacon-on-unload, and a shared event + goal vocabulary.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
