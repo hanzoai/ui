@@ -20,6 +20,10 @@
       "types": "./types/primitives/bases/data/index.d.ts",
       "default": "./src/primitives/bases/data/index.ts"
     },
+    "./gitops": {
+      "types": "./types/gitops.d.ts",
+      "default": "./src/gitops.ts"
+    },
     "./styles/motion.css": "./src/styles/hanzo-motion.css",
     "./package.json": "./package.json"
   },
@@ -44,11 +48,18 @@
   },
   "peerDependencies": {
     "@hanzo/data": ">=1.2.0",
+    "@hanzo/gitops": ">=0.1.0",
     "@hanzo/gui": ">=7.2.2",
     "react": ">=19"
   },
+  "peerDependenciesMeta": {
+    "@hanzo/gitops": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@hanzo/data": "1.2.1",
+    "@hanzo/gitops": "workspace:*",
     "@hanzo/gui": "7.3.0",
     "@hanzogui/config": "7.3.0",
     "@hanzogui/core": "7.3.0",
