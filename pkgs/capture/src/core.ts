@@ -194,7 +194,7 @@ export class Analytics {
       refCode: this.cohort.refCode ?? this.attribution.refCode,
       channel: this.cohort.channel ?? this.attribution.channel,
       signupWeek: this.cohort.signupWeek,
-      library: '@hanzo/analytics',
+      library: '@hanzo/capture',
       libraryVersion: VERSION,
       ...extra,
     }
