@@ -1,0 +1,13 @@
+@hanzo/gitops
+Copyright (c) 2024 Hanzo AI, Inc.
+
+This product is a clean-room port of the Argo CD web UI.
+
+  Argo CD — https://github.com/argoproj/argo-cd
+  Copyright The Argo CD Authors
+  Licensed under the Apache License, Version 2.0.
+
+The health-status and sync-status vocabularies, their status colors, the
+resource-tree topology model (parent references), and the desired-vs-live diff
+presentation are derived from that project. The full Apache 2.0 license text is
+in LICENSE.

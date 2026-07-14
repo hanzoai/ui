@@ -1,0 +1,85 @@
+{
+  "name": "@hanzo/gitops",
+  "version": "0.1.0",
+  "description": "Hanzo GitOps — a presentational, data-prop-driven React surface for a full CD/GitOps console: an applications list, an app detail shell, a health/sync color-coded resource-tree topology (reusing @hanzo/canvas's deterministic layout), resource node info (live manifest, desired-vs-live diff, events, logs) and sync/rollback panels. A clean-room port of the Argo CD UI (argoproj/argo-cd, Apache-2.0). Backend-agnostic: the host wires /v1/gitops and passes typed props.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/gitops"
+  },
+  "keywords": [
+    "gitops",
+    "cd",
+    "continuous-delivery",
+    "argocd",
+    "kubernetes",
+    "resource-tree",
+    "health",
+    "sync",
+    "diff",
+    "hanzo",
+    "hanzo-ai",
+    "hanzoai",
+    "react"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./pure": {
+      "types": "./dist/pure.d.ts",
+      "import": "./dist/pure.mjs",
+      "require": "./dist/pure.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@hanzo/canvas": ">=0.2.0",
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hanzo/canvas": "workspace:*",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.0",
+    "happy-dom": "^20.10.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
