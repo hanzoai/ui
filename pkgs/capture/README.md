@@ -1,4 +1,4 @@
-# @hanzo/analytics
+# @hanzo/capture
 
 Tiny, batched product-analytics capture client for Hanzo surfaces. Emits
 `pageview` / `event` / `identify` / `group` to **Hanzo Cloud** — never to a
@@ -18,7 +18,7 @@ warehouse.
 ## Core (framework-agnostic)
 
 ```ts
-import { createAnalytics, EVENTS } from '@hanzo/analytics'
+import { createAnalytics, EVENTS } from '@hanzo/capture'
 
 // Cookie/session apps (console, admin): same-origin, no token.
 const analytics = createAnalytics({ product: 'console' })
@@ -40,7 +40,7 @@ analytics.capture(EVENTS.ORDER_COMPLETED, { kind: 'plan' }, { productId: 'plan_p
 
 ```tsx
 'use client'
-import { AnalyticsProvider, useAnalytics, usePageview } from '@hanzo/analytics/react'
+import { AnalyticsProvider, useAnalytics, usePageview } from '@hanzo/capture/react'
 import { usePathname } from 'next/navigation'
 
 export function Providers({ children }) {

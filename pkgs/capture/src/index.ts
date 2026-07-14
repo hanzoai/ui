@@ -1,6 +1,6 @@
-// @hanzo/analytics — framework-agnostic entry.
+// @hanzo/capture — framework-agnostic entry.
 //
-//   import { createAnalytics, EVENTS } from '@hanzo/analytics'
+//   import { createAnalytics, EVENTS } from '@hanzo/capture'
 //   const a = createAnalytics({ product: 'console' })  // same-origin, cookie auth
 //   a.pageview(); a.capture(EVENTS.SIGNUP_COMPLETED)
 //
