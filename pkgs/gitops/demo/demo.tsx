@@ -51,7 +51,9 @@ const app = h(
   h(Section, { title: 'Application — sync panel + resource tree + node drill-in' },
     h(GitopsSyncPanel, { app: demoApp, onSync: () => {}, onRefresh: () => {}, onRollback: () => {} }),
     h('div', { style: { display: 'flex', gap: 12, height: 460 } },
-      h(GitopsAppTree, { tree: demoTree, height: 460, style: { flex: 1, minWidth: 0 } }),
+      // Tighter gaps here so the whole tree fits without the runtime auto-fit,
+      // which a static (non-hydrated) render can't run.
+      h(GitopsAppTree, { tree: demoTree, height: 460, columnGap: 205, rowGap: 84, style: { flex: 1, minWidth: 0 } }),
       h(GitopsNodeInfo, {
         node: deployNode,
         resource: demoDeploymentResource,
