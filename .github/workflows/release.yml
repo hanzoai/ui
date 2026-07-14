@@ -2,10 +2,10 @@
 
 name: Release
 
+# Manual-only: publishing @hanzo/* needs npm auth for the scope (OIDC
+# trusted-publisher or NPM_TOKEN). Run from the Actions tab once that's set.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
