@@ -19,9 +19,6 @@ export type { BillingWorkspaceProps } from './billing-workspace'
 export { SpendAlertsPanel } from './spend-alerts'
 export type { SpendAlertsPanelProps } from './spend-alerts'
 
-export { UsagePanel } from './usage-panel'
-export type { UsagePanelProps } from './usage-panel'
-
 export { CreditsPanel } from './credits-panel'
 export type { CreditsPanelProps } from './credits-panel'
 
