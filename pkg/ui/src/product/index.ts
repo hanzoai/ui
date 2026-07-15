@@ -58,3 +58,6 @@ export * from './color'
 
 // Usage — the shared AI-quota surface (meter bar → provider card → dashboard).
 export * from './usage'
+
+// Social — ChannelBadge, PostCard, CampaignCard (extracted from Hanzo Social).
+export * from './social'
