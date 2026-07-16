@@ -6,6 +6,32 @@ React component library (shadcn/ui fork). 161 components, 24+ blocks, two themes
 
 **Docs**: https://ui.hanzo.ai | **Dev port**: 3003
 
+## v8 — the one import surface (`@hanzo/ui@8`, `pkg/ui`)
+
+`@hanzo/ui@8` (`pkg/ui`) is the cross-platform product/record layer on `@hanzo/gui`.
+Every recent component kit is reachable from this single package as a thin subpath
+that re-exports its home package (code lives once; each home is an OPTIONAL peer,
+pulled only when the subpath is used):
+
+| Subpath | Home | Components |
+|---|---|---|
+| `@hanzo/ui` · `/product` | (this) | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
+| `@hanzo/ui/data` | `@hanzo/data` | RecordsView, DataTable, typed field editors |
+| `@hanzo/ui/canvas` | `@hanzo/canvas` | ProjectCanvas, ServiceNode, DeployTimeline, EnvSwitcher, ServiceDetailDrawer, ServiceStatusBadge |
+| `@hanzo/ui/wallet` | `@hanzo/ui-shadcn/wallet` | WalletMenu, injectedEvmAdapter (EIP-1193), walletAvailable, ensureEvmNetwork |
+| `@hanzo/ui/network` | `@hanzo/ui-shadcn/network` | NetworkSwitcher, useNetwork, configureNetworks, HANZO_NETWORKS |
+| `@hanzo/ui/billing` | `@hanzo/ui-shadcn/billing` | CreditModal |
+| `@hanzo/ui/dashboard` | `@hanzo/dashboard` | landing + deploy-pipeline + overview kit |
+| `@hanzo/ui/usage` | `@hanzo/usage` | UsageMeter, UsageProviderCard, UsageDashboard |
+| `@hanzo/ui/gitops` | `@hanzo/gitops` | GitopsAppList, tree, diff, sync/rollback, HealthBadge |
+
+The **8 newest kits** = canvas, wallet, network, billing, dashboard, usage, gitops,
+data. Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name`
+export + an optional peer/devDep. NOTE: `pkg/ui` (singular) sits OUTSIDE the
+`pkgs/*` pnpm workspace, so it publishes via the maintainer flow, not `publish.yml`
+(which auto-publishes `pkgs/*` on a version bump). Lux surfaces use `@luxfi/web3`
+for wallet/login; `@hanzo/ui/wallet`+`/network` are the Hanzo-branded equivalents.
+
 ## Repository Structure
 
 ```
