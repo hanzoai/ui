@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.1",
+  "version": "8.0.3",
   "type": "module",
   "description": "Hanzo UI \u2014 the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
@@ -23,6 +23,30 @@
     "./gitops": {
       "types": "./types/gitops.d.ts",
       "default": "./src/gitops.ts"
+    },
+    "./canvas": {
+      "types": "./types/canvas.d.ts",
+      "default": "./src/canvas.ts"
+    },
+    "./wallet": {
+      "types": "./types/wallet.d.ts",
+      "default": "./src/wallet.ts"
+    },
+    "./network": {
+      "types": "./types/network.d.ts",
+      "default": "./src/network.ts"
+    },
+    "./billing": {
+      "types": "./types/billing.d.ts",
+      "default": "./src/billing.ts"
+    },
+    "./dashboard": {
+      "types": "./types/dashboard.d.ts",
+      "default": "./src/dashboard.ts"
+    },
+    "./usage": {
+      "types": "./types/usage.d.ts",
+      "default": "./src/usage.ts"
     },
     "./styles/motion.css": "./src/styles/hanzo-motion.css",
     "./package.json": "./package.json"
@@ -47,20 +71,40 @@
     "test:watch": "vitest"
   },
   "peerDependencies": {
+    "@hanzo/canvas": ">=0.2.0",
+    "@hanzo/dashboard": ">=0.1.0",
     "@hanzo/data": ">=1.2.0",
     "@hanzo/gitops": ">=0.1.0",
     "@hanzo/gui": ">=7.2.2",
+    "@hanzo/ui-shadcn": ">=5.7.0",
+    "@hanzo/usage": ">=0.1.0",
     "react": ">=19"
   },
   "peerDependenciesMeta": {
+    "@hanzo/canvas": {
+      "optional": true
+    },
+    "@hanzo/dashboard": {
+      "optional": true
+    },
     "@hanzo/gitops": {
+      "optional": true
+    },
+    "@hanzo/ui-shadcn": {
+      "optional": true
+    },
+    "@hanzo/usage": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@hanzo/canvas": "workspace:*",
+    "@hanzo/dashboard": "workspace:*",
     "@hanzo/data": "1.2.1",
     "@hanzo/gitops": "workspace:*",
     "@hanzo/gui": "7.3.0",
+    "@hanzo/ui-shadcn": "workspace:*",
+    "@hanzo/usage": "^0.1.6",
     "@hanzogui/config": "7.3.0",
     "@hanzogui/core": "7.3.0",
     "@hanzogui/lucide-icons-2": "7.3.0",
