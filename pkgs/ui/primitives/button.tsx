@@ -52,6 +52,7 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'default', size = 'default', asChild = false, isLoading = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
+    const iconSize = size === 'icon' || size === 'icon-sm' || size === 'icon-lg';
     return (
       <Comp
         data-slot="button"
@@ -61,12 +62,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {isLoading ? (
-          <Loader2
-            className={cn('h-4 w-4 animate-spin', size !== 'icon' && size !== 'icon-sm' && size !== 'icon-lg' && 'mr-2')}
-          />
-        ) : null}
-        {isLoading && (size === 'icon' || size === 'icon-sm' || size === 'icon-lg') ? null : children}
+        {asChild ? (
+          // With `asChild`, `Comp` is a Radix Slot that merges props into a
+          // SINGLE child and calls React.Children.only on it. Rendering the
+          // loading spinner alongside `children` would make TWO children (an
+          // array) and throw "expected to receive a single React element child",
+          // crashing the whole tree. A slotted button can't host an injected
+          // spinner anyway (the child element replaces the button), so pass
+          // `children` through unchanged — the ONE child Slot requires.
+          children
+        ) : (
+          <>
+            {isLoading ? (
+              <Loader2
+                className={cn('h-4 w-4 animate-spin', !iconSize && 'mr-2')}
+              />
+            ) : null}
+            {isLoading && iconSize ? null : children}
+          </>
+        )}
       </Comp>
     );
   }
