@@ -11,6 +11,11 @@
  *   import { ModelCard, ModelLibrary, ModelTable, ZenEnso } from '@hanzo/ui-shadcn/models'
  *   import { allModels, families } from '@hanzo/zen-models'
  *   <ModelLibrary allModels={allModels} families={families} />
+ *
+ * The unified model picker (gateway/OpenAI-shaped catalog) lives here too:
+ *   import { ModelSelector, fetchModelCatalog } from '@hanzo/ui-shadcn/models'
+ *   const models = await fetchModelCatalog()
+ *   <ModelSelector models={models} value={id} onChange={setId} />
  */
 
 export { ModelCard } from './ModelCard'
@@ -23,5 +28,17 @@ export { ModelLibrary, ModelFamilySection } from './ModelLibrary'
 export type { ModelLibraryProps, ModelFamilySectionProps } from './ModelLibrary'
 
 export { ZenEnso } from './ZenEnso'
+
+export { ModelSelector } from './ModelSelector'
+export type { ModelSelectorProps } from './ModelSelector'
+
+export {
+  familyOf,
+  groupModelsByFamily,
+  isChatModel,
+  filterChatModels,
+  fetchModelCatalog,
+} from './catalog'
+export type { ModelCatalogEntry } from './catalog'
 
 export type { ZenModelLike, ModelFamilyLike, ModelSpecLike, ModelPricingLike } from './types'
