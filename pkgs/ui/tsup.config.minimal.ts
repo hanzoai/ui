@@ -201,6 +201,9 @@ export default defineConfig({
     // Billing components
     'billing/index': 'src/billing/index.ts',
 
+    // Account surfaces (unified self-service billing/usage/org/team UI)
+    'account/index': 'src/account/index.ts',
+
     // Model components (Zen model cards, tables, library, ZenEnso logo)
     'models/index': 'src/models/index.ts',
 
