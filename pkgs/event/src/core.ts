@@ -1,7 +1,8 @@
-// The framework-agnostic capture client. Buffers events and flushes them as one
+// The framework-agnostic event client. Buffers events and flushes them as one
 // batch to Hanzo Cloud — /v1/analytics normally, /v1/tracker via sendBeacon on
 // page unload. It NEVER sends the org/tenant: the server stamps that from the
-// validated session. The client only supplies its own visitor identity.
+// validated session. The client only supplies its own visitor identity. Errors
+// are just events (type:'error') on the same stream — one client, one pipe.
 
 import {
   parseAttribution,
@@ -22,11 +23,12 @@ import type {
   Attribution,
   Cohort,
   EventKind,
+  Exception,
   Transport,
   WireEvent,
 } from './types'
 
-export const VERSION = '0.1.0'
+export const VERSION = '0.2.0'
 
 const ANALYTICS_PATH = '/v1/analytics'
 const TRACKER_PATH = '/v1/tracker' // beacon-on-unload alias
@@ -35,6 +37,19 @@ function uid(): string {
   const c = typeof crypto !== 'undefined' ? crypto : undefined
   if (c && 'randomUUID' in c) return c.randomUUID()
   return 'm-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
+}
+
+/** Normalize anything thrown (Error | string | unknown) into an Exception. */
+function normalizeError(err: unknown): Exception {
+  if (err instanceof Error) {
+    return { type: err.name, message: err.message, stack: err.stack }
+  }
+  if (typeof err === 'string') return { message: err }
+  try {
+    return { message: JSON.stringify(err) }
+  } catch {
+    return { message: String(err) }
+  }
 }
 
 const isBrowser = () => typeof window !== 'undefined'
@@ -67,7 +82,9 @@ class DefaultTransport implements Transport {
 }
 
 export class Analytics {
-  private cfg: Required<Pick<AnalyticsConfig, 'product' | 'batchSize' | 'flushIntervalMs' | 'enabled'>> &
+  private cfg: Required<
+    Pick<AnalyticsConfig, 'product' | 'batchSize' | 'flushIntervalMs' | 'enabled' | 'captureErrors'>
+  > &
     AnalyticsConfig
   private transport: Transport
   private queue: WireEvent[] = []
@@ -83,6 +100,7 @@ export class Analytics {
       batchSize: 20,
       flushIntervalMs: 5000,
       enabled: true,
+      captureErrors: true,
       ...config,
     }
     this.transport = config.transport ?? new DefaultTransport()
@@ -110,6 +128,17 @@ export class Analytics {
     }
     window.addEventListener('visibilitychange', flushHidden)
     window.addEventListener('pagehide', () => this.flush(true))
+
+    // Auto error capture — the drop-in @sentry replacement. Unhandled errors and
+    // rejected promises become type:'error' events on the same stream.
+    if (this.cfg.captureErrors) {
+      window.addEventListener('error', (e: ErrorEvent) => {
+        this.captureError(e.error ?? e.message, { handled: false })
+      })
+      window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
+        this.captureError(e.reason, { handled: false })
+      })
+    }
   }
 
   /** identify binds the current visitor to a stable person id (post-login). */
@@ -143,6 +172,25 @@ export class Analytics {
 
   /** track is an alias of capture (Segment familiarity). */
   track = this.capture.bind(this)
+
+  /** captureError records an exception as a first-class error event — the ONE
+   *  error path (subsumes @sentry). A caught error, an unhandled rejection, or a
+   *  manual report all become a type:'error' event on the same stream, lensed to
+   *  the error-tracking view server-side. Never throws back into the app; errors
+   *  are higher-signal than pageviews, so it flushes promptly (a crash may unload
+   *  the page moments later). */
+  captureError(
+    err: unknown,
+    context?: { handled?: boolean; properties?: Record<string, unknown> },
+  ): void {
+    const ex = normalizeError(err)
+    ex.handled = context?.handled ?? true
+    this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
+    this.flush()
+  }
+
+  /** captureException — @sentry-familiar alias of captureError. */
+  captureException = this.captureError.bind(this)
 
   /** setCohort persists cohort dimensions (e.g. signupWeek at signup) so they ride
    *  every subsequent event. */
@@ -194,7 +242,7 @@ export class Analytics {
       refCode: this.cohort.refCode ?? this.attribution.refCode,
       channel: this.cohort.channel ?? this.attribution.channel,
       signupWeek: this.cohort.signupWeek,
-      library: '@hanzo/capture',
+      library: '@hanzo/event',
       libraryVersion: VERSION,
       ...extra,
     }
