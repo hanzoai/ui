@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.3",
+  "version": "8.0.4",
   "type": "module",
   "description": "Hanzo UI \u2014 the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
@@ -115,11 +115,15 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.9"
+    "vitest": "^4.1.8",
+    "react-native-web": "^0.21.2"
   },
   "publishConfig": {
     "access": "public"
   },
   "license": "BSD-3-Clause",
-  "author": "Hanzo AI <dev@hanzo.ai>"
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "dependencies": {
+    "@hanzo/logo": "^1.0.13"
+  }
 }
