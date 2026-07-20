@@ -1,15 +1,25 @@
-// React bindings for @hanzo/capture — a provider, an accessor hook, and a
-// route-change pageview hook. Framework-neutral: it takes the current path as an
-// argument (the Next app wires usePathname(); a Vite/router app passes its own),
-// so this file never imports next/*.
+// React bindings for @hanzo/event — a provider, an accessor hook, a route-change
+// pageview hook, and an error boundary. Framework-neutral: it takes the current
+// path as an argument (the Next app wires usePathname(); a Vite/router app passes
+// its own), so this file never imports next/*.
 //
 //   'use client'
-//   import { AnalyticsProvider, useAnalytics, usePageview } from '@hanzo/capture/react'
+//   import { AnalyticsProvider, useAnalytics, usePageview, ErrorBoundary } from '@hanzo/event/react'
 //
 //   <AnalyticsProvider config={{ product: 'console' }}>…</AnalyticsProvider>
 //   const a = useAnalytics(); usePageview(usePathname())
 
-import { createContext, createElement, useContext, useEffect, useMemo, useRef, type ReactNode } from 'react'
+import {
+  Component,
+  createContext,
+  createElement,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  type ErrorInfo,
+  type ReactNode,
+} from 'react'
 import { Analytics, createAnalytics } from './core'
 import type { AnalyticsConfig } from './types'
 
@@ -65,3 +75,48 @@ export function usePageview(path: string | null | undefined): void {
 
 // A shared no-op client for use outside a provider — keeps call sites total.
 const noop = new Analytics({ product: 'unknown', enabled: false })
+
+export interface ErrorBoundaryProps {
+  children: ReactNode
+  /** Rendered when a child throws. A function receives the error + a reset. */
+  fallback?: ReactNode | ((error: Error, reset: () => void) => ReactNode)
+  /** Explicit client; defaults to the one from AnalyticsProvider. */
+  client?: Analytics
+}
+
+interface ErrorBoundaryState {
+  error: Error | null
+}
+
+/** ErrorBoundary reports React render errors to the client as error events —
+ *  React swallows these before window.onerror sees them, so a boundary is the
+ *  ONLY way to capture them. This is the React half of the @sentry replacement.
+ *  Pair it with AnalyticsProvider (it reads the client from context), or pass an
+ *  explicit `client`. */
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  static contextType = Ctx
+  declare context: React.ContextType<typeof Ctx>
+  state: ErrorBoundaryState = { error: null }
+
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+    return { error }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo): void {
+    const client = this.props.client ?? this.context ?? undefined
+    client?.captureError(error, {
+      handled: false,
+      properties: { componentStack: info.componentStack, react: true },
+    })
+  }
+
+  private reset = () => this.setState({ error: null })
+
+  render(): ReactNode {
+    const { error } = this.state
+    if (error === null) return this.props.children
+    const { fallback } = this.props
+    if (typeof fallback === 'function') return fallback(error, this.reset)
+    return fallback ?? null
+  }
+}
