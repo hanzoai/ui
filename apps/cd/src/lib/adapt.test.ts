@@ -6,6 +6,7 @@
 import { describe, expect, it } from "vitest"
 
 import {
+  normalizeDeployApp,
   parseApplications,
   toGitopsApp,
   toLogLines,
@@ -90,5 +91,59 @@ describe("toRollbackHistory", () => {
     const h = toRollbackHistory("v1.800.1", ["v1.800.0", "latest", "v1.799.15", "v1.800.1", "main"])
     expect(h.map((r) => r.revision)).toEqual(["v1.800.0", "v1.799.15"])
     expect(h[0].id).toBeGreaterThan(h[1].id) // monotonic ids for the dialog
+  })
+})
+
+// ── the ACTUAL argoproj shape /v1/deploy/applications serves in production ────
+// Captured live (cloud v1.801.109). The first cut read only flat keys, so the
+// fleet bound to zero rows against real data; this pins the real contract.
+describe("live argoproj-shaped application", () => {
+  const LIVE = {
+    apiVersion: "argoproj.io/v1alpha1",
+    kind: "Application",
+    metadata: {
+      name: "admin-guard",
+      namespace: "hanzo",
+      uid: "257fcb88-974d-46fc-8ac2-6f8b86a1f15f",
+      creationTimestamp: "2026-07-15T05:31:10Z",
+      labels: { "hanzo.ai/env": "main", "hanzo.ai/instance": "admin-guard" },
+    },
+    spec: {
+      source: { repoURL: "https://git.hanzo.ai/hanzoai/universe", path: "infra/k8s/operator/crs", targetRevision: "main" },
+      destination: { server: "https://kubernetes.default.svc", namespace: "hanzo" },
+      project: "default",
+    },
+    status: {
+      sync: { status: "Synced", revision: "v0.1.4" },
+      health: { status: "Healthy", message: "Running: available" },
+      resources: [],
+      summary: { images: ["ghcr.io/hanzoai/admin-guard:v0.1.4"] },
+    },
+  }
+
+  it("binds name/env/health/sync/revision/repository from the nested shape", () => {
+    const a = normalizeDeployApp(LIVE)
+    expect(a.name).toBe("admin-guard")
+    expect(a.namespace).toBe("hanzo")
+    expect(a.env).toBe("main")
+    expect(a.health).toBe("Healthy")
+    expect(a.sync).toBe("Synced")
+    expect(a.version).toBe("v0.1.4")
+    expect(a.repository).toBe("ghcr.io/hanzoai/admin-guard")
+    expect(a.runningVersion).toBe("v0.1.4")
+  })
+
+  it("folds to a Healthy/Synced gitops app (the fleet row renders)", () => {
+    const g = toGitopsApp(normalizeDeployApp(LIVE))
+    expect(g.name).toBe("admin-guard")
+    expect(g.health).toBe("Healthy")
+    expect(g.sync).toBe("Synced")
+  })
+
+  it("still reads the flat native shape (both wires supported)", () => {
+    const a = normalizeDeployApp({ name: "x", health: "degraded", sync: "out-of-sync", version: "v1.2.3" })
+    expect(a.name).toBe("x")
+    expect(a.health).toBe("degraded")
+    expect(toGitopsApp(a).sync).toBe("OutOfSync")
   })
 })
