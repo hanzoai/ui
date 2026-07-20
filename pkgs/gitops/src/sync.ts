@@ -32,17 +32,20 @@ const SYNONYM: Record<string, SyncStatus> = {
 }
 
 /**
- * Fold any sync string to a `SyncStatus`. Canonical (case-insensitive) match
- * first, then a small synonym table, then a substring fallback. Empty/unrecognized
- * is honest `Unknown`.
+ * Fold any sync string to a `SyncStatus`. Separators are normalized (whitespace,
+ * `-`, `_` stripped) so the canonical `out-of-sync` folds at the source; then a
+ * canonical match, a small synonym table, and a substring fallback for the BAD
+ * (needs-attention) direction only. There is DELIBERATELY no positive substring
+ * up-guess: `notsynced`/`unsynced` contain `synced` and would be painted green —
+ * an out-of-sync app shown Synced is worse than one shown Unknown. Exact positive
+ * values are covered by CANONICAL + SYNONYM; anything else stays Unknown.
  */
 export function foldSync(raw: string | undefined | null): SyncStatus {
-  const s = (raw ?? '').toString().toLowerCase().trim().replace(/\s+/g, '')
+  const s = (raw ?? '').toString().toLowerCase().trim().replace(/[\s_-]+/g, '')
   if (!s) return 'Unknown'
   if (CANONICAL[s]) return CANONICAL[s]
   if (SYNONYM[s]) return SYNONYM[s]
   if (s.includes('outofsync') || s.includes('drift') || s.includes('diverge')) return 'OutOfSync'
-  if (s.includes('synced') || s.includes('insync') || s.includes('uptodate')) return 'Synced'
   return 'Unknown'
 }
 
