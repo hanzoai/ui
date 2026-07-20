@@ -161,7 +161,13 @@ function toTreeNode(raw: unknown): AppTreeNode {
 
 export function toResourceTree(raw: unknown): ResourceTree {
   const r = rec(raw)
-  const nodes = arr(pick(r, "nodes", "resources")).map(toTreeNode).filter((n) => n.name && n.kind)
+  const nodes = arr(pick(r, "nodes", "resources"))
+    .map(toTreeNode)
+    .filter((n) => n.name && n.kind)
+    // Defense-in-depth: never render a Secret node (its live manifest carries
+    // base64 data). Cloud already excludes Secrets from the tree; drop any that
+    // slip through so the client never surfaces one.
+    .filter((n) => n.kind !== "Secret")
   return { nodes }
 }
 
@@ -183,17 +189,25 @@ export function toManagedResource(raw: unknown): ManagedResource {
   }
 }
 
-// ── logs blob → LogLine[] ────────────────────────────────────────────────────
+// ── logs (blob OR array) → LogLine[], bounded ────────────────────────────────
+
+// Client-side caps so one giant log payload can't bloat the DOM even if the
+// server's `?tail` is absent or ignored: keep the last MAX_LOG_LINES, and clamp
+// any single line (a newline-free megabyte otherwise renders as one huge node).
+const MAX_LOG_LINES = 2000
+const MAX_LOG_LINE = 4000
 
 export function toLogLines(raw: unknown): LogLine[] {
   const r = rec(raw)
   const pod = str(pick(r, "pod")) || undefined
-  const blob = str(pick(r, "logs", "log", "output"))
-  if (!blob) return []
-  return blob
-    .split("\n")
-    .filter((l) => l.length > 0)
-    .map((content) => ({ content, podName: pod }))
+  // Tolerate both shapes: a newline blob (`logs:"…"`) and a line array
+  // (`logs:[…]` / `lines:[…]`), which the blob-only path silently dropped to [].
+  const listed = arr(pick(r, "logs", "lines", "log", "output"))
+  const lines = listed.length
+    ? listed.map(str)
+    : str(pick(r, "logs", "log", "output")).split("\n")
+  const kept = lines.filter((l) => l.length > 0).slice(-MAX_LOG_LINES)
+  return kept.map((l) => ({ content: l.length > MAX_LOG_LINE ? l.slice(0, MAX_LOG_LINE) + "…" : l, podName: pod }))
 }
 
 // ── git tags → RevisionHistory[] (rollback targets; cloud takes a clean semver) ─
