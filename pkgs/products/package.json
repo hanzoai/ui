@@ -1,0 +1,65 @@
+{
+  "name": "@hanzo/products",
+  "version": "0.1.0",
+  "description": "The canonical Hanzo product catalog: one typed contract + icon/color code-maps + a commerce-backed client with a checked-in snapshot fallback. Single source of truth for console, docs, site, and pricing.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.mjs",
+      "require": "./dist/icons.js"
+    },
+    "./snapshot": "./snapshot/catalog.json"
+  },
+  "files": [
+    "dist",
+    "snapshot"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "hanzo",
+    "products",
+    "catalog",
+    "registry",
+    "taxonomy"
+  ],
+  "author": "Hanzo AI",
+  "license": "MIT",
+  "peerDependencies": {
+    "@hanzogui/lucide-icons-2": ">=7",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@hanzogui/lucide-icons-2": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hanzogui/lucide-icons-2": "7.3.0",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
