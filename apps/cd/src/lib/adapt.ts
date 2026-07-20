@@ -87,20 +87,49 @@ export interface DeployApp {
 }
 
 /** Normalize a raw /v1/deploy application row to a stable internal shape. */
+/**
+ * Normalize one application from EITHER wire shape:
+ *
+ *  - argoproj (what `/v1/deploy/applications` actually serves): the projection
+ *    nests everything — `metadata.{name,namespace,labels}`, `spec.source.*`,
+ *    `spec.project`, `status.{sync,health}.status`, `status.summary.images[]`.
+ *  - flat native: `{name,namespace,env,repository,version,health,sync,…}`.
+ *
+ * Both are read here so the app binds regardless of which the plane returns —
+ * flat keys win when present, then the nested argo fields fill in.
+ */
 export function normalizeDeployApp(raw: unknown): DeployApp {
   const r = rec(raw)
+  const meta = rec(pick(r, "metadata"))
+  const spec = rec(pick(r, "spec"))
+  const status = rec(pick(r, "status"))
+  const source = rec(pick(spec, "source"))
+  const dest = rec(pick(spec, "destination"))
+  const sync = rec(pick(status, "sync"))
+  const health = rec(pick(status, "health"))
+  const labels = rec(pick(meta, "labels"))
+  const summary = rec(pick(status, "summary"))
+  // `status.summary.images: ["ghcr.io/hanzoai/x:v1.2.3"]` → repository + tag.
+  const image = strList(pick(summary, "images"))[0] ?? ""
+  const cut = image.lastIndexOf(":")
+  const imageRepo = cut > 0 ? image.slice(0, cut) : image
+  const imageTag = cut > 0 ? image.slice(cut + 1) : ""
+
   return {
-    name: str(pick(r, "name")),
-    namespace: str(pick(r, "namespace", "ns")) || "hanzo",
-    env: str(pick(r, "env", "environment")),
+    name: str(pick(r, "name")) || str(pick(meta, "name")),
+    namespace:
+      str(pick(r, "namespace", "ns")) || str(pick(meta, "namespace")) || str(pick(dest, "namespace")) || "hanzo",
+    env: str(pick(r, "env", "environment")) || str(pick(labels, "hanzo.ai/env")) || str(pick(source, "targetRevision")),
     role: str(pick(r, "role")),
-    repository: str(pick(r, "repository", "repo")),
-    version: str(pick(r, "version", "tag")),
-    runningVersion: str(pick(r, "runningVersion", "running_version")),
-    health: str(pick(r, "health")),
-    healthMessage: str(pick(r, "healthMessage", "health_message", "message")),
-    sync: str(pick(r, "sync", "syncStatus", "sync_status")),
-    phase: str(pick(r, "phase", "status")),
+    // Prefer the deployed image repository; fall back to the manifest repo URL.
+    repository: str(pick(r, "repository", "repo")) || imageRepo || str(pick(source, "repoURL")),
+    version: str(pick(r, "version", "tag")) || str(pick(sync, "revision")) || imageTag,
+    runningVersion: str(pick(r, "runningVersion", "running_version")) || imageTag,
+    health: str(pick(r, "health")) || str(pick(health, "status")),
+    healthMessage:
+      str(pick(r, "healthMessage", "health_message", "message")) || str(pick(health, "message")),
+    sync: str(pick(r, "sync", "syncStatus", "sync_status")) || str(pick(sync, "status")),
+    phase: str(pick(r, "phase")) || str(pick(health, "status")),
     endpoints: strList(pick(r, "endpoints", "urls")),
     revisions: strList(pick(r, "revisions", "history", "tags")),
   }
