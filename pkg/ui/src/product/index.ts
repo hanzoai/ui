@@ -38,6 +38,13 @@ export { Donut as DonutRing, type DonutSegment } from './Donut'
 export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
+// The shared shell — brand mark, org scope + switcher, app header (the
+// console's org-scope contract + switcher hoisted here; hanzoai/ui#36).
+export * from './AppHeader'
+export * from './BrandMark'
+export * from './OrgSwitcher'
+export * from './scope'
+
 // The rest — every exported name below is unique across the layer.
 export * from './DataTable'
 export * from './EmptyState'

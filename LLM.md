@@ -27,9 +27,12 @@ pulled only when the subpath is used):
 
 The **8 newest kits** = canvas, wallet, network, billing, dashboard, usage, gitops,
 data. Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name`
-export + an optional peer/devDep. NOTE: `pkg/ui` (singular) sits OUTSIDE the
-`pkgs/*` pnpm workspace, so it publishes via the maintainer flow, not `publish.yml`
-(which auto-publishes `pkgs/*` on a version bump). Lux surfaces use `@luxfi/web3`
+export + an optional peer/devDep. NOTE: `pkg/*` is a pnpm workspace member (for
+`workspace:*` dev links), but `pkg/ui` publishes via the maintainer flow, not
+`publish.yml` (which auto-publishes only `pkgs/*` on a version bump — see
+PUBLISH_GUIDE.md). The shared shell lives here too: `AppHeader` + `BrandMark`
+(@hanzo/logo) + `OrgSwitcher` + `orgScope` (the console org-scope contract,
+hoisted per #36). Lux surfaces use `@luxfi/web3`
 for wallet/login; `@hanzo/ui/wallet`+`/network` are the Hanzo-branded equivalents.
 
 ## Repository Structure
