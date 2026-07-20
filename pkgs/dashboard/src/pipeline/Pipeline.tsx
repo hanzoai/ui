@@ -13,7 +13,7 @@
  */
 import { useContainerWidth } from '../charts/Charts'
 import { useReducedMotion } from '../motion/hooks'
-import type { PipelineStage, StageState } from './pipeline'
+import type { PipelineStage, StageState } from './stages'
 import { Text, XStack, YStack } from '@hanzo/gui'
 
 const ACCENT = '#7c5cff'
