@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { fileURLToPath, URL } from "node:url"
 
 import react from "@vitejs/plugin-react"
@@ -34,4 +35,7 @@ export default defineConfig({
     port: 4200,
     proxy: { "/v1": { target: CD_API, changeOrigin: true, secure: false } },
   },
+  // The e2e/ specs are Playwright's (they use test.beforeAll); vitest must not
+  // glob them, or a bare `vitest run` reports a red suite for a passing app.
+  test: { exclude: ["e2e/**", "node_modules/**", "dist/**"] },
 })
