@@ -56,19 +56,23 @@ const SYNONYM: Record<string, HealthStatus> = {
 
 /**
  * Fold any health/status string to a `HealthStatus`. Canonical (case-insensitive)
- * match first, then a small synonym table, then a contained-substring fallback.
- * Empty/unrecognized is honest `Unknown` — never guessed up to `Healthy`.
+ * match first, then a small synonym table, then a contained-substring fallback for
+ * BAD states only. Empty/unrecognized is honest `Unknown` — never guessed up to
+ * `Healthy`. There is DELIBERATELY no positive substring fallback: it would paint
+ * a bad state green (`NotReady`/`unavailable`/`Broken` contain ready/available/ok),
+ * and an incident shown Healthy is worse than one shown Unknown. Exact positive
+ * values are covered by CANONICAL + SYNONYM; anything else stays Unknown.
  */
 export function foldHealth(raw: string | undefined | null): HealthStatus {
   const s = (raw ?? '').toString().toLowerCase().trim()
   if (!s) return 'Unknown'
   if (CANONICAL[s]) return CANONICAL[s]
   if (SYNONYM[s]) return SYNONYM[s]
+  // Bad-state substring fallback only (fail-safe direction: up-guess to WORSE).
   if (/(degrad|error|fail|crash|unhealthy)/.test(s)) return 'Degraded'
   if (/(progress|deploy|updat|provision|pending|creat)/.test(s)) return 'Progressing'
   if (/(suspend|paus|stop)/.test(s)) return 'Suspended'
   if (/(miss|absent|notfound|gone)/.test(s)) return 'Missing'
-  if (/(healthy|ready|running|available|live|ok)/.test(s)) return 'Healthy'
   return 'Unknown'
 }
 
