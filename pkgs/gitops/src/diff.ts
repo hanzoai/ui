@@ -51,16 +51,38 @@ export function classifyDiff(unified: string): DiffLine[] {
   return out
 }
 
+// Above this many lines on either side, the O(n·m) LCS matrix is skipped — a
+// ~5k×5k matrix is ~25M numbers (hundreds of MB) and freezes the tab. A large
+// ConfigMap is reachable (not Secret-excluded), so a real operator can hit this;
+// past the cap we fall back to a plain block diff (all removals then additions).
+const LINE_DIFF_CAP = 2000
+
 /**
  * Longest-common-subsequence line diff of two manifests → classified rows
  * (`del` for live-only lines, `add` for desired-only, `context` for shared).
- * O(n·m) space/time — fine for manifests (hundreds of lines).
+ * O(n·m) space/time — bounded to manifests under LINE_DIFF_CAP lines; past the
+ * cap it falls back to a block diff so a large resource can never OOM the tab.
  */
 export function lineDiff(oldText: string, newText: string): DiffLine[] {
   const a = (oldText ?? '').replace(/\r\n?/g, '\n').split('\n')
   const b = (newText ?? '').replace(/\r\n?/g, '\n').split('\n')
   const n = a.length
   const m = b.length
+
+  // Size guard: skip the quadratic LCS on large inputs. If the texts are equal,
+  // it's all context; otherwise emit every old line as a removal and every new
+  // line as an addition — coarse but bounded and honest.
+  if (n > LINE_DIFF_CAP || m > LINE_DIFF_CAP) {
+    if (oldText === newText) {
+      return a.map((text, k) => ({ type: 'context', text, oldLine: k + 1, newLine: k + 1 }))
+    }
+    const out: DiffLine[] = []
+    let oldLine = 1
+    let newLine = 1
+    for (const text of a) out.push({ type: 'del', text, oldLine: oldLine++ })
+    for (const text of b) out.push({ type: 'add', text, newLine: newLine++ })
+    return out
+  }
 
   // dp[i][j] = LCS length of a[i:] and b[j:].
   const dp: number[][] = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0))
