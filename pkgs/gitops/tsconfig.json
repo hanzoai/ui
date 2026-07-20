@@ -21,7 +21,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": false,
     "types": ["react", "react-dom"],
-    "ignoreDeprecations": "6.0",
     "paths": {
       "@hanzo/canvas/pure": ["../canvas/src/pure.ts"]
     }
