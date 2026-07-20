@@ -8,8 +8,8 @@ import { brandsForCategory } from "./brands"
 // If any of these fail, the catalog is malformed BEFORE it ever reaches commerce.
 
 describe("snapshot integrity", () => {
-  it("holds the full 102-product catalog", () => {
-    expect(SNAPSHOT.length).toBe(102)
+  it("holds the full 103-product catalog", () => {
+    expect(SNAPSHOT.length).toBe(103)
   })
 
   it("every id and slug is unique", () => {
@@ -37,9 +37,10 @@ describe("snapshot integrity", () => {
     }
   })
 
-  it("every route is /<slug> and every docsUrl is under the docs services base", () => {
+  it("every route is /<slug> (or a product's own https origin) and every docsUrl is under the docs services base", () => {
     for (const e of SNAPSHOT) {
-      expect(e.route, e.id).toBe(`/${e.slug}`)
+      if (e.route.startsWith("https://")) expect(e.route, e.id).toMatch(/^https:\/\/[a-z0-9.-]+$/)
+      else expect(e.route, e.id).toBe(`/${e.slug}`)
       expect(e.docsUrl.startsWith("https://docs.hanzo.ai/docs/services/"), e.id).toBe(true)
     }
   })

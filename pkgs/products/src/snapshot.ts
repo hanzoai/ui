@@ -11,5 +11,5 @@
 import catalog from "../snapshot/catalog.json"
 import type { CatalogEntry } from "./types"
 
-/** The full 102-product catalog snapshot. */
+/** The full 103-product catalog snapshot. */
 export const SNAPSHOT = catalog as unknown as CatalogEntry[]
