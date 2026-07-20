@@ -55,9 +55,15 @@ export const DeployApi = {
   /** The fleet: every operator App CR (`GET /v1/deploy/applications`). */
   applications: async (): Promise<DeployApp[]> => parseApplications(await request<unknown>("GET", "applications")),
 
-  /** One application's owned-resource tree (`GET /v1/deploy/:name/tree`). */
+  /**
+   * One application's owned-resource tree
+   * (`GET /v1/deploy/applications/:name/resource-tree`).
+   *
+   * The wired route lives under `applications/` — the shorter `:name/tree` form
+   * belongs to an unregistered handler, so it 404s against the live plane.
+   */
   tree: async (name: string): Promise<ResourceTree> =>
-    toResourceTree(await request<unknown>("GET", `${encodeURIComponent(name)}/tree`)),
+    toResourceTree(await request<unknown>("GET", `applications/${encodeURIComponent(name)}/resource-tree`)),
 
   /** One tree node's live manifest + desired-vs-live (`GET /v1/deploy/:name/resource/:ref`). */
   resource: async (name: string, ref: string): Promise<ManagedResource> =>
