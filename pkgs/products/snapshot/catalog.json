@@ -1704,6 +1704,25 @@
     "gcp": null
   },
   {
+    "id": "team",
+    "name": "Team",
+    "category": "Apps",
+    "brandColor": "rose",
+    "iconKey": "Users",
+    "slug": "team",
+    "route": "https://hanzo.team",
+    "docsUrl": "https://docs.hanzo.ai/docs/services/team",
+    "apiPath": "/v1/team",
+    "pricingId": "team",
+    "brands": [
+      "hanzo"
+    ],
+    "repo": "hanzoai/team",
+    "admin": false,
+    "status": "enabled",
+    "gcp": null
+  },
+  {
     "id": "accessibility",
     "name": "Accessibility",
     "category": "Apps",
