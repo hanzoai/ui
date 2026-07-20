@@ -1,4 +1,16 @@
-# @hanzo/capture
+# @hanzo/event
+
+## 0.2.0
+
+### Minor Changes
+
+- Renamed from `@hanzo/capture` to **`@hanzo/event`** — the ONE telemetry client.
+  An error is just another event on the one stream, so error tracking now lives
+  here too (subsumes `@sentry`): `captureError()`/`captureException()`, a React
+  `ErrorBoundary`, and auto-capture of unhandled errors + promise rejections
+  (opt-out via `captureErrors: false`). Added the `error` event kind and the
+  `Exception` type. The server lenses the one stream into product analytics, web
+  analytics, and error tracking (insights/analytics/sentry.hanzo.ai).
 
 ## 0.1.1
 
