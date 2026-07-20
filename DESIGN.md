@@ -6,9 +6,12 @@ Change a value here; apps converge on it. This file is that source of truth for 
 three things that must read as **one product**: typography, the sidebar/panel system,
 and the dark-black palette.
 
-> Two design systems, do not confuse them: **`@hanzo/ui`** = shadcn/ui + Tailwind +
-> Radix (this repo). **`@hanzo/gui`** = the Tamagui/RN system (hanzo console). They
-> share these *token values* (fonts, dark palette, the sidebar glyph), not code.
+> One library: **`@hanzo/ui@8`** (`pkg/ui`, on **`@hanzo/gui`**) IS the component
+> library — the cross-platform product/record layer every surface consumes.
+> **`@hanzo/ui-shadcn`** (`pkgs/ui`) is the legacy shadcn/Tailwind/Radix kit, kept
+> only for existing v5 consumers (pin `@hanzo/ui-shadcn@^5`; no new adoptions).
+> This file stays the source of truth for the *token values* (fonts, dark palette,
+> the sidebar glyph) both render.
 
 ---
 
