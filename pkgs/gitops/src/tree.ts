@@ -80,12 +80,17 @@ export function buildResourceGraph(
   const byId = new Map<string, AppTreeNode>()
   for (const n of all) byId.set(resourceId(n), n)
 
-  // Parent → children (only edges whose endpoints are both present).
+  // Parent → children (only edges whose endpoints are both present). Pre-seed a
+  // bucket for EVERY node id BEFORE walking edges: k8s object lists are NOT
+  // topologically sorted, so a child can appear before its parent, and ownerRefs
+  // can form cycles. Seeding lazily per-node meant `children.get(pid)` was
+  // undefined when the parent came later → `undefined.push(id)` threw during
+  // render (white-screening the whole surface). Pre-seeding makes the `!` safe.
   const children = new Map<string, string[]>()
   const parentOf = new Map<string, string[]>()
+  for (const n of all) children.set(resourceId(n), [])
   for (const n of all) {
     const id = resourceId(n)
-    if (!children.has(id)) children.set(id, [])
     for (const p of n.parentRefs ?? []) {
       const pid = resourceId(p)
       if (!byId.has(pid) || pid === id) continue
