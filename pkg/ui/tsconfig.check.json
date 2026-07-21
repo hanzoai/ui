@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "types",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "src/canvas.ts",
+    "src/gitops.ts",
+    "src/wallet.ts",
+    "src/network.ts",
+    "src/billing.ts",
+    "src/dashboard.ts",
+    "src/usage.ts",
+    "src/data.ts"
+  ]
+}
