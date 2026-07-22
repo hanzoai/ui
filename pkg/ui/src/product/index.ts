@@ -40,6 +40,8 @@ export * from './combobox/filter'
 
 // The shared shell — brand mark, org scope + switcher, app header (the
 // console's org-scope contract + switcher hoisted here; hanzoai/ui#36).
+// `surfaces.data` is the ONE canonical cross-surface list every launcher consumes.
+export * from './surfaces.data'
 export * from './AppHeader'
 export * from './BrandMark'
 export * from './OrgSwitcher'
