@@ -6,34 +6,94 @@ React component library (shadcn/ui fork). 161 components, 24+ blocks, two themes
 
 **Docs**: https://ui.hanzo.ai | **Dev port**: 3003
 
-## v8 — the one import surface (`@hanzo/ui@8`, `pkg/ui`)
+## v8 — the canonical, backend-flexible `@hanzo/ui` (`pkg/ui`)
 
-`@hanzo/ui@8` (`pkg/ui`) is the cross-platform product/record layer on `@hanzo/gui`.
-Every recent component kit is reachable from this single package as a thin subpath
-that re-exports its home package (code lives once; each home is an OPTIONAL peer,
-pulled only when the subpath is used):
+`@hanzo/ui@8` (`pkg/ui`) is THE Hanzo component library: one design core, many
+rendering backends. It is `@hanzo/gui` + `@hanzo/tokens` based, and its ROOT
+barrel exposes the **shadcn-compatible component API** apps import (so consumers
+drop the old `@hanzo/ui-shadcn` alias and point `@hanzo/ui` here with zero import
+churn). `@hanzo/ui-shadcn` (`pkgs/ui`, v5.x) is the legacy standalone shadcn
+package — superseded by this.
 
-| Subpath | Home | Components |
-|---|---|---|
-| `@hanzo/ui` · `/product` | (this) | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
-| `@hanzo/ui/data` | `@hanzo/data` | RecordsView, DataTable, typed field editors |
-| `@hanzo/ui/canvas` | `@hanzo/canvas` | ProjectCanvas, ServiceNode, DeployTimeline, EnvSwitcher, ServiceDetailDrawer, ServiceStatusBadge |
-| `@hanzo/ui/wallet` | `@hanzo/ui-shadcn/wallet` | WalletMenu, injectedEvmAdapter (EIP-1193), walletAvailable, ensureEvmNetwork |
-| `@hanzo/ui/network` | `@hanzo/ui-shadcn/network` | NetworkSwitcher, useNetwork, configureNetworks, HANZO_NETWORKS |
-| `@hanzo/ui/billing` | `@hanzo/ui-shadcn/billing` | CreditModal |
-| `@hanzo/ui/dashboard` | `@hanzo/dashboard` | landing + deploy-pipeline + overview kit |
-| `@hanzo/ui/usage` | `@hanzo/usage` | UsageMeter, UsageProviderCard, UsageDashboard |
-| `@hanzo/ui/gitops` | `@hanzo/gitops` | GitopsAppList, tree, diff, sync/rollback, HealthBadge |
+### Layout (backend-flexible)
 
-The **8 newest kits** = canvas, wallet, network, billing, dashboard, usage, gitops,
-data. Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name`
-export + an optional peer/devDep. NOTE: `pkg/*` is a pnpm workspace member (for
-`workspace:*` dev links), but `pkg/ui` publishes via the maintainer flow, not
-`publish.yml` (which auto-publishes only `pkgs/*` on a version bump — see
-PUBLISH_GUIDE.md). The shared shell lives here too: `AppHeader` + `BrandMark`
-(@hanzo/logo) + `OrgSwitcher` + `orgScope` (the console org-scope contract,
-hoisted per #36). Lux surfaces use `@luxfi/web3`
-for wallet/login; `@hanzo/ui/wallet`+`/network` are the Hanzo-branded equivalents.
+```
+pkg/ui/src/
+  core/            design core (backend-agnostic): cn.ts (clsx+tailwind-merge),
+                   tokens.ts (re-export of @hanzo/tokens), fonts.ts (Geist vars)
+  theme.css        SELF-CONTAINED standard-token CSS vars (Hanzo dark-first,
+                   sourced from @hanzo/tokens) + Geist Sans/Mono — the identity
+  backends/
+    shadcn/        Radix + Tailwind — the shadcn-compatible web API (root default)
+    gui/           @hanzo/gui (Tamagui) product layer — web + native + desktop
+    README.md      backend contract + how to add one (svelte/solid/…)
+  models/          the unified ModelSelector + catalog helpers
+  primitives/      GENERATED per-member entrypoints (see scripts/gen-primitives.mjs)
+  index.ts         root barrel = shadcn API + product layer + tokens
+```
+
+Add a backend under `src/backends/<name>/` (same tokens, different substrate) +
+a `./<name>` export. The two that exist are `shadcn` and `gui`.
+
+### Token-bug fix (the point of the rework)
+
+The old shadcn components reached for app-private token names — `bg-bg-dark`,
+`bg-bg-secondary`, `text-text-secondary`, `bg-divider`, `bg-brand`, `bg-level-2`,
+hard-coded `bg-gray-*` — that consumers never defined, so surfaces rendered
+transparent. Every component here uses ONLY standard design tokens
+(`bg-popover`, `border-border`, `bg-primary`, `text-muted-foreground`, …) and no
+hard-coded font (UI inherits Geist Sans, code Geist Mono; portaled surfaces bind
+`font-sans`). `theme.css` defines every token, so the package is self-contained.
+
+### Subpaths
+
+| Subpath | What |
+|---|---|
+| `@hanzo/ui` | the component API (shadcn backend, the default): Button, Badge, Card*, Checkbox, Dialog*, DropdownMenu*, Input, Toaster, Avatar*, Tabs*, Select*, Tooltip*, Popover*, Command*, Collapsible*, ScrollArea, Slider, Switch, Progress, Separator, Label, Textarea, AspectRatio — + `cn` + tokens (the gui product layer is kept off root, at `/product`, so web consumers never pull the native runtime) |
+| `@hanzo/ui/shadcn` | the shadcn backend barrel (explicit) |
+| `@hanzo/ui/gui` · `/product` | the @hanzo/gui product layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
+| `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
+| `@hanzo/ui/core` · `/tokens` | cn, Geist font vars, the @hanzo/tokens color/theme/radii/spacing scale |
+| `@hanzo/ui/theme.css` | the self-contained Hanzo identity stylesheet |
+| `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
+| `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
+| `@hanzo/ui/{canvas,wallet,network,billing,dashboard,usage,gitops}` | the optional-peer kits (unchanged; each re-exports its home package) |
+
+### modularizeImports support
+
+`scripts/gen-primitives.mjs` reads the shadcn barrel and emits one
+`src/primitives/<Member>.tsx` per exported value (re-export from the backend).
+This makes `@hanzo/ui/primitives/Button` etc. resolve, so a host whose
+`next.config` rewrites `@hanzo/ui` → `@hanzo/ui/primitives/{{member}}` works
+unchanged. Re-run `pnpm gen:primitives` after changing the surface.
+
+NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace, installs
+standalone, and publishes via the maintainer flow, not `publish.yml`. Because the
+optional-peer kits (canvas/dashboard/gitops/ui-shadcn/usage) are not on the public
+registry, a standalone install must skip auto-installing peers. `.npmrc` and
+`pnpm-lock.yaml` are gitignored here, so create the `.npmrc` once:
+
+```bash
+cd pkg/ui
+printf 'auto-install-peers=false\nstrict-peer-dependencies=false\n' > .npmrc
+pnpm install --ignore-workspace     # component-surface deps (radix, cmdk, sonner, …) + @hanzo/tokens
+pnpm gen:primitives                 # refresh the per-member entrypoints
+pnpm typecheck:ui                   # scoped typecheck of the component surface (green)
+```
+
+`@hanzo/tokens` (`pkgs/tokens`) must be built first (`pnpm --filter @hanzo/tokens build`)
+so the `file:` link resolves. The scoped `typecheck:ui` excludes the optional-peer
+subpaths, whose homes aren't installed standalone.
+
+The **kits** = canvas, wallet, network, billing, dashboard, usage, gitops, data.
+Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name` export
++ an optional peer/devDep. `pkg/*` is a pnpm workspace member (for `workspace:*`
+dev links), but `pkg/ui` publishes via the maintainer flow, not `publish.yml`
+(which auto-publishes only `pkgs/*` on a version bump — see PUBLISH_GUIDE.md). The
+shared shell lives here too: `AppHeader` + `BrandMark` (@hanzo/logo) +
+`OrgSwitcher` + `orgScope` (the console org-scope contract, hoisted per #36). Lux
+surfaces use `@luxfi/web3` for wallet/login; `@hanzo/ui/wallet`+`/network` are the
+Hanzo-branded equivalents.
 
 ## Repository Structure
 
