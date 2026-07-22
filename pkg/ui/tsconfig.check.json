@@ -11,6 +11,7 @@
     "types",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "src/backends/svelte",
     "src/canvas.ts",
     "src/gitops.ts",
     "src/wallet.ts",
