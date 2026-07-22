@@ -16,6 +16,11 @@
       "types": "./src/backends/gui/index.ts",
       "default": "./src/backends/gui/index.ts"
     },
+    "./svelte": {
+      "svelte": "./src/backends/svelte/index.ts",
+      "types": "./src/backends/svelte/index.ts",
+      "default": "./src/backends/svelte/index.ts"
+    },
     "./components": {
       "types": "./src/components.ts",
       "default": "./src/components.ts"
@@ -102,6 +107,7 @@
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "typecheck:ui": "tsc -p tsconfig.check.json",
+    "check:svelte": "svelte-check --tsconfig ./tsconfig.svelte.json",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -142,9 +148,13 @@
     "@hanzo/usage": ">=0.1.0",
     "next-themes": ">=0.2.1",
     "react": ">=19",
-    "react-dom": ">=19"
+    "react-dom": ">=19",
+    "svelte": ">=5"
   },
   "peerDependenciesMeta": {
+    "svelte": {
+      "optional": true
+    },
     "@hanzo/canvas": {
       "optional": true
     },
@@ -174,6 +184,8 @@
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "svelte": "^4.2.20",
+    "svelte-check": "^3.8.6",
     "typescript": "^5.7.2",
     "vitest": "^2.1.9"
   },
