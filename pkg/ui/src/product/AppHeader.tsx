@@ -13,22 +13,22 @@
  */
 import { useState, type ReactNode } from 'react'
 import { Button, Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
-import { CreditCard, Grip, LogOut, Settings2, UserRound } from '@hanzogui/lucide-icons-2'
+import { AppWindow, Bot, CreditCard, Grip, LayoutGrid, LogOut, MessageCircle, Settings2, Sparkles, UserRound, Users } from '@hanzogui/lucide-icons-2'
 
 import { BrandMark } from './BrandMark'
 import { ThemeToggle } from './ThemeToggle'
+import { otherSurfaces, type Surface, type SurfaceId } from './surfaces.data'
 
-/** One Hanzo surface the app switcher offers. */
-export type Surface = { id: string; label: string; href: string; hint?: string }
-
-/** The five Hanzo surfaces (cloud opens the console). */
-export const SURFACES: Surface[] = [
-  { id: 'ai', label: 'Hanzo AI', href: 'https://hanzo.ai', hint: 'hanzo.ai' },
-  { id: 'cloud', label: 'Cloud', href: 'https://console.hanzo.ai', hint: 'console' },
-  { id: 'console', label: 'Console', href: 'https://console.hanzo.ai', hint: 'console.hanzo.ai' },
-  { id: 'app', label: 'App', href: 'https://hanzo.app', hint: 'hanzo.app' },
-  { id: 'team', label: 'Team', href: 'https://hanzo.team', hint: 'hanzo.team' },
-]
+/** The per-surface glyph — keyed by `Surface.id`, so each surface reads distinctly. */
+const SURFACE_ICON = {
+  ai: Sparkles,
+  console: LayoutGrid,
+  app: AppWindow,
+  chat: MessageCircle,
+  bot: Bot,
+  team: Users,
+  billing: CreditCard,
+} as const satisfies Record<SurfaceId, unknown>
 
 const openHref = (href: string) => {
   if (typeof window !== 'undefined') window.open(href, '_blank', 'noopener')
@@ -56,7 +56,9 @@ export type AppHeaderProps = {
   org?: ReactNode
   /** Free slot between the org slot and the right cluster. */
   children?: ReactNode
-  /** App-switcher surfaces; [] hides the switcher. */
+  /** The surface this header renders on — omitted from the switcher (no self-link). */
+  current?: SurfaceId
+  /** App-switcher surfaces; defaults to every surface but `current`. [] hides it. */
   surfaces?: Surface[]
   /** Open a surface — default `window.open` (new tab). */
   open?: (surface: Surface) => void
@@ -78,7 +80,8 @@ export function AppHeader({
   onBrand,
   org,
   children,
-  surfaces = SURFACES,
+  current,
+  surfaces,
   open,
   user,
   menu,
@@ -90,6 +93,7 @@ export function AppHeader({
 }: AppHeaderProps) {
   const [appsOpen, setAppsOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const items = surfaces ?? otherSurfaces(current)
   const launch = (s: Surface) => {
     setAppsOpen(false)
     if (open) open(s)
@@ -112,25 +116,29 @@ export function AppHeader({
         {children}
       </XStack>
 
-      {surfaces.length > 0 ? (
+      {items.length > 0 ? (
         <Popover open={appsOpen} onOpenChange={setAppsOpen} placement="bottom-end">
           <Popover.Trigger asChild>
             <Button size="$2" chromeless icon={<Grip size={16} />} aria-label="Apps" />
           </Popover.Trigger>
           <Popover.Content bordered elevate p="$2" width={230} bg="$color2" borderColor="$borderColor">
             <YStack gap="$1">
-              {surfaces.map((s) => (
-                <XStack key={s.id} onPress={() => launch(s)} cursor="pointer" items="center" gap="$2.5" px="$2" py="$2" rounded="$3" hoverStyle={{ bg: '$color5' }}>
-                  <Text flex={1} fontSize="$2" fontWeight="600" color="$color12">
-                    {s.label}
-                  </Text>
-                  {s.hint ? (
-                    <Text fontSize="$1" color="$color10">
-                      {s.hint}
+              {items.map((s) => {
+                const Icon = SURFACE_ICON[s.id]
+                return (
+                  <XStack key={s.id} onPress={() => launch(s)} cursor="pointer" items="center" gap="$2.5" px="$2" py="$2" rounded="$3" hoverStyle={{ bg: '$color5' }}>
+                    <Icon size={16} />
+                    <Text flex={1} fontSize="$2" fontWeight="600" color="$color12">
+                      {s.label}
                     </Text>
-                  ) : null}
-                </XStack>
-              ))}
+                    {s.hint ? (
+                      <Text fontSize="$1" color="$color10">
+                        {s.hint}
+                      </Text>
+                    ) : null}
+                  </XStack>
+                )
+              })}
             </YStack>
           </Popover.Content>
         </Popover>
