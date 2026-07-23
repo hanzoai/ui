@@ -1,8 +1,28 @@
-// The framework-agnostic event client. Buffers events and flushes them as one
-// batch to Hanzo Cloud — /v1/analytics normally, /v1/tracker via sendBeacon on
-// page unload. It NEVER sends the org/tenant: the server stamps that from the
-// validated session. The client only supplies its own visitor identity. Errors
-// are just events (type:'error') on the same stream — one client, one pipe.
+// The framework-agnostic event client. Buffers events and flushes them as ONE
+// batch through the ONE Hanzo Cloud ingestion front door:
+//
+//   POST {host}/v1/event   body: { batch: [Event, …] }   -> { accepted, dropped }
+//
+// It NEVER sends the org/tenant: Cloud resolves that server-side (from the
+// validated session, or the signed publishable key) and stamps it. The client
+// only supplies its own visitor identity. Errors are just events (type:'error')
+// on the same stream — one client, one pipe, lensed server-side into product
+// analytics (insights), web analytics (analytics), and error tracking (sentry).
+//
+// Auth is orthogonal — the SAME body to the SAME door, differing only in how the
+// caller proves its tenant:
+//
+//   • cookie/session app (host:'')  — same-origin credentials ride the request.
+//   • bearer app (getToken)         — Authorization: Bearer <jwt>.
+//   • publishable-key app (ingestKey: 'pk_…') — Authorization: Bearer pk_… on
+//     fetch, ?ingest_key=pk_… on a headerless page-unload beacon. Write-only and
+//     safe to ship in a bundle; the door HMAC-verifies it to an org server-side.
+//
+// The wire is the canonical `Event` (== the cloud CaptureEvent): its `type` field
+// is what Cloud folds to event_type='error', so a captured exception reaches the
+// error-tracking lens. (A four-field {event,distinctId,time,properties} object has
+// no `type`, so it can never be lensed as an error — this batched Event wire is
+// the one that lights up all three lenses.)
 
 import {
   parseAttribution,
@@ -28,10 +48,16 @@ import type {
   WireEvent,
 } from './types'
 
-export const VERSION = '0.2.0'
+export const VERSION = '0.3.0'
 
-const ANALYTICS_PATH = '/v1/analytics'
-const TRACKER_PATH = '/v1/tracker' // beacon-on-unload alias
+const EVENT_PATH = '/v1/event' // the ONE canonical ingestion front door
+const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
+
+/** appendQuery adds a single query param to a URL string — used to carry a
+ *  publishable key on a headerless sendBeacon (?ingest_key=…). */
+function appendQuery(url: string, key: string, value: string): string {
+  return url + (url.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(value)
+}
 
 function uid(): string {
   const c = typeof crypto !== 'undefined' ? crypto : undefined
@@ -55,12 +81,15 @@ function normalizeError(err: unknown): Exception {
 const isBrowser = () => typeof window !== 'undefined'
 
 /** DefaultTransport: fetch(keepalive) for authenticated/normal sends;
- *  navigator.sendBeacon for headerless page-unload beacons. */
+ *  navigator.sendBeacon for headerless page-unload beacons. A bearer (a JWT or a
+ *  publishable pk_ key) rides Authorization on fetch; on a beacon — which cannot
+ *  set headers — a publishable key rides the ?ingest_key query instead. */
 class DefaultTransport implements Transport {
-  send(url: string, body: string, opts: { beacon: boolean; token?: string }): void {
+  send(url: string, body: string, opts: { beacon: boolean; token?: string; ingestKey?: string }): void {
     if (opts.beacon && isBrowser() && typeof navigator.sendBeacon === 'function') {
+      const beaconUrl = opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url
       try {
-        navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }))
+        navigator.sendBeacon(beaconUrl, new Blob([body], { type: 'application/json' }))
         return
       } catch {
         /* fall through to fetch */
@@ -68,7 +97,8 @@ class DefaultTransport implements Transport {
     }
     if (typeof fetch !== 'function') return
     const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-    if (opts.token) headers.Authorization = `Bearer ${opts.token}`
+    const bearer = opts.ingestKey ?? opts.token
+    if (bearer) headers.Authorization = `Bearer ${bearer}`
     void fetch(url, {
       method: 'POST',
       headers,
@@ -76,7 +106,7 @@ class DefaultTransport implements Transport {
       keepalive: true,
       credentials: 'include',
     }).catch(() => {
-      /* analytics loss is acceptable; never throw into the app */
+      /* telemetry loss is acceptable; never throw into the app */
     })
   }
 }
@@ -96,7 +126,7 @@ export class Analytics {
 
   constructor(config: AnalyticsConfig) {
     this.cfg = {
-      host: '',
+      host: DEFAULT_HOST,
       batchSize: 20,
       flushIntervalMs: 5000,
       enabled: true,
@@ -107,8 +137,9 @@ export class Analytics {
   }
 
   /** init is idempotent and browser-only for its side effects: capture first-touch
-   *  attribution, hydrate cohort, and register the unload flush. Safe to call from
-   *  a React effect on every render. */
+   *  attribution, hydrate cohort, register the unload flush, and (unless opted out)
+   *  auto-capture unhandled errors. Safe to call from a React effect on every
+   *  render. */
   init(): void {
     if (this.started || !this.cfg.enabled) return
     this.started = true
@@ -130,7 +161,8 @@ export class Analytics {
     window.addEventListener('pagehide', () => this.flush(true))
 
     // Auto error capture — the drop-in @sentry replacement. Unhandled errors and
-    // rejected promises become type:'error' events on the same stream.
+    // rejected promises become type:'error' events on the same stream, which Cloud
+    // stamps event_type='error' → the sentry.hanzo.ai lens.
     if (this.cfg.captureErrors) {
       window.addEventListener('error', (e: ErrorEvent) => {
         this.captureError(e.error ?? e.message, { handled: false })
@@ -174,11 +206,12 @@ export class Analytics {
   track = this.capture.bind(this)
 
   /** captureError records an exception as a first-class error event — the ONE
-   *  error path (subsumes @sentry). A caught error, an unhandled rejection, or a
-   *  manual report all become a type:'error' event on the same stream, lensed to
-   *  the error-tracking view server-side. Never throws back into the app; errors
-   *  are higher-signal than pageviews, so it flushes promptly (a crash may unload
-   *  the page moments later). */
+   *  error path (subsumes @sentry). A caught error, an unhandled rejection, a
+   *  React render error, or a manual report all become a type:'error' event on the
+   *  same stream; Cloud folds the exception into properties.$exception and stamps
+   *  event_type='error', so it surfaces in the error-tracking lens. Never throws
+   *  back into the app; errors are higher-signal than pageviews, so it flushes
+   *  promptly (a crash may unload the page moments later). */
   captureError(
     err: unknown,
     context?: { handled?: boolean; properties?: Record<string, unknown> },
@@ -198,21 +231,32 @@ export class Analytics {
     this.cohort = mergeCohort(patch)
   }
 
-  /** flush drains the buffer to the server as one batch. beacon=true uses the
-   *  unload-safe path. */
+  /** flush drains the buffer to the server as ONE batch through the ONE ingest
+   *  front door POST /v1/event, body { batch: [Event…] }. beacon=true selects the
+   *  unload-safe transport. Auth is orthogonal to the wire:
+   *
+   *    • publishable key set → rides Authorization: Bearer pk_… (fetch) or
+   *      ?ingest_key=pk_… (beacon), so unload beacons work anonymously.
+   *    • else a bearer JWT rides Authorization (fetch only — sendBeacon cannot
+   *      carry a header, so token apps fall back to keepalive fetch on unload).
+   *    • else a cookie app rides same-origin credentials (beacon carries the
+   *      cookie fine).
+   */
   flush(beacon = false): void {
     if (!this.cfg.enabled || this.queue.length === 0) return
     const batch = this.queue
     this.queue = []
     this.clearTimer()
-    const token = this.cfg.getToken?.() ?? undefined
-    // sendBeacon cannot carry an Authorization header, so token apps always use
-    // keepalive fetch; cookie apps may beacon to the tracker route on unload.
+
+    const key = this.cfg.ingestKey?.trim() || undefined
+    // A publishable key and a bearer JWT are mutually exclusive doors; the key wins.
+    const token = key ? undefined : this.cfg.getToken?.() ?? undefined
+    // Only a headerful bearer JWT blocks the beacon: sendBeacon cannot set an
+    // Authorization header. A pk_ rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token
-    const path = useBeacon ? TRACKER_PATH : ANALYTICS_PATH
     const body = JSON.stringify({ batch })
-    if (this.cfg.debug) console.debug('[analytics] flush', batch.length, path)
-    this.transport.send(this.cfg.host + path, body, { beacon: useBeacon, token: token ?? undefined })
+    if (this.cfg.debug) console.debug('[event] flush →', EVENT_PATH, batch.length)
+    this.transport.send(this.cfg.host + EVENT_PATH, body, { beacon: useBeacon, token, ingestKey: key })
   }
 
   // ── internals ────────────────────────────────────────────────────────────
