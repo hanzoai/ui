@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/event",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Hanzo Event — the ONE telemetry client. Emits every kind of event — pageview/event/identify/group AND errors — to the ONE Hanzo Cloud front door (POST /v1/event) as one batched stream, lensed server-side into product analytics (insights), web analytics (analytics), and error tracking (sentry). First-touch attribution, beacon-on-unload, auto error capture, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -10,7 +10,7 @@
   "author": "Hanzo AI <dev@hanzo.ai>",
   "license": "BSD-3-Clause",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
@@ -44,14 +44,24 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./react": {
-      "types": "./dist/react.d.ts",
-      "import": "./dist/react.mjs",
-      "require": "./dist/react.js"
+      "import": {
+        "types": "./dist/react.d.ts",
+        "default": "./dist/react.mjs"
+      },
+      "require": {
+        "types": "./dist/react.d.cts",
+        "default": "./dist/react.cjs"
+      }
     }
   },
   "peerDependencies": {

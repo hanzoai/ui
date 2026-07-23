@@ -1,5 +1,15 @@
 # @hanzo/event
 
+## 0.3.1
+
+### Patch Changes
+
+- Fixed the CommonJS build: under `"type": "module"` the CJS bundle emitted to
+  `dist/index.js` was parsed as ESM, so `require('@hanzo/event')` threw
+  `ReferenceError: exports is not defined in ES module scope`. CJS is now emitted
+  as `.cjs` (ESM stays `.mjs`) and `exports` maps each condition to its own
+  types, so both `import` and `require` resolve. No API change.
+
 ## 0.3.0
 
 ### Minor Changes
