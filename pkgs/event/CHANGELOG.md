@@ -1,5 +1,24 @@
 # @hanzo/event
 
+## 0.3.0
+
+### Minor Changes
+
+- Repointed the whole client onto the ONE canonical Hanzo Cloud ingestion front
+  door: **`POST /v1/event`** with the batched `{ batch: [Event, …] }` wire,
+  replacing the deprecated `/v1/analytics` + `/v1/tracker` split (and the
+  interim `/v1/ingest` publishable-key door — publishable keys now authenticate
+  directly on `/v1/event`). One door, one wire, for cookie, bearer, and
+  publishable-key auth alike.
+- Errors now reliably reach the error-tracking lens. The batched Event wire
+  carries the `type` field, which Cloud folds to `event_type='error'`; the
+  captured exception rides the top-level `error` field (Cloud lifts it into
+  `properties.$exception`). `window.onerror`, `unhandledrejection`, and the React
+  `ErrorBoundary` all funnel here.
+- The publishable key (`ingestKey`) rides `Authorization: Bearer pk_…` on fetch
+  and `?ingest_key=pk_…` on a headerless unload beacon, so public pages emit to
+  all three lenses (web + product + error) anonymously.
+
 ## 0.2.0
 
 ### Minor Changes
