@@ -96,6 +96,42 @@ One way: bump a package's `version` in its `package.json` and merge to `main`.
 publishes it to npm (needs the repo `NPM_TOKEN` secret). No changesets, no
 version-PR bot — the semver bump is the trigger.
 
+## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
+
+`@hanzo/event` is the single canonical telemetry client for every Hanzo surface.
+It emits **one** kind of thing — an `Event` — to **one** door: `POST /v1/event`
+with the batched `{ batch: [Event, …] }` wire, `-> { accepted, dropped }`.
+Pageview, event, identify, group, AND errors are all events on that one stream;
+Cloud resolves the tenant server-side (session / publishable `pk_` key) and fans
+the stream to the read lenses (analytics = web, insights = product, sentry =
+errors). The client **never** sends the org. Entries: `.` (framework-agnostic:
+`createAnalytics`, `EVENTS`, `GOALS`, attribution helpers) and `./react`
+(`AnalyticsProvider`, `useAnalytics`, `usePageview`, `ErrorBoundary`). Auto error
+capture (window.onerror / unhandledrejection / React boundary) makes it the
+drop-in `@sentry` replacement. SSR-safe, fail-soft, beacon-on-unload.
+
+Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
+`"type": "module"` — a CJS `.js` is parsed as ESM and crashes `require()` with
+"exports is not defined"). Each `exports` condition carries its own types.
+
+### One way — supersessions (no divergent telemetry client)
+
+| Package | Status | Note |
+|---|---|---|
+| `@hanzo/event` | **canonical** | `pkgs/event`, posts `/v1/event` only |
+| `@hanzo/capture` (npm) | **deprecated → `@hanzo/event`** | the old name of this package; `@hanzo/event` is a superset |
+| `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
+
+The legacy telemetry stack in **`hanzoai/universe`** — `@hanzo/analytics`
+(browser, hardcoded org keys → `analytics.hanzo.ai`), `@hanzo/insights` (shim →
+`@hanzo/analytics`), and `@hanzo/events` (server SDK, password + `tenantId` auth,
+LLM traces) — predates `/v1/event` and still emits directly to the lenses. Its
+north star is `@hanzo/event`, but the migration is **cross-repo and API-breaking**
+(different call surfaces; the browser pair needs `/v1/event` publishable-key
+support, and `@hanzo/events` is a server/LLM-obs concern that maps to `/v1/event`
++ the o11y `gen_ai` plane, not the browser client). Tracked as a CTO-gated
+follow-on — not reconciled here.
+
 ## Three-Layer Architecture
 
 1. **Components** (`registry/{style}/ui/`) -- Single primitives (Button, Card, Dialog). CLI-installable.
