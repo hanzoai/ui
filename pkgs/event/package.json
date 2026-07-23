@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/event",
-  "version": "0.2.0",
-  "description": "Hanzo Event — the ONE telemetry client. Emits every kind of event — pageview/event/identify/group AND errors — to Hanzo Cloud (/v1/analytics + /v1/tracker) on one batched stream, lensed server-side into product analytics, web analytics, and error tracking. First-touch attribution, beacon-on-unload, auto error capture, a shared event + goal vocabulary. Subsumes @sentry.",
+  "version": "0.3.0",
+  "description": "Hanzo Event — the ONE telemetry client. Emits every kind of event — pageview/event/identify/group AND errors — to the ONE Hanzo Cloud front door (POST /v1/event) as one batched stream, lensed server-side into product analytics (insights), web analytics (analytics), and error tracking (sentry). First-touch attribution, beacon-on-unload, auto error capture, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
