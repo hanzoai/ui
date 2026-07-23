@@ -1,9 +1,15 @@
 # @hanzo/products
 
-The canonical Hanzo product catalog — ONE typed contract + the two code maps that
-can't live in a database + a commerce-backed client with a checked-in snapshot
-fallback. The single source of truth the console, docs, marketing site, and pricing
-all read, so the product taxonomy / icons / colors can never drift across surfaces.
+The canonical Hanzo product source of truth. Two orthogonal, React-free concerns in
+one tree-shakeable barrel:
+
+1. **Catalog** — the console operational taxonomy (below): ONE typed contract + the
+   two code maps that can't live in a database + a commerce-backed client with a
+   checked-in snapshot fallback. The single source of truth the console, docs,
+   marketing site, and pricing all read, so the product taxonomy / icons / colors
+   can never drift across surfaces.
+2. **Ecosystem shell** — the "Meet Hanzo" header/footer/menu (see the section at the
+   end): the six-product family + the shared chrome every property renders.
 
 ## Decomplected design
 
@@ -91,3 +97,61 @@ validates every `iconKey` against the set's shipped type declarations — no ESM
 The snapshot was bootstrapped from the console2 catalog (the richest hand list).
 Thereafter commerce is the editable source; the snapshot is the offline fallback +
 the commerce seed. Keep it in sync when the seed changes.
+
+## Ecosystem shell ("Meet Hanzo") — the second concern
+
+The shared header / footer / mega-menu every property renders, driven by ONE spec so
+the family / domains / actions / destinations never diverge. All React-free data;
+each renderer (Next/React, Svelte, Tamagui, Fumadocs) maps a `Link.id` / `Product.id`
+/ `Surface.id` to its own glyph — the data stays glyph-free.
+
+Modules:
+
+- `family.ts` — the six flagship products (`FAMILY`) + the `hanzo.ai` `ROOT`. Each
+  `Product` = `{ id, name, short, domain, url, job, verb?, action }`. The six verbs
+  (one each): Chat **Use** · App **Build** · Team **Work** · Studio **Create AI** ·
+  Bot **Deploy** · Cloud **Operate**. `findProduct(id)`.
+- `destinations.ts` — `ORIGIN` (the only place a host string lives) + `DESTINATIONS`
+  (the 14 canonical shared links: products, apps, models, cloudProducts, downloads,
+  browserExtension, desktop, vscode, cli, sdks, docs, apiReference, console, status).
+- `menu.ts` — `MEET_HANZO_MENU` = eyebrow + all-products link + the six-product grid
+  (`= FAMILY`) + a utility row (Models · Enso · Managed Agents · Hanzo Dev · MCP
+  Tools · Documentation) + an install row (Desktop · Browser · VS Code · CLI · SDKs ·
+  All downloads).
+- `footer.ts` — `FOOTER` = 6 columns (Products · AI Platform · Install · Developers ·
+  Resources · Company) + the legal bottom bar.
+- `header.ts` — `HEADERS: Record<SiteId, SiteHeader>` — per-property local nav +
+  primary action, `productId` tying each site to a `Product`. `findHeader(site)`.
+- `surfaces.ts` — `SURFACES`, the collapsed launcher registry (below) +
+  `surfaceById` / `otherSurfaces`.
+- `link.ts` — the `Link` / `Action` atoms.
+
+### De-dupe: the collapsed launcher registry
+
+`surfaces.ts` is the ONE launcher list, collapsing the two that used to drift:
+
+- **`SURFACES`** (this repo, `pkg/ui/src/product/surfaces.data.ts`) — now a
+  re-export shim: it sources the DATA from `@hanzo/products` (`surfaceById`) and
+  preserves the legacy `Surface { id, label, href, hint }` / 7-literal `SurfaceId` /
+  order byte-for-byte, so `AppHeader` needs no change. WIRED + verified in-repo.
+- **`HANZO_APPS`** (`@hanzogui/shell`, a separate repo) — the shim is ready but
+  **gated on publishing** `@hanzo/products` (cross-repo; a workspace link is not
+  possible). Until then that list stays local. When published, map each canonical
+  surface `id` → the shell's inline SVG icon; keep `zach` (personal portal) and
+  `world` local unless confirmed canonical.
+
+The six product surfaces derive from `FAMILY` (single source); the root surface keeps
+the legacy launcher id `"ai"` (not the product id `"hanzo"`); the platform surfaces
+(Console · Billing · Account · Admin · Gateway · Platform) are launcher-only real
+properties, not flagship products.
+
+### Href provenance (honest)
+
+Addresses the spec pins go through `DESTINATIONS`. Marketing sub-pages the spec names
+but does not pin are built from `ORIGIN` on the honest conventions
+`hanzo.ai/<slug>` · `docs.hanzo.ai/<slug>` · `/legal/<slug>` · `github.com/hanzoai`.
+No host is fabricated (a test asserts every absolute href resolves to a known Hanzo
+host and none carries an `/api/` path). Convention slugs to confirm before rollout:
+Managed Agents / Hanzo Dev / MCP Tools (`hanzo.ai/{agents,dev,mcp}`), API Platform
+(`api.hanzo.ai`), CLI Reference (`docs.hanzo.ai/cli`), the Resources/Company slugs,
+and the in-site action paths (`/new`, `/`).

@@ -7,6 +7,8 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "types": ["node", "react"],
+    "ignoreDeprecations": "6.0",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "declaration": true,
