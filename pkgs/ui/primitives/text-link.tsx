@@ -12,6 +12,7 @@ export const TextLink = ({
   url: string;
 } & React.ButtonHTMLAttributes<HTMLSpanElement>) => (
   <span
+    data-slot="text-link"
     className={cn('cursor-pointer text-white underline', className)}
     onClick={() => {
       window.open(url);
