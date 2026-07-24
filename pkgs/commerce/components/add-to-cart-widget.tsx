@@ -148,6 +148,9 @@ const AddToCartWidget: React.FC<{
         </div>
       <Button
         aria-label={'Add another ' + item.title + ' to the cart'}
+        itemProp='potentialAction'
+        itemScope
+        itemType='https://schema.org/AddAction'
         size={ghost || priSmaller ? 'xs' : 'default'}
 
         variant={primary || priSmaller ? 'primary' : 'ghost'}
@@ -168,6 +171,9 @@ const AddToCartWidget: React.FC<{
   ) : (
     <Button
       aria-label={'Add a ' + item.title + ' to cart'}
+      itemProp='potentialAction'
+      itemScope
+      itemType='https://schema.org/AddAction'
       size={ghost || priSmaller ? 'xs' : 'default'}
       variant={ghost ? 'ghost' : (primary || priSmaller ? 'primary' : 'outline')}
       rounded={ROUNDED_VAL}
