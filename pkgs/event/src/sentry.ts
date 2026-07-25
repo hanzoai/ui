@@ -148,13 +148,43 @@ export function framesFromStack(stack: string | undefined): SentryFrame[] {
 /** normalizeError coerces an unknown throwable into {name, message, stack}. */
 export function normalizeError(err: unknown): { name: string; message: string; stack?: string } {
   if (err instanceof Error) {
-    return { name: err.name || 'Error', message: err.message || String(err), stack: err.stack }
+    // `name`, `message` and `stack` are ordinary getters, and the thrown object is
+    // the least trustworthy input this library handles — any of them may throw.
+    // Losing the whole report to a hostile getter is not acceptable.
+    const name = read(err, 'name')
+    const message = read(err, 'message')
+    const stack = read(err, 'stack')
+    return {
+      name: typeof name === 'string' && name ? name : 'Error',
+      message: typeof message === 'string' && message ? message : str(err),
+      stack: typeof stack === 'string' ? stack : undefined,
+    }
   }
   if (typeof err === 'string') return { name: 'Error', message: err }
   try {
-    return { name: 'Error', message: JSON.stringify(err) }
+    return { name: 'Error', message: JSON.stringify(err) ?? str(err) }
   } catch {
-    return { name: 'Error', message: String(err) }
+    return { name: 'Error', message: str(err) }
+  }
+}
+
+/** read pulls a property off a possibly-hostile value without letting a throwing
+ *  getter escape. */
+function read(o: unknown, k: string): unknown {
+  try {
+    return (o as Record<string, unknown>)[k]
+  } catch {
+    return undefined
+  }
+}
+
+/** str coerces to a string without letting a throwing toString/Symbol.toPrimitive
+ *  escape. */
+function str(v: unknown): string {
+  try {
+    return String(v)
+  } catch {
+    return '[unstringifiable]'
   }
 }
 
