@@ -149,6 +149,26 @@ createAnalytics({
 })
 ```
 
+## Taxonomy, funnels & goals
+
+**[TAXONOMY.md](./TAXONOMY.md) is the canonical spec** — naming convention,
+property rules, `identify`/`group` semantics, the funnels for hanzo.ai /
+hanzo.app / hanzo.chat, and the exact emit site (file:line) of every event on
+each surface. Read it before adding an event.
+
+`FUNNELS` (see `funnels.ts`) is the one funnel registry: each journey is an
+ordered list of steps naming `EVENTS` values, scoped by `product`. A funnel that
+spans origins while logged out is marked `join: 'aggregate'` — two origins mean
+two `anonymousId`s, so a per-person rate across them would be a lie.
+
+```ts
+import { FUNNELS, GOALS } from '@hanzo/event'
+
+FUNNELS.appShip.steps.map((s) => s.event)
+// ['$pageview','build_started','generation_completed','deploy_started','deploy_succeeded']
+GOALS.signup.funnel // derived from FUNNELS.signup — never restated
+```
+
 ## Goals & cohorts
 
 `GOALS` and `COHORTS` (see `goals.ts`) are the shared, machine-readable insights
