@@ -131,16 +131,42 @@ version-PR bot — the semver bump is the trigger.
 ## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
 
 `@hanzo/event` is the single canonical telemetry client for every Hanzo surface.
-It emits **one** kind of thing — an `Event` — to **one** door: `POST /v1/event`
-with the batched `{ batch: [Event, …] }` wire, `-> { accepted, dropped }`.
-Pageview, event, identify, group, AND errors are all events on that one stream;
-Cloud resolves the tenant server-side (session / publishable `pk_` key) and fans
-the stream to the read lenses (analytics = web, insights = product, sentry =
-errors). The client **never** sends the org. Entries: `.` (framework-agnostic:
-`createAnalytics`, `EVENTS`, `GOALS`, attribution helpers) and `./react`
-(`AnalyticsProvider`, `useAnalytics`, `usePageview`, `ErrorBoundary`). Auto error
-capture (window.onerror / unhandledrejection / React boundary) makes it the
-drop-in error-tracking replacement. SSR-safe, fail-soft, beacon-on-unload.
+ONE API surface over **TWO** planes — the client never sends the org; the server
+resolves the tenant.
+
+1. **Event stream** — pageview/event/identify/group (and an error breadcrumb),
+   batched to `POST {host}/v1/event` with `{ batch: [Event, …] }`
+   `-> { accepted, dropped }`. Tenant from the session or a publishable `pk_` key.
+2. **Error plane** — every captured exception is ALSO framed as a real **Sentry
+   envelope** and POSTed to `POST {dsn.origin}/v1/sentry/{projectId}/envelope/?sentry_key=…`.
+   This is the ONLY thing that reaches the Sentry error dashboard.
+
+> **There is NO server-side fan-out from `/v1/event` into Sentry.** Versions
+> ≤ 0.3.1 claimed there was ("lensed server-side into … error tracking"). There
+> is not: cloud's handler folds the exception into `properties.$exception`,
+> writes one row to the event warehouse (readable via `GET /v1/errors`), and
+> stops. Because every property believed that claim, the whole fleet reported
+> **zero** errors to Sentry until 0.3.2 added the envelope. Do not re-collapse
+> these planes.
+
+Configure the error plane with `dsn` (or `NEXT_PUBLIC_HANZO_EVENT_DSN`), minted
+per property via `POST /v1/sentry/projects`. The DSN key is publishable and
+write-only — safe in a bundle, same trust class as `pk_`. **No DSN => the error
+plane is inert** (fail-safe: nothing sent, nothing thrown, event stream
+unaffected); assert `client.errorPlaneEnabled` if you need to know.
+
+Note that web analytics is a THIRD, separate plane and is NOT this client — it is
+the `analytics.hanzo.ai/hz.js` tag, which speaks a different wire (a bare JSON
+array of `{site, ts, type, …}`). `analytics.hanzo.ai/v1/event` and
+`api.hanzo.ai/v1/event` share a path spelling but are different protocols; point
+this client at the API host, never the analytics host.
+
+Entries: `.` (framework-agnostic: `createAnalytics`, `EVENTS`, `GOALS`,
+attribution + DSN/scrub helpers) and `./react` (`AnalyticsProvider`,
+`useAnalytics`, `usePageview`, `ErrorBoundary`). Auto error capture
+(window.onerror / unhandledrejection / React boundary) makes it the drop-in
+error-tracking replacement. Secrets and PII are scrubbed client-side before an
+error leaves the device. SSR-safe, fail-soft, beacon-on-unload.
 
 Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
 `"type": "module"` — a CJS `.js` is parsed as ESM and crashes `require()` with
@@ -153,6 +179,7 @@ Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
 | `@hanzo/event` | **canonical** | `pkgs/event`, posts `/v1/event` only |
 | `@hanzo/capture` (npm) | **deprecated → `@hanzo/event`** | the old name of this package; `@hanzo/event` is a superset |
 | `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
+| `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkgs/event` only. |
 
 ## Three-Layer Architecture
 
