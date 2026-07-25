@@ -1,13 +1,15 @@
 // Public types for the Hanzo Event client.
 
-/** The event kinds — the closed set the server understands. An error is just
- *  another event on the one stream (Cloud stamps type:'error' → event_type='error',
- *  the key the error-tracking lens filters on). */
+/** The event kinds — the closed set the server understands. `error` marks the
+ *  breadcrumb an exception leaves on the event stream (Cloud stamps
+ *  event_type='error' for the warehouse, GET /v1/errors). It does NOT reach the
+ *  Sentry dashboard — the envelope on the error plane does that. */
 export type EventKind = 'pageview' | 'event' | 'identify' | 'group' | 'error'
 
-/** A captured exception. Carried on a `type:'error'` event's top-level `error`
- *  field; Cloud folds it into properties.$exception and lenses the event into the
- *  error-tracking view (sentry.hanzo.ai). */
+/** A captured exception as it rides the EVENT STREAM — Cloud folds it into
+ *  properties.$exception for the warehouse. The richer copy (parsed stack frames,
+ *  grouping, release) travels on the error plane as a Sentry envelope; see
+ *  AnalyticsConfig.dsn. */
 export interface Exception {
   /** Constructor/class name, e.g. "TypeError". */
   type?: string
@@ -70,7 +72,8 @@ export interface WireEvent {
   revenue?: number
   currency?: string
   /** Set on `type:'error'` events — the captured exception. Cloud lifts it into
-   *  properties.$exception (foldException) for the error-tracking lens. */
+   *  properties.$exception (foldException) for the event warehouse. Not a Sentry
+   *  path: the envelope on the error plane is what feeds the dashboard. */
   error?: Exception
   properties?: Record<string, unknown>
   library?: string
@@ -88,7 +91,14 @@ export interface Transport {
   send(
     url: string,
     body: string,
-    opts: { beacon: boolean; token?: string; ingestKey?: string; contentType?: string },
+    opts: {
+      beacon: boolean
+      token?: string
+      ingestKey?: string
+      contentType?: string
+      /** Surface non-OK / failed ingest on the console. Never on by default. */
+      debug?: boolean
+    },
   ): void
 }
 
@@ -105,10 +115,11 @@ export interface AnalyticsConfig {
   /** Publishable ingest key (pk_…). When set, the client authenticates to the ONE
    *  front door `/v1/event` with this key instead of a bearer/cookie: it rides
    *  Authorization: Bearer pk_… on fetch and ?ingest_key=pk_… on a headerless
-   *  page-unload beacon, so ALL THREE lenses (web + product + error) light up with
-   *  no bearer and unload beacons work anonymously. The key is write-only (cannot
-   *  read) and safe to ship in a bundle; mint one per org via POST /v1/ingest/keys.
-   *  Recommended for marketing/public pages and the full sentry-subsuming setup. */
+   *  page-unload beacon, so anonymous traffic is accepted and unload beacons work
+   *  without a bearer. The key is write-only (cannot read) and safe to ship in a
+   *  bundle; mint one per org via POST /v1/ingest/keys. This authenticates the
+   *  EVENT STREAM only — the error plane authenticates independently with `dsn`,
+   *  and one does not stand in for the other. */
   ingestKey?: string
   /** Max events buffered before an automatic flush. */
   batchSize?: number
@@ -117,8 +128,9 @@ export interface AnalyticsConfig {
   /** Turn the client off entirely (e.g. opt-out / DNT). Defaults to enabled. */
   enabled?: boolean
   /** Auto-capture unhandled errors + promise rejections (window.onerror,
-   *  unhandledrejection) as error events. Browser-only. Defaults to enabled —
-   *  this is what makes the client a drop-in @sentry replacement. */
+   *  unhandledrejection). Browser-only, defaults to enabled. Together with `dsn`
+   *  this is what makes the client a drop-in @sentry replacement — without a
+   *  `dsn` the captures never reach the Sentry dashboard. */
   captureErrors?: boolean
   /** Override the transport (tests). */
   transport?: Transport
