@@ -44,7 +44,13 @@ import {
   deriveChannel,
 } from './attribution'
 import { PAGEVIEW } from './events'
-import { buildEnvelope, buildSentryEvent, parseDsn, type ErrorIdentity } from './sentry'
+import {
+  buildEnvelope,
+  buildSentryEvent,
+  normalizeError as normalizeThrowable,
+  parseDsn,
+  type ErrorIdentity,
+} from './sentry'
 import {
   anonId,
   sessionId,
@@ -110,16 +116,14 @@ function uid(): string {
 }
 
 /** Normalize anything thrown (Error | string | unknown) into an Exception. */
+/** normalizeError adapts the shared, hostile-input-safe normalizer (sentry.ts) to
+ *  the event stream's Exception shape. ONE normalizer serves both planes: a thrown
+ *  object may define `name`/`message`/`stack` as throwing getters, and when each
+ *  plane rolled its own reader the stream still lost the report that the error
+ *  plane had already survived. */
 function normalizeError(err: unknown): Exception {
-  if (err instanceof Error) {
-    return { type: err.name, message: err.message, stack: err.stack }
-  }
-  if (typeof err === 'string') return { message: err }
-  try {
-    return { message: JSON.stringify(err) }
-  } catch {
-    return { message: String(err) }
-  }
+  const n = normalizeThrowable(err)
+  return { type: n.name, message: n.message, stack: n.stack }
 }
 
 const isBrowser = () => typeof window !== 'undefined'
