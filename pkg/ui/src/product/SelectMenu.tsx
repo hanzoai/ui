@@ -1,16 +1,22 @@
 'use client'
 
 /**
- * SelectMenu — a compact, reusable dropdown select on @hanzo/gui Popover (the
- * console's proven dropdown idiom, same as OrgSwitcher/ScopeSwitcher). Renders a
- * labelled trigger ("All types", or the chosen option) and a popover list with a
- * check on the active option. Prop-driven + self-contained so it lifts into
- * `@hanzo/ui`. `value === null` is the "all"/unfiltered state.
+ * SelectMenu — a compact, reusable dropdown select on @hanzo/gui Popover. Renders a
+ * labelled trigger ("All types", or the chosen option) and a menu list with a check on
+ * the active option. Prop-driven + self-contained. `value === null` is the
+ * "all"/unfiltered state.
+ *
+ * Uses the ONE shared menu spec (MenuPanel + MenuItemView) so it is pixel-identical to
+ * DropdownMenu/ContextMenu, and the SAME portal-theme fix (PortalTheme) so it renders
+ * correctly through the portal under a nested `<Theme>`, light or dark.
  */
 import type { ReactElement } from 'react'
 import { useState } from 'react'
-import { Button, Popover, Text, XStack, YStack } from '@hanzo/gui'
-import { ChevronDown, Check } from '@hanzogui/lucide-icons-2'
+import { Button, Popover, Text } from '@hanzo/gui'
+import { ChevronDown } from '@hanzogui/lucide-icons-2'
+import { MenuItemView, MenuPanel } from './menu/items'
+import { PortalTheme, useThemeName } from './menu/portal-theme'
+import { menuKeyDown } from './menu/roving'
 
 export type SelectOption<T extends string> = { key: T; label: string }
 
@@ -32,6 +38,7 @@ export function SelectMenu<T extends string>({
   minWidth?: number
 }) {
   const [open, setOpen] = useState(false)
+  const themeName = useThemeName()
   const active = value === null ? null : options.find((o) => o.key === value) ?? null
   const triggerLabel = active ? active.label : allLabel
 
@@ -58,37 +65,16 @@ export function SelectMenu<T extends string>({
           </Text>
         </Button>
       </Popover.Trigger>
-      <Popover.Content bordered elevate p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
-        <YStack gap="$0.5" minW={minWidth} maxH={320} overflow="scroll">
-          <Row label={allLabel} active={value === null} onPress={() => pick(null)} />
-          {options.map((o) => (
-            <Row key={o.key} label={o.label} active={value === o.key} onPress={() => pick(o.key)} />
-          ))}
-        </YStack>
+      <Popover.Content backgroundColor="transparent" borderWidth={0} padding={0} elevation={0}>
+        <PortalTheme name={themeName}>
+          <MenuPanel minWidth={minWidth} maxHeight={320} onKeyDown={(e) => menuKeyDown(e, () => setOpen(false))}>
+            <MenuItemView label={allLabel} selected={value === null} onSelect={() => pick(null)} />
+            {options.map((o) => (
+              <MenuItemView key={o.key} label={o.label} selected={value === o.key} onSelect={() => pick(o.key)} />
+            ))}
+          </MenuPanel>
+        </PortalTheme>
       </Popover.Content>
     </Popover>
-  )
-}
-
-function Row({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
-  return (
-    <XStack
-      items="center"
-      gap="$2"
-      px="$2.5"
-      py="$1.5"
-      rounded="$3"
-      cursor="pointer"
-      hoverStyle={{ bg: '$color4' }}
-      bg={active ? '$color4' : 'transparent'}
-      onPress={onPress}
-    >
-      <XStack width={14} items="center" justify="center">
-        {active ? <Check size={13} /> : null}
-      </XStack>
-      <Text fontSize="$2" color="$color12" flex={1} numberOfLines={1}>
-        {label}
-      </Text>
-    </XStack>
   )
 }

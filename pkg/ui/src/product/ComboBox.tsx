@@ -1,22 +1,23 @@
 'use client'
 
 /**
- * ComboBox — a typeable select: a text input the user can type any value into,
- * PLUS a popover of LIVE options (filtered by what's typed) they can pick from.
- * The value is always exactly the input text, so a custom id is inherently
- * supported — selecting an option just fills the input. This is the ONE way the
- * console offers "pick from a live list OR type your own" (the model field, the
- * tool field). Prop-driven + self-contained (options/loading/error injected by the
- * caller), so it is orthogonal to the data source and lifts into `@hanzo/ui`.
+ * ComboBox — a typeable select: a text input the user can type any value into, PLUS a
+ * menu of LIVE options (filtered by what's typed) they can pick from. The value is
+ * always exactly the input text, so a custom id is inherently supported. Prop-driven +
+ * self-contained (options/loading/error injected by the caller).
  *
- * Idiom: the same @hanzo/gui Popover shell as OrgSwitcher/SelectMenu (bordered,
- * elevate, `$color2`). Options render in a portal above the DetailPane SlideOver.
+ * Uses the ONE shared menu spec (MenuPanel + MenuItemView) so options look identical to
+ * every other menu, and the SAME portal-theme fix (PortalTheme) so the list renders
+ * correctly through the portal above a SlideOver and under a nested `<Theme>`.
  */
 import { useMemo, useState } from 'react'
-import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
-import { Check, ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
+import { Button, Input, Popover, Spinner, Text, XStack } from '@hanzo/gui'
+import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
 
 import { filterOptions, type ComboOption } from './combobox/filter'
+import { MenuItemView, MenuPanel } from './menu/items'
+import { PortalTheme, useThemeName } from './menu/portal-theme'
+import { menuKeyDown } from './menu/roving'
 
 export type { ComboOption } from './combobox/filter'
 
@@ -49,6 +50,7 @@ export function ComboBox({
   minWidth?: number
 }) {
   const [open, setOpen] = useState(false)
+  const themeName = useThemeName()
   const filtered = useMemo(() => filterOptions(options, value), [options, value])
 
   const pick = (v: string) => {
@@ -62,7 +64,7 @@ export function ComboBox({
         <Input
           flex={1}
           value={value}
-          onChangeText={(v) => {
+          onChangeText={(v: string) => {
             onChange(v)
             if (!open) setOpen(true)
           }}
@@ -83,65 +85,43 @@ export function ComboBox({
         </Popover.Trigger>
       </XStack>
 
-      <Popover.Content bordered elevate p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
-        <YStack gap="$0.5" minW={minWidth} maxH={300} overflow="scroll">
-          {loading ? (
-            <XStack items="center" gap="$2" px="$2.5" py="$2">
-              <Spinner size="small" color="$color11" />
-              <Text fontSize="$2" color="$color10">
-                Loading options…
+      <Popover.Content backgroundColor="transparent" borderWidth={0} padding={0} elevation={0}>
+        <PortalTheme name={themeName}>
+          <MenuPanel minWidth={minWidth} maxHeight={300} onKeyDown={(e) => menuKeyDown(e, () => setOpen(false))}>
+            {loading ? (
+              <XStack items="center" gap="$2" px="$2" py="$2">
+                <Spinner size="small" color="$color11" />
+                <Text fontSize="$2" color="$color10">
+                  Loading options…
+                </Text>
+              </XStack>
+            ) : error ? (
+              <XStack items="center" gap="$2" px="$2" py="$2">
+                <Text fontSize="$2" color="$color10" flex={1} numberOfLines={2}>
+                  {error}
+                </Text>
+                {onRetry ? (
+                  <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label="Retry" />
+                ) : null}
+              </XStack>
+            ) : filtered.length === 0 ? (
+              <Text fontSize="$2" color="$color10" px="$2" py="$2">
+                {emptyText}
               </Text>
-            </XStack>
-          ) : error ? (
-            <XStack items="center" gap="$2" px="$2.5" py="$2">
-              <Text fontSize="$2" color="$color10" flex={1} numberOfLines={2}>
-                {error}
-              </Text>
-              {onRetry ? (
-                <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label="Retry" />
-              ) : null}
-            </XStack>
-          ) : filtered.length === 0 ? (
-            <Text fontSize="$2" color="$color10" px="$2.5" py="$2">
-              {emptyText}
-            </Text>
-          ) : (
-            filtered.map((o) => (
-              <Row key={o.value} option={o} active={o.value === value} onPress={() => pick(o.value)} />
-            ))
-          )}
-        </YStack>
+            ) : (
+              filtered.map((o) => (
+                <MenuItemView
+                  key={o.value}
+                  label={o.label ?? o.value}
+                  description={o.hint}
+                  selected={o.value === value}
+                  onSelect={() => pick(o.value)}
+                />
+              ))
+            )}
+          </MenuPanel>
+        </PortalTheme>
       </Popover.Content>
     </Popover>
-  )
-}
-
-function Row({ option, active, onPress }: { option: ComboOption; active: boolean; onPress: () => void }) {
-  return (
-    <XStack
-      items="center"
-      gap="$2"
-      px="$2.5"
-      py="$1.5"
-      rounded="$3"
-      cursor="pointer"
-      hoverStyle={{ bg: '$color4' }}
-      bg={active ? '$color4' : 'transparent'}
-      onPress={onPress}
-    >
-      <XStack width={14} items="center" justify="center">
-        {active ? <Check size={13} /> : null}
-      </XStack>
-      <YStack flex={1} minW={0}>
-        <Text fontSize="$2" color="$color12" numberOfLines={1}>
-          {option.label ?? option.value}
-        </Text>
-        {option.hint ? (
-          <Text fontSize="$1" color="$color10" numberOfLines={1}>
-            {option.hint}
-          </Text>
-        ) : null}
-      </YStack>
-    </XStack>
   )
 }
