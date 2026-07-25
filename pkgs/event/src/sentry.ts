@@ -19,6 +19,10 @@ import type {
 
 /** Max stack frames kept — well under the server's 250 cap, plenty for grouping. */
 const MAX_FRAMES = 50
+/** Max stack lines examined, and max length of a line worth examining. Guards the
+ *  frame regexes against a hostile `stack` string (see framesFromStack). */
+const MAX_LINES = 500
+const MAX_LINE_LEN = 2048
 /** Max tag string length, so one huge property can't bloat the envelope. */
 const MAX_TAG_LEN = 1024
 /** Max tags copied from properties. */
@@ -91,9 +95,14 @@ function inApp(file: string): boolean {
  */
 export function framesFromStack(stack: string | undefined): SentryFrame[] {
   if (!stack) return []
-  const lines = stack.split('\n')
+  // Both frame regexes use lazy nested quantifiers, which backtrack badly on a
+  // long line that never matches. A stack is attacker-influenced (a thrown value
+  // can carry any `stack` string), so bound the work: skip absurd lines and stop
+  // after MAX_LINES. Only the innermost MAX_FRAMES are kept anyway.
+  const lines = stack.split('\n', MAX_LINES)
   const frames: SentryFrame[] = []
   for (const raw of lines) {
+    if (raw.length > MAX_LINE_LEN) continue
     const line = raw.trimEnd()
     if (!line) continue
     // Header lines like "TypeError: x is not a function" match neither frame
@@ -172,9 +181,13 @@ export interface BuildEventInput {
 function coerceTag(v: unknown): string {
   const s = typeof v === 'string' ? v : (() => {
     try {
-      return JSON.stringify(v)
+      return JSON.stringify(v) ?? String(v)
     } catch {
-      return String(v)
+      try {
+        return String(v) // circular — fall back to the primitive coercion
+      } catch {
+        return '[unstringifiable]' // ...which a throwing toString can also refuse
+      }
     }
   })()
   return s.length > MAX_TAG_LEN ? s.slice(0, MAX_TAG_LEN) : s
@@ -194,13 +207,26 @@ export function buildSentryEvent(input: BuildEventInput): SentryEvent {
   const tags: Record<string, string> = { handled: String(handled) }
   if (identity.product) tags.product = identity.product
   if (identity.sessionId) tags.session = identity.sessionId
-  const props = options.properties ?? {}
-  let n = 0
-  for (const [k, val] of Object.entries(props)) {
-    if (n >= MAX_TAGS) break
-    if (val === undefined || val === null) continue
-    tags[k] = scrubText(coerceTag(val), capturePII)
-    n++
+  // Tags come from arbitrary caller `properties`. Read each key in isolation:
+  // Object.entries() invokes every getter at once, so one throwing getter would
+  // cost us the entire envelope — losing the stack trace to save a tag. Keys are
+  // optional; the exception is not.
+  try {
+    const props = (options.properties ?? {}) as Record<string, unknown>
+    let n = 0
+    for (const k of Object.keys(props)) {
+      if (n >= MAX_TAGS) break
+      try {
+        const val = props[k]
+        if (val === undefined || val === null) continue
+        tags[k] = scrubText(coerceTag(val), capturePII)
+        n++
+      } catch {
+        continue // throwing getter or unstringifiable value — skip this key only
+      }
+    }
+  } catch {
+    /* unenumerable/exotic properties object — ship the exception without tags */
   }
 
   const event: SentryEvent = {
