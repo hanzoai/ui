@@ -3,10 +3,9 @@ import { promises as fs } from "fs"
 import path from "path"
 import type { Highlighter } from "shiki"
 
-// Enable syntax highlighting in development
-// For static exports, we can use client-side highlighting instead
-const highlightCodeEnabled =
-  process.env.NODE_ENV === "development" || !process.env.GITHUB_ACTIONS
+// Highlight on the server while developing. A production build is a static
+// export, which highlights on the client instead — so the build stays cheap.
+const highlightCodeEnabled = process.env.NODE_ENV === "development"
 
 // Singleton highlighter instance to prevent memory leaks
 let highlighterInstance: Highlighter | null = null

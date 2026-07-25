@@ -5,14 +5,12 @@ const nextConfig = {
   // Transpile packages that might have issues with pnpm symlinks
   transpilePackages: ["chrono-node", "@hanzo/ui"],
 
-  // Enable static export for GitHub Pages / Cloudflare Pages deployment (but not for E2E tests)
-  output: (process.env.GITHUB_ACTIONS || process.env.CF_PAGES) && !process.env.E2E_TEST ? "export" : undefined,
+  // The docs site is a static export, wherever it is built. It is served by
+  // hanzoai/static; `next dev` is unaffected by this.
+  output: "export",
 
-  // Use trailing slashes for GitHub Pages compatibility
+  // Directory-style URLs, so a static server resolves /docs/button/index.html.
   trailingSlash: true,
-
-  // Base path for GitHub Pages (when deployed to github.io subdirectory)
-  basePath: process.env.GITHUB_PAGES ? "/react-sdk" : "",
 
   // Asset prefix for proper loading on custom domain
   assetPrefix: process.env.NEXT_PUBLIC_APP_URL || "",
