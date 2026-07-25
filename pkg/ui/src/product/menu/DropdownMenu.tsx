@@ -1,11 +1,10 @@
 'use client'
 
 /**
- * DropdownMenu — a portal-theme-safe dropdown on the @hanzo/gui Popover (the proven
- * console idiom, same shell as SelectMenu/ComboBox). Declarative `items`; renders the
- * ONE shared menu-item spec so it is pixel-identical to every other menu. Opens under
- * a nested `<Theme>` correctly because the portaled content re-applies the captured
- * theme (see PortalTheme).
+ * DropdownMenu — a portal-theme-safe click menu. Declarative `items` rendered through the
+ * ONE shared menu-item spec, so it is pixel-identical to ContextMenu/SelectMenu/ComboBox.
+ * Built on FloatingMenu (gui Portal), NOT the gui Popover — so it mounts without the
+ * Sheet re-root that loses theme context on gui-native hosts (react-native-web-lite).
  *
  *   <DropdownMenu
  *     trigger={<Button>Actions</Button>}
@@ -17,21 +16,19 @@
  *   />
  */
 import type { ReactElement } from 'react'
-import { Popover, useControllableState } from '@hanzo/gui'
-import { MenuPanel, renderMenuItems, type MenuItemSpec } from './items'
-import { PortalTheme, useThemeName } from './portal-theme'
-import { menuKeyDown } from './roving'
+import { useCallback, useRef } from 'react'
+import { XStack, useControllableState } from '@hanzo/gui'
+import { renderMenuItems, type MenuItemSpec } from './items'
+import { FloatingMenu } from './FloatingMenu'
 
 export type DropdownMenuProps = {
-  /** The clickable element. Cloned as the Popover trigger (`asChild`). */
+  /** The clickable element. Wrapped so any element opens the menu on press. */
   trigger: ReactElement
   items: MenuItemSpec[]
   /** Controlled open state. Omit for uncontrolled. */
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
-  /** Popover placement (default `bottom-start`). */
-  placement?: React.ComponentProps<typeof Popover>['placement']
   minWidth?: number
   maxHeight?: number
 }
@@ -42,7 +39,6 @@ export function DropdownMenu({
   open,
   defaultOpen = false,
   onOpenChange,
-  placement = 'bottom-start',
   minWidth = 200,
   maxHeight,
 }: DropdownMenuProps) {
@@ -51,26 +47,25 @@ export function DropdownMenu({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   })
-  // Capture the resolved theme HERE, where theme context is still available; the
-  // Popover.Content portals out of it and re-applies it via <PortalTheme>.
-  const themeName = useThemeName()
+  const anchorRef = useRef<HTMLElement | null>(null)
+  const anchorRect = useCallback(() => anchorRef.current?.getBoundingClientRect() ?? null, [])
+  const anchorEl = useCallback(() => anchorRef.current, [])
 
   return (
-    <Popover open={isOpen} onOpenChange={setOpen} placement={placement} allowFlip>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
-      <Popover.Content
-        // The visible surface is our MenuPanel — keep Content a transparent shell.
-        bg="transparent"
-        borderWidth={0}
-        p={0}
-        elevation={0}
+    <>
+      <XStack ref={anchorRef as never} self="flex-start" cursor="pointer" onPress={() => setOpen(!isOpen)}>
+        {trigger}
+      </XStack>
+      <FloatingMenu
+        open={isOpen}
+        onClose={() => setOpen(false)}
+        anchorRect={anchorRect}
+        anchorEl={anchorEl}
+        minWidth={minWidth}
+        maxHeight={maxHeight}
       >
-        <PortalTheme name={themeName}>
-          <MenuPanel minWidth={minWidth} maxHeight={maxHeight} onKeyDown={(e) => menuKeyDown(e, () => setOpen(false))}>
-            {renderMenuItems(items, () => setOpen(false))}
-          </MenuPanel>
-        </PortalTheme>
-      </Popover.Content>
-    </Popover>
+        {renderMenuItems(items, () => setOpen(false))}
+      </FloatingMenu>
+    </>
   )
 }

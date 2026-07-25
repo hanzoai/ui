@@ -6,18 +6,18 @@
  * always exactly the input text, so a custom id is inherently supported. Prop-driven +
  * self-contained (options/loading/error injected by the caller).
  *
- * Uses the ONE shared menu spec (MenuPanel + MenuItemView) so options look identical to
- * every other menu, and the SAME portal-theme fix (PortalTheme) so the list renders
- * correctly through the portal above a SlideOver and under a nested `<Theme>`.
+ * Uses the ONE shared menu spec (MenuItemView) + FloatingMenu (gui Portal) so options look
+ * identical to every other menu and render correctly through the portal under a nested
+ * `<Theme>` on gui-native hosts. The input row is the anchor (excluded from dismiss) and
+ * the panel does NOT steal focus, so typing keeps filtering.
  */
-import { useMemo, useState } from 'react'
-import { Button, Input, Popover, Spinner, Text, XStack } from '@hanzo/gui'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { Button, Input, Spinner, Text, XStack } from '@hanzo/gui'
 import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
 
 import { filterOptions, type ComboOption } from './combobox/filter'
-import { MenuItemView, MenuPanel } from './menu/items'
-import { PortalTheme, useThemeName } from './menu/portal-theme'
-import { menuKeyDown } from './menu/roving'
+import { MenuItemView } from './menu/items'
+import { FloatingMenu } from './menu/FloatingMenu'
 
 export type { ComboOption } from './combobox/filter'
 
@@ -50,7 +50,9 @@ export function ComboBox({
   minWidth?: number
 }) {
   const [open, setOpen] = useState(false)
-  const themeName = useThemeName()
+  const rowRef = useRef<HTMLElement | null>(null)
+  const anchorRect = useCallback(() => rowRef.current?.getBoundingClientRect() ?? null, [])
+  const anchorEl = useCallback(() => rowRef.current, [])
   const filtered = useMemo(() => filterOptions(options, value), [options, value])
 
   const pick = (v: string) => {
@@ -59,8 +61,8 @@ export function ComboBox({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen} placement="bottom-start" allowFlip>
-      <XStack items="center" gap="$2" minW={minWidth}>
+    <>
+      <XStack ref={rowRef as never} items="center" gap="$2" minW={minWidth}>
         <Input
           flex={1}
           value={value}
@@ -73,55 +75,57 @@ export function ComboBox({
           placeholder={placeholder}
           autoCapitalize="none"
         />
-        <Popover.Trigger asChild>
-          <Button
-            size="$2"
-            chromeless
-            disabled={disabled}
-            icon={<ChevronDown size={16} opacity={0.7} />}
-            onPress={() => setOpen((o) => !o)}
-            aria-label="Show options"
-          />
-        </Popover.Trigger>
+        <Button
+          size="$2"
+          chromeless
+          disabled={disabled}
+          icon={<ChevronDown size={16} opacity={0.7} />}
+          onPress={() => setOpen((o) => !o)}
+          aria-label="Show options"
+        />
       </XStack>
 
-      <Popover.Content bg="transparent" borderWidth={0} p={0} elevation={0}>
-        <PortalTheme name={themeName}>
-          <MenuPanel minWidth={minWidth} maxHeight={300} onKeyDown={(e) => menuKeyDown(e, () => setOpen(false))}>
-            {loading ? (
-              <XStack items="center" gap="$2" px="$2" py="$2">
-                <Spinner size="small" color="$color11" />
-                <Text fontSize="$2" color="$color10">
-                  Loading options…
-                </Text>
-              </XStack>
-            ) : error ? (
-              <XStack items="center" gap="$2" px="$2" py="$2">
-                <Text fontSize="$2" color="$color10" flex={1} numberOfLines={2}>
-                  {error}
-                </Text>
-                {onRetry ? (
-                  <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label="Retry" />
-                ) : null}
-              </XStack>
-            ) : filtered.length === 0 ? (
-              <Text fontSize="$2" color="$color10" px="$2" py="$2">
-                {emptyText}
-              </Text>
-            ) : (
-              filtered.map((o) => (
-                <MenuItemView
-                  key={o.value}
-                  label={o.label ?? o.value}
-                  description={o.hint}
-                  selected={o.value === value}
-                  onSelect={() => pick(o.value)}
-                />
-              ))
-            )}
-          </MenuPanel>
-        </PortalTheme>
-      </Popover.Content>
-    </Popover>
+      <FloatingMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        anchorRect={anchorRect}
+        anchorEl={anchorEl}
+        autoFocus={false}
+        minWidth={minWidth}
+        maxHeight={300}
+      >
+        {loading ? (
+          <XStack items="center" gap="$2" px="$2" py="$2">
+            <Spinner size="small" color="$color11" />
+            <Text fontSize="$2" color="$color10">
+              Loading options…
+            </Text>
+          </XStack>
+        ) : error ? (
+          <XStack items="center" gap="$2" px="$2" py="$2">
+            <Text fontSize="$2" color="$color10" flex={1} numberOfLines={2}>
+              {error}
+            </Text>
+            {onRetry ? (
+              <Button size="$1" chromeless icon={<RefreshCw size={12} />} onPress={onRetry} aria-label="Retry" />
+            ) : null}
+          </XStack>
+        ) : filtered.length === 0 ? (
+          <Text fontSize="$2" color="$color10" px="$2" py="$2">
+            {emptyText}
+          </Text>
+        ) : (
+          filtered.map((o) => (
+            <MenuItemView
+              key={o.value}
+              label={o.label ?? o.value}
+              description={o.hint}
+              selected={o.value === value}
+              onSelect={() => pick(o.value)}
+            />
+          ))
+        )}
+      </FloatingMenu>
+    </>
   )
 }
