@@ -234,11 +234,11 @@ describe('Event error capture', () => {
     // captureError flushes promptly — no explicit flush() needed.
     expect(tx.sent).toHaveLength(1)
     const e = tx.all[0]
-    // type:'error' is the field Cloud folds to event_type='error' → sentry lens.
+    // type:'error' is the field Cloud folds to event_type='error' for the warehouse.
     expect(e.type).toBe('error')
     expect(e.event).toBe('boom')
     // The exception rides the TOP-LEVEL `error` field (what cloud foldException
-    // reads), NOT properties — a properties-only exception would not be lensed.
+    // reads), NOT properties — a properties-only exception would not be folded.
     expect(e.error?.type).toBe('TypeError')
     expect(e.error?.message).toBe('boom')
     expect(e.error?.stack).toBeTruthy()
@@ -426,5 +426,90 @@ describe('error plane', () => {
       throw new Error('network down')
     }
     expect(() => a.captureError(new Error('x'))).not.toThrow()
+  })
+})
+
+// ── plane independence under hostile input ─────────────────────────────────
+//
+// The regression: captureError ran enqueue()+flush() BEFORE sendError(), all in
+// one try{}. `properties` is arbitrary caller data — hanzoai/app spreads
+// ErrorContext.metadata straight in, and a DOM node, a React synthetic event or
+// an axios error are all circular — so serializing the stream threw, the catch
+// swallowed it, and the CRASH REPORT WAS NEVER SENT. Both planes went to zero on
+// exactly the inputs a real app produces. They must not be able to starve each
+// other.
+
+describe('plane independence', () => {
+  function circular(): Record<string, unknown> {
+    const o: Record<string, unknown> = { name: 'node' }
+    o.self = o
+    return o
+  }
+  const throwingGetter = () =>
+    Object.defineProperty({}, 'boom', {
+      get() {
+        throw new Error('getter exploded')
+      },
+      enumerable: true,
+    }) as Record<string, unknown>
+
+  it('circular properties: the error still reaches Sentry', () => {
+    const a = mk({ dsn: TEST_DSN })
+    a.captureError(new Error('circular payload'), { properties: circular() })
+    expect(tx.envelopes).toHaveLength(1)
+  })
+
+  it('throwing getter in properties: the error still reaches Sentry', () => {
+    const a = mk({ dsn: TEST_DSN })
+    a.captureError(new Error('hostile getter'), { properties: throwingGetter() })
+    expect(tx.envelopes).toHaveLength(1)
+    // The exception survives even though the tag did not.
+    const ev = JSON.parse(tx.envelopes[0].raw.split('\n')[2]) as {
+      exception: { values: { value: string }[] }
+    }
+    expect(ev.exception.values[0].value).toBe('hostile getter')
+  })
+
+  it('a throwing event-stream transport does not stop the error plane', () => {
+    const a = mk({ dsn: TEST_DSN })
+    const real = tx.send.bind(tx)
+    tx.send = (url, body, opts) => {
+      if (opts.contentType !== 'application/x-sentry-envelope') throw new Error('stream down')
+      real(url, body, opts)
+    }
+    a.captureError(new Error('stream is broken'))
+    expect(tx.envelopes).toHaveLength(1)
+  })
+
+  it('a throwing error-plane transport does not stop the event stream', () => {
+    const a = mk({ dsn: TEST_DSN })
+    const real = tx.send.bind(tx)
+    tx.send = (url, body, opts) => {
+      if (opts.contentType === 'application/x-sentry-envelope') throw new Error('sentry down')
+      real(url, body, opts)
+    }
+    a.captureError(new Error('sentry is broken'))
+    expect(tx.streams).toHaveLength(1)
+  })
+
+  it('one poisoned event never discards previously buffered clean events', () => {
+    const a = mk({ dsn: TEST_DSN })
+    a.pageview('/one')
+    a.capture('clean_event')
+    // Now poison the buffer, then force a flush.
+    a.capture('poisoned', circular())
+    a.flush()
+    const names = tx.all.map((e) => e.event)
+    expect(names).toContain('$pageview')
+    expect(names).toContain('clean_event')
+    // The poisoned one is kept too — with its payload replaced, not silently lost.
+    const bad = tx.all.find((e) => e.event === 'poisoned')
+    expect(bad?.properties).toEqual({ $unserializable: true })
+  })
+
+  it('never throws into the host app on any of these', () => {
+    const a = mk({ dsn: TEST_DSN })
+    expect(() => a.captureError(new Error('x'), { properties: circular() })).not.toThrow()
+    expect(() => a.captureError(new Error('y'), { properties: throwingGetter() })).not.toThrow()
   })
 })

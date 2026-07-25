@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { redactSecrets, scrubPII, scrubText } from './scrub'
+import { redactSecrets, scrubPII, scrubText, MAX_SCRUB_LEN } from './scrub'
 
 describe('redactSecrets (always applied)', () => {
   it('redacts a hanzo key', () => {
@@ -41,5 +41,56 @@ describe('scrubPII (default; opt-out via capturePII)', () => {
   it('is total on empty/undefined', () => {
     expect(scrubText(undefined)).toBe('')
     expect(scrubText('')).toBe('')
+  })
+})
+
+// ── denial of service ──────────────────────────────────────────────────────
+//
+// The scrubber runs SYNCHRONOUSLY on the main thread inside captureError, and its
+// input is attacker-influenced: `throw new Error(await res.text())` against an
+// HTML error page is a one-line way to hand it 128KB. The creds-in-URL pattern
+// backtracked quadratically on colon-rich text with no terminating '@' — 4.9s at
+// 32KB, >60s at 128KB. Both the input cap and the bounded pattern are load-bearing.
+
+describe('input bounding', () => {
+  it('caps input length and says so', () => {
+    const out = scrubText('a'.repeat(MAX_SCRUB_LEN * 4))
+    expect(out.length).toBeLessThan(MAX_SCRUB_LEN + 64)
+    expect(out.endsWith('… [truncated]')).toBe(true)
+  })
+
+  it('scrubs pathological colon-rich input in bounded time', () => {
+    // The exact shape that blew up: many colons, no '@' to terminate the match.
+    const hostile = '<div class="a:b:c">'.repeat(8000) // ~150KB
+    const t0 = Date.now()
+    const out = scrubText(hostile)
+    const ms = Date.now() - t0
+    expect(out).toBeTruthy()
+    // Was >60s unbounded. Generous ceiling so the test is not flaky on slow CI.
+    expect(ms).toBeLessThan(1000)
+  })
+
+  it('still redacts real credentials in a URL', () => {
+    expect(scrubText('postgres://user:hunter2@db.internal/app')).toContain('[redacted]')
+    expect(scrubText('postgres://user:hunter2@db.internal/app')).not.toContain('hunter2')
+  })
+})
+
+// ── PAN false positives ────────────────────────────────────────────────────
+//
+// The bare digit-run rule redacted every millisecond epoch and order id it saw,
+// destroying the readability of the messages this client exists to deliver. It is
+// now gated on Luhn, which every real card satisfies — so the false positives go
+// away without introducing a false negative.
+
+describe('card numbers', () => {
+  it('redacts a real (Luhn-valid) card number', () => {
+    expect(scrubText('card 4111111111111111 declined')).toContain('[redacted]')
+    expect(scrubText('card 4111-1111-1111-1111 declined')).toContain('[redacted]')
+  })
+
+  it('leaves an epoch timestamp alone', () => {
+    const out = scrubText('request 1753468800000 timed out')
+    expect(out).toBe('request 1753468800000 timed out')
   })
 })
