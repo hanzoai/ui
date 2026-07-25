@@ -10,6 +10,13 @@ FROM node:22 AS builder
 WORKDIR /src
 
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Publishable ingest key (pk_…), baked in at build because a static export has no
+# server to read config at runtime. Write-only and HMAC-verified to one org, so it
+# is safe in a public bundle; the deployment that builds decides which org the
+# site reports as. Absent, the client stays inert.
+ARG NEXT_PUBLIC_HANZO_INGEST_KEY=""
+ENV NEXT_PUBLIC_HANZO_INGEST_KEY=$NEXT_PUBLIC_HANZO_INGEST_KEY
 # 300+ prerendered pages; the default heap is not enough.
 ENV NODE_OPTIONS=--max-old-space-size=8192
 
