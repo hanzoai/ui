@@ -65,7 +65,7 @@ export function SelectMenu<T extends string>({
           </Text>
         </Button>
       </Popover.Trigger>
-      <Popover.Content backgroundColor="transparent" borderWidth={0} padding={0} elevation={0}>
+      <Popover.Content bg="transparent" borderWidth={0} p={0} elevation={0}>
         <PortalTheme name={themeName}>
           <MenuPanel minWidth={minWidth} maxHeight={320} onKeyDown={(e) => menuKeyDown(e, () => setOpen(false))}>
             <MenuItemView label={allLabel} selected={value === null} onSelect={() => pick(null)} />
