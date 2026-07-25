@@ -258,3 +258,55 @@ describe('fingerprint grouping (port of server model)', () => {
     expect(f1).not.toBe(f2)
   })
 })
+
+// ── hostile thrown objects ─────────────────────────────────────────────────
+//
+// `name`, `message` and `stack` are ordinary getters. A thrown object is free to
+// define any of them to throw, and the thrown value is the least trustworthy
+// input this library handles. normalizeError must be TOTAL — buildSentryEvent
+// throwing here meant the crash report was lost on both planes.
+
+describe('normalizeError survives hostile input', () => {
+  const bomb = (prop: string) => {
+    const e = new Error('real message')
+    Object.defineProperty(e, prop, {
+      get() {
+        throw new Error(prop + ' bomb')
+      },
+      configurable: true,
+    })
+    return e
+  }
+
+  for (const prop of ['stack', 'message', 'name']) {
+    it(`a throwing ${prop} getter does not throw`, () => {
+      expect(() => normalizeError(bomb(prop))).not.toThrow()
+      const n = normalizeError(bomb(prop))
+      expect(typeof n.name).toBe('string')
+      expect(typeof n.message).toBe('string')
+    })
+  }
+
+  it('buildSentryEvent still produces a usable event from a getter bomb', () => {
+    const ev = buildSentryEvent({ error: bomb('stack'), identity: { product: 'test' } })
+    expect(ev.exception?.values[0].type).toBe('Error')
+    // The message survived because only `stack` was hostile.
+    expect(ev.exception?.values[0].value).toBe('real message')
+    expect(ev.exception?.values[0].stacktrace?.frames).toEqual([])
+  })
+
+  it('an object with a throwing toString is still reportable', () => {
+    const evil = {
+      toString() {
+        throw new Error('toString bomb')
+      },
+    }
+    expect(() => normalizeError(evil)).not.toThrow()
+    expect(() => buildSentryEvent({ error: evil, identity: {} })).not.toThrow()
+  })
+
+  it('a frozen/null-prototype throwable is still reportable', () => {
+    const weird = Object.freeze(Object.create(null)) as unknown
+    expect(() => buildSentryEvent({ error: weird, identity: {} })).not.toThrow()
+  })
+})
