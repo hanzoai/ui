@@ -59,6 +59,13 @@ jobs:
         run: |
           cd pkgs/ui && pnpm build
 
+      # link-workspace-packages=true, so the app resolves @hanzo/event to
+      # pkgs/event whatever the version range says. Its exports point at dist/,
+      # which only exists once the package is built.
+      - name: Build @hanzo/event package
+        run: |
+          cd pkgs/event && pnpm build
+
       - name: Capture screenshots (optional)
         if: github.event.inputs.capture_screenshots == 'true'
         working-directory: ./app
