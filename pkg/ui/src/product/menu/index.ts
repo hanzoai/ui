@@ -4,6 +4,7 @@
 
 export { DropdownMenu, type DropdownMenuProps } from './DropdownMenu'
 export { ContextMenu, type ContextMenuProps } from './ContextMenu'
+export { FloatingMenu, type RectLike } from './FloatingMenu'
 export {
   MenuPanel,
   MenuItemView,
