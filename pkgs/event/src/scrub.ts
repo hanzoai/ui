@@ -70,7 +70,12 @@ function redactPAN(s: string): string {
   })
 }
 
-const RE_EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g
+// Bounded to the RFC 5321 maxima (local-part 64, domain 255) for the same reason
+// as the creds-in-URL rule: the unbounded form backtracks quadratically across a
+// long run of local-part-legal characters that never reaches an '@' — measured at
+// 20ms on an 8KB worst case, on the main thread, per captured error. No real
+// address is excluded by these caps.
+const RE_EMAIL = /[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,255}\.[A-Za-z]{2,24}/g
 const RE_IPV4 = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g
 const RE_IPV6 = /\b(?:[0-9A-Fa-f]{1,4}:){2,7}[0-9A-Fa-f]{1,4}\b/g
 
