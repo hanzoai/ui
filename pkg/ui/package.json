@@ -1,69 +1,90 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.7",
+  "version": "8.0.8",
   "type": "module",
   "description": "Hanzo UI \u2014 the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./product": {
-      "types": "./types/product/index.d.ts",
-      "default": "./src/product/index.ts"
+      "types": "./dist/product/index.d.ts",
+      "import": "./dist/product/index.js",
+      "require": "./dist/product/index.cjs",
+      "default": "./dist/product/index.js"
     },
     "./data": {
-      "types": "./types/data.d.ts",
-      "default": "./src/data.ts"
+      "types": "./dist/data.d.ts",
+      "import": "./dist/data.js",
+      "require": "./dist/data.cjs",
+      "default": "./dist/data.js"
     },
     "./primitives/bases/data": {
-      "types": "./types/primitives/bases/data/index.d.ts",
-      "default": "./src/primitives/bases/data/index.ts"
+      "types": "./dist/primitives/bases/data/index.d.ts",
+      "import": "./dist/primitives/bases/data/index.js",
+      "require": "./dist/primitives/bases/data/index.cjs",
+      "default": "./dist/primitives/bases/data/index.js"
     },
     "./gitops": {
-      "types": "./types/gitops.d.ts",
-      "default": "./src/gitops.ts"
+      "types": "./dist/gitops.d.ts",
+      "import": "./dist/gitops.js",
+      "require": "./dist/gitops.cjs",
+      "default": "./dist/gitops.js"
     },
     "./canvas": {
-      "types": "./types/canvas.d.ts",
-      "default": "./src/canvas.ts"
+      "types": "./dist/canvas.d.ts",
+      "import": "./dist/canvas.js",
+      "require": "./dist/canvas.cjs",
+      "default": "./dist/canvas.js"
     },
     "./wallet": {
-      "types": "./types/wallet.d.ts",
-      "default": "./src/wallet.ts"
+      "types": "./dist/wallet.d.ts",
+      "import": "./dist/wallet.js",
+      "require": "./dist/wallet.cjs",
+      "default": "./dist/wallet.js"
     },
     "./network": {
-      "types": "./types/network.d.ts",
-      "default": "./src/network.ts"
+      "types": "./dist/network.d.ts",
+      "import": "./dist/network.js",
+      "require": "./dist/network.cjs",
+      "default": "./dist/network.js"
     },
     "./billing": {
-      "types": "./types/billing.d.ts",
-      "default": "./src/billing.ts"
+      "types": "./dist/billing.d.ts",
+      "import": "./dist/billing.js",
+      "require": "./dist/billing.cjs",
+      "default": "./dist/billing.js"
     },
     "./dashboard": {
-      "types": "./types/dashboard.d.ts",
-      "default": "./src/dashboard.ts"
+      "types": "./dist/dashboard.d.ts",
+      "import": "./dist/dashboard.js",
+      "require": "./dist/dashboard.cjs",
+      "default": "./dist/dashboard.js"
     },
     "./usage": {
-      "types": "./types/usage.d.ts",
-      "default": "./src/usage.ts"
+      "types": "./dist/usage.d.ts",
+      "import": "./dist/usage.js",
+      "require": "./dist/usage.cjs",
+      "default": "./dist/usage.js"
     },
-    "./styles/motion.css": "./src/styles/hanzo-motion.css",
+    "./styles/motion.css": "./dist/styles/hanzo-motion.css",
     "./package.json": "./package.json"
   },
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./types/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": [
     "**/*.css"
   ],
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "clean": "rm -rf types",
+    "build": "tsup && tsc -p tsconfig.build.json && mkdir -p dist/styles && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/add-use-client.mjs",
+    "clean": "rm -rf dist types",
     "prepack": "pnpm run build",
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
@@ -120,7 +141,8 @@
     "react-dom": "^19.0.0",
     "typescript": "^5.7.2",
     "vitest": "^4.1.8",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "tsup": "^8.5.1"
   },
   "publishConfig": {
     "access": "public"
