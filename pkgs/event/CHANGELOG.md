@@ -1,5 +1,38 @@
 # @hanzo/event
 
+## 0.3.2
+
+### Patch Changes
+
+- **`FUNNELS` — the one funnel registry.** Funnels are now data (`funnels.ts`):
+  an ordered list of steps per product journey, each step naming an `EVENTS`
+  value. A test fails the build if a funnel references an event no constant
+  defines, so the spec cannot drift from the vocabulary. `GOALS` no longer
+  restate their steps — they carry a `funnelId` and derive `funnel` from the
+  registry. Shipped: `signup`, `apiActivation`, `upgrade`, `appShip`,
+  `chatEngage`, `siteToChat`.
+- **Fixed the Signup goal.** Its funnel required `signup_verified`, which no
+  surface emits (it is IAM-internal) — the third step was always empty, so the
+  goal reported 0% conversion. The funnel is now
+  `$pageview → signup_viewed → signup_submitted → signup_completed → first_action`.
+- **New events**, each load-bearing in a shipped funnel: `login_completed` (a
+  returning sign-in is not a signup), `build_started` (build INTENT, distinct
+  from `app_created`), `generation_completed` / `generation_failed` (the outcome
+  of anything a model produces, carrying `durationMs`), `deploy_succeeded` /
+  `deploy_failed` (a live URL is its own event, never inferred), and
+  `model_switched` (the strongest dissatisfaction signal a chat surface has).
+- **`PRODUCTS`** is now a closed set (`site | app | chat | console | admin |
+  cloud`) — the values `AnalyticsConfig.product` may take, and what a funnel
+  scopes by. Event names stay product-free: the surface is already on the wire.
+- A cross-origin funnel must declare `join: 'aggregate'`. Two origins mean two
+  `anonymousId`s for a logged-out visitor, so a per-person conversion across
+  them would be a lie; the type makes that explicit (see `siteToChat`).
+- `VERSION` had drifted to `0.3.0` while the package was `0.3.1`, so
+  `libraryVersion` on every event was wrong. It now tracks package.json.
+- Documented the whole thing in **`TAXONOMY.md`** — naming convention, required
+  properties, identify/group semantics, the per-app funnels, and the exact
+  emit sites in hanzo.ai / hanzo.app / hanzo.chat.
+
 ## 0.3.1
 
 ### Patch Changes

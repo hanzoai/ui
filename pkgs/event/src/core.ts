@@ -48,7 +48,9 @@ import type {
   WireEvent,
 } from './types'
 
-export const VERSION = '0.3.0'
+// Rides every event as `libraryVersion` — keep it equal to package.json, or the
+// dimension that tells you WHICH client sent a batch quietly lies.
+export const VERSION = '0.3.2'
 
 const EVENT_PATH = '/v1/event' // the ONE canonical ingestion front door
 const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
