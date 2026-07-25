@@ -60,9 +60,9 @@ export function DropdownMenu({
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Content
         // The visible surface is our MenuPanel — keep Content a transparent shell.
-        backgroundColor="transparent"
+        bg="transparent"
         borderWidth={0}
-        padding={0}
+        p={0}
         elevation={0}
       >
         <PortalTheme name={themeName}>

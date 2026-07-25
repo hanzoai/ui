@@ -7,6 +7,9 @@
  * colour is theme-adaptive tokens ($color2/$color11/$color12/$borderColor) so light
  * and dark both work, with the single purple accent supplied by the brand CSS vars.
  *
+ * Style props use the @hanzo/gui config shorthands (bg/items/justify/px/py/p/mx/my/
+ * minW/maxH/rounded/select/shrink) — the config omits the longhand aliases.
+ *
  * Panel   — bg $color2 (#111 dark), hairline border, radius 12, inner pad 4, subtle
  *           border+ambient elevation.
  * Item    — height 30 (28–32 band), px 8, gap 8, radius 7; icon in a fixed 16px slot
@@ -91,14 +94,14 @@ export function MenuPanel({
       // so it is env-agnostic — the ref type is strict under the pkg build, loose here.
       ref={panelRef as never}
       role="menu"
-      backgroundColor="$color2"
+      bg="$color2"
       borderColor="$borderColor"
       borderWidth={1}
-      borderRadius={PANEL_RADIUS}
-      padding={PANEL_PAD}
+      rounded={PANEL_RADIUS}
+      p={PANEL_PAD}
       gap={PANEL_GAP}
-      minWidth={minWidth}
-      maxHeight={maxHeight}
+      minW={minWidth}
+      maxH={maxHeight}
       overflow="scroll"
       // Subtle border + ambient elevation, minimal shadow.
       shadowColor="rgba(0,0,0,0.45)"
@@ -140,30 +143,30 @@ export function MenuItemView({
       role="menuitem"
       tabIndex={disabled ? -1 : 0}
       aria-disabled={disabled || undefined}
-      alignItems="center"
+      items="center"
       gap={ITEM_GAP}
-      paddingHorizontal={ITEM_PX}
-      minHeight={ITEM_MIN_HEIGHT}
-      borderRadius={ITEM_RADIUS}
+      px={ITEM_PX}
+      minH={ITEM_MIN_HEIGHT}
+      rounded={ITEM_RADIUS}
       cursor={disabled ? 'default' : 'pointer'}
       opacity={disabled ? 0.4 : 1}
-      userSelect="none"
-      outlineWidth={0}
-      hoverStyle={disabled ? {} : { backgroundColor: ACCENT_SOFT as never }}
-      pressStyle={disabled ? {} : { backgroundColor: ACCENT_SOFT as never }}
-      focusStyle={disabled ? {} : { backgroundColor: ACCENT_SOFT as never }}
+      select="none"
+      style={{ outline: 'none' }}
+      hoverStyle={disabled ? {} : { bg: ACCENT_SOFT as never }}
+      pressStyle={disabled ? {} : { bg: ACCENT_SOFT as never }}
+      focusStyle={disabled ? {} : { bg: ACCENT_SOFT as never }}
       onPress={press}
       onKeyDown={onKeyDown as never}
     >
-      <XStack width={ICON_SLOT} height={ICON_SLOT} alignItems="center" justifyContent="center" flexShrink={0}>
+      <XStack width={ICON_SLOT} height={ICON_SLOT} items="center" justify="center" shrink={0}>
         {icon ? (
-          <XStack alignItems="center" justifyContent="center" opacity={destructive ? 1 : 0.9} {...(destructive ? { style: { color: DANGER } } : {})}>
+          <XStack items="center" justify="center" opacity={destructive ? 1 : 0.9} style={destructive ? { color: DANGER } : undefined}>
             {icon}
           </XStack>
         ) : null}
       </XStack>
 
-      <YStack flex={1} minWidth={0}>
+      <YStack flex={1} minW={0}>
         <Text fontSize={FONT_LABEL} lineHeight={18} color={labelColor as never} numberOfLines={1}>
           {label}
         </Text>
@@ -175,7 +178,7 @@ export function MenuItemView({
       </YStack>
 
       {shortcut ? (
-        <Text fontSize={FONT_SHORTCUT} color="$color11" flexShrink={0}>
+        <Text fontSize={FONT_SHORTCUT} color="$color11" shrink={0}>
           {shortcut}
         </Text>
       ) : null}
@@ -187,15 +190,7 @@ export function MenuItemView({
 
 // ── Separator ───────────────────────────────────────────────────────────────────
 export function MenuSeparatorView() {
-  return (
-    <YStack
-      height={1}
-      backgroundColor="$borderColor"
-      marginVertical={SEP_MARGIN}
-      marginHorizontal={SEP_MARGIN}
-      role="separator"
-    />
-  )
+  return <YStack height={1} bg="$borderColor" my={SEP_MARGIN} mx={SEP_MARGIN} role="separator" />
 }
 
 // ── Section label ────────────────────────────────────────────────────────────────
@@ -204,11 +199,11 @@ export function MenuLabelView({ children }: { children: ReactNode }) {
     <Text
       fontSize={FONT_MUTED}
       color="$color11"
-      paddingHorizontal={ITEM_PX}
-      paddingVertical={SEP_MARGIN}
+      px={ITEM_PX}
+      py={SEP_MARGIN}
       textTransform="uppercase"
       letterSpacing={0.4}
-      userSelect="none"
+      select="none"
     >
       {children}
     </Text>
