@@ -1,7 +1,8 @@
 "use client"
 
-import { getDefaultConfig } from "@rainbow-me/rainbowkit"
 import { defineChain } from "viem"
+import { createConfig, http } from "wagmi"
+import { injected } from "wagmi/connectors"
 
 // Localhost (Anvil)
 export const localhost = defineChain({
@@ -155,28 +156,30 @@ export const zooTestnet = defineChain({
   testnet: true,
 })
 
-let _config: ReturnType<typeof getDefaultConfig> | undefined
+const chains = [
+  localhost,
+  hanzoMainnet,
+  hanzoTestnet,
+  luxMainnet,
+  luxTestnet,
+  zooMainnet,
+  zooTestnet,
+] as const
 
-export const getConfig = () => {
-  if (typeof window === "undefined") {
-    // Return a minimal config for SSR that won't be used
-    return {} as ReturnType<typeof getDefaultConfig>
-  }
+type Config = ReturnType<typeof createConfig>
 
+let _config: Config | undefined
+
+export const getConfig = (): Config => {
   if (!_config) {
-    _config = getDefaultConfig({
-      appName: "Hanzo Identity",
-      projectId:
-        process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "YOUR_PROJECT_ID",
-      chains: [
-        localhost,
-        hanzoMainnet,
-        hanzoTestnet,
-        luxMainnet,
-        luxTestnet,
-        zooMainnet,
-        zooTestnet,
-      ],
+    _config = createConfig({
+      chains,
+      // The browser wallet speaks EIP-1193 directly. No third-party bridge, no
+      // vendor project id, and nothing phoning home from a docs page.
+      connectors: [injected()],
+      transports: Object.fromEntries(
+        chains.map((chain) => [chain.id, http()])
+      ) as Record<(typeof chains)[number]["id"], ReturnType<typeof http>>,
       ssr: true,
     })
   }
@@ -184,8 +187,4 @@ export const getConfig = () => {
   return _config
 }
 
-// For backward compatibility
-export const config =
-  typeof window !== "undefined"
-    ? getConfig()
-    : ({} as ReturnType<typeof getDefaultConfig>)
+export const config = getConfig()
