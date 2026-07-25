@@ -82,8 +82,14 @@ export interface WireEvent {
  *  Authorization on fetch; on a headerless beacon a publishable key rides the
  *  ?ingest_key query. */
 export interface Transport {
-  /** Durable POST usable during page unload (fetch keepalive / sendBeacon). */
-  send(url: string, body: string, opts: { beacon: boolean; token?: string; ingestKey?: string }): void
+  /** Durable POST usable during page unload (fetch keepalive / sendBeacon).
+   *  `contentType` defaults to application/json; the error plane overrides it with
+   *  application/x-sentry-envelope. */
+  send(
+    url: string,
+    body: string,
+    opts: { beacon: boolean; token?: string; ingestKey?: string; contentType?: string },
+  ): void
 }
 
 export interface AnalyticsConfig {
@@ -118,4 +124,88 @@ export interface AnalyticsConfig {
   transport?: Transport
   /** Debug logging. */
   debug?: boolean
+
+  // ── error plane (Sentry envelope -> sentry.hanzo.ai) ──────────────────────
+
+  /** Hanzo-minted Sentry DSN: "https://<version>:<hmac>@<host>/v1/sentry/<projectId>".
+   *  Publishable — the key authorizes writes to ONE project and can read nothing,
+   *  so it is safe in a browser bundle (same trust class as `ingestKey`). When
+   *  absent the client reads NEXT_PUBLIC_HANZO_EVENT_DSN; when neither is set the
+   *  error plane is inert (fail-safe: nothing sent, nothing thrown, analytics
+   *  unaffected). Mint one per property: POST /v1/sentry/projects. */
+  dsn?: string
+  /** Release stamped on error events (a git SHA / app version). */
+  release?: string
+  /** Deployment environment for error events (production | staging | …). */
+  environment?: string
+  /** Retain end-user PII (emails/IPs) in error text. Default false = scrub
+   *  client-side before anything leaves the device (the server scrubs again). */
+  capturePII?: boolean
+}
+
+// ── Sentry envelope wire types (a from-scratch model of the PUBLIC, documented
+//    Sentry ingest protocol — develop.sentry.dev; no upstream code) ───────────
+
+export type SentryLevel = 'fatal' | 'error' | 'warning' | 'info' | 'debug'
+
+export interface SentryFrame {
+  filename?: string
+  function?: string
+  module?: string
+  abs_path?: string
+  lineno?: number
+  colno?: number
+  in_app?: boolean
+}
+
+export interface SentryExceptionValue {
+  type?: string
+  value?: string
+  module?: string
+  stacktrace?: { frames: SentryFrame[] }
+}
+
+export interface SentryUser {
+  /** Stable subject id (OIDC sub / anon id). NEVER email/username/ip. */
+  id?: string
+}
+
+export interface SentryEvent {
+  event_id: string
+  timestamp: number
+  platform: 'javascript'
+  level: SentryLevel
+  logger?: string
+  environment?: string
+  release?: string
+  transaction?: string
+  fingerprint?: string[]
+  message?: string
+  exception?: { values: SentryExceptionValue[] }
+  tags?: Record<string, string>
+  user?: SentryUser
+  contexts?: Record<string, Record<string, unknown>>
+  sdk?: { name: string; version: string }
+}
+
+/** Parsed DSN — the public key + the derived ingest URL. */
+export interface Dsn {
+  /** "<version>:<hmac>" public key presented via ?sentry_key= (beacon-safe). */
+  publicKey: string
+  /** Ingest origin, e.g. "https://sentry.hanzo.ai". */
+  origin: string
+  /** Project id segment. */
+  projectId: string
+  /** Fully-derived envelope ingest URL incl. ?sentry_key=. */
+  ingestUrl: string
+}
+
+/** Options for Analytics.captureError. */
+export interface CaptureErrorOptions {
+  /** false => uncaught (window.onerror / unhandledrejection / render crash). */
+  handled?: boolean
+  /** Severity + free-form context; merged into the event's tags. */
+  properties?: Record<string, unknown>
+  /** Override the event level (default: error, or fatal when handled === false). */
+  level?: SentryLevel
 }
