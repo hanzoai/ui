@@ -8,6 +8,9 @@
 // React apps use the './react' entry for the provider + hooks + error boundary.
 
 export { Analytics, createAnalytics, VERSION, getCohort, getFirstTouch } from './core'
+export { parseDsn, buildSentryEvent, buildEnvelope, framesFromStack } from './sentry'
+export type { ErrorIdentity } from './sentry'
+export { scrubText, redactSecrets, scrubPII } from './scrub'
 export { EVENTS, PAGEVIEW } from './events'
 export type { EventName } from './events'
 export { GOALS, COHORTS } from './goals'
@@ -22,9 +25,14 @@ export {
 export type {
   AnalyticsConfig,
   Attribution,
+  CaptureErrorOptions,
   Cohort,
+  Dsn,
   EventKind,
   Exception,
+  SentryEvent,
+  SentryFrame,
+  SentryLevel,
   Transport,
   WireEvent,
 } from './types'
