@@ -33,10 +33,10 @@
 //     safe to ship in a bundle; the door HMAC-verifies it to an org server-side.
 //
 // The wire is the canonical `Event` (== the cloud CaptureEvent): its `type` field
-// is what Cloud folds to event_type='error', so a captured exception reaches the
-// error-tracking lens. (A four-field {event,distinctId,time,properties} object has
-// no `type`, so it can never be lensed as an error — this batched Event wire is
-// the one that lights up all three lenses.)
+// is what Cloud folds to event_type='error', which is how the event WAREHOUSE
+// classifies the row (GET /v1/errors). That is the extent of it — the fold does
+// not forward anything to Sentry. The error dashboard is fed only by the envelope
+// in plane 2 above, and only when a DSN is set.
 
 import {
   parseAttribution,
@@ -124,6 +124,35 @@ function normalizeError(err: unknown): Exception {
 
 const isBrowser = () => typeof window !== 'undefined'
 
+/** serializeBatch stringifies a batch, salvaging what it can. `properties` is
+ *  arbitrary caller data — a DOM node, a React synthetic event, an axios error are
+ *  all circular, and a getter on one can throw — so a whole batch must never be
+ *  lost to a single poisoned event. Falls back to per-event serialization, then to
+ *  keeping the event and dropping its properties. Returns null only when nothing
+ *  at all survives. */
+function serializeBatch(batch: WireEvent[]): string | null {
+  try {
+    return JSON.stringify({ batch })
+  } catch {
+    /* one bad event — salvage the rest below */
+  }
+  const parts: string[] = []
+  for (const e of batch) {
+    try {
+      parts.push(JSON.stringify(e))
+    } catch {
+      try {
+        // Keep the event (identity, session, type all matter); drop the payload
+        // that could not be serialized, and say so rather than lying by omission.
+        parts.push(JSON.stringify({ ...e, properties: { $unserializable: true } }))
+      } catch {
+        /* unsalvageable — drop this ONE event, never the batch */
+      }
+    }
+  }
+  return parts.length > 0 ? '{"batch":[' + parts.join(',') + ']}' : null
+}
+
 /** DefaultTransport: fetch(keepalive) for authenticated/normal sends;
  *  navigator.sendBeacon for headerless page-unload beacons. A bearer (a JWT or a
  *  publishable pk_ key) rides Authorization on fetch; on a beacon — which cannot
@@ -132,7 +161,13 @@ class DefaultTransport implements Transport {
   send(
     url: string,
     body: string,
-    opts: { beacon: boolean; token?: string; ingestKey?: string; contentType?: string },
+    opts: {
+      beacon: boolean
+      token?: string
+      ingestKey?: string
+      contentType?: string
+      debug?: boolean
+    },
   ): void {
     const contentType = opts.contentType ?? 'application/json'
     if (opts.beacon && isBrowser() && typeof navigator.sendBeacon === 'function') {
@@ -154,9 +189,19 @@ class DefaultTransport implements Transport {
       body,
       keepalive: true,
       credentials: 'include',
-    }).catch(() => {
-      /* telemetry loss is acceptable; never throw into the app */
     })
+      .then((res) => {
+        // Telemetry loss never throws into the app — but silence is how this
+        // client lost the fleet's errors in the first place. Under `debug`, say
+        // so. A rejected ingest (the CORS allowlist 403s non-production origins,
+        // so local dev NEVER reports) is otherwise indistinguishable from success.
+        if (!res.ok && opts.debug) {
+          console.warn('[event] ingest rejected', res.status, url.split('?')[0])
+        }
+      })
+      .catch((e: unknown) => {
+        if (opts.debug) console.warn('[event] ingest failed', url.split('?')[0], e)
+      })
   }
 }
 
@@ -231,8 +276,9 @@ export class Analytics {
     window.addEventListener('pagehide', () => this.flush(true))
 
     // Auto error capture — the drop-in @sentry replacement. Unhandled errors and
-    // rejected promises become type:'error' events on the same stream, which Cloud
-    // stamps event_type='error' → the sentry.hanzo.ai lens.
+    // rejected promises are reported on BOTH planes: a Sentry envelope to the DSN
+    // host (what reaches the error dashboard — requires a DSN) and a type:'error'
+    // event on the stream (product signal in the warehouse).
     if (this.cfg.captureErrors) {
       window.addEventListener('error', (e: ErrorEvent) => {
         this.captureError(e.error ?? e.message, { handled: false })
@@ -294,13 +340,27 @@ export class Analytics {
     if (this.reentrant) return
     this.reentrant = true
     try {
-      const ex = normalizeError(err)
-      ex.handled = context?.handled ?? true
-      this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
-      this.flush()
-      this.sendError(err, context)
-    } catch {
-      /* telemetry must never break the host app */
+      // ERROR PLANE FIRST, in its own try. The planes are independent, so neither
+      // may be able to starve the other: `properties` is arbitrary caller data
+      // (a DOM node, a React synthetic event, an axios error — all circular and
+      // all common), and serializing it on the event stream can throw. When the
+      // stream ran first, that throw escaped to the outer catch and the crash
+      // report was never sent — silently losing exactly the signal this client
+      // exists to deliver. Order and isolation are the fix.
+      try {
+        this.sendError(err, context)
+      } catch {
+        /* the error plane must never take the event stream down with it */
+      }
+
+      try {
+        const ex = normalizeError(err)
+        ex.handled = context?.handled ?? true
+        this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
+        this.flush()
+      } catch {
+        /* nor the reverse */
+      }
     } finally {
       this.reentrant = false
     }
@@ -338,9 +398,18 @@ export class Analytics {
     // Only a headerful bearer JWT blocks the beacon: sendBeacon cannot set an
     // Authorization header. A pk_ rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token
-    const body = JSON.stringify({ batch })
+    const body = serializeBatch(batch)
+    if (body === null) {
+      if (this.cfg.debug) console.debug('[event] flush → dropped, batch unserializable')
+      return
+    }
     if (this.cfg.debug) console.debug('[event] flush →', EVENT_PATH, batch.length)
-    this.transport.send(this.cfg.host + EVENT_PATH, body, { beacon: useBeacon, token, ingestKey: key })
+    this.transport.send(this.cfg.host + EVENT_PATH, body, {
+      beacon: useBeacon,
+      token,
+      ingestKey: key,
+      debug: this.cfg.debug,
+    })
   }
 
   // ── internals ────────────────────────────────────────────────────────────
@@ -364,6 +433,7 @@ export class Analytics {
     this.transport.send(this.dsn.ingestUrl, body, {
       beacon: false,
       contentType: ENVELOPE_CONTENT_TYPE,
+      debug: this.cfg.debug,
     })
   }
 
