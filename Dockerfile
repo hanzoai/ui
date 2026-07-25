@@ -28,7 +28,10 @@ RUN cd pkgs/event && pnpm build
 # Builds the component registry, then the site (app/package.json build script).
 RUN cd app && pnpm build
 
-FROM ghcr.io/hanzoai/static:0.4.1
+# 0.5.1 serves a directory's index.html in place. On 0.4.1 every page 301'd to
+# an explicit /index.html, which leaks that filename into the address bar and
+# into the URLs Next builds for its route prefetches.
+FROM ghcr.io/hanzoai/static:0.5.1-amd64
 COPY --from=builder /src/app/out /public
 EXPOSE 3000
 # No -spa: the export writes a real index.html per route (trailingSlash), so a
