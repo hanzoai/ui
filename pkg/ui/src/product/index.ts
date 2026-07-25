@@ -47,6 +47,11 @@ export * from './BrandMark'
 export * from './OrgSwitcher'
 export * from './scope'
 
+// Menu — the ONE menu system: portal-theme-safe DropdownMenu (click) + ContextMenu
+// (right-click), both rendering the SAME item spec (MenuPanel/MenuItemView) so every
+// menu across the fleet is pixel-identical. SelectMenu/ComboBox share the same spec.
+export * from './menu'
+
 // The rest — every exported name below is unique across the layer.
 export * from './DataTable'
 export * from './EmptyState'
@@ -62,6 +67,7 @@ export * from './SelectMenu'
 export * from './SlideOver'
 export * from './StatusTag'
 export * from './ThemeToggle'
+export { ThemeToggleNext } from './ThemeToggleNext'
 export * from './Toast'
 export * from './color'
 
