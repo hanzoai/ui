@@ -15,6 +15,8 @@ export { EVENTS, PAGEVIEW } from './events'
 export type { EventName } from './events'
 export { GOALS, COHORTS } from './goals'
 export type { GoalDef, CohortDef } from './goals'
+export { FUNNELS, PRODUCTS, eventsOf } from './funnels'
+export type { FunnelDef, FunnelStep, FunnelId, ProductId } from './funnels'
 export {
   parseAttribution,
   deriveChannel,
