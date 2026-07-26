@@ -1,10 +1,42 @@
-# Hanzo UI - LLM Context
+# @hanzo/ui — LLM context
 
-## Overview
+**What this is.** The React component library for AI applications: a shadcn/ui
+fork with 161+ components, 24+ blocks, two themes, multi-framework output, and a
+single typed import surface. Published as `@hanzo/ui` (v8) on npm. Docs at
+https://ui.hanzo.ai. Dev port: 3003.
 
-React component library (shadcn/ui fork). 161 components, 24+ blocks, two themes, multi-framework. Published as `@hanzo/ui` on npm.
+**Canonical role.** This is the canonical impl repo for Hanzo's web UI kit —
+frontend components, not an SDK. It sits alongside the two SDK lines (full cloud
+SDK generated from OpenAPI in `hanzo-<lang>/sdk` + wrapper in `hanzoai/<lang>-sdk`;
+AI/agents lib `hanzo` in `hanzoai/python-sdk` flagship, `@hanzo/ai` in `hanzo-js/ai`).
+`@hanzo/event` (telemetry, `POST /v1/event`) lives here in `pkgs/event`. DRY: one
+impl, one place — link out, never duplicate.
 
-**Docs**: https://ui.hanzo.ai | **Dev port**: 3003
+**Brand rules (hard).**
+- Never call Hanzo an "LLM gateway" or position it against LiteLLM — it is a full
+  AI SDK / AI cloud, not a proxy. Purge that framing on sight.
+- Paths are `/v1/…` only — never an `/api/` prefix.
+- Zen models are our own family — never name upstream models.
+- Voice: "Hanzo — the Open AI Cloud." Developer-first, crisp, no emoji-spam.
+
+**Install / run.**
+```bash
+pnpm add @hanzo/ui         # consume
+# dev:
+pnpm install && pnpm build:registry && pnpm dev   # registry MUST build before app
+```
+
+**Key entry points.** `pkg/ui/` (core lib + v8 subpaths: /product /data /canvas
+/wallet /network /billing /dashboard /usage /gitops) · `app/registry/{default,new-york}/`
+(component SOURCE OF TRUTH) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
+`packages/shadcn/` (CLI) · `app/content/docs/` (MDX docs). Publish = bump a
+package `version` + merge to main (`.github/workflows/publish.yml`).
+
+**Spec / more context.** Canonical SDK + docs model: `~/work/hanzo/SDK-ARCHITECTURE.md`.
+Detailed engineering notes (build order, import surface, telemetry, upstream sync,
+gotchas) follow below.
+
+---
 
 ## v8 — the one import surface (`@hanzo/ui@8`, `pkg/ui`)
 
@@ -99,16 +131,42 @@ version-PR bot — the semver bump is the trigger.
 ## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
 
 `@hanzo/event` is the single canonical telemetry client for every Hanzo surface.
-It emits **one** kind of thing — an `Event` — to **one** door: `POST /v1/event`
-with the batched `{ batch: [Event, …] }` wire, `-> { accepted, dropped }`.
-Pageview, event, identify, group, AND errors are all events on that one stream;
-Cloud resolves the tenant server-side (session / publishable `pk_` key) and fans
-the stream to the read lenses (analytics = web, insights = product, sentry =
-errors). The client **never** sends the org. Entries: `.` (framework-agnostic:
-`createAnalytics`, `EVENTS`, `GOALS`, attribution helpers) and `./react`
-(`AnalyticsProvider`, `useAnalytics`, `usePageview`, `ErrorBoundary`). Auto error
-capture (window.onerror / unhandledrejection / React boundary) makes it the
-drop-in `@sentry` replacement. SSR-safe, fail-soft, beacon-on-unload.
+ONE API surface over **TWO** planes — the client never sends the org; the server
+resolves the tenant.
+
+1. **Event stream** — pageview/event/identify/group (and an error breadcrumb),
+   batched to `POST {host}/v1/event` with `{ batch: [Event, …] }`
+   `-> { accepted, dropped }`. Tenant from the session or a publishable `pk_` key.
+2. **Error plane** — every captured exception is ALSO framed as a real **Sentry
+   envelope** and POSTed to `POST {dsn.origin}/v1/sentry/{projectId}/envelope/?sentry_key=…`.
+   This is the ONLY thing that reaches the Sentry error dashboard.
+
+> **There is NO server-side fan-out from `/v1/event` into Sentry.** Versions
+> ≤ 0.3.1 claimed there was ("lensed server-side into … error tracking"). There
+> is not: cloud's handler folds the exception into `properties.$exception`,
+> writes one row to the event warehouse (readable via `GET /v1/errors`), and
+> stops. Because every property believed that claim, the whole fleet reported
+> **zero** errors to Sentry until 0.3.2 added the envelope. Do not re-collapse
+> these planes.
+
+Configure the error plane with `dsn` (or `NEXT_PUBLIC_HANZO_EVENT_DSN`), minted
+per property via `POST /v1/sentry/projects`. The DSN key is publishable and
+write-only — safe in a bundle, same trust class as `pk_`. **No DSN => the error
+plane is inert** (fail-safe: nothing sent, nothing thrown, event stream
+unaffected); assert `client.errorPlaneEnabled` if you need to know.
+
+Note that web analytics is a THIRD, separate plane and is NOT this client — it is
+the `analytics.hanzo.ai/hz.js` tag, which speaks a different wire (a bare JSON
+array of `{site, ts, type, …}`). `analytics.hanzo.ai/v1/event` and
+`api.hanzo.ai/v1/event` share a path spelling but are different protocols; point
+this client at the API host, never the analytics host.
+
+Entries: `.` (framework-agnostic: `createAnalytics`, `EVENTS`, `GOALS`,
+attribution + DSN/scrub helpers) and `./react` (`AnalyticsProvider`,
+`useAnalytics`, `usePageview`, `ErrorBoundary`). Auto error capture
+(window.onerror / unhandledrejection / React boundary) makes it the drop-in
+error-tracking replacement. Secrets and PII are scrubbed client-side before an
+error leaves the device. SSR-safe, fail-soft, beacon-on-unload.
 
 Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
 `"type": "module"` — a CJS `.js` is parsed as ESM and crashes `require()` with
@@ -121,22 +179,13 @@ Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
 | `@hanzo/event` | **canonical** | `pkgs/event`, posts `/v1/event` only |
 | `@hanzo/capture` (npm) | **deprecated → `@hanzo/event`** | the old name of this package; `@hanzo/event` is a superset |
 | `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
-
-The legacy telemetry stack in **`hanzoai/universe`** — `@hanzo/analytics`
-(browser, hardcoded org keys → `analytics.hanzo.ai`), `@hanzo/insights` (shim →
-`@hanzo/analytics`), and `@hanzo/events` (server SDK, password + `tenantId` auth,
-LLM traces) — predates `/v1/event` and still emits directly to the lenses. Its
-north star is `@hanzo/event`, but the migration is **cross-repo and API-breaking**
-(different call surfaces; the browser pair needs `/v1/event` publishable-key
-support, and `@hanzo/events` is a server/LLM-obs concern that maps to `/v1/event`
-+ the o11y `gen_ai` plane, not the browser client). Tracked as a CTO-gated
-follow-on — not reconciled here.
+| `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkgs/event` only. |
 
 ## Three-Layer Architecture
 
-1. **Components** (`registry/{style}/ui/`) -- Single primitives (Button, Card, Dialog). CLI-installable.
-2. **Examples** (`registry/{style}/example/`) -- Usage demos for docs via `<ComponentPreview />`.
-3. **Blocks** (`registry/{style}/blocks/`) -- Full-page sections (Dashboard, Login). NOT CLI-installable, docs only.
+1. **Components** (`registry/{style}/ui/`) — single primitives (Button, Card, Dialog). CLI-installable.
+2. **Examples** (`registry/{style}/example/`) — usage demos for docs via `<ComponentPreview />`.
+3. **Blocks** (`registry/{style}/blocks/`) — full-page sections (Dashboard, Login). NOT CLI-installable, docs only.
 
 ## Import Path Transformation
 
@@ -165,37 +214,25 @@ React 19, Next.js 15.3+, Tailwind CSS 4 (OKLCH colors), Radix UI, Turborepo + pn
 
 ## Upstream Sync
 
-Remote `shadcn` points to `/Users/z/work/shadcn/ui` (local clone of shadcn-ui/ui).
-hanzoai/ui is NOT a GitHub fork -- no shared object store, so large merges can fail on push.
-
-Last sync: 2026-03-24 (shadcn@4.1.0, commit 8bec9c123)
+Remote `shadcn` points to a local clone of shadcn-ui/ui.
+hanzoai/ui is NOT a GitHub fork — no shared object store, so large merges can fail on push.
 Strategy: file-level checkout from shadcn/main for specific directories (not git merge).
 - Take theirs: packages/shadcn/, packages/tests/, apps/, templates/, scripts/, skills/
 - Keep ours: app/, pkg/, demo/, docs/, template/next/, pnpm-workspace.yaml, package.json
-- Remove: deprecated/ (upstream deleted it)
 - Regenerate: pnpm-lock.yaml after sync
 
 ## Key Features
 
-- **Page Builder** (`/builder`): Drag-drop block assembly with @dnd-kit, export to TSX
+- **Page Builder** (`/builder`): drag-drop block assembly with @dnd-kit, export to TSX
 - **White-Label**: Zoo/Lux forks via `brands/{BRAND}.brand.ts`
 - **External Registries**: 35+ sources in `app/registries.json`, install via `npx @hanzo/ui add @aceternity/spotlight`
 
 ## Gotchas
 
-- Registry index is `Index[style][name]`, NOT `Index[name]` -- caused silent block render failures
-- Shiki `getHighlighter` incompatible with static export -- replaced with basic pre/code
+- Registry index is `Index[style][name]`, NOT `Index[name]` — caused silent block render failures
+- Shiki `getHighlighter` incompatible with static export — replaced with basic pre/code
 - Some blocks (login-01, login-02, sidebar-02) have Server Component issues with event handlers
-- Zod validation removed from `_getAllBlocks()`/`_getBlockCode()` -- we control generation
-- Firebase split to optional `@hanzo/auth-firebase` package (Jan 2025)
-- `@hanzo/auth` v2.6.0 uses pluggable provider registry: `registerAuthProvider('firebase', FirebaseAuthService)`
-
-## Component Stats
-
-- 161 total files, ~127 implemented, ~34 stubs
-- Unique: 9 3D components, 12 AI components, 13 animation components, 15 nav variants
-- 3x more components than upstream shadcn/ui (161 vs 58)
-- shadcn CLI: v4.1.0 with font transformers, chart color picker, scaffold from github
+- `@hanzo/auth` v2.6.0 uses a pluggable provider registry: `registerAuthProvider('firebase', FirebaseAuthService)`
 
 ## Rules
 
