@@ -21,6 +21,7 @@ export default defineConfig({
     billing: 'src/billing.ts',
     dashboard: 'src/dashboard.ts',
     usage: 'src/usage.ts',
+    telemetry: 'src/telemetry.ts',
   },
   format: ['esm', 'cjs'],
   outDir: 'dist',
