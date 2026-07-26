@@ -80,9 +80,29 @@ jobs:
         run: pnpm --filter ${{ matrix.package }} build
 
       - name: Publish package
-        run: pnpm --filter ${{ matrix.package }} publish --no-git-checks --access public
+        # Idempotent on purpose: the desired state is "npmjs holds this version", and
+        # a version already there satisfies it. Versions are immutable, so a conflict
+        # means the release already happened (a re-run, or a hand publish) — that is
+        # success, not a failure. Every other error still fails the job.
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -o pipefail
+          OUT=$(pnpm --filter ${{ matrix.package }} publish \
+            --no-git-checks --access public 2>&1) || true
+          echo "$OUT"
+          case "$OUT" in
+            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
+              echo "::notice::${{ matrix.package }} is already on npmjs at this version — nothing to do" ;;
+            *)
+              # Not a conflict: confirm the version really landed, else fail loudly.
+              PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
+              NAME=$(jq -r '.name' "$PKG_DIR/package.json")
+              WANT=$(jq -r '.version' "$PKG_DIR/package.json")
+              npm view "$NAME@$WANT" version >/dev/null 2>&1 \
+                || { echo "::error::$NAME@$WANT is not on npmjs after publish"; exit 1; }
+              echo "published $NAME@$WANT" ;;
+          esac
 
       - name: Publish to the Hanzo registry
         # Second home for the same tarball: api.hanzo.ai/v1/packages/hanzo/npm, our
