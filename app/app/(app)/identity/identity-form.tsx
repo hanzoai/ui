@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { formatEther } from "viem"
 import {
   useAccount,
@@ -11,6 +10,7 @@ import {
   useWriteContract,
 } from "wagmi"
 
+import { ConnectWallet } from "@/components/connect-wallet"
 import {
   AI_TOKEN_ABI,
   CONTRACT_ADDRESSES,
@@ -208,7 +208,7 @@ export function IdentityForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ConnectButton />
+            <ConnectWallet />
 
             {isConnected && aiBalance !== undefined && (
               <div className="mt-4">
