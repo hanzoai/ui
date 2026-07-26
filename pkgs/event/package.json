@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/event",
-  "version": "0.3.1",
-  "description": "Hanzo Event — the ONE telemetry client. Emits every kind of event — pageview/event/identify/group AND errors — to the ONE Hanzo Cloud front door (POST /v1/event) as one batched stream, lensed server-side into product analytics (insights), web analytics (analytics), and error tracking (sentry). First-touch attribution, beacon-on-unload, auto error capture, a shared event + goal vocabulary. Subsumes @sentry.",
+  "version": "0.3.3",
+  "description": "Hanzo Event \u2014 the ONE telemetry client. Emits pageview/event/identify/group to the Hanzo Cloud event stream (POST /v1/event), AND reports errors to Sentry as real Sentry envelopes \u2014 the error plane needs a DSN, without one nothing reaches Sentry. First-touch attribution, beacon-on-unload, auto error capture, client-side secret/PII scrubbing, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -17,7 +17,8 @@
   "files": [
     "dist",
     "src",
-    "README.md"
+    "README.md",
+    "TAXONOMY.md"
   ],
   "repository": {
     "type": "git",

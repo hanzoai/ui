@@ -1,13 +1,27 @@
-// The framework-agnostic event client. Buffers events and flushes them as ONE
-// batch through the ONE Hanzo Cloud ingestion front door:
+// The framework-agnostic event client. ONE API surface over TWO orthogonal
+// planes, sharing one session and one identity:
 //
-//   POST {host}/v1/event   body: { batch: [Event, …] }   -> { accepted, dropped }
+//   1. EVENT STREAM — buffered pageview/event/identify/group, flushed as ONE
+//      batch to the Hanzo Cloud front door:
+//        POST {host}/v1/event   body: { batch: [Event, …] }  -> { accepted, dropped }
+//      Cloud resolves the tenant server-side (validated session, or the signed
+//      publishable key) and stamps it; the client NEVER sends the org.
 //
-// It NEVER sends the org/tenant: Cloud resolves that server-side (from the
-// validated session, or the signed publishable key) and stamps it. The client
-// only supplies its own visitor identity. Errors are just events (type:'error')
-// on the same stream — one client, one pipe, lensed server-side into product
-// analytics (insights), web analytics (analytics), and error tracking (sentry).
+//   2. ERROR PLANE — every captured exception is ALSO framed as a real Sentry
+//      envelope and POSTed to the error host named by the DSN:
+//        POST {dsn.origin}/v1/sentry/{projectId}/envelope/?sentry_key=…
+//      This is what reaches sentry.hanzo.ai (issues, grouping, stack frames).
+//
+// These are NOT the same pipe and one does NOT feed the other. The event stream
+// stores a `type:'error'` row in the cloud event warehouse (readable via
+// GET /v1/errors) — that is product signal, not error tracking. There is no
+// server-side fan-out from /v1/event into Sentry; without the envelope below,
+// nothing ever reaches sentry.hanzo.ai. An earlier revision of this file claimed
+// the one door was "lensed server-side into … error tracking (sentry)". It was
+// wrong, and it silently cost the fleet all of its error telemetry.
+//
+// The error plane is inert (fail-safe) when no DSN is configured: nothing is
+// sent, nothing throws, and the event stream is unaffected.
 //
 // Auth is orthogonal — the SAME body to the SAME door, differing only in how the
 // caller proves its tenant:
@@ -19,10 +33,10 @@
 //     safe to ship in a bundle; the door HMAC-verifies it to an org server-side.
 //
 // The wire is the canonical `Event` (== the cloud CaptureEvent): its `type` field
-// is what Cloud folds to event_type='error', so a captured exception reaches the
-// error-tracking lens. (A four-field {event,distinctId,time,properties} object has
-// no `type`, so it can never be lensed as an error — this batched Event wire is
-// the one that lights up all three lenses.)
+// is what Cloud folds to event_type='error', which is how the event WAREHOUSE
+// classifies the row (GET /v1/errors). That is the extent of it — the fold does
+// not forward anything to Sentry. The error dashboard is fed only by the envelope
+// in plane 2 above, and only when a DSN is set.
 
 import {
   parseAttribution,
@@ -30,6 +44,13 @@ import {
   deriveChannel,
 } from './attribution'
 import { PAGEVIEW } from './events'
+import {
+  buildEnvelope,
+  buildSentryEvent,
+  normalizeError as normalizeThrowable,
+  parseDsn,
+  type ErrorIdentity,
+} from './sentry'
 import {
   anonId,
   sessionId,
@@ -41,17 +62,46 @@ import {
 import type {
   AnalyticsConfig,
   Attribution,
+  CaptureErrorOptions,
   Cohort,
+  Dsn,
   EventKind,
   Exception,
   Transport,
   WireEvent,
 } from './types'
+import { VERSION } from './version'
 
-export const VERSION = '0.3.0'
+export { VERSION }
 
 const EVENT_PATH = '/v1/event' // the ONE canonical ingestion front door
 const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
+const ENVELOPE_CONTENT_TYPE = 'application/x-sentry-envelope'
+
+/** readEnvDsn resolves a DSN from the public env when config omits one, so an app
+ *  gets the error plane by setting ONE build-time variable and nothing else.
+ *  Next/Vite inline these at build; the access is guarded so it is safe in a bare
+ *  browser and during SSR/prerender where `process` may not exist. */
+function readEnvDsn(): string | undefined {
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      return process.env.NEXT_PUBLIC_HANZO_EVENT_DSN || process.env.HANZO_EVENT_DSN || undefined
+    }
+  } catch {
+    /* no process — browser without inlined env */
+  }
+  return undefined
+}
+
+/** readEnv reads an inlined build-time variable, guarded like readEnvDsn. */
+function readEnv(name: string): string | undefined {
+  try {
+    if (typeof process !== 'undefined' && process.env) return process.env[name] || undefined
+  } catch {
+    /* no process */
+  }
+  return undefined
+}
 
 /** appendQuery adds a single query param to a URL string — used to carry a
  *  publishable key on a headerless sendBeacon (?ingest_key=…). */
@@ -66,37 +116,75 @@ function uid(): string {
 }
 
 /** Normalize anything thrown (Error | string | unknown) into an Exception. */
+/** normalizeError adapts the shared, hostile-input-safe normalizer (sentry.ts) to
+ *  the event stream's Exception shape. ONE normalizer serves both planes: a thrown
+ *  object may define `name`/`message`/`stack` as throwing getters, and when each
+ *  plane rolled its own reader the stream still lost the report that the error
+ *  plane had already survived. */
 function normalizeError(err: unknown): Exception {
-  if (err instanceof Error) {
-    return { type: err.name, message: err.message, stack: err.stack }
-  }
-  if (typeof err === 'string') return { message: err }
-  try {
-    return { message: JSON.stringify(err) }
-  } catch {
-    return { message: String(err) }
-  }
+  const n = normalizeThrowable(err)
+  return { type: n.name, message: n.message, stack: n.stack }
 }
 
 const isBrowser = () => typeof window !== 'undefined'
+
+/** serializeBatch stringifies a batch, salvaging what it can. `properties` is
+ *  arbitrary caller data — a DOM node, a React synthetic event, an axios error are
+ *  all circular, and a getter on one can throw — so a whole batch must never be
+ *  lost to a single poisoned event. Falls back to per-event serialization, then to
+ *  keeping the event and dropping its properties. Returns null only when nothing
+ *  at all survives. */
+function serializeBatch(batch: WireEvent[]): string | null {
+  try {
+    return JSON.stringify({ batch })
+  } catch {
+    /* one bad event — salvage the rest below */
+  }
+  const parts: string[] = []
+  for (const e of batch) {
+    try {
+      parts.push(JSON.stringify(e))
+    } catch {
+      try {
+        // Keep the event (identity, session, type all matter); drop the payload
+        // that could not be serialized, and say so rather than lying by omission.
+        parts.push(JSON.stringify({ ...e, properties: { $unserializable: true } }))
+      } catch {
+        /* unsalvageable — drop this ONE event, never the batch */
+      }
+    }
+  }
+  return parts.length > 0 ? '{"batch":[' + parts.join(',') + ']}' : null
+}
 
 /** DefaultTransport: fetch(keepalive) for authenticated/normal sends;
  *  navigator.sendBeacon for headerless page-unload beacons. A bearer (a JWT or a
  *  publishable pk_ key) rides Authorization on fetch; on a beacon — which cannot
  *  set headers — a publishable key rides the ?ingest_key query instead. */
 class DefaultTransport implements Transport {
-  send(url: string, body: string, opts: { beacon: boolean; token?: string; ingestKey?: string }): void {
+  send(
+    url: string,
+    body: string,
+    opts: {
+      beacon: boolean
+      token?: string
+      ingestKey?: string
+      contentType?: string
+      debug?: boolean
+    },
+  ): void {
+    const contentType = opts.contentType ?? 'application/json'
     if (opts.beacon && isBrowser() && typeof navigator.sendBeacon === 'function') {
       const beaconUrl = opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url
       try {
-        navigator.sendBeacon(beaconUrl, new Blob([body], { type: 'application/json' }))
+        navigator.sendBeacon(beaconUrl, new Blob([body], { type: contentType }))
         return
       } catch {
         /* fall through to fetch */
       }
     }
     if (typeof fetch !== 'function') return
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+    const headers: Record<string, string> = { 'Content-Type': contentType }
     const bearer = opts.ingestKey ?? opts.token
     if (bearer) headers.Authorization = `Bearer ${bearer}`
     void fetch(url, {
@@ -105,9 +193,19 @@ class DefaultTransport implements Transport {
       body,
       keepalive: true,
       credentials: 'include',
-    }).catch(() => {
-      /* telemetry loss is acceptable; never throw into the app */
     })
+      .then((res) => {
+        // Telemetry loss never throws into the app — but silence is how this
+        // client lost the fleet's errors in the first place. Under `debug`, say
+        // so. A rejected ingest (the CORS allowlist 403s non-production origins,
+        // so local dev NEVER reports) is otherwise indistinguishable from success.
+        if (!res.ok && opts.debug) {
+          console.warn('[event] ingest rejected', res.status, url.split('?')[0])
+        }
+      })
+      .catch((e: unknown) => {
+        if (opts.debug) console.warn('[event] ingest failed', url.split('?')[0], e)
+      })
   }
 }
 
@@ -123,6 +221,10 @@ export class Analytics {
   private attribution: Attribution = { utm: {} }
   private cohort: Cohort = {}
   private started = false
+  /** Parsed error-plane DSN, or null when the plane is inert. */
+  private dsn: Dsn | null
+  /** Guards against an error thrown *inside* the error path re-entering it. */
+  private reentrant = false
 
   constructor(config: AnalyticsConfig) {
     this.cfg = {
@@ -134,6 +236,23 @@ export class Analytics {
       ...config,
     }
     this.transport = config.transport ?? new DefaultTransport()
+    // Error plane: explicit DSN wins, else the inlined build-time env. Malformed
+    // or absent => null => inert, never throwing into the host app.
+    this.dsn = parseDsn(config.dsn ?? readEnvDsn())
+  }
+
+  /** errorPlaneEnabled reports whether captured exceptions can actually reach the
+   *  error host. False means a DSN was never configured — the documented
+   *  fail-safe. Exposed so an app (or a test) can assert its wiring instead of
+   *  discovering months later that nothing was ever reported. */
+  get errorPlaneEnabled(): boolean {
+    return this.dsn !== null
+  }
+
+  /** errorIngestUrl is the fully-derived envelope endpoint, or undefined when the
+   *  plane is inert. Diagnostics only. */
+  get errorIngestUrl(): string | undefined {
+    return this.dsn?.ingestUrl
   }
 
   /** init is idempotent and browser-only for its side effects: capture first-touch
@@ -161,8 +280,9 @@ export class Analytics {
     window.addEventListener('pagehide', () => this.flush(true))
 
     // Auto error capture — the drop-in @sentry replacement. Unhandled errors and
-    // rejected promises become type:'error' events on the same stream, which Cloud
-    // stamps event_type='error' → the sentry.hanzo.ai lens.
+    // rejected promises are reported on BOTH planes: a Sentry envelope to the DSN
+    // host (what reaches the error dashboard — requires a DSN) and a type:'error'
+    // event on the stream (product signal in the warehouse).
     if (this.cfg.captureErrors) {
       window.addEventListener('error', (e: ErrorEvent) => {
         this.captureError(e.error ?? e.message, { handled: false })
@@ -205,21 +325,49 @@ export class Analytics {
   /** track is an alias of capture (Segment familiarity). */
   track = this.capture.bind(this)
 
-  /** captureError records an exception as a first-class error event — the ONE
-   *  error path (subsumes @sentry). A caught error, an unhandled rejection, a
-   *  React render error, or a manual report all become a type:'error' event on the
-   *  same stream; Cloud folds the exception into properties.$exception and stamps
-   *  event_type='error', so it surfaces in the error-tracking lens. Never throws
-   *  back into the app; errors are higher-signal than pageviews, so it flushes
-   *  promptly (a crash may unload the page moments later). */
-  captureError(
-    err: unknown,
-    context?: { handled?: boolean; properties?: Record<string, unknown> },
-  ): void {
-    const ex = normalizeError(err)
-    ex.handled = context?.handled ?? true
-    this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
-    this.flush()
+  /** captureError reports a caught error, an unhandled rejection, a React render
+   *  error, or a manual report to BOTH planes, from one call:
+   *
+   *    - the ERROR PLANE — a real Sentry envelope to the DSN host. This is the one
+   *      that produces an issue in sentry.hanzo.ai (grouping, stack frames, AST).
+   *      Inert when no DSN is configured.
+   *    - the EVENT STREAM — a `type:'error'` row in the cloud event warehouse, so
+   *      an error stays correlated with the session's pageviews for product
+   *      analysis (readable via GET /v1/errors).
+   *
+   *  Both carry the SAME session and subject id, so an error and the pageview
+   *  before it join up. Never throws back into the app; errors are higher-signal
+   *  than pageviews, so both planes flush promptly (a crash may unload the page
+   *  moments later). */
+  captureError(err: unknown, context?: CaptureErrorOptions): void {
+    // A failure inside the error path must not recurse through the global handlers.
+    if (this.reentrant) return
+    this.reentrant = true
+    try {
+      // ERROR PLANE FIRST, in its own try. The planes are independent, so neither
+      // may be able to starve the other: `properties` is arbitrary caller data
+      // (a DOM node, a React synthetic event, an axios error — all circular and
+      // all common), and serializing it on the event stream can throw. When the
+      // stream ran first, that throw escaped to the outer catch and the crash
+      // report was never sent — silently losing exactly the signal this client
+      // exists to deliver. Order and isolation are the fix.
+      try {
+        this.sendError(err, context)
+      } catch {
+        /* the error plane must never take the event stream down with it */
+      }
+
+      try {
+        const ex = normalizeError(err)
+        ex.handled = context?.handled ?? true
+        this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
+        this.flush()
+      } catch {
+        /* nor the reverse */
+      }
+    } finally {
+      this.reentrant = false
+    }
   }
 
   /** captureException — @sentry-familiar alias of captureError. */
@@ -254,12 +402,56 @@ export class Analytics {
     // Only a headerful bearer JWT blocks the beacon: sendBeacon cannot set an
     // Authorization header. A pk_ rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token
-    const body = JSON.stringify({ batch })
+    const body = serializeBatch(batch)
+    if (body === null) {
+      if (this.cfg.debug) console.debug('[event] flush → dropped, batch unserializable')
+      return
+    }
     if (this.cfg.debug) console.debug('[event] flush →', EVENT_PATH, batch.length)
-    this.transport.send(this.cfg.host + EVENT_PATH, body, { beacon: useBeacon, token, ingestKey: key })
+    this.transport.send(this.cfg.host + EVENT_PATH, body, {
+      beacon: useBeacon,
+      token,
+      ingestKey: key,
+      debug: this.cfg.debug,
+    })
   }
 
   // ── internals ────────────────────────────────────────────────────────────
+
+  /** sendError frames one exception as a Sentry envelope and posts it to the DSN's
+   *  ingest URL. The DSN's own key rides ?sentry_key= (the credential channel the
+   *  server trusts, and the only one a headerless beacon can carry), so NO bearer
+   *  or publishable key is attached here — the two planes authenticate
+   *  independently. Errors are sent one envelope per event, immediately: batching
+   *  a crash report is how you lose it. */
+  private sendError(err: unknown, options?: CaptureErrorOptions): void {
+    if (!this.cfg.enabled || !this.dsn) return
+    const event = buildSentryEvent({
+      error: err,
+      options,
+      identity: this.errorIdentity(),
+      capturePII: this.cfg.capturePII ?? false,
+    })
+    const body = buildEnvelope(event, this.dsn)
+    if (this.cfg.debug) console.debug('[event] error →', this.dsn.ingestUrl, event.event_id)
+    this.transport.send(this.dsn.ingestUrl, body, {
+      beacon: false,
+      contentType: ENVELOPE_CONTENT_TYPE,
+      debug: this.cfg.debug,
+    })
+  }
+
+  /** errorIdentity is the SAME identity the event stream stamps — the OIDC subject
+   *  once identify() has run, else the anon id. Never email/PII. */
+  private errorIdentity(): ErrorIdentity {
+    return {
+      userId: this.personId ?? anonId(),
+      sessionId: sessionId(),
+      product: this.cfg.product,
+      release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
+      environment: this.cfg.environment ?? readEnv('NODE_ENV'),
+    }
+  }
 
   private enqueue(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): void {
     if (!this.cfg.enabled) return
