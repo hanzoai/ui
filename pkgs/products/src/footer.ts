@@ -5,10 +5,10 @@
  * (single source) plus Dev; the INSTALL column and the shared links resolve from
  * `DESTINATIONS`, so a footer link and its menu twin can never disagree.
  *
- * Links whose address the spec pins go through `DESTINATIONS`; marketing sub-pages
- * the spec names but does not pin (About, Blog, Learn, …) are built from `ORIGIN`
- * on the honest `hanzo.ai/<slug>` · `docs.hanzo.ai/<slug>` · `/legal/<slug>`
- * conventions — no host is fabricated. Pure data, React-free.
+ * Links whose address the spec pins go through `DESTINATIONS`; the rest are built
+ * from `ORIGIN` on the `hanzo.ai/<slug>` and `docs.hanzo.ai/docs/<slug>` conventions.
+ * Every address here resolves against the live properties — no host and no path is
+ * a guess. Pure data, React-free.
  */
 import type { Link } from "./link"
 import { FAMILY } from "./family"
@@ -41,6 +41,9 @@ const productLinks: Link[] = [
   { id: "dev", label: "Dev", href: `${ORIGIN.root}/dev` },
 ]
 
+/** The App property — it serves the ecosystem's community page, so resolve it from `FAMILY`. */
+const app = FAMILY.find((p) => p.id === "app")!
+
 export const FOOTER: Footer = {
   columns: [
     { id: "products", title: "PRODUCTS", links: productLinks },
@@ -63,7 +66,6 @@ export const FOOTER: Footer = {
       links: [
         { id: "desktop", label: "Desktop", href: DESTINATIONS.desktop },
         { id: "browser", label: "Browser extension", href: DESTINATIONS.browserExtension },
-        { id: "vscode", label: "VS Code", href: DESTINATIONS.vscode },
         { id: "cli", label: "Hanzo CLI", href: DESTINATIONS.cli },
         { id: "sdks", label: "SDKs", href: DESTINATIONS.sdks },
         { id: "downloads", label: "All downloads", href: DESTINATIONS.downloads },
@@ -77,7 +79,7 @@ export const FOOTER: Footer = {
         { id: "api-reference", label: "API Reference", href: DESTINATIONS.apiReference },
         { id: "sdks", label: "SDKs", href: DESTINATIONS.sdks },
         { id: "mcp", label: "MCP Tools", href: `${ORIGIN.root}/mcp` },
-        { id: "cli-reference", label: "CLI Reference", href: `${ORIGIN.docs}/cli` },
+        { id: "cli-reference", label: "CLI Reference", href: `${ORIGIN.docs}/docs/cli` },
         { id: "github", label: "GitHub", href: ORIGIN.github },
       ],
     },
@@ -85,11 +87,10 @@ export const FOOTER: Footer = {
       id: "resources",
       title: "RESOURCES",
       links: [
-        { id: "learn", label: "Learn", href: `${ORIGIN.docs}/learn` },
-        { id: "quickstarts", label: "Quickstarts", href: `${ORIGIN.docs}/quickstarts` },
-        { id: "community", label: "Community", href: `${ORIGIN.root}/community` },
-        { id: "showcase", label: "Showcase", href: `${ORIGIN.root}/showcase` },
-        { id: "changelog", label: "Changelog", href: `${ORIGIN.root}/changelog` },
+        { id: "learn", label: "Learn", href: `${ORIGIN.root}/learn` },
+        { id: "quickstarts", label: "Quickstarts", href: `${ORIGIN.docs}/docs/getting-started` },
+        { id: "community", label: "Community", href: `${app.url}/community` },
+        { id: "support", label: "Support", href: `${ORIGIN.root}/support` },
         { id: "status", label: "Status", href: DESTINATIONS.status },
       ],
     },
@@ -111,9 +112,9 @@ export const FOOTER: Footer = {
     links: [
       { id: "status", label: "Status", href: DESTINATIONS.status },
       { id: "security", label: "Security", href: `${ORIGIN.root}/security` },
-      { id: "privacy", label: "Privacy", href: `${ORIGIN.root}/legal/privacy` },
-      { id: "terms", label: "Terms", href: `${ORIGIN.root}/legal/terms` },
-      { id: "cookies", label: "Cookies", href: `${ORIGIN.root}/legal/cookies` },
+      { id: "privacy", label: "Privacy", href: `${ORIGIN.root}/privacy` },
+      { id: "terms", label: "Terms", href: `${ORIGIN.root}/terms` },
+      { id: "cookies", label: "Cookies", href: `${ORIGIN.root}/cookies` },
     ],
   },
 }
