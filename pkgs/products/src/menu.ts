@@ -40,7 +40,6 @@ export const MEET_HANZO_MENU: MeetHanzoMenu = {
   installs: [
     { id: "desktop", label: "Desktop app", href: DESTINATIONS.desktop },
     { id: "browser", label: "Browser extension", href: DESTINATIONS.browserExtension },
-    { id: "vscode", label: "VS Code", href: DESTINATIONS.vscode },
     { id: "cli", label: "CLI", href: DESTINATIONS.cli },
     { id: "sdks", label: "SDKs", href: DESTINATIONS.sdks },
     { id: "downloads", label: "All downloads", href: DESTINATIONS.downloads },

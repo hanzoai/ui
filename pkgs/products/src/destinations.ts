@@ -16,14 +16,22 @@ export const ORIGIN = {
   root: "https://hanzo.ai",
   /** The one documentation site. */
   docs: "https://docs.hanzo.ai",
-  /** The AI cloud console. */
+  /** The AI cloud property — also the developer console's front door. */
   cloud: "https://cloud.hanzo.ai",
+  /** The launcher's console surface. */
+  console: "https://console.hanzo.ai",
+  /** Subscriptions, usage, and invoices. */
+  billing: "https://billing.hanzo.ai",
+  /** Identity — profile, organizations, security. */
+  id: "https://hanzo.id",
+  /** Platform administration. */
+  admin: "https://admin.hanzo.ai",
+  /** Deploy and scale services. */
+  platform: "https://platform.hanzo.ai",
   /** The LLM gateway / API platform host (`api.*`, never an `/api` path). */
   api: "https://api.hanzo.ai",
   /** The status page. */
   status: "https://status.hanzo.ai",
-  /** The downloads host (OS-detecting) — the App property also serves `/download`. */
-  downloads: "https://hanzo.app",
   /** The org's GitHub. */
   github: "https://github.com/hanzoai",
 } as const
@@ -36,28 +44,26 @@ export const DESTINATIONS = {
   /** Meet Hanzo / All products. */
   products: `${ORIGIN.root}/products`,
   /** All apps. */
-  apps: `${ORIGIN.root}/apps`,
+  apps: `${ORIGIN.docs}/docs/apps`,
   /** All models. */
   models: `${ORIGIN.root}/models`,
   /** All cloud products. */
   cloudProducts: `${ORIGIN.cloud}/products`,
   /** All downloads (OS-detecting). */
-  downloads: `${ORIGIN.downloads}/download`,
+  downloads: `${ORIGIN.root}/download`,
   /** The browser extension download. */
-  browserExtension: `${ORIGIN.downloads}/download/browser`,
+  browserExtension: `${ORIGIN.root}/extension`,
   /** The desktop app download. */
-  desktop: `${ORIGIN.downloads}/download/desktop`,
-  /** The VS Code extension download. */
-  vscode: `${ORIGIN.downloads}/download/vscode`,
+  desktop: `${ORIGIN.root}/desktop`,
   /** The CLI download. */
-  cli: `${ORIGIN.downloads}/download/cli`,
+  cli: `${ORIGIN.root}/cli`,
   /** The SDKs index. */
-  sdks: `${ORIGIN.docs}/developers/sdks`,
+  sdks: `${ORIGIN.root}/sdks`,
   /** The documentation home. */
   docs: ORIGIN.docs,
   /** The API reference. */
   apiReference: `${ORIGIN.docs}/reference`,
-  /** The developer console. */
+  /** The developer console — Cloud's front door (see `family.test.ts`). */
   console: ORIGIN.cloud,
   /** The status page. */
   status: ORIGIN.status,
