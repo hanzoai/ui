@@ -157,6 +157,7 @@
   "author": "Hanzo AI <dev@hanzo.ai>",
   "dependencies": {
     "@hanzo/logo": "^1.0.13",
+    "@hanzo/products": "workspace:*",
     "@hanzogui/telemetry": "^0.1.0"
   }
 }
