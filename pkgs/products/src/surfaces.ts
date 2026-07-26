@@ -1,9 +1,11 @@
 /**
- * The launcher surface registry — the ONE cross-surface app-switcher list, the
- * collapse of the two lists that used to drift: `SURFACES` (hanzoai/ui
- * `pkg/ui/.../surfaces.data.ts`) and `HANZO_APPS` (hanzoai/gui
- * `@hanzogui/shell`). Both now re-export from here, so add or reorder a surface
- * ONCE and every launcher moves together.
+ * The launcher surface registry — the ONE cross-surface app-switcher list. It
+ * subsumes the two lists that used to drift: `SURFACES` (hanzoai/ui
+ * `pkg/ui/.../surfaces.data.ts`), which now re-exports from here, and
+ * `HANZO_APPS` (hanzoai/gui `@hanzogui/shell`), whose shared ids are all
+ * represented here and which points back at this registry once that repo takes
+ * the dependency. Add or reorder a surface ONCE and every launcher that sources
+ * this moves together.
  *
  * A surface is a place the switcher can open. The six product surfaces DERIVE from
  * `FAMILY` (single source — their label/href/domain/job can't drift from the
@@ -16,6 +18,7 @@
  * and this module imports no React. Pure data.
  */
 import { FAMILY, ROOT } from "./family"
+import { ORIGIN } from "./destinations"
 
 /** Every launcher surface id — the family ids (root as legacy `"ai"`) + platform. */
 export type SurfaceId =
@@ -59,14 +62,26 @@ const productSurfaces: Surface[] = FAMILY.map((p) => ({
   blurb: p.job,
 }))
 
-/** Launcher-only surfaces — real properties that are not flagship products. */
+/**
+ * Launcher-only surfaces — real properties that are not flagship products. Hosts
+ * come from `ORIGIN` and the subtitle is the href's own host, so a surface's tile
+ * can never name a domain it does not open.
+ */
+const platform = (id: SurfaceId, label: string, href: string, blurb: string): Surface => ({
+  id,
+  label,
+  href,
+  domain: new URL(href).host,
+  blurb,
+})
+
 const platformSurfaces: Surface[] = [
-  { id: "console", label: "Console", href: "https://console.hanzo.ai", domain: "console.hanzo.ai", blurb: "API keys, projects, and products." },
-  { id: "billing", label: "Billing", href: "https://billing.hanzo.ai", domain: "billing.hanzo.ai", blurb: "Subscriptions, usage, and invoices." },
-  { id: "account", label: "Account", href: "https://hanzo.id/account", domain: "hanzo.id", blurb: "Profile, organizations, and security." },
-  { id: "admin", label: "Admin", href: "https://admin.hanzo.ai", domain: "admin.hanzo.ai", blurb: "Platform administration." },
-  { id: "gateway", label: "Gateway", href: "https://console.hanzo.ai/gateway", domain: "console.hanzo.ai", blurb: "The unified AI API gateway." },
-  { id: "platform", label: "Platform", href: "https://platform.hanzo.ai", domain: "platform.hanzo.ai", blurb: "Deploy and scale services." },
+  platform("console", "Console", ORIGIN.console, "API keys, projects, and products."),
+  platform("billing", "Billing", ORIGIN.billing, "Subscriptions, usage, and invoices."),
+  platform("account", "Account", `${ORIGIN.id}/account`, "Profile, organizations, and security."),
+  platform("admin", "Admin", ORIGIN.admin, "Platform administration."),
+  platform("gateway", "Gateway", `${ORIGIN.console}/gateway`, "The unified AI API gateway."),
+  platform("platform", "Platform", ORIGIN.platform, "Deploy and scale services."),
 ]
 
 /** The full launcher registry, in order: root, the six products, then platform. */
