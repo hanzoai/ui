@@ -1,7 +1,7 @@
 {
-  "name": "@hanzo/capture",
-  "version": "0.1.1",
-  "description": "Hanzo Analytics — tiny, batched product-analytics capture client. Emits pageview/event/identify/group to Hanzo Cloud (/v1/analytics + /v1/tracker) with first-touch UTM/referrer/refCode attribution, beacon-on-unload, and a shared event + goal vocabulary.",
+  "name": "@hanzo/event",
+  "version": "0.3.0",
+  "description": "Hanzo Event — the ONE telemetry client. Emits every kind of event — pageview/event/identify/group AND errors — on one batched, de-duped stream: analytics to Hanzo Cloud (/v1/analytics + /v1/tracker), and errors as a Sentry-compatible envelope to /v1/sentry with a Hanzo-minted DSN. First-touch attribution, beacon-on-unload, auto error capture, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -22,13 +22,15 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/ui.git",
-    "directory": "pkgs/capture"
+    "directory": "pkgs/event"
   },
   "keywords": [
     "analytics",
     "product-analytics",
-    "capture",
     "telemetry",
+    "events",
+    "error-tracking",
+    "sentry",
     "attribution",
     "funnel",
     "hanzo"
