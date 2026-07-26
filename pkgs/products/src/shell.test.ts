@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { ORIGIN, DESTINATIONS } from "./destinations"
-import { PRODUCTS } from "./family"
-import { MEET_HANZO_MENU } from "./menu"
-import { FOOTER } from "./footer"
+import { addresses } from "./addresses"
 import { HEADERS } from "./header"
-import { SURFACES } from "./surfaces"
 
 /**
  * Cross-cutting honesty guards over the WHOLE ecosystem-shell spec: no href points
@@ -32,28 +28,10 @@ const ALLOWED_HOSTS = new Set([
   "github.com",
 ])
 
-/** Collect every href the spec exposes. */
-function allHrefs(): string[] {
-  const out: string[] = []
-  out.push(...Object.values(ORIGIN))
-  out.push(...Object.values(DESTINATIONS))
-  for (const p of PRODUCTS) {
-    out.push(p.url, p.action.href)
-  }
-  out.push(MEET_HANZO_MENU.allProducts.href)
-  out.push(...MEET_HANZO_MENU.utilities.map((l) => l.href))
-  out.push(...MEET_HANZO_MENU.installs.map((l) => l.href))
-  for (const col of FOOTER.columns) out.push(...col.links.map((l) => l.href))
-  out.push(...FOOTER.legal.links.map((l) => l.href))
-  for (const h of Object.values(HEADERS)) {
-    out.push(h.action.href, ...h.localNav.map((n) => n.href))
-  }
-  out.push(...SURFACES.map((s) => s.href))
-  return out
-}
-
 describe("ecosystem-shell href integrity", () => {
-  const hrefs = allHrefs()
+  // ONE enumeration for every guard — site-relative nav resolved to its property,
+  // so nothing escapes the host check by being a bare path.
+  const hrefs = addresses().map((a) => a.href)
 
   it("exposes hrefs to check", () => {
     expect(hrefs.length).toBeGreaterThan(60)
@@ -67,24 +45,20 @@ describe("ecosystem-shell href integrity", () => {
     for (const h of hrefs) expect(h).not.toMatch(/\/api(\/|$)/)
   })
 
-  it("every absolute href points at a real Hanzo host (no fabrication)", () => {
-    for (const h of hrefs) {
-      if (!h.startsWith("http")) continue // site-relative nav/action paths
-      expect(ALLOWED_HOSTS).toContain(new URL(h).host)
-    }
+  it("every href points at a real Hanzo host (no fabrication)", () => {
+    for (const h of hrefs) expect(ALLOWED_HOSTS).toContain(new URL(h).host)
   })
 
-  it("every absolute href is https (never plaintext http)", () => {
-    for (const h of hrefs) {
-      if (!h.startsWith("http")) continue
-      expect(h).toMatch(/^https:\/\//)
-    }
+  it("every href is https (never plaintext http)", () => {
+    for (const h of hrefs) expect(h).toMatch(/^https:\/\//)
   })
 
-  it("site-relative hrefs are rooted and never protocol-relative", () => {
-    for (const h of hrefs) {
-      if (h.startsWith("http")) continue
-      expect(h.startsWith("/") && !h.startsWith("//")).toBe(true)
+  it("site-relative header hrefs are rooted and never protocol-relative", () => {
+    for (const h of Object.values(HEADERS)) {
+      for (const raw of [h.action.href, ...h.localNav.map((n) => n.href)]) {
+        if (raw.startsWith("http")) continue
+        expect(raw.startsWith("/") && !raw.startsWith("//")).toBe(true)
+      }
     }
   })
 })
