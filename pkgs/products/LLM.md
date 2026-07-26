@@ -112,18 +112,20 @@ Modules:
   (one each): Chat **Use** · App **Build** · Team **Work** · Studio **Create AI** ·
   Bot **Deploy** · Cloud **Operate**. `findProduct(id)`.
 - `destinations.ts` — `ORIGIN` (the only place a host string lives) + `DESTINATIONS`
-  (the 14 canonical shared links: products, apps, models, cloudProducts, downloads,
-  browserExtension, desktop, vscode, cli, sdks, docs, apiReference, console, status).
+  (the 13 canonical shared links: products, apps, models, cloudProducts, downloads,
+  browserExtension, desktop, cli, sdks, docs, apiReference, console, status).
 - `menu.ts` — `MEET_HANZO_MENU` = eyebrow + all-products link + the six-product grid
   (`= FAMILY`) + a utility row (Models · Enso · Managed Agents · Hanzo Dev · MCP
-  Tools · Documentation) + an install row (Desktop · Browser · VS Code · CLI · SDKs ·
-  All downloads).
+  Tools · Documentation) + an install row (Desktop · Browser · CLI · SDKs · All
+  downloads).
 - `footer.ts` — `FOOTER` = 6 columns (Products · AI Platform · Install · Developers ·
   Resources · Company) + the legal bottom bar.
 - `header.ts` — `HEADERS: Record<SiteId, SiteHeader>` — per-property local nav +
   primary action, `productId` tying each site to a `Product`. `findHeader(site)`.
 - `surfaces.ts` — `SURFACES`, the collapsed launcher registry (below) +
   `surfaceById` / `otherSurfaces`.
+- `addresses.ts` — `addresses()`, every address the spec claims, each tagged with the
+  surface that claims it. The ONE enumeration the link checks run over.
 - `link.ts` — the `Link` / `Action` atoms.
 
 ### De-dupe: the collapsed launcher registry
@@ -145,13 +147,50 @@ the legacy launcher id `"ai"` (not the product id `"hanzo"`); the platform surfa
 (Console · Billing · Account · Admin · Gateway · Platform) are launcher-only real
 properties, not flagship products.
 
-### Href provenance (honest)
+### Href provenance — every address is live-verified
 
-Addresses the spec pins go through `DESTINATIONS`. Marketing sub-pages the spec names
-but does not pin are built from `ORIGIN` on the honest conventions
-`hanzo.ai/<slug>` · `docs.hanzo.ai/<slug>` · `/legal/<slug>` · `github.com/hanzoai`.
-No host is fabricated (a test asserts every absolute href resolves to a known Hanzo
-host and none carries an `/api/` path). Convention slugs to confirm before rollout:
-Managed Agents / Hanzo Dev / MCP Tools (`hanzo.ai/{agents,dev,mcp}`), API Platform
-(`api.hanzo.ai`), CLI Reference (`docs.hanzo.ai/cli`), the Resources/Company slugs,
-and the in-site action paths (`/new`, `/`).
+Addresses the spec pins go through `DESTINATIONS`; the rest are built from `ORIGIN` on
+the `hanzo.ai/<slug>` and `docs.hanzo.ai/docs/<slug>` conventions. Every address the
+spec exposes has been fetched against the live properties and returns 200, and each
+one agrees with the independent `U` table in `@hanzogui/shell`'s `hanzo-registry.ts`
+(two witnesses per address).
+
+`addresses.ts` is the ONE enumeration of every address the spec claims (site-relative
+header nav resolved against its own property). `shell.test.ts` runs the offline guards
+over it; `addresses.live.test.ts` fetches all of them:
+
+```
+HANZO_LIVE_LINKS=1 pnpm vitest run addresses.live
+```
+
+Host-only assertions cannot catch a fabricated PATH — that is exactly how an earlier
+draft shipped 23 addresses that 404'd. The live check is the guard that pins paths.
+
+Corrections this replaced (draft convention guess → live address):
+
+| was | is |
+| --- | --- |
+| `hanzo.app/download{,/browser,/desktop,/cli}` | `hanzo.ai/{download,extension,desktop,cli}` |
+| `docs.hanzo.ai/developers/sdks` | `hanzo.ai/sdks` |
+| `docs.hanzo.ai/{cli,quickstarts}` | `docs.hanzo.ai/docs/{cli,getting-started}` |
+| `docs.hanzo.ai/learn` | `hanzo.ai/learn` |
+| `hanzo.ai/apps` | `docs.hanzo.ai/docs/apps` |
+| `hanzo.ai/community` | `hanzo.app/community` (the builder owns the feed) |
+| `hanzo.ai/legal/{privacy,terms,cookies}` | `hanzo.ai/{privacy,terms,cookies}` |
+| `hanzo.ai/{showcase,changelog}` | dropped — no such pages; `support` took the slot |
+| `hanzo.app/download/vscode` | dropped — no VS Code install page exists yet |
+
+Two properties whose top-level nav the draft guessed are corrected to what they serve:
+`hanzo.app` (Features · Templates · Gallery), `hanzo.bot` (Docs · Channels · Pricing,
+CTA `/get-started`). `hanzo.ai`'s "Developers" resolves to `docs.hanzo.ai`.
+
+Unverifiable by status code: `hanzo.chat`, `hanzo.team`, `studio.hanzo.ai`,
+`cloud.hanzo.ai`, `console.hanzo.ai`, `billing.hanzo.ai`, `admin.hanzo.ai`,
+`api.hanzo.ai` and `hanzo.id` answer 200 for ANY path, so their in-site nav and action
+paths (`/new`, `/`, `/features`, …) are reachable but not proven to exist. Those need a
+rendered check (Playwright), not a fetch.
+
+Known divergence from `@hanzogui/shell` still to reconcile: that registry uses
+`hanzo.ai/api` for API Platform and `docs.hanzo.ai/docs/api` for the API reference;
+this spec uses `api.hanzo.ai` and `docs.hanzo.ai/reference` because the house rule
+forbids an `/api` path prefix (a test enforces it). One of the two must move.
