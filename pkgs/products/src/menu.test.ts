@@ -27,13 +27,12 @@ describe("MEET_HANZO_MENU — the launcher model", () => {
     ])
   })
 
-  it("the install row is Desktop · Browser · VS Code · CLI · SDKs · All downloads", () => {
-    expect(MEET_HANZO_MENU.installs.map((l) => l.id)).toEqual(["desktop", "browser", "vscode", "cli", "sdks", "downloads"])
+  it("the install row is Desktop · Browser · CLI · SDKs · All downloads", () => {
+    expect(MEET_HANZO_MENU.installs.map((l) => l.id)).toEqual(["desktop", "browser", "cli", "sdks", "downloads"])
     // each install link resolves to its pinned destination
     expect(MEET_HANZO_MENU.installs.map((l) => l.href)).toEqual([
       DESTINATIONS.desktop,
       DESTINATIONS.browserExtension,
-      DESTINATIONS.vscode,
       DESTINATIONS.cli,
       DESTINATIONS.sdks,
       DESTINATIONS.downloads,

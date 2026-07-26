@@ -5,20 +5,24 @@ describe("DESTINATIONS — the canonical shared addresses (pinned by the spec)",
   it("matches the spec exactly", () => {
     expect(DESTINATIONS).toEqual({
       products: "https://hanzo.ai/products",
-      apps: "https://hanzo.ai/apps",
+      apps: "https://docs.hanzo.ai/docs/apps",
       models: "https://hanzo.ai/models",
       cloudProducts: "https://cloud.hanzo.ai/products",
-      downloads: "https://hanzo.app/download",
-      browserExtension: "https://hanzo.app/download/browser",
-      desktop: "https://hanzo.app/download/desktop",
-      vscode: "https://hanzo.app/download/vscode",
-      cli: "https://hanzo.app/download/cli",
-      sdks: "https://docs.hanzo.ai/developers/sdks",
+      downloads: "https://hanzo.ai/download",
+      browserExtension: "https://hanzo.ai/extension",
+      desktop: "https://hanzo.ai/desktop",
+      cli: "https://hanzo.ai/cli",
+      sdks: "https://hanzo.ai/sdks",
       docs: "https://docs.hanzo.ai",
       apiReference: "https://docs.hanzo.ai/reference",
       console: "https://cloud.hanzo.ai",
       status: "https://status.hanzo.ai",
     })
+  })
+
+  it("ORIGIN names each host exactly once (it is the only place a host lives)", () => {
+    const hosts = Object.values(ORIGIN).map((o) => new URL(o).host)
+    expect(new Set(hosts).size).toBe(hosts.length)
   })
 
   it("every destination is a non-empty absolute https URL", () => {

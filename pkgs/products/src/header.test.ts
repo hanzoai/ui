@@ -29,10 +29,10 @@ describe("HEADERS — per-property header config", () => {
     const labels = (site: SiteId) => HEADERS[site].localNav.map((n) => n.label)
     expect(labels("hanzo.ai")).toEqual(["Models", "Solutions", "Developers", "Pricing", "Enterprise"])
     expect(labels("hanzo.chat")).toEqual(["Features", "Models", "Agents", "Download", "Pricing"])
-    expect(labels("hanzo.app")).toEqual(["Product", "Templates", "Showcase", "Pricing", "Enterprise"])
+    expect(labels("hanzo.app")).toEqual(["Features", "Templates", "Gallery", "Pricing", "Enterprise"])
     expect(labels("hanzo.team")).toEqual(["Product", "Solutions", "Integrations", "Pricing"])
     expect(labels("studio.hanzo.ai")).toEqual(["Models", "Agents", "Evaluations", "Docs"])
-    expect(labels("hanzo.bot")).toEqual(["Product", "Channels", "Templates", "Pricing"])
+    expect(labels("hanzo.bot")).toEqual(["Docs", "Channels", "Pricing"])
     expect(labels("cloud.hanzo.ai")).toEqual(["Products", "Solutions", "Developers", "Pricing", "Docs"])
   })
 
