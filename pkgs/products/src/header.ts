@@ -50,7 +50,13 @@ export const HEADERS: Record<SiteId, SiteHeader> = {
   "hanzo.ai": {
     site: "hanzo.ai",
     productId: "hanzo",
-    localNav: [nav("Models"), nav("Solutions"), nav("Developers"), nav("Pricing"), nav("Enterprise")],
+    localNav: [
+      nav("Models"),
+      nav("Solutions"),
+      nav("Developers", DESTINATIONS.docs),
+      nav("Pricing"),
+      nav("Enterprise"),
+    ],
     action: { label: "Open Chat", href: "https://hanzo.chat" },
   },
   "hanzo.chat": {
@@ -62,7 +68,7 @@ export const HEADERS: Record<SiteId, SiteHeader> = {
   "hanzo.app": {
     site: "hanzo.app",
     productId: "app",
-    localNav: [nav("Product"), nav("Templates"), nav("Showcase"), nav("Pricing"), nav("Enterprise")],
+    localNav: [nav("Features"), nav("Templates"), nav("Gallery"), nav("Pricing"), nav("Enterprise")],
     action: { label: "New project", href: "/new" },
   },
   "hanzo.team": {
@@ -80,8 +86,8 @@ export const HEADERS: Record<SiteId, SiteHeader> = {
   "hanzo.bot": {
     site: "hanzo.bot",
     productId: "bot",
-    localNav: [nav("Product"), nav("Channels"), nav("Templates"), nav("Pricing")],
-    action: { label: "Create bot", href: "/new" },
+    localNav: [nav("Docs"), nav("Channels", "/docs/channels"), nav("Pricing")],
+    action: { label: "Create bot", href: "/get-started" },
   },
   "cloud.hanzo.ai": {
     site: "cloud.hanzo.ai",

@@ -29,7 +29,6 @@ describe("FOOTER — the unified footer", () => {
     expect(install.links.map((l) => l.href)).toEqual([
       DESTINATIONS.desktop,
       DESTINATIONS.browserExtension,
-      DESTINATIONS.vscode,
       DESTINATIONS.cli,
       DESTINATIONS.sdks,
       DESTINATIONS.downloads,
@@ -39,9 +38,10 @@ describe("FOOTER — the unified footer", () => {
   it("the legal bottom bar carries the copyright and the five legal links", () => {
     expect(FOOTER.legal.copyright).toBe("© 2026 Hanzo AI, Inc.")
     expect(FOOTER.legal.links.map((l) => l.id)).toEqual(["status", "security", "privacy", "terms", "cookies"])
-    // privacy / terms / cookies live under the one /legal namespace
+    // privacy / terms / cookies are top-level pages on the marketing root — the
+    // addresses the live site serves (there is no /legal/<slug> namespace).
     for (const id of ["privacy", "terms", "cookies"]) {
-      expect(FOOTER.legal.links.find((l) => l.id === id)!.href).toMatch(/\/legal\//)
+      expect(FOOTER.legal.links.find((l) => l.id === id)!.href).toBe(`https://hanzo.ai/${id}`)
     }
     expect(FOOTER.legal.links.find((l) => l.id === "status")!.href).toBe(DESTINATIONS.status)
   })
