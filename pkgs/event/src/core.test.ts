@@ -136,4 +136,70 @@ describe('Analytics capture', () => {
     a.flush()
     expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/analytics')
   })
+
+  it('stamps every event with the @hanzo/event library id', () => {
+    const a = mk()
+    a.capture('x')
+    a.flush()
+    expect(tx.all[0].library).toBe('@hanzo/event')
+  })
+})
+
+describe('Event error capture (no DSN → analytics stream)', () => {
+  it('captureError emits a type:error event with the exception, and flushes at once', () => {
+    const a = mk()
+    a.captureError(new TypeError('boom'))
+    // captureError flushes promptly — no explicit flush() needed.
+    expect(tx.sent).toHaveLength(1)
+    const e = tx.all[0]
+    expect(e.type).toBe('error')
+    expect(e.event).toBe('boom')
+    expect(e.error?.type).toBe('TypeError')
+    expect(e.error?.message).toBe('boom')
+    expect(e.error?.stack).toBeTruthy()
+    expect(e.error?.handled).toBe(true) // a caught, manually-reported error
+  })
+
+  it('normalizes a thrown string into an exception', () => {
+    const a = mk()
+    a.captureError('plain failure')
+    const e = tx.all[0]
+    expect(e.type).toBe('error')
+    expect(e.error?.message).toBe('plain failure')
+  })
+
+  it('marks handled=false for unhandled/global errors and carries properties', () => {
+    const a = mk()
+    a.captureError(new Error('unhandled'), { handled: false, properties: { source: 'onerror' } })
+    const e = tx.all[0]
+    expect(e.error?.handled).toBe(false)
+    expect(e.properties).toEqual({ source: 'onerror' })
+  })
+
+  it('captureException is an alias of captureError', () => {
+    const a = mk()
+    a.captureException(new Error('via alias'))
+    const e = tx.all[0]
+    expect(e.type).toBe('error')
+    expect(e.error?.message).toBe('via alias')
+  })
+
+  it('an error is still an event on the ONE stream — same route + product', () => {
+    const a = mk({ host: 'https://api.hanzo.ai' })
+    a.captureError(new Error('x'))
+    // Same batched route as any other event — one pipe, not a second SDK.
+    expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/analytics')
+    expect(tx.all[0].product).toBe('console')
+    // never the tenant — the server stamps it, errors included.
+    expect((tx.all[0] as Record<string, unknown>).tenant).toBeUndefined()
+  })
+
+  it('de-duplicates a repeated identical error within the window', () => {
+    const a = mk()
+    const err = new Error('same')
+    a.captureError(err)
+    a.captureError(err)
+    // Two identical reports → one send (de-duped).
+    expect(tx.sent).toHaveLength(1)
+  })
 })
