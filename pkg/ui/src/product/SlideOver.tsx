@@ -158,8 +158,18 @@ export function SlideOver({
         borderLeftWidth={side === 'right' ? 1 : 0}
         borderRightWidth={side === 'left' ? 1 : 0}
         borderColor="$borderColor"
-        className="hz-slide"
-        style={{ transform: open ? 'translateX(0)' : offscreen, height: '100dvh' }}
+        // Material paper depth — the drawer reads as a sheet lifted above the dimmed
+        // list behind it (real layered shadow, theme-aware), not a flat panel.
+        className="hz-slide hz-elevation-4"
+        // Full-height sheet (100dvh — mobile-safe), inset for the notch (top) + home
+        // indicator (bottom) so the drawer header + footer actions clear them on
+        // notched devices (env insets are 0 elsewhere, so no effect there).
+        style={{
+          transform: open ? 'translateX(0)' : offscreen,
+          height: '100dvh',
+          paddingTop: 'env(safe-area-inset-top)',
+          paddingBottom: 'env(safe-area-inset-bottom)',
+        }}
       >
         {title !== undefined ? (
           <>
@@ -176,7 +186,7 @@ export function SlideOver({
                 {title}
               </Text>
               {headerRight}
-              <Button size="$2" chromeless icon={<X size={18} />} onPress={onClose} aria-label="Close" />
+              <Button chromeless width={44} height={44} icon={<X size={18} />} onPress={onClose} aria-label="Close" />
             </XStack>
             <ScrollView flex={1}>
               <YStack flex={1} p="$4" gap="$3">

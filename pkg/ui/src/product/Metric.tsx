@@ -116,7 +116,7 @@ export function LegendDot({ color, label, value }: { color: string; label: strin
         </Text>
       </XStack>
       {value != null ? (
-        <Text fontSize="$2" color="$color12" fontWeight="600">
+        <Text fontSize="$2" color="$color12" fontWeight="500" className="hz-mono">
           {value}
         </Text>
       ) : null}
@@ -152,7 +152,7 @@ export function MetricCard({
       <XStack items="center" gap="$2" justify="space-between">
         <XStack items="center" gap="$2">
           {icon}
-          <Text fontSize="$2" color="$color11" fontWeight="600">
+          <Text fontSize="$2" color="$color11" fontWeight="500">
             {label}
           </Text>
         </XStack>
@@ -163,7 +163,7 @@ export function MetricCard({
         ) : null}
       </XStack>
       <XStack items="flex-end" justify="space-between" gap="$2">
-        <Text fontSize="$8" fontWeight="900" color="$color12" numberOfLines={1}>
+        <Text fontSize="$8" fontWeight="500" color="$color12" numberOfLines={1} className="hz-mono">
           {value}
         </Text>
         {spark && spark.length >= 2 ? <Sparkline points={spark} color={sparkColor ?? SERIES[0]} /> : null}
@@ -242,7 +242,7 @@ export function Panel({
   return (
     <Card p="$4" gap="$3" borderWidth={1} borderColor="$borderColor" flex={grow ? 1 : undefined} minW={minW} width={grow ? undefined : '100%'}>
       <XStack items="center" justify="space-between" gap="$2">
-        <Text fontSize="$4" fontWeight="800" color="$color12">
+        <Text fontSize="$4" fontWeight="500" color="$color12">
           {title}
         </Text>
         {right}

@@ -7,5 +7,8 @@ import { defineConfig } from 'vitest/config'
  * consuming app's build + visual e2e.
  */
 export default defineConfig({
+  // These suites are pure logic and import no CSS, so keep vite from searching
+  // for (and failing on) the repo-root Tailwind PostCSS config.
+  css: { postcss: { plugins: [] } },
   test: { environment: 'node', include: ['src/**/*.test.ts'] },
 })
