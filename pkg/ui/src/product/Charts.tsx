@@ -58,7 +58,7 @@ const tone = (theme: Themed, key: string, fallback: string): string => {
 /** Opacity ramp so N monochrome slices/areas stay visually distinct. */
 const rampOpacity = (i: number, n: number): number => (n <= 1 ? 0.9 : 0.95 - (i / (n - 1)) * 0.62)
 
-function useContainerWidth() {
+export function useContainerWidth() {
   const ref = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(0)
   useEffect(() => {
