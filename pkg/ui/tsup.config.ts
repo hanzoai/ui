@@ -21,6 +21,7 @@ export default defineConfig({
     billing: 'src/billing.ts',
     dashboard: 'src/dashboard.ts',
     usage: 'src/usage.ts',
+    oss: 'src/oss.ts',
   },
   format: ['esm', 'cjs'],
   outDir: 'dist',
