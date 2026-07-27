@@ -58,7 +58,7 @@ export function SelectMenu<T extends string>({
           </Text>
         </Button>
       </Popover.Trigger>
-      <Popover.Content bordered elevate p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
+      <Popover.Content className="hz-paper hz-menu-in" bordered p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
         <YStack gap="$0.5" minW={minWidth} maxH={320} overflow="scroll">
           <Row label={allLabel} active={value === null} onPress={() => pick(null)} />
           {options.map((o) => (

@@ -1,23 +1,23 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.2",
+  "version": "8.0.12",
   "type": "module",
   "description": "Hanzo UI — the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
+      "types": "./src/index.ts",
       "default": "./src/index.ts"
     },
     "./product": {
-      "types": "./types/product/index.d.ts",
+      "types": "./src/product/index.ts",
       "default": "./src/product/index.ts"
     },
     "./data": {
-      "types": "./types/data.d.ts",
+      "types": "./src/data.ts",
       "default": "./src/data.ts"
     },
     "./primitives/bases/data": {
-      "types": "./types/primitives/bases/data/index.d.ts",
+      "types": "./src/primitives/bases/data/index.ts",
       "default": "./src/primitives/bases/data/index.ts"
     },
     "./styles/motion.css": "./src/styles/hanzo-motion.css",
@@ -25,13 +25,12 @@
   },
   "main": "./src/index.ts",
   "module": "./src/index.ts",
-  "types": "./types/index.d.ts",
+  "types": "./src/index.ts",
   "sideEffects": [
     "**/*.css"
   ],
   "files": [
-    "src",
-    "types"
+    "src"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
