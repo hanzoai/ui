@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.8",
+  "version": "8.0.10",
   "type": "module",
   "description": "Hanzo UI \u2014 the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
@@ -75,6 +75,12 @@
       "import": "./dist/oss.js",
       "require": "./dist/oss.cjs",
       "default": "./dist/oss.js"
+    },
+    "./telemetry": {
+      "types": "./dist/telemetry.d.ts",
+      "import": "./dist/telemetry.js",
+      "require": "./dist/telemetry.cjs",
+      "default": "./dist/telemetry.js"
     },
     "./styles/motion.css": "./dist/styles/hanzo-motion.css",
     "./package.json": "./package.json"
@@ -156,6 +162,7 @@
   "license": "BSD-3-Clause",
   "author": "Hanzo AI <dev@hanzo.ai>",
   "dependencies": {
-    "@hanzo/logo": "^1.0.13"
+    "@hanzo/logo": "^1.0.13",
+    "@hanzogui/telemetry": "^0.1.0"
   }
 }
