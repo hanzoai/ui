@@ -2,6 +2,12 @@
 export { HanzoHeader, AppSwitcher, UserOrgDropdown, useHanzoAuth, HanzoCommandPalette, DEFAULT_HANZO_APPS } from './hanzo-shell'
 export type { HanzoApp, HanzoOrg, HanzoUser, HanzoShellProps, HanzoCommandItem, HanzoCommandPaletteProps } from './hanzo-shell'
 
+// MarketingNav – the ONE signed-out marketing bar (five properties shared five
+// byte-near-identical copies of it). hanzo-shell above is the SIGNED-IN chrome;
+// these are different jobs, not two takes on one.
+export { MarketingNav, HANZO_MARKETING_MENUS, isMenu as isMarketingMenu } from './marketing-nav'
+export type { MarketingNavProps, MarketingMenus, NavMenuSpec, NavColumn, NavLink } from './marketing-nav'
+
 // Navigation bar components
 export { default as AdvancedNavigationBar } from "./advanced-navigation-bar"
 export { default as AIModelSelectorNavigationBar } from "./ai-model-selector-navigation-bar"
