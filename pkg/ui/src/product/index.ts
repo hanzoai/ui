@@ -38,7 +38,28 @@ export { Donut as DonutRing, type DonutSegment } from './Donut'
 export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
+// Org scope + switcher — the console's org contract, shared with every admin.
+export * from './OrgMark'
+export * from './OrgSwitcher'
+export * from './scope'
+
+// Menu — the ONE menu system: portal-theme-safe DropdownMenu (click) + ContextMenu
+// (right-click), both rendering the SAME item spec (MenuPanel/MenuItemView) so every
+// menu across the fleet is pixel-identical. SelectMenu/ComboBox share the same spec.
+export * from './menu'
+
+// Admin surface — the honest-state + list layer every admin console renders.
+// `host` is the ONE seam an app injects its router/auth effects through;
+// `CommerceResource` is the ONE store-list surface (console Store + Commerce admin).
+export * from './host'
+export * from './BackendState'
+export * from './CommerceResource'
+export * from './ConfirmDelete'
+export * from './Filters'
+
 // The rest — every exported name below is unique across the layer.
+export * from './AnimatedLogo'
+export * from './brand'
 export * from './DataTable'
 export * from './EmptyState'
 export * from './FadeIn'
@@ -54,6 +75,7 @@ export * from './SlideOver'
 export * from './StatusTag'
 export * from './ThemeToggle'
 export * from './Toast'
+export * from './accent'
 export * from './color'
 
 // Usage — the shared AI-quota surface (meter bar → provider card → dashboard).

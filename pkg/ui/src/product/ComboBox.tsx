@@ -83,7 +83,7 @@ export function ComboBox({
         </Popover.Trigger>
       </XStack>
 
-      <Popover.Content bordered elevate p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
+      <Popover.Content className="hz-paper hz-menu-in" bordered p="$1.5" minW={minWidth} bg="$color2" borderColor="$borderColor">
         <YStack gap="$0.5" minW={minWidth} maxH={300} overflow="scroll">
           {loading ? (
             <XStack items="center" gap="$2" px="$2.5" py="$2">
