@@ -1,147 +1,102 @@
 /**
- * Hanzo UI - Default Color Theme
- * Tailwind CSS 4 compatible with shadcn/ui color system
+ * Hanzo UI — colour bridge (ALIAS layer).
+ *
+ * A single, theme-AGNOSTIC mapping: it wires the shadcn/ui token names AND the
+ * legacy `--hz-ui-*` scale (which the Tailwind preset in tailwind/colors.tailwind.js
+ * feeds on) onto the canonical `--hz-*` set in `@hanzo/ui/style/tokens.css`.
+ *
+ * There is no light/dark oklch here anymore — the theme lives in ONE place
+ * (tokens.css, which flips `--hz-*` under `.light` / `.dark` / [data-theme]).
+ * This bridge just says "shadcn --card === --hz-surface", etc., so every
+ * shadcn component (Button, Input, Card, Badge, …) and every preset colour
+ * inherits the canon and follows the theme automatically.
+ *
+ * Import order (see globals.css): tokens.css first, then this file. Custom
+ * properties resolve at use-time, so the mapping is valid regardless.
  */
 
 @layer base {
-  :root, .hanzo-ui-light-theme {
-    /* Hanzo UI legacy colors */
-    --hz-ui-fg-0: hsl(0 0% 0%);
-    --hz-ui-fg-body: hsl(0 0% 10%);
-    --hz-ui-fg-1: hsl(0 0% 20%);
-    --hz-ui-fg-2: hsl(0 0% 35%);
-    --hz-ui-fg-3: hsl(0 0% 50%);
-    --hz-ui-fg-4: hsl(0 0% 70%);
-    --hz-ui-fg-5: hsl(0 0% 90%);
+  :root {
+    /* ── legacy --hz-ui-* scale → canonical (feeds the Tailwind preset) ── */
+    --hz-ui-fg-0: var(--hz-accent);
+    --hz-ui-fg-body: var(--hz-text);
+    --hz-ui-fg-1: var(--hz-text);
+    --hz-ui-fg-2: var(--hz-text-muted);
+    --hz-ui-fg-3: var(--hz-text-dim);
+    --hz-ui-fg-4: var(--hz-border-strong);
+    --hz-ui-fg-5: var(--hz-border);
 
-    --hz-ui-bg-0: hsl(0 0% 100%);
-    --hz-ui-bg-1: hsl(0 0% 90%);
-    --hz-ui-bg-2: hsl(0 0% 75%);
-    --hz-ui-bg-3: hsl(0 0% 55%);
+    --hz-ui-bg-0: var(--hz-bg);
+    --hz-ui-bg-1: var(--hz-surface);
+    --hz-ui-bg-2: var(--hz-surface-hover);
+    --hz-ui-bg-3: var(--hz-surface-active);
 
-    --hz-ui-bg-overlay: hsla(0 0% 100% / 60%);
-    --hz-ui-bg-inverted: var(--hz-ui-fg-0);
-    --hz-ui-bg-inverted-hover: hsla(0 0% 0% / 85%);
-    --hz-ui-fg-inverted: var(--hz-ui-bg-0);
+    --hz-ui-bg-overlay: color-mix(in srgb, var(--hz-bg) 60%, transparent);
+    --hz-ui-bg-inverted: var(--hz-accent);
+    --hz-ui-bg-inverted-hover: color-mix(in srgb, var(--hz-accent) 85%, transparent);
+    --hz-ui-fg-inverted: var(--hz-accent-fg);
 
-    --hz-ui-secondary-0: hsl(266 79% 80%);
-    --hz-ui-secondary-1: hsl(266 79% 70%);
-    --hz-ui-secondary-2: hsl(266 79% 60%);
-    --hz-ui-secondary-3: hsl(266 79% 50%);
+    --hz-ui-primary: var(--hz-accent);
+    --hz-ui-primary-hover: color-mix(in srgb, var(--hz-accent) 85%, transparent);
+    --hz-ui-primary-fg: var(--hz-accent-fg);
 
-    --hz-ui-primary: var(--hz-ui-bg-inverted);
-    --hz-ui-primary-hover: var(--hz-ui-bg-inverted-hover);
-    --hz-ui-primary-fg: var(--hz-ui-fg-inverted);
+    /* secondary is now MONOCHROME (was a purple 266° ramp — retired) */
+    --hz-ui-secondary-0: var(--hz-surface-active);
+    --hz-ui-secondary-1: var(--hz-surface-hover);
+    --hz-ui-secondary-2: var(--hz-border);
+    --hz-ui-secondary-3: var(--hz-border-strong);
+    --hz-ui-secondary: var(--hz-surface);
+    --hz-ui-secondary-hover: var(--hz-surface-hover);
+    --hz-ui-secondary-fg: var(--hz-text);
 
-    --hz-ui-secondary: var(--hz-ui-secondary-0);
-    --hz-ui-secondary-hover: var(--hz-ui-secondary-2);
-    --hz-ui-secondary-fg: var(--hz-ui-fg-0);
+    --hz-ui-nav: var(--hz-text-muted);
+    --hz-ui-nav-current: var(--hz-accent);
+    --hz-ui-nav-hover: var(--hz-accent);
 
-    --hz-ui-nav: var(--hz-ui-fg-4);
-    --hz-ui-nav-current: var(--hz-ui-fg-0);
-    --hz-ui-nav-hover: var(--hz-ui-fg-0);
+    --hz-ui-destructive: var(--hz-error);
+    --hz-ui-destructive-hover: color-mix(in srgb, var(--hz-error) 80%, #000);
+    --hz-ui-destructive-fg: #fff;
 
-    --hz-ui-destructive: hsl(0 62.8% 45%);
-    --hz-ui-destructive-hover: hsl(0 62.8% 25%);
-    --hz-ui-destructive-fg: hsl(0 0% 100%);
+    --hz-ui-ring: var(--hz-border-strong);
+    --hz-ui-radius: var(--hz-radius);
 
-    --hz-ui-ring: var(--hz-ui-fg-2);
-    --hz-ui-radius: 0.5rem;
+    /* ── shadcn/ui token names → canonical ── */
+    --radius: var(--hz-radius);
+    --background: var(--hz-bg);
+    --foreground: var(--hz-text);
+    --card: var(--hz-surface);
+    --card-foreground: var(--hz-text);
+    --popover: var(--hz-surface);
+    --popover-foreground: var(--hz-text);
+    --primary: var(--hz-accent);
+    --primary-foreground: var(--hz-accent-fg);
+    --secondary: var(--hz-surface);
+    --secondary-foreground: var(--hz-text);
+    --muted: var(--hz-surface);
+    --muted-foreground: var(--hz-text-muted);
+    --accent: var(--hz-surface-hover);
+    --accent-foreground: var(--hz-text);
+    --destructive: var(--hz-error);
+    --destructive-foreground: #fff;
+    --border: var(--hz-border);
+    --input: var(--hz-border);
+    --ring: var(--hz-border-strong);
 
-    /* shadcn/ui compatible color system */
-    --radius: 0.5rem;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: oklch(0.97 0.01 17);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    /* charts — categorical data-viz ramp (not chrome); left as a blue scale */
     --chart-1: var(--color-blue-300);
     --chart-2: var(--color-blue-500);
     --chart-3: var(--color-blue-600);
     --chart-4: var(--color-blue-700);
     --chart-5: var(--color-blue-800);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-  }
 
-  .dark, .hanzo-ui-dark-theme {
-    /* Hanzo UI legacy colors */
-    --hz-ui-fg-0: hsl(0 0% 100%);
-    --hz-ui-fg-body: hsl(0 0% 97%);
-    --hz-ui-fg-1: hsl(0 0% 85%);
-    --hz-ui-fg-2: hsl(0 0% 70%);
-    --hz-ui-fg-3: hsl(0 0% 55%);
-    --hz-ui-fg-4: hsl(0 0% 40%);
-    --hz-ui-fg-5: hsl(0 0% 25%);
-
-    --hz-ui-bg-inverted: var(--hz-ui-fg-0);
-    --hz-ui-bg-inverted-hover: hsla(0 0% 100% / 85%);
-
-    --hz-ui-bg-3: hsl(0 0% 25%);
-    --hz-ui-bg-2: hsl(0 0% 18%);
-    --hz-ui-bg-1: hsl(0 0% 12%);
-    --hz-ui-bg-0: hsl(0 0% 0%);
-
-    --hz-ui-bg-overlay: hsla(0 0% 0% / 60%);
-    --hz-ui-fg-inverted: var(--hz-ui-bg-0);
-
-    --hz-ui-secondary-0: hsl(266 79% 40%);
-    --hz-ui-secondary-1: hsl(266 79% 50%);
-    --hz-ui-secondary-2: hsl(266 79% 60%);
-    --hz-ui-secondary-3: hsl(266 79% 70%);
-
-    /* shadcn/ui compatible color system */
-    --background: oklch(0 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.06 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.06 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.205 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.205 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --destructive-foreground: oklch(0.58 0.22 27);
-    --border: oklch(0.205 0 0);
-    --input: oklch(0.269 0 0);
-    --ring: oklch(0.556 0 0);
-    --chart-1: var(--color-blue-300);
-    --chart-2: var(--color-blue-500);
-    --chart-3: var(--color-blue-600);
-    --chart-4: var(--color-blue-700);
-    --chart-5: var(--color-blue-800);
-    --sidebar: oklch(0 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.205 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(0.205 0 0);
-    --sidebar-ring: oklch(0.439 0 0);
+    /* sidebar */
+    --sidebar: var(--hz-surface);
+    --sidebar-foreground: var(--hz-text);
+    --sidebar-primary: var(--hz-accent);
+    --sidebar-primary-foreground: var(--hz-accent-fg);
+    --sidebar-accent: var(--hz-surface-hover);
+    --sidebar-accent-foreground: var(--hz-text);
+    --sidebar-border: var(--hz-border);
+    --sidebar-ring: var(--hz-border-strong);
   }
 }
