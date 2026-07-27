@@ -16,6 +16,13 @@ export type Channel =
   | 'youtube'
   | 'threads'
 
+/**
+ * A known network, or whatever string the server sent. The badge renders unknown
+ * values through the `x` fallback below, so the type says what it really accepts —
+ * callers keep autocomplete without having to narrow a `string` field first.
+ */
+export type ChannelLike = Channel | (string & {})
+
 const META: Record<Channel, { label: string; bg: string; fg: string; mark: string }> = {
   x: { label: 'X', bg: '#0f0f12', fg: '#e6e6ea', mark: '𝕏' },
   facebook: { label: 'Facebook', bg: '#1877f2', fg: '#ffffff', mark: 'f' },
@@ -31,11 +38,11 @@ export function ChannelBadge({
   showLabel = false,
   size = 22,
 }: {
-  channel: Channel
+  channel: ChannelLike
   showLabel?: boolean
   size?: number
 }) {
-  const m = META[channel] ?? META.x
+  const m = META[channel as Channel] ?? META.x
   return (
     <XStack items="center" gap="$2">
       <YStack

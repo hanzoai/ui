@@ -82,5 +82,7 @@ export * from './color'
 // now lives in ONE home: `@hanzo/usage/panel` (<UsagePanel>). The former meter/card/
 // dashboard kit here was orphaned (zero consumers) and folded into it.
 
-// Social — ChannelBadge, PostCard, CampaignCard (extracted from Hanzo Social).
+// Social — the publish surface (social.hanzo.ai) as parts: channel/post/campaign
+// cards, the summary bar, the list↔calendar toggle, the agenda, the composer, and
+// the provider-readiness list, over one pure time/preview module.
 export * from './social'
