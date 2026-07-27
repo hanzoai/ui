@@ -44,6 +44,7 @@ export * from './combobox/filter'
 export * from './surfaces.data'
 export * from './AppHeader'
 export * from './BrandMark'
+export * from './OrgMark'
 export * from './OrgSwitcher'
 export * from './scope'
 
