@@ -1,0 +1,51 @@
+name: deploy
+
+# Builds ui.hanzo.ai and publishes the image the operator runs.
+#
+# The site was already on our own stack — hanzoai/static behind hanzoai/ingress,
+# with crs/ui.yaml in hanzoai/universe naming the live tag — but no workflow ever
+# built the image: every tag in ghcr.io/hanzoai/ui up to v5.7.6 was pushed by
+# hand. This is that missing step, so a commit on main produces a candidate tag
+# without anyone reaching for docker locally.
+#
+# The image tag is the run's commit, and the CR names which tag is live: a build
+# never deploys itself.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'pkgs/ui/**'
+      - 'pkgs/event/**'
+      - 'pnpm-lock.yaml'
+      - 'Dockerfile'
+      - '.hanzo/workflows/deploy.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: build and push
+        env:
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${REGISTRY_TOKEN:-}" ]; then
+            echo "::error::REGISTRY_TOKEN is unset, so nothing was published. Add the org secret."
+            exit 1
+          fi
+          tag="$(git rev-parse --short HEAD)"
+          image="ghcr.io/hanzoai/ui:${tag}"
+          echo "${REGISTRY_TOKEN}" | docker login ghcr.io -u hanzo-dev --password-stdin
+          docker build -t "${image}" .
+          docker push "${image}"
+          echo "published ${image} — set spec.image.tag in universe crs/ui.yaml to ${tag}"
