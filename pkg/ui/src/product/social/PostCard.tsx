@@ -8,27 +8,18 @@
 import { Card, Text, XStack, YStack, Button } from '@hanzo/gui'
 import { Pencil, Trash2 } from '@hanzogui/lucide-icons-2'
 import { StatusTag } from '../StatusTag'
-import { ChannelBadge, type Channel } from './ChannelBadge'
+import { ChannelBadge, type ChannelLike } from './ChannelBadge'
+import { formatPostTime } from './format'
 
 export type Post = {
   id: string
   content: string
-  channel: Channel
+  channel: ChannelLike
   status: string
   /** unix seconds; 0/undefined = not scheduled */
   scheduleAt?: number
   media?: string[]
 }
-
-const fmt = (unix?: number) =>
-  unix
-    ? new Date(unix * 1000).toLocaleString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    : ''
 
 export function PostCard({
   post,
@@ -64,7 +55,7 @@ export function PostCard({
       <XStack items="center" justify="space-between" gap="$2">
         {post.scheduleAt ? (
           <Text fontSize="$1" color="$color11">
-            {fmt(post.scheduleAt)}
+            {formatPostTime(post.scheduleAt)}
           </Text>
         ) : (
           <YStack />
