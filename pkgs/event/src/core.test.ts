@@ -56,9 +56,14 @@ class FakeTransport implements Transport {
 let tx: FakeTransport
 // Default to same-origin (host:'') so path assertions read the bare /v1/event door;
 // tests that care about the edge host pass it explicitly.
+// `test-app` is deliberately NOT a product in the DSN registry (src/dsn.ts), so
+// the default client here has no error plane and these tests exercise the client
+// itself rather than whichever real products happen to be registered. Tests that
+// want a live error plane pass `dsn:` explicitly; registry resolution is covered
+// in dsn.test.ts.
 function mk(overrides = {}) {
   tx = new FakeTransport()
-  return new Analytics({ product: 'console', host: '', transport: tx, flushIntervalMs: 999999, ...overrides })
+  return new Analytics({ product: 'test-app', host: '', transport: tx, flushIntervalMs: 999999, ...overrides })
 }
 
 describe('Analytics capture', () => {
@@ -78,7 +83,7 @@ describe('Analytics capture', () => {
     const e = tx.all[0]
     expect(e.type).toBe('event')
     expect(e.event).toBe('signup_completed')
-    expect(e.product).toBe('console')
+    expect(e.product).toBe('test-app')
     expect(e.properties).toEqual({ plan: 'pro' })
     // The client must NEVER send a tenant/org — the server stamps it.
     expect((e as Record<string, unknown>).tenant).toBeUndefined()
@@ -276,7 +281,7 @@ describe('Event error capture', () => {
     // Same batched door as any other event — one pipe, not a second SDK.
     expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/event')
     expect(tx.sent[0].raw.startsWith('{"batch":')).toBe(true)
-    expect(tx.all[0].product).toBe('console')
+    expect(tx.all[0].product).toBe('test-app')
     // never the tenant — the server stamps it, errors included.
     expect((tx.all[0] as Record<string, unknown>).tenant).toBeUndefined()
   })
@@ -368,7 +373,7 @@ describe('error plane', () => {
     expect(ev.user.id).toBe('user-sub-123')
     const streamed = tx.all.find((e) => e.type === 'error')
     expect(ev.tags.session).toBe(streamed?.sessionId)
-    expect(ev.tags.product).toBe('console')
+    expect(ev.tags.product).toBe('test-app')
   })
 
   it('an uncaught error is fatal; a reported one is error', () => {
