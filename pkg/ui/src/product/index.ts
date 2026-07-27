@@ -39,6 +39,8 @@ export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
 // The rest — every exported name below is unique across the layer.
+export * from './AnimatedLogo'
+export * from './brand'
 export * from './DataTable'
 export * from './EmptyState'
 export * from './FadeIn'
