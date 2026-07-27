@@ -39,6 +39,8 @@ export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
 // Org scope + switcher — the console's org contract, shared with every admin.
+// `surfaces.data` is the ONE canonical cross-surface list every launcher consumes.
+export * from './surfaces.data'
 export * from './OrgMark'
 export * from './OrgSwitcher'
 export * from './scope'
