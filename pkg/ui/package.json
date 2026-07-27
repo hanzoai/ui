@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.10",
+  "version": "8.0.11",
   "type": "module",
   "description": "Hanzo UI \u2014 the one cross-platform component library on @hanzo/gui. The product/app layer (charts, metrics, page headers, status tags, rich empty states, combobox, slide-over, toasts, drag-reorder, labeled field rows, provider/product marks) + the metadata-driven record layer (@hanzo/data: RecordsView, DataTable, board, typed field editors) + the calm dark-first tokens and motion. Presentational, host-agnostic (data/effects injected), clean-room. Web + native (iOS) + desktop.",
   "exports": {
