@@ -181,12 +181,67 @@ pnpm test              # Unit tests
 pnpm test:e2e          # Playwright E2E
 ```
 
+## How this ships
+
+One way, and it runs on our own stack:
+
+    push  ->  github.com/hanzoai/ui            (a mirror)
+              .github/workflows/sync.yml        carries refs onward
+      ->  git.hanzo.ai/hanzoai/ui               CANONICAL
+              .hanzo/workflows/ci.yml           lint, typecheck, build, test
+              .hanzo/workflows/registries.yml   the v4 registry check
+              .hanzo/workflows/publish.yml      publishes every pkgs/* package
+              .hanzo/workflows/deploy.yml       builds ghcr.io/hanzoai/ui
+      ->  hanzoai/universe crs/ui.yaml          names the tag that is live
+      ->  hanzoai/operator                      reconciles the App
+      ->  hanzoai/static behind hanzoai/ingress serves ui.hanzo.ai
+
+**git.hanzo.ai is canonical; GitHub is a mirror.** `.github/workflows/` holds
+exactly one file, `sync.yml`, and its only job is getting refs to the forge. Every
+build, check, publish and deploy is a workflow under `.hanzo/workflows/`, which the
+forge reads. `.hanzo/workflows` uses GitHub Actions syntax, so a workflow moves
+between the two by changing directory and nothing else.
+
+No Vercel. `ci.yml` used to end in a `deploy-preview` job that ran `vercel deploy`
+on every PR; previews come from our own stack or not at all, so that job is gone.
+Its `status` job never depended on it.
+
 ## Publishing
 
 One way: bump a package's `version` in its `package.json` and merge to `main`.
-`.github/workflows/publish.yml` detects the changed `@hanzo/*` package and
-publishes it to npm (needs the repo `NPM_TOKEN` secret). No changesets, no
-version-PR bot — the semver bump is the trigger.
+`.hanzo/workflows/publish.yml` detects the changed `@hanzo/*` package and publishes
+it to npm (needs `NPM_TOKEN` as a forge secret). No changesets, no version-PR bot
+— the semver bump is the trigger.
+
+It is the SOLE publisher of every non-private `@hanzo/*` in `pkgs/*`, and it
+mirrors the same tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when
+`HANZO_REGISTRY_TOKEN` is present. That mirror is best-effort by construction: no
+token means a notice, not a failure, and npmjs stays authoritative either way.
+
+## Deploying the site
+
+`app/` is a Next.js static export (`output: "export"`, `trailingSlash: true`);
+`pnpm build` there writes `app/out`, which `Dockerfile` copies into
+`ghcr.io/hanzoai/static`. ui.hanzo.ai has been served that way since 2026-07-25 —
+no Cloudflare, no GitHub Pages.
+
+What was missing until now is the build. `crs/ui.yaml` is live and promoted, but no
+workflow ever produced the image it pins: every tag up to `v5.7.6` was pushed by
+hand. `.hanzo/workflows/deploy.yml` is that step. It publishes
+`ghcr.io/hanzoai/ui:<sha>` and stops there — a build never deploys itself. A human
+sets `spec.image.tag` in `hanzoai/universe`
+`infra/k8s/operator/crs/ui.yaml`, which is the one live thing that says which build
+serves.
+
+Coverage lives in `ci.yml`'s `test` job, which runs `pnpm test:coverage` so the
+lcov it uploads to Codecov actually exists. A separate `coverage.yml` used to run
+the same suite a second time for the same upload plus a PR comment through the
+GitHub API; one workflow does it now.
+
+`registries.yml` keeps the `apps/v4` registry honest: reserved namespaces are
+rejected and `pnpm --filter=v4 validate:registries` must pass. Its other job
+labelled and commented on pull requests with the `gh` CLI against the GitHub API,
+which does not exist on the forge, so that job did not come along.
 
 ## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
 
