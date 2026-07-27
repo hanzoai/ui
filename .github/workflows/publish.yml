@@ -104,3 +104,40 @@ jobs:
               echo "published $NAME@$WANT" ;;
           esac
 
+      - name: Publish to the Hanzo registry
+        # Second home for the same tarball: api.hanzo.ai/v1/packages/hanzo/npm, our
+        # own registry (hanzoai/git), so an install does not have to reach npmjs.
+        # Same artifact, same version — this republishes what the step above just
+        # built, it does not rebuild or re-version.
+        #
+        # BEST-EFFORT by construction. No token ⇒ skip with a notice, so this can
+        # land before the credential exists and starts working the moment it does.
+        # An already-published version is a success, not a failure: the registry
+        # holding it is the desired state either way. npmjs is authoritative and is
+        # never affected by anything here.
+        env:
+          HANZO_REGISTRY_TOKEN: ${{ secrets.HANZO_REGISTRY_TOKEN }}
+        run: |
+          set -uo pipefail
+          if [ -z "${HANZO_REGISTRY_TOKEN:-}" ]; then
+            echo "::notice::HANZO_REGISTRY_TOKEN not set — package published to npmjs only."
+            echo "::notice::Add it (a Hanzo Git token with package:write) to mirror to api.hanzo.ai."
+            exit 0
+          fi
+          REG=https://api.hanzo.ai/v1/packages/hanzo/npm/
+          NPMRC="$RUNNER_TEMP/.npmrc-hanzo"
+          {
+            echo "@hanzo:registry=${REG}"
+            echo "//api.hanzo.ai/v1/packages/hanzo/npm/:_authToken=${HANZO_REGISTRY_TOKEN}"
+          } > "$NPMRC"
+          out=$(npm_config_userconfig="$NPMRC" \
+                pnpm --filter ${{ matrix.package }} publish \
+                  --no-git-checks --access public --registry "$REG" 2>&1) || true
+          echo "$out"
+          case "$out" in
+            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"already exists"*)
+              echo "::notice::already in the Hanzo registry at this version — nothing to do" ;;
+            *) echo "$out" | grep -qiE 'error|failed' \
+                 && echo "::warning::mirror to api.hanzo.ai failed (npmjs publish unaffected)" \
+                 || echo "mirrored to the Hanzo registry" ;;
+          esac
