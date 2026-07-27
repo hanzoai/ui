@@ -1,0 +1,143 @@
+name: Publish Packages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pkgs/*/package.json'
+
+jobs:
+  detect-changes:
+    runs-on: hanzo-build-linux-amd64
+    outputs:
+      packages: ${{ steps.changed.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed packages
+        id: changed
+        run: |
+          CHANGED=()
+          for pkg_json in pkgs/*/package.json; do
+            [ ! -f "$pkg_json" ] && continue
+            pkg_dir=$(dirname "$pkg_json")
+
+            # Skip private packages
+            IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")
+            [ "$IS_PRIVATE" = "true" ] && continue
+
+            # Only publish @hanzo/* packages
+            PKG_NAME=$(jq -r '.name' "$pkg_json")
+            case "$PKG_NAME" in
+              @hanzo/*) ;;
+              *) continue ;;
+            esac
+
+            # Check version changed
+            if git diff HEAD~1 HEAD --quiet "$pkg_json" 2>/dev/null; then
+              continue
+            fi
+
+            OLD=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
+            NEW=$(jq -r '.version' "$pkg_json")
+
+            if [ "$OLD" != "$NEW" ]; then
+              echo "Version change: $PKG_NAME ($OLD -> $NEW)"
+              CHANGED+=("$(basename "$pkg_dir")")
+            fi
+          done
+
+          if [ ${#CHANGED[@]} -eq 0 ]; then
+            echo "packages=[]" >> $GITHUB_OUTPUT
+          else
+            JSON=$(printf '%s\n' "${CHANGED[@]}" | jq -R . | jq -s -c .)
+            echo "packages=$JSON" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.packages != '[]'
+    runs-on: hanzo-build-linux-amd64
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm --filter ${{ matrix.package }} build
+
+      - name: Publish package
+        # Idempotent on purpose: the desired state is "npmjs holds this version", and
+        # a version already there satisfies it. Versions are immutable, so a conflict
+        # means the release already happened (a re-run, or a hand publish) — that is
+        # success, not a failure. Every other error still fails the job.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -o pipefail
+          OUT=$(pnpm --filter ${{ matrix.package }} publish \
+            --no-git-checks --access public 2>&1) || true
+          echo "$OUT"
+          case "$OUT" in
+            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
+              echo "::notice::${{ matrix.package }} is already on npmjs at this version — nothing to do" ;;
+            *)
+              # Not a conflict: confirm the version really landed, else fail loudly.
+              PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
+              NAME=$(jq -r '.name' "$PKG_DIR/package.json")
+              WANT=$(jq -r '.version' "$PKG_DIR/package.json")
+              npm view "$NAME@$WANT" version >/dev/null 2>&1 \
+                || { echo "::error::$NAME@$WANT is not on npmjs after publish"; exit 1; }
+              echo "published $NAME@$WANT" ;;
+          esac
+
+      - name: Publish to the Hanzo registry
+        # Second home for the same tarball: api.hanzo.ai/v1/packages/hanzo/npm, our
+        # own registry (hanzoai/git), so an install does not have to reach npmjs.
+        # Same artifact, same version — this republishes what the step above just
+        # built, it does not rebuild or re-version.
+        #
+        # BEST-EFFORT by construction. No token ⇒ skip with a notice, so this can
+        # land before the credential exists and starts working the moment it does.
+        # An already-published version is a success, not a failure: the registry
+        # holding it is the desired state either way. npmjs is authoritative and is
+        # never affected by anything here.
+        env:
+          HANZO_REGISTRY_TOKEN: ${{ secrets.HANZO_REGISTRY_TOKEN }}
+        run: |
+          set -uo pipefail
+          if [ -z "${HANZO_REGISTRY_TOKEN:-}" ]; then
+            echo "::notice::HANZO_REGISTRY_TOKEN not set — package published to npmjs only."
+            echo "::notice::Add it (a Hanzo Git token with package:write) to mirror to api.hanzo.ai."
+            exit 0
+          fi
+          REG=https://api.hanzo.ai/v1/packages/hanzo/npm/
+          NPMRC="$RUNNER_TEMP/.npmrc-hanzo"
+          {
+            echo "@hanzo:registry=${REG}"
+            echo "//api.hanzo.ai/v1/packages/hanzo/npm/:_authToken=${HANZO_REGISTRY_TOKEN}"
+          } > "$NPMRC"
+          out=$(npm_config_userconfig="$NPMRC" \
+                pnpm --filter ${{ matrix.package }} publish \
+                  --no-git-checks --access public --registry "$REG" 2>&1) || true
+          echo "$out"
+          case "$out" in
+            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"already exists"*)
+              echo "::notice::already in the Hanzo registry at this version — nothing to do" ;;
+            *) echo "$out" | grep -qiE 'error|failed' \
+                 && echo "::warning::mirror to api.hanzo.ai failed (npmjs publish unaffected)" \
+                 || echo "mirrored to the Hanzo registry" ;;
+          esac
