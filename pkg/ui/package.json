@@ -70,6 +70,12 @@
       "require": "./dist/usage.cjs",
       "default": "./dist/usage.js"
     },
+    "./oss": {
+      "types": "./dist/oss.d.ts",
+      "import": "./dist/oss.js",
+      "require": "./dist/oss.cjs",
+      "default": "./dist/oss.js"
+    },
     "./styles/motion.css": "./dist/styles/hanzo-motion.css",
     "./package.json": "./package.json"
   },
