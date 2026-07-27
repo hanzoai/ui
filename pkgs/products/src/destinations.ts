@@ -67,6 +67,8 @@ export const DESTINATIONS = {
   console: ORIGIN.cloud,
   /** The status page. */
   status: ORIGIN.status,
+  /** The community hub — reached from both a property's nav and the footer. */
+  community: `${ORIGIN.root}/community`,
 } as const
 
 /** A key of the canonical destinations map. */

@@ -17,6 +17,7 @@ describe("DESTINATIONS — the canonical shared addresses (pinned by the spec)",
       apiReference: "https://docs.hanzo.ai/reference",
       console: "https://cloud.hanzo.ai",
       status: "https://status.hanzo.ai",
+      community: "https://hanzo.ai/community",
     })
   })
 
