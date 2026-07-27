@@ -7,17 +7,18 @@
 @import "tw-animate-css";
 
 /* Hanzo UI custom styles */
+@import "./tokens.css";          /* canonical --hz-* design tokens (source of truth) */
 @import "./hanzo-common.css";
-@import "./hanzo-default-colors.css";
+@import "./hanzo-default-colors.css"; /* shadcn + legacy --hz-ui-* bridge onto --hz-* */
 
 /* Custom variant for dark mode */
 @custom-variant dark (&:is(.dark *));
 
 /* Theme configuration */
 @theme inline {
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
-  --radius: 0.5rem;
+  --font-sans: var(--font-sans, var(--hz-font-sans)), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono, var(--hz-font-mono)), ui-monospace, monospace;
+  --radius: var(--hz-radius, 0.5rem);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
