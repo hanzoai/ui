@@ -75,3 +75,6 @@ export * from './color'
 // Usage — the canonical AI-usage surface (totals, chart, spend-by-model, activity)
 // now lives in ONE home: `@hanzo/usage/panel` (<UsagePanel>). The former meter/card/
 // dashboard kit here was orphaned (zero consumers) and folded into it.
+
+// Social — ChannelBadge, PostCard, CampaignCard (extracted from Hanzo Social).
+export * from './social'
