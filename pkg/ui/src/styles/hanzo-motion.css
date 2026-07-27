@@ -134,3 +134,55 @@
     animation: none;
   }
 }
+
+/* ── Typography + surface classes the product layer's components reference ──────
+   DataTable/Metric typeset numeric cells with `hz-mono`/`hz-tnum`; ComboBox and
+   SelectMenu paint their popovers with `hz-paper hz-menu-in`; DataTable rows use
+   `hz-row`. They travel WITH the components (this is the package's one stylesheet)
+   so any host that imports `@hanzo/ui/styles/motion.css` renders them correctly.
+   The elevation/ring variables fall back to sane values, so a host that defines its
+   own `--hz-*` theme tokens (the console does) still wins. */
+
+.hz-tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Data/numeric face — Geist Mono + tabular figures for metric values, prices, IDs
+   and counts, so numbers read as precise, column-aligned data. */
+.hz-mono {
+  font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
+}
+
+.hz-paper {
+  box-shadow: var(--hz-ring, inset 0 0 0 1px rgba(255, 255, 255, 0.08)),
+    var(--hz-paper-highlight, inset 0 1px 0 0 rgba(255, 255, 255, 0.05)),
+    var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36));
+}
+
+@keyframes hz-menu-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.hz-menu-in {
+  animation: hz-menu-in 140ms ease-out both;
+  will-change: opacity;
+}
+
+.hz-row {
+  transition: background-color 140ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-menu-in {
+    animation: none;
+  }
+}
