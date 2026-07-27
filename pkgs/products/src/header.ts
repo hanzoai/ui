@@ -68,7 +68,7 @@ export const HEADERS: Record<SiteId, SiteHeader> = {
   "hanzo.app": {
     site: "hanzo.app",
     productId: "app",
-    localNav: [nav("Features"), nav("Templates"), nav("Gallery"), nav("Pricing"), nav("Enterprise")],
+    localNav: [nav("Community", DESTINATIONS.community), nav("Features"), nav("Templates"), nav("Gallery"), nav("Pricing"), nav("Enterprise")],
     action: { label: "New project", href: "/new" },
   },
   "hanzo.team": {

@@ -53,6 +53,12 @@ export * from './scope'
 // menu across the fleet is pixel-identical. SelectMenu/ComboBox share the same spec.
 export * from './menu'
 
+// Site chrome — the RENDERER for @hanzo/products' header/launcher/footer models.
+// That package decides what the navigation is; these two draw it, so every
+// property shares one bar and one footer instead of a hand-written copy each.
+export * from './SiteNav'
+export * from './SiteFooter'
+
 // The rest — every exported name below is unique across the layer.
 export * from './DataTable'
 export * from './EmptyState'
