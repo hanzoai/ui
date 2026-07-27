@@ -43,6 +43,7 @@ import {
   hasAttribution,
   deriveChannel,
 } from './attribution'
+import { dsnForProduct } from './dsn'
 import { PAGEVIEW } from './events'
 import {
   buildEnvelope,
@@ -236,9 +237,12 @@ export class Analytics {
       ...config,
     }
     this.transport = config.transport ?? new DefaultTransport()
-    // Error plane: explicit DSN wins, else the inlined build-time env. Malformed
-    // or absent => null => inert, never throwing into the host app.
-    this.dsn = parseDsn(config.dsn ?? readEnvDsn())
+    // Error plane, most specific source first: an explicit DSN wins, then the
+    // inlined build-time env (a per-deploy override), then the product registry
+    // — so declaring `product` is enough to report errors and no surface needs
+    // build-argument plumbing. Malformed or absent => null => inert, never
+    // throwing into the host app.
+    this.dsn = parseDsn(config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product))
   }
 
   /** errorPlaneEnabled reports whether captured exceptions can actually reach the
