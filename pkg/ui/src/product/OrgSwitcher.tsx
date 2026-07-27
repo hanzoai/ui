@@ -18,31 +18,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
+import { OrgMark } from './OrgMark'
 import { filterOrgs, type Org, type OrgScope } from './scope'
 
 const titleCase = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s)
-const initialsOf = (o: Org) =>
-  (o.displayName || o.name)
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
-
-/** An org's avatar — its logo when set, else a monogram tile. */
-function OrgAvatar({ org, size = 22 }: { org: Org; size?: number }) {
-  if (org.logo) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={org.logo} alt="" style={{ height: size, width: size, objectFit: 'contain', display: 'block', borderRadius: 6 }} />
-  }
-  return (
-    <YStack width={size} height={size} rounded="$3" bg="$color4" items="center" justify="center">
-      <Text fontSize="$1" fontWeight="800" color="$color12">
-        {initialsOf(org)}
-      </Text>
-    </YStack>
-  )
-}
 
 export type OrgSwitcherProps = {
   /** The active-org contract (see `orgScope`). */
@@ -55,13 +34,20 @@ export type OrgSwitcherProps = {
   orgs?: (page: number, query: string) => Promise<Org[]>
   /** Rows per page the loader returns. Default 20. */
   pageSize?: number
+  /**
+   * The org the surface is scoped to, already resolved (display name + logo).
+   * Omit and the trigger synthesizes it from the scope id alone — enough to name
+   * the org, but it cannot know a logo. Pass it wherever the host already
+   * resolves the org, so the switcher and the chrome's org mark agree.
+   */
+  current?: Org
   /** Create-org hook → the created org's id; omit to hide the affordance. */
   create?: (name: string) => Promise<string>
   /** Show the "All organizations" de-scope row (`scope.leaveOrg`). */
   picker?: boolean
 }
 
-export function OrgSwitcher({ scope, orgs, pageSize = 20, create, picker = false }: OrgSwitcherProps) {
+export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false }: OrgSwitcherProps) {
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)
@@ -133,10 +119,13 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, create, picker = false
     return [{ name: currentId, displayName: titleCase(currentId) }]
   }, [orgs, rows, query, currentId])
 
-  const current: Org = useMemo(
-    () => rows.find((o) => o.name === currentId) ?? { name: currentId, displayName: titleCase(currentId) },
-    [rows, currentId],
-  )
+  // The host's resolved org wins (it alone can carry the logo), then the loaded
+  // row, then a name synthesized from the scope id — never nothing.
+  const current: Org = useMemo(() => {
+    if (given && given.name === currentId) return given
+    return rows.find((o) => o.name === currentId) ?? { name: currentId, displayName: titleCase(currentId) }
+  }, [given, rows, currentId])
+  const currentLabel = current.displayName || titleCase(current.name)
 
   const select = useCallback(
     (org: string) => {
@@ -163,8 +152,17 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, create, picker = false
   return (
     <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
       <Popover.Trigger asChild>
-        <Button size="$2" chromeless icon={<OrgAvatar org={current} size={18} />} iconAfter={<ChevronsUpDown size={13} />}>
-          {current.displayName || titleCase(current.name)}
+        {/* Sized as the PEER of the account control — same height, same mark,
+            same type, same hit area — so "which workspace" and "who I am" read
+            as the two halves of one identity, not a caption over a control. */}
+        <Button chromeless height={44} px="$2" justify="flex-start" aria-label={`${currentLabel} · switch organization`}>
+          <XStack items="center" gap="$2.5" flex={1} minW={0}>
+            <OrgMark org={current} size={30} />
+            <Text flex={1} minW={0} fontSize="$4" fontWeight="800" color="$color12" numberOfLines={1}>
+              {currentLabel}
+            </Text>
+            <ChevronsUpDown size={15} color="$color9" />
+          </XStack>
         </Button>
       </Popover.Trigger>
       <Popover.Content bordered elevate p="$2" width={300} bg="$color2" borderColor="$borderColor">
@@ -251,7 +249,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, create, picker = false
                     bg={org.name === currentId ? '$color4' : 'transparent'}
                     hoverStyle={{ bg: '$color5' }}
                   >
-                    <OrgAvatar org={org} />
+                    <OrgMark org={org} />
                     <Text flex={1} fontSize="$2" color="$color12" numberOfLines={1}>
                       {org.displayName || org.name}
                     </Text>
