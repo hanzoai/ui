@@ -303,6 +303,11 @@
       "import": "./dist/billing/index.mjs",
       "require": "./dist/billing/index.js"
     },
+    "./team": {
+      "types": "./dist/src/team/index.d.ts",
+      "import": "./dist/team/index.mjs",
+      "require": "./dist/team/index.js"
+    },
     "./finance": {
       "types": "./dist/finance/index.d.ts",
       "import": "./dist/finance/index.mjs",
