@@ -1,0 +1,59 @@
+/*
+ * @hanzo/ui/world — Design tokens (ALIAS layer).
+ *
+ * The world data components (NewsStream, MarketTicker, InstabilityScore,
+ * PredictionMarket, …) read `--world-*` custom properties. Those are now thin
+ * aliases of the canonical `--hz-*` set — the ONE source of truth in
+ * `@hanzo/ui/style/tokens.css` (the world.hanzo.ai look lives there). This keeps
+ * the world component API stable while unifying values across every surface.
+ *
+ * Importing `@hanzo/ui/world/tokens.css` alone still works: it pulls the
+ * canonical layer first, then maps the `--world-*` names onto it.
+ *
+ * To re-skin world components on top of a host design system, override the
+ * `--hz-*` values (preferred) or point specific `--world-*` at your own tokens.
+ */
+
+@import '../../style/tokens.css';
+
+:root {
+  /* Surfaces */
+  --world-bg: var(--hz-bg);
+  --world-surface: var(--hz-surface);
+  --world-surface-hover: var(--hz-surface-hover);
+  --world-surface-active: var(--hz-surface-active);
+
+  /* Borders */
+  --world-border: var(--hz-border);
+  --world-border-strong: var(--hz-border-strong);
+
+  /* Text */
+  --world-text: var(--hz-text);
+  --world-text-muted: var(--hz-text-muted);
+  --world-text-dim: var(--hz-text-dim);
+  --world-accent: var(--hz-accent);
+
+  /* Severity */
+  --world-critical: var(--hz-critical);
+  --world-high: var(--hz-high);
+  --world-elevated: var(--hz-elevated);
+  --world-normal: var(--hz-normal);
+  --world-info: var(--hz-info);
+
+  /* Directional */
+  --world-up: var(--hz-up);
+  --world-down: var(--hz-down);
+
+  /* Status dot */
+  --world-live: var(--hz-live);
+  --world-stale: var(--hz-stale);
+
+  /* Typography */
+  --world-font-sans: var(--hz-font-sans);
+  --world-font-mono: var(--hz-font-mono);
+
+  /* Sizing */
+  --world-radius: var(--hz-radius);
+  --world-radius-sm: var(--hz-radius-sm);
+  --world-transition: var(--hz-transition);
+}

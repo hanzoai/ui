@@ -189,6 +189,16 @@ export default defineConfig({
     'dash/form': 'src/dash/form.tsx',
     'dash/crud': 'src/dash/crud.tsx',
 
+    // World components (embeddable data-stream panels from world.hanzo.ai)
+    'world/index': 'src/world/index.ts',
+    'world/news-stream': 'src/world/news-stream.tsx',
+    'world/market-ticker': 'src/world/market-ticker.tsx',
+    'world/instability-score': 'src/world/instability-score.tsx',
+    'world/prediction-market': 'src/world/prediction-market.tsx',
+    'world/hooks': 'src/world/hooks.ts',
+    'world/format': 'src/world/format.ts',
+    'world/types': 'src/world/types.ts',
+
     // Auth components (IAMLoginButton, AuthGuard)
     'auth/index': 'src/auth/index.ts',
 
