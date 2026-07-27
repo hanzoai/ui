@@ -22,6 +22,7 @@ export default defineConfig({
     dashboard: 'src/dashboard.ts',
     usage: 'src/usage.ts',
     oss: 'src/oss.ts',
+    telemetry: 'src/telemetry.ts',
   },
   format: ['esm', 'cjs'],
   outDir: 'dist',
