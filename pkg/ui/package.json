@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.25",
+  "version": "8.0.26",
   "type": "module",
-  "description": "Hanzo UI — the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI \u2014 the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -17,11 +17,6 @@
     "./gui": {
       "types": "./src/backends/gui/index.ts",
       "default": "./src/backends/gui/index.ts"
-    },
-    "./svelte": {
-      "svelte": "./src/backends/svelte/index.ts",
-      "types": "./src/backends/svelte/index.ts",
-      "default": "./src/backends/svelte/index.ts"
     },
     "./components": {
       "types": "./src/components.ts",
@@ -170,7 +165,6 @@
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "typecheck:ui": "tsc -p tsconfig.check.json",
-    "check:svelte": "svelte-check --tsconfig ./tsconfig.svelte.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\""
@@ -218,13 +212,9 @@
     "@hanzogui/next-theme": ">=7.3.0",
     "next-themes": ">=0.2.1",
     "react": ">=19",
-    "react-dom": ">=19",
-    "svelte": ">=5"
+    "react-dom": ">=19"
   },
   "peerDependenciesMeta": {
-    "svelte": {
-      "optional": true
-    },
     "@hanzo/canvas": {
       "optional": true
     },
@@ -260,8 +250,6 @@
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "svelte": "^4.2.20",
-    "svelte-check": "^3.8.6",
     "typescript": "^5.7.2",
     "vitest": "^4.1.8",
     "react-native-web": "^0.21.2",
