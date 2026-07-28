@@ -36,7 +36,7 @@ Both layers are **presentational + data-injected**: the host supplies rows and p
 
 ## The DocType renderer — one UI for every business app
 
-`@hanzo/ui/doctype` renders the **Hanzo Framework** DocType engine (`hanzoai/cloud
+`@hanzo/ui/framework` renders the **Hanzo Framework** DocType engine (`hanzoai/cloud
 clients/framework`, live at `/v1/framework/*`; also published as
 [`hanzoai/framework`](https://github.com/hanzoai/framework) over
 [`hanzoai/doctype`](https://github.com/hanzoai/doctype)). The engine is
@@ -46,8 +46,8 @@ same renderer. An **app lane is a `module` filter** over the DocType registry pl
 its own copy; there is no per-lane list, form, detail or builder to drift.
 
 ```tsx
-import { createFrameworkClient } from '@hanzo/ui/doctype/core'      // transport only
-import { CollectionsBrowser, DocTypeRecords, DocTypeDetail } from '@hanzo/ui/doctype'
+import { createFrameworkClient } from '@hanzo/ui/framework/core'      // transport only
+import { CollectionsBrowser, DocTypeRecords, DocTypeDetail } from '@hanzo/ui/framework'
 
 // The HOST owns transport: paths are relative to the framework root, so the app
 // decides the origin + the credential. Nothing in the library picks a URL.
@@ -72,16 +72,26 @@ enhancement applied once the box proves it can hold one. Every control meets the
 `inListView` projection so a twelve-field document does not become a horizontal
 scroll wall.
 
-**Two entries, because they are two different things.** `./doctype/core` is the
+**Two entries, because they are two different things.** `./framework/core` is the
 contract — wire types, the client, the metadata↔render mapping, the builder
 projection, the media model. It imports no React and no `@hanzo/gui`, so a data
 layer, a server route or a plain node test can bind the engine without loading a
-component tree. `./doctype` re-exports all of it plus the views.
+component tree. `./framework` re-exports all of it plus the views.
 
 **Ports, not bindings.** The client takes a `FrameworkTransport`; the DAM takes a
 `MediaStore` (ensure-bucket / presign / put / delete) and a **bucket parameter**,
 so ERP attachments never land in a bucket named after the CMS. Routing is
 `onOpen`/`onCreate`/`onBack`/`onView` callbacks — no router import anywhere.
+
+**One entry, not two.** 8.0.24 shipped a first `./framework` lift with the same
+`createFrameworkClient(Transport)` shape but no builder, no DAM and no mobile
+layout, injecting `renderBuilder`/`renderMedia` instead. 8.0.25 is the convergence:
+the same entry, a superset implementation, and every 8.0.24 name still resolves —
+`Transport` aliases `FrameworkTransport`, `Loader` aliases the in-flow `Loading`,
+`setupDescription`/`setupBullets` stay optional (they now fall back to copy DERIVED
+FROM THE LANE, which is the actual fix — the old default was one lane's words), and
+`renderBuilder`/`renderMedia` still win when supplied. A host that passes neither
+now gets the real built-in `CollectionBuilder`/`MediaGrid` instead of nothing.
 
 ## Motion
 
