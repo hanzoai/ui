@@ -105,3 +105,8 @@ export * from './color'
 // cards, the summary bar, the list↔calendar toggle, the agenda, the composer, and
 // the provider-readiness list, over one pure time/preview module.
 export * from './social'
+
+// The gui/product theme object + tag tones (one source of truth, from
+// @hanzo/data) — the theme this layer renders against. Design-token PRIMITIVES
+// (colors, dark/light, radii, spacing) are the runtime-free `@hanzo/ui/core`.
+export { tokens, TAG_TONES, tagTone, type TagTone } from '@hanzo/data'
