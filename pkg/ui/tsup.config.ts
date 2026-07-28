@@ -24,6 +24,15 @@ export default defineConfig({
     // things, not two ways to the same thing.
     'product/social/api': 'src/product/social/api.ts',
     data: 'src/data.ts',
+    // The DocType renderer is its own entry: an app lane (CMS/ERP/CRM/Help) that
+    // renders the framework engine must not have to pull the whole product barrel,
+    // and the pure half (types/fields/builder-logic) must stay importable with no
+    // React in scope.
+    'doctype/index': 'src/doctype/index.ts',
+    // …and the CONTRACT alone (types + client + mapping + media model). It imports
+    // no React and no @hanzo/gui, so a host's data layer or a node test can bind
+    // the engine without pulling a component tree.
+    'doctype/core': 'src/doctype/core.ts',
     'primitives/bases/data/index': 'src/primitives/bases/data/index.ts',
     gitops: 'src/gitops.ts',
     canvas: 'src/canvas.ts',
