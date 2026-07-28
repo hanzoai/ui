@@ -14,7 +14,6 @@
     "dist",
     "types",
     "**/*.test.ts",
-    "**/*.test.tsx",
-    "src/backends/svelte"
+    "**/*.test.tsx"
   ]
 }
