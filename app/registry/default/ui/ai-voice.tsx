@@ -34,44 +34,68 @@ import { Slider } from "@/registry/default/ui/slider"
 import { Switch } from "@/registry/default/ui/switch"
 import { Textarea } from "@/registry/default/ui/textarea"
 
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition
-    webkitSpeechRecognition: typeof SpeechRecognition
-    webkitAudioContext: typeof AudioContext
-  }
+// Web Speech API shapes, declared MODULE-LOCALLY and deliberately not in
+// `declare global`.
+//
+// The Speech API is only partly standardised, so how much of it lib.dom ships
+// varies by TypeScript version — and this file has now been broken from both
+// directions by that. Declaring the names globally MERGES with whatever the lib
+// provides instead of shadowing it, so every small difference became an error
+// (`readonly` vs mutable → TS2687, a second `[index: number]` → TS2374,
+// `error: string` against the real `SpeechRecognitionErrorCode` union → TS2717).
+// Deleting the declarations instead broke the opposite way on a lib that does
+// NOT carry them: TS2552 "Cannot find name 'SpeechRecognitionEvent'".
+//
+// Local names collide with neither. They describe exactly the surface this
+// component touches, and the version of lib.dom in use stops mattering.
+interface SpeechAlternative {
+  readonly transcript: string
+}
 
-  interface SpeechRecognition extends EventTarget {
-    continuous: boolean
-    interimResults: boolean
-    lang: string
-    onresult: (event: SpeechRecognitionEvent) => void
-    onerror: (event: SpeechRecognitionErrorEvent) => void
-    onend: () => void
-    start(): void
-    stop(): void
-    abort(): void
-  }
+interface SpeechResult {
+  readonly isFinal: boolean
+  readonly [index: number]: SpeechAlternative
+}
 
-  // SpeechRecognitionEvent, SpeechRecognitionErrorEvent, SpeechRecognitionResultList
-  // and SpeechRecognitionResult are NOT declared here any more: lib.dom now ships
-  // all four, and re-declaring them in a `declare global` block MERGES with the
-  // built-ins rather than shadowing them. Every difference then becomes an error —
-  // `readonly` vs mutable (TS2687), a second `[index: number]` (TS2374), and
-  // `error: string` against the real `SpeechRecognitionErrorCode` union (TS2717).
-  // Seven errors, all from types the platform already gets right.
-  //
-  // What stays below is only what lib.dom still does NOT provide: the vendor
-  // `webkit*` aliases on Window and the constructor value.
-  interface SpeechRecognitionAlternative {
-    readonly transcript: string
-    readonly confidence: number
-  }
+interface SpeechResultList {
+  readonly length: number
+  readonly [index: number]: SpeechResult
+}
 
-  const SpeechRecognition: {
-    prototype: SpeechRecognition
-    new (): SpeechRecognition
+interface SpeechRecognitionEventLike {
+  readonly resultIndex: number
+  readonly results: SpeechResultList
+}
+
+interface SpeechRecognitionErrorEventLike {
+  readonly error: string
+}
+
+interface SpeechRecognizer {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  onresult: (event: SpeechRecognitionEventLike) => void
+  onerror: (event: SpeechRecognitionErrorEventLike) => void
+  onend: () => void
+  start(): void
+  stop(): void
+  abort(): void
+}
+
+// The constructor is read off `window` through a narrow cast rather than a
+// `Window` augmentation, for the same reason: lib.dom may or may not already
+// declare `SpeechRecognition` there, and re-declaring it with a different type
+// is itself an error.
+type SpeechRecognizerCtor = new () => SpeechRecognizer
+
+const getSpeechRecognizerCtor = (): SpeechRecognizerCtor | undefined => {
+  if (typeof window === "undefined") return undefined
+  const w = window as unknown as {
+    SpeechRecognition?: SpeechRecognizerCtor
+    webkitSpeechRecognition?: SpeechRecognizerCtor
   }
+  return w.webkitSpeechRecognition ?? w.SpeechRecognition
 }
 
 interface VoiceProfile {
@@ -195,7 +219,7 @@ export function AIVoice({
   const [error, setError] = useState<string | null>(null)
   const [audioLevel, setAudioLevel] = useState(0)
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null)
+  const recognitionRef = useRef<SpeechRecognizer | null>(null)
   const synthRef = useRef<SpeechSynthesis | null>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
@@ -205,10 +229,9 @@ export function AIVoice({
 
   // Initialize speech recognition
   useEffect(() => {
-    if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
-      const SpeechRecognition =
-        window.webkitSpeechRecognition || window.SpeechRecognition
-      recognitionRef.current = new SpeechRecognition()
+    const Recognizer = getSpeechRecognizerCtor()
+    if (Recognizer) {
+      recognitionRef.current = new Recognizer()
 
       if (recognitionRef.current) {
         recognitionRef.current.continuous = true
@@ -286,8 +309,15 @@ export function AIVoice({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
 
-      audioContextRef.current = new (window.AudioContext ||
-        window.webkitAudioContext)()
+      // `webkitAudioContext` is a vendor prefix lib.dom does not declare, so it
+      // is read through the same narrow cast as the recogniser rather than by
+      // augmenting Window (see the note at the top of this file).
+      const AudioCtx =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext
+      if (!AudioCtx) throw new Error("Web Audio API is not available")
+      audioContextRef.current = new AudioCtx()
       analyserRef.current = audioContextRef.current.createAnalyser()
       microphoneRef.current =
         audioContextRef.current.createMediaStreamSource(stream)
