@@ -199,7 +199,6 @@ export function useAudioVolume(
 
   useEffect(() => {
     if (!mediaStream) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVolume(0)
       volumeRef.current = 0
       return
