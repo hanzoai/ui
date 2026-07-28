@@ -35,6 +35,8 @@ function openHref(href: string): void {
   if (typeof window !== 'undefined') window.open(href, '_blank', 'noopener')
 }
 
+import { useEmit } from './instrument'
+
 export function EmptyState({
   icon: Icon,
   title,
@@ -54,6 +56,7 @@ export function EmptyState({
   /** An optional lower-emphasis action (Docs / CLI / Learn more). */
   secondary?: EmptyAction
 }) {
+  const track = useEmit()
   return (
     <Card
       borderWidth={1}
@@ -107,7 +110,11 @@ export function EmptyState({
             <PrimaryButton
               icon={primary.icon}
               iconAfter={primary.href ? <ExternalLink size={15} /> : <ArrowRight size={15} />}
-              onPress={() => (primary.href ? openHref(primary.href) : primary.onPress?.())}
+              onPress={() => {
+                track({ component: 'EmptyState', action: 'click', id: title, value: primary.label })
+                if (primary.href) openHref(primary.href)
+                else primary.onPress?.()
+              }}
             >
               {primary.label}
             </PrimaryButton>
@@ -117,7 +124,11 @@ export function EmptyState({
               chromeless
               icon={secondary.icon}
               iconAfter={secondary.href ? <ExternalLink size={14} /> : undefined}
-              onPress={() => (secondary.href ? openHref(secondary.href) : secondary.onPress?.())}
+              onPress={() => {
+                track({ component: 'EmptyState', action: 'click', id: title, value: secondary.label })
+                if (secondary.href) openHref(secondary.href)
+                else secondary.onPress?.()
+              }}
             >
               {secondary.label}
             </Button>

@@ -13,6 +13,7 @@ import { Button, Text, XStack, YStack } from '@hanzo/gui'
 import { Trash2 } from '@hanzogui/lucide-icons-2'
 
 import { classifyBackend } from './BackendState'
+import { useEmit } from './instrument'
 
 export function ConfirmDelete({
   message,
@@ -29,15 +30,19 @@ export function ConfirmDelete({
 }) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  const track = useEmit()
 
   const go = async () => {
     setBusy(true)
     setErr(null)
+    track({ component: 'ConfirmDelete', action: 'confirm', id: confirmLabel })
     try {
       await run()
       onDone()
     } catch (e) {
-      setErr(classifyBackend(e).message || 'Failed to delete.')
+      const message = classifyBackend(e).message || 'Failed to delete.'
+      track({ component: 'ConfirmDelete', action: 'error', id: confirmLabel, value: message })
+      setErr(message)
       setBusy(false)
     }
   }
@@ -61,7 +66,14 @@ export function ConfirmDelete({
         >
           {busy ? 'Deleting…' : confirmLabel}
         </Button>
-        <Button chromeless onPress={() => onDone()} disabled={busy}>
+        <Button
+          chromeless
+          onPress={() => {
+            track({ component: 'ConfirmDelete', action: 'cancel', id: confirmLabel })
+            onDone()
+          }}
+          disabled={busy}
+        >
           Cancel
         </Button>
       </XStack>

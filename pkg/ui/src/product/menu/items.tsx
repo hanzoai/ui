@@ -116,6 +116,8 @@ export function MenuPanel({
 }
 
 // ── Item — the ONE row ──────────────────────────────────────────────────────────
+import { useEmit } from '../instrument'
+
 export function MenuItemView({
   icon,
   label,
@@ -127,14 +129,19 @@ export function MenuItemView({
   hasSubmenu = false,
   onSelect,
 }: Omit<Extract<MenuItemSpec, { type?: 'item' }>, 'key' | 'type' | 'closeOnSelect'>) {
+  const track = useEmit()
+  const choose = () => {
+    track({ component: 'MenuItem', action: 'select', id: typeof label === 'string' ? label : undefined, value: selected })
+    onSelect()
+  }
   const press = () => {
-    if (!disabled) onSelect()
+    if (!disabled) choose()
   }
   const onKeyDown = (e: KeyboardEvent) => {
     if (disabled) return
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      onSelect()
+      choose()
     }
   }
   const labelColor = destructive ? DANGER : '$color12'

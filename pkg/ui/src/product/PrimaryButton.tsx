@@ -18,9 +18,17 @@ import type { ComponentProps } from 'react'
 import { Button } from '@hanzo/gui'
 
 import { useAccent } from './accent'
+import { useEmit } from './instrument'
 
 export function PrimaryButton(props: ComponentProps<typeof Button>) {
   const { accent, contrast } = useAccent()
+  const track = useEmit()
+  // The label IS the identity of a primary action — no app has to name it.
+  const onPress = (e: unknown) => {
+    track({ component: 'PrimaryButton', action: 'click', id: typeof props.children === 'string' ? props.children : props['aria-label'] })
+    ;(props.onPress as ((e: unknown) => void) | undefined)?.(e)
+  }
+  props = { ...props, onPress: onPress as ComponentProps<typeof Button>['onPress'] }
   // Accent set → a filled accent button (bg + readable text, via inline style Tamagui
   // forwards to the DOM). No accent → the default monochrome white (theme="light").
   if (accent) {
