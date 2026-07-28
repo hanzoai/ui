@@ -17,7 +17,7 @@ vi.mock('@hanzogui/telemetry', () => ({
   },
 }))
 
-const { emit, textSize } = await import('./instrument')
+const { emit, labelOf, textSize } = await import('./instrument')
 
 beforeEach(() => {
   tracked.length = 0
@@ -53,5 +53,23 @@ describe('textSize', () => {
     expect(textSize('sk-live-abcdef')).toBe(14)
     expect(textSize('')).toBe(0)
     expect(textSize(undefined)).toBe(0)
+  })
+})
+
+describe('labelOf', () => {
+  it('names a plain-string label', () => {
+    expect(labelOf('Deploy')).toBe('Deploy')
+  })
+
+  it('names an INTERPOLATED label — the common case that was going out anonymous', () => {
+    // <PrimaryButton>Log in with {brand}</PrimaryButton> reaches the component as
+    // an array, so the string check alone dropped the identity of every such button.
+    expect(labelOf(['Log in with ', 'Hanzo Cloud'])).toBe('Log in with Hanzo Cloud')
+  })
+
+  it('refuses to guess at non-textual children', () => {
+    expect(labelOf({ type: 'svg' })).toBeUndefined()
+    expect(labelOf(['  ', '  '])).toBeUndefined()
+    expect(labelOf(undefined)).toBeUndefined()
   })
 })

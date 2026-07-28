@@ -116,7 +116,7 @@ export function MenuPanel({
 }
 
 // ── Item — the ONE row ──────────────────────────────────────────────────────────
-import { useEmit } from '../instrument'
+import { labelOf, useEmit } from '../instrument'
 
 export function MenuItemView({
   icon,
@@ -131,7 +131,7 @@ export function MenuItemView({
 }: Omit<Extract<MenuItemSpec, { type?: 'item' }>, 'key' | 'type' | 'closeOnSelect'>) {
   const track = useEmit()
   const choose = () => {
-    track({ component: 'MenuItem', action: 'select', id: typeof label === 'string' ? label : undefined, value: selected })
+    track({ component: 'MenuItem', action: 'select', id: labelOf(label), value: selected })
     onSelect()
   }
   const press = () => {
