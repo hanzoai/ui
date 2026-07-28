@@ -5,6 +5,11 @@
  * types", or the chosen option) and a menu list with a check on the active option.
  * Prop-driven + self-contained. `value === null` is the "all"/unfiltered state.
  *
+ * `required` turns the same control into a "pick exactly one of N": the null row is
+ * dropped and the value is never nullable. That is the SAME control, not a second
+ * one — a required field picker and a filter differ only in whether "none" is an
+ * option, so it stays one component rather than growing a fourth select.
+ *
  * A thin DropdownMenu (the ONE menu mechanism) so it is pixel-identical to every other
  * menu and rides the same portal-theme-safe Portal path — no gui Popover, no Sheet
  * re-root, works on gui-native hosts.
@@ -24,6 +29,10 @@ export function SelectMenu<T extends string>({
   allLabel = 'All',
   icon,
   minWidth = 130,
+  required,
+  minHeight,
+  disabled,
+  ariaLabel,
 }: {
   options: SelectOption<T>[]
   value: T | null
@@ -33,12 +42,21 @@ export function SelectMenu<T extends string>({
   /** Optional leading icon in the trigger. */
   icon?: ReactElement
   minWidth?: number
+  /** Exactly one of `options` is always chosen — no "all"/none row. */
+  required?: boolean
+  /** Trigger height floor — pass the 44px tap floor on a phone. */
+  minHeight?: number
+  disabled?: boolean
+  /** Accessible name for an unlabelled trigger. */
+  ariaLabel?: string
 }) {
   const active = value === null ? null : options.find((o) => o.key === value) ?? null
   const triggerLabel = active ? active.label : allLabel
 
   const items: MenuItemSpec[] = [
-    { key: '__all__', label: allLabel, selected: value === null, onSelect: () => onChange(null) },
+    ...(required
+      ? []
+      : [{ key: '__all__', label: allLabel, selected: value === null, onSelect: () => onChange(null) }]),
     ...options.map((o) => ({ key: o.key, label: o.label, selected: value === o.key, onSelect: () => onChange(o.key) })),
   ]
 
@@ -47,12 +65,15 @@ export function SelectMenu<T extends string>({
       minWidth={Math.max(minWidth, 160)}
       trigger={
         <Button
-          size="$2"
+          size={minHeight && minHeight >= 40 ? '$4' : '$2'}
           minW={minWidth}
+          minH={minHeight}
+          disabled={disabled}
+          aria-label={ariaLabel}
           justify="space-between"
           borderWidth={1}
           borderColor="$borderColor"
-          bg={value !== null ? '$color5' : 'transparent'}
+          bg={!required && value !== null ? '$color5' : 'transparent'}
           icon={icon}
           iconAfter={<ChevronDown size={14} opacity={0.6} />}
         >

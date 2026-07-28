@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.22",
+  "version": "8.0.23",
   "type": "module",
-  "description": "Hanzo UI \u2014 the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI — the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -69,6 +69,18 @@
       "import": "./dist/data.js",
       "require": "./dist/data.cjs",
       "default": "./dist/data.js"
+    },
+    "./doctype": {
+      "types": "./dist/doctype/index.d.ts",
+      "import": "./dist/doctype/index.js",
+      "require": "./dist/doctype/index.cjs",
+      "default": "./dist/doctype/index.js"
+    },
+    "./doctype/core": {
+      "types": "./dist/doctype/core.d.ts",
+      "import": "./dist/doctype/core.js",
+      "require": "./dist/doctype/core.cjs",
+      "default": "./dist/doctype/core.js"
     },
     "./primitives": {
       "types": "./src/primitives/index.ts",
