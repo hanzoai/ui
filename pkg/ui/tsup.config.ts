@@ -11,7 +11,18 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
+    // The ONE type/radius/space scale every Hanzo admin renders at (createGui).
+    'gui-config': 'src/gui-config.ts',
     'product/index': 'src/product/index.ts',
+    // The social surface is also its own entry: an app that only renders Publish
+    // (the dedicated social.hanzo.ai app, the console's /v1/social binding) must not
+    // have to pull the whole product barrel — and its API module must stay React-free.
+    'product/social/index': 'src/product/social/index.ts',
+    // …and the CONTRACT alone. api.ts imports nothing — no React, no @hanzo/gui — so a
+    // host's data layer (the console's /v1/social binding, a node test) can bind it
+    // without loading a component tree. Two entries because they are two different
+    // things, not two ways to the same thing.
+    'product/social/api': 'src/product/social/api.ts',
     data: 'src/data.ts',
     'primitives/bases/data/index': 'src/primitives/bases/data/index.ts',
     gitops: 'src/gitops.ts',
