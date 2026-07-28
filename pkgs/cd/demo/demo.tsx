@@ -1,5 +1,5 @@
 /**
- * Static demo generator — server-renders the real @hanzo/gitops components over
+ * Static demo generator — server-renders the real @hanzo/cd components over
  * the fixtures into a single self-contained HTML page (`demo/index.html`), so the
  * surface can be seen (and screenshotted) without a running app. Reproduce with:
  *
@@ -45,7 +45,7 @@ const app = h(
   'div',
   { className: 'hz-gitops', style: { ...THEME_VARS.dark, background: 'var(--hz-surface)', minHeight: '100vh', padding: '28px 32px' } },
   h('header', { style: { marginBottom: 24 } },
-    h('h1', { style: { margin: 0, fontSize: 22, fontWeight: 800, color: 'var(--hz-fg-strong)' } }, '@hanzo/gitops'),
+    h('h1', { style: { margin: 0, fontSize: 22, fontWeight: 800, color: 'var(--hz-fg-strong)' } }, '@hanzo/cd'),
     h('p', { style: { margin: '4px 0 0', color: 'var(--hz-fg-muted)', fontSize: 14 } }, 'Argo-CD-class CD/GitOps components — applications list, resource-tree topology, node drill-in, sync & rollback. Presentational, data-prop-driven.'),
   ),
   h(Section, { title: 'Application — sync panel + resource tree + node drill-in' },
@@ -70,7 +70,7 @@ const app = h(
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>@hanzo/gitops demo</title>
+<title>@hanzo/cd demo</title>
 <style>*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 ${GITOPS_CSS}</style></head>
 <body>${renderToStaticMarkup(app)}</body></html>`

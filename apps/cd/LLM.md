@@ -9,16 +9,16 @@ logs · sync/rollback.**
 ## Stack + why
 
 - **Vite + React 19 static SPA** → `dist/` (a static bundle, no runtime server).
-- **`@hanzo/gitops`** (workspace) is the ArgoCD-replacement UI — a clean-room,
+- **`@hanzo/cd`** (workspace) is the ArgoCD-replacement UI — a clean-room,
   framework-free port (plain React + scoped CSS, no Tamagui/Tailwind). We mount
   `GitopsAppList` (the fleet), and compose `GitopsSyncPanel` + `GitopsAppTree` +
   `GitopsNodeInfo` + `GitopsRollbackDialog` for the app detail (lazy per-node
   `/resource` + `/logs` fetch).
 - **`@hanzo/canvas/pure`** (workspace) for the pure helpers.
 - The workspace packages are resolved by **Vite path alias** (`vite.config.ts`),
-  so the app builds off `@hanzo/gitops/dist` + `@hanzo/canvas/src` **without a full
+  so the app builds off `@hanzo/cd/dist` + `@hanzo/canvas/src` **without a full
   monorepo install** (the shared pnpm store lacks the registry deps of the heavier
-  packages). Run `pnpm --filter @hanzo/gitops build` once if its `dist` is stale.
+  packages). Run `pnpm --filter @hanzo/cd build` once if its `dist` is stale.
 
 ## Backend + auth (the contract this preserves)
 
@@ -31,7 +31,7 @@ logs · sync/rollback.**
   `hanzo_iam_token` cookie the cloud binary validates (`SanitizeIdentity` →
   `c.IsAdmin()`). The SPA reads that cookie for its gate; a missing/expired session
   (or an API 401/403) lands on the sign-in screen — never a fabricated row.
-- `src/lib/adapt.ts` maps the `/v1/deploy` DTOs INTO the shared `@hanzo/gitops`
+- `src/lib/adapt.ts` maps the `/v1/deploy` DTOs INTO the shared `@hanzo/cd`
   view-models (reusing the package's own `foldHealth`/`foldSync`). Note: the cloud
   wire uses the hyphenated `out-of-sync`, which `foldSync` (whitespace-only strip)
   reads as Unknown — the adapter strips `[-_]` before folding.
@@ -53,7 +53,7 @@ ingress or backend change: publish the bundle, retire the old ArgoCD `ui/` + the
 ## Verify
 
 - `tsc --noEmit -p tsconfig.app.json` — clean.
-- `npx vitest run src/lib/adapt.test.ts` — the `/v1/deploy` → `@hanzo/gitops`
+- `npx vitest run src/lib/adapt.test.ts` — the `/v1/deploy` → `@hanzo/cd`
   mapping (incl. the `out-of-sync` fold fix, `parentRefs` tree linking, clean-semver
   rollback).
 - `npx playwright test` — builds + serves + proves the fleet renders, a row opens

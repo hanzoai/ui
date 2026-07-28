@@ -10,7 +10,7 @@ import { defineConfig } from "vite"
  * cloud binary by the ingress, so in prod the SPA calls same-origin `/v1/deploy`
  * with the `hanzo_iam_token` cookie (cloud validates → SuperAdmin gate).
  *
- * The @hanzo/gitops (built dist) + @hanzo/canvas/pure (pure TS source) workspace
+ * The @hanzo/cd (built dist) + @hanzo/canvas/pure (pure TS source) workspace
  * packages are resolved by path alias so the app builds without a full monorepo
  * install (the shared store lacks the registry deps of the heavier packages). A
  * dev proxy forwards `/v1` to CD_API (default the live cluster) for local dev.
@@ -23,12 +23,12 @@ export default defineConfig({
   resolve: {
     dedupe: ["react", "react-dom"],
     alias: {
-      "@hanzo/gitops": r("../../pkgs/gitops/dist/index.mjs"),
+      "@hanzo/cd": r("../../pkgs/gitops/dist/index.mjs"),
       "@hanzo/canvas/pure": r("../../pkgs/canvas/src/pure.ts"),
     },
   },
   // Plain CSS only — override the monorepo-root PostCSS/Tailwind config discovery
-  // (this app has no Tailwind; the @hanzo/gitops components ship their own scoped CSS).
+  // (this app has no Tailwind; the @hanzo/cd components ship their own scoped CSS).
   css: { postcss: { plugins: [] } },
   build: { outDir: "dist", target: "es2022", sourcemap: false },
   server: {

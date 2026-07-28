@@ -1,4 +1,4 @@
-// @hanzo/gitops/pure — the React-free surface: the data contract + the pure folds
+// @hanzo/cd/pure — the React-free surface: the data contract + the pure folds
 // (health/sync normalization, resource-tree layout, diff classing). Import from
 // here (not the package root) when you only need the logic — e.g. a host's data
 // mapper and its unit tests — so you never pull in any component or React.

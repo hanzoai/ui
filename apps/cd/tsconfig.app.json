@@ -16,7 +16,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@hanzo/gitops": ["../../pkgs/gitops/dist/index.d.ts"],
+      "@hanzo/cd": ["../../pkgs/gitops/dist/index.d.ts"],
       "@hanzo/canvas/pure": ["../../pkgs/canvas/src/pure.ts"]
     }
   },
