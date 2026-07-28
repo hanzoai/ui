@@ -85,8 +85,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build UI package
-        run: cd pkgs/ui && pnpm run build
+      # Build everything app/ DEPENDS ON, not one hardcoded package. `^...` is
+      # turbo's "dependencies of, excluding itself" filter, so the set is derived
+      # from the workspace graph and stays right when an import is added.
+      #
+      # Building only pkgs/ui was why `Cannot find module '@hanzo/event'` failed
+      # here and nowhere else: @hanzo/event resolves to the workspace copy, whose
+      # package.json points types at ./dist/index.d.ts, and nothing built it.
+      # Reproduce locally by moving pkgs/event/dist aside — the same one error.
+      - name: Build app's workspace dependencies
+        run: pnpm turbo run build --filter='@hanzo/ui-web^...'
 
       - name: Run type checking
         run: |
@@ -126,7 +134,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build UI package
+      # Same reason as the typecheck job: this failed with
+      #   Module not found: Can't resolve '@hanzo/event'
+      # because only pkgs/ui was built. `build:full` is still run for pkgs/ui
+      # (it does more than `build`), but the dependency set comes from turbo.
+      - name: Build app's workspace dependencies
+        run: pnpm turbo run build --filter='@hanzo/ui-web^...'
+
+      - name: Build UI package (full)
         run: cd pkgs/ui && pnpm run build:full
 
       - name: Build app

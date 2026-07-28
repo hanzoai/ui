@@ -53,29 +53,16 @@ declare global {
     abort(): void
   }
 
-  interface SpeechRecognitionEvent extends Event {
-    results: SpeechRecognitionResultList
-    resultIndex: number
-  }
-
-  interface SpeechRecognitionErrorEvent extends Event {
-    error: string
-    message: string
-  }
-
-  interface SpeechRecognitionResultList {
-    readonly length: number
-    item(index: number): SpeechRecognitionResult
-    [index: number]: SpeechRecognitionResult
-  }
-
-  interface SpeechRecognitionResult {
-    readonly length: number
-    readonly isFinal: boolean
-    item(index: number): SpeechRecognitionAlternative
-    [index: number]: SpeechRecognitionAlternative
-  }
-
+  // SpeechRecognitionEvent, SpeechRecognitionErrorEvent, SpeechRecognitionResultList
+  // and SpeechRecognitionResult are NOT declared here any more: lib.dom now ships
+  // all four, and re-declaring them in a `declare global` block MERGES with the
+  // built-ins rather than shadowing them. Every difference then becomes an error —
+  // `readonly` vs mutable (TS2687), a second `[index: number]` (TS2374), and
+  // `error: string` against the real `SpeechRecognitionErrorCode` union (TS2717).
+  // Seven errors, all from types the platform already gets right.
+  //
+  // What stays below is only what lib.dom still does NOT provide: the vendor
+  // `webkit*` aliases on Window and the constructor value.
   interface SpeechRecognitionAlternative {
     readonly transcript: string
     readonly confidence: number
