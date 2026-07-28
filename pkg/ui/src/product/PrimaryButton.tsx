@@ -18,7 +18,7 @@ import type { ComponentProps } from 'react'
 import { Button } from '@hanzo/gui'
 
 import { useAccent } from './accent'
-import { useEmit } from './instrument'
+import { labelOf, useEmit } from './instrument'
 
 export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button>) {
   const { accent, contrast } = useAccent()
@@ -31,7 +31,7 @@ export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button
     track({
       component: 'PrimaryButton',
       action: 'click',
-      id: typeof rest.children === 'string' ? rest.children : rest['aria-label'],
+      id: labelOf(rest.children) ?? rest['aria-label'],
     })
     ;(onPress as ((e: unknown) => void) | undefined)?.(e)
   }

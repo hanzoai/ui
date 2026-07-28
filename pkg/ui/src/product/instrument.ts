@@ -95,6 +95,20 @@ export function useEmit(): (e: UiEvent) => void {
   )
 }
 
+/** A component's own children ARE its identity — "Deploy", "Log in with Hanzo
+ *  Cloud". React hands them over as a string, or as an ARRAY when the label is
+ *  interpolated (`Log in with {brand}`), which is the common case; flattening the
+ *  string parts is the difference between a named event and an anonymous one.
+ *  Anything non-textual (an icon element) yields undefined rather than a guess. */
+export function labelOf(children: unknown): string | undefined {
+  if (typeof children === 'string') return children.trim() || undefined
+  if (Array.isArray(children)) {
+    const text = children.filter((c) => typeof c === 'string' || typeof c === 'number').join('')
+    return text.trim() || undefined
+  }
+  return undefined
+}
+
 /** Free text (a search box, a text field) is reported as its LENGTH — the shape
  *  of the behaviour without the content. One helper so no component invents its
  *  own idea of "safe to send". */
