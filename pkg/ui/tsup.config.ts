@@ -1,4 +1,13 @@
+import { readdirSync } from 'node:fs'
 import { defineConfig } from 'tsup'
+
+// Every `./primitives/<Member>` subpath is a real module in `dist`, derived from
+// what `scripts/gen-primitives.mjs` emitted — never hand-listed, never out of sync.
+const primitives = Object.fromEntries(
+  readdirSync('src/primitives', { withFileTypes: true })
+    .filter((f) => f.isFile() && f.name.endsWith('.tsx'))
+    .map((f) => [`primitives/${f.name.replace(/\.tsx$/, '')}`, `src/primitives/${f.name}`]),
+)
 
 // Ship COMPILED JS (ESM + CJS) so consumers never transpile our source. Next 16's
 // flight-client loader parses `'use client'` modules from node_modules WITHOUT TS —
@@ -33,12 +42,16 @@ export default defineConfig({
     // no React and no @hanzo/gui, so a host's data layer or a node test can bind
     // the engine without pulling a component tree.
     'framework/core': 'src/framework/core.ts',
+    'primitives/index': 'src/primitives/index.ts',
     'primitives/bases/data/index': 'src/primitives/bases/data/index.ts',
+    ...primitives,
+    // The design core + token scale, and the model picker: subpaths a host imports
+    // directly, so they ship compiled like everything else.
+    'core/index': 'src/core/index.ts',
+    'core/tokens': 'src/core/tokens.ts',
+    'models/index': 'src/models/index.ts',
     gitops: 'src/gitops.ts',
     canvas: 'src/canvas.ts',
-    wallet: 'src/wallet.ts',
-    network: 'src/network.ts',
-    billing: 'src/billing.ts',
     dashboard: 'src/dashboard.ts',
     usage: 'src/usage.ts',
     oss: 'src/oss.ts',

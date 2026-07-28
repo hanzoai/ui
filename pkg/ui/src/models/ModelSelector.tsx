@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronsUpDown } from '@hanzogui/lucide-icons-2'
 
 import { cn } from '../core/cn'
 import {
@@ -14,7 +14,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '../backends/shadcn'
+} from '../backends/gui'
 import { familyOf, filterChatModels, groupModelsByFamily, type ModelCatalogEntry } from './catalog'
 
 /** Show the search input once a catalog gets this large. */
@@ -88,9 +88,7 @@ export function ModelSelector({
         >
           <span className="truncate">{selectedLabel}</span>
           {selectedFamily && <span className="truncate text-muted-foreground">{selectedFamily}</span>}
-          <ChevronsUpDown
-            className={cn('ml-auto shrink-0 opacity-50', isSm ? 'h-3 w-3' : 'h-3.5 w-3.5')}
-          />
+          <ChevronsUpDown size={isSm ? 12 : 14} ml="auto" shrink={0} opacity={0.5} />
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -120,12 +118,7 @@ export function ModelSelector({
                       }}
                       className="gap-2"
                     >
-                      <Check
-                        className={cn(
-                          'h-3.5 w-3.5 shrink-0',
-                          m.id === value ? 'opacity-100' : 'opacity-0',
-                        )}
-                      />
+                      <Check size={14} shrink={0} opacity={m.id === value ? 1 : 0} />
                       <span className="truncate">{label}</span>
                       {m.premium && (
                         <span className="text-muted-foreground" title="Premium" aria-label="Premium">

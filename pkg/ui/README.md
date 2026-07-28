@@ -2,7 +2,7 @@
 
 The **one** Hanzo component library, built on [`@hanzo/gui`](https://github.com/hanzoai/gui) (Tamagui) so every component runs on **web, native (iOS), and desktop**. It unifies what used to be three fragmented homes — `@hanzo/data`, the console's in-app `components/ui/*`, and ad-hoc duplicates — into one canonical, presentational, host-agnostic, clean-room library.
 
-> This is the gui-based line (**v8+**). The legacy shadcn/Radix `@hanzo/ui` (v5.x) is a different architecture; it is being retired to `@hanzo/ui-shadcn` so the `@hanzo/ui` name carries the unified gui-based library forward — see `CONSOLIDATION.md` at the repo root.
+> **v8+** is one substrate: every component renders through `@hanzo/gui`, so one import works on web, native and desktop. The v5.x Radix + Tailwind line is a different architecture and is retired — see `CONSOLIDATION.md` at the repo root.
 
 ## Install
 

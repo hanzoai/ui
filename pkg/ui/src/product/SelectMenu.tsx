@@ -17,7 +17,7 @@
 import type { ReactElement } from 'react'
 import { Button, Text } from '@hanzo/gui'
 import { ChevronDown } from '@hanzogui/lucide-icons-2'
-import { DropdownMenu } from './menu/DropdownMenu'
+import { DropdownMenu } from '../backends/gui/dropdown-menu'
 import type { MenuItemSpec } from './menu/items'
 
 export type SelectOption<T extends string> = { key: T; label: string }
