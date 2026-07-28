@@ -20,6 +20,8 @@ import type { ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronsUpDown, ChevronUp } from '@hanzogui/lucide-icons-2'
 
+import { useEmit } from './instrument'
+
 export type Column<T> = {
   key: string
   header: string
@@ -86,6 +88,8 @@ export function DataTable<T>({
   /** Called with the clicked column key; the caller owns the reordering. */
   onSortChange?: (key: string) => void
 }) {
+  // Every table in the fleet reports the same two interactions with no app code.
+  const track = useEmit()
   // Natural min-width of the table: the sum of the declared column widths, with a
   // sensible floor for flex columns, plus row padding + inter-column gaps. On a
   // narrow (mobile) viewport where this exceeds the container, the inner wrapper
@@ -121,7 +125,14 @@ export function DataTable<T>({
                   aria-label={sortable ? `Sort by ${c.header}` : undefined}
                   cursor={sortable ? 'pointer' : undefined}
                   hoverStyle={sortable ? { opacity: 0.75 } : undefined}
-                  onPress={sortable ? () => onSortChange?.(c.key) : undefined}
+                  onPress={
+                    sortable
+                      ? () => {
+                          track({ component: 'DataTable', action: 'sort', id: c.key, value: sort?.key === c.key && sort?.dir === 'asc' ? 'desc' : 'asc' })
+                          onSortChange?.(c.key)
+                        }
+                      : undefined
+                  }
                 >
                   <Text
                     fontSize="$1"
@@ -157,7 +168,14 @@ export function DataTable<T>({
                   bg={expanded ? '$color2' : undefined}
                   hoverStyle={onRowPress ? { bg: '$color2' } : undefined}
                   cursor={onRowPress ? 'pointer' : undefined}
-                  onPress={onRowPress ? () => onRowPress(row) : undefined}
+                  onPress={
+                    onRowPress
+                      ? () => {
+                          track({ component: 'DataTable', action: 'select', id: rowKey(row), value: rows.length })
+                          onRowPress(row)
+                        }
+                      : undefined
+                  }
                 >
                   {columns.map((c) => {
                     // A cell value is either a column's rendered node or the raw

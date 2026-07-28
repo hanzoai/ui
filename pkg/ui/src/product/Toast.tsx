@@ -16,6 +16,8 @@ import { createPortal } from 'react-dom'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
 import { CircleCheck, CircleX, Info, X } from '@hanzogui/lucide-icons-2'
 
+import { useEmit } from './instrument'
+
 export type ToastKind = 'success' | 'error' | 'info'
 
 export type ToastInput = {
@@ -108,6 +110,7 @@ function ToastViewport({ toasts, dismiss }: { toasts: Toast[]; dismiss: (id: num
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const track = useEmit()
   const [toasts, setToasts] = useState<Toast[]>([])
   const timers = useRef(new Map<number, ReturnType<typeof setTimeout>>())
   const seq = useRef(0)
@@ -126,6 +129,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       const id = ++seq.current
       const kind = input.kind ?? 'info'
       const durationMs = input.durationMs ?? (kind === 'error' ? 6000 : 3500)
+      track({ component: 'Toast', action: kind === 'error' ? 'error' : 'view', id: input.title, value: kind })
       setToasts((ts) => [...ts, { id, kind, title: input.title, description: input.description, durationMs }])
       if (durationMs > 0) {
         timers.current.set(
@@ -134,7 +138,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         )
       }
     },
-    [dismiss],
+    [dismiss, track],
   )
 
   // Clear any pending timers on unmount.

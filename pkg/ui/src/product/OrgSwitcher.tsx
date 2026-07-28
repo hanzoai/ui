@@ -18,6 +18,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
+import { useEmit } from './instrument'
 import { OrgMark } from './OrgMark'
 import { filterOrgs, type Org, type OrgScope } from './scope'
 
@@ -127,12 +128,15 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
   }, [given, rows, currentId])
   const currentLabel = current.displayName || titleCase(current.name)
 
+  const track = useEmit()
+
   const select = useCallback(
     (org: string) => {
+      track({ component: 'OrgSwitcher', action: 'select', id: org })
       setOpen(false)
       scope.switchOrg(org)
     },
-    [scope],
+    [scope, track],
   )
 
   const submitCreate = async () => {

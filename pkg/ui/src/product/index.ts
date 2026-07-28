@@ -68,6 +68,13 @@ export * from './CommerceResource'
 export * from './ConfirmDelete'
 export * from './Filters'
 
+// Instrumentation — the ONE place a shared component reports what a user did.
+// Every component above already emits through it, so a product gets the whole
+// interaction vocabulary by rendering the library. Apps only need the optional
+// `<InstrumentSurface value="billing">` to name the area, and `emit` for the
+// one-off moments no shared component can observe.
+export * from './instrument'
+
 // The rest — every exported name below is unique across the layer.
 export * from './AnimatedLogo'
 export * from './brand'

@@ -15,6 +15,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { Button, Input, Spinner, Text, XStack } from '@hanzo/gui'
 import { ChevronDown, RefreshCw } from '@hanzogui/lucide-icons-2'
 
+import { useEmit } from './instrument'
 import { filterOptions, type ComboOption } from './combobox/filter'
 import { MenuItemView } from './menu/items'
 import { FloatingMenu } from './menu/FloatingMenu'
@@ -55,7 +56,10 @@ export function ComboBox({
   const anchorEl = useCallback(() => rowRef.current, [])
   const filtered = useMemo(() => filterOptions(options, value), [options, value])
 
+  const track = useEmit()
+
   const pick = (v: string) => {
+    track({ component: 'ComboBox', action: 'select', id: v, value: filtered.length })
     onChange(v)
     setOpen(false)
   }
@@ -80,7 +84,10 @@ export function ComboBox({
           chromeless
           disabled={disabled}
           icon={<ChevronDown size={16} opacity={0.7} />}
-          onPress={() => setOpen((o) => !o)}
+          onPress={() => {
+            track({ component: 'ComboBox', action: open ? 'close' : 'open' })
+            setOpen((o) => !o)
+          }}
           aria-label="Show options"
         />
       </XStack>
