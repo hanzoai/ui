@@ -28,11 +28,11 @@ export default defineConfig({
     // renders the framework engine must not have to pull the whole product barrel,
     // and the pure half (types/fields/builder-logic) must stay importable with no
     // React in scope.
-    'doctype/index': 'src/doctype/index.ts',
+    'framework/index': 'src/framework/index.ts',
     // …and the CONTRACT alone (types + client + mapping + media model). It imports
     // no React and no @hanzo/gui, so a host's data layer or a node test can bind
     // the engine without pulling a component tree.
-    'doctype/core': 'src/doctype/core.ts',
+    'framework/core': 'src/framework/core.ts',
     'primitives/bases/data/index': 'src/primitives/bases/data/index.ts',
     gitops: 'src/gitops.ts',
     canvas: 'src/canvas.ts',

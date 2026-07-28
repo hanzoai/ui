@@ -83,10 +83,10 @@ export function ErrorBar({ message }: { message: string }) {
 
 /** In-flow loader — the DocType views live inside a host shell, so this never
  *  takes the viewport (that is the host's own full-screen brand loader). */
-export function Loading({ label }: { label?: string }) {
+export function Loading({ label, size = 'small' }: { label?: string; size?: 'small' | 'large' }) {
   return (
     <XStack items="center" justify="center" gap="$3" py="$8">
-      <Spinner size="small" />
+      <Spinner size={size} />
       {label ? (
         <Text fontSize="$3" color="$color11">
           {label}
@@ -94,6 +94,11 @@ export function Loading({ label }: { label?: string }) {
       ) : null}
     </XStack>
   )
+}
+
+/** The name 8.0.24 shipped for the same in-flow loader. One component, two spellings. */
+export function Loader({ label, size }: { label?: string; size?: number }) {
+  return <Loading label={label} size={size && size >= 32 ? 'large' : 'small'} />
 }
 
 /** A dimmed metadata line (record count, field count, type). */
