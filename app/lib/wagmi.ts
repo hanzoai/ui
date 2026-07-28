@@ -77,7 +77,7 @@ export const luxMainnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://api.lux.network/ext/bc/C/rpc"],
+      http: ["https://api.lux.network/v1/bc/C/rpc"],
     },
   },
   blockExplorers: {
@@ -99,7 +99,7 @@ export const luxTestnet = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://testnet-api.lux.network/ext/bc/C/rpc"],
+      http: ["https://testnet-api.lux.network/v1/bc/C/rpc"],
     },
   },
   blockExplorers: {
