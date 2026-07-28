@@ -35,17 +35,28 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: build and push
+        # GHCR_TOKEN/GHCR_USER, which are the org secrets that actually exist.
+        # This job asked for REGISTRY_TOKEN, which was never defined anywhere —
+        # the org has exactly GHCR_TOKEN, GHCR_USER, GH_PAT, KMS_CLIENT_ID,
+        # KMS_CLIENT_SECRET, OCI_TOKEN, OCI_USER — so the guard below fired on
+        # every run and nothing was ever published. Every other image build in
+        # the org already uses the GHCR_* pair; this file and papers were the
+        # two that invented a name.
+        #
+        # The username comes from the secret too, rather than being hardcoded to
+        # hanzo-dev, so rotating the publishing identity is one org-level change.
         env:
-          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+          GHCR_USER: ${{ secrets.GHCR_USER }}
         run: |
           set -euo pipefail
-          if [ -z "${REGISTRY_TOKEN:-}" ]; then
-            echo "::error::REGISTRY_TOKEN is unset, so nothing was published. Add the org secret."
+          if [ -z "${GHCR_TOKEN:-}" ] || [ -z "${GHCR_USER:-}" ]; then
+            echo "::error::GHCR_TOKEN/GHCR_USER are unset, so nothing was published."
             exit 1
           fi
           tag="$(git rev-parse --short HEAD)"
           image="ghcr.io/hanzoai/ui:${tag}"
-          echo "${REGISTRY_TOKEN}" | docker login ghcr.io -u hanzo-dev --password-stdin
+          echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
           docker build -t "${image}" .
           docker push "${image}"
           echo "published ${image} — set spec.image.tag in universe crs/ui.yaml to ${tag}"
