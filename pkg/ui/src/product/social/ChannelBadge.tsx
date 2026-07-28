@@ -6,15 +6,10 @@
  * desktop. Data-free / host-agnostic. Extracted from Hanzo Social (social.hanzo.ai).
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
+import type { Provider } from './api'
 
-export type Channel =
-  | 'x'
-  | 'facebook'
-  | 'instagram'
-  | 'linkedin'
-  | 'tiktok'
-  | 'youtube'
-  | 'threads'
+/** The network vocabulary is the backend's ONE ordered list (./api PROVIDERS). */
+export type Channel = Provider
 
 /**
  * A known network, or whatever string the server sent. The badge renders unknown

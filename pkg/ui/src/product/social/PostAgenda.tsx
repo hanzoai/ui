@@ -11,7 +11,7 @@ import { Calendar } from '@hanzogui/lucide-icons-2'
 import { EmptyState } from '../EmptyState'
 import { StatusTag } from '../StatusTag'
 import { formatPostTime, postDayBucket, postPreview } from './format'
-import type { Post } from './PostCard'
+import type { Post } from './api'
 
 export function PostAgenda({ posts, onOpen }: { posts: Post[]; onOpen: (p: Post) => void }) {
   const days = useMemo(() => {
