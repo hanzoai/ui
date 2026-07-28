@@ -1,4 +1,4 @@
-// @hanzo/ui/doctype — the ONE renderer for the Hanzo Framework DocType engine.
+// @hanzo/ui/framework — the ONE renderer for the Hanzo Framework DocType engine.
 //
 // The engine (`hanzoai/cloud clients/framework`, live at `/v1/framework/*`, also
 // published as github.com/hanzoai/framework) is metadata-driven: a CMS Page, an
@@ -7,7 +7,7 @@
 // `module` filter over the DocType registry plus its own copy; there is no
 // per-lane list, form, detail or builder to drift.
 //
-//   import { CollectionsBrowser, DocTypeRecords, DocTypeDetail } from '@hanzo/ui/doctype'
+//   import { CollectionsBrowser, DocTypeRecords, DocTypeDetail } from '@hanzo/ui/framework'
 //
 // HOST-AGNOSTIC. Nothing here picks an origin, a credential or a router: the host
 // injects a `FrameworkTransport` (→ `createFrameworkClient`), an optional
@@ -20,7 +20,7 @@
 // enhancement applied once the container measures wide enough (`responsive.ts`).
 // Every control meets the 44px tap floor at phone width.
 
-// The wire contract + the pure mapping. Its own entry too (`@hanzo/ui/doctype/core`)
+// The wire contract + the pure mapping. Its own entry too (`@hanzo/ui/framework/core`)
 // so a data layer can bind the engine without loading a component tree.
 export * from './core'
 export * from './responsive'

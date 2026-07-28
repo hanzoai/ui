@@ -81,6 +81,18 @@ export interface DocTypeRecordsProps {
    * and this layer refuses to invent one.
    */
   media?: MediaUploader
+  /**
+   * A host that would rather draw the asset gallery itself supplies this; it wins
+   * over the built-in `MediaGrid`. Both paths need somewhere real to put bytes, so
+   * a host with neither gets the honest generic table — nothing is faked.
+   */
+  renderMedia?: (p: {
+    dt: DocType
+    docs: FrameworkDoc[]
+    onOpen: (name: string) => void
+    onChanged: () => void
+    toolbarExtra: ReactNode
+  }) => ReactNode
   /** How many documents to fetch (the engine caps its own page). */
   limit?: number
 }
@@ -93,6 +105,7 @@ export function DocTypeRecords({
   project,
   title,
   media,
+  renderMedia,
   limit = 200,
 }: DocTypeRecordsProps) {
   const [state, setState] = useState<LoadState>({ phase: 'loading' })
@@ -204,18 +217,22 @@ export function DocTypeRecords({
 
   // A media/asset library (a required Attach) gets the DAM gallery instead of the
   // record views — real upload to the host's object storage + presigned thumbnails.
-  if (ready && media && isMediaDoctype(ready.dt)) {
+  if (ready && (media || renderMedia) && isMediaDoctype(ready.dt)) {
     return (
       <YStack onLayout={onLayout} width="100%">
-        <MediaGrid
-          client={client}
-          dt={ready.dt}
-          docs={ready.docs}
-          media={media}
-          onOpen={onOpen}
-          onChanged={reload}
-          toolbarExtra={refresh}
-        />
+        {renderMedia ? (
+          renderMedia({ dt: ready.dt, docs: ready.docs, onOpen, onChanged: reload, toolbarExtra: refresh })
+        ) : (
+          <MediaGrid
+            client={client}
+            dt={ready.dt}
+            docs={ready.docs}
+            media={media!}
+            onOpen={onOpen}
+            onChanged={reload}
+            toolbarExtra={refresh}
+          />
+        )}
       </YStack>
     )
   }

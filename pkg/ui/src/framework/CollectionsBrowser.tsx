@@ -8,14 +8,16 @@
  * (`POST /v1/framework/modules/:module/install`), and a "New collection" that
  * opens the on-page content-type builder.
  *
- * Generic over the lane by construction: `module`, `label` and the whole first-run
- * copy are props with NO defaults, so nothing in here knows what a CMS is. CMS,
- * ERP, Helpdesk and anything later render this same component.
+ * Generic over the lane by construction: `module`, `label` and the first-run copy
+ * are props, and where copy is unset it is DERIVED FROM THE LANE rather than
+ * borrowed from one — the old default was the CMS's words, so an ERP org read
+ * about Pages and Posts. CMS, ERP, Helpdesk and anything later render this same
+ * component.
  *
  * Honest by construction — an org with the lane not yet installed sees the setup
  * call to action, never a fabricated collection.
  */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Boxes, Plus } from '@hanzogui/lucide-icons-2'
 
@@ -40,12 +42,20 @@ export interface CollectionsBrowserProps {
   /** Open a collection's records. */
   onOpen: (doctype: string) => void
   /**
-   * First-run (pre-install) copy — REQUIRED, because a default here is a default
-   * lane, and the one this used to carry was the CMS's. Each host says what ITS
-   * lane installs.
+   * First-run (pre-install) copy. The defect this fixes was not "there is a
+   * default" — it was that the default was ONE LANE'S copy (the CMS's), so an ERP
+   * org read about Pages and Posts. Unset now falls back to copy derived from the
+   * lane's own `label`, which is true for every lane; a host that has better words
+   * passes them.
    */
-  setupDescription: string
-  setupBullets: string[]
+  setupDescription?: string
+  setupBullets?: string[]
+  /**
+   * Schema AUTHORING injected. The library ships a real `CollectionBuilder`, so a
+   * host that omits this still gets one; a host that wants its own (or wants the
+   * affordance withheld from a read-only surface) supplies or suppresses it.
+   */
+  renderBuilder?: (p: { onSaved: (doctype: string) => void; onCancel: () => void }) => ReactNode
   /** Lane icon (defaults to the generic collection glyph). */
   icon?: IconLike
 }
@@ -63,6 +73,7 @@ export function CollectionsBrowser({
   onOpen,
   setupDescription,
   setupBullets,
+  renderBuilder,
   icon = Boxes,
 }: CollectionsBrowserProps) {
   const [state, setState] = useState<LoadState>({ phase: 'loading' })
@@ -158,23 +169,30 @@ export function CollectionsBrowser({
       {actionError ? <ErrorBar message={actionError} /> : null}
 
       {creating ? (
-        <CollectionBuilder
-          client={client}
-          module={module}
-          onSaved={(name) => {
+        (renderBuilder ?? ((p) => <CollectionBuilder client={client} module={module} {...p} />))({
+          onSaved: (name: string) => {
             setCreating(false)
             onOpen(name)
-          }}
-          onCancel={() => setCreating(false)}
-        />
+          },
+          onCancel: () => setCreating(false),
+        })
       ) : null}
 
       {collections.length === 0 && !creating ? (
         <EmptyState
           icon={icon}
           title={`Set up ${label}`}
-          description={setupDescription}
-          bullets={setupBullets}
+          description={
+            setupDescription ??
+            `${label} is a set of collections on the Hanzo Framework — typed documents, per organization.`
+          }
+          bullets={
+            setupBullets ?? [
+              `Installs the default ${label} collections into your organization`,
+              'Every record is a document on the framework — versioned, permissioned, per-org',
+              'Add your own collections and fields any time',
+            ]
+          }
           primary={state.registered ? { label: busy ? 'Setting up…' : `Set up ${label}`, onPress: install } : undefined}
           secondary={{ label: 'New collection', onPress: () => setCreating(true) }}
         />

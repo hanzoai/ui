@@ -34,6 +34,9 @@ export interface FrameworkTransport {
   del: (path: string) => Promise<void>
 }
 
+/** The name 8.0.24 shipped for the same seam. One concept, one shape, two spellings. */
+export type Transport = FrameworkTransport
+
 const enc = encodeURIComponent
 
 const asRecord = (v: unknown): Record<string, unknown> =>
