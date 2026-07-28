@@ -1,5 +1,5 @@
 /**
- * @hanzo/ui-shadcn/models — Model catalog data layer
+ * @hanzo/ui/models — Model catalog data layer
  *
  * Pure, SSR-safe helpers shared by the unified ModelSelector. No React,
  * no browser globals — usable on the server, in edge runtimes, or the client.

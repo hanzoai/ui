@@ -1,9 +1,9 @@
 # @hanzo/ui — LLM context
 
-**What this is.** The React component library for AI applications: a shadcn/ui
-fork with 161+ components, 24+ blocks, two themes, multi-framework output, and a
-single typed import surface. Published as `@hanzo/ui` (v8) on npm. Docs at
-https://ui.hanzo.ai. Dev port: 3003.
+**What this is.** The React component library for AI applications: 161+
+components, 24+ blocks, two themes, and a single typed import surface, all on ONE
+substrate (`@hanzo/gui`) so the same import runs on web, native and desktop.
+Published as `@hanzo/ui` (v8) on npm. Docs at https://ui.hanzo.ai. Dev port: 3003.
 
 **Canonical role.** This is the canonical impl repo for Hanzo's web UI kit —
 frontend components, not an SDK. It sits alongside the two SDK lines (full cloud
@@ -27,7 +27,7 @@ pnpm install && pnpm build:registry && pnpm dev   # registry MUST build before a
 ```
 
 **Key entry points.** `pkg/ui/` (core lib + v8 subpaths: /product /data /canvas
-/wallet /network /billing /dashboard /usage /gitops) · `app/registry/{default,new-york}/`
+/dashboard /usage /gitops) · `app/registry/{default,new-york}/`
 (component SOURCE OF TRUTH) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
 `packages/shadcn/` (CLI) · `app/content/docs/` (MDX docs). Publish = bump a
 package `version` + merge to main (`.github/workflows/publish.yml`).
@@ -38,62 +38,74 @@ gotchas) follow below.
 
 ---
 
-## v8 — the canonical, backend-flexible `@hanzo/ui` (`pkg/ui`)
+## v8 — the canonical `@hanzo/ui` (`pkg/ui`)
 
-`@hanzo/ui@8` (`pkg/ui`) is THE Hanzo component library: one design core, many
-rendering backends. It is `@hanzo/gui` + `@hanzo/tokens` based, and its ROOT
-barrel exposes the **shadcn-compatible component API** apps import (so consumers
-drop the old `@hanzo/ui-shadcn` alias and point `@hanzo/ui` here with zero import
-churn). `@hanzo/ui-shadcn` (`pkgs/ui`, v5.x) is the legacy standalone shadcn
-package — superseded by this.
+`@hanzo/ui@8` (`pkg/ui`) is THE Hanzo component library, and there is ONE
+substrate: every component renders through `@hanzo/gui` (Tamagui) primitives on
+the `@hanzo/tokens` scale, so one import works on web, native (expo) and desktop
+(Tauri). The Radix + Tailwind surface it used to ship alongside is gone — it
+lives on as its own package, `@hanzo/shadcn`, and `@hanzo/ui` no longer depends
+on it, on any `@radix-ui/*` package, on cva, cmdk or sonner.
 
-### Layout (backend-flexible)
+`@hanzo/ui-shadcn` (`pkgs/ui`, v5.x) is the legacy standalone package —
+superseded, being retired.
+
+### Layout
 
 ```
 pkg/ui/src/
-  core/            design core (backend-agnostic): cn.ts (clsx+tailwind-merge),
+  core/            design core: cn.ts (clsx+tailwind-merge),
                    tokens.ts (re-export of @hanzo/tokens), fonts.ts (Geist vars)
-  theme.css        SELF-CONTAINED standard-token CSS vars (Hanzo dark-first,
-                   sourced from @hanzo/tokens) + Geist Sans/Mono — the identity
-  backends/
-    shadcn/        Radix + Tailwind — the shadcn-compatible web API (root default)
-    gui/           @hanzo/gui (Tamagui) product layer — web + native + desktop
-    README.md      backend contract + how to add one (svelte/solid/…)
+  theme.css        SELF-CONTAINED token CSS vars + Geist Sans/Mono — the identity
+  backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
+  product/         the product/app layer (charts, PageHeader, ComboBox, …)
   models/          the unified ModelSelector + catalog helpers
-  primitives/      GENERATED per-member entrypoints (see scripts/gen-primitives.mjs)
-  index.ts         root barrel = shadcn API + product layer + tokens
+  primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)
+  index.ts         root barrel = the component surface + cn
 ```
 
-Add a backend under `src/backends/<name>/` (same tokens, different substrate) +
-a `./<name>` export. The two that exist are `shadcn` and `gui`.
+### House rules for a component
 
-### Token-bug fix (the point of the rework)
-
-The old shadcn components reached for app-private token names — `bg-bg-dark`,
-`bg-bg-secondary`, `text-text-secondary`, `bg-divider`, `bg-brand`, `bg-level-2`,
-hard-coded `bg-gray-*` — that consumers never defined, so surfaces rendered
-transparent. Every component here uses ONLY standard design tokens
-(`bg-popover`, `border-border`, `bg-primary`, `text-muted-foreground`, …) and no
-hard-coded font (UI inherits Geist Sans, code Geist Mono; portaled surfaces bind
-`font-sans`). `theme.css` defines every token, so the package is self-contained.
+- Style through gui props and theme tokens (`$background`, `$color12`,
+  `$borderColor`) — never a utility class string, never a hard-coded font.
+- Touch targets meet the 44px floor via `hitSlop`, never via padding.
+- Behaviour (focus, portalling, keyboard, a11y) comes from the matching
+  `@hanzogui/*` primitive; nothing reimplements it.
+- Free-form text children go through `ink()`; `data-slot` markers through
+  `slot()`. One helper each, one place.
+- Module scope stays side-effect free — `forwardRef`/`createContext` calls carry
+  `/* @__PURE__ */` and nothing assigns `displayName`, so importing one symbol
+  never drags a neighbour in. A one-symbol import bundles ~4.7KB against ~29KB
+  for the whole barrel.
 
 ### Subpaths
 
 | Subpath | What |
 |---|---|
-| `@hanzo/ui` | the component API (shadcn backend, the default): Button, Badge, Card*, Checkbox, Dialog*, DropdownMenu*, Input, Toaster, Avatar*, Tabs*, Select*, Tooltip*, Popover*, Command*, Collapsible*, ScrollArea, Slider, Switch, Progress, Separator, Label, Textarea, AspectRatio — + `cn` + tokens (the gui product layer is kept off root, at `/product`, so web consumers never pull the native runtime) |
-| `@hanzo/ui/shadcn` | the shadcn backend barrel (explicit) |
-| `@hanzo/ui/gui` · `/product` | the @hanzo/gui product layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
+| `@hanzo/ui` | the component API: Button, Badge, Card*, Checkbox, Dialog*, DropdownMenu*, Input, Toaster, Avatar*, Tabs*, Select*, Tooltip*, Popover*, Command*, Collapsible*, Resizable*, ScrollArea, Slider, Switch, Progress, Separator, Label, Textarea, AspectRatio — + `cn` (the product layer is kept off root, at `/product`) |
+| `@hanzo/ui/components` | alias of the root surface, for hosts that shim the package through a `declare module` |
+| `@hanzo/ui/product` | the product/app layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
 | `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
 | `@hanzo/ui/core` · `/tokens` | cn, Geist font vars, the @hanzo/tokens color/theme/radii/spacing scale |
 | `@hanzo/ui/theme.css` | the self-contained Hanzo identity stylesheet |
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
 | `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
-| `@hanzo/ui/{canvas,wallet,network,billing,dashboard,usage,gitops}` | the optional-peer kits (unchanged; each re-exports its home package) |
+| `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
+
+Everything ships COMPILED from `dist` — every `exports` target is a real file in
+the tarball, including `theme.css` and all 90 `primitives/*` entrypoints.
+
+### One DropdownMenu
+
+There is one `DropdownMenu`, with one API. It is the compound surface (Trigger,
+Content, Item, CheckboxItem, RadioItem, Label, Separator, Shortcut, Group,
+Portal, Sub*, RadioGroup) AND it accepts the declarative `trigger` + `items`
+spec, which it renders through those very same parts. `@hanzo/ui` and
+`@hanzo/ui/product` export the same component; there is no second shape.
 
 ### modularizeImports support
 
-`scripts/gen-primitives.mjs` reads the shadcn barrel and emits one
+`scripts/gen-primitives.mjs` reads the gui backend barrel and emits one
 `src/primitives/<Member>.tsx` per exported value (re-export from the backend).
 This makes `@hanzo/ui/primitives/Button` etc. resolve, so a host whose
 `next.config` rewrites `@hanzo/ui` → `@hanzo/ui/primitives/{{member}}` works
@@ -101,7 +113,7 @@ unchanged. Re-run `pnpm gen:primitives` after changing the surface.
 
 NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace, installs
 standalone, and publishes via the maintainer flow, not `publish.yml`. Because the
-optional-peer kits (canvas/dashboard/gitops/ui-shadcn/usage) are not on the public
+optional-peer kits (canvas/dashboard/gitops/usage) are not on the public
 registry, a standalone install must skip auto-installing peers. `.npmrc` and
 `pnpm-lock.yaml` are gitignored here, so create the `.npmrc` once:
 

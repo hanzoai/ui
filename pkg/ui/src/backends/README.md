@@ -1,42 +1,38 @@
-# @hanzo/ui backends
+# @hanzo/ui — the component surface
 
-`@hanzo/ui` is backend-flexible: one shared design core, many rendering
-substrates. A "backend" is a directory under `src/backends/<name>/` that
-implements components on one substrate. Every backend draws from the SAME core
-(`src/core` + `theme.css`): the Hanzo dark-first identity, the standard design
-tokens (sourced from `@hanzo/tokens`), and Geist Sans/Mono typography. Backends
-differ ONLY in substrate — never in design language.
+There is ONE substrate. `gui/` implements every component on @hanzo/gui
+(Tamagui) primitives, so the same import renders on web, native (expo) and
+desktop (Tauri). The Radix + Tailwind surface that used to live beside it has
+moved out to its own package; nothing here depends on it.
 
 ```
 src/
-  core/                one design core, backend-agnostic
+  core/                design core, runtime-free
     cn.ts              class-name composer (clsx + tailwind-merge)
     tokens.ts          re-export of @hanzo/tokens (the token source of truth)
     fonts.ts           Geist Sans / Geist Mono family variables
-  theme.css            self-contained standard token vars + Geist (the identity)
-  backends/
-    shadcn/            Radix + Tailwind — the shadcn-compatible web API (default)
-    gui/               @hanzo/gui (Tamagui) — cross-platform web + native + desktop
-    <your-backend>/    e.g. svelte, solid, vue, react-native — add here
+  theme.css            self-contained token vars + Geist (the identity)
+  backends/gui/        the component surface — index.ts is its manifest
+  product/             the product/app layer, same substrate (@hanzo/ui/product)
+  primitives/          GENERATED per-member entrypoints (see below)
 ```
 
-## Contract a backend implements
+## Rules a component follows
 
-- Components use ONLY the standard design tokens (`bg-popover`, `border-border`,
-  `bg-primary`, `text-muted-foreground`, …) or the gui token config — never
-  app-private token names, never a hard-coded font family (inherit, or bind to
-  `font-sans` / `font-mono`, which resolve to Geist through the theme).
-- A backend exposes a barrel `index.ts` naming its component surface.
-- Behaviour-heavy components (dialog, dropdown, select, popover, tooltip) keep an
-  accessible primitive (Radix on the web) rather than reimplementing focus
-  management, portalling, and keyboard handling.
+- Style through gui props and theme tokens (`$background`, `$color12`,
+  `$borderColor`) — never a utility class string, never a hard-coded font
+  family. Typography inherits Geist through the token config.
+- Touch targets meet the 44px floor via `hitSlop`, never via padding: visual
+  density and hit area are two concerns.
+- Behaviour (focus management, portalling, keyboard, a11y) comes from the
+  matching `@hanzogui/*` primitive. Nothing here reimplements it.
+- Free-form text children go through `ink()` so a bare string renders on native.
+- `data-slot` markers go through `slot()`. One helper each, one place.
 
-## Adding a backend (e.g. svelte)
+## The manifest
 
-1. `src/backends/svelte/` with the component implementations on that substrate,
-   styled from the shared tokens.
-2. A barrel `src/backends/svelte/index.ts`.
-3. A package `exports` subpath (`./svelte`) pointing at the barrel.
+`gui/index.ts` is the SINGLE source of truth for the surface. `scripts/gen-primitives.mjs`
+reads it and emits `src/primitives/<Member>.tsx`, one per exported value, for hosts
+that modularize `@hanzo/ui` imports. Change the barrel, then re-run:
 
-The gui + shadcn backends are what exist today; the structure is what makes the
-next one drop-in.
+    node scripts/gen-primitives.mjs
