@@ -8,14 +8,7 @@
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { AlertTriangle, CheckCircle2 } from '@hanzogui/lucide-icons-2'
-
-/** One network's readiness, as reported by the server. */
-export type ProviderCapability = {
-  provider: string
-  credentialsConfigured: boolean
-  /** The env vars still missing — shown verbatim, never summarized away. */
-  missingCredentials: string[]
-}
+import type { ProviderCapability } from './api'
 
 export function ProviderReadinessList({ providers }: { providers: ProviderCapability[] }) {
   return (

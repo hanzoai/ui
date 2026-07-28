@@ -12,7 +12,7 @@ import { AlertTriangle } from '@hanzogui/lucide-icons-2'
 import { FieldRow, FieldSelect, FieldText, FieldTextArea } from '../Field'
 import { PrimaryButton } from '../PrimaryButton'
 import { parsePostTime } from './format'
-import type { ProviderCapability } from './ProviderReadinessList'
+import type { ProviderCapability } from './api'
 
 /** Compose intents → the (status, scheduleAt) the backend stores. */
 export const COMPOSE_MODES = ['draft', 'schedule', 'now'] as const
