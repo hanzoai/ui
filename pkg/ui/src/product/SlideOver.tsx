@@ -142,12 +142,9 @@ export function SlideOver({
 
       {/* Panel — slides in from the edge. Full-screen below lg, fixed width at lg+. */}
       <YStack
-        // web DOM ref; Gui forwards it to the underlying node. (`@ts-ignore`, not
-        // `@ts-expect-error`: whether Gui's ref type accepts it depends on the
-        // consumer's resolved @types/react, so an expect-error is itself an error
-        // in half the apps.)
-        // @ts-ignore
-        ref={panelRef}
+        // Web DOM ref; Gui forwards it to the underlying node. Cast (not @ts-expect-error)
+        // so it is env-agnostic — the ref type is strict under the pkg build, loose here.
+        ref={panelRef as never}
         tabIndex={-1}
         role="dialog"
         aria-modal={open ? true : undefined}
