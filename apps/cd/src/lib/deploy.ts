@@ -5,9 +5,9 @@
  * cookie (set by the PKCE login) rides — cloud validates it (SuperAdmin gate). A
  * 401/403 surfaces as an `ApiError` so the app can send the user back to sign in.
  *
- * Responses are mapped INTO the shared `@hanzo/gitops` view-models by `./adapt`.
+ * Responses are mapped INTO the shared `@hanzo/cd` view-models by `./adapt`.
  */
-import type { LogLine, ManagedResource, ResourceTree } from "@hanzo/gitops"
+import type { LogLine, ManagedResource, ResourceTree } from "@hanzo/cd"
 
 import { parseApplications, toLogLines, toManagedResource, toResourceTree, type DeployApp } from "./adapt"
 

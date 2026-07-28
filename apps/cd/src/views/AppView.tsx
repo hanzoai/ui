@@ -1,6 +1,6 @@
 /**
  * The application detail — the ArgoCD-grade drill-in, composed from the shared
- * @hanzo/gitops components: `GitopsSyncPanel` (health/sync/revision + Sync /
+ * @hanzo/cd components: `GitopsSyncPanel` (health/sync/revision + Sync /
  * Refresh / History), `GitopsAppTree` (the owned-resource topology), `GitopsNodeInfo`
  * (a node's manifest / desired-vs-live diff / events / logs), and `GitopsRollbackDialog`.
  *
@@ -20,7 +20,7 @@ import {
   type ManagedResource,
   type ResourceTree,
   type SyncOptions,
-} from "@hanzo/gitops"
+} from "@hanzo/cd"
 
 import { DeployApi } from "../lib/deploy"
 import { toGitopsApp, toRollbackHistory, type DeployApp } from "../lib/adapt"

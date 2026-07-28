@@ -1,5 +1,5 @@
 /**
- * The /v1/deploy → @hanzo/gitops adapter — pins the console CD app against cloud's
+ * The /v1/deploy → @hanzo/cd adapter — pins the console CD app against cloud's
  * REAL clients/deploy shapes (the hyphenated sync verdict, object manifests,
  * parentRefs tree edges, the logs blob, clean-semver rollback).
  */

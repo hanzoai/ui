@@ -1,4 +1,4 @@
-# @hanzo/gitops
+# @hanzo/cd
 
 A presentational, data-prop-driven React surface for a full CD/GitOps console —
 a clean-room port of the [Argo CD](https://github.com/argoproj/argo-cd) UI
@@ -19,7 +19,7 @@ import {
   HealthBadge,        // Healthy / Progressing / Degraded / Suspended / Missing / Unknown
   SyncBadge,          // Synced / OutOfSync / Unknown
   GitopsStyles,       // one <style> tag: theme-aware CSS for the whole surface
-} from '@hanzo/gitops'
+} from '@hanzo/cd'
 ```
 
 ## Design
@@ -34,7 +34,7 @@ are React-free and unit-tested in isolation, importable without pulling in any
 component:
 
 ```ts
-import { foldHealth, foldSync, buildResourceGraph, classifyDiff } from '@hanzo/gitops/pure'
+import { foldHealth, foldSync, buildResourceGraph, classifyDiff } from '@hanzo/cd/pure'
 ```
 
 The resource-tree topology reuses `@hanzo/canvas`'s deterministic layered layout

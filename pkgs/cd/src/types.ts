@@ -1,5 +1,5 @@
 /**
- * @hanzo/gitops — the data contract.
+ * @hanzo/cd — the data contract.
  *
  * Every component in this package is presentational and data-prop-driven: the
  * host maps its `/v1/gitops` rows into these plain, React-free view-models. This

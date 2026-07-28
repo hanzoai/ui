@@ -1,12 +1,12 @@
 /**
  * The fleet view — every operator App CR as a row, health + sync + revision +
- * source, with the shared @hanzo/gitops `GitopsAppList` (search, health/sync
+ * source, with the shared @hanzo/cd `GitopsAppList` (search, health/sync
  * filters, sortable). A compact KPI band up top gives the at-a-glance fleet stats.
  * Data-prop-driven: the app fetches `/v1/deploy/applications` and hands the folded
  * rows in; nothing is fabricated.
  */
 import { useMemo } from "react"
-import { GitopsAppList } from "@hanzo/gitops"
+import { GitopsAppList } from "@hanzo/cd"
 
 import { toGitopsApp, type DeployApp } from "../lib/adapt"
 
