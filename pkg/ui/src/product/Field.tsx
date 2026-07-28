@@ -7,11 +7,10 @@
  * spacing, disabled styling, and the label column stay consistent. Style props
  * use the v5 shorthand set (p/px/items/justify/...).
  */
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import {
   Input,
   Label,
-  Select,
   Switch,
   TextArea,
   Slider,
@@ -19,16 +18,19 @@ import {
   XStack,
   YStack,
 } from '@hanzo/gui'
-import { ChevronDown } from '@hanzogui/lucide-icons-2'
 
-/** Labeled row: fixed label column + flexing control. */
+/**
+ * Labeled row. STACKED on phones (label full-width above a full-width control) so a
+ * form inside a SlideOver stays usable and never clips its labels; a fixed 180px
+ * label column + flexing control at $md+ (the two-column desktop/tablet layout).
+ */
 export function FieldRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <XStack gap="$3" items="flex-start" flexWrap="wrap">
-      <Label width={180} pt="$2" color="$color11" fontSize="$3">
+      <Label width="100%" pt="$2" color="$color11" fontSize="$3" $md={{ width: 180 }}>
         {label}
       </Label>
-      <YStack flex={1} minW={240}>
+      <YStack flex={1} minW={0} $md={{ minW: 240 }}>
         {children}
       </YStack>
     </XStack>
@@ -92,32 +94,81 @@ export function FieldSwitch({
   )
 }
 
+/**
+ * A labeled dropdown.
+ *
+ * Renders a REAL native `<select>` on web (and the OS-native picker on mobile),
+ * NOT the `@hanzo/gui` `<Select native>` — that primitive is broken in gui 7.3.0:
+ * `native` emits bare `<option>` elements with NO `<select>` wrapper, so every
+ * dropdown across the console (region/size pickers, all edit forms) rendered as a
+ * non-interactive flat list of option text that buried the surrounding controls.
+ * A native `<select>` is compact, keyboard/ARIA-accessible, gives the native
+ * mobile picker (best small-screen UX), and is themed via the Tamagui CSS custom
+ * properties (`--background`/`--color12`/`--borderColor`) so it tracks light/dark.
+ */
+const CHEVRON = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+)}`
+
+function selectStyle(disabled?: boolean): CSSProperties {
+  return {
+    width: '100%',
+    boxSizing: 'border-box',
+    appearance: 'none',
+    WebkitAppearance: 'none',
+    MozAppearance: 'none',
+    background: `var(--background) url("${CHEVRON}") no-repeat right 10px center`,
+    color: 'var(--color12)',
+    border: '1px solid var(--borderColor)',
+    borderRadius: 9,
+    padding: '9px 34px 9px 12px',
+    fontSize: 14,
+    lineHeight: '20px',
+    fontFamily: 'inherit',
+    height: 40,
+    outline: 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    opacity: disabled ? 0.5 : 1,
+  }
+}
+
+const OPTION_STYLE: CSSProperties = { background: 'var(--color2)', color: 'var(--color12)' }
+
 export function FieldSelect({
   value,
   options,
   onChange,
   disabled,
+  placeholder = 'Select…',
 }: {
   value: string
   options: string[]
   onChange: (v: string) => void
   disabled?: boolean
+  placeholder?: string
 }) {
+  // When the current value isn't one of the options (empty/unset), show the
+  // placeholder as a selected-but-disabled row so the control reads honestly.
+  const showPlaceholder = value === '' || !options.includes(value)
   return (
-    <Select value={value} onValueChange={onChange} disablePreventBodyScroll native>
-      <Select.Trigger disabled={disabled} iconAfter={<ChevronDown size={16} />}>
-        <Select.Value placeholder="Select…" />
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Viewport>
-          {options.map((opt, i) => (
-            <Select.Item key={opt} index={i} value={opt}>
-              <Select.ItemText>{opt}</Select.ItemText>
-            </Select.Item>
-          ))}
-        </Select.Viewport>
-      </Select.Content>
-    </Select>
+    <select
+      value={showPlaceholder ? '' : value}
+      onChange={(e) => onChange(e.currentTarget.value)}
+      disabled={disabled}
+      aria-label={placeholder}
+      style={selectStyle(disabled)}
+    >
+      {showPlaceholder ? (
+        <option value="" disabled style={OPTION_STYLE}>
+          {placeholder}
+        </option>
+      ) : null}
+      {options.map((opt) => (
+        <option key={opt} value={opt} style={OPTION_STYLE}>
+          {opt}
+        </option>
+      ))}
+    </select>
   )
 }
 

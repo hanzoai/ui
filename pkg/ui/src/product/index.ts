@@ -59,7 +59,18 @@ export * from './menu'
 export * from './SiteNav'
 export * from './SiteFooter'
 
+// Admin surface — the honest-state + list layer every admin console renders.
+// `host` is the ONE seam an app injects its router/auth effects through;
+// `CommerceResource` is the ONE store-list surface (console Store + Commerce admin).
+export * from './host'
+export * from './BackendState'
+export * from './CommerceResource'
+export * from './ConfirmDelete'
+export * from './Filters'
+
 // The rest — every exported name below is unique across the layer.
+export * from './AnimatedLogo'
+export * from './brand'
 export * from './DataTable'
 export * from './EmptyState'
 export * from './FadeIn'
@@ -76,6 +87,7 @@ export * from './StatusTag'
 export * from './ThemeToggle'
 export { ThemeToggleNext } from './ThemeToggleNext'
 export * from './Toast'
+export * from './accent'
 export * from './color'
 
 // Usage — the canonical AI-usage surface (totals, chart, spend-by-model, activity)
