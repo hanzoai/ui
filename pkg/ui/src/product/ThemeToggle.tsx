@@ -18,6 +18,8 @@ import { Component, Suspense, lazy, useState } from 'react'
 import { Button } from '@hanzo/gui'
 import { Moon, Sun } from '@hanzogui/lucide-icons-2'
 
+import { useEmit } from './instrument'
+
 export type ThemeMode = 'light' | 'dark'
 
 export type ThemeToggleProps = {
@@ -80,9 +82,11 @@ export function AgnosticThemeToggle({
   const [internal, setInternal] = useState<ThemeMode>(() => theme ?? defaultTheme ?? readDomTheme() ?? 'dark')
   const current: ThemeMode = controlled ? (theme as ThemeMode) : internal
   const isDark = current === 'dark'
+  const track = useEmit()
 
   const toggle = () => {
     const next: ThemeMode = isDark ? 'light' : 'dark'
+    track({ component: 'ThemeToggle', action: 'change', value: next })
     if (!controlled) {
       setInternal(next)
       applyDomTheme(next)

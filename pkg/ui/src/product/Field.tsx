@@ -7,7 +7,7 @@
  * spacing, disabled styling, and the label column stay consistent. Style props
  * use the v5 shorthand set (p/px/items/justify/...).
  */
-import type { CSSProperties, ReactNode } from 'react'
+import { createContext, useContext, type CSSProperties, type ReactNode } from 'react'
 import {
   Input,
   Label,
@@ -19,6 +19,20 @@ import {
   YStack,
 } from '@hanzo/gui'
 
+import { textSize, useEmit, type UiEvent } from './instrument'
+
+// The label the caller ALREADY typed on the FieldRow becomes the analytics name —
+// so an app never labels a field twice and no field reports as "unnamed".
+const FieldNameContext = createContext<string | undefined>(undefined)
+
+/** Every Field* control reports `{component, action:'change', id:<row label>}`;
+ *  the VALUE is only ever a scalar or a text LENGTH, never free text. */
+function useFieldTrack(component: string): (e: Omit<UiEvent, 'component'>) => void {
+  const track = useEmit()
+  const name = useContext(FieldNameContext)
+  return (e) => track({ component, id: name, ...e })
+}
+
 /**
  * Labeled row. STACKED on phones (label full-width above a full-width control) so a
  * form inside a SlideOver stays usable and never clips its labels; a fixed 180px
@@ -26,6 +40,7 @@ import {
  */
 export function FieldRow({ label, children }: { label: string; children: ReactNode }) {
   return (
+    <FieldNameContext.Provider value={label}>
     <XStack gap="$3" items="flex-start" flexWrap="wrap">
       <Label width="100%" pt="$2" color="$color11" fontSize="$3" $md={{ width: 180 }}>
         {label}
@@ -34,6 +49,7 @@ export function FieldRow({ label, children }: { label: string; children: ReactNo
         {children}
       </YStack>
     </XStack>
+    </FieldNameContext.Provider>
   )
 }
 
@@ -50,10 +66,14 @@ export function FieldText({
   secure?: boolean
   placeholder?: string
 }) {
+  const track = useFieldTrack('FieldText')
   return (
     <Input
       value={value}
-      onChangeText={onChange}
+      onChangeText={(v: string) => {
+        track({ action: 'change', value: secure ? 0 : textSize(v) })
+        onChange(v)
+      }}
       disabled={disabled}
       secureTextEntry={secure}
       placeholder={placeholder}
@@ -73,8 +93,17 @@ export function FieldTextArea({
   disabled?: boolean
   rows?: number
 }) {
+  const track = useFieldTrack('FieldTextArea')
   return (
-    <TextArea value={value} onChangeText={onChange} disabled={disabled} numberOfLines={rows} />
+    <TextArea
+      value={value}
+      onChangeText={(v: string) => {
+        track({ action: 'change', value: textSize(v) })
+        onChange(v)
+      }}
+      disabled={disabled}
+      numberOfLines={rows}
+    />
   )
 }
 
@@ -87,8 +116,17 @@ export function FieldSwitch({
   onChange: (v: boolean) => void
   disabled?: boolean
 }) {
+  const track = useFieldTrack('FieldSwitch')
   return (
-    <Switch checked={checked} onCheckedChange={onChange} disabled={disabled} size="$3">
+    <Switch
+      checked={checked}
+      onCheckedChange={(v: boolean) => {
+        track({ action: 'change', value: v })
+        onChange(v)
+      }}
+      disabled={disabled}
+      size="$3"
+    >
       <Switch.Thumb />
     </Switch>
   )
@@ -149,11 +187,15 @@ export function FieldSelect({
 }) {
   // When the current value isn't one of the options (empty/unset), show the
   // placeholder as a selected-but-disabled row so the control reads honestly.
+  const track = useFieldTrack('FieldSelect')
   const showPlaceholder = value === '' || !options.includes(value)
   return (
     <select
       value={showPlaceholder ? '' : value}
-      onChange={(e) => onChange(e.currentTarget.value)}
+      onChange={(e) => {
+        track({ action: 'change', value: e.currentTarget.value })
+        onChange(e.currentTarget.value)
+      }}
       disabled={disabled}
       aria-label={placeholder}
       style={selectStyle(disabled)}
@@ -187,6 +229,7 @@ export function FieldSlider({
   onChange: (v: number) => void
   disabled?: boolean
 }) {
+  const track = useFieldTrack('FieldSlider')
   return (
     <XStack gap="$3" items="center">
       <Text width={56} fontSize="$3" color="$color11">
@@ -198,7 +241,10 @@ export function FieldSlider({
         max={max}
         step={step}
         value={[value]}
-        onValueChange={(v) => onChange(v[0] ?? min)}
+        onValueChange={(v) => {
+          track({ action: 'change', value: v[0] ?? min })
+          onChange(v[0] ?? min)
+        }}
         disabled={disabled}
       >
         <Slider.Track>

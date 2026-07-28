@@ -68,6 +68,8 @@ export type SlideOverProps = {
   children: ReactNode
 }
 
+import { useEmit } from './instrument'
+
 export function SlideOver({
   open,
   onClose,
@@ -81,8 +83,17 @@ export function SlideOver({
   zIndex = 1000,
   children,
 }: SlideOverProps) {
+  const track = useEmit()
   const panelRef = useRef<HTMLElement | null>(null)
   const openerRef = useRef<Element | null>(null)
+
+  // One open/close pair per drawer, keyed by its title — the shared way every
+  // product reports "a detail pane was looked at".
+  useEffect(() => {
+    track({ component: 'SlideOver', action: open ? 'open' : 'close', id: typeof title === 'string' ? title : ariaLabel })
+    // Only the open/close transition matters; `track` is stable per surface.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
 
   // Body scroll lock + focus management, driven by `open`.
   useEffect(() => {
