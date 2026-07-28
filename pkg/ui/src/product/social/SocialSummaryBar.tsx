@@ -6,13 +6,7 @@
  * Hanzo Social (social.hanzo.ai).
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
-
-export type SocialSummary = {
-  posts: number
-  scheduled: number
-  published: number
-  accounts: number
-}
+import type { SocialSummary } from './api'
 
 export function SocialSummaryBar({ summary }: { summary: SocialSummary }) {
   const cells: { label: string; value: number }[] = [

@@ -8,18 +8,12 @@
 import { Card, Text, XStack, YStack, Button } from '@hanzo/gui'
 import { Pencil, Trash2 } from '@hanzogui/lucide-icons-2'
 import { StatusTag } from '../StatusTag'
-import { ChannelBadge, type ChannelLike } from './ChannelBadge'
+import { ChannelBadge } from './ChannelBadge'
 import { formatPostTime } from './format'
-
-export type Post = {
-  id: string
-  content: string
-  channel: ChannelLike
-  status: string
-  /** unix seconds; 0/undefined = not scheduled */
-  scheduleAt?: number
-  media?: string[]
-}
+// The post shape is the BACKEND's (./api, normalized off /v1/social). This file used
+// to declare a second, near-identical `Post` — exactly the drift this package exists
+// to stop.
+import type { Post } from './api'
 
 export function PostCard({
   post,
