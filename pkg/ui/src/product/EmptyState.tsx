@@ -78,7 +78,7 @@ export function EmptyState({
       </YStack>
 
       <YStack gap="$2" items="center" maxW={480}>
-        <Text fontSize="$6" fontWeight="800" text="center">
+        <Text fontSize="$6" fontWeight="500" text="center" letterSpacing={-0.3}>
           {title}
         </Text>
         <Text fontSize="$3" color="$color11" text="center">
