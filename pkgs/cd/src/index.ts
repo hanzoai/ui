@@ -1,16 +1,16 @@
-// @hanzo/gitops — a presentational, data-prop-driven React surface for a full
+// @hanzo/cd — a presentational, data-prop-driven React surface for a full
 // CD/GitOps console. A clean-room port of the Argo CD UI (Apache-2.0; see NOTICE).
 //
 //   import {
 //     GitopsAppList, GitopsAppDetails, GitopsAppTree, GitopsNodeInfo,
 //     GitopsSyncPanel, GitopsRollbackDialog, GitopsDiffView,
 //     ResourceNode, HealthBadge, SyncBadge, GitopsStyles,
-//   } from '@hanzo/gitops'
+//   } from '@hanzo/cd'
 //
 // Every component takes typed props and renders; the embedding app wires the
 // Hanzo native CD API (/v1/gitops) and maps its rows into the view-models.
 
-// Data contract + pure folds (React-free) — also at `@hanzo/gitops/pure`.
+// Data contract + pure folds (React-free) — also at `@hanzo/cd/pure`.
 export * from './pure'
 
 // Theme + styles

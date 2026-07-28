@@ -3,7 +3,7 @@
  *
  * Serves the built static SPA; mocks the cloud CD plane (`/v1/deploy/*`) with
  * real-shaped `clients/deploy` rows + a session cookie so the app renders the
- * fleet. Proves: the fleet renders on the shared @hanzo/gitops `GitopsAppList`, a
+ * fleet. Proves: the fleet renders on the shared @hanzo/cd `GitopsAppList`, a
  * row opens the ArgoCD-grade detail (sync panel + resource topology), and — the
  * CTO requirement — the body never scrolls horizontally at a 390px viewport.
  * Screenshots at desktop (1440) and mobile (390).

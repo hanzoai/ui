@@ -178,7 +178,7 @@
     "@hanzo/canvas": ">=0.1.0",
     "@hanzo/dashboard": ">=0.1.0",
     "@hanzo/data": ">=1.2.0",
-    "@hanzo/gitops": ">=0.1.0",
+    "@hanzo/cd": ">=0.1.0",
     "@hanzo/gui": ">=7.2.2",
     "@hanzo/ui-shadcn": ">=5.7.0",
     "@hanzo/usage": ">=0.1.0",
@@ -199,7 +199,7 @@
     "@hanzo/dashboard": {
       "optional": true
     },
-    "@hanzo/gitops": {
+    "@hanzo/cd": {
       "optional": true
     },
     "@hanzo/ui-shadcn": {

@@ -1,7 +1,7 @@
 /**
  * Hanzo CD — the dedicated deploy dashboard (cd.hanzo.ai). A static SPA over the
  * cloud CD plane (`/v1/deploy`): the fleet of operator App CRs with health, sync,
- * resource topology, logs, and sync/rollback, built on the shared @hanzo/gitops
+ * resource topology, logs, and sync/rollback, built on the shared @hanzo/cd
  * components. Auth is the first-party `hanzo_iam_token` cookie (set by the PKCE
  * login); a missing/expired session lands on the sign-in screen — never a fake row.
  */

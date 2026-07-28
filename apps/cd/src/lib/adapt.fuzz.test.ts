@@ -1,11 +1,11 @@
 /**
  * RED adversarial suite — feeds hostile / malformed /v1/deploy JSON to the adapter
- * and the shared @hanzo/gitops folds, asserting the view degrades honestly and
+ * and the shared @hanzo/cd folds, asserting the view degrades honestly and
  * NEVER (a) crashes, (b) wedges the tree builder into a hang, or (c) mislabels a
  * bad state as Healthy/Synced. Written by Red; not part of Blue's suite.
  */
 import { describe, expect, it } from "vitest"
-import { buildResourceGraph, foldHealth, foldSync } from "@hanzo/gitops"
+import { buildResourceGraph, foldHealth, foldSync } from "@hanzo/cd"
 
 import {
   manifestText,

@@ -1,6 +1,6 @@
 /**
  * The CD data adapter — maps cloud's `/v1/deploy` DTOs INTO the shared view-models
- * of `@hanzo/gitops` (GitopsApplication / ResourceTree / ManagedResource / LogLine
+ * of `@hanzo/cd` (GitopsApplication / ResourceTree / ManagedResource / LogLine
  * / RevisionHistory). Reuses each package's OWN pure folds (foldHealth/foldSync) so
  * status vocabulary is one way. No React, no I/O — unit-testable.
  *
@@ -23,7 +23,7 @@ import {
   type ResourceRef,
   type ResourceTree,
   type RevisionHistory,
-} from "@hanzo/gitops"
+} from "@hanzo/cd"
 
 // ── optional-safe helpers (snake_case + camelCase tolerant) ──────────────────
 
@@ -43,7 +43,7 @@ const epochMs = (v: unknown): number | undefined => {
   return Number.isNaN(t) ? undefined : t
 }
 
-// The cloud wire uses hyphenated verdicts (`out-of-sync`); @hanzo/gitops's folds
+// The cloud wire uses hyphenated verdicts (`out-of-sync`); @hanzo/cd's folds
 // strip whitespace but not hyphens, so normalize `[-_]` out before folding.
 const fHealth = (raw: string) => foldHealth(raw.replace(/[-_]/g, ""))
 const fSync = (raw: string) => foldSync(raw.replace(/[-_]/g, ""))
@@ -141,7 +141,7 @@ export function parseApplications(data: unknown): DeployApp[] {
   return rows.map(normalizeDeployApp).filter((a) => a.name)
 }
 
-/** Fold a normalized app into the @hanzo/gitops application view-model. */
+/** Fold a normalized app into the @hanzo/cd application view-model. */
 export function toGitopsApp(a: DeployApp): GitopsApplication {
   return {
     name: a.name,
