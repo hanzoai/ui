@@ -165,7 +165,13 @@ export function CollectionsBrowser({ client, module, label, subtitle, onOpen, se
               rounded="$4"
               p="$4"
               gap="$2"
-              width={240}
+              // Mobile first: fill the column on a phone, settle into a grid of
+              // ~260px cards as the viewport allows. A fixed width would leave a
+              // dead gutter at 390px, which is the width that has to work.
+              flex={1}
+              flexBasis={240}
+              minW={200}
+              maxW={340}
             >
               <XStack gap="$2" items="center">
                 <Boxes size={16} />
