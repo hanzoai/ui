@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.13",
+  "version": "8.0.17",
   "type": "module",
-  "description": "Hanzo UI — the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI \u2014 the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -45,6 +45,24 @@
       "import": "./dist/product/index.js",
       "require": "./dist/product/index.cjs",
       "default": "./dist/product/index.js"
+    },
+    "./gui-config": {
+      "types": "./dist/gui-config.d.ts",
+      "import": "./dist/gui-config.js",
+      "require": "./dist/gui-config.cjs",
+      "default": "./dist/gui-config.js"
+    },
+    "./product/social": {
+      "types": "./dist/product/social/index.d.ts",
+      "import": "./dist/product/social/index.js",
+      "require": "./dist/product/social/index.cjs",
+      "default": "./dist/product/social/index.js"
+    },
+    "./product/social/api": {
+      "types": "./dist/product/social/api.d.ts",
+      "import": "./dist/product/social/api.js",
+      "require": "./dist/product/social/api.cjs",
+      "default": "./dist/product/social/api.js"
     },
     "./data": {
       "types": "./dist/data.d.ts",
@@ -176,12 +194,13 @@
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.1.0",
+    "@hanzo/cd": ">=0.1.0",
     "@hanzo/dashboard": ">=0.1.0",
     "@hanzo/data": ">=1.2.0",
-    "@hanzo/cd": ">=0.1.0",
     "@hanzo/gui": ">=7.2.2",
     "@hanzo/ui-shadcn": ">=5.7.0",
     "@hanzo/usage": ">=0.1.0",
+    "@hanzogui/config": ">=7.3.0",
     "@hanzogui/lucide-icons-2": ">=7.3.0",
     "@hanzogui/next-theme": ">=7.3.0",
     "next-themes": ">=0.2.1",
