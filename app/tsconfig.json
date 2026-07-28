@@ -19,9 +19,18 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
+    // `types/nav` and `types/unist` are imported as BARE specifiers, which only
+    // ever resolved because of an implicit project root. Under TypeScript 7
+    // `baseUrl` is gone outright — the compiler answers TS5102 "Option 'baseUrl'
+    // has been removed … use '\"paths\": {\"*\": [\"./*\"]}' instead" — so the
+    // mapping has to be explicit. `paths` entries resolve relative to this file,
+    // so no baseUrl is needed or accepted.
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "types/*": [
+        "./types/*"
       ]
     },
     "plugins": [
