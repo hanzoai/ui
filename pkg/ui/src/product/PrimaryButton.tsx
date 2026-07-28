@@ -20,19 +20,26 @@ import { Button } from '@hanzo/gui'
 import { useAccent } from './accent'
 import { useEmit } from './instrument'
 
-export function PrimaryButton(props: ComponentProps<typeof Button>) {
+export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button>) {
   const { accent, contrast } = useAccent()
   const track = useEmit()
-  // The label IS the identity of a primary action — no app has to name it.
-  const onPress = (e: unknown) => {
-    track({ component: 'PrimaryButton', action: 'click', id: typeof props.children === 'string' ? props.children : props['aria-label'] })
-    ;(props.onPress as ((e: unknown) => void) | undefined)?.(e)
+  // DESTRUCTURE the caller's handler out first. Wrapping it while still reading it
+  // off a rebound `props` makes the wrapper call ITSELF — an unbounded recursion
+  // that a real browser click turns into "Maximum call stack size exceeded".
+  const press = (e: unknown) => {
+    // The label IS the identity of a primary action — no app has to name it.
+    track({
+      component: 'PrimaryButton',
+      action: 'click',
+      id: typeof rest.children === 'string' ? rest.children : rest['aria-label'],
+    })
+    ;(onPress as ((e: unknown) => void) | undefined)?.(e)
   }
-  props = { ...props, onPress: onPress as ComponentProps<typeof Button>['onPress'] }
+  const handler = press as ComponentProps<typeof Button>['onPress']
   // Accent set → a filled accent button (bg + readable text, via inline style Tamagui
   // forwards to the DOM). No accent → the default monochrome white (theme="light").
   if (accent) {
-    return <Button style={{ backgroundColor: accent, color: contrast, borderColor: accent }} {...props} />
+    return <Button style={{ backgroundColor: accent, color: contrast, borderColor: accent }} onPress={handler} {...rest} />
   }
-  return <Button theme="light" {...props} />
+  return <Button theme="light" onPress={handler} {...rest} />
 }
