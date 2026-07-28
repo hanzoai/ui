@@ -1,4 +1,15 @@
+import { readdirSync } from 'node:fs'
 import { defineConfig } from 'tsup'
+
+// `@hanzo/ui/primitives/Button` — one door per component, generated from the
+// backend manifest by scripts/gen-primitives.mjs. Enumerated here so each one
+// compiles to dist like everything else; an exports entry that points at a file
+// the package does not ship is not a door, it is a 404.
+const primitiveEntries = Object.fromEntries(
+  readdirSync(new URL('src/primitives', import.meta.url))
+    .filter((f) => f.endsWith('.tsx'))
+    .map((f) => [`primitives/${f.slice(0, -4)}`, `src/primitives/${f}`]),
+)
 
 // Ship COMPILED JS (ESM + CJS) so consumers never transpile our source. Next 16's
 // flight-client loader parses `'use client'` modules from node_modules WITHOUT TS —
@@ -10,7 +21,22 @@ import { defineConfig } from 'tsup'
 // @hanzo/gui, which resolves its own web/native entry.
 export default defineConfig({
   entry: {
+    ...primitiveEntries,
     index: 'src/index.ts',
+    // Each BACKEND is its own entry, so a consumer can name the one it renders on
+    // instead of inheriting whatever the root barrel happens to re-export. That is
+    // the whole point of `@hanzo/ui/shadcn`: an app that still needs the Radix/
+    // Tailwind surface says so out loud, and the root barrel is free to move.
+    'backends/shadcn/index': 'src/backends/shadcn/index.ts',
+    'backends/gui/index': 'src/backends/gui/index.ts',
+    // The component-API manifest and the per-component doors that `gen-primitives`
+    // emits from it — same surface, addressable one name at a time.
+    components: 'src/components.ts',
+    'primitives/index': 'src/primitives/index.ts',
+    // The design core: `cn`, the token scale, the themes. Pure data + one helper.
+    'core/index': 'src/core/index.ts',
+    'core/tokens': 'src/core/tokens.ts',
+    'models/index': 'src/models/index.ts',
     // The ONE type/radius/space scale every Hanzo admin renders at (createGui).
     'gui-config': 'src/gui-config.ts',
     'product/index': 'src/product/index.ts',

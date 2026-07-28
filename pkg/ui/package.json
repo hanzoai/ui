@@ -2,7 +2,7 @@
   "name": "@hanzo/ui",
   "version": "8.0.26",
   "type": "module",
-  "description": "Hanzo UI \u2014 the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI — the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -11,30 +11,42 @@
       "default": "./dist/index.js"
     },
     "./shadcn": {
-      "types": "./src/backends/shadcn/index.ts",
-      "default": "./src/backends/shadcn/index.ts"
+      "types": "./dist/backends/shadcn/index.d.ts",
+      "import": "./dist/backends/shadcn/index.js",
+      "require": "./dist/backends/shadcn/index.cjs",
+      "default": "./dist/backends/shadcn/index.js"
     },
     "./gui": {
-      "types": "./src/backends/gui/index.ts",
-      "default": "./src/backends/gui/index.ts"
+      "types": "./dist/backends/gui/index.d.ts",
+      "import": "./dist/backends/gui/index.js",
+      "require": "./dist/backends/gui/index.cjs",
+      "default": "./dist/backends/gui/index.js"
     },
     "./components": {
-      "types": "./src/components.ts",
-      "default": "./src/components.ts"
+      "types": "./dist/components.d.ts",
+      "import": "./dist/components.js",
+      "require": "./dist/components.cjs",
+      "default": "./dist/components.js"
     },
     "./models": {
-      "types": "./src/models/index.ts",
-      "default": "./src/models/index.ts"
+      "types": "./dist/models/index.d.ts",
+      "import": "./dist/models/index.js",
+      "require": "./dist/models/index.cjs",
+      "default": "./dist/models/index.js"
     },
     "./core": {
-      "types": "./src/core/index.ts",
-      "default": "./src/core/index.ts"
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs",
+      "default": "./dist/core/index.js"
     },
     "./tokens": {
-      "types": "./src/core/tokens.ts",
-      "default": "./src/core/tokens.ts"
+      "types": "./dist/core/tokens.d.ts",
+      "import": "./dist/core/tokens.js",
+      "require": "./dist/core/tokens.cjs",
+      "default": "./dist/core/tokens.js"
     },
-    "./theme.css": "./src/theme.css",
+    "./theme.css": "./dist/theme.css",
     "./product": {
       "types": "./dist/product/index.d.ts",
       "import": "./dist/product/index.js",
@@ -78,8 +90,10 @@
       "default": "./dist/framework/core.js"
     },
     "./primitives": {
-      "types": "./src/primitives/index.ts",
-      "default": "./src/primitives/index.ts"
+      "types": "./dist/primitives/index.d.ts",
+      "import": "./dist/primitives/index.js",
+      "require": "./dist/primitives/index.cjs",
+      "default": "./dist/primitives/index.js"
     },
     "./primitives/bases/data": {
       "types": "./dist/primitives/bases/data/index.d.ts",
@@ -88,8 +102,10 @@
       "default": "./dist/primitives/bases/data/index.js"
     },
     "./primitives/*": {
-      "types": "./src/primitives/*.tsx",
-      "default": "./src/primitives/*.tsx"
+      "types": "./dist/primitives/*.d.ts",
+      "import": "./dist/primitives/*.js",
+      "require": "./dist/primitives/*.cjs",
+      "default": "./dist/primitives/*.js"
     },
     "./gitops": {
       "types": "./dist/gitops.d.ts",
@@ -158,7 +174,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json && mkdir -p dist/styles && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/add-use-client.mjs",
+    "build": "tsup && tsc -p tsconfig.build.json && mkdir -p dist/styles && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && cp src/theme.css dist/theme.css && node scripts/add-use-client.mjs",
     "clean": "rm -rf dist types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
