@@ -182,6 +182,7 @@
     "@hanzo/gui": ">=7.2.2",
     "@hanzo/ui-shadcn": ">=5.7.0",
     "@hanzo/usage": ">=0.1.0",
+    "@hanzogui/lucide-icons-2": ">=7.3.0",
     "@hanzogui/next-theme": ">=7.3.0",
     "next-themes": ">=0.2.1",
     "react": ">=19",
