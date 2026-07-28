@@ -24,6 +24,10 @@ export default defineConfig({
     // things, not two ways to the same thing.
     'product/social/api': 'src/product/social/api.ts',
     data: 'src/data.ts',
+    // The DocType renderer for the framework engine — list/detail/form driven by
+    // metadata alone. Its own entry so a site shell that renders ONE module does
+    // not pull the whole product barrel.
+    framework: 'src/framework.ts',
     'primitives/bases/data/index': 'src/primitives/bases/data/index.ts',
     gitops: 'src/gitops.ts',
     canvas: 'src/canvas.ts',
