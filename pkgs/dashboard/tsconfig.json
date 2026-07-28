@@ -16,8 +16,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@/*": ["src/*"],
-      "react-native": ["react-native-web"]
+      "@/*": [
+        "./src/*"
+      ],
+      "react-native": [
+        "./react-native-web"
+      ]
     }
   },
   "include": ["src", "gui.config.ts", "gui.d.ts"]
