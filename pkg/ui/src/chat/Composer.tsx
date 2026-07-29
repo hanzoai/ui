@@ -23,6 +23,16 @@ import { ready, sends, type Mods } from './send'
 const PAD = 8
 const MIN_ROWS = 1
 
+/**
+ * The resting placeholder.
+ *
+ * "Ask anything", not "Send a message" and not "Message <model>". It addresses
+ * the person rather than describing the mechanism, and being one constant string
+ * it never has to be recomputed or re-announced when the model or endpoint
+ * changes — which is what a model-named placeholder forces a surface to do.
+ */
+export const ASK = 'Ask anything'
+
 export interface ComposerProps {
   value: string
   onChange: (value: string) => void
@@ -49,7 +59,7 @@ export function Composer({
   onStop,
   busy = false,
   disabled = false,
-  placeholder = 'Send a message',
+  placeholder = ASK,
   rows = MIN_ROWS,
   children,
   hint,
