@@ -26,6 +26,27 @@ const DIRECTIVE = "'use client';"
 /** Emitted modules that are data, not components — never stamped. */
 const DATA = new Set(['gui-config', 'core/tokens', 'framework/core', 'product/social/api'])
 
+/**
+ * A BARREL is a module whose every statement re-exports something else. It holds
+ * no component code, so the directive belongs on the modules it points at, not on
+ * it — and Next's flight loader REFUSES `export *` inside a client boundary
+ * ("It's currently unsupported to use export * in a client boundary"), which is
+ * exactly what a stamped barrel is. Leaving barrels undirectived is also what
+ * every component package does.
+ */
+const isBarrel = (src) => {
+  const code = src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/^\s*\/\/.*$/gm, '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter(Boolean)
+  return (
+    code.length > 0 &&
+    code.every((l) => /^(export|import)\b/.test(l) || /^[\w$,{}\s*]+;?$/.test(l))
+  ) && /^export\s/m.test(code.join('\n'))
+}
+
 const files = (dir, out = []) => {
   for (const name of readdirSync(dir)) {
     const p = join(dir, name)
@@ -59,6 +80,7 @@ const specifiers = (file, ext, probe) => {
 const useClient = (file) => {
   if (DATA.has(relative(DIST, file).replace(/\.(js|cjs)$/, ''))) return
   const src = readFileSync(file, 'utf8')
+  if (isBarrel(src)) return
   if (!/^['"]use client['"]/.test(src)) writeFileSync(file, DIRECTIVE + src)
 }
 
