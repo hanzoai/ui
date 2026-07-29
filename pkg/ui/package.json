@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.17",
+  "version": "8.0.18",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical, backend-flexible component library on @hanzo/gui + @hanzo/tokens. A shared design core (Hanzo dark-first tokens, Geist Sans/Mono typography) with per-backend implementations: the shadcn-compatible web surface (Radix + Tailwind, the API apps import) and the @hanzo/gui product layer (cross-platform web + native + desktop). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
