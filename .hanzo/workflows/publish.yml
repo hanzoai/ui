@@ -111,13 +111,51 @@ jobs:
         # which read like a source problem in @hanzo/ui and are not.
         run: pnpm --filter ${{ matrix.package }}... build
 
+      - name: Fetch the npm token from KMS
+        id: npmtok
+        # publish.yml used secrets.NPM_TOKEN, which exists on NEITHER the hanzoai
+        # org nor this repo on git.hanzo.ai. An absent secret interpolates to the
+        # empty string rather than failing, so every publish reached npmjs
+        # unauthenticated and 401'd -- the reason @hanzo/ui has never shipped from
+        # CI and each release was a hand publish.
+        #
+        # KMS is where a secret lives, so the token is read at run time from the
+        # same org path and with the same machine identity every other workflow
+        # here already uses. Nothing new to rotate, and no npm credential is
+        # stored on the forge.
+        env:
+          KMS_CLIENT_ID: ${{ secrets.KMS_CLIENT_ID }}
+          KMS_CLIENT_SECRET: ${{ secrets.KMS_CLIENT_SECRET }}
+          KMS_ENDPOINT: ${{ vars.KMS_ENDPOINT || 'https://kms.hanzo.ai' }}
+          KMS_ORG: ${{ vars.KMS_ORG || 'hanzo' }}
+          KMS_SECRET_ENV: ${{ vars.KMS_SECRET_ENV || 'prod' }}
+        run: |
+          token=$(curl -fsS "${KMS_ENDPOINT}/v1/kms/auth/login" \
+            -H 'Content-Type: application/json' \
+            -d "{\"clientId\":\"${KMS_CLIENT_ID}\",\"clientSecret\":\"${KMS_CLIENT_SECRET}\"}" \
+            | jq -r '.accessToken // empty')
+          if [ -z "${token}" ]; then
+            echo "::error::KMS login failed at ${KMS_ENDPOINT}/v1/kms/auth/login (check KMS_CLIENT_ID/KMS_CLIENT_SECRET)."
+            exit 1
+          fi
+          npm_token=$(curl -fsS \
+            "${KMS_ENDPOINT}/v1/kms/orgs/${KMS_ORG}/secrets/deploy/NPM_TOKEN?env=${KMS_SECRET_ENV}" \
+            -H "Authorization: Bearer ${token}" | jq -r '.secret.value // empty')
+          if [ -z "${npm_token}" ]; then
+            echo "::error::NPM_TOKEN missing in KMS at ${KMS_ORG}/deploy (env ${KMS_SECRET_ENV})."
+            exit 1
+          fi
+          # Masked before it is ever an output, so it cannot surface in a log.
+          echo "::add-mask::${npm_token}"
+          echo "token=${npm_token}" >> "$GITHUB_OUTPUT"
+
       - name: Publish package
         # Idempotent on purpose: the desired state is "npmjs holds this version", and
         # a version already there satisfies it. Versions are immutable, so a conflict
         # means the release already happened (a re-run, or a hand publish) — that is
         # success, not a failure. Every other error still fails the job.
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ steps.npmtok.outputs.token }}
         run: |
           set -o pipefail
           OUT=$(pnpm --filter ${{ matrix.package }} publish \
@@ -148,7 +186,12 @@ jobs:
         # holding it is the desired state either way. npmjs is authoritative and is
         # never affected by anything here.
         env:
-          HANZO_REGISTRY_TOKEN: ${{ secrets.HANZO_REGISTRY_TOKEN }}
+          # REGISTRY_TOKEN is the fleet-wide name (six other workflows use it and
+          # the hanzoai org carries it). This asked for HANZO_REGISTRY_TOKEN, which
+          # is defined nowhere, so it read as empty and the step below took its
+          # "not set" branch and exited 0 on every run -- the mirror to
+          # api.hanzo.ai has never happened, and said so only as a notice.
+          HANZO_REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
           set -uo pipefail
           if [ -z "${HANZO_REGISTRY_TOKEN:-}" ]; then
