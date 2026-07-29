@@ -17,10 +17,16 @@ const rowsOf = (v: unknown) =>
  * `textAreaSizeVariant` turns rows into height.
  * `rows` is the floor, not a fixed size.
  */
-const Textarea = /* @__PURE__ */ React.forwardRef<
-  HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(function Textarea({ rows, value, defaultValue, ...props }, ref) {
+/**
+ * Typed from the gui component it renders, exactly as `Input` is — the field
+ * takes `onChangeText`, not a DOM `change` event, and the DOM-only spelling was
+ * a type that never matched the runtime.
+ */
+export type TextareaProps = Omit<React.ComponentProps<typeof TextArea>, "children"> &
+  Pick<React.ComponentProps<"textarea">, "onKeyDown" | "rows">
+
+const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  function Textarea({ rows, value, defaultValue, ...props }, ref) {
   const [typed, setTyped] = React.useState(() => rowsOf(defaultValue))
   const uncontrolled = value === undefined
   const invalid = props["aria-invalid"]
@@ -44,6 +50,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<
       {...(props as Record<string, unknown>)}
     />
   )
-})
+  },
+)
 
 export { Textarea }
