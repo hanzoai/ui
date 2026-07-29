@@ -3,8 +3,8 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "declarationMap": false,
-    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src"
   },
@@ -12,6 +12,7 @@
   "exclude": [
     "node_modules",
     "dist",
+    "dist-cjs",
     "types",
     "**/*.test.ts",
     "**/*.test.tsx"

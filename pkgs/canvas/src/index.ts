@@ -1,3 +1,4 @@
+/// <reference path="./css.d.ts" />
 // @hanzo/canvas — a Railway-grade PaaS project canvas for any Hanzo console.
 //
 // A pannable/zoomable board of service nodes with live status, metric
