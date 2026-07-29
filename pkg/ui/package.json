@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.27",
+  "version": "8.0.28",
   "type": "module",
-  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -144,8 +144,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json && mkdir -p dist/styles && cp src/theme.css dist/theme.css && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/add-use-client.mjs",
-    "clean": "rm -rf dist types",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && cp src/theme.css dist/theme.css && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/postbuild.mjs",
+    "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
     "tc": "tsc --noEmit",
@@ -210,10 +210,9 @@
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "typescript": "^5.7.2",
-    "vitest": "^4.1.8",
     "react-native-web": "^0.21.2",
-    "tsup": "^8.5.1"
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.8"
   },
   "publishConfig": {
     "access": "public"
