@@ -4,13 +4,15 @@
  * The chat shell renders. Same reason the gui backend has this test: a build, a
  * typecheck and a pack all pass on a component that throws on first paint.
  *
- * `Composer` is absent here and that is not an oversight — it draws its send
- * control with a `@hanzogui/lucide-icons-2` glyph, and under vitest every themed
- * icon throws `Missing theme` (vitest resolves `@hanzogui/web` to its `src`, and
- * `usePropsAndStyle` finds no theme there on either a server or a client render).
- * The same wall makes `render.test.tsx`'s whole-surface case red on main, because
- * it mounts Checkbox and Select. Composer is covered end-to-end against the built
- * package instead — see `pkg/ui/e2e/chat.spec.ts`.
+ * `Composer` is not here because it is not markup: its contract is a keyboard,
+ * so it mounts against a live DOM in `Composer.test.tsx` instead.
+ *
+ * It used to be excluded for a different and wrong reason — that a themed
+ * `@hanzogui/lucide-icons-2` glyph always throws `Missing theme` under vitest.
+ * The throw was real but it was ours: `@hanzogui/*` were inlined and loaded from
+ * `src`, while `@hanzo/gui` stayed external on `dist`, so the provider wrote the
+ * theme into one module instance and the icon read another. Inlining `@hanzo/gui`
+ * alongside them leaves one instance and the wall is gone.
  */
 import type { ReactNode } from 'react'
 import { describe, expect, it } from 'vitest'
