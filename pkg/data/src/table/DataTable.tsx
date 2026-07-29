@@ -30,6 +30,10 @@ const INSTANT = new Set(['boolean', 'select', 'multiSelect', 'date', 'dateTime',
 const SELECT_COL_W = 44
 const MIN_COL_W = 80
 const DEFAULT_ROW_H = 44
+// The open-record button. Drawn at 26 so it sits inside a 44px row without
+// crowding the cell, then padded out to a 44px touch target with hitSlop.
+const OPEN_HIT = 26
+const OPEN_SLOP = (44 - OPEN_HIT) / 2
 
 export interface DataTableProps {
   fields: FieldDefinition[]
@@ -310,19 +314,24 @@ export function DataTable(props: DataTableProps) {
                           {savingCell === cellId ? <Spinner size="small" color={tokens.textFaint} /> : null}
                         </XStack>
                       )}
-                      {/* open affordance on the first column (hover-revealed) — editable rows only; read-only rows open on full-row press */}
+                      {/* Open affordance on the first column. ALWAYS visible, never hover-gated.
+                          An editable row is not row-pressable (a press has to reach the cell editor),
+                          so this button is the only way into the record — and a control that only
+                          appears on hover does not exist on a touch device at all, and is
+                          undiscoverable with a mouse. It stays quiet via colour, not via opacity. */}
                       {ci === 0 && onOpen && editable && !isEditingCell ? (
                         <XStack
-                          $group-hover={{ opacity: 1 }}
                           items="center"
                           justify="center"
-                          width={26}
-                          height={26}
+                          width={OPEN_HIT}
+                          height={OPEN_HIT}
                           rounded={6}
                           cursor="pointer"
+                          aria-label="Open record"
+                          hitSlop={OPEN_SLOP}
                           onPress={() => onOpen(record)}
                           hoverStyle={{ bg: tokens.border }}
-                          style={{ position: 'absolute', right: 6, opacity: 0, backgroundColor: tokens.surfaceRaised }}
+                          style={{ position: 'absolute', right: 6, backgroundColor: tokens.surfaceRaised }}
                         >
                           <Maximize2 size={13} color={tokens.textMuted} />
                         </XStack>
