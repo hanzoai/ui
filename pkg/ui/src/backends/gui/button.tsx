@@ -138,6 +138,13 @@ export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' 
    * behaviour beats asking ~60 call sites to work around it.
    */
   title?: string
+  /**
+   * The DOM button type. Not cosmetic: inside a form the default is "submit",
+   * so a control meant to do something else submits the form instead. Callers
+   * write type="button" to stop that, and dropping it would be a real bug
+   * rather than a lost attribute. Reaches the element the same way title does.
+   */
+  type?: 'button' | 'submit' | 'reset'
 }
 
 function Button({
