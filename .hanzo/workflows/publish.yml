@@ -4,6 +4,21 @@ on:
   push:
     branches: [main]
     paths:
+      # BOTH package roots, and the singular one is not a typo — `@hanzo/ui` and
+      # `@hanzo/data` live under pkg/, everything else under pkgs/.
+      #
+      # ⚠️ This list and the `for pkg_json in …` loop below are ONE FACT. The loop
+      # was already fixed to walk both roots, with a comment explaining that a
+      # `pkgs/*` glob made pkg/ packages invisible — but this gate was left
+      # matching `pkgs/*` only, so for a pkg/-only change the corrected job could
+      # never be REACHED. The fix was reasoned about in the body and not applied
+      # to the thing that decides whether the body runs.
+      #
+      # Cost: @hanzo/ui 8.0.29 sat unpublished while npmjs served 8.0.28, so
+      # every consumer resolving `^8.0.17` silently got a version without the
+      # `./chat` entrypoint — an import error in the dependent, nothing at all in
+      # this repo. Add a root here whenever one is added to the loop.
+      - 'pkg/*/package.json'
       - 'pkgs/*/package.json'
 
 jobs:
@@ -82,7 +97,19 @@ jobs:
         run: pnpm install
 
       - name: Build package
-        run: pnpm --filter ${{ matrix.package }} build
+        # The trailing `...` is load-bearing: it builds the package's WORKSPACE
+        # DEPENDENCIES first, in topological order.
+        #
+        # Without it, `pnpm --filter @hanzo/ui build` runs alone against siblings
+        # that have no `dist/`. Those siblings type themselves through
+        # `"types": "dist/index.d.ts"`, so tsc reports them as missing modules and
+        # the errors do not name the real cause:
+        #   src/product/SiteNav.tsx: Cannot find module '@hanzo/products'
+        #   src/core/tokens.ts:      Cannot find module '@hanzo/tokens'
+        #   src/gitops.ts:           Cannot find module '@hanzo/cd'
+        # plus a wave of implicit-any errors in the files that imported them,
+        # which read like a source problem in @hanzo/ui and are not.
+        run: pnpm --filter ${{ matrix.package }}... build
 
       - name: Publish package
         # Idempotent on purpose: the desired state is "npmjs holds this version", and
