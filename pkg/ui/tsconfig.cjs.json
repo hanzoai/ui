@@ -1,10 +1,10 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
+    // TypeScript 7 removed `moduleResolution: node10`/`classic`, and it dropped the
+    // TS5095 rule that `bundler` needed an ES module target — so the CJS emit pass
+    // inherits `bundler` from the base config and only overrides the module format.
     "module": "commonjs",
-    // `bundler` resolution is only legal with an ES module target; this pass only
-    // needs the CJS EMIT (it runs --noCheck), so classic node resolution is fine.
-    "moduleResolution": "node",
     "outDir": "./dist-cjs",
     "declaration": false,
     "declarationMap": false,
