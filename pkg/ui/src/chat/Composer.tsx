@@ -74,6 +74,9 @@ export function Composer({
       metaKey: e.metaKey ?? e.nativeEvent?.metaKey,
       ctrlKey: e.ctrlKey ?? e.nativeEvent?.ctrlKey,
       isComposing: e.isComposing ?? e.nativeEvent?.isComposing,
+      // Safari's only honest IME signal on this keydown. Dropping it here would
+      // put the mid-candidate submit straight back, whatever `sends` checks.
+      keyCode: e.keyCode ?? e.nativeEvent?.keyCode,
     }
     if (!sends(key, mods)) return
     ;(e as { preventDefault?: () => void }).preventDefault?.()
