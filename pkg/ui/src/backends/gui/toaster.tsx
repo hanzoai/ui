@@ -41,11 +41,13 @@ export interface ToasterProps extends Omit<GuiToasterProps, 'toastOptions'> {
   className?: string
   /** Inert. gui themes the viewport from tokens. */
   style?: Record<string, string | number>
+  /** Inert. Sonner's semantic palette; gui takes its colours from tokens. */
+  richColors?: boolean
   toastOptions?: ExternalToast & { classNames?: ToasterClassNames }
 }
 
 const Toaster = /* @__PURE__ */ forwardRef<GuiElement, ToasterProps>(function Toaster(props, ref) {
-  const { theme = 'system', toastOptions, ...rest } = props
+  const { theme = 'system', toastOptions, richColors: _richColors, ...rest } = props
   return <GuiToaster ref={ref} theme={theme} toastOptions={toastOptions} {...rest} />
 })
 

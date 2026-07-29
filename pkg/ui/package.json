@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.32",
+  "version": "8.0.33",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -76,6 +76,11 @@
       "import": "./dist/framework/core.js",
       "require": "./dist/framework/core.cjs",
       "default": "./dist/framework/core.js"
+    },
+    "./dropdown-menu": {
+      "types": "./dist/backends/gui/dropdown-menu.d.ts",
+      "import": "./dist/backends/gui/dropdown-menu.js",
+      "require": "./dist/backends/gui/dropdown-menu.cjs"
     },
     "./primitives": {
       "types": "./dist/primitives/index.d.ts",
