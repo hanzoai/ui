@@ -129,6 +129,12 @@ jobs:
           KMS_ENDPOINT: ${{ vars.KMS_ENDPOINT || 'https://kms.hanzo.ai' }}
           KMS_ORG: ${{ vars.KMS_ORG || 'hanzo' }}
           KMS_SECRET_ENV: ${{ vars.KMS_SECRET_ENV || 'prod' }}
+          # Where the token actually lives. deploy/ is the path the sibling
+          # workflows read Cloudflare creds from, so it is the default -- but it
+          # is a GUESS for this secret, and a wrong guess 404s. Set the
+          # KMS_NPM_PATH variable on the repo or org to correct it without
+          # editing this file.
+          KMS_NPM_PATH: ${{ vars.KMS_NPM_PATH || 'deploy' }}
         run: |
           token=$(curl -fsS "${KMS_ENDPOINT}/v1/kms/auth/login" \
             -H 'Content-Type: application/json' \
@@ -138,11 +144,13 @@ jobs:
             echo "::error::KMS login failed at ${KMS_ENDPOINT}/v1/kms/auth/login (check KMS_CLIENT_ID/KMS_CLIENT_SECRET)."
             exit 1
           fi
-          npm_token=$(curl -fsS \
-            "${KMS_ENDPOINT}/v1/kms/orgs/${KMS_ORG}/secrets/deploy/NPM_TOKEN?env=${KMS_SECRET_ENV}" \
+          # No -f: a 404 must report WHICH path was empty, not just exit 22.
+          npm_token=$(curl -sS \
+            "${KMS_ENDPOINT}/v1/kms/orgs/${KMS_ORG}/secrets/${KMS_NPM_PATH}/NPM_TOKEN?env=${KMS_SECRET_ENV}" \
             -H "Authorization: Bearer ${token}" | jq -r '.secret.value // empty')
           if [ -z "${npm_token}" ]; then
-            echo "::error::NPM_TOKEN missing in KMS at ${KMS_ORG}/deploy (env ${KMS_SECRET_ENV})."
+            echo "::error::No NPM_TOKEN at ${KMS_ORG}/${KMS_NPM_PATH}/NPM_TOKEN (env ${KMS_SECRET_ENV})."
+            echo "::error::Put it there, or set the KMS_NPM_PATH variable to the path that has it."
             exit 1
           fi
           # Masked before it is ever an output, so it cannot surface in a log.
