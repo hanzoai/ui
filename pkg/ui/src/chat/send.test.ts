@@ -16,13 +16,37 @@ describe('sends', () => {
     expect(sends('Enter', { isComposing: true })).toBe(false)
   })
 
+  // Safari does not set isComposing on the keydown that accepts a candidate; it
+  // reports keyCode 229, or the key as `Process`. A composer that reads only
+  // isComposing submits the half-typed word — the bug this module exists to end.
+  it('leaves Enter to the IME when only Safari signals are present', () => {
+    expect(sends('Enter', { keyCode: 229 })).toBe(false)
+    expect(sends('Process', { keyCode: 229 })).toBe(false)
+    expect(sends('Process')).toBe(false)
+  })
+
+  it('never sends mid-candidate, whatever the modifier', () => {
+    for (const m of ['shiftKey', 'altKey', 'metaKey', 'ctrlKey'] as const) {
+      expect(sends('Enter', { [m]: true, isComposing: true })).toBe(false)
+      expect(sends('Enter', { [m]: true, keyCode: 229 })).toBe(false)
+    }
+  })
+
   it('ignores every other key', () => {
     for (const k of ['a', 'Tab', 'Escape', 'ArrowUp', '']) expect(sends(k)).toBe(false)
   })
 
-  it('treats any modifier as a newline, not a send', () => {
-    for (const m of ['altKey', 'metaKey', 'ctrlKey'] as const)
-      expect(sends('Enter', { [m]: true })).toBe(false)
+  // Force-send, as every surface already taught it — and as the source of truth
+  // does: `isCtrlEnter` never consults shiftKey.
+  it('sends on Cmd/Ctrl+Enter, even with Shift held', () => {
+    expect(sends('Enter', { metaKey: true })).toBe(true)
+    expect(sends('Enter', { ctrlKey: true })).toBe(true)
+    expect(sends('Enter', { metaKey: true, shiftKey: true })).toBe(true)
+    expect(sends('Enter', { ctrlKey: true, shiftKey: true })).toBe(true)
+  })
+
+  it('writes a newline on Alt+Enter', () => {
+    expect(sends('Enter', { altKey: true })).toBe(false)
   })
 })
 
