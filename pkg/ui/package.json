@@ -157,13 +157,12 @@
   },
   "dependencies": {
     "@hanzo/logo": "^1.0.13",
-    "@hanzo/products": "workspace:*",
+    "@hanzo/products": "^0.2.0",
     "@hanzo/tokens": "workspace:*",
     "@hanzogui/lucide-icons-2": "^7.3.0",
     "@hanzogui/telemetry": "^0.1.0",
     "@hanzogui/toast": "^7.3.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.5.0"
+    "clsx": "^2.1.1"
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.1.0",
