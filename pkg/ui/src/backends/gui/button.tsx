@@ -126,6 +126,18 @@ export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' 
   size?: ButtonSize | null
   isLoading?: boolean
   children?: ReactNode
+  /**
+   * The DOM tooltip. Already reached the element -- every unrecognised prop is
+   * spread onto Frame, which forwards it -- but the Frame's props come from the
+   * cross-platform stack and name no DOM attribute, so passing it did not type.
+   * Callers either dropped the tooltip or re-declared the whole component as
+   * `any`, and the second hides every real error in the file.
+   *
+   * Declared here because it is true on web and harmless elsewhere: native
+   * ignores an attribute it does not know. Widening the type to match the
+   * behaviour beats asking ~60 call sites to work around it.
+   */
+  title?: string
 }
 
 function Button({
