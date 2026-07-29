@@ -215,7 +215,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-native-web": "^0.21.2",
-    "typescript": "^7.0.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.8"
   },
   "publishConfig": {
