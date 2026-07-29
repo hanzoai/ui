@@ -13,22 +13,39 @@ export interface Mods {
   altKey?: boolean
   metaKey?: boolean
   ctrlKey?: boolean
-  /** True while an IME candidate window is open. */
+  /** `KeyboardEvent.isComposing` — true while an IME candidate window is open. */
   isComposing?: boolean
+  /** Legacy `KeyboardEvent.keyCode`. Read only to recognise Safari's IME. */
+  keyCode?: number
 }
 
+/** The keyCode every browser reports for a keystroke an IME has claimed. */
+const IME = 229
+
 /**
- * Enter sends. Shift+Enter — and any other modifier — writes a newline instead,
- * so a multi-line draft is always reachable from the keyboard. A key pressed
- * while an IME is composing belongs to the IME, never to the composer.
+ * Whether the IME owns this keystroke, from all three signals browsers use.
+ *
+ * `isComposing` alone is not enough. Safari does not set it reliably on the
+ * keydown that accepts a candidate, and reports the key as `Process` or with
+ * only the legacy `keyCode` of 229 — so a composer that trusts `isComposing`
+ * by itself still submits a half-typed word out from under a Japanese, Chinese
+ * or Korean writer. That is the bug this module exists to end, and it is not
+ * ended by checking one flag.
  */
-export const sends = (key: string, mods: Mods = {}): boolean =>
-  key === 'Enter' &&
-  !mods.isComposing &&
-  !mods.shiftKey &&
-  !mods.altKey &&
-  !mods.metaKey &&
-  !mods.ctrlKey
+const claimed = (key: string, mods: Mods): boolean =>
+  mods.isComposing === true || key === 'Process' || mods.keyCode === IME
+
+/**
+ * Enter sends. Shift+Enter writes a newline, so a multi-line draft is always
+ * reachable from the keyboard. Cmd/Ctrl+Enter always sends — it is the force-send
+ * every surface already taught its users, and it holds even with Shift down.
+ * A keystroke the IME has claimed belongs to the IME, never to the composer.
+ */
+export const sends = (key: string, mods: Mods = {}): boolean => {
+  if (key !== 'Enter' || claimed(key, mods)) return false
+  if (mods.metaKey === true || mods.ctrlKey === true) return true
+  return mods.shiftKey !== true && mods.altKey !== true
+}
 
 /**
  * Whether a draft may be sent: there has to be something other than whitespace,
