@@ -20,10 +20,11 @@ jobs:
         id: changed
         run: |
           CHANGED=()
-          for pkg_json in pkgs/*/package.json; do
+          # Both package roots. `@hanzo/ui` and `@hanzo/data` live under pkg/ (singular)
+          # and were invisible to a `pkgs/*` glob, so no version bump of either could
+          # ever reach npmjs from here.
+          for pkg_json in pkg/*/package.json pkgs/*/package.json; do
             [ ! -f "$pkg_json" ] && continue
-            pkg_dir=$(dirname "$pkg_json")
-
             # Skip private packages
             IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")
             [ "$IS_PRIVATE" = "true" ] && continue
@@ -45,7 +46,11 @@ jobs:
 
             if [ "$OLD" != "$NEW" ]; then
               echo "Version change: $PKG_NAME ($OLD -> $NEW)"
-              CHANGED+=("$(basename "$pkg_dir")")
+              # The package NAME, because every downstream step spends this as a
+              # `pnpm --filter` argument and a directory basename matches nothing.
+              # An unmatched filter exits 0, so the build silently no-ops and the
+              # publish ships an unbuilt tarball — how 8.0.17 and 8.0.19 shipped broken.
+              CHANGED+=("$PKG_NAME")
             fi
           done
 
