@@ -37,7 +37,7 @@
     "@hanzo/docs-mdx": "14.3.0",
     "@hanzo/docs-ui": "16.5.3",
     "@hanzo/logo": "^1.0.5",
-    "@hanzo/ui": "workspace:@hanzo/ui-shadcn@^",
+    "@hanzo/ui": "npm:@hanzo/ui-shadcn@^5",
     "@hookform/resolvers": "5.2.2",
     "@monaco-editor/react": "^4.7.0",
     "@radix-ui/react-accessible-icon": "^1.1.8",
