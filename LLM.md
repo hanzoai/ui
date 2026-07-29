@@ -111,6 +111,33 @@ This makes `@hanzo/ui/primitives/Button` etc. resolve, so a host whose
 `next.config` rewrites `@hanzo/ui` → `@hanzo/ui/primitives/{{member}}` works
 unchanged. Re-run `pnpm gen:primitives` after changing the surface.
 
+### Build — plain `tsc`, one file in, one file out
+
+There is no bundler. `pnpm build` is two `tsc` passes plus `scripts/postbuild.mjs`:
+
+| Pass | Config | Emits |
+|---|---|---|
+| ESM + types | `tsconfig.build.json` | `dist/**/*.js`, `.d.ts`, `.js.map`, `.d.ts.map` |
+| CJS | `tsconfig.cjs.json` (`--noCheck`) | `dist-cjs/**/*.js`, folded into `dist/**/*.cjs` |
+
+`postbuild.mjs` does the only two things `tsc` will not: it resolves every
+relative specifier to a fully-specified path (`./button` → `./button.js`,
+`./x` → `./x/index.js`; `.cjs` on the CJS half) so Node ESM and strict bundlers
+resolve, and it prepends `'use client'` to every emitted module — the whole
+library is client-side @hanzo/gui UI and Next's flight-client loader wants the
+directive first. It is prepended without a newline so source-map lines hold.
+
+The output is UNBUNDLED and mirrors `src/` one-for-one, so a consumer importing
+one symbol pulls one module. A bundler here would be actively harmful: tsup's
+code splitting emitted 11 shared `chunk-*.js`, and importing `Button` alone
+dragged in `chunk-RCMDRI6V.js` (48K of source). Measured with esbuild, `import
+{ Button } from '@hanzo/ui'` costs 4717 bytes bundled from tsup output vs 2021
+from `tsc` output. Dropping `rollup-plugin-dts` (tsup's `dts` worker) is also
+what makes the package build on TypeScript 7, which it cannot do otherwise.
+
+Everything under `src/` is emitted, so every `exports` subpath resolves by
+construction — no hand-maintained entry list to drift.
+
 NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace, installs
 standalone, and publishes via the maintainer flow, not `publish.yml`. Because the
 optional-peer kits (canvas/dashboard/gitops/usage) are not on the public
