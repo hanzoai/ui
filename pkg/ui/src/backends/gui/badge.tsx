@@ -14,6 +14,7 @@
 import { SizableText, XStack, createStyledContext, styled } from '@hanzo/gui'
 import * as React from 'react'
 import { ink } from './ink'
+import { touch } from './gesture'
 
 export type BadgeVariant =
   | 'default'
@@ -28,7 +29,6 @@ export type BadgeVariant =
 /** A badge is a 24px pill; the slop makes its press area meet the 44px floor. */
 const MIN_TOUCH = 44
 const HEIGHT = 24
-const HIT_SLOP = (MIN_TOUCH - HEIGHT) / 2
 
 const BadgeContext = /* @__PURE__ */ createStyledContext<{ variant: BadgeVariant }>({ variant: 'default' })
 
@@ -115,7 +115,7 @@ export function Badge({
       variant={variant ?? 'default'}
       asChild={asChild}
       render={asChild ? undefined : 'span'}
-      hitSlop={HIT_SLOP}
+      {...touch(HEIGHT, MIN_TOUCH, 'y')}
       className={[badgeVariants({ variant }), className].filter(Boolean).join(' ')}
       {...(props as React.ComponentProps<typeof BadgeFrame>)}
     >

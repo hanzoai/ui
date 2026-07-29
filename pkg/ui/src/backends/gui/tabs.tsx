@@ -5,9 +5,9 @@ import { Tabs as GuiTabs } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { ink } from './ink'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const ROW_H = 36
-const HIT_SLOP = (44 - ROW_H) / 2
 
 export type TabsProps = ComponentProps<typeof GuiTabs>
 export type TabsListProps = ComponentProps<typeof GuiTabs.List>
@@ -42,7 +42,7 @@ const TabsTrigger = ({ children, ...p }: TabsTriggerProps) => (
     gap="$1.5"
     rounded="$3"
     cursor="pointer"
-    hitSlop={HIT_SLOP}
+    {...touch(ROW_H, 44, 'y')}
     hoverStyle={{ bg: '$color4' }}
     focusStyle={{ bg: '$color4' }}
     {...p}

@@ -10,12 +10,6 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./components": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "default": "./dist/index.js"
-    },
     "./models": {
       "types": "./dist/models/index.d.ts",
       "import": "./dist/models/index.js",
@@ -175,7 +169,8 @@
     "@hanzogui/next-theme": ">=7.3.0",
     "next-themes": ">=0.2.1",
     "react": ">=19",
-    "react-dom": ">=19"
+    "react-dom": ">=19",
+    "react-native-web": ">=0.21"
   },
   "peerDependenciesMeta": {
     "@hanzo/canvas": {
@@ -194,6 +189,9 @@
       "optional": true
     },
     "next-themes": {
+      "optional": true
+    },
+    "react-native-web": {
       "optional": true
     }
   },

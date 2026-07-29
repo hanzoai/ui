@@ -1,13 +1,13 @@
 'use client'
 
-/** Switch — 36×20 track, 16px thumb, `hitSlop` to the 44px touch floor. */
+/** Switch — 36×20 track, 16px thumb, `touch()` to the 44px floor everywhere. */
 import { Switch as GuiSwitch } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const TRACK_H = 20
 const THUMB = 16
-const HIT_SLOP = (44 - TRACK_H) / 2
 
 export type SwitchProps = ComponentProps<typeof GuiSwitch>
 
@@ -18,7 +18,7 @@ const Switch = (props: SwitchProps) => (
     height={TRACK_H}
     p={2}
     shrink={0}
-    hitSlop={HIT_SLOP}
+    {...touch(TRACK_H, 44, 'y')}
     {...props}
   >
     <GuiSwitch.Thumb

@@ -12,7 +12,7 @@
  *
  * Panel   — bg $color2 (#111 dark), hairline border, radius 12, inner pad 4, subtle
  *           border+ambient elevation.
- * Item    — height 30 (28–32 band), px 8, gap 8, radius 7; icon in a fixed 16px slot
+ * Item    — height 32 (the DropdownMenu row), px 8, gap 8, radius 7; icon in a fixed 16px slot
  *           on the left; label 13px $color12; right affordance (shortcut / check /
  *           chevron) right-aligned. States: hover/active/focus → accent-soft, focus
  *           visible; selected → check + purple; disabled → muted, no hover.
@@ -23,8 +23,12 @@ import type { ReactNode, KeyboardEvent } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronRight } from '@hanzogui/lucide-icons-2'
 
-// ── Geometry — literal px, 8-grid ──────────────────────────────────────────────
-const ITEM_MIN_HEIGHT = 30
+import { touch } from '../../backends/gui/gesture'
+
+// ── Geometry — literal px, 8-grid. ROW_H matches the gui backend's DropdownMenu
+//    row exactly; two menu geometries would be two design systems. ──────────────
+const ITEM_MIN_HEIGHT = 32
+const TAP_MIN = 44
 const ITEM_RADIUS = 7
 const ITEM_PX = 8
 const ITEM_GAP = 8
@@ -154,6 +158,7 @@ export function MenuItemView({
       gap={ITEM_GAP}
       px={ITEM_PX}
       minH={ITEM_MIN_HEIGHT}
+      {...touch(ITEM_MIN_HEIGHT, TAP_MIN, 'y')}
       rounded={ITEM_RADIUS}
       cursor={disabled ? 'default' : 'pointer'}
       opacity={disabled ? 0.4 : 1}

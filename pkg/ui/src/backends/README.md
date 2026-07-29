@@ -8,7 +8,7 @@ moved out to its own package; nothing here depends on it.
 ```
 src/
   core/                design core, runtime-free
-    cn.ts              class-name composer (clsx + tailwind-merge)
+    cn.ts              class-name composer (clsx)
     tokens.ts          re-export of @hanzo/tokens (the token source of truth)
     fonts.ts           Geist Sans / Geist Mono family variables
   theme.css            self-contained token vars + Geist (the identity)

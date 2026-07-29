@@ -1,6 +1,12 @@
-// @hanzo/ui/product menu — ONE menu system. Portal-theme-safe DropdownMenu (click)
-// and ContextMenu (right-click) both render the SAME item spec, so every menu across
-// the fleet is pixel-identical. See items.tsx for the shared spec.
+// @hanzo/ui/product menu — Portal-theme-safe DropdownMenu (click) and ContextMenu
+// (right-click) render the SAME item spec (items.tsx) at the same geometry (32px
+// row, 8px gutter, 44px tap).
+//
+// They do NOT yet share a renderer: DropdownMenu builds its rows out of gui `Menu`
+// compound parts (which need the Menu context), ContextMenu builds them out of
+// `renderMenuItems` inside a bare `FloatingMenu` portal anchored at the cursor.
+// Collapsing the two means giving the cursor-anchored case a Menu context; until
+// that lands, the spec and the geometry constants are what keep them identical.
 
 // The ONE DropdownMenu lives in the gui BACKEND (it is a component-API member,
 // not a product-layer piece). It grew the declarative `trigger`/`items` form that

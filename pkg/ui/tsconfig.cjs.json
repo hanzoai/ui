@@ -2,6 +2,9 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "module": "commonjs",
+    // `bundler` resolution is only legal with an ES module target; this pass only
+    // needs the CJS EMIT (it runs --noCheck), so classic node resolution is fine.
+    "moduleResolution": "node",
     "outDir": "./dist-cjs",
     "declaration": false,
     "declarationMap": false,

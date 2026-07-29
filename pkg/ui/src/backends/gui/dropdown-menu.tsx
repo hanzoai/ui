@@ -11,8 +11,8 @@
  * menu component rather than two shapes of the same idea.
  *
  * Cross-platform: gui style props only — no Tailwind class strings, no Radix, no
- * DOM APIs. Rows are 32px tall (the design density) with a 6px vertical `hitSlop`
- * so the real tap target is 44px on touch hosts.
+ * DOM APIs. Rows are 32px tall (the design density) and `touch()` lifts the real
+ * tap target to 44px — on web and Tauri as well as native.
  *
  * `DropdownMenuContent` mounts its OWN `Menu.Portal`, so callers never wrap it —
  * and re-applies the trigger's resolved theme inside the portal via `PortalTheme`
@@ -22,19 +22,16 @@ import * as React from "react"
 import { Menu, Text, XStack, YStack, type GuiElement } from "@hanzo/gui"
 import { Check, ChevronRight, Circle } from "@hanzogui/lucide-icons-2"
 
+import { touch } from "./gesture"
 import type { MenuItemSpec } from "../../product/menu/items"
 import { PortalTheme, useThemeName } from "../../product/menu/portal-theme"
 
-// ── Geometry — literal px on the 8-grid; 32px row + 6px hitSlop = 44px tap ──────
+// ── Geometry — literal px on the 8-grid; a 32px row expands to a 44px tap ──────
 const ROW_H = 32
 const TAP_MIN = 44
-const HIT_SLOP = {
-  top: (TAP_MIN - ROW_H) / 2,
-  bottom: (TAP_MIN - ROW_H) / 2,
-  left: 0,
-  right: 0,
-}
 const ROW_PX = 8
+/** The one menu width floor — the spec form and the compound panel share it. */
+const MIN_W = 200
 const INSET_PL = 32
 const INDICATOR_SLOT = 14
 const ICON = 16
@@ -45,7 +42,7 @@ const panel = {
   borderWidth: 1,
   rounded: "$4",
   p: 4,
-  minW: 128,
+  minW: MIN_W,
   overflow: "hidden",
   shadowColor: "rgba(0,0,0,0.45)",
   shadowRadius: 20,
@@ -60,7 +57,7 @@ const row = {
   rounded: "$3",
   select: "none",
   cursor: "pointer",
-  hitSlop: HIT_SLOP,
+  ...touch(ROW_H, TAP_MIN, "y"),
   hoverStyle: { bg: "$color5" },
   focusStyle: { bg: "$color5" },
   pressStyle: { bg: "$color6" },
@@ -110,7 +107,7 @@ function DropdownMenu({
   offset = DEFAULT_OFFSET,
   trigger,
   items,
-  minWidth,
+  minWidth = MIN_W,
   maxHeight,
   children,
   ...props

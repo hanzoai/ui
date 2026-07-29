@@ -34,12 +34,12 @@ import {
 } from "@hanzo/gui"
 
 import { slot } from "./slot"
+import { drag, dragPos, touch } from "./gesture"
 
 /** Bar thickness, and the thumb's minimum length — both in px. */
 const BAR = 10
-/** Minimum touch target. The thumb is `BAR` thin, so hitSlop makes up the rest. */
+/** Minimum touch target. The thumb is `BAR` thin, so `touch()` makes up the rest. */
 const TOUCH = 44
-const SLOP = (TOUCH - BAR) / 2
 
 export type ScrollAreaType = "auto" | "always" | "scroll" | "hover"
 type Axis = "vertical" | "horizontal"
@@ -90,8 +90,22 @@ const ScrollBar = /* @__PURE__ */ forwardRef<GuiElement, ScrollBarProps>(
     const thumb = Math.max(TOUCH, len * (viewport / Math.max(content, 1)))
     const range = Math.max(len - thumb, 0)
     const at = overflow ? range * clamp(offset / scrollable, 1) : 0
-    const coord = (e: { nativeEvent: { pageX: number; pageY: number } }) =>
-      vertical ? e.nativeEvent.pageY : e.nativeEvent.pageX
+
+    const gesture = drag({
+      begin: (e) => {
+        from.current = dragPos(e, !vertical)
+      },
+      move: (e) => {
+        const start = from.current
+        if (start === null || range === 0) return
+        const now = dragPos(e, !vertical)
+        from.current = now
+        ctx.scrollBy(((now - start) * scrollable) / range)
+      },
+      end: () => {
+        from.current = null
+      },
+    })
 
     return (
       <XStack
@@ -121,30 +135,11 @@ const ScrollBar = /* @__PURE__ */ forwardRef<GuiElement, ScrollBarProps>(
           {...slot("scroll-area-thumb")}
           bg="$borderColor"
           rounded={BAR}
-          hitSlop={
-            vertical ? { left: SLOP, right: SLOP } : { top: SLOP, bottom: SLOP }
-          }
+          {...touch(BAR, TOUCH, vertical ? "x" : "y")}
           {...(vertical
             ? { width: "100%" as const, height: thumb, y: at }
             : { height: "100%" as const, width: thumb, x: at })}
-          onStartShouldSetResponder={() => true}
-          onMoveShouldSetResponder={() => true}
-          onResponderGrant={(e) => {
-            from.current = coord(e)
-          }}
-          onResponderMove={(e) => {
-            const start = from.current
-            if (start === null || range === 0) return
-            const now = coord(e)
-            from.current = now
-            ctx.scrollBy(((now - start) * scrollable) / range)
-          }}
-          onResponderRelease={() => {
-            from.current = null
-          }}
-          onResponderTerminate={() => {
-            from.current = null
-          }}
+          {...gesture}
         />
       </XStack>
     )
