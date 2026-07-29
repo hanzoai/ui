@@ -1,2 +1,0 @@
-// Device components
-export {}
