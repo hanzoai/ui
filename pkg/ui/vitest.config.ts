@@ -28,6 +28,13 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     // Aliases only reach source that vite transforms, and these deps are shipped
     // as CommonJS that re-requires ESM — Node cannot load them raw.
-    server: { deps: { inline: [/@hanzogui\//, /react-native/] } },
+    //
+    // `@hanzo/gui` belongs on this list even though it loads fine on its own: it
+    // re-exports the same `@hanzogui/*` modules. Inlined, those resolve through
+    // each package's `source` field to `src`; external, `@hanzo/gui` resolves
+    // them to `dist`. Leaving it off gave the theme TWO module instances — the
+    // provider wrote one, every themed icon read the other, and the icon threw
+    // `Missing theme`. One entry here is the whole fix.
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
   },
 })
