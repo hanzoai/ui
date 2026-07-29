@@ -12,6 +12,7 @@ import { X } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const PAD = 24
 
@@ -64,7 +65,7 @@ const DialogContent = ({ showCloseButton = true, children, ...props }: DialogCon
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
-                hitSlop={14}
+                {...touch(16)}
                 aria-label="Close"
               >
                 <X size={16} />

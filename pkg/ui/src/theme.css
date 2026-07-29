@@ -16,53 +16,11 @@
  * (next/font, @fontsource, CDN) binds those variables and everything inherits
  * it. No Inter, no system-stack default anywhere.
  *
- * When imported INTO a Tailwind v4 pipeline the `@theme inline` block maps the
- * tokens onto utilities (`bg-popover`, `border-border`, `font-sans` → Geist …).
- * When loaded as plain CSS the `:root`/`.dark` variables and the base font still
- * apply (the `@theme` at-rule is inert in the browser).
+ * Plain CSS, nothing else: `:root`/`.dark` custom properties plus the base font
+ * and the touch/elevation rules the components name. The Tailwind v4 `@theme
+ * inline` block that used to map these onto utilities is gone with Tailwind.
  */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-
-  --font-sans: var(--font-geist-sans), sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-}
 
 /* Geist family fallbacks — a host that binds --font-geist-sans/-mono (e.g. via
    next/font) overrides these; otherwise the named Geist families are used if
@@ -158,3 +116,70 @@
 :where(code, kbd, samp, pre) {
   font-family: var(--font-geist-mono), monospace;
 }
+
+/* ── Touch targets ────────────────────────────────────────────────────────────
+   The 44px floor on web/Tauri. gui drops `hitSlop` on web (it is a native-only
+   prop), so `touch()` in the gui backend emits data-touch-x / data-touch-y and
+   these rules expand the hit box with a transparent ::after overlay — no layout
+   shift, no padding hack. Native takes hitSlop instead and ignores all of this. */
+[data-touch-x]::after,
+[data-touch-y]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+[data-touch-x="1"]::after { left: -1px; right: -1px; }
+[data-touch-x="2"]::after { left: -2px; right: -2px; }
+[data-touch-x="3"]::after { left: -3px; right: -3px; }
+[data-touch-x="4"]::after { left: -4px; right: -4px; }
+[data-touch-x="5"]::after { left: -5px; right: -5px; }
+[data-touch-x="6"]::after { left: -6px; right: -6px; }
+[data-touch-x="7"]::after { left: -7px; right: -7px; }
+[data-touch-x="8"]::after { left: -8px; right: -8px; }
+[data-touch-x="9"]::after { left: -9px; right: -9px; }
+[data-touch-x="10"]::after { left: -10px; right: -10px; }
+[data-touch-x="11"]::after { left: -11px; right: -11px; }
+[data-touch-x="12"]::after { left: -12px; right: -12px; }
+[data-touch-x="13"]::after { left: -13px; right: -13px; }
+[data-touch-x="14"]::after { left: -14px; right: -14px; }
+[data-touch-x="15"]::after { left: -15px; right: -15px; }
+[data-touch-x="16"]::after { left: -16px; right: -16px; }
+[data-touch-x="17"]::after { left: -17px; right: -17px; }
+[data-touch-x="18"]::after { left: -18px; right: -18px; }
+[data-touch-x="19"]::after { left: -19px; right: -19px; }
+[data-touch-x="20"]::after { left: -20px; right: -20px; }
+[data-touch-x="21"]::after { left: -21px; right: -21px; }
+[data-touch-x="22"]::after { left: -22px; right: -22px; }
+[data-touch-x="23"]::after { left: -23px; right: -23px; }
+[data-touch-x="24"]::after { left: -24px; right: -24px; }
+[data-touch-y="1"]::after { top: -1px; bottom: -1px; }
+[data-touch-y="2"]::after { top: -2px; bottom: -2px; }
+[data-touch-y="3"]::after { top: -3px; bottom: -3px; }
+[data-touch-y="4"]::after { top: -4px; bottom: -4px; }
+[data-touch-y="5"]::after { top: -5px; bottom: -5px; }
+[data-touch-y="6"]::after { top: -6px; bottom: -6px; }
+[data-touch-y="7"]::after { top: -7px; bottom: -7px; }
+[data-touch-y="8"]::after { top: -8px; bottom: -8px; }
+[data-touch-y="9"]::after { top: -9px; bottom: -9px; }
+[data-touch-y="10"]::after { top: -10px; bottom: -10px; }
+[data-touch-y="11"]::after { top: -11px; bottom: -11px; }
+[data-touch-y="12"]::after { top: -12px; bottom: -12px; }
+[data-touch-y="13"]::after { top: -13px; bottom: -13px; }
+[data-touch-y="14"]::after { top: -14px; bottom: -14px; }
+[data-touch-y="15"]::after { top: -15px; bottom: -15px; }
+[data-touch-y="16"]::after { top: -16px; bottom: -16px; }
+[data-touch-y="17"]::after { top: -17px; bottom: -17px; }
+[data-touch-y="18"]::after { top: -18px; bottom: -18px; }
+[data-touch-y="19"]::after { top: -19px; bottom: -19px; }
+[data-touch-y="20"]::after { top: -20px; bottom: -20px; }
+[data-touch-y="21"]::after { top: -21px; bottom: -21px; }
+[data-touch-y="22"]::after { top: -22px; bottom: -22px; }
+[data-touch-y="23"]::after { top: -23px; bottom: -23px; }
+[data-touch-y="24"]::after { top: -24px; bottom: -24px; }
+
+/* Elevation ladder — the shadow steps components name by class. */
+.hz-elevation-1 { box-shadow: var(--hz-elevation-1, 0 1px 2px rgba(0, 0, 0, 0.16)); }
+.hz-elevation-2 { box-shadow: var(--hz-elevation-2, 0 4px 12px rgba(0, 0, 0, 0.24)); }
+.hz-elevation-3 { box-shadow: var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36)); }
+.hz-elevation-4 { box-shadow: var(--hz-elevation-4, 0 16px 48px rgba(0, 0, 0, 0.44)); }
