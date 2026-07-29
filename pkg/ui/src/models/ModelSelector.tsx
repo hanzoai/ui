@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import { Check, ChevronsUpDown } from '@hanzogui/lucide-icons-2'
+import { SizableText, XStack } from '@hanzo/gui'
 
-import { cn } from '../core/cn'
 import {
+  Button,
   Command,
   CommandEmpty,
   CommandGroup,
@@ -19,6 +20,9 @@ import { familyOf, filterChatModels, groupModelsByFamily, type ModelCatalogEntry
 
 /** Show the search input once a catalog gets this large. */
 const SEARCH_THRESHOLD = 12
+/** Panel floor when the trigger has not reported its width yet. */
+const MIN_W = 224
+const MAX_H = 288
 
 function fmtContext(ctx: number | undefined): string {
   if (!ctx) return ''
@@ -42,11 +46,14 @@ export interface ModelSelectorProps {
 /**
  * ModelSelector — the one unified model picker for every Hanzo app.
  *
- * Family-grouped picker in a compact Radix Popover + cmdk Command combobox:
- * grouped sections with family headers, premium markers, context suffixes,
- * keyboard navigation, and type-to-filter search for large catalogs. Monochrome,
- * dark-first, data-agnostic. Every class is a standard token; the font is
- * inherited (Geist).
+ * Family-grouped picker in a Popover + Command combobox: grouped sections with
+ * family headers, premium markers, context suffixes, keyboard navigation, and
+ * type-to-filter search for large catalogs.
+ *
+ * Styling is gui style props and tokens throughout — no class strings. The panel
+ * matches the trigger's MEASURED width (`onLayout`, which gui implements on web
+ * too), never a Radix `--radix-popover-trigger-width` custom property: nothing
+ * defines that variable now that Radix is gone.
  */
 export function ModelSelector({
   models,
@@ -59,6 +66,7 @@ export function ModelSelector({
   className,
 }: ModelSelectorProps) {
   const [open, setOpen] = useState(false)
+  const [triggerW, setTriggerW] = useState(0)
 
   const visible = useMemo(() => (chatOnly ? filterChatModels(models) : models), [models, chatOnly])
   const groups = useMemo(() => groupModelsByFamily(visible), [visible])
@@ -74,37 +82,37 @@ export function ModelSelector({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          role="combobox"
-          aria-expanded={open}
-          disabled={disabled}
-          className={cn(
-            'inline-flex items-center gap-1.5 rounded-md border border-border bg-background text-left font-medium text-foreground transition hover:border-primary/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
-            isSm ? 'h-7 px-2 text-xs' : 'h-9 px-3 text-sm',
-            className,
+      <XStack width="100%" onLayout={(e) => setTriggerW(e.nativeEvent.layout.width)}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            size={isSm ? 'sm' : 'default'}
+            role="combobox"
+            aria-expanded={open}
+            disabled={disabled}
+            justify="flex-start"
+            width="100%"
+            className={className}
+          >
+          <SizableText numberOfLines={1} size={isSm ? '$1' : '$2'} color="$color12">
+            {selectedLabel}
+          </SizableText>
+          {selectedFamily && (
+            <SizableText numberOfLines={1} size={isSm ? '$1' : '$2'} color="$color11">
+              {selectedFamily}
+            </SizableText>
           )}
-        >
-          <span className="truncate">{selectedLabel}</span>
-          {selectedFamily && <span className="truncate text-muted-foreground">{selectedFamily}</span>}
-          <ChevronsUpDown size={isSm ? 12 : 14} ml="auto" shrink={0} opacity={0.5} />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-[var(--radix-popover-trigger-width)] min-w-[14rem] border-border bg-popover p-0 text-popover-foreground shadow-md"
-      >
+            <ChevronsUpDown size={isSm ? 12 : 14} ml="auto" shrink={0} opacity={0.5} />
+          </Button>
+        </PopoverTrigger>
+      </XStack>
+      <PopoverContent align="start" p={0} width={Math.max(triggerW, MIN_W)}>
         <Command>
-          {showSearch && <CommandInput placeholder="Search models…" className="h-9 text-sm" />}
-          <CommandList className="max-h-72">
+          {showSearch && <CommandInput placeholder="Search models…" />}
+          <CommandList maxH={MAX_H}>
             <CommandEmpty>No models found.</CommandEmpty>
             {groups.map((group) => (
-              <CommandGroup
-                key={group.family}
-                heading={group.family}
-                className="[&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted-foreground"
-              >
+              <CommandGroup key={group.family} heading={group.family}>
                 {group.models.map((m) => {
                   const label = m.label ?? m.id
                   const ctx = fmtContext(m.context_window)
@@ -116,19 +124,22 @@ export function ModelSelector({
                         onChange(m.id)
                         setOpen(false)
                       }}
-                      className="gap-2"
                     >
                       <Check size={14} shrink={0} opacity={m.id === value ? 1 : 0} />
-                      <span className="truncate">{label}</span>
+                      <SizableText numberOfLines={1} size="$2">
+                        {label}
+                      </SizableText>
                       {m.premium && (
-                        <span className="text-muted-foreground" title="Premium" aria-label="Premium">
+                        <SizableText size="$2" color="$color11" aria-label="Premium">
                           ✦
-                        </span>
+                        </SizableText>
                       )}
                       {ctx && (
-                        <span className="ml-auto shrink-0 pl-2 text-[10px] tabular-nums text-muted-foreground">
-                          {ctx}
-                        </span>
+                        <XStack ml="auto" shrink={0} pl="$2">
+                          <SizableText size="$1" color="$color11" fontVariant={['tabular-nums']}>
+                            {ctx}
+                          </SizableText>
+                        </XStack>
                       )}
                     </CommandItem>
                   )

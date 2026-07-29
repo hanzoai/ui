@@ -1,13 +1,13 @@
 'use client'
 
-/** Slider — 6px track, 16px thumb, `hitSlop` to the 44px touch floor. */
+/** Slider — 6px track, 16px thumb, `touch()` to the 44px floor on every target. */
 import { Slider as GuiSlider } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const TRACK = 6
 const THUMB = 16
-const HIT_SLOP = (44 - THUMB) / 2
 
 export type SliderProps = ComponentProps<typeof GuiSlider>
 
@@ -24,7 +24,7 @@ const Slider = (props: SliderProps) => (
       bg="$background"
       borderWidth={1}
       borderColor="$color12"
-      hitSlop={HIT_SLOP}
+      {...touch(THUMB)}
     />
   </GuiSlider>
 )

@@ -4,9 +4,14 @@
 //      `./button` stays extensionless. Node ESM and strict bundlers demand a
 //      fully-specified path, so every relative specifier is resolved against
 //      what was actually emitted: `./button` -> `./button.js` or `./x/index.js`.
-//   2. 'use client' — the whole library is client-side @hanzo/gui UI, and Next's
+//   2. 'use client' — the component layer is client-side @hanzo/gui UI, and Next's
 //      flight-client loader needs the directive as the FIRST statement of every
-//      module. Prepended without a newline so source-map line numbers hold.
+//      such module. Prepended without a newline so source-map line numbers hold.
+//      DATA modules are excluded (see DATA below): a token scale or a gui config
+//      is data, not a component, and stamping it means React's SERVER layer can
+//      only hold a client REFERENCE to it — so `createGui()` never runs in a
+//      prerender, `configureMedia()` never sets its state, and the first
+//      `useMedia()` proxies `undefined`. Data has to stay executable everywhere.
 //
 // The CJS half is compiled to dist-cjs (tsc cannot emit two module formats to
 // one outDir) and folded into dist as `.cjs` here.
@@ -17,6 +22,9 @@ const UI = new URL('..', import.meta.url).pathname
 const DIST = join(UI, 'dist')
 const CJS = join(UI, 'dist-cjs')
 const DIRECTIVE = "'use client';"
+
+/** Emitted modules that are data, not components — never stamped. */
+const DATA = new Set(['gui-config', 'core/tokens', 'framework/core', 'product/social/api'])
 
 const files = (dir, out = []) => {
   for (const name of readdirSync(dir)) {
@@ -49,6 +57,7 @@ const specifiers = (file, ext, probe) => {
 }
 
 const useClient = (file) => {
+  if (DATA.has(relative(DIST, file).replace(/\.(js|cjs)$/, ''))) return
   const src = readFileSync(file, 'utf8')
   if (!/^['"]use client['"]/.test(src)) writeFileSync(file, DIRECTIVE + src)
 }

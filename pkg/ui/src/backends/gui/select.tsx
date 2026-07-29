@@ -20,9 +20,10 @@ import {
 } from 'react'
 import { ink } from './ink'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const ROW_H = 32
-const HIT_SLOP = (44 - ROW_H) / 2
+const TRIGGER_H = 36
 
 const Select: typeof GuiSelect = GuiSelect
 const SelectGroup: typeof GuiSelect.Group = GuiSelect.Group
@@ -44,14 +45,14 @@ const SelectTrigger = ({ children, ...props }: SelectTriggerProps) => (
     items="center"
     justify="space-between"
     gap="$2"
-    height={36}
+    height={TRIGGER_H}
     px="$3"
     rounded="$3"
     borderWidth={1}
     borderColor="$borderColor"
     bg="transparent"
     cursor="pointer"
-    hitSlop={4}
+    {...touch(TRIGGER_H, 44, 'y')}
     {...props}
   >
     {ink(children, undefined, { size: '$2' })}
@@ -73,7 +74,7 @@ const SelectItem = ({ children, ...props }: SelectItemProps) => (
     pr="$7"
     rounded="$2"
     cursor="pointer"
-    hitSlop={HIT_SLOP}
+    {...touch(ROW_H, 44, 'y')}
     hoverStyle={{ bg: '$color5' }}
     focusStyle={{ bg: '$color5' }}
     {...props}

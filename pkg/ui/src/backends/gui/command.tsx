@@ -398,9 +398,12 @@ const CommandGroup = /* @__PURE__ */ forwardRef<GuiElement, CommandGroupProps>(
         >
           {heading != null ? (
             <SizableText
+              data-slot="command-group-heading"
               size="$1"
               color="$color11"
               fontWeight="500"
+              textTransform="uppercase"
+              letterSpacing={0.6}
               px="$2"
               py="$1.5"
             >

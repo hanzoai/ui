@@ -11,6 +11,7 @@ import { Input as GuiInput, XStack } from '@hanzo/gui'
 import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react'
 import { slot } from './slot'
+import { touch } from './gesture'
 
 const HEIGHT = 36
 const GUTTER = 12
@@ -78,7 +79,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
         <XStack
           {...well('r')}
           cursor="pointer"
-          hitSlop={8}
+          {...touch(20)}
           onPress={() => setRevealed((v) => !v)}
           aria-label={revealed ? 'Hide password' : 'Show password'}
         >

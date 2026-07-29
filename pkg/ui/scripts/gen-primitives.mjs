@@ -25,18 +25,25 @@ const outDir = join(root, 'src/primitives')
 
 const src = readFileSync(barrelPath, 'utf8')
 
-// Collect VALUE member names from every `export { ... } from '...'` block.
-// Type-only members (`type Foo`) are skipped: they are not values, cannot be
-// re-exported without `export type` under isolatedModules, and a host only
-// modularizes value imports.
-const members = new Set()
-for (const m of src.matchAll(/export\s*\{([^}]*)\}\s*from/g)) {
+// Collect VALUE member names from every `export { ... } from './module'` block,
+// KEEPING the module each one came from. Type-only members (`type Foo`) are
+// skipped: they are not values, cannot be re-exported without `export type` under
+// isolatedModules, and a host only modularizes value imports.
+//
+// The module matters as much as the name. A per-member file that re-exports from
+// the BARREL puts every component in one bundler chunk, so `import { Button }`
+// drags Select, Dialog, Popover, Tooltip and the whole floating stack with it
+// (measured: 201KB instead of 75KB). Re-exporting from the member's own module
+// keeps one component per chunk and lets the shake actually work.
+const members = new Map()
+for (const m of src.matchAll(/export\s*\{([^}]*)\}\s*from\s*'(\.\/[\w.-]+)'/g)) {
+  const from = m[2]
   for (const raw of m[1].split(',')) {
     const name = raw.trim()
     if (!name || name.startsWith('type ')) continue
     // `X as Y` → the exported name is Y.
     const exported = name.includes(' as ') ? name.split(/\s+as\s+/)[1].trim() : name
-    if (/^[A-Za-z_$][\w$]*$/.test(exported)) members.add(exported)
+    if (/^[A-Za-z_$][\w$]*$/.test(exported)) members.set(exported, from)
   }
 }
 
@@ -55,11 +62,11 @@ for (const f of readdirSync(outDir, { withFileTypes: true })) {
   }
 }
 
-const sorted = [...members].sort()
+const sorted = [...members.keys()].sort()
 for (const name of sorted) {
   writeFileSync(
     join(outDir, `${name}.tsx`),
-    `${BANNER}export { ${name} } from '../backends/gui'\n`,
+    `${BANNER}export { ${name} } from '../backends/gui/${members.get(name).slice(2)}'\n`,
   )
 }
 

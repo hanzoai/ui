@@ -69,9 +69,6 @@ an optional peer, pulled only when you use its subpath.
 | `@hanzo/ui` · `/product` | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast |
 | `@hanzo/ui/data` | RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/canvas` | ProjectCanvas, ServiceNode, DeployTimeline, EnvSwitcher |
-| `@hanzo/ui/wallet` | WalletMenu, EIP-1193 adapter, network helpers |
-| `@hanzo/ui/network` | NetworkSwitcher, useNetwork, configureNetworks |
-| `@hanzo/ui/billing` | CreditModal |
 | `@hanzo/ui/dashboard` | landing + deploy-pipeline + overview kit |
 | `@hanzo/ui/usage` | UsageMeter, UsageProviderCard, UsageDashboard |
 | `@hanzo/ui/gitops` | GitopsAppList, tree, diff, sync/rollback, HealthBadge |

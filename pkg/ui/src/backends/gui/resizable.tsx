@@ -21,7 +21,8 @@
  * + pointer capture and native with the responder system. Both prop sets are
  * typed on gui's stacks, and pointer capture is feature-detected, so nothing
  * here reaches for the DOM on expo. Keyboard resize is arrow keys (Shift for a
- * fine step). Touch target is the 4px handle plus a 20px hitSlop = 44px.
+ * fine step). The grab area comes from `touch()`, so it is 44px on web and
+ * native alike while the visual divider stays 4px.
  */
 import {
   Children,
@@ -36,8 +37,10 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react"
-import { isWeb, Separator, XStack, type XStackProps } from "@hanzo/gui"
+import { Separator, XStack, type XStackProps } from "@hanzo/gui"
 import { GripVertical } from "@hanzogui/lucide-icons-2"
+
+import { drag, dragPos, touch, type DragEvent } from "./gesture"
 
 import {
   defaultLayout,
@@ -258,19 +261,8 @@ export function ResizablePanel({
 // ── Handle ────────────────────────────────────────────────────────────────────
 
 const THICKNESS = 4
-/** 4px + 20px each side = a 44px target without inflating the visual divider. */
-const HIT_SLOP = 20
 const KEY_STEP = 5
 const KEY_STEP_FINE = 1
-
-/** Structural shape shared by a React pointer event and an RN responder event. */
-type DragEvent = {
-  clientX?: number
-  clientY?: number
-  pointerId?: number
-  currentTarget?: unknown
-  nativeEvent?: { pageX?: number; pageY?: number }
-}
 
 export type ResizableHandleProps = Omit<
   XStackProps,
@@ -294,26 +286,13 @@ export function ResizableHandle({
   const off =
     disabled || !group || boundary < 0 || boundary + 1 >= group.sizes.length
 
-  const posOf = useCallback(
-    (e: DragEvent) =>
-      (axis
-        ? (e.clientX ?? e.nativeEvent?.pageX)
-        : (e.clientY ?? e.nativeEvent?.pageY)) ?? 0,
-    [axis]
-  )
+  const posOf = useCallback((e: DragEvent) => dragPos(e, axis), [axis])
 
   const begin = useCallback(
     (e: DragEvent) => {
       if (off || !group) return
       start.current = { pos: posOf(e), sizes: group.sizes }
       setState("drag")
-      // Keeps the drag alive once the pointer leaves the 4px handle, without a
-      // window listener. Absent on native, where the responder system owns it.
-      const target = e.currentTarget as
-        | { setPointerCapture?: (id: number) => void }
-        | undefined
-      if (target?.setPointerCapture && e.pointerId != null)
-        target.setPointerCapture(e.pointerId)
     },
     [group, off, posOf]
   )
@@ -375,25 +354,7 @@ export function ResizableHandle({
     []
   )
 
-  const gesture = isWeb
-    ? {
-        onPointerDown: begin,
-        onPointerMove: move,
-        onPointerUp: end,
-        onPointerCancel: end,
-        onKeyDown: nudge,
-        onMouseEnter: () => hover(true),
-        onMouseLeave: () => hover(false),
-      }
-    : {
-        onStartShouldSetResponder: () => !off,
-        onMoveShouldSetResponder: () => !off,
-        onResponderTerminationRequest: () => false,
-        onResponderGrant: begin,
-        onResponderMove: move,
-        onResponderRelease: end,
-        onResponderTerminate: end,
-      }
+  const gesture = drag({ begin, move, end, enabled: !off })
 
   return (
     <XStack
@@ -404,7 +365,7 @@ export function ResizableHandle({
       shrink={0}
       width={axis ? THICKNESS : "100%"}
       height={axis ? "100%" : THICKNESS}
-      hitSlop={HIT_SLOP}
+      {...touch(THICKNESS, 44, axis ? "x" : "y")}
       cursor={off ? "default" : axis ? "col-resize" : "row-resize"}
       tabIndex={off ? -1 : 0}
       role="separator"
@@ -412,6 +373,9 @@ export function ResizableHandle({
       data-panel-group-direction={group?.direction}
       data-resize-handle-state={state}
       {...gesture}
+      onKeyDown={nudge}
+      onMouseEnter={() => hover(true)}
+      onMouseLeave={() => hover(false)}
       {...rest}
     >
       <Separator

@@ -4,14 +4,29 @@
  * Button — the gui-backend original.
  *
  * `variant`, `size`, `asChild`, `isLoading`, `buttonVariants`, and the
- * `data-slot`/`data-variant`/`data-size` markers. The substrate is @hanzo/gui:
- * `styled()` variants on the gui `Button` frame.
+ * `data-slot`/`data-variant`/`data-size` markers.
  *
- * Every size meets the 44px touch floor through `hitSlop`, never through
- * padding — the visual density stays at 36/32/40px.
+ * The substrate is @hanzo/gui's Button FRAME (`Button.Frame`), not the compound
+ * `Button`. The compound is `Frame.styleable(...)`, i.e. an HOC — `styled()` over
+ * it does not compile style props to classes, so under `asChild` every variant
+ * style leaked onto the child as an invalid lowercase HTML attribute
+ * (`backgroundcolor="var(--background)"`) and nothing was styled. Extending the
+ * frame keeps one component with one API and makes `asChild` a first-class
+ * pattern; the frame already renders a real `<button>` on web and provides the
+ * styled context that `Button.Text` reads.
+ *
+ * Type size rides on that Text, never on the frame: `fontSize` is not a frame
+ * style prop, so setting it there leaked a `font-size="var(--f-size-3)"`
+ * attribute and every size rendered at the same 16px.
+ *
+ * The 44px touch floor comes from `touch()`, which is platform-correct on web
+ * as well as native — visual density stays at 36/32/40px.
  */
 import { Button as GuiButton, Spinner, styled } from '@hanzo/gui'
-import type { ComponentProps, ReactNode } from 'react'
+import { createElement, isValidElement, type ComponentProps, type ReactNode } from 'react'
+
+import { ink } from './ink'
+import { touch } from './gesture'
 
 export type ButtonVariant =
   | 'default'
@@ -35,10 +50,17 @@ const HEIGHT: Record<ButtonSize, number> = {
   'icon-lg': 40,
 }
 
-const MIN_TOUCH = 44
-const slop = (size: ButtonSize) => Math.max(0, (MIN_TOUCH - HEIGHT[size]) / 2)
+/** Type scale per size — applied to the Text host, which is what renders it. */
+const TYPE: Record<ButtonSize, string> = {
+  default: '$3',
+  sm: '$2',
+  lg: '$3',
+  icon: '$3',
+  'icon-sm': '$2',
+  'icon-lg': '$3',
+}
 
-const Frame = styled(GuiButton, {
+const Frame = styled(GuiButton.Frame, {
   name: 'Button',
   items: 'center',
   justify: 'center',
@@ -71,9 +93,9 @@ const Frame = styled(GuiButton, {
       },
     },
     size: {
-      default: { height: HEIGHT.default, px: '$4', fontSize: '$3' },
-      sm: { height: HEIGHT.sm, px: '$3', gap: '$1.5', fontSize: '$2' },
-      lg: { height: HEIGHT.lg, px: '$6', fontSize: '$3' },
+      default: { height: HEIGHT.default, px: '$4' },
+      sm: { height: HEIGHT.sm, px: '$3', gap: '$1.5' },
+      lg: { height: HEIGHT.lg, px: '$6' },
       icon: { height: HEIGHT.icon, width: HEIGHT.icon, px: 0 },
       'icon-sm': { height: HEIGHT['icon-sm'], width: HEIGHT['icon-sm'], px: 0 },
       'icon-lg': { height: HEIGHT['icon-lg'], width: HEIGHT['icon-lg'], px: 0 },
@@ -102,7 +124,6 @@ export const buttonVariants = ({
 export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' | 'children'> & {
   variant?: ButtonVariant | null
   size?: ButtonSize | null
-  asChild?: boolean
   isLoading?: boolean
   children?: ReactNode
 }
@@ -118,6 +139,14 @@ function Button({
   ...props
 }: ButtonProps) {
   const resolved = size ?? 'default'
+  // gui's own `asChild` cannot merge into the child here: the Button frame bakes
+  // a `render: <button>`, so asChild WRAPS the child in a button and drops every
+  // compiled style (measured: `<button class="is_View "><a>…</a></button>`).
+  // `render` is the mechanism that merges — it emits the child's own tag carrying
+  // the full compiled class list. So asChild is expressed through render, and
+  // Button-as-link comes out as a styled <a> with valid markup.
+  const host = asChild && isValidElement(children) ? children : null
+  const body = host ? (host.props as { children?: ReactNode }).children : children
   return (
     <Frame
       data-slot="button"
@@ -125,14 +154,14 @@ function Button({
       data-size={resolved}
       variant={variant ?? 'default'}
       size={resolved}
-      asChild={asChild}
+      render={host ? createElement(host.type, { ...(host.props as object), children: undefined }) : undefined}
       disabled={disabled || isLoading}
-      hitSlop={slop(resolved)}
+      {...touch(HEIGHT[resolved], 44, 'y')}
       className={buttonVariants({ variant, size, className })}
-      icon={isLoading && !asChild ? <Spinner size="small" /> : undefined}
       {...props}
     >
-      {children}
+      {isLoading && <Spinner size="small" />}
+      {ink(body, GuiButton.Text as never, { fontSize: TYPE[resolved] })}
     </Frame>
   )
 }
