@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.33",
+  "version": "8.0.34",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -143,7 +143,11 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./dist/gui-config.js",
+    "./dist/core/tokens.js",
+    "./dist/framework/core.js",
+    "./dist/product/social/api.js"
   ],
   "files": [
     "dist"
