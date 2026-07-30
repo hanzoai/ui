@@ -121,12 +121,25 @@ function cssEscape(s: string): string {
   return s.replace(/["\\\]]/g, '\\$&')
 }
 
-/** Best-effort component display name: a stable `data-hz-name`/`data-component`
- *  attribute first (survives minification), else the nearest named React fiber
- *  owner (present in development builds). Returns undefined when neither exists. */
+/** Best-effort component display name, most-authoritative source first:
+ *
+ *   1. `data-hz-name` / `data-component` — written by a person, about this
+ *      specific node. An explicit intent outranks anything derived.
+ *   2. `data-observe` — written by @hanzo/annotate at BUILD time from the
+ *      component's own declaration, so it survives minification and is present
+ *      in production, which is exactly where (3) is not. The value `off` is not
+ *      a name: it is the redaction opt-out (see redact.ts), and it can never
+ *      collide with a real one because JSX requires component names to be
+ *      capitalised.
+ *   3. The nearest named React fiber owner — free, but development-only: a
+ *      production build strips `_debugOwner` and minifies the function name.
+ *
+ *  Returns undefined when a node has no derivable component. */
 export function componentName(el: Element): string | undefined {
   const marked = attr(el, 'data-hz-name') || attr(el, 'data-component')
   if (marked) return clip(marked)
+  const stamped = attr(el, 'data-observe')
+  if (stamped && stamped !== 'off') return clip(stamped)
   return reactOwner(el)
 }
 
