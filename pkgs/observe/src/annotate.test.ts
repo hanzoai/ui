@@ -101,3 +101,34 @@ group('annotate', () => {
     expect(sem.target.tag).toBe('button')
   })
 })
+
+group('build-time annotation (@hanzo/annotate)', () => {
+  it('reads data-observe as the component name in a production build', () => {
+    expect(componentName(mount('<div data-observe="UserCard">x</div>'))).toBe('UserCard')
+  })
+
+  it('lets a hand-written data-hz-name outrank the build stamp', () => {
+    expect(componentName(mount('<div data-observe="Card" data-hz-name="Chosen">x</div>'))).toBe(
+      'Chosen',
+    )
+  })
+
+  it('never treats the redaction opt-out as a name', () => {
+    expect(componentName(mount('<div data-observe="off">x</div>'))).toBeUndefined()
+  })
+
+  it('builds a readable hierarchy from stamped ancestors alone', () => {
+    document.body.innerHTML = `
+      <nav data-observe="Dashboard">
+        <div data-observe="CardGrid">
+          <section data-observe="UserCard">
+            <button id="save">Save</button>
+          </section>
+        </div>
+      </nav>`
+    const el = document.getElementById('save') as Element
+    // The stamped ancestors name themselves; the unstamped leaf still falls back
+    // to role + accessible name, so the path reads end-to-end in production.
+    expect(annotate(el).label).toBe('Dashboard/CardGrid/UserCard/button[Save]')
+  })
+})

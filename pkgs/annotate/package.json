@@ -1,7 +1,7 @@
 {
-  "name": "@hanzo/observe",
+  "name": "@hanzo/annotate",
   "version": "0.1.1",
-  "description": "Hanzo Observe — default-on interaction capture for React. Watches every click/input/nav/visibility across the tree, annotates each with a semantic hierarchy (component path / role / data-testid / aria) auto-derived from the DOM, and emits it through @hanzo/event to the ONE front door (POST /v1/event). Privacy-gated (input redaction) and fail-soft by default; ships a real-time event stream hook for session playback.",
+  "description": "The build-time half of @hanzo/observe — annotates every component's root element with its own name (data-observe=\"ComponentName\") so a production build keeps the semantic hierarchy React's dev-only fiber owner would have given you. Parses with TypeScript and splices text, so line numbers and formatting are untouched. Ships a webpack/Next loader and a Vite plugin.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -22,16 +22,16 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanzoai/ui.git",
-    "directory": "pkgs/observe"
+    "directory": "pkgs/annotate"
   },
   "keywords": [
+    "observability",
     "analytics",
     "autocapture",
     "session-replay",
-    "telemetry",
-    "semantic",
-    "react",
-    "observability",
+    "babel",
+    "webpack",
+    "vite",
     "hanzo"
   ],
   "scripts": {
@@ -52,33 +52,32 @@
         "default": "./dist/index.cjs"
       }
     },
-    "./react": {
+    "./webpack": {
+      "require": {
+        "types": "./dist/webpack.d.cts",
+        "default": "./dist/webpack.cjs"
+      },
       "import": {
-        "types": "./dist/react.d.ts",
-        "default": "./dist/react.mjs"
+        "types": "./dist/webpack.d.ts",
+        "default": "./dist/webpack.mjs"
+      }
+    },
+    "./vite": {
+      "import": {
+        "types": "./dist/vite.d.ts",
+        "default": "./dist/vite.mjs"
       },
       "require": {
-        "types": "./dist/react.d.cts",
-        "default": "./dist/react.cjs"
+        "types": "./dist/vite.d.cts",
+        "default": "./dist/vite.cjs"
       }
     }
   },
-  "dependencies": {
-    "@hanzo/event": "^0.3.3"
-  },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    }
+    "typescript": ">=5"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "@types/react": "19.2.14",
-    "happy-dom": "^20.0.0",
-    "react": "19.2.4",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
