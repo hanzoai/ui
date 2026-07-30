@@ -56,9 +56,24 @@ const specifiers = (file, ext, probe) => {
   if (out !== src) writeFileSync(file, out)
 }
 
+// A module whose statements are ONLY import/export is a barrel: the client
+// boundary belongs to the leaves it re-exports, which carry their own
+// directive. Stamping the barrel itself makes it a client module, and Next's
+// flight loader hard-errors on `export *` inside a client boundary — which is
+// exactly how 8.0.32 broke every Next 16 consumer at `dist/index.js`.
+const reexportOnly = (src) =>
+  src
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/\/\/[^\n]*/g, '')
+    .replace(/(?:import|export)[^;'"]*from\s*['"][^'"]*['"];?/g, '')
+    .replace(/import\s*['"][^'"]*['"];?/g, '')
+    .replace(/export\s*\{[\s\S]*?\};?/g, '')
+    .trim() === ''
+
 const useClient = (file) => {
   if (DATA.has(relative(DIST, file).replace(/\.(js|cjs)$/, ''))) return
   const src = readFileSync(file, 'utf8')
+  if (reexportOnly(src)) return
   if (!/^['"]use client['"]/.test(src)) writeFileSync(file, DIRECTIVE + src)
 }
 
