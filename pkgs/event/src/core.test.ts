@@ -132,6 +132,41 @@ describe('Analytics capture', () => {
     expect(e.path).toBe('/pricing')
   })
 
+  // Autocapture reaches the wire through capture(), which passes no location.
+  // When only pageview() stamped one, every $click/$input/$change arrived with
+  // an empty url and path — and an interaction with no page is exactly what a
+  // heatmap cannot use.
+  it('stamps the page onto every event, not just pageviews', () => {
+    const g = globalThis as Record<string, unknown>
+    const hadWindow = 'window' in g
+    const hadDocument = 'document' in g
+    // enqueue() inits lazily, and init() is browser-only, so both are needed.
+    g.window = {
+      location: { href: 'https://hanzo.chat/rooms/42?q=1', pathname: '/rooms/42', search: '?q=1' },
+      addEventListener: () => {},
+    }
+    g.document = { referrer: '', visibilityState: 'visible' }
+    try {
+      const a = mk()
+      a.capture('$click')
+      a.pageview('/explicit')
+      a.flush()
+
+      const click = tx.all.find((e) => e.event === '$click')!
+      expect(click.url).toBe('https://hanzo.chat/rooms/42?q=1')
+      expect(click.path).toBe('/rooms/42')
+
+      // A route change fires before window.location catches up, so an explicit
+      // pageview path still has to win over the ambient one.
+      const view = tx.all.find((e) => e.type === 'pageview')!
+      expect(view.path).toBe('/explicit')
+      expect(view.url).toBe('https://hanzo.chat/rooms/42?q=1')
+    } finally {
+      if (!hadWindow) delete g.window
+      if (!hadDocument) delete g.document
+    }
+  })
+
   it('auto-flushes when the batch size is reached', () => {
     const a = mk({ batchSize: 3 })
     a.capture('a')
