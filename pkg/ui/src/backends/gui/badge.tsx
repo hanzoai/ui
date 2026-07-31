@@ -35,6 +35,12 @@ const BadgeContext = /* @__PURE__ */ createStyledContext<{ variant: BadgeVariant
 const BadgeFrame = styled(XStack, {
   name: 'Badge',
   context: BadgeContext,
+  // A badge shrink-wraps its label, always. `self: 'flex-start'` alone only
+  // achieves that inside a FLEX parent — alignSelf is inert in a block one, so
+  // an XStack (display: flex) placed in a plain <div> becomes a block-level flex
+  // container and stretches the full width. Both are kept: inline-flex handles
+  // the block parent, alignSelf still governs when the parent is flex.
+  display: 'inline-flex',
   self: 'flex-start',
   items: 'center',
   justify: 'center',
