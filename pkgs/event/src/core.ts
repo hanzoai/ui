@@ -482,6 +482,20 @@ export class Analytics {
       refCode: this.cohort.refCode ?? this.attribution.refCode,
       channel: this.cohort.channel ?? this.attribution.channel,
       signupWeek: this.cohort.signupWeek,
+      // Where the event happened, stamped for every kind rather than only for
+      // pageviews. An interaction is reported against the page it happened on,
+      // and autocapture ($click/$input/$change) reaches the wire through
+      // capture(), which supplies no location — so every click arrived with an
+      // empty url and path, and `host`, derived from url, was empty with them.
+      // That is unattributable to a page, which is the one thing a heatmap
+      // needs. Read here, at the single point every event is built, so it
+      // cannot go missing from a call site again.
+      //
+      // Before `...extra`: pageview() passes an explicit path for route
+      // changes that fire before window.location has caught up, and that value
+      // has to win over the one read here.
+      url: isBrowser() ? window.location.href : undefined,
+      path: isBrowser() ? window.location.pathname : undefined,
       library: '@hanzo/event',
       libraryVersion: VERSION,
       ...extra,
