@@ -19,15 +19,15 @@ const Checkbox = (props: CheckboxProps) => (
     {...slot('checkbox')}
     width={BOX}
     height={BOX}
-    shrink={0}
-    rounded="$2"
+    flexShrink={0}
+    borderRadius="$2"
     borderWidth={1}
     borderColor="$borderColor"
-    bg="transparent"
+    backgroundColor="transparent"
     {...touch(BOX)}
     {...props}
   >
-    <GuiCheckbox.Indicator {...slot('checkbox-indicator')} items="center" justify="center">
+    <GuiCheckbox.Indicator {...slot('checkbox-indicator')} alignItems="center" justifyContent="center">
       <Check size={BOX - 3} />
     </GuiCheckbox.Indicator>
   </GuiCheckbox>

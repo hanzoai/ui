@@ -16,8 +16,8 @@ const Switch = (props: SwitchProps) => (
     {...slot('switch')}
     width={36}
     height={TRACK_H}
-    p={2}
-    shrink={0}
+    padding={2}
+    flexShrink={0}
     {...touch(TRACK_H, 44, 'y')}
     {...props}
   >
