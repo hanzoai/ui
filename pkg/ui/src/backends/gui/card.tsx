@@ -22,17 +22,23 @@ const CardFrame = styled(YStack, {
   gap: PAD,
 })
 
-const HeaderFrame = styled(XStack, {
+// STACKED, not a row. The reference header is a grid whose rows are
+// `[auto_auto]` — title above description — and it only becomes two columns
+// when a CardAction is present. Porting it to XStack put the title and the
+// description side by side, so every plain <CardHeader><CardTitle/>
+// <CardDescription/></CardHeader> rendered as two narrow columns with the
+// title wrapping mid-phrase. That is the shape 79 of 79 call sites in
+// hanzo.app use; CardAction is used in none of them and self-aligns instead.
+const HeaderFrame = styled(YStack, {
   name: 'CardHeader',
   px: PAD,
   gap: '$2',
   items: 'flex-start',
-  justify: 'space-between',
 })
 
 const TitleFrame = styled(SizableText, { name: 'CardTitle', size: '$4', fontWeight: '600' })
 const DescriptionFrame = styled(SizableText, { name: 'CardDescription', size: '$2', color: '$color11' })
-const ActionFrame = styled(XStack, { name: 'CardAction', self: 'flex-start', shrink: 0 })
+const ActionFrame = styled(XStack, { name: 'CardAction', self: 'flex-end', shrink: 0 })
 const ContentFrame = styled(YStack, { name: 'CardContent', px: PAD })
 const FooterFrame = styled(XStack, { name: 'CardFooter', px: PAD, items: 'center' })
 
