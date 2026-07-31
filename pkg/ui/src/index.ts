@@ -15,7 +15,42 @@
 // Styling is theme tokens, never utility classes: `$background`, `$color12`,
 // `$borderColor` resolve through the gui token config on every host. Touch
 // targets meet the 44px floor via `hitSlop`, never via padding.
-export * from './backends/gui'
+// Named, not `export *`.
+//
+// This module is a client boundary ('use client' above), and Next 16 refuses
+// `export *` across one: "It's currently unsupported to use `export *` in a client
+// boundary." Every app importing the root barrel failed to build on that one line.
+//
+// Naming them also restores tree-shaking, which `export *` defeats — a bundler
+// cannot prove which members are unused through a star, so importing Button pulled
+// the whole surface in.
+//
+// ./backends/gui already declares these as explicit named blocks; this list mirrors
+// it and is regenerated the same way (scripts/gen-primitives.mjs reads that manifest).
+export {
+  AspectRatio, Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardAction,
+  CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible,
+  CollapsibleContent, CollapsibleTrigger, Command, CommandDialog, CommandEmpty, CommandGroup,
+  CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut, Dialog,
+  DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay,
+  DialogPortal, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuCheckboxItem,
+  DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator,
+  DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger,
+  DropdownMenuTrigger, Input, Label, Popover, PopoverAnchor, PopoverClose, PopoverContent,
+  PopoverTrigger, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,
+  ScrollBar, Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
+  SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue,
+  Separator, Slider, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toaster,
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, badgeVariants, buttonVariants,
+  toast,
+} from './backends/gui'
+
+export type {
+  AspectRatioProps, BadgeProps, BadgeVariant, ButtonProps, ButtonSize, ButtonVariant,
+  CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps,
+  ResizablePanelGroupProps, ResizablePanelProps,
+} from './backends/gui'
 
 // `cn` — the class-name composer, surfaced for convenience.
 export { cn } from './core/cn'
