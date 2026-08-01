@@ -211,6 +211,7 @@
     }
   },
   "devDependencies": {
+    "@hanzo/cd": "workspace:*",
     "@hanzo/data": "1.2.1",
     "@hanzo/gui": "8.0.0",
     "@hanzogui/config": "8.0.0",
