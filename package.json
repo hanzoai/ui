@@ -11,6 +11,7 @@
   "workspaces": [
     "app",
     "apps/*",
+    "pkg/*",
     "pkgs/*"
   ],
   "scripts": {
