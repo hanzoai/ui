@@ -111,6 +111,44 @@ jobs:
         # which read like a source problem in @hanzo/ui and are not.
         run: pnpm --filter ${{ matrix.package }}... build
 
+      - name: Test package
+        # A published version is IMMUTABLE, so this is the last point at which a
+        # defect costs nothing. Nothing else runs a package's own tests before it
+        # ships: ci.yml's test job runs `cd pkgs/ui && …` — that one directory —
+        # and this workflow went checkout → build → publish. So @hanzo/event's
+        # suite, which pins the version the client stamps on every event, ran in
+        # no workflow that gates a release, and the stale stamp it was written to
+        # catch could still have reached npmjs.
+        #
+        # `--if-present` so a package with no test script is skipped rather than
+        # failing the release: the set of testable packages is read from each
+        # package.json, not listed here, so a new package is covered the day it
+        # adds a `test` script.
+        run: pnpm --filter ${{ matrix.package }} run --if-present test
+
+      - name: Verify the tarball carries what package.json promises
+        # `types` is a PROMISE to every consumer, and tsup writes dist/*.mjs in a
+        # separate pass from dist/*.d.ts — so a declaration failure yields a
+        # package whose JS is fine and whose types are absent. That is invisible
+        # here and surfaces in dependents as "Could not find a declaration file".
+        #
+        # Asserted from the package's OWN manifest, so it holds for every package
+        # this workflow publishes and needs no per-package list.
+        run: |
+          set -euo pipefail
+          PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
+          TYPES=$(jq -r '.types // .typings // empty' "$PKG_DIR/package.json")
+          if [ -z "$TYPES" ]; then
+            echo "::notice::${{ matrix.package }} declares no types entrypoint — nothing to verify"
+            exit 0
+          fi
+          if [ ! -f "$PKG_DIR/$TYPES" ]; then
+            echo "::error::${{ matrix.package }} declares types at $TYPES but the build produced no such file."
+            echo "::error::Publishing would ship a package that silently has no types. Fix the declaration build."
+            exit 1
+          fi
+          echo "types present: $TYPES"
+
       - name: Fetch the npm token from KMS
         id: npmtok
         # publish.yml used secrets.NPM_TOKEN, which exists on NEITHER the hanzoai
