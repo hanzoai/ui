@@ -1,5 +1,24 @@
 # @hanzo/event
 
+## 0.3.7
+
+### Patch Changes
+
+- **`hz.js` moved here — the tag is a distribution of this client, not a second
+  client.** It lived in `hanzoai/analytics` and posted a **bare JSON array** of
+  `{site, ts, type, path, …}` to `analytics.hanzo.ai/v1/event`: a second protocol
+  behind an identical path spelling, served by a second collector with its own
+  database. Measured, `POST api.hanzo.ai/v1/event {"batch":[]}` answered 200 and
+  `POST analytics.hanzo.ai/v1/event []` answered 204, so a client pointed at the
+  wrong host failed silently. The tag now emits the canonical `WireEvent` shape as
+  `{ batch: [ … ] }` to `POST {host}/v1/event`, defaulting to `api.hanzo.ai`; the
+  Next.js door and the collector it fed are deleted. One wire, one door, one home.
+- **DOM autocapture reaches the one stream.** `$click` (with a compact, PII-light
+  element locator), `$outbound`, `$scroll` depth, `$form` and `$vitals` — what a
+  bundled app does not need and a plain page cannot get. `data-product` names the
+  surface, `data-host` overrides the API host, `data-capture="0"` turns autocapture
+  off, DNT is respected, and optional `data-ga` / `data-fb` fan out unchanged.
+
 ## 0.3.3
 
 ### Patch Changes

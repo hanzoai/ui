@@ -27,10 +27,28 @@ starve the other:
 > plane is **inert**: nothing is sent, nothing throws, analytics is unaffected.
 > Assert `client.errorPlaneEnabled` if you want to know which you have.
 
-Web analytics (analytics.hanzo.ai) is a **third, separate** plane and is NOT this
-client — it is the `hz.js` tag, which speaks a different wire (a bare JSON array).
-Note that `analytics.hanzo.ai/v1/event` and `api.hanzo.ai/v1/event` share a path
-spelling but are **different protocols**; point this client at the API host.
+### No bundler? Use the `hz.js` tag — same client, same wire
+
+```html
+<script async src="https://unpkg.com/@hanzo/event/hz.js"
+        data-product="hanzo.ai"
+        data-capture="1"></script>
+```
+
+`hz.js` (in this package) is the **script-tag distribution** of this client, for
+surfaces with no build step. It posts the SAME `{ batch: [WireEvent, …] }` to the
+SAME `POST {host}/v1/event`, and adds DOM **autocapture** — `$click` (with an
+element locator), `$outbound`, `$scroll`, `$form`, `$vitals` — which a bundled app
+does not need and a plain page cannot get. Manual API: `window.hanzo.track()` /
+`identify()` / `page()`.
+
+> The tag used to live in `hanzoai/analytics` and post a **bare JSON array** of
+> `{site, ts, type, path, …}` to `analytics.hanzo.ai/v1/event` — a second protocol
+> behind an identical path spelling, served by a second collector with its own
+> database. `POST api.hanzo.ai/v1/event {"batch":[]}` answered 200 while
+> `POST analytics.hanzo.ai/v1/event []` answered 204, and a client pointed at the
+> wrong host failed silently. Both the second door and the second collector are
+> deleted. One wire, one door, one client home — this package.
 
 - **Batched** with a size + interval flush, and **beacon-on-unload**
   (`sendBeacon` for cookie/publishable-key apps, `fetch(keepalive)` for token apps).
