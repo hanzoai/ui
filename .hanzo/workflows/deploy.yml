@@ -29,7 +29,14 @@ concurrency:
 
 jobs:
   image:
-    runs-on: ubuntu-latest
+    # hanzo-build-linux-amd64, not ubuntu-latest. This file lives in
+    # .hanzo/workflows, which GitHub never reads -- git.hanzo.ai is the only
+    # thing that can run it, and the fleet deliberately advertises no generic
+    # ubuntu-* label (~1400 mirrored forks all ask for it; one bad job was
+    # retried ~520 times across 10 runners). An unmatched label is not an
+    # error here, it is silence: the job queues until the 24h timeout, so this
+    # deploy has never produced an image and nothing ever said so.
+    runs-on: hanzo-build-linux-amd64
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
