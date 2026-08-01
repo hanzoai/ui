@@ -181,6 +181,108 @@ describe('Analytics capture', () => {
     }
   })
 
+  // Stamping the location on EVERY event multiplied an exposure that used to
+  // cost one row per page load: a reset/invite/magic link carries a JWT in the
+  // query and an address in `?email=`, so without scrubbing, every click on that
+  // page ships both to the warehouse in cleartext. The error plane has always
+  // scrubbed its free text; the location field is free text too.
+  describe('location scrubbing', () => {
+    const withLocation = (href: string, referrer: string, fn: () => void) => {
+      const g = globalThis as Record<string, unknown>
+      const hadWindow = 'window' in g
+      const hadDocument = 'document' in g
+      const u = new URL(href)
+      g.window = {
+        location: { href, pathname: u.pathname, search: u.search },
+        addEventListener: () => {},
+      }
+      g.document = { referrer, visibilityState: 'visible' }
+      try {
+        fn()
+      } finally {
+        if (!hadWindow) delete g.window
+        if (!hadDocument) delete g.document
+      }
+    }
+
+    const SECRET_URL =
+      'https://hanzo.ai/invite/accept?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA&email=cfo@acme.com'
+
+    it('redacts a secret and PII from the url of every event kind', () => {
+      withLocation(SECRET_URL, '', () => {
+        const a = mk()
+        a.capture('$click')
+        a.pageview()
+        a.flush()
+
+        // Both kinds, because pageview() reaches the wire through a different
+        // branch than autocapture does.
+        for (const e of tx.all) {
+          expect(e.url).not.toContain('eyJhbGciOiJIUzI1NiJ9')
+          expect(e.url).not.toContain('cfo@acme.com')
+          expect(e.url).toContain('[redacted]')
+          expect(e.url).toContain('[email]')
+          // Scrubbed, not dropped — the page is still attributable, which is the
+          // whole reason the field is stamped.
+          expect(e.url).toContain('https://hanzo.ai/invite/accept')
+        }
+      })
+    })
+
+    // pageview() used to pass its own `url` through `...extra`, which merges
+    // AFTER the field build() reads — so scrubbing only the read would have left
+    // the highest-volume event emitting the raw location. The scrub runs on the
+    // assembled record precisely so no call site can route around it.
+    it('cannot be bypassed by a call site that supplies its own location', () => {
+      withLocation(SECRET_URL, '', () => {
+        const a = mk()
+        a.pageview('/invite/accept?token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.QWxnSWdub3JlZA')
+        a.flush()
+        const view = tx.all.find((e) => e.type === 'pageview')!
+        expect(view.path).not.toContain('eyJhbGciOiJIUzI1NiJ9')
+        expect(view.path).toContain('[redacted]')
+      })
+    })
+
+    // document.referrer is the previous page's full URL and is stamped on every
+    // event, so it leaks the same way the current location does.
+    it('redacts the referrer', () => {
+      withLocation('https://hanzo.ai/dashboard', SECRET_URL, () => {
+        const a = mk()
+        a.capture('$click')
+        a.flush()
+        expect(tx.all[0].referrer).not.toContain('eyJhbGciOiJIUzI1NiJ9')
+        expect(tx.all[0].referrer).not.toContain('cfo@acme.com')
+      })
+    })
+
+    // capturePII is an explicit opt-in for END-USER identifiers. It is NOT a
+    // mode that ships credentials: there is no configuration under which a
+    // secret leaves the browser.
+    it('still redacts secrets when capturePII is enabled', () => {
+      withLocation(SECRET_URL, '', () => {
+        const a = mk({ capturePII: true })
+        a.capture('$click')
+        a.flush()
+        expect(tx.all[0].url).not.toContain('eyJhbGciOiJIUzI1NiJ9')
+        expect(tx.all[0].url).toContain('[redacted]')
+        expect(tx.all[0].url).toContain('cfo@acme.com')
+      })
+    })
+
+    // A redactor that mangles ordinary URLs would destroy the analytics it
+    // exists to protect, so the common case must pass through byte-for-byte.
+    it('leaves an ordinary url untouched', () => {
+      withLocation('https://hanzo.ai/pricing?plan=pro&utm_source=x', '', () => {
+        const a = mk()
+        a.capture('$click')
+        a.flush()
+        expect(tx.all[0].url).toBe('https://hanzo.ai/pricing?plan=pro&utm_source=x')
+        expect(tx.all[0].path).toBe('/pricing')
+      })
+    })
+  })
+
   it('auto-flushes when the batch size is reached', () => {
     const a = mk({ batchSize: 3 })
     a.capture('a')
