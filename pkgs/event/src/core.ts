@@ -45,6 +45,7 @@ import {
 } from './attribution'
 import { dsnForProduct } from './dsn'
 import { PAGEVIEW } from './events'
+import { scrubText } from './scrub'
 import {
   buildEnvelope,
   buildSentryEvent,
@@ -311,9 +312,12 @@ export class Analytics {
 
   /** pageview records a $pageview for the current (or given) location. */
   pageview(path?: string, properties?: Record<string, unknown>): void {
-    const url = isBrowser() ? window.location.href : undefined
+    // No `url` here: build() reads window.location.href for every event, in the
+    // same tick, so this recomputed it to the identical value. Only `path` is
+    // passed, because a route change fires before window.location has caught up
+    // and the caller's value has to win.
     const p = path ?? (isBrowser() ? window.location.pathname : undefined)
-    this.enqueue('pageview', PAGEVIEW, { url, path: p, properties })
+    this.enqueue('pageview', PAGEVIEW, { path: p, properties })
   }
 
   /** capture records a named product event with optional properties. Commerce
@@ -467,7 +471,7 @@ export class Analytics {
 
   private build(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): WireEvent {
     const anon = anonId()
-    return {
+    const wire: WireEvent = {
       messageId: uid(),
       type: kind,
       event,
@@ -500,6 +504,32 @@ export class Analytics {
       libraryVersion: VERSION,
       ...extra,
     }
+
+    // A location is free text an attacker (or an ordinary product flow) controls,
+    // and it is now stamped on EVERY event rather than only pageviews — so the
+    // one field that is always a URL gets the same policy the error plane has
+    // always applied to error text. A password-reset, invite or magic link puts
+    // a JWT in the query and an address in `?email=`; without this, one click on
+    // that page ships both to the warehouse in cleartext, and every later click
+    // repeats it.
+    //
+    // AFTER `...extra`, deliberately. A call site can pass its own location —
+    // pageview() passes `path`, and until this commit it passed `url` too — and
+    // `extra` merges over the fields read above, so scrubbing at the read would
+    // have left the highest-volume event emitting a raw location while looking
+    // scrubbed. Applied to the ASSEMBLED record, the guarantee holds for every
+    // call site, including ones not written yet.
+    //
+    // `scrubText` is the SAME policy as the error plane (secrets always,
+    // PII unless capturePII) rather than a second URL-specific redactor: one
+    // definition of "must not leave the browser", already tested, mirroring the
+    // server's. Guarded on presence so an absent field stays absent instead of
+    // becoming the empty string that `host` derivation reads as a page.
+    const capturePII = this.cfg.capturePII ?? false
+    if (wire.url) wire.url = scrubText(wire.url, capturePII)
+    if (wire.path) wire.path = scrubText(wire.path, capturePII)
+    if (wire.referrer) wire.referrer = scrubText(wire.referrer, capturePII)
+    return wire
   }
 
   private schedule(): void {
