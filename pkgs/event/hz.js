@@ -32,7 +32,7 @@
   if (navigator.doNotTrack === '1' || navigator.doNotTrack === 'yes' || window.hzDNT) return
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.7'
+  var VERSION = '0.3.8'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
