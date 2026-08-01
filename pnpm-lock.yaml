@@ -952,9 +952,6 @@ importers:
       '@hanzo/canvas':
         specifier: '>=0.1.0'
         version: link:../../pkgs/canvas
-      '@hanzo/cd':
-        specifier: '>=0.1.0'
-        version: link:../../pkgs/cd
       '@hanzo/dashboard':
         specifier: '>=0.1.0'
         version: 0.2.0(@hanzo/gui@8.0.0(react-dom@19.2.4(react@19.2.4))(react-native@0.86.0(@babel/core@7.29.7)(@react-native/metro-config@0.86.0(@babel/core@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10))(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -983,6 +980,9 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
     devDependencies:
+      '@hanzo/cd':
+        specifier: workspace:*
+        version: link:../../pkgs/cd
       '@hanzo/data':
         specifier: 1.2.1
         version: link:../data
@@ -1068,6 +1068,21 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+
+  pkgs/annotate:
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.9.5
+      tsup:
+        specifier: ^8.5.1
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.0
+        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
 
   pkgs/canvas:
     devDependencies:
