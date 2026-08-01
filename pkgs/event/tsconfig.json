@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    // tsup's declaration worker composes `baseUrl` into its config, which
+    // TypeScript 6 rejects outright. Without this the .d.ts build fails while
+    // the JS build succeeds, so the package publishes with no types at all --
+    // silently, since `tsup` still exits after writing dist/*.mjs.
+    "ignoreDeprecations": "6.0",
     "target": "ES2020",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
