@@ -79,6 +79,38 @@
       headers: { 'content-type': 'application/json' },
     }).catch(function () {})
   }
+  // ── location redaction ────────────────────────────────────────────────────
+  // The same policy src/scrub.ts applies in the npm client, restated here because
+  // this file has no bundler and therefore cannot import it: a reset, invite or
+  // magic link carries a JWT in the query and an address in `?email=`, and the
+  // location is stamped on EVERY event — so without this, one page load ships the
+  // credential to the warehouse and every later click repeats it.
+  //
+  // Deliberately a SUBSET: the shapes that actually appear in a URL. Free-text
+  // error scrubbing (PANs, private keys, stack text) has no counterpart here
+  // because this distribution has no error plane. Keep the markers identical to
+  // scrub.ts — a warehouse row must not reveal which distribution wrote it.
+  var SECRETS = [
+    /eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{6,}\.[A-Za-z0-9_-]{6,}/g, // JWT
+    /\bbearer\s+[A-Za-z0-9._~+/-]{12,}=*/gi,
+    /\b(?:sk|pk|rk)-[A-Za-z0-9]{2,}-?[A-Za-z0-9]{12,}/g,
+    /\b(?:sk|pk)_(?:live|test)_[A-Za-z0-9]{16,}/g,
+    /\bhk-[A-Za-z0-9]{16,}/g,
+    /\bgh[posru]_[A-Za-z0-9]{20,}/g,
+    /\bAIza[0-9A-Za-z_-]{20,}/g,
+    /\bAKIA[0-9A-Z]{16}\b/g,
+    // Bounded like scrub.ts's: the unbounded form backtracks quadratically on
+    // colon-rich text that never reaches an '@'.
+    /[a-zA-Z][a-zA-Z0-9+.-]{0,32}:\/\/[^\s:@/]{1,256}:[^\s@/]{1,256}@/g,
+  ]
+  var EMAIL = /[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,255}\.[A-Za-z]{2,24}/g
+  function clean(u) {
+    if (!u) return u
+    if (u.length > 8192) u = u.slice(0, 8192) + '… [truncated]'
+    for (var i = 0; i < SECRETS.length; i++) u = u.replace(SECRETS[i], '[redacted]')
+    return u.replace(EMAIL, '[email]')
+  }
+
   // send builds ONE WireEvent — the same shape core.ts build() produces, so the
   // server cannot tell which distribution emitted it.
   function send(kind, event, props) {
@@ -92,9 +124,9 @@
       personId: person || undefined,
       sessionId: sid,
       product: product,
-      url: location.href,
-      path: location.pathname,
-      referrer: document.referrer || undefined,
+      url: clean(location.href),
+      path: clean(location.pathname),
+      referrer: clean(document.referrer) || undefined,
       properties: props || undefined,
       library: LIB,
       libraryVersion: VERSION,
@@ -117,7 +149,9 @@
     }
     var txt = (el.innerText || el.value || '').trim().replace(/\s+/g, ' ').slice(0, 80)
     if (txt) o.text = txt
-    if (el.getAttribute && el.getAttribute('href')) o.href = el.getAttribute('href')
+    // A link target is a URL like any other — a share/invite href carries the
+    // same token shapes the page URL does.
+    if (el.getAttribute && el.getAttribute('href')) o.href = clean(el.getAttribute('href'))
     if (el.dataset) for (var k in el.dataset) if (k !== 'hz') (o.data = o.data || {})[k] = el.dataset[k]
     var p = [],
       n = el,
@@ -170,7 +204,7 @@
         var loc = locator(el)
         send('event', '$click', loc)
         if (el.tagName === 'A' && el.host && el.host !== location.host)
-          send('event', '$outbound', { url: el.href, el: loc })
+          send('event', '$outbound', { url: clean(el.href), el: loc })
       },
       true,
     )
