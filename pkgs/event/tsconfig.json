@@ -1,10 +1,29 @@
 {
   "compilerOptions": {
-    // tsup's declaration worker composes `baseUrl` into its config, which
-    // TypeScript 6 rejects outright. Without this the .d.ts build fails while
-    // the JS build succeeds, so the package publishes with no types at all --
-    // silently, since `tsup` still exits after writing dist/*.mjs.
-    "ignoreDeprecations": "6.0",
+    // No `ignoreDeprecations` here, and it must stay that way while this package
+    // builds on TypeScript 5.
+    //
+    // tsup's declaration worker injects `baseUrl: compilerOptions.baseUrl || "."`
+    // (tsup/dist/rollup.js) whether or not this file sets one, so the deprecation
+    // cannot be avoided by not writing it. The accepted value of the escape hatch
+    // is version-specific and the two are mutually exclusive — measured, all six
+    // cells, `tsup` in pkgs/event:
+    //
+    //                     TS 5.9.3 (declared here)   TS 6.0.3 (repo root)
+    //   absent            exit 0, 3 .d.ts            exit 1, TS5101
+    //   "5.0"             exit 0, 3 .d.ts            exit 1, TS5101
+    //   "6.0"             exit 1, TS5103             exit 0, 3 .d.ts
+    //
+    // devDependencies pin `typescript: ^5.9.3` (<6), and publish.yml builds via
+    // `pnpm --filter @hanzo/event... build`, which resolves THIS package's
+    // TypeScript — so CI is always the left column and "6.0" fails the release
+    // outright. "5.0" is not a compromise: it is byte-identical to absent under
+    // 5.9.3 and still TS5101s under 6. Absent is therefore the only correct
+    // value, and the minimal one.
+    //
+    // Every failing cell exits 1, so this can never publish a typeless tarball
+    // by accident; publish.yml additionally asserts the `types` entrypoint
+    // exists before it ships. Revisit only together with the version pin above.
     "target": "ES2020",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "jsx": "react-jsx",
