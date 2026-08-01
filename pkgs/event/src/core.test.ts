@@ -2,6 +2,20 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { Analytics, VERSION } from './core'
 import { EVENTS, PAGEVIEW } from './events'
 import type { Transport, WireEvent } from './types'
+import pkg from '../package.json' with { type: 'json' }
+
+// VERSION is stamped on every event as `libraryVersion`, and it is the only way
+// to tell from the warehouse which build emitted a row. It is hand-maintained
+// (it lives alone to keep sentry.ts from importing core.ts), so it silently fell
+// a release behind: 0.3.4 shipped stamping "0.3.3", making its rows
+// indistinguishable from the previous release's. Every other assertion compares
+// VERSION to itself and so cannot catch that. This one pins it to the version
+// actually published.
+describe('VERSION', () => {
+  it('matches the published package version', () => {
+    expect(VERSION).toBe(pkg.version)
+  })
+})
 
 interface Sent {
   url: string
