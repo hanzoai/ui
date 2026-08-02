@@ -32,15 +32,36 @@
   if (navigator.doNotTrack === '1' || navigator.doNotTrack === 'yes' || window.hzDNT) return
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.8'
+  var VERSION = '0.3.9'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
 
-  function uid() {
-    return crypto.randomUUID
-      ? crypto.randomUUID()
-      : Date.now().toString(36) + '.' + Math.random().toString(36).slice(2)
+  // uuidv7 (RFC 9562 §5.7) — the same minter as src/uid.ts, restated here for the
+  // same reason `clean` restates scrub.ts: this file has no bundler and cannot
+  // import it. It has to be v7. The session rollups on the plane derive a session's
+  // start instant from the 48-bit millisecond timestamp the id carries and admit
+  // only ids whose version nibble is 7, so a crypto.randomUUID() (v4) session id —
+  // and equally the old base36 fallback, which does not even parse as a UUID — is
+  // dropped there silently and the session never appears.
+  function uid(now) {
+    var b = new Uint8Array(16),
+      i
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) crypto.getRandomValues(b)
+    else for (i = 0; i < 16; i++) b[i] = (Math.random() * 256) | 0
+    var t = Math.floor(now || Date.now())
+    for (i = 5; i >= 0; i--) {
+      b[i] = t % 256
+      t = Math.floor(t / 256)
+    }
+    b[6] = 0x70 | (b[6] & 0x0f) // version 7
+    b[8] = 0x80 | (b[8] & 0x3f) // variant 0b10
+    var h = ''
+    for (i = 0; i < 16; i++) {
+      h += (b[i] + 0x100).toString(16).slice(1)
+      if (i === 3 || i === 5 || i === 7 || i === 9) h += '-'
+    }
+    return h
   }
   function stored(store, key) {
     try {
