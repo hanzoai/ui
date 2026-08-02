@@ -543,19 +543,19 @@ export class Commerce {
     },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST', body: params, token,
     })
   }
 
   async listPaymentMethods(customerId: string, token?: string): Promise<PaymentMethod[]> {
-    return this.request<PaymentMethod[]>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod[]>('/v1/billing/methods', {
       params: { customerId }, token,
     })
   }
 
   async removePaymentMethod(paymentMethodId: string, token?: string): Promise<void> {
-    await this.request<void>(`/v1/billing/payment-methods/${paymentMethodId}`, {
+    await this.request<void>(`/v1/billing/methods/${paymentMethodId}`, {
       method: 'DELETE', token,
     })
   }
@@ -714,7 +714,7 @@ export class Commerce {
     },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST',
       body: { customerId: params.customerId, type: 'bank_account', plaidToken: params.plaidToken, bankName: params.bankName, accountType: params.accountType },
       token,
@@ -725,7 +725,7 @@ export class Commerce {
     params: { customerId: string; chain: string; address: string; label?: string },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST',
       body: { customerId: params.customerId, type: 'crypto', chain: params.chain, address: params.address, label: params.label },
       token,
