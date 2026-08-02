@@ -28,8 +28,14 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 # Workspace packages the app imports must be built first: their package.json
-# exports point at dist/.
-RUN cd pkgs/ui && pnpm build
+# exports point at dist/. Only @hanzo/event qualifies -- .npmrc sets
+# link-workspace-packages=true and the lockfile resolves it to link:../pkgs/event.
+#
+# There used to be a `cd pkgs/ui` line here. pkgs/ui was @hanzo/ui-shadcn, deleted
+# in 5dbdb2943 when shadcn was consolidated to one home, and that commit did not
+# touch this file -- so every build since has run `cd` into a directory that does
+# not exist and died with exit code 2 before compiling anything. The app takes
+# @hanzo/ui from the registry now (npm:@hanzo/ui-shadcn@^5), not the workspace.
 RUN cd pkgs/event && pnpm build
 
 # Builds the component registry, then the site (app/package.json build script).
