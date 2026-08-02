@@ -25,15 +25,6 @@
  * })
  * window.location.href = session.checkoutUrl
  *
- * // Tokenize a card (S2S — no external SDK required)
- * const token = await commerce.tokenizeCard({
- *   number: '4242424242424242',
- *   expiryMonth: '12',
- *   expiryYear: '2027',
- *   cvc: '123',
- *   name: 'Jane Smith',
- * })
- *
  * // Subscribe
  * const sub = await commerce.subscribe({ planId: 'pro', userId: 'user_xyz' })
  * ```
@@ -252,28 +243,6 @@ export type CheckoutSessionResponse = {
     amount: number
     discountCents: number
   }
-}
-
-// ---------------------------------------------------------------------------
-// Card tokenization (S2S — no provider SDK needed on the frontend)
-// ---------------------------------------------------------------------------
-
-export type CardTokenizeRequest = {
-  number: string
-  expiryMonth: string   // "01"–"12"
-  expiryYear: string    // "2025"–"2099"
-  cvc: string
-  name?: string
-  zip?: string
-}
-
-export type CardTokenizeResult = {
-  token: string
-  brand: string
-  last4: string
-  expiryMonth: string
-  expiryYear: string
-  provider: string
 }
 
 // ---------------------------------------------------------------------------
@@ -561,31 +530,6 @@ export class Commerce {
   }
 
   // -----------------------------------------------------------------------
-  // Card tokenization (S2S — no external SDK required)
-  // -----------------------------------------------------------------------
-
-  /**
-   * Tokenize a payment card server-side.
-   * No external SDK (Square.js, Stripe.js, etc.) is needed on the frontend.
-   * The card data is sent to the Hanzo Commerce API over HTTPS, which
-   * tokenizes via the configured payment provider (Stripe).
-   */
-  async tokenizeCard(card: CardTokenizeRequest, token?: string): Promise<CardTokenizeResult> {
-    return this.request<CardTokenizeResult>('/v1/billing/card/tokenize', {
-      method: 'POST',
-      body: {
-        number: card.number.replace(/\s/g, ''),
-        expiry_month: card.expiryMonth,
-        expiry_year: card.expiryYear,
-        cvc: card.cvc,
-        name: card.name,
-        zip: card.zip,
-      },
-      token,
-    })
-  }
-
-  // -----------------------------------------------------------------------
   // Payment methods
   // -----------------------------------------------------------------------
 
@@ -593,25 +537,25 @@ export class Commerce {
     params: {
       customerId: string
       type: PaymentMethodType
-      token?: string          // from tokenizeCard
+      token?: string          // provider nonce (Square Web Payments SDK)
       providerRef?: string
       providerType?: string
     },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST', body: params, token,
     })
   }
 
   async listPaymentMethods(customerId: string, token?: string): Promise<PaymentMethod[]> {
-    return this.request<PaymentMethod[]>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod[]>('/v1/billing/methods', {
       params: { customerId }, token,
     })
   }
 
   async removePaymentMethod(paymentMethodId: string, token?: string): Promise<void> {
-    await this.request<void>(`/v1/billing/payment-methods/${paymentMethodId}`, {
+    await this.request<void>(`/v1/billing/methods/${paymentMethodId}`, {
       method: 'DELETE', token,
     })
   }
@@ -770,7 +714,7 @@ export class Commerce {
     },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST',
       body: { customerId: params.customerId, type: 'bank_account', plaidToken: params.plaidToken, bankName: params.bankName, accountType: params.accountType },
       token,
@@ -781,7 +725,7 @@ export class Commerce {
     params: { customerId: string; chain: string; address: string; label?: string },
     token?: string,
   ): Promise<PaymentMethod> {
-    return this.request<PaymentMethod>('/v1/billing/payment-methods', {
+    return this.request<PaymentMethod>('/v1/billing/methods', {
       method: 'POST',
       body: { customerId: params.customerId, type: 'crypto', chain: params.chain, address: params.address, label: params.label },
       token,
