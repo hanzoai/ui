@@ -61,6 +61,7 @@ import {
   getCohort,
   mergeCohort,
 } from './storage'
+import { uuidv7 } from './uid'
 import type {
   AnalyticsConfig,
   Attribution,
@@ -109,12 +110,6 @@ function readEnv(name: string): string | undefined {
  *  publishable key on a headerless sendBeacon (?ingest_key=…). */
 function appendQuery(url: string, key: string, value: string): string {
   return url + (url.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(value)
-}
-
-function uid(): string {
-  const c = typeof crypto !== 'undefined' ? crypto : undefined
-  if (c && 'randomUUID' in c) return c.randomUUID()
-  return 'm-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
 }
 
 /** Normalize anything thrown (Error | string | unknown) into an Exception. */
@@ -472,7 +467,7 @@ export class Analytics {
   private build(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): WireEvent {
     const anon = anonId()
     const wire: WireEvent = {
-      messageId: uid(),
+      messageId: uuidv7(),
       type: kind,
       event,
       timestamp: new Date().toISOString(),

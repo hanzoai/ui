@@ -8,6 +8,7 @@
 // normalizeEvent, computeFingerprint). No upstream (FSL) code is used.
 
 import { scrubText } from './scrub'
+import { uuidv7 } from './uid'
 import { VERSION } from './version'
 import type {
   CaptureErrorOptions,
@@ -28,13 +29,10 @@ const MAX_TAG_LEN = 1024
 /** Max tags copied from properties. */
 const MAX_TAGS = 50
 
-/** eventId mints a 32-hex-char id (no dashes) — the Sentry event_id shape. */
+/** eventId mints a 32-hex-char id (no dashes) — the Sentry event_id shape. Same
+ *  minter as everything else, just formatted for Sentry's wire. */
 export function eventId(): string {
-  const c = typeof crypto !== 'undefined' ? crypto : undefined
-  if (c && 'randomUUID' in c) return c.randomUUID().replace(/-/g, '')
-  let s = ''
-  for (let i = 0; i < 32; i++) s += Math.floor(Math.random() * 16).toString(16)
-  return s
+  return uuidv7().replace(/-/g, '')
 }
 
 /** byteLen returns the UTF-8 byte length used for envelope item framing. */
