@@ -3,6 +3,7 @@
 // client imports cleanly in a Next.js server component.
 
 import type { Attribution, Cohort } from './types'
+import { uuidv7 } from './uid'
 
 const KEY = {
   anon: 'hz_anon_id',
@@ -23,19 +24,13 @@ function ls(): Storage | undefined {
   }
 }
 
-function uid(): string {
-  const c = typeof crypto !== 'undefined' ? crypto : undefined
-  if (c && 'randomUUID' in c) return c.randomUUID()
-  return 'a-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
-}
-
 /** Stable anonymous id, minted once per browser and reused across sessions. */
 export function anonId(): string | undefined {
   const s = ls()
   if (!s) return undefined
   let v = s.getItem(KEY.anon)
   if (!v) {
-    v = uid()
+    v = uuidv7()
     s.setItem(KEY.anon, v)
   }
   return v
@@ -46,7 +41,14 @@ interface SessionState {
   last: number
 }
 
-/** Current session id, rotated after SESSION_TTL_MS of inactivity. */
+/**
+ * Current session id, rotated after SESSION_TTL_MS of inactivity.
+ *
+ * Minted at `now`, so the v7 timestamp the id carries IS the session's start
+ * instant — which is what the session rollups partition and order on. Passing the
+ * caller's clock rather than reading Date.now() again keeps the id's embedded time
+ * and the recorded `last` from disagreeing.
+ */
 export function sessionId(now = Date.now()): string | undefined {
   const s = ls()
   if (!s) return undefined
@@ -57,7 +59,7 @@ export function sessionId(now = Date.now()): string | undefined {
     state = null
   }
   if (!state || now - state.last > SESSION_TTL_MS) {
-    state = { id: uid(), last: now }
+    state = { id: uuidv7(now), last: now }
   } else {
     state.last = now
   }
