@@ -107,3 +107,69 @@ group('Observer', () => {
     ).not.toThrow()
   })
 })
+
+// A click's WHERE. Element identity says which thing was clicked; only a position
+// can be drawn as a heat map, and the MouseEvent carrying it used to be discarded.
+group('pointer position', () => {
+  function click(el: Element, init: MouseEventInit): void {
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true, ...init }))
+  }
+
+  it('carries the pointer position and the viewport it was measured in', () => {
+    document.body.innerHTML = '<button>x</button>'
+    start()
+    click(document.querySelector('button')!, { clientX: 120, clientY: 340 })
+
+    expect(sink).toHaveLength(1)
+    expect(sink[0].props).toMatchObject({
+      $x: 120,
+      $y: 340,
+      $target_fixed: false,
+      $viewport_width: window.innerWidth,
+      $viewport_height: window.innerHeight,
+    })
+  })
+
+  it('keeps the element identity it always had', () => {
+    document.body.innerHTML = '<section data-hz-name="Card"><button data-testid="save">Save</button></section>'
+    start()
+    click(document.querySelector('button')!, { clientX: 1, clientY: 2 })
+    expect(sink[0].semantic.label).toBe('Card/button[save]')
+    expect(sink[0].props).toMatchObject({ $x: 1, $y: 2 })
+  })
+
+  it('measures a scrolled page in page coordinates', () => {
+    document.body.innerHTML = '<button>x</button>'
+    vi.spyOn(window, 'scrollX', 'get').mockReturnValue(15)
+    vi.spyOn(window, 'scrollY', 'get').mockReturnValue(600)
+    start()
+    click(document.querySelector('button')!, { clientX: 10, clientY: 40 })
+    expect(sink[0].props).toMatchObject({ $x: 25, $y: 640, $target_fixed: false })
+    vi.restoreAllMocks()
+  })
+
+  it('measures a fixed target against the viewport it stays pinned to', () => {
+    document.body.innerHTML = '<nav style="position:fixed"><button>x</button></nav>'
+    vi.spyOn(window, 'scrollY', 'get').mockReturnValue(600)
+    start()
+    click(document.querySelector('button')!, { clientX: 10, clientY: 40 })
+    expect(sink[0].props).toMatchObject({ $x: 10, $y: 40, $target_fixed: true })
+    vi.restoreAllMocks()
+  })
+
+  it('contributes no position for an event that has no pointer', () => {
+    document.body.innerHTML = '<button>x</button>'
+    start()
+    document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(sink).toHaveLength(1)
+    expect(sink[0].props?.$x).toBeUndefined()
+  })
+
+  it('positions only a click — an input carries no coordinates', () => {
+    document.body.innerHTML = '<input name="q" value="">'
+    start()
+    document.querySelector('input')!.dispatchEvent(new Event('change', { bubbles: true }))
+    expect(sink[0].kind).toBe('change')
+    expect(sink[0].props?.$x).toBeUndefined()
+  })
+})

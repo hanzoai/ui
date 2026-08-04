@@ -78,4 +78,4 @@ projection in `@hanzo/observe`. One vocabulary across web, mobile, and desktop.
 
 ## License
 
-BSD-3-Clause © Hanzo AI
+MIT © Hanzo AI — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).
