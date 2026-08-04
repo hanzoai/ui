@@ -22,7 +22,7 @@
   "scripts": {
     "lat": "npm show @hanzo/commerce version",
     "pub": "npm publish",
-    "tc": "tsgo --noEmit",
+    "tc": "tsc --noEmit",
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
   "exports": {

@@ -20,8 +20,8 @@
     "src"
   ],
   "scripts": {
-    "tc": "tsgo --noEmit",
-    "typecheck": "tsgo --noEmit",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true",
     "test": "bun test"
   },

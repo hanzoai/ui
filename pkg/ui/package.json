@@ -157,9 +157,9 @@
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
-    "tc": "tsgo --noEmit",
-    "typecheck": "tsgo --noEmit",
-    "typecheck:ui": "tsgo -p tsconfig.check.json",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "typecheck:ui": "tsc -p tsconfig.check.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\""
