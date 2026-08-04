@@ -72,7 +72,7 @@ export function TimeseriesTileView({ tile, data, loading }: { tile: TimeseriesTi
   const total = points.reduce((s, p) => s + p.value, 0)
 
   return (
-    <Panel title={tile.title} flex={1} right={points.length ? <Text fontSize="$2" color="$color10" className="hz-tnum">{fmt(total)}</Text> : undefined}>
+    <Panel title={tile.title} flex={1} right={points.length ? <Text fontSize="$2" color="$color10" className="tnum">{fmt(total)}</Text> : undefined}>
       {loading && series === undefined ? (
         <SkeletonBar w="100%" h={200} />
       ) : points.length < 2 ? (
@@ -110,7 +110,7 @@ export function DistributionTileView({ tile, data, loading }: { tile: Distributi
             slices={slices}
             center={
               <>
-                <Text fontSize="$5" fontWeight="500" color="$color12" className="hz-tnum">
+                <Text fontSize="$5" fontWeight="500" color="$color12" className="tnum">
                   {fmt(total)}
                 </Text>
                 {tile.centerLabel ? (
@@ -136,10 +136,10 @@ export function DistributionTileView({ tile, data, loading }: { tile: Distributi
                   ) : null}
                 </YStack>
                 <YStack items="flex-end">
-                  <Text fontSize="$3" fontWeight="500" color="$color12" className="hz-tnum">
+                  <Text fontSize="$3" fontWeight="500" color="$color12" className="tnum">
                     {fmt(s.value)}
                   </Text>
-                  <Text fontSize="$1" color="$color10" className="hz-tnum">
+                  <Text fontSize="$1" color="$color10" className="tnum">
                     {Math.round((s.value / total) * 100)}%
                   </Text>
                 </YStack>

@@ -60,7 +60,7 @@ try {
 
   const gui = config.getCSS()
   const tokens = readFileSync(join(UI, 'src/theme.css'), 'utf8')
-  const motion = readFileSync(join(UI, 'src/styles/hanzo-motion.css'), 'utf8')
+  const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
 
   // `--hanzo-ui-styles` is what <Hanzo> looks up to tell a consumer, in
   // development, that this file never reached the document.

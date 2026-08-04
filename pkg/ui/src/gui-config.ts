@@ -24,7 +24,7 @@ import { createGui } from '@hanzo/gui'
 // product moves. Adding a fourth spelling of a size is the thing to refuse.
 //
 // Canonical face: Geist Sans for UI, Geist Mono for anything numeric/code/id
-// (`.hz-mono`). The host self-hosts both faces (its own fonts.css) — this only
+// (`.mono`). The host self-hosts both faces (its own fonts.css) — this only
 // names them.
 // ─────────────────────────────────────────────────────────────────────────────
 
