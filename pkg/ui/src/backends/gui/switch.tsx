@@ -18,6 +18,9 @@ const Switch = (props: SwitchProps) => (
     height={TRACK_H}
     padding={2}
     flexShrink={0}
+    // Without an explicit border the UA's 2px outset button border shows.
+    borderWidth={1}
+    borderColor="$borderColor"
     {...touch(TRACK_H, 44, 'y')}
     {...props}
   >
