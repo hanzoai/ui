@@ -39,7 +39,7 @@
     "build": "npm run clean && tsup --config tsup.config.ts && tsc --emitDeclarationOnly --declaration --outDir dist",
     "build:watch": "tsup --watch",
     "clean": "rm -rf dist",
-    "tc": "tsc --noEmit",
+    "tc": "tsgo --noEmit",
     "prepublishOnly": "npm run build"
   },
   "exports": {
