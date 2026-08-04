@@ -1,0 +1,26 @@
+# The whole caller. Every decision this pipeline makes — what to test, what to
+# build, where to roll it — is read from the root hanzo.yml, so this file only
+# ever names the triggers and the reusable.
+#
+# `.hanzo/workflows`, not `.github/workflows`, and that is not a style choice:
+# CI for this repo runs on git.hanzo.ai, which resolves ONLY `.hanzo/workflows`.
+# github.com has zero self-hosted runners registered for the `hanzo-build-*`
+# labels this pipeline asks for, so the same file under `.github/workflows`
+# would queue there forever and never report anything at all.
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cicd:
+    uses: hanzoai/ci/.hanzo/workflows/build.yml@v1
+    secrets: inherit
