@@ -12,6 +12,7 @@ import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react'
 import { slot } from './slot'
 import { touch } from './gesture'
+import { FOCUS } from './focus'
 
 const HEIGHT = 36
 const GUTTER = 12
@@ -57,6 +58,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       bg="transparent"
       borderWidth={1}
       borderColor="$borderColor"
+      {...FOCUS}
       placeholderTextColor="$color10"
       fontSize="$3"
       pl={startAdornment ? WELL : GUTTER}

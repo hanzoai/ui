@@ -51,15 +51,22 @@ jobs:
               *) continue ;;
             esac
 
-            # Check version changed
-            if git diff HEAD~1 HEAD --quiet "$pkg_json" 2>/dev/null; then
-              continue
-            fi
-
-            OLD=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
+            # What npm SERVES, not what the previous commit said. HEAD~1 is the
+            # FIRST PARENT, so a merge whose first parent is the feature branch
+            # already carries the new version and the diff is empty — the publish
+            # is skipped and npm keeps serving the old release, silently. Asking
+            # the registry is independent of merge topology and of how many
+            # commits the runner fetched.
             NEW=$(jq -r '.version' "$pkg_json")
+            OLD=$(curl -sf "https://registry.npmjs.org/${PKG_NAME}" \
+                    | jq -r '."dist-tags".latest // "0.0.0"' 2>/dev/null || echo "0.0.0")
 
-            if [ "$OLD" != "$NEW" ]; then
+            # FORWARD ONLY. `!=` fires in both directions, and several packages
+            # sit BEHIND npm (a release cut elsewhere, a revert) — publishing
+            # those walks the registry backwards. Only a strictly greater local
+            # version is a release.
+            NEWEST=$(printf '%s\n%s\n' "$OLD" "$NEW" | sort -V | tail -1)
+            if [ "$OLD" != "$NEW" ] && [ "$NEWEST" = "$NEW" ]; then
               echo "Version change: $PKG_NAME ($OLD -> $NEW)"
               # The package NAME, because every downstream step spends this as a
               # `pnpm --filter` argument and a directory basename matches nothing.
@@ -81,6 +88,9 @@ jobs:
     if: needs.detect-changes.outputs.packages != '[]'
     runs-on: hanzo-build-linux-amd64
     strategy:
+      # One package's broken build must not withhold every other package's
+      # release: the matrix legs are independent publishes, not one artifact.
+      fail-fast: false
       matrix:
         package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
     steps:
@@ -167,12 +177,11 @@ jobs:
           KMS_ENDPOINT: ${{ vars.KMS_ENDPOINT || 'https://kms.hanzo.ai' }}
           KMS_ORG: ${{ vars.KMS_ORG || 'hanzo' }}
           KMS_SECRET_ENV: ${{ vars.KMS_SECRET_ENV || 'prod' }}
-          # Where the token actually lives. deploy/ is the path the sibling
-          # workflows read Cloudflare creds from, so it is the default -- but it
-          # is a GUESS for this secret, and a wrong guess 404s. Set the
-          # KMS_NPM_PATH variable on the repo or org to correct it without
-          # editing this file.
-          KMS_NPM_PATH: ${{ vars.KMS_NPM_PATH || 'deploy' }}
+          # Where the token actually lives, MEASURED: NPM_TOKEN sits at the org
+          # root, not under deploy/ (which holds CLOUDFLARE_*, GIT_TOKEN,
+          # KUBECONFIG, UNIVERSE_PIN_TOKEN). Empty means root; set the
+          # KMS_NPM_PATH variable to move it without editing this file.
+          KMS_NPM_PATH: ${{ vars.KMS_NPM_PATH || '' }}
         run: |
           token=$(curl -fsS "${KMS_ENDPOINT}/v1/kms/auth/login" \
             -H 'Content-Type: application/json' \
@@ -182,12 +191,15 @@ jobs:
             echo "::error::KMS login failed at ${KMS_ENDPOINT}/v1/kms/auth/login (check KMS_CLIENT_ID/KMS_CLIENT_SECRET)."
             exit 1
           fi
+          # The read is org-scoped by the TOKEN's owner claim, not by a path
+          # segment: the flat form is the contract cloud's embedded KMS serves,
+          # and it answers {name, env, value}. The older
+          # /v1/kms/orgs/<org>/secrets/... form with .secret.value 404s here.
+          secret_url="${KMS_ENDPOINT}/v1/kms/secrets/${KMS_NPM_PATH:+${KMS_NPM_PATH}/}NPM_TOKEN?env=${KMS_SECRET_ENV}"
           # No -f: a 404 must report WHICH path was empty, not just exit 22.
-          npm_token=$(curl -sS \
-            "${KMS_ENDPOINT}/v1/kms/orgs/${KMS_ORG}/secrets/${KMS_NPM_PATH}/NPM_TOKEN?env=${KMS_SECRET_ENV}" \
-            -H "Authorization: Bearer ${token}" | jq -r '.secret.value // empty')
+          npm_token=$(curl -sS "${secret_url}" -H "Authorization: Bearer ${token}" | jq -r '.value // empty')
           if [ -z "${npm_token}" ]; then
-            echo "::error::No NPM_TOKEN at ${KMS_ORG}/${KMS_NPM_PATH}/NPM_TOKEN (env ${KMS_SECRET_ENV})."
+            echo "::error::No NPM_TOKEN at ${secret_url}."
             echo "::error::Put it there, or set the KMS_NPM_PATH variable to the path that has it."
             exit 1
           fi
