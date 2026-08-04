@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.40",
+  "version": "8.0.41",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -10,6 +10,13 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
+    "./gallery": {
+      "types": "./dist/gallery.d.ts",
+      "import": "./dist/gallery.js",
+      "require": "./dist/gallery.cjs",
+      "default": "./dist/gallery.js"
+    },
+    "./styles.css": "./dist/styles.css",
     "./models": {
       "types": "./dist/models/index.d.ts",
       "import": "./dist/models/index.js",
@@ -153,16 +160,18 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && cp src/theme.css dist/theme.css && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/postbuild.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && cp src/theme.css dist/theme.css && cp src/styles/hanzo-motion.css dist/styles/hanzo-motion.css && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "typecheck:ui": "tsc -p tsconfig.check.json",
-    "test": "vitest run",
+    "test": "vitest run && node scripts/consumer-test.mjs",
     "test:watch": "vitest",
-    "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\""
+    "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\"",
+    "test:consumer": "node scripts/consumer-test.mjs",
+    "test:unit": "vitest run"
   },
   "dependencies": {
     "@hanzo/logo": "^1.0.13",
@@ -226,7 +235,8 @@
     "react-dom": "^19.0.0",
     "react-native-web": "^0.21.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "@playwright/test": "^1.61.0"
   },
   "publishConfig": {
     "access": "public"
