@@ -37,8 +37,8 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf types",
     "prepack": "pnpm run build",
-    "tc": "tsgo --noEmit",
-    "typecheck": "tsgo --noEmit",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },

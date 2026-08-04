@@ -30,8 +30,6 @@ export type {
   CheckoutItem,
   CheckoutSessionRequest,
   CheckoutSessionResponse,
-  CardTokenizeRequest,
-  CardTokenizeResult,
   PaymentMethod,
   PaymentMethodType,
   Referral,

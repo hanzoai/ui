@@ -1,8 +1,7 @@
-/// <reference types="vitest/config" />
 import { fileURLToPath, URL } from "node:url"
 
 import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import { defineConfig } from "vitest/config"
 
 /**
  * Hanzo CD — a static SPA served at cd.hanzo.ai from the shared static plane
@@ -23,7 +22,7 @@ export default defineConfig({
   resolve: {
     dedupe: ["react", "react-dom"],
     alias: {
-      "@hanzo/cd": r("../../pkgs/gitops/dist/index.mjs"),
+      "@hanzo/cd": r("../../pkgs/cd/dist/index.mjs"),
       "@hanzo/canvas/pure": r("../../pkgs/canvas/src/pure.ts"),
     },
   },
