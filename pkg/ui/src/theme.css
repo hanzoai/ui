@@ -198,3 +198,15 @@
 .hz-elevation-2 { box-shadow: var(--hz-elevation-2, 0 4px 12px rgba(0, 0, 0, 0.24)); }
 .hz-elevation-3 { box-shadow: var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36)); }
 .hz-elevation-4 { box-shadow: var(--hz-elevation-4, 0 16px 48px rgba(0, 0, 0, 0.44)); }
+
+/* Glass — the ONE frosted material (see backends/gui/glass.tsx). The component
+   stands as a solid raised panel; only a browser that can actually blur the
+   backdrop trades it for the translucent material, so content never sits on
+   see-through ground without the blur. !important beats the compiled bg atom. */
+@supports (backdrop-filter: blur(8px)) {
+  [data-slot="glass"] {
+    background-color: color-mix(in oklab, var(--background) 72%, transparent) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    backdrop-filter: blur(20px) saturate(1.8);
+  }
+}
