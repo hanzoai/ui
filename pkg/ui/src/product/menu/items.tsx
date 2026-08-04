@@ -41,12 +41,31 @@ const FONT_LABEL = 13
 const FONT_MUTED = 11
 const FONT_SHORTCUT = 12
 
-// ── Colour — brand purple accent via CSS vars (fallbacks keep it correct even when
-//    @hanzo/brand is not loaded, e.g. a bare Vite/Tauri host); everything else uses
-//    theme-adaptive Tamagui tokens. ──────────────────────────────────────────────
-const ACCENT = 'var(--hanzo-accent, #8b5cf6)'
-const ACCENT_SOFT = 'var(--hanzo-accent-soft, rgba(139,92,246,0.16))'
-const DANGER = 'var(--hanzo-danger, #ef4444)'
+// ── Colour — @hanzo/design tokens, with fallbacks so a bare Vite/Tauri host that
+//    loaded no stylesheet still renders correctly; everything else uses
+//    theme-adaptive Tamagui tokens.
+//
+//    These were `var(--hanzo-accent, #8b5cf6)` and `var(--hanzo-accent-soft, …)`,
+//    described as "brand purple". Neither custom property is declared anywhere in
+//    design, gui or ui — so the fallback was not a fallback, it was the value, and
+//    this menu shipped PURPLE into a brand whose brand.json says
+//    primaryColor #FFFFFF and whose DESIGN.md says "no colored accent — the house
+//    style is monochrome". @hanzogui/shell consumed the same undefined property
+//    with a #ffffff fallback, so two repos disagreed about the colour of a
+//    variable that did not exist.
+//
+//    Each is now the token that actually names its duty:
+//      ACCENT      ink — the check on a selected row. --neutral-50 is a PALETTE
+//                  rung, identical in both themes, which is what a Tamagui
+//                  surface that may render light or dark needs.
+//      ACCENT_SOFT fill — the row wash. A --white-* rung would be white-on-white
+//                  in light, so this reads --glass-strong, which BOTH themes
+//                  define.
+//      DANGER      already correct in value; now sourced rather than copied.
+//                  --state-error IS #ef4444.
+const ACCENT = 'var(--neutral-50, #fafafa)'
+const ACCENT_SOFT = 'var(--glass-strong, rgb(255 255 255 / .08))'
+const DANGER = 'var(--state-error, #ef4444)'
 
 // ── Declarative item model ──────────────────────────────────────────────────────
 export type MenuItemSpec =
