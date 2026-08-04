@@ -60,6 +60,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "author": "Hanzo AI <dev@hanzo.ai>"
 }

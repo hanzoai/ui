@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
+import { FOCUS } from "./focus"
 
 /** Floor for the grown row count. */
 const MIN_ROWS = 3
@@ -44,6 +45,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       bg="transparent"
       borderWidth={1}
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
+      {...FOCUS}
       placeholderTextColor="$color10"
       fontSize="$3"
       opacity={props.disabled ? 0.5 : 1}

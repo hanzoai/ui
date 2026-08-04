@@ -338,7 +338,7 @@ const { streamMessage } = useStreaming({
 
 ## License
 
-BSD-3-Clause © Hanzo AI, Inc.
+MIT © Hanzo AI, Inc. — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).
 
 ## Support
 

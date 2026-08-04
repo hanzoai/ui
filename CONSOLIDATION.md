@@ -125,7 +125,7 @@ These import app `~/lib`/session/router/branding and must be made presentational
 
 New in **`pkg/ui`** (was a bare `src/` staging dir — no package):
 
-- `package.json` — `@hanzo/ui` `8.0.0`, source-published (`files: ["src"]`, exports map to `.ts`), peers `@hanzo/gui >=7.2.2`, `@hanzo/data >=1.2.0`, `react >=19`; BSD-3-Clause. Exports: `.`, `./product`, `./data`, `./primitives/bases/data`, `./styles/motion.css`.
+- `package.json` — `@hanzo/ui` `8.0.0`, source-published (`files: ["src"]`, exports map to `.ts`), peers `@hanzo/gui >=7.2.2`, `@hanzo/data >=1.2.0`, `react >=19`; MIT (repo `LICENSE.md`). Exports: `.`, `./product`, `./data`, `./primitives/bases/data`, `./styles/motion.css`.
 - `src/index.ts` — top-level barrel (product layer + tokens).
 - `src/product/index.ts` — product barrel; **collision-free** (Charts `Sparkline`/`Donut` canonical; Metric's → `MetricSparkline`; standalone ring → `DonutRing`; `ComboOption` from the one filter module) — **zero loss**.
 - `src/data.ts` — `export * from '@hanzo/data'` (the record layer, one home).
@@ -137,7 +137,7 @@ New in **`pkg/ui`** (was a bare `src/` staging dir — no package):
 
 ## Clean-room guarantee (preserved)
 
-`pkg/data` audited for GPL/Twenty contamination: **none.** No GPL, no copied license headers/SPDX, no Twenty entity/decorator architecture. The field/record model is an independent `FieldType` union + `FieldDefinition` + runtime `Map` registry (records are plain `Record<string, unknown>`). "Twenty" appears **only as benchmark prose** ("Airtable/Twenty-class polish, clean-room"). License: BSD-3-Clause. `@hanzo/ui` inherits the same posture.
+`pkg/data` audited for GPL/Twenty contamination: **none.** No GPL, no copied license headers/SPDX, no Twenty entity/decorator architecture. The field/record model is an independent `FieldType` union + `FieldDefinition` + runtime `Map` registry (records are plain `Record<string, unknown>`). "Twenty" appears **only as benchmark prose** ("Airtable/Twenty-class polish, clean-room"). License: MIT (repo `LICENSE.md`). `@hanzo/ui` inherits the same posture.
 
 ---
 

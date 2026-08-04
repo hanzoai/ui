@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.42",
+  "version": "8.0.44",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -241,6 +241,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "author": "Hanzo AI <dev@hanzo.ai>"
 }
