@@ -51,13 +51,15 @@ jobs:
               *) continue ;;
             esac
 
-            # Check version changed
-            if git diff HEAD~1 HEAD --quiet "$pkg_json" 2>/dev/null; then
-              continue
-            fi
-
-            OLD=$(git show HEAD~1:"$pkg_json" 2>/dev/null | jq -r '.version' || echo "0.0.0")
+            # What npm SERVES, not what the previous commit said. HEAD~1 is the
+            # FIRST PARENT, so a merge whose first parent is the feature branch
+            # already carries the new version and the diff is empty — the publish
+            # is skipped and npm keeps serving the old release, silently. Asking
+            # the registry is independent of merge topology and of how many
+            # commits the runner fetched.
             NEW=$(jq -r '.version' "$pkg_json")
+            OLD=$(curl -sf "https://registry.npmjs.org/${PKG_NAME}" \
+                    | jq -r '."dist-tags".latest // "0.0.0"' 2>/dev/null || echo "0.0.0")
 
             if [ "$OLD" != "$NEW" ]; then
               echo "Version change: $PKG_NAME ($OLD -> $NEW)"
