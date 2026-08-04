@@ -7,6 +7,7 @@
     { "pattern": "pkgs/*/" },
     { "pattern": "pkgs/*/" }
   ],
+  "tailwindCSS.classFunctions": ["cva", "cn"],
   "vitest.debugExclude": [
     "<node_internals>/**",
     "**/node_modules/**",
