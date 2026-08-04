@@ -83,7 +83,15 @@ const Frame = styled(GuiButton.Frame, {
         borderColor: '$borderColor',
         hoverStyle: { bg: '$color3', borderColor: '$color6' },
       },
-      primary: { bg: '$color12', color: '$color1', hoverStyle: { opacity: 0.9 } },
+      // The strongest control WITHOUT a white slab — the macOS dark pushbutton:
+      // an elevated gray fill, white text, hairline. On an otherwise quiet page
+      // this IS the loudest thing; a $color12 fill read as a glare, not a CTA.
+      primary: {
+        bg: '$color5',
+        color: '$color12',
+        borderColor: '$color6',
+        hoverStyle: { bg: '$color6', borderColor: '$color7' },
+      },
       destructive: { bg: '$red9', color: '$white1', hoverStyle: { opacity: 0.9 } },
       outline: {
         bg: '$background',
