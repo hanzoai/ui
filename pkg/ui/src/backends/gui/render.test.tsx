@@ -127,7 +127,7 @@ describe('gui backend renders', () => {
           <PopoverContent>panel</PopoverContent>
         </Popover>
         <Progress value={40} />
-        <ResizablePanelGroup>
+        <ResizablePanelGroup direction="horizontal">
           <ResizablePanel />
           <ResizableHandle />
           <ResizablePanel />
