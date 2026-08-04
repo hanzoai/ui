@@ -36,27 +36,39 @@ export interface ThemeTokens {
   sidebarRing: string
 }
 
-/** Hanzo dark theme (primary) -- oklch values */
+/** Hanzo dark theme (primary).
+ *
+ * THESE ARE @hanzo/design's VALUES, and they must stay that way. This module is
+ * the TS mirror of tokens/colors.css over there — the CSS is the source of
+ * truth, and a second set of numbers here is not a second opinion, it is drift.
+ *
+ * It had drifted: stock shadcn oklch neutrals, so `background` was oklch(0.145)
+ * — a washed near-#252525 — where the system says true black, and `card` was
+ * lighter still, which is the grey-box-on-grey look. An app built on @hanzo/ui
+ * and an app built on @hanzo/design did not resemble each other.
+ *
+ * destructiveForeground was also unreadable: oklch(0.58 0.22 27) is the same
+ * saturated red as `destructive`, so error text sat on its own background. */
 export const dark: ThemeTokens = {
-  background:              "oklch(0.145 0 0)",
-  foreground:              "oklch(0.985 0 0)",
-  card:                    "oklch(0.205 0 0)",
-  cardForeground:          "oklch(0.985 0 0)",
-  popover:                 "oklch(0.269 0 0)",
-  popoverForeground:       "oklch(0.985 0 0)",
-  primary:                 "oklch(0.922 0 0)",
-  primaryForeground:       "oklch(0.205 0 0)",
-  secondary:               "oklch(0.269 0 0)",
-  secondaryForeground:     "oklch(0.985 0 0)",
-  muted:                   "oklch(0.269 0 0)",
-  mutedForeground:         "oklch(0.708 0 0)",
-  accent:                  "oklch(0.371 0 0)",
-  accentForeground:        "oklch(0.985 0 0)",
-  destructive:             "oklch(0.704 0.191 22.216)",
-  destructiveForeground:   "oklch(0.58 0.22 27)",
-  border:                  "oklch(1 0 0 / 10%)",
-  input:                   "oklch(1 0 0 / 15%)",
-  ring:                    "oklch(0.556 0 0)",
+  background:              "#000000",
+  foreground:              "#ededed",
+  card:                    "#0a0a0a",
+  cardForeground:          "#f5f5f5",
+  popover:                 "#0a0a0a",
+  popoverForeground:       "#f5f5f5",
+  primary:                 "#ffffff",
+  primaryForeground:       "#000000",
+  secondary:               "#1a1a1a",
+  secondaryForeground:     "#f5f5f5",
+  muted:                   "#101010",
+  mutedForeground:         "#888888",
+  accent:                  "#1a1a1a",
+  accentForeground:        "#f5f5f5",
+  destructive:             "#ef4444",
+  destructiveForeground:   "#f5f5f5",
+  border:                  "#1f1f1f",
+  input:                   "#1f1f1f",
+  ring:                    "#737373",
   radius:                  "0.5rem",
   sidebar:                 "oklch(0.205 0 0)",
   sidebarForeground:       "oklch(0.985 0 0)",
