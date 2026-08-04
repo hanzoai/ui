@@ -94,7 +94,7 @@ forge script script/DeployIdentitySystem.s.sol:DeployIdentitySystem \
 
 # For Lux Mainnet
 forge script script/DeployIdentitySystem.s.sol:DeployIdentitySystem \
-  --rpc-url https://api.lux.network/ext/bc/C/rpc \
+  --rpc-url https://api.lux.network/v1/bc/C/rpc \
   --broadcast
 
 # For Zoo Mainnet
@@ -131,8 +131,8 @@ Visit `http://localhost:3333/identity` to access the identity registration page.
 |---------|----------|---------|----------|
 | Hanzo Mainnet | 36963 | https://rpc.hanzo.ai | https://explorer.hanzo.ai |
 | Hanzo Testnet | 36962 | https://testnet-rpc.hanzo.ai | https://testnet-explorer.hanzo.ai |
-| Lux Mainnet | 96369 | https://api.lux.network/ext/bc/C/rpc | https://explorer.lux.network |
-| Lux Testnet | 96368 | https://testnet-api.lux.network/ext/bc/C/rpc | https://testnet-explorer.lux.network |
+| Lux Mainnet | 96369 | https://api.lux.network/v1/bc/C/rpc | https://explorer.lux.network |
+| Lux Testnet | 96368 | https://testnet-api.lux.network/v1/bc/C/rpc | https://testnet-explorer.lux.network |
 | Zoo Mainnet | 200200 | https://rpc.zoo.network | https://explorer.zoo.network |
 | Zoo Testnet | 200201 | https://testnet-rpc.zoo.network | https://testnet-explorer.zoo.network |
 
