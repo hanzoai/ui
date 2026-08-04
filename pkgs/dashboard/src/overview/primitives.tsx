@@ -79,7 +79,7 @@ export function Kpi({ label, value, unit, deltaPct, series, icon: Icon, color, c
       {loading && !finite ? (
         <SkeletonBar w={110} h={34} />
       ) : (
-        <Text fontSize="$9" fontWeight="500" color={finite ? '$color12' : '$color10'} numberOfLines={1} className="hz-tnum">
+        <Text fontSize="$9" fontWeight="500" color={finite ? '$color12' : '$color10'} numberOfLines={1} className="tnum">
           {finite ? formatMetric(shown, unit) : '—'}
         </Text>
       )}
@@ -272,7 +272,7 @@ export function LiveDot({ on }: { on: boolean }) {
   if (!on) return null
   return (
     <XStack items="center" gap="$1.5">
-      <YStack width={7} height={7} rounded="$10" style={{ backgroundColor: OK, animation: reduced ? undefined : 'hz-pulse 1.6s ease-in-out infinite' }} />
+      <YStack width={7} height={7} rounded="$10" style={{ backgroundColor: OK, animation: reduced ? undefined : 'pulse 1.6s ease-in-out infinite' }} />
       <Text fontSize="$1" color="$color10">
         Live
       </Text>
@@ -282,7 +282,7 @@ export function LiveDot({ on }: { on: boolean }) {
 
 /** A shimmer skeleton block (honest "loading", not fabricated content). */
 export function SkeletonBar({ w, h, rounded }: { w: number | string; h: number; rounded?: boolean }) {
-  return <div className="hz-skeleton" style={{ width: w, height: h, borderRadius: rounded ? '50%' : 8 }} aria-hidden />
+  return <div className="skeleton" style={{ width: w, height: h, borderRadius: rounded ? '50%' : 8 }} aria-hidden />
 }
 
 /** An honest empty-state note inside a panel. */
