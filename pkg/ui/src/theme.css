@@ -9,14 +9,18 @@
  * transparent). Values originate in `@hanzo/tokens` (dark/light theme sets) —
  * the same source `@hanzo/ui/tokens` exposes to code — so CSS and runtime agree.
  *
- * Dark-first Hanzo identity: neutral zinc-on-black, calm, high-contrast. Add
- * `class="dark"` on <html> for the canonical dark look; `:root` is the light
- * counterpart. Typography is Geist Sans (UI/body) + Geist Mono (code) — bound
+ * Dark-first Hanzo identity: neutral zinc-on-black, calm, high-contrast. `:root`
+ * IS the dark look — the file said "dark-first" while shipping light at `:root`,
+ * so an app that mounted <Hanzo> (dark by default) and read `--background` in its
+ * own CSS got white. `.light` retunes. Both themes also answer to gui's own
+ * `.t_light` / `.t_dark`, which <Hanzo> stamps on the body, so the CSS custom
+ * properties and the component tokens name one theme and never disagree.
+ * Typography is Geist Sans (UI/body) + Geist Mono (code) — bound
  * through `--font-geist-sans` / `--font-geist-mono`; a host that loads Geist
  * (next/font, @fontsource, CDN) binds those variables and everything inherits
  * it. No Inter, no system-stack default anywhere.
  *
- * Plain CSS, nothing else: `:root`/`.dark` custom properties plus the base font
+ * Plain CSS, nothing else: `:root` / `.light` custom properties plus the base font
  * and the touch/elevation rules the components name. The Tailwind v4 `@theme
  * inline` block that used to map these onto utilities is gone with Tailwind.
  */
@@ -30,10 +34,52 @@
   --font-geist-mono: var(--font-geist-mono-provided, 'Geist Mono');
 }
 
-/* Light identity (the counterpart to dark-first). */
-:root {
+/* Dark-first Hanzo identity — neutral zinc-on-black.
+   Borders are HAIRLINES: 10% white, never a solid chalk line on black. */
+:root,
+.dark,
+.t_dark {
   --radius: 0.5rem;
 
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.269 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.371 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+/* Light — the counterpart. Ordered before `.dark` so an explicit `.dark` inside
+   a light subtree still wins the specificity tie. */
+.light,
+.t_light {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -69,41 +115,26 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* Dark-first Hanzo identity — neutral zinc-on-black. */
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.269 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.371 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+/* ── The UA reset ─────────────────────────────────────────────────────────────
+   gui renders REAL <button>, <input> and <textarea> elements, and the browser
+   has opinions about those: a button is #efefef with a 2px OUTSET border. gui
+   compiles style props to border-WIDTH and border-COLOR and never emits
+   border-STYLE, so the UA's `outset` survived every one of them — which is why
+   a Collapsible trigger rendered as a white bar across a dark page and a Switch
+   wore a 2px black ring. A <div> was never affected (its border-style starts at
+   `none`), so this only ever showed on the components that are really buttons.
 
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.439 0 0);
+   `:where()` carries ZERO specificity, so every gui atomic class still wins;
+   `border: 0 solid transparent` leaves the STYLE resolved so that a component
+   setting only a width and a colour actually draws its line. */
+:where(button, input, textarea) {
+  appearance: none;
+  background-color: transparent;
+  border: 0 solid transparent;
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 /* Geist by default — UI/body inherits Geist Sans; code/mono surfaces get Geist

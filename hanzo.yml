@@ -1,0 +1,31 @@
+# Canonical CI config — see hanzoai/ci.
+#
+# @hanzo/ui is a library, not a container: there is no `images:` to build and no
+# `deploy:` cluster to roll. What CI owes us here is the gate, and for THIS
+# package the gate is a specific one — a build, a typecheck and a pack all pass on
+# a component library that renders every element unstyled, which is exactly how
+# hanzo.app shipped 103 `_bg-` classes against a stylesheet with zero `_bg-`
+# rules. So the checks below do the two things a green build cannot:
+#
+#   styles  — compares the classes the components REFERENCE against the rules the
+#             shipped stylesheet DEFINES, and fails unless every one is covered.
+#   consumer— packs the tarball, installs it into a throwaway app outside this
+#             repo, builds it, and asserts COMPUTED styles in a real browser at
+#             390px and 1280px in both themes. Not a workspace link: a link
+#             resolves through src/ and hides every packaging defect there is.
+test:
+  - name: ui-unit
+    run: |
+      set -e
+      corepack enable
+      pnpm install --frozen-lockfile
+      cd pkg/ui
+      pnpm run build
+      pnpm run test:unit
+  - name: ui-consumer
+    run: |
+      set -e
+      corepack enable
+      cd pkg/ui
+      pnpm exec playwright install --with-deps chromium
+      pnpm run test:consumer

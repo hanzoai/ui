@@ -8,6 +8,7 @@
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
+import { ink } from './ink'
 import { slot } from './slot'
 
 const PAD = 24
@@ -55,7 +56,11 @@ const CardHeader = (p: CardHeaderProps) => <HeaderFrame {...slot('card-header')}
 const CardTitle = (p: CardTitleProps) => <TitleFrame {...slot('card-title')} {...p} />
 const CardDescription = (p: CardDescriptionProps) => <DescriptionFrame {...slot('card-description')} {...p} />
 const CardAction = (p: CardActionProps) => <ActionFrame {...slot('card-action')} {...p} />
-const CardContent = (p: CardContentProps) => <ContentFrame {...slot('card-content')} {...p} />
-const CardFooter = (p: CardFooterProps) => <FooterFrame {...slot('card-footer')} {...p} />
+const CardContent = ({ children, ...p }: CardContentProps) => (
+  <ContentFrame {...slot('card-content')} {...p}>{ink(children)}</ContentFrame>
+)
+const CardFooter = ({ children, ...p }: CardFooterProps) => (
+  <FooterFrame {...slot('card-footer')} {...p}>{ink(children)}</FooterFrame>
+)
 
 export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent }

@@ -52,6 +52,11 @@ export type {
   ResizablePanelGroupProps, ResizablePanelProps,
 } from './backends/gui'
 
+// `Hanzo` — the root, and the only thing an app mounts. It carries the gui
+// config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
+// no gui.config.ts, no CSS import, no generator script.
+export { Hanzo, type HanzoProps } from './root'
+
 // `cn` — the class-name composer, surfaced for convenience.
 export { cn } from './core/cn'
 
