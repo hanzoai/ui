@@ -73,6 +73,7 @@ export {
   DropdownMenuRadioGroup,
   type DropdownMenuProps,
 } from './dropdown-menu'
+export { Glass, type GlassProps } from './glass'
 export { Input, type InputProps } from './input'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'
