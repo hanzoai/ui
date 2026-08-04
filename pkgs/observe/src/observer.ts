@@ -74,6 +74,50 @@ function elementOf(target: EventTarget | null): Element | null {
   return null
 }
 
+/** How far up the tree a fixed ancestor is looked for. Bounded because this runs a
+ *  style resolution per level. */
+const FIXED_DEPTH = 12
+
+/** Whether the target stays put when the page scrolls. */
+function isFixed(el: Element | null): boolean {
+  for (let n = el, d = 0; n && d < FIXED_DEPTH; n = n.parentElement, d++) {
+    const p = getComputedStyle(n).position
+    if (p === 'fixed' || p === 'sticky') return true
+  }
+  return false
+}
+
+/** WHERE the pointer was, which is what a heat map is drawn from — element identity
+ *  says WHICH thing was clicked, never where on the page it sat.
+ *
+ *  Coordinates are the PAGE's, so a click keeps its place on a scrolled document.
+ *  A fixed target is the exception: it does not move with the scroll, so adding the
+ *  offset would drift it down the page by however far the visitor had scrolled.
+ *  `$target_fixed` records which of the two a row was measured in, because the
+ *  reader cannot tell them apart afterwards.
+ *
+ *  The viewport rides along because a position only means something against the
+ *  window it was measured in — the read path scales x by it.
+ *
+ *  Total: a non-pointer event (a synthetic click, a keyboard activation) has no
+ *  coordinates and contributes none, rather than a click at the origin. */
+function positionOf(e: Event, el: Element | null): Record<string, unknown> | undefined {
+  const m = e as MouseEvent
+  if (typeof m.clientX !== 'number' || typeof m.clientY !== 'number') return undefined
+  try {
+    const fixed = isFixed(el)
+    return {
+      $x: Math.round(m.clientX + (fixed ? 0 : window.scrollX)),
+      $y: Math.round(m.clientY + (fixed ? 0 : window.scrollY)),
+      $target_fixed: fixed,
+      $viewport_width: window.innerWidth,
+      $viewport_height: window.innerHeight,
+    }
+  } catch {
+    return undefined
+  }
+}
+
 export class Observer {
   readonly stream: Stream<Interaction>
   private cfg: Required<Pick<ObserveConfig, 'enabled' | 'nav' | 'viewSelector' | 'inputDebounceMs' | 'maxDepth'>> &
@@ -138,7 +182,10 @@ export class Observer {
 
   // ── listeners (arrow fields so they unbind cleanly) ────────────────────────
 
-  private onClick = (e: Event) => this.fire('click', elementOf(e.target))
+  private onClick = (e: Event) => {
+    const el = elementOf(e.target)
+    this.fire('click', el, positionOf(e, el))
+  }
 
   private onInput = (e: Event) => {
     const el = elementOf(e.target)
