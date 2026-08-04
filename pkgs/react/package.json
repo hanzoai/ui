@@ -40,7 +40,7 @@
     "dev": "tsup --watch",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
-    "typecheck": "tsgo --noEmit",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "exports": {
