@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.hanzo.ai/schema.json",
+  "style": "default",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "registries": {
+    "@hanzo": "https://ui.hanzo.ai/r/{name}.json",
+    "@hanzo": "https://ui.hanzo.com/r/{name}.json",
+    "@acme": "https://ui.hanzo.ai/r/acme/{name}.json"
+  },
+  "resolvedPaths": {
+    "cwd": ".",
+    "path": ".",
+    "tailwindConfig": "./tailwind.config.js",
+    "tailwindCss": "./app/globals.css",
+    "utils": "./lib/utils",
+    "components": "./components",
+    "lib": "./lib",
+    "hooks": "./hooks",
+    "ui": "./components/ui"
+  }
+}
