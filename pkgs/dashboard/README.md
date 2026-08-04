@@ -242,4 +242,4 @@ The package **ships `src`** (source-only, like `@hanzo/data`); the consumer's bu
 transpiles it, and the `@hanzo/gui` shorthand style props type-check against the real
 token unions via `gui.config.ts` + `gui.d.ts`.
 
-License: BSD-3-Clause · Hanzo AI, Inc.
+License: MIT · Hanzo AI, Inc. — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).

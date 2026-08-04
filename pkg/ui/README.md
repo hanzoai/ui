@@ -117,4 +117,4 @@ registerField('rating', { Display: MyStars, Input: MyStarPicker })
 - **Clean-room** — original implementation, no GPL / Twenty code. Airtable/Twenty-*class* polish, our own code.
 - **Cross-platform** — web + native + desktop, because it's only `@hanzo/gui`.
 
-BSD-3-Clause · Hanzo AI
+MIT · Hanzo AI — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).

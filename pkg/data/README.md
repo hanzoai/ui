@@ -66,4 +66,4 @@ import { applyView, sortRecords, filterRecords, boardColumns } from '@hanzo/data
 - **Logic** — `applyView`, `sortRecords`, `filterRecords`, `searchRecords`, `paginate`, `boardColumns`, `movePatch`, `operatorsForType`, `emptyView`, `describeView`, …
 - **Theme** — `tokens`, `TAG_TONES`, `tagTone`
 
-BSD-3-Clause · Hanzo AI
+MIT · Hanzo AI — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).
