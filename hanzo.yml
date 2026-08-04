@@ -1,0 +1,51 @@
+# Canonical CI config — see hanzoai/ci.
+#
+# @hanzo/ui is a library, not a container: nothing here builds an image and
+# nothing rolls a cluster, so this file is a `test:` block and nothing else.
+# Publishing stays in .hanzo/workflows/publish.yml, which fires on a version
+# change and is the only thing allowed to reach npmjs.
+#
+# The gate is pkg/ui — the package this repo actually publishes — and it is
+# the same three commands publish.yml already proves on this runner, moved
+# EARLIER. That ordering is the whole point: publish.yml is the LAST place a
+# defect costs nothing, because the version it ships is immutable. Here it
+# costs a re-push.
+#
+# The trailing `...` on the build filter is load-bearing: it builds @hanzo/ui's
+# WORKSPACE DEPENDENCIES first, in topological order. Without it the siblings
+# have no dist/, tsc reads them through their own `"types": "dist/index.d.ts"`,
+# and they come back as missing modules — `Cannot find module '@hanzo/tokens'`,
+# `'@hanzo/products'`, `'@hanzo/cd'` — plus a wave of implicit-any in every file
+# that imported them. Those errors name @hanzo/ui and are not its fault.
+#
+# `pnpm install` without --frozen-lockfile is deliberate and is the literal
+# command measured green here: pnpm already defaults frozen-lockfile to true
+# under CI, so the flag adds nothing but a second way to spell the same thing.
+#
+# WHAT THIS DOES NOT GATE, and why the ci.yml it replaces was red on every run
+# for months. That workflow had four jobs and three of them could not pass:
+#
+#   Build   `cd pkgs/ui && pnpm run build:full`
+#   Test    `cd pkgs/ui && pnpm test:coverage`
+#           → both: `cd: pkgs/ui: No such file or directory`. The package moved
+#             to pkg/ (singular) — the same split publish.yml documents at
+#             length — and these two steps were never followed across.
+#   Type    `cd app && pnpm run typecheck`
+#           → ~10x `error TS7016: Could not find a declaration file for module
+#             '@hanzo/ui/animation/*'`. app/ is the shadcn registry this repo
+#             grew from, and its package.json aliases
+#             `"@hanzo/ui": "npm:@hanzo/ui-shadcn@^5"`, so those imports resolve
+#             to a PUBLISHED package that ships no declarations. Nothing in this
+#             tree can fix it, and the app is stale anyway.
+#
+# A gate that cannot go green teaches nobody anything — it is read once, filed
+# as "CI is just red here", and from then on it hides real breakage. Gating
+# pkg/ui is not a smaller gate than that one. It is the first real one.
+test:
+  - name: ui
+    run: |
+      set -e
+      corepack enable
+      pnpm install
+      pnpm --filter @hanzo/ui... build
+      pnpm --filter @hanzo/ui run test
