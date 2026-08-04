@@ -117,8 +117,10 @@ export const buttonVariants = ({
   size,
   className,
 }: { variant?: ButtonVariant | null; size?: ButtonSize | null; className?: string } = {}) =>
-  [`hanzo-button`, `hanzo-button--${variant ?? 'default'}`, `hanzo-button--${size ?? 'default'}`, className]
-    .filter(Boolean)
+  // Variant and size share the `btn-` namespace, so the two defaults collide on
+  // `btn-default`. A Set emits it once; no name is used by both a variant and a
+  // size, so nothing else can merge.
+  [...new Set([`btn`, `btn-${variant ?? 'default'}`, `btn-${size ?? 'default'}`, className].filter(Boolean))]
     .join(' ')
 
 export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' | 'children'> & {
