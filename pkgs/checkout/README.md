@@ -208,4 +208,4 @@ The checkout widget uses CSS custom properties for easy theming:
 
 ## License
 
-BSD-3-Clause
+MIT — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).
