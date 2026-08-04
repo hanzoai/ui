@@ -73,7 +73,16 @@ const Frame = styled(GuiButton.Frame, {
 
   variants: {
     variant: {
-      default: { bg: '$color12', color: '$color1', hoverStyle: { opacity: 0.9 } },
+      // The unmarked case is QUIET: a control on the surface ladder, hairline
+      // border, hover brightens border more than fill. `default` used to be the
+      // same value as `primary` (white filled), so every unstyled <Button> in
+      // every app shouted — the loudest treatment must be asked for by name.
+      default: {
+        bg: '$color2',
+        color: '$color12',
+        borderColor: '$borderColor',
+        hoverStyle: { bg: '$color3', borderColor: '$color6' },
+      },
       primary: { bg: '$color12', color: '$color1', hoverStyle: { opacity: 0.9 } },
       destructive: { bg: '$red9', color: '$white1', hoverStyle: { opacity: 0.9 } },
       outline: {
