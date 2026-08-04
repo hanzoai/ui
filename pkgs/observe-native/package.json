@@ -8,7 +8,7 @@
     "scope": "@hanzo"
   },
   "author": "Hanzo AI <dev@hanzo.ai>",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
