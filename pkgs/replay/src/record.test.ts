@@ -282,6 +282,37 @@ group('the recording handle', () => {
     expect(String(errs[0])).toContain('ingestKey')
   })
 
+  // The name above used to promise a check the code did not make: a secret key
+  // was accepted and then sent in an Authorization header on every batch.
+  it('refuses a SECRET key, so a secret has no carrier out of the browser', () => {
+    for (const secret of ['sk-live-abcdef', 'sk_test_abcdef', 'hi_nq2pI13AO3Yj5mN', 'Bearer pk-nope']) {
+      const errs: unknown[] = []
+      const f = fakeRecorder()
+      const s = spy()
+      const replay = record({
+        ingestKey: secret,
+        recorder: f.recorder,
+        transport: s.transport,
+        onError: (e) => errs.push(e),
+      })
+      expect(replay.recording).toBe(false)
+      // never started, so nothing was ever captured…
+      expect(f.calls()).toBe(0)
+      // …and nothing was ever sent, on any carrier.
+      expect(s.sent.length).toBe(0)
+      expect(String(errs[0])).toContain('publishable')
+    }
+  })
+
+  it('accepts both publishable spellings', () => {
+    for (const key of ['pk-live-abc', 'pk_test_abc']) {
+      const f = fakeRecorder()
+      const replay = record({ ingestKey: key, recorder: f.recorder })
+      expect(replay.recording).toBe(true)
+      replay.stop()
+    }
+  })
+
   it('carries the ids the batch is filed under', () => {
     const f = fakeRecorder()
     const replay = record({ ingestKey: KEY, recorder: f.recorder })
@@ -386,10 +417,13 @@ group('the recording handle', () => {
     record({
       ingestKey: KEY,
       recorder: f.recorder,
-      rrweb: { maskAllInputs: false, blockSelector: '.mine' },
+      rrweb: { maskAllInputs: true, blockSelector: '.mine' },
     })
     const o = f.opts()
-    expect(o.maskAllInputs).toBe(true)
+    // The caller cannot hand rrweb its own type list back: `true` would make rrweb
+    // substitute a hardcoded one that omits `hidden`.
+    expect(o.maskAllInputs).toBe(false)
+    expect(o.maskInputOptions?.hidden).toBe(true)
     expect(o.blockSelector).toContain('[data-hz-private]')
     expect(o.blockSelector).toContain('input[type="password"]')
     expect(typeof o.emit).toBe('function')
