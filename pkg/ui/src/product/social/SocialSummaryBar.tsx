@@ -31,7 +31,7 @@ export function SocialSummaryBar({ summary }: { summary: SocialSummary }) {
           <Text fontSize="$1" color="$color10">
             {c.label}
           </Text>
-          <Text fontSize="$6" fontWeight="500" className="tnum">
+          <Text fontSize="$6" fontWeight="500" className="hz-tnum">
             {c.value}
           </Text>
         </YStack>

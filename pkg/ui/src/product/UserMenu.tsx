@@ -24,6 +24,7 @@ import { Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut, UserRound } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
+import { displayName } from './name'
 import { OrgMark } from './OrgMark'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -85,13 +86,10 @@ function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
   )
 }
 
-/** The name to show: the given one, else the email's local part, else nothing
- *  fabricated — "User" is not a name and reads as a bug to the person it names. */
-export function displayName(name?: string, email?: string): string {
-  if (name?.trim()) return name.trim()
-  const local = email?.split('@')[0]
-  return local?.trim() || ''
-}
+// The name to show is a rule over two strings, so it lives in `./name` and is
+// reachable without a gui runtime via `@hanzo/ui/product/pure`. Re-exported
+// here because it was published from this module.
+export { displayName }
 
 export function UserMenu({
   name,

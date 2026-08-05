@@ -121,8 +121,21 @@ export * from './Reorder'
 export * from './SelectMenu'
 export * from './SlideOver'
 export * from './StatusTag'
+export * from './tone'
 export * from './ThemeToggle'
-export { ThemeToggleNext } from './ThemeToggleNext'
+
+// `ThemeToggleNext` is NOT re-exported here, and that is the whole reason this
+// comment exists. It is the @hanzogui/next-theme binding, and next-theme's
+// provider imports `next/script` — so a static edge from this barrel put Next in
+// the graph of every consumer of `@hanzo/ui/product`, including the Vite,
+// Express and Tauri hosts the layer promises to run on. `ThemeToggle` already
+// reaches it by dynamic import, which a bundler can split; a barrel re-export is
+// exactly what it cannot.
+//
+//   import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+//
+// Nobody needs that import: `<ThemeToggle />` with no props already picks this
+// path when next-theme is installed, and degrades when it is not.
 export * from './Toast'
 export * from './accent'
 export * from './color'
