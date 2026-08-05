@@ -1,13 +1,14 @@
 /**
- * The numbered ramp is not the token layer, and two rungs used to say so.
+ * The numbered ramp is not the token layer, and three rungs used to say so.
  *
  * `$color1..$color12` comes from upstream `@hanzogui/themes` — a generic
  * monotonic scale. @hanzo/design is where this system's colour decisions are
- * made. Where the two overlap the ramp must defer, and on two rungs it did the
- * opposite: it shipped a SOLID edge under a token layer whose borders are alpha
- * on purpose, and PURE WHITE labels under a foreground that is `#fafafa` on
- * purpose. Every component in this package reads both by name, so the ramp's
- * opinion reached the product and design's did not.
+ * made. Where the two overlap the ramp must defer, and on three rungs it did
+ * the opposite: a SOLID edge under a token layer whose borders are alpha on
+ * purpose, PURE WHITE labels under a foreground that is `#fafafa` on purpose,
+ * and a focus ring at 1.4:1 under a `--ring` authored to clear 3:1. Every
+ * component in this package reads them by name, so the ramp's opinion reached
+ * the product and design's did not.
  *
  * These tests read @hanzo/design's OWN published stylesheet — not a copy of it,
  * not a number typed here — so if design moves a value and gui-config does not,
@@ -45,6 +46,34 @@ const token = (name: string, theme: 'dark' | 'light'): string => {
   return indirect ? token(indirect[1], theme) : value
 }
 
+/** `#rrggbb`, `rgb(r g b)` or `rgb(r g b / a)` as [r, g, b, a]. */
+const parse = (colour: string): [number, number, number, number] => {
+  const hex = colour.match(/^#([0-9a-f]{6})$/i)
+  if (hex) return [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16)).concat(1) as never
+  const parts = colour.replace(/^rgba?\(|\)$/g, '').split(/[\s,/]+/).filter(Boolean).map(Number)
+  if (parts.length < 3 || parts.some(Number.isNaN)) throw new Error(`cannot read colour ${colour}`)
+  return [parts[0], parts[1], parts[2], parts[3] ?? 1]
+}
+
+/** A translucent colour painted over an opaque one — what the eye actually gets. */
+const over = (top: string, ground: string): string => {
+  const [r, g, b, a] = parse(top)
+  const [gr, gg, gb] = parse(ground)
+  const mix = (t: number, u: number) => Math.round(t * a + u * (1 - a))
+  return `rgb(${mix(r, gr)} ${mix(g, gg)} ${mix(b, gb)})`
+}
+
+/** WCAG 2.x relative luminance and contrast ratio. */
+const contrast = (a: string, b: string): number => {
+  const lum = (colour: string) => {
+    const [r, g, bl] = parse(colour)
+    const chan = (v: number) => (v / 255 <= 0.04045 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4)
+    return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(bl)
+  }
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x)
+  return (hi + 0.05) / (lo + 0.05)
+}
+
 /**
  * A theme value as authored. `createGui` wraps every one in a Variable
  * (`{ isVar, key, name, val }`) and interns the payload under `val` — reading
@@ -60,7 +89,7 @@ const themed = (theme: 'dark' | 'light', key: string) => {
   return raw as string
 }
 
-describe('the two rungs design already decided read the token', () => {
+describe('the rungs design already decided read the token', () => {
   it.each(['dark', 'light'] as const)('%s: the edge is design’s alpha hairline, not a solid grey', (theme) => {
     // The anti-pattern design's colors.css spends a paragraph refusing: a solid
     // hex edge stops being a lighter LINE the moment it lands on a lifted
@@ -81,6 +110,30 @@ describe('the two rungs design already decided read the token', () => {
     const label = token('foreground', theme)
     expect(label.toLowerCase()).not.toBe('#ffffff')
     expect(themed(theme, 'color12')).toBe(`var(--foreground, ${label})`)
+  })
+
+  it.each(['dark', 'light'] as const)('%s: the focus ring is design’s --ring, and it CLEARS 3:1', (theme) => {
+    // WCAG 2.4.11, computed rather than asserted as a string — a string check
+    // passes on any grey somebody types. The ring is translucent, so it is
+    // composited over design's own ground first: that is what an eye gets.
+    const ring = token('ring', theme)
+    const ground = token('background', theme)
+    expect(themed(theme, 'outlineColor')).toBe(`var(--ring, ${ring})`)
+    expect(contrast(over(ring, ground), ground)).toBeGreaterThanOrEqual(3)
+  })
+
+  it('the ramp’s own ring was a grey that only works on white — and this is dark-first', () => {
+    // `hsla(0, 0%, 27%, 0.6)` is why the requirement is computed and not
+    // eyeballed: on a white page it clears 3:1 comfortably, so nothing about
+    // reading the number says it is broken. On design's near-black ground the
+    // same value composites to about rgb(45,45,45) and lands near 1.4:1 — an
+    // invisible ring on hanzo.app's Sign In, Get started and Search, the three
+    // primary CTAs. A ramp inherited from a light-first substrate cannot know
+    // which canvas it will be spent on; a token can, and design's --ring is
+    // translucent white for exactly that reason.
+    const ramp = 'rgb(69 69 69 / .6)'
+    expect(contrast(over(ramp, token('background', 'dark')), token('background', 'dark'))).toBeLessThan(3)
+    expect(contrast(over(ramp, token('background', 'light')), token('background', 'light'))).toBeGreaterThan(3)
   })
 
   it('the two themes do not collapse onto one literal', () => {
