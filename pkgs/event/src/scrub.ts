@@ -79,8 +79,44 @@ const RE_EMAIL = /[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9.-]{1,255}\.[A-Za-z]{2,24}/g
 const RE_IPV4 = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g
 const RE_IPV6 = /\b(?:[0-9A-Fa-f]{1,4}:){2,7}[0-9A-Fa-f]{1,4}\b/g
 
+// A CREDENTIAL IN A QUERY PARAM HAS NO SHAPE TO MATCH.
+//
+// Every pattern above recognises a secret by what it LOOKS like — a JWT's three
+// dots, `sk-`, `AKIA`, `ghp_`. An OAuth `code`, a `state`, a password-reset
+// nonce and an invite token are opaque random strings, indistinguishable from a
+// page id, so none of them match and all of them survive.
+//
+// That matters because the client stamps `url: window.location.href` on EVERY
+// event, not just pageviews. So one visit to `/callback?code=…&state=…` puts a
+// live authorization code on the wire, once per event, in cleartext — and the
+// code is exchangeable until it is redeemed.
+//
+// The fix is to redact by the NAME the value is filed under rather than by the
+// value's shape, which is the only signal available for an opaque token. The
+// name half is bounded (`{1,32}`) and the value half stops at the first
+// separator, so neither half can backtrack across a long string — the same
+// discipline the creds-in-URL pattern above documents.
+const CREDENTIAL_PARAMS = [
+  'code', 'state', 'token', 'access_token', 'id_token', 'refresh_token',
+  'auth', 'authorization', 'secret', 'client_secret', 'password', 'passwd', 'pwd',
+  'api_key', 'apikey', 'key', 'session', 'session_id', 'sid',
+  'sig', 'signature', 'nonce', 'otp', 'invite', 'invitation',
+  'reset_token', 'confirmation_token', 'magic', 'ticket', 'assertion',
+]
+const RE_CREDENTIAL_PARAM = new RegExp(
+  '([?&#;](?:' + CREDENTIAL_PARAMS.join('|') + ')=)[^&#;\\s]{1,4096}',
+  'gi',
+)
+
+/** redactCredentialParams removes the VALUE of any query parameter whose NAME
+ *  says it carries a credential, leaving the name so the URL still reads. */
+export function redactCredentialParams(s: string): string {
+  return s.replace(RE_CREDENTIAL_PARAM, (_m, prefix: string) => prefix + REDACTED)
+}
+
 /** redactSecrets removes known secret shapes. Always applied. */
 export function redactSecrets(s: string): string {
+  s = redactCredentialParams(s)
   for (const re of SECRET_PATTERNS) s = s.replace(re, REDACTED)
   return redactPAN(s)
 }
