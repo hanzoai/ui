@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.46",
+  "version": "8.0.47",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -163,11 +163,12 @@
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "typecheck:ui": "tsc -p tsconfig.check.json",
-    "test": "vitest run && node scripts/consumer-test.mjs",
+    "test": "vitest run && node scripts/consumer-test.mjs && node scripts/consumer-webpack.mjs",
     "test:watch": "vitest",
     "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\"",
     "test:consumer": "node scripts/consumer-test.mjs",
-    "test:unit": "vitest run"
+    "test:unit": "vitest run",
+    "test:consumer:webpack": "node scripts/consumer-webpack.mjs"
   },
   "dependencies": {
     "@hanzo/design": "^0.4.6",
