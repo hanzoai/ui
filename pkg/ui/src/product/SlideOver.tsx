@@ -172,7 +172,12 @@ export function SlideOver({
         borderColor="$borderColor"
         // Material paper depth — the drawer reads as a sheet lifted above the dimmed
         // list behind it (real layered shadow, theme-aware), not a flat panel.
-        className="slide elevation-4"
+        //
+        // Rung 3, the top of the ladder: a drawer has no anchor and a scrim of its
+        // own, so it floats free exactly the way a modal does. It asked for a 4th
+        // rung, which is what a ladder turns into when it is treated as a palette —
+        // and the 4th was a hardcoded shadow behind a variable nothing defined.
+        className="slide elevation-3"
         // Full-height sheet (100dvh — mobile-safe), inset for the notch (top) + home
         // indicator (bottom) so the drawer header + footer actions clear them on
         // notched devices (env insets are 0 elsewhere, so no effect there).
