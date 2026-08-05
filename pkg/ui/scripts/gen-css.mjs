@@ -59,7 +59,10 @@ try {
     )
 
   const gui = config.getCSS()
-  const tokens = readFileSync(join(UI, 'src/theme.css'), 'utf8')
+  // dist/theme.css, not src: the token layer is @hanzo/design's, composed in
+  // by scripts/compose-theme.mjs. Reading src here would ship a stylesheet whose
+  // components reference tokens the sheet never declares.
+  const tokens = readFileSync(join(UI, 'dist/theme.css'), 'utf8')
   const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
 
   // `--hanzo-ui-styles` is what <Hanzo> looks up to tell a consumer, in
