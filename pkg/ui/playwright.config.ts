@@ -21,7 +21,7 @@ export default defineConfig({
   retries: 0,
   reporter: process.env.CI ? 'line' : 'list',
   use: {
-    baseURL: process.env.CONSUMER_URL ?? 'http://127.0.0.1:4390',
+    baseURL: process.env.CONSUMER_URL ?? 'http://localhost:4390',
     deviceScaleFactor: 1,
   },
   expect: {

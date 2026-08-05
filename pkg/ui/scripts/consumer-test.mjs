@@ -17,7 +17,17 @@ import { fileURLToPath } from 'node:url'
 
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
 const PORT = Number(process.env.CONSUMER_PORT ?? 4390)
-const URL_ = `http://127.0.0.1:${PORT}`
+// `localhost`, NOT 127.0.0.1 — and this is why the consumer gate could never
+// go green. `vite preview` binds IPv6 only: it prints "Local:
+// http://localhost:4390/" and answers on [::1], while 127.0.0.1 refuses the
+// connection. So the readiness poll below counted to 60 and threw "consumer app
+// never came up" on every run, AFTER the pack and the install and the build had
+// all succeeded — which reads like the app is broken and is the harness looking
+// at the wrong address.
+//
+// The same literal made the "someone else is on this port" guard inert, so the
+// one thing it was written to catch could not be caught either.
+const URL_ = `http://localhost:${PORT}`
 
 const run = (cmd, args, cwd) =>
   execFileSync(cmd, args, { cwd, stdio: 'inherit', env: { ...process.env, npm_config_yes: 'true' } })
