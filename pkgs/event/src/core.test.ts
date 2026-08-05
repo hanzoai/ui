@@ -390,6 +390,35 @@ describe('Analytics capture', () => {
     expect(tx.sent[0].ingestKey).toBeUndefined()
   })
 
+  it('a signed-in bearer WINS over a key from the build env', () => {
+    // The leak this closes: one console bundle is served to several brands, and a
+    // pk- names ONE org. If an env-sourced key displaced the bearer, every
+    // signed-in user's events would re-file under whichever org minted the key.
+    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-one-org'
+    try {
+      const a = mk({ getToken: () => 'jwt-of-a-real-person' })
+      a.capture('x')
+      a.flush()
+      expect(tx.sent[0].token).toBe('jwt-of-a-real-person')
+      expect(tx.sent[0].ingestKey).toBeUndefined()
+    } finally {
+      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+    }
+  })
+
+  it('an anonymous visitor still rides the key', () => {
+    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-one-org'
+    try {
+      const a = mk({ getToken: () => undefined })   // logged out
+      a.capture('x')
+      a.flush()
+      expect(tx.sent[0].ingestKey).toBe('pk-live-one-org')
+      expect(tx.sent[0].token).toBeUndefined()
+    } finally {
+      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+    }
+  })
+
   it('setCohort rides subsequent events', () => {
     const a = mk()
     a.setCohort({ signupWeek: '2026-W29', channel: 'paid', refCode: 'REF9' })
