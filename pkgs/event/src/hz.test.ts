@@ -230,8 +230,8 @@ describe('hz.js', () => {
   // keyed static surface therefore sent UNATTRIBUTED writes, which the door
   // refuses — silently, because nothing here reads the response.
 
-  it('presents the ingest key as a bearer on fetch', () => {
-    const r = runSnippet({ attrs: { 'data-ingest-key': 'pk-abc123' } })
+  it('presents the publishable key as a bearer on fetch', () => {
+    const r = runSnippet({ attrs: { 'data-publishable-key': 'pk-abc123' } })
     r.api!.flush()
     const post = r.posts.at(-1)!
     expect(post.via).toBe('fetch')
@@ -239,7 +239,7 @@ describe('hz.js', () => {
     expect(post.url).toBe('https://api.hanzo.ai/v1/event')
   })
 
-  it('presents the ingest key in the query on a headerless beacon', () => {
+  it('still reads the retiring data-ingest-key, on a headerless beacon', () => {
     const r = runSnippet({ attrs: { 'data-ingest-key': 'pk-abc123' }, beacon: true })
     r.api!.flush()
     const post = r.posts.at(-1)!

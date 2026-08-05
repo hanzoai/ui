@@ -9,7 +9,7 @@
  *
  *   <script async src="https://unpkg.com/@hanzo/event/hz.js"
  *           data-product="hanzo.ai"          // required: which surface this is
- *           data-ingest-key="pk-…"           // required off api.hanzo.ai's own origin
+ *           data-publishable-key="pk-…"      // required off api.hanzo.ai's own origin
  *           data-host="https://api.hanzo.ai" // optional: API host override
  *           data-ga="G-XXXX" data-fb="123"   // optional: also fan out to GA4 / Meta
  *           data-capture="1"></script>       // optional: autocapture off with "0"
@@ -55,7 +55,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.16'
+  var VERSION = '0.3.17'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -67,7 +67,9 @@
   // nothing here reads the response. Through 0.3.11 this file had no way to
   // present a key at all, so every keyed static surface looked wired, measured
   // fine in the browser, and filed nothing.
-  var key = s.getAttribute('data-ingest-key') || ''
+  // data-publishable-key is the name; a static tag has no lockstep build to
+  // migrate it, so data-ingest-key stays readable as the retiring spelling.
+  var key = s.getAttribute('data-publishable-key') || s.getAttribute('data-ingest-key') || ''
 
   // ── the shared anonymous-identity chain ───────────────────────────────────
   // COPIED VERBATIM from @hanzo/event's src/anon.js, markers and all, for the same
