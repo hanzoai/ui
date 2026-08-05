@@ -20,6 +20,7 @@ import {
 } from '@hanzo/gui'
 
 import { textSize, useEmit, type UiEvent } from './instrument'
+import { masked } from './SecretInput'
 
 // The label the caller ALREADY typed on the FieldRow becomes the analytics name —
 // so an app never labels a field twice and no field reports as "unnamed".
@@ -75,7 +76,10 @@ export function FieldText({
         onChange(v)
       }}
       disabled={disabled}
-      secureTextEntry={secure}
+      // `secureTextEntry` ALONE rendered the secret in plain text on web — gui
+      // drops the native spelling there. `masked` sets both names. Every
+      // `<FieldText secure>` in the fleet was unmasked until this line.
+      {...masked(Boolean(secure))}
       placeholder={placeholder}
       autoCapitalize="none"
     />

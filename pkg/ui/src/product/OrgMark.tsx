@@ -9,11 +9,38 @@
  * customer's console must show the customer's identity, not ours.
  *
  * Monochrome by construction (`$color4` tile, `$color12` glyph) so it belongs to
- * the chrome; colour stays with content.
+ * the chrome; colour stays with content — with one exception: an emoji logo is
+ * rendered in full colour, because a monochrome emoji is not the emoji.
+ *
+ * Three kinds of `logo`, resolved in order: a URL, a short emoji string, or
+ * nothing. A URL that FAILS to load falls back to the monogram rather than
+ * leaving a broken-image glyph in the chrome — org logos are tenant-supplied and
+ * a dead link is the normal case, not the exceptional one.
  */
+import { useEffect, useState } from 'react'
 import { Text, YStack } from '@hanzo/gui'
 
 import type { Org } from './scope'
+
+/**
+ * An emoji mark rather than a URL.
+ *
+ * Tested by absence of a scheme/path and by shortness — an emoji sequence is a
+ * handful of code points, and `Intl.Segmenter` counts grapheme clusters so a
+ * flag or a family (several code points, one glyph) reads as one character.
+ * Falls back to code-point length where `Segmenter` is unavailable.
+ */
+export function isEmoji(logo: string): boolean {
+  const s = logo.trim()
+  if (!s || /^(https?:|data:|\/)/.test(s)) return false
+  // Regional_Indicator as well as Extended_Pictographic: a flag is a pair of
+  // regional indicators and carries no pictographic code point at all, so the
+  // pictographic test alone rejects every country mark.
+  if (!/[\p{Extended_Pictographic}\p{Regional_Indicator}]/u.test(s)) return false
+  const Seg = (Intl as { Segmenter?: typeof Intl.Segmenter }).Segmenter
+  const units = Seg ? [...new Seg().segment(s)].length : [...s].length
+  return units <= 3
+}
 
 /**
  * The monogram for a name: the first letter of each of the first two words,
@@ -44,7 +71,28 @@ export type OrgMarkProps = {
 }
 
 export function OrgMark({ org, size = 22, maxW }: OrgMarkProps) {
-  if (org.logo) {
+  // Reset when the mark changes: switcher rows reuse instances, so a failure on
+  // one org must not blank the next org's logo.
+  const [broken, setBroken] = useState(false)
+  useEffect(() => setBroken(false), [org.logo])
+
+  if (org.logo && isEmoji(org.logo)) {
+    return (
+      <YStack
+        width={size}
+        height={size}
+        items="center"
+        justify="center"
+        style={{ flexShrink: 0 }}
+      >
+        <Text fontSize={Math.round(size * 0.72)} lineHeight={size}>
+          {org.logo.trim()}
+        </Text>
+      </YStack>
+    )
+  }
+
+  if (org.logo && !broken) {
     // An arbitrary tenant-supplied URL — a raw <img>, since next/image would need
     // a remote allow-list per customer domain.
     // eslint-disable-next-line @next/next/no-img-element
@@ -52,6 +100,7 @@ export function OrgMark({ org, size = 22, maxW }: OrgMarkProps) {
       <img
         src={org.logo}
         alt=""
+        onError={() => setBroken(true)}
         style={{
           height: size,
           width: maxW ? 'auto' : size,
