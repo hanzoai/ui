@@ -120,9 +120,12 @@ export interface AnalyticsConfig {
    *  a reading principal — so it is safe to ship in a bundle. Mint one per org with
    *  POST /v1/keys {"type":"publishable"}.
    *
-   *  Omit it and the client reads NEXT_PUBLIC_HANZO_EVENT_KEY, then HANZO_EVENT_KEY,
-   *  from the inlined build env — the same resolution `dsn` uses, so a surface
-   *  declares BOTH planes the same way and neither needs code to switch on.
+   *  Omit it and the client reads NEXT_PUBLIC_EVENT_INGEST_KEY from the inlined
+   *  build env, the same way `dsn` falls back — so a surface declares BOTH planes
+   *  in its build and neither needs code to switch on. That is the ONE spelling
+   *  the fleet already carries: KMS holds deploy/EVENT_INGEST_KEY, and each
+   *  Dockerfile takes EVENT_INGEST_KEY as a build-arg and re-exports it with the
+   *  NEXT_PUBLIC_ prefix that makes Next inline it.
    *
    *  A surface with no key at all still reports for whoever is SIGNED IN (the
    *  session credential attributes them), and drops every logged-out visitor: the
