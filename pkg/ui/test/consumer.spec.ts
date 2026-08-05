@@ -395,12 +395,25 @@ test('CommandDialog reports the highlighted row and filters as you type', async 
   await page.setViewportSize({ width: 1280, height: 900 })
   await load(page, 'dark')
 
-  const input = page.locator('[data-slot="command-dialog"] [data-slot="command-input"], [role="dialog"] input').first()
+  // Scoped to THIS palette. The gallery keeps three dialogs open at once so each
+  // gets styled, and gui 8.1.0's focus-scope fix changed which of them owns the
+  // keyboard — so an unscoped `[role="dialog"] input` is a coin flip between
+  // them. That is a property of the harness, not of the component: the thing
+  // under test is whether CommandDialog hands its props to Command, not how a
+  // browser arbitrates focus between stacked dialogs.
+  // Identified by what it CONTAINS, not by an attribute: CommandDialog spreads
+  // leftover props onto Dialog, which portals, so a marker put there does not
+  // reliably land on a rendered node.
+  const palette = page.locator('[role="dialog"]').filter({ hasText: 'alpha' }).first()
+  const input = palette.locator('input').first()
   await input.waitFor({ state: 'visible' })
 
   // Selection escapes. Arrow down moves off `alpha`; the host callback writes
   // the new value onto a node it owns, which is what a preview panel would do.
-  await input.press('ArrowDown')
+  // Dispatched at the palette's own input for the reason above.
+  await input.evaluate((el) =>
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })),
+  )
   await expect
     .poll(async () => page.getAttribute('[data-palette-selected]', 'data-palette-selected'))
     .not.toBe('')
@@ -412,10 +425,30 @@ test('CommandDialog reports the highlighted row and filters as you type', async 
   // items are hidden rather than unmounted — so visibility is the question.
   await input.fill('gamma')
   await expect
-    .poll(async () =>
-      page.locator('[role="dialog"] [data-slot="command-item"]:visible').count(),
-    )
+    .poll(async () => palette.locator('[data-slot="command-item"]:visible').count())
     .toBeLessThan(3)
-  const visibleText = await page.locator('[role="dialog"] [data-slot="command-item"]:visible').allInnerTexts()
+  const visibleText = await palette.locator('[data-slot="command-item"]:visible').allInnerTexts()
   expect(visibleText.join(' ').toLowerCase(), 'typing did not narrow the list').toContain('gamma')
 })
+
+/**
+ * The column cap. `min` alone cannot say "2 on a phone, 4 on a desktop": 2-up at
+ * 390px needs a ~170px floor, and that same floor yields six columns at 1280.
+ * `max` raises the floor to one-Mth of the row so auto-fill cannot fit an
+ * (M+1)th track, while leaving the small-screen behaviour untouched.
+ */
+for (const [width, want] of [[390, 2], [1280, 4]] as const)
+  test(`a capped grid is ${want}-up at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await load(page, 'dark')
+    const boxes = await boxesIn(page, '[data-grid="capped"] > [data-slot="card"]')
+    expect(boxes.length, 'the capped grid did not render').toBe(6)
+    // Items sharing a y are one row. The first row is the column count.
+    const first = rowsOf(boxes).sort((a, b) => a[0].y - b[0].y)[0]
+    expect(first.length, `expected ${want} columns at ${width}px`).toBe(want)
+    const overflow = await page.evaluate(() => ({
+      scroll: document.documentElement.scrollWidth,
+      client: document.documentElement.clientWidth,
+    }))
+    expect(overflow.scroll, 'the page scrolls horizontally').toBeLessThanOrEqual(overflow.client + 1)
+  })
