@@ -6,8 +6,13 @@
 // `EmptyState` or `ThemeToggle` reports the SAME interaction vocabulary with
 // zero app code. Nothing to wire, nothing to remember, nothing to drift.
 //
-//   import { emit, useEmit, InstrumentSurface } from '@hanzo/ui'
-//   <InstrumentSurface name="billing">…</InstrumentSurface>   // optional context
+//   import { emit, useEmit, InstrumentSurface } from '@hanzo/ui/product'
+//   <InstrumentSurface value="billing">…</InstrumentSurface>   // optional context
+//
+// This is the CURATED half. `<Hanzo analytics>` already reports every click,
+// change, submit and route change on its own, annotated with the component it
+// happened on — what autocapture cannot know is that a click WAS a checkout.
+// That is what this names. Same client, same stream, same front door.
 //
 // ONE event name, structured properties — the taxonomy in @hanzo/event is a
 // CLOSED set, and its own rule for a product-specific moment is "the `action`

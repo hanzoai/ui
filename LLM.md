@@ -372,11 +372,15 @@ write-only — safe in a bundle, same trust class as `pk_`. **No DSN => the erro
 plane is inert** (fail-safe: nothing sent, nothing thrown, event stream
 unaffected); assert `client.errorPlaneEnabled` if you need to know.
 
-Note that web analytics is a THIRD, separate plane and is NOT this client — it is
-the `analytics.hanzo.ai/hz.js` tag, which speaks a different wire (a bare JSON
-array of `{site, ts, type, …}`). `analytics.hanzo.ai/v1/event` and
-`api.hanzo.ai/v1/event` share a path spelling but are different protocols; point
-this client at the API host, never the analytics host.
+There is NO third plane. Web analytics used to be one — `analytics.hanzo.ai/hz.js`
+posting a bare JSON array of `{site, ts, type, …}` to a second collector behind an
+identical path spelling — and 0.3.7 deleted both. `hz.js` now lives in this package
+as the script-tag DISTRIBUTION of this client: same `WireEvent`, same
+`{ batch: [ … ] }`, same `POST {host}/v1/event`. Point everything at the API host.
+
+It could not authenticate until 0.3.12: it sent no `Authorization` and no
+`?ingest_key=`, so a keyed static surface's writes were unattributed, the door
+refused them (`401`), and nothing in the page said so. `data-ingest-key="pk-…"`.
 
 Entries: `.` (framework-agnostic: `createAnalytics`, `EVENTS`, `GOALS`,
 attribution + DSN/scrub helpers) and `./react` (`AnalyticsProvider`,
@@ -388,6 +392,47 @@ error leaves the device. SSR-safe, fail-soft, beacon-on-unload.
 Build is a tsup dual bundle: **CJS → `.cjs`, ESM → `.mjs`** (required under
 `"type": "module"` — a CJS `.js` is parsed as ESM and crashes `require()` with
 "exports is not defined"). Each `exports` condition carries its own types.
+
+### Interaction analytics — `<Hanzo analytics>` is the one wiring
+
+An app instruments nothing. `<Hanzo analytics>` (`pkg/ui/src/root.tsx`) is the
+whole setup, and every click / change / submit / route change inside the tree
+reaches `POST /v1/event` named by the component it happened on:
+
+```tsx
+<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_EVENT_INGEST_KEY }}>
+```
+
+Four packages, one of each concern, no duplication:
+
+| Concern | Where | Note |
+|---|---|---|
+| client + wire | `@hanzo/event` (`pkgs/event`) | one endpoint, one key |
+| capture engine | `@hanzo/observe` (`pkgs/observe`) | delegated listeners, semantic annotation, redaction |
+| provider + consent | `@hanzogui/telemetry` (`~/work/hanzo/gui`) | `<TelemetryProvider/>`; owns DNT/GPC + stored choice |
+| curated events | `@hanzo/ui/product` `instrument.ts` | `emit({component, action})` — what autocapture cannot know |
+
+**`analytics` is a prop, not a default.** Mounting a component library must not
+start a network conversation the app did not ask for. Off, no provider renders.
+
+**Component names are real in production.** Every primitive already carries a
+`data-slot` (via `slot()`); `componentName()` in `pkgs/observe/src/annotate.ts`
+reads it, ranked ABOVE the React fiber owner deliberately — the fiber name is
+dev-only, so grouping on it silently empties the dashboard at deploy. Labels keep
+the qualifier: `card/button[Save]`.
+
+**It cannot double-count.** The engine installs *delegated* listeners on a root,
+so two engines on one root report everything twice — which is what an app got by
+mounting a library provider AND `<ObserveProvider/>`, both correct instructions.
+Since observe 0.1.7 the first engine claims its root under a `Symbol.for`
+registry (page-wide, so duplicate copies of the package still see each other) and
+any later one stays inert (`engine.capturing === false`). Verified in Chromium,
+not only in jsdom.
+
+**Consent is decided in ONE layer.** The engine takes `enabled` as a value; the
+provider resolves policy (GPC, DNT, stored `hz_consent`, build kill switch) and
+passes the answer down. Do not add a second, partial copy to the engine — the two
+then disagree about an explicit opt-in.
 
 ### One way — supersessions (no divergent telemetry client)
 

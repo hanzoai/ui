@@ -1,5 +1,36 @@
 # @hanzo/event
 
+## 0.3.12
+
+### Patch Changes
+
+- **`hz.js` can finally present a key, so a keyed static surface stops filing
+  nothing.** Through 0.3.11 the script tag sent no credential on either
+  transport — no `Authorization`, no `?ingest_key=` — so every write from an
+  origin other than the door's own was unattributed, and the door refuses an
+  unattributable write (`401 ingest_key_required`). Nothing here reads the
+  response, so the tag measured fine in the browser and the surface was simply
+  absent from the warehouse. `data-ingest-key="pk-…"` now rides
+  `Authorization: Bearer` on fetch and `?ingest_key=` on the headerless unload
+  beacon — the same pair `core.ts` uses, so the door cannot tell the
+  distributions apart.
+- **The tag honours the consent the rest of the stack honours.** It read Do Not
+  Track only. It now also obeys Global Privacy Control (the signal CPRA actually
+  requires) and the `hz_consent` stored choice a Hanzo consent banner writes —
+  which outranks the browser signal in BOTH directions, because that is what
+  explicit means.
+- **`libraryVersion` is pinned to the package version.** It had drifted to
+  `0.3.9` against a published `0.3.11`, dating every static-site row in the
+  warehouse to a release three patches old — including the ones that changed
+  what the tag sends. A test now fails on any drift, matching the one that
+  already pins `src/version.ts`.
+- **The hz.js suite runs again.** Node ≥ 21 ships a real `navigator` whose
+  descriptor is an accessor with no setter, so the harness's plain assignment
+  threw and every test in the file failed — the one shipped file with no bundler
+  and no import-time type checking had no executed coverage at all. Globals are
+  defined, not assigned, and the suite now also asserts what reaches the wire:
+  transport, URL and headers, not just the batch.
+
 ## 0.3.7
 
 ### Patch Changes

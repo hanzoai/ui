@@ -14,6 +14,36 @@ import type { Interaction, InteractionKind, ObserveConfig } from './types'
 
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
+// ── one root, one engine ────────────────────────────────────────────────────
+//
+// The engine installs DELEGATED listeners on a root — `document`, normally — so
+// two running engines on one root capture every interaction TWICE. That is not
+// hypothetical: it is what an app gets by following two true sets of
+// instructions at once. @hanzogui/telemetry's provider starts an engine, and
+// this package's own README told apps to mount `<ObserveProvider/>`; a tree with
+// both doubled every click, and a doubled click is indistinguishable downstream
+// from an engaged visitor.
+//
+// The claim lives on the PAGE, under a registry `Symbol.for` resolves, not in
+// module scope: two copies of this package in one bundle have two module scopes
+// and would not see each other's claim at all — which is precisely the case
+// where a duplicate is most likely. A well-known symbol is the one slot every
+// copy resolves to the same value.
+//
+// First to start wins and keeps the root until it stops; a later engine stays
+// inert (`capturing === false`) rather than throwing, because a second provider
+// is a wiring accident, not an app error.
+const REGISTRY = Symbol.for('hanzo.observe.roots')
+
+function claimed(): Set<unknown> {
+  const g = globalThis as unknown as Record<symbol, Set<unknown> | undefined>
+  const existing = g[REGISTRY]
+  if (existing) return existing
+  const fresh = new Set<unknown>()
+  g[REGISTRY] = fresh
+  return fresh
+}
+
 /** Reserved autocapture event name per kind — the same $-prefixed vocabulary the
  *  server read lens expects ($pageview is already the pageview name). */
 const NAME: Record<InteractionKind, string> = {
@@ -124,7 +154,12 @@ export class Observer {
     ObserveConfig
   private root: Document | Element
   private started = false
-  private pending?: { el: Element; t: ReturnType<typeof setTimeout> }
+  /** In-flight input debounces, keyed BY FIELD. One shared slot coalesced across
+   *  elements: typing in a second field cleared the first field's pending timer,
+   *  so filling a form reported only the last field touched and every field
+   *  before it vanished. The debounce is per field because that is what it is
+   *  for — collapsing one field's keystrokes, not one form's fields. */
+  private pending = new Map<Element, ReturnType<typeof setTimeout>>()
   private io?: IntersectionObserver
   private seen = new WeakSet<Element>()
 
@@ -141,9 +176,19 @@ export class Observer {
     this.stream = new Stream<Interaction>(config.bufferSize ?? 500)
   }
 
-  /** Install listeners. Idempotent and browser-only. */
+  /** Whether this engine holds its root and is capturing. False for a second
+   *  engine on an already-claimed root — see the registry above. */
+  get capturing(): boolean {
+    return this.started
+  }
+
+  /** Install listeners. Idempotent, browser-only, and refused when another
+   *  engine already holds this root. */
   start(): void {
     if (this.started || !this.cfg.enabled || !isBrowser()) return
+    const roots = claimed()
+    if (roots.has(this.root)) return
+    roots.add(this.root)
     this.started = true
     const r = this.root as Document
     r.addEventListener('click', this.onClick, { capture: true, passive: true })
@@ -158,10 +203,11 @@ export class Observer {
     this.installView()
   }
 
-  /** Remove listeners and release resources. Idempotent. */
+  /** Remove listeners, release the root, and free resources. Idempotent. */
   stop(): void {
     if (!this.started) return
     this.started = false
+    claimed().delete(this.root)
     const r = this.root as Document
     r.removeEventListener('click', this.onClick, { capture: true } as EventListenerOptions)
     r.removeEventListener('input', this.onInput, { capture: true } as EventListenerOptions)
@@ -172,10 +218,8 @@ export class Observer {
       window.removeEventListener(HISTORY_EVENT, this.onNav)
       uninstallHistory()
     }
-    if (this.pending) {
-      clearTimeout(this.pending.t)
-      this.pending = undefined
-    }
+    for (const t of this.pending.values()) clearTimeout(t)
+    this.pending.clear()
     this.io?.disconnect()
     this.io = undefined
   }
@@ -190,22 +234,29 @@ export class Observer {
   private onInput = (e: Event) => {
     const el = elementOf(e.target)
     if (!el) return
-    if (this.pending) clearTimeout(this.pending.t)
-    this.pending = {
+    const running = this.pending.get(el)
+    if (running !== undefined) clearTimeout(running)
+    this.pending.set(
       el,
-      t: setTimeout(() => {
-        this.pending = undefined
+      setTimeout(() => {
+        this.pending.delete(el)
         this.fire('input', el)
       }, this.cfg.inputDebounceMs),
-    }
+    )
   }
 
   private onChange = (e: Event) => {
-    if (this.pending) {
-      clearTimeout(this.pending.t)
-      this.pending = undefined
+    const el = elementOf(e.target)
+    // A change on a field supersedes its own pending $input — it is the same
+    // edit, settled. Other fields keep theirs.
+    if (el) {
+      const running = this.pending.get(el)
+      if (running !== undefined) {
+        clearTimeout(running)
+        this.pending.delete(el)
+      }
     }
-    this.fire('change', elementOf(e.target))
+    this.fire('change', el)
   }
 
   private onSubmit = (e: Event) => this.fire('submit', elementOf(e.target))

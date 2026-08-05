@@ -127,12 +127,22 @@ function cssEscape(s: string): string {
  *      specific node. An explicit intent outranks anything derived.
  *   2. `data-observe` — written by @hanzo/annotate at BUILD time from the
  *      component's own declaration, so it survives minification and is present
- *      in production, which is exactly where (3) is not. The value `off` is not
+ *      in production, which is exactly where (4) is not. The value `off` is not
  *      a name: it is the redaction opt-out (see redact.ts), and it can never
  *      collide with a real one because JSX requires component names to be
  *      capitalised.
- *   3. The nearest named React fiber owner — free, but development-only: a
- *      production build strips `_debugOwner` and minifies the function name.
+ *   3. `data-slot` — the part name a design system stamps on the element it
+ *      renders: `button`, `input`, `select-trigger`, `dialog-content`,
+ *      `dropdown-menu-item`. @hanzo/ui puts one on every primitive (one helper,
+ *      `slot()`), shadcn does the same, and unlike (4) it is REAL IN
+ *      PRODUCTION — which is where the question "which component did they
+ *      click" is actually asked. Reading it is what makes a component library
+ *      attributable without a `data-hz-name` at 30 call sites.
+ *   4. The nearest named React fiber owner — richer (it knows `SaveButton`, not
+ *      `button`) but development-only: a production build strips `_debugOwner`
+ *      and minifies the function name. It ranks BELOW `data-slot` deliberately.
+ *      A name that changes at deploy time is worse than a plainer one that does
+ *      not: the dashboard grouped on it silently empties when you ship.
  *
  *  Returns undefined when a node has no derivable component. */
 export function componentName(el: Element): string | undefined {
@@ -140,6 +150,8 @@ export function componentName(el: Element): string | undefined {
   if (marked) return clip(marked)
   const stamped = attr(el, 'data-observe')
   if (stamped && stamped !== 'off') return clip(stamped)
+  const slot = attr(el, 'data-slot')
+  if (slot) return clip(slot)
   return reactOwner(el)
 }
 
@@ -207,9 +219,16 @@ function significant(n: SemanticNode): boolean {
   return Boolean(n.component || n.testid || (n.role && n.role !== 'generic') || n.name)
 }
 
+/** One node's segment of the label: WHAT it is, then WHICH one it is.
+ *
+ *  The qualifier is not optional detail. A component name identifies a KIND of
+ *  element and a library renders hundreds of each, so `button` alone collapses
+ *  every button on the page into one row — the label stops answering the
+ *  question it exists for. It was previously dropped whenever a component name
+ *  was present, which cost nothing while names came from the dev-only fiber
+ *  owner and everything once `data-slot` made them universal in production. */
 function labelOf(n: SemanticNode): string {
-  if (n.component) return n.component
-  const base = n.role && n.role !== 'generic' ? n.role : n.tag
+  const base = n.component ?? (n.role && n.role !== 'generic' ? n.role : n.tag)
   if (n.testid) return `${base}[${n.testid}]`
   if (n.name) return `${base}[${n.name}]`
   return base

@@ -85,7 +85,11 @@ group('annotate', () => {
     // Wrapper div drops out of the label; significant nodes remain, root→leaf.
     // The generic wrapper div AND the generic leaf span drop from the compact
     // label; the clicked span is still available as sem.target.
-    expect(sem.label).toBe('Dashboard/UserCard/button[save]')
+    //
+    // A named node keeps its qualifier, exactly as `button[save]` always did:
+    // the name says WHAT it is and the test id says WHICH one, and a library
+    // renders many of each. Dropping it merged every UserCard into one row.
+    expect(sem.label).toBe('Dashboard/UserCard[user-card]/button[save]')
     // The path is complete (includes the wrapper) even though the label is compact.
     expect(sem.path.some((n) => n.component === 'UserCard')).toBe(true)
     expect(sem.path.some((n) => n.component === 'Dashboard')).toBe(true)
@@ -115,6 +119,36 @@ group('build-time annotation (@hanzo/annotate)', () => {
 
   it('never treats the redaction opt-out as a name', () => {
     expect(componentName(mount('<div data-observe="off">x</div>'))).toBeUndefined()
+  })
+
+  it('reads a design system data-slot as the component name', () => {
+    // @hanzo/ui stamps one on every primitive through a single `slot()` helper,
+    // so a component library becomes attributable in production without a
+    // hand-written data-hz-name at every call site.
+    expect(componentName(mount('<button data-slot="button">x</button>'))).toBe('button')
+    expect(componentName(mount('<div data-slot="dialog-content">x</div>'))).toBe('dialog-content')
+  })
+
+  it('lets an explicit name and a build stamp both outrank data-slot', () => {
+    expect(componentName(mount('<button data-slot="button" data-hz-name="SaveButton">x</button>'))).toBe(
+      'SaveButton',
+    )
+    expect(componentName(mount('<button data-slot="button" data-observe="SaveButton">x</button>'))).toBe(
+      'SaveButton',
+    )
+  })
+
+  it('keeps WHICH one alongside WHAT it is', () => {
+    // A component name identifies a KIND, and a library renders hundreds of each.
+    // Dropping the qualifier collapsed every button on the page into one row.
+    document.body.innerHTML = `
+      <section data-slot="card">
+        <button data-slot="button">Save</button>
+        <button data-slot="button">Delete</button>
+      </section>`
+    const [save, del] = Array.from(document.querySelectorAll('button'))
+    expect(annotate(save).label).toBe('card/button[Save]')
+    expect(annotate(del).label).toBe('card/button[Delete]')
   })
 
   it('builds a readable hierarchy from stamped ancestors alone', () => {

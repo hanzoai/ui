@@ -68,6 +68,37 @@ group('Observer', () => {
     vi.useRealTimers()
   })
 
+  it('debounces each field on its own, so a filled form reports every field', () => {
+    // One shared debounce slot coalesced ACROSS elements: moving to the next
+    // field cleared the previous field's pending timer, so a form filled at any
+    // human speed reported only the last field touched. Caught in a browser,
+    // where filling two fields in sequence produced one $input.
+    vi.useFakeTimers()
+    document.body.innerHTML = '<input name="email"><input name="q">'
+    start({ inputDebounceMs: 300 })
+    const [email, q] = Array.from(document.querySelectorAll('input'))
+    email.dispatchEvent(new Event('input', { bubbles: true }))
+    vi.advanceTimersByTime(50)
+    q.dispatchEvent(new Event('input', { bubbles: true }))
+    vi.advanceTimersByTime(300)
+
+    expect(sink.map((i) => i.semantic.target.name)).toEqual(['email', 'q'])
+    vi.useRealTimers()
+  })
+
+  it('a settled change supersedes that field’s pending input, and only that one', () => {
+    vi.useFakeTimers()
+    document.body.innerHTML = '<input name="email"><select name="plan"><option>Pro</option></select>'
+    start({ inputDebounceMs: 300 })
+    const email = document.querySelector('input')!
+    email.dispatchEvent(new Event('input', { bubbles: true }))
+    document.querySelector('select')!.dispatchEvent(new Event('change', { bubbles: true }))
+    vi.advanceTimersByTime(300)
+
+    expect(sink.map((i) => i.kind)).toEqual(['change', 'input'])
+    vi.useRealTimers()
+  })
+
   it('never captures inside a private subtree', () => {
     document.body.innerHTML = '<div data-hz-private><button id="b">x</button></div>'
     start()
@@ -90,6 +121,53 @@ group('Observer', () => {
     e.stop()
     document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
     expect(sink).toHaveLength(0)
+  })
+
+  // ── one root, one engine ──────────────────────────────────────────────────
+  // Delegated listeners mean a second engine on the same root reports every
+  // interaction a second time. An app gets one by following two true sets of
+  // instructions at once (a library's provider AND this package's own README),
+  // and a doubled click is indistinguishable downstream from an engaged visitor.
+
+  it('refuses a second engine on a root another already holds', () => {
+    document.body.innerHTML = '<button>x</button>'
+    const first = start()
+    const second = new Observer({ sink: (i) => sink.push(i), nav: false, viewSelector: '' })
+    second.start()
+
+    expect(first.capturing).toBe(true)
+    expect(second.capturing).toBe(false)
+
+    document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(sink).toHaveLength(1)
+    second.stop()
+  })
+
+  it('hands the root on once the holder stops', () => {
+    document.body.innerHTML = '<button>x</button>'
+    const first = start()
+    first.stop()
+    const second = new Observer({ sink: (i) => sink.push(i), nav: false, viewSelector: '' })
+    second.start()
+    expect(second.capturing).toBe(true)
+    document.querySelector('button')!.dispatchEvent(new Event('click', { bubbles: true }))
+    expect(sink).toHaveLength(1)
+    second.stop()
+  })
+
+  it('claims per root, so a scoped engine coexists with a document-wide one', () => {
+    document.body.innerHTML = '<section id="scope"><button>x</button></section>'
+    const scoped = new Observer({
+      sink: (i) => sink.push(i),
+      root: document.getElementById('scope') as Element,
+      nav: false,
+      viewSelector: '',
+    })
+    scoped.start()
+    const wide = start()
+    expect(scoped.capturing).toBe(true)
+    expect(wide.capturing).toBe(true)
+    scoped.stop()
   })
 
   it('is fail-soft: a throwing sink never surfaces to the dispatcher', () => {
