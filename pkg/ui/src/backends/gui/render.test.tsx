@@ -88,6 +88,42 @@ describe('gui backend renders', () => {
       expect(markup, leak).not.toContain(leak)
   })
 
+  // The trap that made the Switch a 36x29 box for as long as it existed: gui's
+  // `size` variants return { height, minHeight, width }, so a wrapper that sets
+  // `height` and not `minHeight` overrides two of the three, and min-height —
+  // which always beats height — silently keeps the variant's floor. Nothing
+  // fails; the control is simply the wrong size, and on a pill that also clamps
+  // the radius until it stops being a pill.
+  //
+  // Scoped to the controls whose geometry IS the contract. A floor is not itself
+  // a smell — Textarea writes `minH={64}` on purpose, because rows are its floor
+  // and not a fixed size — so a surface-wide version of this cries wolf. These
+  // are the ones where a floor can only be an accident.
+  it('never lets a size floor outrank a fixed control\'s height', () => {
+    const FIXED = ['switch', 'switch-thumb', 'checkbox']
+    const markup = html(<Gallery />)
+    const offenders: string[] = []
+    let checked = 0
+
+    for (const [tag] of markup.matchAll(/<[a-z]+\s[^>]*>/g)) {
+      const slot = tag.match(/data-slot="([^"]+)"/)?.[1]
+      if (!slot || !FIXED.includes(slot)) continue
+      checked++
+      const list = (tag.match(/class="([^"]*)"/)?.[1] ?? '').split(/\s+/)
+      const h = list.find((c) => /^_height-\d+px$/.test(c))
+      const mh = list.find((c) => /^_minH-\d+px$/.test(c))
+      if (!h || !mh) continue
+      const [height, floor] = [h, mh].map((c) => Number(c.match(/\d+/)![0]))
+      if (floor > height) offenders.push(`${slot}: height ${height}px, floor ${floor}px`)
+    }
+
+    // A guard that matched nothing passes for the wrong reason, which is the
+    // same shape of silence it exists to catch.
+    expect(checked, 'the guard saw none of the controls it claims to cover')
+      .toBeGreaterThanOrEqual(FIXED.length)
+    expect(offenders, offenders.join('\n')).toHaveLength(0)
+  })
+
   it('gives a web Button a 44px touch target it cannot get from hitSlop', () => {
     const markup = html(<Button size="sm">go</Button>)
     // 32px tall + 6px each side. `hitSlop` is dropped on web, so this attribute
