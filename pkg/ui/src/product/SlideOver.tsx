@@ -9,7 +9,7 @@
  *
  * Smoothness is CSS-transform driven (never a JS layout branch): the panel is
  * ALWAYS mounted and toggles `translateX(0) ↔ translateX(±100%)` via the shared
- * `.hz-slide` class, and the backdrop cross-fades via `.hz-fade`. Because it never
+ * `.slide` class, and the backdrop cross-fades via `.fade`. Because it never
  * unmounts, the EXIT animates too (a `Dialog` that unmounts on close cannot). Both
  * classes are reduced-motion-aware in `globals.css`, so the whole thing snaps
  * instantly for users who ask for that — no bespoke logic here.
@@ -146,7 +146,7 @@ export function SlideOver({
         r={0}
         b={0}
         bg="rgba(0,0,0,0.55)"
-        className="hz-fade"
+        className="fade"
         style={{ opacity: open ? 1 : 0 }}
         onPress={onClose}
       />
@@ -172,7 +172,7 @@ export function SlideOver({
         borderColor="$borderColor"
         // Material paper depth — the drawer reads as a sheet lifted above the dimmed
         // list behind it (real layered shadow, theme-aware), not a flat panel.
-        className="hz-slide hz-elevation-4"
+        className="slide elevation-4"
         // Full-height sheet (100dvh — mobile-safe), inset for the notch (top) + home
         // indicator (bottom) so the drawer header + footer actions clear them on
         // notched devices (env insets are 0 elsewhere, so no effect there).

@@ -9,7 +9,7 @@ moved out to its own package; nothing here depends on it.
 src/
   core/                design core, runtime-free
     cn.ts              class-name composer (clsx)
-    tokens.ts          re-export of @hanzo/tokens (the token source of truth)
+    tokens.ts          re-export of @hanzo/design (the token source of truth)
     fonts.ts           Geist Sans / Geist Mono family variables
   theme.css            self-contained token vars + Geist (the identity)
   backends/gui/        the component surface — index.ts is its manifest

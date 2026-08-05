@@ -1,4 +1,4 @@
-// @hanzo/ui — the one Hanzo component library, on @hanzo/gui + @hanzo/tokens.
+// @hanzo/ui — the one Hanzo component library, on @hanzo/gui + @hanzo/design.
 //
 // ONE substrate: every component renders through @hanzo/gui primitives, so the
 // same import works on web, native (expo) and desktop (Tauri). The ROOT barrel is
@@ -51,6 +51,11 @@ export type {
   CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps,
   ResizablePanelGroupProps, ResizablePanelProps,
 } from './backends/gui'
+
+// `Hanzo` — the root, and the only thing an app mounts. It carries the gui
+// config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
+// no gui.config.ts, no CSS import, no generator script.
+export { Hanzo, type HanzoProps } from './root'
 
 // `cn` — the class-name composer, surfaced for convenience.
 export { cn } from './core/cn'

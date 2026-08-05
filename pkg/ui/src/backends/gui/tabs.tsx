@@ -51,6 +51,10 @@ const TabsTrigger = ({ children, ...p }: TabsTriggerProps) => (
   </GuiTabs.Tab>
 )
 
-const TabsContent = (p: TabsContentProps) => <GuiTabs.Content {...slot('tabs-content')} flex={1} {...p} />
+const TabsContent = ({ children, ...p }: TabsContentProps) => (
+  <GuiTabs.Content {...slot('tabs-content')} flex={1} {...p}>
+    {ink(children)}
+  </GuiTabs.Content>
+)
 
 export { Tabs, TabsList, TabsTrigger, TabsContent }

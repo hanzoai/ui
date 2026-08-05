@@ -114,9 +114,9 @@ function MetricsSkeleton() {
     <XStack flexWrap="wrap" gap="$3">
       {[0, 1, 2, 3].map((i) => (
         <Card key={i} p="$3.5" gap="$2.5" borderWidth={1} borderColor="$borderColor" bg="$color2" flex={1} minW={168}>
-          <div className="hz-skeleton" style={{ height: 10, width: '55%', borderRadius: 4 }} />
-          <div className="hz-skeleton" style={{ height: 26, width: '72%', borderRadius: 6 }} />
-          <div className="hz-skeleton" style={{ height: 10, width: '40%', borderRadius: 4 }} />
+          <div className="skeleton" style={{ height: 10, width: '55%', borderRadius: 4 }} />
+          <div className="skeleton" style={{ height: 26, width: '72%', borderRadius: 6 }} />
+          <div className="skeleton" style={{ height: 10, width: '40%', borderRadius: 4 }} />
         </Card>
       ))}
     </XStack>

@@ -160,7 +160,7 @@ function Header({ title, subtitle, actions }: { title: string; subtitle?: string
 /** A fade-up entrance (staggered by index). Honors reduced motion via the CSS. */
 function FadeIn({ children, index = 0, step = 50 }: { children: ReactNode; index?: number; step?: number }) {
   return (
-    <div className="hz-fade-up" style={{ animationDelay: `${index * step}ms` }}>
+    <div className="fade-up" style={{ animationDelay: `${index * step}ms` }}>
       {children}
     </div>
   )

@@ -27,6 +27,8 @@ export {
   CardAction,
   CardDescription,
   CardContent,
+  CardMedia,
+  type CardMediaProps,
 } from './card'
 export { Checkbox } from './checkbox'
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible'
@@ -74,6 +76,7 @@ export {
   type DropdownMenuProps,
 } from './dropdown-menu'
 export { Glass, type GlassProps } from './glass'
+export { Grid, type GridProps } from './grid'
 export { Input, type InputProps } from './input'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'
@@ -99,6 +102,7 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from './select'
+export { Section, type SectionProps } from './section'
 export { Separator } from './separator'
 export { Slider } from './slider'
 export { Switch } from './switch'

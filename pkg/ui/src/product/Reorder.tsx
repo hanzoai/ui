@@ -94,7 +94,7 @@ export function Reorder<T>({
             key={keyOf(item)}
             height={rowHeight}
             justify="center"
-            className="hz-drag-item"
+            className="drag"
             style={{
               transform: `translateY(${shift}px)`,
               zIndex: dragging ? 2 : 1,
