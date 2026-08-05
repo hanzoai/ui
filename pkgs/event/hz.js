@@ -9,6 +9,7 @@
  *
  *   <script async src="https://unpkg.com/@hanzo/event/hz.js"
  *           data-product="hanzo.ai"          // required: which surface this is
+ *           data-ingest-key="pk-…"           // required off api.hanzo.ai's own origin
  *           data-host="https://api.hanzo.ai" // optional: API host override
  *           data-ga="G-XXXX" data-fb="123"   // optional: also fan out to GA4 / Meta
  *           data-capture="1"></script>       // optional: autocapture off with "0"
@@ -29,13 +30,44 @@
 ;(function () {
   var s = document.currentScript
   if (!s) return
-  if (navigator.doNotTrack === '1' || navigator.doNotTrack === 'yes' || window.hzDNT) return
+
+  // ── consent ───────────────────────────────────────────────────────────────
+  // The same three sources the bundled stack honours, restated here for the same
+  // reason the uid minter and the scrubber are: a script tag has no bundler and
+  // cannot import them. An EXPLICIT stored choice — `hz_consent`, the key a Hanzo
+  // consent banner writes — outranks the browser signal in BOTH directions,
+  // because that is what "explicit" means. Otherwise Global Privacy Control (the
+  // signal CPRA actually obliges a site to obey) and Do Not Track are refusals.
+  var choice = null
+  try {
+    choice = localStorage.getItem('hz_consent')
+  } catch (e) {}
+  if (choice !== 'granted') {
+    if (choice === 'denied' || window.hzDNT) return
+    if (navigator.globalPrivacyControl === true) return
+    if (
+      navigator.doNotTrack === '1' ||
+      navigator.doNotTrack === 'yes' ||
+      window.doNotTrack === '1' ||
+      navigator.msDoNotTrack === '1'
+    )
+      return
+  }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.9'
+  var VERSION = '0.3.12'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
+  // The publishable ingest key (pk-…). Write-only and safe in page source: it
+  // attributes a write and mints no reading principal.
+  //
+  // Without it a tag on any origin but the door's own sends an UNATTRIBUTED
+  // write, and the door refuses one (401 ingest_key_required) — silently, since
+  // nothing here reads the response. Through 0.3.11 this file had no way to
+  // present a key at all, so every keyed static surface looked wired, measured
+  // fine in the browser, and filed nothing.
+  var key = s.getAttribute('data-ingest-key') || ''
 
   // uuidv7 (RFC 9562 §5.7) — the same minter as src/uid.ts, restated here for the
   // same reason `clean` restates scrub.ts: this file has no bundler and cannot
@@ -86,18 +118,27 @@
     if (!queue.length) return
     var body = JSON.stringify({ batch: queue.splice(0, queue.length) })
     var url = host + '/v1/event'
+    // The key rides the two channels each transport can actually carry — the
+    // same pair core.ts uses, so the door cannot tell the distributions apart:
+    // a headerless sendBeacon puts it in the query, a fetch puts it in the
+    // Authorization header.
     try {
       if (
         navigator.sendBeacon &&
-        navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }))
+        navigator.sendBeacon(
+          key ? url + '?ingest_key=' + encodeURIComponent(key) : url,
+          new Blob([body], { type: 'application/json' }),
+        )
       )
         return
     } catch (e) {}
+    var headers = { 'content-type': 'application/json' }
+    if (key) headers.authorization = 'Bearer ' + key
     fetch(url, {
       method: 'POST',
       body: body,
       keepalive: true,
-      headers: { 'content-type': 'application/json' },
+      headers: headers,
     }).catch(function () {})
   }
   // ── location redaction ────────────────────────────────────────────────────

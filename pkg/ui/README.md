@@ -114,6 +114,98 @@ import { registerField } from '@hanzo/ui/data'
 registerField('rating', { Display: MyStars, Input: MyStarPicker })
 ```
 
+## Analytics — one flag, and the components report themselves
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_EVENT_INGEST_KEY }}>
+  <App />
+</Hanzo>
+```
+
+That is the entire wiring. Every click, form change, submit and route change
+inside the tree arrives on the ONE front door (`POST /v1/event`) annotated with
+the component it happened on — no `onClick` handler anywhere reports anything,
+and no call site changes:
+
+```jsonc
+{
+  "event": "$click",
+  "$el": "card/button[Save]",      // the significant-node trail, root→leaf
+  "$role": "button",
+  "$component": "button",          // from the data-slot every primitive carries
+  "$name": "Save"
+}
+```
+
+Component names are real **in production**. Every primitive here stamps a
+`data-slot` through one helper (`slot()`), and the capture engine reads it — so
+attribution does not depend on React fiber owners, which a production build
+minifies away. A component that wants a better name than its slot says so once,
+on itself: `data-hz-name="SaveButton"` outranks everything.
+
+### What it is made of — one of each
+
+| Concern | Package | There is exactly one |
+|---|---|---|
+| Client + wire | [`@hanzo/event`](../../pkgs/event) | endpoint `POST /v1/event`, batched, beacon-on-unload |
+| Capture engine | [`@hanzo/observe`](../../pkgs/observe) | delegated listeners, semantic annotation, redaction |
+| Provider + consent | `@hanzogui/telemetry` | `<TelemetryProvider/>`, which `analytics` renders |
+
+`analytics` is a **prop, not a default**. Mounting a component library must
+never start a network conversation the app did not ask for: without it `<Hanzo>`
+renders no provider, installs no listener and sends nothing.
+
+### It cannot double-count
+
+An app that already mounts `<TelemetryProvider/>` itself leaves `analytics`
+off — but if both are mounted, the events still do not double. The capture
+engine installs *delegated* listeners on a root, so two engines on one root
+would report every interaction twice; a page-wide claim (`Symbol.for`, so
+duplicate copies of the package in one bundle still see each other) gives the
+root to the first engine and leaves any later one inert. Both providers also
+resolve the same client, so there is one session and one stream either way.
+
+### Privacy
+
+Consent decides whether any of it runs: Global Privacy Control, Do Not Track,
+and a stored choice a consent banner records — which outranks the browser signal
+in **both** directions, because that is what explicit means. Beyond that:
+
+- **Input values are withheld.** `$input`/`$change` carry the field's kind and
+  value length, never the typed text.
+- **Sensitive fields are never captured at all** — password, email, card, cvv,
+  token, ssn — not even a length.
+- **`data-hz-private`** on any element excludes its whole subtree.
+
+### One ingest key
+
+`ingestKey` is a publishable `pk-…` — write-only, safe in a bundle, minted per
+org with `POST /v1/keys {"type":"publishable"}`. Omit it and the client reads
+`NEXT_PUBLIC_EVENT_INGEST_KEY` from the build env, which is the spelling the
+fleet already carries end to end (KMS holds `deploy/EVENT_INGEST_KEY`; the
+Dockerfile takes it as a build-arg and re-exports it with the `NEXT_PUBLIC_`
+prefix Next needs to inline it). A surface with no key reports only for whoever
+is signed in and silently drops every logged-out visitor — the door refuses an
+unattributable write rather than filing it where its owner cannot read it.
+
+For a page with no build step at all, the same client ships as a script tag:
+`@hanzo/event/hz.js`, with `data-ingest-key="pk-…"`.
+
+### Naming a moment the components cannot see
+
+Autocapture reports what was clicked; it cannot know that a click *was* a
+checkout. Curated events live on `@hanzo/ui/product`, one closed verb set over
+one event name, on the same client and the same stream:
+
+```tsx
+import { useEmit, InstrumentSurface } from '@hanzo/ui/product'
+
+const emit = useEmit()
+emit({ component: 'PlanCard', action: 'select', id: 'pro' })
+```
+
 ## Design principles
 
 - **One home, no duplication** — components are extracted, never copied. The record layer's source of truth stays in `@hanzo/data`; `@hanzo/ui` composes it.

@@ -9,4 +9,11 @@ export const alias = [
     replacement: new URL('../test/react-native-svg.stub.ts', import.meta.url).pathname,
   },
   { find: /^react-native$/, replacement: 'react-native-web' },
+  // `root.tsx` imports the sheet `scripts/gen-css.mjs` writes into `dist` at
+  // publish time. It resolves for a consumer and not from `src`, so anything
+  // that imports the root off source — the suite, the generator — needs this.
+  {
+    find: /^\.\/styles\.css$/,
+    replacement: new URL('../test/styles.stub.ts', import.meta.url).pathname,
+  },
 ]

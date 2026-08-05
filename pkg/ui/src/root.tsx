@@ -35,6 +35,7 @@
  * this flag controls.
  */
 import { GuiProvider } from '@hanzo/gui'
+import { TelemetryProvider, type TelemetryConfig } from '@hanzogui/telemetry'
 import type { ReactNode } from 'react'
 
 import { config } from './gui-config'
@@ -44,6 +45,30 @@ export type HanzoProps = {
   children?: ReactNode
   /** Dark-first Hanzo identity. `light` retunes it. */
   theme?: 'dark' | 'light'
+  /**
+   * Interaction analytics for everything inside — OFF unless you ask.
+   *
+   *   <Hanzo analytics>                              // zero config
+   *   <Hanzo analytics={{ product: 'console' }}>     // named surface
+   *
+   * `true` is the whole setup: every click, form change, submit and route
+   * change inside this tree arrives on the ONE front door (`POST /v1/event`)
+   * annotated with the component it happened on — `card/button[Save]` — with
+   * input values withheld. Nothing to instrument at a call site.
+   *
+   * It is a PROP, not the default, because mounting a component library must
+   * never start a network conversation an app did not ask for. Off, this
+   * renders no provider, installs no listener and sends nothing.
+   *
+   * On, it is the one wiring: ONE client (@hanzo/event), ONE capture engine
+   * (@hanzo/observe), ONE endpoint, ONE publishable key — and consent decides
+   * whether any of it runs (Global Privacy Control, Do Not Track, and a stored
+   * choice a banner records, which outranks both). An app that already mounts
+   * `<TelemetryProvider/>` itself leaves this off; both would be the same
+   * client on the same stream, and the capture engine refuses a root another
+   * engine holds, so the events do not double either way.
+   */
+  analytics?: boolean | TelemetryConfig
 }
 
 /** A stylesheet that did not reach the document is invisible until someone opens
@@ -65,13 +90,19 @@ const assertStylesheet = () => {
   )
 }
 
-export const Hanzo = ({ children, theme = 'dark' }: HanzoProps) => {
+export const Hanzo = ({ children, theme = 'dark', analytics }: HanzoProps) => {
   if (process.env.NODE_ENV !== 'production') assertStylesheet()
-  return (
+  const tree = (
     <GuiProvider config={config} defaultTheme={theme} disableInjectCSS>
       {children}
     </GuiProvider>
   )
+  // OUTSIDE the gui provider: capture is delegated at the document, so it does
+  // not need to be inside the styled tree, and an app that renders its own
+  // `<TelemetryProvider/>` above `<Hanzo>` then nests two providers of the same
+  // kind rather than interleaving them with the theme.
+  if (!analytics) return tree
+  return <TelemetryProvider {...(analytics === true ? {} : analytics)}>{tree}</TelemetryProvider>
 }
 
 export default Hanzo
