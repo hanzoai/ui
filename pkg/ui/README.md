@@ -119,7 +119,7 @@ registerField('rating', { Display: MyStars, Input: MyStarPicker })
 ```tsx
 import { Hanzo } from '@hanzo/ui'
 
-<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_EVENT_INGEST_KEY }}>
+<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_PUBLISHABLE_KEY }}>
   <App />
 </Hanzo>
 ```
@@ -183,8 +183,8 @@ in **both** directions, because that is what explicit means. Beyond that:
 
 `ingestKey` is a publishable `pk-…` — write-only, safe in a bundle, minted per
 org with `POST /v1/keys {"type":"publishable"}`. Omit it and the client reads
-`NEXT_PUBLIC_EVENT_INGEST_KEY` from the build env, which is the spelling the
-fleet already carries end to end (KMS holds `deploy/EVENT_INGEST_KEY`; the
+`NEXT_PUBLIC_PUBLISHABLE_KEY` from the build env, which is the spelling the
+fleet already carries end to end (KMS holds `deploy/PUBLISHABLE_KEY`; the
 Dockerfile takes it as a build-arg and re-exports it with the `NEXT_PUBLIC_`
 prefix Next needs to inline it). A surface with no key reports only for whoever
 is signed in and silently drops every logged-out visitor — the door refuses an

@@ -360,26 +360,26 @@ describe('Analytics capture', () => {
     // The failure this closes is silent: a surface with no key attributes nothing
     // for a logged-out visitor, the door refuses the write, and the page shows no
     // sign of it. The key must resolve from the env exactly as the DSN does.
-    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-from-env'
+    process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-from-env'
     try {
       const a = mk() // no key in config
       a.capture('x')
       a.flush(true)
       expect(tx.sent[0].ingestKey).toBe('pk-live-from-env')
     } finally {
-      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+      delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
     }
   })
 
   it('prefers an explicit ingest key over the build env', () => {
-    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-from-env'
+    process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-from-env'
     try {
       const a = mk({ ingestKey: 'pk-live-explicit' })
       a.capture('x')
       a.flush(true)
       expect(tx.sent[0].ingestKey).toBe('pk-live-explicit')
     } finally {
-      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+      delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
     }
   })
 
@@ -394,7 +394,7 @@ describe('Analytics capture', () => {
     // The leak this closes: one console bundle is served to several brands, and a
     // pk- names ONE org. If an env-sourced key displaced the bearer, every
     // signed-in user's events would re-file under whichever org minted the key.
-    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-one-org'
+    process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-one-org'
     try {
       const a = mk({ getToken: () => 'jwt-of-a-real-person' })
       a.capture('x')
@@ -402,12 +402,12 @@ describe('Analytics capture', () => {
       expect(tx.sent[0].token).toBe('jwt-of-a-real-person')
       expect(tx.sent[0].ingestKey).toBeUndefined()
     } finally {
-      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+      delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
     }
   })
 
   it('an anonymous visitor still rides the key', () => {
-    process.env.NEXT_PUBLIC_EVENT_INGEST_KEY = 'pk-live-one-org'
+    process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-one-org'
     try {
       const a = mk({ getToken: () => undefined })   // logged out
       a.capture('x')
@@ -415,7 +415,7 @@ describe('Analytics capture', () => {
       expect(tx.sent[0].ingestKey).toBe('pk-live-one-org')
       expect(tx.sent[0].token).toBeUndefined()
     } finally {
-      delete process.env.NEXT_PUBLIC_EVENT_INGEST_KEY
+      delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
     }
   })
 

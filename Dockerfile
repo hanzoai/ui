@@ -16,12 +16,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # is safe in a public bundle; the deployment that builds decides which org the
 # site reports as.
 #
-# ONE name, end to end: KMS holds `deploy/EVENT_INGEST_KEY`, hanzo.yml declares it
+# ONE name, end to end: KMS holds `deploy/PUBLISHABLE_KEY`, hanzo.yml declares it
 # as this image's build_secret, and the KMS name IS the build-arg name. NEXT_PUBLIC_
 # is added HERE because that prefix is what makes Next inline it — the app reads
-# process.env.NEXT_PUBLIC_EVENT_INGEST_KEY.
+# process.env.NEXT_PUBLIC_PUBLISHABLE_KEY.
 #
-# Do NOT re-declare `ARG NEXT_PUBLIC_EVENT_INGEST_KEY` after the ENV below. A later
+# Do NOT re-declare `ARG NEXT_PUBLIC_PUBLISHABLE_KEY` after the ENV below. A later
 # ARG of the same name shadows the ENV with its own (empty) default, and the build
 # stays green while the bundle ships blank — which is exactly how hanzo.chat 1.0.58
 # shipped a keyless site from a fully green run.
@@ -39,12 +39,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 #             so requiring the current `pk-` shape refuses the stale one outright.
 #
 # Neither failure is visible from outside the artifact, so refuse the artifact.
-ARG EVENT_INGEST_KEY
-ENV NEXT_PUBLIC_EVENT_INGEST_KEY=$EVENT_INGEST_KEY
-RUN case "$EVENT_INGEST_KEY" in \
+ARG PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_PUBLISHABLE_KEY=$PUBLISHABLE_KEY
+RUN case "$PUBLISHABLE_KEY" in \
       pk-*) : ;; \
-      '')   echo "EVENT_INGEST_KEY is empty - pass --build-arg EVENT_INGEST_KEY=<pk-...> (KMS deploy/EVENT_INGEST_KEY, env prod)" >&2; exit 1 ;; \
-      *)    echo "EVENT_INGEST_KEY is not a publishable key (expected a pk- prefix)" >&2; exit 1 ;; \
+      '')   echo "PUBLISHABLE_KEY is empty - pass --build-arg PUBLISHABLE_KEY=<pk-...> (KMS deploy/PUBLISHABLE_KEY, env prod)" >&2; exit 1 ;; \
+      *)    echo "PUBLISHABLE_KEY is not a publishable key (expected a pk- prefix)" >&2; exit 1 ;; \
     esac
 # 300+ prerendered pages; the default heap is not enough.
 ENV NODE_OPTIONS=--max-old-space-size=8192
@@ -71,16 +71,16 @@ RUN cd pkgs/event && pnpm build
 #
 # ...and then PROVES the key reached the client bundle. The gate above proves a
 # key was PASSED; only this proves it was INLINED. Those are different failures:
-# a rename on either side of `process.env.NEXT_PUBLIC_EVENT_INGEST_KEY` leaves the
+# a rename on either side of `process.env.NEXT_PUBLIC_PUBLISHABLE_KEY` leaves the
 # build-arg intact and the bundle keyless, and a static export cannot report that
 # at runtime because there is no runtime.
 #
 # `&&`, never `;` — a `;` chain returns the LAST command's status, so a failed
 # build followed by a passing grep exits 0 and the image is published.
 RUN cd app && pnpm build && \
-    if [ -z "${NEXT_PUBLIC_EVENT_INGEST_KEY}" ]; then \
-      echo "ERROR: NEXT_PUBLIC_EVENT_INGEST_KEY is empty after a successful build." >&2; exit 1; \
-    elif grep -rqF "${NEXT_PUBLIC_EVENT_INGEST_KEY}" out; then \
+    if [ -z "${NEXT_PUBLIC_PUBLISHABLE_KEY}" ]; then \
+      echo "ERROR: NEXT_PUBLIC_PUBLISHABLE_KEY is empty after a successful build." >&2; exit 1; \
+    elif grep -rqF "${NEXT_PUBLIC_PUBLISHABLE_KEY}" out; then \
       echo "Build OK - ingest key inlined into app/out, verified"; \
     else \
       echo "ERROR: key supplied but NOT present in app/out - ui would ship unattributed" >&2; exit 1; \

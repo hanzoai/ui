@@ -75,7 +75,7 @@ images:
     dockerfile: Dockerfile
     repo: ghcr.io/hanzoai/ui
     platforms: [linux/amd64]
-    build_secrets: [EVENT_INGEST_KEY]
+    build_secrets: [PUBLISHABLE_KEY]
 
 # No `deploy:` — ON PURPOSE. hanzoai/universe names what is live, in
 # charts/app/values/hanzo/ui.yaml, and the in-cluster reconcile restores it — so a

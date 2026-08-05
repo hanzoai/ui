@@ -6,8 +6,8 @@ name: deploy
 #
 # The reason is one capability, not tidiness. ui.hanzo.ai is a static export, so
 # its ingest key has to be BAKED IN at build; the key lives in KMS as
-# `deploy/EVENT_INGEST_KEY`, and hanzoai/ci is the only lane that reads it and
-# passes it as `--build-arg EVENT_INGEST_KEY=…`. The `docker build -t "$image" .`
+# `deploy/PUBLISHABLE_KEY`, and hanzoai/ci is the only lane that reads it and
+# passes it as `--build-arg PUBLISHABLE_KEY=…`. The `docker build -t "$image" .`
 # below cannot — there is no KMS hop in it and nowhere to put the value — so any
 # image it produced would ship a client with no key at all, and cloud answers
 # `401 ingest_key_required` for an unattributed write. With the Dockerfile now
