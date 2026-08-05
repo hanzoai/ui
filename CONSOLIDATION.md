@@ -80,7 +80,7 @@ The brief's premise (`globals.css` `t_dark`/`t_light` token blocks) is **correct
 |---|---|---|
 | Calm dark-first tokens (surface, text, accent `#60a5fa`, tag tones) — raw hex, theme-config independent | `pkg/data/src/theme.ts` | `@hanzo/ui` (top-level `tokens`/`TAG_TONES`/`tagTone`) |
 | OKLCH shadcn-compatible palette (soft-charcoal `oklch(0.145 0 0)`, `--radius: 0.5rem`, indigo sidebar accent) | `pkgs/ui/style/hanzo-default-colors.css`, `@hanzo/tokens` | unchanged (legacy shadcn line); the gui line uses the hex tokens above |
-| **Motion vocabulary** — `hz-fade-up` (FadeIn), `hz-collapse`/`hz-slide`/`hz-fade` (shell/drawer), `hz-drag-item`, `hz-skeleton`/`hz-pulse`/`hz-row-in`; all `prefers-reduced-motion`-guarded | `console2/app/globals.css` (motion section) | **`@hanzo/ui/styles/motion.css`** (verbatim) — `import '@hanzo/ui/styles/motion.css'` once at app root |
+| **Motion vocabulary** — `fade-up` (FadeIn), `collapse`/`slide`/`fade` (shell/drawer), `drag`, `skeleton`/`pulse`/`row-in`; all `prefers-reduced-motion`-guarded | `console2/app/globals.css` (motion section) | **`@hanzo/ui/styles/motion.css`** (verbatim) — `import '@hanzo/ui/styles/motion.css'` once at app root |
 
 ### D. Generic DocType renderer → `@hanzo/ui`  ⏳ (Step 3, FINAL — active lane)
 

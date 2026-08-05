@@ -6,7 +6,8 @@
  * Defines EVERY standard design token the components reference, so `@hanzo/ui`
  * never depends on a consumer having pre-declared them (the bug this rework
  * fixes: components that reached for tokens the host didn't define rendered
- * transparent). Values originate in `@hanzo/tokens` (dark/light theme sets) —
+ * transparent). Values originate in `@hanzo/design` (composed in at build time by
+ * scripts/compose-theme.mjs) —
  * the same source `@hanzo/ui/tokens` exposes to code — so CSS and runtime agree.
  *
  * Dark-first Hanzo identity: neutral zinc-on-black, calm, high-contrast. Add
@@ -46,24 +47,6 @@
    `.light` follows both so it can still win. */
 :root,
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.269 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.371 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
 
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -82,26 +65,7 @@
 }
 
 .light {
-  --radius: 0.5rem;
 
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -194,10 +158,10 @@
 [data-touch-y="24"]::after { top: -24px; bottom: -24px; }
 
 /* Elevation ladder — the shadow steps components name by class. */
-.hz-elevation-1 { box-shadow: var(--hz-elevation-1, 0 1px 2px rgba(0, 0, 0, 0.16)); }
-.hz-elevation-2 { box-shadow: var(--hz-elevation-2, 0 4px 12px rgba(0, 0, 0, 0.24)); }
-.hz-elevation-3 { box-shadow: var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36)); }
-.hz-elevation-4 { box-shadow: var(--hz-elevation-4, 0 16px 48px rgba(0, 0, 0, 0.44)); }
+.elevation-1 { box-shadow: var(--hz-elevation-1, 0 1px 2px rgba(0, 0, 0, 0.16)); }
+.elevation-2 { box-shadow: var(--hz-elevation-2, 0 4px 12px rgba(0, 0, 0, 0.24)); }
+.elevation-3 { box-shadow: var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36)); }
+.elevation-4 { box-shadow: var(--hz-elevation-4, 0 16px 48px rgba(0, 0, 0, 0.44)); }
 
 /* Glass — the ONE frosted material (see backends/gui/glass.tsx). The component
    stands as a solid raised panel; only a browser that can actually blur the

@@ -1,5 +1,9 @@
 import { defineConfig } from 'vitest/config'
 
+// Shared with scripts/gen-css.mjs — the generator and the suite must resolve
+// @hanzo/gui the same way or they are testing different code.
+import { alias } from './scripts/alias.mjs'
+
 /**
  * Two kinds of suite, one runner.
  *
@@ -14,14 +18,7 @@ export default defineConfig({
   // These suites import no CSS, so keep vite from searching for (and failing on)
   // the repo-root PostCSS config.
   css: { postcss: { plugins: [] } },
-  resolve: {
-    alias: [
-      // The gui icon set pulls react-native-svg, whose CommonJS build re-requires
-      // ESM and crashes under Node. Markup is what these suites assert.
-      { find: /^react-native-svg(\/.*)?$/, replacement: new URL('./test/react-native-svg.stub.ts', import.meta.url).pathname },
-      { find: /^react-native$/, replacement: 'react-native-web' },
-    ],
-  },
+  resolve: { alias },
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],

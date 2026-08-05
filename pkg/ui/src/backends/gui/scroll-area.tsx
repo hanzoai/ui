@@ -33,6 +33,7 @@ import {
   type YStackProps,
 } from "@hanzo/gui"
 
+import { ink } from "./ink"
 import { slot } from "./slot"
 import { drag, dragPos, touch } from "./gesture"
 
@@ -253,7 +254,7 @@ const ScrollArea = /* @__PURE__ */ forwardRef<GuiElement, ScrollAreaProps>(
             wake()
           }}
         >
-          {children}
+          {ink(children)}
         </ScrollView>
         <Ctx.Provider
           value={{ axis, track, type, active, rtl: dir === "rtl", scrollBy }}

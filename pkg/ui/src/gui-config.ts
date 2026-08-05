@@ -24,11 +24,17 @@ import { createGui } from '@hanzo/gui'
 // product moves. Adding a fourth spelling of a size is the thing to refuse.
 //
 // Canonical face: Geist Sans for UI, Geist Mono for anything numeric/code/id
-// (`.hz-mono`). The host self-hosts both faces (its own fonts.css) — this only
+// (`.mono`). The host self-hosts both faces (its own fonts.css) — this only
 // names them.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const GEIST = "'Geist', system-ui, -apple-system, sans-serif"
+
+/** The numeric/code/id face. Byte-for-byte the stack `.mono` sets in
+ *  styles/motion.css — the class and the `$mono` token have to resolve to the
+ *  same face or the same number renders in two different fonts depending on
+ *  which one a component reached for. */
+const GEIST_MONO = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 
 /** Type — SIX sizes in the app, matching the host's `--text-*` design tokens.
  *  $1 label · $2 nav + dense body · $3 base · $4/$5 emphasis · $6 section head ·
@@ -152,6 +158,12 @@ export const config = createGui({
     ...defaultConfig.fonts,
     body: { ...defaultConfig.fonts.body, family: GEIST, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
     heading: { ...defaultConfig.fonts.heading, family: GEIST, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
+    // `$mono` was NOT defined here, and gui emits NO class for a font token it
+    // does not know — no warning, no fallback, a green build and text that is
+    // simply not monospace. 260 `fontFamily="$mono"` call sites across 74 files
+    // in hanzo.app were dead on that alone. A missing token has to be a defined
+    // token, not a silent no-op, so it is defined.
+    mono: { ...defaultConfig.fonts.body, family: GEIST_MONO, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
   },
 })
 
