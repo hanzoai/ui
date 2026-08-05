@@ -356,6 +356,40 @@ describe('Analytics capture', () => {
     expect(tx.sent[0].url).toBe('/v1/event')
   })
 
+  it('reads the ingest key from the build env when config omits it', () => {
+    // The failure this closes is silent: a surface with no key attributes nothing
+    // for a logged-out visitor, the door refuses the write, and the page shows no
+    // sign of it. The key must resolve from the env exactly as the DSN does.
+    process.env.NEXT_PUBLIC_HANZO_EVENT_KEY = 'pk-live-from-env'
+    try {
+      const a = mk() // no key in config
+      a.capture('x')
+      a.flush(true)
+      expect(tx.sent[0].ingestKey).toBe('pk-live-from-env')
+    } finally {
+      delete process.env.NEXT_PUBLIC_HANZO_EVENT_KEY
+    }
+  })
+
+  it('prefers an explicit ingest key over the build env', () => {
+    process.env.NEXT_PUBLIC_HANZO_EVENT_KEY = 'pk-live-from-env'
+    try {
+      const a = mk({ ingestKey: 'pk-live-explicit' })
+      a.capture('x')
+      a.flush(true)
+      expect(tx.sent[0].ingestKey).toBe('pk-live-explicit')
+    } finally {
+      delete process.env.NEXT_PUBLIC_HANZO_EVENT_KEY
+    }
+  })
+
+  it('stays keyless when neither config nor env names a key', () => {
+    const a = mk()
+    a.capture('x')
+    a.flush(true)
+    expect(tx.sent[0].ingestKey).toBeUndefined()
+  })
+
   it('setCohort rides subsequent events', () => {
     const a = mk()
     a.setCohort({ signupWeek: '2026-W29', channel: 'paid', refCode: 'REF9' })
