@@ -1,5 +1,4 @@
-# Canonical CI config — see hanzoai/ci.
-#
+
 # @hanzo/ui is a library, not a container: nothing here builds an image and
 # nothing rolls a cluster, so this file is a `test:` block and nothing else.
 # Publishing stays in .hanzo/workflows/publish.yml, which fires on a version
@@ -41,11 +40,36 @@
 # A gate that cannot go green teaches nobody anything — it is read once, filed
 # as "CI is just red here", and from then on it hides real breakage. Gating
 # pkg/ui is not a smaller gate than that one. It is the first real one.
+
+# Two jobs, not one, and the split is not cosmetic. `pnpm run test` is now
+# vitest + the Vite consumer + the WEBPACK consumer, and the two consumer
+# suites need a browser and a real npm install that unit tests do not. Running
+# them as one step means a playwright download sits in front of every unit
+# failure.
+#
+# The `...` on the build filter stays and is load-bearing: it builds @hanzo/ui's
+# WORKSPACE DEPENDENCIES first, in topological order. @hanzo/cd is still one of
+# them. Without it the sibling has no dist/, tsc reads it through its own
+# `"types": "dist/index.d.ts"`, and it comes back as a missing module — an error
+# that names @hanzo/ui and is not its fault.
 test:
-  - name: ui
+  - name: ui-unit
     run: |
       set -e
       corepack enable
       pnpm install
       pnpm --filter @hanzo/ui... build
-      pnpm --filter @hanzo/ui run test
+      pnpm --filter @hanzo/ui run test:unit
+  - name: ui-consumer
+    run: |
+      set -e
+      corepack enable
+      pnpm install
+      pnpm --filter @hanzo/ui... build
+      cd pkg/ui
+      pnpm exec playwright install --with-deps chromium
+      # Both bundlers. They disagree about css url() asset resolution, and a
+      # Vite-only gate is how 8.0.46 shipped a stylesheet pointing at a font
+      # file the package does not pack.
+      pnpm run test:consumer
+      pnpm run test:consumer:webpack

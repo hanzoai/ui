@@ -13,59 +13,8 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import {
-  AspectRatio,
-  Avatar,
-  AvatarFallback,
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Checkbox,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Input,
-  Label,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Progress,
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-  ScrollArea,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  Separator,
-  Slider,
-  Switch,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Textarea,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from './index'
+import { Gallery } from '../../gallery'
+import { Button } from './index'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -78,85 +27,12 @@ const slots = (markup: string) =>
   [...markup.matchAll(/data-slot="([^"]+)"/g)].map((m) => m[1])
 
 describe('gui backend renders', () => {
+  // The surface is `src/gallery.tsx` — the same list `scripts/gen-css.mjs`
+  // renders to generate the stylesheet and the consumer test renders in a
+  // browser. A second copy of "every component" here would drift from it, and a
+  // component styled by one list and missed by the other is the whole bug.
   it('mounts the whole surface and emits its slot markers', () => {
-    const markup = html(
-      <>
-        <AspectRatio ratio={16 / 9} />
-        <Avatar>
-          <AvatarFallback>HZ</AvatarFallback>
-        </Avatar>
-        <Badge>new</Badge>
-        <Button variant="outline" size="lg">
-          go
-        </Button>
-        <Card>
-          <CardHeader>
-            <CardTitle>t</CardTitle>
-          </CardHeader>
-          <CardContent>c</CardContent>
-        </Card>
-        <Checkbox />
-        <Collapsible open>
-          <CollapsibleTrigger>more</CollapsibleTrigger>
-          <CollapsibleContent>body</CollapsibleContent>
-        </Collapsible>
-        <Command>
-          <CommandInput />
-          <CommandList>
-            <CommandEmpty>none</CommandEmpty>
-            <CommandGroup heading="g">
-              <CommandItem value="a">a</CommandItem>
-            </CommandGroup>
-          </CommandList>
-        </Command>
-        <Dialog open>
-          <DialogContent>
-            <DialogTitle>d</DialogTitle>
-          </DialogContent>
-        </Dialog>
-        <DropdownMenu open>
-          <DropdownMenuTrigger>menu</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem>one</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Input placeholder="p" />
-        <Label>l</Label>
-        <Popover open>
-          <PopoverTrigger>open</PopoverTrigger>
-          <PopoverContent>panel</PopoverContent>
-        </Popover>
-        <Progress value={40} />
-        <ResizablePanelGroup direction="horizontal">
-          <ResizablePanel />
-          <ResizableHandle />
-          <ResizablePanel />
-        </ResizablePanelGroup>
-        <ScrollArea height={80}>tall</ScrollArea>
-        <Select>
-          <SelectTrigger />
-          <SelectContent>
-            <SelectItem value="x" index={0}>
-              x
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Separator />
-        <Slider defaultValue={[20]} />
-        <Switch />
-        <Tabs defaultValue="one">
-          <TabsList>
-            <TabsTrigger value="one">one</TabsTrigger>
-          </TabsList>
-          <TabsContent value="one">body</TabsContent>
-        </Tabs>
-        <Textarea />
-        <Tooltip open>
-          <TooltipTrigger>hint</TooltipTrigger>
-          <TooltipContent>tip</TooltipContent>
-        </Tooltip>
-      </>,
-    )
+    const markup = html(<Gallery />)
 
     // Portalled panels (dialog/popover/menu/select content) do not appear in
     // static markup — they mount into a portal host at runtime. What is asserted

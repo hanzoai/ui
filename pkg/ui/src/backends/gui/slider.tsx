@@ -21,9 +21,14 @@ const Slider = (props: SliderProps) => (
       index={0}
       circular
       size={THUMB}
-      bg="$background"
-      borderWidth={1}
-      borderColor="$color12"
+      // A FILLED knob, no ring. It used to be a dark knob ringed in `$color12`,
+      // which is #fff on dark — the one border value the identity does not
+      // allow. `$borderColor` is not the fix either: gui gives the thumb its own
+      // `SliderThumb` sub-theme, where that token is white as well. A filled
+      // knob needs no border, and `$color12` reads on both themes (white on
+      // dark, near-black on light).
+      bg="$color12"
+      borderWidth={0}
       {...touch(THUMB)}
     />
   </GuiSlider>

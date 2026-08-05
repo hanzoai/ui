@@ -3,7 +3,7 @@
 /**
  * FadeIn — the ONE entrance animation for the console.
  *
- * A thin wrapper that applies the shared `.hz-fade-up` keyframe (defined once in
+ * A thin wrapper that applies the shared `.fade-up` keyframe (defined once in
  * globals.css) plus an optional stagger delay, so sections and cards rise in the
  * way the hanzo.ai marketing surface does. Framework-free (no animation driver,
  * no JS observers) so it works under static export and honors
@@ -31,7 +31,7 @@ export function FadeIn({
 }) {
   const delay = delayMs ?? index * step
   return (
-    <div className="hz-fade-up" style={{ animationDelay: `${delay}ms`, ...style }}>
+    <div className="fade-up" style={{ animationDelay: `${delay}ms`, ...style }}>
       {children}
     </div>
   )

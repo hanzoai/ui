@@ -56,6 +56,8 @@ superseded, being retired.
 pkg/ui/src/
   core/            design core: cn.ts (clsx+tailwind-merge),
                    tokens.ts (re-export of @hanzo/tokens), fonts.ts (Geist vars)
+  root.tsx         <Hanzo> — the root. Carries the gui config AND the stylesheet.
+  gallery.tsx      EVERY component, once, in every variant. The one list.
   theme.css        SELF-CONTAINED token CSS vars + Geist Sans/Mono — the identity
   backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
@@ -63,6 +65,63 @@ pkg/ui/src/
   primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)
   index.ts         root barrel = the component surface + cn
 ```
+
+### Out of the box — the package carries its own config and its own CSS
+
+```tsx
+import { Hanzo, Button } from '@hanzo/ui'
+<Hanzo><Button>Ship</Button></Hanzo>
+```
+
+That is the entire setup. No `gui.config.ts`, no CSS import, no generator script.
+Three things used to be each app's job:
+
+1. **The stylesheet.** gui compiles a style prop to an atomic class the first
+   time something RENDERS it, so the sheet does not exist until a render has
+   happened — which is why every app ran a `gen-gui-css.mjs` of its own. hanzo.app
+   never did: it shipped 103 `_bg-` classes and 26 `_dsp-` classes against a
+   stylesheet containing ZERO of either, every gui-styled element unstyled in
+   production, green build throughout. The render happens at OUR publish time now
+   (`scripts/gen-css.mjs` renders `src/gallery.tsx` in both themes and writes
+   `dist/styles.css` — 381 KB, 35 KB gzipped, 340 atomic selectors), and
+   `<Hanzo>` imports it. Styles gui generates at RUNTIME for props we could not
+   know at publish time still reach the document through `insertStyleRules`;
+   the shipped sheet is what makes the FIRST paint and every SSR/static render
+   correct.
+
+2. **The config.** `<Hanzo>` passes `config` from `gui-config.ts` to
+   `GuiProvider` — as a VALUE, never a bare `import './gui-config'`. Vite 8
+   (rolldown) ignores package.json `sideEffects` ARRAYS outright: with any array
+   the registration is dropped and the first render dies on "Missing hanzogui
+   config"; only `sideEffects: true` keeps it, and that costs +63% bundle
+   (404 KB → 661 KB measured). Correctness does not live in bundler metadata.
+
+3. **The theme.** gui throws `Missing theme.` for any component with no root
+   theme context, so a root is structurally required — there is no version of
+   this with no root at all. Forgetting `<Hanzo>` is therefore a hard crash on
+   first paint, never a silently unstyled page.
+
+`theme.css` is dark-first at `:root` (it used to claim dark-first while shipping
+LIGHT at `:root`, so an app that mounted the dark default and read `--background`
+got white). `.light` retunes, and both answer to gui's own `.t_light`/`.t_dark`
+that `<Hanzo>` stamps on the body — one theme, named the same by the CSS custom
+properties and the component tokens.
+
+### Three tests, one list of components
+
+`src/gallery.tsx` is the specification of "what this package has to style", and
+all three layers render THAT — a second copy of the list is how a component gets
+styled by one and missed by another.
+
+| Layer | Command | What it catches |
+|---|---|---|
+| `src/styles.test.tsx` | `pnpm test:unit` | every atomic class the gallery renders vs every class `dist/styles.css` defines a rule for. Not "the intersection is large" — TOTAL. Catches a stale sheet. |
+| `src/backends/gui/render.test.tsx` | `pnpm test:unit` | the surface mounts under the real provider; a component that throws on first paint fails. |
+| `test/consumer.spec.ts` | `pnpm test:consumer` | packs the tarball, installs it into a temp app OUTSIDE the repo (never a workspace link — that hides `files`/`exports`/`workspace:*` defects), builds, serves, and asserts COMPUTED styles + screenshots at 390 and 1280 in both themes. |
+
+The consumer spec also fails on a solid-white border (the `@hanzo/design`
+`border-card: var(--white…)` defect — borders are low-alpha hairlines) and on any
+element that has a text child and a zero-height box.
 
 ### House rules for a component
 
@@ -87,7 +146,9 @@ pkg/ui/src/
 | `@hanzo/ui/product` | the product/app layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
 | `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
 | `@hanzo/ui/core` · `/tokens` | cn, Geist font vars, the @hanzo/tokens color/theme/radii/spacing scale |
-| `@hanzo/ui/theme.css` | the self-contained Hanzo identity stylesheet |
+| `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Geist + touch/elevation) |
+| `@hanzo/ui/styles.css` | the COMPLETE sheet — tokens + motion + the generated gui atomic/theme CSS. `<Hanzo>` imports it, so an app never has to |
+| `@hanzo/ui/gallery` | every component, once — what the generator, the unit test and the consumer test all render |
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
 | `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
@@ -113,7 +174,9 @@ unchanged. Re-run `pnpm gen:primitives` after changing the surface.
 
 ### Build — plain `tsc`, one file in, one file out
 
-There is no bundler. `pnpm build` is two `tsc` passes plus `scripts/postbuild.mjs`:
+There is no bundler. `pnpm build` is two `tsc` passes, `scripts/postbuild.mjs`,
+then `scripts/gen-css.mjs` (which renders the gallery through vite's SSR pipeline
+to harvest `config.getCSS()` into `dist/styles.css` — the slow step, ~2 min):
 
 | Pass | Config | Emits |
 |---|---|---|

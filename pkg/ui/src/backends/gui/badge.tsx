@@ -95,7 +95,7 @@ const BadgeText = styled(SizableText, {
  * the tokens; this only names the variant.
  */
 export const badgeVariants = ({ variant }: { variant?: BadgeVariant | null } = {}) =>
-  `hanzo-badge hanzo-badge--${variant ?? 'default'}`
+  `badge badge-${variant ?? 'default'}`
 
 /**
  * Typed as span props because that is the contract every existing call site was

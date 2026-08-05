@@ -49,7 +49,7 @@ function SkeletonRows<T>({ columns, count = 6 }: { columns: Column<T>[]; count?:
           {columns.map((c, i) => (
             <YStack key={c.key} width={c.width} flex={c.width ? undefined : 1} minW={c.width ? undefined : FLEX_MIN_COL_W} items={c.align === 'right' ? 'flex-end' : 'flex-start'}>
               <div
-                className="hz-skeleton"
+                className="skeleton"
                 style={{ height: 12, borderRadius: 6, width: `${[62, 40, 54, 34, 48][(i + r) % 5]}%` }}
                 aria-hidden
               />
@@ -139,7 +139,7 @@ export function DataTable<T>({
                     fontWeight="500"
                     color={active ? '$color12' : '$color10'}
                     text={c.align === 'right' ? 'right' : 'left'}
-                    className={c.mono ? 'hz-tnum' : undefined}
+                    className={c.mono ? 'tnum' : undefined}
                   >
                     {c.header}
                   </Text>
@@ -158,7 +158,7 @@ export function DataTable<T>({
                 return (
                 <YStack key={rowKey(row)}>
                 <XStack
-                  className="hz-row"
+                  className="row"
                   py="$2.5"
                   px="$3"
                   gap="$3"
@@ -202,7 +202,7 @@ export function DataTable<T>({
                             numberOfLines={1}
                             color="$color12"
                             text={c.align === 'right' ? 'right' : 'left'}
-                            className={c.mono ? 'hz-mono' : undefined}
+                            className={c.mono ? 'mono' : undefined}
                           >
                             {cell}
                           </Text>

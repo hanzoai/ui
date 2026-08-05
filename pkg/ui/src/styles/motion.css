@@ -8,7 +8,7 @@
 
 /* Fade-up entrance — <FadeIn> applies the class + a per-item stagger delay.
    ~0.4s ease-out, small upward travel (matches the hanzo.ai marketing feel). */
-@keyframes hz-fade-up {
+@keyframes fade-up {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -19,41 +19,41 @@
   }
 }
 
-.hz-fade-up {
-  animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+.fade-up {
+  animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-fade-up {
+  .fade-up {
     animation: none;
   }
 }
 
 /* Shell chrome motion — sidebar collapse (width) and the Linear-style two-level
    nav slide (transform); backdrop cross-fade behind a SlideOver / dialog. */
-.hz-collapse {
+.collapse {
   transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
 }
 
-.hz-slide {
+.slide {
   transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
-.hz-fade {
+.fade {
   transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity;
 }
 
 /* Drag-to-reorder — a pinned row while it is being dragged (pointer DnD). The
-   lifted row gets a subtle lift; siblings ease into place via `.hz-slide`. */
-.hz-drag-item {
+   lifted row gets a subtle lift; siblings ease into place via `.slide`. */
+.drag {
   touch-action: none;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hz-drag-item[data-dragging='true'] {
+.drag[data-dragging='true'] {
   transition: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   opacity: 0.96;
@@ -61,10 +61,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-collapse,
-  .hz-slide,
-  .hz-fade,
-  .hz-drag-item {
+  .collapse,
+  .slide,
+  .fade,
+  .drag {
     transition: none;
   }
 }
@@ -75,7 +75,7 @@
    a brief highlight when a freshly-arrived row lands. */
 
 /* Skeleton shimmer — an honest "loading", never fabricated content. */
-@keyframes hz-shimmer {
+@keyframes shimmer {
   0% {
     background-position: -160px 0;
   }
@@ -84,7 +84,7 @@
   }
 }
 
-.hz-skeleton {
+.skeleton {
   background-color: var(--color3, rgba(148, 163, 184, 0.14));
   background-image: linear-gradient(
     90deg,
@@ -94,11 +94,11 @@
   );
   background-size: 160px 100%;
   background-repeat: no-repeat;
-  animation: hz-shimmer 1.2s ease-in-out infinite;
+  animation: shimmer 1.2s ease-in-out infinite;
 }
 
 /* Live-feed pulse — the "Live" dot on a streaming panel. */
-@keyframes hz-pulse {
+@keyframes pulse {
   0%,
   100% {
     opacity: 1;
@@ -111,7 +111,7 @@
 }
 
 /* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
-@keyframes hz-row-in {
+@keyframes row-in {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -122,48 +122,48 @@
   }
 }
 
-.hz-row-in {
-  animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+.row-in {
+  animation: row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-skeleton {
+  .skeleton {
     animation: none;
   }
-  .hz-row-in {
+  .row-in {
     animation: none;
   }
 }
 
 /* ── Typography + surface classes the product layer's components reference ──────
-   DataTable/Metric typeset numeric cells with `hz-mono`/`hz-tnum`; ComboBox and
-   SelectMenu paint their popovers with `hz-paper hz-menu-in`; DataTable rows use
-   `hz-row`. They travel WITH the components (this is the package's one stylesheet)
+   DataTable/Metric typeset numeric cells with `mono`/`tnum`; ComboBox and
+   SelectMenu paint their popovers with `paper menu-in`; DataTable rows use
+   `row`. They travel WITH the components (this is the package's one stylesheet)
    so any host that imports `@hanzo/ui/styles/motion.css` renders them correctly.
    The elevation/ring variables fall back to sane values, so a host that defines its
    own `--hz-*` theme tokens (the console does) still wins. */
 
-.hz-tnum {
+.tnum {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
 
 /* Data/numeric face — Geist Mono + tabular figures for metric values, prices, IDs
    and counts, so numbers read as precise, column-aligned data. */
-.hz-mono {
+.mono {
   font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
   letter-spacing: -0.01em;
 }
 
-.hz-paper {
+.paper {
   box-shadow: var(--hz-ring, inset 0 0 0 1px rgba(255, 255, 255, 0.08)),
     var(--hz-paper-highlight, inset 0 1px 0 0 rgba(255, 255, 255, 0.05)),
     var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36));
 }
 
-@keyframes hz-menu-in {
+@keyframes menu-in {
   from {
     opacity: 0;
   }
@@ -172,17 +172,44 @@
   }
 }
 
-.hz-menu-in {
-  animation: hz-menu-in 140ms ease-out both;
+.menu-in {
+  animation: menu-in 140ms ease-out both;
   will-change: opacity;
 }
 
-.hz-row {
+.row {
   transition: background-color 140ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-menu-in {
+  .menu-in {
     animation: none;
   }
+}
+
+/* ── Layout guarantees ─────────────────────────────────────────────────────────
+   Two rules, both structural. They are attached to `data-slot` rather than to a
+   class because they are not styling a caller can opt out of — they are the
+   thing the primitive PROMISES, and a class can be overwritten by forgetting to
+   pass it on. */
+
+/* A grid item's initial `min-width` is `auto`, which floors the track at the
+   item's min-content width. One long unbroken string — a hash, a URL, a wide
+   <pre> — then pushes its own column wider and squeezes every sibling, which is
+   the ragged row Grid exists to prevent. The track sizing in grid.tsx is only
+   honoured once this floor is gone. */
+[data-slot='grid'] > * {
+  min-width: 0;
+}
+
+/* Media fills the ratio box instead of setting its own size. Without this an
+   <img> renders at its intrinsic pixel size and either overflows the frame or
+   sits letterboxed inside it, and the ratio the caller asked for is decoration.
+   `display:block` kills the inline-baseline gap under the image. */
+[data-ratio] > img,
+[data-ratio] > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

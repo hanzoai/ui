@@ -110,12 +110,36 @@ const Frame = styled(GuiButton.Frame, {
       },
     },
     size: {
-      default: { height: HEIGHT.default, px: '$4' },
-      sm: { height: HEIGHT.sm, px: '$3', gap: '$1.5' },
-      lg: { height: HEIGHT.lg, px: '$6' },
-      icon: { height: HEIGHT.icon, width: HEIGHT.icon, px: 0 },
-      'icon-sm': { height: HEIGHT['icon-sm'], width: HEIGHT['icon-sm'], px: 0 },
-      'icon-lg': { height: HEIGHT['icon-lg'], width: HEIGHT['icon-lg'], px: 0 },
+      // minHeight, NOT height. A control has to be a predictable size, and it
+      // still is: text at this type scale is shorter than the box, so every
+      // ordinary Button renders at exactly these numbers. What changes is the
+      // failure: a pinned `height` CLIPS anything taller, which is how a 119px
+      // thumbnail shipped rendered as a 30px sliver with a green build. A floor
+      // cannot clip — the button grows and the mistake is visible immediately
+      // instead of silently cropping content.
+      //
+      // Same for the icon sizes' width: a floor keeps them square without
+      // truncating a child that is wider than the box.
+      // `height: 'auto'` + `minHeight`, and BOTH halves are load-bearing.
+      //
+      // minHeight alone is not enough: dropping `height` lets GuiButton.Frame's
+      // own size variant supply one (measured: 44px), which re-pins the box and
+      // ALSO makes every ordinary button 8px taller. `height: 'auto'` is what
+      // turns that off, and minHeight is what keeps the control its designed
+      // size once it is off.
+      //
+      // Together: text is shorter than the floor, so an ordinary Button still
+      // measures exactly these numbers. Anything taller GROWS instead of being
+      // cropped — a pinned height is how a 119px thumbnail shipped rendered as
+      // a 36px sliver with a green build. Both directions are asserted in
+      // consumer.spec.ts, because getting one right and the other wrong is
+      // exactly what happened on the first attempt.
+      default: { height: 'auto', minHeight: HEIGHT.default, px: '$4' },
+      sm: { height: 'auto', minHeight: HEIGHT.sm, px: '$3', gap: '$1.5' },
+      lg: { height: 'auto', minHeight: HEIGHT.lg, px: '$6' },
+      icon: { height: 'auto', minHeight: HEIGHT.icon, width: 'auto', minWidth: HEIGHT.icon, px: 0 },
+      'icon-sm': { height: 'auto', minHeight: HEIGHT['icon-sm'], width: 'auto', minWidth: HEIGHT['icon-sm'], px: 0 },
+      'icon-lg': { height: 'auto', minHeight: HEIGHT['icon-lg'], width: 'auto', minWidth: HEIGHT['icon-lg'], px: 0 },
     },
     disabled: {
       true: { opacity: 0.5, pointerEvents: 'none', cursor: 'default' },
@@ -134,8 +158,10 @@ export const buttonVariants = ({
   size,
   className,
 }: { variant?: ButtonVariant | null; size?: ButtonSize | null; className?: string } = {}) =>
-  [`hanzo-button`, `hanzo-button--${variant ?? 'default'}`, `hanzo-button--${size ?? 'default'}`, className]
-    .filter(Boolean)
+  // Variant and size share the `btn-` namespace, so the two defaults collide on
+  // `btn-default`. A Set emits it once; no name is used by both a variant and a
+  // size, so nothing else can merge.
+  [...new Set([`btn`, `btn-${variant ?? 'default'}`, `btn-${size ?? 'default'}`, className].filter(Boolean))]
     .join(' ')
 
 export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' | 'children'> & {
