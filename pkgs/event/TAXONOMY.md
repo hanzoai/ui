@@ -239,7 +239,7 @@ Verified against the trees at the time of writing. ✅ = emitting, ❌ = not emi
    no org today; chat funnels are person-scoped only.
 5. **Logged-out reach depends on a publishable key.** Anonymous events need
    `ingestKey` (`pk_…`, write-only) or they fail closed at the door.
-   `NEXT_PUBLIC_HANZO_INGEST_KEY` (hanzo.ai), `NEXT_PUBLIC_EVENT_INGEST_KEY`
+   `NEXT_PUBLIC_HANZO_INGEST_KEY` (hanzo.ai), `NEXT_PUBLIC_PUBLISHABLE_KEY`
    (hanzo.app), `VITE_HANZO_INGEST_KEY` (hanzo.chat) are read but must be
    provisioned per org via `POST /v1/ingest/keys`. Config, not code.
 
