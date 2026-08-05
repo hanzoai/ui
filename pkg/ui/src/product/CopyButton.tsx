@@ -15,8 +15,8 @@
  * not a chat idea; it belongs to the product layer, and `Code` now imports it
  * from here rather than owning it.
  */
-import { useEffect, useRef, useState } from 'react'
-import { XStack } from '@hanzo/gui'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Text, XStack } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
 
 import { tip } from '../backends/gui/slot'
@@ -28,15 +28,26 @@ const CONFIRM = 2000
 export interface CopyButtonProps {
   /** The text placed on the clipboard. */
   value: string
-  /** Resting label — the tooltip and the accessible name. */
+  /**
+   * Visible text beside the glyph — "Copy key", "Copy address". Omit for the
+   * bare square the icon form has always been.
+   *
+   * There is no second prop and no variant to pick, because the two forms differ
+   * in exactly one thing: whether the label is drawn. A control standing alone —
+   * under a minted key, beside a wire instruction — has no neighbours to explain
+   * it, and an unlabeled glyph there is a guess; inside a code header or a table
+   * row the label is noise. Passing the text is what asks for it.
+   */
+  children?: ReactNode
+  /** The tooltip and the accessible name. Defaults to the visible text, else "Copy". */
   label?: string
-  /** Edge of the square hit area. Default 24. */
+  /** Edge of the glyph's square. Default 24. */
   size?: number
   /** Names the copied thing in analytics ("api-key", "address"). Never the value. */
   id?: string
 }
 
-export function CopyButton({ value, label = 'Copy', size = 24, id }: CopyButtonProps) {
+export function CopyButton({ value, children, label, size = 24, id }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const track = useEmit()
@@ -64,10 +75,18 @@ export function CopyButton({ value, label = 'Copy', size = 24, id }: CopyButtonP
       })
   }
 
+  const name = label ?? (typeof children === 'string' ? children : 'Copy')
+  const glyph = Math.round(size * 0.58)
+
   return (
     <XStack
-      width={size}
+      // The label form is a pill that sizes to its text; the icon form is the
+      // square it has always been. `height` is shared so a labeled control lines
+      // up with an unlabeled one in the same row.
+      width={children == null ? size : undefined}
       height={size}
+      px={children == null ? undefined : '$2'}
+      gap={children == null ? undefined : '$1.5'}
       items="center"
       justify="center"
       rounded="$2"
@@ -76,12 +95,20 @@ export function CopyButton({ value, label = 'Copy', size = 24, id }: CopyButtonP
       onPress={copy}
       role="button"
       tabIndex={0}
-      aria-label={copied ? 'Copied' : label}
-      {...tip(copied ? 'Copied' : label)}
+      aria-label={copied ? 'Copied' : name}
+      {...tip(copied ? 'Copied' : name)}
       hoverStyle={{ bg: '$color4', opacity: 1 }}
       pressStyle={{ bg: '$color5' }}
     >
-      {copied ? <Check size={Math.round(size * 0.58)} /> : <Copy size={Math.round(size * 0.58)} />}
+      {copied ? <Check size={glyph} /> : <Copy size={glyph} />}
+      {children == null ? null : (
+        // The word carries the confirmation too. A tick alone, at 14px, beside
+        // text that did not change is the smallest possible way to say the thing
+        // the control exists to say.
+        <Text fontSize="$2" color="$color12" numberOfLines={1}>
+          {copied ? 'Copied' : children}
+        </Text>
+      )}
     </XStack>
   )
 }

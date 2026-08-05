@@ -24,19 +24,13 @@ import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
 import { tip } from '../backends/gui/slot'
 import { CopyButton } from './CopyButton'
 import { useEmit } from './instrument'
+import { masked } from '../backends/gui/mask'
 
-/**
- * Masking, on both platforms.
- *
- * `secureTextEntry` is React Native's spelling and gui DROPS it on web — an
- * input carrying only that prop renders the secret in plain text, which is the
- * exact opposite of what the caller asked for. `type="password"` is the web
- * spelling and gui forwards it, being an unrecognised prop. Native ignores
- * `type` for the same reason. So masking needs BOTH names, and neither alone is
- * safe. `readOnly` is the same story: `editable={false}` is dropped on web.
- */
-export const masked = (on: boolean) =>
-  (on ? { secureTextEntry: true, type: 'password' } : { secureTextEntry: false, type: 'text' }) as object
+// `masked` — the props that hide a value on web AND native — is a value, so it
+// lives in `./mask` and is reachable without a gui runtime via
+// `@hanzo/ui/product/pure`. Re-exported here because it was published from this
+// module and the product barrel still carries it.
+export { masked }
 
 export type SecretInputProps = {
   value: string

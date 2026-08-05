@@ -33,14 +33,39 @@ export type FieldsetProps = {
   action?: ReactNode
   /** The destructive register — irreversible actions only. */
   danger?: boolean
+  /**
+   * Share the width of a ROW of groups instead of taking all of it. Default
+   * false, which is the settings page: one group per line, full width.
+   *
+   * A settings page is a column, but a settings TAB is often two — "Profile"
+   * beside "Password", "Region" beside "Limits" — and a group with no way to
+   * flex forced every such layout to wrap the group in a sizing box of its own.
+   */
+  grow?: boolean
+  /** Floor for the group's width when it is sharing a row. Default 280. */
+  minW?: number
   children: ReactNode
 }
 
-export function Fieldset({ title, icon, description, action, danger, children }: FieldsetProps) {
+export function Fieldset({
+  title,
+  icon,
+  description,
+  action,
+  danger,
+  grow = false,
+  minW = 280,
+  children,
+}: FieldsetProps) {
   const edge = danger ? '$red9' : '$borderColor'
   return (
     <YStack
-      width="100%"
+      // Full width when it owns the line; flexing with a floor when it shares
+      // one. Setting both `width: 100%` and `flex: 1` makes the group overflow
+      // its row by its own gap, so it is one or the other.
+      width={grow ? undefined : '100%'}
+      flex={grow ? 1 : undefined}
+      minW={grow ? minW : 0}
       p="$4"
       gap="$3"
       rounded="$4"
