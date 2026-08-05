@@ -231,6 +231,15 @@ export class Analytics {
       enabled: true,
       captureErrors: true,
       ...config,
+      // The publishable key resolves the SAME way the DSN below does: an explicit
+      // config wins, else the inlined build-time env. Without this the key was the
+      // one piece of wiring a surface could not declare the way it declares every
+      // other piece, so every surface that shipped without passing it in code sent
+      // its beacons unattributed — and an unattributed write is refused (401
+      // ingest_key_required), which is silent in the page and invisible until you
+      // read the warehouse and find the host missing entirely.
+      ingestKey:
+        config.ingestKey ?? readEnv('NEXT_PUBLIC_HANZO_EVENT_KEY') ?? readEnv('HANZO_EVENT_KEY'),
     }
     this.transport = config.transport ?? new DefaultTransport()
     // Error plane, most specific source first: an explicit DSN wins, then the
