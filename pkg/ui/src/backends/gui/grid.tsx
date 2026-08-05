@@ -48,6 +48,15 @@ export interface GridProps extends Omit<ComponentProps<'div'>, 'children'> {
   min?: number
   /** Fixed column count. Overrides `min` — use it when the count is the design. */
   cols?: number
+  /**
+   * Never exceed this many columns, while still wrapping down on narrow
+   * screens. `<Grid min={160} max={4}>` is 2-up on a phone and 4-up on a
+   * desktop, with nothing in between to configure.
+   *
+   * A single `min` cannot express that: 2-up at 390px needs min ~170, and that
+   * same 170 gives SIX columns at 1280. Capping is the missing half.
+   */
+  max?: number
   /** A `$n` space token or a raw px number. */
   gap?: number | string
   children?: ReactNode
@@ -61,11 +70,23 @@ const space = (v: number | string | undefined, fallback: number): number => {
   return typeof t === 'number' ? t : fallback
 }
 
-const Grid = ({ min = 240, cols, gap = '$3', style, ...props }: GridProps) => {
+const Grid = ({ min = 240, cols, max, gap = '$3', style, ...props }: GridProps) => {
   const g = space(gap, 12)
+  // The track floor, capped. Without `max` it is `min(Npx, 100%)` — N wide, but
+  // never wider than the container, which is what keeps a 900px min from
+  // overflowing a 390px phone.
+  //
+  // With `max` the floor also has to be at least "one Mth of the row", so
+  // auto-fill can never fit an (M+1)th track: subtract the M-1 gaps first, then
+  // divide. Below that width the max() picks Npx again and the grid wraps
+  // normally — so the cap costs nothing on small screens, which is the whole
+  // point of expressing it as a floor rather than a breakpoint.
+  const floor = max
+    ? `max(min(${min}px, 100%), calc((100% - ${(max - 1) * g}px) / ${max}))`
+    : `min(${min}px, 100%)`
   const columns = cols
     ? `repeat(${cols}, minmax(0, 1fr))`
-    : `repeat(auto-fill, minmax(min(${min}px, 100%), 1fr))`
+    : `repeat(auto-fill, minmax(${floor}, 1fr))`
   const grid: CSSProperties = { display: 'grid', gridTemplateColumns: columns, gap: g }
   return <div data-slot="grid" style={{ ...grid, ...style }} {...props} />
 }

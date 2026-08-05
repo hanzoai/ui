@@ -262,6 +262,15 @@ export const Gallery = () => (
         ))}
       </Grid>
 
+      {/* The capped grid: 2-up on a phone, never more than 4 on a desktop, with
+          no breakpoint props anywhere. Six items so the cap has something to
+          refuse. */}
+      <Grid min={160} max={4} gap="$3" style={{ width: '100%' }} data-grid="capped">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <Card key={i}><CardContent>cap {i}</CardContent></Card>
+        ))}
+      </Grid>
+
       {/* A track WIDER than a phone. This is the case `min(Npx, 100%)` exists
           for: a bare minmax(900px, 1fr) forces a 900px column into a 390px
           window and the document scrolls sideways. A 240px min never shows it,
