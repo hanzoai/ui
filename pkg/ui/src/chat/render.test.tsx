@@ -20,7 +20,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
-import { Message, Thread } from './index'
+import { Code, Message, Thread } from './index'
 
 const html = (node: ReactNode) =>
   renderToStaticMarkup(
@@ -59,5 +59,26 @@ describe('chat shell renders', () => {
     )
     for (const leak of ['backgroundcolor=', 'maxw=', 'hoverstyle=', 'flexdirection='])
       expect(markup, leak).not.toContain(leak)
+  })
+})
+
+describe('Code', () => {
+  /** The atomic class gui compiles a colour token to, so this asserts the token
+   *  the component ASKED FOR rather than a class name spelled out by hand. Read
+   *  from the ELEMENTS: gui inlines the whole stylesheet ahead of them, and that
+   *  sheet defines a rule for every rung whether or not anything renders one. */
+  const rung = (markup: string) =>
+    [...markup.replace(/<style[\s\S]*?<\/style>/g, '').matchAll(/_col-(color\d+)/g)].map((m) => m[1])
+
+  it('typesets the language label on the readable secondary rung', () => {
+    // It was `$color10` — the rung below the one chrome text belongs on. On the
+    // package's own ramp that still cleared 4.5:1, but a host that redeclares
+    // `--color10` at `:root` (hanzo.ai does) took it to 2.97:1 on a 11px label,
+    // and a shared component should not need the host to be careful.
+    // `gui-config.test.ts` measures both rungs; this pins which one Code uses.
+    const markup = html(<Code language="typescript">const x = 1</Code>)
+    expect(markup).toContain('typescript')
+    expect(rung(markup)).toContain('color11')
+    expect(rung(markup)).not.toContain('color10')
   })
 })

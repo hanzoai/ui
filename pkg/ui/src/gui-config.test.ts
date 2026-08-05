@@ -46,10 +46,19 @@ const token = (name: string, theme: 'dark' | 'light'): string => {
   return indirect ? token(indirect[1], theme) : value
 }
 
-/** `#rrggbb`, `rgb(r g b)` or `rgb(r g b / a)` as [r, g, b, a]. */
+/** `#rrggbb`, `rgb(r g b)`, `rgb(r g b / a)` or a GREYSCALE `hsla(0, 0%, l%, a)`
+ *  as [r, g, b, a]. The ramp is written in the last form, and only in greyscale —
+ *  a saturated rung would be a hue this system does not spend, so it throws
+ *  rather than quietly approximating one. */
 const parse = (colour: string): [number, number, number, number] => {
   const hex = colour.match(/^#([0-9a-f]{6})$/i)
   if (hex) return [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16)).concat(1) as never
+  const hsl = colour.match(/^hsla?\(\s*[\d.]+\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*(?:,\s*([\d.]+)\s*)?\)$/)
+  if (hsl) {
+    if (Number(hsl[1]) !== 0) throw new Error(`${colour} is not greyscale`)
+    const v = Math.round((Number(hsl[2]) / 100) * 255)
+    return [v, v, v, hsl[3] === undefined ? 1 : Number(hsl[3])]
+  }
   const parts = colour.replace(/^rgba?\(|\)$/g, '').split(/[\s,/]+/).filter(Boolean).map(Number)
   if (parts.length < 3 || parts.some(Number.isNaN)) throw new Error(`cannot read colour ${colour}`)
   return [parts[0], parts[1], parts[2], parts[3] ?? 1]
@@ -167,5 +176,34 @@ describe('the rungs design already decided read the token', () => {
     for (const theme of ['dark', 'light'] as const)
       for (const rung of ['color1', 'color2', 'color3', 'color5', 'color6', 'color11'])
         expect([theme, rung, themed(theme, rung)]).toEqual([theme, rung, expect.stringMatching(/^hsla?\(/)])
+  })
+})
+
+describe('the readable-secondary rung', () => {
+  /**
+   * `$color11` is the rung chrome puts SECONDARY TEXT on — a code block's
+   * language label, a panel's description, a metric's caption. `$color10` is a
+   * rung dimmer than that, and components reached for it because it looked
+   * quieter, not because it was legible.
+   *
+   * The audit that prompted this measured the language label at 2.97:1 on
+   * hanzo.ai/overview. That number is NOT reproducible from this package: the
+   * ramp below puts `$color10` on `$color2` at 8:1 dark and 11.8:1 light, so the
+   * failure came from a HOST redeclaring `--color10`/`--t*` at `:root` on top of
+   * ours. Which is exactly why the assertion here is about the rung's job rather
+   * than about one page's pixels — the value we control is which rung a shared
+   * component asks for, and a component that asks for the readable one survives
+   * a host that dims the other.
+   */
+  it.each(['dark', 'light'] as const)('%s: secondary text clears 4.5:1 on the surface it sits on', (theme) => {
+    const surface = themed(theme, 'color2')
+    expect(contrast(themed(theme, 'color11'), surface)).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it.each(['dark', 'light'] as const)('%s: and is strictly more legible than the rung below it', (theme) => {
+    const surface = themed(theme, 'color2')
+    expect(contrast(themed(theme, 'color11'), surface)).toBeGreaterThan(
+      contrast(themed(theme, 'color10'), surface),
+    )
   })
 })

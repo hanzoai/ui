@@ -13,6 +13,7 @@ import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react
 import { slot } from './slot'
 import { touch } from './gesture'
 import { FOCUS } from './focus'
+import { masked } from './mask'
 
 const HEIGHT = 36
 const GUTTER = 12
@@ -24,8 +25,16 @@ export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children'> & {
   startAdornment?: ReactNode
   /** Optional trailing affordance rendered inside the field. */
   endAdornment?: ReactNode
-  /** Suppress the built-in show/hide control for `secureTextEntry`/`type="password"`. */
-  hidePasswordToggle?: boolean
+  /**
+   * Whether a masked field draws its own show/hide eye. Default true.
+   *
+   * `false` when the caller owns the reveal — `SecretInput` does, and so does
+   * any field that masks locally — because two controls over one boolean is a
+   * field with two states that disagree: press ours and the caller's icon still
+   * reads "show", press theirs and ours does. The field is masked by whichever
+   * was pressed last and neither control can say which.
+   */
+  reveal?: boolean
 }
 
 const well = (side: 'l' | 'r') =>
@@ -39,18 +48,29 @@ const well = (side: 'l' | 'r') =>
   })
 
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input(
-  { startAdornment, endAdornment, hidePasswordToggle, type, secureTextEntry, ...props },
+  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, ...props },
   ref,
 ) {
   const [revealed, setRevealed] = useState(false)
   const isPassword = type === 'password' || secureTextEntry === true
-  const toggle = isPassword && !hidePasswordToggle
+  const toggle = isPassword && reveal
 
   const field = (
     <GuiInput
       ref={ref as never}
       {...slot('input')}
-      secureTextEntry={isPassword && !revealed}
+      // BOTH spellings, via `masked`, and that is not belt-and-braces.
+      //
+      // This passed `secureTextEntry` alone and dropped `type` on the floor
+      // (destructured out, never forwarded), and gui drops `secureTextEntry` on
+      // web — so `<Input type="password">` rendered the password IN PLAIN TEXT
+      // in every browser, with the eye sitting next to it offering to reveal
+      // what was already visible. `@hanzo/ui/product`'s `masked` was written for
+      // exactly this and this component never called it.
+      //
+      // Only on the password path: `masked(false)` states `type="text"`, which
+      // would overwrite a caller's `type="email"` or `type="search"`.
+      {...(isPassword ? masked(!revealed) : { type, secureTextEntry })}
       height={HEIGHT}
       width="100%"
       minW={0}

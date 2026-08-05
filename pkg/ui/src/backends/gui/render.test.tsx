@@ -14,7 +14,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
 import { Gallery } from '../../gallery'
-import { Button } from './index'
+import { Button, Input } from './index'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -94,5 +94,30 @@ describe('gui backend renders', () => {
     // is the only thing that can lift the target — theme.css has the rule.
     expect(markup).toContain('data-touch-y="6"')
     expect(markup).not.toContain('hitslop')
+  })
+})
+
+describe('Input’s reveal', () => {
+  const eye = (markup: string) => /aria-label="(Show|Hide) password"/.test(markup)
+
+  it('draws the eye on a masked field, and only on a masked one', () => {
+    expect(eye(html(<Input type="password" value="s" readOnly />))).toBe(true)
+    expect(eye(html(<Input secureTextEntry value="s" readOnly />))).toBe(true)
+    expect(eye(html(<Input value="s" readOnly />))).toBe(false)
+  })
+
+  it('yields the control when the caller owns it', () => {
+    // `SecretInput` and every locally-masked field own their own reveal. Two
+    // controls over one boolean is a field with two states that disagree: press
+    // ours and the caller's icon still reads "show", press theirs and ours does,
+    // and neither can say which one masked the field.
+    expect(eye(html(<Input type="password" value="s" readOnly reveal={false} />))).toBe(false)
+  })
+
+  it('still masks the value when the eye is suppressed', () => {
+    // The regression this locks: reading `reveal` as "show the value" rather
+    // than "show the control" would unmask every field that suppressed the icon.
+    const markup = html(<Input type="password" value="s" readOnly reveal={false} />)
+    expect(markup).toContain('type="password"')
   })
 })

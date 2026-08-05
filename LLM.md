@@ -136,6 +136,24 @@ element that has a text child and a zero-height box.
   `/* @__PURE__ */` and nothing assigns `displayName`, so importing one symbol
   never drags a neighbour in. A one-symbol import bundles ~4.7KB against ~29KB
   for the whole barrel.
+- Utility classes carry `hz-`. This sheet used to claim `.row`, `.skeleton`,
+  `.fade`, `.mono`, `.drag` and `.tnum` at the document level, in a package an
+  app imports once at its root; an app with its own `.row` got no warning, it got
+  whichever rule the cascade preferred. The unprefixed selectors survive as
+  aliases on the same rules for one minor version and are **REMOVED IN 8.1.0**.
+  Nothing here emits them — `styles.test.tsx` scans every `className=` literal in
+  `src/` and fails on an unprefixed one. `glass`/`elevation-N` are the one family
+  still bare: they are an API VALUE (`glass(3).className`), not a typed literal,
+  so they move on their own change.
+- A prop must actually arrive. gui is not the DOM, and two measured cases prove
+  it in both directions: **`name` is gui's OWN prop** (it names a styled component
+  and a theme) and is consumed before it reaches the element, so a `name` on a
+  field type-checks and renders nothing; and gui **drops `secureTextEntry` on
+  web**, which is why masking needs BOTH spellings via `masked()` in
+  `backends/gui/mask.ts` and why `<Input type="password">` rendered passwords in
+  PLAIN TEXT until 8.0.61 (the wrapper destructured `type` out and never
+  forwarded it, next to an eye offering to reveal what was already visible).
+  Render it and read the markup before you believe a prop works.
 
 ### Subpaths
 
@@ -152,9 +170,56 @@ element that has a text child and a zero-height box.
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
 | `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
+| `@hanzo/ui/product/*` · `/primitives/*` | deep imports — one module without its barrel |
+| `@hanzo/ui/product/pure` | the product layer's RULES with none of the layer (below) |
+| `@hanzo/ui/product/theme-toggle-next` | the `@hanzogui/next-theme` binding, off the barrel on purpose (below) |
+| `@hanzo/ui/css` | `substitute()` — resolve a `var()` chain, for tests jsdom cannot answer (below) |
 
 Everything ships COMPILED from `dist` — every `exports` target is a real file in
 the tarball, including `theme.css` and all 90 `primitives/*` entrypoints.
+`src/dist.test.ts` asserts that against the built output, wildcards included; a
+subpath pointing at a file tsc never emitted is invisible from source.
+
+### Three doors that exist because the barrel is not one
+
+`@hanzo/ui/product` mounts the whole gui runtime to give you one component, and
+for three kinds of caller that is not a cost — it is a wall.
+
+**`@hanzo/ui/product/pure` — the rules, without the layer.** `pages()`,
+`masked()`, `displayName()`, `tone()`, `orgScope`, `filterOptions`,
+`resolveBrand` and the wordmark geometry. Every module it re-exports imports
+NOTHING (`src/dist.test.ts` asserts the closure is empty) and is on
+`postbuild.mjs`'s `DATA` list, so none is stamped `'use client'` — a stamped
+module is a client REFERENCE on React's server layer, and calling `pages()`
+through one in a server component throws instead of paging. It loads under a
+bare `require()` with no transform and no DOM; the test proves it in a child
+node process rather than under vitest, which has vite's transform already
+installed and would prove nothing.
+
+The components import these same modules, so there is one definition and not a
+testable copy of a shipped one.
+
+**`@hanzo/ui/product/theme-toggle-next` — Next, quarantined.**
+`@hanzogui/next-theme`'s provider imports `next/script`, so the product barrel's
+one `export { ThemeToggleNext }` line put Next in the graph of every Vite,
+Express and Tauri host — the hosts this layer promises to run on. A barrel
+re-export is a static edge no bundler can split. It is off the barrel; `<ThemeToggle />`
+with no props still reaches it by dynamic import and degrades when next-theme is
+absent, and `dist.test.ts` asserts BOTH — no static edge, and the dynamic one
+still there, because a test that only asserted the absence would pass on a
+deleted feature. `next` is now an OPTIONAL peer here: next-theme requires it and
+nothing in this package admitted that.
+
+**`@hanzo/ui/css` — `substitute(value, vars?)`.** jsdom does not resolve
+`var()`; it hands a test the text verbatim. The theme rungs are
+`var(--border, rgb(255 255 255 / .10))` on purpose (follow the live cascade
+where design's sheet is mounted, keep the audited literal where it is not), so
+every consumer trying to assert a border's contrast compared a colour to a
+function call. With no `vars` map the answer is exact rather than approximate:
+jsdom mounts no design sheet, so the fallback IS what a browser computes. It is
+NOT part of `@hanzo/ui/core` — that subpath is ESM-only because @hanzo/design
+publishes no `require` condition, and a jest consumer is the caller that needs
+this. Importing nothing is what lets it ship both formats.
 
 ### One DropdownMenu
 
@@ -189,6 +254,15 @@ relative specifier to a fully-specified path (`./button` → `./button.js`,
 resolve, and it prepends `'use client'` to every emitted module — the whole
 library is client-side @hanzo/gui UI and Next's flight-client loader wants the
 directive first. It is prepended without a newline so source-map lines hold.
+
+**`@hanzo/data` runs this same script**, with its package root and its own data
+modules as arguments (`node ../ui/scripts/postbuild.mjs . theme,table/logic,…`).
+It has the same two formats and the same two problems, and a second copy of the
+file would be a second place to get the barrel rule wrong. That package used to
+point its `exports` at `src/index.ts` and ship raw TSX — every consumer had to
+transpile it, and `require('@hanzo/data')` could not load at all, which is one of
+the two edges that broke `require('@hanzo/ui')`. It emits `dist/` now, both
+formats, from 1.2.2.
 
 The output is UNBUNDLED and mirrors `src/` one-for-one, so a consumer importing
 one symbol pulls one module. A bundler here would be actively harmful: tsup's
