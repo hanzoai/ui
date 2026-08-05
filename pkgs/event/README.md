@@ -32,8 +32,17 @@ starve the other:
 ```html
 <script async src="https://unpkg.com/@hanzo/event/hz.js"
         data-product="hanzo.ai"
+        data-ingest-key="pk-…"
         data-capture="1"></script>
 ```
+
+> **`data-ingest-key` is required off the door's own origin**, and through
+> 0.3.11 this file could not present one at all — no header, no query. A keyed
+> static surface therefore sent UNATTRIBUTED writes, which the door refuses
+> (`401 ingest_key_required`) silently, because nothing here reads the response.
+> The tag measured fine in the browser and filed nothing. It now rides
+> `Authorization: Bearer pk-…` on fetch and `?ingest_key=pk-…` on a headerless
+> unload beacon — the same pair the npm client uses.
 
 `hz.js` (in this package) is the **script-tag distribution** of this client, for
 surfaces with no build step. It posts the SAME `{ batch: [WireEvent, …] }` to the
@@ -41,6 +50,12 @@ SAME `POST {host}/v1/event`, and adds DOM **autocapture** — `$click` (with an
 element locator), `$outbound`, `$scroll`, `$form`, `$vitals` — which a bundled app
 does not need and a plain page cannot get. Manual API: `window.hanzo.track()` /
 `identify()` / `page()`.
+
+It honours the same consent sources the bundled stack does: an explicit stored
+choice (`hz_consent`, the key a Hanzo consent banner writes) outranks the browser
+signal in both directions; otherwise Global Privacy Control and Do Not Track are
+refusals. A React app does not need this file — mount `<Hanzo analytics>` from
+`@hanzo/ui`, which wires this client and the capture engine together.
 
 > The tag used to live in `hanzoai/analytics` and post a **bare JSON array** of
 > `{site, ts, type, path, …}` to `analytics.hanzo.ai/v1/event` — a second protocol

@@ -1,13 +1,17 @@
 // hz.js is the no-build distribution — 300 lines of shipped client that no test
 // had ever executed. It restates, by hand, what the bundled client imports, so the
 // two can drift; this runs the real file against a minimal browser stub and reads
-// the batch it actually posts.
+// what it actually posts — batch, URL and headers, because the credential is not
+// in the body and a test that reads only the batch cannot see it.
 
 import { describe, expect, it, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 const SRC = readFileSync(fileURLToPath(new URL('../hz.js', import.meta.url)), 'utf8')
+const PKG = JSON.parse(
+  readFileSync(fileURLToPath(new URL('../package.json', import.meta.url)), 'utf8'),
+) as { version: string }
 
 /** The event plane's session-rollup admission gate, transcribed from its own SQL. */
 const versionNibble = (id: string): bigint => (BigInt('0x' + id.replace(/-/g, '')) >> 76n) & 15n
@@ -23,38 +27,106 @@ interface WireEvent {
   libraryVersion: string
 }
 
-/** Runs hz.js against a stub browser and returns everything it posted. */
-function runSnippet(): { sent: WireEvent[]; api: { track(n: string): void; flush(): void } } {
-  const sent: WireEvent[] = []
-  const store = () => {
-    const m = new Map<string, string>()
-    return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) }
+/** One recorded transmission: which transport carried it, where, under what headers. */
+interface Post {
+  via: 'beacon' | 'fetch'
+  url: string
+  headers: Record<string, string>
+  batch: WireEvent[]
+}
+
+interface StubOptions {
+  /** data-* attributes on the <script> tag. */
+  attrs?: Record<string, string>
+  /** navigator fields — doNotTrack, globalPrivacyControl, msDoNotTrack. */
+  navigator?: Record<string, unknown>
+  /** Seed localStorage (e.g. an explicit hz_consent choice). */
+  storage?: Record<string, string>
+  /** Let navigator.sendBeacon succeed, so the beacon path is the one measured. */
+  beacon?: boolean
+}
+
+type Api = { track(n: string, p?: unknown): void; flush(): void }
+
+/** Runs hz.js against a stub browser and returns everything it posted.
+ *
+ *  Globals are DEFINED, not assigned: Node ≥ 21 ships a real `navigator` whose
+ *  descriptor is an accessor with no setter, so the plain assignment this
+ *  harness used threw — and every hz.js test failed on a current runtime,
+ *  leaving the shipped file with no executed coverage again. */
+function runSnippet(opts: StubOptions = {}): { posts: Post[]; api: Api | undefined } {
+  const posts: Post[] = []
+  const store = (seed: Record<string, string> = {}) => {
+    const m = new Map<string, string>(Object.entries(seed))
+    return {
+      getItem: (k: string) => m.get(k) ?? null,
+      setItem: (k: string, v: string) => void m.set(k, v),
+      removeItem: (k: string) => void m.delete(k),
+    }
   }
-  const g = globalThis as Record<string, unknown>
-  g.location = { href: 'https://x.test/p?a=1', pathname: '/p', search: '?a=1', hostname: 'x.test', host: 'x.test' }
-  g.document = {
-    currentScript: { getAttribute: (a: string) => (a === 'data-product' ? 'test' : null) },
+  const attrs: Record<string, string> = { 'data-product': 'test', ...opts.attrs }
+  const g = globalThis as unknown as Record<string, unknown>
+  const define = (name: string, value: unknown) =>
+    Object.defineProperty(g, name, { value, configurable: true, writable: true })
+
+  define('location', {
+    href: 'https://x.test/p?a=1',
+    pathname: '/p',
+    search: '?a=1',
+    hostname: 'x.test',
+    host: 'x.test',
+  })
+  define('document', {
+    currentScript: { getAttribute: (a: string) => attrs[a] ?? null },
     referrer: '',
     addEventListener: () => {},
     documentElement: { scrollHeight: 1000 },
     visibilityState: 'visible',
     createElement: () => ({}),
     head: { appendChild: () => {} },
-  }
-  g.navigator = { doNotTrack: '0' }
-  g.localStorage = store()
-  g.sessionStorage = store()
-  g.history = { pushState: () => {}, replaceState: () => {} }
-  g.addEventListener = () => {}
-  g.PerformanceObserver = undefined
-  g.fetch = (_u: string, init: { body: string }) => {
-    sent.push(...(JSON.parse(init.body).batch as WireEvent[]))
+  })
+  define('navigator', {
+    doNotTrack: '0',
+    ...opts.navigator,
+    sendBeacon: opts.beacon
+      ? (url: string, blob: { body: string }) => {
+          posts.push({ via: 'beacon', url, headers: {}, batch: JSON.parse(blob.body).batch })
+          return true
+        }
+      : undefined,
+  })
+  define(
+    'Blob',
+    class {
+      body: string
+      constructor(parts: string[]) {
+        this.body = parts.join('')
+      }
+    },
+  )
+  define('localStorage', store(opts.storage))
+  define('sessionStorage', store())
+  define('history', { pushState: () => {}, replaceState: () => {} })
+  define('addEventListener', () => {})
+  define('PerformanceObserver', undefined)
+  define('hzDNT', undefined)
+  define('doNotTrack', undefined)
+  // The stub `window` IS globalThis, so a public API installed by an earlier run
+  // would still be there — and "it refused" would be indistinguishable from
+  // "the previous run's API answered".
+  define('hanzo', undefined)
+  define('fetch', (url: string, init: { body: string; headers: Record<string, string> }) => {
+    posts.push({ via: 'fetch', url, headers: init.headers, batch: JSON.parse(init.body).batch })
     return Promise.resolve()
-  }
-  g.window = g
+  })
+  define('window', g)
+
   new Function(SRC)()
-  return { sent, api: (g.window as { hanzo: { track(n: string): void; flush(): void } }).hanzo }
+  return { posts, api: (g.window as { hanzo?: Api }).hanzo }
 }
+
+/** Every event across every transmission, in order. */
+const sentOf = (r: { posts: Post[] }): WireEvent[] => r.posts.flatMap((p) => p.batch)
 
 describe('hz.js', () => {
   let run: ReturnType<typeof runSnippet>
@@ -63,11 +135,12 @@ describe('hz.js', () => {
   })
 
   it('mints session ids the plane admits', () => {
-    run.api.track('checkout_started')
-    run.api.flush()
-    expect(run.sent.length).toBeGreaterThan(0)
+    run.api!.track('checkout_started')
+    run.api!.flush()
+    const sent = sentOf(run)
+    expect(sent.length).toBeGreaterThan(0)
     const before = Date.now()
-    for (const ev of run.sent) {
+    for (const ev of sent) {
       expect(versionNibble(ev.sessionId)).toBe(7n)
       expect(versionNibble(ev.messageId)).toBe(7n)
       expect(versionNibble(ev.anonymousId)).toBe(7n)
@@ -78,19 +151,76 @@ describe('hz.js', () => {
   })
 
   it('holds one session id across every event it emits', () => {
-    run.api.track('a')
-    run.api.track('b')
-    run.api.flush()
-    const ids = new Set(run.sent.map((e) => e.sessionId))
-    expect(ids.size).toBe(1)
-    expect(new Set(run.sent.map((e) => e.messageId)).size).toBe(run.sent.length)
+    run.api!.track('a')
+    run.api!.track('b')
+    run.api!.flush()
+    const sent = sentOf(run)
+    expect(new Set(sent.map((e) => e.sessionId)).size).toBe(1)
+    expect(new Set(sent.map((e) => e.messageId)).size).toBe(sent.length)
   })
 
   it('emits the auto pageview on load and stamps the library', () => {
-    run.api.flush()
-    const pv = run.sent.find((e) => e.type === 'pageview')
+    run.api!.flush()
+    const pv = sentOf(run).find((e) => e.type === 'pageview')
     expect(pv).toBeDefined()
     expect(pv!.library).toBe('hz.js')
-    expect(pv!.libraryVersion).toMatch(/^\d+\.\d+\.\d+$/)
+    // The stamped version IS the package version. It had drifted to 0.3.9 against
+    // a published 0.3.11, so every static-site row in the warehouse was dated to a
+    // release three patches old — including the ones that changed what it sends.
+    expect(pv!.libraryVersion).toBe(PKG.version)
+  })
+
+  // ── the publishable key ───────────────────────────────────────────────────
+  // Through 0.3.11 this file could present none at all: no header, no query. A
+  // keyed static surface therefore sent UNATTRIBUTED writes, which the door
+  // refuses — silently, because nothing here reads the response.
+
+  it('presents the ingest key as a bearer on fetch', () => {
+    const r = runSnippet({ attrs: { 'data-ingest-key': 'pk-abc123' } })
+    r.api!.flush()
+    const post = r.posts.at(-1)!
+    expect(post.via).toBe('fetch')
+    expect(post.headers.authorization).toBe('Bearer pk-abc123')
+    expect(post.url).toBe('https://api.hanzo.ai/v1/event')
+  })
+
+  it('presents the ingest key in the query on a headerless beacon', () => {
+    const r = runSnippet({ attrs: { 'data-ingest-key': 'pk-abc123' }, beacon: true })
+    r.api!.flush()
+    const post = r.posts.at(-1)!
+    expect(post.via).toBe('beacon')
+    expect(post.url).toBe('https://api.hanzo.ai/v1/event?ingest_key=pk-abc123')
+  })
+
+  it('sends no credential when no key is declared', () => {
+    run.api!.flush()
+    const post = run.posts.at(-1)!
+    expect(post.headers.authorization).toBeUndefined()
+    expect(post.url).not.toContain('ingest_key')
+  })
+
+  // ── consent ───────────────────────────────────────────────────────────────
+
+  it('refuses under Global Privacy Control', () => {
+    const r = runSnippet({ navigator: { globalPrivacyControl: true } })
+    expect(r.api).toBeUndefined()
+    expect(r.posts).toEqual([])
+  })
+
+  it('refuses under Do Not Track, in each of its spellings', () => {
+    for (const nav of [{ doNotTrack: '1' }, { doNotTrack: 'yes' }, { msDoNotTrack: '1' }]) {
+      expect(runSnippet({ navigator: nav }).api).toBeUndefined()
+    }
+  })
+
+  it('refuses on a stored denial', () => {
+    expect(runSnippet({ storage: { hz_consent: 'denied' } }).api).toBeUndefined()
+  })
+
+  it('an explicit grant outranks the browser signal', () => {
+    const r = runSnippet({ navigator: { doNotTrack: '1' }, storage: { hz_consent: 'granted' } })
+    expect(r.api).toBeDefined()
+    r.api!.flush()
+    expect(sentOf(r).length).toBeGreaterThan(0)
   })
 })
