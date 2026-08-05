@@ -1,5 +1,32 @@
 # @hanzo/event
 
+## 0.3.13
+
+### Patch Changes
+
+- **One anonymous visitor is now ONE person across every `*.hanzo.ai` surface.**
+  The anonymous id lived in `localStorage`, which is ORIGIN-scoped, so docs,
+  cloud, console, studio, pay and www each minted their own id for the same
+  browser: a single marketing → docs → signup → checkout journey arrived as
+  several strangers, and 463 anonymous identities carried 545 events in a week —
+  about 1.2 events each, which is a funnel that cannot be read. `anonId()` now
+  keeps the id in a first-party cookie on the registrable domain
+  (`Domain=hanzo.ai; Path=/; SameSite=Lax; Secure`, two years, refreshed on
+  read), which every subdomain shares.
+- **The migration is additive — no returning visitor is reset.** Resolution is
+  cookie, else the `hz_anon_id` this package has always written in
+  `localStorage` — ADOPTED into the cookie, never minted over, because minting
+  there would hand every returning visitor a new identity and detach them from
+  their own history — else mint. `localStorage` keeps being written, so a
+  rollback finds everyone where it left them.
+- Degrades the way it always did: SSR and prerender still return `undefined`
+  rather than minting a server-side id; cookies refused falls back to
+  `localStorage`; both refused holds one id in memory for the page load instead
+  of letting every event mint its own. `Domain` and `Secure` are omitted off
+  `hanzo.ai` (localhost, previews), where either attribute would make the
+  browser drop the cookie outright. `sessionId()` is deliberately unchanged — a
+  session stays origin-local.
+
 ## 0.3.12
 
 ### Patch Changes
