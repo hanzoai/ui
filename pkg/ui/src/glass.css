@@ -108,16 +108,19 @@
    drop does all the work and must be light enough not to smudge, on near-black
    it must be heavy enough to exist at all. The values are design's own, and
    glass.test.ts fails if either column stops matching what design publishes.
-   `:root.t_light` alongside `.light` is gui's spelling of the same idea —
-   compose-theme teaches design's sheet that alias, and this file, which also
-   ships on its own, says it outright. */
+   `:root.t_light` and `.t_light` alongside `.light` are gui's spelling of the
+   same idea — compose-theme teaches design's sheet those aliases, and this
+   file, which also ships on its own, says them outright. The bare class is for
+   a NESTED light scope: gui puts `t_light` on a span for `<Theme name="light">`
+   inside a dark app, which `:root.t_light` cannot match, so without it a light
+   island stood on the dark ladder. */
 :root {
   --glass-shadow-1: 0 1px 2px 0 rgb(0 0 0 / .40);
   --glass-shadow-2: 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55);
   --glass-shadow-3: 0 24px 60px -16px rgb(0 0 0 / .75);
 }
 
-.light, :root.t_light {
+.light, :root.t_light, .t_light {
   --glass-shadow-1: 0 1px 2px 0 rgb(0 0 0 / .06);
   --glass-shadow-2: 0 10px 15px -3px rgb(0 0 0 / .09), 0 4px 6px -4px rgb(0 0 0 / .07);
   --glass-shadow-3: 0 24px 60px -16px rgb(0 0 0 / .18);
@@ -156,10 +159,19 @@
 
    One value, in one place: the recipes module reads the same token, so the dim
    behind a component dialog and the dim behind a hand-rolled one are the same
-   dim by construction rather than by two people remembering a number. */
+   dim by construction rather than by two people remembering a number.
+
+   !important for the same reason the material above carries it, and it was
+   missing here: gui compiles `opacity` and `background-color` into atomic
+   classes (`_o-0--5`, `_bg-rgba0000--538295333`) that land in an inline <style>
+   a bundler orders AFTER this sheet, so at equal specificity they won and the
+   rule read as if it had never been written. Measured on hanzo.app's ⌘K
+   palette: `rgba(0,0,0,.5)` under `opacity: .5` — a quarter black, exactly the
+   double dim these two lines exist to end. A rule written to beat a compiled
+   class has to be written with the weight to beat one. */
 [data-slot="dialog-overlay"] {
-  opacity: 1;
-  background-color: var(--surface-scrim, rgb(0 0 0 / .8));
+  opacity: 1 !important;
+  background-color: var(--surface-scrim, rgb(0 0 0 / .8)) !important;
 }
 
 /* ── Grouped rows ───────────────────────────────────────────────────────────

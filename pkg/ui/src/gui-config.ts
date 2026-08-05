@@ -147,8 +147,57 @@ for (const [k, v] of Object.entries(STEP)) {
 space.$true = STEP['4']
 space['-true'] = -STEP['4']
 
+/**
+ * TWO RUNGS OF THE NUMBERED RAMP UNDID A TOKEN DECISION, so they are re-based.
+ *
+ * `$color1..$color12` is a generic monotonic ramp inherited from upstream
+ * `@hanzogui/themes` — a scale, not this system's token layer. Most of it is
+ * harmless: a ramp of greys is a ramp of greys. Two rungs are not, because
+ * every component in this package reads them by name and @hanzo/design had
+ * already decided each one the other way, in writing:
+ *
+ *   `$borderColor` (= `$color4`) shipped `hsla(0, 0%, 14%, 1)` — a SOLID edge.
+ *   design's `colors.css` spends a paragraph on why its borders are alpha: a
+ *   solid hex hairline vanishes the moment it lands on a lifted surface,
+ *   because it stops being a lighter line and becomes an unrelated grey. Nearly
+ *   every component here (Button, Input, Card, Select, Dialog, Popover,
+ *   Tooltip, Switch, Checkbox, DropdownMenu) draws its edge with it.
+ *
+ *   `$color12` shipped `hsla(0, 0%, 100%, 1)` — PURE WHITE, and it is the label
+ *   colour for Button's default/primary, for every Badge, and for the `accent`
+ *   recipe, the one loud control a page is allowed. design sets `--foreground`
+ *   to `#fafafa` on purpose: pure white halates on near-black.
+ *
+ * So the two rungs read the token instead of shadowing it. `var()` first, so a
+ * host that mounts design's sheet (this package's own theme.css does) follows
+ * the live cascade and inverts with it; design's published literal behind it,
+ * so a host that mounts neither still gets the right value rather than a
+ * dropped declaration.
+ *
+ * The literals are stated per theme rather than left to the cascade, and that
+ * is load-bearing: a NESTED `<Theme name="light">` (PrimaryButton's white pill
+ * inside a dark app) emits `.t_light` on a span, not on `:root`, so the light
+ * column has to be able to answer on its own. gui-config.test.ts reads
+ * @hanzo/design's stylesheet and fails if either column stops matching what
+ * design publishes, so the copy cannot drift.
+ */
+const EDGE = { dark: 'rgb(255 255 255 / .10)', light: 'rgb(0 0 0 / .10)' } as const
+const LABEL = { dark: '#fafafa', light: '#0a0a0a' } as const
+
+const rebased = (theme: 'dark' | 'light') => ({
+  ...defaultConfig.themes[theme],
+  color4: `var(--border, ${EDGE[theme]})`,
+  borderColor: `var(--border, ${EDGE[theme]})`,
+  color12: `var(--foreground, ${LABEL[theme]})`,
+})
+
 export const config = createGui({
   ...defaultConfig,
+  themes: {
+    ...defaultConfig.themes,
+    dark: rebased('dark'),
+    light: rebased('light'),
+  },
   tokens: {
     ...defaultConfig.tokens,
     radius: RADIUS,
