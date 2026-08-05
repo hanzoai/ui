@@ -9,7 +9,9 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "@hanzo/gui": "^8.1.0",
+    "@hanzogui/config": "^8.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.1.0",
