@@ -59,6 +59,20 @@ describe('Switch', () => {
     expect(cls(thumb(on), 'bg')).not.toBe(cls(thumb(off), 'bg'))
   })
 
+  // The one that matters, and the one whose absence let an invisible thumb ship
+  // in 8.0.57-8.0.59. gui wraps the thumb in a sub-theme that INVERTS the ramp,
+  // so naming the same token on both sides is what guarantees they contrast —
+  // `$color3` is the dark track and the light thumb, `$color12` the light track
+  // and the dark thumb. Choosing the thumb's token independently is choosing a
+  // colour whose resolved value nothing here can see, which is how both states
+  // came out painted onto their own background.
+  it('paints the thumb with its track\'s token, so the sub-theme inverts it', () => {
+    for (const checked of [true, false]) {
+      const markup = html(<Switch checked={checked} />)
+      expect(cls(thumb(markup), 'bg'), `checked=${checked}`).toBe(cls(frame(markup), 'bg'))
+    }
+  })
+
   // The checked thumb must REPLACE its colour, not add a second class that races
   // the first. `background` in activeStyle compiles to `_background-…` beside the
   // base `_bg-…`, so which one paints is decided by stylesheet order — a bug that
