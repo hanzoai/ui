@@ -186,3 +186,30 @@
     animation: none;
   }
 }
+
+/* ── Layout guarantees ─────────────────────────────────────────────────────────
+   Two rules, both structural. They are attached to `data-slot` rather than to a
+   class because they are not styling a caller can opt out of — they are the
+   thing the primitive PROMISES, and a class can be overwritten by forgetting to
+   pass it on. */
+
+/* A grid item's initial `min-width` is `auto`, which floors the track at the
+   item's min-content width. One long unbroken string — a hash, a URL, a wide
+   <pre> — then pushes its own column wider and squeezes every sibling, which is
+   the ragged row Grid exists to prevent. The track sizing in grid.tsx is only
+   honoured once this floor is gone. */
+[data-slot='grid'] > * {
+  min-width: 0;
+}
+
+/* Media fills the ratio box instead of setting its own size. Without this an
+   <img> renders at its intrinsic pixel size and either overflows the frame or
+   sits letterboxed inside it, and the ratio the caller asked for is decoration.
+   `display:block` kills the inline-baseline gap under the image. */
+[data-ratio] > img,
+[data-ratio] > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
