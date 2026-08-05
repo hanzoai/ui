@@ -25,6 +25,20 @@
  * with no signal in it — which is what a full page of these actually looked
  * like. Off is muted, on is filled, and the loudest treatment is the one that
  * means something.
+ *
+ * THE THUMB TAKES THE SAME TOKEN AS ITS TRACK, and that is not a copy-paste
+ * slip. gui wraps the thumb in a `t_SwitchThumb` sub-theme that INVERTS the
+ * whole ramp — measured live, `$color3` is rgb(26,26,26) at the frame and
+ * rgb(171,171,171) inside the thumb; `$color12` is rgb(250,250,250) and
+ * rgb(10,10,10). So naming one token paints both sides of the pair and the
+ * contrast is structural: the thumb cannot come out the same colour as the
+ * track it sits on, in either state, whatever the palette does later.
+ *
+ * Picking the tokens by eye instead shipped once, in 8.0.57-8.0.59, and it
+ * shipped INVISIBLE: `$color10` under the thumb resolved to the off track's own
+ * rgb(26,26,26) and `$color1` to the on track's rgb(255,255,255). The tests
+ * passed, because they asked whether the two states DIFFER from each other and
+ * never whether either one differs from the thing behind it.
  */
 import { Switch as GuiSwitch } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
@@ -64,7 +78,7 @@ const Switch = ({ disabled, ...props }: SwitchProps) => (
       {...slot('switch-thumb')}
       width={THUMB}
       height={THUMB}
-      backgroundColor="$color10"
+      backgroundColor="$color3"
       // `bg`, and it is the only one of the three spellings that is both typed
       // and correct. The Thumb's activeStyle is typed as the SHORTHAND style set:
       // `backgroundColor` paints but is not in that type; `background` is in it
@@ -73,7 +87,7 @@ const Switch = ({ disabled, ...props }: SwitchProps) => (
       // Consumers build with ignoreBuildErrors, so the first would have shipped
       // an error nobody sees and the second a colour that lands or does not
       // depending on stylesheet order.
-      activeStyle={{ bg: '$color1' }}
+      activeStyle={{ bg: '$color12' }}
     />
   </GuiSwitch>
 )
