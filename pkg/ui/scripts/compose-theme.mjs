@@ -58,7 +58,30 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * `@hanzo/design/styles.css`, whose url()s resolve against design, where the
  * files actually are.
  */
-const design = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
+const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
+
+/**
+ * Teach design's light block gui's spelling of "light".
+ *
+ * The two systems name the same idea differently: design is `:root` (dark) with
+ * `.light` to opt out; gui's provider emits `t_dark` / `t_light`. They never had
+ * to agree while gui was declaring its own --background — it simply won. Now
+ * that design owns those names, an app in light mode carrying only gui's
+ * `t_light` would get design's DARK palette, because nothing matches `.light`.
+ *
+ * So design's light selector also answers to `:root.t_light`. The VALUES are
+ * still declared exactly once, by design, in design's own block — this adds a
+ * selector, never a second copy, which is the whole difference between an alias
+ * and a fork. `:root.t_light` is (0,2,0) and beats design's `:root` dark, which
+ * is the intent.
+ *
+ * Pure CSS, so it works under SSR. Doing it in <Hanzo> with an effect would
+ * leave the first paint dark in a light app.
+ */
+const design = designNoFonts.replace(
+  /(^|})([^{}]*?)\.light(\s*)\{/g,
+  (m, brace, before, ws) => `${brace}${before}.light, :root.t_light${ws}{`,
+)
 
 // The trap from store's decision doc, checked rather than remembered: design
 // publishes FINISHED colors (`#000000`, `rgb(255 255 255 / .10)`). Wrapping one
