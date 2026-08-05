@@ -17,17 +17,10 @@ import { fileURLToPath } from 'node:url'
 
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
 const PORT = Number(process.env.CONSUMER_PORT ?? 4390)
-// `localhost`, NOT 127.0.0.1 — and this is why the consumer gate could never
-// go green. `vite preview` binds IPv6 only: it prints "Local:
-// http://localhost:4390/" and answers on [::1], while 127.0.0.1 refuses the
-// connection. So the readiness poll below counted to 60 and threw "consumer app
-// never came up" on every run, AFTER the pack and the install and the build had
-// all succeeded — which reads like the app is broken and is the harness looking
-// at the wrong address.
-//
-// The same literal made the "someone else is on this port" guard inert, so the
-// one thing it was written to catch could not be caught either.
-const URL_ = `http://localhost:${PORT}`
+// The address is STATED, not inferred — see the `--host 127.0.0.1` below, which
+// is the whole reason this gate can go green. Keep the three literals (here, the
+// spawn, and playwright.config.ts's baseURL) equal.
+const URL_ = `http://127.0.0.1:${PORT}`
 
 const run = (cmd, args, cwd) =>
   execFileSync(cmd, args, { cwd, stdio: 'inherit', env: { ...process.env, npm_config_yes: 'true' } })
@@ -58,17 +51,47 @@ try {
   )
   if (taken) throw new Error(`${URL_} is already serving something. Free it, or set CONSUMER_PORT.`)
 
-  server = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], {
-    cwd: app,
-    stdio: 'ignore',
-    detached: true,
-  })
+  // `--host 127.0.0.1` STATES the interface instead of leaving it to be
+  // inferred, and the inference is what kept this gate red. Vite picks its own
+  // default and resolves `localhost` through the platform's resolver, so the
+  // address it listens on differs by machine: on macOS it bound [::1] only and
+  // 127.0.0.1 refused; on the Linux runner it did the opposite and `localhost`
+  // was the one that never answered. Either way the poll below counted to 60
+  // and reported the app as broken, after the pack, the install and the build
+  // had all succeeded.
+  //
+  // Named here, both ends agree by construction — this, the poll, and
+  // playwright.config.ts's baseURL are the same literal on every platform.
+  server = spawn(
+    'npx',
+    ['vite', 'preview', '--host', '127.0.0.1', '--port', String(PORT), '--strictPort'],
+    { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], detached: true },
+  )
+
+  // The server's own account of itself, kept rather than discarded.
+  //
+  // This was `stdio: 'ignore'`, so a preview that died on startup and one that
+  // was merely slow produced the identical message 30 seconds apart — on a CI
+  // runner nobody can attach to. Three runs were spent guessing at a cause vite
+  // had printed on the first one. Whatever it says, the failure says it too.
+  let said = ''
+  const keep = (d) => (said += d)
+  server.stdout.on('data', keep)
+  server.stderr.on('data', keep)
+
+  // A process that has already exited is never going to answer, so waiting the
+  // full 30s for it teaches nothing.
+  let dead = null
+  server.on('exit', (code, signal) => (dead = signal ?? `exit ${code}`))
+
+  const withLog = (msg) => new Error(`${msg}\n--- vite preview said ---\n${said.trim() || '(nothing)'}`)
   for (let i = 0; ; i++) {
     try {
       await fetch(URL_)
       break
     } catch {
-      if (i > 60) throw new Error(`consumer app never came up on ${URL_}`)
+      if (dead) throw withLog(`vite preview died (${dead}) before serving ${URL_}`)
+      if (i > 60) throw withLog(`consumer app never came up on ${URL_}`)
       await new Promise((r) => setTimeout(r, 500))
     }
   }
