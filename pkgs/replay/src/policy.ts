@@ -115,7 +115,13 @@ export function maskText(text: string): string {
 }
 
 /** Every input type opted into masking, so `maskInput` above is consulted for all
- *  of them rather than only the ones rrweb masks by default. */
+ *  of them rather than only the ones rrweb masks by default.
+ *
+ *  THE LIST MUST COVER `SECURE_TYPES`. When `policy.maskInput` is false,
+ *  `maskAllInputs` is false too and rrweb consults THIS table to decide whether to
+ *  call `maskInputFn` at all — so a type that is "never captured" per SECURE_TYPES
+ *  but missing here is not masked by anything: its raw value serializes. `hidden`
+ *  was exactly that hole, and hidden inputs are where CSRF tokens live. */
 const ALL_INPUTS = {
   color: true,
   date: true,
@@ -133,6 +139,12 @@ const ALL_INPUTS = {
   textarea: true,
   select: true,
   password: true,
+  // Carry a value the user never typed and never sees, so no one thinks to mask
+  // them: tokens, ids, and prefilled state.
+  hidden: true,
+  checkbox: true,
+  radio: true,
+  file: true,
 } as const
 
 /** Translate a policy (plus the app's own selectors) into rrweb record options.
@@ -153,7 +165,19 @@ export function recorderOptions(
     // the app marked private.
     blockSelector: [priv, CREDENTIAL_SELECTOR, opts.blockSelector].filter(Boolean).join(','),
     maskTextSelector: [priv, opts.maskTextSelector].filter(Boolean).join(','),
-    maskAllInputs: policy.maskInput !== false,
+    // ALWAYS false, and NOT a reading of policy.maskInput — this is the switch that
+    // decides WHO owns the masking decision, not WHETHER masking happens.
+    //
+    // rrweb does not treat `maskAllInputs: true` as "mask everything". It REPLACES
+    // `maskInputOptions` with its OWN hardcoded type list and then masks only what
+    // that list names — and that list has no `hidden`, so a hidden input's value
+    // attribute serialized in full no matter what we passed. (Reproduced in a real
+    // browser: a CSRF token in `input[type=hidden]` rode out in the FullSnapshot.)
+    //
+    // Handing rrweb `false` plus OUR complete table keeps the decision in ONE place:
+    // `maskInput()` below, which still honours `policy.maskInput` for the ordinary
+    // types and still refuses SECURE_TYPES outright. Same policy, one authority.
+    maskAllInputs: false,
     maskInputOptions: { ...ALL_INPUTS },
     maskInputFn: (text: string, el: HTMLElement) => maskInput(text, el, policy),
     maskTextFn: (text: string) => maskText(text),
@@ -161,5 +185,24 @@ export function recorderOptions(
     // one form no text rule can mask.
     recordCanvas: false,
     inlineImages: false,
+    // The REST of the gate. `extra` is spread above so a caller can tune sampling,
+    // and an option this list does not NAME is an option the caller can still set —
+    // so every switch that widens what is captured has to be named here, not just
+    // the obvious two above.
+    //
+    // A cross-origin iframe is another origin's DOM: it is not ours to record, and
+    // the policy above cannot reach inside it to mask anything.
+    recordCrossOriginIframes: false,
+    // Fonts are bytes off the page, not structure; they inflate the recording and
+    // can carry licensed content.
+    collectFonts: false,
+    // A plugin records whatever it likes, outside every hook above.
+    plugins: [],
+    // rrweb's class conventions are part of the gate: an app marks a node
+    // `rr-block`/`rr-ignore`/`rr-mask` to keep it out. Letting `extra` rename them
+    // silently disarms every such marking already in the app's markup.
+    blockClass: 'rr-block',
+    ignoreClass: 'rr-ignore',
+    maskTextClass: 'rr-mask',
   }
 }
