@@ -232,7 +232,7 @@ describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => 
     ['3', 'shadow-floating'],
   ])('rung %s still carries design’s --%s, in both themes', (rung, name) => {
     const ours = declared(rules(css), `glass-shadow-${rung}`)
-    expect(ours.map((d) => d.scope)).toEqual([':root', '.light, :root.t_light'])
+    expect(ours.map((d) => d.scope)).toEqual([':root', '.light, :root.t_light, .t_light'])
     expect(ours.map((d) => d.value)).toEqual([token(name, 'dark'), token(name, 'light')])
   })
 
@@ -272,6 +272,24 @@ describe('A scrim dims the page — it does not delete it', () => {
   it('the dim is one token, read from both languages', () => {
     expect(css).toContain('background-color: var(--surface-scrim')
     expect(scrim.backgroundColor).toContain('var(--surface-scrim')
+  })
+
+  it('both declarations carry the weight, because a compiled class is what they beat', () => {
+    // THE regression this rule exists to fix, shipped for a whole release with
+    // the rule present and losing. gui compiles the overlay's own opacity and
+    // ground into atomic classes (`_o-0--5`, `_bg-rgba0000--538295333`) that
+    // land in an inline <style> the bundler orders AFTER this sheet — equal
+    // specificity, later source, so they won and every hanzo.app modal dimmed
+    // to a quarter black while this file said 80%. Its neighbours (the
+    // material, all three rungs) already carry !important for exactly that
+    // reason; the scrim was written without it. Both declarations need it:
+    // `opacity: 1` alone still leaves a .5 ground, and the ground alone is
+    // still halved by the compiled opacity.
+    const rule = rules(css).slice(rules(css).indexOf('[data-slot="dialog-overlay"]'))
+    const body = rule.slice(rule.indexOf('{') + 1, rule.indexOf('}'))
+    const decls = body.split(';').map((d) => d.trim()).filter(Boolean)
+    expect(decls.map((d) => d.slice(0, d.indexOf(':')).trim())).toEqual(['opacity', 'background-color'])
+    expect(decls.filter((d) => !d.endsWith('!important'))).toEqual([])
   })
 
   it('no component paints its own full-bleed black', () => {

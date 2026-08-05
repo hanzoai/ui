@@ -75,12 +75,22 @@ const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
  * and a fork. `:root.t_light` is (0,2,0) and beats design's `:root` dark, which
  * is the intent.
  *
+ * And to a bare `.t_light`, which is the same bug one scope down. gui emits
+ * `t_light` on a SPAN for a nested `<Theme name="light">` — PrimaryButton's
+ * white pill inside a dark app is exactly that — and `:root.t_light` cannot
+ * match a span. Design's tokens therefore stayed dark inside a light island,
+ * which is invisible until something in that island reads one: a `--foreground`
+ * label on a white pill came out white on white. A directly-matching
+ * declaration beats an inherited one whatever the specificity, so the bare
+ * class settles the subtree; the `:root` form stays for the whole-page case,
+ * where it beats design's dark `:root` on specificity rather than on order.
+ *
  * Pure CSS, so it works under SSR. Doing it in <Hanzo> with an effect would
  * leave the first paint dark in a light app.
  */
 const design = designNoFonts.replace(
   /(^|})([^{}]*?)\.light(\s*)\{/g,
-  (m, brace, before, ws) => `${brace}${before}.light, :root.t_light${ws}{`,
+  (m, brace, before, ws) => `${brace}${before}.light, :root.t_light, .t_light${ws}{`,
 )
 
 // The trap from store's decision doc, checked rather than remembered: design
