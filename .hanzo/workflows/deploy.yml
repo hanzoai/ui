@@ -1,26 +1,27 @@
 name: deploy
 
-# Builds ui.hanzo.ai and publishes the image the operator runs.
+# RETIRED as an automatic lane. The image is built by hanzo.yml's `images:` block
+# through hanzoai/ci (.hanzo/workflows/cicd.yml), and this job is kept only as a
+# manually-dispatched fallback.
 #
-# The site was already on our own stack — hanzoai/static behind hanzoai/ingress,
-# with crs/ui.yaml in hanzoai/universe naming the live tag — but no workflow ever
-# built the image: every tag in ghcr.io/hanzoai/ui up to v5.7.6 was pushed by
-# hand. This is that missing step, so a commit on main produces a candidate tag
-# without anyone reaching for docker locally.
+# The reason is one capability, not tidiness. ui.hanzo.ai is a static export, so
+# its ingest key has to be BAKED IN at build; the key lives in KMS as
+# `deploy/EVENT_INGEST_KEY`, and hanzoai/ci is the only lane that reads it and
+# passes it as `--build-arg EVENT_INGEST_KEY=…`. The `docker build -t "$image" .`
+# below cannot — there is no KMS hop in it and nowhere to put the value — so any
+# image it produced would ship a client with no key at all, and cloud answers
+# `401 ingest_key_required` for an unattributed write. With the Dockerfile now
+# failing closed on an empty key, this job fails on every run instead of quietly
+# publishing an inert site.
 #
-# The image tag is the run's commit, and the CR names which tag is live: a build
-# never deploys itself.
+# Left in place rather than deleted, and dispatch-only rather than on push:
+# deleting a repo's only build lane strands the host with no failing run to show
+# it, and two push-triggered builders for one image means one commit yields two
+# images under two tag schemes. Dispatching this publishes `<short-sha>` with an
+# EMPTY key and the Dockerfile will refuse it — so if you dispatch it, pass the
+# key yourself or expect the gate to fire.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'app/**'
-      - 'pkgs/ui/**'
-      - 'pkgs/event/**'
-      - 'pnpm-lock.yaml'
-      - 'Dockerfile'
-      - '.hanzo/workflows/deploy.yml'
   workflow_dispatch:
 
 concurrency:
@@ -66,4 +67,4 @@ jobs:
           echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
           docker build -t "${image}" .
           docker push "${image}"
-          echo "published ${image} — set spec.image.tag in universe crs/ui.yaml to ${tag}"
+          echo "published ${image} — set image.tag AND image.digest in universe charts/app/values/hanzo/ui.yaml"
