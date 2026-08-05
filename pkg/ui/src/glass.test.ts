@@ -139,8 +139,26 @@ describe('Depth is a ladder, and it has three rungs', () => {
       const rule = css.slice(css.indexOf(`.elevation-${rung}`))
       const body = rule.slice(0, rule.indexOf('}'))
       expect(body).toContain('var(--edge-highlight')
-      expect(body).toMatch(/var\(--shadow-(sm|lg|floating)/)
+      expect(body).toContain(`var(--glass-shadow-${rung})`)
     }
+  })
+
+  it('no sheet reads the t-shirt ramp — the ladder owns its drops', () => {
+    // THE regression. A rung's drop used to be `var(--shadow-sm | --shadow-lg)`
+    // — generic sizes @hanzo/brand ALSO declares at :root, tuned for a white
+    // canvas (.05/.1 where design says .40/.55). Same name, same specificity,
+    // so it came down to which sheet the bundler put last, and brand won; and a
+    // declared variable beats a var() fallback, so the mirror below could not
+    // rescue it either. On #080808 the drops resolved to nothing visible and
+    // rungs 1-2 flattened — silently, because the lit edge still drew.
+    //
+    // Role names are safe and stay: only design coins --edge-highlight,
+    // --surface-scrim, --shadow-inset-hairline. It is the SIZE ramp that is
+    // common property, so the ladder may never read it again by any spelling.
+    const ramp = /var\(\s*--shadow(?:-(?:sm|md|lg|xl|2xl))?(?![-\w])/g
+    for (const [name, sheet] of Object.entries(sheets))
+      expect([name, [...rules(sheet).matchAll(ramp)].map((m) => m[0])]).toEqual([name, []])
+    expect(source.flatMap((s) => [...s.matchAll(ramp)].map((m) => m[0]))).toEqual([])
   })
 
   it('the anchored slots share rung 2 and the modal shares rung 3 — no restatement', () => {
@@ -172,28 +190,72 @@ describe('Depth is a ladder, and it has three rungs', () => {
 
 describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => {
   const require = createRequire(import.meta.url)
-  const design = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8')
-  const token = (name: string) => {
-    const m = design.match(new RegExp(`\\n\\s*--${name}:\\s*([^;]+);`))
-    if (!m) throw new Error(`@hanzo/design publishes no --${name}`)
-    return m[1].trim()
+  const design = rules(readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8'))
+
+  /**
+   * Every declaration of a token, paired with the selector that scopes it.
+   *
+   * Design states the ladder TWICE — dark at `:root`, light in `.light` — so
+   * reading only the first match compares one theme against both. The selector
+   * is the text back to the previous rule, which is exact for a flat sheet and
+   * is why comments are stripped first: a comment before a selector would
+   * otherwise BE part of it.
+   */
+  const declared = (sheet: string, name: string) =>
+    [...sheet.matchAll(new RegExp(`--${name}:\\s*([^;]+);`, 'g'))].map((m) => {
+      const open = sheet.lastIndexOf('{', m.index)
+      return {
+        scope: sheet.slice(Math.max(sheet.lastIndexOf('}', open), 0), open).replace(/[{}]/g, '').trim(),
+        value: m[1].replace(/\s+/g, ' ').trim(),
+      }
+    })
+
+  const token = (name: string, theme: 'dark' | 'light') => {
+    const hit = declared(design, name).filter((d) =>
+      theme === 'light' ? d.scope.includes('.light') : d.scope === ':root'
+    )
+    if (!hit.length) throw new Error(`@hanzo/design publishes no ${theme} --${name}`)
+    return hit[hit.length - 1].value
   }
 
   /**
-   * The fallbacks in glass.css are design's OWN values, present so a host that
-   * imports the sheet without design's token layer gets a ladder instead of a
-   * silently-dropped declaration. A copy is how one fact ends up with two homes
-   * and the two drift — so the copy is CHECKED rather than trusted. Bump
-   * @hanzo/design, and whichever value moved fails here by name.
+   * The ladder's own drops are design's values under names this package owns,
+   * because the names design publishes them under are a generic ramp anyone may
+   * declare — and @hanzo/brand does. Owning the name is what makes the rung
+   * reachable; it also makes this a COPY, with one fact in two homes. So the
+   * copy is checked rather than trusted, in both themes: bump @hanzo/design and
+   * whichever column moved fails here by rung and by name.
    */
-  it.each(['edge-highlight', 'shadow-sm', 'shadow-lg', 'shadow-floating', 'surface-scrim'])(
+  it.each([
+    ['1', 'shadow-sm'],
+    ['2', 'shadow-lg'],
+    ['3', 'shadow-floating'],
+  ])('rung %s still carries design’s --%s, in both themes', (rung, name) => {
+    const ours = declared(rules(css), `glass-shadow-${rung}`)
+    expect(ours.map((d) => d.scope)).toEqual([':root', '.light, :root.t_light'])
+    expect(ours.map((d) => d.value)).toEqual([token(name, 'dark'), token(name, 'light')])
+  })
+
+  /**
+   * The role-named tokens are still READ from design, so their fallbacks stay
+   * mirrors: present so a host that imports the sheet without design's token
+   * layer gets a ladder instead of a silently-dropped declaration.
+   */
+  it.each(['edge-highlight', 'surface-scrim'])(
     'the --%s fallback still equals what design publishes',
     (name) => {
       const found = fallbacks(`${css}\n${motion}\n${recipes}`, name)
       expect(found.length).toBeGreaterThan(0)
-      expect([...new Set(found)]).toEqual([token(name).replace(/\s+/g, ' ')])
+      expect([...new Set(found)]).toEqual([token(name, 'dark')])
     }
   )
+
+  it('paper’s standalone fallback is the rung it names', () => {
+    // motion.css ships on its own, so it cannot assume the ladder is present —
+    // but a fallback that disagrees with the rung is a second opinion about how
+    // deep rung 2 is, visible only to hosts that skipped glass.css.
+    expect(fallbacks(motion, 'glass-shadow-2')).toEqual([token('shadow-lg', 'dark')])
+  })
 
   it('the recipes name tokens, never literals', () => {
     // A hex or an rgb() in a recipe is a value that stopped following the theme
