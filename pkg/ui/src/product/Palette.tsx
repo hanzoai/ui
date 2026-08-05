@@ -138,12 +138,23 @@ export function Palette({
               {items.map((op) => (
                 <CommandItem key={op.id} value={op.id} onSelect={() => onRun(op)} gap="$2">
                   {op.icon}
-                  <SizableText numberOfLines={1}>{op.label}</SizableText>
-                  {op.hint ? (
-                    <SizableText numberOfLines={1} fontSize="$1" color="$color11">
-                      {op.hint}
+                  {/* The name and its help share one flexible cell, and only the
+                      HELP may shrink. A row lays out by distributing slack, so
+                      without this the two competed: the name — the thing being
+                      searched for, and the thing that has to be read to choose —
+                      collapsed to "ap…" while a summary took the rest of the
+                      width. It also stops a row with no help from pushing its
+                      name to the far right. */}
+                  <XStack flex={1} items="center" gap="$2" overflow="hidden">
+                    <SizableText numberOfLines={1} shrink={0}>
+                      {op.label}
                     </SizableText>
-                  ) : null}
+                    {op.hint ? (
+                      <SizableText numberOfLines={1} flex={1} fontSize="$1" color="$color11">
+                        {op.hint}
+                      </SizableText>
+                    ) : null}
+                  </XStack>
                   <Method of={op} />
                   {op.end}
                 </CommandItem>
@@ -181,7 +192,7 @@ function Method({ of }: { of: Op }) {
   if (of.method === undefined) return null
   return (
     <SizableText
-      ml="auto"
+      shrink={0}
       fontFamily="$mono"
       fontSize={10}
       letterSpacing={0.4}
