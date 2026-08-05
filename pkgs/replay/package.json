@@ -1,0 +1,71 @@
+{
+  "name": "@hanzo/replay",
+  "version": "0.1.0",
+  "description": "Hanzo Replay — browser session-replay recorder. Wraps rrweb to capture a replayable DOM movie, batches it, and POSTs it to the ONE ingest door (POST /v1/replay) attributed by a publishable pk- key. Masks at CAPTURE time using @hanzo/observe's redaction policy — inputs masked by default, marked subtrees excluded, credential-bearing URLs redacted through @hanzo/event, and no recording at all on OAuth callback routes. Orthogonal to @hanzo/observe: semantic capture there, pixels here.",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/replay"
+  },
+  "keywords": [
+    "session-replay",
+    "rrweb",
+    "replay",
+    "analytics",
+    "telemetry",
+    "privacy",
+    "observability",
+    "hanzo"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "dependencies": {
+    "@hanzo/event": "^0.3.16",
+    "@hanzo/observe": "^0.1.7"
+  },
+  "peerDependencies": {
+    "rrweb": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "happy-dom": "^20.0.0",
+    "rrweb": "^2.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
