@@ -12,7 +12,7 @@
 // Nothing runs at module scope — importing this package records nothing.
 
 import { record as rrwebRecord } from 'rrweb'
-import { Batch, DEFAULT_ENDPOINT, defaultTransport, replayUrl } from './batch'
+import { Batch, DEFAULT_ENDPOINT, defaultTransport, publishable, replayUrl } from './batch'
 import { distinctId, sessionId, windowId } from './identity'
 import { recorderOptions } from './policy'
 import { refused } from './routes'
@@ -64,6 +64,15 @@ export function record(config: ReplayConfig): ReplayHandle {
 
   if (!config.ingestKey) {
     fail(new Error('replay: ingestKey is required'))
+    return inert(ids)
+  }
+  // A PUBLISHABLE key and nothing else. This runs in a browser, so whatever is
+  // handed here is readable by anyone who opens devtools — a secret key would be
+  // published by the act of using it, on every batch, in an Authorization header.
+  // The beacon path already refused one; refusing at the door means there is no
+  // carrier on which a secret can leave, rather than one carrier that happens to.
+  if (!publishable(config.ingestKey)) {
+    fail(new Error('replay: ingestKey must be a publishable key (pk-…) — never a secret key'))
     return inert(ids)
   }
   // A recording of an OAuth callback IS the authorization code. Never start here.

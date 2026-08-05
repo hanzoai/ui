@@ -133,7 +133,9 @@ group('privateSelector', () => {
 group('recorderOptions', () => {
   it('masks all inputs by default and consults our decision for every type', () => {
     const o = recorderOptions()
-    expect(o.maskAllInputs).toBe(true)
+    // false = "do not substitute your list for mine"; the masking itself is in
+    // maskInputOptions + maskInputFn below.
+    expect(o.maskAllInputs).toBe(false)
     expect(o.maskInputOptions?.password).toBe(true)
     expect(o.maskInputOptions?.text).toBe(true)
     expect(o.maskInputOptions?.textarea).toBe(true)
@@ -181,13 +183,80 @@ group('recorderOptions', () => {
       { extra: { mousemoveWait: 100, maskAllInputs: false, blockSelector: '.nope' } },
     )
     expect(o.mousemoveWait).toBe(100)
-    expect(o.maskAllInputs).toBe(true) // ours wins
+    expect(o.maskAllInputs).toBe(false) // ours wins — see below for why false IS the gate
     expect(o.blockSelector).toContain('[data-hz-private]')
     expect(o.blockSelector).not.toBe('.nope')
   })
 
-  it('follows the policy when masking is explicitly turned off', () => {
-    expect(recorderOptions({ maskInput: false }).maskAllInputs).toBe(false)
+  // rrweb reads `maskAllInputs: true` as "use MY hardcoded type list instead of
+  // yours", and that list omits `hidden`. Passing false keeps our table — and
+  // therefore maskInputFn — in charge of every type we name.
+  it('keeps the masking decision in maskInputFn rather than rrwebs own list', () => {
+    for (const policy of [{}, { maskInput: false }, { maskInput: true }]) {
+      const o = recorderOptions(policy)
+      expect(o.maskAllInputs).toBe(false)
+      expect(typeof o.maskInputFn).toBe('function')
+      expect(o.maskInputOptions?.hidden).toBe(true)
+    }
+  })
+
+  it('still follows the policy when masking is explicitly turned off', () => {
+    // Not via maskAllInputs any more — via the function that owns the decision.
+    const el = mount('<input type="text" name="nickname">')
+    expect(maskInput('Zach', el, { maskInput: false })).toBe('Zach')
+    expect(maskInput('Zach', el, {})).toBe('****')
+    // …but a secure type is refused whatever the mode says.
+    const pw = mount('<input type="hidden" name="csrf_token">')
+    expect(maskInput('CSRF-TOKEN', pw, { maskInput: false })).toBe('********')
+  })
+
+  // With maskInput:false, maskAllInputs is false and rrweb consults
+  // maskInputOptions to decide whether maskInputFn runs at all. A type that
+  // SECURE_TYPES calls "never captured" but this table omits is masked by nothing.
+  it('opts every SECURE_TYPE into maskInputOptions, so none can serialize raw', () => {
+    for (const policy of [{}, { maskInput: false }]) {
+      const o = recorderOptions(policy)
+      for (const t of ['password', 'hidden', 'email', 'tel']) {
+        expect(o.maskInputOptions?.[t as keyof typeof o.maskInputOptions]).toBe(true)
+      }
+    }
+  })
+
+  it('masks the value-bearing types a user never typed', () => {
+    const o = recorderOptions({})
+    for (const t of ['hidden', 'checkbox', 'radio', 'file']) {
+      expect(o.maskInputOptions?.[t as keyof typeof o.maskInputOptions]).toBe(true)
+    }
+  })
+
+  // The escape hatch is spread FIRST, so anything the gate does not NAME is
+  // something the caller can still set. These are the switches that widen capture.
+  it('pins every widening rrweb switch against the escape hatch', () => {
+    const o = recorderOptions(
+      {},
+      {
+        extra: {
+          recordCrossOriginIframes: true,
+          collectFonts: true,
+          recordCanvas: true,
+          inlineImages: true,
+          blockClass: 'not-rr-block',
+          ignoreClass: 'not-rr-ignore',
+          maskTextClass: 'not-rr-mask',
+          plugins: [{ name: 'evil' }] as never,
+        },
+      },
+    )
+    expect(o.recordCrossOriginIframes).toBe(false)
+    expect(o.collectFonts).toBe(false)
+    expect(o.recordCanvas).toBe(false)
+    expect(o.inlineImages).toBe(false)
+    // Renaming these silently disarms every rr-block/rr-ignore/rr-mask already
+    // written into the app's markup.
+    expect(o.blockClass).toBe('rr-block')
+    expect(o.ignoreClass).toBe('rr-ignore')
+    expect(o.maskTextClass).toBe('rr-mask')
+    expect(o.plugins).toEqual([])
   })
 })
 
