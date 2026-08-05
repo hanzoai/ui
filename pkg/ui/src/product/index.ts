@@ -106,6 +106,14 @@ export * from './FadeIn'
 export * from './Field'
 export * from './HanzoMark'
 export * from './PageHeader'
+
+// Palette — the ONE ⌘K bar, plus its opener. The list it renders is not written
+// down anywhere: cloud publishes `GET /v1/commands`, the fifth projection of the
+// one route table, and a surface passes it in. `match.ts` holds the matching
+// rule (safe methods browse, unsafe methods must be named) as pure functions.
+export * from './Palette'
+export * from './match'
+export * from './useCommandK'
 export * from './PrimaryButton'
 export * from './ProductIcon'
 export * from './ProviderLogo'
