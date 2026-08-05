@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.45",
+  "version": "8.0.46",
   "type": "module",
-  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -31,15 +31,11 @@
     },
     "./core": {
       "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs",
-      "default": "./dist/core/index.js"
+      "import": "./dist/core/index.js"
     },
     "./tokens": {
       "types": "./dist/core/tokens.d.ts",
-      "import": "./dist/core/tokens.js",
-      "require": "./dist/core/tokens.cjs",
-      "default": "./dist/core/tokens.js"
+      "import": "./dist/core/tokens.js"
     },
     "./theme.css": "./dist/theme.css",
     "./product": {
@@ -160,7 +156,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && cp src/theme.css dist/theme.css && cp src/styles/motion.css dist/styles/motion.css && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
@@ -174,9 +170,9 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
+    "@hanzo/design": "^0.4.6",
     "@hanzo/logo": "^1.0.13",
     "@hanzo/products": "^0.2.0",
-    "@hanzo/tokens": "workspace:*",
     "@hanzogui/lucide-icons-2": "^8.0.0",
     "@hanzogui/telemetry": "^8.0.0",
     "@hanzogui/toast": "^8.0.0",
@@ -228,6 +224,7 @@
     "@hanzogui/lucide-icons-2": "8.0.0",
     "@hanzogui/next-theme": "8.0.0",
     "@hanzogui/web": "8.0.0",
+    "@playwright/test": "^1.61.0",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.0",
     "next-themes": "^0.4.6",
@@ -235,8 +232,7 @@
     "react-dom": "^19.0.0",
     "react-native-web": "^0.21.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.8",
-    "@playwright/test": "^1.61.0"
+    "vitest": "^4.1.8"
   },
   "publishConfig": {
     "access": "public"

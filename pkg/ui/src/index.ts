@@ -1,4 +1,4 @@
-// @hanzo/ui — the one Hanzo component library, on @hanzo/gui + @hanzo/tokens.
+// @hanzo/ui — the one Hanzo component library, on @hanzo/gui + @hanzo/design.
 //
 // ONE substrate: every component renders through @hanzo/gui primitives, so the
 // same import works on web, native (expo) and desktop (Tauri). The ROOT barrel is

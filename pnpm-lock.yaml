@@ -955,15 +955,15 @@ importers:
       '@hanzo/dashboard':
         specifier: '>=0.1.0'
         version: 0.2.0(@hanzo/gui@8.0.0(react-dom@19.2.4(react@19.2.4))(react-native@0.86.0(@babel/core@7.29.7)(@react-native/metro-config@0.86.0(@babel/core@7.29.7))(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@hanzo/design':
+        specifier: ^0.4.6
+        version: 0.4.6
       '@hanzo/logo':
         specifier: ^1.0.13
         version: 1.0.13(react@19.2.4)
       '@hanzo/products':
         specifier: ^0.2.0
         version: link:../../pkgs/products
-      '@hanzo/tokens':
-        specifier: workspace:*
-        version: link:../../pkgs/tokens
       '@hanzo/usage':
         specifier: '>=0.1.0'
         version: 0.1.6(@hanzo/gui@8.0.0(react-dom@19.2.4(react@19.2.4))(react-native@0.86.0(@babel/core@7.29.7)(@react-native/metro-config@0.86.0(@babel/core@7.29.7))(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(react@19.2.4))(@hanzogui/lucide-icons-2@8.0.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -2961,6 +2961,10 @@ packages:
       '@hanzo/gui': '>=7.2.2'
       react: 19.2.4
       react-dom: 19.2.4
+
+  '@hanzo/design@0.4.6':
+    resolution: {integrity: sha512-kRjnGKsGqMfGTg2kMUv+pPRDryarYk85rMOoblIqshFIZJp48pCKYcdv1DmfxbNyKm+7CqvqD1NjY3HhNPUQ/A==}
+    hasBin: true
 
   '@hanzo/docs-core@16.5.3':
     resolution: {integrity: sha512-eh72D7KiaKBaJj8+dZ5kLV9tA3GQdV/wD48IIgL1Zy3g3BNpTDp65wt3xJG5pZ1pUr8KUbXzbBskDuw/0M6bsA==}
@@ -16747,6 +16751,8 @@ snapshots:
       '@hanzo/gui': 8.0.0(react-dom@19.2.4(react@19.2.4))(react-native@0.86.0(@babel/core@7.29.7)(@react-native/metro-config@0.86.0(@babel/core@7.29.7))(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(react@19.2.4)
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
+
+  '@hanzo/design@0.4.6': {}
 
   '@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3)':
     dependencies:
