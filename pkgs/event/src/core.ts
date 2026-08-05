@@ -123,7 +123,14 @@ function normalizeError(err: unknown): Exception {
   return { type: n.name, message: n.message, stack: n.stack }
 }
 
-const isBrowser = () => typeof window !== 'undefined'
+// React Native defines a `window` but no `document` (and no `window.location`),
+// so `typeof window !== 'undefined'` alone took the browser path there and
+// `init()` threw on `window.location.search`. Requiring `document` makes RN read
+// as non-browser: `init()` returns early (skips attribution + the visibility/
+// unload listeners RN doesn't have), while `capture()`/`flush()` — which are NOT
+// gated on this and post through plain `fetch` — still emit. So the client is
+// inert-safe under SSR/Node and live on RN, without a second transport.
+const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
 /** serializeBatch stringifies a batch, salvaging what it can. `properties` is
  *  arbitrary caller data — a DOM node, a React synthetic event, an axios error are
