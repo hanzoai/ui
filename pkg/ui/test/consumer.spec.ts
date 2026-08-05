@@ -324,3 +324,57 @@ test.describe('layout', () => {
     expect(await card.getAttribute('tabindex')).toBe('0')
   })
 })
+
+/**
+ * design's token names are design's. gui must not shadow them.
+ *
+ * @hanzo/design declares --background/--black/--white on `:root` and `.light`
+ * — specificity (0,1,0). gui's generated theme classes declared the same three
+ * on `:root.t_dark`/`:root.t_light` — (0,2,0). SPECIFICITY BEATS SOURCE ORDER,
+ * so gui won in every app that wires the theme class onto <html>, and design's
+ * palette was silently replaced by gui's default grey.
+ *
+ * The wiring is the whole test. Without a theme class on <html> the shadow
+ * cannot fire and the page looks correct — which is exactly why this shipped,
+ * and why "re-import design's colors.css last" appeared to fix it. That
+ * workaround loses to specificity the moment themes are wired properly: a fix
+ * that expires on being fixed.
+ */
+/**
+ * design's declared values, per theme, copied from its own blocks. Equality with
+ * these exact strings is the point: billing measured gui winning even where the
+ * two AGREE in intent — dark grounded at #141414 (gui) instead of #0a0a0a
+ * (design), a drift invisible to a contrast gate and visible as "why is our
+ * black slightly grey". A threshold would have passed it. Equality does not.
+ */
+const DESIGN = {
+  t_dark: { background: '#0a0a0a', black: '#000000', white: '#fafafa' },
+  t_light: { background: '#ffffff', black: '#0a0a0a', white: '#ffffff' },
+}
+
+for (const [themeClass, expected] of Object.entries(DESIGN))
+  test(`design owns its token names under ${themeClass}`, async ({ page }) => {
+    await load(page, themeClass === 't_dark' ? 'dark' : 'light')
+    const got = await page.evaluate((cls) => {
+      // The condition the defect needs: gui's theme class ON <html>. Set by hand
+      // so the assertion holds whether or not the app wires it at the root.
+      document.documentElement.classList.add(cls)
+      // Chromium serialises a custom property's value, so design's `#000000`
+      // comes back as `#000`. Expanding the short form compares VALUES rather
+      // than spellings — the alternative is a test that fails on a browser
+      // formatting choice and teaches everyone to ignore it.
+      const read = (n) => {
+        const v = getComputedStyle(document.documentElement).getPropertyValue(n).trim().toLowerCase()
+        const m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/.exec(v)
+        return m ? `#${m[1]}${m[1]}${m[2]}${m[2]}${m[3]}${m[3]}` : v
+      }
+      return { background: read('--background'), black: read('--black'), white: read('--white') }
+    }, themeClass)
+    // --background is the one that provably moves (billing diffed every design
+    // token it consumes under forced gui classes; only this one differs).
+    expect(got.background.toLowerCase(), `--background under ${themeClass}`).toBe(expected.background)
+    // Declared but unread in both measured apps. Covered because they are the
+    // complete set gui redeclared, not because a bug was seen.
+    expect(got.black.toLowerCase(), `--black under ${themeClass}`).toBe(expected.black)
+    expect(got.white.toLowerCase(), `--white under ${themeClass}`).toBe(expected.white)
+  })

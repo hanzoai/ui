@@ -45,6 +45,77 @@ const server = await createServer({
   ssr: { noExternal: [/@hanzogui\//, /@hanzo\/gui/] },
 })
 
+
+/**
+ * Stop gui's ROOT theme from shadowing @hanzo/design's token names.
+ *
+ * design declares `--background`, `--black`, `--white` on `:root` and `.light`
+ * — specificity (0,1,0). gui's generated theme classes redeclare the same three
+ * on `:root.t_dark` / `:root.t_light` — (0,2,0). Specificity beats source order,
+ * so gui wins in every app that wires GuiProvider's theme class onto <html>, and
+ * design's palette is silently replaced by gui's default grey.
+ *
+ * That also means the obvious workaround does not work: re-importing design's
+ * colors.css LAST cannot win against a higher specificity. It only appears to
+ * work where the theme classes never reach <html>, and reverts the day someone
+ * wires themes correctly — a fix that expires on being fixed.
+ *
+ * One fact, one home, at the CSS layer too: these three names belong to design,
+ * so the ROOT theme blocks stop declaring them and `var(--background)` resolves
+ * through design.
+ *
+ * SUB-THEMES ARE LEFT ALONE, and that distinction is the whole reason this is a
+ * parser and not a regex. `.t_accent`, `.t_blue_Button` and ~248 others
+ * legitimately scope their own background — that is what a nested theme IS.
+ * Only a selector that is exactly `:root`, `:root.t_dark` or `:root.t_light` is
+ * the root theme; anything with a further `.t_*` is a nested one and keeps its
+ * override.
+ *
+ * Bare `:root` is in that list because gui shadows TWICE, by two different
+ * mechanisms, and fixing only the loud one leaves the page just as wrong:
+ *   · `:root.t_dark` / `:root.t_light` — (0,2,0), beats design on SPECIFICITY.
+ *   · plain `:root { --background: var(--t1) }` — (0,1,0), TIES design and wins
+ *     on SOURCE ORDER, because gui's block is appended after design's here.
+ * The second one is why the acceptance test still read gui's grey after the
+ * first fix.
+ */
+const SHADOWED = ['background', 'black', 'white']
+const ROOT_THEME = /^:root(\.t_(dark|light))?$/
+
+function unshadowDesignTokens(css) {
+  let out = ''
+  let i = 0
+  let stripped = 0
+  while (i < css.length) {
+    const open = css.indexOf('{', i)
+    if (open === -1) {
+      out += css.slice(i)
+      break
+    }
+    const close = css.indexOf('}', open)
+    if (close === -1) {
+      out += css.slice(i)
+      break
+    }
+    const selector = css.slice(i, open)
+    let body = css.slice(open + 1, close)
+    const isRootTheme = selector
+      .split(',')
+      .some((sel) => ROOT_THEME.test(sel.trim()))
+    if (isRootTheme) {
+      for (const name of SHADOWED) {
+        const before = body
+        body = body.replace(new RegExp(`(^|;)\\s*--${name}\\s*:[^;}]*;?`, 'g'), '$1')
+        if (body !== before) stripped++
+      }
+    }
+    out += selector + '{' + body + '}'
+    i = close + 1
+  }
+  console.log(`  unshadowed ${stripped} design token declaration(s) from gui's root themes`)
+  return out
+}
+
 try {
   const { GuiProvider } = await server.ssrLoadModule('@hanzo/gui')
   const { config } = await server.ssrLoadModule(join(UI, 'src/gui-config.ts'))
@@ -58,7 +129,7 @@ try {
       createElement(GuiProvider, { config, defaultTheme: theme }, createElement(Gallery)),
     )
 
-  const gui = config.getCSS()
+  const gui = unshadowDesignTokens(config.getCSS())
   // dist/theme.css, not src: the token layer is @hanzo/design's, composed in
   // by scripts/compose-theme.mjs. Reading src here would ship a stylesheet whose
   // components reference tokens the sheet never declares.
