@@ -279,15 +279,62 @@ const Command = /* @__PURE__ */ forwardRef<GuiElement, CommandProps>(function Co
   )
 })
 
-export type CommandDialogProps = ComponentProps<typeof Dialog> & {
-  title?: string
-  description?: string
-}
+/**
+ * Dialog props, plus the palette's OWN behaviour forwarded to the `Command`
+ * inside it.
+ *
+ * Without this the dialog was a dead end: `<Command>` was rendered bare, so a
+ * host that needed the highlighted value — to drive a preview panel beside the
+ * list, which is the whole point of a two-pane palette — could not reach it.
+ * hanzo.app hit exactly that and rebuilt the dialog by hand around the bare
+ * `Command` primitive, and its file still says why:
+ *
+ *   "Composed from the @hanzo/ui `Command` primitive inside a wide `Dialog`
+ *    (rather than the stock `CommandDialog`, which doesn't forward
+ *    `onValueChange` — needed to drive the preview panel from the highlighted
+ *    row)."
+ *
+ * `value`/`onValueChange` are the SELECTED ITEM, matching `Command`'s own
+ * names — and cmdk's before it, so a host moving over does not have to relearn
+ * them. The SEARCH string is `CommandInput`'s `value`, which is a different
+ * prop on a different component; they have always been distinct and stay so.
+ *
+ * The rest of the palette's behaviour comes too. Forwarding one prop would
+ * just mean the next host needing `loop` files the same bug again.
+ */
+export type CommandDialogProps = ComponentProps<typeof Dialog> &
+  Pick<
+    CommandProps,
+    | 'value'
+    | 'defaultValue'
+    | 'onValueChange'
+    | 'filter'
+    | 'shouldFilter'
+    | 'loop'
+    | 'label'
+    | 'vimBindings'
+    | 'disablePointerSelection'
+  > & {
+    title?: string
+    description?: string
+  }
 
 const CommandDialog = ({
   title = 'Command Palette',
   description = 'Search for a command to run...',
   children,
+  // Destructured by name so each lands on the component that owns it: these
+  // drive the Command, everything left over is the Dialog's. Spreading the lot
+  // at the Dialog is what made them unreachable in the first place.
+  value,
+  defaultValue,
+  onValueChange,
+  filter,
+  shouldFilter,
+  loop,
+  label,
+  vimBindings,
+  disablePointerSelection,
   ...props
 }: CommandDialogProps) => (
   <Dialog modal {...props}>
@@ -299,7 +346,19 @@ const CommandDialog = ({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </VisuallyHidden>
-        <Command>{children}</Command>
+        <Command
+          value={value}
+          defaultValue={defaultValue}
+          onValueChange={onValueChange}
+          filter={filter}
+          shouldFilter={shouldFilter}
+          loop={loop}
+          label={label}
+          vimBindings={vimBindings}
+          disablePointerSelection={disablePointerSelection}
+        >
+          {children}
+        </Command>
       </DialogContent>
     </DialogPortal>
   </Dialog>

@@ -378,3 +378,44 @@ for (const [themeClass, expected] of Object.entries(DESIGN))
     expect(got.black.toLowerCase(), `--black under ${themeClass}`).toBe(expected.black)
     expect(got.white.toLowerCase(), `--white under ${themeClass}`).toBe(expected.white)
   })
+
+/**
+ * CommandDialog forwards the palette's own props to the Command inside it.
+ *
+ * It used to render `<Command>` bare, so `onValueChange` never reached a host
+ * and the highlighted row was unreachable from outside. A two-pane palette —
+ * list on the left, preview of the highlighted row on the right — was therefore
+ * impossible with the stock component, and hanzo.app rebuilt the dialog by hand
+ * around the bare `Command` primitive. Its file still carries the reason.
+ *
+ * Two props, two failure modes, both asserted: selection has to escape
+ * (onValueChange) and filtering has to happen (shouldFilter).
+ */
+test('CommandDialog reports the highlighted row and filters as you type', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await load(page, 'dark')
+
+  const input = page.locator('[data-slot="command-dialog"] [data-slot="command-input"], [role="dialog"] input').first()
+  await input.waitFor({ state: 'visible' })
+
+  // Selection escapes. Arrow down moves off `alpha`; the host callback writes
+  // the new value onto a node it owns, which is what a preview panel would do.
+  await input.press('ArrowDown')
+  await expect
+    .poll(async () => page.getAttribute('[data-palette-selected]', 'data-palette-selected'))
+    .not.toBe('')
+
+  const afterArrow = await page.getAttribute('[data-palette-selected]', 'data-palette-selected')
+  expect(afterArrow, 'onValueChange never reached the host').toBeTruthy()
+
+  // Filtering happens. `gamma` matches, the other two do not, and filtered-out
+  // items are hidden rather than unmounted — so visibility is the question.
+  await input.fill('gamma')
+  await expect
+    .poll(async () =>
+      page.locator('[role="dialog"] [data-slot="command-item"]:visible').count(),
+    )
+    .toBeLessThan(3)
+  const visibleText = await page.locator('[role="dialog"] [data-slot="command-item"]:visible').allInnerTexts()
+  expect(visibleText.join(' ').toLowerCase(), 'typing did not narrow the list').toContain('gamma')
+})
