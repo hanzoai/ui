@@ -38,6 +38,45 @@ try {
   run('npm', ['i', '--no-audit', '--no-fund', '--silent'], app)
   run('npm', ['i', '--no-audit', '--no-fund', '--silent', `./${tgz}`], app)
 
+  // ONE COPY of the gui runtime, or nothing below means anything.
+  //
+  // @hanzogui packages pin each other EXACTLY (toast@8.0.0 -> core@8.0.0, no
+  // caret), so a single stale range in this package's dependencies drags a whole
+  // second generation of the train in beside the consumer's. Both typecheck.
+  // Both build. Then the config singleton lives in one copy and the components
+  // read the other, and the app dies on prerender with `Missing theme.` —
+  // hanzo.ai hit exactly that and had to state the invariant by hand in a
+  // pnpm.overrides block.
+  //
+  // The invariant belongs HERE, in the package that caused it. `npm ls` prints
+  // one line per resolved copy; more than one distinct version is the defect.
+  {
+    const out = execFileSync('npm', ['ls', '@hanzogui/web', '--all', '--json'], {
+      cwd: app,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    })
+    const found = new Set()
+    const walk = (node) => {
+      if (!node || typeof node !== 'object') return
+      if (node.version && node._name === '@hanzogui/web') found.add(node.version)
+      for (const [name, child] of Object.entries(node.dependencies ?? {})) {
+        if (name === '@hanzogui/web' && child.version) found.add(child.version)
+        walk(child)
+      }
+    }
+    walk(JSON.parse(out))
+    console.log(`· @hanzogui/web copies: ${[...found].join(', ') || 'none'}`)
+    if (found.size > 1)
+      throw new Error(
+        `${found.size} copies of @hanzogui/web resolved in the consumer: ${[...found].join(', ')}.\n` +
+          `  The gui runtime must resolve to ONE copy. Two generations means the config\n` +
+          `  singleton and the components live in different modules, which typechecks,\n` +
+          `  builds, and then dies on prerender with "Missing theme.".\n` +
+          `  Fix the @hanzogui/* ranges in this package rather than overriding downstream.`,
+      )
+  }
+
   console.log(`· building the consumer app`)
   run('npx', ['vite', 'build'], app)
 
