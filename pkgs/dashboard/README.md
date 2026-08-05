@@ -210,7 +210,7 @@ per component:
    stay in console (they're used elsewhere) — the driver now inlines its own.
 4. **Landing** — replace `products/landing/*` with the package; the console builds a
    `LandingConfig` with `docsUrl: config.docsUrl`, `brandName: config.brandName`,
-   `discordUrl: 'https://discord.gg/hanzo'`. `LandingHero`'s console-specific
+   `discordUrl: 'https://discord.gg/CJCyAsm9Vr'`. `LandingHero`'s console-specific
    `HeroGraphic`/`AccentButton` (from `inference/parts`) are now inlined in the package.
 5. **Pipeline** — swap `paas/RailwayDeploy.tsx` for `<Pipeline>`; the console owns the
    `PaasApi.getApp` poll (`usePoll` + `PaasApi`) and the monotonic `furthest` state,

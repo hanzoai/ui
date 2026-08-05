@@ -8,7 +8,7 @@ export const siteConfig = {
   links: {
     twitter: "https://x.com/hanzoai",
     github: "https://github.com/hanzoai/ui",
-    discord: "https://discord.gg/hanzo",
+    discord: "https://discord.gg/CJCyAsm9Vr",
   },
 }
 
