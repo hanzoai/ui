@@ -4,11 +4,25 @@
    transitions the Gui-driven inline width/transform/opacity. Every animation is
    guarded by `prefers-reduced-motion: reduce`.
 
-   Import once at the app root:  import '@hanzo/ui/styles/motion.css'  */
+   Import once at the app root:  import '@hanzo/ui/styles/motion.css'
+
+   ── EVERY CLASS HERE IS `hz-` PREFIXED, and it was not always ────────────────
+   This sheet used to claim `.row`, `.skeleton`, `.fade`, `.mono`, `.drag` and
+   `.tnum` — six of the most ordinary words in anyone's CSS — at the document
+   level, in a package an app imports once at its root. An app with its own
+   `.row` did not get a warning; it got whichever rule the cascade preferred, in
+   a stylesheet it never opened. A library's utility classes are its namespace,
+   so they carry its name.
+
+   The unprefixed selectors are kept as aliases on the SAME rule for one minor
+   version so nothing breaks mid-flight, and are REMOVED IN 8.1.0. Nothing in
+   this package emits them any more — they exist only for a consumer who typed
+   `className="skeleton"` against the old sheet. Keyframe names are prefixed too
+   and have no alias: nothing outside this file ever referenced them.  */
 
 /* Fade-up entrance — <FadeIn> applies the class + a per-item stagger delay.
    ~0.4s ease-out, small upward travel (matches the hanzo.ai marketing feel). */
-@keyframes fade-up {
+@keyframes hz-fade-up {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -19,12 +33,14 @@
   }
 }
 
+.hz-fade-up,
 .fade-up {
-  animation: fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hz-fade-up,
   .fade-up {
     animation: none;
   }
@@ -32,27 +48,32 @@
 
 /* Shell chrome motion — sidebar collapse (width) and the Linear-style two-level
    nav slide (transform); backdrop cross-fade behind a SlideOver / dialog. */
+.hz-collapse,
 .collapse {
   transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
 }
 
+.hz-slide,
 .slide {
   transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
+.hz-fade,
 .fade {
   transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity;
 }
 
 /* Drag-to-reorder — a pinned row while it is being dragged (pointer DnD). The
-   lifted row gets a subtle lift; siblings ease into place via `.slide`. */
+   lifted row gets a subtle lift; siblings ease into place via `.hz-slide`. */
+.hz-drag,
 .drag {
   touch-action: none;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+.hz-drag[data-dragging='true'],
 .drag[data-dragging='true'] {
   transition: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
@@ -61,9 +82,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hz-collapse,
   .collapse,
+  .hz-slide,
   .slide,
+  .hz-fade,
   .fade,
+  .hz-drag,
   .drag {
     transition: none;
   }
@@ -75,7 +100,7 @@
    a brief highlight when a freshly-arrived row lands. */
 
 /* Skeleton shimmer — an honest "loading", never fabricated content. */
-@keyframes shimmer {
+@keyframes hz-shimmer {
   0% {
     background-position: -160px 0;
   }
@@ -84,6 +109,7 @@
   }
 }
 
+.hz-skeleton,
 .skeleton {
   background-color: var(--color3, rgba(148, 163, 184, 0.14));
   background-image: linear-gradient(
@@ -94,11 +120,11 @@
   );
   background-size: 160px 100%;
   background-repeat: no-repeat;
-  animation: shimmer 1.2s ease-in-out infinite;
+  animation: hz-shimmer 1.2s ease-in-out infinite;
 }
 
 /* Live-feed pulse — the "Live" dot on a streaming panel. */
-@keyframes pulse {
+@keyframes hz-pulse {
   0%,
   100% {
     opacity: 1;
@@ -111,7 +137,7 @@
 }
 
 /* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
-@keyframes row-in {
+@keyframes hz-row-in {
   from {
     opacity: 0;
     transform: translateY(-6px);
@@ -122,27 +148,31 @@
   }
 }
 
+.hz-row-in,
 .row-in {
-  animation: row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hz-skeleton,
   .skeleton {
     animation: none;
   }
+  .hz-row-in,
   .row-in {
     animation: none;
   }
 }
 
 /* ── Typography + surface classes the product layer's components reference ──────
-   DataTable/Metric typeset numeric cells with `mono`/`tnum`; ComboBox and
-   SelectMenu paint their popovers with `paper menu-in`; DataTable rows use
-   `row`. They travel WITH the components (this is the package's one stylesheet)
-   so any host that imports `@hanzo/ui/styles/motion.css` renders them correctly.
-   The elevation/ring variables fall back to sane values, so a host that defines its
-   own `--hz-*` theme tokens (the console does) still wins. */
+   DataTable/Metric typeset numeric cells with `hz-mono`/`hz-tnum`; ComboBox and
+   SelectMenu paint their popovers with `hz-paper hz-menu-in`; DataTable rows use
+   `hz-row`. They travel WITH the components (this is the package's one
+   stylesheet) so any host that imports `@hanzo/ui/styles/motion.css` renders them
+   correctly. The elevation/ring variables fall back to sane values, so a host
+   that defines its own `--hz-*` theme tokens (the console does) still wins. */
 
+.hz-tnum,
 .tnum {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
@@ -150,6 +180,7 @@
 
 /* Data/numeric face — Geist Mono + tabular figures for metric values, prices, IDs
    and counts, so numbers read as precise, column-aligned data. */
+.hz-mono,
 .mono {
   font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-variant-numeric: tabular-nums;
@@ -170,13 +201,14 @@
    order — so paper lost its drop on dark exactly the way the rungs did. The
    fallback stays because this sheet ships on its own: a host that imports
    motion.css without glass.css has no ladder to read. */
+.hz-paper,
 .paper {
   box-shadow: var(--shadow-inset-hairline, inset 0 0 0 1px rgb(255 255 255 / .10)),
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
     var(--glass-shadow-2, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
 }
 
-@keyframes menu-in {
+@keyframes hz-menu-in {
   from {
     opacity: 0;
   }
@@ -185,16 +217,19 @@
   }
 }
 
+.hz-menu-in,
 .menu-in {
-  animation: menu-in 140ms ease-out both;
+  animation: hz-menu-in 140ms ease-out both;
   will-change: opacity;
 }
 
+.hz-row,
 .row {
   transition: background-color 140ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hz-menu-in,
   .menu-in {
     animation: none;
   }

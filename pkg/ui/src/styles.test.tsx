@@ -16,7 +16,7 @@
  * The regression it catches is the one that hit hanzo.app: a component added
  * without re-running the generator ships classes nothing defines.
  */
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -93,4 +93,55 @@ describe('the shipped stylesheet', () => {
         `${missing.length} of ${used.size} classes have no rule — dist/styles.css is stale. Run: pnpm build`,
       ).toEqual([])
     })
+})
+
+/**
+ * The utility classes are a NAMESPACE, and it used to be everybody's.
+ *
+ * This sheet claimed `.row`, `.skeleton`, `.fade`, `.mono`, `.drag` and `.tnum`
+ * at the document level, in a package an app imports once at its root. An app
+ * with its own `.row` got no warning — it got whichever rule the cascade
+ * preferred, from a stylesheet it never opened.
+ */
+const SRC = join(dirname(dirname(fileURLToPath(import.meta.url))), 'src')
+
+/** Every literal class name the components put in their own markup. */
+const emitted = (dir: string, out = new Set<string>()) => {
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    const p = join(dir, name.name)
+    if (name.isDirectory()) emitted(p, out)
+    else if (/\.tsx?$/.test(name.name) && !name.name.includes('.test.'))
+      for (const m of readFileSync(p, 'utf8').matchAll(/className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g))
+        for (const token of (m[1] ?? m[2] ?? '').split(/\s+/).filter(Boolean)) out.add(token)
+  }
+  return out
+}
+
+describe('the utility class namespace', () => {
+  const ours = [...emitted(SRC)].sort()
+  const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
+
+  it('found the classes to check — an empty scan proves nothing', () => {
+    expect(ours.length).toBeGreaterThan(5)
+  })
+
+  it('is carried in every class this package emits', () => {
+    // `glass` and `elevation-N` are the one family still unprefixed. They are an
+    // API value (`glass(3).className`) rather than a hand-typed literal, so they
+    // move on their own change, not this one.
+    const unqualified = ours.filter((c) => !c.startsWith('hz-') && !/^(glass|elevation-\d)$/.test(c))
+    expect(unqualified, `${unqualified.join(', ')} would collide with a consumer's own CSS`).toEqual([])
+  })
+
+  it('defines a rule for each of them', () => {
+    const orphan = ours.filter((c) => c.startsWith('hz-') && !motion.includes(`.${c}`))
+    expect(orphan, `${orphan.join(', ')} is emitted with no rule in motion.css`).toEqual([])
+  })
+
+  it('still answers to the old names, for one more minor version', () => {
+    // The window: a consumer who typed `className="skeleton"` against the old
+    // sheet keeps working. REMOVED IN 8.1.0 — nothing in this package emits them.
+    for (const old of ['skeleton', 'row', 'tnum', 'mono', 'fade', 'drag', 'slide', 'fade-up'])
+      expect([old, motion.includes(`\n.${old} `) || motion.includes(`\n.${old},`) || motion.includes(`.${old}[`)]).toEqual([old, true])
+  })
 })

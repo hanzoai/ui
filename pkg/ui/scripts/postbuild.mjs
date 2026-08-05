@@ -15,16 +15,52 @@
 //
 // The CJS half is compiled to dist-cjs (tsc cannot emit two module formats to
 // one outDir) and folded into dist as `.cjs` here.
+//
+// TWO packages run this, and that is deliberate — @hanzo/data emits the same
+// two formats with the same two problems, and a second copy of this file is a
+// second place for the barrel rule below to be got wrong. The package root and
+// its data modules are arguments:
+//
+//   node ../ui/scripts/postbuild.mjs <package-root> [data,modules,by,path]
+//
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { dirname, join, relative } from 'node:path'
+import { dirname, join, relative, resolve as abs } from 'node:path'
 
-const UI = new URL('..', import.meta.url).pathname
+const UI = process.argv[2] ? abs(process.argv[2]) : new URL('..', import.meta.url).pathname
 const DIST = join(UI, 'dist')
 const CJS = join(UI, 'dist-cjs')
 const DIRECTIVE = "'use client';"
 
-/** Emitted modules that are data, not components — never stamped. */
-const DATA = new Set(['gui-config', 'core/tokens', 'framework/core', 'glass', 'product/social/api'])
+/**
+ * Emitted modules that are data, not components — never stamped.
+ *
+ * Everything `product/pure` re-exports is on this list, and has to be: the point
+ * of that subpath is that a rule loads anywhere a value loads, and a stamped
+ * module is a client REFERENCE on React's server layer, not a function. Calling
+ * `pages()` in a server component through a stamped module does not page — it
+ * throws. `product/pure` names its own constituents, so this list is that list.
+ */
+const DATA = new Set(
+  process.argv[3]
+    ? process.argv[3].split(',').filter(Boolean)
+    : [
+        'gui-config',
+        'core/tokens',
+        'core/css',
+        'framework/core',
+        'glass',
+        'product/social/api',
+        'product/pure',
+        'product/pages',
+        'backends/gui/mask',
+        'product/name',
+        'product/tone',
+        'product/scope',
+        'product/brand',
+        'product/animatedLogo.logic',
+        'product/combobox/filter',
+      ],
+)
 
 const files = (dir, out = []) => {
   for (const name of readdirSync(dir)) {

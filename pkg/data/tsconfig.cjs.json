@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    // `moduleResolution` is stated here rather than inherited, for the same
+    // reason it is stated in @hanzo/ui's copy: under TypeScript 5 a `bundler`
+    // resolution inherited into a `commonjs` module target is a hard TS5095
+    // error and the build emits nothing at all.
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist-cjs",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  }
+}
