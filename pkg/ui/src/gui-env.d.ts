@@ -16,7 +16,23 @@
 import type { createGui } from '@hanzo/gui'
 import type { defaultConfig } from '@hanzogui/config/v5'
 
-type Conf = ReturnType<typeof createGui<typeof defaultConfig>>
+type Base = ReturnType<typeof createGui<typeof defaultConfig>>
+
+/**
+ * The registration is derived from `defaultConfig`, NOT from this package's own
+ * `config`, and it has to stay that way: `gui-config.ts` imports @hanzo/gui,
+ * whose types read this augmentation, so pointing at the real config closes a
+ * cycle and every style prop collapses to `any`.
+ *
+ * The cost is that anything gui-config ADDS is invisible here. `fonts.mono` is
+ * such an addition — `defaultConfig` ships `body` and `heading` only — so
+ * `fontFamily="$mono"` failed to type even though the token now exists at
+ * runtime. Declaring it on the type keeps the two in step without the cycle.
+ * Anything else added to `fonts` in gui-config.ts belongs in this intersection.
+ */
+type Conf = Omit<Base, 'fonts'> & {
+  fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
+}
 
 declare module '@hanzogui/web' {
   interface GuiCustomConfig extends Conf {}

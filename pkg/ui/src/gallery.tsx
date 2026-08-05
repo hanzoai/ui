@@ -34,9 +34,21 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger,
+  TooltipTrigger, Grid, Section as PageSection, CardMedia,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
+
+/** A real <img> with real intrinsic pixels, inline so nothing hits the network.
+ *  120x40 on purpose: the wrong ratio for every box it goes in, so a frame that
+ *  fails to cover-fit its child is visible rather than merely untested. */
+const SWATCH =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    // `#` is written literally and encodeURIComponent turns it into %23. Writing
+    // %23 here instead double-encodes it to %25888, the fill is invalid, and the
+    // swatch silently renders black — which it did.
+    '<svg xmlns="http://www.w3.org/2000/svg" width="120" height="40"><rect width="120" height="40" fill="#888"/></svg>',
+  )
 
 const BUTTON_VARIANTS: ButtonVariant[] = [
   'default', 'destructive', 'outline', 'secondary', 'ghost', 'link', 'primary', 'linkFG', 'linkMuted',
@@ -204,6 +216,91 @@ export const Gallery = () => (
         </Tooltip>
       </TooltipProvider>
       <Toaster />
+    </Section>
+    <Section name="layout">
+      {/* A Grid of SEVEN cards — deliberately not a multiple of any column
+          count, so an uneven last row is exercised at every width. The consumer
+          test measures these at 390/768/1280: equal widths within a row, zero
+          horizontal overflow, and every media box taller than zero. */}
+      <Grid min={240} gap="$3" style={{ width: '100%' }} data-grid="auto">
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <Card key={i}>
+            <CardMedia ratio={16 / 10}>
+              <img src={SWATCH} alt="" />
+            </CardMedia>
+            <CardHeader>
+              <CardTitle>Card {i}</CardTitle>
+              <CardDescription>Sized by its content, never by a pinned height.</CardDescription>
+            </CardHeader>
+          </Card>
+        ))}
+      </Grid>
+
+      {/* A track WIDER than a phone. This is the case `min(Npx, 100%)` exists
+          for: a bare minmax(900px, 1fr) forces a 900px column into a 390px
+          window and the document scrolls sideways. A 240px min never shows it,
+          because 240 already fits. */}
+      <Grid min={900} gap="$3" style={{ width: '100%' }} data-grid="wide">
+        <Card><CardContent>wide</CardContent></Card>
+        <Card><CardContent>wide</CardContent></Card>
+      </Grid>
+
+      {/* Fixed count, and one child holds an unbreakable string. `minmax(0,1fr)`
+          is the only reason this row stays even. */}
+      {/* The wrapper clips: in the HEALTHY case the nowrap span is wider than its
+          285px cell and would otherwise scroll the page, which is a different
+          failure from the one under test. */}
+      <div style={{ width: '100%', overflow: 'hidden' }}>
+        <Grid cols={3} gap="$3" style={{ width: '100%' }} data-grid="fixed">
+          <Card><CardContent>short</CardContent></Card>
+          <Card>
+            <CardContent>
+              {/* nowrap, so its min-content really is the whole string. A long
+                  BREAKABLE string proves nothing — the browser wraps it and the
+                  track never feels it, which is why the first version of this
+                  probe stayed green through the mutation. */}
+              <span style={{ whiteSpace: 'nowrap' }}>
+                MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+              </span>
+            </CardContent>
+          </Card>
+          <Card><CardContent>short</CardContent></Card>
+        </Grid>
+      </div>
+
+      {/* Four times the content of its neighbour: a Card GROWS, it does not clip. */}
+      <div
+        data-grid="growth"
+        style={{ display: 'flex', alignItems: 'flex-start', gap: 12, width: '100%' }}
+      >
+        <Card data-card="lean"><CardContent>one line</CardContent></Card>
+        <Card data-card="fat">
+          <CardContent>one line</CardContent>
+          <CardContent>two line</CardContent>
+          <CardContent>three line</CardContent>
+          <CardContent>four line</CardContent>
+        </Card>
+      </div>
+
+      <Card interactive data-card="interactive">
+        <CardHeader><CardTitle>Interactive card</CardTitle></CardHeader>
+      </Card>
+
+      <PageSection maxWidth={600} data-section="demo">
+        <CardTitle>Section</CardTitle>
+      </PageSection>
+
+      {/* The Button constraint. A Button PINS its height, correctly — it is a
+          control. Given a block child it must not silently clip it to a sliver,
+          which is the defect that shipped a 119px thumbnail rendered at 30px. */}
+      {/* `$mono` must resolve to a real face. gui emits nothing at all for a
+          font token it does not know, so this renders as proof the token exists
+          rather than as decoration. */}
+      <CardTitle fontFamily="$mono" data-type="mono">1234567890</CardTitle>
+
+      <Button data-button="block-child">
+        <span data-block-child style={{ display: 'block', height: 119, width: 119 }} />
+      </Button>
     </Section>
   </div>
 )
