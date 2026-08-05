@@ -42,6 +42,9 @@ interface StubOptions {
   navigator?: Record<string, unknown>
   /** Seed localStorage (e.g. an explicit hz_consent choice). */
   storage?: Record<string, string>
+  /** The cookie jar. Pass one in to model a browser that already carries an id —
+   *  from another *.hanzo.ai surface, or from the npm client on this same page. */
+  jar?: Map<string, string>
   /** Let navigator.sendBeacon succeed, so the beacon path is the one measured. */
   beacon?: boolean
 }
@@ -54,16 +57,20 @@ type Api = { track(n: string, p?: unknown): void; flush(): void }
  *  descriptor is an accessor with no setter, so the plain assignment this
  *  harness used threw — and every hz.js test failed on a current runtime,
  *  leaving the shipped file with no executed coverage again. */
-function runSnippet(opts: StubOptions = {}): { posts: Post[]; api: Api | undefined } {
+function runSnippet(opts: StubOptions = {}): {
+  posts: Post[]
+  api: Api | undefined
+  local: Map<string, string>
+  jar: Map<string, string>
+} {
   const posts: Post[] = []
-  const store = (seed: Record<string, string> = {}) => {
-    const m = new Map<string, string>(Object.entries(seed))
-    return {
-      getItem: (k: string) => m.get(k) ?? null,
-      setItem: (k: string, v: string) => void m.set(k, v),
-      removeItem: (k: string) => void m.delete(k),
-    }
-  }
+  const local = new Map<string, string>(Object.entries(opts.storage ?? {}))
+  const jar = opts.jar ?? new Map<string, string>()
+  const store = (m: Map<string, string>) => ({
+    getItem: (k: string) => m.get(k) ?? null,
+    setItem: (k: string, v: string) => void m.set(k, v),
+    removeItem: (k: string) => void m.delete(k),
+  })
   const attrs: Record<string, string> = { 'data-product': 'test', ...opts.attrs }
   const g = globalThis as unknown as Record<string, unknown>
   const define = (name: string, value: unknown) =>
@@ -78,6 +85,16 @@ function runSnippet(opts: StubOptions = {}): { posts: Post[]; api: Api | undefin
   })
   define('document', {
     currentScript: { getAttribute: (a: string) => attrs[a] ?? null },
+    // A real jar: the anonymous id is a cookie now, so a stub with no `cookie`
+    // would leave the whole identity chain unexecuted by these tests.
+    get cookie(): string {
+      return [...jar].map(([k, v]) => `${k}=${v}`).join('; ')
+    },
+    set cookie(raw: string) {
+      const first = raw.split(';')[0]
+      const eq = first.indexOf('=')
+      if (eq > 0) jar.set(first.slice(0, eq).trim(), first.slice(eq + 1).trim())
+    },
     referrer: '',
     addEventListener: () => {},
     documentElement: { scrollHeight: 1000 },
@@ -104,8 +121,8 @@ function runSnippet(opts: StubOptions = {}): { posts: Post[]; api: Api | undefin
       }
     },
   )
-  define('localStorage', store(opts.storage))
-  define('sessionStorage', store())
+  define('localStorage', store(local))
+  define('sessionStorage', store(new Map()))
   define('history', { pushState: () => {}, replaceState: () => {} })
   define('addEventListener', () => {})
   define('PerformanceObserver', undefined)
@@ -122,7 +139,7 @@ function runSnippet(opts: StubOptions = {}): { posts: Post[]; api: Api | undefin
   define('window', g)
 
   new Function(SRC)()
-  return { posts, api: (g.window as { hanzo?: Api }).hanzo }
+  return { posts, api: (g.window as { hanzo?: Api }).hanzo, local, jar }
 }
 
 /** Every event across every transmission, in order. */
@@ -168,6 +185,44 @@ describe('hz.js', () => {
     // a published 0.3.11, so every static-site row in the warehouse was dated to a
     // release three patches old — including the ones that changed what it sends.
     expect(pv!.libraryVersion).toBe(PKG.version)
+  })
+
+  // ── identity ──────────────────────────────────────────────────────────────
+  // This file used to mint into `hz_id`, a key nothing else read or wrote, so a
+  // page carrying both this tag and the npm client sent two anonymous ids for one
+  // visitor — and every surface counted them as two people. It now runs the same
+  // chain, from the same file, against the same key.
+
+  const SEEDED = '01920000-0000-7000-8000-0000000000cc'
+  const LEGACY = '01920000-0000-7000-8000-0000000000dd'
+
+  it('is the same person as every other Hanzo client on the browser', () => {
+    // The cookie the npm client (or another *.hanzo.ai surface) already wrote.
+    const r = runSnippet({ jar: new Map([['hz_anon_id', SEEDED]]) })
+    r.api!.track('checkout_started')
+    r.api!.flush()
+    const sent = sentOf(r)
+    expect(sent.length).toBeGreaterThan(0)
+    for (const ev of sent) expect(ev.anonymousId).toBe(SEEDED)
+  })
+
+  it('adopts the `hz_id` it used to mint rather than making a stranger', () => {
+    // Every browser that has ever loaded this tag holds one of these. Minting
+    // over it would detach a returning visitor from their own history.
+    const r = runSnippet({ storage: { hz_id: LEGACY } })
+    r.api!.flush()
+    for (const ev of sentOf(r)) expect(ev.anonymousId).toBe(LEGACY)
+    expect(r.jar.get('hz_anon_id')).toBe(LEGACY) // carried onto the shared key
+    expect(r.local.get('hz_anon_id')).toBe(LEGACY)
+  })
+
+  it('writes the one key, in the durable place, and no longer mints its own', () => {
+    const r = runSnippet()
+    r.api!.flush()
+    const id = sentOf(r)[0].anonymousId
+    expect(r.jar.get('hz_anon_id')).toBe(id) // the cookie outlives the ORIGIN
+    expect(r.local.get('hz_anon_id')).toBe(id)
+    expect(r.local.has('hz_id')).toBe(false)
   })
 
   // ── the publishable key ───────────────────────────────────────────────────

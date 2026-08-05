@@ -6,3 +6,9 @@ build
 **/fixtures
 deprecated
 apps/v4/registry/styles/**/*.css
+
+# Byte-coupled: hz.js carries the marked region of src/anon.js VERBATIM, and
+# pkgs/event/src/anon.test.ts compares them byte for byte. Reformatting either
+# one alone breaks the build; the same region is also vendored by hanzoai/cloud.
+pkgs/event/src/anon.js
+pkgs/event/hz.js
