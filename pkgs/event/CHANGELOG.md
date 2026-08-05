@@ -1,6 +1,6 @@
 # @hanzo/event
 
-## 0.3.13
+## 0.3.14
 
 ### Patch Changes
 
@@ -26,6 +26,19 @@
   `hanzo.ai` (localhost, previews), where either attribute would make the
   browser drop the cookie outright. `sessionId()` is deliberately unchanged — a
   session stays origin-local.
+
+## 0.3.13
+
+### Patch Changes
+
+- **A credential is redacted by the parameter name it is filed under, not by its
+  shape.** Every `SECRET_PATTERNS` entry recognised a secret by what it looks
+  like — a JWT's three dots, `sk-`, `AKIA`, `ghp_` — but an OAuth code, a state,
+  a password-reset nonce and an invite token are opaque random strings
+  indistinguishable from a page id, so none matched and all survived. The client
+  stamps `url` on EVERY event, so one visit to `/callback?code=&state=` put a
+  live, still-redeemable authorization code on the wire once per event.
+  Ordinary params (`plan`, `utm_source`, `page`) are untouched.
 
 ## 0.3.12
 
