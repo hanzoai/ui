@@ -145,6 +145,21 @@ describe('the rungs design already decided read the token', () => {
     expect(themed('dark', 'color12')).not.toBe(themed('light', 'color12'))
   })
 
+  it('EVERY theme rings in one value — a sub-theme does not get its own', () => {
+    // The three CTAs the audit named live under `dark_Button`, which gui
+    // activates for every Button it renders, so fixing only the root themes
+    // left them exactly as broken. There is one focus ring in this system.
+    const all = Object.keys(config.themes)
+    expect(all.length).toBeGreaterThan(300)
+    const rings = new Set(all.map((n) => themed(n as 'dark', 'outlineColor')))
+    expect([...rings].sort()).toEqual(
+      [`var(--ring, ${token('ring', 'dark')})`, `var(--ring, ${token('ring', 'light')})`].sort(),
+    )
+    // …and a `light_*` sub-theme takes the light fallback, not the dark one.
+    expect(themed('light_Button' as 'light', 'outlineColor')).toBe(`var(--ring, ${token('ring', 'light')})`)
+    expect(themed('dark_Button' as 'dark', 'outlineColor')).toBe(`var(--ring, ${token('ring', 'dark')})`)
+  })
+
   it('the rest of the ramp is left alone — this is a re-base, not a fork', () => {
     // Every other rung is a grey in a scale of greys and design has no opinion
     // about it. Restating them here would be a second palette, which is the

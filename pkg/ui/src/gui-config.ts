@@ -195,21 +195,49 @@ const EDGE = { dark: 'rgb(255 255 255 / .10)', light: 'rgb(0 0 0 / .10)' } as co
 const LABEL = { dark: '#fafafa', light: '#0a0a0a' } as const
 const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as const
 
-const rebased = (theme: 'dark' | 'light') => ({
-  ...defaultConfig.themes[theme],
-  color4: `var(--border, ${EDGE[theme]})`,
-  borderColor: `var(--border, ${EDGE[theme]})`,
-  color12: `var(--foreground, ${LABEL[theme]})`,
-  outlineColor: `var(--ring, ${RING[theme]})`,
-})
+/**
+ * The edge and the label are re-based on the two ROOT themes; the ring is
+ * re-based on ALL of them, and the asymmetry is the point.
+ *
+ * A sub-theme exists to hold different colours — `dark_accent`'s label really
+ * should be the accent's label, `dark_red`'s edge really should be red — so
+ * re-basing those two rungs everywhere would flatten 388 themes into one and
+ * stop being a re-base. A focus ring is the opposite kind of thing: there is
+ * exactly ONE of it in this system, it is `--ring`, and it is a contrast
+ * requirement rather than a colour choice. The ramp ships 21 distinct rings
+ * across 390 themes, twenty of them hues — a pale blue on `dark_blue_Button`,
+ * a pale pink on `dark_pink` — and every one of them fails 3:1 on a near-black
+ * canvas the same way the grey did.
+ *
+ * Measured, and this is why the two root themes are not enough: gui activates a
+ * `Button` sub-theme for every Button it renders, so hanzo.app's Sign In, Get
+ * started and Search kept `dark_Button`'s ring at 1.4:1 while the page's own
+ * `--outlineColor` already read design's. The three CTAs the audit named were
+ * exactly the three a root-only fix misses.
+ */
+const scheme = (name: string): 'dark' | 'light' => (name.startsWith('light') ? 'light' : 'dark')
+
+const themes = Object.fromEntries(
+  Object.entries(defaultConfig.themes).map(([name, theme]) => {
+    const s = scheme(name)
+    const ringed = { ...theme, outlineColor: `var(--ring, ${RING[s]})` }
+    return [
+      name,
+      name === s
+        ? {
+            ...ringed,
+            color4: `var(--border, ${EDGE[s]})`,
+            borderColor: `var(--border, ${EDGE[s]})`,
+            color12: `var(--foreground, ${LABEL[s]})`,
+          }
+        : ringed,
+    ]
+  }),
+) as typeof defaultConfig.themes
 
 export const config = createGui({
   ...defaultConfig,
-  themes: {
-    ...defaultConfig.themes,
-    dark: rebased('dark'),
-    light: rebased('light'),
-  },
+  themes,
   tokens: {
     ...defaultConfig.tokens,
     radius: RADIUS,
