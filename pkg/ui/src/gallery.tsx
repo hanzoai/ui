@@ -34,7 +34,7 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger, Grid, Section as PageSection, CardMedia,
+  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
 
@@ -171,6 +171,32 @@ export const Gallery = () => (
           <CommandSeparator />
         </CommandList>
       </Command>
+
+      {/* CommandDialog, OPEN, driving a host-owned preview from the highlighted
+          row. That readout is the assertion: before CommandDialog forwarded the
+          palette's props it rendered `<Command>` bare, `onValueChange` never
+          reached a host, and a two-pane palette was impossible — which is why
+          hanzo.app rebuilt the dialog by hand. `shouldFilter` comes through the
+          same door, so typing must narrow the list. */}
+      <CommandDialog
+        open
+        defaultValue="alpha"
+        onValueChange={(v) => {
+          const el = document.querySelector('[data-palette-selected]')
+          if (el) el.setAttribute('data-palette-selected', v)
+        }}
+      >
+        <CommandInput />
+        <CommandList>
+          <CommandEmpty>No results</CommandEmpty>
+          <CommandGroup heading="Palette">
+            <CommandItem value="alpha">alpha</CommandItem>
+            <CommandItem value="beta">beta</CommandItem>
+            <CommandItem value="gamma">gamma</CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
+      <span data-palette-selected="" />
     </Section>
 
     {/* Portalled surfaces. Rendered open so their panels produce styles too —
