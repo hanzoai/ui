@@ -94,3 +94,30 @@ describe('card numbers', () => {
     expect(out).toBe('request 1753468800000 timed out')
   })
 })
+
+describe('credential params in a URL', () => {
+  // The client stamps url = window.location.href on EVERY event, so one visit to
+  // an OAuth callback would otherwise put a live, still-redeemable authorization
+  // code on the wire once per event.
+  it('redacts an OAuth code and state, which have no matchable shape', () => {
+    const out = scrubText('https://hanzo.id/callback?code=4%2F0AeanS0bQx7Lm&state=xyzzy123')
+    expect(out).not.toContain('4%2F0AeanS0bQx7Lm')
+    expect(out).not.toContain('xyzzy123')
+    expect(out).toContain('code=')
+    expect(out).toContain('https://hanzo.id/callback')
+  })
+
+  it('redacts reset / invite / session tokens too', () => {
+    for (const q of ['reset_token=abc123def', 'invite=q7Wm2', 'session_id=s-9182', 'api_key=plain']) {
+      const out = scrubText('https://hanzo.ai/x?' + q)
+      expect(out.split('=')[1]).not.toMatch(/abc123def|q7Wm2|s-9182|plain/)
+    }
+  })
+
+  it('leaves ordinary params alone', () => {
+    const out = scrubText('https://hanzo.ai/pricing?plan=pro&utm_source=hn&page=2')
+    expect(out).toContain('plan=pro')
+    expect(out).toContain('utm_source=hn')
+    expect(out).toContain('page=2')
+  })
+})
