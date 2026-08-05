@@ -157,20 +157,14 @@
 [data-touch-y="23"]::after { top: -23px; bottom: -23px; }
 [data-touch-y="24"]::after { top: -24px; bottom: -24px; }
 
-/* Elevation ladder — the shadow steps components name by class. */
-.elevation-1 { box-shadow: var(--hz-elevation-1, 0 1px 2px rgba(0, 0, 0, 0.16)); }
-.elevation-2 { box-shadow: var(--hz-elevation-2, 0 4px 12px rgba(0, 0, 0, 0.24)); }
-.elevation-3 { box-shadow: var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36)); }
-.elevation-4 { box-shadow: var(--hz-elevation-4, 0 16px 48px rgba(0, 0, 0, 0.44)); }
+/* The material, the elevation ladder, the scrim and the row separators live in
+   src/glass.css and are inlined here by scripts/compose-theme.mjs — one home,
+   two entry points (`@hanzo/ui/theme.css` and `@hanzo/ui/glass.css`), so a host
+   that wants only the chrome material does not have to take the token layer
+   with it.
 
-/* Glass — the ONE frosted material (see backends/gui/glass.tsx). The component
-   stands as a solid raised panel; only a browser that can actually blur the
-   backdrop trades it for the translucent material, so content never sits on
-   see-through ground without the blur. !important beats the compiled bg atom. */
-@supports (backdrop-filter: blur(8px)) {
-  [data-slot="glass"] {
-    background-color: color-mix(in oklab, var(--background) 72%, transparent) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(1.8);
-    backdrop-filter: blur(20px) saturate(1.8);
-  }
-}
+   They used to be four `.elevation-*` rules reading `var(--hz-elevation-N, …)`.
+   Nothing in this repo, in @hanzo/design or in any consumer ever DEFINED an
+   `--hz-elevation-*` variable, so every one of those resolved to its fallback:
+   an indirection through a name that does not exist, with a hardcoded shadow
+   behind it, next to a design system that publishes real ones. */

@@ -24,7 +24,7 @@ const CJS = join(UI, 'dist-cjs')
 const DIRECTIVE = "'use client';"
 
 /** Emitted modules that are data, not components — never stamped. */
-const DATA = new Set(['gui-config', 'core/tokens', 'framework/core', 'product/social/api'])
+const DATA = new Set(['gui-config', 'core/tokens', 'framework/core', 'glass', 'product/social/api'])
 
 const files = (dir, out = []) => {
   for (const name of readdirSync(dir)) {

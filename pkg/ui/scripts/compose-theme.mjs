@@ -27,6 +27,13 @@ const UI = dirname(dirname(fileURLToPath(import.meta.url)))
 const designRaw = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8')
 const ours = readFileSync(join(UI, 'src/theme.css'), 'utf8')
 
+// The chrome material — its own entry point AND part of this sheet. A host that
+// already has the token layer (or wants only the material) imports
+// `@hanzo/ui/glass.css`; a host that wants everything imports theme.css and
+// gets it inlined. Two entry points, ONE source file, so they cannot say
+// different things about what glass is.
+const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
+
 /**
  * Drop design's @font-face blocks. FONT DELIVERY HAS ONE OWNER AND IT IS NOT US.
  *
@@ -58,7 +65,7 @@ const design = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
 // in `hsl(...)` — the shadcn-era idiom, where tokens were bare `H S% L%` triples
 // — is invalid at computed-value time, and the browser drops the WHOLE
 // declaration without a word. One grep is cheaper than finding it on a page.
-const composed = `${design}\n${ours}`
+const composed = `${design}\n${ours}\n${glass}`
 const bad = [...composed.matchAll(/\b(hsl|rgb|oklch)a?\(\s*var\(/g)].map((m) => m[0])
 if (bad.length) {
   throw new Error(
@@ -86,6 +93,7 @@ if (urls.length) {
 
 mkdirSync(join(UI, 'dist'), { recursive: true })
 writeFileSync(join(UI, 'dist/theme.css'), composed)
+writeFileSync(join(UI, 'dist/glass.css'), glass)
 
 // design's exports map does not expose ./package.json, so the version is read
 // off the resolved stylesheet's own directory rather than by specifier.
