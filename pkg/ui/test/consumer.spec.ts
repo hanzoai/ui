@@ -349,7 +349,10 @@ test.describe('layout', () => {
  */
 const DESIGN = {
   t_dark: { background: '#0a0a0a', black: '#000000', white: '#fafafa' },
-  t_light: { background: '#ffffff', black: '#0a0a0a', white: '#ffffff' },
+  // Softened off pure white deliberately: a #ffffff page reads as a lightbox.
+  // These are design's declared values; if design moves, this must move WITH it —
+  // that is the test doing its job, not an obstacle.
+  t_light: { background: '#f7f7f7', black: '#0a0a0a', white: '#ffffff' },
 }
 
 for (const [themeClass, expected] of Object.entries(DESIGN))
