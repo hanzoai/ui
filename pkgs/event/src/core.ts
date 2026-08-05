@@ -415,9 +415,20 @@ export class Analytics {
     this.queue = []
     this.clearTimer()
 
-    const key = this.cfg.ingestKey?.trim() || undefined
-    // A publishable key and a bearer JWT are mutually exclusive doors; the key wins.
-    const token = key ? undefined : this.cfg.getToken?.() ?? undefined
+    // A publishable key and a bearer JWT are mutually exclusive doors, and the
+    // BEARER WINS. It names a real principal and resolves to THAT person's org;
+    // a pk- names one org for everybody holding it. So the key is what attributes
+    // a visitor nobody has vouched for, and it must never displace someone who
+    // has been.
+    //
+    // The precedence used to run the other way, which was survivable only while
+    // the key had to be passed in code. Once it also resolves from the build env,
+    // key-wins means setting one variable silently blanks every signed-in user's
+    // token and re-files their events under whichever org minted the key — on a
+    // console served to several brands from one bundle, that is a cross-tenant
+    // leak introduced by an env var.
+    const token = this.cfg.getToken?.() ?? undefined
+    const key = token ? undefined : this.cfg.ingestKey?.trim() || undefined
     // Only a headerful bearer JWT blocks the beacon: sendBeacon cannot set an
     // Authorization header. A pk_ rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token
