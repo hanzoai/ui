@@ -1,41 +1,50 @@
 {
   "name": "@hanzo/data",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "type": "module",
   "description": "Hanzo Data — cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.",
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     },
     "./table/logic": {
-      "types": "./types/table/logic.d.ts",
-      "default": "./src/table/logic.ts"
+      "types": "./dist/table/logic.d.ts",
+      "import": "./dist/table/logic.js",
+      "require": "./dist/table/logic.cjs",
+      "default": "./dist/table/logic.js"
     },
     "./board/logic": {
-      "types": "./types/board/logic.d.ts",
-      "default": "./src/board/logic.ts"
+      "types": "./dist/board/logic.d.ts",
+      "import": "./dist/board/logic.js",
+      "require": "./dist/board/logic.cjs",
+      "default": "./dist/board/logic.js"
     },
     "./view/logic": {
-      "types": "./types/view/logic.d.ts",
-      "default": "./src/view/logic.ts"
+      "types": "./dist/view/logic.d.ts",
+      "import": "./dist/view/logic.js",
+      "require": "./dist/view/logic.cjs",
+      "default": "./dist/view/logic.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./types/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": [
-    "**/registerDefaults.ts",
-    "**/index.ts"
+    "**/registerDefaults.js",
+    "**/registerDefaults.cjs",
+    "**/index.js",
+    "**/index.cjs"
   ],
   "files": [
-    "src",
-    "types"
+    "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "clean": "rm -rf types",
+    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . theme,table/logic,board/logic,view/logic,view/types,field/types,field/registry",
+    "clean": "rm -rf dist dist-cjs types",
     "prepack": "pnpm run build",
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",

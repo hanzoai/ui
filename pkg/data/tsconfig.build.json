@@ -4,10 +4,10 @@
     "noEmit": false,
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "outDir": "./types",
+    "sourceMap": true,
+    "outDir": "./dist",
     "rootDir": "./src"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "types", "**/*.test.ts", "**/*.test.tsx"]
+  "exclude": ["node_modules", "dist", "dist-cjs", "types", "**/*.test.ts", "**/*.test.tsx"]
 }

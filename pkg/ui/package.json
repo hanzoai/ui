@@ -37,6 +37,12 @@
       "types": "./dist/core/tokens.d.ts",
       "import": "./dist/core/tokens.js"
     },
+    "./css": {
+      "types": "./dist/core/css.d.ts",
+      "import": "./dist/core/css.js",
+      "require": "./dist/core/css.cjs",
+      "default": "./dist/core/css.js"
+    },
     "./theme.css": "./dist/theme.css",
     "./glass.css": "./dist/glass.css",
     "./glass": {
@@ -57,6 +63,18 @@
       "require": "./dist/gui-config.cjs",
       "default": "./dist/gui-config.js"
     },
+    "./product/pure": {
+      "types": "./dist/product/pure.d.ts",
+      "import": "./dist/product/pure.js",
+      "require": "./dist/product/pure.cjs",
+      "default": "./dist/product/pure.js"
+    },
+    "./product/theme-toggle-next": {
+      "types": "./dist/product/ThemeToggleNext.d.ts",
+      "import": "./dist/product/ThemeToggleNext.js",
+      "require": "./dist/product/ThemeToggleNext.cjs",
+      "default": "./dist/product/ThemeToggleNext.js"
+    },
     "./product/social": {
       "types": "./dist/product/social/index.d.ts",
       "import": "./dist/product/social/index.js",
@@ -68,6 +86,12 @@
       "import": "./dist/product/social/api.js",
       "require": "./dist/product/social/api.cjs",
       "default": "./dist/product/social/api.js"
+    },
+    "./product/*": {
+      "types": "./dist/product/*.d.ts",
+      "import": "./dist/product/*.js",
+      "require": "./dist/product/*.cjs",
+      "default": "./dist/product/*.js"
     },
     "./data": {
       "types": "./dist/data.d.ts",
@@ -190,11 +214,12 @@
     "@hanzo/canvas": ">=0.1.0",
     "@hanzo/cd": ">=0.1.0",
     "@hanzo/dashboard": ">=0.1.0",
-    "@hanzo/data": ">=1.2.0",
+    "@hanzo/data": ">=1.2.3",
     "@hanzo/gui": ">=8.1.0",
     "@hanzo/usage": ">=0.1.0",
     "@hanzogui/config": ">=8.1.0",
     "@hanzogui/next-theme": ">=8.1.0",
+    "next": ">=14",
     "next-themes": ">=0.2.1",
     "react": ">=19",
     "react-dom": ">=19",
@@ -216,6 +241,9 @@
     "@hanzogui/next-theme": {
       "optional": true
     },
+    "next": {
+      "optional": true
+    },
     "next-themes": {
       "optional": true
     },
@@ -225,7 +253,7 @@
   },
   "devDependencies": {
     "@hanzo/cd": "workspace:*",
-    "@hanzo/data": "1.2.1",
+    "@hanzo/data": "1.2.2",
     "@hanzo/gui": "8.1.0",
     "@hanzogui/config": "8.1.0",
     "@hanzogui/core": "8.1.0",

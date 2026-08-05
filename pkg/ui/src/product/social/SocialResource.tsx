@@ -111,7 +111,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
       ) : null}
       {post.externalId ? (
         <FieldRow label="External id">
-          <Text fontSize="$3" className="tnum">
+          <Text fontSize="$3" className="hz-tnum">
             {post.externalId}
           </Text>
         </FieldRow>
