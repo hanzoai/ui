@@ -14,7 +14,7 @@
  * `X-Org-Id`). Create posts through the injected hook, then scopes into the
  * new org.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
@@ -46,9 +46,31 @@ export type OrgSwitcherProps = {
   create?: (name: string) => Promise<string>
   /** Show the "All organizations" de-scope row (`scope.leaveOrg`). */
   picker?: boolean
+  /**
+   * Which way the panel opens. `up` for a switcher sitting in a bottom identity
+   * bar, where a downward panel would open off the bottom of the viewport —
+   * hanzo.app kept a whole local copy of this component for want of this one
+   * prop.
+   */
+  direction?: 'down' | 'up'
+  /**
+   * Rows below the list, above the create/de-scope affordances — the surface's
+   * own additions (a personal-workspace badge, a link into org settings). The
+   * other half of what hanzo.app's local copy existed for.
+   */
+  footer?: ReactNode
 }
 
-export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create, picker = false }: OrgSwitcherProps) {
+export function OrgSwitcher({
+  scope,
+  orgs,
+  pageSize = 20,
+  current: given,
+  create,
+  picker = false,
+  direction = 'down',
+  footer,
+}: OrgSwitcherProps) {
   const currentId = scope.currentOrg()
 
   const [open, setOpen] = useState(false)
@@ -154,7 +176,7 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen} placement="bottom-start">
+    <Popover open={open} onOpenChange={setOpen} placement={direction === 'up' ? 'top-start' : 'bottom-start'}>
       <Popover.Trigger asChild>
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
@@ -277,6 +299,8 @@ export function OrgSwitcher({ scope, orgs, pageSize = 20, current: given, create
                 </XStack>
               ) : null}
             </div>
+
+            {footer}
 
             {create ? (
               <XStack

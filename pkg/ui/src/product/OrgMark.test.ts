@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { monogram } from './OrgMark'
+import { isEmoji, monogram } from './OrgMark'
 
 describe('monogram', () => {
   it('takes the first letter of the first two words', () => {
@@ -28,5 +28,34 @@ describe('monogram', () => {
     expect(monogram('x')).toBe('X')
     expect(monogram('  spaced  out  ')).toBe('SO')
     expect(monogram('---')).toBe('--')
+  })
+})
+
+describe('isEmoji', () => {
+  it('accepts an emoji mark, including multi-code-point ones', () => {
+    expect(isEmoji('🚀')).toBe(true)
+    expect(isEmoji(' 🎧 ')).toBe(true)
+    // One glyph, several code points — counted as one grapheme cluster, which is
+    // the whole reason this is not a `.length <= 3` test.
+    expect(isEmoji('🇯🇵')).toBe(true)
+    expect(isEmoji('👨‍👩‍👧')).toBe(true)
+  })
+
+  it('rejects a URL, which is the other kind of logo', () => {
+    expect(isEmoji('https://acme.test/logo.png')).toBe(false)
+    expect(isEmoji('http://acme.test/logo.svg')).toBe(false)
+    expect(isEmoji('/logo.png')).toBe(false)
+    expect(isEmoji('data:image/png;base64,iVBOR')).toBe(false)
+  })
+
+  it('rejects text, so a display name never renders as a mark', () => {
+    expect(isEmoji('')).toBe(false)
+    expect(isEmoji('   ')).toBe(false)
+    expect(isEmoji('AC')).toBe(false)
+    expect(isEmoji('acme')).toBe(false)
+  })
+
+  it('rejects a string of emoji — a mark is one glyph, not a sentence', () => {
+    expect(isEmoji('🚀🚀🚀🚀🚀')).toBe(false)
   })
 })

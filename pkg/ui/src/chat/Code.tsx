@@ -13,13 +13,10 @@
  * plain text or its own highlighted nodes.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { Check, Copy } from '@hanzogui/lucide-icons-2'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 
-import { slot, tip } from '../backends/gui/slot'
-
-/** How long the copy control shows its confirmation, in ms. */
-const CONFIRM = 2000
+import { slot } from '../backends/gui/slot'
+import { CopyButton } from '../product/CopyButton'
 
 /**
  * Monospace stack, applied through `style` rather than a `$mono` token.
@@ -79,63 +76,5 @@ export function Code({ children, language = 'text', value, actions }: CodeProps)
         </SizableText>
       </YStack>
     </YStack>
-  )
-}
-
-export interface CopyButtonProps {
-  value: string
-  label?: string
-}
-
-/**
- * CopyButton — copy with a confirmation tick.
- *
- * The tick is the point. A control that looks identical before and after leaves
- * the reader unsure whether it fired, and the usual response is to press it
- * again. Reverts after `CONFIRM`, and clears its timer on unmount so it cannot
- * set state on a component that is gone.
- */
-export function CopyButton({ value, label = 'Copy' }: CopyButtonProps) {
-  const [copied, setCopied] = useState(false)
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-
-  useEffect(() => () => clearTimeout(timer.current), [])
-
-  const copy = () => {
-    // Optional-chained rather than assumed: `navigator.clipboard` is undefined
-    // in insecure contexts and absent entirely on native, and these components
-    // are meant to run on both.
-    navigator?.clipboard
-      ?.writeText(value)
-      .then(() => {
-        setCopied(true)
-        clearTimeout(timer.current)
-        timer.current = setTimeout(() => setCopied(false), CONFIRM)
-      })
-      .catch(() => {
-        // A refused clipboard needs no toast — the missing tick already says it,
-        // and an error dialog for a failed copy is louder than the failure.
-      })
-  }
-
-  return (
-    <XStack
-      width={24}
-      height={24}
-      items="center"
-      justify="center"
-      rounded="$2"
-      cursor="pointer"
-      opacity={0.7}
-      onPress={copy}
-      role="button"
-      tabIndex={0}
-      aria-label={copied ? 'Copied' : label}
-      {...tip(copied ? 'Copied' : label)}
-      hoverStyle={{ bg: '$color4', opacity: 1 }}
-      pressStyle={{ bg: '$color5' }}
-    >
-      {copied ? <Check size={14} /> : <Copy size={14} />}
-    </XStack>
   )
 }
