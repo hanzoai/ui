@@ -171,6 +171,17 @@ jobs:
         # failing the release: the set of testable packages is read from each
         # package.json, not listed here, so a new package is covered the day it
         # adds a `test` script.
+        #
+        # This step needs `test` to mean the same thing in every package — the
+        # package's own suite, no browser, no network. @hanzo/ui briefly chained
+        # its two CONSUMER suites onto it (pack a tarball, npm-install it into a
+        # throwaway app, drive it in chromium), which is a real gate and belongs
+        # exactly where hanzo.yml already runs it: on the push, in its own
+        # `ui-consumer` job, next to the `playwright install` that gives it a
+        # browser. Here there is no such step, so a chained `test` could only
+        # fail — the last gate before an immutable version would have been one
+        # that cannot pass, which is the failure mode this repo has already paid
+        # for twice.
         run: pnpm --filter ${{ matrix.package }} run --if-present test
 
       - name: Verify the tarball carries what package.json promises
