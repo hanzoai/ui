@@ -17,6 +17,18 @@
  * declaration (an undefined var() invalidates the whole property). They are a
  * mirror, not a second opinion — glass.test.ts reads @hanzo/design/styles.css
  * and fails if any of them stops matching, so the copy cannot drift.
+ *
+ * Reached BY ROLE, never by size. A role name (--edge-highlight,
+ * --surface-scrim) is coined for one job and only design declares it. The
+ * t-shirt ramp — --shadow-sm/md/lg/xl — is the opposite: a generic scale that
+ * every token package ships, and @hanzo/brand ships one too, at :root, tuned
+ * for a WHITE canvas (.05/.1 against design's .40/.55). Same names, same
+ * specificity, so the winner is whichever sheet the bundler ordered last, and
+ * it was brand. A declared variable also beats a var() fallback outright — so
+ * the mirror above could not save the rungs that read a ramp name, and on
+ * #080808 their drops resolved to a shadow you cannot see. The lit edge kept
+ * the ladder from vanishing, which is why it read as flat rather than as
+ * broken. The ladder therefore declares its own drops below; see there.
  */
 
 /* ── The material ───────────────────────────────────────────────────────────
@@ -77,11 +89,44 @@
 
    Glass over glass (a select opened inside a dialog) is deliberately left to
    stack: two 72% grounds land near 92%, so the nested surface reads as MORE
-   solid than its parent, which is the right answer and the one macOS gives. */
+   solid than its parent, which is the right answer and the one macOS gives.
+
+   ── The rungs' drops are this package's own, and that is the fix ────────────
+   A rung used to read the ramp by size — var(--shadow-sm | --shadow-lg) — and
+   a name you do not own is a value somebody else gets to set. @hanzo/brand
+   sets exactly those, at :root, for a white canvas, and won on load order.
+   Three values are three names, so they are declared here: nothing else ships
+   a --glass-shadow-*, so no sheet can outrank them and no load order can
+   change the answer. A theme that wants a different ladder declares these
+   three and gets one; that is a hook, where reading the ramp was an accident.
+
+   Only the DROP is owned. --edge-highlight stays design's, because it is
+   role-named, uncollided, and design's `.light` zeroing of it is the half of
+   the composition that makes one rule work on both canvases.
+
+   Both themes are stated for the same reason design states them: on white the
+   drop does all the work and must be light enough not to smudge, on near-black
+   it must be heavy enough to exist at all. The values are design's own, and
+   glass.test.ts fails if either column stops matching what design publishes.
+   `:root.t_light` alongside `.light` is gui's spelling of the same idea —
+   compose-theme teaches design's sheet that alias, and this file, which also
+   ships on its own, says it outright. */
+:root {
+  --glass-shadow-1: 0 1px 2px 0 rgb(0 0 0 / .40);
+  --glass-shadow-2: 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55);
+  --glass-shadow-3: 0 24px 60px -16px rgb(0 0 0 / .75);
+}
+
+.light, :root.t_light {
+  --glass-shadow-1: 0 1px 2px 0 rgb(0 0 0 / .06);
+  --glass-shadow-2: 0 10px 15px -3px rgb(0 0 0 / .09), 0 4px 6px -4px rgb(0 0 0 / .07);
+  --glass-shadow-3: 0 24px 60px -16px rgb(0 0 0 / .18);
+}
+
 .elevation-1 {
   box-shadow:
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
-    var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / .40)) !important;
+    var(--glass-shadow-1) !important;
 }
 
 .elevation-2,
@@ -92,14 +137,14 @@
 [data-slot="tooltip-content"] {
   box-shadow:
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
-    var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55)) !important;
+    var(--glass-shadow-2) !important;
 }
 
 .elevation-3,
 [data-slot="dialog-content"] {
   box-shadow:
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
-    var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75)) !important;
+    var(--glass-shadow-3) !important;
 }
 
 /* ── The scrim ──────────────────────────────────────────────────────────────
