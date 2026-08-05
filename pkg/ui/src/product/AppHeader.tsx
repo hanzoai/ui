@@ -12,11 +12,11 @@
  * flex + truncation, the wordmark collapse is the brand motion itself.
  */
 import { useState, type ReactNode } from 'react'
-import { Button, Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
-import { AppWindow, Bot, CreditCard, Grip, LayoutGrid, LogOut, MessageCircle, Settings2, Sparkles, UserRound, Users } from '@hanzogui/lucide-icons-2'
+import { Button, Popover, Text, XStack, YStack } from '@hanzo/gui'
+import { AppWindow, Bot, CreditCard, Grip, LayoutGrid, MessageCircle, Settings2, Sparkles, UserRound, Users } from '@hanzogui/lucide-icons-2'
 
 import { BrandMark } from './BrandMark'
-import { ThemeToggle } from './ThemeToggle'
+import { UserMenu, type UserMenuItem } from './UserMenu'
 import { otherSurfaces, type Surface, type SurfaceId } from './surfaces.data'
 
 /** The per-surface glyph — keyed by `Surface.id`, so each surface reads distinctly. */
@@ -32,17 +32,6 @@ const SURFACE_ICON = {
 
 const openHref = (href: string) => {
   if (typeof window !== 'undefined') window.open(href, '_blank', 'noopener')
-}
-
-function MenuRow({ icon, label, onPress }: { icon: ReactNode; label: string; onPress: () => void }) {
-  return (
-    <XStack onPress={onPress} cursor="pointer" items="center" gap="$2.5" px="$2" py="$2" rounded="$3" hoverStyle={{ bg: '$color5' }}>
-      {icon}
-      <Text fontSize="$2" color="$color12">
-        {label}
-      </Text>
-    </XStack>
-  )
 }
 
 export type AppHeaderProps = {
@@ -92,7 +81,6 @@ export function AppHeader({
   onSignOut,
 }: AppHeaderProps) {
   const [appsOpen, setAppsOpen] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
   const items = surfaces ?? otherSurfaces(current)
   const launch = (s: Surface) => {
     setAppsOpen(false)
@@ -144,40 +132,23 @@ export function AppHeader({
         </Popover>
       ) : null}
 
-      <Popover open={menuOpen} onOpenChange={setMenuOpen} placement="bottom-end">
-        <Popover.Trigger asChild>
-          <Button size="$2" chromeless icon={<UserRound size={16} />} aria-label="Account">
-            {user ? (
-              <Text fontSize="$2" color="$color12" numberOfLines={1} maxW={140}>
-                {user}
-              </Text>
-            ) : null}
-          </Button>
-        </Popover.Trigger>
-        <Popover.Content bordered elevate p="$2" width={220} bg="$color2" borderColor="$borderColor">
-          {menu ?? (
-            <YStack gap="$1">
-              {onProfile ? <MenuRow icon={<UserRound size={15} />} label="Profile" onPress={() => (setMenuOpen(false), onProfile())} /> : null}
-              {theme !== null ? (
-                <XStack items="center" gap="$2.5" px="$2" py="$1" rounded="$3">
-                  <Text flex={1} fontSize="$2" color="$color12">
-                    Theme
-                  </Text>
-                  {theme ?? <ThemeToggle />}
-                </XStack>
-              ) : null}
-              {onTeam ? <MenuRow icon={<Settings2 size={15} />} label="Team settings" onPress={() => (setMenuOpen(false), onTeam())} /> : null}
-              {onBilling ? <MenuRow icon={<CreditCard size={15} />} label="Billing" onPress={() => (setMenuOpen(false), onBilling())} /> : null}
-              {onSignOut ? (
-                <>
-                  <Separator borderColor="$borderColor" my="$1" />
-                  <MenuRow icon={<LogOut size={15} />} label="Sign out" onPress={() => (setMenuOpen(false), onSignOut())} />
-                </>
-              ) : null}
-            </YStack>
-          )}
-        </Popover.Content>
-      </Popover>
+      {/* The account control is `UserMenu` — one implementation, so the header's
+          menu and a surface's standalone one cannot drift. */}
+      <UserMenu
+        name={user}
+        groups={[
+          ([
+            onProfile ? { id: 'profile', label: 'Profile', icon: <UserRound size={15} />, onPress: onProfile } : null,
+            onTeam ? { id: 'team', label: 'Team settings', icon: <Settings2 size={15} />, onPress: onTeam } : null,
+            onBilling ? { id: 'billing', label: 'Billing', icon: <CreditCard size={15} />, onPress: onBilling } : null,
+          ] satisfies (UserMenuItem | null)[]).filter((r) => r !== null),
+        ]}
+        theme={theme}
+        onSignOut={onSignOut}
+        height={36}
+      >
+        {menu}
+      </UserMenu>
     </XStack>
   )
 }

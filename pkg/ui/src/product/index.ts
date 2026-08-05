@@ -38,14 +38,19 @@ export { Donut as DonutRing, type DonutSegment } from './Donut'
 export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
-// The shared shell — brand mark, org scope + switcher, app header (the
-// console's org-scope contract + switcher hoisted here; hanzoai/ui#36).
+// The shared shell — brand mark, org scope + switcher, account menu, app header
+// (the console's org-scope contract + switcher hoisted here; hanzoai/ui#36).
 // `surfaces.data` is the ONE canonical cross-surface list every launcher consumes.
+//
+// `UserMenu` is the account half of the chrome trio (org · apps · account). It
+// was written inside `AppHeader` and unreachable from anywhere else, so five
+// surfaces wrote their own; `AppHeader` now renders this one.
 export * from './surfaces.data'
 export * from './AppHeader'
 export * from './BrandMark'
 export * from './OrgMark'
 export * from './OrgSwitcher'
+export * from './UserMenu'
 export * from './scope'
 
 // Menu — the ONE menu system: portal-theme-safe DropdownMenu (click) + ContextMenu
@@ -74,6 +79,23 @@ export * from './Filters'
 // `<InstrumentSurface value="billing">` to name the area, and `emit` for the
 // one-off moments no shared component can observe.
 export * from './instrument'
+
+// Settings — `Fieldset` is the titled group the `Field*` rows sit in. It is not
+// `Panel` (a dashboard metric tile): a settings group runs full width, carries a
+// legend and has a destructive register. Every settings page drew its own.
+export * from './Fieldset'
+
+// `CopyButton` and `SecretInput` — copying a value, and revealing one. CopyButton
+// lived in `chat/Code.tsx`, reachable only as `@hanzo/ui/chat`, so ~30 hand-rolled
+// copies grew across six surfaces; `Code` now imports it from here. SecretInput
+// composes it, because copying a key while it is still masked is the whole reason
+// the field exists.
+export * from './CopyButton'
+export * from './SecretInput'
+
+// `Pagination` — the fixed-width page run (`pages` is the pure rule, testable
+// without a browser).
+export * from './Pagination'
 
 // The rest — every exported name below is unique across the layer.
 export * from './AnimatedLogo'

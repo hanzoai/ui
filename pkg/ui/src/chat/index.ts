@@ -17,6 +17,12 @@
  *
  * The model picker is not here: it already ships at `@hanzo/ui/models`, and it
  * is not chat-specific.
+ *
+ * `CopyButton` is not here either, for the same reason and after the same
+ * mistake: it lived in `Code.tsx`, so the only way to reach it was
+ * `@hanzo/ui/chat`, and no one hunting for a copy button looks in a chat module.
+ * Six surfaces wrote their own instead. It now ships at `@hanzo/ui/product`;
+ * `Code` imports it from there.
  */
 export { Composer, ASK, type ComposerProps } from './Composer'
 export { Message, type MessageProps, type Role } from './Message'
@@ -57,7 +63,7 @@ export {
   type AsideProps,
 } from './Header'
 
-export { Code, CopyButton, type CodeProps, type CopyButtonProps } from './Code'
+export { Code, type CodeProps } from './Code'
 
 export {
   Sources,

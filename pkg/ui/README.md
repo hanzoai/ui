@@ -26,7 +26,11 @@ import { RecordsView, DataTable, BoardView, RecordDetail, registerField } from '
   - **Charts** (dependency-free inline SVG): `Sparkline`, `LineChart`, `BarChart`, `Donut`, `BarRows` — hover tooltips, axis ticks, honest `null` under two real points.
   - **Metric** tiles/panels: `MetricCard`, `MiniBars`, `UtilBar`, `LegendDot`, `Panel`, `HintButton` (+ `MetricSparkline`).
   - **Chrome**: `PageHeader`, `StatusTag`, `EmptyState` (DO/Vercel-class first-run), `PrimaryButton`, `HanzoMark`, `ProductIcon`, `ProviderLogo`.
-  - **Interaction**: `ComboBox` (typeable, ReDoS-safe filter), `SelectMenu`, `SlideOver` (a11y drawer), `Toast` (`useToast`), `Reorder` (pointer DnD), `Field*` rows, `FadeIn`, `ThemeToggle`, generic `DataTable<T>`.
+  - **The identity trio** — one row of chrome, three switchers: `OrgSwitcher` (which workspace, `direction` up or down, `footer` for a surface's own rows), the app switcher inside `AppHeader`, and `UserMenu` (who I am). `AppHeader` composes all three; each is importable alone, so a surface that wants an account menu without the whole header does not write a sixth one.
+  - **Settings**: `Fieldset` — the titled, optionally destructive group the `Field*` rows sit in. Not `Panel`: that is a dashboard metric tile.
+  - **Interaction**: `ComboBox` (typeable, ReDoS-safe filter), `SelectMenu`, `SlideOver` (a11y drawer), `Toast` (`useToast`), `Reorder` (pointer DnD), `Field*` rows, `CopyButton`, `SecretInput` (mask · reveal · copy), `Pagination` (+ the pure `pages` rule), `FadeIn`, `ThemeToggle`, generic `DataTable<T>`.
+
+> **Masking needs both spellings.** `secureTextEntry` is React Native's and gui **drops it on web**, so an input carrying only that prop renders the secret in plain text; `type="password"` is the web one and native ignores it. `masked(on)` sets both and is what `SecretInput` and `<FieldText secure>` use. Never pass `secureTextEntry` alone.
   - **Tokens**: `tokens`, `TAG_TONES`, `tagTone` — the calm, dark-first, zinc-on-black identity.
 - **`@hanzo/ui/data`** — the metadata-driven record layer (source of truth: `@hanzo/data`): `RecordsView` (table ⇆ board, filter/sort/search/group, inline edit, saved views), the record-grid `DataTable`, `BoardView`, `RecordDetail`/`RecordForm`, every typed field editor, the field registry, and the pure view/sort/filter logic.
 
