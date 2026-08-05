@@ -148,11 +148,11 @@ space.$true = STEP['4']
 space['-true'] = -STEP['4']
 
 /**
- * TWO RUNGS OF THE NUMBERED RAMP UNDID A TOKEN DECISION, so they are re-based.
+ * THREE RUNGS OF THE NUMBERED RAMP UNDID A TOKEN DECISION, so they are re-based.
  *
  * `$color1..$color12` is a generic monotonic ramp inherited from upstream
  * `@hanzogui/themes` — a scale, not this system's token layer. Most of it is
- * harmless: a ramp of greys is a ramp of greys. Two rungs are not, because
+ * harmless: a ramp of greys is a ramp of greys. Three rungs are not, because
  * every component in this package reads them by name and @hanzo/design had
  * already decided each one the other way, in writing:
  *
@@ -168,7 +168,17 @@ space['-true'] = -STEP['4']
  *   recipe, the one loud control a page is allowed. design sets `--foreground`
  *   to `#fafafa` on purpose: pure white halates on near-black.
  *
- * So the two rungs read the token instead of shadowing it. `var()` first, so a
+ *   `$outlineColor` shipped `hsla(0, 0%, 27%, 0.6)` — the FOCUS RING, and on a
+ *   near-black ground that composites to about `rgb(45,45,45)`, roughly 1.2:1
+ *   against the header it is drawn on. WCAG 2.4.11 asks for 3:1. Measured on
+ *   hanzo.app's Sign In, Get started and Search — the three primary CTAs, where
+ *   a keyboard user has no other way to know where they are. design publishes
+ *   `--ring` at `rgb(255 255 255 / .40)` for exactly this, translucent so it
+ *   lifts with whatever surface is under it; over the header that lands near
+ *   3.6:1. A ring is not a shade of grey somebody picked, it is a contrast
+ *   requirement, and the ramp had no way to know that.
+ *
+ * So the three rungs read the token instead of shadowing it. `var()` first, so a
  * host that mounts design's sheet (this package's own theme.css does) follows
  * the live cascade and inverts with it; design's published literal behind it,
  * so a host that mounts neither still gets the right value rather than a
@@ -183,12 +193,14 @@ space['-true'] = -STEP['4']
  */
 const EDGE = { dark: 'rgb(255 255 255 / .10)', light: 'rgb(0 0 0 / .10)' } as const
 const LABEL = { dark: '#fafafa', light: '#0a0a0a' } as const
+const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as const
 
 const rebased = (theme: 'dark' | 'light') => ({
   ...defaultConfig.themes[theme],
   color4: `var(--border, ${EDGE[theme]})`,
   borderColor: `var(--border, ${EDGE[theme]})`,
   color12: `var(--foreground, ${LABEL[theme]})`,
+  outlineColor: `var(--ring, ${RING[theme]})`,
 })
 
 export const config = createGui({
