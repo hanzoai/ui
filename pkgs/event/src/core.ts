@@ -241,9 +241,9 @@ export class Analytics {
       // The publishable key resolves the SAME way the DSN below does: an explicit
       // config wins, else the inlined build-time env.
       //
-      // NEXT_PUBLIC_EVENT_INGEST_KEY is that env, and it is the name the fleet
-      // ALREADY carries end to end — KMS holds deploy/EVENT_INGEST_KEY, each
-      // Dockerfile takes it as the EVENT_INGEST_KEY build-arg and re-exports it
+      // NEXT_PUBLIC_PUBLISHABLE_KEY is that env, and it is the name the fleet
+      // ALREADY carries end to end — KMS holds deploy/PUBLISHABLE_KEY, each
+      // Dockerfile takes it as the PUBLISHABLE_KEY build-arg and re-exports it
       // with the NEXT_PUBLIC_ prefix Next needs to inline it. Reading anything
       // else here would add a fourth spelling of one value.
       //
@@ -253,7 +253,7 @@ export class Analytics {
       // unattributed write is refused (401 ingest_key_required), which is silent
       // in the page and invisible until you read the warehouse and find the host
       // missing entirely.
-      ingestKey: config.ingestKey ?? readEnv('NEXT_PUBLIC_EVENT_INGEST_KEY'),
+      ingestKey: config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY'),
     }
     this.transport = config.transport ?? new DefaultTransport()
     // Error plane, most specific source first: an explicit DSN wins, then the

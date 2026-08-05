@@ -13,9 +13,9 @@ import { createAnalytics } from "@hanzo/event"
 // reports as the org that deployed it; without one cloud answers
 // `401 ingest_key_required` and every logged-out pageview is dropped in silence.
 //
-// NEXT_PUBLIC_EVENT_INGEST_KEY is the ONE name, and it is the name the fleet
-// already carries end to end: KMS holds `deploy/EVENT_INGEST_KEY`, the Dockerfile
-// takes it as the EVENT_INGEST_KEY build-arg and re-exports it with the
+// NEXT_PUBLIC_PUBLISHABLE_KEY is the ONE name, and it is the name the fleet
+// already carries end to end: KMS holds `deploy/PUBLISHABLE_KEY`, the Dockerfile
+// takes it as the PUBLISHABLE_KEY build-arg and re-exports it with the
 // NEXT_PUBLIC_ prefix that makes Next inline it.
 //
 // This file used to read NEXT_PUBLIC_HANZO_INGEST_KEY — a spelling nothing in KMS
@@ -31,5 +31,5 @@ import { createAnalytics } from "@hanzo/event"
 // resolves to undefined in a static export.
 export const analytics = createAnalytics({
   product: "site",
-  ingestKey: process.env.NEXT_PUBLIC_EVENT_INGEST_KEY,
+  ingestKey: process.env.NEXT_PUBLIC_PUBLISHABLE_KEY,
 })

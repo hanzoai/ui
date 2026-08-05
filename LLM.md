@@ -474,7 +474,7 @@ whole setup, and every click / change / submit / route change inside the tree
 reaches `POST /v1/event` named by the component it happened on:
 
 ```tsx
-<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_EVENT_INGEST_KEY }}>
+<Hanzo analytics={{ product: 'console', ingestKey: process.env.NEXT_PUBLIC_PUBLISHABLE_KEY }}>
 ```
 
 Four packages, one of each concern, no duplication:
