@@ -1,0 +1,140 @@
+/* Glass — the material floating chrome is made of, and the ladder it stands on.
+ *
+ *   import '@hanzo/ui/glass.css'      // this slice alone
+ *   import '@hanzo/ui/theme.css'      // the whole sheet; this is inlined in it
+ *
+ * Menus, dialogs, popovers, toasts, sticky bars: things with page UNDER them.
+ * That last clause is the whole rule. Vibrancy is a lens — translucent ground
+ * plus a backdrop blur — so it shows a softened version of whatever it covers,
+ * and covering nothing but the flat canvas it has nothing to soften. An in-flow
+ * card wearing this is not glass; it is the page with extra steps. So: over
+ * content -> glass, in the flow -> the surface ladder. There is no third case.
+ *
+ * ── Values come from @hanzo/design ──────────────────────────────────────────
+ * Every colour, shadow and light below is a design token. The fallbacks are
+ * design's OWN published values, present so a host that imports this file
+ * without design's sheet still gets a ladder instead of a silently-dropped
+ * declaration (an undefined var() invalidates the whole property). They are a
+ * mirror, not a second opinion — glass.test.ts reads @hanzo/design/styles.css
+ * and fails if any of them stops matching, so the copy cannot drift.
+ */
+
+/* ── The material ───────────────────────────────────────────────────────────
+   Applied BY SLOT, not by call site. Every surface below is floating chrome by
+   construction — a popover is over the page or it is nothing — so which of them
+   is glass was never a decision a call site should get to make. It was making
+   it anyway: in the console, of 135 floating surfaces exactly ONE had reached
+   for the material by hand and a dozen dialogs had gone the other way and
+   pinned an opaque fill. Reaching them one by one is 134 edits that agree today
+   and drift apart on the next one somebody adds. A new dialog is glass because
+   it is a dialog.
+
+   `.glass` is here for the same reason `glass()` exists in the recipes module:
+   a hand-rolled bar or a custom menu is floating chrome that no slot names.
+
+   The ground is derived from --background rather than fixed, so the material
+   follows the theme instead of assuming a dark one.
+
+   The opaque `background-color` outside the @supports block is load-bearing
+   rather than belt-and-braces: a browser that cannot blur gets no rule at all
+   from inside it, and a menu with no background is a menu you read the page
+   through. !important beats the compiled atomic background class, which lands
+   in an inline <style> a bundler orders after this sheet, and it beats the call
+   sites that pin a fill by hand — those become no-ops instead of holes. */
+@supports (backdrop-filter: blur(8px)) {
+  .glass,
+  [data-slot="glass"],
+  [data-slot="dialog-content"],
+  [data-slot="popover-content"],
+  [data-slot="select-content"],
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"],
+  [data-slot="tooltip-content"] {
+    background-color: color-mix(in oklab, var(--background) 72%, transparent) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    backdrop-filter: blur(20px) saturate(1.8);
+  }
+}
+
+/* ── Depth — three rungs, and the lit edge is the load-bearing half ──────────
+   A cast shadow is how a light page shows lift. On a near-black canvas it is
+   nearly free of information: black on near-black moves no pixels, so a raised
+   panel wearing only a shadow reads exactly as flat as one wearing none. What
+   says "this surface is above that one" in a dark UI is the LIT EDGE — the top
+   lip catching light, which is why every macOS/iOS glass panel has one. Design
+   spends the same two tokens for the same reason and zeroes --edge-highlight in
+   `.light`, where a white line on a white card is nothing and the drop does all
+   the work: one composition, both themes, no branch here.
+
+   Levels are a LADDER, not a palette — 1 rests in the flow, 2 lifts off it, 3
+   floats over the page. Nothing needs a fourth; if something seems to, it is
+   sitting at the wrong level.
+
+   Anchored chrome — a menu pinned to the control that opened it, a tooltip to
+   its target — is rung 2. A modal has no anchor and a scrim of its own, so it
+   floats free at 3. Those slots share the rung's rule rather than restating its
+   value, so the ladder cannot come apart from the surfaces standing on it.
+
+   Glass over glass (a select opened inside a dialog) is deliberately left to
+   stack: two 72% grounds land near 92%, so the nested surface reads as MORE
+   solid than its parent, which is the right answer and the one macOS gives. */
+.elevation-1 {
+  box-shadow:
+    var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
+    var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / .40)) !important;
+}
+
+.elevation-2,
+[data-slot="popover-content"],
+[data-slot="select-content"],
+[data-slot="dropdown-menu-content"],
+[data-slot="dropdown-menu-sub-content"],
+[data-slot="tooltip-content"] {
+  box-shadow:
+    var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
+    var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55)) !important;
+}
+
+.elevation-3,
+[data-slot="dialog-content"] {
+  box-shadow:
+    var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
+    var(--shadow-floating, 0 24px 60px -16px rgb(0 0 0 / .75)) !important;
+}
+
+/* ── The scrim ──────────────────────────────────────────────────────────────
+   The dim that makes a floating panel read as floating rather than as more
+   page. gui's overlay dims TWICE — a translucent ground under a further
+   `opacity` — landing at about a quarter black. Opaque chrome gets away with
+   it; glass does not, because the blur behind a translucent panel only reads as
+   depth when the ground behind it is genuinely darker.
+
+   One value, in one place: the recipes module reads the same token, so the dim
+   behind a component dialog and the dim behind a hand-rolled one are the same
+   dim by construction rather than by two people remembering a number. */
+[data-slot="dialog-overlay"] {
+  opacity: 1;
+  background-color: var(--surface-scrim, rgb(0 0 0 / .8));
+}
+
+/* ── Grouped rows ───────────────────────────────────────────────────────────
+   One card, hairlines between its rows — the macOS settings group. Four
+   separate cards for four toggles reads as four unrelated decisions, each with
+   its own four edges; the same four inside one card reads as one set and drops
+   twelve edges of noise.
+
+   The separator is drawn by the PARENT, because only the parent knows which
+   child is last. Every by-hand version either left a trailing hairline sitting
+   against the card's own bottom border (two parallel lines, 1px apart) or made
+   each row take a `first` flag it should never have needed. `> * + *` has
+   neither failure mode and needs nothing from the call site.
+
+   Pair with `overflow: hidden` on the card (the `rows` recipe does) so the
+   separators stop at the radius instead of poking through the rounded corner.
+
+   --borderColor first: that is the variable the gui theme scope re-bases, and
+   it is what a card's own edge is drawn with. Falling through to --border keeps
+   a host that has design's tokens but no gui scope from losing the line. */
+[data-slot="rows"] > * + * {
+  border-top: 1px solid var(--borderColor, var(--border));
+}

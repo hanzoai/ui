@@ -157,10 +157,17 @@
   letter-spacing: -0.01em;
 }
 
+/* Paper — a ringed sheet: the ladder's lit edge and drop, plus a hairline all
+   the way round. The three values are @hanzo/design's, reached by their real
+   names. They used to be `--hz-ring` / `--hz-paper-highlight` /
+   `--hz-elevation-3`, none of which is defined in this repo, in @hanzo/design
+   or in any consumer — so all three resolved to hardcoded fallbacks, and the
+   comment above promising that "a host that defines its own --hz-* tokens still
+   wins" described a hook nobody could reach. */
 .paper {
-  box-shadow: var(--hz-ring, inset 0 0 0 1px rgba(255, 255, 255, 0.08)),
-    var(--hz-paper-highlight, inset 0 1px 0 0 rgba(255, 255, 255, 0.05)),
-    var(--hz-elevation-3, 0 8px 24px rgba(0, 0, 0, 0.36));
+  box-shadow: var(--shadow-inset-hairline, inset 0 0 0 1px rgb(255 255 255 / .10)),
+    var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
+    var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
 }
 
 @keyframes menu-in {
