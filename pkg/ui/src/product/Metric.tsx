@@ -116,7 +116,7 @@ export function LegendDot({ color, label, value }: { color: string; label: strin
         </Text>
       </XStack>
       {value != null ? (
-        <Text fontSize="$2" color="$color12" fontWeight="500" className="mono">
+        <Text fontSize="$2" color="$color12" fontWeight="500" className="hz-mono">
           {value}
         </Text>
       ) : null}
@@ -163,7 +163,7 @@ export function MetricCard({
         ) : null}
       </XStack>
       <XStack items="flex-end" justify="space-between" gap="$2">
-        <Text fontSize="$8" fontWeight="500" color="$color12" numberOfLines={1} className="mono">
+        <Text fontSize="$8" fontWeight="500" color="$color12" numberOfLines={1} className="hz-mono">
           {value}
         </Text>
         {spark && spark.length >= 2 ? <Sparkline points={spark} color={sparkColor ?? SERIES[0]} /> : null}
@@ -228,12 +228,21 @@ export function HintButton({
  */
 export function Panel({
   title,
+  icon,
+  description,
   right,
   children,
   minW = 280,
   grow = true,
 }: {
   title: string
+  /** Glyph before the title, at the title's own size. Names the panel's subject
+   *  at a glance in a wall of them. */
+  icon?: ReactNode
+  /** One line under the title saying what the panel shows — units, window,
+   *  source. A number is not self-describing, and the caption every console
+   *  wanted was being smuggled in as the first child. */
+  description?: string
   right?: ReactNode
   children: ReactNode
   minW?: number
@@ -242,11 +251,21 @@ export function Panel({
   return (
     <Card p="$4" gap="$3" borderWidth={1} borderColor="$borderColor" flex={grow ? 1 : undefined} minW={minW} width={grow ? undefined : '100%'}>
       <XStack items="center" justify="space-between" gap="$2">
-        <Text fontSize="$4" fontWeight="500" color="$color12">
-          {title}
-        </Text>
+        <XStack items="center" gap="$2" flex={1} minW={0}>
+          {icon}
+          <Text fontSize="$4" fontWeight="500" color="$color12">
+            {title}
+          </Text>
+        </XStack>
         {right}
       </XStack>
+      {description ? (
+        // Under the title, not beside it: a description sharing the line with a
+        // right-hand control is the first thing to wrap on a phone.
+        <Text fontSize="$2" color="$color11">
+          {description}
+        </Text>
+      ) : null}
       {children}
     </Card>
   )

@@ -17,8 +17,10 @@ import { GuiProvider } from '@hanzo/gui'
 import config from '../gui-config'
 import { CopyButton } from './CopyButton'
 import { Fieldset } from './Fieldset'
+import { Panel } from './Metric'
 import { Pagination } from './Pagination'
 import { SecretInput } from './SecretInput'
+import { StatusTag } from './StatusTag'
 import { FieldText } from './Field'
 import { UserMenu, displayName } from './UserMenu'
 
@@ -28,6 +30,16 @@ const html = (node: ReactNode) =>
       {node}
     </GuiProvider>,
   )
+
+/**
+ * The markup WITHOUT the stylesheet gui inlines ahead of it.
+ *
+ * `GuiProvider` emits the whole 400 KB sheet in a `<style>` tag, so any
+ * assertion phrased as "the markup does not contain X" is answered by a rule
+ * for some unrelated component and passes or fails on the wrong evidence.
+ * Elements only.
+ */
+const els = (markup: string) => markup.replace(/<style[\s\S]*?<\/style>/g, '')
 
 /** gui forwards unknown props to the DOM; a style prop leaking through is a
  *  React warning in the console and an invalid attribute in the markup. */
@@ -48,6 +60,63 @@ describe('CopyButton', () => {
     // The value belongs on the clipboard, not in the DOM — a token rendered
     // into a tooltip is a token in every screenshot and every crash report.
     expect(html(<CopyButton value="hk-secret-value" />)).not.toContain('hk-secret-value')
+  })
+
+  it('draws its label when it is given one, and nothing when it is not', () => {
+    // The two forms differ in exactly one thing, and this is that thing: a
+    // control standing alone under a minted key has no neighbours to explain an
+    // unlabeled glyph.
+    expect(html(<CopyButton value="hk-abc">Copy key</CopyButton>)).toContain('Copy key')
+    expect(html(<CopyButton value="hk-abc" />)).not.toContain('Copy key')
+  })
+
+  it('takes its accessible name from the visible text by default', () => {
+    // Two names for one control is how a button reads "Copy" to a screen reader
+    // and "Copy address" to everyone else.
+    expect(html(<CopyButton value="0xabc">Copy address</CopyButton>)).toContain('aria-label="Copy address"')
+    // …and an explicit label still wins, for the cases where the visible text is
+    // not a sentence ("hk_live_…").
+    expect(html(<CopyButton value="0xabc" label="Copy wallet address">0x…abc</CopyButton>)).toContain(
+      'aria-label="Copy wallet address"',
+    )
+  })
+})
+
+describe('StatusTag', () => {
+  it('renders the status it was given, whatever the vocabulary makes of it', () => {
+    for (const s of ['past_due', 'paid', 'flurbled']) expect(html(<StatusTag status={s} />), s).toContain(s)
+    expect(html(<StatusTag />)).toContain('unknown')
+  })
+
+  it('spends no hue saying an invoice is overdue', () => {
+    // A monochrome pill in a monochrome system. The check is on the emitted
+    // ELEMENTS — gui inlines the whole stylesheet ahead of them, and every hue
+    // in the ramp appears somewhere in 400 KB of rules.
+    const markup = els(html(<StatusTag status="past_due" />))
+    for (const hue of ['red', 'green', 'yellow', 'orange', '#e5534b', '#7ee787'])
+      expect([hue, markup.includes(hue)]).toEqual([hue, false])
+  })
+
+  it('lets a caller override the tone the vocabulary chose', () => {
+    expect(html(<StatusTag status="whatever" tone="stopped" />)).toContain('whatever')
+  })
+})
+
+describe('Panel', () => {
+  it('renders the icon and the description a console needed to smuggle in as a child', () => {
+    const markup = html(
+      <Panel title="Spend" icon={<span>§</span>} description="Last 30 days, USD.">
+        <span>body</span>
+      </Panel>,
+    )
+    for (const s of ['Spend', '§', 'Last 30 days, USD.', 'body']) expect(markup, s).toContain(s)
+    clean(markup)
+  })
+
+  it('renders with neither, exactly as before', () => {
+    const markup = html(<Panel title="Spend"><span>body</span></Panel>)
+    expect(markup).toContain('body')
+    expect(markup).not.toContain('Last 30 days')
   })
 })
 
@@ -87,6 +156,23 @@ describe('FieldText', () => {
     expect(markup).toContain('type="password"')
     expect(html(<FieldText value="plain" onChange={() => {}} />)).not.toContain('type="password"')
   })
+
+  it('tells the browser what may fill it', () => {
+    // A sign-in form built out of these rows could not say `autocomplete`, so a
+    // password manager had nothing to go on: it filled nothing, or filled the
+    // wrong row. Every surface that cared dropped back to a raw <input> for it.
+    // Lower-cased because HTML attribute names are case-insensitive and React's
+    // static renderer prints the JSX spelling.
+    const markup = els(html(<FieldText value="" onChange={() => {}} id="signin-email" autoComplete="email" />))
+    expect(markup.toLowerCase()).toContain('autocomplete="email"')
+    expect(markup).toContain('id="signin-email"')
+  })
+
+  it('says nothing when the caller says nothing', () => {
+    // An `autocomplete=""` is not the same as an absent attribute — Chrome reads
+    // the empty string as "on" and offers to fill an API-key row.
+    expect(els(html(<FieldText value="" onChange={() => {}} />)).toLowerCase()).not.toContain('autocomplete=')
+  })
 })
 
 describe('UserMenu', () => {
@@ -123,6 +209,16 @@ describe('Fieldset', () => {
 
   it('renders with no legend at all', () => {
     expect(html(<Fieldset><span>bare</span></Fieldset>)).toContain('bare')
+  })
+
+  it('takes the whole line by default and shares it on request', () => {
+    // A settings PAGE is a column and a settings TAB is often two. Without
+    // `grow` every two-column layout wrapped the group in a sizing box of its
+    // own, and the boxes disagreed.
+    const full = html(<Fieldset title="Profile"><span>r</span></Fieldset>)
+    const shared = html(<Fieldset title="Profile" grow><span>r</span></Fieldset>)
+    expect(full).not.toBe(shared)
+    for (const markup of [full, shared]) clean(markup)
   })
 })
 

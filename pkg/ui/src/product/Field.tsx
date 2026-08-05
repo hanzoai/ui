@@ -20,7 +20,7 @@ import {
 } from '@hanzo/gui'
 
 import { textSize, useEmit, type UiEvent } from './instrument'
-import { masked } from './SecretInput'
+import { masked } from '../backends/gui/mask'
 
 // The label the caller ALREADY typed on the FieldRow becomes the analytics name —
 // so an app never labels a field twice and no field reports as "unnamed".
@@ -60,12 +60,34 @@ export function FieldText({
   disabled,
   secure,
   placeholder,
+  autoComplete,
+  id,
 }: {
   value: string
   onChange: (v: string) => void
   disabled?: boolean
   secure?: boolean
   placeholder?: string
+  /**
+   * What the browser may fill this with — "email", "current-password",
+   * "one-time-code", or "off". A sign-in form built out of these rows could not
+   * say it, so password managers had nothing to go on: they either filled
+   * nothing or filled the wrong row, and every surface that cared dropped back
+   * to a raw `<input>` to get the one attribute.
+   */
+  autoComplete?: string
+  /**
+   * The field's DOM id — what an external `<label for>` points at, and the
+   * second thing autofill reads after `autoComplete`.
+   *
+   * There is deliberately no `name`. `name` is @hanzo/gui's OWN prop (it names a
+   * styled component and a theme) and it is consumed before it can reach the
+   * DOM — measured, not assumed. Accepting one here would type-check, render
+   * nothing, and leave a caller believing their form posts a field it does not.
+   * `autoComplete` is the attribute that actually drives autofill; these rows
+   * are controlled React fields, so nothing depends on a native form post.
+   */
+  id?: string
 }) {
   const track = useFieldTrack('FieldText')
   return (
@@ -81,6 +103,8 @@ export function FieldText({
       // `<FieldText secure>` in the fleet was unmasked until this line.
       {...masked(Boolean(secure))}
       placeholder={placeholder}
+      autoComplete={autoComplete}
+      id={id}
       autoCapitalize="none"
     />
   )

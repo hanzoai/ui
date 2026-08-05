@@ -1,49 +1,37 @@
 'use client'
 
 /**
- * Status pill — maps a resource/cluster status string to a tone, one place.
+ * Status pill — one status string, one pill, everywhere.
  *
- * Provisioned things (managed resources, clusters) report free-form lifecycle
- * strings; this normalizes them to green/yellow/red/neutral so every list reads
- * the same. Style props use the v5 shorthand set.
+ * What a status MEANS is `tone` in `./tone`: a pure lookup a billing surface can
+ * assert against without mounting anything. This draws it. The pill has no hue
+ * to spend — the four tones are rungs of the grey ladder — so `stopped` is set
+ * apart by an EDGE, and every tone carries a border (transparent on three of
+ * them) so turning one on shifts no layout in a table of fifty rows.
  */
 import { Text } from '@hanzo/gui'
 
-type Tone = 'green' | 'yellow' | 'red' | 'neutral'
+import { TONE, tone } from './tone'
 
-const toneOf = (status: string): Tone => {
-  const s = status.toLowerCase()
-  // Platform health verdicts map straight to a tone (the apps inventory reports
-  // green/yellow/red directly).
-  if (s === 'green') return 'green'
-  if (s === 'yellow') return 'yellow'
-  if (s === 'red') return 'red'
-  if (['ready', 'active', 'running', 'available', 'ok', 'live', 'succeeded', 'connected', 'synced', 'imported'].includes(s)) return 'green'
-  if (['creating', 'provisioning', 'pending', 'updating', 'attaching', 'building', 'deploying', 'queued', 'importing'].includes(s))
-    return 'yellow'
-  if (['error', 'failed', 'degraded', 'down', 'canceled', 'conflict'].includes(s)) return 'red'
-  return 'neutral'
+export type StatusTagProps = {
+  status?: string
+  /** Override the tone when the caller knows better than the vocabulary does. */
+  tone?: keyof typeof TONE
 }
 
-// `as const` keeps the literal token types (not widened to `string`) so they
-// satisfy the GUI `bg`/`color` token unions.
-const TONE_BG = {
-  green: '$color5',
-  yellow: '$color4',
-  red: '$color4',
-  neutral: '$color3',
-} as const
-const TONE_FG = {
-  green: '$color12',
-  yellow: '$color12',
-  red: '$color12',
-  neutral: '$color11',
-} as const
-
-export function StatusTag({ status }: { status?: string }) {
-  const tone = toneOf(status ?? '')
+export function StatusTag({ status, tone: override }: StatusTagProps) {
+  const t = TONE[override ?? tone(status ?? '')]
   return (
-    <Text fontSize="$1" px="$2" py="$1" rounded="$2" bg={TONE_BG[tone]} color={TONE_FG[tone]}>
+    <Text
+      fontSize="$1"
+      px="$2"
+      py="$1"
+      rounded="$2"
+      borderWidth={1}
+      borderColor={t.borderColor}
+      bg={t.bg}
+      color={t.color}
+    >
       {status || 'unknown'}
     </Text>
   )
