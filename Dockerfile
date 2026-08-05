@@ -11,12 +11,41 @@ WORKDIR /src
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Publishable ingest key (pk_…), baked in at build because a static export has no
+# Publishable ingest key (pk-…), baked in at build because a static export has no
 # server to read config at runtime. Write-only and HMAC-verified to one org, so it
 # is safe in a public bundle; the deployment that builds decides which org the
-# site reports as. Absent, the client stays inert.
-ARG NEXT_PUBLIC_HANZO_INGEST_KEY=""
-ENV NEXT_PUBLIC_HANZO_INGEST_KEY=$NEXT_PUBLIC_HANZO_INGEST_KEY
+# site reports as.
+#
+# ONE name, end to end: KMS holds `deploy/EVENT_INGEST_KEY`, hanzo.yml declares it
+# as this image's build_secret, and the KMS name IS the build-arg name. NEXT_PUBLIC_
+# is added HERE because that prefix is what makes Next inline it — the app reads
+# process.env.NEXT_PUBLIC_EVENT_INGEST_KEY.
+#
+# Do NOT re-declare `ARG NEXT_PUBLIC_EVENT_INGEST_KEY` after the ENV below. A later
+# ARG of the same name shadows the ENV with its own (empty) default, and the build
+# stays green while the bundle ships blank — which is exactly how hanzo.chat 1.0.58
+# shipped a keyless site from a fully green run.
+#
+# Fail CLOSED, on BOTH ways this goes wrong.
+#
+#   empty   — builds, serves and looks correct while cloud answers
+#             `401 ingest_key_required` for every anonymous pageview. The previous
+#             `ARG …=""` default made that the normal outcome of an unattended
+#             build, which is why no automated lane could ever publish a working
+#             image.
+#   `pk_…`  — the OLDER key format. v5.7.6 shipped one, passed by hand on a local
+#             `docker build`, and it is now dead: api.hanzo.ai 401s it on both the
+#             fetch and beacon transports. A hand-passed key goes stale in silence,
+#             so requiring the current `pk-` shape refuses the stale one outright.
+#
+# Neither failure is visible from outside the artifact, so refuse the artifact.
+ARG EVENT_INGEST_KEY
+ENV NEXT_PUBLIC_EVENT_INGEST_KEY=$EVENT_INGEST_KEY
+RUN case "$EVENT_INGEST_KEY" in \
+      pk-*) : ;; \
+      '')   echo "EVENT_INGEST_KEY is empty - pass --build-arg EVENT_INGEST_KEY=<pk-...> (KMS deploy/EVENT_INGEST_KEY, env prod)" >&2; exit 1 ;; \
+      *)    echo "EVENT_INGEST_KEY is not a publishable key (expected a pk- prefix)" >&2; exit 1 ;; \
+    esac
 # 300+ prerendered pages; the default heap is not enough.
 ENV NODE_OPTIONS=--max-old-space-size=8192
 
@@ -39,7 +68,23 @@ RUN pnpm install --frozen-lockfile
 RUN cd pkgs/event && pnpm build
 
 # Builds the component registry, then the site (app/package.json build script).
-RUN cd app && pnpm build
+#
+# ...and then PROVES the key reached the client bundle. The gate above proves a
+# key was PASSED; only this proves it was INLINED. Those are different failures:
+# a rename on either side of `process.env.NEXT_PUBLIC_EVENT_INGEST_KEY` leaves the
+# build-arg intact and the bundle keyless, and a static export cannot report that
+# at runtime because there is no runtime.
+#
+# `&&`, never `;` — a `;` chain returns the LAST command's status, so a failed
+# build followed by a passing grep exits 0 and the image is published.
+RUN cd app && pnpm build && \
+    if [ -z "${NEXT_PUBLIC_EVENT_INGEST_KEY}" ]; then \
+      echo "ERROR: NEXT_PUBLIC_EVENT_INGEST_KEY is empty after a successful build." >&2; exit 1; \
+    elif grep -rqF "${NEXT_PUBLIC_EVENT_INGEST_KEY}" out; then \
+      echo "Build OK - ingest key inlined into app/out, verified"; \
+    else \
+      echo "ERROR: key supplied but NOT present in app/out - ui would ship unattributed" >&2; exit 1; \
+    fi
 
 # 0.5.1 serves a directory's index.html in place. On 0.4.1 every page 301'd to
 # an explicit /index.html, which leaks that filename into the address bar and
