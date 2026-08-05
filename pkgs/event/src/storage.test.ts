@@ -113,6 +113,34 @@ describe('anonId', () => {
     }
   })
 
+  it("adopts hz.js's `hz_id` when there is no canonical id to find", async () => {
+    // The no-build tag minted into a key of its own, so a browser that met hz.js
+    // first already carries an identity — under a different name. Minting here
+    // would make that visitor a stranger the moment they reach a bundled surface,
+    // which is precisely the split this migration closes.
+    const b = browser({ storage: { hz_id: LEGACY } })
+    try {
+      const { anonId } = await load()
+      expect(anonId()).toBe(LEGACY)
+      expect(b.jar.get(ANON)).toBe(LEGACY)
+      expect(b.store!.get(ANON)).toBe(LEGACY) // and converged onto the one key
+    } finally {
+      b.restore()
+    }
+  })
+
+  it('prefers the canonical id when a divergent hz_id is also present', async () => {
+    // Both clients ran on this origin before the merge and counted the visitor
+    // twice. One of the two has to win, and it is the key everything else uses.
+    const b = browser({ storage: { [ANON]: LEGACY, hz_id: OTHER } })
+    try {
+      const { anonId } = await load()
+      expect(anonId()).toBe(LEGACY)
+    } finally {
+      b.restore()
+    }
+  })
+
   it('lets the cookie win over a divergent origin-local id', async () => {
     // docs already minted its own before the migration; the shared cookie is now
     // the source of truth and localStorage converges onto it.

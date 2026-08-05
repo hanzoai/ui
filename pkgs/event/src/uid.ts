@@ -1,5 +1,11 @@
 // The ONE id minter for this client — UUIDv7 (RFC 9562 §5.7).
 //
+// The implementation is `hzUuidv7` in ./anon.js and this file only re-exports it.
+// It lives there because the anonymous-id chain has to mint too, and that chain is
+// inlined verbatim by two distributions that have no bundler (hz.js, and the tag
+// the door hosts) — a minter here as well would be a second implementation, and
+// the version nibble it produces is exactly the thing that must never diverge.
+//
 // WHY NOT crypto.randomUUID(): it mints v4, whose 122 bits are pure entropy and
 // carry no time. The session rollups on the event plane derive a session's start
 // instant FROM THE ID — their PARTITION BY and ORDER BY are
@@ -21,22 +27,8 @@
 // Never returns a non-UUID shape. The old minters fell back to `'a-' + base36`
 // when crypto was absent, and the plane casts a session id with
 // accurateCastOrNull(…, 'UUID') — a shape that does not parse becomes NULL and is
-// dropped by the same gate, so the fallback failed exactly like v4 did. Here only
-// the ENTROPY degrades without crypto; the shape is always a valid v7 UUID.
-
-/** 00..ff, so formatting is a lookup rather than 16 padStart calls. */
-const HEX: string[] = Array.from({ length: 256 }, (_, i) => (i + 0x100).toString(16).slice(1))
-
-/** Cryptographic randomness when the host has it, Math.random when it does not. */
-function fill(b: Uint8Array): Uint8Array {
-  const c = typeof crypto !== 'undefined' ? crypto : undefined
-  if (c && typeof c.getRandomValues === 'function') {
-    c.getRandomValues(b)
-    return b
-  }
-  for (let i = 0; i < b.length; i++) b[i] = (Math.random() * 256) | 0
-  return b
-}
+// dropped by the same gate, so the fallback failed exactly like v4 did. Only the
+// ENTROPY degrades without crypto; the shape is always a valid v7 UUID.
 
 /**
  * uuidv7 mints a time-ordered UUIDv7 for `now` (epoch milliseconds).
@@ -44,25 +36,7 @@ function fill(b: Uint8Array): Uint8Array {
  * Two ids minted in the same millisecond sort arbitrarily between themselves; ids
  * from different milliseconds sort by time, lexically and numerically alike.
  */
-export function uuidv7(now: number = Date.now()): string {
-  const b = fill(new Uint8Array(16))
-  // 48-bit big-endian timestamp. Milliseconds stay exact well past year 10000, so
-  // the arithmetic never leaves the safe-integer range.
-  let t = Math.floor(now)
-  for (let i = 5; i >= 0; i--) {
-    b[i] = t % 256
-    t = Math.floor(t / 256)
-  }
-  b[6] = 0x70 | (b[6] & 0x0f) // version 7
-  b[8] = 0x80 | (b[8] & 0x3f) // variant 0b10
-  return (
-    HEX[b[0]] + HEX[b[1]] + HEX[b[2]] + HEX[b[3]] + '-' +
-    HEX[b[4]] + HEX[b[5]] + '-' +
-    HEX[b[6]] + HEX[b[7]] + '-' +
-    HEX[b[8]] + HEX[b[9]] + '-' +
-    HEX[b[10]] + HEX[b[11]] + HEX[b[12]] + HEX[b[13]] + HEX[b[14]] + HEX[b[15]]
-  )
-}
+export { hzUuidv7 as uuidv7 } from './anon.js'
 
 /** The millisecond timestamp a v7 id was minted at — the inverse of uuidv7. */
 export function uuidv7Time(id: string): number {

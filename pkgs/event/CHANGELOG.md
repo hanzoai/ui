@@ -1,5 +1,27 @@
 # @hanzo/event
 
+## 0.3.15
+
+### Patch Changes
+
+- **One anonymous identity chain, in one file, for all three distributions.**
+  0.3.14 moved `anonId()` onto a shared cookie, but only in the bundled client:
+  `hz.js` still minted into `hz_id` — a KEY OF ITS OWN — and the tag the door
+  hosts at `/v1/event.js` had a third implementation of the same idea. A page
+  carrying two of them counted one visitor as two people, and which snippet a
+  surface happened to load decided who the visitor was. The chain now lives in
+  `src/anon.js` and nothing else implements it: `src/storage.ts` imports it,
+  `hz.js` inlines the marked region verbatim (`src/anon.test.ts` fails on a byte
+  of drift), and hanzoai/cloud vendors the same file and serves that region with
+  its tag as one asset.
+- **`hz_id` is adopted, not orphaned.** Resolution is cookie, else localStorage
+  `hz_anon_id`, else localStorage `hz_id`, else in-memory, else mint — every id
+  already in a browser is taken over, and only a browser holding none is given a
+  new one. Every visitor who has ever loaded `hz.js` keeps their history.
+- `hz.js` also drops its own restated UUIDv7 minter: the chain carries the one
+  minter, so the version nibble the event plane's session rollups admit can no
+  longer diverge between distributions. `sessionId()` is unchanged.
+
 ## 0.3.14
 
 ### Patch Changes
