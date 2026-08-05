@@ -158,16 +158,22 @@
 }
 
 /* Paper — a ringed sheet: the ladder's lit edge and drop, plus a hairline all
-   the way round. The three values are @hanzo/design's, reached by their real
-   names. They used to be `--hz-ring` / `--hz-paper-highlight` /
-   `--hz-elevation-3`, none of which is defined in this repo, in @hanzo/design
-   or in any consumer — so all three resolved to hardcoded fallbacks, and the
-   comment above promising that "a host that defines its own --hz-* tokens still
-   wins" described a hook nobody could reach. */
+   the way round. The three values are reached by their real names. They used to
+   be `--hz-ring` / `--hz-paper-highlight` / `--hz-elevation-3`, none of which is
+   defined in this repo, in @hanzo/design or in any consumer — so all three
+   resolved to hardcoded fallbacks, and the comment above promising that "a host
+   that defines its own --hz-* tokens still wins" described a hook nobody could
+   reach.
+
+   The drop is rung 2's, by the ladder's own name. It read `--shadow-lg` — a
+   t-shirt size @hanzo/brand also declares, for a white canvas, winning on load
+   order — so paper lost its drop on dark exactly the way the rungs did. The
+   fallback stays because this sheet ships on its own: a host that imports
+   motion.css without glass.css has no ladder to read. */
 .paper {
   box-shadow: var(--shadow-inset-hairline, inset 0 0 0 1px rgb(255 255 255 / .10)),
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
-    var(--shadow-lg, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
+    var(--glass-shadow-2, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
 }
 
 @keyframes menu-in {
