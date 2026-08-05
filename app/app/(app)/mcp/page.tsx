@@ -304,7 +304,7 @@ export default function MCPPage() {
             </p>
             <div className="flex gap-4">
               <Button asChild>
-                <Link href="https://discord.gg/hanzo">Join Discord</Link>
+                <Link href="https://discord.gg/CJCyAsm9Vr">Join Discord</Link>
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/docs">Read Documentation</Link>

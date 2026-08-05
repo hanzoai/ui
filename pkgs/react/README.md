@@ -344,4 +344,4 @@ MIT © Hanzo AI, Inc. — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai
 
 - Documentation: [https://ui.hanzo.ai/docs/hanzo-react](https://ui.hanzo.ai/docs/hanzo-react)
 - GitHub: [https://github.com/hanzoai/ui](https://github.com/hanzoai/ui)
-- Discord: [https://discord.gg/hanzo](https://discord.gg/hanzo)
+- Discord: [https://discord.gg/CJCyAsm9Vr](https://discord.gg/CJCyAsm9Vr)
