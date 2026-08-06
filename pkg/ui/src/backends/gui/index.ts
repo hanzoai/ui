@@ -89,6 +89,15 @@ export {
   type ResizablePanelProps,
   type ResizableHandleProps,
 } from './resizable'
+// The layout primitives. Without these an app cannot obey "import from
+// @hanzo/ui" — it has to reach past this package to @hanzo/gui, which is how
+// 216 files in hanzo.app ended up doing exactly that. See ./layout.
+export {
+  XStack, YStack, ZStack,
+  SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
+  Image, Spacer, ScrollView, View, Text,
+  type GuiElement,
+} from './layout'
 export { ScrollArea, ScrollBar } from './scroll-area'
 export {
   Select,
