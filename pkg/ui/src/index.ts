@@ -25,11 +25,18 @@
 // cannot prove which members are unused through a star, so importing Button pulled
 // the whole surface in.
 //
-// ./backends/gui already declares these as explicit named blocks; this list mirrors
-// it and is regenerated the same way (scripts/gen-primitives.mjs reads that manifest).
+// ./backends/gui declares these as explicit named blocks and this list mirrors it.
+//
+// It is maintained BY HAND — `scripts/gen-primitives.mjs` writes `src/primitives/`,
+// not this file, so nothing regenerates it and nothing used to notice when the two
+// drifted. Glass, Grid, Section and CardMedia were all exported by the backend and
+// absent here, which means a consumer could not import them AT ALL: the component
+// existed, the docs named it, and `import { Grid } from '@hanzo/ui'` was undefined.
+// `src/__tests__/barrel.test.ts` now fails when the two disagree.
 export {
   AspectRatio, Avatar, AvatarFallback, AvatarImage, Badge, Button, Card, CardAction,
-  CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible,
+  CardContent, CardDescription, CardFooter, CardHeader, CardMedia, CardTitle, Checkbox,
+  Collapsible,
   CollapsibleContent, CollapsibleTrigger, Command, CommandDialog, CommandEmpty, CommandGroup,
   CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut, Dialog,
   DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay,
@@ -37,11 +44,13 @@ export {
   DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator,
   DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger,
-  DropdownMenuTrigger, Input, Label, Popover, PopoverAnchor, PopoverClose, PopoverContent,
+  DropdownMenuTrigger, Glass, Grid, Input, Label, Popover, PopoverAnchor, PopoverClose,
+  PopoverContent,
   PopoverTrigger, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,
   ScrollBar, Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
   SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue,
-  Separator, Slider, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Textarea, Toaster,
+  Section, Separator, Slider, Switch, Tabs, TabsContent, TabsList, TabsTrigger, Textarea,
+  Toaster,
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, badgeVariants, buttonVariants,
   toast,
 } from './backends/gui'
