@@ -65,6 +65,19 @@ export type {
   ResizablePanelGroupProps, ResizablePanelProps,
 } from './backends/gui'
 
+// LAYOUT — the stacks and the type scale. Without these on the ROOT barrel an
+// app cannot obey "import from @hanzo/ui" and has to reach past this package to
+// @hanzo/gui; 216 files in hanzo.app did exactly that. Note this list is
+// SEPARATE from the one in ./backends/gui and both must carry a name for it to
+// reach a consumer: 8.0.65 added them to the backend only, published, and the
+// dist still had no XStack — a green release that changed nothing.
+export {
+  XStack, YStack, ZStack,
+  SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
+  Anchor, Image, Spacer, ScrollView, View, Text,
+  type GuiElement,
+} from './backends/gui'
+
 // `Hanzo` — the root, and the only thing an app mounts. It carries the gui
 // config and the generated stylesheet, so `npm i @hanzo/ui` is the whole setup:
 // no gui.config.ts, no CSS import, no generator script.
