@@ -1,0 +1,75 @@
+import { describe, expect, it } from 'vitest'
+import { readFileSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
+
+/**
+ * The control ladder, asserted on the source that declares it.
+ *
+ * Two defects this pins, both shipped in 8.0.64 and inherited by every app:
+ *
+ *  1. A PINNED height clips. `height={36}` on a control means a child taller
+ *     than 36px is cropped, silently, with a green build — a 119px thumbnail
+ *     once rendered as a 30px sliver that way. Button was moved to
+ *     `height: 'auto'` + a `minHeight` floor in 01ac46dce; Input and
+ *     SelectTrigger kept theirs, so the trap stayed armed in the two controls
+ *     that appear in every form.
+ *  2. An Input and a Select are the SAME control — 36px, 8px radius, 1px edge —
+ *     sitting side by side in every form. One rendered its text at 14px and the
+ *     other at 13px.
+ *
+ * Source text, not a render: these are contracts about what the package
+ * declares, and a render test would need the whole gui runtime to answer them.
+ */
+const dir = join(__dirname, '..', 'backends', 'gui')
+const read = (f: string) => readFileSync(join(dir, f), 'utf8')
+
+/**
+ * The controls that carry ARBITRARY CONTENT in a single row — a caller's label,
+ * value or children can be taller than the box, so each must state a FLOOR.
+ *
+ * Named, not scanned. A blanket "no pinned height" rule flags the 1px menu
+ * separator, the 8px progress track and the 20px resize handle, none of which
+ * hold anything a caller supplies — and a guard that cries wolf on correct code
+ * gets deleted, taking the real check with it.
+ */
+const CONTENT_BEARING = ['button.tsx', 'select.tsx', 'textarea.tsx']
+
+// `input.tsx` is deliberately absent. An <input> is single-line — it has no
+// children and does not wrap — so a pinned height cannot clip anything, and
+// gui's Input does not accept `minHeight` in the first place. Adding it here
+// makes the guard demand something the platform refuses.
+
+describe('control ladder', () => {
+  it.each(CONTENT_BEARING)('%s states a height FLOOR, never a pin', (file) => {
+    const src = read(file)
+
+    // BOTH spellings: a JSX attribute (`height={36}`) and an object literal
+    // inside a size variant (`height: 'auto'`). Button uses the second; matching
+    // only the first reported it as having no floor at all, which is how a guard
+    // ends up flagging the one control that already does this correctly.
+    const pins: string[] = []
+    for (const m of src.matchAll(/\bheight\s*[=:]\s*(?:\{([^}]+)\}|'([^']+)'|"([^"]+)"|(\d+))/g)) {
+      const v = (m[1] ?? m[2] ?? m[3] ?? m[4]).trim().replace(/^['"]|['"]$/g, '')
+      if (/^(?:auto|100%|undefined)$/.test(v)) continue
+      pins.push(v)
+    }
+
+    expect(
+      pins,
+      `${file} pins height=${pins.join(', ')} — taller content is CLIPPED and the build stays green`,
+    ).toEqual([])
+
+    // And a floor has to actually be stated, or the control has no size at all.
+    expect(/\bminHeight\s*[=:]|\bminH\s*[=:]/.test(src), `${file} states no minHeight floor`).toBe(true)
+  })
+
+  // The two field controls must read at the same size or every form looks broken.
+  it('Input and SelectTrigger render their text at the same size', () => {
+    const inputSize = read('input.tsx').match(/fontSize="(\$\d+)"/)?.[1]
+    const selectSize = read('select.tsx').match(/ink\(children[^)]*size:\s*'(\$\d+)'/)?.[1]
+
+    expect(inputSize, 'input.tsx declares no fontSize').toBeDefined()
+    expect(selectSize, 'select.tsx declares no ink size').toBeDefined()
+    expect(selectSize).toBe(inputSize)
+  })
+})

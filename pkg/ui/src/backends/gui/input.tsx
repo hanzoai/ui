@@ -71,6 +71,11 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       // Only on the password path: `masked(false)` states `type="text"`, which
       // would overwrite a caller's `type="email"` or `type="search"`.
       {...(isPassword ? masked(!revealed) : { type, secureTextEntry })}
+      // A pin, and correct here. `<input>` is single-line: no children, no
+      // wrapping, so its content CANNOT exceed the box and there is nothing to
+      // clip. gui's Input does not accept `minHeight` at all, which is the type
+      // system saying the same thing. The floor rule is for controls that hold
+      // children — Button and SelectTrigger.
       height={HEIGHT}
       width="100%"
       minW={0}
