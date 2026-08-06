@@ -22,6 +22,59 @@ export interface Exception {
   handled?: boolean
 }
 
+/** One stack frame as Error Tracking renders it. The key names are the product's
+ *  POST-symbolication vocabulary (`mangled_name`/`source`/`line`/`column`), which
+ *  is what the issue view reads straight off `$exception_list`. */
+export interface ExceptionFrame {
+  /** "<hash>/<part>" — stable per code location; the frame's identity. */
+  raw_id: string
+  /** The function name as it appears in the shipped bundle. */
+  mangled_name: string
+  /** File/URL the frame is in. */
+  source: string
+  line: number
+  column: number
+  /** First-party code. Frames without this are hidden by default in the product. */
+  in_app: boolean
+  lang: string
+  /** Whether a symbol set mapped this frame back to original source. */
+  resolved: boolean
+  resolve_failure?: string
+  resolved_name?: string | null
+  module?: string | null
+}
+
+/** One exception in `$exception_list`. */
+export interface ExceptionEntry {
+  id: string
+  type: string
+  value: string
+  mechanism?: {
+    type: 'generic'
+    handled: boolean
+    synthetic?: boolean
+  }
+  /** `type` MUST be 'resolved' — the renderer draws frames on no other value. */
+  stacktrace?: { type: 'resolved'; frames: ExceptionFrame[] }
+}
+
+/** The `$exception_*` property bag Error Tracking reads off a `$exception` event. */
+export interface ExceptionProperties {
+  $exception_list: ExceptionEntry[]
+  /** Issue grouping key. An event without one is dropped by the issue query. */
+  $exception_fingerprint: string
+  $exception_fingerprint_record: { type: 'manual' }[]
+  $exception_type: string
+  $exception_message: string
+  $exception_level: SentryLevel
+  $exception_handled: boolean
+  $exception_synthetic: boolean
+  $exception_types: string[]
+  $exception_values: string[]
+  $exception_sources: string[]
+  $exception_functions: string[]
+}
+
 /** First-touch marketing attribution, parsed once and persisted. */
 export interface Attribution {
   utm: {

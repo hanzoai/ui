@@ -483,45 +483,78 @@ describe('Analytics capture', () => {
 })
 
 describe('Event error capture', () => {
-  it('captureError emits a type:error event carrying a TOP-LEVEL exception, flushed at once', () => {
+  it('emits under the RESERVED $exception name, never under the message', () => {
     const a = mk()
     a.captureError(new TypeError('boom'))
     // captureError flushes promptly — no explicit flush() needed.
     expect(tx.sent).toHaveLength(1)
     const e = tx.all[0]
-    // type:'error' is the field Cloud folds to event_type='error' for the warehouse.
-    expect(e.type).toBe('error')
-    expect(e.event).toBe('boom')
-    // The exception rides the TOP-LEVEL `error` field (what cloud foldException
-    // reads), NOT properties — a properties-only exception would not be folded.
+    // THE NAME. Until 0.3.20 this was `ex.message`, which made every distinct
+    // error string a permanent entry in the event taxonomy and left Error
+    // Tracking — which reads this exact name — at zero rows.
+    expect(e.event).toBe('$exception')
+    // THE TYPE. `type` alone picks the storage plane: 'error' routes to the error
+    // plane, which the product-event projection does not read, so an exception
+    // filed there cannot reach Error Tracking. The full error record still goes to
+    // the error plane as a Sentry envelope.
+    expect(e.type).toBe('event')
+    // The exception STILL rides the TOP-LEVEL `error` field, which is what cloud's
+    // foldException reads to stamp properties.$exception (scrubbing on the way).
     expect(e.error?.type).toBe('TypeError')
     expect(e.error?.message).toBe('boom')
     expect(e.error?.stack).toBeTruthy()
     expect(e.error?.handled).toBe(true) // a caught, manually-reported error
-    expect((e.properties ?? {})).not.toHaveProperty('$exception')
+    // The client does not stamp $exception itself — the server fold owns that key.
+    expect(e.properties ?? {}).not.toHaveProperty('$exception')
+  })
+
+  it('carries the $exception_* bag Error Tracking reads', () => {
+    const a = mk()
+    a.captureError(new TypeError('boom'))
+    const p = tx.all[0].properties as Record<string, unknown>
+    expect(Array.isArray(p.$exception_list)).toBe(true)
+    // Without a fingerprint the issue query drops the event outright.
+    expect(p.$exception_fingerprint).toMatch(/^[0-9a-f]{32}$/)
+    expect(p.$exception_type).toBe('TypeError')
+    expect(p.$exception_handled).toBe(true)
   })
 
   it('normalizes a thrown string into an exception', () => {
     const a = mk()
     a.captureError('plain failure')
     const e = tx.all[0]
-    expect(e.type).toBe('error')
+    expect(e.event).toBe('$exception')
+    expect(e.type).toBe('event')
     expect(e.error?.message).toBe('plain failure')
   })
 
-  it('marks handled=false for unhandled/global errors and carries properties', () => {
+  it('marks handled=false for unhandled/global errors and carries caller properties', () => {
     const a = mk()
     a.captureError(new Error('unhandled'), { handled: false, properties: { source: 'onerror' } })
     const e = tx.all[0]
     expect(e.error?.handled).toBe(false)
-    expect(e.properties).toEqual({ source: 'onerror' })
+    const p = e.properties as Record<string, unknown>
+    // The caller's own properties survive alongside the exception bag.
+    expect(p.source).toBe('onerror')
+    expect(p.$exception_handled).toBe(false)
+  })
+
+  it("a caller property cannot overwrite the exception bag it shares a name with", () => {
+    const a = mk()
+    a.captureError(new Error('x'), {
+      handled: false,
+      properties: { $exception_fingerprint: 'forged' },
+    })
+    const p = tx.all[0].properties as Record<string, unknown>
+    expect(p.$exception_fingerprint).not.toBe('forged')
   })
 
   it('captureException is an alias of captureError', () => {
     const a = mk()
     a.captureException(new Error('via alias'))
     const e = tx.all[0]
-    expect(e.type).toBe('error')
+    expect(e.event).toBe('$exception')
+    expect(e.type).toBe('event')
     expect(e.error?.message).toBe('via alias')
   })
 
@@ -563,7 +596,7 @@ describe('error plane', () => {
     expect(tx.envelopes).toHaveLength(0)
     // fail-safe: the event stream still carries the error, analytics untouched.
     expect(tx.streams).toHaveLength(1)
-    expect(tx.all[0].type).toBe('error')
+    expect(tx.all[0].event).toBe('$exception')
   })
 
   it('with a DSN, an error POSTs a Sentry envelope to the DERIVED ingest URL', () => {
