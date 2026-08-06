@@ -357,3 +357,59 @@ describe('Glass is for chrome; the flow gets a panel', () => {
     expect(accent.color).toBe('$color12')
   })
 })
+
+describe('The composer prism is a RIM, and it is declared once', () => {
+  /**
+   * This section exists because the class was declared TWICE — in hanzo.chat's
+   * client/src/style.css and hanzo.app's assets/globals.css, each calling itself
+   * "the ONE prism on any Hanzo surface" — and the two drifted until one was
+   * simply wrong. hanzo.app's copy drew a filled DISC and leaned on the panel
+   * above it being opaque to hide the middle, which is invisible until a glass
+   * panel sits in it: then the whole spectrum washes up through the composer's
+   * interior. These assertions are the shape of that bug.
+   */
+  const before = css.slice(css.indexOf('.hz-composer::before'), css.indexOf('.hz-composer::after'))
+  const after = css.slice(css.indexOf('.hz-composer::after'), css.indexOf('.hz-composer > *'))
+
+  it('ships the prism at all', () => {
+    expect(css).toContain('.hz-composer {')
+    expect(before.length).toBeGreaterThan(100)
+    expect(after.length).toBeGreaterThan(100)
+  })
+
+  it('masks BOTH pseudo-elements, so neither paints behind the panel', () => {
+    // Without this the ring is a disc and the panel's opacity becomes
+    // load-bearing for something that was never about the panel.
+    for (const [name, block] of [['ring', before], ['halo', after]] as const) {
+      expect(block, `${name} must be masked`).toContain('mask-composite: exclude')
+      expect(block, `${name} needs the content-box hole`).toContain('content-box')
+    }
+  })
+
+  it('states -webkit-mask-composite AFTER the standard shorthand', () => {
+    // WebKit aliases `mask` onto `-webkit-mask`, so the shorthand RESETS the
+    // composite to `source-over` — the filled disc again — on exactly the
+    // browsers too old to have `mask-composite`. Order is the whole fix.
+    for (const block of [before, after]) {
+      expect(block.indexOf('-webkit-mask-composite')).toBeGreaterThan(block.indexOf('mask-composite: exclude'))
+    }
+  })
+
+  it('declares the spectrum ONCE and closes the loop', () => {
+    const stops = css.match(/--hz-spectrum:/g) ?? []
+    expect(stops).toHaveLength(1)
+    // A conic gradient whose first and last stop differ shows a hard seam.
+    const decl = css.slice(css.indexOf('--hz-spectrum:')).split(';')[0]
+    const rgba = decl.match(/rgba\([^)]*\)/g) ?? []
+    expect(rgba.length).toBeGreaterThanOrEqual(3)
+    expect(rgba[0]).toBe(rgba[rgba.length - 1])
+  })
+
+  it('keeps the halo quiet — no opacity pulse', () => {
+    // The loud version (0.5 resting, pulsing to 0.85) read as a purple wash
+    // over an animated backdrop and was killed on purpose.
+    expect(after).not.toContain('hzComposerGlow')
+    const op = Number((after.match(/opacity:\s*([\d.]+)/) ?? [])[1])
+    expect(op).toBeLessThanOrEqual(0.3)
+  })
+})

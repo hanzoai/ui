@@ -195,3 +195,120 @@
 [data-slot="rows"] > * + * {
   border-top: 1px solid var(--borderColor, var(--border));
 }
+
+/* ── The composer prism — the ONE ring on any Hanzo surface ──────────────────
+   The composer is where you talk to Hanzo, so it is the thing that should look
+   alive, and it earns that with MOTION and LIGHT rather than hue. Every other
+   pixel of chrome stays monochrome; there is no second exemption, and the two
+   attempts to grant one (a violet ring, then a full-wheel rainbow) each made
+   the surface wearing it the only colour in the product.
+
+   THIS LIVES HERE BECAUSE IT WAS DECLARED TWICE AND DRIFTED. hanzo.chat's
+   client/src/style.css and hanzo.app's assets/globals.css each carried a copy,
+   each calling itself "the ONE prism on any Hanzo surface". chat fixed the ring
+   to be a rim; hanzo.app's copy kept drawing a filled DISC and never got the
+   fix — invisible until a glass panel sat in it, at which point the whole
+   spectrum washed up through the composer's interior. chat also quieted the
+   halo (0.5 with a pulse -> 0.22, no pulse); hanzo.app kept the loud one. Two
+   copies of one look is how that happens, and neither app could see the other
+   was wrong.
+
+   Structure: `.hz-composer` is a 1.5px-padded host; its direct child is the
+   panel. ::before is the ring, ::after the halo. Both are MASKED to exclude the
+   panel's footprint, so the ring is a rim BY CONSTRUCTION and the panel is free
+   to be any material — opaque, glass, anything. The stops are declared once and
+   read by both, because duplicated they drift on the first palette change and
+   nobody notices which half moved. */
+
+/* `@property` is what lets a conic angle animate. Where it is unsupported the
+   ring is simply static, which is a fine floor. */
+@property --hz-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  /* One sweep, closing on the stop it opened with — a conic gradient whose
+     first and last stop differ shows a hard seam. */
+  --hz-spectrum: rgba(8, 148, 255, 0.45), rgba(201, 89, 221, 0.48),
+    rgba(255, 46, 84, 0.4), rgba(255, 144, 4, 0.4), rgba(8, 148, 255, 0.45);
+}
+
+@keyframes hzComposerSpin {
+  to {
+    --hz-angle: 360deg;
+  }
+}
+
+.hz-composer {
+  position: relative;
+  isolation: isolate;
+  padding: 1.5px;
+}
+
+/* The ring DRAWS A RING. `padding` is its thickness; the two-layer mask keeps
+   paint outside it — `content-box` is the hole, the full box the plate, and
+   `exclude` leaves the lip. */
+.hz-composer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--hz-angle), var(--hz-spectrum));
+  animation: hzComposerSpin 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* After the standard shorthand: WebKit aliases `mask` onto `-webkit-mask`, so
+     declaring this first lets the shorthand reset it to `source-over` — the
+     filled disc again, on exactly the browsers too old to have `mask-composite`
+     at all. */
+  -webkit-mask-composite: xor;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* The halo lights the air AROUND the box and nothing behind it. */
+.hz-composer::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  padding: 6px;
+  /* Concentric with the box, NOT `inherit`: the halo lives 6px outside, so an
+     inherited corner on this larger box curves too tight and reads as a second,
+     mismatched rounding just outside the panel. */
+  border-radius: calc(1.5rem + 6px);
+  background: conic-gradient(from var(--hz-angle), var(--hz-spectrum));
+  filter: blur(16px);
+  opacity: 0.22;
+  animation: hzComposerSpin 10s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* The panel sits above ring and halo. */
+.hz-composer > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-composer::before,
+  .hz-composer::after {
+    animation: none;
+  }
+}
