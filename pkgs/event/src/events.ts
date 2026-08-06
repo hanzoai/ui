@@ -69,3 +69,8 @@ export type EventName = (typeof EVENTS)[keyof typeof EVENTS]
 
 /** The reserved event name a pageview is stored under (server + read lens). */
 export const PAGEVIEW = '$pageview'
+
+/** The reserved name every captured exception is emitted under. Error Tracking
+ *  reads exactly this name; an exception emitted under its own message instead
+ *  makes every distinct message a permanent entry in the event taxonomy. */
+export const EXCEPTION = '$exception'

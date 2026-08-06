@@ -13,7 +13,8 @@ export { uuidv7, uuidv7Time } from './uid'
 export { PRODUCT_PROJECT, dsnForProduct } from './dsn'
 export type { ErrorIdentity } from './sentry'
 export { scrubText, redactSecrets, scrubPII } from './scrub'
-export { EVENTS, PAGEVIEW } from './events'
+export { EVENTS, EXCEPTION, PAGEVIEW } from './events'
+export { exceptionEntry, exceptionProperties, fingerprint, digest } from './exception'
 export type { EventName } from './events'
 export { GOALS, COHORTS } from './goals'
 export type { GoalDef, CohortDef } from './goals'
@@ -34,6 +35,9 @@ export type {
   Dsn,
   EventKind,
   Exception,
+  ExceptionEntry,
+  ExceptionFrame,
+  ExceptionProperties,
   SentryEvent,
   SentryFrame,
   SentryLevel,

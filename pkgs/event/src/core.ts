@@ -44,7 +44,8 @@ import {
   deriveChannel,
 } from './attribution'
 import { dsnForProduct, defaultPublishableKey } from './dsn'
-import { PAGEVIEW } from './events'
+import { EXCEPTION, PAGEVIEW } from './events'
+import { exceptionProperties } from './exception'
 import { scrubText } from './scrub'
 import {
   buildEnvelope,
@@ -389,9 +390,35 @@ export class Analytics {
       }
 
       try {
+        const handled = context?.handled ?? true
         const ex = normalizeError(err)
-        ex.handled = context?.handled ?? true
-        this.enqueue('error', ex.message, { error: ex, properties: context?.properties })
+        ex.handled = handled
+        // NAME: the reserved '$exception', never the message. The message was the
+        // name until 0.3.20, which put every distinct error string — one per failed
+        // chunk id, per ResizeObserver notification — permanently into the event
+        // taxonomy, and left Error Tracking (which reads this exact name) at zero.
+        //
+        // TYPE 'event', not 'error'. `type` alone picks the storage plane: 'error'
+        // routes to the error plane, which the product-event projection does not
+        // read, so an exception filed there is invisible to Error Tracking however
+        // well-formed it is. The full error record still reaches the error plane as
+        // a Sentry envelope above — this row is the product-analytics breadcrumb,
+        // which is what keeps a crash correlated with the session's pageviews.
+        //
+        // `error` is still carried: the server folds it into properties.$exception
+        // (scrubbing message and stack on the way), which is the shape existing
+        // readers bind to.
+        this.enqueue('event', EXCEPTION, {
+          error: ex,
+          properties: {
+            ...context?.properties,
+            ...exceptionProperties(err, {
+              handled,
+              id: uuidv7(),
+              level: context?.level,
+            }),
+          },
+        })
         this.flush()
       } catch {
         /* nor the reverse */
