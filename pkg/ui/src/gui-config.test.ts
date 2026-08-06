@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
 
-import { config } from './gui-config'
+import { config, monochrome } from './gui-config'
 
 const require = createRequire(import.meta.url)
 const design = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
@@ -205,5 +205,55 @@ describe('the readable-secondary rung', () => {
     expect(contrast(themed(theme, 'color11'), surface)).toBeGreaterThan(
       contrast(themed(theme, 'color10'), surface),
     )
+  })
+})
+
+/**
+ * `monochrome` is `config` with rows removed — never a second scale. Every
+ * assertion here is a relationship BETWEEN the two, so the only way to break it
+ * is to author a value in one that does not exist in the other.
+ */
+describe('monochrome is config minus the hues', () => {
+  const names = (c: typeof config) => Object.keys(c.themes)
+  const CHROMA = ['blue', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow']
+
+  it('keeps both root themes — a surface still has a ground to stand on', () => {
+    expect(names(monochrome)).toEqual(expect.arrayContaining(['dark', 'light']))
+  })
+
+  it('activates no chromatic sub-theme', () => {
+    const chromatic = names(monochrome).filter((n) =>
+      n.split('_').slice(1).some((s) => CHROMA.includes(s)),
+    )
+    expect(chromatic).toEqual([])
+  })
+
+  it('keeps every greyscale sub-theme, so a monochrome surface loses nothing', () => {
+    const wanted = names(config).filter(
+      (n) => !n.split('_').slice(1).some((s) => CHROMA.includes(s)),
+    )
+    expect(names(monochrome).sort()).toEqual(wanted.sort())
+  })
+
+  it('is a strict subset — it can never carry a theme config does not', () => {
+    const full = new Set(names(config))
+    expect(names(monochrome).filter((n) => !full.has(n))).toEqual([])
+  })
+
+  it('is meaningfully smaller, or it is not worth having', () => {
+    expect(names(monochrome).length).toBeLessThan(names(config).length / 2)
+  })
+
+  it('shares one scale: a theme present in both is byte-identical', () => {
+    for (const n of names(monochrome)) {
+      expect(monochrome.themes[n as keyof typeof monochrome.themes]).toEqual(
+        config.themes[n as keyof typeof config.themes],
+      )
+    }
+  })
+
+  it('shares the radius and font decisions, which live in one place', () => {
+    expect(monochrome.tokens.radius).toEqual(config.tokens.radius)
+    expect(monochrome.fonts.mono.family).toBe(config.fonts.mono.family)
   })
 })

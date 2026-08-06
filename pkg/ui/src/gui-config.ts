@@ -235,9 +235,10 @@ const themes = Object.fromEntries(
   }),
 ) as typeof defaultConfig.themes
 
-export const config = createGui({
+// Everything except the theme table, which is the one thing the two configs
+// below disagree about. Stated once so they cannot drift on radius or fonts.
+const base = {
   ...defaultConfig,
-  themes,
   tokens: {
     ...defaultConfig.tokens,
     radius: RADIUS,
@@ -254,8 +255,46 @@ export const config = createGui({
     // token, not a silent no-op, so it is defined.
     mono: { ...defaultConfig.fonts.body, family: GEIST_MONO, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
   },
-})
+}
+
+export const config = createGui({ ...base, themes })
 
 export default config
+
+/**
+ * The eight chromatic families. Everything else a sub-theme name can carry —
+ * `accent`, `black`, `white`, `gray`, `neutral`, `surface1`, `surface2` — is a
+ * position on the greyscale, so it survives into the monochrome table below.
+ *
+ * Derived from the segment, never from a substring: `dark_teal_Button` is
+ * chromatic because one of its segments IS `teal`, while a future
+ * `dark_tealish` or a component called `Red` is not caught by accident.
+ */
+const CHROMA = new Set(['blue', 'green', 'orange', 'pink', 'purple', 'red', 'teal', 'yellow'])
+
+const chromatic = (name: string) => name.split('_').slice(1).some((s) => CHROMA.has(s))
+
+/**
+ * The same system with the chromatic sub-themes omitted — 150 themes instead of
+ * 390, and 62% less theme table.
+ *
+ * A gui theme table is DATA that ships: it cannot be tree-shaken, because a
+ * theme is selected by string at runtime. So a surface that renders no colour
+ * still pays for every hue. The browser extension's new-tab page is monochrome
+ * by design and loads on every single tab, and 240 themes it can never activate
+ * were the difference between it fitting its bundle budget and not.
+ *
+ * This is NOT a second design system. It is the same `config` with rows
+ * removed, from the same scale, so nothing here can drift from `config` — only
+ * be absent from it. Reach for it when a surface genuinely renders no hue;
+ * anything that does must use `config`, because a missing theme falls back
+ * silently rather than failing.
+ */
+export const monochrome = createGui({
+  ...base,
+  themes: Object.fromEntries(
+    Object.entries(themes).filter(([name]) => !chromatic(name)),
+  ) as typeof themes,
+})
 
 export type Conf = typeof config
