@@ -247,9 +247,18 @@ describe('hz.js', () => {
     expect(post.url).toBe('https://api.hanzo.ai/v1/event?ingest_key=pk-abc123')
   })
 
-  it('sends no credential when no key is declared', () => {
+  it('falls to the baked hanzo key when no key is declared on the hanzo cloud', () => {
+    // publishable_key for all: a bare tag on the hanzo cloud still emits
+    // attributed, rather than dropping unkeyed to $public.
     run.api!.flush()
     const post = run.posts.at(-1)!
+    expect(post.headers.authorization).toBe('Bearer pk-live-c88649f1085fb6ad441d8a0072933a9b')
+  })
+
+  it('sends no credential when no key is declared and the host is not the hanzo cloud', () => {
+    const r = runSnippet({ attrs: { 'data-host': 'https://api.zoo.ngo' } })
+    r.api!.flush()
+    const post = r.posts.at(-1)!
     expect(post.headers.authorization).toBeUndefined()
     expect(post.url).not.toContain('ingest_key')
   })
