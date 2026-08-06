@@ -43,7 +43,7 @@ import {
   hasAttribution,
   deriveChannel,
 } from './attribution'
-import { dsnForProduct, defaultPublishableKey } from './dsn'
+import { dsnForProduct } from './dsn'
 import { EXCEPTION, PAGEVIEW } from './events'
 import { exceptionProperties } from './exception'
 import { scrubText } from './scrub'
@@ -239,35 +239,29 @@ export class Analytics {
       enabled: true,
       captureErrors: true,
       ...config,
-      // The publishable key resolves the SAME way the DSN below does, and now
-      // ends the SAME way too — in a baked default, so declaring nothing is
-      // enough. Most specific first:
+      // The publishable key resolves from ONE live source, never a literal baked
+      // beside the code. Most specific first:
       //   1. an explicit `ingestKey` in config;
       //   2. NEXT_PUBLIC_PUBLISHABLE_KEY, the inlined build-time env the fleet
-      //      carries end to end (KMS `deploy/PUBLISHABLE_KEY` -> the PUBLISHABLE_KEY
-      //      build-arg -> the NEXT_PUBLIC_ prefix Next inlines);
-      //   3. the hanzo org key baked in `dsn.ts`, on the hanzo cloud only.
+      //      carries end to end — KMS `deploy/PUBLISHABLE_KEY` -> the PUBLISHABLE_KEY
+      //      build-arg -> the NEXT_PUBLIC_ prefix Next inlines.
       //
-      // (3) is why this is `publishable_key for all`: a hanzo surface that passes
-      // no key in code and inlines no env still emits attributed, exactly as
-      // declaring `product` is enough for the DSN. Without it that surface sent
-      // its beacons to `$public` — which drops every track/identify/group and
-      // still answers 200 — silent in the page and invisible until you read the
-      // warehouse and find the host missing entirely. A white-label surface on
-      // its own cloud (a non-default host) gets no default, so the org this
-      // attributes to is never the wrong one.
-      ingestKey:
-        config.ingestKey ??
-        readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY') ??
-        defaultPublishableKey(config.host ?? DEFAULT_HOST),
+      // A surface that provides neither has no key, and its anonymous traffic
+      // files under `$public` (which drops track/identify/group and answers 200);
+      // the fix is to give it the KMS-sourced env, not to hardcode the org key
+      // here. The key is a credential-class value: its home is KMS, and the ONE
+      // build reads it from there.
+      ingestKey: config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY'),
     }
     this.transport = config.transport ?? new DefaultTransport()
     // Error plane, most specific source first: an explicit DSN wins, then the
-    // inlined build-time env (a per-deploy override), then the product registry
-    // — so declaring `product` is enough to report errors and no surface needs
-    // build-argument plumbing. Malformed or absent => null => inert, never
-    // throwing into the host app.
-    this.dsn = parseDsn(config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product))
+    // inlined build-time env (a per-deploy override), then the product registry —
+    // whose DSN carries the SAME resolved key (not a baked one), so declaring
+    // `product` + providing the key is enough to report errors. Malformed or
+    // absent => null => inert, never throwing into the host app.
+    this.dsn = parseDsn(
+      config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product, this.cfg.ingestKey)
+    )
   }
 
   /** errorPlaneEnabled reports whether captured exceptions can actually reach the
