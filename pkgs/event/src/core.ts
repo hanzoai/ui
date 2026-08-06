@@ -43,7 +43,7 @@ import {
   hasAttribution,
   deriveChannel,
 } from './attribution'
-import { dsnForProduct } from './dsn'
+import { dsnForProduct, defaultPublishableKey } from './dsn'
 import { PAGEVIEW } from './events'
 import { scrubText } from './scrub'
 import {
@@ -238,22 +238,27 @@ export class Analytics {
       enabled: true,
       captureErrors: true,
       ...config,
-      // The publishable key resolves the SAME way the DSN below does: an explicit
-      // config wins, else the inlined build-time env.
+      // The publishable key resolves the SAME way the DSN below does, and now
+      // ends the SAME way too — in a baked default, so declaring nothing is
+      // enough. Most specific first:
+      //   1. an explicit `ingestKey` in config;
+      //   2. NEXT_PUBLIC_PUBLISHABLE_KEY, the inlined build-time env the fleet
+      //      carries end to end (KMS `deploy/PUBLISHABLE_KEY` -> the PUBLISHABLE_KEY
+      //      build-arg -> the NEXT_PUBLIC_ prefix Next inlines);
+      //   3. the hanzo org key baked in `dsn.ts`, on the hanzo cloud only.
       //
-      // NEXT_PUBLIC_PUBLISHABLE_KEY is that env, and it is the name the fleet
-      // ALREADY carries end to end — KMS holds deploy/PUBLISHABLE_KEY, each
-      // Dockerfile takes it as the PUBLISHABLE_KEY build-arg and re-exports it
-      // with the NEXT_PUBLIC_ prefix Next needs to inline it. Reading anything
-      // else here would add a fourth spelling of one value.
-      //
-      // Without this the key was the one piece of wiring a surface could not
-      // declare the way it declares every other piece, so a surface that shipped
-      // without passing it in code sent its beacons unattributed — and an
-      // unattributed write is refused (401 ingest_key_required), which is silent
-      // in the page and invisible until you read the warehouse and find the host
-      // missing entirely.
-      ingestKey: config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY'),
+      // (3) is why this is `publishable_key for all`: a hanzo surface that passes
+      // no key in code and inlines no env still emits attributed, exactly as
+      // declaring `product` is enough for the DSN. Without it that surface sent
+      // its beacons to `$public` — which drops every track/identify/group and
+      // still answers 200 — silent in the page and invisible until you read the
+      // warehouse and find the host missing entirely. A white-label surface on
+      // its own cloud (a non-default host) gets no default, so the org this
+      // attributes to is never the wrong one.
+      ingestKey:
+        config.ingestKey ??
+        readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY') ??
+        defaultPublishableKey(config.host ?? DEFAULT_HOST),
     }
     this.transport = config.transport ?? new DefaultTransport()
     // Error plane, most specific source first: an explicit DSN wins, then the

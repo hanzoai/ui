@@ -55,7 +55,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.17'
+  var VERSION = '0.3.18'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -68,8 +68,12 @@
   // present a key at all, so every keyed static surface looked wired, measured
   // fine in the browser, and filed nothing.
   // data-publishable-key is the name; a static tag has no lockstep build to
-  // migrate it, so data-ingest-key stays readable as the retiring spelling.
-  var key = s.getAttribute('data-publishable-key') || s.getAttribute('data-ingest-key') || ''
+  // migrate it, so data-ingest-key stays readable as the retiring spelling. With
+  // neither, a tag on the hanzo cloud falls to the baked hanzo org key (the same
+  // default the npm client bakes in dsn.ts), so a bare tag still emits attributed
+  // rather than dropping to $public. A custom data-host gets no default.
+  var key = s.getAttribute('data-publishable-key') || s.getAttribute('data-ingest-key') ||
+    (host === 'https://api.hanzo.ai' ? 'pk-live-c88649f1085fb6ad441d8a0072933a9b' : '')
 
   // ── the shared anonymous-identity chain ───────────────────────────────────
   // COPIED VERBATIM from @hanzo/event's src/anon.js, markers and all, for the same
