@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { Analytics, VERSION } from './core'
+import { HANZO_PUBLISHABLE_KEY } from './dsn'
 import { EVENTS, PAGEVIEW } from './events'
 import type { Transport, WireEvent } from './types'
 import pkg from '../package.json' with { type: 'json' }
@@ -383,11 +384,46 @@ describe('Analytics capture', () => {
     }
   })
 
-  it('stays keyless when neither config nor env names a key', () => {
+  it('stays keyless when neither config nor env names a key, off the hanzo cloud', () => {
+    // mk() uses host:'' — a same-origin app, deliberately NOT defaulted.
     const a = mk()
     a.capture('x')
     a.flush(true)
     expect(tx.sent[0].ingestKey).toBeUndefined()
+  })
+
+  it('bakes the hanzo publishable key as the default ON the hanzo cloud', () => {
+    // publishable_key for all: a hanzo surface that passes no key and inlines no
+    // env still emits attributed, the same way declaring `product` is enough for
+    // the DSN. No wiring, no $public, no silent drop of track/identify/group.
+    const a = mk({ host: 'https://api.hanzo.ai' })
+    a.capture('x')
+    a.flush(true)
+    expect(tx.sent[0].ingestKey).toBe(HANZO_PUBLISHABLE_KEY)
+  })
+
+  it('does NOT bake the default for a white-label (non-hanzo) host', () => {
+    const a = mk({ host: 'https://api.zoo.ngo' })
+    a.capture('x')
+    a.flush(true)
+    expect(tx.sent[0].ingestKey).toBeUndefined()
+  })
+
+  it('lets an explicit key and the build env each override the baked default', () => {
+    const explicit = mk({ host: 'https://api.hanzo.ai', ingestKey: 'pk-explicit' })
+    explicit.capture('x')
+    explicit.flush(true)
+    expect(tx.sent[0].ingestKey).toBe('pk-explicit')
+
+    process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-from-env'
+    try {
+      const env = mk({ host: 'https://api.hanzo.ai' }) // mk() reassigns `tx`
+      env.capture('y')
+      env.flush(true)
+      expect(tx.sent[0].ingestKey).toBe('pk-from-env')
+    } finally {
+      delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
+    }
   })
 
   it('a signed-in bearer WINS over a key from the build env', () => {

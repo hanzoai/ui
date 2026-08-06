@@ -43,3 +43,29 @@ export function dsnForProduct(product: string | undefined): string | undefined {
   if (!product) return undefined
   return PRODUCT_DSN[product]
 }
+
+/** The hanzo org's publishable ingest key. Like the DSNs above it is PUBLIC by
+ *  construction: write-only — it attributes a write and mints no reading
+ *  principal — so it ships in the bundle and is readable in devtools, exactly as
+ *  hanzo.id already inlines it. It is the value KMS holds at `deploy/PUBLISHABLE_KEY`
+ *  and every fleet Dockerfile passes as the `PUBLISHABLE_KEY` build-arg; baking it
+ *  as the default is the SAME move `dsnForProduct` makes for errors — a hanzo
+ *  surface on the hanzo cloud emits attributed with zero wiring, and no build can
+ *  ship unkeyed (the failure that files anonymous traffic under `$public`, which
+ *  drops every track/identify/group and answers 200). */
+export const HANZO_PUBLISHABLE_KEY =
+  'pk-live-c88649f1085fb6ad441d8a0072933a9b'
+
+/** defaultPublishableKey resolves the baked hanzo key, but ONLY for the explicit
+ *  hanzo cloud host (api.hanzo.ai) — the host the public, anonymous-traffic
+ *  surfaces use. It is deliberately NOT applied to a same-origin `''` host: that
+ *  is the shape a cookie/session app uses (it attributes signed-in users through
+ *  the session, so it needs no anonymous key), AND it is the one host a
+ *  white-label surface shares with hanzo, so defaulting it could attribute the
+ *  wrong org. A custom host gets undefined. An explicit `ingestKey`, or an
+ *  inlined NEXT_PUBLIC_PUBLISHABLE_KEY, still wins over this. */
+export function defaultPublishableKey(host: string | undefined): string | undefined {
+  return host === undefined || host === 'https://api.hanzo.ai'
+    ? HANZO_PUBLISHABLE_KEY
+    : undefined
+}
