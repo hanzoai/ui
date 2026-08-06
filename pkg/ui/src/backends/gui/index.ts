@@ -95,7 +95,7 @@ export {
 export {
   XStack, YStack, ZStack,
   SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
-  Image, Spacer, ScrollView, View, Text,
+  Anchor, Image, Spacer, ScrollView, View, Text,
   type GuiElement,
 } from './layout'
 export { ScrollArea, ScrollBar } from './scroll-area'
