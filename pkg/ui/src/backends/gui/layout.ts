@@ -47,7 +47,8 @@ export {
   Strong,
   Em,
 
-  // Leaves — an image, a rule, a gap, a scroller.
+  // Leaves — a link, an image, a gap, a scroller.
+  Anchor,
   Image,
   Spacer,
   ScrollView,
