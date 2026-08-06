@@ -37,40 +37,20 @@ export const PRODUCT_PROJECT: Readonly<Record<string, string>> = Object.freeze({
   site: '019f9b1e-5785-7359-ad0b-f75db8e58c99', // hanzo.ai (marketing; product `site`)
 })
 
-/** dsnForProduct builds the product's Sentry DSN — the ONE org publishable key at
- *  its project's envelope endpoint — or undefined when the product has no project
- *  yet, which leaves the error plane inert rather than posting into the wrong one.
- *  Same key as the event stream: cloud resolves it to the org and attributes the
- *  errors there. */
-export function dsnForProduct(product: string | undefined): string | undefined {
-  if (!product) return undefined
+/** dsnForProduct builds the product's Sentry DSN from the caller's resolved
+ *  publishable `key` and the product's project — the SAME key the event stream
+ *  carries, at the product's envelope endpoint. Returns undefined when there is no
+ *  key or no project for the product, leaving the error plane inert rather than
+ *  posting into the wrong one. The key is NOT baked here: it is the value the
+ *  surface resolved (an explicit `ingestKey`, or the KMS-sourced
+ *  NEXT_PUBLIC_PUBLISHABLE_KEY the build inlines) — the ONE live source, never a
+ *  literal committed beside the code. */
+export function dsnForProduct(
+  product: string | undefined,
+  key: string | undefined
+): string | undefined {
+  if (!product || !key) return undefined
   const projectId = PRODUCT_PROJECT[product]
   if (!projectId) return undefined
-  return `https://${HANZO_PUBLISHABLE_KEY}@api.hanzo.ai/v1/sentry/${projectId}`
-}
-
-/** The hanzo org's publishable ingest key. Like the DSNs above it is PUBLIC by
- *  construction: write-only — it attributes a write and mints no reading
- *  principal — so it ships in the bundle and is readable in devtools, exactly as
- *  hanzo.id already inlines it. It is the value KMS holds at `deploy/PUBLISHABLE_KEY`
- *  and every fleet Dockerfile passes as the `PUBLISHABLE_KEY` build-arg; baking it
- *  as the default is the SAME move `dsnForProduct` makes for errors — a hanzo
- *  surface on the hanzo cloud emits attributed with zero wiring, and no build can
- *  ship unkeyed (the failure that files anonymous traffic under `$public`, which
- *  drops every track/identify/group and answers 200). */
-export const HANZO_PUBLISHABLE_KEY =
-  'pk-live-c88649f1085fb6ad441d8a0072933a9b'
-
-/** defaultPublishableKey resolves the baked hanzo key, but ONLY for the explicit
- *  hanzo cloud host (api.hanzo.ai) — the host the public, anonymous-traffic
- *  surfaces use. It is deliberately NOT applied to a same-origin `''` host: that
- *  is the shape a cookie/session app uses (it attributes signed-in users through
- *  the session, so it needs no anonymous key), AND it is the one host a
- *  white-label surface shares with hanzo, so defaulting it could attribute the
- *  wrong org. A custom host gets undefined. An explicit `ingestKey`, or an
- *  inlined NEXT_PUBLIC_PUBLISHABLE_KEY, still wins over this. */
-export function defaultPublishableKey(host: string | undefined): string | undefined {
-  return host === undefined || host === 'https://api.hanzo.ai'
-    ? HANZO_PUBLISHABLE_KEY
-    : undefined
+  return `https://${key}@api.hanzo.ai/v1/sentry/${projectId}`
 }
