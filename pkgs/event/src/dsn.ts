@@ -24,24 +24,29 @@
  * product name the app passes to `createAnalytics`.
  */
 
-/** PRODUCT_DSN maps a `product` to the DSN its errors are submitted to. */
-export const PRODUCT_DSN: Readonly<Record<string, string>> = Object.freeze({
-  // hanzo-console — console.hanzo.ai (also served embedded by the cloud binary)
-  console:
-    'https://1:0c8054dbde157f4f420c56b58660052b2ad782293c4de1d606ef8fbc46a0bf34@api.hanzo.ai/v1/sentry/019fa40b-94ae-7f1d-8f7b-e92f123fad42',
-  // hanzo-app — hanzo.app
-  app: 'https://1:b3e1173125568c80f91ef4b1fabbbd2d7e22341de02b33ce7e22ef4fc16a196e@api.hanzo.ai/v1/sentry/019f9b1e-57eb-7171-9d92-72c0b85e4b4b',
-  // hanzo-ai — hanzo.ai (the marketing site; `site` is the product name it declares)
-  site: 'https://1:d9cbfb844958bd7ef2a455600f00fbf237fbd71b75c1504f137773096d6aa53f@api.hanzo.ai/v1/sentry/019f9b1e-5785-7359-ad0b-f75db8e58c99',
+/** PRODUCT_PROJECT maps a `product` to its Sentry project id. The DSN's KEY is no
+ *  longer a per-project secret — it is the ONE org publishable key (below), so a
+ *  surface's errors ride the SAME key its events do. The id only names WHICH
+ *  project the errors group under, and cloud auto-provisions that project on first
+ *  keyed ingest, so a new id needs nothing minted. `site` lives in the `hanzo-ai`
+ *  project — an explicit map, because the projects predate this and do not derive
+ *  cleanly from the product name. */
+export const PRODUCT_PROJECT: Readonly<Record<string, string>> = Object.freeze({
+  console: '019fa40b-94ae-7f1d-8f7b-e92f123fad42', // console.hanzo.ai
+  app: '019f9b1e-57eb-7171-9d92-72c0b85e4b4b', // hanzo.app
+  site: '019f9b1e-5785-7359-ad0b-f75db8e58c99', // hanzo.ai (marketing; product `site`)
 })
 
-/** dsnForProduct resolves the registered DSN for a product, or undefined when the
- *  product has no project yet — which leaves the error plane inert rather than
- *  guessing a destination and silently posting a surface's errors into the wrong
- *  project. */
+/** dsnForProduct builds the product's Sentry DSN — the ONE org publishable key at
+ *  its project's envelope endpoint — or undefined when the product has no project
+ *  yet, which leaves the error plane inert rather than posting into the wrong one.
+ *  Same key as the event stream: cloud resolves it to the org and attributes the
+ *  errors there. */
 export function dsnForProduct(product: string | undefined): string | undefined {
   if (!product) return undefined
-  return PRODUCT_DSN[product]
+  const projectId = PRODUCT_PROJECT[product]
+  if (!projectId) return undefined
+  return `https://${HANZO_PUBLISHABLE_KEY}@api.hanzo.ai/v1/sentry/${projectId}`
 }
 
 /** The hanzo org's publishable ingest key. Like the DSNs above it is PUBLIC by
