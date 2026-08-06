@@ -45,7 +45,12 @@ const SelectTrigger = ({ children, ...props }: SelectTriggerProps) => (
     items="center"
     justify="space-between"
     gap="$2"
-    height={TRIGGER_H}
+    // A FLOOR, not a pin. `height` alone clips a child taller than the box, and
+    // the build stays green while it does — that is why 01ac46dce moved Button
+    // off a pinned height. Select and Input kept theirs, so the same trap was
+    // still armed in the two controls that sit in every form.
+    height="auto"
+    minHeight={TRIGGER_H}
     px="$3"
     rounded="$3"
     borderWidth={1}
@@ -55,7 +60,11 @@ const SelectTrigger = ({ children, ...props }: SelectTriggerProps) => (
     {...touch(TRIGGER_H, 44, 'y')}
     {...props}
   >
-    {ink(children, undefined, { size: '$2' })}
+    {/* $3, not $2. A Select and an Input are the same control — 36px tall, 8px
+        radius, 1px edge — and they sit side by side in every form; rendering one
+        at 14px and the other at 13px is the single most visible inconsistency
+        the package shipped. Input is the reference, so Select moves to it. */}
+    {ink(children, undefined, { size: '$3' })}
     <GuiSelect.Icon>
       <ChevronDown size={16} opacity={0.5} />
     </GuiSelect.Icon>
