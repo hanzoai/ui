@@ -57,13 +57,13 @@ export {
   Text, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, View, XStack, YStack,
   ZStack, badgeVariants, buttonVariants,
   toast,
-  Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
   AspectRatioProps, BadgeProps, BadgeVariant, ButtonProps, ButtonSize, ButtonVariant,
   CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps,
   ResizablePanelGroupProps, ResizablePanelProps,
-  AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
+  AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
   ToggleGroupSize, ToggleGroupVariant,
 } from './backends/gui'
 
