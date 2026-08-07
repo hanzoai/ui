@@ -15,6 +15,18 @@
  * stays the default white. A caller's own `style`/`color` still win (spread last).
  */
 import type { ComponentProps } from 'react'
+// gui's Button, still — and this is the one place the ladder is knowingly not
+// enforced yet. Ours SHOULD back this: gui's renders at 44px with gui's own
+// radius, so every PrimaryButton in the fleet sits a size above the 36px ladder,
+// beside a 36px field. That is the form stepping console shows across 56 call
+// sites.
+//
+// It cannot be a one-line swap. gui's Button takes `icon` and `iconAfter` as
+// PROPS; ours has `icon` only as a SIZE name and renders glyphs as children. So
+// the swap breaks every caller that passes one — EmptyState and SocialResource
+// among them, caught by tsc rather than by review. Doing it properly means
+// adding `icon`/`iconAfter` to the canonical Button, which is a new public API
+// on the component every surface depends on, and it wants its own change.
 import { Button } from '@hanzo/gui'
 
 import { useAccent } from './accent'
