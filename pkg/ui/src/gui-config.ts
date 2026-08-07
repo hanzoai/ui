@@ -36,51 +36,71 @@ const GEIST = "'Geist', system-ui, -apple-system, sans-serif"
  *  which one a component reached for. */
 const GEIST_MONO = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 
-/** Type — SIX sizes in the app, matching the host's `--text-*` design tokens.
+/** Type — the same SIX sizes, now DEFERRED to @hanzo/design rather than restated.
  *  $1 label · $2 nav + dense body · $3 base · $4/$5 emphasis · $6 section head ·
- *  $7 page title · $8+ display. `$5` collapses onto 15 to retire the 16px base
- *  (217 stray nodes); `$9` collapses onto 26 so a page title has ONE size. */
+ *  $7 page title · $8+ display. `$5` still collapses onto 15 to retire the 16px
+ *  base (217 stray nodes); `$9` still collapses onto 26 so a page title has ONE
+ *  size — those are decisions, and deferring the VALUE does not undo them.
+ *
+ *  Twelve rungs name a design token whose published value is byte-identical to
+ *  the number that was here, so this is a zero-change edit; gui-config.test.ts
+ *  asserts that equality rung by rung, the same way it already does for the
+ *  three colour rungs, so design cannot move a size without this failing.
+ *
+ *  Four rungs ($12 48 · $13 56 · $15 80 · $16 96) have no counterpart: design's
+ *  display ramp goes 52/64/84/112. Inventing a token or silently resizing them
+ *  would both be worse than saying so, so they keep their literal and carry the
+ *  knob directly.
+ *
+ *  Why a var() at all: gui resolves these in JS and applies them INLINE, and an
+ *  inline style outranks every stylesheet — so a CSS custom property is the only
+ *  thing that can reach a `fontSize="$n"` call site, and there are ~1600 of them.
+ *  design's ramp multiplies by `--type-scale`, so one number retunes the whole
+ *  product and a person can set it for themselves. The px literal stays as the
+ *  var()'s fallback, so a host that mounts no token layer still renders. */
 const FONT_SIZE = {
-  1: 11,
-  2: 13,
-  3: 14,
-  4: 15,
-  5: 15,
-  6: 17,
-  7: 21,
-  8: 26,
-  9: 26,
-  10: 32,
-  11: 40,
-  12: 48,
-  13: 56,
-  14: 64,
-  15: 80,
-  16: 96,
-  true: 14,
+  1: `var(--text-xs, 11px)`,
+  2: `var(--text-sm, 13px)`,
+  3: `var(--text-base, 14px)`,
+  4: `var(--text-lg, 15px)`,
+  5: `var(--text-lg, 15px)`,
+  6: `var(--text-xl, 17px)`,
+  7: `var(--text-2xl, 21px)`,
+  8: `var(--text-3xl, 26px)`,
+  9: `var(--text-3xl, 26px)`,
+  10: `var(--text-4xl, 32px)`,
+  11: `var(--text-5xl, 40px)`,
+  12: `calc(48px * var(--type-scale, 1))`,
+  13: `calc(56px * var(--type-scale, 1))`,
+  14: `var(--text-7xl, 64px)`,
+  15: `calc(80px * var(--type-scale, 1))`,
+  16: `calc(96px * var(--type-scale, 1))`,
+  true: `var(--text-base, 14px)`,
 } as const
 
-/** Leading, paired 1:1 with the sizes above. A size token carries a line-height
- *  tuned for ONE line, so these track the type scale rather than the inherited
- *  ladder, which left an 11px label sitting in an 18px box. */
+/** Leading, paired 1:1 with the sizes above — and NOT deferred, deliberately.
+ *  design publishes its own `--leading-*` rhythm and exactly ONE of these
+ *  sixteen matches it, so adopting those would re-flow every line box in the
+ *  product. These are the values tuned for this ladder; they keep them, and
+ *  carry `--type-scale` so leading grows with the text instead of clamping it. */
 const LINE_HEIGHT = {
-  1: 16,
-  2: 18,
-  3: 20,
-  4: 22,
-  5: 22,
-  6: 24,
-  7: 28,
-  8: 32,
-  9: 32,
-  10: 38,
-  11: 46,
-  12: 54,
-  13: 62,
-  14: 70,
-  15: 86,
-  16: 102,
-  true: 20,
+  1: `calc(16px * var(--type-scale, 1))`,
+  2: `calc(18px * var(--type-scale, 1))`,
+  3: `calc(20px * var(--type-scale, 1))`,
+  4: `calc(22px * var(--type-scale, 1))`,
+  5: `calc(22px * var(--type-scale, 1))`,
+  6: `calc(24px * var(--type-scale, 1))`,
+  7: `calc(28px * var(--type-scale, 1))`,
+  8: `calc(32px * var(--type-scale, 1))`,
+  9: `calc(32px * var(--type-scale, 1))`,
+  10: `calc(38px * var(--type-scale, 1))`,
+  11: `calc(46px * var(--type-scale, 1))`,
+  12: `calc(54px * var(--type-scale, 1))`,
+  13: `calc(62px * var(--type-scale, 1))`,
+  14: `calc(70px * var(--type-scale, 1))`,
+  15: `calc(86px * var(--type-scale, 1))`,
+  16: `calc(102px * var(--type-scale, 1))`,
+  true: `calc(20px * var(--type-scale, 1))`,
 } as const
 
 /** Radius — FOUR values, no more. 6 control · 8 input/row · 12 panel · pill.
