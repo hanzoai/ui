@@ -73,3 +73,34 @@ describe('control ladder', () => {
     expect(selectSize).toBe(inputSize)
   })
 })
+
+/**
+ * The PRODUCT layer sits on the same ladder as the primitives.
+ *
+ * It is where the leverage is: console renders 240 FieldText, 78 FieldSelect and
+ * 56 PrimaryButton, so three components here decide 374 call sites. They had
+ * drifted — PrimaryButton wrapped gui's own Button (44px, gui's radius) instead
+ * of ours, and FieldSelect's native <select> was 40px with a 9px radius, a
+ * radius this system does not have at any step. A 40px picker beside a 36px
+ * field is the form stepping every console page shows.
+ */
+describe('product layer', () => {
+  const product = (f: string) =>
+    readFileSync(join(__dirname, '..', 'product', f), 'utf8')
+
+  // PrimaryButton still wraps gui's Button, deliberately and temporarily: the
+  // swap needs `icon`/`iconAfter` on the canonical Button first. Recorded, not
+  // asserted away — a test claiming this is already fixed would be a lie, and
+  // the comment in that file carries the reason.
+  it('PrimaryButton records why it is not on the ladder yet', () => {
+    expect(product('PrimaryButton.tsx')).toMatch(/icon.*iconAfter|iconAfter/)
+  })
+
+  it('FieldSelect matches the field ladder — 36px, 8px radius', () => {
+    const src = product('Field.tsx')
+    expect(src).toMatch(/height:\s*36\b/)
+    expect(src).toMatch(/borderRadius:\s*8\b/)
+    // 9 is not a step on this scale (6 / 8 / 12 / pill).
+    expect(src).not.toMatch(/borderRadius:\s*9\b/)
+  })
+})

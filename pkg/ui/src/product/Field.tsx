@@ -186,12 +186,17 @@ function selectStyle(disabled?: boolean): CSSProperties {
     background: `var(--background) url("${CHEVRON}") no-repeat right 10px center`,
     color: 'var(--color12)',
     border: '1px solid var(--borderColor)',
-    borderRadius: 9,
-    padding: '9px 34px 9px 12px',
+    // THE LADDER, not a nearby number. This is a native <select> on purpose (see
+    // above), so it cannot inherit from SelectTrigger — but it sits in the same
+    // form row as FieldText, and a 40px picker beside a 36px field is the
+    // stepping every console form shows. 9px is not a radius this system has at
+    // all: the scale is 6 / 8 / 12 / pill, and controls are 8.
+    borderRadius: 8,
+    padding: '7px 34px 7px 12px',
     fontSize: 14,
     lineHeight: '20px',
     fontFamily: 'inherit',
-    height: 40,
+    height: 36,
     outline: 'none',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
