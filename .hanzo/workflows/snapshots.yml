@@ -53,9 +53,17 @@ jobs:
           pnpm --filter @hanzo/ui... build
           cd pkg/ui
           pnpm exec playwright install --with-deps chromium
-          # consumer-test.mjs forwards argv to playwright, so this is
-          # `playwright test --update-snapshots` inside the real consumer app.
-          pnpm run test:consumer -- --update-snapshots
+          # Invoke the script directly rather than through `pnpm run ... --`.
+          # pnpm forwards the separator itself, so the `--` form reached
+          # playwright as `playwright test -- --update-snapshots`, where a bare
+          # `--` is a positional test-file filter — the flag never applied, the
+          # suite ran as a normal check, and the refresh lane failed with the
+          # same four screenshot diffs it exists to resolve.
+          #
+          # consumer-test.mjs passes process.argv.slice(2) straight through, so
+          # this is exactly `playwright test --update-snapshots` inside the real
+          # consumer app.
+          node scripts/consumer-test.mjs --update-snapshots
 
       # Commit ONLY the snapshot directory. The refresh also builds a throwaway
       # consumer app and a packed tarball; committing those would be noise at
