@@ -34,10 +34,10 @@ export function PostCard({
         </XStack>
         <XStack gap="$1">
           {onEdit ? (
-            <Button size="$2" chromeless icon={<Pencil size={15} />} onPress={() => onEdit(post)} />
+            <Button size="$2" chromeless icon={<Pencil size={16} />} onPress={() => onEdit(post)} />
           ) : null}
           {onDelete ? (
-            <Button size="$2" chromeless icon={<Trash2 size={15} />} onPress={() => onDelete(post)} />
+            <Button size="$2" chromeless icon={<Trash2 size={16} />} onPress={() => onDelete(post)} />
           ) : null}
         </XStack>
       </XStack>

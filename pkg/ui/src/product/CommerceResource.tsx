@@ -71,7 +71,7 @@ export function CommerceResource<T>({
         actions={
           <XStack gap="$2">
             {actions?.(reload)}
-            <Button size="$2" icon={<RefreshCw size={15} />} onPress={reload}>
+            <Button size="$2" icon={<RefreshCw size={16} />} onPress={reload}>
               Refresh
             </Button>
           </XStack>

@@ -138,9 +138,9 @@ export function AppHeader({
         name={user}
         groups={[
           ([
-            onProfile ? { id: 'profile', label: 'Profile', icon: <UserRound size={15} />, onPress: onProfile } : null,
-            onTeam ? { id: 'team', label: 'Team settings', icon: <Settings2 size={15} />, onPress: onTeam } : null,
-            onBilling ? { id: 'billing', label: 'Billing', icon: <CreditCard size={15} />, onPress: onBilling } : null,
+            onProfile ? { id: 'profile', label: 'Profile', icon: <UserRound size={16} />, onPress: onProfile } : null,
+            onTeam ? { id: 'team', label: 'Team settings', icon: <Settings2 size={16} />, onPress: onTeam } : null,
+            onBilling ? { id: 'billing', label: 'Billing', icon: <CreditCard size={16} />, onPress: onBilling } : null,
           ] satisfies (UserMenuItem | null)[]).filter((r) => r !== null),
         ]}
         theme={theme}
