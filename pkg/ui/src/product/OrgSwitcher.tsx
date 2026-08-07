@@ -187,7 +187,7 @@ export function OrgSwitcher({
             <Text flex={1} minW={0} fontSize="$4" fontWeight="800" color="$color12" numberOfLines={1}>
               {currentLabel}
             </Text>
-            <ChevronsUpDown size={15} color="$color9" />
+            <ChevronsUpDown size={16} color="$color9" />
           </XStack>
         </Button>
       </Popover.Trigger>
@@ -279,7 +279,7 @@ export function OrgSwitcher({
                     <Text flex={1} fontSize="$2" color="$color12" numberOfLines={1}>
                       {org.displayName || org.name}
                     </Text>
-                    {org.name === currentId ? <Check size={15} /> : null}
+                    {org.name === currentId ? <Check size={16} /> : null}
                   </XStack>
                 ))
               )}

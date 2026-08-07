@@ -103,4 +103,35 @@ describe('product layer', () => {
     // 9 is not a step on this scale (6 / 8 / 12 / pill).
     expect(src).not.toMatch(/borderRadius:\s*9\b/)
   })
+
+  /**
+   * ICONS STEP TOO, and 15 is not a step.
+   *
+   * The product layer had 15px icons in fifteen places — chevrons, checks, menu
+   * glyphs, pagination arrows — while every consuming app draws 14 or 16.
+   * Measured on the signed-in /dev rail: 16px appeared 22 times, 14px nine
+   * times, and 15px exactly once, inside an @hanzo/ui control. One pixel is
+   * invisible alone and unmistakable in a row: it is why a rail of identical
+   * controls reads as "everything is a slightly different size".
+   *
+   * 16 is the step that pairs with this ladder's 14px text, and the one the
+   * apps already use, so the library moves to the apps rather than the reverse.
+   * Scanned rather than named: a new file with a 15 is exactly the drift this
+   * exists to catch, and it would never be added to a named list.
+   */
+  it('draws no icon at 15px — a size this scale does not have', () => {
+    const dir = join(__dirname, '..', 'product')
+    const offenders: string[] = []
+    const walk = (d: string) => {
+      for (const e of readdirSync(d, { withFileTypes: true })) {
+        const full = join(d, e.name)
+        if (e.isDirectory()) walk(full)
+        else if (e.name.endsWith('.tsx') && /size=\{15\}/.test(readFileSync(full, 'utf8'))) {
+          offenders.push(e.name)
+        }
+      }
+    }
+    walk(dir)
+    expect(offenders, `size={15} is off the icon scale (12 / 14 / 16 / 18 / 24)`).toEqual([])
+  })
 })

@@ -41,7 +41,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
       <Button
         size="$2"
         chromeless
-        icon={<ChevronLeft size={15} />}
+        icon={<ChevronLeft size={16} />}
         onPress={() => go(page - 1)}
         disabled={page <= 1}
         aria-label="Previous page"
@@ -68,7 +68,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
       <Button
         size="$2"
         chromeless
-        icon={<ChevronRight size={15} />}
+        icon={<ChevronRight size={16} />}
         onPress={() => go(page + 1)}
         disabled={page >= count}
         aria-label="Next page"

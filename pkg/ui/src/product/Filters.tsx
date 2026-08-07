@@ -83,7 +83,7 @@ export function SearchInput({
   }
   return (
     <XStack flex={1} minW={180} items="center" gap="$2" px="$3" borderWidth={1} borderColor="$borderColor" rounded="$4" bg="$color1">
-      <Search size={15} color="$color10" />
+      <Search size={16} color="$color10" />
       <Input flex={1} value={value} onChangeText={onChangeTracked} placeholder={placeholder} borderWidth={0} bg="transparent" px="$0" fontSize="$3" />
     </XStack>
   )
