@@ -65,16 +65,24 @@ export type {
   ResizablePanelGroupProps, ResizablePanelProps,
 } from './backends/gui'
 
-// LAYOUT — the stacks and the type scale. Without these on the ROOT barrel an
-// app cannot obey "import from @hanzo/ui" and has to reach past this package to
-// @hanzo/gui; 216 files in hanzo.app did exactly that. Note this list is
-// SEPARATE from the one in ./backends/gui and both must carry a name for it to
-// reach a consumer: 8.0.65 added them to the backend only, published, and the
-// dist still had no XStack — a green release that changed nothing.
+// LAYOUT — the stacks and the type scale reach consumers through the component
+// barrel above, which already names XStack/YStack/ZStack, the type scale
+// (SizableText, Paragraph, Heading, H1-H6, Span, Strong, Em) and Image, Spacer,
+// ScrollView, View and Text. This block adds only what that one lacks.
+//
+// It used to repeat all twenty, and TypeScript rejects a name exported twice from
+// one module: `error TS2300: Duplicate identifier 'Em'` and nineteen more, so
+// `tsc -p tsconfig.build.json` failed and @hanzo/ui could not build AT ALL. That
+// took the whole cicd lane down with it — the test gate runs
+// `pnpm --filter @hanzo/ui... build` first, so no test ever ran and ui.hanzo.ai
+// could not ship.
+//
+// The concern the duplication came from is real and still holds: a name must be
+// on the ROOT barrel to reach a consumer — 8.0.65 added these to the backend only
+// and the dist still had no XStack, a green release that changed nothing. The fix
+// for that is to name it once here, not twice.
 export {
-  XStack, YStack, ZStack,
-  SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
-  Anchor, Image, Spacer, ScrollView, View, Text,
+  Anchor,
   type GuiElement,
 } from './backends/gui'
 
