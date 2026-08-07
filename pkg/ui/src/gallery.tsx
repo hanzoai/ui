@@ -24,6 +24,11 @@
 import type { ReactNode } from 'react'
 
 import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction,
+  AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, ContextMenu, ContextMenuContent, ContextMenuItem,
+  ContextMenuLabel, ContextMenuSeparator, ContextMenuTrigger, HoverCard, HoverCardContent,
+  HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem,
   AspectRatio, Avatar, AvatarFallback, Badge, Button, Card, CardAction, CardContent,
   CardDescription, CardFooter, CardHeader, CardTitle, Checkbox, Collapsible,
   CollapsibleContent, CollapsibleTrigger, Command, CommandEmpty, CommandGroup, CommandInput,
@@ -125,6 +130,65 @@ export const Gallery = () => (
       <Switch checked />
       <Slider defaultValue={[40]} />
       <Progress value={40} />
+      {/* Both orientations: the root restores `flexDirection` from `orientation`
+          (gui consumes it for aria + roving focus and never forwards it), so the
+          row axis is a distinct style VALUE and needs its own render. */}
+      <RadioGroup defaultValue="a">
+        <RadioGroupItem value="a" />
+        <RadioGroupItem value="b" />
+        <RadioGroupItem value="c" disabled />
+      </RadioGroup>
+      <RadioGroup orientation="horizontal" defaultValue="a">
+        <RadioGroupItem value="a" />
+        <RadioGroupItem value="b" />
+      </RadioGroup>
+    </Section>
+
+    {/* Every variant x size, because gui compiles each distinct style value to
+        its own class — an unrendered combination is an unwritten rule. Both
+        `type`s: single gets `role=radiogroup` + `aria-checked`, multiple gets
+        `toolbar` + `aria-pressed`, and the two selected fills differ. */}
+    <Section name="toggle-group">
+      {(['default', 'outline'] as const).map((variant) =>
+        (['default', 'sm', 'lg'] as const).map((size) => (
+          <ToggleGroup
+            key={`${variant}-${size}`}
+            type="single"
+            defaultValue="a"
+            variant={variant}
+            size={size}
+          >
+            <ToggleGroupItem value="a">A</ToggleGroupItem>
+            <ToggleGroupItem value="b">B</ToggleGroupItem>
+            <ToggleGroupItem value="c" disabled>
+              C
+            </ToggleGroupItem>
+          </ToggleGroup>
+        )),
+      )}
+      <ToggleGroup type="multiple" defaultValue={['a']}>
+        <ToggleGroupItem value="a">A</ToggleGroupItem>
+        <ToggleGroupItem value="b">B</ToggleGroupItem>
+      </ToggleGroup>
+      <ToggleGroup type="single" orientation="vertical" defaultValue="a">
+        <ToggleGroupItem value="a">A</ToggleGroupItem>
+        <ToggleGroupItem value="b">B</ToggleGroupItem>
+      </ToggleGroup>
+    </Section>
+
+    {/* Open on purpose: `AccordionContent` mounts only while its item is, so a
+        closed accordion writes no rule for the panel or the rotated chevron. */}
+    <Section name="accordion">
+      <Accordion type="single" collapsible defaultValue="one">
+        <AccordionItem value="one">
+          <AccordionTrigger>Accordion trigger</AccordionTrigger>
+          <AccordionContent>Accordion content</AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="two">
+          <AccordionTrigger>Second trigger</AccordionTrigger>
+          <AccordionContent>Second content</AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </Section>
 
     <Section name="tabs">
@@ -241,6 +305,36 @@ export const Gallery = () => (
           <TooltipContent>Tooltip content</TooltipContent>
         </Tooltip>
       </TooltipProvider>
+      <AlertDialog open>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Alert title</AlertDialogTitle>
+            <AlertDialogDescription>Alert description</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <HoverCard open>
+        <HoverCardTrigger>Hover card</HoverCardTrigger>
+        <HoverCardContent>Hover card content</HoverCardContent>
+      </HoverCard>
+      {/* ContextMenu is the one surface this list cannot open: it has no `open`
+          prop by design (Radix's has none either) — it opens from a real
+          `contextmenu` event, which no static render fires. Its panel and row
+          style objects are byte-identical IN VALUE to dropdown-menu.tsx's, and
+          gui keys an atomic class on the value, so those rules are already
+          written by the DropdownMenu above. Only the trigger is new here. */}
+      <ContextMenu>
+        <ContextMenuTrigger>Context menu</ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuLabel>Label</ContextMenuLabel>
+          <ContextMenuSeparator />
+          <ContextMenuItem>Item</ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
       <Toaster />
     </Section>
     <Section name="layout">

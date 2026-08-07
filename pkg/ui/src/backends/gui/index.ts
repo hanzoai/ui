@@ -15,6 +15,33 @@
 // one room. Re-run after changing the surface:
 //   node scripts/gen-primitives.mjs
 
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+  type AccordionProps,
+  type AccordionItemProps,
+  type AccordionTriggerProps,
+  type AccordionContentProps,
+} from './accordion'
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+  type AlertDialogProps,
+  type AlertDialogOverlayProps,
+  type AlertDialogContentProps,
+  type AlertDialogSectionProps,
+} from './alert-dialog'
 export { AspectRatio, type AspectRatioProps } from './aspect-ratio'
 export { Avatar, AvatarImage, AvatarFallback } from './avatar'
 export { Badge, badgeVariants, type BadgeProps, type BadgeVariant } from './badge'
@@ -45,6 +72,31 @@ export {
   type CommandFilter,
   type CommandProps,
 } from './command'
+// The compound, shadcn-shaped ContextMenu. `@hanzo/ui/product` still exports a
+// DIFFERENT, declarative `ContextMenu` (`trigger` + `items`) — the two names now
+// collide across subpaths exactly as DropdownMenu's did before it collapsed onto
+// one component here. Same collapse is owed to this one; it needs
+// dropdown-menu.tsx's private `renderSpec` hoisted onto a shared module first.
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+  type ContextMenuContentProps,
+  type ContextMenuSubContentProps,
+  type ContextMenuItemProps,
+} from './context-menu'
 export {
   Dialog,
   DialogClose,
@@ -77,10 +129,24 @@ export {
 } from './dropdown-menu'
 export { Glass, type GlassProps } from './glass'
 export { Grid, type GridProps } from './grid'
+export {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+  type HoverCardProps,
+  type HoverCardTriggerProps,
+  type HoverCardContentProps,
+} from './hover-card'
 export { Input, type InputProps } from './input'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'
 export { Progress } from './progress'
+export {
+  RadioGroup,
+  RadioGroupItem,
+  type RadioGroupProps,
+  type RadioGroupItemProps,
+} from './radio-group'
 export {
   ResizablePanelGroup,
   ResizablePanel,
@@ -118,4 +184,12 @@ export { Switch } from './switch'
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'
 export { Textarea } from './textarea'
 export { Toaster, toast } from './toaster'
+export {
+  ToggleGroup,
+  ToggleGroupItem,
+  type ToggleGroupProps,
+  type ToggleGroupItemProps,
+  type ToggleGroupVariant,
+  type ToggleGroupSize,
+} from './toggle-group'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'
