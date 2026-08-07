@@ -1,0 +1,76 @@
+# Refresh the consumer visual baselines, on the runner that judges them.
+#
+# `test/consumer.spec.ts-snapshots/*-chromium-linux.png` are byte comparisons, so
+# they are only meaningful when the image that WROTE them and the image that
+# CHECKS them render identically. Regenerating them on a workstation produces
+# baselines the runner rejects — same browser, different fonts — and the fix for
+# a red gate becomes a second red gate. So this lane exists to run the refresh
+# HERE, in the container the gate runs in, and commit what it produced.
+#
+# It is deliberately NOT part of cicd.yml. That lane calls
+# `hanzoai/ci/.hanzo/workflows/build.yml@v1`, which runs `pnpm run test:consumer`
+# from `hanzo.yml` and fails the build when the render drifts. A gate allowed to
+# rewrite its own expected value is not a gate — it would go green against
+# whatever it just produced, and a real regression would land as a baseline.
+#
+# Hence `workflow_dispatch` and nothing else: no push trigger, no schedule. A
+# person decides the new rendering is correct and then asks for it, which is the
+# judgement a byte comparison cannot make. Read the diff the failing run
+# attached (`*-diff.png`) BEFORE dispatching — a genuine regression and an
+# intended redesign are the same 30% of pixels to this file.
+#
+# What made this necessary: `71d7b847` moved the composer prism into this
+# package, the gallery grew 210px (5090 -> 5300), and all four screenshot cases
+# failed on a page that renders correctly. The baselines were last written at
+# `b18b61a5`, several component changes earlier.
+name: Snapshots
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: snapshots-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    # The label the gate uses. `ubuntu-*` is not advertised to this fleet, and an
+    # unmatched label does not error here — the job queues until it times out.
+    runs-on: hanzo-build-linux-amd64
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # Mirrors hanzo.yml's `ui-consumer` step exactly. It has to: the baseline
+      # is a function of the whole build, so a shortcut here (skipping the
+      # workspace build, a different browser install) writes a baseline the gate
+      # will not reproduce.
+      - name: Refresh the baselines
+        run: |
+          set -e
+          corepack enable
+          pnpm install
+          pnpm --filter @hanzo/ui... build
+          cd pkg/ui
+          pnpm exec playwright install --with-deps chromium
+          # consumer-test.mjs forwards argv to playwright, so this is
+          # `playwright test --update-snapshots` inside the real consumer app.
+          pnpm run test:consumer -- --update-snapshots
+
+      # Commit ONLY the snapshot directory. The refresh also builds a throwaway
+      # consumer app and a packed tarball; committing those would be noise at
+      # best, and `pnpm pack` output is a build artifact that must never enter
+      # the tree.
+      - name: Commit what changed
+        run: |
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          git add -- 'pkg/ui/test/consumer.spec.ts-snapshots'
+          if git diff --cached --quiet; then
+            echo "the baselines already match this runner's rendering — nothing to commit"
+            exit 0
+          fi
+          git -c user.name=hanzo-dev -c user.email=dev@hanzo.ai commit \
+            -m 'ui: refresh the consumer visual baselines' \
+            -m 'Regenerated on hanzo-build-linux-amd64, the runner that checks them, so the bytes the gate compares against are bytes it can reproduce.'
+          git push origin HEAD:main
