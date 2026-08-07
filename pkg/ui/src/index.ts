@@ -57,12 +57,14 @@ export {
   Text, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, View, XStack, YStack,
   ZStack, badgeVariants, buttonVariants,
   toast,
-} from './backends/gui'
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
   AspectRatioProps, BadgeProps, BadgeVariant, ButtonProps, ButtonSize, ButtonVariant,
   CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps,
   ResizablePanelGroupProps, ResizablePanelProps,
+  AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
+  ToggleGroupSize, ToggleGroupVariant,
 } from './backends/gui'
 
 // LAYOUT — the stacks and the type scale reach consumers through the component
