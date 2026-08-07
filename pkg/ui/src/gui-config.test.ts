@@ -257,3 +257,79 @@ describe('monochrome is config minus the hues', () => {
     expect(monochrome.fonts.mono.family).toBe(config.fonts.mono.family)
   })
 })
+
+/**
+ * The type ladder defers to @hanzo/design, and these prove it did so without
+ * moving a single rendered pixel.
+ *
+ * gui resolves font sizes in JS and applies them INLINE, where they outrank
+ * every stylesheet — so a CSS custom property is the only thing that can reach
+ * a `fontSize="$n"` call site, and there are ~1600 of them across the apps.
+ * That is why the ladder names `var(--text-*)` rather than a number: design's
+ * ramp multiplies by `--type-scale`, so one knob retunes the whole product.
+ *
+ * The risk of doing that is silent resizing — naming a token whose published
+ * value is not the number that was there. So each mapped rung is checked
+ * against design's OWN stylesheet, the same way the three colour rungs are.
+ */
+describe('the type ladder defers to @hanzo/design', () => {
+  /** design publishes `--text-lg:calc(0.9375rem * var(--type-scale, 1))`; this is
+   *  the rem base in px at a 16px root — what the rung renders at scale 1. */
+  const textPx = (name: string): number => {
+    const m = design.match(new RegExp(`--text-${name}:\\s*calc\\(([0-9.]+)rem`))
+    if (!m) throw new Error(`@hanzo/design publishes no --text-${name} (or it stopped scaling)`)
+    return Number(m[1]) * 16
+  }
+
+  // gui keys these by the BARE rung ('3'), not '$3', and stores the value as a
+  // plain string — which is itself the finding: a var() survives into the token
+  // table untouched, exactly as it does for the three colour rungs above.
+  const size = config.fonts.body.size as Record<string, unknown>
+  const val = (k: string | number): string => String(size[String(k)] ?? '')
+
+  /** Every rung that names a design token, and the px it used to be. */
+  const MAPPED: Array<[number, string, number]> = [
+    [1, 'xs', 11], [2, 'sm', 13], [3, 'base', 14], [4, 'lg', 15], [5, 'lg', 15],
+    [6, 'xl', 17], [7, '2xl', 21], [8, '3xl', 26], [9, '3xl', 26],
+    [10, '4xl', 32], [11, '5xl', 40], [14, '7xl', 64],
+  ]
+
+  it.each(MAPPED)('$%i names --text-%s, and design still publishes %ipx', (rung, name, px) => {
+    expect(val(rung)).toBe(`var(--text-${name}, ${px}px)`)
+    // The whole point: the token's published value IS the number that was here,
+    // so deferring changed nothing. If design retunes the rung, this fails.
+    expect(textPx(name)).toBe(px)
+  })
+
+  it('every rung can be retuned by ONE knob', () => {
+    // A rung reaches --type-scale either through a design token (whose value is
+    // a calc on the knob) or by carrying the knob itself. A rung that does
+    // neither is a rung a person cannot resize.
+    const stuck: string[] = []
+    for (let k = 1; k <= 16; k++) {
+      const v = val(k)
+      const named = v.match(/^var\(--text-([a-z0-9]+),/)
+      if (named) {
+        const decl = design.match(new RegExp(`--text-${named[1]}:\\s*([^;]+);`))?.[1] ?? ''
+        if (!decl.includes('var(--type-scale')) stuck.push(`$${k} -> --text-${named[1]} does not scale`)
+      } else if (!v.includes('var(--type-scale')) {
+        stuck.push(`$${k} = ${v}`)
+      }
+    }
+    expect(stuck).toEqual([])
+  })
+
+  it('the deliberate collapses survive — $4/$5 and $8/$9 stay one size each', () => {
+    expect(val(5)).toBe(val(4))
+    expect(val(9)).toBe(val(8))
+  })
+
+  it('leading tracks the knob but keeps ITS rhythm, not design\'s', () => {
+    const lh = config.fonts.body.lineHeight as Record<string, unknown>
+    const lval = (k: number) => String(lh[String(k)] ?? '')
+    // Only one of sixteen matched design's --leading-*, so adopting them would
+    // re-flow every line box. They stay, and scale.
+    for (let k = 1; k <= 16; k++) expect(lval(k)).toMatch(/var\(--type-scale, 1\)/)
+    expect(lval(3)).toBe('calc(20px * var(--type-scale, 1))')
+  })
+})
