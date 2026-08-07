@@ -61,7 +61,7 @@ export function ConfirmDelete({
         <Button
           onPress={go}
           disabled={busy}
-          icon={<Trash2 size={15} />}
+          icon={<Trash2 size={16} />}
           style={{ backgroundColor: '#dc2626', borderColor: '#dc2626', color: '#fff' }}
         >
           {busy ? 'Deleting…' : confirmLabel}

@@ -109,7 +109,7 @@ export function EmptyState({
           {primary ? (
             <PrimaryButton
               icon={primary.icon}
-              iconAfter={primary.href ? <ExternalLink size={15} /> : <ArrowRight size={15} />}
+              iconAfter={primary.href ? <ExternalLink size={16} /> : <ArrowRight size={16} />}
               onPress={() => {
                 track({ component: 'EmptyState', action: 'click', id: title, value: primary.label })
                 if (primary.href) openHref(primary.href)

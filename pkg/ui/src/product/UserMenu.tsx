@@ -195,7 +195,7 @@ export function UserMenu({
                   item={{
                     id: 'sign-out',
                     label: signOutLabel,
-                    icon: <LogOut size={15} />,
+                    icon: <LogOut size={16} />,
                     onPress: onSignOut,
                   }}
                   onDone={close}
