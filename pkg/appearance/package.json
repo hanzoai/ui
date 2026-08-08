@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/appearance",
   "version": "0.1.0",
-  "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
+  "description": "A person's own reading of the Hanzo design system \u2014 type size, density, accent \u2014 stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -20,8 +20,12 @@
       "default": "./dist/state.js"
     }
   },
-  "files": ["dist"],
-  "publishConfig": { "access": "public" },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state",
     "clean": "rm -rf dist dist-cjs types",
@@ -35,8 +39,14 @@
     "@hanzo/design": "^0.4.12"
   },
   "peerDependencies": {
-    "@hanzo/ui": ">=8.0.69",
     "react": ">=19"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "jsdom": "^29.0.0",
+    "react": "^19.0.0",
+    "typescript": "^5.9.2",
+    "vitest": "^2.1.9"
+  }
 }
