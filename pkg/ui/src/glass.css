@@ -230,9 +230,21 @@
 
 :root {
   /* One sweep, closing on the stop it opened with — a conic gradient whose
-     first and last stop differ shows a hard seam. */
-  --hz-spectrum: rgba(8, 148, 255, 0.45), rgba(201, 89, 221, 0.48),
-    rgba(255, 46, 84, 0.4), rgba(255, 144, 4, 0.4), rgba(8, 148, 255, 0.45);
+     first and last stop differ shows a hard seam.
+
+     LUMINANCE, NOT HUE. Four saturated stops at 0.40-0.48 alpha, swept around
+     a rounded RECTANGLE, do not distribute evenly: the long top and bottom
+     edges each take a wide angular slice and the short sides almost none, so
+     one edge wore a bright blue while the opposite wore a burnt orange — a
+     ring that highlights half the box and reads as sitting off-centre. White
+     at two close alphas removes the bright arc entirely, drops the peak from
+     0.48 to 0.18, and keeps the slow drift as a sheen. hanzo.chat and
+     hanzo.app both declare exactly these stops; this is the package catching
+     up to its consumers — the copies must not drift again, and this file is
+     the home. */
+  --hz-spectrum: rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.1);
 }
 
 @keyframes hzComposerSpin {
