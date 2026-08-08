@@ -31,8 +31,11 @@ let root: HTMLElement
 beforeEach(() => { root = document.createElement('html') })
 
 describe('read', () => {
-  it('answers the published defaults when nothing is stored', () => {
-    expect(read(memory())).toEqual(DEFAULT)
+  it('answers EMPTY when nothing is stored — an unset axis is absent, not neutral', () => {
+    // Deliberately not DEFAULT. What `read()` returns reaches the document as an
+    // INLINE custom property, which outranks every stylesheet, so answering with
+    // a neutral 1 would override a brand's own scale on every untouched install.
+    expect(read(memory())).toEqual({})
   })
 
   it('round-trips what write stored', () => {
@@ -42,7 +45,7 @@ describe('read', () => {
   })
 
   it('never throws when storage is blocked — an unreadable preference is an unset one', () => {
-    expect(read(hostile())).toEqual(DEFAULT)
+    expect(read(hostile())).toEqual({})
     expect(write({ type: 1.2 }, hostile())).toBe(false)
   })
 
@@ -50,15 +53,26 @@ describe('read', () => {
     const s = memory()
     s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', evil: '</style>' }))
     const p = read(s) as Record<string, unknown>
-    expect(p.type).toBe(DEFAULT.type)
-    expect(p.density).toBe(DEFAULT.density)
+    expect(p.type).toBeUndefined()
+    expect(p.density).toBeUndefined()
     expect(p.evil).toBeUndefined()
   })
 
   it('survives a corrupt value', () => {
     const s = memory()
     s.setItem(KEY, 'not json{')
-    expect(read(s)).toEqual(DEFAULT)
+    expect(read(s)).toEqual({})
+  })
+
+  it('DEFAULT is what an unset axis READS AS, never what gets written', () => {
+    // The panel shows Default selected for an absent axis; the document is left
+    // alone. Both halves of that sentence matter, so both are stated here.
+    expect(DEFAULT).toEqual({ type: 1, density: 'default' })
+    const empty = read(memory())
+    expect(empty.type ?? DEFAULT.type).toBe(1)
+    apply(empty, root)
+    expect(root.style.getPropertyValue('--type-scale')).toBe('')
+    expect(root.style.getPropertyValue('--density')).toBe('')
   })
 })
 
@@ -105,14 +119,21 @@ describe('first paint', () => {
     expect(out).toContain('--type-scale:1.15')
   })
 
-  it('the boot script agrees with apply() on the SAME stored value', () => {
-    // Two implementations of one rule is how a flash becomes a permanent
-    // disagreement, so they are checked against each other rather than trusted.
-    const stored = { type: 1.15, density: 'comfortable' as const }
+  // Two implementations of one rule is how a flash becomes a permanent
+  // disagreement, so they are checked against each other rather than trusted.
+  //
+  // BOTH cases, and the empty one is the whole point: the head script has always
+  // set a property only when one is stored, while `read()` used to merge DEFAULT
+  // in, so `apply(read())` stamped `--type-scale: 1; --density: 1` on every
+  // untouched install. Checking only a stored value passed throughout.
+  it.each([
+    ['a stored value', { type: 1.15, density: 'comfortable' as const }],
+    ['NOTHING stored', {}],
+  ])('the boot script agrees with apply() on %s', (_name, stored) => {
     const store = memory()
     write(stored, store)
 
-    apply(stored, root)
+    apply(read(store), root)
     const viaApply = {
       type: root.style.getPropertyValue('--type-scale'),
       density: root.style.getPropertyValue('--density'),
