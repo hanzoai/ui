@@ -257,6 +257,20 @@ const themes = Object.fromEntries(
 
 // Everything except the theme table, which is the one thing the two configs
 // below disagree about. Stated once so they cannot drift on radius or fonts.
+/**
+ * gui types a font size as a NUMBER, and at runtime it is a CSS value.
+ *
+ * The token table is handed straight through to the style layer — verified by
+ * reading the built config, where `config.fonts.body.size['3']` is the string
+ * `var(--text-base, 14px)` — which is exactly how the three colour rungs above
+ * already carry `var(--border, …)`. Colour is typed loosely enough to allow it;
+ * size is not, so upstream's type is narrower than upstream's behaviour.
+ *
+ * Asserting here rather than widening the tokens keeps the lie in ONE place,
+ * next to the reason for it, instead of letting `any` spread through the config.
+ */
+const asSizes = <T,>(t: T) => t as unknown as typeof defaultConfig.fonts.body.size
+
 const base = {
   ...defaultConfig,
   tokens: {
@@ -266,14 +280,14 @@ const base = {
   },
   fonts: {
     ...defaultConfig.fonts,
-    body: { ...defaultConfig.fonts.body, family: GEIST, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
-    heading: { ...defaultConfig.fonts.heading, family: GEIST, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
+    body: { ...defaultConfig.fonts.body, family: GEIST, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
+    heading: { ...defaultConfig.fonts.heading, family: GEIST, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
     // `$mono` was NOT defined here, and gui emits NO class for a font token it
     // does not know — no warning, no fallback, a green build and text that is
     // simply not monospace. 260 `fontFamily="$mono"` call sites across 74 files
     // in hanzo.app were dead on that alone. A missing token has to be a defined
     // token, not a silent no-op, so it is defined.
-    mono: { ...defaultConfig.fonts.body, family: GEIST_MONO, size: FONT_SIZE, lineHeight: LINE_HEIGHT },
+    mono: { ...defaultConfig.fonts.body, family: GEIST_MONO, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
   },
 }
 
