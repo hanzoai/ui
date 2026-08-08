@@ -32,7 +32,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "^0.4.11"
+    "@hanzo/design": "^0.4.12"
   },
   "peerDependencies": {
     "@hanzo/ui": ">=8.0.69",
