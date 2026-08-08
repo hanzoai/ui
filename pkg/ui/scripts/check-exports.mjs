@@ -16,6 +16,22 @@
 // Wildcard subpaths (`./tokens/*`) name a directory, not a module: the pattern
 // is checked to point somewhere real and then skipped, since there is no single
 // artifact to load.
+//
+// SCOPE — this runs in bare Node, so it belongs to packages whose target IS bare
+// Node. @hanzo/ui is NOT one: its CJS transitively requires `react-native`,
+// whose entry is Flow (`import typeof * as …`) and unparseable, because a
+// bundler or jest aliases `react-native` -> `react-native-web` and bare Node has
+// no alias. Point this at @hanzo/ui and 17 of its 26 require-subpaths "fail"
+// while working perfectly for every real consumer — chat's jest setup requires
+// one of them. Two failure kinds, and only one is portable:
+//
+//   MANIFEST  ERR_PACKAGE_PATH_NOT_EXPORTED / ERR_MODULE_NOT_FOUND — the map is
+//             wrong. No bundler config repairs it. This is the appearance bug.
+//   LOAD      anything the module threw while executing — may only mean the
+//             probe ran somewhere the package was never meant to load.
+//
+// Both fail the build (a package should be able to load its own artifact), but
+// the message says which, so the next reader does not "fix" a working package.
 
 import { createRequire } from 'node:module'
 import { execFileSync } from 'node:child_process'
@@ -72,8 +88,21 @@ for (const { subpath, condition, target } of promises(pkg.exports ?? {}, '.')) {
     else await import(pathToFileURL(file).href)
     ok.push(`${where} -> ${target}`)
   } catch (e) {
-    const why = e.stderr?.toString().split('\n').find((l) => /Error/.test(l)) ?? e.message
-    fail.push(`${where}: ${target} does not load — ${why.trim().slice(0, 120)}`)
+    const why = (e.stderr?.toString().split('\n').find((l) => /Error/.test(l)) ?? e.message).trim()
+    // RESOLUTION failed vs the module EXECUTED and threw. Only the first is
+    // portable: a specifier that will not resolve will not resolve anywhere, and
+    // no bundler alias repairs it. The blame may sit in a DEPENDENCY's exports
+    // map rather than this one — appearance 0.1.0's own map was fine, it was
+    // design's that had no `require` — so this says what failed, not whose fault.
+    const unresolvable =
+      /ERR_PACKAGE_PATH_NOT_EXPORTED|ERR_MODULE_NOT_FOUND|MODULE_NOT_FOUND|ERR_UNSUPPORTED_DIR_IMPORT|Cannot find module|Cannot find package/.test(
+        why,
+      )
+    fail.push(
+      unresolvable
+        ? `${where}: ${target} — RESOLUTION failed, portable: ${why.slice(0, 110)}`
+        : `${where}: ${target} — EXECUTED and threw; may be bare-Node only: ${why.slice(0, 110)}`,
+    )
   }
 }
 
