@@ -17,35 +17,48 @@ export type { Preference }
 /** One key, one shape. Namespaced because a surface's localStorage is shared. */
 export const KEY = 'hanzo.appearance'
 
-/** The published defaults — every knob at its neutral value, so an untouched
- *  install renders exactly what the design system publishes. */
+/** What an unset axis READS AS, for a control that has to show something
+ *  selected. Never written to the document — see `read()`. */
 export const DEFAULT: Preference = { type: 1, density: 'default' }
 
 const isBrowser = () => typeof document !== 'undefined'
 
 /**
- * What this device has chosen, or the defaults.
+ * What this device has CHOSEN — and nothing else.
  *
- * Never throws: storage can be unavailable (private mode, an embedded frame with
- * no access) and a corrupt value is not worth taking a surface down for. An
- * unreadable preference is the same answer as an unset one.
+ * An axis nobody set is absent, not neutral. The difference is invisible at
+ * `:root` (the token sheet declares 1 anyway) and decisive everywhere else: a
+ * value here becomes an INLINE custom property on <html>, which outranks any
+ * stylesheet, so writing a neutral 1 silently overrides a brand that set its
+ * own scale. `apply()` removes an absent axis for exactly that reason, and
+ * merging DEFAULT in here made that branch unreachable — every untouched
+ * install stamped `--type-scale: 1; --density: 1` over whatever the brand
+ * published. `bootScript()` already got this right (it sets a property only
+ * when one is stored), so the two halves of this module disagreed on every
+ * load: the head script deferred, then the mount overrode.
+ *
+ * Absent is also what the panel expects — it displays `pref.type ?? 1`.
+ *
+ * Never throws: storage can be unavailable (private mode, an embedded frame
+ * with no access) and a corrupt value is not worth taking a surface down for.
+ * An unreadable preference is the same answer as an unset one.
  */
 export function read(store: Storage | undefined = safeStore()): Preference {
   try {
     const raw = store?.getItem(KEY)
-    if (!raw) return { ...DEFAULT }
+    if (!raw) return {}
     const p = JSON.parse(raw) as Preference
-    if (!p || typeof p !== 'object') return { ...DEFAULT }
+    if (!p || typeof p !== 'object') return {}
     // Only known axes survive. A stored key we do not recognise is either from a
     // future version or from someone editing localStorage, and neither should
     // reach a stylesheet.
     return {
-      type: typeof p.type === 'number' && Number.isFinite(p.type) ? p.type : DEFAULT.type,
-      density: p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? p.density : DEFAULT.density,
+      ...(typeof p.type === 'number' && Number.isFinite(p.type) ? { type: p.type } : {}),
+      ...(p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? { density: p.density } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
     }
   } catch {
-    return { ...DEFAULT }
+    return {}
   }
 }
 

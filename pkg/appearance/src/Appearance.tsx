@@ -82,10 +82,16 @@ export function useAppearance() {
     })
   }, [])
 
+  // Reset means "I have no preference", which is an EMPTY one — not the neutral
+  // values written out. Storing `{ type: 1, density: 'default' }` renders the
+  // same and behaves differently: those become inline properties on <html> that
+  // outrank any brand stylesheet, so the person who pressed Reset would be
+  // pinned to the generic scale forever. The panel reads an absent axis as
+  // Default already, so this still shows Default selected.
   const reset = useCallback(() => {
-    apply(DEFAULT)
-    write(DEFAULT)
-    setPref(DEFAULT)
+    apply({})
+    write({})
+    setPref({})
   }, [])
 
   return { pref, set, reset }
