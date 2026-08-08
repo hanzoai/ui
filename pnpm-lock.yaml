@@ -917,6 +917,18 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0
 
+  pkg/appearance:
+    dependencies:
+      '@hanzo/design':
+        specifier: ^0.4.12
+        version: 0.4.12
+      '@hanzo/ui':
+        specifier: '>=8.0.69'
+        version: link:../ui
+      react:
+        specifier: 19.2.4
+        version: 19.2.4
+
   pkg/data:
     devDependencies:
       '@hanzo/gui':
@@ -2995,6 +3007,10 @@ packages:
 
   '@hanzo/design@0.4.11':
     resolution: {integrity: sha512-COf48+riyqXnOvgoB4iQVD5C+Te5ua48A6+sig5sEs4bWt3OcoM/SPYebuVBD5dVvp76iDyBvCjHQAmIPINsSg==}
+    hasBin: true
+
+  '@hanzo/design@0.4.12':
+    resolution: {integrity: sha512-lE1UxUL10FLrETj7VjfMqTkbUF+qlOTTwN2zXKJIhUwHyr0isKWfFPigdjoxy2YK+/t7aY/zE9C/Y5s3DoTKQA==}
     hasBin: true
 
   '@hanzo/docs-core@16.5.3':
@@ -16808,6 +16824,8 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
 
   '@hanzo/design@0.4.11': {}
+
+  '@hanzo/design@0.4.12': {}
 
   '@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3)':
     dependencies:
