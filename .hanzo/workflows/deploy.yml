@@ -16,7 +16,7 @@ on:
     branches: [main]
     paths:
       - 'app/**'
-      - 'pkgs/ui/**'
+      - 'pkg/ui/**'
       - 'pkgs/event/**'
       - 'pnpm-lock.yaml'
       - 'Dockerfile'
