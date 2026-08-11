@@ -3,30 +3,26 @@ name: Publish Packages
 on:
   push:
     branches: [main]
-    paths:
-      # BOTH package roots, and the singular one is not a typo — `@hanzo/ui` and
-      # `@hanzo/data` live under pkg/, everything else under pkgs/.
-      #
-      # ⚠️ This list and the `for pkg_json in …` loop below are ONE FACT. The loop
-      # was already fixed to walk both roots, with a comment explaining that a
-      # `pkgs/*` glob made pkg/ packages invisible — but this gate was left
-      # matching `pkgs/*` only, so for a pkg/-only change the corrected job could
-      # never be REACHED. The fix was reasoned about in the body and not applied
-      # to the thing that decides whether the body runs.
-      #
-      # Cost: @hanzo/ui 8.0.29 sat unpublished while npmjs served 8.0.28, so
-      # every consumer resolving `^8.0.17` silently got a version without the
-      # `./chat` entrypoint — an import error in the dependent, nothing at all in
-      # this repo. Add a root here whenever one is added to the loop.
-      - 'pkg/*/package.json'
-      - 'pkgs/*/package.json'
-  # A publish that fails for an infrastructure reason — the runner missing a
-  # tool, npmjs answering slowly — could only be retried by pushing another
-  # commit that touches a package.json, i.e. by burning a version number to
-  # re-run a job that was never wrong about the code. detect-changes reads what
-  # npmjs SERVES, so a dispatch is idempotent by construction: it publishes
-  # exactly the packages that are ahead of the registry, and nothing when none
-  # are.
+    # No `paths:` filter, deliberately. There is ONE question here — "does npmjs
+    # serve something older than this tree?" — and detect-changes already answers
+    # it against the registry itself. A path gate in front of it is a second,
+    # WORSE answer to the same question: it guesses from the shape of a diff.
+    #
+    # It guessed wrong twice, in opposite directions. Matching `pkgs/*` only made
+    # every `pkg/*` package unreachable, and @hanzo/ui 8.0.29 sat unpublished
+    # while npmjs served 8.0.28 — consumers on `^8.0.17` silently resolved a
+    # version with no `./chat` entrypoint. Adding `pkg/*` fixed that case and
+    # left the shape intact, so the second one landed anyway: 8.0.72 bumped
+    # cleanly, the run failed on a stale lockfile, and the lockfile-only FIX
+    # then matched no path and could not re-run the job it repaired.
+    #
+    # Both are the same defect. A version reaches users through the registry
+    # comparison, so anything that can veto the job before that comparison runs
+    # is a way to lose a release. Deleting the gate leaves exactly one, and it
+    # is the one that reads the truth: detect-changes publishes whatever is
+    # ahead of npmjs and nothing when nothing is, so running it on every push to
+    # main is idempotent by construction — the same property that makes the
+    # manual dispatch below safe.
   workflow_dispatch:
 
 jobs:
