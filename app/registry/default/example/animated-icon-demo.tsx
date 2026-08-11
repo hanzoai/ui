@@ -1,4 +1,4 @@
-import { AnimatedIcon } from "@hanzo/ui/animation/animated-icon"
+import { AnimatedIcon } from "@/registry/default/ui/animated-icon"
 
 export default function AnimatedIconDemo() {
   return (
