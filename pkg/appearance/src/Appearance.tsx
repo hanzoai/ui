@@ -103,9 +103,9 @@ const S = {
   group: { display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' } as CSSProperties,
   panel: { display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' } as CSSProperties,
   row: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' } as CSSProperties,
-  title: { fontSize: 'var(--text-base)', fontWeight: 500, color: 'var(--foreground)' } as CSSProperties,
+  title: { fontSize: 'var(--text-base)', fontWeight: 'var(--weight-medium)' as CSSProperties['fontWeight'], color: 'var(--foreground)' } as CSSProperties,
   hint: { fontSize: 'var(--text-xs)', lineHeight: 'var(--leading-xs)', color: 'var(--muted-foreground, var(--foreground))', opacity: 0.7, margin: 0 } as CSSProperties,
-  swatch: (c: string): CSSProperties => ({ width: 10, height: 10, borderRadius: 9999, background: c, flex: '0 0 auto' }),
+  swatch: (c: string): CSSProperties => ({ width: 10, height: 10, borderRadius: 'var(--radius-full)', background: c, flex: '0 0 auto' }),
 }
 
 const choice = (on: boolean): CSSProperties => ({
