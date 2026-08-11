@@ -19,6 +19,8 @@
  */
 import { useSyncExternalStore } from 'react'
 
+import { css } from '@hanzo/design'
+
 /** An org's persisted theme block (mirrors IAM `themeData`; only the fields we apply). */
 export type OrgThemeData = {
   colorPrimary?: string
@@ -89,7 +91,38 @@ export function setOrgAccent(theme: OrgThemeData | null | undefined): void {
   const next = accentFor(theme)
   if (next.accent === current.accent) return
   current = next.accent ? next : DEFAULT
+  publish(current.accent)
   for (const l of listeners) l()
+}
+
+/**
+ * The org's accent as CSS custom properties, so it reaches the whole product
+ * rather than the components that happen to call `useAccent()`.
+ *
+ * An org accent and a person's accent are the SAME adjustment at two scopes, so
+ * they are the same two properties — `--primary` and `--accent`, produced by
+ * @hanzo/design's own `vars()`. `@hanzo/appearance` writes them for a person and
+ * this writes them for an org; nothing here restates what an accent means.
+ *
+ * PRECEDENCE FALLS OUT OF CSS AND IS NOT COORDINATED IN CODE. This writes a
+ * `:root` STYLESHEET; a person's preference is written INLINE on <html>, which
+ * outranks any stylesheet. So a person who chose an accent keeps it, an org that
+ * sets one gets it for everybody who did not, and neither module has to know the
+ * other exists. Writing both inline would have made it a race decided by load
+ * order — the org fetch resolving after mount would silently overwrite the
+ * person's choice on every reload.
+ */
+function publish(accent: string | null): void {
+  if (typeof document === 'undefined') return
+  const ID = 'hanzo-org-accent'
+  let el = document.getElementById(ID) as HTMLStyleElement | null
+  if (!accent) { el?.remove(); return }
+  if (!el) {
+    el = document.createElement('style')
+    el.id = ID
+    document.head.appendChild(el)
+  }
+  el.textContent = css({ accent }, ':root')
 }
 
 function subscribe(cb: () => void): () => void {
