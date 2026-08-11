@@ -971,6 +971,9 @@ importers:
 
   pkg/ui:
     dependencies:
+      '@hanzo/appearance':
+        specifier: ^0.1.3
+        version: link:../appearance
       '@hanzo/canvas':
         specifier: '>=0.1.0'
         version: link:../../pkgs/canvas
