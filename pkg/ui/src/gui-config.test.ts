@@ -18,7 +18,7 @@ import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
 
-import { config, monochrome } from './gui-config'
+import { config, css, monochrome } from './gui-config'
 
 const require = createRequire(import.meta.url)
 const design = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')
@@ -331,5 +331,67 @@ describe('the type ladder defers to @hanzo/design', () => {
     // re-flow every line box. They stay, and scale.
     for (let k = 1; k <= 16; k++) expect(lval(k)).toMatch(/var\(--type-scale, 1\)/)
     expect(lval(3)).toBe('calc(20px * var(--type-scale, 1))')
+  })
+})
+
+/**
+ * The three axes @hanzo/appearance publishes — type, density, accent — plus the
+ * brand palette underneath them. All four are the SAME mechanism: a value in
+ * @hanzo/design that gui references rather than copies. A rung that resolves to
+ * a literal renders perfectly and answers to nobody, which is the failure these
+ * assert against.
+ */
+describe('a person and a brand can both move this', () => {
+  // createGui turns each token into a Variable: the `$` is stripped from the
+  // key and the authored value moves to `.val`.
+  const space = config.tokens.space as unknown as Record<string, { val: string | number }>
+
+  it('every spacing step carries the density knob', () => {
+    // design multiplies its own --space-* by --density, but gui compiles a
+    // SECOND ramp for `padding="$4"` and resolves it in JS — so until this
+    // carried the knob, a density preference moved the stylesheet and left
+    // every gui-rendered gap exactly where it was.
+    const stuck = Object.entries(space)
+      .filter(([, v]) => v.val !== 0 && !String(v.val).includes('var(--density'))
+      .map(([k]) => k)
+    expect(stuck).toEqual([])
+  })
+
+  it('zero stays zero — a token meaning "no space" needs no knob', () => {
+    expect(space['0'].val).toBe(0)
+  })
+
+  it('the ground, the ink and the loud fill are REFERENCES, not copies', () => {
+    // Each names a @hanzo/design token, so a brand that retunes the token moves
+    // gui with it. `background` is the exception and is asserted below.
+    const dark = config.themes.dark as unknown as Record<string, { val?: string }>
+    const refOf = (k: string) => String(dark[k]?.val ?? dark[k] ?? '')
+    expect(refOf('color')).toContain('var(--foreground')
+    expect(refOf('placeholderColor')).toContain('var(--text-tertiary')
+    expect(refOf('accentBackground')).toContain('var(--primary')
+    expect(refOf('accentColor')).toContain('var(--primary-foreground')
+    expect(refOf('borderColor')).toContain('var(--border')
+    expect(refOf('outlineColor')).toContain('var(--ring')
+  })
+
+  it('css() drops the names design owns from the ROOT themes', () => {
+    // gui publishes a bare --<key> per theme key at (0,2,0), which outranks
+    // design's :root (0,1,0) for the whole document. Referencing the name back
+    // would cycle and compute EMPTY, so the declaration goes instead and
+    // `var(--background)` resolves through design.
+    const out = css()
+    const rootThemeBodies = [...out.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter((m) => m[1].split(',').some((sel) => /^:root(\.t_(dark|light))?$/.test(sel.trim())))
+      .map((m) => m[2])
+    for (const name of ['background', 'black', 'white'])
+      for (const body of rootThemeBodies)
+        expect(body).not.toMatch(new RegExp(`(^|;)\\s*--${name}\\s*:`))
+  })
+
+  it('a NESTED theme keeps its own ground — that is what a nested theme IS', () => {
+    const out = css()
+    const nested = [...out.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter((m) => /\.t_\w+\s*\.t_\w+|\.t_[a-z]+_/.test(m[1]))
+    expect(nested.some((m) => /--background\s*:/.test(m[2]))).toBe(true)
   })
 })
