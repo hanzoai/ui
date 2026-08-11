@@ -18,6 +18,7 @@ const READ = {
   'edge   border-color': ['#edge', 'borderTopColor'],
   'loud   background': ['#loud', 'backgroundColor'],
   'ground background': ['#ground', 'backgroundColor'],
+  'ground ink': ['#ground > *', 'color'],
 }
 
 const read = () => p.evaluate((sel) => {
@@ -43,8 +44,19 @@ await set({ '--type-scale': null, '--density': '1.15' })
 rows['person: density 1.15'] = await read()
 await set({ '--density': null, '--primary': '#8b5cf6', '--accent': '#8b5cf6' })
 rows['person: accent violet'] = await read()
-await set({ '--primary': null, '--accent': null, '--background': '#123456', '--border': '#00ff00' })
-rows['BRAND: ground+edge'] = await read()
+// The CTO's acceptance test: one component set, N brands, differing only in
+// token VALUES. Each palette below is DATA — no component, config or package
+// changes between these three rows.
+const clear = { '--primary': null, '--accent': null, '--background': null, '--foreground': null, '--border': null }
+const BRANDS = {
+  'brand HANZO (published)': {},
+  'brand LUX  (data only)': { '--background': '#04070d', '--foreground': '#e6f0ff', '--border': 'rgb(120 170 255 / .22)', '--primary': '#3b82f6' },
+  'brand ZOO  (data only)': { '--background': '#0b0f06', '--foreground': '#eefbe0', '--border': 'rgb(150 220 120 / .22)', '--primary': '#84cc16' },
+}
+for (const [label, palette] of Object.entries(BRANDS)) {
+  await set({ ...clear, ...palette })
+  rows[label] = await read()
+}
 
 console.table(rows)
 await browser.close()
