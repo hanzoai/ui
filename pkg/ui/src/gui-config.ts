@@ -159,13 +159,34 @@ const STEP: Record<string, number> = {
   '20': 208,
 }
 
-const space: Record<string, number> = {}
+/**
+ * Every step carries `--density`, the same way every type rung carries
+ * `--type-scale`.
+ *
+ * Spacing is the axis a density control actually moves — design's own
+ * `tokens/spacing.css` multiplies each `--space-*` by `var(--density, 1)`, but
+ * that reaches only CSS consumers. gui resolves `padding="$4"` in JS and writes
+ * it into an atomic class as `var(--c-space-4)`, so the ramp gui compiles is a
+ * SECOND ramp, and until it carried the knob a density preference moved the
+ * stylesheet and left every gui-rendered gap exactly where it was.
+ *
+ * The px literal stays the source of truth and stays visible in the number
+ * above; `calc()` multiplies it. At density 1 that is a byte-for-byte no-op —
+ * `calc(16px * 1)` computes to `16px` — so this changes nothing until somebody
+ * asks it to.
+ *
+ * Zero is left as the number `0`: `calc(0px * n)` is still zero, and a token
+ * whose whole meaning is "no space" does not need a knob to say so.
+ */
+const step = (px: number): string | number => (px === 0 ? 0 : `calc(${px}px * var(--density, 1))`)
+
+const space: Record<string, string | number> = {}
 for (const [k, v] of Object.entries(STEP)) {
-  space[`$${k}`] = v
-  space[`-${k}`] = -v
+  space[`$${k}`] = step(v)
+  space[`-${k}`] = step(-v)
 }
-space.$true = STEP['4']
-space['-true'] = -STEP['4']
+space.$true = step(STEP['4'])
+space['-true'] = step(-STEP['4'])
 
 /**
  * THREE RUNGS OF THE NUMBERED RAMP UNDID A TOKEN DECISION, so they are re-based.
@@ -216,6 +237,55 @@ const LABEL = { dark: '#fafafa', light: '#0a0a0a' } as const
 const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as const
 
 /**
+ * The ground, the placeholder, and the one loud fill — the rest of what a brand
+ * owns, on the same terms as the three rungs above.
+ *
+ * `color`, `placeholderColor` and the accent pair are plain references, because
+ * design spells them `--foreground`, `--text-tertiary`, `--primary` and
+ * `--primary-foreground` while gui's keys are `color`, `placeholderColor`,
+ * `accentBackground` and `accentColor`. Those names never meet, so the reference
+ * is live and that is the end of it.
+ *
+ * `background` is the ONE name that cannot be referenced, and it is worth being
+ * exact about why. gui publishes each THEME key as a bare `--<key>` on
+ * `:root.t_dark` — specificity (0,2,0) against design's (0,1,0) `:root` — so
+ * gui's copy wins for the whole document, not merely for gui's own components.
+ * Point it back at the name it shadows and `--background: var(--background)` is
+ * a self-reference; CSS drops BOTH sides of a cycle and the property computes
+ * EMPTY. Not theory: an empty `--border` is what left `border-border` falling
+ * back to `currentColor`, a white hairline on every pricing card on hanzo.ai.
+ *
+ * Three things that look like fixes are not, each measured in a browser:
+ *   · a fallback — `var(--background, #0a0a0a)` computes empty too, because the
+ *     fallback is inside the dependency graph the cycle is found in;
+ *   · routing through design's `--surface-page`, which is itself declared as
+ *     `var(--background)` — a two-hop cycle, equally empty;
+ *   · deleting the key here, which stops `$background` resolving at all and so
+ *     emits no class rather than the wrong one.
+ *
+ * So the value stays design's published literal — `gui-config.test.ts` reads it
+ * out of design's own stylesheet, so it cannot drift — and the DECLARATION is
+ * dropped from the root theme blocks by `css()` below. The literal never reaches
+ * a browser; `var(--background)` resolves through design, live and rebrandable.
+ * Keeping a true literal rather than a reference is deliberate: if a consumer
+ * ever emits this sheet without `css()`, it renders design's colour frozen
+ * instead of rendering nothing, and a frozen ground is a far cheaper failure
+ * than an empty one.
+ *
+ * `accentBackground`/`accentColor` are gui's loud control pair, and design's
+ * `--primary`/`--primary-foreground` are the same idea under this system's own
+ * name. Binding them is what puts an ACCENT within reach: `@hanzo/appearance`
+ * writes `--primary` (and `--accent`) for a person, `themeToTokens()` writes the
+ * same names for an org, and both now land on the same components. Before this
+ * the accent knob reached nothing gui rendered — nothing in this package
+ * referenced `--primary` at all.
+ */
+const GROUND = { dark: '#0a0a0a', light: '#f7f7f7' } as const
+const MUTED = { dark: 'rgb(255 255 255 / .55)', light: 'rgb(10 10 10 / .55)' } as const
+const LOUD = { dark: '#fafafa', light: '#0a0a0a' } as const
+const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
+
+/**
  * The edge and the label are re-based on the two ROOT themes; the ring is
  * re-based on ALL of them, and the asymmetry is the point.
  *
@@ -249,6 +319,11 @@ const themes = Object.fromEntries(
             color4: `var(--border, ${EDGE[s]})`,
             borderColor: `var(--border, ${EDGE[s]})`,
             color12: `var(--foreground, ${LABEL[s]})`,
+            background: GROUND[s],
+            color: `var(--foreground, ${LABEL[s]})`,
+            placeholderColor: `var(--text-tertiary, ${MUTED[s]})`,
+            accentBackground: `var(--primary, ${LOUD[s]})`,
+            accentColor: `var(--primary-foreground, ${LOUD_LABEL[s]})`,
           }
         : ringed,
     ]
@@ -294,6 +369,67 @@ const base = {
 export const config = createGui({ ...base, themes })
 
 export default config
+
+/**
+ * The three names design owns that gui also publishes as theme keys.
+ *
+ * `background` is the ground; `black` and `white` are constants, and they are
+ * not harmless — design publishes `--white: #fafafa` in dark because pure white
+ * halates on near-black, and gui's ramp overwrites it with `#ffffff`. That is
+ * design's own decision being undone by a name collision.
+ */
+const OWNED = ['background', 'black', 'white']
+
+/** Exactly `:root`, `:root.t_dark` or `:root.t_light` — a ROOT theme. Anything
+ *  carrying a further `.t_*` is a NESTED theme, and a nested theme scoping its
+ *  own ground is what a nested theme IS. ~248 of them legitimately do. */
+const ROOT_THEME = /^:root(\.t_(dark|light))?$/
+
+/**
+ * gui's stylesheet, with the declarations that shadow @hanzo/design removed.
+ *
+ * THIS is what a consumer emits — never `config.getCSS()` directly. gui builds
+ * its atomic CSS as components render, so every app runs a generator of its own;
+ * that is why this cannot be a step inside one package's build script and has to
+ * be the function apps call. It was one, in `scripts/gen-css.mjs`, and it
+ * therefore fixed @hanzo/ui's own sheet and nothing else — hanzo.ai generates
+ * its sheet with its own script and still ships gui's grey over design's black.
+ *
+ * gui shadows TWICE, by two different mechanisms, and fixing one leaves the page
+ * just as wrong:
+ *   · `:root.t_dark` / `:root.t_light` — (0,2,0), beats design on SPECIFICITY,
+ *     so re-importing design's colours last cannot win. That workaround only
+ *     appears to work where the theme class never reaches <html>, and reverts
+ *     the day someone wires themes properly — a fix that expires on being fixed.
+ *   · plain `:root { --background: … }` — (0,1,0), TIES design and wins on
+ *     SOURCE ORDER, because gui's block is appended after design's.
+ *
+ * Removing the declaration does not remove the token: `$background` still
+ * resolves to `var(--background)` and still emits its class, and that `var()`
+ * now reads design's value from the cascade. So the ground follows the brand,
+ * the theme and any runtime retune, which is the whole point.
+ */
+export function css(): string {
+  const source = config.getCSS()
+  let out = ''
+  let i = 0
+  while (i < source.length) {
+    const open = source.indexOf('{', i)
+    if (open === -1) { out += source.slice(i); break }
+    const close = source.indexOf('}', open)
+    if (close === -1) { out += source.slice(i); break }
+    const selector = source.slice(i, open)
+    let body = source.slice(open + 1, close)
+    if (selector.split(',').some((s) => ROOT_THEME.test(s.trim()))) {
+      for (const name of OWNED) {
+        body = body.replace(new RegExp(`(^|;)\\s*--${name}\\s*:[^;}]*;?`, 'g'), '$1')
+      }
+    }
+    out += selector + '{' + body + '}'
+    i = close + 1
+  }
+  return out
+}
 
 /**
  * The eight chromatic families. Everything else a sub-theme name can carry —
