@@ -1,4 +1,4 @@
-import { AnimatedNumber } from "@hanzo/ui/animation/animated-number"
+import { AnimatedNumber } from "@/registry/default/ui/animated-number"
 
 export default function AnimatedNumberDemo() {
   return (

@@ -2,7 +2,7 @@
   "name": "@hanzo/ui",
   "version": "8.0.38",
   "type": "module",
-  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/tokens. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -211,6 +211,7 @@
     }
   },
   "devDependencies": {
+    "@hanzo/cd": "0.1.1",
     "@hanzo/data": "1.2.1",
     "@hanzo/gui": "8.0.0",
     "@hanzogui/config": "8.0.0",

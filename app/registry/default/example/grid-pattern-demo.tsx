@@ -1,6 +1,6 @@
 "use client"
 
-import { GridPattern, GridPatternPresets } from "@hanzo/ui/pattern/grid-pattern"
+import { GridPattern, GridPatternPresets } from "@/registry/default/ui/grid-pattern"
 
 import {
   Tabs,

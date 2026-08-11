@@ -89,17 +89,22 @@ jobs:
       # turbo's "dependencies of, excluding itself" filter, so the set is derived
       # from the workspace graph and stays right when an import is added.
       #
-      # Building only pkgs/ui was why `Cannot find module '@hanzo/event'` failed
+      # Building only pkg/ui was why `Cannot find module '@hanzo/event'` failed
       # here and nowhere else: @hanzo/event resolves to the workspace copy, whose
       # package.json points types at ./dist/index.d.ts, and nothing built it.
       # Reproduce locally by moving pkgs/event/dist aside — the same one error.
-      - name: Build app's workspace dependencies
-        run: pnpm turbo run build --filter='@hanzo/ui-web^...'
+      # This job typechecks app AND pkg/ui, so build what BOTH depend on. With
+      # only app's set built, @hanzo/data stayed unbuilt: its exports name
+      # ./types/index.d.ts, nothing produced it, and Bundler resolution fell
+      # through to ./src/index.ts — so pkg/ui typechecked 90 errors' worth of
+      # another package's source.
+      - name: Build the workspace dependencies of app and pkg/ui
+        run: pnpm turbo run build --filter='@hanzo/ui-web^...' --filter='@hanzo/ui^...'
 
       - name: Run type checking
         run: |
           cd app && pnpm run typecheck
-          cd ../pkgs/ui && pnpm run tc --noEmit
+          cd ../pkg/ui && pnpm run tc
 
   build:
     name: Build
@@ -136,13 +141,12 @@ jobs:
 
       # Same reason as the typecheck job: this failed with
       #   Module not found: Can't resolve '@hanzo/event'
-      # because only pkgs/ui was built. `build:full` is still run for pkgs/ui
-      # (it does more than `build`), but the dependency set comes from turbo.
+      # because only pkg/ui was built. The dependency set comes from turbo.
       - name: Build app's workspace dependencies
         run: pnpm turbo run build --filter='@hanzo/ui-web^...'
 
       - name: Build UI package (full)
-        run: cd pkgs/ui && pnpm run build:full
+        run: cd pkg/ui && pnpm run build
 
       - name: Build app
         run: cd app && pnpm run build
@@ -155,7 +159,7 @@ jobs:
           name: build-artifacts
           path: |
             app/.next
-            pkgs/ui/dist
+            pkg/ui/dist
 
   test:
     name: Test
@@ -190,8 +194,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Run pkgs/ui tests
-        run: cd pkgs/ui && pnpm test:coverage -- --run
+      - name: Run pkg/ui tests
+        run: cd pkg/ui && pnpm test
 
       - name: Run app tests
         run: |
@@ -201,12 +205,6 @@ jobs:
             echo "No test script found"
           fi
 
-      - name: Upload coverage
-        if: always()
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./pkgs/ui/coverage/lcov.info
-          flags: unit
 
   status:
     name: CI Status
