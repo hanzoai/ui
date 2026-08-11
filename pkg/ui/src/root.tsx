@@ -36,7 +36,9 @@
  */
 import { GuiProvider } from '@hanzo/gui'
 import { TelemetryProvider, type TelemetryConfig } from '@hanzogui/telemetry'
-import type { ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+
+import { apply, read } from '@hanzo/appearance/state'
 
 import { config } from './gui-config'
 import './styles.css'
@@ -92,6 +94,24 @@ const assertStylesheet = () => {
 
 export const Hanzo = ({ children, theme = 'dark', analytics }: HanzoProps) => {
   if (process.env.NODE_ENV !== 'production') assertStylesheet()
+  // A person's stored type size, density and accent, put on the document.
+  //
+  // Unconditional, unlike `analytics`, and the difference is the whole reason
+  // that one is a prop. Analytics starts a conversation with a server the app
+  // did not ask for; this reads a preference the PERSON already set on this
+  // device and honours it. An app that has to opt in is an app that forgets to,
+  // and then the setting silently does nothing on that surface — which is worse
+  // than not offering it.
+  //
+  // Costs nothing when unused: an axis nobody set is absent rather than
+  // neutral, so `apply()` removes the property instead of stamping a `1` that
+  // would outrank a brand's own scale.
+  //
+  // This is the MOUNT half only. First paint still wants `bootScript()` in
+  // <head>, because no component can run before the document exists.
+  useEffect(() => {
+    apply(read())
+  }, [])
   const tree = (
     <GuiProvider config={config} defaultTheme={theme} disableInjectCSS>
       {children}
