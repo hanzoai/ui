@@ -139,13 +139,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      # Same reason as the typecheck job: this failed with
-      #   Module not found: Can't resolve '@hanzo/event'
-      # because only pkg/ui was built. The dependency set comes from turbo.
-      - name: Build app's workspace dependencies
-        run: pnpm turbo run build --filter='@hanzo/ui-web^...'
+      # This job builds app AND pkg/ui, so build what BOTH depend on — the same
+      # reason the typecheck job does. With only app's set built, pkg/ui's own
+      # dependencies resolve to nothing:
+      #   src/core/tokens.ts(33,8): error TS2307: Cannot find module
+      #   '@hanzo/tokens' or its corresponding type declarations.
+      # and the same for @hanzo/cd and @hanzo/products.
+      - name: Build the workspace dependencies of app and pkg/ui
+        run: pnpm turbo run build --filter='@hanzo/ui-web^...' --filter='@hanzo/ui^...'
 
-      - name: Build UI package (full)
+      - name: Build UI package
         run: cd pkg/ui && pnpm run build
 
       - name: Build app
