@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React package for building AI-powered applications with generative UI",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -72,11 +72,9 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
-    "clsx": "^2.1.1",
     "nanoid": "^5.1.7",
     "openai": "^6.32.0",
     "swr": "^2.4.1",
-    "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.12"
   },

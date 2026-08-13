@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/agent-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hanzo Agent Cloud UI components — dashboard, nodes, workflows, executions, identity, compute",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -15,7 +15,6 @@
   "sideEffects": false,
   "files": [
     "dist",
-    "style",
     "README.md"
   ],
   "repository": {
@@ -98,16 +97,11 @@
       "types": "./dist/lib/index.d.ts",
       "import": "./dist/lib/index.mjs",
       "require": "./dist/lib/index.js"
-    },
-    "./style/*": "./style/*"
+    }
   },
-  "dependencies": {
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.5.0"
-  },
+  "dependencies": {},
   "peerDependencies": {
-    "@hanzo/ui": "^5.0.0",
+    "@hanzo/ui": ">=8",
     "@xyflow/react": "^12.0.0",
     "lucide-react": ">=0.400.0",
     "react": "^18.0.0 || ^19.0.0",
