@@ -25,9 +25,19 @@ export interface ModelCatalogEntry {
   description?: string
 }
 
-/** owned_by → display family. */
+/**
+ * owned_by → display family.
+ *
+ * There is no `hanzo` entry, and its absence is the point. It used to say
+ * `hanzo: 'Zen'`, which was wrong twice: Zoo Labs Foundation makes Zen, and the
+ * gateway does not report Zen that way — it answers `owned_by: 'zenlm'`. What
+ * `owned_by: 'hanzo'` actually names is the dozen models Hanzo serves under its
+ * own namespace, so that entry filed Whisper, Kokoro, GLM, Kimi, Qwen3.5 and
+ * MiniMax under "Zen" as well. Without it each falls to its id prefix and lands
+ * where it belongs, and what is genuinely Hanzo's capitalizes to "Hanzo".
+ */
 const OWNER_FAMILY: Record<string, string> = {
-  hanzo: 'Zen',
+  zenlm: 'Zen',
   anthropic: 'Anthropic',
   openai: 'OpenAI',
   deepseek: 'DeepSeek',
@@ -41,7 +51,7 @@ const OWNER_FAMILY: Record<string, string> = {
   moonshot: 'Kimi',
 }
 
-/** House then marquee; everything else sorts alphabetically after these. */
+/** What the picker leads with; everything else sorts alphabetically after these. */
 const FAMILY_ORDER = ['Enso', 'Zen', 'Anthropic', 'OpenAI']
 
 function capitalize(s: string): string {
