@@ -43,9 +43,13 @@ const AddToCartWidget: React.FC<{
     }
   }, [])
 
-  const ROUNDED_VAL = 'lg'
-    // no need to safelist, since its used widely
-  const ROUNDED_CLX = ` rounded-${ROUNDED_VAL} `
+  // `rounded-lg` written out, not interpolated. The note that used to sit here
+  // said safelisting was unnecessary "since its used widely" — which is true
+  // only for as long as some OTHER file in whatever the consumer scans spells it
+  // literally. Tailwind reads source text; a template literal is not a class
+  // name, so this one was borrowing a rule it did not ask for.
+  const ROUNDED_VAL = 'lg'          // the `rounded=` variant prop on Button
+  const ROUNDED_CLX = ' rounded-lg ' // the class
 
   const ghost = variant === 'minimal'
   const outline = variant === 'outline'
