@@ -12,6 +12,10 @@ const NodeTabs: React.FC<{
   mutator: StringMutator | StringArrayMutator
   multiple?: boolean
   className?: string
+  /** Layout the caller computes from data. A column count is a number, and a
+   *  number cannot be a class name — Tailwind reads source text, so a template
+   *  literal never becomes a rule. */
+  style?: React.CSSProperties
   buttonClx?: string
   itemClx?: string
   mobile?: boolean
@@ -24,6 +28,7 @@ const NodeTabs: React.FC<{
   buttonClx='',
   itemClx='',
   className='',
+  style,
   mobile=false,
   tabSize,
   show='image-and-label'
@@ -59,6 +64,7 @@ const NodeTabs: React.FC<{
       size={tabSize ? tabSize : (mobile ? 'sm' : 'default')}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
+      style={style}
       {...roundedToSpread}
     >
     {levelNodes.map((treeNode, index) => {

@@ -20,6 +20,25 @@ import QuantityIndicator from './quantity-indicator'
 
 const DEFAULT_CONSTRAINT = {h: 36, w: 72} // // Apple suggest 42px for clickability
 
+// `ImageDef.rounded` is a corner of the radius scale, spelled by whoever wrote
+// the catalog. It used to be pasted straight into a class — `rounded-${...}` —
+// and Tailwind reads source text, so no such rule was ever generated: setting
+// `rounded: 'full'` produced LESS rounding than leaving it unset, because the
+// truthy branch handed back a class name with nothing behind it while the
+// default branch at least said `rounded-sm`. Writing the scale out is what makes
+// the extractor see it. Anything off the scale falls back to the default, which
+// is what the old code did by accident for every value.
+const ROUNDED: Record<string, string> = {
+  none: 'rounded-none',
+  sm: 'rounded-sm',
+  md: 'rounded-md',
+  lg: 'rounded-lg',
+  xl: 'rounded-xl',
+  '2xl': 'rounded-2xl',
+  '3xl': 'rounded-3xl',
+  full: 'rounded-full',
+}
+
 const ImageRadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'value' | 'id'> & {
@@ -44,7 +63,7 @@ const ImageRadioGroupItem = React.forwardRef<
         'focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
         className,
         'overflow-hidden',
-        img?.rounded ? `rounded-${img.rounded}` : 'rounded-sm'
+        (img?.rounded && ROUNDED[img.rounded]) || 'rounded-sm'
       )}
       {...props}
       id={item.sku}

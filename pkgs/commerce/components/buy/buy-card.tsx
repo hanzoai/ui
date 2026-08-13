@@ -207,11 +207,19 @@ const BuyCard: React.FC<{
       </ApplyTypography>
       <NodeTabs
         className={cn(
-          'grid gap-0 align-stretch justify-normal ' + `grid-cols-${inst.current.requestedNode.subNodes!.length}`, 
+          'grid gap-0 align-stretch justify-normal',
           'border-b-2 rounded-lg border-level-3 mb-4 -mr-2 -ml-2 max-w-[460px] h-10', // height is needed for iPhone bug
           (scroll ? 'shrink-0' : ''),
-          famWidgetClx  
-        )} 
+          famWidgetClx
+        )}
+        // One column per sub-node. The count used to be interpolated into a
+        // column-count utility in the className, and Tailwind's extractor never
+        // saw it: the extractor reads source text, and a template literal is not
+        // a class name. The element got `display:grid` with the default
+        // `grid-template-columns: none`, so every family tab row stacked in a
+        // single column. `repeat(n, minmax(0, 1fr))` is exactly what the utility
+        // would have compiled to, and it holds for any n.
+        style={{ gridTemplateColumns: `repeat(${inst.current.requestedNode.subNodes!.length}, minmax(0, 1fr))` }}
         mobile={mobile}
         mutator={allVariants ? 
           {
