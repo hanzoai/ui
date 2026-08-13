@@ -11,7 +11,6 @@
 export type {
   // Status
   CanonicalStatus,
-  StatusTone,
   TimeRangeValue,
 
   // Agent Nodes
@@ -272,10 +271,4 @@ export {
 export type { SSEOptions, TimeRangeState } from './hooks'
 
 // Lib utilities
-export {
-  getStatusTone,
-  getStatusBadgeClasses,
-  STATUS_TONES,
-  getNextTimeRange,
-  TIME_RANGE_OPTIONS,
-} from './lib'
+export { getNextTimeRange, TIME_RANGE_OPTIONS } from './lib'
