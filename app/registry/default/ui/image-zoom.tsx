@@ -37,10 +37,9 @@ const ImageZoom = React.forwardRef<HTMLDivElement, ImageZoomProps>(
         <img
           src={src}
           alt={alt}
-          className={cn(
-            "h-full w-full object-cover transition-transform duration-200",
-            isZoomed && `scale-${zoomScale * 100}`
-          )}
+          // Scale is the inline transform below: zoomScale is a number, and a
+          // number cannot be a utility class.
+          className="h-full w-full object-cover transition-transform duration-200"
           style={
             isZoomed
               ? {
