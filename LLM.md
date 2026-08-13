@@ -569,6 +569,57 @@ by sparse-checkout, and nothing ever read the singular one.
 - **White-Label**: Zoo/Lux forks via `brands/{BRAND}.brand.ts`
 - **External Registries**: 35+ sources in `app/registries.json`, install via `npx @hanzo/ui add @aceternity/spotlight`
 
+## Where Tailwind belongs, and where it is a bug
+
+Two different things wear the same clothes here, and confusing them breaks
+something either way.
+
+**Framework — `pkg/ui`.** `@hanzo/ui@8` is @hanzo/gui style props on the
+`@hanzo/tokens` scale. Zero `@radix-ui` imports, zero utility classes; the only
+class names are `hz-*` handles its own `theme.css` defines. A Tailwind class
+appearing in `pkg/ui/src` is a mistake. (One exception, on purpose:
+`hover-card.test.tsx` passes `text-xs` as a caller className to prove an
+arbitrary class survives the merge, and that gui's own width outranks it — that
+is the interop contract for call sites still on Tailwind.)
+
+**Product — everything else.** `app/registry/**` and `apps/v4/registry/**` are
+the source the `shadcn` CLI hands to customers; `templates/*` are the projects it
+scaffolds; `pkgs/shadcn` is the CLI. Tailwind there is the deliverable. It is
+also LIVE in both docs sites — the deployed export at `app/out` carries 2208
+class selectors — so a class deleted from `app/` changes the design. Do not
+"clean up" a registry.
+
+**The defect that survives a live pipeline.** Tailwind reads SOURCE TEXT.
+`grid-cols-${n}`, `rounded-${size}`, `scale-${n*100}` never become rules — and
+the failure hides, because a neighbouring file that spells one literally lends
+you its rule. `grid-cols-3` is literal in two commerce files, so a
+three-option selector laid out and a four-option one stacked. Same for
+registry components: `animated-list` looked right in our docs (the pages spell 1
+to 7) and stacked in the customer project that installed it.
+
+Ask Tailwind's own extractor rather than reasoning about it:
+
+```js
+import { Scanner } from '@tailwindcss/oxide'   // run from the repo root
+new Scanner({ sources: [{ base: '/abs/dir', pattern: '**/*.tsx', negated: false }] }).scan()
+```
+
+Anything the interpolation was reaching for is absent from that list. Two fixes,
+both one-way: a count or a length becomes an inline style
+(`gridTemplateColumns: repeat(n, minmax(0, 1fr))` is what the utility compiles
+to); a value off a fixed scale becomes a literal lookup table, so the extractor
+can see every arm.
+
+**Commerce is still on the v5 line and cannot leave yet.** `@hanzo/commerce`
+peers on `npm:@hanzo/ui-shadcn@^5` and holds the repo's last direct
+`@radix-ui/*` import (`react-radio-group`, for an image tile — v5's
+`RadioGroupItem` hardcodes a 16px dot and takes no children). v8 has gained
+`RadioGroup`/`RadioGroupItem`/`Image`; what it still lacks, and commerce imports,
+is `ApplyTypography`, `MediaStack`, `Skeleton`, `Carousel`, the `Form*` set, and
+the media type surface (`Dimensions`, `ImageDef`, `MediaStackDef`,
+`MediaTransform`, `VideoDef`, `AnimationDef`). The peer is one choice for the
+whole package, so commerce moves when those land, not file by file.
+
 ## Gotchas
 
 - Registry index is `Index[style][name]`, NOT `Index[name]` — caused silent block render failures
