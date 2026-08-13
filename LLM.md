@@ -333,7 +333,6 @@ ui/
   skills/
     shadcn/              AI skill definitions for shadcn CLI
   templates/             Project templates (next, vite, astro, react-router, start + monorepo variants)
-  template/next/         Hanzo-customized Next.js template
 ```
 
 ## Critical: Build Order
@@ -554,8 +553,15 @@ Remote `shadcn` points to a local clone of shadcn-ui/ui.
 hanzoai/ui is NOT a GitHub fork — no shared object store, so large merges can fail on push.
 Strategy: file-level checkout from shadcn/main for specific directories (not git merge).
 - Take theirs: packages/shadcn/, packages/tests/, apps/, templates/, scripts/, skills/
-- Keep ours: app/, pkg/, demo/, docs/, template/next/, pnpm-workspace.yaml, package.json
+- Keep ours: app/, pkg/, docs/, pnpm-workspace.yaml, package.json
 - Regenerate: pnpm-lock.yaml after sync
+
+`demo/` and `template/next/` used to be on the keep list and are gone. Neither
+could run: `demo/*.tsx` imported `../src/auth` and `@/registry/…`, and the repo
+root has no `src/` and no `@/` path mapping, so all three files were unresolvable
+from the day they were placed there. `template/next/` was a Next 13 / React 18
+copy of the upstream `next-template`; the CLI scaffolds from `templates/` (plural)
+by sparse-checkout, and nothing ever read the singular one.
 
 ## Key Features
 

@@ -1251,10 +1251,10 @@ export interface IncidentItem {
   error?: string
 }
 
-// ============================================================================
-// Status Theme
-// ============================================================================
-
-export type StatusTone = 'success' | 'warning' | 'error' | 'info' | 'neutral'
+// `StatusTone` was here — 'success' | 'warning' | 'error' | 'info' | 'neutral'.
+// It named colours, and `@hanzo/ui`'s `Tone` names states ('settled' | 'moving'
+// | 'stopped' | 'quiet') because the pills are rungs of a grey ladder with no
+// hue to spend. Two vocabularies for one fact; the one in `@hanzo/ui/product/pure`
+// is the one every list already reads.
 
 export type TimeRangeValue = '1h' | '24h' | '7d' | '30d' | 'all'

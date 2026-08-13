@@ -29,7 +29,12 @@ export { useStreaming, type UseStreamingOptions, type UseStreamingReturn } from 
 // export { useAttachments } from './hooks/useAttachments'
 
 // Utilities
-export { cn } from './utils/cn'
+//
+// `cn` was here, as `twMerge(clsx(...))`. Two things were wrong with that: this
+// package renders nothing that needs a class name, and Tailwind conflict
+// resolution is not a fact an AI-hooks package gets to hold. There is one `cn`,
+// in `@hanzo/ui` — and it is clsx alone, because @hanzo/gui style props carry
+// the styling and there are no utilities left to resolve.
 export { generateId } from './utils/id'
 export { parseStream } from './utils/stream'
 
@@ -37,4 +42,4 @@ export { parseStream } from './utils/stream'
 export * from './types'
 
 // Version
-export const VERSION = '1.0.0'
+export const VERSION = '1.0.1'
