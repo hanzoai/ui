@@ -29,7 +29,7 @@ RUN pnpm install --frozen-lockfile
 
 # Workspace packages the app imports must be built first: their package.json
 # exports point at dist/.
-RUN cd pkgs/ui && pnpm build
+RUN cd pkg/ui && pnpm build
 RUN cd pkgs/event && pnpm build
 
 # Builds the component registry, then the site (app/package.json build script).
