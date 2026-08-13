@@ -620,6 +620,62 @@ the media type surface (`Dimensions`, `ImageDef`, `MediaStackDef`,
 `MediaTransform`, `VideoDef`, `AnimationDef`). The peer is one choice for the
 whole package, so commerce moves when those land, not file by file.
 
+## A primitive that discards a prop is the migration's real blocker
+
+Two components here silently dropped the prop their caller cared about, and both
+were what stopped hanzo.chat converting its last Radix call sites. Neither was
+visible as a failure: a discarded prop is not an error, the component still
+renders, and the test suite was green through both. Fixed in **8.0.73**.
+
+- **`PopoverContent` destructured `align` into a variable it never read.** Every
+  caller asking for a left- or right-aligned panel got a centred one. gui keeps
+  the whole placement fact on the popper ROOT as one floating-ui string while the
+  compound API splits it into a side and an align, so Content now publishes into
+  the root exactly as `sideOffset` already did. `place(side, align)` is the
+  rejoining and it is a PURE function, because the panel is portalled and
+  positioned at run time — it never reaches server-rendered markup, so no
+  snapshot could have caught this and the decision is the only assertable thing.
+- **`Slider` spread caller props onto the root**, but gui puts `role="slider"` on
+  the Thumb — so every `aria-label` landed on a plain container and the control
+  announced as unnamed. `named()` routes the four ARIA naming properties to the
+  thumb and leaves value/range/step on the root, where gui reads them.
+
+Both tests are mutation-checked: reverting either fix fails them (2 and 3
+respectively). A test nobody has watched fail is not known to run.
+
+**Before believing a report that a primitive is MISSING, check the version it was
+measured against.** A fleet pass concluded @hanzo/ui "cannot receive" Accordion,
+HoverCard or RadioGroup and that `<TabsTrigger>Label</TabsTrigger>` renders an
+empty tab. All four claims were true of 8.0.63 and false of 8.0.72 — the three
+primitives exist and `ink()` wraps bare text children in a Text host. That stale
+answer is what a consumer repo reads to decide the migration is blocked, so it
+costs a whole conversion.
+
+## Two packages removed public exports in a PATCH — decided, not an oversight
+
+`@hanzo/agent-ui` 0.1.0→**0.1.1** dropped `getStatusTone`,
+`getStatusBadgeClasses`, `STATUS_TONES`, type `StatusTone` and the `./style/*`
+subpath, and moved its `@hanzo/ui` peer from `^5.0.0` to `>=8`. `@hanzo/react`
+1.0.0→**1.0.1** dropped `cn`. Both are live on npm and cannot be unpublished.
+
+**Publishing 0.2.0 / 1.1.0 would fix nothing**, and that is the part worth
+knowing: `^0.1.0` resolves `>=0.1.0 <0.2.0`, so 0.1.1 is still the version a
+caret range picks. Only a RESTORING patch or a deprecation changes what anyone
+installs.
+
+So it was measured instead. Nothing in the fleet imports `@hanzo/agent-ui` at all
+— the four grep hits are comments inside its own barrel — nothing imports
+`@hanzo/agent-ui/style`, and nothing imports `cn` from `@hanzo/react`. Last-month
+downloads are 83 and 107, which is CI traffic against packages with two and
+twenty-three versions. And every removed name is a Tailwind class-string helper
+this repo is deliberately deleting, so restoring them would re-import the thing
+the whole migration exists to remove.
+
+**Accepted, deliberately, with no version churn.** Recorded here so the next
+reader who notices it does not spend a release cycle repairing a break with no
+consumer. If an outside consumer ever appears, the lever is `npm deprecate` on
+those two exact versions, not a new minor.
+
 ## Gotchas
 
 - Registry index is `Index[style][name]`, NOT `Index[name]` — caused silent block render failures
