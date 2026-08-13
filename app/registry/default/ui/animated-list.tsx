@@ -351,11 +351,19 @@ export function AnimatedList({
       case "horizontal":
         return "flex flex-row gap-4 overflow-x-auto"
       case "grid":
-        return `grid gap-4 grid-cols-${gridColumns}`
+        return "grid gap-4"
       default:
         return "flex flex-col gap-4"
     }
   }
+
+  // gridColumns is a prop, and a prop cannot be a utility class: Tailwind reads
+  // source text, so only counts spelled literally somewhere in your project
+  // would ever get a rule. Set the track list directly and any count works.
+  const getLayoutStyle = (): React.CSSProperties | undefined =>
+    layout === "grid"
+      ? { gridTemplateColumns: `repeat(${gridColumns}, minmax(0, 1fr))` }
+      : undefined
 
   const renderListItem = (
     item: AnimatedListItem,
@@ -403,7 +411,7 @@ export function AnimatedList({
           onReorder?.(newItems)
         }}
         className={cn(getLayoutClassName(), className)}
-        style={style}
+        style={{ ...getLayoutStyle(), ...style }}
       >
         <AnimatePresence mode="popLayout">
           {animatedItems.map((item, index) => (
@@ -445,7 +453,7 @@ export function AnimatedList({
   return (
     <motion.div
       className={cn(getLayoutClassName(), className)}
-      style={style}
+      style={{ ...getLayoutStyle(), ...style }}
       initial="hidden"
       animate="visible"
       key={animationKey}
