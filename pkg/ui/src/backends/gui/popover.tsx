@@ -21,25 +21,13 @@ import {
   type ComponentProps,
 } from 'react'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
+import { place, type Align } from './place'
 import { slot } from './slot'
 
 const DEFAULT_OFFSET = 4
 const DEFAULT_SIDE = 'bottom'
 
-export type Align = 'start' | 'center' | 'end'
-
-/**
- * The placement a SIDE and an ALIGN name together. gui speaks floating-ui's
- * one string; the compound API splits the same fact in two, so this rejoins
- * them. `center` is the ABSENCE of a suffix rather than a suffix of its own,
- * and a side that already carries one is re-aligned rather than appended to.
- *
- * Example: place('bottom', 'start') === 'bottom-start'
- */
-export const place = (side: string, align: Align = 'center'): string => {
-  const base = side.split('-')[0]
-  return align === 'center' ? base : `${base}-${align}`
-}
+export type { Align }
 
 /** What Content declares and the root owns. */
 type Placed = { offset?: number; align?: Align }

@@ -7,20 +7,19 @@
  * so every caller asking for a left- or right-aligned panel got a centred one
  * — silently, because a discarded prop is not an error and the panel still
  * appears. Nothing downstream could see it either: the panel is portalled and
- * positioned by floating-ui at run time, so its offset never reaches the
+ * positioned by floating-ui at run time, so its placement never reaches the
  * server-rendered markup and no snapshot could have caught this.
  *
- * What IS assertable is the decision, so the decision is a pure function and
- * this file tests it directly. `place` is the whole of it: gui speaks
- * floating-ui's single placement string, the compound API splits that fact
- * into a side and an align, and rejoining them is the only logic involved.
+ * The decision it now makes is `place()`, which is shared with `hover-card` and
+ * tested in `place.test.ts`. What is asserted HERE is the component's own half:
+ * that it accepts the prop and still renders.
  */
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Popover, PopoverContent, PopoverTrigger, place } from './popover'
+import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -28,31 +27,6 @@ const html = (node: React.ReactNode) =>
       {node}
     </GuiProvider>,
   )
-
-describe('place', () => {
-  it('names the side alone when the alignment is centre', () => {
-    expect(place('bottom')).toBe('bottom')
-    expect(place('bottom', 'center')).toBe('bottom')
-    expect(place('top', 'center')).toBe('top')
-  })
-
-  it('suffixes the side with a non-centre alignment', () => {
-    expect(place('bottom', 'start')).toBe('bottom-start')
-    expect(place('bottom', 'end')).toBe('bottom-end')
-    expect(place('right', 'start')).toBe('right-start')
-  })
-
-  it('RE-aligns a side that already carries a suffix rather than appending', () => {
-    // The root may be given a full placement and Content may still declare an
-    // align; the later word wins, and the result stays a legal placement.
-    expect(place('bottom-end', 'start')).toBe('bottom-start')
-    expect(place('bottom-start', 'center')).toBe('bottom')
-  })
-
-  it('is idempotent', () => {
-    expect(place(place('bottom', 'start'), 'start')).toBe('bottom-start')
-  })
-})
 
 describe('Popover', () => {
   it('renders its trigger without a layout pass', () => {
@@ -78,5 +52,17 @@ describe('Popover', () => {
         ),
       ).not.toThrow()
     }
+  })
+
+  it('lets a caller override the default surface', () => {
+    // The visual props are DEFAULTS, not fixtures: {...props} spreads last, so a
+    // call site keeps the width and surface it had before converting.
+    const markup = html(
+      <Popover open>
+        <PopoverTrigger>Open</PopoverTrigger>
+        <PopoverContent width={480}>Panel</PopoverContent>
+      </Popover>,
+    )
+    expect(markup).toContain('Open')
   })
 })

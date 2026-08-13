@@ -17,11 +17,12 @@
  *      Radix's own defaults (700 / 300) are kept.
  *   2. `side` + `align` + `sideOffset` (Content) -> ONE `placement` and one
  *      `offset` on the ROOT. Content still ACCEPTS all three and publishes them
- *      up through a context — the same idiom `popover.tsx` uses for `sideOffset`
- *      — so `<HoverCardContent side="left" align="start">` lands as
- *      `placement="left-start"` instead of being silently dropped, which is what
- *      `PopoverContent` does with `align` today. gui's popper and Radix agree on
- *      the default here (`bottom`/`center`), so nothing has to be written out.
+ *      up through a context — the same idiom `popover.tsx` uses — so
+ *      `<HoverCardContent side="left" align="start">` lands as
+ *      `placement="left-start"`. The rejoining rule itself is `place()`, shared
+ *      with `popover.tsx` rather than spelled here: it was written in both, and
+ *      the two copies had already diverged. gui's popper and Radix agree on the
+ *      default (`bottom`/`center`), so nothing has to be written out.
  *
  * One deliberate a11y deviation from Radix, in the safer direction. Radix's hover
  * card is sighted-user-only: its Content carries no role and its Trigger no aria
@@ -49,6 +50,7 @@ import {
 } from 'react'
 
 import { ink } from './ink'
+import { place, type Align, type Side } from './place'
 import { slot } from './slot'
 import { PortalTheme, useThemeName } from '../../product/menu/portal-theme'
 
@@ -60,8 +62,6 @@ const DEFAULT_OFFSET = 4
 const WIDTH = 256
 
 type Placement = NonNullable<ComponentProps<typeof GuiPopover>['placement']>
-type Side = 'top' | 'right' | 'bottom' | 'left'
-type Align = 'start' | 'center' | 'end'
 
 /** Root-owned floating geometry. Content publishes into it; see rename 2 above. */
 const FloatContext = /* @__PURE__ */ createContext<
@@ -126,7 +126,7 @@ const HoverCardContent = ({
   const themeName = useThemeName()
   const publish = useContext(FloatContext)
   useEffect(
-    () => publish?.(align === 'center' ? side : (`${side}-${align}` as Placement), sideOffset),
+    () => publish?.(place(side, align) as Placement, sideOffset),
     [publish, side, align, sideOffset],
   )
   return (
