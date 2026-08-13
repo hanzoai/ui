@@ -170,12 +170,18 @@ const ButtonItemSelector: React.FC<ItemSelectorProps> = observer(({
  
   return showButtonIfOnlyOne || items.length > 1 ? (
     <RadioGroup
-      className={cn( 
-        (scrollable ? 'shrink min-h-0 gap-0' : (mobile ? 'gap-3' : 'gap-1')), 
-        (horizButtons ? `grid grid-cols-${items.length} gap-1` : 'flex flex-col'),
+      className={cn(
+        (scrollable ? 'shrink min-h-0 gap-0' : (mobile ? 'gap-3' : 'gap-1')),
+        (horizButtons ? 'grid gap-1' : 'flex flex-col'),
         (mobile && showText) ? 'min-w-pr-50' : '',
         clx,
       )}
+      // One column per item, same as the family tabs: the count is data, and
+      // data cannot be a class name. Interpolating it produced a rule only when
+      // the number happened to be 3, because two other files in this package
+      // spell that one literally — so this laid out correctly in a three-option
+      // selector and stacked in every other.
+      style={horizButtons ? { gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` } : undefined}
       onValueChange={selectSku}
       value={itemRef.item ? itemRef.item.sku : ''}
       data-vaul-no-drag 
