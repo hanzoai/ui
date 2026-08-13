@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/checkout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Embeddable checkout widget for Hanzo Commerce - Stripe-like checkout experience",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -39,7 +39,6 @@
   },
   "peerDependencies": {
     "@hanzo/commerce": "^7.3.0",
-    "@hanzo/ui": "^5.3.0",
     "lucide-react": ">=0.456.0",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
