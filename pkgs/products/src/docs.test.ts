@@ -12,6 +12,7 @@ const mk = (id: string, category: ProductCategory, docsSlug = id): CatalogEntry 
   route: `/${id}`,
   docsUrl: `https://docs.hanzo.ai/docs/services/${docsSlug}`,
   apiPath: `/v1/${id}`,
+  kind: "service",
   pricingId: null,
   brands: [],
 })

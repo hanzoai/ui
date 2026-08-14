@@ -12,6 +12,7 @@ const mk = (id: string, name: string, category: ProductCategory, gcp?: string): 
   route: `/${id}`,
   docsUrl: `https://docs.hanzo.ai/docs/services/${id}`,
   apiPath: `/v1/${id}`,
+  kind: "service",
   pricingId: null,
   brands: [],
   gcp,
