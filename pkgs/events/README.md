@@ -1,34 +1,52 @@
 # @hanzo/events
 
-**Use [`@hanzo/event`](https://www.npmjs.com/package/@hanzo/event).** Singular.
-
-```sh
-npm i @hanzo/event
-```
-
-This package is the plural spelling. It re-exports the real one unchanged, so
-code that guessed wrong keeps working — but every example, every doc and every
-new import should say `@hanzo/event`.
-
-## Why it exists
-
-The package is singular because one call sends one event:
+The canonical Hanzo event schema: **which events exist, what each one means, and
+what it carries.**
 
 ```ts
-import { analytics, EVENTS } from '@hanzo/event'
+import { EVENTS, SCHEMA, isKnown, specFor } from '@hanzo/events'
 
-analytics.capture(EVENTS.PROJECT_CREATED)
+SCHEMA['first_action']
+// { summary: 'Activation: the first moment of real value…',
+//   props: { action: { type:'string', values:['api_call','app_live','chat_reply'] } } }
+
+isKnown('deploy_succeeded')  // true
+isKnown('deploy_static_ok')  // false — flagged at the door, not refused
 ```
 
-Plural is the natural guess, though, and a guess that resolves to nothing is a
-dead end for whoever made it. So the name resolves here, and here points home.
+To **send** an event, use [`@hanzo/event`](https://www.npmjs.com/package/@hanzo/event).
+Plural is the catalog, singular is the client: many events are defined here, one
+event is sent by a call there. The client depends on this package and re-exports
+`EVENTS`, so either import works and there is still one definition.
 
-## What it deliberately does not do
+## The rules this file keeps
 
-It defines nothing. No event names, no schemas, no client — those live in
-`@hanzo/event`, and a second definition of what an event is, in a package one
-letter away from the first, is how the two come to disagree.
+**A dimension is a property, never part of the name.** `deploy_succeeded` with
+`{framework:'static'}`, never `deploy_static_succeeded`. That is what makes a
+funnel line up across console, chat, app, site and admin — and it is the reason
+a catalog like this can exist at all.
 
-Every signal — pageview, product event, identify, error — goes to one door,
-`POST /v1/event` on api.hanzo.ai, and is lensed server-side into web analytics,
-product insights and error tracking.
+**A property is listed only where there is evidence for it** — a docstring in
+the vocabulary or a live `capture()` call in a surface. An invented property is
+worse than an absent one: it teaches a wrong shape to the next reader and to
+anything trained on the corpus.
+
+**Every event is open.** `props` is what an event is known to carry, never the
+exhaustive set. A property absent here is undocumented, not forbidden.
+
+## For readers that are not TypeScript
+
+`catalog.json` ships in the package — the same catalog as data. The ingest door
+is Go and cannot import TypeScript, so it reads that. One source, two readers.
+
+```
+@hanzo/events/catalog.json
+  { version, names[], reserved[], schema{} }
+```
+
+## Unknown events are recorded, not refused
+
+The door records an event whose name is not in this catalog and flags it.
+Refusing would mean a surface that ships a new event before the catalog does
+loses the data outright — and the data is the part you cannot recover. A flag
+you can act on later.
