@@ -5,7 +5,7 @@
  *
  * `hanzo` is the full AI cloud. The sovereign-chain brands (`lux`, `zoo`, `pars`)
  * are web3 / bootnode admin consoles: Web3 (on-chain), Network (nodes/peering),
- * Security (keys/HSM/authz), Platform (deploy + CLI/SDKs/API keys/IDE) — NOT the
+ * Security (keys/HSM/authz), Infrastructure (deploy + CLI/SDKs/API keys/IDE) — NOT the
  * AI-cloud surfaces (AI, Compute, Data, Observe, Apps, Commerce). Account settings
  * (team/profile/org) live in the avatar menu, orthogonal to this grid. `null` = all.
  */
@@ -18,9 +18,9 @@ export const ALL_BRANDS: BrandId[] = ["hanzo", "lux", "zoo", "pars"]
 /** The categories each brand's console admits. `null` = all. Adjust a brand here. */
 export const BRAND_CATEGORIES: Record<BrandId, ProductCategory[] | null> = {
   hanzo: null,
-  lux: ["Web3", "Network", "Security", "Platform"],
-  zoo: ["Web3", "Network", "Security", "Platform"],
-  pars: ["Web3", "Network", "Security", "Platform"],
+  lux: ["Web3", "Network", "Security", "Infrastructure"],
+  zoo: ["Web3", "Network", "Security", "Infrastructure"],
+  pars: ["Web3", "Network", "Security", "Infrastructure"],
 }
 
 /** Categories a given brand's console surfaces, in display order (all for hanzo). */

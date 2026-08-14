@@ -55,7 +55,7 @@ describe("normalizeEntry", () => {
   })
   it("states what API a product has, defaulting to service", () => {
     expect(normalizeEntry({ id: "foo", category: "AI" })!.kind).toBe("service")
-    expect(normalizeEntry({ id: "cli", category: "Platform", kind: "client" })!.kind).toBe("client")
+    expect(normalizeEntry({ id: "cli", category: "Infrastructure", kind: "client" })!.kind).toBe("client")
     expect(normalizeEntry({ id: "mpc", category: "Security", kind: "pending" })!.kind).toBe("pending")
     // An unknown kind reads as a service, so a row is judged by its apiPath
     // rather than silently exempted by a word nothing here understands.

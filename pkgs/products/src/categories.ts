@@ -17,7 +17,7 @@ export const CATEGORY_ORDER: ProductCategory[] = [
   "Network",
   "Security",
   "Observe",
-  "Platform",
+  "Infrastructure",
   "Web3",
   "Apps",
   "Commerce",
@@ -46,7 +46,7 @@ export const CATEGORY_SUMMARY: Record<ProductCategory, string> = {
     "IAM, authorization, KMS, HSM, secrets, MPC, and audit — identity and secrets for your organization.",
   Observe:
     "Usage, spend, traces, metrics, logs, dashboards, and alerts — see and evaluate what your workloads do.",
-  Platform:
+  Infrastructure:
     "Projects, environments, builds, registry, releases, and pipelines, plus the CLI, SDKs, API, and IDE — the developer surface to ship and run your applications.",
   Web3: "Networks, tokens, wallets, oracles, indexer, and settlement — the on-chain surface.",
   Apps: "Chat, bot, search, marketplace, and studio — end-user AI applications.",
@@ -69,7 +69,7 @@ export const CATEGORY_COLORS: Record<ProductCategory, string> = {
   Network: "blue",
   Security: "red",
   Observe: "green",
-  Platform: "indigo",
+  Infrastructure: "indigo",
   Web3: "amber",
   Apps: "pink",
   Commerce: "teal",

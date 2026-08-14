@@ -19,7 +19,7 @@ import type { BrandId, ProductCategory } from "./types"
 
 // The sovereign-console category scope (lux/zoo/pars) and its complement — the
 // hanzo-only AI-cloud categories. Together they PARTITION CATEGORY_ORDER (10).
-const SOVEREIGN_CATS: ProductCategory[] = ["Web3", "Network", "Security", "Platform"]
+const SOVEREIGN_CATS: ProductCategory[] = ["Web3", "Network", "Security", "Infrastructure"]
 const HANZO_ONLY_CATS: ProductCategory[] = ["AI", "Compute", "Data", "Observe", "Apps", "Commerce"]
 const SOVEREIGN: BrandId[] = ["lux", "zoo", "pars"]
 
@@ -27,7 +27,7 @@ describe("the locked 10-category taxonomy", () => {
   it("CATEGORY_ORDER is exactly the 10 canonical categories, in order", () => {
     expect(CATEGORY_ORDER).toEqual([
       "AI", "Compute", "Data", "Network", "Security",
-      "Observe", "Platform", "Web3", "Apps", "Commerce",
+      "Observe", "Infrastructure", "Web3", "Apps", "Commerce",
     ])
     expect(CATEGORY_ORDER.length).toBe(10)
   })

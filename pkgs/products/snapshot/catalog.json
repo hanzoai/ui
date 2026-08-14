@@ -847,7 +847,7 @@
   {
     "id": "cli",
     "name": "CLI",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Terminal",
     "slug": "cli",
@@ -870,7 +870,7 @@
   {
     "id": "sdks",
     "name": "SDKs",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Package",
     "slug": "sdks",
@@ -893,7 +893,7 @@
   {
     "id": "api",
     "name": "API",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "sky",
     "iconKey": "Code2",
     "slug": "api",
@@ -916,7 +916,7 @@
   {
     "id": "integrations",
     "name": "Integrations",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "orange",
     "iconKey": "Cable",
     "slug": "integrations",
@@ -939,7 +939,7 @@
   {
     "id": "apps",
     "name": "Apps",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "rose",
     "iconKey": "AppWindow",
     "slug": "apps",
@@ -982,7 +982,7 @@
   {
     "id": "ide",
     "name": "IDE",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "indigo",
     "iconKey": "Code",
     "slug": "ide",
@@ -1005,7 +1005,7 @@
   {
     "id": "desktop",
     "name": "Desktop",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "cyan",
     "iconKey": "Monitor",
     "slug": "desktop",
@@ -1028,7 +1028,7 @@
   {
     "id": "projects",
     "name": "Projects",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "orange",
     "iconKey": "FolderGit2",
     "slug": "projects",
@@ -1051,7 +1051,7 @@
   {
     "id": "environments",
     "name": "Environments",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "teal",
     "iconKey": "Layers",
     "slug": "environments",
@@ -1074,7 +1074,7 @@
   {
     "id": "builds",
     "name": "Builds",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "rose",
     "iconKey": "Hammer",
     "slug": "builds",
@@ -1097,7 +1097,7 @@
   {
     "id": "registry",
     "name": "Registry",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Package",
     "slug": "registry",
@@ -1120,7 +1120,7 @@
   {
     "id": "releases",
     "name": "Releases",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Rocket",
     "slug": "releases",
@@ -1143,7 +1143,7 @@
   {
     "id": "pipelines",
     "name": "Pipelines",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "sky",
     "iconKey": "GitBranch",
     "slug": "pipelines",
@@ -1970,7 +1970,7 @@
   {
     "id": "api-keys",
     "name": "API Keys",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "orange",
     "iconKey": "KeySquare",
     "slug": "api-keys",
