@@ -52,19 +52,66 @@
    from inside it, and a menu with no background is a menu you read the page
    through. !important beats the compiled atomic background class, which lands
    in an inline <style> a bundler orders after this sheet, and it beats the call
-   sites that pin a fill by hand — those become no-ops instead of holes. */
+   sites that pin a fill by hand — those become no-ops instead of holes.
+
+   EVERY floating slot the package emits is here. It was seven, and the three it
+   left out were not obscure: AlertDialog is a MODAL — the one surface that
+   cannot be anything but floating — and it was opaque beside a glass Dialog.
+   ContextMenu and HoverCard are anchored menus beside glass DropdownMenu and
+   glass Popover. That is precisely the drift this file exists to stop, still
+   present in the file that stops it, which is worth stating plainly: a rule
+   that attaches the material to the slot only holds if every slot is named.
+   The list is checked against what the components actually emit, so the next
+   floating slot somebody adds fails the test rather than the eye. */
 @supports (backdrop-filter: blur(8px)) {
   .glass,
   [data-slot="glass"],
   [data-slot="dialog-content"],
+  [data-slot="alert-dialog-content"],
   [data-slot="popover-content"],
   [data-slot="select-content"],
   [data-slot="dropdown-menu-content"],
   [data-slot="dropdown-menu-sub-content"],
+  [data-slot="context-menu-content"],
+  [data-slot="context-menu-sub-content"],
+  [data-slot="hover-card-content"],
   [data-slot="tooltip-content"] {
     background-color: color-mix(in oklab, var(--background) 72%, transparent) !important;
     -webkit-backdrop-filter: blur(20px) saturate(1.8);
     backdrop-filter: blur(20px) saturate(1.8);
+    /* ── The dispersion ──────────────────────────────────────────────────────
+       Glass splits light at the EDGE. That is the whole of the physics and the
+       whole of the rule: the body of a pane shows you what is behind it, and the
+       rim is where the angle is steep enough to spread the spectrum. So the fill
+       stays monochrome — the brand is monochrome and text has to sit on it — and
+       the colour lives in one pixel at the top lip.
+
+       LINEAR, ACROSS THE LIP — never conic around the box. The composer's note
+       below records what conic costs on a rectangle: the long edges take a wide
+       angular slice and the short sides almost none, so one side wears blue and
+       the opposite burnt orange, and the ring reads as off-centre. Swept along
+       one edge instead, the stops are evenly spaced at any aspect ratio, so a
+       1000px dialog and a 90px tooltip disperse alike.
+
+       Peak alpha .16, on a band two pixels tall, one pixel DOWN. Both numbers
+       were measured rather than chosen. The lit edge is an inset box-shadow, and
+       a box-shadow paints over the background — so the first version put the
+       spectrum in the same pixel the white lip occupies and the lip won: at ×6
+       the rim was a neutral hairline with no colour in it at all. Sitting the
+       band one pixel inside puts it where a real pane disperses anyway, just
+       behind the specular line, and it is legible there at half the alpha a
+       collision would have needed. Three pixels at .22 was tried too and reads
+       as a coloured stroke somebody drew, which is a different thing entirely.
+
+       That is also the difference between this and the full-wheel rainbow that
+       was tried and reverted: not a different palette, a different AREA. Colour
+       over a whole surface makes that surface the only coloured thing in the
+       product; colour along its rim reads as the material catching light, which
+       is the one thing chrome is allowed to say. */
+    background-image: var(--glass-prism) !important;
+    background-repeat: no-repeat !important;
+    background-size: 100% 2px !important;
+    background-position: 0 1px !important;
   }
 }
 
@@ -118,6 +165,24 @@
   --glass-shadow-1: 0 1px 2px 0 rgb(0 0 0 / .40);
   --glass-shadow-2: 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55);
   --glass-shadow-3: 0 24px 60px -16px rgb(0 0 0 / .75);
+
+  /* The spectrum the lip disperses. Declared here for the same reason the drops
+     above are: a name this package owns cannot be outranked by a sheet that
+     happens to load later. Nothing else ships a --glass-prism.
+
+     Five stops, blue through violet, rose, amber, to a cool green — the order
+     light actually comes apart in, so it reads as refraction rather than as a
+     palette somebody chose. Alphas .13-.16: measured at ×6 against the white lip
+     that sits a pixel above, high enough to read there and low enough that at
+     1:1 it is a tinge. A theme that wants none of it sets this to `none` and the
+     rim goes back to being the lit edge alone. */
+  --glass-prism:
+    linear-gradient(90deg,
+      rgb(120 170 255 / .16) 0%,
+      rgb(178 142 255 / .15) 24%,
+      rgb(255 146 198 / .13) 48%,
+      rgb(255 190 124 / .15) 72%,
+      rgb(138 228 208 / .16) 100%);
 }
 
 .light, :root.t_light, .t_light {
@@ -137,6 +202,9 @@
 [data-slot="select-content"],
 [data-slot="dropdown-menu-content"],
 [data-slot="dropdown-menu-sub-content"],
+[data-slot="context-menu-content"],
+[data-slot="context-menu-sub-content"],
+[data-slot="hover-card-content"],
 [data-slot="tooltip-content"] {
   box-shadow:
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
@@ -144,7 +212,8 @@
 }
 
 .elevation-3,
-[data-slot="dialog-content"] {
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"] {
   box-shadow:
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
     var(--glass-shadow-3) !important;
@@ -169,7 +238,8 @@
    palette: `rgba(0,0,0,.5)` under `opacity: .5` — a quarter black, exactly the
    double dim these two lines exist to end. A rule written to beat a compiled
    class has to be written with the weight to beat one. */
-[data-slot="dialog-overlay"] {
+[data-slot="dialog-overlay"],
+[data-slot="alert-dialog-overlay"] {
   opacity: 1 !important;
   background-color: var(--surface-scrim, rgb(0 0 0 / .8)) !important;
 }
