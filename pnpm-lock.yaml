@@ -967,8 +967,8 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
       vitest:
-        specifier: ^2.1.9
-        version: 2.1.9(@types/node@25.9.5)(@vitest/ui@4.1.9)(esbuild@0.28.1)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+        specifier: ^4.1.0
+        version: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
 
   pkg/ui:
     dependencies:
@@ -24882,15 +24882,6 @@ snapshots:
       msw: 2.14.6(@types/node@20.19.43)(typescript@5.9.3)
       vite: 8.1.5(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  '@vitest/mocker@2.1.9(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))':
-    dependencies:
-      '@vitest/spy': 2.1.9
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      msw: 2.14.6(@types/node@25.9.5)(typescript@5.9.3)
-      vite: 8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-
   '@vitest/mocker@4.1.9(msw@2.14.6(@types/node@25.9.4)(typescript@5.9.3))(vite@8.0.16(@types/node@25.9.4)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.9
@@ -24986,7 +24977,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 2.1.9(@types/node@25.9.5)(@vitest/ui@4.1.9)(esbuild@0.28.1)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
+      vitest: 2.1.9(@types/node@20.19.43)(@vitest/ui@4.1.9)(esbuild@0.28.1)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@20.19.43)(typescript@5.9.3))(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
     optional: true
 
   '@vitest/ui@4.1.9(vitest@4.1.9)':
@@ -34155,28 +34146,6 @@ snapshots:
       - tsx
       - yaml
 
-  vite-node@2.1.9(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0):
-    dependencies:
-      cac: 6.7.14
-      debug: 4.4.3
-      es-module-lexer: 1.7.0
-      pathe: 1.1.2
-      vite: 8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-    transitivePeerDependencies:
-      - '@types/node'
-      - '@vitejs/devtools'
-      - esbuild
-      - jiti
-      - less
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
   vite-tsconfig-paths@4.3.2(typescript@5.9.3)(vite@8.1.5(@types/node@20.19.43)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       debug: 4.4.3
@@ -34328,48 +34297,6 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.43
-      '@vitest/ui': 4.1.9(vitest@2.1.9)
-      happy-dom: 20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      jsdom: 29.1.1(@noble/hashes@1.8.0)
-    transitivePeerDependencies:
-      - '@vitejs/devtools'
-      - esbuild
-      - jiti
-      - less
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - yaml
-
-  vitest@2.1.9(@types/node@25.9.5)(@vitest/ui@4.1.9)(esbuild@0.28.1)(happy-dom@20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0):
-    dependencies:
-      '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
-      '@vitest/pretty-format': 2.1.9
-      '@vitest/runner': 2.1.9
-      '@vitest/snapshot': 2.1.9
-      '@vitest/spy': 2.1.9
-      '@vitest/utils': 2.1.9
-      chai: 5.3.3
-      debug: 4.4.3
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      pathe: 1.1.2
-      std-env: 3.10.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.1.1
-      tinyrainbow: 1.2.0
-      vite: 8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-      vite-node: 2.1.9(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 25.9.5
       '@vitest/ui': 4.1.9(vitest@2.1.9)
       happy-dom: 20.10.6(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       jsdom: 29.1.1(@noble/hashes@1.8.0)
