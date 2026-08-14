@@ -47,7 +47,8 @@ CatalogEntry {
   brandColor,                   // swatch key  → css by ./colors swatchHex
   iconKey,                      // icon name   → component by ./icons
   slug, route, docsUrl,
-  apiPath,                      // always /v1-prefixed
+  apiPath,                      // /v1-prefixed, or EMPTY when there is no API
+  kind,                         // service | client | pending — why apiPath is empty
   pricingId,                    // pricing service key (plans/<key>.json) or null
   brands?                       // OPTIONAL — derived from category when absent
 }
