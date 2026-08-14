@@ -9,10 +9,11 @@
  *     { products: CatalogEntry[] }     (preferred envelope)  — OR —
  *     { catalog | data | items: [...] }                      (tolerated)
  *   Each row: { id, name, category, brandColor, iconKey, slug, route, docsUrl,
- *               apiPath, pricingId, brands? }. `brands` MAY be omitted — the
- *   client derives it from `category`. Unknown-category rows are dropped (they
- *   cannot be grouped). Missing optional fields are filled with the conventional
- *   default so a partial row still renders.
+ *               apiPath, kind, pricingId, brands? }. `brands` MAY be omitted —
+ *   the client derives it from `category`. Unknown-category rows are dropped
+ *   (they cannot be grouped). Missing optional fields are filled with the
+ *   conventional default so a partial row still renders — EXCEPT apiPath, which
+ *   is never invented from the slug, because a slug is not a route.
  *
  * Env-agnostic: takes an injected `fetch` (Node, browser, edge, or a test mock);
  * no DOM lib dependency. React-free.

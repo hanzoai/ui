@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/products",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The canonical Hanzo product catalog: one typed contract + icon/color code-maps + a commerce-backed client with a checked-in snapshot fallback. Single source of truth for console, docs, site, and pricing.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
