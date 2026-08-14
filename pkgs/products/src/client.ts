@@ -100,7 +100,16 @@ export function normalizeEntry(raw: unknown): CatalogEntry | null {
     slug,
     route: str(raw.route) ?? `/${slug}`,
     docsUrl: str(raw.docsUrl) ?? `https://docs.hanzo.ai/docs/services/${slug}`,
-    apiPath: str(raw.apiPath) ?? `/v1/${slug}`,
+    // NOT `?? /v1/${slug}`. That default invented an address out of a name, and
+    // the names were wrong: 31 of the 84 products the live catalog served came
+    // back with a path nothing answers — /v1/providers, /v1/containers, /v1/nodes,
+    // /v1/wallet — because a slug is not a route and the router was never asked.
+    // Worse, it was self-healing in the wrong direction: commerce now sends ""
+    // for the twelve products that HAVE no API, and this line would have turned
+    // every one of those honest blanks straight back into a dead link. An empty
+    // apiPath renders as no API, which is exactly what it means.
+    apiPath: str(raw.apiPath) ?? "",
+    kind: raw.kind === "client" || raw.kind === "pending" ? raw.kind : "service",
     pricingId: typeof pricing === "string" && pricing.length > 0 ? pricing : null,
     brands: brandsRaw, // resolveCatalog derives from category when empty
     repo: str(raw.repo) ?? null,

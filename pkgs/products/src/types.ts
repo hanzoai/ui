@@ -54,6 +54,14 @@ export type ColorToken = string
 export type ProductStatus = "enabled" | "soon"
 
 /**
+ * What API a product has on api.hanzo.ai. `service` serves one at `apiPath`;
+ * `client` consumes one and serves none; `pending` is a real product this API
+ * does not front yet. The last two carry an EMPTY `apiPath`, which is the honest
+ * value — see `normalizeEntry`, which used to invent `/v1/<slug>` there.
+ */
+export type ProductKind = "service" | "client" | "pending"
+
+/**
  * One product row — the unit commerce stores and every surface renders.
  *
  * The first eleven fields are the CONTRACT (present on every row). The trailing
@@ -77,8 +85,19 @@ export interface CatalogEntry {
   route: string
   /** Canonical docs deep link, `https://docs.hanzo.ai/docs/services/<docsSlug>`. */
   docsUrl: string
-  /** The product's `/v1` API surface, e.g. `"/v1/gateway"`. Always `/v1`-prefixed. */
+  /**
+   * The product's `/v1` API surface, e.g. `"/v1/gateway"` — `/v1`-prefixed when
+   * present, and EMPTY when the product has none. Empty is a real answer, not a
+   * gap to be filled: read `kind` for which of the two reasons applies.
+   */
   apiPath: string
+  /**
+   * What API this product has: it SERVES one (`apiPath` is a live route), it
+   * CONSUMES one and serves none (the CLI, the SDKs, the desktop app), or it is
+   * a real product this API does not front yet (`pending`). Stated rather than
+   * inferred, so a surface never has to guess why `apiPath` is empty.
+   */
+  kind: ProductKind
   /** Pricing service key (`plans/<key>.json` in hanzoai/pricing), or `null` when unpriced. */
   pricingId: string | null
   /** Brands whose console surfaces this product. Derived from `category`. */
