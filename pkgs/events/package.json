@@ -1,0 +1,25 @@
+{
+  "name": "@hanzo/events",
+  "version": "0.1.0",
+  "description": "The plural spelling of @hanzo/event. Re-exports it; install @hanzo/event instead.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": { "types": "./index.d.ts", "default": "./index.js" },
+    "./react": { "types": "./react.d.ts", "default": "./react.js" }
+  },
+  "files": ["index.js", "index.d.ts", "react.js", "react.d.ts", "README.md"],
+  "dependencies": {
+    "@hanzo/event": "^0.3.21"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/events"
+  },
+  "homepage": "https://github.com/hanzoai/ui/tree/main/pkgs/event",
+  "keywords": ["hanzo", "analytics", "telemetry", "events"],
+  "publishConfig": { "registry": "https://registry.npmjs.org", "access": "public" }
+}
