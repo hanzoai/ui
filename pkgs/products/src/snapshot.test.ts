@@ -45,8 +45,18 @@ describe("snapshot integrity", () => {
     }
   })
 
-  it("every apiPath is /v1-prefixed (nothing before /v1)", () => {
-    for (const e of SNAPSHOT) expect(e.apiPath, e.id).toMatch(/^\/v1(\/|$)/)
+  // A service is reached at a real /v1 route; a client and a pending product are
+  // reached at none, and their apiPath is empty because that is what is true.
+  // The old rule demanded a path from EVERY row, which is why every row had one —
+  // 31 of them made up out of the slug, each a link that answers 404.
+  it("a service names a /v1 route, and nothing else names any", () => {
+    for (const e of SNAPSHOT) {
+      if (e.kind === "client" || e.kind === "pending") expect(e.apiPath, e.id).toBe("")
+      else expect(e.apiPath, e.id).toMatch(/^\/v1(\/|$)/)
+    }
+  })
+  it("every row states its kind", () => {
+    for (const e of SNAPSHOT) expect(["service", "client", "pending"], e.id).toContain(e.kind)
   })
 
   it("pricingId is a non-empty string or null", () => {

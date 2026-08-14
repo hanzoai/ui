@@ -39,9 +39,27 @@ describe("normalizeEntry", () => {
     expect(e.slug).toBe("foo")
     expect(e.route).toBe("/foo")
     expect(e.docsUrl).toBe("https://docs.hanzo.ai/docs/services/foo")
-    expect(e.apiPath).toBe("/v1/foo")
     expect(e.iconKey).toBe("Box")
     expect(e.pricingId).toBeNull()
+  })
+  // A name is not a route. This line used to read `/v1/foo`, and that default is
+  // where 31 of the 84 products in the live catalog got the address they
+  // advertise — /v1/providers, /v1/containers, /v1/nodes, /v1/wallet — none of
+  // which api.hanzo.ai has ever answered. Defaulting produced a plausible dead
+  // link and reported it as a working one, which is worse than producing nothing:
+  // the gap could not be seen from any surface that rendered it.
+  it("never invents an apiPath from the slug", () => {
+    expect(normalizeEntry({ id: "foo", category: "AI" })!.apiPath).toBe("")
+    expect(normalizeEntry({ id: "foo", category: "AI", apiPath: "" })!.apiPath).toBe("")
+    expect(normalizeEntry({ id: "foo", category: "AI", apiPath: "/v1/foos" })!.apiPath).toBe("/v1/foos")
+  })
+  it("states what API a product has, defaulting to service", () => {
+    expect(normalizeEntry({ id: "foo", category: "AI" })!.kind).toBe("service")
+    expect(normalizeEntry({ id: "cli", category: "Platform", kind: "client" })!.kind).toBe("client")
+    expect(normalizeEntry({ id: "mpc", category: "Security", kind: "pending" })!.kind).toBe("pending")
+    // An unknown kind reads as a service, so a row is judged by its apiPath
+    // rather than silently exempted by a word nothing here understands.
+    expect(normalizeEntry({ id: "foo", category: "AI", kind: "whatever" })!.kind).toBe("service")
   })
   it("repairs a bogus brandColor to a stable default, keeps a real one", () => {
     expect(normalizeEntry({ id: "foo", category: "AI", brandColor: "not-a-color" })!.brandColor).not.toBe("not-a-color")
