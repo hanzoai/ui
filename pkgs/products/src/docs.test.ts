@@ -21,8 +21,8 @@ const fixture: CatalogEntry[] = [
   mk("models", "AI"),
   mk("agents", "AI"),
   mk("kms", "Security"),
-  mk("products", "Commerce", "commerce"),
-  mk("orders", "Commerce", "commerce"), // collapses to the same docs page
+  mk("products", "Apps", "commerce"),
+  mk("orders", "Apps", "commerce"), // collapses to the same docs page
 ]
 
 describe("docsSlugOf", () => {
@@ -37,7 +37,7 @@ describe("docsServicesMeta — canonical taxonomy applied to docs", () => {
 
   it("emits categories as separators in CATEGORY_ORDER, only present ones", () => {
     const seps = meta.pages.filter((p) => p.startsWith("---"))
-    expect(seps).toEqual(["---AI---", "---Security---", "---Commerce---"])
+    expect(seps).toEqual(["---AI---", "---Security---", "---Apps---"])
   })
   it("lists a category's slugs after its separator, in order", () => {
     const ai = meta.pages.indexOf("---AI---")
@@ -67,7 +67,7 @@ describe("docsServicesMeta — canonical taxonomy applied to docs", () => {
     // a category whose only pages are missing drops out entirely
     expect(m.pages).not.toContain("---Security---")
     expect(m.pages).toContain("---AI---")
-    expect(m.pages).toContain("---Commerce---")
+    expect(m.pages).toContain("---Apps---")
   })
 })
 

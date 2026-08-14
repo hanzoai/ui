@@ -16,21 +16,22 @@
  *     source may omit it; the client fills it in. It is never authored by hand —
  *     duplicating it per-row is exactly the drift this package exists to kill.
  */
+import { CATEGORIES } from "./taxonomy.generated"
 
-/** The 10 canonical Hanzo Cloud categories — the console operational axis, in the
- *  one true order (see ./categories `CATEGORY_ORDER`). This is the reconciled
- *  taxonomy every surface groups by; docs' descriptive groups map onto it. */
-export type ProductCategory =
-  | "AI"
-  | "Compute"
-  | "Data"
-  | "Network"
-  | "Security"
-  | "Observe"
-  | "Infrastructure"
-  | "Web3"
-  | "Apps"
-  | "Commerce"
+/**
+ * A product category — read off the catalog's own list rather than spelled out
+ * again here.
+ *
+ * The union used to be typed by hand, and a hand-typed union is a claim about
+ * someone else's data: it claimed `Commerce` (which the catalog has never
+ * carried a single product under) and omitted `Dev` (which carries eight). The
+ * claim was load-bearing — `normalizeEntry` drops any row whose category is not
+ * in it — so every Dev product the live catalog served was silently discarded.
+ *
+ * Deriving it from `CATEGORIES` makes that class of disagreement unstateable:
+ * the only way to name a category here is for commerce to be serving it.
+ */
+export type ProductCategory = (typeof CATEGORIES)[number]
 
 /** A white-label brand whose console surfaces a category-scoped subset of the
  *  catalog. `hanzo` = the full AI cloud; the sovereign chains = web3/admin only. */
