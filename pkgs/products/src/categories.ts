@@ -11,7 +11,7 @@
  * Fumadocs build or an Express service alike.
  */
 import type { ProductCategory } from "./types"
-import { CATEGORIES } from "./taxonomy.generated"
+import { CATEGORIES, COLORS } from "./taxonomy.generated"
 
 /** Every category in exact display order. Every nav, launcher, and docs group
  *  reads this one list; groupers skip empty categories. */
@@ -43,7 +43,7 @@ export const CATEGORY_SUMMARY: Record<ProductCategory, string> = {
   Security:
     "IAM, authorization, KMS, HSM, secrets, MPC, and audit — identity and secrets for your organization.",
   Dev: "API, SDKs, CLI, IDE, desktop, and keys — the developer tools you build against the cloud with.",
-  Platform:
+  Infrastructure:
     "Projects, environments, builds, registry, releases, and pipelines — ship and run your applications.",
   Observe:
     "Usage, spend, traces, metrics, logs, dashboards, and alerts — see and evaluate what your workloads do.",
@@ -52,22 +52,14 @@ export const CATEGORY_SUMMARY: Record<ProductCategory, string> = {
 }
 
 /**
- * One representative color-swatch KEY per category — the accent a category header
- * (landing page, docs group, marketing shelf) tints with. Resolved to css by
- * `swatchHex` (./colors), like every product's `brandColor`. Chosen to match the
- * dominant flagship color in each group, so the per-category and per-product
- * accents read as one palette. This is the "per-category color" axis; per-product
- * colors live on each row's `brandColor`.
+ * One color-swatch KEY per category — the accent a category header (landing page,
+ * docs group, marketing shelf, console sidebar) tints with. Resolved to css by
+ * `swatchHex` (./colors), like every product's `brandColor`.
+ *
+ * Served by the catalog, not chosen here. A category's colour is the only cue
+ * that separates ten groups at a glance, so it is part of the category rather
+ * than each surface's decoration — and while it WAS each surface's decoration,
+ * the console drew this taxonomy's seventh category teal and this file called it
+ * indigo, which is two categories to anyone looking at both.
  */
-export const CATEGORY_COLORS: Record<ProductCategory, string> = {
-  AI: "violet",
-  Compute: "sky",
-  Data: "cyan",
-  Network: "blue",
-  Security: "red",
-  Dev: "indigo",
-  Platform: "teal",
-  Observe: "green",
-  Web3: "amber",
-  Apps: "pink",
-}
+export const CATEGORY_COLORS: Record<ProductCategory, string> = COLORS

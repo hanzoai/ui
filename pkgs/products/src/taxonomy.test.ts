@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { CATEGORIES, BRAND_SCOPE } from "./taxonomy.generated"
+import { CATEGORIES, BRAND_SCOPE, COLORS } from "./taxonomy.generated"
 import { CATEGORY_ORDER, CATEGORY_SUMMARY, CATEGORY_COLORS, categorySlug } from "./categories"
 import { ALL_BRANDS, BRAND_CATEGORIES, brandsForCategory } from "./brands"
 import { isSwatchKey } from "./colors"
@@ -50,6 +50,13 @@ describe("every category carries its display copy", () => {
   it("has one real swatch per category and no swatch for a category that is gone", () => {
     expect(Object.keys(CATEGORY_COLORS).sort()).toEqual([...CATEGORY_ORDER].sort())
     for (const c of CATEGORY_ORDER) expect(isSwatchKey(CATEGORY_COLORS[c]), c).toBe(true)
+  })
+
+  // The accent is the catalog's, like the list itself. Restating it here would
+  // be the same defect one layer down: the console and this package each kept a
+  // mapping, and the same category came out teal in one and indigo in the other.
+  it("takes its accents from the generated list rather than restating them", () => {
+    expect(CATEGORY_COLORS).toEqual(COLORS)
   })
 })
 

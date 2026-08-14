@@ -988,7 +988,7 @@
   {
     "id": "projects",
     "name": "Projects",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "orange",
     "iconKey": "FolderGit2",
     "slug": "projects",
@@ -1008,7 +1008,7 @@
   {
     "id": "environments",
     "name": "Environments",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "teal",
     "iconKey": "Layers",
     "slug": "environments",
@@ -1028,7 +1028,7 @@
   {
     "id": "builds",
     "name": "Builds",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "rose",
     "iconKey": "Hammer",
     "slug": "builds",
@@ -1048,7 +1048,7 @@
   {
     "id": "registry",
     "name": "Registry",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Package",
     "slug": "registry",
@@ -1068,7 +1068,7 @@
   {
     "id": "releases",
     "name": "Releases",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "slate",
     "iconKey": "Rocket",
     "slug": "releases",
@@ -1088,7 +1088,7 @@
   {
     "id": "pipelines",
     "name": "Pipelines",
-    "category": "Platform",
+    "category": "Infrastructure",
     "brandColor": "sky",
     "iconKey": "GitBranch",
     "slug": "pipelines",
