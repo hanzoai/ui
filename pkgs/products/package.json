@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/products",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "The canonical Hanzo product catalog: one typed contract + icon/color code-maps + a commerce-backed client with a checked-in snapshot fallback. Single source of truth for console, docs, site, and pricing.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -26,7 +26,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "test": "vitest run",
+    "sync": "node scripts/sync.mjs",
+    "test": "vitest run && node scripts/sync.mjs --check",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

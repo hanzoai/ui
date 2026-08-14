@@ -18,22 +18,25 @@ import type { BrandId, ProductCategory } from "./types"
 // derivation. Pure (brand passed in), so no hostname mocking.
 
 // The sovereign-console category scope (lux/zoo/pars) and its complement — the
-// hanzo-only AI-cloud categories. Together they PARTITION CATEGORY_ORDER (10).
-const SOVEREIGN_CATS: ProductCategory[] = ["Web3", "Network", "Security", "Infrastructure"]
-const HANZO_ONLY_CATS: ProductCategory[] = ["AI", "Compute", "Data", "Observe", "Apps", "Commerce"]
+// hanzo-only AI-cloud categories. READ off the scope rather than restated: this
+// file used to carry its own copy of both lists AND of CATEGORY_ORDER, so it
+// could only ever agree with itself. It asserted a taxonomy with `Commerce` and
+// without `Dev` — the exact inverse of the catalog — and passed the whole time.
+const SOVEREIGN_CATS: readonly ProductCategory[] = BRAND_CATEGORIES.lux ?? []
+const HANZO_ONLY_CATS = CATEGORY_ORDER.filter((c) => !SOVEREIGN_CATS.includes(c))
 const SOVEREIGN: BrandId[] = ["lux", "zoo", "pars"]
 
-describe("the locked 10-category taxonomy", () => {
-  it("CATEGORY_ORDER is exactly the 10 canonical categories, in order", () => {
-    expect(CATEGORY_ORDER).toEqual([
-      "AI", "Compute", "Data", "Network", "Security",
-      "Observe", "Infrastructure", "Web3", "Apps", "Commerce",
-    ])
-    expect(CATEGORY_ORDER.length).toBe(10)
+describe("the taxonomy the catalog serves", () => {
+  it("is a non-empty list of distinct categories", () => {
+    expect(CATEGORY_ORDER.length).toBeGreaterThan(0)
+    expect(new Set(CATEGORY_ORDER).size).toBe(CATEGORY_ORDER.length)
   })
-  it("the cut categories (Training/Dev/Settings) are gone", () => {
-    for (const gone of ["Training", "Dev", "Settings"]) {
-      expect(CATEGORY_ORDER).not.toContain(gone as ProductCategory)
+  // Account administration is not something a customer buys, so it is not a
+  // product category. `Dev` is NOT on this list: it is the catalog's own sixth
+  // category and eight products sit under it.
+  it("carries no console navigation section", () => {
+    for (const nav of ["Training", "Billing", "Settings"]) {
+      expect(CATEGORY_ORDER).not.toContain(nav as ProductCategory)
     }
   })
   it("sovereign + hanzo-only scopes PARTITION CATEGORY_ORDER (no overlap, no gap)", () => {

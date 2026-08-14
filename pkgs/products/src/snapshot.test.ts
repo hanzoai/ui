@@ -8,8 +8,11 @@ import { brandsForCategory } from "./brands"
 // If any of these fail, the catalog is malformed BEFORE it ever reaches commerce.
 
 describe("snapshot integrity", () => {
-  it("holds the full 103-product catalog", () => {
-    expect(SNAPSHOT.length).toBe(103)
+  // Not a magic number to keep in step by hand: the snapshot is generated from
+  // the catalog, so this only pins that it is a catalog and not an empty file.
+  // Its exact size is the catalog's business and `pnpm sync --check` compares it.
+  it("holds a catalog", () => {
+    expect(SNAPSHOT.length).toBeGreaterThan(50)
   })
 
   it("every id and slug is unique", () => {
@@ -17,13 +20,18 @@ describe("snapshot integrity", () => {
     expect(new Set(SNAPSHOT.map((e) => e.slug)).size).toBe(SNAPSHOT.length)
   })
 
-  it("every category is one of the 10 canonical", () => {
+  it("every category is one the taxonomy carries", () => {
     for (const e of SNAPSHOT) expect(CATEGORY_ORDER).toContain(e.category)
   })
 
-  it("holds NONE of the cut categories (Training/Dev/Settings)", () => {
+  // This used to assert that `Dev` was cut. It is not cut — it is the catalog's
+  // sixth category and eight products are filed under it — and asserting the
+  // opposite is how the disagreement survived: the copy was wrong and its own
+  // suite defended it. Which categories exist is not this file's opinion; see
+  // ./taxonomy.test.ts, which reads the generated list.
+  it("holds no category the console administers rather than sells", () => {
     const cats = new Set(SNAPSHOT.map((e) => e.category))
-    for (const gone of ["Training", "Dev", "Settings"]) expect(cats.has(gone as never)).toBe(false)
+    for (const nav of ["Settings", "Billing", "Training"]) expect(cats.has(nav as never)).toBe(false)
   })
 
   it("every brandColor is a real swatch key (colorToken -> css never falls through)", () => {
