@@ -121,12 +121,30 @@ export function Palette({
         placeholderTextColor="$color11"
       />
       <XStack minH={height}>
+        {/* THE LAST ROW MUST BE ABLE TO CLEAR THE BOTTOM EDGE. With equal
+            padding top and bottom the scrollable content ended flush with the
+            container, so the final row rested sliced against it and no amount of
+            scrolling ever showed it whole — the list had nowhere further to go.
+            The deeper bottom pad extends the scroll range past the last row,
+            so the row can reach a resting place clear of the edge. It reads no
+            row height, so it survives a row growing a second line.
+
+            `scrollPaddingBottom` belongs here too — it is the keyboard half,
+            parking an arrowed-to row clear of the edge rather than at its first
+            visible pixel — but this list is a gui ScrollView and does not take
+            it. gui drops an unknown prop silently, so it would have compiled,
+            rendered, and done nothing; the type checker is the only reason that
+            is written here instead of shipped.
+
+            A JSX comment cannot sit among the attributes below — it is not an
+            attribute and the parse fails. */}
         <CommandList
           maxH={height}
           width={children ? "50%" : "100%"}
           borderRightWidth={children ? 1 : 0}
           borderColor="$borderColor"
-          py="$1"
+          pt="$1"
+          pb="$4"
         >
           {groups.length === 0 && (
             <CommandEmpty>
