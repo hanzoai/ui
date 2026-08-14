@@ -11,7 +11,7 @@ export const CATEGORIES = [
   "Network",
   "Security",
   "Dev",
-  "Platform",
+  "Infrastructure",
   "Observe",
   "Web3",
   "Apps",
@@ -23,4 +23,26 @@ export const BRAND_SCOPE = {
   lux: ["Web3", "Network", "Security", "Dev"],
   zoo: ["Web3", "Network", "Security", "Dev"],
   pars: ["Web3", "Network", "Security", "Dev"],
+} as const
+
+/**
+ * The accent each category reads as — a swatch key, resolved to css by
+ * `swatchHex`, exactly like a product's `brandColor`.
+ *
+ * Served by the catalog, not chosen per surface: a category drawn teal in the
+ * console and indigo on the site is two different categories to anyone looking
+ * at both, which is what happened while this mapping lived in two files and was
+ * owned by neither.
+ */
+export const COLORS = {
+  "AI": "violet",
+  "Compute": "blue",
+  "Data": "cyan",
+  "Network": "sky",
+  "Security": "red",
+  "Dev": "indigo",
+  "Infrastructure": "teal",
+  "Observe": "green",
+  "Web3": "amber",
+  "Apps": "pink",
 } as const
