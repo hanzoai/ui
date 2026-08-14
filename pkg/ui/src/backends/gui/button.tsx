@@ -216,7 +216,17 @@ function Button({
       data-size={resolved}
       variant={variant ?? 'default'}
       size={resolved}
-      render={host ? createElement(host.type, { ...(host.props as object), children: undefined }) : undefined}
+      // SPREAD, never `render={… : undefined}`. The frame bakes its own
+      // `render: <button type="button" />`, and an explicitly passed undefined
+      // overrides a default rather than falling back to it — so writing the
+      // prop unconditionally erased the element on every button that is not
+      // asChild, and they all came out `<div role="button">`. That reads
+      // correctly to a screen reader and is invisible to the form: a div is not
+      // a submitter, so the click handler still ran while `<form action=…>`
+      // never fired. Absent means "keep the frame's"; present means "use mine".
+      {...(host
+        ? { render: createElement(host.type, { ...(host.props as object), children: undefined }) }
+        : null)}
       disabled={disabled || isLoading}
       {...touch(HEIGHT[resolved], 44, 'y')}
       className={buttonVariants({ variant, size, className })}
