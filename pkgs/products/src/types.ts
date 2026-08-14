@@ -27,7 +27,7 @@ export type ProductCategory =
   | "Network"
   | "Security"
   | "Observe"
-  | "Platform"
+  | "Infrastructure"
   | "Web3"
   | "Apps"
   | "Commerce"
