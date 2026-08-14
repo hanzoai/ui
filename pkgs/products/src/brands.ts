@@ -1,30 +1,37 @@
 /**
- * Per-brand catalog scope — the ONE knob that makes each brand's console show the
- * right surfaces, and the derivation that fills a row's `brands[]` from its
- * `category`. Lifted verbatim from console2 `brand-scope.ts`; pure + React-free.
+ * Per-brand catalog scope — which categories each brand's console admits, and the
+ * derivation that fills a row's `brands[]` from its `category`. Pure + React-free.
  *
  * `hanzo` is the full AI cloud. The sovereign-chain brands (`lux`, `zoo`, `pars`)
  * are web3 / bootnode admin consoles: Web3 (on-chain), Network (nodes/peering),
- * Security (keys/HSM/authz), Infrastructure (deploy + CLI/SDKs/API keys/IDE) — NOT the
- * AI-cloud surfaces (AI, Compute, Data, Observe, Apps, Commerce). Account settings
- * (team/profile/org) live in the avatar menu, orthogonal to this grid. `null` = all.
+ * Security (keys/HSM/authz), Dev (keys/CLI/SDKs) — NOT the AI-cloud surfaces.
+ * Account settings (team/profile/org) live in the avatar menu, orthogonal to this
+ * grid.
+ *
+ * The scope is not decided here either. `GET /v1/commerce/catalog?brand=lux`
+ * already answers it — that is the request a Lux console actually makes — so
+ * scripts/sync.mjs reads each brand's answer into `BRAND_SCOPE`. A second copy
+ * here would be a rule with two homes, and it had already drifted: this file
+ * scoped the chain brands to `Infrastructure` while the API scoped them to `Dev`,
+ * so a row's `brands[]` disagreed with the catalog that served it.
  */
 import type { BrandId, ProductCategory } from "./types"
 import { CATEGORY_ORDER } from "./categories"
+import { BRAND_SCOPE } from "./taxonomy.generated"
 
 /** Every brand, in display order. */
 export const ALL_BRANDS: BrandId[] = ["hanzo", "lux", "zoo", "pars"]
 
-/** The categories each brand's console admits. `null` = all. Adjust a brand here. */
+/** The categories each brand's console admits. `null` = all. */
 export const BRAND_CATEGORIES: Record<BrandId, ProductCategory[] | null> = {
-  hanzo: null,
-  lux: ["Web3", "Network", "Security", "Infrastructure"],
-  zoo: ["Web3", "Network", "Security", "Infrastructure"],
-  pars: ["Web3", "Network", "Security", "Infrastructure"],
+  hanzo: BRAND_SCOPE.hanzo,
+  lux: [...BRAND_SCOPE.lux],
+  zoo: [...BRAND_SCOPE.zoo],
+  pars: [...BRAND_SCOPE.pars],
 }
 
 /** Categories a given brand's console surfaces, in display order (all for hanzo). */
-export const categoriesForBrand = (brand: BrandId): ProductCategory[] => {
+export const categoriesForBrand = (brand: BrandId): readonly ProductCategory[] => {
   const allowed = BRAND_CATEGORIES[brand]
   return allowed === null ? CATEGORY_ORDER : CATEGORY_ORDER.filter((c) => allowed.includes(c))
 }
