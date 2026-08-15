@@ -34,8 +34,15 @@ describe('tw — one class', () => {
     })
   })
 
+  it('takes a font size from the theme, not from a table', () => {
+    // @hanzo/design's ramp is compact — base is 14px, not Tailwind's 16 — so a
+    // hardcoded scale silently resized every converted element.
+    expect(props('text-xs')).toEqual({ fontSize: 'var(--text-xs)' })
+    expect(props('text-2xl')).toEqual({ fontSize: 'var(--text-2xl)' })
+  })
+
   it('distinguishes a size, an alignment and a colour under one head', () => {
-    expect(props('text-sm')).toEqual({ fontSize: 14 })
+    expect(props('text-sm')).toEqual({ fontSize: 'var(--text-sm)' })
     expect(props('text-center')).toEqual({ textAlign: 'center' })
     expect(props('text-muted-foreground')).toEqual({ color: 'var(--muted-foreground)' })
   })

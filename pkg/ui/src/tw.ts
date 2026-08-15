@@ -30,10 +30,17 @@ const SPACE: Record<string, number> = {
   '60': 240, '64': 256, '72': 288, '80': 320, '96': 384,
 }
 
-const FONT_SIZE: Record<string, number> = {
-  xs: 12, sm: 14, base: 16, lg: 18, xl: 20, '2xl': 24, '3xl': 30, '4xl': 36,
-  '5xl': 48, '6xl': 60, '7xl': 72, '8xl': 96, '9xl': 128,
-}
+/**
+ * A size is the theme's variable, not a hardcoded pixel — the same reason a
+ * colour is. Tailwind reads `--text-*` from the theme too, and a design system
+ * may set its own ramp: @hanzo/design's is compact, where `base` is 14px and
+ * `sm` is 13px. Baking Tailwind's stock 16/14 in made every converted size
+ * wrong for those apps, which measured as a page silently shrinking.
+ */
+const FONT_SIZE: Record<string, string> = Object.fromEntries(
+  ['xs','sm','base','lg','xl','2xl','3xl','4xl','5xl','6xl','7xl','8xl','9xl']
+    .map((k) => [k, `var(--text-${k})`]),
+)
 
 const WEIGHT: Record<string, number> = {
   thin: 100, extralight: 200, light: 300, normal: 400, medium: 500,
