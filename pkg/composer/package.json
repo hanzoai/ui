@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/composer",
-  "version": "0.1.1",
-  "description": "The composer's material — the lit ring around anything you can type into, on every Hanzo surface.",
+  "version": "0.1.2",
+  "description": "The composer's material \u2014 the lit ring around anything you can type into, on every Hanzo surface.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
