@@ -270,7 +270,7 @@ const Command = /* @__PURE__ */ forwardRef<GuiElement, CommandProps>(function Co
         overflow="hidden"
         rounded="$4"
         bg="$background"
-        {...(isWeb ? { onKeyDown: onKey } : null)}
+        {...(isWeb ? { onKeyDown: onKey as never } : null)}
         {...rest}
       >
         {children}
@@ -403,7 +403,7 @@ const CommandInput = /* @__PURE__ */ forwardRef<GuiElement, CommandInputProps>(
             setSearch(next)
             onValueChange?.(next)
           }}
-          {...(isWeb ? { onKeyDown: onKey } : null)}
+          {...(isWeb ? { onKeyDown: onKey as never } : null)}
           {...rest}
         />
       </XStack>

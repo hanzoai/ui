@@ -194,7 +194,7 @@ export function ResizablePanelGroup({
         flexDirection={axis ? "row" : "column"}
         overflow="hidden"
         data-panel-group-direction={direction}
-        onLayout={(e) => {
+        onLayout={(e: any) => {
           extent.current = axis
             ? e.nativeEvent.layout.width
             : e.nativeEvent.layout.height
@@ -321,7 +321,9 @@ export function ResizableHandle({
   }, [])
 
   const nudge = useCallback(
-    (e: { key: string; shiftKey?: boolean; preventDefault: () => void }) => {
+    // gui types a key handler with the generic native event, which carries no
+    // `key`. On web react-native-web hands the DOM event through.
+    (e: any) => {
       if (off || !group) return
       const dir = axis
         ? e.key === "ArrowLeft"
