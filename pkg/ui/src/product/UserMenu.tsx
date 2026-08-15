@@ -195,6 +195,12 @@ export function UserMenu({
 
       <Popover.Content
         role="menu"
+        /* A menu sheet's rows run its full width. gui's PopperContent centres
+           its children, so each row is only as wide as its own text until the
+           class that stretches it lands a frame later: the sheet flashes a
+           column of narrow, centred rows and then settles. Measured at 66px of
+           dead space down both edges of a 300px sheet. */
+        items="stretch"
         /* borderWidth/elevation, NOT bordered/elevate. Popover.Content
            declares neither -- gui has them only on Tabs -- and gui DROPS an
            unrecognised prop without a word, so this panel rendered with no
