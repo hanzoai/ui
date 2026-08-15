@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.81",
+  "version": "8.0.82",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -203,7 +203,7 @@
   },
   "dependencies": {
     "@hanzo/appearance": "^0.1.4",
-    "@hanzo/design": "^0.5.3",
+    "@hanzo/design": "^0.5.4",
     "@hanzo/logo": "^1.0.13",
     "@hanzo/products": "^0.2.0",
     "@hanzogui/lucide-icons-2": "^8.1.0",
