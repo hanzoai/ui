@@ -99,3 +99,5 @@ export { cn } from './core/cn'
 // The design-token scale (colors, dark/light themes, radii, spacing, typography)
 // lives on the `@hanzo/ui/core` / `@hanzo/ui/tokens` subpath — pure data, no
 // runtime.
+
+export { tw, type Parsed, type Props as TwProps } from './tw'

@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.0.83",
+  "version": "8.0.84",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -171,7 +171,13 @@
       "default": "./dist/telemetry.js"
     },
     "./styles/motion.css": "./dist/styles/motion.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./tw": {
+      "types": "./dist/tw.d.ts",
+      "import": "./dist/tw.js",
+      "require": "./dist/tw.cjs",
+      "default": "./dist/tw.js"
+    }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
