@@ -18,9 +18,17 @@
  * falls from the top, so every shadow points the same way and elevation reads
  * as a stack rather than as decoration. Outlines appear only where two sheets
  * meet edge-on — a hairline, never a border around a thing.
+ *
+ * The rungs come from `sheet()` (../glass), which reads @hanzo/design's
+ * `--sheet-*` / `--shadow-sheet-*`. gui's own `elevation` prop is a DIFFERENT
+ * idea wearing the same word: it synthesises a shadow from a number, carries no
+ * lit edge, and answers to nothing — so a dock lit that way and a menu lit by
+ * the ladder stand in two different rooms.
  */
 import { useCallback, useRef, type ReactNode } from 'react'
 import { Button, Separator, Text, XStack, YStack, useControllableState } from '@hanzo/gui'
+
+import { sheet } from '../glass'
 
 export type Side = 'left' | 'right' | 'bottom'
 
@@ -121,11 +129,10 @@ export function Dock({
     />
   )
 
-  const sheet = (
+  const dock = (
     <YStack
       overflow="hidden"
-      bg="$color2"
-      elevation="$2"
+      {...sheet(1)}
       {...(horizontal ? { width: extent } : { height: extent })}
     >
       <XStack items="center" gap="$1" px="$2" pt="$1.5">
@@ -140,11 +147,13 @@ export function Dock({
               py="$1.5"
               cursor="pointer"
               // The active tab is a raised sheet whose bottom corners stay
-              // square, so it reads as continuous with the pane beneath it.
+              // square, so it reads as continuous with the pane beneath it —
+              // which is why both stand on rung 2 rather than merely looking
+              // similar. An inactive tab is not a sheet at all; it is the
+              // dock's own surface showing through.
               rounded="$3"
-              bg={on ? '$color3' : 'transparent'}
-              elevation={on ? '$1' : undefined}
-              hoverStyle={{ bg: on ? '$color3' : '$color2' }}
+              {...(on ? sheet(2) : { backgroundColor: 'transparent' })}
+              hoverStyle={{ bg: on ? undefined : '$color2' }}
             >
               <YStack onPress={() => setActive(t.id)}>
                 <XStack items="center" gap="$1.5">
@@ -172,17 +181,25 @@ export function Dock({
       </XStack>
       {/* Where the tab sheet meets the pane, edge-on. */}
       <Separator opacity={0.4} />
-      <YStack flex={1} overflow="hidden" bg="$color3">
+      {/* The pane is the active tab CONTINUED, so it stands on the same rung.
+          It was `$color3` — the selected-item fill, a state and not a surface,
+          which is the one substitution `panel` exists to stop. */}
+      <YStack flex={1} overflow="hidden" {...sheet(2)}>
         {current.content}
       </YStack>
     </YStack>
   )
 
-  const parts = HANDLE_FIRST[side] ? [seam, sheet] : [sheet, seam]
-  return horizontal ? (
-    <XStack>{parts}</XStack>
-  ) : (
-    <YStack>{parts}</YStack>
+  // Named rather than an array: a list of children needs keys, and two siblings
+  // that are not a list should not have to invent identities to sit beside
+  // each other.
+  const [first, second] = HANDLE_FIRST[side] ? [seam, dock] : [dock, seam]
+  const Row = horizontal ? XStack : YStack
+  return (
+    <Row>
+      {first}
+      {second}
+    </Row>
   )
 }
 

@@ -22,7 +22,7 @@
  * VALUE to its own class, so an unrendered variant is an unwritten rule.
  */
 import type { ReactNode } from 'react'
-import { Workbench } from './product'
+import { Workbench } from './product/Workbench'
 
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction,
