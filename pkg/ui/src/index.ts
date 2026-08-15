@@ -101,3 +101,4 @@ export { cn } from './core/cn'
 // runtime.
 
 export { tw, type Parsed, type Props as TwProps } from './tw'
+export { Box, type BoxProps } from './box'
