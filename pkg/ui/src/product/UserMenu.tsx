@@ -21,9 +21,10 @@
  */
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
-import { Check, ChevronsUpDown, LogOut, UserRound } from '@hanzogui/lucide-icons-2'
+import { ChevronsUpDown, LogOut, UserRound } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
+import { MenuLabel, MenuRow } from './MenuRow'
 import { displayName } from './name'
 import { OrgMark } from './OrgMark'
 import { ThemeToggle } from './ThemeToggle'
@@ -97,33 +98,18 @@ export type UserMenuProps = {
 
 function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
   const track = useEmit()
-  // A row that can be CURRENT is one of a set exactly one of which holds; a row
-  // without the notion is an action. One fact — `active` — decides the role, so
-  // no call site has to say it twice.
-  const choice = item.active !== undefined
   return (
-    <XStack
+    <MenuRow
+      label={item.label}
+      icon={item.icon}
+      active={item.active}
+      danger={item.danger}
       onPress={() => {
         track({ component: 'UserMenu', action: 'select', id: item.id })
         onDone()
         item.onPress()
       }}
-      role={choice ? 'radio' : 'menuitem'}
-      aria-checked={choice ? !!item.active : undefined}
-      cursor="pointer"
-      items="center"
-      gap="$2.5"
-      px="$2"
-      py="$2"
-      rounded="$3"
-      hoverStyle={{ bg: '$color5' }}
-    >
-      {item.icon}
-      <Text flex={1} fontSize="$2" color={item.danger ? '$red10' : '$color12'}>
-        {item.label}
-      </Text>
-      {item.active ? <Check size={14} /> : null}
-    </XStack>
+    />
   )
 }
 
@@ -242,11 +228,7 @@ export function UserMenu({
               return (
                 <YStack key={i} gap="$1">
                   {i > 0 || shown || email ? <Separator borderColor="$borderColor" my="$1" /> : null}
-                  {groupName ? (
-                    <Text px="$2" py="$1" fontSize="$1" color="$color10" fontWeight="500">
-                      {groupName}
-                    </Text>
-                  ) : null}
+                  {groupName ? <MenuLabel>{groupName}</MenuLabel> : null}
                   {choice ? (
                     <YStack role="radiogroup" aria-label={groupName} gap="$1">
                       {rows}
