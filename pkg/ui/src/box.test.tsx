@@ -31,6 +31,20 @@ describe('Box', () => {
     expect(html(<Box className="flex px-6">x</Box>)).not.toContain('px-6')
   })
 
+  it('is a block, like the div it replaces — not the Stack it is built on', () => {
+    // A gui Stack is flex-column. Taking that default silently turned 77 of 225
+    // elements on one page into flex containers nothing asked to be.
+    expect(html(<Box className="px-4">x</Box>)).toMatch(/display:\s*block/)
+  })
+
+  it('still becomes flex when a class says so', () => {
+    // gui compiles every style value it sees into one sheet, so both words are
+    // in the markup either way. The element's own class list is what decides.
+    const el = /<div[^>]*class="([^"]*)"/.exec(html(<Box className="flex items-center">x</Box>))
+    expect(el?.[1]).toMatch(/_dsp-flex/)
+    expect(el?.[1]).not.toMatch(/_dsp-block/)
+  })
+
   it('lets an explicit prop win over the class that says the same thing', () => {
     const out = html(<Box className="px-6" paddingLeft={2}>x</Box>)
     expect(out).toBeTruthy()
