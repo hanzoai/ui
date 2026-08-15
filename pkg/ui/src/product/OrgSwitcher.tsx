@@ -14,7 +14,7 @@
  * `X-Org-Id`). Create posts through the injected hook, then scopes into the
  * new org.
  */
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
@@ -57,8 +57,12 @@ export type OrgSwitcherProps = {
    * Rows below the list, above the create/de-scope affordances — the surface's
    * own additions (a personal-workspace badge, a link into org settings). The
    * other half of what hanzo.app's local copy existed for.
+   *
+   * Given a function it receives `close`, so a row that acts IN PLACE — picking
+   * a project rather than navigating away — can dismiss the sheet it was chosen
+   * from. A row that navigates does not need it; a row that does not, does.
    */
-  footer?: ReactNode
+  footer?: ReactNode | ((close: () => void) => ReactNode)
   /**
    * The second line of the trigger, when the caller scopes below the org — a
    * project, an environment. The console kept a whole local copy of this
@@ -73,6 +77,26 @@ export type OrgSwitcherProps = {
    * "<org> · switch organization".
    */
   aria?: string
+  /**
+   * Whether the list can be searched. Defaults to "whenever there is a loader",
+   * because a loader is what makes a list longer than the rows on screen.
+   *
+   * It is separate from the loader because the two answer different questions —
+   * whether a list can be FETCHED, and whether searching it can change the
+   * answer. The console fetches for everyone and offers the field only to a
+   * platform admin, whose list is cross-tenant, server-paged and far longer than
+   * one page; a customer has one org, and a field promising a list that does not
+   * exist is worse than no field.
+   */
+  search?: boolean
+  /** What to call the list, for a sheet that answers more than one question. */
+  heading?: string
+  /** `data-testid` on the trigger. */
+  testId?: string
+  /** Classes for the sheet — the host's own material (glass, elevation). */
+  className?: string
+  /** Inline style for the sheet — a host's stacking layer belongs here. */
+  style?: CSSProperties
 }
 
 export function OrgSwitcher({
@@ -86,6 +110,11 @@ export function OrgSwitcher({
   footer,
   sub,
   aria,
+  search,
+  heading,
+  testId,
+  className,
+  style,
 }: OrgSwitcherProps) {
   const currentId = scope.currentOrg()
 
@@ -197,7 +226,14 @@ export function OrgSwitcher({
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
             as the two halves of one identity, not a caption over a control. */}
-        <Button chromeless height={44} px="$2" justify="flex-start" aria-label={aria ?? `${currentLabel} · switch organization`}>
+        <Button
+          chromeless
+          height={44}
+          px="$2"
+          justify="flex-start"
+          data-testid={testId}
+          aria-label={aria ?? `${currentLabel} · switch organization`}
+        >
           <XStack items="center" gap="$2.5" flex={1} minW={0}>
             <OrgMark org={current} size={30} />
             {/* One line when the control names only an org; two when a caller
@@ -223,7 +259,18 @@ export function OrgSwitcher({
           put the content two steps off both edges and left the sheet reading as
           a frame around a narrower menu. `$1` is the gap a row's hover pill
           needs to not touch the edge; the row still owns the content inset. */}
-      <Popover.Content bordered elevate px="$1" py="$1" width={300} bg="$color2" borderColor="$borderColor">
+      <Popover.Content
+        role="menu"
+        bordered
+        elevate
+        px="$1"
+        py="$1"
+        width={300}
+        bg="$color2"
+        borderColor="$borderColor"
+        className={className}
+        style={style}
+      >
         {creating ? (
           <YStack gap="$2">
             <Text fontSize="$2" color="$color12" fontWeight="700">
@@ -258,7 +305,13 @@ export function OrgSwitcher({
           </YStack>
         ) : (
           <YStack gap="$1">
-            {orgs ? (
+            {heading ? (
+              <Text px="$2" py="$1" fontSize="$1" color="$color10" fontWeight="500">
+                {heading}
+              </Text>
+            ) : null}
+
+            {search ?? !!orgs ? (
               <XStack items="center" gap="$2" px="$2" py="$1" rounded="$3" borderWidth={1} borderColor="$borderColor">
                 <Search size={13} opacity={0.6} />
                 <Input
@@ -266,7 +319,8 @@ export function OrgSwitcher({
                   size="$2"
                   borderWidth={0}
                   bg="transparent"
-                  placeholder="Find organization…"
+                  placeholder="Find an organization"
+                  aria-label="Find an organization"
                   value={query}
                   onChangeText={setQuery}
                   autoCapitalize="none"
@@ -294,26 +348,37 @@ export function OrgSwitcher({
                   {query.trim() ? `No organizations match “${query.trim()}”.` : 'No organizations yet.'}
                 </Text>
               ) : (
-                visible.map((org) => (
-                  <XStack
-                    key={org.name}
-                    onPress={() => select(org.name)}
-                    cursor="pointer"
-                    items="center"
-                    gap="$2.5"
-                    px="$2"
-                    py="$2"
-                    rounded="$3"
-                    bg={org.name === currentId ? '$color4' : 'transparent'}
-                    hoverStyle={{ bg: '$color5' }}
-                  >
-                    <OrgMark org={org} />
-                    <Text flex={1} fontSize="$2" color="$color12" numberOfLines={1}>
-                      {org.displayName || org.name}
-                    </Text>
-                    {org.name === currentId ? <Check size={16} /> : null}
-                  </XStack>
-                ))
+                // A set of organizations exactly one of which holds is a
+                // `radiogroup` of `radio`s — not a bag of divs, which is what
+                // assistive tech was being handed. `radio` rather than the more
+                // obvious `option` because @hanzo/gui's `role` union is React
+                // Native's accessibility-role set: it admits `option` but NOT
+                // `listbox`, so an `option` here could never be given the parent
+                // ARIA requires.
+                <YStack role="radiogroup" aria-label="Organizations" gap="$1">
+                  {visible.map((org) => (
+                    <XStack
+                      key={org.name}
+                      onPress={() => select(org.name)}
+                      role="radio"
+                      aria-checked={org.name === currentId}
+                      cursor="pointer"
+                      items="center"
+                      gap="$2.5"
+                      px="$2"
+                      py="$2"
+                      rounded="$3"
+                      bg={org.name === currentId ? '$color4' : 'transparent'}
+                      hoverStyle={{ bg: '$color5' }}
+                    >
+                      <OrgMark org={org} />
+                      <Text flex={1} fontSize="$2" color="$color12" numberOfLines={1}>
+                        {org.displayName || org.name}
+                      </Text>
+                      {org.name === currentId ? <Check size={16} /> : null}
+                    </XStack>
+                  ))}
+                </YStack>
               )}
 
               {loadingMore ? (
@@ -332,10 +397,11 @@ export function OrgSwitcher({
               ) : null}
             </div>
 
-            {footer}
+            {typeof footer === 'function' ? footer(() => setOpen(false)) : footer}
 
             {create ? (
               <XStack
+                role="menuitem"
                 onPress={() => {
                   setCreating(true)
                   setErr(null)
@@ -362,6 +428,7 @@ export function OrgSwitcher({
 
             {picker ? (
               <XStack
+                role="menuitem"
                 onPress={() => {
                   setOpen(false)
                   scope.leaveOrg()
