@@ -35,6 +35,16 @@ if (!dir) { console.error('usage: detag.mjs <dir> [--write]'); process.exit(2) }
 /** Tags a Box replaces: a plain box carrying no semantics of its own. */
 const TAGS = new Set(['div', 'section', 'article', 'main', 'header', 'footer', 'aside', 'nav'])
 
+/**
+ * DOM attributes a gui Stack does not take. An element using one is a DOM
+ * element doing a DOM thing — dragging, a native tooltip — and it stays one.
+ */
+const DOM_ONLY = new Set([
+  'draggable', 'onDragStart', 'onDragEnd', 'onDragOver', 'onDrop', 'onDragEnter',
+  'onDragLeave', 'title', 'onFocusCapture', 'onBlurCapture', 'contentEditable',
+  'spellCheck', 'tabIndex', 'dangerouslySetInnerHTML',
+])
+
 const files = []
 ;(function walk(d) {
   for (const e of readdirSync(d)) {
@@ -45,7 +55,7 @@ const files = []
   }
 })(dir)
 
-let moved = 0, held = 0, touched = 0, semantic = 0
+let moved = 0, held = 0, touched = 0, semantic = 0, skipped = 0
 const holding = new Map()
 
 for (const f of files) {
@@ -63,8 +73,11 @@ for (const f of files) {
       )
       // Only a literal className is knowable here. An expression may compose
       // classes at run time and is left for a person.
+      const domOnly = open.attributes.properties.some(
+        (a) => ts.isJsxAttribute(a) && DOM_ONLY.has(a.name.getText()),
+      )
       const lit = attr?.initializer
-      if (lit && ts.isStringLiteral(lit)) {
+      if (lit && ts.isStringLiteral(lit) && !domOnly) {
         const { rest } = tw(lit.text)
         if (rest === '') {
           // A tag carrying its own meaning stays that tag; a screen reader and
@@ -89,33 +102,56 @@ for (const f of files) {
   visit(sf)
 
   if (!edits.length) continue
-  let out = src
+  const added = addImport(src, sf)
+  if (added === null) { skipped++; continue }
+  let out = added.text
+  // The import is inserted before the JSX, so every edit after that point moves
+  // by its length. Applied back-to-front, so an earlier edit's offsets survive.
+  const shift = added.text.length - src.length
   for (const [a, b, text] of edits.sort((x, y) => y[0] - x[0])) {
-    out = out.slice(0, a) + text + out.slice(b)
+    const [i, j] = a >= added.at ? [a + shift, b + shift] : [a, b]
+    out = out.slice(0, i) + text + out.slice(j)
   }
-  out = addImport(out)
   touched++
   if (write) writeFileSync(f, out)
 }
 
-/** One import of Box, merged into an existing `@hanzo/ui` import if there is one. */
-function addImport(s) {
-  const existing = /import \{([^}]*)\} from (['"])@hanzo\/ui\2/.exec(s)
-  if (existing) {
-    if (/\bBox\b/.test(existing[1])) return s
-    return s.replace(existing[0], `import {${existing[1].trimEnd()}, Box } from ${existing[2]}@hanzo/ui${existing[2]}`)
+/**
+ * One import of Box. Returns null when the file already binds that name to
+ * something else — a second binding is a syntax error, and guessing which one
+ * the JSX meant is not this script's call.
+ */
+function addImport(s, sf) {
+  let last = 0
+  for (const st of sf.statements) {
+    if (ts.isImportDeclaration(st)) {
+      last = st.getEnd()
+      const named = st.importClause?.namedBindings
+      if (named && ts.isNamedImports(named)) {
+        for (const el of named.elements) {
+          if (el.name.text !== 'Box') continue
+          // Already imported from @hanzo/ui: nothing to add. From anywhere
+          // else: leave the file alone.
+          return st.moduleSpecifier.getText().includes('@hanzo/ui')
+            ? { text: s, at: s.length } : null
+        }
+      }
+    }
   }
-  const last = [...s.matchAll(/^import .*$/gm)].pop()
-  const line = `import { Box } from '@hanzo/ui'`
-  if (!last) return `${line}\n${s}`
-  const at = last.index + last[0].length
-  return s.slice(0, at) + `\n${line}` + s.slice(at)
+  // A local declaration of the same name collides just as hard as an import.
+  for (const st of sf.statements) {
+    if (ts.isVariableStatement(st) &&
+        st.declarationList.declarations.some((d) => d.name.getText() === 'Box')) return null
+    if ((ts.isFunctionDeclaration(st) || ts.isClassDeclaration(st)) && st.name?.text === 'Box') return null
+  }
+  return { at: last, text: s.slice(0, last) + `\nimport { Box } from '@hanzo/ui'` + s.slice(last) }
 }
 
 console.log(`  files scanned  : ${files.length}`)
 console.log(`  files changed  : ${touched}`)
 console.log(`  tags moved     : ${moved}`)
 console.log(`  kept semantic  : ${semantic}   (section/header/nav — the tag is the meaning)`)
+console.log(`  skipped        : ${skipped}   (the file already binds the name Box)`)
 console.log(`  held back      : ${held}   (a class tw cannot read yet)`)
 if (holding.size) {
   console.log(`  what holds them, most common first:`)
