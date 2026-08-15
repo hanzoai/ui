@@ -419,3 +419,26 @@ describe('one authority decides the theme', () => {
     expect(out).toContain(':root.t_light')
   })
 })
+
+describe('one emitter, either table', () => {
+  it('css(monochrome) is the monochrome sheet, not the full one', () => {
+    // A surface that mounts `monochrome` and emits `css()` ships 390 themes of
+    // CSS for a runtime that can activate 150 — the reduced table with the full
+    // sheet beside it, which is the worst of both.
+    const full = css()
+    const mono = css(monochrome)
+    expect(mono.length).toBeLessThan(full.length)
+    expect(mono).not.toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|purple|red|teal|yellow)(_|\b)/)
+    expect(full).toMatch(/\.t_(light_|dark_)?(blue|green|orange|pink|purple|red|teal|yellow)(_|\b)/)
+  })
+
+  it('the prune still runs on it — a reduced table shadows design the same way', () => {
+    const rootThemeBodies = [...css(monochrome).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+      .filter((m) => m[1].split(',').some((sel) => /^:root(\.t_(dark|light))?$/.test(sel.trim())))
+      .map((m) => m[2])
+    expect(rootThemeBodies.length).toBeGreaterThan(0)
+    for (const name of ['background', 'black', 'white'])
+      for (const body of rootThemeBodies)
+        expect(body).not.toMatch(new RegExp(`(^|;)\\s*--${name}\\s*:`))
+  })
+})

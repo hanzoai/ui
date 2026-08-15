@@ -427,9 +427,15 @@ const ROOT_THEME = /^:root(\.t_(dark|light))?$/
  * resolves to `var(--background)` and still emits its class, and that `var()`
  * now reads design's value from the cascade. So the ground follows the brand,
  * the theme and any runtime retune, which is the whole point.
+ *
+ * It takes the table it emits, because a surface may mount `monochrome` instead
+ * (below) and would otherwise ship the full sheet beside the reduced runtime —
+ * 390 themes of CSS for a config that can activate 150. One emitter, either
+ * table; the prune is the same either way, because the shadowing is a property
+ * of gui and not of which rows are in the table.
  */
-export function css(): string {
-  const source = config.getCSS()
+export function css(conf: { getCSS(): string } = config): string {
+  const source = conf.getCSS()
   let out = ''
   let i = 0
   while (i < source.length) {
