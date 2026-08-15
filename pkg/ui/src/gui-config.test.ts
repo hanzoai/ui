@@ -395,3 +395,27 @@ describe('a person and a brand can both move this', () => {
     expect(nested.some((m) => /--background\s*:/.test(m[2]))).toBe(true)
   })
 })
+
+describe('one authority decides the theme', () => {
+  it('the sheet asks the OS nothing — no prefers-color-scheme block', () => {
+    // gui's default wraps each theme's ROOT variables in a colour-scheme media
+    // query. @hanzo/design is dark-first at bare `:root` and retunes under
+    // `.light`, and gui stamps `.t_dark`/`.t_light` on <html>, so the media
+    // block is a second answer to a question already answered — and it ties
+    // design on specificity, so it wins on load order wherever it applies.
+    //
+    // What it costs is invisible until a light-scheme browser opens a dark
+    // product: the gui token table resolves to the LIGHT base while every
+    // class-token surface beside it stays dark. Measured on hanzo.app in
+    // production, which is why its generator used to unwrap this after the fact.
+    expect(css()).not.toContain('prefers-color-scheme')
+  })
+
+  it('the class-driven root themes are still both there', () => {
+    // The point is to delete the OS question, not a theme. Unwrapping has to
+    // leave the dark and light grounds reachable by the class gui writes.
+    const out = css()
+    expect(out).toContain(':root.t_dark')
+    expect(out).toContain(':root.t_light')
+  })
+})
