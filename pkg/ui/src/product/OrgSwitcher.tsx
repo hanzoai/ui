@@ -92,6 +92,22 @@ export type OrgSwitcherProps = {
   search?: boolean
   /** What to call the list, for a sheet that answers more than one question. */
   heading?: string
+  /**
+   * Render the trigger as the ANCHOR of its surface rather than one control
+   * among several.
+   *
+   * A sidebar whose brand lockup is the first thing read wants a heavier
+   * control than a bar that already carries a wordmark of its own. Both are
+   * legitimate, so the component says both: this steps the mark and the label
+   * UP THE SAME RAMP the default already stands on — `$4` → `$6` (design's
+   * `--text-xl`), 30 → 36, 44 → 56 — rather than introducing a second scale.
+   *
+   * The alternative a host is left with otherwise is reaching into this
+   * component's insides through `className` descendant selectors, which breaks
+   * the moment the markup moves. A variation a surface legitimately needs
+   * belongs in the component that owns the markup.
+   */
+  lead?: boolean
   /** `data-testid` on the trigger. */
   testId?: string
   /** Classes for the sheet — the host's own material (glass, elevation). */
@@ -113,6 +129,7 @@ export function OrgSwitcher({
   aria,
   search,
   heading,
+  lead = false,
   testId,
   className,
   style,
@@ -241,20 +258,29 @@ export function OrgSwitcher({
             as the two halves of one identity, not a caption over a control. */}
         <Button
           chromeless
-          height={44}
+          height={lead ? 56 : 44}
           px="$2"
           justify="flex-start"
           data-testid={testId}
           aria-label={aria ?? `${currentLabel} · switch organization`}
         >
           <XStack items="center" gap="$2.5" flex={1} minW={0}>
-            <OrgMark org={current} size={30} />
+            <OrgMark org={current} size={lead ? 36 : 30} />
             {/* One line when the control names only an org; two when a caller
                 also scopes BELOW it — a project, an environment — because the
                 trigger then has to answer "where am I" completely, and a second
                 control for the second half would be a second place to look. */}
             <YStack flex={1} minW={0}>
-              <Text minW={0} fontSize="$4" fontWeight="800" color="$color12" numberOfLines={1}>
+              <Text
+                minW={0}
+                // Heavier at the smaller size and lighter at the larger one, so
+                // the two read at the same WEIGHT on the page: 800 is what makes
+                // 15px hold its own as a peer, and it turns 17px into a shout.
+                fontSize={lead ? '$6' : '$4'}
+                fontWeight={lead ? '700' : '800'}
+                color="$color12"
+                numberOfLines={1}
+              >
                 {currentLabel}
               </Text>
               {sub ? (
