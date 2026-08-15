@@ -45,6 +45,13 @@ describe('Box', () => {
     expect(el?.[1]).not.toMatch(/_dsp-block/)
   })
 
+  it('renders a text size the frame would have dropped', () => {
+    // `fontSize` is not a frame style prop — set on a Stack it silently does
+    // nothing, so a box carrying `text-xs` rendered at the inherited size and
+    // every page using one came out taller.
+    expect(html(<Box className="text-xs">x</Box>)).toMatch(/font-size:\s*var\(--text-xs\)/)
+  })
+
   it('lets an explicit prop win over the class that says the same thing', () => {
     const out = html(<Box className="px-6" paddingLeft={2}>x</Box>)
     expect(out).toBeTruthy()
