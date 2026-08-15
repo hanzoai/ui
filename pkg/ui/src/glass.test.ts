@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
-import { accent, glass, panel, row, rows, screen, scrim, selected } from './glass'
+import { accent, fold, glass, panel, row, rows, screen, scrim, selected, sheet } from './glass'
 
 /**
  * ONE glass.
@@ -257,10 +257,58 @@ describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => 
     expect(fallbacks(motion, 'glass-shadow-2')).toEqual([token('shadow-lg', 'dark')])
   })
 
+  /**
+   * Paper and glass are ONE ladder under two names, and this is the seam.
+   *
+   * Design publishes the rungs as `--shadow-sheet-*` — a name it owns outright,
+   * which is what lets anything outside this package (a raw stylesheet, the
+   * extension, a site that never loads gui) stand on the same steps. This
+   * package composes the identical thing from `--edge-highlight` + its own
+   * drop, because it needs a name @hanzo/brand cannot outrank.
+   *
+   * Two homes for one fact, so the fact is checked. If design retunes a rung
+   * and this sheet does not follow, a menu and a transcript on the same screen
+   * quietly stand at different heights — and nothing renders an error.
+   */
+  // Layer separators are compared as separators, not as text: the two files
+  // disagree about the space after a comma and always will.
+  const layers = (v: string) => v.replace(/\s*,\s*/g, ',').replace(/\s+/g, ' ').trim()
+
+  it.each([['1'], ['2']])('rung %s is the step design publishes as --shadow-sheet-N', (rung) => {
+    const ours = declared(rules(css), `glass-shadow-${rung}`)
+    for (const [i, mode] of (['dark', 'light'] as const).entries())
+      expect(layers(token(`shadow-sheet-${rung}`, mode))).toBe(
+        layers(`var(--edge-highlight),${ours[i].value}`)
+      )
+  })
+
+  /** design states a tint as a chain of role names; a fallback has to be what
+   *  the chain ARRIVES at, since a host without the sheet resolves none of it. */
+  const resolve = (name: string, mode: 'dark' | 'light'): string => {
+    const value = token(name, mode)
+    const hop = value.match(/^var\(\s*--([A-Za-z0-9-]+)\s*\)$/)
+    return hop ? resolve(hop[1], mode) : value
+  }
+
+  it('a sheet is filled from design’s paper tints, at every rung', () => {
+    // The fill is half the lift, and on a dark canvas it is the half that
+    // reads — so a rung whose tint stopped following design stopped rising.
+    for (const level of [0, 1, 2] as const)
+      expect(fallbacks(String(sheet(level).backgroundColor), `sheet-${level}`)).toEqual([
+        resolve(`sheet-${level}`, 'dark'),
+      ])
+  })
+
+  it('the fold names design’s face', () => {
+    expect(fallbacks(css, 'fold-face').length).toBe(1)
+    expect(fold.className).toBe('fold')
+  })
+
   it('the recipes name tokens, never literals', () => {
     // A hex or an rgb() in a recipe is a value that stopped following the theme
     // — it looks right in dark and is wrong the moment anything renders light.
-    const values = [glass(2), glass(3), scrim, panel, rows, row, accent, screen, selected(true), selected(false)]
+    const values = [glass(2), glass(3), scrim, panel, rows, row, accent, screen, selected(true), selected(false),
+                    sheet(0), sheet(1), sheet(2), fold]
       .flatMap((r) => Object.values(r))
       .flatMap((v) => (v && typeof v === 'object' ? Object.values(v) : [v]))
       .filter((v): v is string => typeof v === 'string')
