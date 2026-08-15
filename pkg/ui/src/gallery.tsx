@@ -22,6 +22,7 @@
  * VALUE to its own class, so an unrendered variant is an unwritten rule.
  */
 import type { ReactNode } from 'react'
+import { Box } from './box'
 import { Workbench } from './product/Workbench'
 
 import {
@@ -454,6 +455,18 @@ export const Gallery = () => (
           <CardTitle>center</CardTitle>
         </Workbench>
       </div>
+    </Section>
+
+
+    {/* Box renders whatever `tw` read out of the classes, so the gallery has to
+        carry a real utility string or none of those rules get written. */}
+    <Section name="box">
+      <Box className="flex items-center gap-4 px-6 py-3 rounded-lg border">
+        <CardTitle>utility classes</CardTitle>
+      </Box>
+      <Box className="flex-col gap-2 max-w-3xl mx-auto overflow-hidden">
+        <CardTitle>column</CardTitle>
+      </Box>
     </Section>
 
   </div>
