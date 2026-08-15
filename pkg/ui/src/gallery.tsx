@@ -22,6 +22,7 @@
  * VALUE to its own class, so an unrendered variant is an unwritten rule.
  */
 import type { ReactNode } from 'react'
+import { Workbench } from './product'
 
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction,
@@ -431,6 +432,30 @@ export const Gallery = () => (
         <span data-block-child style={{ display: 'block', height: 119, width: 119 }} />
       </Button>
     </Section>
+
+    {/* Every dock side, because gui compiles each distinct style VALUE to its
+        own class — a side never rendered is a rule never written. */}
+    <Section name="workbench">
+      <div style={{ display: 'flex', height: 220, width: 880 }}>
+        <Workbench
+          left={{ tabs: [{ id: 'files', title: 'Files', content: <CardTitle>left</CardTitle> }] }}
+          right={{
+            tabs: [
+              { id: 'chat', title: 'Side chat', content: <CardTitle>chat</CardTitle> },
+              { id: 'browser', title: 'Browser', content: <CardTitle>browser</CardTitle> },
+            ],
+          }}
+          bottom={{
+            tabs: [
+              { id: 'console', title: 'Console', closable: false, content: <CardTitle>console</CardTitle> },
+            ],
+          }}
+        >
+          <CardTitle>center</CardTitle>
+        </Workbench>
+      </div>
+    </Section>
+
   </div>
 )
 
