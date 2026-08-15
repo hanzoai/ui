@@ -59,6 +59,18 @@ export type UserMenuProps = {
   label?: boolean
   /** Trigger height. Default 44 — the peer of `OrgSwitcher`. */
   height?: number
+  /**
+   * Which way the panel opens, and from which edge. A user menu in a top bar
+   * opens down from its right edge; the same control at the FOOT of a sidebar
+   * has to open upward from its left, and a downward panel there falls off the
+   * bottom of the viewport. This was hard-coded `bottom-end`, which is why the
+   * console could not mount this component in its rail and kept a local copy of
+   * the whole thing — the peer of `OrgSwitcher.direction`, which already had it.
+   */
+  direction?: 'down' | 'up'
+  /** Which edge the panel aligns to. Default `end` (a top-bar avatar); `start`
+   *  for a rail, where the panel should share the trigger's left edge. */
+  align?: 'start' | 'end'
 }
 
 function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
@@ -102,6 +114,8 @@ export function UserMenu({
   children,
   label = true,
   height = 44,
+  direction = 'down',
+  align = 'end',
 }: UserMenuProps) {
   const [open, setOpen] = useState(false)
   const track = useEmit()
@@ -116,7 +130,7 @@ export function UserMenu({
         track({ component: 'UserMenu', action: next ? 'open' : 'close' })
         setOpen(next)
       }}
-      placement="bottom-end"
+      placement={`${direction === 'up' ? 'top' : 'bottom'}-${align}` as const}
     >
       <Popover.Trigger asChild>
         <XStack
@@ -147,7 +161,7 @@ export function UserMenu({
         </XStack>
       </Popover.Trigger>
 
-      <Popover.Content bordered elevate p="$2" width={240} bg="$color2" borderColor="$borderColor">
+      <Popover.Content bordered elevate px="$1" py="$1" width={240} bg="$color2" borderColor="$borderColor">
         {children ?? (
           <YStack gap="$1">
             {shown || email ? (
