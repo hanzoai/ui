@@ -21,9 +21,10 @@ import {
 import { ink } from './ink'
 import { slot } from './slot'
 import { touch } from './gesture'
+import { CONTROL_H, FIELD } from './control'
 
 const ROW_H = 32
-const TRIGGER_H = 36
+const TRIGGER_H = CONTROL_H
 
 const Select: typeof GuiSelect = GuiSelect
 const SelectGroup: typeof GuiSelect.Group = GuiSelect.Group
@@ -42,6 +43,7 @@ const SelectTrigger = ({ children, ...props }: SelectTriggerProps) => (
   <GuiSelect.Trigger
     {...slot('select-trigger')}
     unstyled
+    {...FIELD}
     items="center"
     justify="space-between"
     gap="$2"
@@ -51,11 +53,15 @@ const SelectTrigger = ({ children, ...props }: SelectTriggerProps) => (
     // still armed in the two controls that sit in every form.
     height="auto"
     minHeight={TRIGGER_H}
-    px="$3"
-    rounded="$3"
-    borderWidth={1}
-    borderColor="$borderColor"
-    bg="transparent"
+    // The trigger states its own vertical padding because otherwise something
+    // else states it. `unstyled` does not survive gui's ListItem (it is
+    // destructured into a local and never reaches the frame), so the frame
+    // styles itself at `size: '$true'` and writes `paddingVertical: $3.5` — and
+    // under `height: auto` that padding, not the floor, is what decides the box:
+    // 14 + a 20px line + 14 + 2px of border rendered a 50px Select beside a 36px
+    // Input. At 0 the floor decides again and `items="center"` does the
+    // centring, which is exactly how the Input already behaves.
+    py={0}
     cursor="pointer"
     {...touch(TRIGGER_H, 44, 'y')}
     {...props}
