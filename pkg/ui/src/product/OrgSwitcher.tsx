@@ -19,6 +19,7 @@ import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gu
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
+import { MenuRow } from './MenuRow'
 import { OrgMark } from './OrgMark'
 import { filterOrgs, type Org, type OrgScope } from './scope'
 
@@ -357,26 +358,13 @@ export function OrgSwitcher({
                 // ARIA requires.
                 <YStack role="radiogroup" aria-label="Organizations" gap="$1">
                   {visible.map((org) => (
-                    <XStack
+                    <MenuRow
                       key={org.name}
+                      label={org.displayName || org.name}
+                      icon={<OrgMark org={org} />}
+                      active={org.name === currentId}
                       onPress={() => select(org.name)}
-                      role="radio"
-                      aria-checked={org.name === currentId}
-                      cursor="pointer"
-                      items="center"
-                      gap="$2.5"
-                      px="$2"
-                      py="$2"
-                      rounded="$3"
-                      bg={org.name === currentId ? '$color4' : 'transparent'}
-                      hoverStyle={{ bg: '$color5' }}
-                    >
-                      <OrgMark org={org} />
-                      <Text flex={1} fontSize="$2" color="$color12" numberOfLines={1}>
-                        {org.displayName || org.name}
-                      </Text>
-                      {org.name === currentId ? <Check size={16} /> : null}
-                    </XStack>
+                    />
                   ))}
                 </YStack>
               )}
