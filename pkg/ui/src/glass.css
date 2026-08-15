@@ -219,6 +219,31 @@
     var(--glass-shadow-3) !important;
 }
 
+/* ── The fold — the one mark that means an item opens ────────────────────────
+   A corner turned back, painted onto the sheet itself. It is a class and not a
+   pair of style props because gui compiles those into atomic classes and a
+   background-image is not one of the properties it maps; and because a fold has
+   exactly one spelling, so the call site should not be able to invent a second
+   one. `--fold-face` is @hanzo/design's, with the dark value inline so a host
+   that took this sheet without the token layer still gets a corner rather than
+   a silently-dropped declaration.
+
+   The corner is SQUARED, not rounded: a folded corner is a straight crease, and
+   a rounded one under a triangle reads as a rendering fault. That is also why
+   this carries !important — the radius it has to beat is a compiled style prop.
+
+   Spend it only where the thing expands. A fold on a surface that opens nothing
+   is a chevron that never turns. */
+.fold {
+  background-image: var(--fold-face,
+    linear-gradient(315deg,
+      rgb(255 255 255 / .08) 0, rgb(255 255 255 / .08) 11px,
+      rgb(255 255 255 / .16) 11px, rgb(255 255 255 / .16) 12px,
+      transparent 12px)) !important;
+  background-repeat: no-repeat !important;
+  border-bottom-right-radius: 0 !important;
+}
+
 /* ── The scrim ──────────────────────────────────────────────────────────────
    The dim that makes a floating panel read as floating rather than as more
    page. gui's overlay dims TWICE — a translucent ground under a further
