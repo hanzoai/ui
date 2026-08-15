@@ -1,0 +1,229 @@
+/* The composer's material: a lit ring around anything you can type into.
+ *
+ * Every number here is a custom property whose fallback is the published value,
+ * so a surface tunes one axis without forking the file. `.hz-composer` wraps the
+ * panel; the panel is the surface's own — this owns the ring, the halo and the
+ * round controls, and nothing about what typing does.
+ *
+ * Reads @hanzo/design's `--density` and `--text-base`, so a person's appearance
+ * preference retunes the composer with everything else.
+ */
+
+:root {
+  /* Two alphas of white, closing on the stop it opened with — a conic gradient
+     whose first and last stop differ shows a seam.
+     LUMINANCE, NOT HUE: a conic gradient does not spread stops evenly around a
+     rounded rectangle. The long edges take a wide angular slice and the short
+     sides almost none, so saturated stops put a bright arc on one edge and a dim
+     one opposite, which reads as a ring that is slightly off. Two close alphas
+     have no bright arc to land in the wrong place; the drift survives as sheen. */
+  --hz-spectrum: rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.1);
+
+  /* Pill by default. A surface with a paragraph field overrides to a box radius;
+     the halo below stays concentric either way. */
+  --hz-composer-radius: 9999px;
+  --hz-composer-band: 1px;
+  --hz-composer-halo: 5px;
+  --hz-composer-blur: 14px;
+  --hz-composer-rest: 0.5;
+  --hz-composer-lift: 0.8;
+  --hz-composer-glow: 0.1;
+  --hz-composer-glow-lift: 0.16;
+  --hz-composer-spin: 10s;
+  /* The round controls' base box. 30 fits inside a single-line field; a surface
+     whose controls sit in a row UNDER a paragraph box overrides to 36. */
+  --hz-composer-control: 30px;
+}
+
+/* `@property` is what lets a conic angle animate at all. Unsupported, the ring
+   is static — which is a ring either way. */
+@property --hz-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes hzComposerSpin {
+  to {
+    --hz-angle: 360deg;
+  }
+}
+
+/* The host's padding IS the ring's width — one property, read twice, so they
+   cannot disagree. Disagreeing makes the band clip or show a hairline of panel. */
+.hz-composer {
+  position: relative;
+  isolation: isolate;
+  box-sizing: border-box;
+  padding: var(--hz-composer-band);
+  border-radius: var(--hz-composer-radius);
+}
+
+/* The ring: a conic fill masked down to the padding band, so what shows is an
+   outline and not a disc. It rests quiet and lifts on attention — at full
+   strength the sweep reads as a hard white edge, louder than the one control it
+   draws around. */
+.hz-composer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--hz-composer-band);
+  border-radius: inherit;
+  opacity: var(--hz-composer-rest);
+  transition: opacity 200ms ease;
+  background: conic-gradient(from var(--hz-angle), var(--hz-spectrum));
+  animation: hzComposerSpin var(--hz-composer-spin) linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  /* After the standard shorthand: WebKit aliases `mask` onto `-webkit-mask`, so
+     declaring this second lets the shorthand reset it to `source-over` — the
+     filled disc again — on exactly the browsers too old to have `mask-composite`. */
+  -webkit-mask-composite: xor;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* The halo: the same sweep, blurred, living outside the box. Masked like the
+   ring so it lights the air around the panel and nothing behind it.
+   Its radius is the host's PLUS its own inset, because a box larger on every
+   side needs a wider corner to stay concentric — `inherit` curves too tight and
+   reads as a second, mismatched rounding just outside the panel. */
+.hz-composer::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--hz-composer-halo));
+  padding: var(--hz-composer-halo);
+  border-radius: calc(var(--hz-composer-radius) + var(--hz-composer-halo));
+  opacity: var(--hz-composer-glow);
+  transition: opacity 200ms ease;
+  background: conic-gradient(from var(--hz-angle), var(--hz-spectrum));
+  filter: blur(var(--hz-composer-blur));
+  animation: hzComposerSpin var(--hz-composer-spin) linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Hover AND focus lift it, together. The composer is one target, and a keyboard
+   arrives at it without a pointer ever crossing it — withholding the only
+   affordance a mouse gets is a difference nobody chose. */
+.hz-composer:hover::before,
+.hz-composer:focus-within::before {
+  opacity: var(--hz-composer-lift);
+}
+
+.hz-composer:hover::after,
+.hz-composer:focus-within::after {
+  opacity: var(--hz-composer-glow-lift);
+}
+
+/* The panel covers the middle, so only the band shows. */
+.hz-composer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The field is the composite control's interior, not a field of its own, so it
+   takes the base rung and inherits every colour from the panel. Sizing it here
+   is what puts it on `--type-scale` with the rest of the product. */
+.hz-composer :is(input, textarea) {
+  font-size: var(--text-base, 14px);
+}
+
+/* A composer grows with what you type; it is never dragged. `resize: vertical`
+   paints a grab handle inside the ring, on top of the gradient. */
+.hz-composer textarea {
+  resize: none;
+}
+
+/* The round controls are circles, not the library's rounded squares, and they
+   scale with density like every other box.
+   `!important` at (0,3,1) is load-bearing: @hanzo/ui writes
+   `[data-variant][data-size]{border-radius:var(--control-radius)!important}` at
+   (0,3,0), which no prop, class or inline style can reach.
+   FLOORED AT 24px — WCAG 2.5.8 AA — so no density can shrink a target under it.
+   The 44px coarse-pointer floor deliberately does not apply: the tap target in a
+   composer is the FIELD, which is the full width of the column, and these are
+   its secondary chrome. Stretching them to 44 makes a single line three lines
+   tall on the one device where that matters most. */
+html:root .hz-composer :is(button, a).hz-round {
+  --hz-round-size: max(24px, calc(var(--hz-composer-control) * var(--density, 1)));
+  width: var(--hz-round-size) !important;
+  height: var(--hz-round-size) !important;
+  min-width: var(--hz-round-size) !important;
+  min-height: var(--hz-round-size) !important;
+  padding: 0 !important;
+  border-radius: 9999px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Still lit, no drift. */
+@media (prefers-reduced-motion: reduce) {
+  .hz-composer::before,
+  .hz-composer::after {
+    animation: none;
+  }
+}
+
+/* The halo is atmosphere — it is the layer that makes the box read as floating
+   over what is behind it, which is the effect this asks to be spared. The ring
+   stays and goes solid, because it is the edge. */
+@media (prefers-reduced-transparency: reduce) {
+  .hz-composer::after {
+    display: none;
+  }
+
+  .hz-composer::before,
+  .hz-composer:hover::before,
+  .hz-composer:focus-within::before {
+    opacity: 1;
+  }
+}
+
+/* Asked for contrast, the ring stops being a sheen and becomes an edge: one
+   flat colour at full opacity, no sweep to average out against the page. */
+@media (prefers-contrast: more) {
+  .hz-composer::after {
+    display: none;
+  }
+
+  .hz-composer::before,
+  .hz-composer:hover::before,
+  .hz-composer:focus-within::before {
+    opacity: 1;
+    background: var(--hz-composer-edge, #fff);
+    animation: none;
+  }
+}
+
+/* The OS owns the palette here. A masked gradient survives forced colours as a
+   grey smear over a black panel, so both layers go and a system-coloured border
+   carries the edge — the one thing the palette guarantees will be visible. */
+@media (forced-colors: active) {
+  .hz-composer::before,
+  .hz-composer::after {
+    display: none;
+  }
+
+  .hz-composer {
+    border: var(--hz-composer-band) solid CanvasText;
+    padding: 0;
+  }
+}
