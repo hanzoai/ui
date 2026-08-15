@@ -4,11 +4,12 @@
  *   import { glass, panel, scrim } from '@hanzo/ui/glass'
  *   import '@hanzo/ui/glass.css'   // or '@hanzo/ui/theme.css', which inlines it
  *
- * Eight recipes, because eight things were being spelled out by hand on every
- * page and drifting apart every time: what a floating surface is made of, what
- * a resting one is made of, what dims the page under a modal, how a set of
- * rows is grouped, what one of those rows looks like, which item in a set is
- * the current one, which control is the loud one, and what it means to fill the
+ * Ten recipes, because ten things were being spelled out by hand on every page
+ * and drifting apart every time: what a floating surface is made of, what a
+ * resting one is made of, how high a sheet of the workspace sits and what marks
+ * one that opens, what dims the page under a modal, how a set of rows is
+ * grouped, what one of those rows looks like, which item in a set is the
+ * current one, which control is the loud one, and what it means to fill the
  * screen. Each is ONE value here and nowhere else.
  *
  * They are plain objects, spread onto any `@hanzo/gui` element:
@@ -73,6 +74,62 @@ export const glass = (level: Lift = 2) =>
     backgroundColor: '$background',
     borderColor: '$borderColor',
   }) as const
+
+/**
+ * A sheet of paper, and how high off the workspace it sits.
+ *
+ *   <YStack {...sheet(0)}>            the workspace itself
+ *     <YStack {...sheet(1)}>          a tool you are using
+ *       <YStack {...sheet(2)}>        what it opened
+ *
+ * The rungs are `glass`'s rungs — `sheet(2)` and `glass(2)` stand at the same
+ * height, they are just cut from different material — so a screen mixing a
+ * transcript, a menu and a dialog still reads as ONE space. What differs is
+ * what the surface MEANS: glass is chrome floating over content, paper is the
+ * content's own structure, where the level says which thing you are working in.
+ *
+ * NO BORDER, deliberately, and this is the rule the recipe exists to enforce:
+ * if two surfaces need separating, RAISE one. A surface that is already a step
+ * above its neighbour and also wears a hairline is drawn twice, and a screen of
+ * those is the wireframe look — every pane in its own box, none of them saying
+ * which one you are in. Reach for `panel` when the thing genuinely is a card in
+ * the flow with a finished edge; reach for this when depth is the hierarchy.
+ *
+ * The fill is `--sheet-*` from @hanzo/design — an alpha wash, not an opaque
+ * step, so sheets STACK: one laid on another lands a shade lighter and the pile
+ * converges instead of blowing out. That is also why 0 is worth spelling: the
+ * ground is a value, not the absence of one, and a pane that means "workspace"
+ * should say so rather than inherit whatever is behind it.
+ *
+ * Rung 0 carries no `elevation-` class because nothing casts a shadow onto the
+ * thing it is lying on.
+ */
+export const sheet = (level: 0 | 1 | 2 = 1) =>
+  ({
+    backgroundColor: SHEET_FILL[level],
+    ...(level === 0 ? {} : { className: `elevation-${level}` as const }),
+  }) as const
+
+const SHEET_FILL = {
+  0: 'var(--sheet-0, #0a0a0a)',
+  1: 'var(--sheet-1, rgb(38 38 38 / .5))',
+  2: 'var(--sheet-2, rgb(38 38 38 / .75))',
+} as const
+
+/**
+ * The fold — a corner turned back, and the ONE mark that says an item opens.
+ *
+ *   <YStack {...sheet(1)} {...fold}>
+ *
+ * Spend it only where the thing expands. A fold on a surface that does nothing
+ * is the same lie as a chevron that does not turn: it is an affordance, and an
+ * affordance that leads nowhere costs more than no mark at all.
+ *
+ * A `background-image` on the sheet itself, so it needs no extra element and no
+ * pseudo-element from the call site, and it squares that one corner — a folded
+ * corner is not round. `--fold-face` flips with the theme underneath.
+ */
+export const fold = { className: 'fold' } as const
 
 /**
  * The scrim under anything modal — the dim that makes a floating panel read as
