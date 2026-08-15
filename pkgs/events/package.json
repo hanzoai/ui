@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/events",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The canonical Hanzo event schema: which events exist, what each means, and what it carries.",
   "license": "MIT",
   "type": "module",
