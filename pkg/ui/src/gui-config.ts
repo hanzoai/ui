@@ -346,8 +346,27 @@ const themes = Object.fromEntries(
  */
 const asSizes = <T,>(t: T) => t as unknown as typeof defaultConfig.fonts.body.size
 
+/**
+ * ONE authority decides the theme, and it is the class on `<html>`.
+ *
+ * gui's default wraps each theme's root variables in
+ * `@media (prefers-color-scheme: …)`, which asks the OS a question every Hanzo
+ * surface has already answered: @hanzo/design is dark-first at bare `:root` and
+ * retunes under `.light`, and gui itself stamps `.t_dark` / `.t_light` on the
+ * html element. Two authorities for one question disagree exactly when they are
+ * least visible — a light-scheme browser opening a dark product — and the media
+ * block outranks nothing and everything at once, because it TIES design on
+ * specificity and wins on load order.
+ *
+ * Both consumers had already discovered this and answered it privately, at the
+ * wrong layer: hanzo.ai set this same flag in a config of its own, and
+ * hanzo.app's sheet generator unwrapped the dark block and deleted the light one
+ * after the fact. A generated sheet edited afterwards is a fact stated twice, so
+ * it is stated here instead, once, where both read it.
+ */
 const base = {
   ...defaultConfig,
+  settings: { ...defaultConfig.settings, shouldAddPrefersColorThemes: false },
   tokens: {
     ...defaultConfig.tokens,
     radius: RADIUS,
