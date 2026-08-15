@@ -59,6 +59,20 @@ export type OrgSwitcherProps = {
    * other half of what hanzo.app's local copy existed for.
    */
   footer?: ReactNode
+  /**
+   * The second line of the trigger, when the caller scopes below the org — a
+   * project, an environment. The console kept a whole local copy of this
+   * component because its trigger has to say "Org / project" and this one could
+   * only say the org; a caller that scopes deeper has to be able to name where
+   * it is, or it grows a second control beside this one saying the other half.
+   */
+  sub?: string
+  /**
+   * The accessible name, when the control does more than switch organization
+   * (a caller passing `sub` is also switching what `sub` names). Defaults to
+   * "<org> · switch organization".
+   */
+  aria?: string
 }
 
 export function OrgSwitcher({
@@ -70,6 +84,8 @@ export function OrgSwitcher({
   picker = false,
   direction = 'down',
   footer,
+  sub,
+  aria,
 }: OrgSwitcherProps) {
   const currentId = scope.currentOrg()
 
@@ -181,17 +197,33 @@ export function OrgSwitcher({
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read
             as the two halves of one identity, not a caption over a control. */}
-        <Button chromeless height={44} px="$2" justify="flex-start" aria-label={`${currentLabel} · switch organization`}>
+        <Button chromeless height={44} px="$2" justify="flex-start" aria-label={aria ?? `${currentLabel} · switch organization`}>
           <XStack items="center" gap="$2.5" flex={1} minW={0}>
             <OrgMark org={current} size={30} />
-            <Text flex={1} minW={0} fontSize="$4" fontWeight="800" color="$color12" numberOfLines={1}>
-              {currentLabel}
-            </Text>
+            {/* One line when the control names only an org; two when a caller
+                also scopes BELOW it — a project, an environment — because the
+                trigger then has to answer "where am I" completely, and a second
+                control for the second half would be a second place to look. */}
+            <YStack flex={1} minW={0}>
+              <Text minW={0} fontSize="$4" fontWeight="800" color="$color12" numberOfLines={1}>
+                {currentLabel}
+              </Text>
+              {sub ? (
+                <Text minW={0} fontSize="$1" color="$color10" numberOfLines={1}>
+                  {sub}
+                </Text>
+              ) : null}
+            </YStack>
             <ChevronsUpDown size={16} color="$color9" />
           </XStack>
         </Button>
       </Popover.Trigger>
-      <Popover.Content bordered elevate p="$2" width={300} bg="$color2" borderColor="$borderColor">
+      {/* The panel's horizontal padding is a GUTTER, not an indent: every row
+          inside already pads `$2`, so padding the sheet by the same step again
+          put the content two steps off both edges and left the sheet reading as
+          a frame around a narrower menu. `$1` is the gap a row's hover pill
+          needs to not touch the edge; the row still owns the content inset. */}
+      <Popover.Content bordered elevate px="$1" py="$1" width={300} bg="$color2" borderColor="$borderColor">
         {creating ? (
           <YStack gap="$2">
             <Text fontSize="$2" color="$color12" fontWeight="700">
