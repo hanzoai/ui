@@ -27,7 +27,10 @@ export interface ThreadProps {
 }
 
 export function Thread({ children, maxWidth = MEASURE, slack = SLACK, gap = 24 }: ThreadProps) {
-  const view = useRef<GetRef<typeof ScrollView>>(null)
+  const view = useRef<
+    // gui's GetRef omits the ScrollView's imperative methods; the view has them.
+    GetRef<typeof ScrollView> & { scrollToEnd(o: { animated: boolean }): void }
+  >(null)
   const track = useRef<Track>({ offset: 0, viewport: 0, content: 0 })
   const follow = useRef(true)
 
@@ -42,14 +45,14 @@ export function Thread({ children, maxWidth = MEASURE, slack = SLACK, gap = 24 }
       flex={1}
       width="100%"
       scrollEventThrottle={16}
-      onLayout={(e) => {
+      onLayout={(e: any) => {
         track.current = { ...track.current, viewport: e.nativeEvent.layout.height }
       }}
-      onContentSizeChange={(_w, h) => {
+      onContentSizeChange={(_w: any, h: any) => {
         track.current = { ...track.current, content: h }
         grew()
       }}
-      onScroll={(e) => {
+      onScroll={(e: any) => {
         const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent
         track.current = {
           offset: contentOffset.y,

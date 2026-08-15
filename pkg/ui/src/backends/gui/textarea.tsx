@@ -38,7 +38,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       rows={Math.max(rows ?? MIN_ROWS, uncontrolled ? typed : rowsOf(value))}
       value={value as string | undefined}
       defaultValue={defaultValue as string | undefined}
-      onChangeText={uncontrolled ? (t) => setTyped(rowsOf(t)) : undefined}
+      onChangeText={uncontrolled ? (t: any) => setTyped(rowsOf(t)) : undefined}
       width="100%"
       minH={64}
       rounded="$4"
