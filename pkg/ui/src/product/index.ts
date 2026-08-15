@@ -55,6 +55,7 @@ export * from './menu'
 
 // The rest — every exported name below is unique across the layer.
 export * from './DataTable'
+export * from './Workbench'
 export * from './EmptyState'
 export * from './FadeIn'
 export * from './Field'
