@@ -19,9 +19,9 @@
  * same type — so "which workspace" and "who I am" read as two halves of one
  * identity rather than a caption over a control.
  */
-import { useState, type ReactNode } from 'react'
+import { useState, type CSSProperties, type ReactNode } from 'react'
 import { Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
-import { LogOut, UserRound } from '@hanzogui/lucide-icons-2'
+import { Check, ChevronsUpDown, LogOut, UserRound } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
 import { displayName } from './name'
@@ -36,7 +36,20 @@ export type UserMenuItem = {
   onPress: () => void
   /** Draws the row in the destructive tone (sign out, delete account). */
   danger?: boolean
+  /**
+   * Whether this row is the chosen one — for a group that is a CHOICE rather
+   * than a list of actions (which theme, which language). Its presence makes the
+   * group a `radiogroup` and the row a `radio`, so assistive tech is told that
+   * exactly one of them holds, and the chosen row carries a check.
+   */
+  active?: boolean
 }
+
+/** A group of rows, optionally named. A bare array is the unnamed form. */
+export type UserMenuGroup = UserMenuItem[] | { label?: string; items: UserMenuItem[] }
+
+const itemsOf = (g: UserMenuGroup): UserMenuItem[] => (Array.isArray(g) ? g : g.items)
+const nameOf = (g: UserMenuGroup): string | undefined => (Array.isArray(g) ? undefined : g.label)
 
 export type UserMenuProps = {
   /** The signed-in person's display name. Falls back to the email's local part. */
@@ -44,8 +57,9 @@ export type UserMenuProps = {
   email?: string
   /** Avatar URL. Absent → the monogram of the name, like an org's mark. */
   avatar?: string
-  /** Grouped rows — each group is separated by a rule, empty groups are dropped. */
-  groups?: UserMenuItem[][]
+  /** Grouped rows — each group is separated by a rule, empty groups are dropped.
+   *  A group may be named, and a named group of `active` rows is a choice. */
+  groups?: UserMenuGroup[]
   /** Theme row content — default `<ThemeToggle/>`; `null` hides the row (a
    *  single-theme surface has nothing to toggle and should not pretend to). */
   theme?: ReactNode
@@ -71,10 +85,22 @@ export type UserMenuProps = {
   /** Which edge the panel aligns to. Default `end` (a top-bar avatar); `start`
    *  for a rail, where the panel should share the trigger's left edge. */
   align?: 'start' | 'end'
+  /** The trigger's accessible name. Defaults to "<name> · account". */
+  aria?: string
+  /** `data-testid` on the trigger. */
+  testId?: string
+  /** Classes for the sheet — the host's own material (glass, elevation). */
+  className?: string
+  /** Inline style for the sheet — a host's stacking layer belongs here. */
+  style?: CSSProperties
 }
 
 function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
   const track = useEmit()
+  // A row that can be CURRENT is one of a set exactly one of which holds; a row
+  // without the notion is an action. One fact — `active` — decides the role, so
+  // no call site has to say it twice.
+  const choice = item.active !== undefined
   return (
     <XStack
       onPress={() => {
@@ -82,6 +108,8 @@ function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
         onDone()
         item.onPress()
       }}
+      role={choice ? 'radio' : 'menuitem'}
+      aria-checked={choice ? !!item.active : undefined}
       cursor="pointer"
       items="center"
       gap="$2.5"
@@ -91,9 +119,10 @@ function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
       hoverStyle={{ bg: '$color5' }}
     >
       {item.icon}
-      <Text fontSize="$2" color={item.danger ? '$red10' : '$color12'}>
+      <Text flex={1} fontSize="$2" color={item.danger ? '$red10' : '$color12'}>
         {item.label}
       </Text>
+      {item.active ? <Check size={14} /> : null}
     </XStack>
   )
 }
@@ -116,11 +145,15 @@ export function UserMenu({
   height = 44,
   direction = 'down',
   align = 'end',
+  aria,
+  testId,
+  className,
+  style,
 }: UserMenuProps) {
   const [open, setOpen] = useState(false)
   const track = useEmit()
   const shown = displayName(name, email)
-  const filled = groups.filter((g) => g.length > 0)
+  const filled = groups.filter((g) => itemsOf(g).length > 0)
   const close = () => setOpen(false)
 
   return (
@@ -144,7 +177,8 @@ export function UserMenu({
           hoverStyle={{ bg: '$color4' }}
           role="button"
           tabIndex={0}
-          aria-label={shown ? `${shown} · account` : 'Account'}
+          data-testid={testId}
+          aria-label={aria ?? (shown ? `${shown} · account` : 'Account')}
         >
           {/* The person wears the same mark treatment as a workspace — an image
               when there is one, a monogram when there is not. */}
@@ -158,10 +192,27 @@ export function UserMenu({
               {shown}
             </Text>
           ) : null}
+          {/* The same chevron `OrgSwitcher` wears. Without it the two controls
+              were a mark-and-a-name that opens something and a mark-and-a-name
+              that does not appear to, side by side in one rail — which is a
+              caption over a control, the exact thing both files say they are
+              not. It is the affordance, so it belongs to both or to neither. */}
+          {label && shown ? <ChevronsUpDown size={16} color="$color9" /> : null}
         </XStack>
       </Popover.Trigger>
 
-      <Popover.Content bordered elevate px="$1" py="$1" width={240} bg="$color2" borderColor="$borderColor">
+      <Popover.Content
+        role="menu"
+        bordered
+        elevate
+        px="$1"
+        py="$1"
+        width={240}
+        bg="$color2"
+        borderColor="$borderColor"
+        className={className}
+        style={style}
+      >
         {children ?? (
           <YStack gap="$1">
             {shown || email ? (
@@ -181,14 +232,31 @@ export function UserMenu({
               </YStack>
             ) : null}
 
-            {filled.map((group, i) => (
-              <YStack key={i} gap="$1">
-                {(i > 0 || shown || email) ? <Separator borderColor="$borderColor" my="$1" /> : null}
-                {group.map((item) => (
-                  <Row key={item.id} item={item} onDone={close} />
-                ))}
-              </YStack>
-            ))}
+            {filled.map((group, i) => {
+              const items = itemsOf(group)
+              const groupName = nameOf(group)
+              // A group whose every row carries a chosen-one is a CHOICE, so it
+              // is a radiogroup — a heading alone would leave the rows unrelated.
+              const choice = items.every((it) => it.active !== undefined)
+              const rows = items.map((item) => <Row key={item.id} item={item} onDone={close} />)
+              return (
+                <YStack key={i} gap="$1">
+                  {i > 0 || shown || email ? <Separator borderColor="$borderColor" my="$1" /> : null}
+                  {groupName ? (
+                    <Text px="$2" py="$1" fontSize="$1" color="$color10" fontWeight="500">
+                      {groupName}
+                    </Text>
+                  ) : null}
+                  {choice ? (
+                    <YStack role="radiogroup" aria-label={groupName} gap="$1">
+                      {rows}
+                    </YStack>
+                  ) : (
+                    rows
+                  )}
+                </YStack>
+              )
+            })}
 
             {theme !== null ? (
               <>
