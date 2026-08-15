@@ -222,7 +222,19 @@ export function OrgSwitcher({
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen} placement={direction === 'up' ? 'top-start' : 'bottom-start'}>
+    // `direction` is a PREFERENCE, not a promise: `allowFlip`/`stayInFrame` let
+    // the sheet turn over and slide back into view when the side it wants has no
+    // room. The same control sits at the foot of a desktop rail (so: upward) and
+    // near the TOP of a phone's account sheet, where upward is off the screen —
+    // and a panel that cannot flip lands under the chrome it opened from:
+    // present, measurable, and unclickable.
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+      placement={direction === 'up' ? 'top-start' : 'bottom-start'}
+      allowFlip
+      stayInFrame
+    >
       <Popover.Trigger asChild>
         {/* Sized as the PEER of the account control — same height, same mark,
             same type, same hit area — so "which workspace" and "who I am" read

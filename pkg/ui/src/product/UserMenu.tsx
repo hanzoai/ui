@@ -150,6 +150,12 @@ export function UserMenu({
         setOpen(next)
       }}
       placement={`${direction === 'up' ? 'top' : 'bottom'}-${align}` as const}
+      // `direction` is a PREFERENCE, not a promise — see the note in
+      // `OrgSwitcher`. This is the control it bites: at the foot of a desktop
+      // rail it opens upward, and the SAME mount near the top of a phone's
+      // account sheet has nowhere to go upward at all.
+      allowFlip
+      stayInFrame
     >
       <Popover.Trigger asChild>
         <XStack
