@@ -14,9 +14,9 @@ import { slot } from './slot'
 import { touch } from './gesture'
 import { FOCUS } from './focus'
 import { masked } from './mask'
+import { CONTROL_H, FIELD, GUTTER } from './control'
 
-const HEIGHT = 36
-const GUTTER = 12
+const HEIGHT = CONTROL_H
 /** Width reserved for an adornment inside the field. */
 const WELL = 36
 
@@ -76,13 +76,10 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       // clip. gui's Input does not accept `minHeight` at all, which is the type
       // system saying the same thing. The floor rule is for controls that hold
       // children — Button and SelectTrigger.
+      {...FIELD}
       height={HEIGHT}
       width="100%"
       minW={0}
-      rounded="$3"
-      bg="transparent"
-      borderWidth={1}
-      borderColor="$borderColor"
       {...FOCUS}
       placeholderTextColor="$color10"
       fontSize="$3"

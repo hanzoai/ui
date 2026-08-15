@@ -3,6 +3,8 @@
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
 import { FOCUS } from "./focus"
+import { FIELD } from "./control"
+import { slot } from "./slot"
 
 /** Floor for the grown row count. */
 const MIN_ROWS = 3
@@ -34,16 +36,18 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
   return (
     <TextArea
       ref={ref as never}
-      data-slot="textarea"
+      {...slot("textarea")}
       rows={Math.max(rows ?? MIN_ROWS, uncontrolled ? typed : rowsOf(value))}
       value={value as string | undefined}
       defaultValue={defaultValue as string | undefined}
       onChangeText={uncontrolled ? (t: any) => setTyped(rowsOf(t)) : undefined}
+      {...FIELD}
       width="100%"
       minH={64}
-      rounded="$4"
-      bg="transparent"
-      borderWidth={1}
+      // The gutter has to be NAMED. Left unsaid it came from gui's
+      // `textAreaSizeVariant`, which computes its own horizontal padding and
+      // landed on 20 — so the one field a form makes tall was also the one
+      // indented differently from the two above it.
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
       {...FOCUS}
       placeholderTextColor="$color10"
