@@ -189,8 +189,16 @@ export function UserMenu({
 
       <Popover.Content
         role="menu"
-        bordered
-        elevate
+        /* borderWidth/elevation, NOT bordered/elevate. Popover.Content
+           declares neither -- gui has them only on Tabs -- and gui DROPS an
+           unrecognised prop without a word, so this panel rendered with no
+           border and no shadow in every consumer: console, hanzo.app, chat and
+           platform. Measured: computed border-left-width 0px while px and bg
+           applied normally, and React logged "Received true for a non-boolean
+           attribute bordered". The siblings in this package have always used
+           borderWidth={1}. */
+        borderWidth={1}
+        elevation="$2"
         px="$1"
         py="$1"
         width={240}
