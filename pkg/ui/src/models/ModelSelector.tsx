@@ -82,7 +82,7 @@ export function ModelSelector({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <XStack width="100%" onLayout={(e) => setTriggerW(e.nativeEvent.layout.width)}>
+      <XStack width="100%" onLayout={(e: any) => setTriggerW(e.nativeEvent.layout.width)}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"

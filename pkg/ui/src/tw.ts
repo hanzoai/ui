@@ -64,7 +64,7 @@ const SIDE: Record<string, string> = { t: 'Top', r: 'Right', b: 'Bottom', l: 'Le
 /** Longest first, so `max-w` wins over `max` and `gap-x` over `gap`. */
 const HEADS = [
   'min-w', 'min-h', 'max-w', 'max-h', 'grid-cols', 'grid-rows', 'col-span',
-  'row-span', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
+  'row-span', 'translate-x', 'translate-y', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
   'transition', 'duration', 'delay', 'ease', 'blur', 'backdrop-blur', 'shadow',
   'overflow',
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
@@ -92,7 +92,8 @@ const DURATION: Record<string, number> = {
 /** What Tailwind animates under each word. */
 const TRANSITION: Record<string, string> = {
   none: 'none', all: 'all', DEFAULT: 'color, background-color, border-color, opacity, box-shadow, transform',
-  colors: 'color, background-color, border-color', opacity: 'opacity',
+  colors: 'color, background-color, border-color, text-decoration-color, fill, stroke',
+  opacity: 'opacity',
   shadow: 'box-shadow', transform: 'transform',
 }
 
@@ -106,7 +107,7 @@ const SHADOW: Record<string, string> = {
 }
 
 const BLUR: Record<string, number> = {
-  none: 0, sm: 4, DEFAULT: 8, md: 12, lg: 16, xl: 24, '2xl': 40, '3xl': 64,
+  none: 0, xs: 4, sm: 8, DEFAULT: 8, md: 12, lg: 16, xl: 24, '2xl': 40, '3xl': 64,
 }
 
 /** A size word, a fraction, or a step on the ramp. */
@@ -131,14 +132,21 @@ function size(v: string): string | number | undefined {
 function color(v: string): string | undefined {
   if (v === 'transparent') return 'transparent'
   if (v === 'current') return 'currentColor'
+  if (v === 'white') return '#fff'
+  if (v === 'black') return '#000'
   const m = /^(.+?)(?:\/(\d{1,3}))?$/.exec(v)
   if (!m) return undefined
   const [, name, alpha] = m
   const arb = /^\[(.+)]$/.exec(name)
-  const base = arb ? arb[1] : `var(--${name})`
+  const base = arb ? arb[1]
+    : name === 'white' ? '#fff' : name === 'black' ? '#000'
+    : `var(--${name})`
   if (!alpha) return base
   return `color-mix(in srgb, ${base} ${alpha}%, transparent)`
 }
+
+/** Properties a negative class may set — the rest have no negative form. */
+const NEGATABLE = /^(margin|top|right|bottom|left|zIndex|translate)/
 
 /** One class to zero or more props. Returns null when the class is unknown. */
 function one(c: string): Props | null {
@@ -188,9 +196,25 @@ function one(c: string): Props | null {
     case 'select-none': return { userSelect: 'none' }
     case 'pointer-events-none': return { pointerEvents: 'none' }
     case 'sr-only': return { position: 'absolute', width: 1, height: 1, overflow: 'hidden' }
+    case 'tabular-nums': return { fontVariantNumeric: 'tabular-nums' }
+    case 'transform': return { transform: 'translateZ(0)' }
     case 'transition': return { transitionProperty: TRANSITION.DEFAULT }
     case 'blur': return { filter: `blur(${BLUR.DEFAULT}px)` }
     case 'shadow': return { boxShadow: SHADOW.DEFAULT }
+  }
+
+  // A leading `-` negates whatever the rest of the class resolves to.
+  if (c.startsWith('-')) {
+    const pos = one(c.slice(1))
+    if (!pos) return null
+    const out: Props = {}
+    for (const k in pos) {
+      const v = pos[k]
+      out[k] = typeof v === 'number' && NEGATABLE.test(k) ? -v
+        : typeof v === 'string' && /^[\d.]+%$/.test(v) && NEGATABLE.test(k) ? `-${v}`
+        : v
+    }
+    return out
   }
 
   // Heads are matched longest-first. A shortest-match split reads `max-w-3xl`
@@ -288,6 +312,10 @@ function one(c: string): Props | null {
     case 'space-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { rowGap: n } }
     case 'space-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { columnGap: n } }
     case 'row-span': return /^\d+$/.test(v) ? { gridRow: `span ${v} / span ${v}` } : null
+    case 'translate-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null
+      : { transform: `translateX(${typeof n === 'number' ? n + 'px' : n})` } }
+    case 'translate-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null
+      : { transform: `translateY(${typeof n === 'number' ? n + 'px' : n})` } }
     case 'shadow': return SHADOW[v] ? { boxShadow: SHADOW[v] } : null
   }
   return null

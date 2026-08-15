@@ -93,10 +93,10 @@ const ScrollBar = /* @__PURE__ */ forwardRef<GuiElement, ScrollBarProps>(
     const at = overflow ? range * clamp(offset / scrollable, 1) : 0
 
     const gesture = drag({
-      begin: (e) => {
+      begin: (e: any) => {
         from.current = dragPos(e, !vertical)
       },
-      move: (e) => {
+      move: (e: any) => {
         const start = from.current
         if (start === null || range === 0) return
         const now = dragPos(e, !vertical)
@@ -125,7 +125,7 @@ const ScrollBar = /* @__PURE__ */ forwardRef<GuiElement, ScrollBarProps>(
         p={1}
         opacity={shown ? 1 : 0}
         pointerEvents={shown ? "auto" : "none"}
-        onLayout={(e) =>
+        onLayout={(e: any) =>
           setLen(
             vertical ? e.nativeEvent.layout.height : e.nativeEvent.layout.width
           )
@@ -170,7 +170,10 @@ const ScrollArea = /* @__PURE__ */ forwardRef<GuiElement, ScrollAreaProps>(
     },
     ref
   ) {
-    const viewport = useRef<GetRef<typeof ScrollView>>(null)
+    const viewport = useRef<
+      // gui's GetRef omits the ScrollView's imperative methods; the view has them.
+      GetRef<typeof ScrollView> & { scrollTo(o: { x: number; y: number; animated: boolean }): void }
+    >(null)
     const live = useRef<Track>(ZERO)
     const [track, setTrack] = useState<Track>(ZERO)
     const [active, setActive] = useState(false)
@@ -240,15 +243,15 @@ const ScrollArea = /* @__PURE__ */ forwardRef<GuiElement, ScrollAreaProps>(
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
-          onLayout={(e) =>
+          onLayout={(e: any) =>
             put({
               viewport: horizontal
                 ? e.nativeEvent.layout.width
                 : e.nativeEvent.layout.height,
             })
           }
-          onContentSizeChange={(w, h) => put({ content: horizontal ? w : h })}
-          onScroll={(e) => {
+          onContentSizeChange={(w: any, h: any) => put({ content: horizontal ? w : h })}
+          onScroll={(e: any) => {
             const { contentOffset } = e.nativeEvent
             put({ offset: horizontal ? contentOffset.x : contentOffset.y })
             wake()

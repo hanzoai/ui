@@ -7,7 +7,7 @@
  * and a row is the one box model that also exists on native.
  */
 import { SizableText, XStack, YStack, styled, withStaticProperties } from '@hanzo/gui'
-import type { ComponentProps, KeyboardEvent } from 'react'
+import type { ComponentProps } from 'react'
 import { AspectRatio, type AspectRatioProps } from './aspect-ratio'
 import { ink } from './ink'
 import { slot } from './slot'
@@ -76,7 +76,7 @@ const Card = ({ interactive, onPress, ...p }: CardProps) => (
           // A div with role="button" is not a button: the browser gives it no
           // keyboard activation, so it has to be spelled out or the card is
           // mouse-only. Space must also preventDefault or the page scrolls.
-          onKeyDown: (e: KeyboardEvent) => {
+          onKeyDown: (e: any) => {
             if (e.key !== 'Enter' && e.key !== ' ') return
             e.preventDefault()
             ;(onPress as ((e: unknown) => void) | undefined)?.(e)
