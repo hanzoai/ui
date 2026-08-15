@@ -23,6 +23,11 @@ import { forwardRef, type ReactNode } from 'react'
 import { YStack } from '@hanzo/gui'
 import { tw, type ClassValue } from './tw'
 
+/** Properties a frame ignores and a DOM element passes to its children. */
+const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
+  'textTransform', 'fontFamily', 'fontStyle', 'textAlign', 'color',
+  'textDecorationLine', 'whiteSpace'] as const
+
 export type BoxProps = Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> & {
   className?: ClassValue
   children?: ReactNode
@@ -39,6 +44,17 @@ export const Box = forwardRef<any, BoxProps>(function Box(
   ref,
 ) {
   const { props, rest: unread } = tw(className)
+  // gui drops a text property set on a frame — `fontSize` is not a frame style
+  // prop, so it silently rendered at the inherited size and a page carrying
+  // `text-xs` on a box came out three pixels larger everywhere. A div DOES pass
+  // these to its children, so they ride as a plain style, which is what the
+  // browser inherits from.
+  const text: Record<string, unknown> = {}
+  for (const k of TEXT_PROPS) if (k in props) { text[k] = props[k]; delete props[k] }
+  // A div's line-height comes from the cascade; gui's Stack stamps its own, so
+  // a converted box grew a few pixels per line of text. Stated only when no
+  // class said otherwise, so `leading-relaxed` still wins.
+  if (!('lineHeight' in text)) text.lineHeight = 'inherit'
   // Explicit props win: a caller who states a value directly means it, and the
   // classes are what they are migrating away from.
   return (
@@ -49,6 +65,7 @@ export const Box = forwardRef<any, BoxProps>(function Box(
       {...(props as object)}
       {...rest}
       className={unread || undefined}
+      style={Object.keys(text).length ? { ...text, ...(rest as any).style } : (rest as any).style}
     >
       {children}
     </YStack>
