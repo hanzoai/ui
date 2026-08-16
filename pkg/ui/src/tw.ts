@@ -173,6 +173,9 @@ function color(v: string): string | undefined {
 /** Properties a negative class may set — the rest have no negative form. */
 const NEGATABLE = /^(margin|top|right|bottom|left|zIndex|translate)/
 
+/** A transform function and its value: `translateX(50%)` -> `translateX`, `50`, `%`. */
+const TRANSFORM_FN = /^([a-z]+)\((-?[\d.]+)([a-z%]*)\)$/i
+
 /** One class to zero or more props. Returns null when the class is unknown. */
 function one(c: string): Props | null {
   // display and the flex words
@@ -240,6 +243,11 @@ function one(c: string): Props | null {
       const v = pos[k]
       out[k] = typeof v === 'number' && NEGATABLE.test(k) ? -v
         : typeof v === 'string' && /^[\d.]+%$/.test(v) && NEGATABLE.test(k) ? `-${v}`
+        // A transform is a function around its value, and the key is `transform`
+        // whatever the class was — so the value carries the sign, and no test on
+        // the property name can reach it.
+        : k === 'transform' && typeof v === 'string' && TRANSFORM_FN.test(v)
+          ? v.replace(TRANSFORM_FN, (_m, fn, n, unit) => `${fn}(${-Number(n)}${unit})`)
         : v
     }
     return out
