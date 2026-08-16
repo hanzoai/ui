@@ -30,7 +30,12 @@ const MEMBER = 'appearance'
 export interface Account {
   /** IAM's origin, e.g. `https://hanzo.id`. */
   base: string
-  /** The caller's bearer. Absent means signed out, and there is nothing to read. */
+  /**
+   * A bearer, for a caller on another origin. Omit it on IAM's own host, where
+   * the session is a first-party cookie and rides along on its own — that is how
+   * the portal reads the account today, and requiring a token there would mean
+   * inventing one to satisfy a signature.
+   */
   token?: string
   signal?: AbortSignal
 }
@@ -45,7 +50,6 @@ export interface Account {
  * `resolve()` expects.
  */
 export async function load({ base, token, signal }: Account): Promise<Preference | undefined> {
-  if (!token) return undefined
   try {
     // An empty patch merges nothing and returns the stored object, so the write
     // endpoint is also the read. One route, one merge, one shape to keep in step.
@@ -68,7 +72,6 @@ export async function save(
   appearance: Preference,
   { base, token, signal }: Account
 ): Promise<boolean> {
-  if (!token) return false
   try {
     return !!(await post(base, token, { [MEMBER]: appearance }, signal))
   } catch {
@@ -78,13 +81,19 @@ export async function save(
 
 async function post(
   base: string,
-  token: string,
+  token: string | undefined,
   patch: Record<string, unknown>,
   signal?: AbortSignal
 ): Promise<Record<string, unknown> | undefined> {
   const res = await fetch(`${base.replace(/\/+$/, '')}/v1/iam/preferences`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    // Sent either way: on IAM's own host this IS the session, and cross-origin it
+    // is harmless next to the bearer. One request shape rather than two.
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
     body: JSON.stringify(patch),
     signal,
   })

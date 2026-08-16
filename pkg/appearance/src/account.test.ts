@@ -5,12 +5,15 @@ import { load, save } from './account'
 const base = 'https://hanzo.id'
 
 describe('the account layer', () => {
-  it('asks nobody when there is no bearer, because there is no person yet', async () => {
-    const fetchSpy = vi.fn()
+  // On IAM's own host the session IS the cookie, so requiring a bearer would mean
+  // inventing one to satisfy a signature. The cookie rides on credentials.
+  it('asks with the cookie when there is no bearer', async () => {
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({ appearance: { type: 1.15 } }) }))
     vi.stubGlobal('fetch', fetchSpy)
-    expect(await load({ base })).toBeUndefined()
-    expect(await save({ type: 1.3 }, { base })).toBe(false)
-    expect(fetchSpy).not.toHaveBeenCalled()
+    expect(await load({ base })).toEqual({ type: 1.15 })
+    const [, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit]
+    expect(init.credentials).toBe('include')
+    expect((init.headers as Record<string, string>).Authorization).toBeUndefined()
     vi.unstubAllGlobals()
   })
 

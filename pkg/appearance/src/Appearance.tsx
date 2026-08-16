@@ -142,7 +142,7 @@ export function useAppearance({
   // -- and then the device's own answer stands rather than being cleared by a
   // round trip that failed.
   useEffect(() => {
-    if (!account?.token) return
+    if (!account) return
     let live = true
     void load(account).then((theirs) => {
       if (!live || !theirs) return
@@ -171,7 +171,7 @@ export function useAppearance({
       // The device has it either way; the account is what makes it travel. A
       // failed save is not surfaced because the choice is already in effect here
       // and reconciles on the next successful write.
-      if (account?.token && scope === 'everywhere') void save(next, account)
+      if (account && scope === 'everywhere') void save(next, account)
     },
     [scope, org, refresh, account],
   )
@@ -190,7 +190,7 @@ export function useAppearance({
   const reset = useCallback(() => {
     write({}, { scope, org })
     refresh()
-    if (account?.token && scope === 'everywhere') void save({}, account)
+    if (account && scope === 'everywhere') void save({}, account)
   }, [scope, org, refresh, account])
 
   return { pref, set, reset, scope, setScope: (s: Scope) => refresh(s), from, layer: layerFor(scope) }

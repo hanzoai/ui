@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/appearance",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "A person's own reading of the Hanzo design system \u2014 type size, density, accent \u2014 stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.js",
