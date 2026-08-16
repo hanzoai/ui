@@ -47,8 +47,22 @@ const WEIGHT: Record<string, number> = {
   semibold: 600, bold: 700, extrabold: 800, black: 900,
 }
 
-const RADIUS: Record<string, number> = {
-  none: 0, sm: 2, '': 4, md: 6, lg: 8, xl: 12, '2xl': 16, '3xl': 24, full: 9999,
+/**
+ * A corner is the theme's variable, for the same reason a size is. @hanzo/design
+ * states the ramp — 6/8/12/16/24 — and Tailwind reads the same `--radius-*`
+ * names, so a class and a converted prop paint the same corner. Baking
+ * Tailwind's stock numbers in put every converted corner one rung small.
+ */
+const RADIUS: Record<string, number | string> = {
+  none: 0,
+  sm: 'var(--radius-sm, 0.375rem)',
+  '': 4,
+  md: 'var(--radius-md, 0.5rem)',
+  lg: 'var(--radius-lg, 0.75rem)',
+  xl: 'var(--radius-xl, 1rem)',
+  '2xl': 'var(--radius-2xl, 1.5rem)',
+  '3xl': 'var(--radius-3xl, 1.5rem)',
+  full: 9999,
 }
 
 const LEADING: Record<string, string> = {
@@ -134,14 +148,17 @@ function size(v: string): string | number | undefined {
  * A colour is a CSS custom property, so `text-foreground` stays exactly the
  * value the sheet already resolves — the palette is not restated here. The
  * `/NN` suffix is an alpha, which `color-mix` applies without needing to know
- * what the variable holds.
+ * what the variable holds. Tailwind writes that alpha two ways — `/5` as a
+ * percentage and `/[0.05]` as the same fraction — and reading only the first
+ * left the second inside the NAME, so `bg-white/[0.02]` asked the sheet for a
+ * variable called `--white/[0.02]` and painted nothing.
  */
 function color(v: string): string | undefined {
   if (v === 'transparent') return 'transparent'
   if (v === 'current') return 'currentColor'
   if (v === 'white') return '#fff'
   if (v === 'black') return '#000'
-  const m = /^(.+?)(?:\/(\d{1,3}))?$/.exec(v)
+  const m = /^(.+?)(?:\/(\[[\d.]+]|\d{1,3}))?$/.exec(v)
   if (!m) return undefined
   const [, name, alpha] = m
   const arb = /^\[(.+)]$/.exec(name)
@@ -149,7 +166,8 @@ function color(v: string): string | undefined {
     : name === 'white' ? '#fff' : name === 'black' ? '#000'
     : `var(--${name})`
   if (!alpha) return base
-  return `color-mix(in srgb, ${base} ${alpha}%, transparent)`
+  const pct = alpha[0] === '[' ? +(+alpha.slice(1, -1) * 100).toFixed(4) : +alpha
+  return `color-mix(in srgb, ${base} ${pct}%, transparent)`
 }
 
 /** Properties a negative class may set — the rest have no negative form. */
@@ -172,7 +190,10 @@ function one(c: string): Props | null {
     case 'flex-row-reverse': return { flexDirection: 'row-reverse' }
     case 'flex-wrap': return { flexWrap: 'wrap' }
     case 'flex-nowrap': return { flexWrap: 'nowrap' }
-    case 'flex-1': return { flex: 1 }
+    // `1 1 0%`, not `1 1 0px`. Against a parent of indefinite height a 0%
+    // basis resolves as content and a 0px one does not, so the shorthand's
+    // pixel basis collapsed every converted flex child to zero.
+    case 'flex-1': return { flexGrow: 1, flexShrink: 1, flexBasis: '0%' }
     case 'flex-auto': return { flex: 'auto' }
     case 'flex-none': return { flex: 'none' }
     case 'flex-initial': return { flex: 'initial' }
