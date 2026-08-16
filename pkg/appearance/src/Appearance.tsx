@@ -27,29 +27,47 @@
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
+import type { Face, Measure } from '@hanzo/design'
+
 import { DEFAULT, apply, current, read, write, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
 
 /** The named type steps. Inside design's clamp, so none can be refused. */
 export const TYPE_STEPS = [
-  { label: 'Small', value: 0.9 },
-  { label: 'Default', value: 1 },
-  { label: 'Large', value: 1.15 },
-  { label: 'Larger', value: 1.3 },
+  { label: 'S', title: 'Small', value: 0.9 },
+  { label: 'M', title: 'Default', value: 1 },
+  { label: 'L', title: 'Large', value: 1.15 },
+  { label: 'XL', title: 'Larger', value: 1.3 },
 ] as const
 
 /** How far apart the rungs sit. Named for what they DO to a page, because
  *  "1.25" describes the arithmetic and not the reading. */
 export const RATIO_STEPS = [
-  { label: 'Flat', value: 0.85 },
-  { label: 'Default', value: 1 },
-  { label: 'Airy', value: 1.2 },
+  { label: 'Flat', title: 'Sizes sit close together — dense screens', value: 0.85 },
+  { label: 'Default', title: 'The published scale', value: 1 },
+  { label: 'Airy', title: 'Headings lead further — reading pages', value: 1.2 },
 ] as const
 
 const DENSITIES = [
-  { label: 'Compact', value: 'compact' as const },
+  { label: 'Tight', value: 'compact' as const },
   { label: 'Default', value: 'default' as const },
-  { label: 'Comfortable', value: 'comfortable' as const },
+  { label: 'Roomy', value: 'comfortable' as const },
+]
+
+/** The faces `tokens/fonts.css` declares. Each option is SET in the face it
+ *  names, so the control shows its own answer instead of describing it. */
+const FACES: Array<{ label: string; value: Face; preview?: string }> = [
+  { label: 'Sans', value: 'default' },
+  { label: 'System', value: 'system', preview: 'ui-sans-serif, system-ui' },
+  { label: 'Serif', value: 'serif', preview: 'var(--font-serif)' },
+  { label: 'Mono', value: 'mono', preview: 'var(--font-mono)' },
+]
+
+/** How far the page runs before it wraps — the measure, not the window. */
+const MEASURES: Array<{ label: string; value: Measure }> = [
+  { label: 'Narrow', value: 'narrow' },
+  { label: 'Default', value: 'default' },
+  { label: 'Wide', value: 'wide' },
 ]
 
 /** A monochrome brand spends exactly one hue, so these are starting points, not
@@ -136,48 +154,104 @@ export function useAppearance({ org, install, orgPref }: { org?: string; install
 
 // Tokens, never literals — this panel is the one screen that must not invent a
 // value, because it is the screen that explains the system.
+//
+// The layout is ROWS: a label on the left, its control on the right, one per
+// axis. It reads as a preferences list rather than a settings page, which is
+// what lets the same component sit in a popover and in a settings tab without a
+// second layout to keep in step.
 const S = {
-  group: { display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' } as CSSProperties,
-  panel: { display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' } as CSSProperties,
-  row: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 'var(--space-2)' } as CSSProperties,
-  title: { fontSize: 'var(--text-base)', fontWeight: 'var(--weight-medium)' as CSSProperties['fontWeight'], color: 'var(--foreground)' } as CSSProperties,
-  hint: { fontSize: 'var(--text-xs)', lineHeight: 'var(--leading-xs)', color: 'var(--muted-foreground, var(--foreground))', opacity: 0.7, margin: 0 } as CSSProperties,
-  swatch: (c: string): CSSProperties => ({ width: 10, height: 10, borderRadius: 'var(--radius-full)', background: c, flex: '0 0 auto' }),
+  panel: { display: 'flex', flexDirection: 'column' } as CSSProperties,
+  row: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 'var(--space-3)',
+    minHeight: 40,
+    paddingBlock: 'var(--space-2)',
+    flexWrap: 'wrap',
+  } as CSSProperties,
+  label: { fontSize: 'var(--text-sm)', color: 'var(--foreground)', whiteSpace: 'nowrap' } as CSSProperties,
+  note: {
+    fontSize: 'var(--text-xs)',
+    lineHeight: 'var(--leading-xs)',
+    color: 'var(--muted-foreground, var(--foreground))',
+    opacity: 0.6,
+    margin: 0,
+  } as CSSProperties,
+  // One track, the options inside it — so the choice reads as one control with a
+  // position, not as N buttons that happen to sit together.
+  track: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 2,
+    padding: 2,
+    borderRadius: 'var(--radius-full)',
+    background: 'var(--secondary, rgb(255 255 255 / .06))',
+  } as CSSProperties,
+  swatch: (c?: string): CSSProperties => ({
+    width: 14,
+    height: 14,
+    borderRadius: 'var(--radius-full)',
+    background: c ?? 'var(--foreground)',
+    opacity: c ? 1 : 0.35,
+    flex: '0 0 auto',
+  }),
 }
 
 const choice = (on: boolean): CSSProperties => ({
   display: 'inline-flex',
   alignItems: 'center',
+  justifyContent: 'center',
   gap: 'var(--space-1)',
-  height: 28,
-  padding: '0 var(--space-3)',
-  borderRadius: 'var(--radius-md, 8px)',
-  border: `1px solid ${on ? 'var(--border-selected, var(--border))' : 'var(--border)'}`,
-  background: on ? 'var(--secondary, rgb(255 255 255 / .10))' : 'transparent',
-  color: 'var(--foreground)',
+  height: 24,
+  padding: '0 var(--space-2)',
+  borderRadius: 'var(--radius-full)',
+  border: '1px solid transparent',
+  background: on ? 'var(--surface-card, rgb(255 255 255 / .10))' : 'transparent',
+  color: on ? 'var(--foreground)' : 'var(--muted-foreground, var(--foreground))',
+  opacity: on ? 1 : 0.7,
   fontSize: 'var(--text-xs)',
   fontFamily: 'inherit',
   cursor: 'pointer',
 })
 
-function Choice({ on, onSelect, children }: { on: boolean; onSelect: () => void; children: ReactNode }) {
+function Choice({
+  on,
+  onSelect,
+  children,
+  title,
+  style,
+}: {
+  on: boolean
+  onSelect: () => void
+  children: ReactNode
+  /** The long name, when the label had to be short enough to fit the track. */
+  title?: string
+  style?: CSSProperties
+}) {
   return (
-    <button type="button" aria-pressed={on} onClick={onSelect} style={choice(on)}>
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onSelect}
+      title={title}
+      aria-label={title}
+      style={{ ...choice(on), ...style }}
+    >
       {children}
     </button>
   )
 }
 
-function Group({
-  title,
-  hint,
+/** One axis: what it is, and the control that sets it. */
+function Row({
+  label,
   children,
   by,
   scope,
   org,
 }: {
-  title: string
-  hint: string
+  label: string
   children: ReactNode
   /** Who decided this axis, when it was not decided at the scope being edited. */
   by?: Layer
@@ -194,19 +268,18 @@ function Group({
         : by === 'install'
           ? 'A default for this install'
           : by === 'user'
-            ? 'From your settings for everywhere'
+            ? 'Your setting for everywhere'
             : `Your setting for ${org || 'this organization'}`
       : null
 
   return (
-    <section style={S.group}>
+    <div style={S.row}>
       <div>
-        <div style={S.title}>{title}</div>
-        <p style={S.hint}>{hint}</p>
-        {inherited ? <p style={{ ...S.hint, opacity: 0.65 }}>{inherited}</p> : null}
+        <div style={S.label}>{label}</div>
+        {inherited ? <p style={S.note}>{inherited}</p> : null}
       </div>
-      <div style={S.row}>{children}</div>
-    </section>
+      <div style={S.track}>{children}</div>
+    </div>
   )
 }
 
@@ -214,8 +287,10 @@ export function Appearance({ org, orgName, install, orgPref }: { org?: string; o
   const { pref, set, reset, scope, setScope, from } = useAppearance({ org, install, orgPref })
   const type = pref.type ?? 1
   const ratio = pref.ratio ?? 1
-  const density = pref.density ?? 'default'
-  const touched = type !== 1 || ratio !== 1 || density !== 'default' || !!pref.accent
+  const near = (a: number, b: number) => Math.abs(a - b) < 0.001
+  const touched =
+    type !== 1 || ratio !== 1 || (pref.density ?? 'default') !== 'default' ||
+    (pref.font ?? 'default') !== 'default' || (pref.width ?? 'default') !== 'default' || !!pref.accent
   const here = orgName || org
 
   return (
@@ -224,67 +299,77 @@ export function Appearance({ org, orgName, install, orgPref }: { org?: string; o
           — or none — "everywhere" is the only meaning available, and offering a
           choice between one option and itself is noise. */}
       {org ? (
-        <Group title="Applies to" hint={`Whether these settings follow you everywhere, or stay with ${here}.`}>
+        <Row label="Applies to">
           <Choice on={scope === 'everywhere'} onSelect={() => setScope('everywhere')}>
             Everywhere
           </Choice>
           <Choice on={scope === 'org'} onSelect={() => setScope('org')}>
-            Only {here}
+            {here}
           </Choice>
-        </Group>
+        </Row>
       ) : null}
 
-      <Group
-        title="Text size"
-        hint={`How large text reads across the product. ${Math.round(TYPE_MIN * 100)}–${Math.round(TYPE_MAX * 100)}%.`}
-        by={from.type}
-        scope={scope}
-        org={here}
-      >
+      <Row label="Text size" by={from.type} scope={scope} org={here}>
         {TYPE_STEPS.map((s) => (
-          <Choice key={s.label} on={Math.abs(type - s.value) < 0.001} onSelect={() => set({ type: s.value })}>
+          <Choice key={s.label} on={near(type, s.value)} onSelect={() => set({ type: s.value })} title={s.title}>
             {s.label}
           </Choice>
         ))}
-      </Group>
+      </Row>
 
-      <Group
-        title="Scale"
-        hint="How far apart the sizes sit — flat for dense screens, airy where headings should lead."
-        by={from.ratio}
-        scope={scope}
-        org={here}
-      >
+      <Row label="Scale" by={from.ratio} scope={scope} org={here}>
         {RATIO_STEPS.map((s) => (
-          <Choice key={s.label} on={Math.abs(ratio - s.value) < 0.001} onSelect={() => set({ ratio: s.value })}>
+          <Choice key={s.label} on={near(ratio, s.value)} onSelect={() => set({ ratio: s.value })} title={s.title}>
             {s.label}
           </Choice>
         ))}
-      </Group>
+      </Row>
 
-      <Group title="Density" hint="How much room sits between things — padding, gaps and section rhythm." by={from.density} scope={scope} org={here}>
+      <Row label="Spacing" by={from.density} scope={scope} org={here}>
         {DENSITIES.map((d) => (
-          <Choice key={d.value} on={density === d.value} onSelect={() => set({ density: d.value })}>
+          <Choice key={d.value} on={(pref.density ?? 'default') === d.value} onSelect={() => set({ density: d.value })}>
             {d.label}
           </Choice>
         ))}
-      </Group>
+      </Row>
 
-      <Group title="Accent" hint="The one hue this monochrome system spends — on actions and on selection." by={from.accent} scope={scope} org={here}>
-        {ACCENTS.map((a) => (
-          <Choice key={a.label} on={pref.accent === a.value} onSelect={() => set({ accent: a.value })}>
-            {a.value ? <span style={S.swatch(a.value)} /> : null}
-            {a.label}
+      <Row label="Font" by={from.font} scope={scope} org={here}>
+        {FACES.map((f) => (
+          <Choice
+            key={f.value}
+            on={(pref.font ?? 'default') === f.value}
+            onSelect={() => set({ font: f.value })}
+            // The option is set in the face it names, so the choice shows its
+            // own answer rather than describing it.
+            style={{ fontFamily: f.preview }}
+          >
+            {f.label}
           </Choice>
         ))}
-      </Group>
+      </Row>
+
+      <Row label="Width" by={from.width} scope={scope} org={here}>
+        {MEASURES.map((m) => (
+          <Choice key={m.value} on={(pref.width ?? 'default') === m.value} onSelect={() => set({ width: m.value })}>
+            {m.label}
+          </Choice>
+        ))}
+      </Row>
+
+      <Row label="Accent" by={from.accent} scope={scope} org={here}>
+        {ACCENTS.map((a) => (
+          <Choice key={a.label} on={pref.accent === a.value} onSelect={() => set({ accent: a.value })} title={a.label}>
+            <span style={S.swatch(a.value)} />
+          </Choice>
+        ))}
+      </Row>
 
       {/* Only offered once something has changed — a reset for a state that is
           already the default is a control that does nothing. */}
       {touched ? (
-        <div>
+        <div style={{ ...S.row, justifyContent: 'flex-end' }}>
           <button type="button" onClick={reset} style={{ ...choice(false), opacity: 0.8 }}>
-            {scope === 'org' ? `Reset for ${here}` : 'Reset to defaults'}
+            {scope === 'org' ? `Reset for ${here}` : 'Reset'}
           </button>
         </div>
       ) : null}

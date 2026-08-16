@@ -920,8 +920,8 @@ importers:
   pkg/appearance:
     dependencies:
       '@hanzo/design':
-        specifier: ^0.5.9
-        version: 0.5.9
+        specifier: ^0.5.11
+        version: 0.5.11
     devDependencies:
       '@types/react':
         specifier: 19.2.14
@@ -1080,7 +1080,7 @@ importers:
     dependencies:
       '@hanzo/ui':
         specifier: '>=8'
-        version: 8.0.108(@hanzo/canvas@pkgs+canvas)(@hanzo/cd@pkgs+cd)(@hanzo/dashboard@0.2.0(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hanzo/data@1.2.3(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzo/usage@0.1.6(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/config@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-reanimated@4.5.3(react-native-worklets@0.11.4(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/next-theme@8.1.0(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/telemetry@8.1.0(react@19.2.4))(@hanzogui/toast@8.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-native-web@0.21.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
+        version: link:../../pkg/ui
       '@xyflow/react':
         specifier: ^12.0.0
         version: 12.11.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(immer@11.1.8)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3032,11 +3032,6 @@ packages:
       tailwindcss:
         optional: true
 
-  '@hanzo/appearance@0.1.4':
-    resolution: {integrity: sha512-JBsre5oDxjo0iRpXvt0ME2NKklXdNsB7dJwBoZouGzSHAbQldxFF7LLNuSuk6w1a6TYCIftoooYGmw0ynQsclA==}
-    peerDependencies:
-      react: 19.2.4
-
   '@hanzo/brand@1.4.6':
     resolution: {integrity: sha512-Pn0rBr4n0yCx9KiNuL2lU1ikRcVlgNadfB4LfOkh4b+RGJNfxgg+CQVa0WJFwRKYVWfCyPucvwqNAh9MihGZtQ==}
     hasBin: true
@@ -3060,12 +3055,12 @@ packages:
       '@hanzo/gui': '>=7.2.2'
       react: 19.2.4
 
-  '@hanzo/design@0.5.3':
-    resolution: {integrity: sha512-oXYWSZGqiCcruxz/wOtsedxNRpz/1p6vLLyuUzQCShm3mBOuspTPBHsl5XTAZr4XqDTRDLwDFjGrGcYSU+8iYQ==}
+  '@hanzo/design@0.5.11':
+    resolution: {integrity: sha512-fBoZox9w/2/gDaNZ+bQiuJAFIfkWFJUy/ROdvJIhi1QXp9Z10tPuECiYQTuCfkOebSULBYDS769VaZFGgjpXyg==}
     hasBin: true
 
-  '@hanzo/design@0.5.9':
-    resolution: {integrity: sha512-Qi3hTsWyJ2VnJlG78blfhCCvpRwTYpo1048r6mKV/SjJWxgaHzWrMFcR+TIVCQvl/XI4heEGgsYvCKhgMdmKFw==}
+  '@hanzo/design@0.5.3':
+    resolution: {integrity: sha512-oXYWSZGqiCcruxz/wOtsedxNRpz/1p6vLLyuUzQCShm3mBOuspTPBHsl5XTAZr4XqDTRDLwDFjGrGcYSU+8iYQ==}
     hasBin: true
 
   '@hanzo/docs-core@16.5.3':
@@ -3239,17 +3234,6 @@ packages:
       react:
         optional: true
 
-  '@hanzo/products@0.2.5':
-    resolution: {integrity: sha512-JZ/XU64LgWZmjO9N/yGQIeX6nmQar1JD0nuQ5TAC7iALutL59mlow3fjNiBkwYtKcGnbiT+61hHwRmFuUUxRBA==}
-    peerDependencies:
-      '@hanzogui/lucide-icons-2': '>=7'
-      react: 19.2.4
-    peerDependenciesMeta:
-      '@hanzogui/lucide-icons-2':
-        optional: true
-      react:
-        optional: true
-
   '@hanzo/ui-shadcn@5.9.1':
     resolution: {integrity: sha512-CmqSmgK0t+nudKP34WUzi2MruSLPE5aBW1qYZpN9hEHKpcXLrbPfQP04e9Fx4ZnbAQhcE/wR+il2aIGvAtPucw==}
     deprecated: Retired. The shadcn/Radix/Tailwind line lives on as @hanzo/shadcn (github.com/hanzoai/shadcn); the current Hanzo component library is @hanzo/ui@8, which renders on @hanzo/gui.
@@ -3329,43 +3313,6 @@ packages:
       styled-components:
         optional: true
       wagmi:
-        optional: true
-
-  '@hanzo/ui@8.0.108':
-    resolution: {integrity: sha512-qLQpqzJTkq4cXGc43YehoEd7ezs/ruxChYnTyFhcB6Sm3PvAttGcI+mHUZE/h+r0jikrrG9gBlT2f8nuKDU6Rg==}
-    peerDependencies:
-      '@hanzo/canvas': '>=0.1.0'
-      '@hanzo/cd': '>=0.1.0'
-      '@hanzo/dashboard': '>=0.1.0'
-      '@hanzo/data': '>=1.2.3'
-      '@hanzo/gui': '>=8.1.0'
-      '@hanzo/usage': '>=0.1.0'
-      '@hanzogui/config': '>=8.1.0'
-      '@hanzogui/lucide-icons-2': '>=8.1.0'
-      '@hanzogui/next-theme': '>=8.1.0'
-      '@hanzogui/telemetry': '>=8.1.0'
-      '@hanzogui/toast': '>=8.1.0'
-      next: '>=14.2.25'
-      next-themes: '>=0.2.1'
-      react: 19.2.4
-      react-dom: 19.2.4
-      react-native-web: '>=0.21'
-    peerDependenciesMeta:
-      '@hanzo/canvas':
-        optional: true
-      '@hanzo/cd':
-        optional: true
-      '@hanzo/dashboard':
-        optional: true
-      '@hanzo/usage':
-        optional: true
-      '@hanzogui/next-theme':
-        optional: true
-      next:
-        optional: true
-      next-themes:
-        optional: true
-      react-native-web:
         optional: true
 
   '@hanzo/usage@0.1.6':
@@ -16135,11 +16082,6 @@ snapshots:
       '@tailwindcss/oxide': 4.3.1
       tailwindcss: 4.3.0
 
-  '@hanzo/appearance@0.1.4(react@19.2.4)':
-    dependencies:
-      '@hanzo/design': 0.5.9
-      react: 19.2.4
-
   '@hanzo/brand@1.4.6(react@19.2.4)':
     dependencies:
       '@hanzo/logo': 1.0.13(react@19.2.4)
@@ -16157,9 +16099,9 @@ snapshots:
       '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@hanzo/design@0.5.3': {}
+  '@hanzo/design@0.5.11': {}
 
-  '@hanzo/design@0.5.9': {}
+  '@hanzo/design@0.5.3': {}
 
   '@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3)':
     dependencies:
@@ -16502,11 +16444,6 @@ snapshots:
     optionalDependencies:
       react: 19.2.4
 
-  '@hanzo/products@0.2.5(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4)':
-    optionalDependencies:
-      '@hanzogui/lucide-icons-2': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      react: 19.2.4
-
   ? '@hanzo/ui-shadcn@5.9.1(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3))(@hookform/resolvers@3.10.0(react-hook-form@7.80.0(react@19.2.4)))(@modelcontextprotocol/sdk@1.29.0(zod@4.4.3))(@tanstack/react-query@5.101.0(react@19.2.4))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(chrono-node@2.9.1)(date-fns@4.4.0)(embla-carousel@8.6.0)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@0.577.0(react@19.2.4))(mobx@6.16.1)(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-day-picker@9.14.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.80.0(react@19.2.4))(react-resizable-panels@3.0.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(recharts@3.8.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(redux@5.0.1))(tailwindcss@4.3.0)(validator@13.15.35)(wagmi@3.6.21(@tanstack/query-core@5.101.0)(@tanstack/react-query@5.101.0(react@19.2.4))(@types/react@19.2.14)(immer@11.1.8)(react@19.2.4)(typescript@5.9.3)(viem@2.52.2(typescript@5.9.3)(zod@4.4.3)))'
   : dependencies:
       '@hookform/resolvers': 3.10.0(react-hook-form@7.80.0(react@19.2.4))
@@ -16676,32 +16613,6 @@ snapshots:
       - '@types/react'
       - '@types/react-dom'
       - tailwindcss
-
-  ? '@hanzo/ui@8.0.108(@hanzo/canvas@pkgs+canvas)(@hanzo/cd@pkgs+cd)(@hanzo/dashboard@0.2.0(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@hanzo/data@1.2.3(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzo/usage@0.1.6(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/config@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-reanimated@4.5.3(react-native-worklets@0.11.4(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/next-theme@8.1.0(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@hanzogui/telemetry@8.1.0(react@19.2.4))(@hanzogui/toast@8.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-native-web@0.21.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)'
-  : dependencies:
-      '@hanzo/appearance': 0.1.4(react@19.2.4)
-      '@hanzo/brand': 1.4.6(react@19.2.4)
-      '@hanzo/data': 1.2.3(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      '@hanzo/design': 0.5.9
-      '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
-      '@hanzo/logo': 1.0.13(react@19.2.4)
-      '@hanzo/products': 0.2.5(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      '@hanzogui/config': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-reanimated@4.5.3(react-native-worklets@0.11.4(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      '@hanzogui/lucide-icons-2': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      '@hanzogui/telemetry': 8.1.0(react@19.2.4)
-      '@hanzogui/toast': 8.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      clsx: 2.1.1
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    optionalDependencies:
-      '@hanzo/canvas': link:pkgs/canvas
-      '@hanzo/cd': link:pkgs/cd
-      '@hanzo/dashboard': 0.2.0(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@hanzo/usage': 0.1.6(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      '@hanzogui/next-theme': 8.1.0(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
-      next: 16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      next-themes: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      react-native-web: 0.21.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
   '@hanzo/usage@0.1.6(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(@hanzogui/lucide-icons-2@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native-svg@15.15.5(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react@19.2.4))(react@19.2.4)':
     optionalDependencies:
