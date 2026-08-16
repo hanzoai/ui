@@ -47,7 +47,12 @@ const FONT_SHORTCUT = 12
 //    follows that opt-in without knowing it exists, and stays monochrome without
 //    it. Everything else uses theme-adaptive Tamagui tokens. ───────────────────
 const ACCENT = 'var(--primary, #fafafa)'
-const ACCENT_SOFT = 'var(--accent, #262626)'
+// A TINT of the accent, never the accent itself. @hanzo/design writes an org's
+// chosen hue to `--primary` AND `--accent`, so using `--accent` raw paints the
+// hover row a solid brand slab: #fafafa on #ff5c00 measures 2.97:1, under the
+// 4.5 AA floor and under even the 3:1 large-text one. Composited at 16% it
+// keeps the hue and reads at 16:1.
+const ACCENT_SOFT = 'color-mix(in oklab, var(--accent, #262626) 16%, transparent)'
 const DANGER = 'var(--destructive, #ef4444)'
 
 // ── Declarative item model ──────────────────────────────────────────────────────
