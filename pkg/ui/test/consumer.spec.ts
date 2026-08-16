@@ -448,6 +448,37 @@ for (const [themeClass, expected] of Object.entries(DESIGN))
  * Two props, two failure modes, both asserted: selection has to escape
  * (onValueChange) and filtering has to happen (shouldFilter).
  */
+/**
+ * A spinner that does not spin is a stray line, and nothing says so.
+ *
+ * hanzo.app had 83 call sites where the rotation was an opt-in class the caller
+ * was trusted to remember; one of the 83 did. So this asserts the MOTION, not
+ * the markup — and it asserts it here rather than in jsdom, because the
+ * keyframes come from react-native-web's own stylesheet at runtime and jsdom
+ * computes no animation at all.
+ */
+test('a Spinner spins, at the size it was asked for', async ({ page }) => {
+  await load(page, 'dark')
+  const spinners = await page.evaluate(() =>
+    [...document.querySelectorAll('[data-slot="spinner"]')].map((el) => ({
+      spun: [...el.querySelectorAll('*')].some((n) => {
+        const c = getComputedStyle(n)
+        return c.animationName !== 'none' && c.animationIterationCount === 'infinite'
+      }),
+      // offsetWidth, NOT getBoundingClientRect: the rect is the TRANSFORMED box,
+      // and this element is mid-rotation — a 12px spinner measured 14.6 there,
+      // which reads exactly like a size that failed to arrive.
+      w: (el as HTMLElement).offsetWidth,
+      h: (el as HTMLElement).offsetHeight,
+    })),
+  )
+  expect(spinners.map((s) => s.spun)).toEqual([true, true, true, true])
+  // The gallery renders 12/16/20/32 — the enum upstream types cannot say any of
+  // them, and the box is how you tell a number arrived.
+  expect(spinners.map((s) => s.w)).toEqual([12, 16, 20, 32])
+  expect(spinners.map((s) => s.h)).toEqual([12, 16, 20, 32])
+})
+
 test('CommandDialog reports the highlighted row and filters as you type', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 })
   await load(page, 'dark')
