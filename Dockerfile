@@ -57,7 +57,7 @@ COPY . .
 RUN pnpm install --frozen-lockfile
 
 # Workspace packages the app imports must be built first: their package.json
-# exports point at dist/. Only @hanzo/event qualifies -- .npmrc sets
+# exports point at dist/. @hanzo/event is the one the app imports -- .npmrc sets
 # link-workspace-packages=true and the lockfile resolves it to link:../pkgs/event.
 #
 # There used to be a `cd pkgs/ui` line here. pkgs/ui was @hanzo/ui-shadcn, deleted
@@ -65,7 +65,19 @@ RUN pnpm install --frozen-lockfile
 # touch this file -- so every build since has run `cd` into a directory that does
 # not exist and died with exit code 2 before compiling anything. The app takes
 # @hanzo/ui from the registry now (npm:@hanzo/ui-shadcn@^5), not the workspace.
-RUN cd pkgs/event && pnpm build
+#
+# The trailing `...` is load-bearing and is why this is a filter rather than a
+# `cd`. @hanzo/event imports @hanzo/events, a sibling that types itself through
+# its own "types": "dist/index.d.ts" -- so built alone, tsup's declaration pass
+# cannot resolve it and says so in the language of a missing dependency:
+#
+#     src/events.ts(20,45): error TS2307: Cannot find module '@hanzo/events'
+#
+# which reads as a broken import and is a build-order problem. The filter builds
+# WORKSPACE DEPENDENCIES first, in topological order. publish.yml and hanzo.yml
+# already spell it this way for the same reason; this line was the last `cd`
+# left, and it only started failing when @hanzo/event took that dependency.
+RUN pnpm --filter @hanzo/event... build
 
 # Builds the component registry, then the site (app/package.json build script).
 #
