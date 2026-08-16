@@ -129,7 +129,13 @@ describe('the unload beacon', () => {
     expect(fetches).toHaveLength(1)
     const batch = (JSON.parse(fetches[0].body) as { batch: { event?: string }[] }).batch
     expect(batch.map((e) => e.event)).toContain('checkout_started')
-    expect(fetches[0].headers.Authorization).toBe('Bearer pk-abc123')
+
+    // The fallback carries the key the SAME way the beacon it replaces did, and
+    // stays a simple request doing so — a fallback that preflights is no fallback
+    // on the customer origin this client is meant to run on.
+    expect(fetches[0].url).toBe('https://api.hanzo.ai/v1/event?ingest_key=pk-abc123')
+    expect(fetches[0].headers.Authorization).toBeUndefined()
+    expect(fetches[0].headers['Content-Type']).toBe('text/plain')
 
     // The fallback is only a fallback if it survives the teardown that the beacon
     // was there for. Without this the batch is cancelled mid-flight and the

@@ -298,13 +298,24 @@ describe('hz.js', () => {
   // keyed static surface therefore sent UNATTRIBUTED writes, which the door
   // refuses — silently, because nothing here reads the response.
 
-  it('presents the publishable key as a bearer on fetch', () => {
+  // The fetch presents it on the SAME carrier the beacon does, and stays a CORS
+  // simple request doing so. This file's whole job is to run on a customer's own
+  // page, where every send is cross-origin: an Authorization header or a JSON
+  // content type would preflight the POST, and an origin that does not pass the
+  // preflight loses the batch that splice has already emptied. A simple request is
+  // sent from any origin — the browser asks permission to READ a cross-origin
+  // response, never to send one, and nothing here reads it.
+  it('presents the publishable key on the query, as a simple request', () => {
     const r = runSnippet({ attrs: { 'data-publishable-key': 'pk-abc123' } })
     r.api!.flush()
     const post = r.posts.at(-1)!
     expect(post.via).toBe('fetch')
-    expect(post.headers.authorization).toBe('Bearer pk-abc123')
-    expect(post.url).toBe('https://api.hanzo.ai/v1/event')
+    expect(post.url).toBe('https://api.hanzo.ai/v1/event?ingest_key=pk-abc123')
+    expect(post.headers.authorization).toBeUndefined()
+    expect(post.headers['content-type']).toBe('text/plain')
+    // Content-Type is safelisted only for three values; every other header is
+    // outside the safelist by construction, so the count is the check.
+    expect(Object.keys(post.headers)).toEqual(['content-type'])
   })
 
   it('still reads the retiring data-ingest-key, on a headerless beacon', () => {
