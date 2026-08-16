@@ -437,7 +437,13 @@ export const Gallery = () => (
     {/* Every dock side, because gui compiles each distinct style VALUE to its
         own class — a side never rendered is a rule never written. */}
     <Section name="workbench">
-      <div style={{ display: 'flex', height: 220, width: 880 }}>
+      {/* 880 is the width this demo needs — three docks around a centre — and it
+          is a MAXIMUM, not a floor. Written as a flat `width` it stayed 880 in a
+          390px viewport and dragged the whole document to 759px of horizontal
+          scroll, which is the one thing a page may never do. A component with an
+          intrinsic minimum width scrolls inside its OWN box; the body does not
+          scroll for it. */}
+      <div style={{ display: 'flex', height: 220, width: 880, maxWidth: '100%', overflowX: 'auto' }}>
         <Workbench
           left={{ tabs: [{ id: 'files', title: 'Files', content: <CardTitle>left</CardTitle> }] }}
           right={{
