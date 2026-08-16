@@ -207,17 +207,25 @@ class DefaultTransport implements Transport {
       }
     }
     if (typeof fetch !== 'function') return
+    // A publishable key makes the send a CORS SIMPLE request: the key rides the
+    // query, the body is text/plain, and nothing asks for credentials. That is what
+    // lets a bundled client run on a customer's own page — every send from there is
+    // cross-origin, and an Authorization header or a JSON type preflights the POST
+    // for an origin that cannot pass one. A JWT is first-party by construction, so
+    // it keeps the header and the session it travels with, and so does the error
+    // plane, which names its own envelope type.
+    const simple = opts.ingestKey !== undefined && opts.contentType === undefined
     const headers: Record<string, string> = {
-      'Content-Type': opts.contentType ?? 'application/json',
+      'Content-Type': simple ? BEACON_CONTENT_TYPE : (opts.contentType ?? 'application/json'),
     }
-    const bearer = opts.ingestKey ?? opts.token
+    const bearer = simple ? undefined : (opts.ingestKey ?? opts.token)
     if (bearer) headers.Authorization = `Bearer ${bearer}`
-    void fetch(url, {
+    void fetch(simple ? appendQuery(url, 'ingest_key', opts.ingestKey!) : url, {
       method: 'POST',
       headers,
       body,
       keepalive: true,
-      credentials: 'include',
+      credentials: simple ? 'omit' : 'include',
     })
       .then((res) => {
         // Telemetry loss never throws into the app — but silence is how this
