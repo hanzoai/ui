@@ -81,6 +81,13 @@ export { VERSION }
 const EVENT_PATH = '/v1/event' // the ONE canonical ingestion front door
 const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
 const ENVELOPE_CONTENT_TYPE = 'application/x-sentry-envelope'
+// The beacon body's type. text/plain is CORS-SAFELISTED, which is the whole
+// property: a safelisted type makes the POST a SIMPLE request, and a simple
+// request needs no preflight. An unloading document does not get a second round
+// trip, so cross-origin a preflighted beacon is never sent at all. The door reads
+// the raw body and dispatches on its first non-space byte, so the type names the
+// CORS class and nothing else.
+const BEACON_CONTENT_TYPE = 'text/plain'
 
 /** readEnvDsn resolves a DSN from the public env when config omits one, so an app
  *  gets the error plane by setting ONE build-time variable and nothing else.
@@ -165,7 +172,12 @@ function serializeBatch(batch: WireEvent[]): string | null {
 /** DefaultTransport: fetch(keepalive) for authenticated/normal sends;
  *  navigator.sendBeacon for headerless page-unload beacons. A bearer (a JWT or a
  *  publishable pk_ key) rides Authorization on fetch; on a beacon — which cannot
- *  set headers — a publishable key rides the ?ingest_key query instead. */
+ *  set headers — a publishable key rides the ?ingest_key query instead.
+ *
+ *  `contentType` names the FETCH request's Content-Type (the error plane sets the
+ *  envelope type there). The beacon body is always BEACON_CONTENT_TYPE: its type
+ *  is a CORS class, not a payload description, and a beacon that is not a simple
+ *  request is a beacon that is never sent. */
 class DefaultTransport implements Transport {
   send(
     url: string,
@@ -178,18 +190,26 @@ class DefaultTransport implements Transport {
       debug?: boolean
     },
   ): void {
-    const contentType = opts.contentType ?? 'application/json'
     if (opts.beacon && isBrowser() && typeof navigator.sendBeacon === 'function') {
       const beaconUrl = opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url
       try {
-        navigator.sendBeacon(beaconUrl, new Blob([body], { type: contentType }))
-        return
+        // The answer is whether the agent QUEUED the batch — false for a body past
+        // the beacon size limit, or a full queue. Only a queued batch ends the
+        // send; a refused one falls through to the keepalive fetch below.
+        const queued = navigator.sendBeacon(
+          beaconUrl,
+          new Blob([body], { type: BEACON_CONTENT_TYPE }),
+        )
+        if (queued) return
+        if (opts.debug) console.warn('[event] beacon refused, falling back to fetch')
       } catch {
         /* fall through to fetch */
       }
     }
     if (typeof fetch !== 'function') return
-    const headers: Record<string, string> = { 'Content-Type': contentType }
+    const headers: Record<string, string> = {
+      'Content-Type': opts.contentType ?? 'application/json',
+    }
     const bearer = opts.ingestKey ?? opts.token
     if (bearer) headers.Authorization = `Bearer ${bearer}`
     void fetch(url, {
