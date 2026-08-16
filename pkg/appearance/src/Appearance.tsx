@@ -25,6 +25,8 @@
  * restored.
  */
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+
+import { load, save, type Account } from './account'
 import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
 import type { Face, Measure } from '@hanzo/design'
@@ -88,7 +90,22 @@ const ACCENTS: Array<{ label: string; value?: string }> = [
  * density before first paint, but it deliberately does not validate a colour, so
  * the mount is where an accent actually lands.
  */
-export function useAppearance({ org, install, orgPref }: { org?: string; install?: Preference; orgPref?: Preference } = {}) {
+export function useAppearance({
+  org,
+  install,
+  orgPref,
+  account,
+}: {
+  org?: string
+  install?: Preference
+  orgPref?: Preference
+  /**
+   * The signed-in person's account, if there is one. Given it, the preference
+   * belongs to the PERSON and follows them to every origin; without it the device
+   * is all there is, which is the honest best for someone signed out.
+   */
+  account?: Account
+} = {}) {
   const [pref, setPref] = useState<Preference>(DEFAULT)
   const [from, setFrom] = useState<Resolved['from']>({})
   // Which of the two personal layers a save lands in. It defaults to everywhere
@@ -116,6 +133,28 @@ export function useAppearance({ org, install, orgPref }: { org?: string; install
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org, install, orgPref])
 
+  // What the PERSON chose, which the device may not have seen: they set it on
+  // another origin, or on another machine. It lands in the device layer because
+  // that is the layer the panel edits and the boot script reads, so the next load
+  // paints it before a fetch could return.
+  //
+  // Absent means the account has nothing to say -- signed out, offline, never set
+  // -- and then the device's own answer stands rather than being cleared by a
+  // round trip that failed.
+  useEffect(() => {
+    if (!account?.token) return
+    let live = true
+    void load(account).then((theirs) => {
+      if (!live || !theirs) return
+      write(theirs, { scope: 'everywhere' })
+      refresh()
+    })
+    return () => {
+      live = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account?.base, account?.token])
+
   const set = useCallback(
     (patch: Partial<Preference>) => {
       // Patch the LAYER being edited, not the resolved value — writing the
@@ -129,8 +168,12 @@ export function useAppearance({ org, install, orgPref }: { org?: string; install
       if ('accent' in patch && patch.accent === undefined) delete next.accent
       write(next, { scope, org })
       refresh()
+      // The device has it either way; the account is what makes it travel. A
+      // failed save is not surfaced because the choice is already in effect here
+      // and reconciles on the next successful write.
+      if (account?.token && scope === 'everywhere') void save(next, account)
     },
-    [scope, org, refresh],
+    [scope, org, refresh, account],
   )
 
   // Reset means "I have no preference", which is an EMPTY one — not the neutral
@@ -147,7 +190,8 @@ export function useAppearance({ org, install, orgPref }: { org?: string; install
   const reset = useCallback(() => {
     write({}, { scope, org })
     refresh()
-  }, [scope, org, refresh])
+    if (account?.token && scope === 'everywhere') void save({}, account)
+  }, [scope, org, refresh, account])
 
   return { pref, set, reset, scope, setScope: (s: Scope) => refresh(s), from, layer: layerFor(scope) }
 }
@@ -283,8 +327,8 @@ function Row({
   )
 }
 
-export function Appearance({ org, orgName, install, orgPref }: { org?: string; orgName?: string; install?: Preference; orgPref?: Preference } = {}) {
-  const { pref, set, reset, scope, setScope, from } = useAppearance({ org, install, orgPref })
+export function Appearance({ org, orgName, install, orgPref, account }: { org?: string; orgName?: string; install?: Preference; orgPref?: Preference; account?: Account } = {}) {
+  const { pref, set, reset, scope, setScope, from } = useAppearance({ org, install, orgPref, account })
   const type = pref.type ?? 1
   const ratio = pref.ratio ?? 1
   const near = (a: number, b: number) => Math.abs(a - b) < 0.001
