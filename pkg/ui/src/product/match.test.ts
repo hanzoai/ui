@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { match, survivors, type Op } from "./match"
+import { ASK_GROUP, askOp, match, rows, survivors, type Op } from "./match"
 
 const route = (group: string, label: string, method = "GET", hint?: string): Op => ({
   id: `${method} /v1/${group}/${label}`,
@@ -103,5 +103,63 @@ describe("survivors", () => {
     const looser = route("projects", "deployments-list")
     const [[, items]] = survivors([looser, exact], "list")
     expect(items[0]).toBe(exact)
+  })
+})
+
+describe("the ask row — a question is never a dead end", () => {
+  it("says the same words every Hanzo palette says", () => {
+    // @hanzogui/shell states this rule for the palettes it draws, and the two
+    // packages cannot import from each other — shell is deliberately
+    // dependency-free so it drops into a Vite app with no provider. So the
+    // label is pinned here instead. If shell's `askLabel` ever changes, this
+    // fails and the estate stops saying two different things.
+    expect(askOp("vector search").label).toBe("Ask AI: vector search")
+    expect(askOp("x").group).toBe(ASK_GROUP)
+  })
+
+  it("carries no method, because it runs in the page", () => {
+    // A method tag is the visible half of the browse-vs-name rule. The ask row
+    // is not a route, so tagging it would be claiming something untrue about
+    // what pressing enter does.
+    expect(askOp("anything").method).toBeUndefined()
+  })
+
+  it("is a local command, so no rule can withhold it", () => {
+    // The browse-vs-name rule protects people from stumbling onto destructive
+    // ROUTES. The ask row is neither destructive nor a route, and it is the one
+    // row that must be reachable exactly when nothing else is — so it must fall
+    // on the always-reachable side of that rule, not merely happen to.
+    const [[group, items]] = survivors([askOp("zzzznotathing")], "zzzznotathing")
+    expect(group).toBe(ASK_GROUP)
+    expect(items).toHaveLength(1)
+  })
+})
+
+describe("rows — what the bar actually shows", () => {
+  const ops: Op[] = [local("Navigate to", "Dashboard"), route("projects", "list")]
+
+  it("ends with the way out once something is typed", () => {
+    const got = rows(ops, "zzzznotathing", undefined, true)
+    expect(got.map(([g]) => g)).toEqual(["Ask"])
+    expect(got[0][1][0].label).toBe("Ask AI: zzzznotathing")
+  })
+
+  it("puts it LAST, under whatever did match", () => {
+    // First would push the real answer down for every query that has one.
+    const got = rows(ops, "list", undefined, true)
+    expect(got.map(([g]) => g)).toEqual(["projects", "Ask"])
+  })
+
+  it("offers nothing to ask on an empty query", () => {
+    // There is no question yet, and a row reading "Ask AI: " asks nothing.
+    expect(rows(ops, "", undefined, true).map(([g]) => g)).toEqual(["Navigate to"])
+    expect(rows(ops, "   ", undefined, true).map(([g]) => g)).toEqual(["Navigate to"])
+  })
+
+  it("is identical to a plain filter for a surface that cannot ask", () => {
+    // A bar with nothing behind the row must not grow one that goes nowhere.
+    for (const q of ["", "list", "zzzznotathing"]) {
+      expect(rows(ops, q)).toEqual(survivors(ops, q))
+    }
   })
 })
