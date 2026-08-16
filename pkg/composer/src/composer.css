@@ -21,9 +21,15 @@
     rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.18),
     rgba(255, 255, 255, 0.1);
 
-  /* Pill by default. A surface with a paragraph field overrides to a box radius;
-     the halo below stays concentric either way. */
-  --hz-composer-radius: 9999px;
+  /* @hanzo/design states the composer's radius (`--radius-composer`, 28px) and
+     nothing consumed it — four composers across the estate drew four different
+     shapes. Reading it here is what makes the token mean something, with the
+     old pill as the fallback for a surface that does not mount design.
+
+     At a single-line composer (~56px) 28px IS a pill, so nothing moves on the
+     surfaces that were already pills; the two diverge only once the field grows
+     to a paragraph, which is exactly when a stadium stops being right. */
+  --hz-composer-radius: var(--radius-composer, 9999px);
   --hz-composer-band: 1px;
   --hz-composer-halo: 5px;
   --hz-composer-blur: 14px;
