@@ -113,7 +113,18 @@ describe('The material attaches to the slot, not to who remembered', () => {
   })
 
   it('no component hand-rolls a backdrop blur — the material owns it', () => {
-    expect(source.filter((s) => /backdropFilter/.test(s))).toEqual([])
+    // A COMPONENT. `tw.ts` is not one: it is the table that turns a utility
+    // class a CONSUMER wrote into the style property it always meant, and
+    // `backdrop-blur-*` is one of some forty families it translates. Naming a
+    // property there is the table doing its job, and it is the single place
+    // that mapping lives — the same "stated once" this rule is protecting,
+    // one layer out. What the rule is actually against is a component picking
+    // its own radius instead of wearing the material, and the table cannot do
+    // that: it renders nothing and reaches the page only through markup
+    // somebody else wrote.
+    const components = walk(SRC).filter((f) => !/[\\/]tw\.tsx?$/.test(f))
+    const offenders = components.filter((f) => /backdropFilter/.test(readFileSync(f, 'utf8')))
+    expect(offenders.map((f) => f.replace(SRC, ''))).toEqual([])
   })
 })
 
