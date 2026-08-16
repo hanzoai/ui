@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/appearance",
   "version": "0.1.6",
-  "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
+  "description": "A person's own reading of the Hanzo design system \u2014 type size, density, accent \u2014 stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -16,6 +16,11 @@
       "types": "./dist/state.d.ts",
       "import": "./dist/state.js",
       "default": "./dist/state.js"
+    },
+    "./account": {
+      "types": "./dist/account.d.ts",
+      "import": "./dist/account.js",
+      "default": "./dist/account.js"
     }
   },
   "files": [
