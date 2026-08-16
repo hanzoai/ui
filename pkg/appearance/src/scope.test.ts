@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import { isInherited, layerFor, resolve } from './scope'
-import { keyFor, read, readLayers, write } from './state'
+import { KNOBS, keyFor, read, readLayers, write } from './state'
+import { vars } from '@hanzo/design'
 
 const memory = (): Storage => {
   const m = new Map<string, string>()
@@ -70,6 +71,23 @@ describe('scope', () => {
     // Editing the org layer: their own everywhere setting is now the one they
     // cannot change from here either.
     expect(isInherited(r, 'type', 'org')).toBe(true)
+  })
+})
+
+describe('a modular scale', () => {
+  it('is removable — every rung it writes is on the removal list', () => {
+    // An inline custom property outranks the stylesheet, so a rung a modular
+    // scale wrote and nothing removes is a ramp the design system can never get
+    // back. This is the exact shape of the bug the removal list exists for.
+    const written = Object.keys(vars({ modular: 1.618 }))
+    expect(written.length).toBeGreaterThan(0)
+    for (const name of written) expect(KNOBS).toContain(name)
+  })
+
+  it('resolves per axis like every other — an org scale, a person size', () => {
+    const r = resolve({ org: { modular: 1.618 }, user: { type: 1.15 } })
+    expect(r.pref).toEqual({ type: 1.15, modular: 1.618 })
+    expect(r.from).toEqual({ type: 'user', modular: 'org' })
   })
 })
 
