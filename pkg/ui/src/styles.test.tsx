@@ -25,6 +25,7 @@ import { describe, expect, it } from 'vitest'
 
 import { config } from './gui-config'
 import { Gallery } from './gallery'
+import { tw } from './tw'
 
 const SHEET = join(dirname(dirname(fileURLToPath(import.meta.url))), 'dist/styles.css')
 
@@ -105,20 +106,50 @@ describe('the shipped stylesheet', () => {
  */
 const SRC = join(dirname(dirname(fileURLToPath(import.meta.url))), 'src')
 
-/** Every literal class name the components put in their own markup. */
-const emitted = (dir: string, out = new Set<string>()) => {
+/**
+ * Every literal class name the components put in their own markup — and
+ * separately, the ones handed to `<Box>`, which are a different thing.
+ *
+ * `Box` exists to READ utility classes: `tw` turns each one it knows into gui
+ * style props, and only what it does NOT know stays a class on the element. So
+ * a recognised class never reaches the document and cannot collide with
+ * anything, while an unrecognised one lands there exactly like any other
+ * literal. Those are opposite answers to this file's question, and the element
+ * is what tells them apart — hence two buckets rather than one.
+ */
+const emitted = (dir: string, out = { any: new Set<string>(), box: new Set<string>() }) => {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name)
     if (name.isDirectory()) emitted(p, out)
-    else if (/\.tsx?$/.test(name.name) && !name.name.includes('.test.'))
-      for (const m of readFileSync(p, 'utf8').matchAll(/className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g))
-        for (const token of (m[1] ?? m[2] ?? '').split(/\s+/).filter(Boolean)) out.add(token)
+    else if (/\.tsx?$/.test(name.name) && !name.name.includes('.test.')) {
+      // COMMENTS FIRST. A docblock explaining the migration writes the very
+      // thing this file is looking for — `box.tsx` says <div className="flex
+      // items-center gap-4"> in prose to explain what Box replaces — and a
+      // scanner that reads it as markup reports three classes nothing renders.
+      // A prose example is not an element. `//` is only a comment when it does
+      // not follow a colon, so a URL in a string keeps its second half.
+      const src = readFileSync(p, 'utf8')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/(^|[^:])\/\/[^\n]*/g, '$1')
+      // A `<Box className="…">` opening tag. Box takes the classes as INPUT, so
+      // its literal is checked against `tw` below instead of the namespace.
+      const onBox = new Set<string>()
+      for (const m of src.matchAll(/<Box\s[^>]*?className="([^"{}]*)"/g))
+        for (const token of m[1].split(/\s+/).filter(Boolean)) onBox.add(token)
+      for (const token of onBox) out.box.add(token)
+
+      for (const m of src.matchAll(/className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g))
+        for (const token of (m[1] ?? m[2] ?? '').split(/\s+/).filter(Boolean))
+          if (!onBox.has(token)) out.any.add(token)
+    }
   }
   return out
 }
 
 describe('the utility class namespace', () => {
-  const ours = [...emitted(SRC)].sort()
+  const scanned = emitted(SRC)
+  const ours = [...scanned.any].sort()
+  const onBox = [...scanned.box].sort()
   const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
 
   it('found the classes to check — an empty scan proves nothing', () => {
@@ -131,6 +162,28 @@ describe('the utility class namespace', () => {
     // move on their own change, not this one.
     const unqualified = ours.filter((c) => !c.startsWith('hz-') && !/^(glass|elevation-\d)$/.test(c))
     expect(unqualified, `${unqualified.join(', ')} would collide with a consumer's own CSS`).toEqual([])
+  })
+
+  it('hands Box only classes tw actually reads', () => {
+    // The same rule, asked of the element that changes the answer. `tw` is the
+    // authority and is CALLED rather than guessed at: a class it reads becomes
+    // style props and never reaches the document, so it cannot collide; one it
+    // does not read stays on the element, where it is an unqualified class name
+    // like any other and would.
+    //
+    // This is the stricter half of the pair, not an exemption. The gallery has
+    // to carry a real utility string or `gen-css` writes none of the rules Box
+    // compiles, and today the only way to say that was to say something this
+    // file forbids.
+    const unread = onBox.filter((c) => tw(c).rest !== '')
+    expect(
+      unread,
+      `${unread.join(', ')} on <Box> — tw does not read these, so they stay on the element unqualified`,
+    ).toEqual([])
+  })
+
+  it('found the Box classes to check — an empty scan proves nothing', () => {
+    expect(onBox.length).toBeGreaterThan(5)
   })
 
   it('defines a rule for each of them', () => {
