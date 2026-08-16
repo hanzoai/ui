@@ -139,8 +139,10 @@ export interface WireEvent {
  *  ?ingest_key query. */
 export interface Transport {
   /** Durable POST usable during page unload (fetch keepalive / sendBeacon).
-   *  `contentType` defaults to application/json; the error plane overrides it with
-   *  application/x-sentry-envelope. */
+   *  `contentType` names the FETCH request's Content-Type — it defaults to
+   *  application/json, and the error plane sets application/x-sentry-envelope. A
+   *  beacon body carries a CORS-safelisted type so the POST stays a simple request;
+   *  that is a property of the transport, not a caller's choice. */
   send(
     url: string,
     body: string,

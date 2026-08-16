@@ -55,7 +55,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.23'
+  var VERSION = '0.3.24'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -288,12 +288,17 @@ function hzAnonId() {
     // same pair core.ts uses, so the door cannot tell the distributions apart:
     // a headerless sendBeacon puts it in the query, a fetch puts it in the
     // Authorization header.
+    //
+    // The beacon body is text/plain because that type is CORS-safelisted, which
+    // makes the POST a SIMPLE request: no preflight, and an unloading document
+    // gets no second round trip. The door reads the raw body and dispatches on
+    // its first non-space byte, so the type names the CORS class and nothing else.
     try {
       if (
         navigator.sendBeacon &&
         navigator.sendBeacon(
           key ? url + '?ingest_key=' + encodeURIComponent(key) : url,
-          new Blob([body], { type: 'application/json' }),
+          new Blob([body], { type: 'text/plain' }),
         )
       )
         return
