@@ -24,16 +24,11 @@ export default defineConfig({
     baseURL: process.env.CONSUMER_URL ?? 'http://127.0.0.1:4390',
     deviceScaleFactor: 1,
   },
-  expect: {
-    toHaveScreenshot: {
-      animations: 'disabled',
-      caret: 'hide',
-      scale: 'css',
-      // Anti-aliasing differs by a hair between runs of the same renderer. Zero
-      // tolerance produces a suite that fails on its own output, and a suite
-      // that fails on its own output gets ignored and then deleted.
-      maxDiffPixelRatio: 0.002,
-    },
-  },
+  // No `expect.toHaveScreenshot` settings, because nothing in this suite takes a
+  // screenshot any more — see the note in test/consumer.spec.ts. The tolerance
+  // that used to live here was tuned for anti-aliasing between runs of ONE
+  // renderer, and the failure that actually arrived was a different font set on
+  // the runner making every line box taller. No ratio saves a comparison whose
+  // two sides disagree about the height of the page.
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 })
