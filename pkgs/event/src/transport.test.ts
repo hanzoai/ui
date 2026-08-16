@@ -22,6 +22,9 @@ interface Fetched {
   url: string
   headers: Record<string, string>
   body: string
+  /** Whether the request may outlive the document that made it. A fetch without
+   *  it is cancelled on teardown, which is the whole failure this file guards. */
+  keepalive?: boolean
 }
 
 // The three CORS-safelisted request content types. A POST whose body carries one
@@ -70,10 +73,16 @@ function unloadFlush(queued: boolean): { beacons: Beaconed[]; fetches: Fetched[]
       }
     },
   )
-  define('fetch', (url: string, init: { headers: Record<string, string>; body: string }) => {
-    fetches.push({ url, headers: init.headers, body: init.body })
-    return Promise.resolve({ ok: true, status: 200 })
-  })
+  define(
+    'fetch',
+    (
+      url: string,
+      init: { headers: Record<string, string>; body: string; keepalive?: boolean },
+    ) => {
+      fetches.push({ url, headers: init.headers, body: init.body, keepalive: init.keepalive })
+      return Promise.resolve({ ok: true, status: 200 })
+    },
+  )
 
   try {
     // No `transport`, so the client builds the real DefaultTransport. The key is
@@ -121,5 +130,10 @@ describe('the unload beacon', () => {
     const batch = (JSON.parse(fetches[0].body) as { batch: { event?: string }[] }).batch
     expect(batch.map((e) => e.event)).toContain('checkout_started')
     expect(fetches[0].headers.Authorization).toBe('Bearer pk-abc123')
+
+    // The fallback is only a fallback if it survives the teardown that the beacon
+    // was there for. Without this the batch is cancelled mid-flight and the
+    // refusal was merely traded for a quieter loss.
+    expect(fetches[0].keepalive).toBe(true)
   })
 })
