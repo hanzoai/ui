@@ -52,6 +52,18 @@ describe('Box', () => {
     expect(html(<Box className="text-xs">x</Box>)).toMatch(/font-size:\s*var\(--text-xs\)/)
   })
 
+  it('shrinks like the div it replaces, not like the View it is built on', () => {
+    // React Native defaults flexShrink to 0. A converted flex child that will
+    // not shrink keeps its whole basis and pushes its row wide.
+    const el = /<div[^>]*class="([^"]*)"/.exec(html(<Box className="p-2">x</Box>))
+    expect(el?.[1]).toMatch(/_shrink-1/)
+  })
+
+  it('still refuses to shrink when a class says so', () => {
+    const el = /<div[^>]*class="([^"]*)"/.exec(html(<Box className="flex-shrink-0">x</Box>))
+    expect(el?.[1]).toMatch(/_shrink-0/)
+  })
+
   it('lets an explicit prop win over the class that says the same thing', () => {
     const out = html(<Box className="px-6" paddingLeft={2}>x</Box>)
     expect(out).toBeTruthy()
