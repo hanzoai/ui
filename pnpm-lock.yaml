@@ -920,8 +920,8 @@ importers:
   pkg/appearance:
     dependencies:
       '@hanzo/design':
-        specifier: ^0.5.11
-        version: 0.5.11
+        specifier: ^0.5.12
+        version: 0.5.12
     devDependencies:
       '@types/react':
         specifier: 19.2.14
@@ -989,7 +989,7 @@ importers:
     dependencies:
       '@hanzo/appearance':
         specifier: ^0.1.4
-        version: link:../appearance
+        version: 0.1.6(react@19.2.4)
       '@hanzo/brand':
         specifier: ^1.4.5
         version: 1.4.6(react@19.2.4)
@@ -3032,6 +3032,11 @@ packages:
       tailwindcss:
         optional: true
 
+  '@hanzo/appearance@0.1.6':
+    resolution: {integrity: sha512-JXsH0SHO5F+gd7grLxstGcFCt5M4n1JoGU/JWotaf+eFaSW+TeUHHDSdTRc9tR5Eo/EG79riaKuht6yyPXKETw==}
+    peerDependencies:
+      react: 19.2.4
+
   '@hanzo/brand@1.4.6':
     resolution: {integrity: sha512-Pn0rBr4n0yCx9KiNuL2lU1ikRcVlgNadfB4LfOkh4b+RGJNfxgg+CQVa0WJFwRKYVWfCyPucvwqNAh9MihGZtQ==}
     hasBin: true
@@ -3055,8 +3060,8 @@ packages:
       '@hanzo/gui': '>=7.2.2'
       react: 19.2.4
 
-  '@hanzo/design@0.5.11':
-    resolution: {integrity: sha512-fBoZox9w/2/gDaNZ+bQiuJAFIfkWFJUy/ROdvJIhi1QXp9Z10tPuECiYQTuCfkOebSULBYDS769VaZFGgjpXyg==}
+  '@hanzo/design@0.5.12':
+    resolution: {integrity: sha512-eUeLzWuZ//9Np69fgNPCyfGeQyKV0ekT1qmLZphhl/v8PcnV9HEsJSmIl2gSM68Ouf1YO/gPB+hhqktdrFjhLw==}
     hasBin: true
 
   '@hanzo/design@0.5.3':
@@ -16082,6 +16087,11 @@ snapshots:
       '@tailwindcss/oxide': 4.3.1
       tailwindcss: 4.3.0
 
+  '@hanzo/appearance@0.1.6(react@19.2.4)':
+    dependencies:
+      '@hanzo/design': 0.5.12
+      react: 19.2.4
+
   '@hanzo/brand@1.4.6(react@19.2.4)':
     dependencies:
       '@hanzo/logo': 1.0.13(react@19.2.4)
@@ -16099,7 +16109,7 @@ snapshots:
       '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@hanzo/design@0.5.11': {}
+  '@hanzo/design@0.5.12': {}
 
   '@hanzo/design@0.5.3': {}
 

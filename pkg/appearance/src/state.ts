@@ -76,6 +76,7 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
     return {
       ...(typeof p.type === 'number' && Number.isFinite(p.type) ? { type: p.type } : {}),
       ...(typeof p.ratio === 'number' && Number.isFinite(p.ratio) ? { ratio: p.ratio } : {}),
+      ...(typeof p.modular === 'number' && Number.isFinite(p.modular) ? { modular: p.modular } : {}),
       ...(p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? { density: p.density } : {}),
       ...(p.font === 'default' || p.font === 'system' || p.font === 'serif' || p.font === 'mono' ? { font: p.font } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
@@ -134,9 +135,19 @@ export function apply(p: Preference, root: HTMLElement | undefined = isBrowser()
   }
 }
 
-/** Every property `vars()` can emit — the removal list has to be exhaustive, or
- *  clearing an axis would leave the last value stuck on the document. */
-const KNOBS = [
+/**
+ * Every property `vars()` can emit — the removal list has to be exhaustive, or
+ * clearing an axis would leave the last value stuck on the document.
+ *
+ * The display rungs are here because a modular scale REGENERATES them: turning
+ * one off has to hand the ramp back to the stylesheet, and an inline property
+ * that nothing removes outranks the stylesheet forever. They are derived from
+ * one list rather than typed out, so a rung cannot be added to the scale and
+ * forgotten here — which is the one way this list goes wrong.
+ */
+const DISPLAY_RUNGS = ['2xl', '3xl', '4xl', '5xl', '6xl', '7xl', '8xl', '9xl']
+
+export const KNOBS: readonly string[] = [
   '--type-scale',
   '--type-ratio',
   '--density',
@@ -146,7 +157,8 @@ const KNOBS = [
   '--container-wide',
   '--primary',
   '--accent',
-] as const
+  ...DISPLAY_RUNGS.map((r) => `--text-${r}`),
+]
 
 /**
  * What this person, in this org, on this device, should actually see.
