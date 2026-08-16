@@ -118,6 +118,41 @@ for (const theme of THEMES) {
       expect(chrome, 'elements wearing the UA button border').toEqual([])
     })
 
+    test('one edge, and every exception reads a different token on purpose', async ({ page }) => {
+      await load(page, theme)
+      // A control that draws `$borderColor` draws design's `--border`, and the
+      // browser is the only place that can say so — gui activates a sub-theme
+      // per component, so an Input and a Select could read the same token name
+      // and land on different colours. They did: measured here at 8.0.100, the
+      // Input and Textarea drew `rgb(51,51,51)` and the Button, Switch and the
+      // AlertDialog's cancel drew `rgb(69,69,69)`, while the Select — a
+      // `<button>`, which activates no sub-theme — already had design's.
+      //
+      // The exceptions are the four elements that reach for a DIFFERENT token,
+      // each named with the one it reads. Anything else appearing here is a
+      // control disagreeing with the page about where its edge comes from.
+      const EXCEPT = [
+        { slot: 'button', attr: 'data-variant', value: 'primary', token: '$color6' },
+        { slot: 'toggle-group-item', attr: 'data-state', value: 'on', token: '$color7' },
+        { slot: 'switch', attr: 'data-state', value: 'checked', token: '$color12' },
+        { slot: 'tooltip-content', attr: null, value: null, token: 'its own light surface' },
+      ]
+      const stray = await page.evaluate((except) => {
+        const out: string[] = []
+        for (const el of document.querySelectorAll('*')) {
+          const c = getComputedStyle(el)
+          if (!parseFloat(c.borderTopWidth)) continue
+          const [, , , a = 1] = c.borderTopColor.match(/[\d.]+/g)?.map(Number) ?? []
+          if (a === 0 || a < 1) continue // design's edge is the low-alpha one
+          const slot = el.getAttribute('data-slot')
+          if (except.some((e) => e.slot === slot && (!e.attr || el.getAttribute(e.attr) === e.value))) continue
+          out.push(`${slot ?? el.tagName} ${c.borderTopColor}`)
+        }
+        return [...new Set(out)]
+      }, EXCEPT)
+      expect(stray, 'an opaque edge that is neither design’s nor a named exception').toEqual([])
+    })
+
     test('a text child renders at a height greater than zero', async ({ page }) => {
       await load(page, theme)
       // `<TabsTrigger>Label</TabsTrigger>` rendered EMPTY on a green build: the

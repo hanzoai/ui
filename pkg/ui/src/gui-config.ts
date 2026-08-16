@@ -286,18 +286,18 @@ const LOUD = { dark: '#fafafa', light: '#0a0a0a' } as const
 const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
 
 /**
- * The edge and the label are re-based on the two ROOT themes; the ring is
- * re-based on ALL of them, and the asymmetry is the point.
+ * The label is re-based on the two ROOT themes; the ring and the edge are
+ * re-based wider than that, and each asymmetry is the point.
  *
  * A sub-theme exists to hold different colours — `dark_accent`'s label really
  * should be the accent's label, `dark_red`'s edge really should be red — so
- * re-basing those two rungs everywhere would flatten 388 themes into one and
- * stop being a re-base. A focus ring is the opposite kind of thing: there is
- * exactly ONE of it in this system, it is `--ring`, and it is a contrast
- * requirement rather than a colour choice. The ramp ships 21 distinct rings
- * across 390 themes, twenty of them hues — a pale blue on `dark_blue_Button`,
- * a pale pink on `dark_pink` — and every one of them fails 3:1 on a near-black
- * canvas the same way the grey did.
+ * re-basing every rung everywhere would flatten 388 themes into one and stop
+ * being a re-base. A focus ring is the opposite kind of thing: there is exactly
+ * ONE of it in this system, it is `--ring`, and it is a contrast requirement
+ * rather than a colour choice. The ramp ships 21 distinct rings across 390
+ * themes, twenty of them hues — a pale blue on `dark_blue_Button`, a pale pink
+ * on `dark_pink` — and every one of them fails 3:1 on a near-black canvas the
+ * same way the grey did.
  *
  * Measured, and this is why the two root themes are not enough: gui activates a
  * `Button` sub-theme for every Button it renders, so hanzo.app's Sign In, Get
@@ -307,10 +307,55 @@ const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
  */
 const scheme = (name: string): 'dark' | 'light' => (name.startsWith('light') ? 'light' : 'dark')
 
+/**
+ * A theme carries a scale of its own when it states `color4` — and where it
+ * does, `borderColor` is that same rung: 104 of the 390 state both and NOT ONE
+ * of them disagrees. So the edge IS rung 4, by gui's own table.
+ *
+ * The other 286 state an edge and no scale. Those are the sub-themes gui
+ * activates per component — `Input`, `TextArea`, `Button`, `Switch`, `Slider`,
+ * `Progress`, `surface1/2` — and the edge each states is a nudge to a rung it
+ * inherits, off a greyscale that predates the token layer. A nudge is not a
+ * choice, so they take the edge of the theme they are nested IN, which the last
+ * segment of the name identifies: `dark_Input` follows `dark`, and follows it to
+ * design's `--border`. This is what the cascade would do with the declaration
+ * removed, said as a VALUE so it reaches the JS side and every consumer's
+ * generator, not only this package's sheet.
+ *
+ * Following the parent is what keeps this a re-base rather than a flattening:
+ * `dark_red_Button` follows `dark_red`, which has a scale, so a red theme's
+ * button keeps a red edge. `dark_Tooltip` has a scale of its own and grounds at
+ * `hsla(0, 0%, 80%, 1)` — a LIGHT surface inside a dark page, where a 10%-white
+ * hairline would be invisible — so it keeps its darker line.
+ *
+ * Measured in a browser, `dark`, before: Input and Textarea drew `rgb(51,51,51)`
+ * and Button, Switch and the AlertDialog's cancel drew `rgb(69,69,69)`, all
+ * solid, beside 45 elements already on design's `rgba(255,255,255,.10)` — the
+ * Card, Badge, Dialog, Popover, Select trigger, Checkbox, Radio and
+ * DropdownMenu. Two edges of the same control disagreeing is the whole defect:
+ * a Select is a `<button>` and read the root, an Input read `dark_Input`.
+ */
+const scaled = (theme: object) => 'color4' in theme
+
+/** The theme this one is nested in — the last segment names the component. */
+const enclosing = (name: string) => name.split('_').slice(0, -1).join('_')
+
+const edge = (name: string): string => {
+  const theme = defaultConfig.themes[name as keyof typeof defaultConfig.themes] as
+    | { borderColor?: unknown }
+    | undefined
+  if (!theme || name === scheme(name)) return `var(--border, ${EDGE[scheme(name)]})`
+  return scaled(theme) ? String(theme.borderColor) : edge(enclosing(name))
+}
+
 const themes = Object.fromEntries(
   Object.entries(defaultConfig.themes).map(([name, theme]) => {
     const s = scheme(name)
-    const ringed = { ...theme, outlineColor: `var(--ring, ${RING[s]})` }
+    const ringed = {
+      ...theme,
+      outlineColor: `var(--ring, ${RING[s]})`,
+      ...(scaled(theme) ? {} : { borderColor: edge(name) }),
+    }
     return [
       name,
       name === s
