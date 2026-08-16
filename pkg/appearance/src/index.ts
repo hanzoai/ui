@@ -29,4 +29,5 @@
  */
 export { Appearance, useAppearance, TYPE_STEPS, RATIO_STEPS } from './Appearance'
 export { read, readLayers, write, apply, current, style, bootScript, keyFor, DEFAULT, KEY, type Preference, type At } from './state'
+export { load, save, type Account } from './account'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'
