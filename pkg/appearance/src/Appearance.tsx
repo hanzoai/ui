@@ -50,6 +50,27 @@ export const RATIO_STEPS = [
   { label: 'Airy', title: 'Headings lead further — reading pages', value: 1.2 },
 ] as const
 
+/**
+ * The classical modular scales, named the way designers name them.
+ *
+ * "Default" is the ABSENCE of one — the authored ramp, which is tuned rather
+ * than generated and is what almost everyone should read. The rest replace the
+ * display half with a geometric scale; the interface rungs never move, because
+ * a geometric scale has no 13px nav label in it.
+ *
+ * Golden is exactly 1.618. Its top rungs are enormous by construction — a
+ * classical scale is used with about four steps and this ramp has eight — which
+ * is why design clamps every rung at both ends rather than clamping the ratio
+ * down to something that is no longer golden.
+ */
+export const MODULAR_STEPS: Array<{ label: string; title: string; value?: number }> = [
+  { label: 'Default', title: 'The authored ramp — tuned, not generated' },
+  { label: 'Minor 3rd', title: 'A gentle scale (1.2)', value: 1.2 },
+  { label: 'Major 3rd', title: 'What this ramp already approximates (1.25)', value: 1.25 },
+  { label: '4th', title: 'A perfect fourth (1.333) — strong headings', value: 1.3333 },
+  { label: 'Golden', title: 'The golden ratio (1.618) — display-first', value: 1.618 },
+]
+
 const DENSITIES = [
   { label: 'Tight', value: 'compact' as const },
   { label: 'Default', value: 'default' as const },
@@ -333,7 +354,7 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
   const ratio = pref.ratio ?? 1
   const near = (a: number, b: number) => Math.abs(a - b) < 0.001
   const touched =
-    type !== 1 || ratio !== 1 || (pref.density ?? 'default') !== 'default' ||
+    type !== 1 || ratio !== 1 || pref.modular !== undefined || (pref.density ?? 'default') !== 'default' ||
     (pref.font ?? 'default') !== 'default' || (pref.width ?? 'default') !== 'default' || !!pref.accent
   const here = orgName || org
 
@@ -365,6 +386,19 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
         {RATIO_STEPS.map((s) => (
           <Choice key={s.label} on={near(ratio, s.value)} onSelect={() => set({ ratio: s.value })} title={s.title}>
             {s.label}
+          </Choice>
+        ))}
+      </Row>
+
+      <Row label="Scale system" by={from.modular} scope={scope} org={here}>
+        {MODULAR_STEPS.map((m) => (
+          <Choice
+            key={m.label}
+            on={m.value === undefined ? pref.modular === undefined : Math.abs((pref.modular ?? 0) - m.value) < 0.001}
+            onSelect={() => set({ modular: m.value })}
+            title={m.title}
+          >
+            {m.label}
           </Choice>
         ))}
       </Row>

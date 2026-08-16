@@ -38,7 +38,7 @@ export type Layer = (typeof LAYERS)[number]
 export type Layers = Partial<Record<Layer, Preference>>
 
 /** Which axes exist. Adding one here is all it takes to make it resolvable. */
-const AXES = ['type', 'ratio', 'density', 'font', 'width', 'accent'] as const
+const AXES = ['type', 'ratio', 'modular', 'density', 'font', 'width', 'accent'] as const
 
 /**
  * What a person actually sees — and, for each axis, who decided it.
