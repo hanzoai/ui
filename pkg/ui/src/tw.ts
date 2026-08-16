@@ -260,7 +260,11 @@ function one(c: string): Props | null {
     case 'max-w': { const n = MAX_W[v] ?? size(v); return n === undefined ? null : { maxWidth: n } }
     case 'max-h': { const n = v === 'screen' ? '100vh' : size(v); return n === undefined ? null : { maxHeight: n } }
     case 'text': {
-      if (v in FONT_SIZE) return { fontSize: FONT_SIZE[v] }
+      // A size utility sets BOTH — Tailwind pairs every `--text-*` with a
+      // `--text-*--line-height`, and emitting the size alone leaves the element
+      // on whatever leading it inherits. That measured as every converted
+      // heading losing 8px of height and the page under it rising to match.
+      if (v in FONT_SIZE) return { fontSize: FONT_SIZE[v], lineHeight: `var(--text-${v}--line-height)` }
       if (v === 'left' || v === 'center' || v === 'right' || v === 'justify') return { textAlign: v }
       const col = color(v)
       return col ? { color: col } : null
