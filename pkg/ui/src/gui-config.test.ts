@@ -169,6 +169,52 @@ describe('the rungs design already decided read the token', () => {
     expect(themed('dark_Button' as 'dark', 'outlineColor')).toBe(`var(--ring, ${token('ring', 'dark')})`)
   })
 
+  it('every edge is design’s or the theme’s own rung 4 — there is no third thing', () => {
+    // The whole invariant in one line, read off the built table. 390 themes: 288
+    // take design's, 102 keep a scale of their own, and NOTHING lands anywhere
+    // else. Before this, 286 sub-themes each nudged the edge off a greyscale
+    // that predates the token layer, so a page and the controls on it disagreed.
+    const odd = Object.keys(config.themes).filter((n) => {
+      const border = themed(n as 'dark', 'borderColor')
+      return (
+        border !== `var(--border, ${token('border', 'dark')})` &&
+        border !== `var(--border, ${token('border', 'light')})` &&
+        border !== themed(n as 'dark', 'color4')
+      )
+    })
+    expect(odd).toEqual([])
+  })
+
+  it('the component sub-themes gui activates take the system edge', () => {
+    // Measured in a browser before this, `dark`: Input and Textarea drew
+    // `rgb(51,51,51)`, Button, Switch and the AlertDialog's cancel drew
+    // `rgb(69,69,69)`, beside 45 elements already on design's hairline — the
+    // Card, Badge, Dialog, Popover, Select trigger, Checkbox and Radio. The
+    // Select is a `<button>` and read the root; the Input read `dark_Input`.
+    for (const scheme of ['dark', 'light'] as const)
+      for (const part of ['Input', 'TextArea', 'Button', 'Switch', 'Slider', 'Progress', 'surface1', 'surface2']) {
+        const name = `${scheme}_${part}`
+        expect([name, themed(name as 'dark', 'borderColor')]).toEqual([
+          name,
+          `var(--border, ${token('border', scheme)})`,
+        ])
+      }
+  })
+
+  it('a component sub-theme follows the theme it is nested IN, not the root', () => {
+    // Following the parent is what keeps this a re-base and not a flattening:
+    // `dark_red` states a scale, so its Button keeps a red edge rather than
+    // taking a white hairline. Re-basing every sub-theme onto design would
+    // collapse 388 themes into one and stop being a re-base.
+    expect(themed('dark_red_Button' as 'dark', 'borderColor')).toBe(themed('dark_red' as 'dark', 'color4'))
+    expect(themed('dark_black_Button' as 'dark', 'borderColor')).toBe(themed('dark_black' as 'dark', 'color4'))
+
+    // …and a theme with a surface of its own keeps its line. `dark_Tooltip`
+    // grounds at `hsla(0, 0%, 80%, 1)` — a LIGHT surface inside a dark page,
+    // where a 10%-white hairline would be invisible.
+    expect(themed('dark_Tooltip' as 'dark', 'borderColor')).toMatch(/^hsla?\(/)
+  })
+
   it('the rest of the ramp is left alone — this is a re-base, not a fork', () => {
     // Every other rung is a grey in a scale of greys and design has no opinion
     // about it. Restating them here would be a second palette, which is the
