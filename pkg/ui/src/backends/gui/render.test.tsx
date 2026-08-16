@@ -50,6 +50,7 @@ describe('gui backend renders', () => {
       'input',
       'scroll-area',
       'scroll-area-viewport',
+      'spinner',
       'tabs',
       'tabs-list',
       'tabs-trigger',
