@@ -15,7 +15,6 @@ import {
   createElement,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   type ErrorInfo,
   type ReactNode,
@@ -36,12 +35,13 @@ export interface AnalyticsProviderProps {
 
 export function AnalyticsProvider(props: AnalyticsProviderProps) {
   const { client, config, autoPageview = true, children } = props
-  const instance = useMemo<Analytics>(() => {
-    if (client) return client
-    if (config) return createAnalytics(config)
-    throw new Error('AnalyticsProvider requires `client` or `config`')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client])
+  // No memo. createAnalytics returns the client for a stream, so asking on every
+  // render hands back the same object — the identity a memo used to be here to
+  // preserve. Memoizing construction is what made a config change unreachable
+  // (deps held `client` alone) while adding `config` would have built a client
+  // per render, since call sites pass an object literal.
+  if (!client && !config) throw new Error('AnalyticsProvider requires `client` or `config`')
+  const instance = client ?? createAnalytics(config as AnalyticsConfig)
 
   useEffect(() => {
     instance.init()
