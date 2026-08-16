@@ -70,6 +70,25 @@ export type OrgMarkProps = {
   maxW?: number
 }
 
+/**
+ * A mark's glyph is sized by TOKEN, not by arithmetic.
+ *
+ * It used to be a ratio of the tile — `size * 0.4` — which bypasses the type
+ * system in two ways. It lands off the scale (at the 30px mark both identity
+ * controls use it computed 12, a value on no ladder, and the console's design
+ * sweep found it on every screen that renders a mark). And a raw pixel cannot
+ * answer to `--type-scale`: the ramp behind every token is
+ * `var(--text-sm, 13px)` and design multiplies it, so a person who turns their
+ * type up watches all text grow EXCEPT the monogram, which is the one place the
+ * drift is most visible because it sits beside their own name.
+ *
+ * So the tile's size chooses a token and the token carries the value. Bands
+ * rather than a formula, because a token IS a band — the ladder is not linear,
+ * and rounding onto it is the same mistake in a nicer coat.
+ */
+const glyphToken = (size: number): '$1' | '$2' | '$4' | '$6' =>
+  size < 26 ? '$1' : size < 34 ? '$2' : size < 44 ? '$4' : '$6'
+
 export function OrgMark({ org, size = 22, maxW }: OrgMarkProps) {
   // Reset when the mark changes: switcher rows reuse instances, so a failure on
   // one org must not blank the next org's logo.
@@ -123,7 +142,7 @@ export function OrgMark({ org, size = 22, maxW }: OrgMarkProps) {
       justify="center"
       style={{ flexShrink: 0 }}
     >
-      <Text fontSize={Math.round(size * 0.4)} fontWeight="800" color="$color12">
+      <Text fontSize={glyphToken(size)} fontWeight="800" color="$color12">
         {monogram(org.displayName || org.name)}
       </Text>
     </YStack>
