@@ -252,7 +252,8 @@ jobs:
             # Idempotent on purpose: the desired state is "npmjs holds this
             # version", and a version already there satisfies it. Versions are
             # immutable, so a conflict means the release already happened.
-            OUT=$(pnpm --filter "$PKG" publish --no-git-checks --access public 2>&1) || true
+            OUT=$(pnpm --filter "$PKG" publish --no-git-checks --access public 2>&1)
+            PUB=$?
             echo "$OUT"
             case "$OUT" in
               *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
@@ -271,19 +272,26 @@ jobs:
                   echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/6); waiting 10s"
                   sleep 10
                 done
-                if [ -z "$landed" ]; then
-                  if [ -n "$FIRST" ]; then
-                    # A package npmjs had never heard of takes longer to become
-                    # readable than one it is already serving. The publish output
-                    # above is the evidence; do not fail a first release on the
-                    # registry's own propagation.
-                    echo "::warning::$NAME@$WANT is a FIRST release and is not readable yet — check the registry before re-running (republishing the same version 403s)."
-                  else
-                    echo "::error::$NAME@$WANT is not on npmjs 60s after publish"
-                    return 1
-                  fi
-                else
+                if [ -n "$landed" ]; then
                   echo "published $NAME@$WANT"
+                elif [ "$PUB" -ne 0 ]; then
+                  # The PUBLISH ITSELF failed. Leniency below is about the
+                  # registry being slow to SERVE a release that happened; it is
+                  # not about one that did not. Reading only the registry cannot
+                  # tell those apart, and a first release that 403s looks exactly
+                  # like a first release that is propagating — which is how
+                  # @hanzo/next and @hanzo/vite reported a GREEN publish while
+                  # npmjs answered 404 for both.
+                  echo "::error::$NAME@$WANT: publish exited $PUB and the version is not on npmjs"
+                  return 1
+                elif [ -n "$FIRST" ]; then
+                  # Publish reported success and this name is new to npmjs, which
+                  # takes longer to become readable than one it already serves.
+                  # A false red here burns a version number over propagation.
+                  echo "::warning::$NAME@$WANT published but is not readable yet (first release) — confirm on the registry before re-running; republishing the same version 403s."
+                else
+                  echo "::error::$NAME@$WANT is not on npmjs 60s after publish"
+                  return 1
                 fi ;;
             esac
 
