@@ -28,9 +28,11 @@
 //
 //   • cookie/session app (host:'')  — same-origin credentials ride the request.
 //   • bearer app (getToken)         — Authorization: Bearer <jwt>.
-//   • publishable-key app (ingestKey: 'pk_…') — Authorization: Bearer pk_… on
-//     fetch, ?ingest_key=pk_… on a headerless page-unload beacon. Write-only and
-//     safe to ship in a bundle; the door HMAC-verifies it to an org server-side.
+//   • publishable-key app (ingestKey: 'pk-…') — ?ingest_key=pk-… on the query, on
+//     the fetch and the beacon alike, with a text/plain body. Write-only and safe
+//     to ship in a bundle; the door resolves it to an org server-side. The query
+//     is the carrier neither send needs a header for, which is what keeps both
+//     CORS-simple and therefore sendable from a customer's own origin.
 //
 // The wire is the canonical `Event` (== the cloud CaptureEvent): its `type` field
 // is what Cloud folds to event_type='error', which is how the event WAREHOUSE
@@ -115,7 +117,7 @@ function readEnv(name: string): string | undefined {
 }
 
 /** appendQuery adds a single query param to a URL string — used to carry a
- *  publishable key on a headerless sendBeacon (?ingest_key=…). */
+ *  publishable key on either send (?ingest_key=…). */
 function appendQuery(url: string, key: string, value: string): string {
   return url + (url.includes('?') ? '&' : '?') + key + '=' + encodeURIComponent(value)
 }
@@ -170,14 +172,19 @@ function serializeBatch(batch: WireEvent[]): string | null {
 }
 
 /** DefaultTransport: fetch(keepalive) for authenticated/normal sends;
- *  navigator.sendBeacon for headerless page-unload beacons. A bearer (a JWT or a
- *  publishable pk_ key) rides Authorization on fetch; on a beacon — which cannot
- *  set headers — a publishable key rides the ?ingest_key query instead.
+ *  navigator.sendBeacon for page-unload beacons.
+ *
+ *  A publishable key rides the ?ingest_key query on BOTH, which is what keeps
+ *  both CORS-simple: the query is the one carrier neither send needs a header
+ *  for, and a simple request leaves the browser from any origin — permission is
+ *  asked to READ a cross-origin response, never to send one. That is what lets a
+ *  bundled client run on a customer's own page. A JWT is first-party by
+ *  construction, so it keeps Authorization and the session it travels with.
  *
  *  `contentType` names the FETCH request's Content-Type (the error plane sets the
- *  envelope type there). The beacon body is always BEACON_CONTENT_TYPE: its type
- *  is a CORS class, not a payload description, and a beacon that is not a simple
- *  request is a beacon that is never sent. */
+ *  envelope type there, and keeps the header carrier with it). The beacon body is
+ *  always BEACON_CONTENT_TYPE: its type is a CORS class, not a payload
+ *  description, and a beacon that is not a simple request is never sent. */
 class DefaultTransport implements Transport {
   send(
     url: string,
@@ -463,8 +470,8 @@ export class Analytics {
    *  front door POST /v1/event, body { batch: [Event…] }. beacon=true selects the
    *  unload-safe transport. Auth is orthogonal to the wire:
    *
-   *    • publishable key set → rides Authorization: Bearer pk_… (fetch) or
-   *      ?ingest_key=pk_… (beacon), so unload beacons work anonymously.
+   *    • publishable key set → rides ?ingest_key=pk-… on both sends, keeping each
+   *      a CORS-simple request that any origin may send.
    *    • else a bearer JWT rides Authorization (fetch only — sendBeacon cannot
    *      carry a header, so token apps fall back to keepalive fetch on unload).
    *    • else a cookie app rides same-origin credentials (beacon carries the
@@ -490,8 +497,8 @@ export class Analytics {
     // leak introduced by an env var.
     const token = this.cfg.getToken?.() ?? undefined
     const key = token ? undefined : this.cfg.ingestKey?.trim() || undefined
-    // Only a headerful bearer JWT blocks the beacon: sendBeacon cannot set an
-    // Authorization header. A pk_ rides ?ingest_key; a cookie rides credentials.
+    // Only a bearer JWT blocks the beacon: sendBeacon cannot set an Authorization
+    // header. A pk- rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token
     const body = serializeBatch(batch)
     if (body === null) {
