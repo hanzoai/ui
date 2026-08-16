@@ -180,6 +180,7 @@ export {
 export { Section, type SectionProps } from './section'
 export { Separator } from './separator'
 export { Slider } from './slider'
+export { Spinner, type SpinnerProps } from './spinner'
 export { Switch } from './switch'
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'
 export { Textarea } from './textarea'

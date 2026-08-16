@@ -41,7 +41,7 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog,
+  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog, Spinner,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
 
@@ -215,6 +215,12 @@ export const Gallery = () => (
         <ResizableHandle />
         <ResizablePanel />
       </ResizablePanelGroup>
+    </Section>
+
+    <Section name="spinner">
+      {[12, 16, 20, 32].map((size) => (
+        <Spinner key={size} size={size} />
+      ))}
     </Section>
 
     <Section name="collapsible">
