@@ -95,6 +95,32 @@ describe('one stream, one client', () => {
     expect(tx.sent[0].ingestKey).toBe(KEY)
   })
 
+  // A provider whose ownership resolves in an effect renders once saying
+  // `enabled: false` and then again saying true. Measured on hanzo.ai: the
+  // library's first render built a disabled client, and a registry that kept it
+  // handed that one to the app too — the page went silent, which is worse than
+  // the double it replaced.
+  it('does not let a disabled client take the stream', () => {
+    const off = createAnalytics({ product: 'site', host: HOST, enabled: false })
+    const on = createAnalytics({ product: 'site', host: HOST, transport: tx, flushIntervalMs: 999999 })
+    expect(on).not.toBe(off)
+    on.pageview('/pricing')
+    on.flush()
+    expect(tx.pageviews).toHaveLength(1)
+    expect(createAnalytics({ product: 'site', host: HOST, getToken: () => KEY })).toBe(on)
+  })
+
+  it('gives every disabled caller its own inert client', () => {
+    const a = createAnalytics({ product: 'site', host: HOST, enabled: false, transport: tx })
+    const b = createAnalytics({ product: 'site', host: HOST, enabled: false, transport: tx })
+    expect(a).not.toBe(b)
+    a.pageview('/pricing')
+    b.pageview('/pricing')
+    a.flush()
+    b.flush()
+    expect(tx.sent).toHaveLength(0)
+  })
+
   it('keeps separate streams separate', () => {
     expect(createAnalytics({ product: 'chat', host: HOST })).not.toBe(
       createAnalytics({ product: 'site', host: HOST }),

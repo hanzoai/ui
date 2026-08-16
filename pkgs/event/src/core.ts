@@ -699,7 +699,14 @@ function registry(): Map<string, Analytics> {
  *  This is the ONE way to get a client: `new Analytics` bypasses the registry
  *  and is for tests and for a deliberately separate instance. */
 export function createAnalytics(config: AnalyticsConfig): Analytics {
-  if (!isBrowser()) return new Analytics(config)
+  // A disabled client emits nothing, so it can double nothing and does not take
+  // the stream. Callers reach their answer at different moments — a provider
+  // whose ownership resolves in an effect renders once saying `false` before it
+  // has decided anything — and the client built in that moment must not become
+  // the one the page keeps. Registering it would silence the page, and adopting
+  // `enabled` from a later caller would let one surface overrule another's
+  // reading of consent. Neither: it is simply not the stream's client.
+  if (!isBrowser() || config.enabled === false) return new Analytics(config)
   const key = (config.host ?? DEFAULT_HOST) + '\0' + config.product
   const clients = registry()
   const existing = clients.get(key)
