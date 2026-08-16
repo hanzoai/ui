@@ -34,11 +34,15 @@ export const CHART_PALETTE = [
   '#c084fc',
   '#f4c245',
 ]
-export const CHART_OTHER = '#64748b'
+export const CHART_OTHER = 'var(--muted-foreground)'
 
 const ACCENT = CHART_PALETTE[0]
-const GRID = 'rgba(148,163,184,0.16)'
-const AXIS = 'rgba(148,163,184,0.85)'
+
+// Chrome is not data: the grid, the axis and the tooltip are design tokens, which
+// resolve inside an SVG presentation attribute as well as in a style rule. They
+// were a fixed slate ramp, so they neither matched the neutrals nor changed in light.
+const GRID = 'var(--border)'
+const AXIS = 'var(--muted-foreground)'
 
 /** A point on a temporal/sequential axis (LineChart / BarChart). */
 export type ChartPoint = { label: string; value: number }
@@ -125,13 +129,13 @@ function Tooltip({ x, height, label, value }: { x: number; height: number; label
     >
       <div
         style={{
-          background: 'rgba(15,17,21,0.94)',
-          border: '1px solid rgba(148,163,184,0.25)',
-          borderRadius: 8,
+          background: 'var(--popover)',
+          border: '1px solid var(--border)',
+          borderRadius: 'var(--radius)',
           padding: '6px 9px',
           fontSize: 11,
           lineHeight: 1.35,
-          color: '#e2e8f0',
+          color: 'var(--popover-foreground)',
           whiteSpace: 'nowrap',
           boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
         }}
@@ -212,7 +216,7 @@ export function LineChart({
           {hover != null && data[hover] ? (
             <>
               <line x1={x(hover)} x2={x(hover)} y1={padT} y2={padT + innerH} stroke={AXIS} strokeWidth={1} strokeDasharray="3 3" />
-              <circle cx={x(hover)} cy={y(data[hover].value)} r={4} fill={color} stroke="#0f1115" strokeWidth={2} />
+              <circle cx={x(hover)} cy={y(data[hover].value)} r={4} fill={color} stroke="var(--background)" strokeWidth={2} />
             </>
           ) : null}
           {ticks.map((t) => (
