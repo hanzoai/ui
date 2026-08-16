@@ -55,7 +55,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.24'
+  var VERSION = '0.3.25'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -471,11 +471,25 @@ function hzAnonId() {
       })
     }).observe({ type: 'layout-shift', buffered: true })
   } catch (e) {}
-  addEventListener('visibilitychange', function () {
-    if (document.visibilityState !== 'hidden') return
-    if (vitals.lcp != null || vitals.cls != null) send('event', '$vitals', vitals)
+  // A document can be taken away on either signal, and neither one alone covers
+  // every browser: visibilitychange is what fires when a tab is backgrounded or
+  // discarded, pagehide is what fires on the navigation path where it does not.
+  // core.ts listens for both; this listens for both. flush() returns on an empty
+  // queue, so whichever arrives second finds nothing left to send.
+  var vitalsSent = false
+  function leaving() {
+    // The web vitals are one measurement of one page view. Hiding a tab twice
+    // does not make two of them.
+    if (!vitalsSent && (vitals.lcp != null || vitals.cls != null)) {
+      vitalsSent = true
+      send('event', '$vitals', vitals)
+    }
     flush()
+  }
+  addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'hidden') leaving()
   })
+  addEventListener('pagehide', leaving)
 
   // ── public API (manual funnel/identify) + GA/Meta fan-out ─────────────────
   function assign(a, b) {

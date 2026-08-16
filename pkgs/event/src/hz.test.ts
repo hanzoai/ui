@@ -75,8 +75,11 @@ function runSnippet(opts: StubOptions = {}): {
   api: Api | undefined
   local: Map<string, string>
   jar: Map<string, string>
+  fire: (type: string) => void
+  hide: () => void
 } {
   const posts: Post[] = []
+  const listeners = new Map<string, (() => void)[]>()
   const local = new Map<string, string>(Object.entries(opts.storage ?? {}))
   const jar = opts.jar ?? new Map<string, string>()
   const store = (m: Map<string, string>) => ({
@@ -145,7 +148,13 @@ function runSnippet(opts: StubOptions = {}): {
   define('localStorage', store(local))
   define('sessionStorage', store(new Map()))
   define('history', { pushState: () => {}, replaceState: () => {} })
-  define('addEventListener', () => {})
+  // Listeners are kept, not discarded: the unload flush IS a listener, so a stub
+  // that drops them leaves the only path the drop-off signal travels unexecuted.
+  define('addEventListener', (type: string, fn: () => void) => {
+    const seen = listeners.get(type)
+    if (seen) seen.push(fn)
+    else listeners.set(type, [fn])
+  })
   define('PerformanceObserver', undefined)
   define('hzDNT', undefined)
   define('doNotTrack', undefined)
@@ -166,7 +175,16 @@ function runSnippet(opts: StubOptions = {}): {
   define('window', g)
 
   new Function(SRC)()
-  return { posts, api: (g.window as { hanzo?: Api }).hanzo, local, jar }
+  /** Raise an event the page would raise, so its listeners actually run. */
+  const fire = (type: string) => {
+    for (const fn of listeners.get(type) ?? []) fn()
+  }
+  /** Hide the document, as a browser does before it takes one away. */
+  const hide = () => {
+    ;(g.document as { visibilityState: string }).visibilityState = 'hidden'
+    fire('visibilitychange')
+  }
+  return { posts, api: (g.window as { hanzo?: Api }).hanzo, local, jar, fire, hide }
 }
 
 /** Every event across every transmission, in order. */
@@ -176,6 +194,29 @@ describe('hz.js', () => {
   let run: ReturnType<typeof runSnippet>
   beforeEach(() => {
     run = runSnippet()
+  })
+
+  // A visitor who leaves mid-funnel is the drop-off signal, and hz.js only gets
+  // to report it from a teardown listener. Neither signal fires in every browser
+  // on every path, so the tag listens for both.
+  it('flushes what is queued when the tab is hidden', () => {
+    run.api!.track('plan_clicked')
+    run.hide()
+    expect(sentOf(run).map((e) => e.event)).toContain('plan_clicked')
+  })
+
+  it('flushes what is queued on pagehide, which visibilitychange need not precede', () => {
+    run.api!.track('checkout_started')
+    run.fire('pagehide')
+    expect(sentOf(run).map((e) => e.event)).toContain('checkout_started')
+  })
+
+  it('sends nothing a second time when both teardown signals arrive', () => {
+    run.api!.track('plan_clicked')
+    run.hide()
+    run.fire('pagehide')
+    const clicks = sentOf(run).filter((e) => e.event === 'plan_clicked')
+    expect(clicks).toHaveLength(1)
   })
 
   it('mints session ids the plane admits', () => {
