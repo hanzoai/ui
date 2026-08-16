@@ -261,6 +261,8 @@ export class Analytics {
   private attribution: Attribution = { utm: {} }
   private cohort: Cohort = {}
   private started = false
+  /** The view pageview() last counted — path + location. */
+  private counted?: string
   /** Parsed error-plane DSN, or null when the plane is inert. */
   private dsn: Dsn | null
   /** Guards against an error thrown *inside* the error path re-entering it. */
@@ -297,6 +299,21 @@ export class Analytics {
     this.dsn = parseDsn(
       config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product, this.cfg.ingestKey)
     )
+  }
+
+  /** adopt gives this client a credential it does not have. The key belongs to
+   *  the stream, not to whichever caller happened to ask for the handle first,
+   *  so a later caller carrying one hands it over. The error plane derives from
+   *  the key, so it comes up here too when it was inert for want of one.
+   *  Present fields are never overwritten: the first caller's key stays. */
+  adopt(config: AnalyticsConfig): void {
+    if (config.ingestKey && !this.cfg.ingestKey) this.cfg.ingestKey = config.ingestKey
+    if (config.getToken && !this.cfg.getToken) this.cfg.getToken = config.getToken
+    if (!this.dsn) {
+      this.dsn = parseDsn(
+        config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product, this.cfg.ingestKey),
+      )
+    }
   }
 
   /** errorPlaneEnabled reports whether captured exceptions can actually reach the
@@ -363,13 +380,22 @@ export class Analytics {
     this.enqueue('group', undefined, { groupId, properties: traits })
   }
 
-  /** pageview records a $pageview for the current (or given) location. */
+  /** pageview records a $pageview for the current (or given) location, once per
+   *  view. A view is the path plus the full location, so a query or hash change
+   *  is a new one and a repeat call for the same place is not. */
   pageview(path?: string, properties?: Record<string, unknown>): void {
     // No `url` here: build() reads window.location.href for every event, in the
     // same tick, so this recomputed it to the identical value. Only `path` is
     // passed, because a route change fires before window.location has caught up
     // and the caller's value has to win.
     const p = path ?? (isBrowser() ? window.location.pathname : undefined)
+    // Counting a page once is the client's rule, not each caller's. A page holds
+    // several emitters that each correctly believe they count the first view —
+    // the provider's autoPageview, a router hook, a nav autocapture — and per
+    // emitter state cannot see the others. On the stream they are one page.
+    const view = (p ?? '') + '\0' + (isBrowser() ? window.location.href : '')
+    if (view === this.counted) return
+    this.counted = view
     this.enqueue('pageview', PAGEVIEW, { path: p, properties })
   }
 
@@ -638,9 +664,52 @@ export class Analytics {
   }
 }
 
-/** createAnalytics builds a client instance. Most apps use one shared instance. */
+// ── one stream, one client ──────────────────────────────────────────────────
+//
+// A page has ONE event stream per (host, product): one queue, one anon id, one
+// credential. Two clients on it split the batch and double the pageview, and
+// the half built by the caller that had no key is refused at the door — so the
+// same page is both over- and under-counted, and neither number says so.
+//
+// Two callers ask for that stream on any real page and both are right to: the
+// app mounts a provider, and the component library mounts its own telemetry.
+// Neither can see the other, so the fix cannot live in either. It lives here,
+// where the stream is: asking twice returns the same client.
+//
+// The registry is on the PAGE, under a `Symbol.for` slot, not in module scope.
+// `@hanzo/event` and `@hanzo/event/react` are separate bundles that each carry
+// a copy of this module, so a module-scope map is per-copy and the two copies
+// never see each other's — which is exactly how the duplicate arises. A
+// well-known symbol is the one slot every copy resolves to the same value.
+//
+// Browser only. A server process serves many visitors, and one client shared
+// across requests would carry one visitor's personId into the next.
+const CLIENTS = Symbol.for('hanzo.event.clients')
+
+function registry(): Map<string, Analytics> {
+  const g = globalThis as unknown as Record<symbol, Map<string, Analytics> | undefined>
+  const existing = g[CLIENTS]
+  if (existing) return existing
+  const fresh = new Map<string, Analytics>()
+  g[CLIENTS] = fresh
+  return fresh
+}
+
+/** createAnalytics returns the client for a stream, building it on first ask.
+ *  This is the ONE way to get a client: `new Analytics` bypasses the registry
+ *  and is for tests and for a deliberately separate instance. */
 export function createAnalytics(config: AnalyticsConfig): Analytics {
-  return new Analytics(config)
+  if (!isBrowser()) return new Analytics(config)
+  const key = (config.host ?? DEFAULT_HOST) + '\0' + config.product
+  const clients = registry()
+  const existing = clients.get(key)
+  if (existing) {
+    existing.adopt(config)
+    return existing
+  }
+  const fresh = new Analytics(config)
+  clients.set(key, fresh)
+  return fresh
 }
 
 // Re-export the hydrate helpers so consumers can read persisted cohort/attribution
