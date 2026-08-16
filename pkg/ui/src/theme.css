@@ -64,7 +64,7 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
-.light {
+.light, :root.t_light, .t_light {
 
 
   --chart-1: oklch(0.646 0.222 41.116);
