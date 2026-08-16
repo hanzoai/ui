@@ -24,17 +24,20 @@ import { createGui } from '@hanzo/gui'
 // product moves. Adding a fourth spelling of a size is the thing to refuse.
 //
 // Canonical face: Geist Sans for UI, Geist Mono for anything numeric/code/id
-// (`.mono`). The host self-hosts both faces (its own fonts.css) — this only
-// names them.
+// (`.mono`). The host self-hosts both faces, so the token READS the host's
+// binding (`--font-sans`/`--font-mono`) rather than restating a stack of its
+// own — restating it is how a host that loads Geist through next/font lost the
+// metric-matched fallback on every element gui styles. The literal survives as
+// the var's fallback, for a host that mounts no token layer.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GEIST = "'Geist', system-ui, -apple-system, sans-serif"
+const GEIST = "var(--font-sans, 'Geist', system-ui, -apple-system, sans-serif)"
 
-/** The numeric/code/id face. Byte-for-byte the stack `.mono` sets in
- *  styles/motion.css — the class and the `$mono` token have to resolve to the
- *  same face or the same number renders in two different fonts depending on
- *  which one a component reached for. */
-const GEIST_MONO = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+/** The numeric/code/id face. The same stack `.mono` sets in styles/motion.css —
+ *  the class and the `$mono` token have to resolve to the same face or the same
+ *  number renders in two different fonts depending on which one a component
+ *  reached for. */
+const GEIST_MONO = "var(--font-mono, 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
 
 /** Type — the same SIX sizes, now DEFERRED to @hanzo/design rather than restated.
  *  $1 label · $2 nav + dense body · $3 base · $4/$5 emphasis · $6 section head ·
