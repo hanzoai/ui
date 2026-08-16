@@ -35,24 +35,24 @@ describe('read', () => {
     // Deliberately not DEFAULT. What `read()` returns reaches the document as an
     // INLINE custom property, which outranks every stylesheet, so answering with
     // a neutral 1 would override a brand's own scale on every untouched install.
-    expect(read(memory())).toEqual({})
+    expect(read({ store: memory() })).toEqual({})
   })
 
   it('round-trips what write stored', () => {
     const s = memory()
-    write({ type: 1.15, density: 'compact', accent: '#808000' }, s)
-    expect(read(s)).toEqual({ type: 1.15, density: 'compact', accent: '#808000' })
+    write({ type: 1.15, density: 'compact', accent: '#808000' }, { store: s })
+    expect(read({ store: s })).toEqual({ type: 1.15, density: 'compact', accent: '#808000' })
   })
 
   it('never throws when storage is blocked — an unreadable preference is an unset one', () => {
-    expect(read(hostile())).toEqual({})
-    expect(write({ type: 1.2 }, hostile())).toBe(false)
+    expect(read({ store: hostile() })).toEqual({})
+    expect(write({ type: 1.2 }, { store: hostile() })).toBe(false)
   })
 
   it('drops values it does not recognise rather than passing them to CSS', () => {
     const s = memory()
     s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', evil: '</style>' }))
-    const p = read(s) as Record<string, unknown>
+    const p = read({ store: s }) as Record<string, unknown>
     expect(p.type).toBeUndefined()
     expect(p.density).toBeUndefined()
     expect(p.evil).toBeUndefined()
@@ -61,14 +61,14 @@ describe('read', () => {
   it('survives a corrupt value', () => {
     const s = memory()
     s.setItem(KEY, 'not json{')
-    expect(read(s)).toEqual({})
+    expect(read({ store: s })).toEqual({})
   })
 
   it('DEFAULT is what an unset axis READS AS, never what gets written', () => {
     // The panel shows Default selected for an absent axis; the document is left
     // alone. Both halves of that sentence matter, so both are stated here.
     expect(DEFAULT).toEqual({ type: 1, density: 'default' })
-    const empty = read(memory())
+    const empty = read({ store: memory() })
     expect(empty.type ?? DEFAULT.type).toBe(1)
     apply(empty, root)
     expect(root.style.getPropertyValue('--type-scale')).toBe('')
@@ -131,9 +131,9 @@ describe('first paint', () => {
     ['NOTHING stored', {}],
   ])('the boot script agrees with apply() on %s', (_name, stored) => {
     const store = memory()
-    write(stored, store)
+    write(stored, { store })
 
-    apply(read(store), root)
+    apply(read({ store }), root)
     const viaApply = {
       type: root.style.getPropertyValue('--type-scale'),
       density: root.style.getPropertyValue('--density'),

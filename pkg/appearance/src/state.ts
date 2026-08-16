@@ -11,11 +11,32 @@
  * preview all need to apply a preference, and only one of them has hooks.
  */
 import { vars, css, type Preference } from '@hanzo/design'
+import { resolve, type Layers, type Scope } from './scope'
 
 export type { Preference }
 
 /** One key, one shape. Namespaced because a surface's localStorage is shared. */
 export const KEY = 'hanzo.appearance'
+
+/**
+ * Where a personal preference is kept for a given scope.
+ *
+ * The everywhere-layer keeps the bare key it has always had, so an install that
+ * predates scoping reads back unchanged and lands where it belongs — a
+ * preference set before there were scopes was, in fact, meant for everywhere.
+ * A per-org override is the same key suffixed with the org, so the two never
+ * overwrite each other and clearing one leaves the other standing.
+ */
+export const keyFor = (scope: Scope, org?: string): string =>
+  scope === 'org' && org ? `${KEY}@${org}` : KEY
+
+/** Which preference is being read or written, and out of which storage. */
+export interface At {
+  scope?: Scope
+  /** The org in scope. Required for `scope: 'org'`; ignored otherwise. */
+  org?: string
+  store?: Storage
+}
 
 /** What an unset axis READS AS, for a control that has to show something
  *  selected. Never written to the document — see `read()`. */
@@ -43,9 +64,9 @@ const isBrowser = () => typeof document !== 'undefined'
  * with no access) and a corrupt value is not worth taking a surface down for.
  * An unreadable preference is the same answer as an unset one.
  */
-export function read(store: Storage | undefined = safeStore()): Preference {
+export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}): Preference {
   try {
-    const raw = store?.getItem(KEY)
+    const raw = store?.getItem(keyFor(scope, org))
     if (!raw) return {}
     const p = JSON.parse(raw) as Preference
     if (!p || typeof p !== 'object') return {}
@@ -54,6 +75,7 @@ export function read(store: Storage | undefined = safeStore()): Preference {
     // reach a stylesheet.
     return {
       ...(typeof p.type === 'number' && Number.isFinite(p.type) ? { type: p.type } : {}),
+      ...(typeof p.ratio === 'number' && Number.isFinite(p.ratio) ? { ratio: p.ratio } : {}),
       ...(p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? { density: p.density } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
     }
@@ -62,11 +84,25 @@ export function read(store: Storage | undefined = safeStore()): Preference {
   }
 }
 
+/**
+ * Both personal layers at once, ready to hand to `resolve()`.
+ *
+ * The per-org layer is only read when an org is actually in scope — with none,
+ * there is no such preference to have, and inventing a key for `undefined` would
+ * make one org's settings the home of everybody who happened to be signed out.
+ */
+export function readLayers({ org, store = safeStore() }: At = {}): Layers {
+  return {
+    user: read({ scope: 'everywhere', store }),
+    ...(org ? { userOrg: read({ scope: 'org', org, store }) } : {}),
+  }
+}
+
 /** Persist, and answer whether it stuck — a caller that promised "saved" needs to
  *  know, the same rule the console's save indicator lives by. */
-export function write(p: Preference, store: Storage | undefined = safeStore()): boolean {
+export function write(p: Preference, { scope = 'everywhere', org, store = safeStore() }: At = {}): boolean {
   try {
-    store?.setItem(KEY, JSON.stringify(p))
+    store?.setItem(keyFor(scope, org), JSON.stringify(p))
     return !!store
   } catch {
     return false
@@ -98,7 +134,23 @@ export function apply(p: Preference, root: HTMLElement | undefined = isBrowser()
 
 /** Every property `vars()` can emit — the removal list has to be exhaustive, or
  *  clearing an axis would leave the last value stuck on the document. */
-const KNOBS = ['--type-scale', '--density', '--primary', '--accent'] as const
+const KNOBS = ['--type-scale', '--type-ratio', '--density', '--primary', '--accent'] as const
+
+/**
+ * What this person, in this org, on this device, should actually see.
+ *
+ * The one call a surface needs: it collects the two personal layers off the
+ * device, stacks them under whatever the install and the org supplied, and hands
+ * back the resolved preference along with who decided each axis.
+ *
+ * `install` and `org` are ARGUMENTS because they are not the browser's to know —
+ * an org's branding is a row on a server and the install's default is built into
+ * the host. Reading them here would mean guessing, or fetching, and this module
+ * is the one that must stay synchronous enough to run before first paint.
+ */
+export function current({ install, org, orgId, store }: { install?: Preference; org?: Preference; orgId?: string; store?: Storage } = {}) {
+  return resolve({ install, org, ...readLayers({ org: orgId, store }) })
+}
 
 /**
  * The preference as a `<style>` body, for a server render or an inline head
@@ -120,11 +172,22 @@ export function style(p: Preference): string {
  * for the same reason. Anything it cannot do (validation, colour checking) is
  * done again by `apply()` the moment React mounts.
  */
-export function bootScript(): string {
+export function bootScript({ org, base }: { org?: string; base?: Preference } = {}): string {
+  // The install's and the org's defaults are known at render time, so they are
+  // BAKED into the script rather than fetched by it — a boot script cannot await
+  // anything, and a layer that arrives after first paint is the flash this
+  // function exists to prevent.
+  const seed = JSON.stringify(base ?? {})
+  const keys = JSON.stringify(org ? [KEY, keyFor('org', org)] : [KEY])
   return (
-    `(function(){try{var p=JSON.parse(localStorage.getItem(${JSON.stringify(KEY)})||'{}');` +
+    `(function(){try{var p=${seed};` +
+    // Narrowest last, and axis by axis — the same rule resolve() follows, so the
+    // pre-paint answer and the post-mount one cannot disagree.
+    `${keys}.forEach(function(k){var o=JSON.parse(localStorage.getItem(k)||'{}');` +
+    `for(var a in o)if(o[a]!==undefined&&o[a]!=='')p[a]=o[a]});` +
     `var s=document.documentElement.style;` +
     `if(typeof p.type==='number')s.setProperty('--type-scale',String(Math.min(1.4,Math.max(0.85,p.type))));` +
+    `if(typeof p.ratio==='number')s.setProperty('--type-ratio',String(Math.min(1.5,Math.max(0.75,p.ratio))));` +
     `var d={compact:'0.85',default:'1',comfortable:'1.15'}[p.density];if(d)s.setProperty('--density',d);` +
     `}catch(e){}})()`
   )
