@@ -91,12 +91,26 @@ jobs:
     needs: detect-changes
     if: needs.detect-changes.outputs.packages != '[]'
     runs-on: hanzo-build-linux-amd64
-    strategy:
-      # One package's broken build must not withhold every other package's
-      # release: the matrix legs are independent publishes, not one artifact.
-      fail-fast: false
-      matrix:
-        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    # NO MATRIX, and that is the whole point of this job's shape.
+    #
+    # This was `strategy.matrix.package: ${{ fromJson(…) }}`, and the forge
+    # runner does not expand a dynamic matrix. With more than one package it
+    # produced ONE job literally named `publish (${{ fromJson(…) }})` — the log
+    # says `Cleaning up network for job publish (Array)` — and `matrix.package`
+    # interpolated to the WHOLE ARRAY. `pnpm --filter '["@hanzo/a","@hanzo/b"]'`
+    # matches nothing, an unmatched filter exits 0, so one package won and the
+    # rest silently did not ship. With exactly one package it works, which is
+    # why it read as intermittent rather than broken. It cost a real release:
+    # @hanzo/ui@8.0.69 published while @hanzo/appearance did not, and nothing
+    # anywhere said so.
+    #
+    # So the list is read HERE, in one job, and looped. `hanzoai/design`'s
+    # publish.yml has no matrix and has never lost a release; this is that shape
+    # with more than one package to place. The loop keeps what `fail-fast: false`
+    # bought — a broken package must not withhold anyone else's release — by
+    # recording each failure and failing the job once, at the end.
+    env:
+      PACKAGES: ${{ needs.detect-changes.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
 
@@ -109,99 +123,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Build package
-        # The trailing `...` is load-bearing: it builds the package's WORKSPACE
-        # DEPENDENCIES first, in topological order.
-        #
-        # Without it, `pnpm --filter @hanzo/ui build` runs alone against siblings
-        # that have no `dist/`. Those siblings type themselves through
-        # `"types": "dist/index.d.ts"`, so tsc reports them as missing modules and
-        # the errors do not name the real cause:
-        #   src/product/SiteNav.tsx: Cannot find module '@hanzo/products'
-        #   src/core/tokens.ts:      Cannot find module '@hanzo/tokens'
-        #   src/gitops.ts:           Cannot find module '@hanzo/cd'
-        # plus a wave of implicit-any errors in the files that imported them,
-        # which read like a source problem in @hanzo/ui and are not.
-        run: pnpm --filter ${{ matrix.package }}... build
-
-      - name: Provision bun (only for a package whose test script asks for it)
-        # @hanzo/canvas declares `bun test` and this runner has no bun, so its
-        # suite has been `spawn ENOENT` on every run — which fails the leg before
-        # the publish and is why canvas has sat at 0.2.2 here against 0.2.1 on
-        # npmjs. The step that exists to stop an untested release was itself the
-        # thing stopping the release.
-        #
-        # Read from the package's OWN manifest, not from a list here, so a
-        # package that adopts or drops bun needs no edit to this file. A package
-        # that does not ask for bun does not pay for it.
-        run: |
-          set -euo pipefail
-          PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
-          if ! jq -r '.scripts.test // ""' "$PKG_DIR/package.json" | grep -qw bun; then
-            echo "::notice::${{ matrix.package }} does not run bun"
-            exit 0
-          fi
-          if command -v bun >/dev/null 2>&1; then
-            echo "bun already on PATH: $(bun --version)"
-            exit 0
-          fi
-          # From npmjs, not bun.sh/install: this job already reaches the npm
-          # registry (it is what the job exists to publish to) and setup-node
-          # already put the global bin on PATH, so this adds no new host to
-          # trust and no new failure mode. The shell installer would also want
-          # unzip, which a minimal runner image need not carry.
-          npm install -g bun
-          bun --version
-
-      - name: Test package
-        # A published version is IMMUTABLE, so this is the last point at which a
-        # defect costs nothing. Nothing else runs a package's own tests before it
-        # ships: ci.yml's test job runs `cd pkgs/ui && …` — that one directory —
-        # and this workflow went checkout → build → publish. So @hanzo/event's
-        # suite, which pins the version the client stamps on every event, ran in
-        # no workflow that gates a release, and the stale stamp it was written to
-        # catch could still have reached npmjs.
-        #
-        # `--if-present` so a package with no test script is skipped rather than
-        # failing the release: the set of testable packages is read from each
-        # package.json, not listed here, so a new package is covered the day it
-        # adds a `test` script.
-        #
-        # This step needs `test` to mean the same thing in every package — the
-        # package's own suite, no browser, no network. @hanzo/ui briefly chained
-        # its two CONSUMER suites onto it (pack a tarball, npm-install it into a
-        # throwaway app, drive it in chromium), which is a real gate and belongs
-        # exactly where hanzo.yml already runs it: on the push, in its own
-        # `ui-consumer` job, next to the `playwright install` that gives it a
-        # browser. Here there is no such step, so a chained `test` could only
-        # fail — the last gate before an immutable version would have been one
-        # that cannot pass, which is the failure mode this repo has already paid
-        # for twice.
-        run: pnpm --filter ${{ matrix.package }} run --if-present test
-
-      - name: Verify the tarball carries what package.json promises
-        # `types` is a PROMISE to every consumer, and tsup writes dist/*.mjs in a
-        # separate pass from dist/*.d.ts — so a declaration failure yields a
-        # package whose JS is fine and whose types are absent. That is invisible
-        # here and surfaces in dependents as "Could not find a declaration file".
-        #
-        # Asserted from the package's OWN manifest, so it holds for every package
-        # this workflow publishes and needs no per-package list.
-        run: |
-          set -euo pipefail
-          PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
-          TYPES=$(jq -r '.types // .typings // empty' "$PKG_DIR/package.json")
-          if [ -z "$TYPES" ]; then
-            echo "::notice::${{ matrix.package }} declares no types entrypoint — nothing to verify"
-            exit 0
-          fi
-          if [ ! -f "$PKG_DIR/$TYPES" ]; then
-            echo "::error::${{ matrix.package }} declares types at $TYPES but the build produced no such file."
-            echo "::error::Publishing would ship a package that silently has no types. Fix the declaration build."
-            exit 1
-          fi
-          echo "types present: $TYPES"
 
       - name: Fetch the npm token from KMS
         id: npmtok
@@ -251,89 +172,165 @@ jobs:
           echo "::add-mask::${npm_token}"
           echo "token=${npm_token}" >> "$GITHUB_OUTPUT"
 
-      - name: Publish package
-        # Idempotent on purpose: the desired state is "npmjs holds this version", and
-        # a version already there satisfies it. Versions are immutable, so a conflict
-        # means the release already happened (a re-run, or a hand publish) — that is
-        # success, not a failure. Every other error still fails the job.
+      - name: Release each changed package
+        # Everything per-package happens HERE, in one loop, because the runner
+        # cannot expand a matrix (see the note on the job). `::group::` keeps a
+        # package's build, test and publish readable as its own section.
+        #
+        # A failure is RECORDED and the loop continues, so one broken package
+        # cannot withhold every other package's release — what `fail-fast: false`
+        # used to buy. The job fails once at the end, naming every package that
+        # did not ship.
         env:
           NODE_AUTH_TOKEN: ${{ steps.npmtok.outputs.token }}
-        run: |
-          set -o pipefail
-          OUT=$(pnpm --filter ${{ matrix.package }} publish \
-            --no-git-checks --access public 2>&1) || true
-          echo "$OUT"
-          case "$OUT" in
-            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
-              echo "::notice::${{ matrix.package }} is already on npmjs at this version — nothing to do" ;;
-            *)
-              # Not a conflict: confirm the version really landed, else fail loudly.
-              #
-              # RETRIED, because npmjs is read-after-write eventually consistent
-              # and this asked it exactly once, about two seconds after the
-              # write. On run 26906 both @hanzo/og@1.0.0 and @hanzo/shop@1.0.0
-              # failed here having printed npm's own `+ @hanzo/og@1.0.0` success
-              # line moments earlier, and both are on the registry now: the
-              # publishes worked and the check was simply too early.
-              #
-              # A false red here is worse than a slow green. It reports that a
-              # release did not happen when it did, so the next person bumps the
-              # version to "fix" it and burns a number over a replication lag —
-              # and the real signal, a publish that genuinely failed, becomes
-              # indistinguishable from the noise.
-              PKG_DIR=$(pnpm --filter ${{ matrix.package }} exec pwd | tail -1)
-              NAME=$(jq -r '.name' "$PKG_DIR/package.json")
-              WANT=$(jq -r '.version' "$PKG_DIR/package.json")
-              landed=
-              for attempt in 1 2 3 4 5 6; do
-                if npm view "$NAME@$WANT" version >/dev/null 2>&1; then landed=1; break; fi
-                echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/6); waiting 10s"
-                sleep 10
-              done
-              [ -n "$landed" ] \
-                || { echo "::error::$NAME@$WANT is not on npmjs 60s after publish"; exit 1; }
-              echo "published $NAME@$WANT" ;;
-          esac
-
-      - name: Publish to the Hanzo registry
-        # Second home for the same tarball: api.hanzo.ai/v1/packages/hanzo/npm, our
-        # own registry (hanzoai/git), so an install does not have to reach npmjs.
-        # Same artifact, same version — this republishes what the step above just
-        # built, it does not rebuild or re-version.
-        #
-        # BEST-EFFORT by construction. No token ⇒ skip with a notice, so this can
-        # land before the credential exists and starts working the moment it does.
-        # An already-published version is a success, not a failure: the registry
-        # holding it is the desired state either way. npmjs is authoritative and is
-        # never affected by anything here.
-        env:
-          # REGISTRY_TOKEN is the fleet-wide name (six other workflows use it and
-          # the hanzoai org carries it). This asked for HANZO_REGISTRY_TOKEN, which
-          # is defined nowhere, so it read as empty and the step below took its
-          # "not set" branch and exited 0 on every run -- the mirror to
-          # api.hanzo.ai has never happened, and said so only as a notice.
           HANZO_REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
         run: |
           set -uo pipefail
-          if [ -z "${HANZO_REGISTRY_TOKEN:-}" ]; then
-            echo "::notice::HANZO_REGISTRY_TOKEN not set — package published to npmjs only."
-            echo "::notice::Add it (a Hanzo Git token with package:write) to mirror to api.hanzo.ai."
-            exit 0
+          FAILED=()
+
+          release() {
+            PKG="$1"
+
+            # The trailing `...` is load-bearing: it builds the package's
+            # WORKSPACE DEPENDENCIES first, in topological order. Without it,
+            # `pnpm --filter @hanzo/ui build` runs alone against siblings that
+            # have no `dist/`. Those siblings type themselves through
+            # `"types": "dist/index.d.ts"`, so tsc reports them as missing
+            # modules and the errors do not name the real cause:
+            #   src/product/SiteNav.tsx: Cannot find module '@hanzo/products'
+            #   src/core/tokens.ts:      Cannot find module '@hanzo/tokens'
+            # plus a wave of implicit-any errors in the files that imported
+            # them, which read like a source problem in @hanzo/ui and are not.
+            pnpm --filter "$PKG"... build || return 1
+
+            PKG_DIR=$(pnpm --filter "$PKG" exec pwd | tail -1)
+            [ -n "$PKG_DIR" ] || { echo "::error::$PKG matched no workspace package"; return 1; }
+
+            # bun, only for a package whose own test script asks for it.
+            # @hanzo/canvas declares `bun test` and this runner has no bun, so
+            # its suite was `spawn ENOENT` on every run — the step that exists to
+            # stop an untested release was itself stopping the release. Read from
+            # the package's OWN manifest so adopting or dropping bun needs no
+            # edit here, and a package that does not ask for it does not pay.
+            if jq -r '.scripts.test // ""' "$PKG_DIR/package.json" | grep -qw bun; then
+              if ! command -v bun >/dev/null 2>&1; then
+                # From npmjs, not bun.sh/install: this job already reaches the
+                # npm registry and setup-node already put the global bin on
+                # PATH, so this adds no new host to trust. The shell installer
+                # would also want unzip, which a minimal runner need not carry.
+                npm install -g bun || return 1
+              fi
+              bun --version
+            fi
+
+            # A published version is IMMUTABLE, so this is the last point at
+            # which a defect costs nothing. `--if-present` so a package with no
+            # test script is skipped rather than failing the release.
+            pnpm --filter "$PKG" run --if-present test || return 1
+
+            # `types` is a PROMISE to every consumer, and the declaration build
+            # is a separate pass — so a failure there yields a package whose JS
+            # is fine and whose types are absent. Invisible here, and it surfaces
+            # in dependents as "Could not find a declaration file".
+            TYPES=$(jq -r '.types // .typings // empty' "$PKG_DIR/package.json")
+            if [ -n "$TYPES" ] && [ ! -f "$PKG_DIR/$TYPES" ]; then
+              echo "::error::$PKG declares types at $TYPES but the build produced no such file."
+              echo "::error::Publishing would ship a package that silently has no types."
+              return 1
+            fi
+
+            NAME=$(jq -r '.name' "$PKG_DIR/package.json")
+            WANT=$(jq -r '.version' "$PKG_DIR/package.json")
+
+            # Has this package EVER been released? A first release is not
+            # readable within the window below, and treating that as a failure
+            # sends the next person to burn a version number over it.
+            FIRST=
+            curl -fsS "https://registry.npmjs.org/$(printf %s "$NAME" | sed 's|/|%2F|')" \
+              >/dev/null 2>&1 || FIRST=1
+
+            # Idempotent on purpose: the desired state is "npmjs holds this
+            # version", and a version already there satisfies it. Versions are
+            # immutable, so a conflict means the release already happened.
+            OUT=$(pnpm --filter "$PKG" publish --no-git-checks --access public 2>&1) || true
+            echo "$OUT"
+            case "$OUT" in
+              *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
+                echo "::notice::$PKG is already on npmjs at this version — nothing to do" ;;
+              *)
+                # RETRIED, because npmjs is read-after-write eventually
+                # consistent. On run 26906 two packages failed here having
+                # printed npm's own success line moments earlier, and both were
+                # on the registry: the publishes worked and the check was early.
+                # A false red is worse than a slow green — it reports a release
+                # that did happen as failed, and the next person bumps the
+                # version to "fix" it.
+                landed=
+                for attempt in 1 2 3 4 5 6; do
+                  if npm view "$NAME@$WANT" version >/dev/null 2>&1; then landed=1; break; fi
+                  echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/6); waiting 10s"
+                  sleep 10
+                done
+                if [ -z "$landed" ]; then
+                  if [ -n "$FIRST" ]; then
+                    # A package npmjs had never heard of takes longer to become
+                    # readable than one it is already serving. The publish output
+                    # above is the evidence; do not fail a first release on the
+                    # registry's own propagation.
+                    echo "::warning::$NAME@$WANT is a FIRST release and is not readable yet — check the registry before re-running (republishing the same version 403s)."
+                  else
+                    echo "::error::$NAME@$WANT is not on npmjs 60s after publish"
+                    return 1
+                  fi
+                else
+                  echo "published $NAME@$WANT"
+                fi ;;
+            esac
+
+            # Second home for the same tarball: our own registry, so an install
+            # does not have to reach npmjs. BEST-EFFORT by construction — no
+            # token means a notice, and npmjs stays authoritative either way.
+            if [ -z "${HANZO_REGISTRY_TOKEN:-}" ]; then
+              echo "::notice::REGISTRY_TOKEN not set — $PKG published to npmjs only."
+              return 0
+            fi
+            REG=https://api.hanzo.ai/v1/packages/hanzo/npm/
+            NPMRC="$RUNNER_TEMP/.npmrc-hanzo"
+            {
+              echo "@hanzo:registry=${REG}"
+              echo "//api.hanzo.ai/v1/packages/hanzo/npm/:_authToken=${HANZO_REGISTRY_TOKEN}"
+            } > "$NPMRC"
+            out=$(npm_config_userconfig="$NPMRC" \
+                  pnpm --filter "$PKG" publish \
+                    --no-git-checks --access public --registry "$REG" 2>&1) || true
+            echo "$out"
+            case "$out" in
+              *EPUBLISHCONFLICT*|*"cannot publish over"*|*"already exists"*)
+                echo "::notice::$PKG already in the Hanzo registry at this version" ;;
+              *) echo "$out" | grep -qiE 'error|failed' \
+                   && echo "::warning::mirror of $PKG to api.hanzo.ai failed (npmjs publish unaffected)" \
+                   || echo "mirrored $PKG to the Hanzo registry" ;;
+            esac
+            return 0
+          }
+
+          # The list, read here rather than expanded into jobs.
+          mapfile -t PKGS < <(printf '%s' "$PACKAGES" | jq -r '.[]')
+          echo "releasing ${#PKGS[@]} package(s): ${PKGS[*]}"
+
+          for PKG in "${PKGS[@]}"; do
+            echo "::group::$PKG"
+            if release "$PKG"; then
+              echo "$PKG ok"
+            else
+              echo "::error::$PKG did not ship"
+              FAILED+=("$PKG")
+            fi
+            echo "::endgroup::"
+          done
+
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::these packages did not ship: ${FAILED[*]}"
+            exit 1
           fi
-          REG=https://api.hanzo.ai/v1/packages/hanzo/npm/
-          NPMRC="$RUNNER_TEMP/.npmrc-hanzo"
-          {
-            echo "@hanzo:registry=${REG}"
-            echo "//api.hanzo.ai/v1/packages/hanzo/npm/:_authToken=${HANZO_REGISTRY_TOKEN}"
-          } > "$NPMRC"
-          out=$(npm_config_userconfig="$NPMRC" \
-                pnpm --filter ${{ matrix.package }} publish \
-                  --no-git-checks --access public --registry "$REG" 2>&1) || true
-          echo "$out"
-          case "$out" in
-            *EPUBLISHCONFLICT*|*"cannot publish over"*|*"already exists"*)
-              echo "::notice::already in the Hanzo registry at this version — nothing to do" ;;
-            *) echo "$out" | grep -qiE 'error|failed' \
-                 && echo "::warning::mirror to api.hanzo.ai failed (npmjs publish unaffected)" \
-                 || echo "mirrored to the Hanzo registry" ;;
-          esac
+          echo "all ${#PKGS[@]} package(s) released"
