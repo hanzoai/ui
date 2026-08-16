@@ -1,31 +1,21 @@
 'use client'
 
 /**
- * The Hanzo "H" mark — the canonical 7-path shaded glyph: five body blocks +
- * two shade slivers (geometry canon: @hanzo/logo `MARK_PATHS`).
+ * The Hanzo "H" — the house mark, static, inheriting `currentColor`.
  *
- * Rendered as inline SVG with `fill: currentColor` (shade at reduced opacity),
- * so it inherits the surrounding text color and adapts to the dark/light theme
- * with no per-theme asset. ONE source for the mark across the chrome.
+ * It held its own copy of the seven paths, which made three copies of one
+ * geometry across the fleet: `@hanzo/logo` publishes the canon, `@hanzo/brand`
+ * composes it into the registry, and this transcribed it a third time. A
+ * transcription drifts silently — it is right until the canon moves — so it
+ * reads the registry now, like every other mark.
+ *
+ * Kept as its own name because it means something the general one cannot: the
+ * HOUSE mark specifically, for the places that are Hanzo whatever host they are
+ * served from (a "built by Hanzo" credit on a white-label surface). Anything
+ * showing THIS surface's identity wants `BrandMark`, which follows the host.
  */
+import { BrandMark } from './BrandMark'
+
 export function HanzoMark({ size = 22, color = 'currentColor' }: { size?: number; color?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 67 67"
-      role="img"
-      aria-label="Hanzo"
-      fill={color}
-      style={{ display: 'block', flexShrink: 0 }}
-    >
-      <path d="M22.21 67V44.6369H0V67H22.21Z" />
-      <path opacity={0.55} d="M0 44.6369L22.21 46.8285V44.6369H0Z" />
-      <path d="M66.7038 22.3184H22.2534L0.0878906 44.6367H44.4634L66.7038 22.3184Z" />
-      <path d="M22.21 0H0V22.3184H22.21V0Z" />
-      <path d="M66.7198 0H44.5098V22.3184H66.7198V0Z" />
-      <path opacity={0.55} d="M66.6753 22.3185L44.5098 20.0822V22.3185H66.6753Z" />
-      <path d="M66.7198 67V44.6369H44.5098V67H66.7198Z" />
-    </svg>
-  )
+  return <BrandMark brand="hanzo" size={size} color={color} animated={false} wordmark={false} />
 }

@@ -984,6 +984,9 @@ importers:
       '@hanzo/appearance':
         specifier: ^0.1.4
         version: link:../appearance
+      '@hanzo/brand':
+        specifier: ^1.4.5
+        version: 1.4.6(react@19.2.4)
       '@hanzo/canvas':
         specifier: '>=0.1.0'
         version: link:../../pkgs/canvas
@@ -1260,7 +1263,7 @@ importers:
     devDependencies:
       '@hanzo/ui':
         specifier: npm:@hanzo/ui-shadcn@^5
-        version: '@hanzo/ui-shadcn@5.9.1(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@1.21.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@3.25.76))(@hookform/resolvers@3.10.0(react-hook-form@7.80.0(react@19.2.4)))(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(@tanstack/react-query@5.101.0(react@19.2.4))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(chrono-node@2.9.1)(date-fns@4.4.0)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.21.0(react@19.2.4))(mobx@6.16.1)(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-day-picker@9.14.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.80.0(react@19.2.4))(react-resizable-panels@4.11.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(redux@5.0.1))(tailwindcss@4.3.0)(validator@13.15.35)(wagmi@3.6.21(@tanstack/query-core@5.101.0)(@tanstack/react-query@5.101.0(react@19.2.4))(@types/react@19.2.14)(immer@11.1.8)(react@19.2.4)(typescript@5.9.3)(viem@2.52.2(typescript@5.9.3)(zod@3.25.76)))'
+        version: '@hanzo/ui-shadcn@5.9.1(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@1.21.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@3.25.76))(@hookform/resolvers@3.10.0(react-hook-form@7.80.0(react@19.2.4)))(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(@tanstack/react-query@5.101.0(react@19.2.4))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(chrono-node@2.9.1)(date-fns@4.4.0)(embla-carousel@8.6.0)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.21.0(react@19.2.4))(mobx@6.16.1)(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-day-picker@9.14.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.80.0(react@19.2.4))(react-resizable-panels@4.11.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(redux@5.0.1))(tailwindcss@4.3.0)(validator@13.15.35)(wagmi@3.6.21(@tanstack/query-core@5.101.0)(@tanstack/react-query@5.101.0(react@19.2.4))(@types/react@19.2.14)(immer@11.1.8)(react@19.2.4)(typescript@5.9.3)(viem@2.52.2(typescript@5.9.3)(zod@3.25.76)))'
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -2997,6 +3000,15 @@ packages:
       tailwindcss:
         optional: true
 
+  '@hanzo/brand@1.4.6':
+    resolution: {integrity: sha512-Pn0rBr4n0yCx9KiNuL2lU1ikRcVlgNadfB4LfOkh4b+RGJNfxgg+CQVa0WJFwRKYVWfCyPucvwqNAh9MihGZtQ==}
+    hasBin: true
+    peerDependencies:
+      react: 19.2.4
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@hanzo/dashboard@0.2.0':
     resolution: {integrity: sha512-OipHFO5Mkjt/ieKHFxzao5E/g+Nq4vSa+e8Urb3GZsTr1hCM/C2Y2N+bOKFfNINJor2LQ4njGELtnrpezcSFIw==}
     engines: {node: '>=20'}
@@ -3209,7 +3221,7 @@ packages:
       lucide-react: '>=0.456.0'
       mermaid: ^10.0.0
       mobx: ^6.12.3
-      next: '>=14.2.25'
+      next: '>=14.2.32'
       next-themes: ^0.2.1 || ^0.3.0 || ^0.4.0
       react: 19.2.4
       react-day-picker: ^9.0.0
@@ -11790,7 +11802,7 @@ packages:
   next-usequerystate@1.20.0:
     resolution: {integrity: sha512-0uXOYkOHXiTwrnBwZ3E6pT2l1HWoqgCxjcJE58TRSbhYjNnpQ9MxzgwoU7z6akQuQodWQffTh+HNLZRwoh1ujQ==}
     peerDependencies:
-      next: '>=14.2.32'
+      next: '>=14.2.25'
 
   next@16.1.6:
     resolution: {integrity: sha512-hkyRkcu5x/41KoqnROkfTm2pZVbKxvbZRuNvKXLRXxs3VfyO0WhY50TQS40EuKO9SW3rBj/sF3WbVwDACeMZyw==}
@@ -15834,6 +15846,12 @@ snapshots:
       '@tailwindcss/oxide': 4.3.1
       tailwindcss: 4.3.0
 
+  '@hanzo/brand@1.4.6(react@19.2.4)':
+    dependencies:
+      '@hanzo/logo': 1.0.13(react@19.2.4)
+    optionalDependencies:
+      react: 19.2.4
+
   '@hanzo/dashboard@0.2.0(@hanzo/gui@8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
@@ -16271,7 +16289,7 @@ snapshots:
       - '@types/react-dom'
       - tailwindcss
 
-  ? '@hanzo/ui-shadcn@5.9.1(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@1.21.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@3.25.76))(@hookform/resolvers@3.10.0(react-hook-form@7.80.0(react@19.2.4)))(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(@tanstack/react-query@5.101.0(react@19.2.4))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(chrono-node@2.9.1)(date-fns@4.4.0)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.21.0(react@19.2.4))(mobx@6.16.1)(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-day-picker@9.14.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.80.0(react@19.2.4))(react-resizable-panels@4.11.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(redux@5.0.1))(tailwindcss@4.3.0)(validator@13.15.35)(wagmi@3.6.21(@tanstack/query-core@5.101.0)(@tanstack/react-query@5.101.0(react@19.2.4))(@types/react@19.2.14)(immer@11.1.8)(react@19.2.4)(typescript@5.9.3)(viem@2.52.2(typescript@5.9.3)(zod@3.25.76)))'
+  ? '@hanzo/ui-shadcn@5.9.1(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@dnd-kit/modifiers@9.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/sortable@10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4))(@dnd-kit/utilities@3.2.2(react@19.2.4))(@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@1.21.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@3.25.76))(@hookform/resolvers@3.10.0(react-hook-form@7.80.0(react@19.2.4)))(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(@tanstack/react-query@5.101.0(react@19.2.4))(@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(chrono-node@2.9.1)(date-fns@4.4.0)(embla-carousel@8.6.0)(framer-motion@12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(lucide-react@1.21.0(react@19.2.4))(mobx@6.16.1)(next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-day-picker@9.14.0(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react-hook-form@7.80.0(react@19.2.4))(react-resizable-panels@4.11.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)(recharts@3.8.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@18.3.1)(react@19.2.4)(redux@5.0.1))(tailwindcss@4.3.0)(validator@13.15.35)(wagmi@3.6.21(@tanstack/query-core@5.101.0)(@tanstack/react-query@5.101.0(react@19.2.4))(@types/react@19.2.14)(immer@11.1.8)(react@19.2.4)(typescript@5.9.3)(viem@2.52.2(typescript@5.9.3)(zod@3.25.76)))'
   : dependencies:
       '@hookform/resolvers': 3.10.0(react-hook-form@7.80.0(react@19.2.4))
       '@next/third-parties': 16.2.9(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -16344,6 +16362,7 @@ snapshots:
       '@tanstack/react-table': 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       chrono-node: 2.9.1
       date-fns: 4.4.0
+      embla-carousel: 8.6.0
       framer-motion: 12.40.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react-day-picker: 9.14.0(react@19.2.4)
       react-hook-form: 7.80.0(react@19.2.4)
@@ -23312,7 +23331,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.4)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.5)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.4)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
 
   '@vitest/expect@2.1.9':
     dependencies:
@@ -23446,7 +23465,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.4)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.5)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.4)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.4)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
 
   '@vitest/utils@2.1.9':
     dependencies:
