@@ -5,7 +5,7 @@
  * presentational primitives, so DropdownMenu, ContextMenu, SelectMenu and ComboBox
  * are pixel-identical. Geometry is literal px on a strict 8-grid (never random);
  * colour is theme-adaptive tokens ($color2/$color11/$color12/$borderColor) so light
- * and dark both work, with the single purple accent supplied by the brand CSS vars.
+ * and dark both work, over the design tokens `@hanzo/ui/theme.css` defines.
  *
  * Style props use the @hanzo/gui config shorthands (bg/items/justify/px/py/p/mx/my/
  * minW/maxH/rounded/select/shrink) — the config omits the longhand aliases.
@@ -14,8 +14,8 @@
  *           border+ambient elevation.
  * Item    — height 32 (the DropdownMenu row), px 8, gap 8, radius 7; icon in a fixed 16px slot
  *           on the left; label 13px $color12; right affordance (shortcut / check /
- *           chevron) right-aligned. States: hover/active/focus → accent-soft, focus
- *           visible; selected → check + purple; disabled → muted, no hover.
+ *           chevron) right-aligned. States: hover/active/focus → accent surface,
+ *           focus visible; selected → check in primary; disabled → muted, no hover.
  * Separator — 1px hairline, 4px vertical margin.
  * Label     — 11px uppercase muted section header, px 8.
  */
@@ -41,12 +41,14 @@ const FONT_LABEL = 13
 const FONT_MUTED = 11
 const FONT_SHORTCUT = 12
 
-// ── Colour — brand purple accent via CSS vars (fallbacks keep it correct even when
-//    @hanzo/brand is not loaded, e.g. a bare Vite/Tauri host); everything else uses
-//    theme-adaptive Tamagui tokens. ──────────────────────────────────────────────
-const ACCENT = 'var(--hanzo-accent, #8b5cf6)'
-const ACCENT_SOFT = 'var(--hanzo-accent-soft, rgba(139,92,246,0.16))'
-const DANGER = 'var(--hanzo-danger, #ef4444)'
+// ── Colour — the design tokens, which `@hanzo/ui/theme.css` ships, so a bare
+//    Vite/Tauri host has them too. `--primary` and `--accent` are also the two
+//    properties `product/accent.ts` writes for an org's chosen accent, so a menu
+//    follows that opt-in without knowing it exists, and stays monochrome without
+//    it. Everything else uses theme-adaptive Tamagui tokens. ───────────────────
+const ACCENT = 'var(--primary, #fafafa)'
+const ACCENT_SOFT = 'var(--accent, #262626)'
+const DANGER = 'var(--destructive, #ef4444)'
 
 // ── Declarative item model ──────────────────────────────────────────────────────
 export type MenuItemSpec =

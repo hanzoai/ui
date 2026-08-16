@@ -15,9 +15,9 @@ export function Donut({
   thickness = 18,
   centerValue,
   centerLabel,
-  trackColor = '#2a2d2e',
-  valueColor = '#ecedee',
-  labelColor = '#9ba1a6',
+  trackColor = 'var(--secondary)',
+  valueColor = 'var(--foreground)',
+  labelColor = 'var(--muted-foreground)',
 }: {
   segments: DonutSegment[]
   size?: number
@@ -26,7 +26,7 @@ export function Donut({
   centerValue?: string
   /** Caption under the center value. */
   centerLabel?: string
-  /** Unfilled-ring color (explicit hex so it never depends on theme var names). */
+  /** Unfilled-ring color. Design tokens, which resolve inside an SVG attribute. */
   trackColor?: string
   valueColor?: string
   labelColor?: string
