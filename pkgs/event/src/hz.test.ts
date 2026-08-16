@@ -27,13 +27,26 @@ interface WireEvent {
   libraryVersion: string
 }
 
-/** One recorded transmission: which transport carried it, where, under what headers. */
+/** One recorded transmission: which transport carried it, where, under what headers
+ *  and — the fact that decides whether a cross-origin unload beacon is sent at all
+ *  — the content type its body was labelled with. */
 interface Post {
   via: 'beacon' | 'fetch'
   url: string
   headers: Record<string, string>
+  contentType: string
   batch: WireEvent[]
 }
+
+// The three CORS-safelisted request content types. A POST whose body carries one
+// is a SIMPLE request and goes immediately; anything else is PREFLIGHTED, and an
+// unloading document never gets the preflight's second round trip. This tag runs
+// on a customer's own domain, so its beacon is always cross-origin.
+const CORS_SAFELISTED = new Set([
+  'text/plain',
+  'application/x-www-form-urlencoded',
+  'multipart/form-data',
+])
 
 interface StubOptions {
   /** data-* attributes on the <script> tag. */
@@ -106,8 +119,14 @@ function runSnippet(opts: StubOptions = {}): {
     doNotTrack: '0',
     ...opts.navigator,
     sendBeacon: opts.beacon
-      ? (url: string, blob: { body: string }) => {
-          posts.push({ via: 'beacon', url, headers: {}, batch: JSON.parse(blob.body).batch })
+      ? (url: string, blob: { body: string; type: string }) => {
+          posts.push({
+            via: 'beacon',
+            url,
+            headers: {},
+            contentType: blob.type,
+            batch: JSON.parse(blob.body).batch,
+          })
           return true
         }
       : undefined,
@@ -116,8 +135,10 @@ function runSnippet(opts: StubOptions = {}): {
     'Blob',
     class {
       body: string
-      constructor(parts: string[]) {
+      type: string
+      constructor(parts: string[], opts?: { type?: string }) {
         this.body = parts.join('')
+        this.type = opts?.type ?? ''
       }
     },
   )
@@ -133,7 +154,13 @@ function runSnippet(opts: StubOptions = {}): {
   // "the previous run's API answered".
   define('hanzo', undefined)
   define('fetch', (url: string, init: { body: string; headers: Record<string, string> }) => {
-    posts.push({ via: 'fetch', url, headers: init.headers, batch: JSON.parse(init.body).batch })
+    posts.push({
+      via: 'fetch',
+      url,
+      headers: init.headers,
+      contentType: init.headers['content-type'] ?? '',
+      batch: JSON.parse(init.body).batch,
+    })
     return Promise.resolve()
   })
   define('window', g)
@@ -245,6 +272,19 @@ describe('hz.js', () => {
     const post = r.posts.at(-1)!
     expect(post.via).toBe('beacon')
     expect(post.url).toBe('https://api.hanzo.ai/v1/event?ingest_key=pk-abc123')
+  })
+
+  it('labels the beacon body a CORS-simple type, so the unload POST is sent', () => {
+    // The tag is installed on a customer's own domain, so every send here is
+    // cross-origin. A non-safelisted body type preflights, and an unloading
+    // document gets no second round trip — the batch would simply never leave.
+    // The credential is in the query for the same reason: a beacon sets no
+    // headers, and an Authorization header preflights whatever the type is.
+    const r = runSnippet({ attrs: { 'data-ingest-key': 'pk-abc123' }, beacon: true })
+    r.api!.flush()
+    const post = r.posts.at(-1)!
+    expect(post.via).toBe('beacon')
+    expect(CORS_SAFELISTED.has(post.contentType)).toBe(true)
   })
 
   it('sends no credential when no key is declared — no baked literal', () => {
