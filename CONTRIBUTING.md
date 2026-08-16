@@ -13,7 +13,7 @@ This repository is a monorepo.
 - We use [pnpm](https://pnpm.io) and [`workspaces`](https://pnpm.io/workspaces) for development.
 - We use [Turborepo](https://turbo.build/repo) as our build system.
 - Releases are semver-driven: bump a package's `version` in its `package.json` and
-  merge to `main`. CI (`.github/workflows/publish.yml`) detects the version change
+  merge to `main`. CI (`.hanzo/workflows/publish.yml`) detects the version change
   and publishes that package to npm. One step, one source of truth.
 
 ## Structure
