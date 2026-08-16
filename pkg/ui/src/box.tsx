@@ -44,6 +44,10 @@ export const Box = forwardRef<any, BoxProps>(function Box(
   ref,
 ) {
   const { props, rest: unread } = tw(className)
+  // A View pins `min-height: 0`; a div's is `auto`, and auto is what gives a
+  // flex or grid child its automatic minimum size. Pinned, a converted child of
+  // a row of indefinite height measured 0px and its content vanished.
+  if (!('minHeight' in props)) props.minHeight = 'auto'
   // gui drops a text property set on a frame — `fontSize` is not a frame style
   // prop, so it silently rendered at the inherited size and a page carrying
   // `text-xs` on a box came out three pixels larger everywhere. A div DOES pass

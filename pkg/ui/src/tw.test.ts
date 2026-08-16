@@ -34,6 +34,29 @@ describe('tw — one class', () => {
     })
   })
 
+  it('reads an alpha written as a fraction, not as part of the name', () => {
+    // `bg-white/[0.02]` asked for a variable called `--white/[0.02]`.
+    expect(props('bg-white/[0.02]')).toEqual({
+      backgroundColor: 'color-mix(in srgb, #fff 2%, transparent)',
+    })
+    expect(props('border-white/[0.07]')).toEqual({
+      borderColor: 'color-mix(in srgb, #fff 7%, transparent)',
+    })
+  })
+
+  it('takes a corner from the theme, one rung per name', () => {
+    // Tailwind's stock numbers put every converted corner one rung small
+    // against @hanzo/design's ramp.
+    expect(props('rounded-lg')).toEqual({ borderRadius: 'var(--radius-lg, 0.75rem)' })
+    expect(props('rounded-2xl')).toEqual({ borderRadius: 'var(--radius-2xl, 1.5rem)' })
+    expect(props('rounded-full')).toEqual({ borderRadius: 9999 })
+  })
+
+  it('gives flex-1 a percentage basis', () => {
+    // `0px` does not resolve as content against an indefinite parent; `0%` does.
+    expect(props('flex-1')).toEqual({ flexGrow: 1, flexShrink: 1, flexBasis: '0%' })
+  })
+
   it('takes a font size from the theme, not from a table', () => {
     // @hanzo/design's ramp is compact — base is 14px, not Tailwind's 16 — so a
     // hardcoded scale silently resized every converted element.

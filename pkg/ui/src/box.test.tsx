@@ -64,6 +64,13 @@ describe('Box', () => {
     expect(el?.[1]).toMatch(/_shrink-0/)
   })
 
+  it('keeps the automatic minimum size a div has', () => {
+    // A View pins min-height 0, so a converted flex child measured 0px tall.
+    const cls = (ui: React.ReactNode) => /<div[^>]*class="([^"]*)"/.exec(html(ui))?.[1] ?? ''
+    expect(cls(<Box className="p-2">x</Box>)).toMatch(/_minH-auto/)
+    expect(cls(<Box className="min-h-0">x</Box>)).not.toMatch(/_minH-auto/)
+  })
+
   it('lets an explicit prop win over the class that says the same thing', () => {
     const out = html(<Box className="px-6" paddingLeft={2}>x</Box>)
     expect(out).toBeTruthy()
