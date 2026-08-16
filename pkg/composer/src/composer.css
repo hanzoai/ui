@@ -145,9 +145,19 @@
 
 /* The field is the composite control's interior, not a field of its own, so it
    takes the base rung and inherits every colour from the panel. Sizing it here
-   is what puts it on `--type-scale` with the rest of the product. */
+   is what puts it on `--type-scale` with the rest of the product.
+
+   AND IT CARRIES NO EDGE. @hanzo/design gives every field a surface and a 1px
+   `--border-control` because a bare field has to show where it is — right for a
+   field on a page, wrong for this one, where the ring outside it is already the
+   control's edge. Measured on hanzo.ai: `1px solid rgba(255,255,255,.15)` with
+   square corners, a hard rectangle sitting inside the pill. Same defect the
+   focus ring had and the same cure — the edge belongs to whatever the person
+   can see the bounds of, which is never this. */
 .hz-composer :is(input, textarea) {
   font-size: var(--text-base, 14px);
+  background: transparent;
+  border: 0;
 }
 
 /* A composer grows with what you type; it is never dragged. `resize: vertical`
