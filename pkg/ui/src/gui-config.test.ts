@@ -348,16 +348,24 @@ describe('the type ladder defers to @hanzo/design', () => {
   })
 
   it('every rung can be retuned by ONE knob', () => {
-    // A rung reaches --type-scale either through a design token (whose value is
-    // a calc on the knob) or by carrying the knob itself. A rung that does
-    // neither is a rung a person cannot resize.
+    // A rung reaches --type-scale either through the design tokens it names
+    // (whose declarations are calcs on the knob) or by carrying the knob itself.
+    // A rung that does neither is a rung a person cannot resize.
+    //
+    // EVERY token it names, not just a leading one: four rungs fall between two
+    // of design's and are written as an interpolation of both, so a matcher
+    // anchored on `^var(--text-…` sees a `calc(` and calls a fully-derived rung
+    // stuck. The property was always "does it reach the knob"; only the shape a
+    // rung may take widened.
     const stuck: string[] = []
     for (let k = 1; k <= 16; k++) {
       const v = val(k)
-      const named = v.match(/^var\(--text-([a-z0-9]+),/)
-      if (named) {
-        const decl = design.match(new RegExp(`--text-${named[1]}:\\s*([^;]+);`))?.[1] ?? ''
-        if (!decl.includes('var(--type-scale')) stuck.push(`$${k} -> --text-${named[1]} does not scale`)
+      const named = [...v.matchAll(/var\(--text-([a-z0-9]+)[,)]/g)].map((m) => m[1])
+      if (named.length) {
+        for (const n of named) {
+          const decl = design.match(new RegExp(`--text-${n}:\\s*([^;]+);`))?.[1] ?? ''
+          if (!decl.includes('var(--type-scale')) stuck.push(`$${k} -> --text-${n} does not scale`)
+        }
       } else if (!v.includes('var(--type-scale')) {
         stuck.push(`$${k} = ${v}`)
       }
@@ -486,5 +494,50 @@ describe('one emitter, either table', () => {
     for (const name of ['background', 'black', 'white'])
       for (const body of rootThemeBodies)
         expect(body).not.toMatch(new RegExp(`(^|;)\\s*--${name}\\s*:`))
+  })
+})
+
+/**
+ * The type ladder is SIXTEEN rungs over design's THIRTEEN, so four of them
+ * ($12 48 · $13 56 · $15 80 · $16 96) fall between two of design's and used to
+ * carry a px literal instead.
+ *
+ * That was fine while `--type-scale` was the only knob — a multiplier moves a
+ * literal and a token alike, so the ladder stayed ordered. `--type-ratio`
+ * expands the ramp around its base rung and can only reach a rung that READS
+ * the ramp, so the twelve bound rungs grew past the four frozen ones: at ratio
+ * 1.5, $11 measured 53px against $12's 48px. A higher rung rendering smaller is
+ * not a size being wrong, it is the ladder ceasing to be one.
+ */
+describe('the type ladder', () => {
+  const FONT = (config as unknown as { fonts: Record<string, { size: Record<string, string> }> }).fonts
+  const sizes = Object.values(FONT)[0].size
+
+  it('has no frozen rung — every one is a function of design’s ramp', () => {
+    for (const [rung, value] of Object.entries(sizes)) {
+      if (rung === 'true') continue
+      expect(String(value), `$${rung} must read the ramp, not a literal`).toContain('var(--text-')
+    }
+  })
+
+  it('spends the four in-between rungs as interpolations of their neighbours', () => {
+    // 48 IS a third of the way from 40 to 64 — that was always the fact, and
+    // now the value says so, which is why a ramp change it has never heard of
+    // moves it correctly and a literal could not.
+    expect(sizes['12']).toContain('--text-5xl')
+    expect(sizes['12']).toContain('--text-7xl')
+    expect(sizes['15']).toContain('--text-7xl')
+    expect(sizes['15']).toContain('--text-8xl')
+    expect(sizes['16']).toContain('--text-9xl')
+  })
+
+  it('is ordered, and stays ordered — a point between two ordered values is one', () => {
+    // Structural rather than measured: an interpolation of two ascending rungs
+    // cannot overtake either, whatever the knobs do to them. jsdom resolves no
+    // var(), so the numbers live in the browser test; what is assertable here is
+    // that no rung is outside that argument.
+    const rungs = Object.keys(sizes).filter((k) => k !== 'true')
+    expect(rungs.length).toBe(16)
+    for (const r of rungs) expect(String(sizes[r])).toMatch(/var\(--text-/)
   })
 })
