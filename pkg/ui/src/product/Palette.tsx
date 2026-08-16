@@ -28,10 +28,12 @@
  * its personality: hanzo.app keeps its live project preview and console keeps its
  * `>` AI mode by passing them, not by forking this.
  *
- * Filtering is `survivors`. The safe-methods-browse rule, the per-group cap and
- * the empty-query behaviour all live in `match.ts` as pure functions, so
- * `shouldFilter` is off and the Command primitive is left holding the cursor and
- * the view — which is also what makes the rule testable without a DOM.
+ * Which rows exist is `rows`. The safe-methods-browse rule, the per-group cap,
+ * the empty-query behaviour and the ask row all live in `match.ts` as pure
+ * functions, so `shouldFilter` is off and the Command primitive is left holding
+ * the cursor and the view — which is also what makes them testable without a
+ * DOM. This component renders into a portal, so a test cannot read its rows at
+ * all; a rule kept here instead would be a rule nothing can check.
  */
 import { type ReactNode, useMemo, useState } from "react"
 import { SizableText, XStack, YStack } from "@hanzo/gui"
@@ -44,7 +46,7 @@ import {
   CommandItem,
   CommandList,
 } from "../backends/gui"
-import { SAFE, survivors, type Op } from "./match"
+import { ASK, SAFE, rows, type Op } from "./match"
 
 export type PaletteProps = {
   open: boolean
@@ -75,6 +77,15 @@ export type PaletteProps = {
   height?: number
   /** The dialog's accessible name. */
   title?: string
+  /**
+   * Take whatever was typed and answer it, when the list cannot.
+   *
+   * Supplied, the bar ends with one "Ask AI: …" row for any non-empty query, so
+   * a search that matches nothing is a question rather than a dead end. Absent,
+   * the bar behaves exactly as it did — a surface with nothing to ask does not
+   * grow a row that goes nowhere.
+   */
+  onAsk?: (question: string) => void
 }
 
 export function Palette({
@@ -93,6 +104,7 @@ export function Palette({
   footer,
   height = 320,
   title = "Search commands",
+  onAsk,
 }: PaletteProps) {
   const [own, setOwn] = useState("")
   const search = controlled ?? own
@@ -101,7 +113,14 @@ export function Palette({
     onSearch?.(s)
   }
 
-  const groups = useMemo(() => survivors(ops, search, limit), [ops, search, limit])
+  const question = search.trim()
+
+  const groups = useMemo(() => rows(ops, search, limit, !!onAsk), [ops, search, limit, onAsk])
+
+  const run = (op: Op) => {
+    if (op.id === ASK && onAsk) onAsk(question)
+    else onRun(op)
+  }
 
   return (
     <CommandDialog
@@ -154,7 +173,7 @@ export function Palette({
           {groups.map(([group, items]) => (
             <CommandGroup key={group} heading={group}>
               {items.map((op) => (
-                <CommandItem key={op.id} value={op.id} onSelect={() => onRun(op)} gap="$2">
+                <CommandItem key={op.id} value={op.id} onSelect={() => run(op)} gap="$2">
                   {op.icon}
                   {/* The name and its help share one flexible cell, and only the
                       HELP may shrink. A row lays out by distributing slack, so

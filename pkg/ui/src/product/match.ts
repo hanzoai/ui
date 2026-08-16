@@ -42,6 +42,32 @@ export interface Op {
 export const SAFE = 'GET'
 
 /**
+ * The row that makes a question the answer when nothing else is.
+ *
+ * A command list is finite and a question is not, so "no results" is never the
+ * right end of a palette — the AI is the one thing that can take a query nobody
+ * indexed. Every Hanzo palette ends this way, and it must LOOK the same in all
+ * of them, so the label is built here rather than typed out per surface.
+ *
+ * It is a plain `Op`, which is why it needs nothing else: it files under its own
+ * group, carries no method (it runs in the page, not against a route), and
+ * reaches the host through the same `onRun` every other row uses.
+ *
+ * `@hanzogui/shell` states this same rule for the palettes it draws. The two
+ * cannot import from each other — shell is deliberately dependency-free so it
+ * drops into a Vite app with no provider, which is the whole reason it exists —
+ * so the string is asserted equal by test rather than shared by import.
+ */
+export const ASK = 'ask'
+export const ASK_GROUP = 'Ask'
+export const askOp = (question: string): Op => ({
+  id: ASK,
+  group: ASK_GROUP,
+  label: `Ask AI: ${question}`,
+})
+
+
+/**
  * Whether `op` survives `search`, and how well. `0` hides it.
  *
  * # Safe methods browse; unsafe methods must be named
@@ -105,4 +131,27 @@ export const survivors = (ops: Op[], search: string, limit = 50): Array<[string,
     out.push([group, ranked.slice(0, limit).map(([op]) => op)])
   }
   return out
+}
+
+/**
+ * What the bar actually shows: what survived the search, then the way out.
+ *
+ * The ask row is APPENDED rather than filtered. It answers the query by
+ * definition — its own label contains it — so putting it through `survivors`
+ * would score a row against itself, and the one row that must be present
+ * exactly when nothing else is would be at the mercy of the ranker.
+ *
+ * It lives here rather than in the component for the same reason every other
+ * rule about which rows exist does: `Palette` renders into a portal, so no test
+ * can read its rows, and a rule that cannot be tested is a rule that drifts.
+ */
+export const rows = (
+  ops: Op[],
+  search: string,
+  limit?: number,
+  canAsk = false
+): Array<[string, Op[]]> => {
+  const found = survivors(ops, search, limit)
+  const question = search.trim()
+  return canAsk && question ? [...found, [ASK_GROUP, [askOp(question)]]] : found
 }
