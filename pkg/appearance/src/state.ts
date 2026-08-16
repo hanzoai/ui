@@ -77,6 +77,8 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(typeof p.type === 'number' && Number.isFinite(p.type) ? { type: p.type } : {}),
       ...(typeof p.ratio === 'number' && Number.isFinite(p.ratio) ? { ratio: p.ratio } : {}),
       ...(p.density === 'compact' || p.density === 'comfortable' || p.density === 'default' ? { density: p.density } : {}),
+      ...(p.font === 'default' || p.font === 'system' || p.font === 'serif' || p.font === 'mono' ? { font: p.font } : {}),
+      ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
     }
   } catch {
@@ -134,7 +136,17 @@ export function apply(p: Preference, root: HTMLElement | undefined = isBrowser()
 
 /** Every property `vars()` can emit — the removal list has to be exhaustive, or
  *  clearing an axis would leave the last value stuck on the document. */
-const KNOBS = ['--type-scale', '--type-ratio', '--density', '--primary', '--accent'] as const
+const KNOBS = [
+  '--type-scale',
+  '--type-ratio',
+  '--density',
+  '--font-sans',
+  '--container-max',
+  '--container-prose',
+  '--container-wide',
+  '--primary',
+  '--accent',
+] as const
 
 /**
  * What this person, in this org, on this device, should actually see.
@@ -189,6 +201,10 @@ export function bootScript({ org, base }: { org?: string; base?: Preference } = 
     `if(typeof p.type==='number')s.setProperty('--type-scale',String(Math.min(1.4,Math.max(0.85,p.type))));` +
     `if(typeof p.ratio==='number')s.setProperty('--type-ratio',String(Math.min(1.5,Math.max(0.75,p.ratio))));` +
     `var d={compact:'0.85',default:'1',comfortable:'1.15'}[p.density];if(d)s.setProperty('--density',d);` +
+    `var f={system:'ui-sans-serif, system-ui, -apple-system, sans-serif',serif:'var(--font-serif)',mono:'var(--font-mono)'}[p.font];` +
+    `if(f)s.setProperty('--font-sans',f);` +
+    `var w={narrow:['64rem','40rem','58rem'],wide:['96rem','56rem','86rem']}[p.width];` +
+    `if(w){s.setProperty('--container-max',w[0]);s.setProperty('--container-prose',w[1]);s.setProperty('--container-wide',w[2])}` +
     `}catch(e){}})()`
   )
 }
