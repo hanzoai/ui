@@ -61,6 +61,11 @@ export const Box = forwardRef<any, BoxProps>(function Box(
     <YStack
       ref={ref}
       display="block"
+      // A View does not shrink; a div does. Left at the View's default, every
+      // converted flex child held its full basis and overflowed its row instead
+      // of sharing it — two half-width columns came out 608px each in a 1216px
+      // row with a 32px gap, where the divs they replaced sat at 592.
+      flexShrink={1}
       aria-hidden={hidden === undefined ? undefined : hidden !== 'false' && hidden !== false}
       {...(props as object)}
       {...rest}
