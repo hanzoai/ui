@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/appearance",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.js",
@@ -34,7 +34,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "^0.5.1"
+    "@hanzo/design": "^0.5.9"
   },
   "peerDependencies": {
     "react": ">=19"
@@ -42,8 +42,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.0",
     "jsdom": "^29.1.1",
     "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "typescript": "^5.9.2",
     "vitest": "^4.1.8"
   }
