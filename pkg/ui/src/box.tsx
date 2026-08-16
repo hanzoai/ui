@@ -65,7 +65,9 @@ export const Box = forwardRef<any, BoxProps>(function Box(
       // converted flex child held its full basis and overflowed its row instead
       // of sharing it — two half-width columns came out 608px each in a 1216px
       // row with a 32px gap, where the divs they replaced sat at 592.
-      flexShrink={1}
+      // `shrink`, not `flexShrink`: gui types the shorthand and compiles both to
+      // the same `_shrink-1`, and the DOM spelling is the one it does not carry.
+      shrink={1}
       aria-hidden={hidden === undefined ? undefined : hidden !== 'false' && hidden !== false}
       {...(props as object)}
       {...rest}
