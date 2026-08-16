@@ -55,7 +55,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.25'
+  var VERSION = '0.3.26'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -284,32 +284,31 @@ function hzAnonId() {
     if (!queue.length) return
     var body = JSON.stringify({ batch: queue.splice(0, queue.length) })
     var url = host + '/v1/event'
-    // The key rides the two channels each transport can actually carry — the
-    // same pair core.ts uses, so the door cannot tell the distributions apart:
-    // a headerless sendBeacon puts it in the query, a fetch puts it in the
-    // Authorization header.
+    // BOTH transports send a SIMPLE request, and for the same reason. The key is
+    // publishable (data-publishable-key, write-only and safe in page source), so
+    // it rides the query — the one carrier neither transport needs a header for —
+    // and the body is text/plain, the CORS-safelisted type. A simple request is
+    // sent whatever origin it is on, because the browser asks permission to READ
+    // a cross-origin response, never to send one, and nothing here reads it.
     //
-    // The beacon body is text/plain because that type is CORS-safelisted, which
-    // makes the POST a SIMPLE request: no preflight, and an unloading document
-    // gets no second round trip. The door reads the raw body and dispatches on
-    // its first non-space byte, so the type names the CORS class and nothing else.
+    // That property is what lets this file run on a customer's own page at all.
+    // Every send from there is cross-origin; an Authorization header or a JSON
+    // content type makes the POST preflighted instead, and an origin that does not
+    // pass the preflight loses the batch, which splice has already emptied.
+    //
+    // The door reads the raw body and dispatches on its first non-space byte, so
+    // the type names the CORS class and nothing else.
+    var wire = key ? url + '?ingest_key=' + encodeURIComponent(key) : url
     try {
-      if (
-        navigator.sendBeacon &&
-        navigator.sendBeacon(
-          key ? url + '?ingest_key=' + encodeURIComponent(key) : url,
-          new Blob([body], { type: 'text/plain' }),
-        )
-      )
+      if (navigator.sendBeacon && navigator.sendBeacon(wire, new Blob([body], { type: 'text/plain' })))
         return
     } catch (e) {}
-    var headers = { 'content-type': 'application/json' }
-    if (key) headers.authorization = 'Bearer ' + key
-    fetch(url, {
+    fetch(wire, {
       method: 'POST',
       body: body,
       keepalive: true,
-      headers: headers,
+      credentials: 'omit',
+      headers: { 'content-type': 'text/plain' },
     }).catch(function () {})
   }
   // ── location redaction ────────────────────────────────────────────────────

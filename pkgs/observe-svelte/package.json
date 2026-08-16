@@ -54,7 +54,7 @@
     }
   },
   "dependencies": {
-    "@hanzo/event": "^0.3.25",
+    "@hanzo/event": "^0.3.26",
     "@hanzo/observe": "^0.1.0"
   },
   "peerDependencies": {
