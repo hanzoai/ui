@@ -50,10 +50,25 @@ const GEIST_MONO = "var(--font-mono, 'Geist Mono', ui-monospace, SFMono-Regular,
  *  asserts that equality rung by rung, the same way it already does for the
  *  three colour rungs, so design cannot move a size without this failing.
  *
- *  Four rungs ($12 48 · $13 56 · $15 80 · $16 96) have no counterpart: design's
- *  display ramp goes 52/64/84/112. Inventing a token or silently resizing them
- *  would both be worse than saying so, so they keep their literal and carry the
- *  knob directly.
+ *  Four rungs ($12 48 · $13 56 · $15 80 · $16 96) have no token of their own:
+ *  design's display ramp goes 52/64/84/112, so they fall BETWEEN rungs. They
+ *  used to carry a px literal and say so — and that was fine while `--type-scale`
+ *  was the only knob, because a multiplier moves a literal and a token alike and
+ *  the ladder stayed ordered.
+ *
+ *  A second knob broke it. `--type-ratio` expands the ramp around its base rung,
+ *  and it can only reach a rung that READS the ramp — so the twelve bound rungs
+ *  grew past the four frozen ones. Measured at ratio 1.5: $11 = 53px against
+ *  $12 = 48px, and $14 = 89px against $15 = 80px. A HIGHER rung rendering
+ *  SMALLER, which is not a size being wrong, it is the ladder ceasing to be one.
+ *
+ *  So nothing here is frozen any more: each of the four is an INTERPOLATION of
+ *  the two ramp rungs it sits between, which is what it always was in fact —
+ *  48 is a third of the way from 40 to 64 — and now says so in the value. It
+ *  equals its published px exactly today (checked: 48/56/80/96), follows every
+ *  knob because its inputs do, and cannot invert, because a point between two
+ *  ordered values is ordered with them. A ramp change it has never heard of
+ *  moves it correctly, which a literal can never do.
  *
  *  Why a var() at all: gui resolves these in JS and applies them INLINE, and an
  *  inline style outranks every stylesheet — so a CSS custom property is the only
@@ -73,11 +88,11 @@ const FONT_SIZE = {
   9: `var(--text-3xl, 26px)`,
   10: `var(--text-4xl, 32px)`,
   11: `var(--text-5xl, 40px)`,
-  12: `calc(48px * var(--type-scale, 1))`,
-  13: `calc(56px * var(--type-scale, 1))`,
+  12: `calc(var(--text-5xl, 40px) + (var(--text-7xl, 64px) - var(--text-5xl, 40px)) / 3)`,
+  13: `calc(var(--text-5xl, 40px) + 2 * (var(--text-7xl, 64px) - var(--text-5xl, 40px)) / 3)`,
   14: `var(--text-7xl, 64px)`,
-  15: `calc(80px * var(--type-scale, 1))`,
-  16: `calc(96px * var(--type-scale, 1))`,
+  15: `calc(var(--text-7xl, 64px) + 4 * (var(--text-8xl, 84px) - var(--text-7xl, 64px)) / 5)`,
+  16: `calc(var(--text-8xl, 84px) + 3 * (var(--text-9xl, 112px) - var(--text-8xl, 84px)) / 7)`,
   true: `var(--text-base, 14px)`,
 } as const
 
