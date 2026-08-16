@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/appearance",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.js",
@@ -34,7 +34,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "^0.5.9"
+    "@hanzo/design": "^0.5.11"
   },
   "peerDependencies": {
     "react": ">=19"

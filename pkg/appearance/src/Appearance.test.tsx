@@ -23,10 +23,16 @@ const render = (el: React.ReactElement) => {
   })
 }
 
+/**
+ * Find a control by what it SAYS — its text, or its accessible name when the
+ * label had to be short enough to fit a segmented track (S/M/L/XL) or is a
+ * swatch with no text at all.
+ */
 const press = (label: string | RegExp) => {
   const match = typeof label === 'string' ? (t: string) => t === label : (t: string) => label.test(t)
-  const btn = [...host.querySelectorAll('button')].find((b) => match(b.textContent?.trim() ?? ''))
-  if (!btn) throw new Error(`no control labelled ${label} — saw: ${[...host.querySelectorAll('button')].map((b) => b.textContent).join(' | ')}`)
+  const names = (b: Element) => [b.textContent?.trim() ?? '', b.getAttribute('aria-label') ?? '']
+  const btn = [...host.querySelectorAll('button')].find((b) => names(b).some(match))
+  if (!btn) throw new Error(`no control labelled ${label} — saw: ${[...host.querySelectorAll('button')].map((b) => names(b).filter(Boolean).join('/')).join(' | ')}`)
   act(() => {
     btn.dispatchEvent(new MouseEvent('click', { bubbles: true }))
   })
@@ -83,14 +89,14 @@ describe('the panel', () => {
 
   it('writes to the everywhere layer by default, and puts it on the document', () => {
     render(<Appearance />)
-    press('Large')
+    press('L')
     expect(stored(KEY)).toEqual({ type: 1.15 })
     expect(prop('--type-scale')).toBe('1.15')
   })
 
   it('sends a save to the org layer once the person scopes it there', () => {
     render(<Appearance org="acme" orgName="Acme" />)
-    press('Only Acme')
+    press('Acme')
     press('Airy')
 
     expect(stored(`${KEY}@acme`)).toEqual({ ratio: 1.2 })
@@ -104,7 +110,7 @@ describe('the panel', () => {
     // person's own layer would copy the org's accent into it, and the person
     // would stop tracking the org from then on.
     render(<Appearance org="acme" orgName="Acme" orgPref={{ accent: '#ff5c00' }} />)
-    press('Large')
+    press('L')
 
     expect(prop('--accent')).toBe('#ff5c00')
     expect(prop('--type-scale')).toBe('1.15')
@@ -119,8 +125,8 @@ describe('the panel', () => {
 
   it('resets only the layer in scope, and the org shows through again', () => {
     render(<Appearance org="acme" orgName="Acme" orgPref={{ density: 'compact' }} />)
-    press('Only Acme')
-    press('Comfortable')
+    press('Acme')
+    press('Roomy')
     expect(prop('--density')).toBe('1.15')
 
     press(/^Reset for Acme$/)
@@ -129,11 +135,27 @@ describe('the panel', () => {
     expect(prop('--density')).toBe('0.85')
   })
 
+  it('sets the face by reference, so a brand that redefines serif still wins', () => {
+    render(<Appearance />)
+    press('Serif')
+    expect(prop('--font-sans')).toBe('var(--font-serif)')
+    // Code stays monospaced whatever the page is set in.
+    expect(prop('--font-mono')).toBe('')
+    expect(stored(KEY)).toEqual({ font: 'serif' })
+  })
+
+  it('moves the measure without touching the column count', () => {
+    render(<Appearance />)
+    press('Wide')
+    expect(prop('--container-prose')).toBe('56rem')
+    expect(prop('--grid-columns')).toBe('')
+  })
+
   it('leaves an untouched axis OFF the document rather than writing a neutral', () => {
     // An inline property outranks every stylesheet, so a neutral 1 written here
     // silently overrides a brand that published its own scale.
     render(<Appearance />)
-    press('Large')
+    press('L')
     expect(prop('--density')).toBe('')
     expect(prop('--type-ratio')).toBe('')
   })
