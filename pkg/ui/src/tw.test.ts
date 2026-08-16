@@ -58,7 +58,20 @@ describe('tw — one class', () => {
   it('reads fractions and arbitrary values', () => {
     expect(props('w-1/2')).toEqual({ width: '50%' })
     expect(props('w-full')).toEqual({ width: '100%' })
-    expect(props('leading-[1.1]')).toEqual({ lineHeight: 1.1 })
+    expect(props('leading-[1.1]')).toEqual({ lineHeight: '1.1' })
+  })
+
+  it('keeps a leading RATIO unitless, and a leading STEP a length', () => {
+    // gui reads a bare number as pixels, so a ratio sent as a number lands as
+    // `1.625px` — a line box smaller than the type inside it.
+    expect(props('leading-relaxed')).toEqual({ lineHeight: '1.625' })
+    expect(props('leading-6')).toEqual({ lineHeight: 24 })
+  })
+
+  it('declines space-y, whose spacing lives on the children', () => {
+    // `gap` reproduces it on a flex container and silently loses it on a block
+    // one, so the class stays and the rule that works keeps working.
+    expect(tw('space-y-6')).toEqual({ props: {}, rest: 'space-y-6' })
   })
 
   it('gives flex its direction, since a row is not the browser default', () => {
@@ -134,9 +147,12 @@ describe('tw — the vocabulary it was built for', () => {
     'text-sm', 'mx-auto', 'rounded-full', 'mb-4', 'font-medium', 'font-bold',
     'transition-colors', 'overflow-hidden', 'flex-col', 'grid-cols-1',
     'flex-wrap', 'inset-0', 'z-10', 'md:grid-cols-2', 'leading-relaxed',
-    'max-w-3xl', 'max-w-7xl', 'font-mono', 'min-h-screen', 'space-y-4',
+    'max-w-3xl', 'max-w-7xl', 'font-mono', 'min-h-screen',
     'blur-3xl', 'flex-1', 'flex-shrink-0', 'uppercase', 'shadow-2xl',
   ]
+  // `space-y-*` is heavy in the corpus and deliberately absent: its spacing
+  // lives on the children, and no single container prop reproduces that on a
+  // block container.
 
   it('converts every one of them', () => {
     const missed = TOP.filter((c) => tw(c).rest !== '')
