@@ -51,8 +51,8 @@ const RADIUS: Record<string, number> = {
   none: 0, sm: 2, '': 4, md: 6, lg: 8, xl: 12, '2xl': 16, '3xl': 24, full: 9999,
 }
 
-const LEADING: Record<string, number> = {
-  none: 1, tight: 1.25, snug: 1.375, normal: 1.5, relaxed: 1.625, loose: 2,
+const LEADING: Record<string, string> = {
+  none: '1', tight: '1.25', snug: '1.375', normal: '1.5', relaxed: '1.625', loose: '2',
 }
 
 const TRACKING: Record<string, number> = {
@@ -273,9 +273,12 @@ function one(c: string): Props | null {
     case 'font': return WEIGHT[v] !== undefined ? { fontWeight: WEIGHT[v] }
       : FAMILY[v] ? { fontFamily: FAMILY[v] } : null
     case 'leading': {
+      // A named step is a RATIO and must stay unitless; a numbered one
+      // (`leading-6`) is a length off the spacing ramp and stays a number.
       const arb = /^\[(.+)]$/.exec(v)
-      const n = arb ? Number(arb[1]) || arb[1] : LEADING[v] ?? SPACE[v]
-      return n === undefined ? null : { lineHeight: n }
+      if (arb) return { lineHeight: arb[1] }
+      if (v in LEADING) return { lineHeight: LEADING[v] }
+      return v in SPACE ? { lineHeight: SPACE[v] } : null
     }
     case 'tracking': return TRACKING[v] !== undefined ? { letterSpacing: TRACKING[v] } : null
     case 'rounded': {
@@ -316,12 +319,10 @@ function one(c: string): Props | null {
     case 'delay': return DURATION[v] !== undefined ? { transitionDelay: `${DURATION[v]}ms` } : null
     case 'blur': return BLUR[v] !== undefined ? { filter: `blur(${BLUR[v]}px)` } : null
     case 'backdrop-blur': return BLUR[v] !== undefined ? { backdropFilter: `blur(${BLUR[v]}px)` } : null
-    // `space-y` puts the gap on the children's margins; `gap` puts it on the
-    // container. The rendering matches wherever the container is flex or grid,
-    // which is everywhere these classes are used, and `gap` is the one a stack
-    // already speaks.
-    case 'space-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { rowGap: n } }
-    case 'space-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { columnGap: n } }
+    // `space-y` is deliberately NOT converted. It sets margins on the CHILDREN,
+    // and `gap` only reproduces that on a flex or grid container — on a block
+    // one the spacing disappears with nothing to show for it. Left as a class,
+    // so the rule that works keeps working.
     case 'row-span': return /^\d+$/.test(v) ? { gridRow: `span ${v} / span ${v}` } : null
     case 'translate-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null
       : { transform: `translateX(${typeof n === 'number' ? n + 'px' : n})` } }
