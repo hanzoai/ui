@@ -66,6 +66,15 @@ describe('the ring is one measurement', () => {
     expect(css).toContain('.hz-composer:focus-within::before')
     expect(css).toContain('.hz-composer:focus-within::after')
   })
+
+  it('leaves the field no edge of its own', () => {
+    // One edge per control. @hanzo/design gives a field a surface and a border
+    // because a field on a page needs to show where it is; inside the ring that
+    // border draws a square inside a pill.
+    const field = css.match(/\.hz-composer :is\(input, textarea\) \{[^}]*\}/)?.[0] ?? ''
+    expect(field).toContain('border: 0')
+    expect(field).toContain('background: transparent')
+  })
 })
 
 describe('accessibility', () => {
