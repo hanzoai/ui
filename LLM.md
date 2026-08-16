@@ -30,7 +30,7 @@ pnpm install && pnpm build:registry && pnpm dev   # registry MUST build before a
 /dashboard /usage /gitops) · `app/registry/{default,new-york}/`
 (component SOURCE OF TRUTH) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
 `packages/shadcn/` (CLI) · `app/content/docs/` (MDX docs). Publish = bump a
-package `version` + merge to main (`.github/workflows/publish.yml`).
+package `version` + merge to main (`.hanzo/workflows/publish.yml`).
 
 **Spec / more context.** Canonical SDK + docs model: `~/work/hanzo/SDK-ARCHITECTURE.md`.
 Detailed engineering notes (build order, import surface, telemetry, upstream sync,
@@ -360,26 +360,27 @@ pnpm test:e2e          # Playwright E2E
 
 One way, and it runs on our own stack:
 
-    push  ->  github.com/hanzoai/ui            (a mirror)
-              .github/workflows/sync.yml        carries refs onward
-      ->  git.hanzo.ai/hanzoai/ui               CANONICAL
-              .hanzo/workflows/ci.yml           lint, typecheck, build, test
+    push  ->  git.hanzo.ai/hanzoai/ui           CANONICAL (remote `hanzogit`)
+              .hanzo/workflows/cicd.yml         the whole pipeline, from hanzo.yml
               .hanzo/workflows/registries.yml   the v4 registry check
-              .hanzo/workflows/publish.yml      publishes every pkgs/* package
+              .hanzo/workflows/publish.yml      publishes pkg/* and pkgs/*
+              .hanzo/workflows/snapshots.yml    refreshes the visual baselines
               .hanzo/workflows/deploy.yml       builds ghcr.io/hanzoai/ui
       ->  hanzoai/universe crs/ui.yaml          names the tag that is live
       ->  hanzoai/operator                      reconciles the App
       ->  hanzoai/static behind hanzoai/ingress serves ui.hanzo.ai
+        github.com/hanzoai/ui                   a mirror (remote `origin`), pushed
+                                                alongside; it runs nothing
 
-**git.hanzo.ai is canonical; GitHub is a mirror.** `.github/workflows/` holds
-exactly one file, `sync.yml`, and its only job is getting refs to the forge. Every
-build, check, publish and deploy is a workflow under `.hanzo/workflows/`, which the
-forge reads. `.hanzo/workflows` uses GitHub Actions syntax, so a workflow moves
-between the two by changing directory and nothing else.
+**git.hanzo.ai is canonical; GitHub is a mirror.** There is no `.github/workflows/`
+— every build, check, publish and deploy is a workflow under `.hanzo/workflows/`,
+which the forge reads. `.hanzo/workflows` uses GitHub Actions syntax, so a workflow
+moves between the two by changing directory and nothing else, and github.com has no
+runner registered for the `hanzo-build-*` labels these ask for. Keeping the mirror
+current means pushing both remotes; nothing carries refs for you.
 
-No Vercel. `ci.yml` used to end in a `deploy-preview` job that ran `vercel deploy`
-on every PR; previews come from our own stack or not at all, so that job is gone.
-Its `status` job never depended on it.
+`cicd.yml` names only the triggers: every decision — what to test, what to build,
+where it rolls — is read from the root `hanzo.yml`. No Vercel, no preview deploys.
 
 ## Publishing
 
@@ -408,10 +409,12 @@ sets `spec.image.tag` in `hanzoai/universe`
 `infra/k8s/operator/crs/ui.yaml`, which is the one live thing that says which build
 serves.
 
-Coverage lives in `ci.yml`'s `test` job, which runs `pnpm test:coverage` so the
-lcov it uploads to Codecov actually exists. A separate `coverage.yml` used to run
-the same suite a second time for the same upload plus a PR comment through the
-GitHub API; one workflow does it now.
+The gate is `hanzo.yml`'s `test:` block, which `cicd.yml` runs through `hanzoai/ci`:
+`ui-unit` builds `@hanzo/ui` with its workspace deps and runs `test:unit`, and
+`ui-consumer` installs chromium and runs `test:consumer` under both bundlers —
+Vite and webpack disagree about css `url()` asset resolution, and a Vite-only gate
+is how 8.0.46 shipped a stylesheet pointing at a font the package does not pack.
+No coverage upload runs here.
 
 `registries.yml` keeps the `apps/v4` registry honest: reserved namespaces are
 rejected and `pnpm --filter=v4 validate:registries` must pass. Its other job

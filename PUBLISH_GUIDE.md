@@ -1,39 +1,40 @@
 # Publishing
 
-Two lanes, one trigger each. No changesets, no version-PR bot.
+One lane, one trigger. No changesets, no version-PR bot.
 
-## 1. `pkgs/*` — auto-publish on version bump (`publish.yml`)
+Bump a package's `version` in `pkg/<name>/package.json` or `pkgs/<name>/package.json`
+and merge to `main`. `.hanzo/workflows/publish.yml` builds and publishes it to npm
+(`NPM_TOKEN`, read from KMS on the forge runner). Patch bumps only (`x.y.z` → `x.y.z+1`).
 
-Bump a package's `version` in `pkgs/<name>/package.json` and merge to `main`.
-`.github/workflows/publish.yml` detects the changed public `@hanzo/*` package,
-builds it, and publishes to npm (repo secret `NPM_TOKEN`). Patch bumps only
-(`x.y.z` → `x.y.z+1`).
+Both roots, not just `pkgs/*`: `@hanzo/ui` and `@hanzo/data` live under `pkg/`
+(singular) and were invisible to a `pkgs/*` glob, so no bump of either could reach
+npm. Nothing publishes by hand — a local `npm publish` skips the gate that proves
+the tarball builds.
 
-## 2. `pkg/ui` — `@hanzo/ui@8`, the v8 lane (maintainer flow)
+## What decides a publish
 
-`pkg/ui` (with `pkg/data`) is the modern cross-platform library on `@hanzo/gui`.
-It publishes from the package directory (`prepack` builds the `types/`):
+The workflow asks npm, not the diff: for every non-private `@hanzo/*` package it
+compares the local `version` against `dist-tags.latest` from the registry and
+publishes only when the local one is strictly greater. So it is idempotent — it
+runs on every push to `main` and does nothing when nothing is ahead.
 
-```bash
-cd pkg/ui
-pnpm typecheck && pnpm test && pnpm build
-# bump "version" in package.json (patch), commit to main, then:
-npm publish --access public
-```
+Forward only. A package sitting BEHIND npm is never published, because that walks
+the registry backwards. It also means a package whose tree is behind npm cannot be
+published again until its version passes what the registry serves.
 
 `@hanzo/ui-shadcn` (`pkgs/ui`) is the legacy v5 kit — existing consumers pin
-`@hanzo/ui-shadcn@^5`; it rides lane 1 like any other `pkgs/*` package.
+`@hanzo/ui-shadcn@^5`; it rides the same lane as any other package.
 
 > The old tag-driven flow (`publish-on-tag.yml`, `npm-publish.yml`, the
 > `pkg/commerce|brand|react` paths) is gone — do not tag to publish here.
 
 ## Prerequisites
 
-- `NPM_TOKEN` repo secret (lane 1) / npm auth as a maintainer (lane 2)
+- `NPM_TOKEN` available to the forge runner
 - Every package carries `"publishConfig": { "access": "public" }`
 
 ## Checklist
 
 - [ ] `pnpm typecheck` + `pnpm test` green in the package
 - [ ] Patch version bump (check the last published patch first)
-- [ ] Commit to `main`; lane 1 publishes on merge, lane 2 via `npm publish`
+- [ ] Commit to `main`; the push publishes
