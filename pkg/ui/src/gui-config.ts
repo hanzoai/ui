@@ -226,7 +226,7 @@ space['-true'] = step(-STEP['4'])
  *   `$color12` shipped `hsla(0, 0%, 100%, 1)` — PURE WHITE, and it is the label
  *   colour for Button's default/primary, for every Badge, and for the `accent`
  *   recipe, the one loud control a page is allowed. design sets `--foreground`
- *   to `#fafafa` on purpose: pure white halates on near-black.
+ *   to `#e5e5e5` on purpose: pure white halates on near-black.
  *
  *   `$outlineColor` shipped `hsla(0, 0%, 27%, 0.6)` — the FOCUS RING, and on a
  *   near-black ground that composites to about `rgb(45,45,45)`, roughly 1.2:1
@@ -252,7 +252,7 @@ space['-true'] = step(-STEP['4'])
  * design publishes, so the copy cannot drift.
  */
 const EDGE = { dark: 'rgb(255 255 255 / .10)', light: 'rgb(0 0 0 / .10)' } as const
-const LABEL = { dark: '#fafafa', light: '#0a0a0a' } as const
+const LABEL = { dark: '#e5e5e5', light: '#0a0a0a' } as const
 const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as const
 
 /**
