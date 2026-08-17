@@ -319,11 +319,34 @@ describe('monochrome is config minus the hues', () => {
  * against design's OWN stylesheet, the same way the three colour rungs are.
  */
 describe('the type ladder defers to @hanzo/design', () => {
-  /** design publishes `--text-lg:calc(0.9375rem * var(--type-scale, 1))`; this is
-   *  the rem base in px at a 16px root — what the rung renders at scale 1. */
+  /**
+   * A rung is a base rem plus a signed step, the step scaled by `--type-ratio`
+   * and the sum by `--type-scale`, all clamped between a floor and a ceiling:
+   *
+   *     --text-xs: clamp(var(--text-floor),
+   *                      calc((0.875rem - 0.1875rem * var(--type-ratio, 1))
+   *                           * var(--type-scale, 1)),
+   *                      var(--text-ceiling))
+   *
+   * `--text-base` carries no step, so the base alone is the rung. This returns
+   * px at a 16px root with both knobs at 1 — what the rung renders untuned.
+   */
   const textPx = (name: string): number => {
-    const m = design.match(new RegExp(`--text-${name}:\\s*calc\\(([0-9.]+)rem`))
+    const m = design.match(
+      new RegExp(
+        `--text-${name}:[^;]*?calc\\(\\(?([0-9.]+)rem` +
+          `(?:\\s*([-+])\\s*([0-9.]+)rem\\s*\\*\\s*var\\(--type-ratio)?`,
+      ),
+    )
     if (!m) throw new Error(`@hanzo/design publishes no --text-${name} (or it stopped scaling)`)
+    const step = m[3] ? Number(m[3]) * (m[2] === '-' ? -1 : 1) : 0
+    return (Number(m[1]) + step) * 16
+  }
+
+  /** The rem the clamp's lower bound holds every rung to, in px. */
+  const floorPx = (): number => {
+    const m = design.match(/--text-floor:\s*([0-9.]+)rem/)
+    if (!m) throw new Error('@hanzo/design publishes no --text-floor')
     return Number(m[1]) * 16
   }
 
@@ -345,6 +368,9 @@ describe('the type ladder defers to @hanzo/design', () => {
     // The whole point: the token's published value IS the number that was here,
     // so deferring changed nothing. If design retunes the rung, this fails.
     expect(textPx(name)).toBe(px)
+    // A clamped rung renders its bound, not its expression, so the number above
+    // is one a browser paints only while it clears the floor.
+    expect(px).toBeGreaterThanOrEqual(floorPx())
   })
 
   it('every rung can be retuned by ONE knob', () => {
