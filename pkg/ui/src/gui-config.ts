@@ -438,6 +438,8 @@ const asSizes = <T,>(t: T) => t as unknown as typeof defaultConfig.fonts.body.si
  */
 const EASE = 'var(--ease-out, cubic-bezier(0.215, 0.61, 0.355, 1))'
 const animations = createAnimations({
+  // The driver's required fallback: what an unnamed `animation` resolves to.
+  default: `${EASE} var(--duration-base, 300ms)`,
   '75ms': `${EASE} 75ms`,
   '100ms': `${EASE} 100ms`,
   '200ms': `${EASE} 200ms`,
