@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
-import { FOCUS } from "./focus"
 import { FIELD } from "./control"
 import { slot } from "./slot"
 
@@ -49,7 +48,6 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       // landed on 20 — so the one field a form makes tall was also the one
       // indented differently from the two above it.
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
-      {...FOCUS}
       placeholderTextColor="$color10"
       fontSize="$3"
       opacity={props.disabled ? 0.5 : 1}
