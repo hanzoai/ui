@@ -1,4 +1,5 @@
 import { defaultConfig } from '@hanzogui/config/v5'
+import { createAnimations } from '@hanzogui/animations-css'
 import { createGui } from '@hanzo/gui'
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -427,7 +428,31 @@ const asSizes = <T,>(t: T) => t as unknown as typeof defaultConfig.fonts.body.si
  * after the fact. A generated sheet edited afterwards is a fact stated twice, so
  * it is stated here instead, once, where both read it.
  */
+/**
+ * The animation driver. gui resolves every `animation` prop and every
+ * `useAnimatedNumber` through the config's driver, and `createGui` accepts its
+ * absence silently — until a Sheet mounts and hydration dies in
+ * `setValue` of undefined. The CSS driver costs no runtime: it renders
+ * transitions, which is all a monochrome product chrome animates. Named rungs
+ * ride design's motion tokens so a rebrand retunes them.
+ */
+const EASE = 'var(--ease-out, cubic-bezier(0.215, 0.61, 0.355, 1))'
+const animations = createAnimations({
+  '75ms': `${EASE} 75ms`,
+  '100ms': `${EASE} 100ms`,
+  '200ms': `${EASE} 200ms`,
+  quickest: `${EASE} var(--duration-fast, 150ms)`,
+  quicker: `${EASE} var(--duration-base, 300ms)`,
+  quick: `${EASE} var(--duration-slow, 400ms)`,
+  medium: `${EASE} 300ms`,
+  slow: `${EASE} 500ms`,
+  bouncy: `${EASE} 200ms`,
+  lazy: `${EASE} 1000ms`,
+  tooltip: `${EASE} 400ms`,
+})
+
 const base = {
+  animations,
   ...defaultConfig,
   settings: { ...defaultConfig.settings, shouldAddPrefersColorThemes: false },
   tokens: {
