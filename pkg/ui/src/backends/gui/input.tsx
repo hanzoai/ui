@@ -12,7 +12,6 @@ import { Eye, EyeOff } from '@hanzogui/lucide-icons-2'
 import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react'
 import { slot } from './slot'
 import { touch } from './gesture'
-import { FOCUS } from './focus'
 import { masked } from './mask'
 import { CONTROL_H, FIELD, GUTTER } from './control'
 
@@ -80,7 +79,6 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       height={HEIGHT}
       width="100%"
       minW={0}
-      {...FOCUS}
       placeholderTextColor="$color10"
       fontSize="$3"
       pl={startAdornment ? WELL : GUTTER}

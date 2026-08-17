@@ -49,3 +49,25 @@ export const FIELD = {
   borderColor: '$borderColor',
   bg: 'transparent',
 } as const
+
+/**
+ * Focus is @hanzo/design's, and a field says nothing about it.
+ *
+ * design draws ONE indicator for everything focusable —
+ * `:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px }` — and
+ * `gui-config.ts` re-bases `$outlineColor` onto that same `--ring` in every
+ * theme. So the outline gui already draws on a field IS that ring, and design's
+ * offset lands on top of it, because gui emits no `outline-offset` of its own.
+ *
+ * A field cannot abstain by writing a prop. gui carries the outline in its
+ * variant defaults, and a prop REPLACES that atomic class rather than dropping
+ * it — `focusVisibleStyle={{}}` emits the same three rules as no prop at all.
+ * Whatever a call site writes is compiled to
+ * `:root:root:root:root … :focus-visible { … !important }`, which outranks every
+ * stylesheet in the document, so `outlineWidth: 0` does not hand the decision
+ * back to the sheet: it deletes the indicator on every surface at once, and no
+ * consuming app can argue with it.
+ *
+ * A field that should ring differently from a button says so in @hanzo/design,
+ * where the rule lives. `focus.test.tsx` holds this.
+ */
