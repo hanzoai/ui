@@ -997,8 +997,8 @@ importers:
         specifier: '>=0.1.0'
         version: link:../../pkgs/canvas
       '@hanzo/design':
-        specifier: ^0.5.15
-        version: 0.5.15
+        specifier: ^0.5.16
+        version: 0.5.16
       '@hanzo/logo':
         specifier: ^1.0.13
         version: 1.0.13(react@19.2.4)
@@ -1108,7 +1108,7 @@ importers:
         version: 19.2.3(@types/react@19.2.14)
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -1120,7 +1120,7 @@ importers:
         version: 25.9.5
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1186,7 +1186,7 @@ importers:
         version: 19.2.4(react@19.2.4)
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1330,7 +1330,7 @@ importers:
         version: 19.2.4
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1377,7 +1377,7 @@ importers:
         version: 19.2.4
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1417,7 +1417,7 @@ importers:
         version: 19.2.4(react@19.2.4)
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1445,7 +1445,7 @@ importers:
         version: 20.10.6
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1478,7 +1478,7 @@ importers:
         version: 19.2.4
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1496,7 +1496,7 @@ importers:
         version: 5.1.14
       openai:
         specifier: ^6.32.0
-        version: 6.44.0(ws@8.21.0)(zod@4.4.3)
+        version: 6.44.0(ws@8.21.3)(zod@4.4.3)
       swr:
         specifier: ^2.4.1
         version: 2.4.1(react@19.2.4)
@@ -1533,7 +1533,7 @@ importers:
         version: 19.2.4(react@19.2.4)
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1561,7 +1561,7 @@ importers:
         version: 2.1.1
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1762,7 +1762,7 @@ importers:
     devDependencies:
       tsup:
         specifier: ^8.5.1
-        version: 8.5.1(jiti@2.7.0)(postcss@8.5.20)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -3082,6 +3082,10 @@ packages:
 
   '@hanzo/design@0.5.15':
     resolution: {integrity: sha512-UCjYbIbnqruWv1SHcSPHEiW7HrwzET8nryip5ow+u8Kta8I9vDzvifQqcQKw9y4nm9nzRW0HyoIUNaBHtrYv0Q==}
+    hasBin: true
+
+  '@hanzo/design@0.5.16':
+    resolution: {integrity: sha512-/az9TpqxjylBVfD7ThA0+5sR+oaw0k+Jl1Ni7aEpaT/3B5KhZaEKzCmCntOuZ+amWjx8TjWMBG8xtNyblD4eKw==}
     hasBin: true
 
   '@hanzo/docs-core@16.5.3':
@@ -16329,7 +16333,7 @@ snapshots:
 
   '@hanzo/appearance@0.1.6(react@19.2.4)':
     dependencies:
-      '@hanzo/design': 0.5.15
+      '@hanzo/design': 0.5.16
       react: 19.2.4
 
   '@hanzo/brand@1.4.6(react@19.2.4)':
@@ -16350,6 +16354,8 @@ snapshots:
       react: 19.2.4
 
   '@hanzo/design@0.5.15': {}
+
+  '@hanzo/design@0.5.16': {}
 
   '@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3)':
     dependencies:
@@ -29136,9 +29142,9 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@6.44.0(ws@8.21.0)(zod@4.4.3):
+  openai@6.44.0(ws@8.21.3)(zod@4.4.3):
     optionalDependencies:
-      ws: 8.21.0
+      ws: 8.21.3
       zod: 4.4.3
 
   optionator@0.9.4:
@@ -29458,6 +29464,15 @@ snapshots:
     optionalDependencies:
       jiti: 2.7.0
       postcss: 8.5.20
+      tsx: 4.22.4
+      yaml: 2.9.0
+
+  postcss-load-config@6.0.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(yaml@2.9.0):
+    dependencies:
+      lilconfig: 3.1.3
+    optionalDependencies:
+      jiti: 2.7.0
+      postcss: 8.5.26
       tsx: 4.22.4
       yaml: 2.9.0
 
@@ -31186,6 +31201,34 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       postcss: 8.5.20
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - jiti
+      - supports-color
+      - tsx
+      - yaml
+
+  tsup@8.5.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(typescript@5.9.3)(yaml@2.9.0):
+    dependencies:
+      bundle-require: 5.1.0(esbuild@0.27.7)
+      cac: 6.7.14
+      chokidar: 4.0.3
+      consola: 3.4.2
+      debug: 4.4.3
+      esbuild: 0.27.7
+      fix-dts-default-cjs-exports: 1.0.1
+      joycon: 3.1.1
+      picocolors: 1.1.1
+      postcss-load-config: 6.0.1(jiti@2.7.0)(postcss@8.5.26)(tsx@4.22.4)(yaml@2.9.0)
+      resolve-from: 5.0.0
+      rollup: 4.62.2
+      source-map: 0.7.6
+      sucrase: 3.35.1
+      tinyexec: 0.3.2
+      tinyglobby: 0.2.17
+      tree-kill: 1.2.2
+    optionalDependencies:
+      postcss: 8.5.26
       typescript: 5.9.3
     transitivePeerDependencies:
       - jiti
