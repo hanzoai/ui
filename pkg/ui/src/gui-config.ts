@@ -1,6 +1,6 @@
 import { defaultConfig } from '@hanzogui/config/v5'
 import { createAnimations } from '@hanzogui/animations-css'
-import { createGui } from '@hanzo/gui'
+import { createGui, type CreateGuiProps } from '@hanzo/gui'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE ONE SCALE — shared, because a second app that copied it would fork it.
@@ -454,7 +454,10 @@ const animations = createAnimations({
 })
 
 const base = {
-  animations,
+  // The cast crosses pnpm's instance boundary, not a design boundary: the
+  // driver package pins @hanzogui/web exactly while @hanzo/gui floats it, so
+  // the two AnimationDriver types are the same shape from two installs.
+  animations: animations as unknown as CreateGuiProps['animations'],
   ...defaultConfig,
   settings: { ...defaultConfig.settings, shouldAddPrefersColorThemes: false },
   tokens: {
