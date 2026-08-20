@@ -93,7 +93,7 @@ jobs:
     runs-on: hanzo-build-linux-amd64
     # NO MATRIX, and that is the whole point of this job's shape.
     #
-    # This was `strategy.matrix.package: ${{ fromJson(…) }}`, and the forge
+    # This was `strategy.matrix.package: ${{ fromJson(…) }}`, and Hanzo Git
     # runner does not expand a dynamic matrix. With more than one package it
     # produced ONE job literally named `publish (${{ fromJson(…) }})` — the log
     # says `Cleaning up network for job publish (Array)` — and `matrix.package`
@@ -135,7 +135,7 @@ jobs:
         # KMS is where a secret lives, so the token is read at run time from the
         # same org path and with the same machine identity every other workflow
         # here already uses. Nothing new to rotate, and no npm credential is
-        # stored on the forge.
+        # stored on Hanzo Git.
         env:
           KMS_CLIENT_ID: ${{ secrets.KMS_CLIENT_ID }}
           KMS_CLIENT_SECRET: ${{ secrets.KMS_CLIENT_SECRET }}
