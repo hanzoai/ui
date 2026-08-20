@@ -113,8 +113,8 @@ describe('anonId', () => {
     }
   })
 
-  it("adopts hz.js's `hz_id` when there is no canonical id to find", async () => {
-    // The no-build tag minted into a key of its own, so a browser that met hz.js
+  it("adopts a legacy `hz_id` when there is no canonical id to find", async () => {
+    // A no-build tag once minted into a key of its own, so a browser that met it
     // first already carries an identity — under a different name. Minting here
     // would make that visitor a stranger the moment they reach a bundled surface,
     // which is precisely the split this migration closes.

@@ -30,7 +30,7 @@ function ls(): Storage | undefined {
 
 /**
  * Stable anonymous id, shared by every *.hanzo.ai surface AND by every Hanzo
- * client on the page — the npm client, hz.js and the hosted tag all run the one
+ * client on the page — the npm client and the hosted tag both run the one
  * chain in ./anon.js, so which snippet a surface loaded no longer decides who the
  * visitor is.
  *
