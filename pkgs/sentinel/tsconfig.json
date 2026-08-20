@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    // TypeScript stays below 6, and there is no `ignoreDeprecations` here.
+    // tsup's declaration worker injects `baseUrl` whether or not this file sets
+    // one; TS 6 rejects that without `ignoreDeprecations: "6.0"`, and TS 5
+    // rejects that value in turn. The two are mutually exclusive, the
+    // devDependency pins `^5.9.3`, so absent is the only value that builds.
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": false,
+    // No ambient type packages. Everything this package touches — fetch,
+    // Response, URLSearchParams — comes from `lib.DOM`, and vitest types arrive
+    // through the import in the test file. An empty list keeps the answer the
+    // same whatever else the workspace hoists into node_modules/@types.
+    "types": []
+  },
+  // Tests are included so `tsc --noEmit` checks them too. They never ship: tsup
+  // bundles from `entry`, and nothing in it reaches a test file.
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
