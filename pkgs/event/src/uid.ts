@@ -2,7 +2,7 @@
 //
 // The implementation is `hzUuidv7` in ./anon.js and this file only re-exports it.
 // It lives there because the anonymous-id chain has to mint too, and that chain is
-// inlined verbatim by two distributions that have no bundler (hz.js, and the tag
+// inlined verbatim by the distribution that has no bundler (the tag
 // the door hosts) — a minter here as well would be a second implementation, and
 // the version nibble it produces is exactly the thing that must never diverge.
 //

@@ -27,29 +27,27 @@ starve the other:
 > plane is **inert**: nothing is sent, nothing throws, analytics is unaffected.
 > Assert `client.errorPlaneEnabled` if you want to know which you have.
 
-### No bundler? Use the `hz.js` tag — same client, same wire
+### No bundler? Use the hosted tag
 
 ```html
-<script async src="https://unpkg.com/@hanzo/event/hz.js"
-        data-product="hanzo.ai"
-        data-ingest-key="pk-…"
-        data-capture="1"></script>
+<script defer src="https://api.hanzo.ai/v1/event.js" data-key="pk-…"></script>
 ```
 
-> **`data-ingest-key` is required off the door's own origin**, and through
-> 0.3.11 this file could not present one at all — no header, no query. A keyed
-> static surface therefore sent UNATTRIBUTED writes, which the door refuses
-> (`401 ingest_key_required`) silently, because nothing here reads the response.
-> The tag measured fine in the browser and filed nothing. It now rides
-> `Authorization: Bearer pk-…` on fetch and `?ingest_key=pk-…` on a headerless
-> unload beacon — the same pair the npm client uses.
+That one line is the whole install, and it is the same line for a published site,
+hanzo.team and a customer's own page. The tag is served by the door that eats the
+events, so a caller allowlists ONE host and the tag can never drift from the wire
+it posts to. It adds DOM **autocapture** — `$click` (with an element locator),
+`$outbound`, `$scroll`, `$form`, `$vitals` — which a bundled app does not need and
+a plain page cannot get, and it carries the site's tag config from `/v1/tags`, so a
+pixel is configured on the project rather than pasted into the page.
 
-`hz.js` (in this package) is the **script-tag distribution** of this client, for
-surfaces with no build step. It posts the SAME `{ batch: [WireEvent, …] }` to the
-SAME `POST {host}/v1/event`, and adds DOM **autocapture** — `$click` (with an
-element locator), `$outbound`, `$scroll`, `$form`, `$vitals` — which a bundled app
-does not need and a plain page cannot get. Manual API: `window.hanzo.track()` /
-`identify()` / `page()`.
+> **`data-key` is a publishable `pk-`, and without one the tag is INERT.** A write
+> the door cannot attribute is refused (`401 ingest_key_required`) silently, so a
+> keyless tag measures fine in the browser and files nothing. Mint one with
+> `POST /v1/keys {"type":"publishable"}`.
+
+This package is the client for a surface that **builds**. There is no second
+script-tag distribution here: one wire, one door, one tag.
 
 It honours the same consent sources the bundled stack does: an explicit stored
 choice (`hz_consent`, the key a Hanzo consent banner writes) outranks the browser
