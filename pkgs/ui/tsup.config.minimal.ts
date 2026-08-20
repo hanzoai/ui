@@ -211,8 +211,13 @@ export default defineConfig({
     // Billing components
     'billing/index': 'src/billing/index.ts',
 
+<<<<<<< HEAD
     // Account surfaces (unified self-service billing/usage/org/team UI)
     'account/index': 'src/account/index.ts',
+=======
+    // Team / roles management (shared: billing + console, IAM-powered)
+    'team/index': 'src/team/index.ts',
+>>>>>>> 9fb6bad33 (feat(team): @hanzo/ui/team — shared IAM-powered team/roles surface (5.7.1))
 
     // Model components (Zen model cards, tables, library, ZenEnso logo)
     'models/index': 'src/models/index.ts',
