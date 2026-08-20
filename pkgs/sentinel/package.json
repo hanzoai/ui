@@ -1,0 +1,59 @@
+{
+  "name": "@hanzo/sentinel",
+  "version": "0.1.0",
+  "description": "Hanzo Sentinel — the client for the error plane's read face. Lists and resolves grouped issues, reads captured errors, manages projects and their DSNs, and queries logs, stats, traces and aggregates over /v1/sentinel. The write side is @hanzo/event.",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/sentinel"
+  },
+  "keywords": [
+    "error-tracking",
+    "issues",
+    "observability",
+    "traces",
+    "sentinel",
+    "hanzo"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
