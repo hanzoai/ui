@@ -431,8 +431,18 @@ resolves the tenant.
    batched to `POST {host}/v1/event` with `{ batch: [Event, …] }`
    `-> { accepted, dropped }`. Tenant from the session or a publishable `pk_` key.
 2. **Error plane** — every captured exception is ALSO framed as a real **Sentry
-   envelope** and POSTed to `POST {dsn.origin}/v1/sentry/{projectId}/envelope/?sentry_key=…`.
-   This is the ONLY thing that reaches the Sentry error dashboard.
+   envelope** and POSTed to `POST {dsn.base}/envelope/?sentry_key=…`, i.e. the
+   SAME `/v1/event` door the stream uses: `/v1/event/{projectId}/envelope/`.
+   This is the ONLY thing that reaches the error dashboard.
+
+   ONE door, from 0.3.29. Both planes are `/v1/event` — the error plane used to
+   be spelled `/v1/sentry/{projectId}/envelope/`, a second public address for the
+   same wire. And it was written THREE times: `dsnForProduct` minted it,
+   `parseDsn` threw the DSN's path away and rebuilt it as a literal, and
+   `buildEnvelope` restated it again in the envelope header. `Dsn.base` is that
+   address now, DERIVED from the DSN in `parseDsn`, so `dsnForProduct` is the one
+   place it is spelled. Do not re-introduce a second spelling, and do not
+   hardcode a path anywhere downstream of the DSN.
 
 > **There is NO server-side fan-out from `/v1/event` into Sentry.** Versions
 > ≤ 0.3.1 claimed there was ("lensed server-side into … error tracking"). There
@@ -505,10 +515,48 @@ registry (page-wide, so duplicate copies of the package still see each other) an
 any later one stays inert (`engine.capturing === false`). Verified in Chromium,
 not only in jsdom.
 
+**The CLIENT cannot be doubled either.** The same shape one layer down, and it
+was live on hanzo.ai/pricing until event 0.3.28: two clients on one page, each
+with its own queue, putting two batches on `/v1/event` in the same frame — one
+authenticated (200) and one with no `Authorization` at all (401
+`ingest_key_required`), because the library asked for its client before the app
+supplied the key. Both batches held a `$pageview` for the same page, so the
+number was over- and under-counted at once and neither said so.
+
+Since 0.3.28 `createAnalytics` returns THE client for a `(host, product)`
+stream, held on the page under `Symbol.for('hanzo.event.clients')`. The slot is
+global for the same reason observe's is, and here it is load-bearing rather than
+defensive: `@hanzo/event` and `@hanzo/event/react` are separate tsup entries
+that each carry their own copy of `core`, so on any page importing both there
+are always TWO module scopes — a module-scope map would dedupe nothing. A caller
+arriving with a credential the client lacks hands it over (the key belongs to
+the stream, not to whoever asked first), and the error plane, which derives from
+that key, comes up with it.
+
+`pageview()` records a view once, keyed on path + location. Counting a page is
+the client's rule, not each emitter's: `AnalyticsProvider`'s autoPageview, the
+telemetry route hook and nav autocapture each correctly believe they count the
+first view and cannot see one another. Without this half, sharing the client
+turns two half-counted pageviews into two counted ones.
+
+`AnalyticsProvider` no longer memoizes construction. `useMemo(…, [client])`
+never saw a config change, and adding `config` builds a client per render since
+call sites pass an object literal — the memo was only ever standing in for an
+identity the registry now supplies.
+
 **Consent is decided in ONE layer.** The engine takes `enabled` as a value; the
 provider resolves policy (GPC, DNT, stored `hz_consent`, build kill switch) and
 passes the answer down. Do not add a second, partial copy to the engine — the two
-then disagree about an explicit opt-in.
+then disagree about an explicit opt-in. Only a client that can emit takes the
+stream: `createAnalytics` skips the registry for `enabled: false`, and `adopt`
+fills in a missing credential and nothing else, so no surface overrules
+another's reading of consent in either direction. 0.3.27 registered the
+disabled one — `TelemetryProvider` renders once reporting `enabled: false`
+before its ownership resolves in an effect, and the client built in that
+moment became the one every later caller got, which took hanzo.ai's telemetry
+to ZERO. Whenever you touch this registry, read `enabled` off the live client
+(`globalThis[Symbol.for('hanzo.event.clients')]`), not just the request count:
+silence and correctness look identical in a network panel.
 
 ### One way — supersessions (no divergent telemetry client)
 

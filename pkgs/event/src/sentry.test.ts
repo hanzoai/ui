@@ -11,7 +11,7 @@ import {
 import type { SentryEvent, SentryFrame } from './types'
 import { VERSION } from './version'
 
-const DSN = 'https://1:deadbeefcafe@api.hanzo.ai/v1/sentry/00000000-0000-0000-0000-000000000000'
+const DSN = 'https://1:deadbeefcafe@api.hanzo.ai/v1/event/00000000-0000-0000-0000-000000000000'
 
 describe('parseDsn', () => {
   it('keeps the version:hmac key intact (does NOT split on the colon) and derives the ingest url', () => {
@@ -20,14 +20,14 @@ describe('parseDsn', () => {
     expect(dsn.origin).toBe('https://api.hanzo.ai')
     expect(dsn.projectId).toBe('00000000-0000-0000-0000-000000000000')
     expect(dsn.ingestUrl).toBe(
-      'https://api.hanzo.ai/v1/sentry/00000000-0000-0000-0000-000000000000/envelope/?sentry_key=1%3Adeadbeefcafe',
+      'https://api.hanzo.ai/v1/event/00000000-0000-0000-0000-000000000000/envelope/?sentry_key=1%3Adeadbeefcafe',
     )
   })
   it('returns null for malformed input (fail-safe)', () => {
     expect(parseDsn(undefined)).toBeNull()
     expect(parseDsn('')).toBeNull()
     expect(parseDsn('not-a-dsn')).toBeNull()
-    expect(parseDsn('https://api.hanzo.ai/v1/sentry/x')).toBeNull() // no key
+    expect(parseDsn('https://api.hanzo.ai/v1/event/x')).toBeNull() // no key
     expect(parseDsn('https://1:k@api.hanzo.ai')).toBeNull() // no project
   })
 })

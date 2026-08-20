@@ -9,7 +9,7 @@
 //
 //   2. ERROR PLANE — every captured exception is ALSO framed as a real Sentry
 //      envelope and POSTed to the error host named by the DSN:
-//        POST {dsn.origin}/v1/sentry/{projectId}/envelope/?sentry_key=…
+//        POST {dsn.base}/envelope/?sentry_key=…   ({base} = /v1/event/{projectId})
 //      This is what reaches sentry.hanzo.ai (issues, grouping, stack frames).
 //
 // These are NOT the same pipe and one does NOT feed the other. The event stream
