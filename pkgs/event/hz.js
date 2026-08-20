@@ -11,7 +11,6 @@
  *           data-product="hanzo.ai"          // required: which surface this is
  *           data-publishable-key="pk-…"      // required off api.hanzo.ai's own origin
  *           data-host="https://api.hanzo.ai" // optional: API host override
- *           data-ga="G-XXXX" data-fb="123"   // optional: also fan out to GA4 / Meta
  *           data-capture="1"></script>       // optional: autocapture off with "0"
  *
  * It adds what a bundled app does not need and a plain page cannot get: DOM
@@ -55,7 +54,7 @@
   }
 
   var LIB = 'hz.js'
-  var VERSION = '0.3.31'
+  var VERSION = '0.3.32'
   var host = (s.getAttribute('data-host') || 'https://api.hanzo.ai').replace(/\/+$/, '')
   var product = s.getAttribute('data-product') || location.hostname
   var capture = s.getAttribute('data-capture') !== '0'
@@ -508,46 +507,5 @@ function hzAnonId() {
       if (props) send('event', 'page_props', props)
     },
     flush: flush,
-  }
-  var ga = s.getAttribute('data-ga'),
-    fb = s.getAttribute('data-fb')
-  function load(src) {
-    var el = document.createElement('script')
-    el.async = true
-    el.src = src
-    document.head.appendChild(el)
-  }
-  if (ga) {
-    load('https://www.googletagmanager.com/gtag/js?id=' + ga)
-    window.dataLayer = window.dataLayer || []
-    window.gtag = function () { dataLayer.push(arguments) }
-    gtag('js', new Date())
-    gtag('config', ga)
-    var _t = window.hanzo.track
-    window.hanzo.track = function (n, p) {
-      _t(n, p)
-      try { gtag('event', n, p || {}) } catch (e) {}
-    }
-  }
-  if (fb) {
-    !(function (f) {
-      if (f.fbq) return
-      var n = (f.fbq = function () {
-        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      })
-      if (!f._fbq) f._fbq = n
-      n.push = n
-      n.loaded = !0
-      n.version = '2.0'
-      n.queue = []
-    })(window)
-    load('https://connect.facebook.net/en_US/fbevents.js')
-    fbq('init', fb)
-    fbq('track', 'PageView')
-    var _u = window.hanzo.track
-    window.hanzo.track = function (n, p) {
-      _u(n, p)
-      try { fbq('trackCustom', n, p || {}) } catch (e) {}
-    }
   }
 })()
