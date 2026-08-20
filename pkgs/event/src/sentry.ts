@@ -3,7 +3,7 @@
 // Analytics client (core.ts) wires these to identity + transport.
 //
 // The wire shapes are a from-scratch model of the PUBLIC, documented Sentry ingest
-// protocol (develop.sentry.dev), verified against the Hanzo /v1/sentry ingest
+// protocol (develop.sentry.dev), verified against the Hanzo /v1/event ingest
 // (o11y pkg/modules/errortracking/implerrortracking: parseEnvelope, SentryEvent,
 // normalizeEvent, computeFingerprint). No upstream (FSL) code is used.
 
@@ -44,7 +44,7 @@ function byteLen(s: string): number {
 }
 
 /**
- * parseDsn parses "https://<version>:<hmac>@<host>/v1/sentry/<projectId>" into its
+ * parseDsn parses "https://<version>:<hmac>@<host>/v1/event/<projectId>" into its
  * public key + the derived envelope ingest URL. The key (which itself contains a
  * ':') is taken verbatim as the userinfo — we do NOT split it as user:pass. The
  * key rides ?sentry_key= (not the DSN in the body) because that is the credential
@@ -64,10 +64,14 @@ export function parseDsn(dsn: string | undefined | null): Dsn | null {
   const projectId = segs.length > 0 ? segs[segs.length - 1] : ''
   if (!projectId) return null
   const origin = `${scheme}://${host}`
-  const ingestUrl =
-    `${origin}/v1/sentry/${encodeURIComponent(projectId)}/envelope/` +
-    `?sentry_key=${encodeURIComponent(publicKey)}`
-  return { publicKey, origin, projectId, ingestUrl }
+  // THE DSN'S OWN PATH IS THE ADDRESS — derived here, never restated. It used to
+  // be rebuilt as a literal, which threw away the path the DSN carried and wrote
+  // the ingest address a second time; buildEnvelope wrote it a third. Three copies
+  // of one fact. dsnForProduct (dsn.ts) is the ONE place it is spelled; this
+  // follows it.
+  const base = `${origin}/${segs.map(encodeURIComponent).join('/')}`
+  const ingestUrl = `${base}/envelope/?sentry_key=${encodeURIComponent(publicKey)}`
+  return { publicKey, origin, projectId, base, ingestUrl }
 }
 
 const V8_FRAME = /^\s*at\s+(?:(.+?)\s+\()?(?:(.+?):(\d+):(\d+)|([^)]+))\)?\s*$/
@@ -295,7 +299,7 @@ export function buildEnvelope(event: SentryEvent, dsn: Dsn, sentAt?: string): st
   const payload = JSON.stringify(event)
   const header = JSON.stringify({
     event_id: event.event_id,
-    dsn: `${dsn.origin}/v1/sentry/${dsn.projectId}`,
+    dsn: dsn.base,
     sent_at: sentAt ?? new Date().toISOString(),
   })
   const itemHeader = JSON.stringify({

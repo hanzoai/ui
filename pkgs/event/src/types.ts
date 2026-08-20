@@ -209,7 +209,7 @@ export interface AnalyticsConfig {
 
   // ── error plane (Sentry envelope -> sentry.hanzo.ai) ──────────────────────
 
-  /** Hanzo-minted Sentry DSN: "https://<version>:<hmac>@<host>/v1/sentry/<projectId>".
+  /** Hanzo-minted Sentry DSN: "https://<version>:<hmac>@<host>/v1/event/<projectId>".
    *  Publishable — the key authorizes writes to ONE project and can read nothing,
    *  so it is safe in a browser bundle (same trust class as `ingestKey`). When
    *  absent the client reads NEXT_PUBLIC_HANZO_EVENT_DSN; when neither is set the
@@ -278,6 +278,10 @@ export interface Dsn {
   origin: string
   /** Project id segment. */
   projectId: string
+  /** The DSN's own origin + path, e.g. "https://api.hanzo.ai/v1/event/<projectId>".
+   *  Every URL below is derived from this, so the ingest address is named once —
+   *  in dsnForProduct — and nowhere else. */
+  base: string
   /** Fully-derived envelope ingest URL incl. ?sentry_key=. */
   ingestUrl: string
 }

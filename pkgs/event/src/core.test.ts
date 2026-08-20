@@ -552,7 +552,7 @@ describe('Event error capture', () => {
 const TEST_DSN =
   'https://1:' +
   '0'.repeat(64) +
-  '@sentry.hanzo.ai/v1/sentry/019f9b1e-5785-7359-ad0b-f75db8e58c99'
+  '@sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99'
 
 describe('error plane', () => {
   it('is INERT without a DSN — nothing sent to sentry, event stream unaffected', () => {
@@ -574,7 +574,7 @@ describe('error plane', () => {
     const env = tx.envelopes[0]
     // The exact route the o11y ingest registers, key on the query string.
     expect(env.url).toBe(
-      'https://sentry.hanzo.ai/v1/sentry/019f9b1e-5785-7359-ad0b-f75db8e58c99/envelope/' +
+      'https://sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99/envelope/' +
         '?sentry_key=1%3A' + '0'.repeat(64),
     )
     expect(env.contentType).toBe('application/x-sentry-envelope')
@@ -600,7 +600,7 @@ describe('error plane', () => {
     // byte length, not the JS string length.
     expect(item.length).toBe(new TextEncoder().encode(payload).length)
     expect(header.dsn).toBe(
-      'https://sentry.hanzo.ai/v1/sentry/019f9b1e-5785-7359-ad0b-f75db8e58c99',
+      'https://sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99',
     )
     const ev = JSON.parse(payload) as {
       event_id: string
