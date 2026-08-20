@@ -1,34 +1,34 @@
-/*! anon.js — THE anonymous-identity chain. ONE implementation, three distributions.
+/*! anon.js — THE anonymous-identity chain. ONE implementation, two distributions.
  *
  * One browser is ONE person on every Hanzo surface, whichever client a page
- * happens to have loaded. There were three implementations writing TWO keys —
- * `hz_anon_id` (the npm client, the hosted tag) and `hz_id` (hz.js) — so the same
- * visitor was several people depending on which snippet the surface shipped.
+ * happens to have loaded. There were once three implementations writing TWO keys —
+ * `hz_anon_id` and `hz_id` — so the same visitor was several people depending on
+ * which snippet the surface shipped.
  *
- * The three call sites:
+ * The two call sites:
  *   1. src/storage.ts        — the bundled npm client; IMPORTS this file.
- *   2. hz.js                 — the no-build script tag; INLINES the marked region.
- *   3. hanzoai/cloud apps/analytics/tag.js — the tag the door hosts at
+ *   2. hanzoai/cloud apps/analytics/tag.js — the tag the door hosts at
  *      /v1/event.js; vendors this file and its tag.go serves the marked region
  *      with the tag as one asset, so the door holds no second copy either.
  *
- * (2) and (3) have no bundler and cannot import anything, which is why the chain
- * lives in a file that is plain ES5 rather than in a .ts: the region between the
- * BEGIN and END markers is COPIED VERBATIM, and src/anon.test.ts fails if hz.js's
- * copy is so much as a byte different. Keep the region ES5, dependency-free,
- * `hz`-prefixed (it is spliced into other people's scopes) and unformatted — a
- * reformat of one copy is a diff against the other.
+ * (2) has no bundler and cannot import anything, which is why the chain lives in a
+ * file that is plain ES5 rather than in a .ts: the region between the BEGIN and END
+ * markers is COPIED VERBATIM. Keep it ES5, dependency-free, `hz`-prefixed (it is
+ * spliced into other people's scopes) and unformatted — a reformat here is a diff
+ * against the vendored copy. After editing, resync the door:
+ *
+ *   curl -fsSL https://unpkg.com/@hanzo/event/src/anon.js -o apps/analytics/anon.js
  */
 
-/* ── BEGIN hz anon chain — copied VERBATIM into hz.js and hanzoai/cloud ────── */
+/* ── BEGIN hz anon chain — copied VERBATIM into hanzoai/cloud ──────────────── */
 
 /** The ONE anonymous-id key, on every surface and in every distribution. */
 var HZ_ANON_KEY = 'hz_anon_id'
 
-/** hz.js used to write `hz_id` — a SECOND identity space, so the one-paste tag
- *  and the npm client were two different people on one page. It is READ and never
- *  written: an id already in the wild is ADOPTED into the shared identity, because
- *  minting over one detaches a returning visitor from their own history. */
+/** `hz_id` is a SECOND identity space a no-build tag once wrote, so one page could
+ *  hold two people. It is READ and never written: an id already in the wild is
+ *  ADOPTED into the shared identity, because minting over one detaches a returning
+ *  visitor from their own history. */
 var HZ_ANON_LEGACY_KEY = 'hz_id'
 
 /** The registrable domain the cookie is scoped to, so docs, cloud, console,

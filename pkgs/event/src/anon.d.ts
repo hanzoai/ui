@@ -1,5 +1,5 @@
 // Types for anon.js, which is hand-written ES5 rather than TypeScript because
-// hz.js and the door's hosted tag inline it VERBATIM and neither has a compiler.
+// The door's hosted tag inlines it VERBATIM and has no compiler.
 // The declarations are here so the bundled client still imports it typed.
 
 /** Mints a time-ordered UUIDv7 (RFC 9562 §5.7) for `now` in epoch milliseconds. */
