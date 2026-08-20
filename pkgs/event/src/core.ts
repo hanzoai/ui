@@ -409,9 +409,6 @@ export class Analytics {
     this.enqueue('event', event, { properties, ...commerce })
   }
 
-  /** track is an alias of capture (Segment familiarity). */
-  track = this.capture.bind(this)
-
   /** captureError reports a caught error, an unhandled rejection, a React render
    *  error, or a manual report to BOTH planes, from one call:
    *
@@ -482,9 +479,6 @@ export class Analytics {
       this.reentrant = false
     }
   }
-
-  /** captureException — @sentry-familiar alias of captureError. */
-  captureException = this.captureError.bind(this)
 
   /** setCohort persists cohort dimensions (e.g. signupWeek at signup) so they ride
    *  every subsequent event. */

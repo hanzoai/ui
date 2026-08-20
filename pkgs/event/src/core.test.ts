@@ -515,15 +515,6 @@ describe('Event error capture', () => {
     expect(p.$exception_fingerprint).not.toBe('forged')
   })
 
-  it('captureException is an alias of captureError', () => {
-    const a = mk()
-    a.captureException(new Error('via alias'))
-    const e = tx.all[0]
-    expect(e.event).toBe('$exception')
-    expect(e.type).toBe('event')
-    expect(e.error?.message).toBe('via alias')
-  })
-
   it('an error is still an event on the ONE stream — same /v1/event door + product', () => {
     const a = mk({ host: 'https://api.hanzo.ai' })
     a.captureError(new Error('x'))
