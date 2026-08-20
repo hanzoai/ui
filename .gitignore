@@ -49,7 +49,6 @@ yarn.lock
 
 # AI cruft
 AGENTS.md
-CLAUDE.md
 GEMINI.md
 GROK.md
 QWEN.md
