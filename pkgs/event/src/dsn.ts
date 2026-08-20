@@ -52,5 +52,5 @@ export function dsnForProduct(
   if (!product || !key) return undefined
   const projectId = PRODUCT_PROJECT[product]
   if (!projectId) return undefined
-  return `https://${key}@api.hanzo.ai/v1/sentry/${projectId}`
+  return `https://${key}@api.hanzo.ai/v1/event/${projectId}`
 }

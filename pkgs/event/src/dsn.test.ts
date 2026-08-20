@@ -5,8 +5,8 @@ import { PRODUCT_PROJECT, dsnForProduct } from './dsn'
 import { parseDsn } from './sentry'
 
 const ENV = 'NEXT_PUBLIC_HANZO_EVENT_DSN'
-const OVERRIDE = 'https://1:aaaa@api.hanzo.ai/v1/sentry/env-project'
-const EXPLICIT = 'https://1:bbbb@api.hanzo.ai/v1/sentry/explicit-project'
+const OVERRIDE = 'https://1:aaaa@api.hanzo.ai/v1/event/env-project'
+const EXPLICIT = 'https://1:bbbb@api.hanzo.ai/v1/event/explicit-project'
 // A stand-in for the surface's own resolved key — the DSN carries whatever key
 // the caller resolved (config or the KMS-sourced env), never a literal.
 const KEY = 'pk-test-resolved-key'
@@ -18,10 +18,10 @@ afterEach(() => {
 describe('the product registry', () => {
   it('builds a product DSN from the CALLER key + the project — nothing baked', () => {
     expect(dsnForProduct('console', KEY)).toBe(
-      `https://${KEY}@api.hanzo.ai/v1/sentry/${PRODUCT_PROJECT.console}`
+      `https://${KEY}@api.hanzo.ai/v1/event/${PRODUCT_PROJECT.console}`
     )
     expect(dsnForProduct('site', KEY)).toBe(
-      `https://${KEY}@api.hanzo.ai/v1/sentry/${PRODUCT_PROJECT.site}`
+      `https://${KEY}@api.hanzo.ai/v1/event/${PRODUCT_PROJECT.site}`
     )
   })
 
