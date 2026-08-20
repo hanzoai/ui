@@ -1,12 +1,12 @@
 /**
- * The product → Sentry DSN registry.
+ * The product → Sentinel DSN registry.
  *
  * An app declares WHAT it is (`product: 'console'`); this module knows WHERE its
  * errors go. That split is the whole point: no surface has to learn a DSN, carry
  * a build argument, or grow a config file to report errors — declaring the
  * product it already declares is enough.
  *
- * A Sentry DSN is PUBLIC by construction. It ships inside the client bundle and
+ * A Sentinel DSN is PUBLIC by construction. It ships inside the client bundle and
  * is readable in devtools on any deployed page, and it grants exactly one
  * capability: submitting new events. It cannot read issues, projects, or any
  * other data. So committing it is not leaking a secret — it is recording a public
@@ -20,11 +20,11 @@
  * exception table is the same data with a trap in it.
  *
  * Projects are org-scoped and named `<org>-<app>`. To add one: create the project
- * (POST /v1/sentry/projects with X-Org-Id), then add its `dsn` here keyed by the
+ * (POST /v1/sentinel/projects with X-Org-Id), then add its `dsn` here keyed by the
  * product name the app passes to `createAnalytics`.
  */
 
-/** PRODUCT_PROJECT maps a `product` to its Sentry project id. The DSN's KEY is no
+/** PRODUCT_PROJECT maps a `product` to its Sentinel project id. The DSN's KEY is no
  *  longer a per-project secret — it is the ONE org publishable key (below), so a
  *  surface's errors ride the SAME key its events do. The id only names WHICH
  *  project the errors group under, and cloud auto-provisions that project on first
@@ -37,7 +37,7 @@ export const PRODUCT_PROJECT: Readonly<Record<string, string>> = Object.freeze({
   site: '019f9b1e-5785-7359-ad0b-f75db8e58c99', // hanzo.ai (marketing; product `site`)
 })
 
-/** dsnForProduct builds the product's Sentry DSN from the caller's resolved
+/** dsnForProduct builds the product's Sentinel DSN from the caller's resolved
  *  publishable `key` and the product's project — the SAME key the event stream
  *  carries, at the product's envelope endpoint. Returns undefined when there is no
  *  key or no project for the product, leaving the error plane inert rather than
