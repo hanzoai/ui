@@ -34,14 +34,29 @@ const DialogOverlay = (props: DialogOverlayProps) => (
 
 export type DialogContentProps = ComponentProps<typeof GuiDialog.Content> & {
   showCloseButton?: boolean
+  /**
+   * The overlay's own props. Content owns the overlay — that is what lets a
+   * caller mount Content alone — but owning it is not the same as hiding it,
+   * and with no way through, the dim, the stacking and the click target were
+   * unreachable from outside. A consumer stacking dialogs (a preview opened
+   * from a dialog) has no way to say which one dims which.
+   *
+   * Absent, nothing changes: the default overlay renders exactly as before.
+   */
+  overlay?: DialogOverlayProps
 }
 
-const DialogContent = ({ showCloseButton = true, children, ...props }: DialogContentProps) => {
+const DialogContent = ({
+  showCloseButton = true,
+  overlay,
+  children,
+  ...props
+}: DialogContentProps) => {
   const themeName = useThemeName()
   return (
     <GuiDialog.Portal>
       <PortalTheme name={themeName}>
-        <DialogOverlay />
+        <DialogOverlay {...overlay} />
         <GuiDialog.Content
           {...slot('dialog-content')}
           bg="$background"
