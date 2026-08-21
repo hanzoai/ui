@@ -190,8 +190,10 @@ prefix Next needs to inline it). A surface with no key reports only for whoever
 is signed in and silently drops every logged-out visitor — the door refuses an
 unattributable write rather than filing it where its owner cannot read it.
 
-For a page with no build step at all, the same client ships as a script tag:
-`@hanzo/event/hz.js`, with `data-ingest-key="pk-…"`.
+For a page with no build step at all, the same wire ships as a hosted tag, served
+by the door it posts to:
+`<script defer src="https://api.hanzo.ai/v1/event/tag.js" data-key="pk-…">`.
+It is one or the other — a page running both counts every pageview twice.
 
 ### Naming a moment the components cannot see
 

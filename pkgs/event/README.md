@@ -30,21 +30,33 @@ starve the other:
 ### No bundler? Use the hosted tag
 
 ```html
-<script defer src="https://api.hanzo.ai/v1/event.js" data-key="pk-…"></script>
+<script defer src="https://api.hanzo.ai/v1/event/tag.js" data-key="pk-…"></script>
 ```
 
 That one line is the whole install, and it is the same line for a published site,
 hanzo.team and a customer's own page. The tag is served by the door that eats the
 events, so a caller allowlists ONE host and the tag can never drift from the wire
-it posts to. It adds DOM **autocapture** — `$click` (with an element locator),
-`$outbound`, `$scroll`, `$form`, `$vitals` — which a bundled app does not need and
-a plain page cannot get, and it carries the site's tag config from `/v1/tags`, so a
-pixel is configured on the project rather than pasted into the page.
+it posts to — `.js` is part of a segment rather than a child of one, so the tag
+sits UNDER `/v1/event` rather than beside it, and the old sibling `/v1/event.js`
+404s.
+
+It autocaptures pageviews — the first one and every SPA navigation, since
+`history.pushState` fires no event of its own — plus uncaught errors and rejected
+promises. Anything a page means on purpose goes through `window.hanzo`
+(`track`, `identify`, `page`, `error`, `flush`). It also carries the site's tag
+config from `/v1/projects/tags`, so a pixel is configured on the project rather
+than pasted into the page.
+
+> A bundled app should NOT add this tag. Both clients post pageviews to the same
+> door, so a page running `@hanzo/event` and the tag counts every pageview twice.
+> One surface, one client.
 
 > **`data-key` is a publishable `pk-`, and without one the tag is INERT.** A write
 > the door cannot attribute is refused (`401 ingest_key_required`) silently, so a
-> keyless tag measures fine in the browser and files nothing. Mint one with
-> `POST /v1/keys {"type":"publishable"}`.
+> keyless tag measures fine in the browser and files nothing. A project mints one
+> with itself: `POST /v1/projects`. A key that names no project is refused
+> `403 ingest_key_unknown` — the door fails closed rather than filing a write it
+> cannot attribute.
 
 This package is the client for a surface that **builds**. There is no second
 script-tag distribution here: one wire, one door, one tag.
