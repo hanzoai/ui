@@ -275,8 +275,13 @@ what makes the package build on TypeScript 7, which it cannot do otherwise.
 Everything under `src/` is emitted, so every `exports` subpath resolves by
 construction — no hand-maintained entry list to drift.
 
-NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace, installs
-standalone, and publishes via the maintainer flow, not `publish.yml`. Because the
+NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace and installs
+standalone — but it DOES publish through `.hanzo/workflows/publish.yml`, which
+globs `pkg/*/package.json` AND `pkgs/*/package.json`. This line used to say the
+opposite ("the maintainer flow, not publish.yml"), and the workflow's own comment
+records why nobody should trust prose here: "It guessed wrong twice, in opposite
+directions." Measured — bumping this package's version and pushing main put
+8.0.115 on npm with no further step. Read the glob, not this paragraph. Because the
 optional-peer kits (canvas/dashboard/gitops/usage) are not on the public
 registry, a standalone install must skip auto-installing peers. `.npmrc` and
 `pnpm-lock.yaml` are gitignored here, so create the `.npmrc` once:
