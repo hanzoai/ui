@@ -46,6 +46,7 @@ import {
   deriveChannel,
 } from './attribution'
 import { dsnForProduct } from './dsn'
+import { keyForPage } from './org'
 import { EXCEPTION, PAGEVIEW } from './events'
 import { exceptionProperties } from './exception'
 import { scrubText } from './scrub'
@@ -283,12 +284,21 @@ export class Analytics {
       //      carries end to end — KMS `deploy/PUBLISHABLE_KEY` -> the PUBLISHABLE_KEY
       //      build-arg -> the NEXT_PUBLIC_ prefix Next inlines.
       //
-      // A surface that provides neither has no key, and its anonymous traffic
-      // files under `$public` (which drops track/identify/group and answers 200);
-      // the fix is to give it the KMS-sourced env, not to hardcode the org key
-      // here. The key is a credential-class value: its home is KMS, and the ONE
-      // build reads it from there.
-      ingestKey: config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY'),
+      //   3. the org that owns the HOST this page is served from (`org.ts`).
+      //
+      // Step 3 fires only when a surface configured NOTHING, so it never overrides
+      // the KMS chain above — it replaces going dark with reporting to the right
+      // brand. That is what a static export needs: `output: export` inlines no env,
+      // so before this the only way to report was to commit a key literal, and the
+      // fleet grew one copy per site of a value with a single source.
+      //
+      // A surface no brand claims still has no key, and the door REFUSES an
+      // unattributed event (401 `ingest_key_required`) — the reserved `$public`
+      // tenant that once caught keyless beacons is retired, and anonymous ingest is
+      // refused at every door on every brand host. So there is no quiet fallback to
+      // rely on: an event lands in the org a credential names, or it does not land.
+      ingestKey:
+        config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY') ?? keyForPage(),
     }
     this.transport = config.transport ?? new DefaultTransport()
     // Error plane, most specific source first: an explicit DSN wins, then the
