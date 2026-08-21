@@ -694,6 +694,21 @@ renders, and the test suite was green through both. Fixed in **8.0.73**.
 Both tests are mutation-checked: reverting either fix fails them (2 and 3
 respectively). A test nobody has watched fail is not known to run.
 
+- **`DialogContent` rendered `<DialogOverlay />` with no props and no way in**,
+  fixed in **8.0.115**. Content owning its own portal and overlay is the point —
+  it is what lets a caller mount Content alone — but owning is not hiding, and
+  with nothing through, the dim, the stacking order and the click target were
+  unreachable from outside the package. A consumer stacking a preview over a
+  dialog had no way to say which one dims which. `overlay?: DialogOverlayProps`
+  is the way through; absent, nothing changes. This is the last of the three
+  things keeping hanzo.chat's dialog files on Radix, whose own Dialog lets them
+  render the overlay themselves.
+
+  Its test reads the COMPUTED z-index, never `el.style`: gui compiles a style
+  prop to one atomic class (`_z-1234`) and writes no inline style at all, so
+  `el.style.zIndex` is `''` on an overlay that is correctly stacked. Written the
+  inline way first — and the test failing against working code is what said so.
+
 **Before believing a report that a primitive is MISSING, check the version it was
 measured against.** A fleet pass concluded @hanzo/ui "cannot receive" Accordion,
 HoverCard or RadioGroup and that `<TabsTrigger>Label</TabsTrigger>` renders an
