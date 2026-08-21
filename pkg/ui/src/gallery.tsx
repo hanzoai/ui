@@ -91,10 +91,11 @@ const BADGE_VARIANTS: BadgeVariant[] = ['default', 'secondary', 'destructive', '
 /** The chat shell is callbacks-out, and this list only needs them to exist. */
 const NOOP = () => {}
 
-/** Two, so the grid's wrap rule and the letter fallback both render. */
+/** Two: one with a host and one without, so the card's second line and its
+ *  letter fallback are both rendered rules. */
 const SOURCES: Source[] = [
-  { id: 'a', title: 'hanzo.ai', href: 'https://hanzo.ai' },
-  { id: 'b', title: 'Reference' },
+  { id: 'a', title: 'The one chat surface', href: 'https://hanzo.ai', host: 'hanzo.ai' },
+  { id: 'b', title: 'A reference with a title long enough to reach the three-line clamp' },
 ]
 
 /** One section. Plain CSS on a plain div — the gallery is a harness, and laying
@@ -552,7 +553,11 @@ export const Gallery = () => (
     */}
     <Section name="chat">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 520, height: 320 }}>
-        <ChatHeader title="A conversation with a long enough name to clamp">
+        <ChatHeader
+          title="A conversation with a long enough name to clamp"
+          leading={<AsideToggle />}
+          onOpenMenu={NOOP}
+        >
           <ShareButton />
           <AsideToggle />
         </ChatHeader>
@@ -583,6 +588,11 @@ export const Gallery = () => (
           {/* Without a retry it is a statement; that is a different tree. */}
           <Message role="assistant">
             <Failure>Rate limited.</Failure>
+          </Message>
+          {/* A caller's own bubble material: a different fill is a different
+              rule, and this is the door chat needs for its `glass` turn. */}
+          <Message role="user" body={{ bg: '$color5', rounded: '$3' }}>
+            restyled bubble
           </Message>
           <Message role="system">note</Message>
         </Thread>

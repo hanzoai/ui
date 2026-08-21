@@ -34,7 +34,7 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Ban, Check, ChevronDown, TriangleAlert } from '@hanzogui/lucide-icons-2'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, Spinner } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
@@ -79,7 +79,8 @@ const mark = (status: Ran) => {
   }
 }
 
-export interface StepProps {
+export interface StepProps
+  extends Omit<ComponentProps<typeof Collapsible>, 'children' | 'open' | 'defaultOpen' | 'onOpenChange'> {
   /** What ran — a tool name, "Reasoning", "Plan". */
   name: string
   status?: Ran
@@ -108,6 +109,7 @@ export function Step({
   defaultOpen,
   open,
   onOpenChange,
+  ...props
 }: StepProps) {
   // A step with no body is a statement, not a control. Rendering a dead chevron
   // and a focusable trigger over nothing is how a keyboard user is sent to a
@@ -150,6 +152,7 @@ export function Step({
       borderColor={status === 'error' ? '$color9' : '$borderColor'}
       bg="$color2"
       overflow="hidden"
+      {...props}
     >
       {opens ? <CollapsibleTrigger width="100%">{header}</CollapsibleTrigger> : header}
       {opens ? (

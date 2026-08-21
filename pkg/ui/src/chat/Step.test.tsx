@@ -13,7 +13,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
-import { Failure, Step } from './index'
+import { Code, Composer, Failure, Message, Sources, Step, Thread } from './index'
 
 const html = (node: ReactNode) =>
   renderToStaticMarkup(
@@ -111,5 +111,47 @@ describe('Failure', () => {
     // a failed turn is the last one that should be pointer-only.
     const markup = html(<Failure onRetry={() => {}}>x</Failure>)
     expect(markup).toMatch(/<button[^>]*data-slot="failure-retry"/)
+  })
+})
+
+describe('the module is open', () => {
+  /**
+   * Every component here destructured a closed prop list and spread no
+   * residual, so a caller could not pass an `id`, a `className`, a `style` or a
+   * test hook — and hanzo/chat could adopt none of it, because its scroll
+   * machinery addresses turns BY id and `SelectionAsk` finds one with
+   * `closest('.message-render')`. `popover.tsx:39` in this same package already
+   * does the opposite. gui forwards what it does not recognise, which is the
+   * whole mechanism `slot()` is built on, so the residual spread costs nothing.
+   */
+  it.each([
+    ['Message', <Message key="m" role="user" id="turn-1" className="message-render" />],
+    ['Composer', <Composer key="c" value="" onChange={() => {}} onSend={() => {}} id="turn-1" className="message-render" />],
+    ['Code', <Code key="k" id="turn-1" className="message-render">x</Code>],
+    ['Step', <Step key="s" name="n" id="turn-1" className="message-render" />],
+    ['Failure', <Failure key="f" id="turn-1" className="message-render">x</Failure>],
+    ['Sources', <Sources key="o" id="turn-1" className="message-render" sources={[{ id: 'a', title: 'A' }]} />],
+    ['Thread', <Thread key="t" id="turn-1" className="message-render" />],
+  ])('%s passes an id and a class through to its element', (_name, node) => {
+    const markup = html(node)
+    expect(markup).toContain('id="turn-1"')
+    expect(markup).toContain('message-render')
+  })
+
+  it('lets a caller restyle the bubble without rebuilding the turn', () => {
+    // `bg` was welded to `$color3` and `maxW` to a percentage, so chat's
+    // fleet-wide `glass` turn could not be expressed. Same door `DialogContent`
+    // opened with `overlay`.
+    const markup = html(
+      <Message role="user" body={{ className: 'glass', bg: '$color5' }}>
+        hi
+      </Message>,
+    )
+    expect(markup).toContain('glass')
+    expect(markup).toContain('_bg-color5')
+  })
+
+  it('names the turn a hover group, so an action strip can reveal itself', () => {
+    expect(html(<Message role="assistant" actions={<Code>c</Code>} />)).toContain('t_group')
   })
 })
