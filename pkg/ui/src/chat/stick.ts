@@ -1,10 +1,8 @@
 /**
  * Stay-at-the-bottom, as a pure decision.
  *
- * A thread should follow a streaming answer, but it must stop following the
- * moment the reader scrolls up to re-read something — otherwise every new token
- * yanks them back down. The rule is a distance test against the bottom, and it
- * is the piece each surface had written slightly differently.
+ * A thread follows a streaming answer and stops the moment the reader scrolls
+ * up, or every new token yanks them back down. A distance test against the end.
  */
 
 /** How far from the bottom still counts as "at the bottom", in px. */

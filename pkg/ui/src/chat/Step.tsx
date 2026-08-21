@@ -4,33 +4,15 @@
  * Step — something the assistant did on the way to the answer, and how it went.
  *
  * A tool call, a retrieval, a plan, a stretch of reasoning, a progress report:
- * every one of them is a named region that reports a state and opens to show
- * its detail. Two repos had written that arrangement NINE times without ever
- * naming it — hanzo/chat once (`ToolCall.tsx` + `ProgressText.tsx`), hanzo.app
- * eight (`chat-panel/index.tsx` `ToolDisplay`, `SyntheticErrorDisplay`,
- * `ReasoningDisplay`, `PlanDisplay`, `AgentDisplay`, `ProgressDisplay`, the
- * inline `project_context` block, and the builder's own `CollapsibleSection` in
- * `ask-ai/chat-thread.tsx:330`). Nine chances to order the header differently,
- * and they took most of them.
+ * each is a named region that reports a state and opens to show its detail.
+ * The header, the state mark, the disclosure and the frame are here; what goes
+ * inside is `children`.
  *
- * What goes INSIDE stays the surface's: chat renders the input as a code block
- * and the result through its own markdown, the app renders
- * `JSON.stringify(parameters, null, 2)`. That is `children`. The header, the
- * state mark, the disclosure and the frame are the same drawing in all nine and
- * they are here.
+ * Open/closed is `Collapsible`, so `aria-expanded`, `aria-controls` and the
+ * keyboard come from the primitive.
  *
- * The open/closed behaviour is `Collapsible`, not a hand-rolled height
- * animation. Both existing implementations rolled their own — chat measures
- * `scrollHeight` in a `useLayoutEffect`, keeps a `ResizeObserver` alive and
- * transitions an explicit pixel height — and that is the keyboard handling and
- * the `aria-expanded`/`aria-controls` pair re-derived by hand each time. The
- * primitive already has them.
- *
- * There is no duration and no elapsed time. Neither implementation shows one,
- * and chat's apparent progress is not measured at all: `useProgress.ts:54`
- * ticks a `setInterval` by 0.007 every 200ms and caps at 0.95 until the server
- * says otherwise. A number that is invented should not be given a place to
- * render.
+ * No duration: nothing upstream measures one, and a progress ratio ticked by a
+ * timer is not a measurement.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Ban, Check, ChevronDown, TriangleAlert } from '@hanzogui/lucide-icons-2'
@@ -39,32 +21,20 @@ import type { ComponentProps, ReactNode } from 'react'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, Spinner } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 
-/**
- * How a step went.
- *
- * Four, from the union of what the two implementations track. chat reports
- * `error`, `cancelled` and a progress ratio it treats as running-or-done
- * (`ToolCall.tsx:139`); the app reports `pending | executing | completed |
- * failed` (`chat-panel/index.tsx:97`) — and `pending` and `executing` draw the
- * same thing, because from the reader's side a step that has not started and a
- * step that is running are both "not yet".
- */
+/** How a step went. A step that has not started and one that is running draw
+ *  the same thing: from the reader's side both are "not yet". */
 export type Ran = 'running' | 'done' | 'error' | 'cancelled'
 
-/** Edge of the state mark, px. One size, so the header never reflows on a state
- *  change — a step that finishes must not move the text beside it. */
+/** Edge of the state mark, px. One size, so a state change never reflows the
+ *  header. */
 const MARK = 13
 
 /**
  * The mark for each state. `running` is the one that moves.
  *
- * Tinted on the glyph, never on the box: `XStack` is a View and has no `color`,
- * so a colour set there type-errors rather than cascading — which is this
- * package's "a prop must actually arrive" rule catching a habit borrowed from
- * the DOM. Written as four call sites rather than a lookup table because the
- * Spinner and the three glyphs do not share a props type: the icons take a
- * themed `GetThemeValueForKey<'color'>` and the Spinner takes a plain string,
- * and the table that unified them only typechecked by widening both to `any`.
+ * Tinted on the glyph: `XStack` is a View and takes no `color`. Four call sites
+ * rather than a table because the Spinner and the icons do not share a props
+ * type — the icons take a themed colour, the Spinner a plain string.
  */
 const mark = (status: Ran) => {
   switch (status) {
@@ -84,19 +54,15 @@ export interface StepProps
   /** What ran — a tool name, "Reasoning", "Plan". */
   name: string
   status?: Ran
-  /**
-   * One line beside the name: the command, the path, the query. Clamped to a
-   * single line — the app truncates its own to 50 characters
-   * (`chat-panel/index.tsx:1148`) precisely because an untruncated one wraps
-   * the header and moves the chevron.
-   */
+  /** One line beside the name: the command, the path, the query. Clamped, or it
+   *  wraps the header and moves the chevron. */
   detail?: string
   /** Revealed when open. Omit it and the step has nothing to open, so it does
    *  not offer to: no chevron, no trigger, no keyboard stop. */
   children?: ReactNode
   /** Uncontrolled. */
   defaultOpen?: boolean
-  /** Controlled — the app holds every step's state in one `Set` on the panel. */
+  /** Controlled. */
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
@@ -111,9 +77,8 @@ export function Step({
   onOpenChange,
   ...props
 }: StepProps) {
-  // A step with no body is a statement, not a control. Rendering a dead chevron
-  // and a focusable trigger over nothing is how a keyboard user is sent to a
-  // stop that does not answer.
+  // A step with no body is a statement, not a control: no chevron, no trigger,
+  // no keyboard stop that does not answer.
   const opens = children != null
 
   const header = (
@@ -144,11 +109,8 @@ export function Step({
       width="100%"
       rounded="$4"
       borderWidth={1}
-      // The failure edge, not a red one. `product/tone.ts` states the rule this
-      // package works under — "this system has no colour to spend" — and marks
-      // its `stopped` register with a border rather than a fill. A step that
-      // errored is set apart the same way, so it still reads as a failure in a
-      // brand that retunes the whole ramp.
+      // An edge, not a red fill — `product/tone.ts` marks `stopped` the same
+      // way, so it survives a brand that retunes the ramp.
       borderColor={status === 'error' ? '$color9' : '$borderColor'}
       bg="$color2"
       overflow="hidden"

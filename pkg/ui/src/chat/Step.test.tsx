@@ -1,12 +1,8 @@
 // @vitest-environment jsdom
 
-/**
- * What a step and a failure promise, asserted on the markup rather than on the
- * source. Both are arrangements the surfaces had each drawn by hand, so the
- * things worth pinning are the ones a hand-drawn copy got wrong: whether the
- * disclosure is a real disclosure, whether a failure interrupts, and whether
- * the controls answer a keyboard.
- */
+/** Step and Failure, asserted on the markup: that the disclosure is a real
+ *  disclosure, that a failure interrupts, and that the controls take a
+ *  keyboard. */
 import type { ReactNode } from 'react'
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -31,9 +27,7 @@ describe('Step', () => {
   })
 
   it('clamps both header strings to one line', () => {
-    // An untruncated command wraps the header and moves the chevron, which is
-    // why the app cuts its own to 50 characters at the call site. Here the
-    // clamp is the component's, so no caller has to remember.
+    // An untruncated command wraps the header and moves the chevron.
     const markup = html(<Step name="shell" detail={'x'.repeat(400)} />)
     expect([...markup.matchAll(/_ws-nowrap/g)]).toHaveLength(2)
   })
@@ -64,15 +58,14 @@ describe('Step', () => {
     ['error', 'm21.73 18-8-14'],
     ['cancelled', 'm4.9 4.9 14.2 14.2'],
   ] as const)('draws its own mark for %s', (status, signature) => {
-    // Each state has to be TOLD APART, so this reads the glyph's own path data
-    // rather than merely asserting that some svg rendered.
+    // Reads the glyph's own path data: the states have to be told apart, not
+    // merely all render an svg.
     expect(html(<Step name="s" status={status} />)).toContain(signature)
   })
 
   it('marks a failed step with an edge, never a colour', () => {
-    // `product/tone.ts`: "this system has no colour to spend". `stopped` is set
-    // apart by a border, and a step that errored is set apart the same way, so
-    // it survives a brand that retunes the ramp.
+    // `product/tone.ts` marks `stopped` with a border, so it survives a brand
+    // that retunes the ramp.
     expect(html(<Step name="s" status="error" />)).toContain('_btc-color9')
     expect(html(<Step name="s" status="done" />)).toContain('_btc-borderColor')
   })
@@ -106,24 +99,15 @@ describe('Failure', () => {
   })
 
   it('gives retry a real button, so a keyboard can reach it', () => {
-    // A `role="button"` View takes focus and then ignores Enter and Space —
-    // activation belongs to the element, not the attribute. The one control on
-    // a failed turn is the last one that should be pointer-only.
+    // A `role="button"` View takes focus and then ignores Enter and Space.
     const markup = html(<Failure onRetry={() => {}}>x</Failure>)
     expect(markup).toMatch(/<button[^>]*data-slot="failure-retry"/)
   })
 })
 
 describe('the module is open', () => {
-  /**
-   * Every component here destructured a closed prop list and spread no
-   * residual, so a caller could not pass an `id`, a `className`, a `style` or a
-   * test hook — and hanzo/chat could adopt none of it, because its scroll
-   * machinery addresses turns BY id and `SelectionAsk` finds one with
-   * `closest('.message-render')`. `popover.tsx:39` in this same package already
-   * does the opposite. gui forwards what it does not recognise, which is the
-   * whole mechanism `slot()` is built on, so the residual spread costs nothing.
-   */
+  // A surface addresses turns by id and finds them by class; both have to reach
+  // the element.
   it.each([
     ['Message', <Message key="m" role="user" id="turn-1" className="message-render" />],
     ['Composer', <Composer key="c" value="" onChange={() => {}} onSend={() => {}} id="turn-1" className="message-render" />],
@@ -139,9 +123,6 @@ describe('the module is open', () => {
   })
 
   it('lets a caller restyle the bubble without rebuilding the turn', () => {
-    // `bg` was welded to `$color3` and `maxW` to a percentage, so chat's
-    // fleet-wide `glass` turn could not be expressed. Same door `DialogContent`
-    // opened with `overlay`.
     const markup = html(
       <Message role="user" body={{ className: 'glass', bg: '$color5' }}>
         hi

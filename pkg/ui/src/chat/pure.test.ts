@@ -1,14 +1,9 @@
 /**
  * The conversation's decisions load where a value loads.
  *
- * `import('@hanzo/ui/chat')` in Node dies on `SyntaxError: Unexpected token
- * 'typeof'` — it is TSX behind a client directive — so a script, a Playwright
- * spec or a server-side caller could not reach `sends` at all and had to stand
- * up a browser to ask whether Enter sends. This is the door that opens.
- *
- * Proven in a CHILD NODE PROCESS with a bare `require`, exactly as
- * `dist.test.ts` proves it for `product/pure`: vitest has vite's transform
- * already installed, so importing it here would prove nothing about Node.
+ * Proven in a child node process with a bare `require`, as `dist.test.ts` does
+ * for `product/pure`: vitest has vite's transform installed, so importing here
+ * would prove nothing about Node.
  */
 import { execFileSync } from 'node:child_process'
 import { existsSync } from 'node:fs'
@@ -18,9 +13,8 @@ import { describe, expect, it } from 'vitest'
 
 import { pinned, ready, sends } from './pure'
 
-// Up out of `src/chat`, then out of `src` — this file sits one level deeper
-// than `dist.test.ts`, and a DIST that does not exist makes `runIf` skip
-// silently, which reads exactly like passing.
+// Up out of `src/chat`, then out of `src`. A DIST that does not exist makes
+// `runIf` skip silently, which reads exactly like passing.
 const DIST = join(dirname(dirname(dirname(fileURLToPath(import.meta.url)))), 'dist')
 const built = existsSync(join(DIST, 'chat/pure.cjs'))
 
@@ -52,9 +46,8 @@ describe('@hanzo/ui/chat/pure', () => {
   })
 
   it.runIf(built)('is not stamped as a client module', () => {
-    // A stamped module is a client REFERENCE on React's server layer, not a
-    // function: calling `sends` through one in a server component throws
-    // instead of answering. `postbuild.mjs` keeps these off the stamp list.
+    // A stamped module is a client reference on React's server layer, so
+    // calling `sends` through one in a server component throws.
     const src = require('node:fs').readFileSync(join(DIST, 'chat/pure.js'), 'utf8')
     expect(src.startsWith("'use client'")).toBe(false)
   })

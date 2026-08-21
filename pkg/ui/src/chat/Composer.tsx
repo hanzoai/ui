@@ -12,21 +12,11 @@
  * turn is in flight it stops. Two buttons in one place was the thing every
  * surface got subtly different.
  *
- * Two keys are deliberately absent, because the surfaces do not agree that they
- * exist. ESCAPE is bound in none of the three main composers — only in chat's
- * two SUB-composers, where it dismisses the thing they float over
- * (`SelectionAsk.tsx:85`, `EditMessage.tsx:124`), which is the host's concern
- * and not the field's. ARROWUP recalls the last turn in exactly one composer,
- * chat's (`useHandleKeyUp.ts:117`), and it does it by finding
- * `document.getElementById('edit-' + parentMessageId)` and clicking it — it is
- * a binding to their edit-in-place, not a general history recall, and there is
- * nothing here for it to reach. Adding either would be inventing an interaction
- * and then asking three surfaces to adopt it.
+ * Escape and ArrowUp are not bound. Dismissal belongs to whatever the composer
+ * floats inside, and history recall needs a turn store this has no view of.
  *
- * Growth is `Textarea`'s, and since 8.1.4 it follows the CONTENT rather than the
- * newline count — so a long paragraph that wraps without ever containing a `\n`
- * raises the field instead of scrolling inside it. `rows` is the floor and
- * `maxHeight` the ceiling; both are bounds, and neither is re-implemented here.
+ * Growth is `Textarea`'s and follows the content, so a wrapped paragraph raises
+ * the field. `rows` is the floor, `maxHeight` the ceiling.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ArrowUp, Square } from '@hanzogui/lucide-icons-2'
@@ -36,43 +26,19 @@ import { Button, Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { ready, sends, type Mods } from './send'
 
-/** `onChange` is dropped: this component already has one and it carries the
- *  draft, not a DOM change event. */
+/** `onChange` is dropped: here it carries the draft, not a DOM change event. */
 type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
 type FieldProps = Omit<ComponentProps<typeof Textarea>, 'value' | 'onChangeText'>
 
 const PAD = 8
 const MIN_ROWS = 1
 
-/**
- * How tall the field may grow before it scrolls, px.
- *
- * 200 is the number three independent composers reached — hanzo.app `/chat`
- * (`page.tsx:184`, `Math.min(el.scrollHeight, 200)`), hanzo/chat's
- * `AnswerComposer.tsx:134`, and the extension's `answer/Composer.tsx:81`
- * (`maxH={200}`). The two that differ are both fitting a NARROWER frame — the
- * extension's in-page overlay caps at 110 (`content-script.ts:1340`) and its
- * sidebar at 120 — and the one that differs upward, chat's main composer at
- * `max-h-[45vh]`, is the full-page surface. So 200 is the default and the
- * ceiling is a prop.
- *
- * Uncapped is not an option: the field would grow with the draft until a long
- * paste owned the viewport and pushed the thread it belongs to off screen.
- * Nothing capped it here before.
- */
+/** How tall the field may grow before it scrolls, px. Uncapped, a long paste
+ *  pushes the thread off screen; narrower frames pass their own. */
 const CEILING = 200
 
-/**
- * Floor for the field, px.
- *
- * `Textarea` is a form control and stands 64px tall by default, which is right
- * for a message body in a form and wrong for a composer: it is three lines of
- * chrome before anything is typed. Every surface sets its own — 44 in chat
- * (`ChatForm.tsx:334`) and in the app builder (`COMPOSER_MIN_H`), 48 in the app
- * `/chat`. 44 is both the mode and this package's touch-target floor, so the
- * one-line composer is exactly as tall as the smallest thing you are allowed to
- * tap.
- */
+/** Floor for the field, px. `Textarea` defaults to 64, which is three lines of
+ *  chrome before anything is typed. 44 is the touch-target floor. */
 const FLOOR = 44
 
 /**
@@ -105,25 +71,17 @@ export interface ComposerProps extends Stack {
   /** Hint shown at the end of the footer row. */
   hint?: string
   /**
-   * The accessible name of the field.
+   * The accessible name of the field, independent of `placeholder`.
    *
-   * Distinct from `placeholder`, which it used to be derived from. A surface
-   * whose placeholder rotates on a timer — hanzo.app's does — renamed the
-   * control on every tick, so a screen reader re-announced the field while the
-   * writer was typing into it. The name is stable and the placeholder is
-   * decoration; deriving one from the other conflates them.
+   * A placeholder that rotates renames the control on every tick and gets the
+   * field re-announced mid-sentence. The name is stable; the placeholder is
+   * decoration.
    */
   label?: string
   /** The field's own props — a ref, a testid, focus handlers, a paste handler. */
   field?: FieldProps
-  /**
-   * Replaces the send control entirely.
-   *
-   * The default is the right one — one button that submits and stops, which is
-   * what every surface got subtly different — but a surface with a second
-   * commit mode has nowhere else to put it, and `children` is the START of the
-   * footer row.
-   */
+  /** Replaces the send control. `children` is the START of the footer row, so a
+   *  second commit mode has nowhere else to go. */
   send?: ReactNode
 }
 
@@ -185,11 +143,8 @@ export function Composer({
         maxH={maxHeight}
         aria-label={label ?? placeholder}
         {...field}
-        // After `field`, and deliberately. These four ARE the composer; a
-        // caller's `onKeyDown` landing on top of `keyed` would take the Enter
-        // rule and the IME guard with it, type-check, and go on looking
-        // correct until a Japanese writer typed into it. So the caller's runs
-        // FIRST and this one defers to it if it claimed the key.
+        // After `field`: spread over, a caller's `onKeyDown` would replace the
+        // Enter rule and the IME guard. Theirs runs first and can claim the key.
         value={value}
         onChangeText={onChange}
         onKeyDown={(e: any) => {

@@ -12,41 +12,20 @@ const rowsOf = (v: unknown) =>
   typeof v === "string" ? v.split("\n").length : 0
 
 /**
- * Textarea — standard-token multiline field that grows with what is in it.
+ * Textarea — standard-token multiline field that grows with its content.
  *
- * Growth used to be LINE-DRIVEN — `rows` from `value.split('\n').length` — on
- * the stated grounds that counting newlines is the one measurement web, native
- * and desktop agree on. It counts the wrong thing. A draft that wraps without
- * ever containing a newline never raises the count, so the most ordinary input
- * there is, one long paragraph, scrolls inside the floor while you type.
- * Measured in Chromium at 420px wide: 700 characters and no `\n` gave
- * `clientHeight 44` around `scrollHeight 160`.
+ * The height is measured off the node and applied INLINE. Two nearer-looking
+ * routes do not work here: `onContentSizeChange` never fires, because gui's
+ * `TextArea` is `styled(Input, { render: 'textarea' })` over a real DOM element
+ * rather than react-native-web's `TextInput`; and a `height` style prop would
+ * mint one atomic class per pixel value, none of them in the packaged sheet.
  *
- * The fix is to measure the content. Two things that look like the measurement
- * are not available here, and both were tried:
+ * `rows` is the floor and `maxH` the ceiling — CSS clamps between them and the
+ * field scrolls past the ceiling, so neither bound is re-implemented here.
+ * Counting newlines instead would miss a paragraph that wraps without one.
  *
- *   `onContentSizeChange` is the RN API for exactly this, and
- *   react-native-web implements it by reading `scrollHeight`
- *   (`dist/exports/TextInput/index.js:192`). It never fires through this
- *   component — measured, zero calls, no warning. gui's `TextArea` is
- *   `styled(Input, { render: 'textarea' })` from `@hanzogui/web`: a Tamagui
- *   styled component over a real DOM `<textarea>`, so RNW's `TextInput` is not
- *   on the path and neither is its implementation of that prop.
- *
- *   A `height` STYLE PROP would be compiled by gui into one atomic class per
- *   distinct pixel value, so a field that grows through forty heights mints
- *   forty rules at runtime — none of them in the packaged sheet.
- *
- * So the height is measured off the node and applied INLINE, which is the one
- * channel that carries a per-render value without going through the atomic
- * compiler. `rows` stays the floor and `maxH` stays the ceiling; CSS clamps
- * between them and the field scrolls past the ceiling, so neither bound is
- * re-implemented in script.
- *
- * The measurement is guarded on `scrollHeight` actually being a number, so on a
- * target where the host is not a DOM element the effect no-ops and the
- * line-driven floor is what remains — today's behaviour, unchanged, rather than
- * a broken one.
+ * Guarded on `scrollHeight` being a number, so where the host is not a DOM
+ * element the effect no-ops and the row count is what remains.
  */
 /**
  * Typed from the gui component it renders, exactly as `Input` is — the field
@@ -65,9 +44,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
   const node = React.useRef<HTMLTextAreaElement | null>(null)
   const [grown, setGrown] = React.useState<number | undefined>(undefined)
 
-  // Both refs reach the same host: ours to measure it, the caller's because a
-  // caller that hands one over must still get it. Written as a callback so
-  // neither is dropped on the other's behalf.
+  // Both refs reach the same host: ours to measure it, and the caller's.
   const hold = React.useCallback(
     (el: HTMLTextAreaElement | null) => {
       node.current = el
@@ -77,16 +54,14 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
     [ref],
   )
 
-  // The value the field is actually showing — a controlled field is told, an
-  // uncontrolled one has to be watched, and both have to re-measure.
+  // What the field is showing: told when controlled, watched when not.
   const shown = uncontrolled ? typed : value
 
   React.useLayoutEffect(() => {
     const el = node.current
     if (!el || typeof el.scrollHeight !== "number") return
     // Released to `auto` first, or `scrollHeight` reports the height it already
-    // has and the field can only ever grow. Restored in the same synchronous
-    // block, before paint, so nothing flashes.
+    // has and the field can only grow. Restored before paint.
     const held = el.style.height
     el.style.height = "auto"
     const measured = el.scrollHeight
@@ -114,9 +89,8 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       fontSize="$3"
       opacity={props.disabled ? 0.5 : 1}
       {...(props as Record<string, unknown>)}
-      // After the caller's props: the measurement is this component's answer to
-      // its own question, and a caller's `style` should not silently turn the
-      // growth off. A caller wanting a fixed height says so with `height`.
+      // After the caller's props, so a passed `style` cannot silently disable
+      // growth. A fixed height is asked for with `height`.
       style={{ ...(style as object), ...(grown ? { height: grown } : null) }}
     />
   )
