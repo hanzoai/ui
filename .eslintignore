@@ -4,5 +4,4 @@ target/
 build/
 dist/
 
-/templates/
 /fixtures/

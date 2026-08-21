@@ -23,14 +23,20 @@ impl, one place — link out, never duplicate.
 ```bash
 pnpm add @hanzo/ui         # consume
 # dev:
-pnpm install && pnpm build:registry && pnpm dev   # registry MUST build before app
+pnpm install && pnpm --filter @hanzo/ui... build
 ```
 
 **Key entry points.** `pkg/ui/` (core lib + v8 subpaths: /product /data /canvas
-/dashboard /usage /gitops) · `app/registry/{default,new-york}/`
-(component SOURCE OF TRUTH) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
-`packages/shadcn/` (CLI) · `app/content/docs/` (MDX docs). Publish = bump a
-package `version` + merge to main (`.hanzo/workflows/publish.yml`).
+/dashboard /usage /gitops) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
+`apps/cd` (the @hanzo/cd demo). Publish = bump a package `version` + merge to
+main (`.hanzo/workflows/publish.yml`).
+
+**What is NOT here.** Everything shadcn-lineage lives in **`hanzoai/shadcn`**:
+the `shadcn` CLI, the component registry (`app/registry/**`, `apps/v4/registry/**`),
+both docs sites, the `templates/*` scaffolds, and the docs-site e2e suite.
+ui.hanzo.ai is built and deployed from there. This repo is `@hanzo/ui@8` on
+`@hanzo/gui` plus the `@hanzo/*` family, and nothing else — no Tailwind, no
+Radix, no registry.
 
 **Spec / more context.** Canonical SDK + docs model: `~/work/hanzo/SDK-ARCHITECTURE.md`.
 Detailed engineering notes (build order, import surface, telemetry, upstream sync,
@@ -312,70 +318,58 @@ Hanzo-branded equivalents.
 
 ```
 ui/
-  app/                   Hanzo documentation site (Next.js 15.3.1, React 19)
-    registry/            Component registry (SOURCE OF TRUTH)
-      default/ui/        150+ components
-      default/example/   Usage demos
-      default/blocks/    24+ full-page sections
-      new-york/          Alternative theme
-    content/docs/        MDX documentation
-    scripts/             Build scripts
+  pkg/                   published, and the reason this repo exists
+    ui/                  @hanzo/ui@8 — the core library (npm)
+    appearance/          @hanzo/appearance
+    composer/            @hanzo/composer
+    data/                @hanzo/data
+  pkgs/                  the rest of the @hanzo/* family, auto-published
+    event/               telemetry client — POST /v1/event
+    observe/             capture engine        og/       OG image generation
+    commerce/  checkout/  shop/  products/     canvas/   cd/   dashboard/
+    agent-ui/  annotate/  react/  replay/      sentinel/ tokens/
+    events/    next/      vite/   observe-native/  observe-svelte/
   apps/
-    v4/                  Upstream shadcn v4 docs/registry app (port 4000)
-  packages/
-    shadcn/              shadcn CLI v4.1.0 (font system, chart colors, scaffold)
-    tests/               Integration tests for shadcn CLI
-    og/                  OG image generation (Hanzo-only)
-  pkg/
-    ui/                  Core library (npm)
-    react/               React primitives
-    brand/               Branding system
-    commerce/            E-commerce components
-    checkout/            Checkout flow
-    shop/                Shop components
-    agent-ui/            AI agent UI components
-    tokens/              Design tokens
-  skills/
-    shadcn/              AI skill definitions for shadcn CLI
-  templates/             Project templates (next, vite, astro, react-router, start + monorepo variants)
+    cd/                  demo app for @hanzo/cd
 ```
 
-## Critical: Build Order
+Both roots publish: `.hanzo/workflows/publish.yml` globs `pkg/*/package.json`
+AND `pkgs/*/package.json`. A package in either place ships on a version bump.
 
-**Registry MUST build before app.** The registry generates JSON that the CLI reads.
+## Build Order
+
+`@hanzo/ui` depends on siblings that type themselves through their own
+`"types": "dist/index.d.ts"`, so they must be built first. The `...` suffix does
+that, in topological order — never build `@hanzo/ui` alone.
 
 ```bash
-pnpm build:registry    # MUST run first
-pnpm build             # Then build app
+pnpm --filter @hanzo/ui... build
 ```
 
 ## Commands
 
 ```bash
-pnpm dev               # Dev server (:3003)
-pnpm build:registry    # Build component registry
-pnpm build             # Build app
-pnpm lint              # Lint all workspaces
-pnpm typecheck         # Type checking
-pnpm test              # Unit tests
-pnpm test:e2e          # Playwright E2E
+pnpm --filter @hanzo/ui... build   # the library and its workspace deps
+pnpm --filter @hanzo/ui test:unit  # styles + render surface
+pnpm lint                          # lint all workspaces
+pnpm typecheck                     # type checking
+pnpm test                          # unit tests
 ```
 
 ## How this ships
 
 One way, and it runs on our own stack:
 
-    push  ->  git.hanzo.ai/hanzoai/ui           CANONICAL (remote `hanzogit`)
+    push  ->  git.hanzo.ai/hanzoai/ui           CANONICAL
               .hanzo/workflows/cicd.yml         the whole pipeline, from hanzo.yml
-              .hanzo/workflows/registries.yml   the v4 registry check
               .hanzo/workflows/publish.yml      publishes pkg/* and pkgs/*
               .hanzo/workflows/snapshots.yml    refreshes the visual baselines
-              .hanzo/workflows/deploy.yml       builds ghcr.io/hanzoai/ui
-      ->  hanzoai/universe crs/ui.yaml          names the tag that is live
-      ->  hanzoai/operator                      reconciles the App
-      ->  hanzoai/static behind hanzoai/ingress serves ui.hanzo.ai
-        github.com/hanzoai/ui                   a mirror (remote `origin`), pushed
-                                                alongside; it runs nothing
+      ->  npmjs                                 @hanzo/ui and the @hanzo/* family
+        github.com/hanzoai/ui                   a mirror, pushed alongside;
+                                                it runs nothing
+
+No image and no deploy lane. This repo emits packages. ui.hanzo.ai is built
+from `hanzoai/shadcn`, which owns the docs site and the registry it serves.
 
 **git.hanzo.ai is canonical; GitHub is a mirror.** There is no `.github/workflows/`
 — every build, check, publish and deploy is a workflow under `.hanzo/workflows/`,
@@ -394,37 +388,25 @@ One way: bump a package's `version` in its `package.json` and merge to `main`.
 it to npm (needs `NPM_TOKEN` as a forge secret). No changesets, no version-PR bot
 — the semver bump is the trigger.
 
-It is the SOLE publisher of every non-private `@hanzo/*` in `pkgs/*`, and it
-mirrors the same tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when
+It is the SOLE publisher of every non-private `@hanzo/*` in `pkg/*` and `pkgs/*`,
+and it mirrors the same tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when
 `HANZO_REGISTRY_TOKEN` is present. That mirror is best-effort by construction: no
 token means a notice, not a failure, and npmjs stays authoritative either way.
 
-## Deploying the site
+## The gate
 
-`app/` is a Next.js static export (`output: "export"`, `trailingSlash: true`);
-`pnpm build` there writes `app/out`, which `Dockerfile` copies into
-`ghcr.io/hanzoai/static`. ui.hanzo.ai has been served that way since 2026-07-25 —
-no Cloudflare, no GitHub Pages.
-
-What was missing until now is the build. `crs/ui.yaml` is live and promoted, but no
-workflow ever produced the image it pins: every tag up to `v5.7.6` was pushed by
-hand. `.hanzo/workflows/deploy.yml` is that step. It publishes
-`ghcr.io/hanzoai/ui:<sha>` and stops there — a build never deploys itself. A human
-sets `spec.image.tag` in `hanzoai/universe`
-`infra/k8s/operator/crs/ui.yaml`, which is the one live thing that says which build
-serves.
-
-The gate is `hanzo.yml`'s `test:` block, which `cicd.yml` runs through `hanzoai/ci`:
+`hanzo.yml`'s `test:` block, which `cicd.yml` runs through `hanzoai/ci`:
 `ui-unit` builds `@hanzo/ui` with its workspace deps and runs `test:unit`, and
 `ui-consumer` installs chromium and runs `test:consumer` under both bundlers —
 Vite and webpack disagree about css `url()` asset resolution, and a Vite-only gate
 is how 8.0.46 shipped a stylesheet pointing at a font the package does not pack.
 No coverage upload runs here.
 
-`registries.yml` keeps the `apps/v4` registry honest: reserved namespaces are
-rejected and `pnpm --filter=v4 validate:registries` must pass. Its other job
-labelled and commented on pull requests with the `gh` CLI against the GitHub API,
-which does not exist on the forge, so that job did not come along.
+**`test:consumer` is red on published 8.1.0 and later, and it is not a split
+defect.** `@hanzo/ui` → `@hanzogui/lucide-icons-2` → `react-native-svg@15.15.5`
+imports `AssetRegistry`, which `react-native-web@0.21.2` does not export, so the
+consumer app fails to build. The fix is a version pin on that chain, which is its
+own decision — do not paper over it here.
 
 ## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
 
@@ -572,16 +554,6 @@ silence and correctness look identical in a network panel.
 | `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
 | `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkgs/event` only. |
 
-## Three-Layer Architecture
-
-1. **Components** (`registry/{style}/ui/`) — single primitives (Button, Card, Dialog). CLI-installable.
-2. **Examples** (`registry/{style}/example/`) — usage demos for docs via `<ComponentPreview />`.
-3. **Blocks** (`registry/{style}/blocks/`) — full-page sections (Dashboard, Login). NOT CLI-installable, docs only.
-
-## Import Path Transformation
-
-Registry files use `@/registry/default/ui/button`. After CLI install, rewritten to `@/components/ui/button`.
-
 ## Package Exports
 
 ```typescript
@@ -593,37 +565,31 @@ import { cn } from '@hanzo/ui/lib/utils'
 
 ## Adding a Component
 
-1. Create in BOTH themes: `app/registry/{default,new-york}/ui/my-component.tsx`
-2. Create example: `app/registry/default/example/my-component-demo.tsx`
-3. Create docs: `app/content/docs/components/my-component.mdx`
-4. Update nav: `app/config/docs.ts`
-5. Build: `pnpm build:registry`
+`src/backends/gui/` is the surface and `src/gallery.tsx` is the list. Add the
+component to the backend, export it from the backend barrel, and render it once
+in the gallery — the styles test, the render test and the consumer screenshots
+all read that one list, so a component missing from it is a component three
+layers do not check.
+
+```bash
+pnpm gen:primitives                 # refresh the per-member entrypoints
+pnpm --filter @hanzo/ui... build
+pnpm --filter @hanzo/ui test:unit
+```
+
+The registry flow — two themes, an example, an MDX page, `pnpm build:registry` —
+belongs to `hanzoai/shadcn` now, along with the registry itself.
 
 ## Tech Stack
 
-React 19, Next.js 15.3+, Tailwind CSS 4 (OKLCH colors), Radix UI, Turborepo + pnpm, Fumadocs (MDX), class-variance-authority.
+React 19, `@hanzo/gui` (Tamagui) on the `@hanzo/tokens` scale, plain `tsc` (no
+bundler), Turborepo + pnpm, vitest + playwright.
 
 ## Upstream Sync
 
-Remote `shadcn` points to a local clone of shadcn-ui/ui.
-hanzoai/ui is NOT a GitHub fork — no shared object store, so large merges can fail on push.
-Strategy: file-level checkout from shadcn/main for specific directories (not git merge).
-- Take theirs: packages/shadcn/, packages/tests/, apps/, templates/, scripts/, skills/
-- Keep ours: app/, pkg/, docs/, pnpm-workspace.yaml, package.json
-- Regenerate: pnpm-lock.yaml after sync
-
-`demo/` and `template/next/` used to be on the keep list and are gone. Neither
-could run: `demo/*.tsx` imported `../src/auth` and `@/registry/…`, and the repo
-root has no `src/` and no `@/` path mapping, so all three files were unresolvable
-from the day they were placed there. `template/next/` was a Next 13 / React 18
-copy of the upstream `next-template`; the CLI scaffolds from `templates/` (plural)
-by sparse-checkout, and nothing ever read the singular one.
-
-## Key Features
-
-- **Page Builder** (`/builder`): drag-drop block assembly with @dnd-kit, export to TSX
-- **White-Label**: Zoo/Lux forks via `brands/{BRAND}.brand.ts`
-- **External Registries**: 35+ sources in `app/registries.json`, install via `npx @hanzo/ui add @aceternity/spotlight`
+Nothing here syncs from upstream shadcn any more; that relationship moved with
+the registry and the CLI to `hanzoai/shadcn`. `@hanzo/ui@8` is clean-room on
+`@hanzo/gui`.
 
 ## Where Tailwind belongs, and where it is a bug
 
@@ -638,25 +604,23 @@ appearing in `pkg/ui/src` is a mistake. (One exception, on purpose:
 arbitrary class survives the merge, and that gui's own width outranks it — that
 is the interop contract for call sites still on Tailwind.)
 
-**Product — everything else.** `app/registry/**` and `apps/v4/registry/**` are
-the source the `shadcn` CLI hands to customers; `templates/*` are the projects it
-scaffolds; `pkgs/shadcn` is the CLI. Tailwind there is the deliverable. It is
-also LIVE in both docs sites — the deployed export at `app/out` carries 2208
-class selectors — so a class deleted from `app/` changes the design. Do not
-"clean up" a registry.
+**Product — the v5 holdouts.** `pkgs/commerce`, `pkgs/checkout` and `pkgs/shop`
+still emit Tailwind class strings against the `@hanzo/ui-shadcn@^5` peer.
+Tailwind there is the deliverable, not a defect. The registry and the CLI that
+hand those classes to customers moved to `hanzoai/shadcn` — do not "clean up" a
+registry, and do not go looking for one here.
 
 **The defect that survives a live pipeline.** Tailwind reads SOURCE TEXT.
 `grid-cols-${n}`, `rounded-${size}`, `scale-${n*100}` never become rules — and
 the failure hides, because a neighbouring file that spells one literally lends
 you its rule. `grid-cols-3` is literal in two commerce files, so a
-three-option selector laid out and a four-option one stacked. Same for
-registry components: `animated-list` looked right in our docs (the pages spell 1
-to 7) and stacked in the customer project that installed it.
+three-option selector laid out and a four-option one stacked.
 
-Ask Tailwind's own extractor rather than reasoning about it:
+Ask Tailwind's own extractor rather than reasoning about it (from a tree that
+has it installed — this repo no longer does):
 
 ```js
-import { Scanner } from '@tailwindcss/oxide'   // run from the repo root
+import { Scanner } from '@tailwindcss/oxide'
 new Scanner({ sources: [{ base: '/abs/dir', pattern: '**/*.tsx', negated: false }] }).scan()
 ```
 
@@ -749,16 +713,15 @@ those two exact versions, not a new minor.
 
 ## Gotchas
 
-- Registry index is `Index[style][name]`, NOT `Index[name]` — caused silent block render failures
-- Shiki `getHighlighter` incompatible with static export — replaced with basic pre/code
-- Some blocks (login-01, login-02, sidebar-02) have Server Component issues with event handlers
+- Build with `...` or not at all — `pnpm --filter @hanzo/ui build` alone reports
+  its siblings as missing modules and blames @hanzo/ui for it
+- `tsconfig.check.json` does not exist, so `pnpm typecheck:ui` fails on a missing
+  file. Use `pnpm --filter @hanzo/ui exec tsc --noEmit` until someone writes it
 - `@hanzo/auth` v2.6.0 uses a pluggable provider registry: `registerAuthProvider('firebase', FirebaseAuthService)`
 
 ## Rules
 
-1. Always build registry before app
-2. Keep default and new-york themes in sync
-3. Blocks are docs only, not CLI-installable
-4. Use pnpm, not npm/yarn
-5. Never commit symlinked files (AGENTS.md, CLAUDE.md, etc.)
-6. Documentation goes in `app/content/docs/`, not random root MD files
+1. Use pnpm, not npm/yarn
+2. Never commit symlinked files (AGENTS.md, CLAUDE.md, etc.)
+3. Knowledge goes in this file, not random root MD files
+4. Anything shadcn-lineage belongs in `hanzoai/shadcn`, not here
