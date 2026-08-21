@@ -2,7 +2,13 @@
 
 **Goal.** RIP the fragmentation (`@hanzo/data` vs `@hanzo/ui` vs in-console duplicates) into ONE canonical, cross-platform, presentational, clean-room library: **`@hanzo/ui`, built on `@hanzo/gui`**. Preserve every polished component + token; zero loss; no fork.
 
-**Status.**
+**Status. LANDED — the sequence below is done, and npm is the record of it:**
+`@hanzo/ui@8.0.114` is `latest`, the shadcn line lives at `@hanzo/ui-shadcn@5.9.1`,
+and all 210 pre-8 versions of `@hanzo/ui` are deprecated pointing at it. The two
+consumers that still name a 5.x do so as `npm:@hanzo/ui-shadcn@^5.9.0`, which is
+the intended end state rather than a leftover. What follows is kept as the record
+of how it was done, not as work outstanding.
+
 - **Step 1 — Audit:** complete (this document; four source trees read file-by-file).
 - **Step 2 — Establish `@hanzo/ui` + migrate the stable foundation:** **DONE & GREEN** (`pkg/ui` is now a real package; `tsc --noEmit` = 0 errors, `vitest` = 12/12).
 - **Step 3 — Console re-point:** **STAGED, not merged.** Gate is split (backend live, app lanes in-flight) — see [Step 3](#step-3--console-re-point-staged).
@@ -141,7 +147,7 @@ New in **`pkg/ui`** (was a bare `src/` staging dir — no package):
 
 ---
 
-## Naming / version — DECIDED: `@hanzo/ui@8`, shadcn retired to `@hanzo/ui-shadcn`
+## Naming / version — DONE: `@hanzo/ui@8`, shadcn retired to `@hanzo/ui-shadcn`
 
 **Decision:** the gui-based unified library takes the `@hanzo/ui` name **forward at `8.0.0`** (aligning with the "Hanzo Cloud 8.x" umbrella; major = breaking re-platform). The legacy shadcn/Radix line (`pkgs/ui`, v5.7.0) is **retired by renaming** to `@hanzo/ui-shadcn` (never hard-deleted) — it stays fully alive under the new name, freeing `@hanzo/ui` for v8. Precedent: `pkg/data@1.2.0` already superseded `pkgs/data@1.1.0` under the same name.
 
@@ -159,7 +165,7 @@ This is **DONE (repo-local):** `pkg/ui/package.json` is `@hanzo/ui@8.0.0`, GREEN
 5. `npm deprecate '@hanzo/ui@<8' 'moved to @hanzo/ui-shadcn; @hanzo/ui@8+ is the @hanzo/gui-based unified lib'`.
 6. Tag `v8.0.0` → CI publishes `@hanzo/ui@8.0.0`. Verify `npm view @hanzo/ui@8.0.0`.
 
-**Gated on the user's direct go-ahead** (irreversible / globally-visible / ecosystem-wide): steps 2–6 — the `pkgs/ui` rename, the ~20-repo consumer sweep, the CI rewire, `npm deprecate`, and the `v8.0.0` tag push that triggers publish. These were not executed autonomously.
+**Was gated on the CTO's go-ahead** (irreversible / globally-visible / ecosystem-wide): steps 2-6 — given, and done. The `pkgs/ui` rename, the ~20-repo consumer sweep, the CI rewire, `npm deprecate`, and the `v8.0.0` tag push that triggers publish. These were not executed autonomously.
 
 ---
 
