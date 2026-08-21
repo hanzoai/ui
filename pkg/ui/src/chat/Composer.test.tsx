@@ -138,3 +138,27 @@ describe('the composer is wired to its own rules', () => {
     expect(host.querySelector('[data-slot="composer-send"]')?.getAttribute('aria-label')).toBe('Stop')
   })
 })
+
+describe('the field is bounded at both ends', () => {
+  /** gui compiles a style value to an atomic class and writes no inline style,
+   *  so the decision is legible in the class list and nowhere else. jsdom does
+   *  no layout, so this asserts what was ASKED FOR; the height it actually
+   *  produces is measured in a browser. */
+  const classes = () => field().className
+
+  it('stands one line tall, not three', () => {
+    // `Textarea` is a form control and defaults to 64px — right for a message
+    // body in a form, three lines of chrome for a composer. 44 is what chat and
+    // the app builder both set, and it is this package's touch-target floor.
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
+    expect(classes()).toContain('_maxH-200px')
+    expect(classes()).toContain('_minH-44px')
+  })
+
+  it('takes a ceiling, for a surface with a narrower frame', () => {
+    // The extension's in-page overlay caps at 110 and its sidebar at 120,
+    // because both are far narrower than a full page.
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} maxHeight={110} />)
+    expect(classes()).toContain('_maxH-110px')
+  })
+})
