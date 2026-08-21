@@ -6,7 +6,7 @@ set -euo pipefail
 # its own @hanzo/brand — that caused a package-name collision. Fail if it reappears.
 
 hits=$(grep -rlE '"name"[[:space:]]*:[[:space:]]*"@hanzo/brand"' \
-  --include=package.json app apps packages pkg 2>/dev/null \
+  --include=package.json apps pkg pkgs 2>/dev/null \
   | grep -vE '/node_modules/|/dist/' || true)
 
 if [ -n "$hits" ]; then

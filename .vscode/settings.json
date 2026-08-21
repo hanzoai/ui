@@ -3,11 +3,16 @@
   "editor.gotoLocation.multipleDefinitions": "goto",
   "typescript.preferences.quoteStyle": "single",
   "eslint.workingDirectories": [
-    { "pattern": "apps/*/" },
-    { "pattern": "pkgs/*/" },
-    { "pattern": "pkgs/*/" }
+    {
+      "pattern": "apps/*/"
+    },
+    {
+      "pattern": "pkg/*/"
+    },
+    {
+      "pattern": "pkgs/*/"
+    }
   ],
-  "tailwindCSS.classFunctions": ["cva", "cn"],
   "vitest.debugExclude": [
     "<node_internals>/**",
     "**/node_modules/**",
@@ -17,8 +22,6 @@
     "deprecated": true
   },
   "search.exclude": {
-    "apps/v4/registry/radix-*": true,
-    "apps/v4/public/r/*": true,
-    "pkgs/shadcn/test/fixtures/*": true
+    "**/dist": true
   }
 }

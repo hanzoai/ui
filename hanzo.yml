@@ -1,19 +1,15 @@
-
-# This repo is BOTH a library and a container. `pkg/ui` publishes to npm from
-# .hanzo/workflows/publish.yml on a version change — still the only thing allowed
-# to reach npmjs. `app/` is ui.hanzo.ai: a Next static export served by
-# hanzoai/static as ghcr.io/hanzoai/ui, pinned live in hanzoai/universe.
+# Canonical CI/CD config for hanzoai/ui — the one file both the hanzoai/ci
+# reusable (.hanzo/workflows/cicd.yml) and platform.hanzo.ai read.
 #
-# The `images:` block below is what makes the second half true here. This file
-# carried a `test:` block and nothing else, and said "a library, not a container"
-# — accurate about pkg/ui and wrong about the site, which has been live on
-# ghcr.io/hanzoai/ui since before any workflow could build it.
+# A library, not a container. `pkg/ui` publishes to npm from
+# .hanzo/workflows/publish.yml on a version change — still the only thing here
+# allowed to reach npmjs. The shadcn CLI, the component registry and the docs
+# sites live in hanzoai/shadcn, and ui.hanzo.ai is built there.
 #
-# The gate is pkg/ui — the package this repo actually publishes — and it is
-# the same three commands publish.yml already proves on this runner, moved
-# EARLIER. That ordering is the whole point: publish.yml is the LAST place a
-# defect costs nothing, because the version it ships is immutable. Here it
-# costs a re-push.
+# The gate is pkg/ui — the package this repo publishes — running the same
+# commands publish.yml proves on this runner, moved EARLIER. That ordering is
+# the point: publish.yml is the LAST place a defect costs nothing, because the
+# version it ships is immutable. Here it costs a re-push.
 #
 # The trailing `...` on the build filter is load-bearing: it builds @hanzo/ui's
 # WORKSPACE DEPENDENCIES first, in topological order. Without it the siblings
@@ -22,83 +18,14 @@
 # `'@hanzo/products'`, `'@hanzo/cd'` — plus a wave of implicit-any in every file
 # that imported them. Those errors name @hanzo/ui and are not its fault.
 #
-# `pnpm install` without --frozen-lockfile is deliberate and is the literal
-# command measured green here: pnpm already defaults frozen-lockfile to true
-# under CI, so the flag adds nothing but a second way to spell the same thing.
-#
-# WHAT THIS DOES NOT GATE, and why the ci.yml it replaces was red on every run
-# for months. That workflow had four jobs and three of them could not pass:
-#
-#   Build   `cd pkgs/ui && pnpm run build:full`
-#   Test    `cd pkgs/ui && pnpm test:coverage`
-#           → both: `cd: pkgs/ui: No such file or directory`. The package moved
-#             to pkg/ (singular) — the same split publish.yml documents at
-#             length — and these two steps were never followed across.
-#   Type    `cd app && pnpm run typecheck`
-#           → ~10x `error TS7016: Could not find a declaration file for module
-#             '@hanzo/ui/animation/*'`. app/ is the shadcn registry this repo
-#             grew from, and its package.json aliases
-#             `"@hanzo/ui": "npm:@hanzo/ui-shadcn@^5"`, so those imports resolve
-#             to a PUBLISHED package that ships no declarations. Nothing in this
-#             tree can fix it, and the app is stale anyway.
-#
-# A gate that cannot go green teaches nobody anything — it is read once, filed
-# as "CI is just red here", and from then on it hides real breakage. Gating
-# pkg/ui is not a smaller gate than that one. It is the first real one.
+# `pnpm install` without --frozen-lockfile is deliberate: pnpm already defaults
+# frozen-lockfile to true under CI, so the flag adds a second way to spell the
+# same thing.
 
-# ui.hanzo.ai. The recipe is the root Dockerfile and lives nowhere else; this
-# block only declares WHAT is built and what it needs to be valid.
-#
-# THE BUILD SECRET IS WHY THIS BLOCK EXISTS. hanzoai/ci (which
-# .hanzo/workflows/cicd.yml already imports) is the ONLY lane that implements
-# `build_secrets`: it reads each name from KMS `deploy/<NAME>?env=prod` and passes
-# it as `--build-arg NAME=value`, refusing the run when the value is empty. The
-# hand-rolled image job in .hanzo/workflows/deploy.yml ran a bare `docker build`
-# with no build-arg and no KMS hop, so no lane in this repo could put a key in the
-# bundle. The one key that ever reached production got there on somebody's laptop,
-# and it has since gone dead — api.hanzo.ai 401s it — which is what a credential
-# with no automated source always does eventually. That job is now
-# workflow_dispatch-only; this is the lane.
-#
-# The KMS name IS the build-arg name IS the Dockerfile ARG. One name, one place.
-# Supply it or the Dockerfile's gate refuses the build — the two halves either
-# both hold or both fail loudly.
-#
-# No `version:` — imgver derives it, and deriving is correct here. The root
-# package.json is a 0.0.1 workspace stub and pkg/ui's 8.0.58 is the NPM package's
-# number, not the site's; neither describes the image. imgver takes
-# max(declared, published)+1 patch, so the series continues from what is already
-# in the registry (5.7.6 live) instead of restarting or colliding with npm.
-images:
-  - name: ui
-    context: .
-    dockerfile: Dockerfile
-    repo: ghcr.io/hanzoai/ui
-    platforms: [linux/amd64]
-    build_secrets: [PUBLISHABLE_KEY]
-
-# No `deploy:` — ON PURPOSE. hanzoai/universe names what is live, in
-# charts/app/values/hanzo/ui.yaml, and the in-cluster reconcile restores it — so a
-# CI-side patch does not stick. It would also LOOK like it worked: the patch
-# applies, the pod rolls, and the declared tag comes back a minute later. A build
-# emits an image; git declares desired state; CD applies it.
-#
-# That file pins `tag:` AND `digest:` together, and the digest is what is actually
-# pulled: moving the tag alone changes nothing. Read the tag off the build you
-# fired — this lane publishes `sha-<sha7>-amd64`, `latest` and the imgver semver,
-# none of which is the `v5.7.6` shape pinned there today.
-
-# Two jobs, not one, and the split is not cosmetic. `pnpm run test` is now
-# vitest + the Vite consumer + the WEBPACK consumer, and the two consumer
-# suites need a browser and a real npm install that unit tests do not. Running
-# them as one step means a playwright download sits in front of every unit
-# failure.
-#
-# The `...` on the build filter stays and is load-bearing: it builds @hanzo/ui's
-# WORKSPACE DEPENDENCIES first, in topological order. @hanzo/cd is still one of
-# them. Without it the sibling has no dist/, tsc reads it through its own
-# `"types": "dist/index.d.ts"`, and it comes back as a missing module — an error
-# that names @hanzo/ui and is not its fault.
+# Two jobs, not one, and the split is not cosmetic. `pnpm run test` is vitest
+# plus the Vite consumer plus the WEBPACK consumer, and the two consumer suites
+# need a browser and a real npm install that unit tests do not. Running them as
+# one step puts a playwright download in front of every unit failure.
 test:
   - name: ui-unit
     run: |
