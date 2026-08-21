@@ -7,17 +7,40 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
     "./catalog.json": "./dist/catalog.json"
   },
-  "files": ["dist", "src", "README.md"],
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && node scripts/catalog.mjs",
-    "test": "node --test test/*.mjs"
+    "build": "tsgo -p tsconfig.json && node scripts/catalog.mjs",
+    "test": "node --test test/*.mjs",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
-  "devDependencies": { "typescript": "^5.6.0" },
-  "repository": { "type": "git", "url": "git+https://github.com/hanzoai/ui.git", "directory": "pkgs/events" },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/events"
+  },
   "homepage": "https://github.com/hanzoai/ui/tree/main/pkgs/events",
-  "keywords": ["hanzo", "analytics", "events", "schema", "taxonomy"],
-  "publishConfig": { "registry": "https://registry.npmjs.org", "access": "public" }
+  "keywords": [
+    "hanzo",
+    "analytics",
+    "events",
+    "schema",
+    "taxonomy"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
 }
