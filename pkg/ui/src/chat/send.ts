@@ -40,6 +40,15 @@ const claimed = (key: string, mods: Mods): boolean =>
  * reachable from the keyboard. Cmd/Ctrl+Enter always sends — it is the force-send
  * every surface already taught its users, and it holds even with Shift down.
  * A keystroke the IME has claimed belongs to the IME, never to the composer.
+ *
+ * HAND IT `e.nativeEvent`, NEVER `e`. React's synthetic KeyboardEvent does not
+ * carry `isComposing` or `keyCode`, so passing the synthetic event gets one of
+ * the three IME signals instead of three, type-checks cleanly, reads correctly
+ * at the call site, and puts the mid-candidate submit straight back for every
+ * Japanese, Chinese and Korean writer. That is the entire bug this function
+ * exists to end, and it is re-introducible in one character.
+ *
+ *     onKeyDown={(e) => { if (sends(e.key, e.nativeEvent)) { … } }}
  */
 export const sends = (key: string, mods: Mods = {}): boolean => {
   if (key !== 'Enter' || claimed(key, mods)) return false

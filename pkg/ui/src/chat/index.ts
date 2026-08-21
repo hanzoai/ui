@@ -39,6 +39,23 @@
  * active-id resolution. The same components serve a live conversation, a shared
  * read-only transcript and a test fixture.
  *
+ * Every component here spreads its residual props onto its own element, and
+ * `Message`, `Thread` and `Composer` publish a way through to the part they own
+ * (`body`, `column`, `field`). They did not, and that closed list was the ONE
+ * thing keeping hanzo/chat from adopting `Message`: its scroll machinery
+ * addresses turns by `id`, `SelectionAsk` finds one with
+ * `closest('.message-render')`, and its turn wears a fleet-wide `glass`
+ * material against a `bg` welded to `$color3`. None of it exotic, all of it
+ * free with a spread — gui forwards what it does not recognise, which is the
+ * mechanism `slot()` is already built on.
+ *
+ * `@hanzo/ui/chat/pure` is the same module's decisions with nothing attached:
+ * `sends`, `ready`, `pinned`, `SLACK`. It exists because `import('@hanzo/ui/chat')`
+ * cannot load in Node, so no script and no spec could reach them. They are also
+ * re-exported from `@hanzo/ui/product/pure`, because they are not chat rules —
+ * ten of the fifteen files importing `sends` in hanzo.app are a SQL editor, a
+ * file explorer, a command palette, a rename field.
+ *
  * Styling is `$` tokens throughout, never literal colours, so each brand retunes
  * through its own theme and nothing here carries a Hanzo mark — which is what
  * lets the same shell ship on Lux and Zoo surfaces without leaking a brand.
@@ -97,8 +114,8 @@ export { Failure, type FailureProps } from './Failure'
 
 export {
   Sources,
-  SourceChip,
+  SourceCard,
   type Source,
   type SourcesProps,
-  type SourceChipProps,
+  type SourceCardProps,
 } from './Sources'

@@ -19,12 +19,21 @@
  * renders a timestamp.
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
 
 export type Role = 'user' | 'assistant' | 'system'
+
+/**
+ * What a gui stack accepts — id, className, style, the `$` style props.
+ *
+ * `role` is dropped because this component already has one and means something
+ * else by it: the ARIA role of the row is not the speaker of the turn. The row
+ * needs no ARIA role, and `aria-label` is still reachable for the name.
+ */
+type Stack = Omit<ComponentProps<typeof XStack>, 'children' | 'role'>
 
 /**
  * The mark that says a turn is still arriving.
@@ -45,7 +54,7 @@ export function Caret() {
   return <YStack {...slot('caret')} width={2} height={15} rounded={1} bg="$color12" aria-hidden />
 }
 
-export interface MessageProps {
+export interface MessageProps extends Stack {
   role: Role
   children?: ReactNode
   /** Row rendered under the turn — copy, retry, feedback. */
@@ -54,12 +63,38 @@ export interface MessageProps {
   busy?: boolean
   /** Leading affordance for an assistant turn: avatar or model mark. */
   icon?: ReactNode
+  /**
+   * The bubble's own props — the inner box, not the row.
+   *
+   * The same reason `DialogContent` grew `overlay`: this component owns the
+   * body so a caller never has to assemble one, but owning is not hiding, and
+   * with nothing through, the fill, the corner and the width cap were
+   * unreachable from outside the package. hanzo/chat's turn is `glass hz-turn`
+   * with a `color-mix` fill it applies fleet-wide (`style.css:389`); it cannot
+   * adopt a bubble welded to `$color3`. Absent, nothing changes.
+   */
+  body?: Stack
 }
 
-export function Message({ role, children, actions, busy = false, icon }: MessageProps) {
+export function Message({
+  role,
+  children,
+  actions,
+  busy = false,
+  icon,
+  body,
+  ...props
+}: MessageProps) {
   if (role === 'system')
     return (
-      <XStack {...slot('message')} data-role="system" width="100%" justify="center" py="$2">
+      <XStack
+        {...slot('message')}
+        data-role="system"
+        width="100%"
+        justify="center"
+        py="$2"
+        {...props}
+      >
         <Text fontSize="$1" color="$color10" text="center">
           {children}
         </Text>
@@ -74,6 +109,13 @@ export function Message({ role, children, actions, busy = false, icon }: Message
       width="100%"
       justify={mine ? 'flex-end' : 'flex-start'}
       gap="$2"
+      // The row is a hover group, so an action strip can be revealed with
+      // `$group-hover` instead of by a wrapper each surface adds itself. Both
+      // hanzo/chat and hanzo.app reveal theirs on hover and both had to supply
+      // the group. Unnamed on purpose: gui types `group` as a BOOLEAN here, so
+      // `group="turn"` type-errors rather than registering a named group.
+      group
+      {...props}
     >
       {icon && !mine ? <YStack pt="$1">{icon}</YStack> : null}
       <YStack
@@ -94,6 +136,7 @@ export function Message({ role, children, actions, busy = false, icon }: Message
           px: '$3',
           py: '$2',
         })}
+        {...body}
       >
         {ink(children)}
         {busy ? <Caret /> : null}

@@ -13,7 +13,7 @@
  * plain text or its own highlighted nodes.
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
-import { type ReactNode } from 'react'
+import { type ComponentProps, type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { CopyButton } from '../product/CopyButton'
@@ -31,7 +31,7 @@ const MONO = {
   fontFamily: 'var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace)',
 } as const
 
-export interface CodeProps {
+export interface CodeProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
   children?: ReactNode
   /** Shown in the label bar. */
   language?: string
@@ -41,7 +41,7 @@ export interface CodeProps {
   actions?: ReactNode
 }
 
-export function Code({ children, language = 'text', value, actions }: CodeProps) {
+export function Code({ children, language = 'text', value, actions, ...props }: CodeProps) {
   const text = value ?? (typeof children === 'string' ? children : '')
 
   return (
@@ -53,6 +53,7 @@ export function Code({ children, language = 'text', value, actions }: CodeProps)
       borderColor="$borderColor"
       bg="$color2"
       overflow="hidden"
+      {...props}
     >
       <XStack
         items="center"
