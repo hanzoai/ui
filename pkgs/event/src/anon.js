@@ -22,14 +22,21 @@
 
 /* ── BEGIN hz anon chain — copied VERBATIM into hanzoai/cloud ──────────────── */
 
-/** The ONE anonymous-id key, on every surface and in every distribution. */
-var HZ_ANON_KEY = 'hz_anon_id'
+/** The ONE anonymous-id key, on every surface and in every distribution.
+ *
+ *  It names what it is, not who ships it: this value is visible to anyone who opens
+ *  their own cookie jar, and a vendor's name has no business there. Identity is IAM's
+ *  concern whether or not the visitor has said who they are. */
+var HZ_ANON_KEY = 'iam-anon-id'
 
-/** `hz_id` is a SECOND identity space a no-build tag once wrote, so one page could
- *  hold two people. It is READ and never written: an id already in the wild is
- *  ADOPTED into the shared identity, because minting over one detaches a returning
- *  visitor from their own history. */
-var HZ_ANON_LEGACY_KEY = 'hz_id'
+/** Keys an id may already be living under. READ, never written.
+ *
+ *  Each was canonical once — `hz_anon_id` most recently, and `hz_id` before it, when a
+ *  no-build tag wrote a second identity space and one page could hold two people.
+ *  Adopting an id already in the wild is what makes this a rename rather than an
+ *  erasure: minting over one detaches a returning visitor from their own history.
+ *  They are never written, so they leave with the cookies that hold them. */
+var HZ_ANON_ADOPT = ['hz_anon_id', 'hz_id']
 
 /** The registrable domain the cookie is scoped to, so docs, cloud, console,
  *  studio, pay, id and www all read the ONE id. localStorage cannot do this: it is
@@ -165,7 +172,7 @@ function hzAnonWrite(name, value) {
  * Resolution is strictly ADDITIVE — every id that already exists is ADOPTED, and
  * only a browser holding none of them is given a new one:
  *
- *   cookie · localStorage hz_anon_id · localStorage hz_id · in-memory · mint
+ *   cookie · localStorage iam-anon-id · adopted keys · in-memory · mint
  *
  * Minting over an id resets a returning visitor and detaches them from their own
  * history, so the order is the migration: the cookie is the shared home, the two
@@ -175,13 +182,26 @@ function hzAnonWrite(name, value) {
  * localStorage keeps being written, so a rollback finds everyone where it left
  * them, and a browser that refuses cookies still holds one id per origin.
  */
+/**
+ * hzAnonAdopted returns an id already living under a key that used to be canonical,
+ * from the cookie jar first — that is the copy shared across subdomains, so a visitor
+ * who arrived on one host is the same person on the next.
+ */
+function hzAnonAdopted(s) {
+  for (var i = 0; i < HZ_ANON_ADOPT.length; i++) {
+    var id = hzAnonCookie(HZ_ANON_ADOPT[i]) || hzAnonItem(s, HZ_ANON_ADOPT[i])
+    if (id) return id
+  }
+  return ''
+}
+
 function hzAnonId() {
   if (typeof window === 'undefined') return '' // SSR / prerender: no browser to identify
   var s = hzAnonStore()
   var id =
     hzAnonCookie(HZ_ANON_KEY) ||
     hzAnonItem(s, HZ_ANON_KEY) ||
-    hzAnonItem(s, HZ_ANON_LEGACY_KEY) ||
+    hzAnonAdopted(s) ||
     hzAnonMemo ||
     hzUuidv7()
   hzAnonMemo = id

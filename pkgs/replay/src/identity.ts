@@ -3,7 +3,7 @@
 // A replay is only worth having if it lands on the SAME session and the SAME
 // person as the events around it — a movie you cannot join to the funnel is a
 // curiosity. So this module does not mint a private identity space: it reads the
-// keys @hanzo/event already owns (`hz_session`, `hz_anon_id`, legacy `hz_id`) and
+// keys @hanzo/event already owns (`hz_session`, `iam-anon-id`, and the keys it adopts) and
 // only mints into them when a page has none, which is exactly what
 // @hanzo/event's own chain does. Whichever client loads first wins, and both
 // agree either way.
@@ -15,8 +15,8 @@ import { uuidv7 } from '@hanzo/event'
 /** @hanzo/event's session record: `{ id, last }`, rotated on inactivity. */
 const SESSION_KEY = 'hz_session'
 /** The shared anonymous id, and the legacy key hz.js wrote before it. */
-const ANON_KEY = 'hz_anon_id'
-const ANON_LEGACY_KEY = 'hz_id'
+const ANON_KEY = 'iam-anon-id'
+const ANON_ADOPT = ['hz_anon_id', 'hz_id']
 /** One tab. sessionStorage is per-tab by definition, which is the whole idea. */
 const WINDOW_KEY = 'hz_window'
 
@@ -84,11 +84,14 @@ export function sessionId(now = Date.now()): string {
 }
 
 /** The visitor. Reads @hanzo/event's anon chain in ITS order — cookie, then
- *  `hz_anon_id`, then legacy `hz_id` — adopting any id already in the wild
+ *  `iam-anon-id`, then the keys it adopts — taking any id already in the wild
  *  instead of detaching a returning visitor from their own history. */
 export function distinctId(): string {
   const s = store('local')
-  const found = cookie(ANON_KEY) || read(s, ANON_KEY) || read(s, ANON_LEGACY_KEY)
+  const found =
+    cookie(ANON_KEY) ||
+    read(s, ANON_KEY) ||
+    ANON_ADOPT.reduce<string>((got, k) => got || cookie(k) || read(s, k) || '', '')
   if (found) return found
   const id = uuidv7()
   // Write only the localStorage rung; @hanzo/event promotes it to the shared
