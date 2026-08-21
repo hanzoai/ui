@@ -12,7 +12,7 @@
  * dependency or be bypassed. `children` is rendered as-is, so a surface can pass
  * plain text or its own highlighted nodes.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -76,11 +76,26 @@ export function Code({ children, language = 'text', value, actions }: CodeProps)
         {text ? <CopyButton value={text} /> : null}
       </XStack>
 
-      <YStack px="$3" py="$2.5">
-        <SizableText size="$1" style={MONO} lineHeight={20}>
-          {children}
-        </SizableText>
-      </YStack>
+      {/*
+        A long line scrolls; it does not wrap and it does not disappear.
+
+        The frame carries `overflow="hidden"` so the corners stay round, which
+        on its own CLIPS anything wider than the block — and code is the one
+        content type where the interesting part is regularly past column 80 (a
+        curl with a URL, a stack frame, a one-line pipeline). Both surfaces that
+        style a code block reach for the same rule: hanzo.app's `.md pre`
+        (`assets/globals.css:1370`) and the extension's `.ae-widget-example`
+        (`newtab.css:419`) are each `overflow-x: auto`. A horizontal ScrollView
+        is that rule spelled so it also holds on native, where there is no
+        overflow property to set.
+      */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <YStack px="$3" py="$2.5">
+          <SizableText size="$1" style={MONO} lineHeight={20}>
+            {children}
+          </SizableText>
+        </YStack>
+      </ScrollView>
     </YStack>
   )
 }
