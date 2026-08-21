@@ -10,19 +10,27 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Ellipsis, PanelRight, Share2 } from '@hanzogui/lucide-icons-2'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
 
-export interface HeaderProps {
+export interface HeaderProps extends Omit<ComponentProps<typeof XStack>, 'children'> {
   title: string
   /** Overflow menu next to the title. Omit to hide it. */
   onOpenMenu?: () => void
   /** Action slot, rendered at the end of the row. */
   children?: ReactNode
+  /**
+   * Slot BEFORE the title — a rail toggle, a back arrow.
+   *
+   * hanzo.app `/chat` leads with a sidebar toggle and kept its own header
+   * rather than adopt this one, because the row began at the title and there
+   * was nowhere to put it.
+   */
+  leading?: ReactNode
 }
 
-export function Header({ title, onOpenMenu, children }: HeaderProps) {
+export function Header({ title, onOpenMenu, children, leading, ...props }: HeaderProps) {
   return (
     <XStack
       {...slot('chat-header')}
@@ -35,7 +43,9 @@ export function Header({ title, onOpenMenu, children }: HeaderProps) {
       borderBottomWidth={1}
       borderColor="$borderColor"
       bg="$background"
+      {...props}
     >
+      {leading}
       <XStack items="center" gap="$1" shrink={1}>
         {/*
           Clamped to one line. Titles are generated and can be arbitrarily long;

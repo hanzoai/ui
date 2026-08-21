@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.1.4",
+  "version": "8.1.5",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -28,6 +28,12 @@
       "import": "./dist/chat/index.js",
       "require": "./dist/chat/index.cjs",
       "default": "./dist/chat/index.js"
+    },
+    "./chat/pure": {
+      "types": "./dist/chat/pure.d.ts",
+      "import": "./dist/chat/pure.js",
+      "require": "./dist/chat/pure.cjs",
+      "default": "./dist/chat/pure.js"
     },
     "./core": {
       "types": "./dist/core/index.d.ts",

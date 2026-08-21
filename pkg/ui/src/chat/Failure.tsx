@@ -27,13 +27,13 @@
  */
 import { XStack, YStack } from '@hanzo/gui'
 import { RefreshCw } from '@hanzogui/lucide-icons-2'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { Button } from '../backends/gui'
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
 
-export interface FailureProps {
+export interface FailureProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
   /** What went wrong, in the surface's own words. */
   children?: ReactNode
   /** Offer to run the turn again. Omit and no control renders. */
@@ -41,7 +41,7 @@ export interface FailureProps {
   retryLabel?: string
 }
 
-export function Failure({ children, onRetry, retryLabel = 'Try again' }: FailureProps) {
+export function Failure({ children, onRetry, retryLabel = 'Try again', ...props }: FailureProps) {
   return (
     <YStack
       {...slot('failure')}
@@ -58,6 +58,7 @@ export function Failure({ children, onRetry, retryLabel = 'Try again' }: Failure
       // spend, an outline is what separates "this one" from its neighbours.
       borderColor="$color9"
       bg="$color4"
+      {...props}
     >
       {ink(children, undefined, { size: '$2', color: '$color12' })}
       {onRetry ? (

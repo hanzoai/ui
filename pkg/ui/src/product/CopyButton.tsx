@@ -15,7 +15,7 @@
  * not a chat idea; it belongs to the product layer, and `Code` now imports it
  * from here rather than owning it.
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { type ComponentProps, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Text, XStack } from '@hanzo/gui'
 import { Check, Copy } from '@hanzogui/lucide-icons-2'
 
@@ -45,9 +45,18 @@ export interface CopyButtonProps {
   size?: number
   /** Names the copied thing in analytics ("api-key", "address"). Never the value. */
   id?: string
+  /**
+   * Everything else the control's box accepts — a class, a style, an opacity.
+   *
+   * A copy control is very often HOVER-REVEALED: hanzo/chat's sit at
+   * `opacity-0` until the turn is hovered, so a closed prop list meant adopting
+   * this one made them permanently visible on every message, which is the whole
+   * reason a surface keeps writing its own.
+   */
+  props?: Omit<ComponentProps<typeof XStack>, 'children' | 'role' | 'onPress'>
 }
 
-export function CopyButton({ value, children, label, size = 24, id }: CopyButtonProps) {
+export function CopyButton({ value, children, label, size = 24, id, props }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const track = useEmit()
@@ -99,6 +108,7 @@ export function CopyButton({ value, children, label, size = 24, id }: CopyButton
       {...tip(copied ? 'Copied' : name)}
       hoverStyle={{ bg: '$color4', opacity: 1 }}
       pressStyle={{ bg: '$color5' }}
+      {...props}
     >
       {copied ? <Check size={glyph} /> : <Copy size={glyph} />}
       {children == null ? null : (

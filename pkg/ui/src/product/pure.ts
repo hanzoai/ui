@@ -53,3 +53,11 @@ export {
   type WordmarkStyle,
   type WordmarkStyleInput,
 } from './animatedLogo.logic'
+
+// Committing a field with the keyboard, and staying at the bottom of a scroller.
+// They live in `src/chat` because that is where they were first needed, and they
+// are re-exported here because they are not chat rules: ten of the fifteen files
+// in hanzo.app that import `sends` are a SQL editor, a file explorer, a command
+// palette, a rename field. One definition, and the general door is this one.
+export { ready, sends, type Mods } from '../chat/send'
+export { pinned, SLACK, type Track } from '../chat/stick'

@@ -23,22 +23,23 @@
  * nothing here for it to reach. Adding either would be inventing an interaction
  * and then asking three surfaces to adopt it.
  *
- * Growth is `Textarea`'s and it is LINE-DRIVEN, not DOM-measured: the row count
- * follows the newlines in the value, which is what lets web, native and desktop
- * grow identically. The tradeoff is real and worth knowing before you adopt —
- * a draft that soft-wraps without ever containing a `\n` does not raise the row
- * count, so a long unbroken paragraph scrolls inside the floor instead of
- * growing the field. Fixing that means measuring `scrollHeight`, which is the
- * DOM-only path the five hand-rolled composers each took and the reason none of
- * them runs on native. It is a `Textarea` decision, not a chat one.
+ * Growth is `Textarea`'s, and since 8.1.4 it follows the CONTENT rather than the
+ * newline count — so a long paragraph that wraps without ever containing a `\n`
+ * raises the field instead of scrolling inside it. `rows` is the floor and
+ * `maxHeight` the ceiling; both are bounds, and neither is re-implemented here.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { ArrowUp, Square } from '@hanzogui/lucide-icons-2'
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import { Button, Textarea } from '../backends/gui'
 import { slot } from '../backends/gui/slot'
 import { ready, sends, type Mods } from './send'
+
+/** `onChange` is dropped: this component already has one and it carries the
+ *  draft, not a DOM change event. */
+type Stack = Omit<ComponentProps<typeof YStack>, 'children' | 'onChange'>
+type FieldProps = Omit<ComponentProps<typeof Textarea>, 'value' | 'onChangeText'>
 
 const PAD = 8
 const MIN_ROWS = 1
@@ -84,7 +85,7 @@ const FLOOR = 44
  */
 export const ASK = 'Ask anything'
 
-export interface ComposerProps {
+export interface ComposerProps extends Stack {
   value: string
   onChange: (value: string) => void
   /** Called when the draft is submitted. Clearing `value` is the host's job. */
@@ -103,6 +104,27 @@ export interface ComposerProps {
   children?: ReactNode
   /** Hint shown at the end of the footer row. */
   hint?: string
+  /**
+   * The accessible name of the field.
+   *
+   * Distinct from `placeholder`, which it used to be derived from. A surface
+   * whose placeholder rotates on a timer — hanzo.app's does — renamed the
+   * control on every tick, so a screen reader re-announced the field while the
+   * writer was typing into it. The name is stable and the placeholder is
+   * decoration; deriving one from the other conflates them.
+   */
+  label?: string
+  /** The field's own props — a ref, a testid, focus handlers, a paste handler. */
+  field?: FieldProps
+  /**
+   * Replaces the send control entirely.
+   *
+   * The default is the right one — one button that submits and stops, which is
+   * what every surface got subtly different — but a surface with a second
+   * commit mode has nowhere else to put it, and `children` is the START of the
+   * footer row.
+   */
+  send?: ReactNode
 }
 
 export function Composer({
@@ -117,6 +139,10 @@ export function Composer({
   maxHeight = CEILING,
   children,
   hint,
+  label,
+  field,
+  send,
+  ...props
 }: ComposerProps) {
   const sendable = ready(value, busy, disabled)
 
@@ -147,19 +173,29 @@ export function Composer({
       bg="$background"
       p={PAD}
       gap={PAD}
+      {...props}
     >
       <Textarea
         {...slot('composer-field')}
         rows={rows}
-        value={value}
         placeholder={placeholder}
         disabled={disabled}
-        onChangeText={onChange}
-        onKeyDown={keyed}
         borderWidth={0}
         minH={FLOOR}
         maxH={maxHeight}
-        aria-label={placeholder}
+        aria-label={label ?? placeholder}
+        {...field}
+        // After `field`, and deliberately. These four ARE the composer; a
+        // caller's `onKeyDown` landing on top of `keyed` would take the Enter
+        // rule and the IME guard with it, type-check, and go on looking
+        // correct until a Japanese writer typed into it. So the caller's runs
+        // FIRST and this one defers to it if it claimed the key.
+        value={value}
+        onChangeText={onChange}
+        onKeyDown={(e: any) => {
+          field?.onKeyDown?.(e)
+          if (!e?.defaultPrevented) keyed(e)
+        }}
       />
       <XStack items="center" gap={PAD}>
         {children}
@@ -169,15 +205,17 @@ export function Composer({
             {hint}
           </SizableText>
         ) : null}
-        <Button
-          {...slot('composer-send')}
-          size="sm"
-          disabled={busy ? !onStop : !sendable}
-          onPress={busy ? onStop : onSend}
-          aria-label={busy ? 'Stop' : 'Send'}
-        >
-          {busy ? <Square size={14} /> : <ArrowUp size={16} />}
-        </Button>
+        {send ?? (
+          <Button
+            {...slot('composer-send')}
+            size="sm"
+            disabled={busy ? !onStop : !sendable}
+            onPress={busy ? onStop : onSend}
+            aria-label={busy ? 'Stop' : 'Send'}
+          >
+            {busy ? <Square size={14} /> : <ArrowUp size={16} />}
+          </Button>
+        )}
       </XStack>
     </YStack>
   )
