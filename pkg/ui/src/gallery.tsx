@@ -32,9 +32,11 @@ import {
   AsideToggle,
   Code,
   Composer,
+  Failure,
   Header as ChatHeader,
   Message,
   ShareButton,
+  Step,
   Sidebar,
   SidebarFolder,
   SidebarHeader,
@@ -557,11 +559,30 @@ export const Gallery = () => (
         <Thread>
           <Message role="user">ask</Message>
           <Message role="assistant" icon={<Spinner />} actions={<Badge>copy</Badge>}>
+            {/* Every state draws a different mark and the error state a
+                different border, so each is its own rule. `open` on one and a
+                body on another: a step with no children renders no chevron and
+                no trigger, which is a different tree, not a different value. */}
+            <Step name="shell" status="running" detail="git status --porcelain" />
+            <Step name="write" status="done" detail="src/index.ts" defaultOpen>
+              <Code language="json" value="{}">{'{}'}</Code>
+            </Step>
+            <Step name="fetch" status="error" detail="timed out">
+              plain body
+            </Step>
+            <Step name="plan" status="cancelled" />
             <Code language="typescript" value="const x = 1">const x = 1</Code>
             <Sources sources={SOURCES} />
           </Message>
           <Message role="assistant" busy>
             answering
+          </Message>
+          <Message role="assistant">
+            <Failure onRetry={NOOP}>The model stopped before finishing.</Failure>
+          </Message>
+          {/* Without a retry it is a statement; that is a different tree. */}
+          <Message role="assistant">
+            <Failure>Rate limited.</Failure>
           </Message>
           <Message role="system">note</Message>
         </Thread>
