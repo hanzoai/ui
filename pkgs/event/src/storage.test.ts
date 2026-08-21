@@ -8,7 +8,7 @@
 
 import { describe, it, expect, vi } from 'vitest'
 
-const ANON = 'hz_anon_id'
+const ANON = 'iam-anon-id'
 const LEGACY = '01920000-0000-7000-8000-0000000000aa'
 const OTHER = '01920000-0000-7000-8000-0000000000bb'
 
