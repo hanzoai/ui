@@ -1,5 +1,30 @@
 # @hanzo/event
 
+## 0.3.35
+
+### Patch Changes
+
+- **The hosted tag's address here was one the door does not answer.** 0.3.33 removed
+  `hz.js` and pointed readers at `api.hanzo.ai/v1/event.js`. Hours later the ingest
+  door took the app's name, and the tag moved UNDER it: `.js` is part of a segment
+  rather than a child of one, so a tag beside `/v1/event` could not be routed by the
+  prefix that serves it. The address is `GET /v1/event/tag.js`, there is no alias
+  behind the old one, and this README was sending people to a 404.
+
+- **It also described autocapture the tag does not do.** The listed `$click`,
+  `$outbound`, `$scroll`, `$form` and `$vitals` are the BUNDLED capture engine's.
+  The hosted tag captures pageviews (initial and every `pushState` navigation),
+  uncaught errors and rejected promises; everything deliberate goes through
+  `window.hanzo`. A page reading the old paragraph would have shipped a tag
+  expecting a heatmap and got none.
+
+- Its config door is `/v1/projects/tags`, not `/v1/tags` — the config follows the
+  project store it reads. A key is minted with `POST /v1/projects`, not a keys
+  endpoint of its own, and one that names no project is refused `403`.
+
+- Says plainly that a surface runs the tag OR this client, never both: they post
+  pageviews to the same door, so a page carrying both counts every one twice.
+
 ## 0.3.34
 
 ### Patch Changes
