@@ -84,7 +84,14 @@ const resolve = (file, spec, ext, probe) => {
 const specifiers = (file, ext, probe) => {
   const src = readFileSync(file, 'utf8')
   const out = src.replace(SPECIFIER, (m, head, q, spec) => {
-    if (/\.(js|cjs|mjs|json|css)$/.test(spec)) return m
+    if (/\.(js|cjs|mjs|json|css)$/.test(spec)) {
+      // A source that writes its own `./names.js` is already fully specified, so
+      // the ESM pass leaves it alone. The CJS pass cannot: `dist/names.js` is the
+      // ESM emit, and a `.cjs` requiring it loads ESM under `require` and throws
+      // `Unexpected token 'export'`. Retarget to the sibling this pass writes.
+      const sibling = ext === '.cjs' && spec.endsWith('.js') && spec.slice(0, -3) + '.cjs'
+      return sibling && existsSync(join(dirname(file), spec)) ? `${head}${q}${sibling}${q}` : m
+    }
     const fixed = resolve(file, spec, ext, probe)
     if (!fixed) throw new Error(`unresolved specifier ${spec} in ${relative(UI, file)}`)
     return `${head}${q}${fixed}${q}`

@@ -1,25 +1,28 @@
 {
   "name": "@hanzo/appearance",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./state": {
       "types": "./dist/state.d.ts",
       "import": "./dist/state.js",
+      "require": "./dist/state.cjs",
       "default": "./dist/state.js"
     },
     "./account": {
       "types": "./dist/account.d.ts",
       "import": "./dist/account.js",
+      "require": "./dist/account.cjs",
       "default": "./dist/account.js"
     }
   },
@@ -30,7 +33,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rm -rf dist types && tsc -p tsconfig.build.json && node ../ui/scripts/postbuild.mjs . state && node ../ui/scripts/check-exports.mjs .",
+    "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state && node ../ui/scripts/check-exports.mjs .",
     "clean": "rm -rf dist types",
     "prepack": "pnpm run build",
     "typecheck": "tsc --noEmit",
@@ -39,7 +42,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "^0.5.15"
+    "@hanzo/design": "^0.5.17"
   },
   "peerDependencies": {
     "react": ">=19"

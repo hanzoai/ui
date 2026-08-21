@@ -1,14 +1,17 @@
 {
   "name": "@hanzo/events",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The canonical Hanzo event schema: which events exist, what each means, and what it carries.",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
     "./catalog.json": "./dist/catalog.json"
@@ -19,7 +22,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsgo -p tsconfig.json && node scripts/catalog.mjs",
+    "build": "rm -rf dist dist-cjs && tsgo -p tsconfig.json && tsgo -p tsconfig.cjs.json && node ../../pkg/ui/scripts/postbuild.mjs . index,names,schema,funnels && node scripts/catalog.mjs && node ../../pkg/ui/scripts/check-exports.mjs .",
     "test": "node --test test/*.mjs",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },

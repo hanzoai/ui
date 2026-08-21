@@ -22,6 +22,13 @@ describe('@hanzo/vite', () => {
     expect(String((entry!.find as RegExp).test('react-native/Libraries/x'))).toBe('false')
   })
 
+  it('points the native asset registry at the one react-native-web implements', () => {
+    // react-native-svg's web build imports it by its react-native name, so an
+    // app that renders any icon fails to bundle without this.
+    const entry = find(hanzo({}, { root: ROOT }), /^@react-native\/assets-registry\/registry$/)
+    expect(entry?.replacement).toBe('react-native-web/dist/modules/AssetRegistry')
+  })
+
   it('forces ONE copy of every package whose identity is load-bearing', () => {
     // Two copies of a context provider are two contexts, and the failure is not
     // a crash — it is a component that renders unstyled.
