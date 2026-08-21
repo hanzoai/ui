@@ -24,6 +24,9 @@
 import type { ReactNode } from 'react'
 import { Box } from './box'
 import { Workbench } from './product/Workbench'
+import { Skeleton } from './product/Skeleton'
+import { TooltipAnchor } from './product/TooltipAnchor'
+import { DialogTemplate } from './product/DialogTemplate'
 
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction,
@@ -469,6 +472,35 @@ export const Gallery = () => (
       </div>
     </Section>
 
+
+    {/* The product layer's three arrangements. They are here for the same
+        reason everything else is: gui writes an atomic rule the first time a
+        style VALUE renders, so a component missing from this list ships with
+        classes the packaged stylesheet has no rules for — correct only after
+        the runtime has caught up, which is never true of a first paint or a
+        static render. The Skeleton widths are enumerated because 100% and 60%
+        are two distinct values and each needs its own rule. */}
+    <Section name="product-arrangements">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 320 }}>
+        <Skeleton width={120} />
+        <Skeleton width="100%" height={72} rounded="$4" />
+        <Skeleton.Text lines={3} />
+      </div>
+      <TooltipAnchor description="Delete this agent">
+        <Button>hinted</Button>
+      </TooltipAnchor>
+      {/* `open` so the portalled content actually renders and its rules are
+          harvested — a closed dialog styles nothing. */}
+      <Dialog open>
+        <DialogTemplate
+          title="Delete agent"
+          description="This removes every run recorded against it."
+          confirm={{ label: 'Delete', tone: 'danger' }}
+        >
+          <CardTitle>body</CardTitle>
+        </DialogTemplate>
+      </Dialog>
+    </Section>
 
     {/* Box renders whatever `tw` read out of the classes, so the gallery has to
         carry a real utility string or none of those rules get written. */}
