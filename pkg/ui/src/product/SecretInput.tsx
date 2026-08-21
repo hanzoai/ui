@@ -42,6 +42,13 @@ export type SecretInputProps = {
   copy?: boolean
   /** Names the secret in analytics ("openai-key"). Never the value. */
   id?: string
+  /** Failed validation: reddens the frame AND says so to a screen reader. A
+   *  colour alone is not a message, and a required key is the field's most
+   *  common error. */
+  invalid?: boolean
+  /** id of the element holding the error text, so the field announces WHY it is
+   *  invalid rather than only that it is. */
+  'aria-describedby'?: string
 }
 
 export function SecretInput({
@@ -51,6 +58,8 @@ export function SecretInput({
   disabled,
   copy = true,
   id,
+  invalid,
+  'aria-describedby': describedBy,
 }: SecretInputProps) {
   const [shown, setShown] = useState(false)
   const track = useEmit()
@@ -67,7 +76,7 @@ export function SecretInput({
       px="$2"
       rounded="$3"
       borderWidth={1}
-      borderColor="$borderColor"
+      borderColor={invalid ? '$red10' : '$borderColor'}
       bg="$background"
       opacity={disabled ? 0.5 : 1}
     >
@@ -76,6 +85,8 @@ export function SecretInput({
         minW={0}
         borderWidth={0}
         bg="transparent"
+        aria-invalid={invalid ? 'true' : undefined}
+        aria-describedby={describedBy}
         value={value}
         onChangeText={
           onChange
