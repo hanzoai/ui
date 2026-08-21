@@ -27,11 +27,19 @@ export type Align = 'start' | 'center' | 'end'
  * side that already carries one is RE-aligned rather than appended to — so the
  * result is always a legal placement and applying it twice changes nothing.
  *
- *     place('bottom')            === 'bottom'
- *     place('bottom', 'start')   === 'bottom-start'
+ * An align that is not named does not mean centre. A side arrives already
+ * carrying its own alignment whenever the root was given a whole placement, and
+ * only a Content that names one has anything to say about it — so the carried
+ * suffix survives, and naming `center` is how a caller re-centres on purpose.
+ *
+ *     place('bottom')              === 'bottom'
+ *     place('bottom', 'start')     === 'bottom-start'
+ *     place('bottom-start')        === 'bottom-start'
  *     place('bottom-end', 'start') === 'bottom-start'
+ *     place('bottom-start', 'center') === 'bottom'
  */
-export const place = (side: string, align: Align = 'center'): string => {
-  const base = side.split('-')[0]
-  return align === 'center' ? base : `${base}-${align}`
+export const place = (side: string, align?: Align): string => {
+  const [base, carried] = side.split('-')
+  const named = align ?? (carried as Align | undefined)
+  return !named || named === 'center' ? base : `${base}-${named}`
 }
