@@ -2,7 +2,8 @@
 
 # @hanzo/ui
 
-**The React component library for AI applications.** Accessible, customizable primitives for React, Vue, Svelte, and React Native — built on shadcn/ui, extended with AI, 3D, animation, and commerce components, and a single typed import surface.
+**The React component library for AI applications.** 157 components on one
+substrate, so the same import runs on web, native and desktop.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@hanzo/ui"><img src="https://img.shields.io/npm/v/@hanzo/ui?color=black&label=%40hanzo%2Fui" alt="npm"></a>
@@ -10,147 +11,90 @@
   <a href="https://ui.hanzo.ai"><img src="https://img.shields.io/badge/docs-ui.hanzo.ai-black" alt="docs"></a>
 </p>
 
-![hero](app/public/og.jpg)
+## One substrate
 
-## Features
+Every component renders through [`@hanzo/gui`](https://github.com/hanzoai/gui)
+primitives on the `@hanzo/tokens` scale. No Radix, no Tailwind, no utility
+classes — style props and `$` tokens, which is what lets one import serve React,
+React Native (Expo) and Tauri.
 
-- **161+ components** — 3x the surface of upstream shadcn/ui
-- **Multi-framework** — React, Vue, Svelte, React Native
-- **Two themes** — Default & New York variants
-- **AI components** — chat, assistants, agent UI, playground
-- **3D components** — interactive 3D elements
-- **Animations** — advanced motion components
-- **Page builder** — visual drag-and-drop assembly, export to TSX
-- **Blocks** — 24+ production-ready full-page templates
-- **White-label** — fork and rebrand by domain (Zoo, Lux, …)
-- **Accessible** — built on Radix UI primitives
-- **Customizable** — Tailwind CSS 4 (OKLCH), fully typed TypeScript
+Other frameworks are their own packages, because a theme does not port:
+[`@hanzo/svelte`](https://www.npmjs.com/package/@hanzo/svelte) for Svelte 5.
 
 ## Quick start
 
-### Install
-
 ```bash
 pnpm add @hanzo/ui
-# or
-npm install @hanzo/ui
 ```
 
-### Use
-
 ```tsx
-import { Button, Card, Input } from '@hanzo/ui'
+import { Hanzo, Button, Card, CardHeader, CardTitle, CardContent, Input } from '@hanzo/ui'
 
 export function App() {
   return (
-    <Card>
-      <Card.Header>
-        <Card.Title>Welcome</Card.Title>
-      </Card.Header>
-      <Card.Content>
-        <Input placeholder="Enter text..." />
-      </Card.Content>
-      <Card.Footer>
-        <Button>Submit</Button>
-      </Card.Footer>
-    </Card>
+    <Hanzo>
+      <Card>
+        <CardHeader><CardTitle>Welcome</CardTitle></CardHeader>
+        <CardContent>
+          <Input placeholder="Enter text…" />
+          <Button>Submit</Button>
+        </CardContent>
+      </Card>
+    </Hanzo>
   )
 }
 ```
 
-## One import surface (v8)
+`<Hanzo>` is the whole setup — it carries the gui config, the theme and the
+stylesheet. There is no CSS import and no generator step.
 
-`@hanzo/ui@8` is the single entry point for the whole kit. Each capability is a
-thin subpath that re-exports its home package — code lives once, and each home is
-an optional peer, pulled only when you use its subpath.
+## Import surface
 
 | Import | What you get |
 |---|---|
-| `@hanzo/ui` · `/product` | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast |
+| `@hanzo/ui` | the component surface — Button, Card\*, Dialog\*, Input, Select\*, Tabs\*, Popover\*, Command\*, … |
+| `@hanzo/ui/product` | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast |
+| `@hanzo/ui/chat` | Thread, Message, Composer, Sidebar, Header, Code, Sources |
+| `@hanzo/ui/chat/pure` | `sends`, `ready`, `pinned` — decisions with no React, loads in Node |
+| `@hanzo/ui/models` | ModelSelector, fetchModelCatalog |
 | `@hanzo/ui/data` | RecordsView, DataTable, typed field editors |
-| `@hanzo/ui/canvas` | ProjectCanvas, ServiceNode, DeployTimeline, EnvSwitcher |
-| `@hanzo/ui/dashboard` | landing + deploy-pipeline + overview kit |
-| `@hanzo/ui/usage` | UsageMeter, UsageProviderCard, UsageDashboard |
-| `@hanzo/ui/gitops` | GitopsAppList, tree, diff, sync/rollback, HealthBadge |
-
-Also available as granular imports:
-
-```ts
-import { Button, Card } from '@hanzo/ui/components'
-import * as Dialog from '@hanzo/ui/primitives/dialog'
-import { cn } from '@hanzo/ui/lib/utils'
-```
+| `@hanzo/ui/core` · `/tokens` | `cn`, font vars, the colour/theme/radii/spacing scale |
+| `@hanzo/ui/theme.css` · `/styles.css` | tokens alone, or the complete sheet |
+| `@hanzo/ui/primitives/<Name>` | one member, for hosts that modularize imports |
+| `@hanzo/ui/{canvas,dashboard,usage,gitops}` | optional-peer kits |
 
 ## CLI
 
-Add components straight into your project — the CLI copies source you own:
-
 ```bash
 npx @hanzo/ui add button
-npx @hanzo/ui add card dialog
-```
-
-Install from 35+ external registries too:
-
-```bash
-npx @hanzo/ui add @aceternity/spotlight
+npx @hanzo/ui add @aceternity/spotlight   # 35+ external registries
 ```
 
 ## Packages
 
-The workspace publishes a family of scoped packages under `@hanzo/*`:
-
 | Package | Purpose |
 |---|---|
-| `@hanzo/ui` | Core library + the v8 import surface (161+ components) |
+| `@hanzo/ui` | the component library |
+| `@hanzo/svelte` | the Svelte 5 kit |
 | `@hanzo/react` | React primitives |
-| `@hanzo/data` | Records, data tables, typed field editors |
-| `@hanzo/canvas` | Service/deploy canvas components |
-| `@hanzo/dashboard` | Dashboard + deploy-pipeline kit |
-| `@hanzo/commerce` · `@hanzo/checkout` · `@hanzo/shop` | Commerce components |
-| `@hanzo/agent-ui` | AI agent UI components |
-| `@hanzo/brand` · `@hanzo/tokens` | Branding system & design tokens |
-| `@hanzo/event` | Telemetry client (`POST /v1/event`) |
+| `@hanzo/data` | records, data tables, typed field editors |
+| `@hanzo/canvas` · `@hanzo/dashboard` | service/deploy canvas, dashboard kit |
+| `@hanzo/commerce` · `@hanzo/checkout` · `@hanzo/shop` | commerce |
+| `@hanzo/brand` · `@hanzo/tokens` | branding and design tokens |
+| `@hanzo/event` | telemetry client (`POST /v1/event`) |
 
 ## Development
 
 ```bash
-git clone https://github.com/hanzoai/ui.git
-cd ui
 pnpm install
-
-pnpm build:registry   # generate the component registry FIRST
-pnpm dev              # docs site + registry (http://localhost:3003)
+pnpm build:registry   # must run before the app
+pnpm dev              # :3003
 ```
 
-> The registry generates the JSON the CLI reads, so `build:registry` must run
-> before `build`. Keep the Default and New York themes in sync when adding
-> components. Use pnpm — not npm or yarn.
+| Command | |
+|---|---|
+| `pnpm test` | unit |
+| `pnpm test:consumer` | packs the tarball, installs it outside the repo, asserts computed styles |
+| `pnpm typecheck` · `pnpm lint` | |
 
-```bash
-pnpm build            # build the docs app
-pnpm lint             # lint all workspaces
-pnpm typecheck        # type check
-pnpm test             # unit tests
-pnpm test:e2e         # Playwright E2E
-```
-
-## Documentation
-
-Full docs, live previews, and the component catalog: **[ui.hanzo.ai](https://ui.hanzo.ai)**.
-
-## Contributing
-
-See the [contributing guide](/CONTRIBUTING.md).
-
-## License
-
-MIT — see [LICENSE.md](./LICENSE.md).
-
----
-
-## Hanzo — the Open AI Cloud
-
-Open source · every language · on-chain settlement. [hanzo.ai](https://hanzo.ai) · [docs.hanzo.ai](https://docs.hanzo.ai)
-
-**SDKs in every language** — [Python](https://github.com/hanzoai/python-sdk) (flagship) · [TypeScript](https://github.com/hanzo-js/sdk) · [Go](https://github.com/hanzo-go/sdk) · [Rust](https://github.com/hanzo-rs/sdk) · [C++](https://github.com/hanzo-cpp/sdk) · [Swift](https://github.com/hanzo-swift/sdk) · [Kotlin](https://github.com/hanzo-kt/sdk) · [umbrella](https://github.com/hanzoai/sdk)
+Docs at [ui.hanzo.ai](https://ui.hanzo.ai). MIT.
