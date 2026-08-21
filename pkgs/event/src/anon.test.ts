@@ -1,5 +1,5 @@
 // The anonymous-identity chain is ONE implementation with two call sites, and one
-// of them cannot import it: the tag hanzoai/cloud hosts at /v1/event.js has no
+// of them cannot import it: the tag hanzoai/cloud hosts at /v1/event/tag.js has no
 // bundler, so it carries the marked region of anon.js VERBATIM. That is the drift
 // risk this file exists to remove — snippets that agree the day they are written
 // and disagree a quarter later, which is exactly how the same browser came to hold
