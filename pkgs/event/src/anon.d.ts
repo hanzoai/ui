@@ -8,7 +8,7 @@ export declare function hzUuidv7(now?: number): string
 /**
  * The stable anonymous id for this browser, or '' during SSR.
  *
- * cookie · localStorage `hz_anon_id` · localStorage `hz_id` · in-memory · mint —
+ * cookie · localStorage `iam-anon-id` · adopted keys · in-memory · mint —
  * every existing id is adopted, and only a browser holding none is given a new one.
  */
 export declare function hzAnonId(): string
