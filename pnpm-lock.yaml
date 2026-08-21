@@ -923,8 +923,8 @@ importers:
   pkg/appearance:
     dependencies:
       '@hanzo/design':
-        specifier: ^0.5.15
-        version: 0.5.15
+        specifier: ^0.5.17
+        version: 0.5.17
     devDependencies:
       '@types/react':
         specifier: 19.2.14
@@ -991,8 +991,8 @@ importers:
   pkg/ui:
     dependencies:
       '@hanzo/appearance':
-        specifier: ^0.1.4
-        version: 0.1.6(react@19.2.4)
+        specifier: ^0.2.2
+        version: link:../appearance
       '@hanzo/brand':
         specifier: ^1.4.5
         version: 1.4.6(react@19.2.4)
@@ -3067,11 +3067,6 @@ packages:
       tailwindcss:
         optional: true
 
-  '@hanzo/appearance@0.1.6':
-    resolution: {integrity: sha512-JXsH0SHO5F+gd7grLxstGcFCt5M4n1JoGU/JWotaf+eFaSW+TeUHHDSdTRc9tR5Eo/EG79riaKuht6yyPXKETw==}
-    peerDependencies:
-      react: 19.2.4
-
   '@hanzo/brand@1.4.6':
     resolution: {integrity: sha512-Pn0rBr4n0yCx9KiNuL2lU1ikRcVlgNadfB4LfOkh4b+RGJNfxgg+CQVa0WJFwRKYVWfCyPucvwqNAh9MihGZtQ==}
     hasBin: true
@@ -3095,12 +3090,12 @@ packages:
       '@hanzo/gui': '>=7.2.2'
       react: 19.2.4
 
-  '@hanzo/design@0.5.15':
-    resolution: {integrity: sha512-UCjYbIbnqruWv1SHcSPHEiW7HrwzET8nryip5ow+u8Kta8I9vDzvifQqcQKw9y4nm9nzRW0HyoIUNaBHtrYv0Q==}
-    hasBin: true
-
   '@hanzo/design@0.5.16':
     resolution: {integrity: sha512-/az9TpqxjylBVfD7ThA0+5sR+oaw0k+Jl1Ni7aEpaT/3B5KhZaEKzCmCntOuZ+amWjx8TjWMBG8xtNyblD4eKw==}
+    hasBin: true
+
+  '@hanzo/design@0.5.17':
+    resolution: {integrity: sha512-jkYV9Tcz8NC2g0aOetGvJTMoFA3Z4+m2Aet23Dzd5X78Zgk56rpYy0R5SMO0MMUrYYIyGSQ62332KG9S4q5aXQ==}
     hasBin: true
 
   '@hanzo/docs-core@16.5.3':
@@ -16393,11 +16388,6 @@ snapshots:
       '@tailwindcss/oxide': 4.3.1
       tailwindcss: 4.3.0
 
-  '@hanzo/appearance@0.1.6(react@19.2.4)':
-    dependencies:
-      '@hanzo/design': 0.5.16
-      react: 19.2.4
-
   '@hanzo/brand@1.4.6(react@19.2.4)':
     dependencies:
       '@hanzo/logo': 1.0.13(react@19.2.4)
@@ -16415,9 +16405,9 @@ snapshots:
       '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@hanzo/design@0.5.15': {}
-
   '@hanzo/design@0.5.16': {}
+
+  '@hanzo/design@0.5.17': {}
 
   '@hanzo/docs-core@16.5.3(@mdx-js/mdx@3.1.1)(@types/estree-jsx@1.0.5)(@types/hast@3.0.4)(@types/mdast@4.0.4)(@types/react@19.2.14)(lucide-react@0.577.0(react@19.2.4))(mdast-util-mdx-jsx@3.2.0)(next@16.2.9(@babel/core@7.29.7)(@opentelemetry/api@1.9.0)(@playwright/test@1.61.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.4.3)':
     dependencies:
@@ -24061,7 +24051,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.4)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.5)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.4)(typescript@5.9.3))(vite@8.0.16(@types/node@25.9.4)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
 
   '@vitest/expect@2.1.9':
     dependencies:
@@ -24244,7 +24234,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.4)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.5)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.4)(typescript@5.9.3))(vite@8.0.16(@types/node@25.9.4)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
+      vitest: 4.1.9(@opentelemetry/api@1.9.0)(@types/node@25.9.5)(@vitest/coverage-v8@4.1.8)(@vitest/ui@4.1.9)(happy-dom@20.10.6)(jsdom@29.1.1(@noble/hashes@1.8.0))(msw@2.14.6(@types/node@25.9.5)(typescript@5.9.3))(vite@8.1.5(@types/node@25.9.5)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.50.0)(tsx@4.22.4)(yaml@2.9.0))
 
   '@vitest/utils@2.1.9':
     dependencies:

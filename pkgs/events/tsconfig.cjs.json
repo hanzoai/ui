@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Only the module format changes. `moduleResolution` stays inherited:
+    // tsgo is TypeScript 7, which removed node10 and lets `bundler` resolution
+    // pair with a CommonJS target. Types come from the ESM pass — emitting them
+    // twice would put two .d.ts next to each other for one set of declarations.
+    "module": "commonjs",
+    "outDir": "dist-cjs",
+    "declaration": false
+  }
+}
