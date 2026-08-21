@@ -29,6 +29,16 @@ describe('place', () => {
     expect(place('left', 'end')).toBe('left-end')
   })
 
+  it('KEEPS a carried alignment when no align is named', () => {
+    // A whole placement given to the root arrives here as `side`, and Content
+    // publishes its align as undefined unless it declares one. Reading that
+    // silence as centre threw the alignment away with no type error to show
+    // for it: `placement="bottom-start"` came out `bottom`.
+    expect(place('bottom-start')).toBe('bottom-start')
+    expect(place('left-end')).toBe('left-end')
+    expect(place('bottom-start', undefined)).toBe('bottom-start')
+  })
+
   it('RE-aligns a side that already carries a suffix rather than appending', () => {
     // The root may be given a full placement while Content still declares an
     // align; the later word wins, and the result stays a legal placement. This
