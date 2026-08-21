@@ -1,5 +1,24 @@
 # @hanzo/event
 
+## 0.3.36
+
+### Patch Changes
+
+- **Four live Hanzo sites were absent from the domain table, so they resolved no
+  key and reported nothing.** `hanzo.works`, `hanzo.codes`, `hanzoskills.com` and
+  `hanzo.ventures` are all served by universe and all answered 200 while filing
+  zero events; `hanzo.team` was missing too. This is the exact failure 0.3.34
+  described — "a site added tomorrow reports nothing until somebody remembers to
+  paste one in" — arriving as four sites nobody pasted one into. `hanzo.ventures`
+  is the clearest: it mounts `AnalyticsProvider` with
+  `NEXT_PUBLIC_PUBLISHABLE_KEY || ''` and its own comment admits the key is empty.
+  It now resolves Hanzo's key from its hostname and needs no edit of its own.
+
+  A brand's domains are not a pattern — `hanzoskills.com` does not end in
+  `hanzo.ai`, and `hanzo.works` is a registrable domain rather than a subdomain of
+  one — so each is a separate fact and the test pins all five against the hosts
+  universe actually serves.
+
 ## 0.3.35
 
 ### Patch Changes

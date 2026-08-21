@@ -36,6 +36,22 @@ describe('the org that owns a host', () => {
     expect(orgOf('id.zoo.network')).toBe('zoo')
   })
 
+  it('claims every Hanzo site the fleet actually serves', () => {
+    // The table is the reason a static export reports at all, so a site that is
+    // LIVE and missing from it reports nothing while looking configured. These
+    // are the hosts universe serves; each resolves to Hanzo's key or this fails.
+    for (const host of [
+      'hanzo.works',
+      'hanzo.codes',
+      'hanzoskills.com',
+      'hanzo.ventures',
+      'hanzo.team',
+    ]) {
+      expect(orgOf(host)).toBe('hanzo')
+      expect(keyFor(host)).toBe(ORG_KEY.hanzo)
+    }
+  })
+
   it('reads a hostname the way a domain compares', () => {
     expect(orgOf('LUX.NETWORK')).toBe('lux')
     expect(orgOf('lux.network:3000')).toBe('lux')
