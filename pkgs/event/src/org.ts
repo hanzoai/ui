@@ -45,7 +45,23 @@ export type Keyring = Readonly<Record<string, string>>
  * and it is only visible later in someone else's warehouse.
  */
 export const ORG_DOMAIN: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  hanzo: Object.freeze(['hanzo.ai', 'hanzo.app', 'hanzo.chat', 'hanzo.id', 'hanzo.bot', 'hanzo.sh']),
+  // A brand's domains are not a pattern — `hanzoskills.com` is Hanzo's and does
+  // not end in `hanzo.ai`, while `hanzo.works` is a registrable domain of its own
+  // rather than a subdomain of anything here. Each is stated because each is a
+  // separate fact, which is the whole reason this is a table.
+  hanzo: Object.freeze([
+    'hanzo.ai',
+    'hanzo.app',
+    'hanzo.bot',
+    'hanzo.chat',
+    'hanzo.codes',
+    'hanzo.id',
+    'hanzo.sh',
+    'hanzo.team',
+    'hanzo.ventures',
+    'hanzo.works',
+    'hanzoskills.com',
+  ]),
   lux: Object.freeze([
     'lux.network',
     'lux.exchange',
