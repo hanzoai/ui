@@ -87,14 +87,16 @@ npx @hanzo/ui add @aceternity/spotlight   # 35+ external registries
 
 ```bash
 pnpm install
-pnpm build:registry   # must run before the app
-pnpm dev              # :3003
+pnpm --filter @hanzo/ui... build   # the `...` builds workspace deps first
 ```
 
 | Command | |
 |---|---|
-| `pnpm test` | unit |
-| `pnpm test:consumer` | packs the tarball, installs it outside the repo, asserts computed styles |
+| `pnpm --filter @hanzo/ui test:unit` | styles + render surface |
+| `pnpm --filter @hanzo/ui test:consumer` | packs the tarball, installs it outside the repo, asserts computed styles |
 | `pnpm typecheck` · `pnpm lint` | |
+
+The `shadcn` CLI, the component registry and the docs sites live in
+[hanzoai/shadcn](https://github.com/hanzoai/shadcn).
 
 Docs at [ui.hanzo.ai](https://ui.hanzo.ai). MIT.
