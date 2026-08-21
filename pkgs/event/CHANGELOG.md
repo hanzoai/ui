@@ -1,5 +1,33 @@
 # @hanzo/event
 
+## 0.3.34
+
+### Patch Changes
+
+- **A surface no longer configures its own key — the host resolves it.** A domain
+  belongs to exactly one brand, so a key stated per site restates something the
+  page already knows, and the fleet held one copy per surface of a value with a
+  single source. `org.ts` answers `orgOf(location.hostname)` and hands back that
+  org's publishable key, as a THIRD step after an explicit `ingestKey` and the
+  KMS-sourced `NEXT_PUBLIC_PUBLISHABLE_KEY` — so it never overrides what a build
+  already resolved, it only replaces going dark.
+
+  This is the defect hanzo.id already fixed for the identity hosts, in its other
+  form. There, ONE build-time key was inlined for every brand, so Lux's, Zoo's,
+  Osage's and Pars' visitors were all filed in HANZO's project. On the marketing
+  sites each surface commits its OWN literal instead, so a site added tomorrow
+  reports nothing until somebody pastes one in. Both are the same mistake: a key
+  treated as a property of the BUILD rather than of the brand being served.
+
+  `keyFor(host, keyring?)` takes the keyring as a parameter precisely so the
+  identity runtime — which receives one from `/config.json` because a single image
+  serves every brand — resolves through this function rather than a second copy.
+
+  An unrecognised host resolves to UNDEFINED and reports nothing. There is no
+  fallback to Hanzo: `osage`, `pars` and `bootnode` have no project of their own,
+  and filing them under a brand that is not theirs is silent, reads as working,
+  and only surfaces later in someone else's warehouse.
+
 ## 0.3.15
 
 ### Patch Changes

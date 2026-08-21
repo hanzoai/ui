@@ -44,3 +44,10 @@ export type {
   Transport,
   WireEvent,
 } from './types'
+
+/** Which org owns a host's telemetry — the resolution that lets a surface report
+ *  correctly while configuring nothing. `keyFor` takes an optional keyring so a
+ *  runtime that receives one (hanzo.id serves every brand from one image) resolves
+ *  through this same function rather than a second copy of it. */
+export { ORG_DOMAIN, ORG_KEY, orgOf, keyFor, keyForPage } from './org'
+export type { Keyring } from './org'
