@@ -11,14 +11,20 @@
  *   toast.success('Created my-db')
  *   toast.error(err instanceof ApiError ? err.message : 'Failed to create')
  */
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
-import { CircleCheck, CircleX, Info, X } from '@hanzogui/lucide-icons-2'
+import { CircleCheck, CircleX, Info, TriangleAlert, X } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
 
-export type ToastKind = 'success' | 'error' | 'info'
+/**
+ * The four things a mutation can report. `warning` is here because surfaces
+ * genuinely raise it — "saved, but the version did not change", "3 of 5 files
+ * downloaded" — and without it those land as `error` (alarming, and wrong) or
+ * `info` (invisible). Measured on one surface alone: 14 call sites.
+ */
+export type ToastKind = 'success' | 'error' | 'warning' | 'info'
 
 export type ToastInput = {
   title: string
@@ -26,14 +32,23 @@ export type ToastInput = {
   kind?: ToastKind
   /** Auto-dismiss after this many ms; 0 keeps it until dismissed. */
   durationMs?: number
+  /** Drop the leading icon. Defaults to showing it. */
+  showIcon?: boolean
 }
 
-type Toast = Required<Omit<ToastInput, 'description'>> & { id: number; description?: string }
+/** A toast on screen: an input with its defaults resolved, and an id. */
+export type Toast = ToastInput & { id: number; kind: ToastKind; durationMs: number; showIcon: boolean }
 
-type ToastApi = {
+/**
+ * What `useToast()` answers. Exported because a consumer that passes the api
+ * down, or stores it, has to be able to name its type — it could not before,
+ * which made the hook awkward to build on.
+ */
+export type ToastApi = {
   toast: (t: ToastInput) => void
   success: (title: string, description?: string) => void
   error: (title: string, description?: string) => void
+  warning: (title: string, description?: string) => void
   info: (title: string, description?: string) => void
   dismiss: (id: number) => void
 }
@@ -44,13 +59,23 @@ const ToastContext = createContext<ToastApi | null>(null)
 const ACCENT = {
   success: '$green10',
   error: '$red10',
+  warning: '$yellow10',
   info: '$color11',
 } as const
 
 const ICON: Record<ToastKind, typeof Info> = {
   success: CircleCheck,
   error: CircleX,
+  warning: TriangleAlert,
   info: Info,
+}
+
+/** How long each kind stays. Anything that went wrong is worth re-reading. */
+const DURATION: Record<ToastKind, number> = {
+  success: 3500,
+  error: 6000,
+  warning: 6000,
+  info: 3500,
 }
 
 function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
@@ -71,9 +96,11 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
       elevation="$2"
     >
       <XStack gap="$2.5" items="flex-start">
-        <YStack pt={1}>
-          <Icon size={18} color={accent} />
-        </YStack>
+        {t.showIcon ? (
+          <YStack pt={1}>
+            <Icon size={18} color={accent} />
+          </YStack>
+        ) : null}
         <YStack flex={1} gap="$1">
           <Text fontSize="$3" fontWeight="700" color="$color12">
             {t.title}
@@ -128,9 +155,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     (input: ToastInput) => {
       const id = ++seq.current
       const kind = input.kind ?? 'info'
-      const durationMs = input.durationMs ?? (kind === 'error' ? 6000 : 3500)
+      const durationMs = input.durationMs ?? DURATION[kind]
+      const showIcon = input.showIcon ?? true
       track({ component: 'Toast', action: kind === 'error' ? 'error' : 'view', id: input.title, value: kind })
-      setToasts((ts) => [...ts, { id, kind, title: input.title, description: input.description, durationMs }])
+      setToasts((ts) => [
+        ...ts,
+        { id, kind, title: input.title, description: input.description, durationMs, showIcon },
+      ])
       if (durationMs > 0) {
         timers.current.set(
           id,
@@ -147,13 +178,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     return () => map.forEach((t) => clearTimeout(t))
   }, [])
 
-  const api: ToastApi = {
-    toast,
-    success: (title, description) => toast({ title, description, kind: 'success' }),
-    error: (title, description) => toast({ title, description, kind: 'error' }),
-    info: (title, description) => toast({ title, description, kind: 'info' }),
-    dismiss,
-  }
+  // Memoized because the api is what a consumer holds. Rebuilt every render it
+  // is a new identity every render, so any `useCallback`/`useEffect` keyed on it
+  // re-runs on each parent render — which is exactly what an adapter wrapping
+  // this hook does. `toast` and `dismiss` are already stable.
+  const api = useMemo<ToastApi>(
+    () => ({
+      toast,
+      success: (title, description) => toast({ title, description, kind: 'success' }),
+      error: (title, description) => toast({ title, description, kind: 'error' }),
+      warning: (title, description) => toast({ title, description, kind: 'warning' }),
+      info: (title, description) => toast({ title, description, kind: 'info' }),
+      dismiss,
+    }),
+    [toast, dismiss],
+  )
 
   return (
     <ToastContext.Provider value={api}>
