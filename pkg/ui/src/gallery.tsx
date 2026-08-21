@@ -27,6 +27,26 @@ import { Workbench } from './product/Workbench'
 import { Skeleton } from './product/Skeleton'
 import { TooltipAnchor } from './product/TooltipAnchor'
 import { DialogTemplate } from './product/DialogTemplate'
+import {
+  Aside,
+  AsideToggle,
+  Code,
+  Composer,
+  Header as ChatHeader,
+  Message,
+  ShareButton,
+  Sidebar,
+  SidebarFolder,
+  SidebarHeader,
+  SidebarItem,
+  SidebarNewChat,
+  SidebarScroll,
+  SidebarSection,
+  SidebarUser,
+  Sources,
+  Thread,
+  type Source,
+} from './chat'
 
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction,
@@ -65,6 +85,15 @@ const BUTTON_VARIANTS: ButtonVariant[] = [
 ]
 const BUTTON_SIZES: ButtonSize[] = ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg']
 const BADGE_VARIANTS: BadgeVariant[] = ['default', 'secondary', 'destructive', 'outline']
+
+/** The chat shell is callbacks-out, and this list only needs them to exist. */
+const NOOP = () => {}
+
+/** Two, so the grid's wrap rule and the letter fallback both render. */
+const SOURCES: Source[] = [
+  { id: 'a', title: 'hanzo.ai', href: 'https://hanzo.ai' },
+  { id: 'b', title: 'Reference' },
+]
 
 /** One section. Plain CSS on a plain div — the gallery is a harness, and laying
  *  it out with the components under test would make a layout bug read as a
@@ -500,6 +529,70 @@ export const Gallery = () => (
           <CardTitle>body</CardTitle>
         </DialogTemplate>
       </Dialog>
+    </Section>
+
+    {/*
+      The chat shell. It was absent from this list from the day it landed
+      (8.0.29), and absent from this list means absent from `dist/styles.css`:
+      measured against the shipped sheet, 25 of the 141 atomic classes these
+      components render had no rule — including `_justify-flex-end` and all four
+      of `_btlr/_btrr/_bblr/_bbrr-c-radius-5`, i.e. a user turn that is neither
+      right-aligned nor round on first paint, plus `_maxW-8037` (its width cap),
+      `_text-center` (the system turn), `_col-color9`/`_col-color10` (every muted
+      rung), `_o-0hover-1` (the hover reveal) and `_fwr-wrap` (the sources grid).
+      The defect this file's own header describes, in this package, for ninety
+      patch releases.
+
+      Variants are enumerated because gui writes a rule per style VALUE: a user
+      turn and an assistant turn are different rules, busy and idle are
+      different rules, and a composer with a hint is a different rule from one
+      without.
+    */}
+    <Section name="chat">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 520, height: 320 }}>
+        <ChatHeader title="A conversation with a long enough name to clamp">
+          <ShareButton />
+          <AsideToggle />
+        </ChatHeader>
+        <Thread>
+          <Message role="user">ask</Message>
+          <Message role="assistant" icon={<Spinner />} actions={<Badge>copy</Badge>}>
+            <Code language="typescript" value="const x = 1">const x = 1</Code>
+            <Sources sources={SOURCES} />
+          </Message>
+          <Message role="assistant" busy>
+            answering
+          </Message>
+          <Message role="system">note</Message>
+        </Thread>
+        <Composer value="a draft" onChange={NOOP} onSend={NOOP} hint="Enter to send">
+          <Badge>tool</Badge>
+        </Composer>
+        <Composer value="" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
+      </div>
+      {/* The rail is its own column and never wraps into the one above. */}
+      <Aside>
+        <Sources sources={SOURCES} />
+      </Aside>
+      <div style={{ display: 'flex', width: 260, height: 320 }}>
+        <Sidebar>
+          <SidebarHeader title="Hanzo" onOpenSwitcher={NOOP} onSearch={NOOP} onCollapse={NOOP} />
+          <SidebarNewChat onPress={NOOP} />
+          <SidebarScroll>
+            <SidebarSection label="Today">
+              {/* Both rungs: active and idle are different rules. */}
+              <SidebarItem active onPress={NOOP}>
+                Selected thread
+              </SidebarItem>
+              <SidebarItem onPress={NOOP}>Another thread</SidebarItem>
+            </SidebarSection>
+            <SidebarFolder name="Archive" defaultOpen>
+              <SidebarItem onPress={NOOP}>Nested thread</SidebarItem>
+            </SidebarFolder>
+          </SidebarScroll>
+          <SidebarUser name="z" secondary="z@hanzo.ai" onPress={NOOP} onHelp={NOOP} />
+        </Sidebar>
+      </div>
     </Section>
 
     {/* Box renders whatever `tw` read out of the classes, so the gallery has to

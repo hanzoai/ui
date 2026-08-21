@@ -25,7 +25,7 @@
  * `Code` imports it from there.
  */
 export { Composer, ASK, type ComposerProps } from './Composer'
-export { Message, type MessageProps, type Role } from './Message'
+export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
 export { ready, sends, type Mods } from './send'
 export { pinned, SLACK, type Track } from './stick'
