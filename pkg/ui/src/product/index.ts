@@ -121,10 +121,18 @@ export * from './ProductIcon'
 export * from './ProviderLogo'
 export * from './Reorder'
 export * from './SelectMenu'
+export * from './Skeleton'
 export * from './SlideOver'
 export * from './StatusTag'
 export * from './tone'
 export * from './ThemeToggle'
+// `DialogTemplate` and `TooltipAnchor` are the two arrangements every surface
+// was already writing by hand over the Dialog and Tooltip primitives — a
+// titled dialog with a cancel/confirm footer, and a one-string hint on a
+// control. The primitives stay exported for the cases that genuinely are not
+// those shapes; reaching for them is the signal you have left the common case.
+export * from './DialogTemplate'
+export * from './TooltipAnchor'
 
 // `ThemeToggleNext` is NOT re-exported here, and that is the whole reason this
 // comment exists. It is the @hanzogui/next-theme binding, and next-theme's

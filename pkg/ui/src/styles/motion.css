@@ -14,10 +14,13 @@
    a stylesheet it never opened. A library's utility classes are its namespace,
    so they carry its name.
 
-   The unprefixed selectors are kept as aliases on the SAME rule for one minor
-   version so nothing breaks mid-flight, and are REMOVED IN 8.1.0. Nothing in
-   this package emits them any more — they exist only for a consumer who typed
-   `className="skeleton"` against the old sheet. Keyframe names are prefixed too
+   The unprefixed selectors are kept as aliases on the SAME rule so nothing
+   breaks mid-flight, and are REMOVED IN 8.2.0. Nothing in this package emits
+   them any more — they exist only for a consumer who typed
+   `className="skeleton"` against the old sheet. (The target was 8.1.0, and
+   8.1.0 went out carrying additions instead. Moving the date is the honest
+   edit: shipping the version a comment says removed something, without
+   removing it, is how a deprecation note stops being read.) Keyframe names are prefixed too
    and have no alias: nothing outside this file ever referenced them.  */
 
 /* Fade-up entrance — <FadeIn> applies the class + a per-item stagger delay.

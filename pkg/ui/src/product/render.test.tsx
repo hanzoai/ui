@@ -23,6 +23,12 @@ import { SecretInput } from './SecretInput'
 import { StatusTag } from './StatusTag'
 import { FieldText } from './Field'
 import { UserMenu, displayName } from './UserMenu'
+import { Skeleton } from './Skeleton'
+import { TooltipAnchor } from './TooltipAnchor'
+import { DialogTemplate } from './DialogTemplate'
+import { Dialog } from '../backends/gui/dialog'
+import { createRoot } from 'react-dom/client'
+import { act } from 'react'
 
 const html = (node: ReactNode) =>
   renderToStaticMarkup(
@@ -249,5 +255,109 @@ describe('Pagination', () => {
     // chrome that only ever says "no".
     expect(html(<Pagination page={1} count={1} onChange={() => {}} />)).not.toContain('aria-label="Next page"')
     expect(html(<Pagination page={1} count={0} onChange={() => {}} />)).not.toContain('aria-label="Next page"')
+  })
+})
+
+/**
+ * The three arrangements added in 8.1: a loading placeholder, a one-string
+ * tooltip, and the titled dialog every surface was writing by hand. Each is
+ * asserted on the thing it PROMISES, not on its markup shape — a snapshot of
+ * gui output tells you a class changed, not whether the component works.
+ */
+describe('Skeleton', () => {
+  it('renders the shimmer handle, not a bare grey box', () => {
+    // The animation lives in styles/motion.css as `.hz-skeleton`. A placeholder
+    // that misses the class is a static block nobody notices is stuck.
+    expect(els(html(<Skeleton width={120} />))).toContain('hz-skeleton')
+  })
+
+  it('is hidden from a screen reader', () => {
+    // A placeholder is scenery. Announcing "loading" mid-page is worse than
+    // silence, because the real content is what should be read when it lands.
+    expect(els(html(<Skeleton />))).toContain('aria-hidden')
+  })
+
+  it('stands in for as many lines as asked, and ends short', () => {
+    // A stack of equal bars reads as a table; a real paragraph ends mid-line.
+    // gui compiles a width to an atomic class, so the assertion is that the
+    // last line's width DIFFERS from the others — never the literal '60%',
+    // which never reaches the markup.
+    const markup = els(html(<Skeleton.Text lines={3} />))
+    expect(markup.match(/hz-skeleton/g)).toHaveLength(3)
+    const widths = [...markup.matchAll(/_width-\S+?(?= )/g)].map((m) => m[0])
+    expect(new Set(widths.slice(-3)).size).toBeGreaterThan(1)
+  })
+})
+
+describe('TooltipAnchor', () => {
+  it('names the control it wraps, so an icon button is not anonymous', () => {
+    // The reason `description` is a string: it is an accessible name as well as
+    // a hint, and markup cannot be one.
+    expect(els(html(<TooltipAnchor description="Delete agent"><button /></TooltipAnchor>)))
+      .toContain('aria-label="Delete agent"')
+  })
+
+  it('does not overwrite a name the child already has', () => {
+    // Two names on one control is worse than none.
+    const markup = els(html(
+      <TooltipAnchor description="Delete agent"><button aria-label="Remove" /></TooltipAnchor>,
+    ))
+    expect(markup).toContain('aria-label="Remove"')
+    expect(markup).not.toContain('aria-label="Delete agent"')
+  })
+
+  it('leaves the child alone when there is no hint', () => {
+    // An absent description costs nothing and needs no branch at the call site.
+    expect(els(html(<TooltipAnchor><button id="bare" /></TooltipAnchor>))).toContain('id="bare"')
+  })
+})
+
+describe('DialogTemplate', () => {
+  /**
+   * Mounted, not server-rendered. DialogContent portals, and a portal emits
+   * NOTHING from `renderToStaticMarkup` — the SSR output is one empty
+   * `t_unmounted` span, so every assertion below would pass or fail on the
+   * absence of the whole component rather than on its contents.
+   */
+  const open = (node: ReactNode): string => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    act(() => {
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <Dialog open>{node}</Dialog>
+        </GuiProvider>,
+      )
+    })
+    const markup = els(document.body.innerHTML)
+    act(() => root.unmount())
+    host.remove()
+    return markup
+  }
+
+  it('renders the title and the confirm it was given', () => {
+    const markup = open(
+      <DialogTemplate title="Delete agent" confirm={{ label: 'Delete', tone: 'danger' }} />,
+    )
+    expect(markup).toContain('Delete agent')
+    expect(markup).toContain('Delete')
+  })
+
+  it('offers a way out by default — a dialog you cannot leave is a trap', () => {
+    expect(open(<DialogTemplate title="Delete agent" />)).toContain('Cancel')
+  })
+
+  it('drops cancel only when told to', () => {
+    expect(open(<DialogTemplate title="Saved" showCancel={false} />)).not.toContain('Cancel')
+  })
+
+  it('disables BOTH actions while busy, not just the confirm', () => {
+    // A slow request that can still be cancelled halfway into itself is the
+    // failure this prevents.
+    const markup = open(
+      <DialogTemplate title="Deleting" busy confirm={{ label: 'Delete' }} />,
+    )
+    expect(markup.match(/disabled/g)?.length ?? 0).toBeGreaterThanOrEqual(2)
   })
 })

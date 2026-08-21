@@ -140,7 +140,7 @@ element that has a text child and a zero-height box.
   `.fade`, `.mono`, `.drag` and `.tnum` at the document level, in a package an
   app imports once at its root; an app with its own `.row` got no warning, it got
   whichever rule the cascade preferred. The unprefixed selectors survive as
-  aliases on the same rules for one minor version and are **REMOVED IN 8.1.0**.
+  aliases on the same rules and are **REMOVED IN 8.2.0** (8.1.0 was the target and went out carrying additions instead).
   Nothing here emits them — `styles.test.tsx` scans every `className=` literal in
   `src/` and fails on an unprefixed one. `glass`/`elevation-N` are the one family
   still bare: they are an API VALUE (`glass(3).className`), not a typed literal,

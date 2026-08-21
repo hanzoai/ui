@@ -193,7 +193,7 @@ describe('the utility class namespace', () => {
 
   it('still answers to the old names, for one more minor version', () => {
     // The window: a consumer who typed `className="skeleton"` against the old
-    // sheet keeps working. REMOVED IN 8.1.0 — nothing in this package emits them.
+    // sheet keeps working. REMOVED IN 8.2.0 — nothing in this package emits them.
     for (const old of ['skeleton', 'row', 'tnum', 'mono', 'fade', 'drag', 'slide', 'fade-up'])
       expect([old, motion.includes(`\n.${old} `) || motion.includes(`\n.${old},`) || motion.includes(`.${old}[`)]).toEqual([old, true])
   })
