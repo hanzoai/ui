@@ -534,23 +534,9 @@ export const Gallery = () => (
       </Dialog>
     </Section>
 
-    {/*
-      The chat shell. It was absent from this list from the day it landed
-      (8.0.29), and absent from this list means absent from `dist/styles.css`:
-      measured against the shipped sheet, 25 of the 141 atomic classes these
-      components render had no rule — including `_justify-flex-end` and all four
-      of `_btlr/_btrr/_bblr/_bbrr-c-radius-5`, i.e. a user turn that is neither
-      right-aligned nor round on first paint, plus `_maxW-8037` (its width cap),
-      `_text-center` (the system turn), `_col-color9`/`_col-color10` (every muted
-      rung), `_o-0hover-1` (the hover reveal) and `_fwr-wrap` (the sources grid).
-      The defect this file's own header describes, in this package, for ninety
-      patch releases.
-
-      Variants are enumerated because gui writes a rule per style VALUE: a user
-      turn and an assistant turn are different rules, busy and idle are
-      different rules, and a composer with a hint is a different rule from one
-      without.
-    */}
+    {/* The chat shell. Variants are enumerated because gui writes a rule per
+        style VALUE: user and assistant turns, busy and idle, a composer with a
+        hint and one without are each their own rule. */}
     <Section name="chat">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 520, height: 320 }}>
         <ChatHeader

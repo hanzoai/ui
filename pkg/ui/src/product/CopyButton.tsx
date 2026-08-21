@@ -45,14 +45,8 @@ export interface CopyButtonProps {
   size?: number
   /** Names the copied thing in analytics ("api-key", "address"). Never the value. */
   id?: string
-  /**
-   * Everything else the control's box accepts — a class, a style, an opacity.
-   *
-   * A copy control is very often HOVER-REVEALED: hanzo/chat's sit at
-   * `opacity-0` until the turn is hovered, so a closed prop list meant adopting
-   * this one made them permanently visible on every message, which is the whole
-   * reason a surface keeps writing its own.
-   */
+  /** Everything else the box accepts. A copy control is often hover-revealed,
+   *  which needs a class or an opacity through. */
   props?: Omit<ComponentProps<typeof XStack>, 'children' | 'role' | 'onPress'>
 }
 

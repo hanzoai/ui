@@ -1,73 +1,32 @@
 /**
  * @hanzo/ui/chat — the one chat shell, on @hanzo/gui primitives.
  *
- * Shell only: Thread scrolls, Message presents a turn, Composer takes a draft,
- * Sidebar navigates between conversations, Header names the current one, and
- * Code, Step, Failure and Sources present the pieces of a turn every surface
- * renders the same way.
+ * Thread scrolls, Message presents a turn, Composer takes a draft, Sidebar
+ * navigates between conversations, Header names the current one, and Code,
+ * Step, Failure and Sources present the pieces of a turn.
  *
- * This file used to end that sentence with "Content rendering (markdown, tool
- * calls) stays with the surface — they disagree on the pipeline, and none of it
- * is presentational." Half of that was right and the half that was wrong cost
- * nine hand-drawn copies. Re-decided by reading what the three surfaces
- * actually render:
+ * The markdown pipeline is the surface's and arrives as `children`: the three
+ * surfaces run nine plugins, one plugin, and a regex under a bundle ceiling
+ * that cannot afford a parser. There is no `renderPart` prop for the same
+ * reason — the part union is per-surface too, so a callback here would take a
+ * Part type matching nobody's.
  *
- *   MARKDOWN STAYS OUT, and not as a preference. hanzo/chat runs seven remark
- *   plugins and two rehype plugins (`Content/Markdown.tsx:42-65`, including
- *   katex and highlight.js over a 35-language subset); hanzo.app runs
- *   remark-gfm and nothing else (`markdown-renderer/index.tsx:107`); the
- *   extension parses markdown with eighty lines of regex and no dependency at
- *   all (`answer/markdown.ts`) because `newtab.js` measures 485.9 KB against a
- *   500 KB ceiling that fails the build (`scripts/check-bundle-budgets.mjs:29`)
- *   and its MV3 policy is `script-src 'self'`. Fourteen kilobytes of headroom
- *   is not a pipeline disagreement to be reconciled; it is a surface that
- *   cannot afford a parser. So the pipeline is the surface's, and `children` is
- *   how it arrives — which is also why there is no `renderPart` prop: the part
- *   UNION is per-surface too (twelve item types in the app's
- *   `chat-panel/index.tsx` `TurnDisplay`, eight in chat's `Content/Part.tsx`,
- *   none in the extension), so a callback here would need a Part type that
- *   matches nobody's. The surface maps its own parts and passes nodes.
+ * Everything else about a turn is presentational and lives here: the code
+ * frame, the step disclosure, the failure, the streaming caret.
  *
- *   THE REST OF IT WAS ALWAYS PRESENTATIONAL. A code block with a language
- *   label and a copy control, a collapsible step with a state mark, a failure
- *   with a retry, a streaming caret — every surface draws these and no two draw
- *   them alike. `Step` alone replaces nine copies across two repos. What is
- *   inside each of them is still `children`; the frame, the header, the mark
- *   and the disclosure are here.
+ * Props-in, callbacks-out — no transport, no store, no routing. Each component
+ * spreads its residual props, and the three that own an inner part publish a
+ * way through to it (`Message body`, `Thread column`, `Composer field`).
  *
- * Everything is props-in, callbacks-out: no transport, no store, no routing, no
- * active-id resolution. The same components serve a live conversation, a shared
- * read-only transcript and a test fixture.
+ * `@hanzo/ui/chat/pure` carries `sends`, `ready`, `pinned` and `SLACK` with no
+ * imports, for Node and for callers that are not chat.
  *
- * Every component here spreads its residual props onto its own element, and
- * `Message`, `Thread` and `Composer` publish a way through to the part they own
- * (`body`, `column`, `field`). They did not, and that closed list was the ONE
- * thing keeping hanzo/chat from adopting `Message`: its scroll machinery
- * addresses turns by `id`, `SelectionAsk` finds one with
- * `closest('.message-render')`, and its turn wears a fleet-wide `glass`
- * material against a `bg` welded to `$color3`. None of it exotic, all of it
- * free with a spread — gui forwards what it does not recognise, which is the
- * mechanism `slot()` is already built on.
+ * Styling is `$` tokens throughout, never literal colours, so a brand retunes
+ * through its own theme and nothing here carries a mark.
  *
- * `@hanzo/ui/chat/pure` is the same module's decisions with nothing attached:
- * `sends`, `ready`, `pinned`, `SLACK`. It exists because `import('@hanzo/ui/chat')`
- * cannot load in Node, so no script and no spec could reach them. They are also
- * re-exported from `@hanzo/ui/product/pure`, because they are not chat rules —
- * ten of the fifteen files importing `sends` in hanzo.app are a SQL editor, a
- * file explorer, a command palette, a rename field.
- *
- * Styling is `$` tokens throughout, never literal colours, so each brand retunes
- * through its own theme and nothing here carries a Hanzo mark — which is what
- * lets the same shell ship on Lux and Zoo surfaces without leaking a brand.
- *
- * The model picker is not here: it already ships at `@hanzo/ui/models`, and it
- * is not chat-specific.
- *
- * `CopyButton` is not here either, for the same reason and after the same
- * mistake: it lived in `Code.tsx`, so the only way to reach it was
- * `@hanzo/ui/chat`, and no one hunting for a copy button looks in a chat module.
- * Six surfaces wrote their own instead. It now ships at `@hanzo/ui/product`;
- * `Code` imports it from there.
+ * The model picker and `CopyButton` are not here — neither is chat-specific, so
+ * they ship at `@hanzo/ui/models` and `@hanzo/ui/product`. Nobody hunting for a
+ * copy button looks in a chat module.
  */
 export { Composer, ASK, type ComposerProps } from './Composer'
 export { Caret, Message, type MessageProps, type Role } from './Message'

@@ -1,19 +1,10 @@
 // @vitest-environment jsdom
 
 /**
- * The field grows with its CONTENT, and taking a ref to measure it must not
- * cost the caller theirs.
+ * Taking a ref to measure the field must not cost the caller theirs.
  *
- * The growth itself is a layout fact and jsdom performs no layout —
- * `scrollHeight` is 0 there, so the measurement no-ops and there is nothing
- * here that could observe it. It is measured in Chromium instead, against the
- * packed tarball: at 420px wide, 700 characters with no newline read
- * `clientHeight 44` around `scrollHeight 160` before this and `160/160` after,
- * shrink back to 44, and sixty lines clamp at the 200px ceiling while
- * `scrollHeight` runs to 1200.
- *
- * What jsdom CAN hold is the thing the measurement put at risk: the component
- * now needs the host node for itself, and a caller's ref has to survive that.
+ * The growth itself is a layout fact and jsdom performs no layout, so it is
+ * measured in Chromium against the packed tarball instead.
  */
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -56,8 +47,7 @@ afterEach(() => {
 
 describe('Textarea', () => {
   it('still hands the caller the node it asked for', () => {
-    // The component holds its own ref to measure the content. A callback ref
-    // that forgot to pass the node on would take every caller's focus(),
+    // A callback ref that dropped the node would take every caller's focus(),
     // select() and scrollIntoView() with it, silently and at run time.
     const ref = createRef<HTMLTextAreaElement>()
     mount(<Textarea ref={ref} value="" onChangeText={() => {}} />)
