@@ -145,6 +145,19 @@ describe('SecretInput', () => {
     expect(html(<SecretInput value="" />)).not.toContain('aria-label="Copy secret"')
     expect(html(<SecretInput value="hk" />)).toContain('aria-label="Copy secret"')
   })
+
+  it('says it is invalid, and says what is wrong', () => {
+    // A red frame is not a message. Without both attributes a required key
+    // announces as an ordinary field and the error text beside it is never
+    // read out — which is why a validated form could not use this component.
+    const plain = html(<SecretInput value="hk" />)
+    expect(plain).not.toContain('aria-invalid')
+    expect(plain).not.toContain('aria-describedby')
+
+    const bad = html(<SecretInput value="hk" invalid aria-describedby="key-error" />)
+    expect(bad).toContain('aria-invalid="true"')
+    expect(bad).toContain('aria-describedby="key-error"')
+  })
 })
 
 describe('FieldText', () => {
