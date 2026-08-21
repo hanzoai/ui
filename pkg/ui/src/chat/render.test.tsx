@@ -47,27 +47,18 @@ describe('chat shell renders', () => {
   })
 
   /**
-   * A string child has to reach a Text host.
+   * A string child has to reach a Text host, or it does not render on native.
    *
-   * `Message` put `children` straight into a `YStack`, and gui answered every
-   * render with "Unexpected text node: ask. A text node cannot be a child of a
-   * <View>." On web that degrades to a bare text node; on native — the whole
-   * reason this package is on one substrate — a text node outside a Text host
-   * does not render, so the simplest possible call, `<Message>hi</Message>`,
-   * drew an empty bubble. `ink()` is the package's one answer to this and every
-   * other component with free-form children already ran it.
-   *
-   * Asserted on the SLOT gui stamps on its text host rather than on the absence
-   * of a warning: a console assertion passes the day the warning is reworded.
+   * Asserted on the slot gui stamps on that host, not on the absence of a
+   * console warning — a warning assertion passes the day it is reworded.
    */
   it('wraps a bare string child in a text host', () => {
     const markup = html(<Message role="user">ask</Message>)
     expect(markup).toMatch(/<span[^>]*data-slot="sizable-text"[^>]*>ask</)
   })
 
-  it('caps a user turn at the 85% three surfaces agreed on', () => {
-    // gui compiles the percentage into the class name, so this reads the
-    // decision rather than a rendered pixel width jsdom could not measure.
+  it('caps a user turn at 85%', () => {
+    // gui compiles the percentage into the class name; jsdom measures no width.
     expect(html(<Message role="user">hi</Message>)).toContain('_maxW-8537')
   })
 

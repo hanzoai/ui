@@ -1,10 +1,6 @@
 /**
- * The two decisions a composer makes, as pure functions.
- *
- * Every Hanzo chat surface had re-implemented both inline, and they had drifted:
- * one sent on a bare Enter while composing an IME candidate (committing a
- * half-typed word), another let a whitespace-only draft through. Keeping them
- * here means the rules are asserted once, without a DOM.
+ * The two decisions a composer makes, as pure functions — asserted once,
+ * without a DOM.
  */
 
 /** Modifier state, in the shape web and native events agree on. */
@@ -25,12 +21,9 @@ const IME = 229
 /**
  * Whether the IME owns this keystroke, from all three signals browsers use.
  *
- * `isComposing` alone is not enough. Safari does not set it reliably on the
- * keydown that accepts a candidate, and reports the key as `Process` or with
- * only the legacy `keyCode` of 229 — so a composer that trusts `isComposing`
- * by itself still submits a half-typed word out from under a Japanese, Chinese
- * or Korean writer. That is the bug this module exists to end, and it is not
- * ended by checking one flag.
+ * `isComposing` alone is not enough: Safari does not set it reliably on the
+ * keydown that accepts a candidate, reporting `Process` or only the legacy
+ * `keyCode` of 229.
  */
 const claimed = (key: string, mods: Mods): boolean =>
   mods.isComposing === true || key === 'Process' || mods.keyCode === IME
@@ -41,12 +34,9 @@ const claimed = (key: string, mods: Mods): boolean =>
  * every surface already taught its users, and it holds even with Shift down.
  * A keystroke the IME has claimed belongs to the IME, never to the composer.
  *
- * HAND IT `e.nativeEvent`, NEVER `e`. React's synthetic KeyboardEvent does not
- * carry `isComposing` or `keyCode`, so passing the synthetic event gets one of
- * the three IME signals instead of three, type-checks cleanly, reads correctly
- * at the call site, and puts the mid-candidate submit straight back for every
- * Japanese, Chinese and Korean writer. That is the entire bug this function
- * exists to end, and it is re-introducible in one character.
+ * Hand it `e.nativeEvent`, never `e`: React's synthetic event carries neither
+ * `isComposing` nor `keyCode`, so `e` type-checks and silently drops two of the
+ * three IME signals.
  *
  *     onKeyDown={(e) => { if (sends(e.key, e.nativeEvent)) { … } }}
  */
