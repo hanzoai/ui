@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    // `moduleResolution` is stated because this package compiles with TypeScript
+    // 5, where `bundler` is legal only with an ES module target (TS5095) and so
+    // cannot be inherited into a CommonJS pass. Types and maps come from the ESM
+    // pass — emitting them twice writes two .d.ts for one set of declarations.
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist-cjs",
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  }
+}

@@ -77,12 +77,18 @@ export type HanzoProps = {
  *  production. `styles.css` declares `--hanzo-ui-styles`, so the check is one
  *  lookup, it runs once, and it names the fix. Development only.
  *
- *  A document with NO stylesheets at all is jsdom, where nothing loads CSS and
- *  there is nothing to be wrong about — throwing there would break every
- *  consumer's unit tests to report a condition that cannot exist. */
+ *  Only a sheet with an OWNER ELEMENT counts. A bundler that processed the CSS
+ *  emits a `<link>` or a `<style>`; jsdom loads no CSS at all, so a document
+ *  with no such element cannot answer the question and must not be asked —
+ *  throwing there breaks every consumer's unit tests to report a condition that
+ *  cannot exist. Counting SHEETS instead of elements is what made that happen:
+ *  the gui runtime inserts its own ownerless sheet while this module is being
+ *  imported, so by first render jsdom was never empty and every jest consumer
+ *  rendering `<Hanzo>` threw. */
 let checked = false
+const styled = () => [...document.styleSheets].some((s) => s.ownerNode)
 const assertStylesheet = () => {
-  if (checked || typeof document === 'undefined' || document.styleSheets.length === 0) return
+  if (checked || typeof document === 'undefined' || !styled()) return
   checked = true
   if (getComputedStyle(document.documentElement).getPropertyValue('--hanzo-ui-styles').trim()) return
   throw new Error(

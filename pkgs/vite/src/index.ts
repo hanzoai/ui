@@ -66,6 +66,15 @@ export function hanzo(config: Config = {}, options: Options): Config {
     ...(Array.isArray(appResolve.alias) ? appResolve.alias : []),
     ...Object.entries(alias).map(([find, to]) => ({ find, replacement: resolve(root, to) })),
     { find: /^react-native$/, replacement: 'react-native-web' },
+    // The asset registry is react-native's, and react-native-web reimplements it
+    // with the same `getAssetByID`. react-native-svg's web build reaches for the
+    // native one by name, so without this the bundle resolves nothing and the
+    // build fails — an icon is enough to trigger it, which is every product
+    // component that carries one.
+    {
+      find: /^@react-native\/assets-registry\/registry$/,
+      replacement: 'react-native-web/dist/modules/AssetRegistry',
+    },
   ]
 
   return {
