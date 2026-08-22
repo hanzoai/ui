@@ -30,8 +30,24 @@ type Base = ReturnType<typeof createGui<typeof defaultConfig>>
  * runtime. Declaring it on the type keeps the two in step without the cycle.
  * Anything else added to `fonts` in gui-config.ts belongs in this intersection.
  */
-type Conf = Omit<Base, 'fonts'> & {
+/**
+ * The twelve names gui-config gives the ramp, declared here for the same reason
+ * `fonts.mono` is: this registration is derived from `defaultConfig`, so
+ * anything our config ADDS is invisible to the type system until it is stated.
+ *
+ * Leaving them out is not a lint-level problem — `pnpm build` typechecks, the
+ * publish job runs the build, and 308 errors across 75 files kept five versions
+ * off npmjs while every test stayed green, because vitest does not typecheck.
+ */
+type Alias = Record<
+  | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
+  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink',
+  Base['themes']['dark']['color12']
+>
+
+type Conf = Omit<Base, 'fonts' | 'themes'> & {
   fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
+  themes: { [K in keyof Base['themes']]: Base['themes'][K] & Alias }
 }
 
 declare module '@hanzogui/web' {

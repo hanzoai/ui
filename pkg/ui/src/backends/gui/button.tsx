@@ -255,7 +255,7 @@ function Button({
           which made `<Button isLoading>loading</Button>` render 389×309 — a
           button wider than a phone, and the only element on the whole surface
           that overflowed at 390px. */}
-      {isLoading && <Spinner size="small" maxWidth={SPIN[resolved]} maxHeight={SPIN[resolved]} />}
+      {isLoading && <Spinner size="small" maxW={SPIN[resolved]} maxH={SPIN[resolved]} />}
       {ink(body, GuiButton.Text as never, { fontSize: TYPE[resolved] })}
     </Frame>
   )

@@ -344,6 +344,17 @@ const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as con
  * the same instruction, so a surface keeps its relationship to whatever is
  * beneath it instead of needing a second table.
  */
+/**
+ * The names the ramp answers to. One list, so the VALUES below and the TYPE the
+ * config is cast to cannot disagree — they are generated from this.
+ */
+const ALIASES = [
+  'sunken', 'panel', 'hover', 'edge', 'raised', 'rim',
+  'bound', 'dim', 'faint', 'soft', 'quiet', 'ink',
+] as const
+
+type Alias = Record<(typeof ALIASES)[number], string>
+
 const SURFACE = {
   dark: { base: 'rgb(255 255 255 / .03)', hover: 'rgb(255 255 255 / .06)', raised: 'rgb(255 255 255 / .12)' },
   light: { base: 'rgb(0 0 0 / .03)', hover: 'rgb(0 0 0 / .06)', raised: 'rgb(0 0 0 / .12)' },
@@ -534,7 +545,16 @@ const themes = Object.fromEntries(
         : ringed,
     ]
   }),
-) as typeof defaultConfig.themes
+  // The cast has to CARRY the aliases, not erase them. `as typeof
+  // defaultConfig.themes` says "these are upstream's themes", which is true of
+  // the shape and false of the keys — so every `color="$ink"` was a type error
+  // while rendering perfectly. That is the whole reason 8.1.11 through 8.1.15
+  // never reached npmjs: `pnpm build` typechecks and the publish job runs it,
+  // vitest does not, so the suite stayed green over a package that could not be
+  // built. Intersecting the alias record is what makes the runtime fact a typed
+  // one; `Alias` is derived from ALIASES so a new name cannot be added in one
+  // place and missed in the other.
+) as { [K in keyof typeof defaultConfig.themes]: (typeof defaultConfig.themes)[K] & Alias }
 
 // Everything except the theme table, which is the one thing the two configs
 // below disagree about. Stated once so they cannot drift on radius or fonts.

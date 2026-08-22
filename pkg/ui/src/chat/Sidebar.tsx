@@ -45,7 +45,7 @@ export function Sidebar({ children, width = WIDTH }: SidebarProps) {
       // 264px inside a 232px cell and pushed the whole document sideways, at one
       // breakpoint only. A width says how wide it WANTS to be; the ceiling says
       // it may not take more than it was given.
-      maxWidth="100%"
+      maxW="100%"
       shrink={0}
       height="100%"
       gap="$1"

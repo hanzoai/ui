@@ -66,7 +66,7 @@ export const Thread = /* @__PURE__ */ forwardRef<Scroller, ThreadProps>(function
       // is its content, so without it the item refuses to shrink under 976px and
       // there is nothing to scroll inside.
       overflowY="auto"
-      minHeight={0}
+      minH={0}
       scrollEventThrottle={16}
       onContentSizeChange={grew}
       onScroll={(e: any) => {
