@@ -67,6 +67,7 @@ import {
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
   TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog, Spinner, Text,
+  Screen, Fill,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
 
@@ -582,18 +583,10 @@ export const Gallery = () => (
           of turns, so a 320px box does not scroll it, it lets it paint over
           whatever follows. `minHeight` is what makes the thread's `flex: 1`
           mean something: `grow` needs a definite parent to grow into. */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 12,
-          width: '100%',
-          maxWidth: 720,
-          height: 'min(72vh, 620px)',
-          minHeight: 420,
-          overflow: 'hidden',
-        }}
-      >
+      {/* The shell is a COMPONENT now. This used to be a hand-written div
+          carrying six declarations, and getting any of them wrong is the bug
+          Screen exists to remove. */}
+      <Screen height="min(72vh, 620px)" minH={420} maxW={720} gap="$3">
         <ChatHeader
           title="A conversation with a long enough name to clamp"
           leading={<AsideToggle />}
@@ -602,6 +595,9 @@ export const Gallery = () => (
           <ShareButton />
           <AsideToggle />
         </ChatHeader>
+        <Fill>
+          <Message role="user">plain Fill — the middle, without a Thread</Message>
+        </Fill>
         <Thread>
           <Message role="user">ask</Message>
           <Message role="assistant" icon={<Spinner />} actions={<Badge>copy</Badge>}>
@@ -641,7 +637,7 @@ export const Gallery = () => (
           <Badge>tool</Badge>
         </Composer>
         <Composer value="" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
-      </div>
+      </Screen>
       {/* The rail is its own column and never wraps into the one above. */}
       <Aside>
         <Sources sources={SOURCES} />
