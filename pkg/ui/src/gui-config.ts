@@ -256,6 +256,37 @@ const LABEL = { dark: '#e5e5e5', light: '#0a0a0a' } as const
 const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as const
 
 /**
+ * THE SURFACE LADDER — three more rungs read the token instead of shadowing it,
+ * for the reason the edge already does.
+ *
+ * The argument three rungs above is not about borders. A solid hex stops being a
+ * lighter line and becomes an unrelated grey the moment it lands on a lifted
+ * surface — and a FILL is the larger case, since it covers the area rather than
+ * outlining it. The ramp's surfaces are solid, so a Card inside a Dialog inside a
+ * themed section reads as three unrelated greys where design intends three lifts.
+ *
+ * design already publishes the ladder and had no consumer: `--surface-1/2/3`
+ * resolve to `--card`, `--muted` and `--secondary`, `--surface-card` is
+ * translucent at `rgb(38 38 38 / .5)`, and there is a whole glass family. Two
+ * files in this package name a `--surface-*` and ONE of the two is a test; none
+ * names `--glass`. So this is not a new ladder, it is the existing one reaching
+ * the components that were drawing their own.
+ *
+ * The literals behind each `var()` are what the products converged on
+ * independently, which is the evidence the ladder is right: hanzo.app draws
+ * `rgba(255,255,255,.02)` on 43 elements — its commonest surface by a wide
+ * margin — over `#0a0a0a`, with `rgba(255,255,255,.10)` edges on 56, and
+ * hanzo.chat lifts with translucent oklab over pure black. Alpha is also what
+ * lets ONE ladder serve both schemes: white-over-dark and black-over-light are
+ * the same instruction, so a surface keeps its relationship to whatever is
+ * beneath it instead of needing a second table.
+ */
+const SURFACE = {
+  dark: { base: 'rgb(255 255 255 / .03)', hover: 'rgb(255 255 255 / .06)', raised: 'rgb(255 255 255 / .12)' },
+  light: { base: 'rgb(0 0 0 / .03)', hover: 'rgb(0 0 0 / .06)', raised: 'rgb(0 0 0 / .12)' },
+} as const
+
+/**
  * The ground, the placeholder, and the one loud fill — the rest of what a brand
  * owns, on the same terms as the three rungs above.
  *
@@ -380,7 +411,10 @@ const themes = Object.fromEntries(
       name === s
         ? {
             ...ringed,
+            color2: `var(--surface-1, ${SURFACE[s].base})`,
+            color3: `var(--surface-2, ${SURFACE[s].hover})`,
             color4: `var(--border, ${EDGE[s]})`,
+            color5: `var(--surface-3, ${SURFACE[s].raised})`,
             borderColor: `var(--border, ${EDGE[s]})`,
             color12: `var(--foreground, ${LABEL[s]})`,
             background: GROUND[s],
