@@ -66,10 +66,12 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog, Spinner, Text,
+  TooltipTrigger, Section as PageSection, CardMedia, CommandDialog, Spinner, Text,
   Screen, Fill,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
+// Off the barrel — web-only, so it is imported the way a consumer imports it.
+import { Cell, Grid } from './grid'
 
 /** A real <img> with real intrinsic pixels, inline so nothing hits the network.
  *  120x40 on purpose: the wrong ratio for every box it goes in, so a frame that
@@ -424,7 +426,7 @@ export const Gallery = () => (
           count, so an uneven last row is exercised at every width. The consumer
           test measures these at 390/768/1280: equal widths within a row, zero
           horizontal overflow, and every media box taller than zero. */}
-      <Grid min={240} gap="$3" style={{ width: '100%' }} data-grid="auto">
+      <Grid columns={{ min: 240 }} gap="$3" style={{ width: '100%' }} data-grid="auto">
         {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <Card key={i}>
             <CardMedia ratio={16 / 10}>
@@ -441,7 +443,7 @@ export const Gallery = () => (
       {/* The capped grid: 2-up on a phone, never more than 4 on a desktop, with
           no breakpoint props anywhere. Six items so the cap has something to
           refuse. */}
-      <Grid min={160} max={4} gap="$3" style={{ width: '100%' }} data-grid="capped">
+      <Grid columns={{ min: 160, max: 4 }} gap="$3" style={{ width: '100%' }} data-grid="capped">
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <Card key={i}><CardContent>cap {i}</CardContent></Card>
         ))}
@@ -451,7 +453,7 @@ export const Gallery = () => (
           for: a bare minmax(900px, 1fr) forces a 900px column into a 390px
           window and the document scrolls sideways. A 240px min never shows it,
           because 240 already fits. */}
-      <Grid min={900} gap="$3" style={{ width: '100%' }} data-grid="wide">
+      <Grid columns={{ min: 900 }} gap="$3" style={{ width: '100%' }} data-grid="wide">
         <Card><CardContent>wide</CardContent></Card>
         <Card><CardContent>wide</CardContent></Card>
       </Grid>
@@ -462,7 +464,7 @@ export const Gallery = () => (
           285px cell and would otherwise scroll the page, which is a different
           failure from the one under test. */}
       <div style={{ width: '100%', overflow: 'hidden' }}>
-        <Grid cols={3} gap="$3" style={{ width: '100%' }} data-grid="fixed">
+        <Grid columns={3} gap="$3" style={{ width: '100%' }} data-grid="fixed">
           <Card><CardContent>short</CardContent></Card>
           <Card>
             <CardContent>
@@ -478,6 +480,16 @@ export const Gallery = () => (
           <Card><CardContent>short</CardContent></Card>
         </Grid>
       </div>
+
+      {/* Placement, the half a track list cannot express. `col`/`row` take a
+          NUMBER to span and a string to place, so a caller never writes
+          `gridColumn` by hand. The wide cell spans two of the three tracks; the
+          measurement is that its box really is two tracks plus one gap. */}
+      <Grid columns={3} rows={2} gap="$3" style={{ width: '100%' }} data-grid="cells">
+        <Cell col={2} data-cell="span2"><Card><CardContent>spans two</CardContent></Card></Cell>
+        <Cell data-cell="plain"><Card><CardContent>one</CardContent></Card></Cell>
+        <Cell col="1 / -1" data-cell="full"><Card><CardContent>the whole row</CardContent></Card></Cell>
+      </Grid>
 
       {/* Four times the content of its neighbour: a Card GROWS, it does not clip. */}
       <div
