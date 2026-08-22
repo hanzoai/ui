@@ -6,18 +6,20 @@
  * The shape is always the same: something pinned at the top, something pinned at
  * the bottom, and a middle that takes whatever is left and scrolls. Chat writes
  * it, the console writes it, every workbench pane writes it. Written by hand it
- * is two declarations, and BOTH have to be right or the failure is silent:
+ * is `flex: 1` for the slack plus something that says what to do with the
+ * overflow, and the second half is the one that gets left out. Measured in this
+ * package: `Thread` rendered 976px of turns in a 332px box and drew every one of
+ * them across the composer, because a container with `overflow: visible` never
+ * scrolls no matter how full it gets.
  *
- *   `flex: 1`  alone gives the middle the slack…
- *   `minHeight: 0`  is what lets it actually shrink to take it.
- *
- * Without the second, a flex item's automatic minimum is its CONTENT, so the
- * middle refuses to go below its natural height, grows the shell instead, and —
- * because a scroll container that never overflows never scrolls — paints its
- * content straight over whatever follows. Measured in this package: `Thread`
- * rendered 976px of turns in a 332px box and drew every one of them across the
- * composer. 37 files here set `flex={1}`; exactly one had ever written the
- * second declaration, and only after that bug was found.
+ * The folklore names `minHeight: 0` as that second half — a flex item's
+ * automatic minimum is its content, so the item refuses to shrink and grows the
+ * shell instead. True in general, and already handled here: rnw's `View` base and
+ * gui's own stack base both set `min-height: 0`, measured on the rendered
+ * element. So on web it is the DECLARED OVERFLOW that contains a shell, and
+ * `scripts/contain.mjs` keeps one frame of each as a control to say so —
+ * overflow without `minH` contains, `minH` without overflow escapes by 310px.
+ * Do not go adding `minH={0}` to flex sites; it changes nothing here.
  *
  * So the rule stops being a rule. `Fill` IS the middle, with both halves and the
  * clip built in, and a caller cannot forget a thing it does not have to write.
@@ -73,10 +75,17 @@ export interface FillProps extends YStackProps {
 /**
  * The middle. Takes the slack, and can give it back.
  *
- * `flexBasis: 0` with `minHeight: 0` is the pair that makes "takes the slack"
- * true in both directions: grow into a bigger shell, shrink inside a smaller
- * one. Siblings need nothing — a bar keeps its natural height because it never
- * asked for slack.
+ * `flexBasis: 0` is what makes "takes the slack" true in both directions: grow
+ * into a bigger shell, shrink inside a smaller one. Siblings need nothing — a bar
+ * keeps its natural height because it never asked for slack. `overflowY` is the
+ * half that actually contains the result, and `minH` restates a floor the bases
+ * already set, kept because it costs nothing and this is where a reader looks
+ * for it.
+ *
+ * On web `scroll` becomes `overflow-y: auto` on a styled stack. A `ScrollView`
+ * is the other way to get a scrolling middle and the two are not
+ * interchangeable off the web — nothing here measures native, so nothing here
+ * claims it.
  */
 const Fill = ({ children, scroll = true, ...props }: FillProps) => (
   <YStack
