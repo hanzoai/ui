@@ -264,3 +264,143 @@
   object-fit: cover;
   display: block;
 }
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Scrollbars, on the surfaces this package scrolls.
+
+   A scroll region is a component decision, so its scrollbar is one too. Left to
+   the platform it is not neutral: on Linux/GTK Chrome draws a wide track with
+   STEPPER ARROWS at both ends, and a dark product grows two grey buttons per
+   scroll region — visible in chat's thread, its source strip and the composer at
+   the same time. Windows draws a wide light track. macOS overlays a thin one and
+   hides it, which is the behaviour the other two should have had.
+
+   So the package states it, and states it ONCE, for the five slots that actually
+   scroll (measured, not guessed: textarea, fill, thread, sources-strip,
+   composer-field). Scoping to our own slots is the point — a component library
+   restyling the HOST's page scrollbars is taking a decision that is not its own.
+
+   `::-webkit-scrollbar-button { display: none }` is the line that removes the
+   steppers; without it the arrows survive every other rule here. The thumb sits
+   on the same alpha ladder as every other edge, so it lifts with its surface
+   instead of being a fixed grey that only suits one theme.
+   ───────────────────────────────────────────────────────────────────────────── */
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+) {
+  /* Firefox — no pseudo-elements, two properties, same intent. */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.18) transparent;
+}
+
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* The steppers. This is the rule that removes the arrows. */
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+  /* A transparent border with background-clip keeps the thumb off the very edge
+     without a track colour doing it, which is what makes it read as an overlay
+     rather than a channel. */
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+:where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar-thumb:hover {
+  background: rgb(255 255 255 / 0.30);
+  background-clip: content-box;
+}
+
+/* The light theme reads the same ladder from the other side. */
+.t_light :where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+) {
+  scrollbar-color: rgb(0 0 0 / 0.20) transparent;
+}
+
+.t_light :where(
+  [data-slot='fill'],
+  [data-slot='thread'],
+  [data-slot='sources-strip'],
+  [data-slot='sidebar-scroll'],
+  [data-slot='scroll-area-viewport'],
+  [data-slot='textarea'],
+  [data-slot='composer-field']
+)::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 0.20);
+  background-clip: content-box;
+}
+
+/* The textarea's resize grip is the other platform artefact in the same family:
+   a diagonal hatch in the corner of every Textarea and composer, drawn by the UA
+   and matching nothing. A composer that grows with its content does not need a
+   drag handle, and one that does not grow should not offer a broken one. */
+:where([data-slot='textarea'], [data-slot='composer-field']) {
+  resize: none;
+}
