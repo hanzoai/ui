@@ -538,7 +538,24 @@ export const Gallery = () => (
         style VALUE: user and assistant turns, busy and idle, a composer with a
         hint and one without are each their own rule. */}
     <Section name="chat">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 520, height: 320 }}>
+      {/* A chat shell is an APP shell: a header, a thread that takes the slack,
+          a composer pinned under it. Sized in relative units because a fixed
+          520×320 is a lie about the component — the thread alone renders ~976px
+          of turns, so a 320px box does not scroll it, it lets it paint over
+          whatever follows. `minHeight` is what makes the thread's `flex: 1`
+          mean something: `grow` needs a definite parent to grow into. */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 12,
+          width: '100%',
+          maxWidth: 720,
+          height: 'min(72vh, 620px)',
+          minHeight: 420,
+          overflow: 'hidden',
+        }}
+      >
         <ChatHeader
           title="A conversation with a long enough name to clamp"
           leading={<AsideToggle />}

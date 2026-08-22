@@ -60,6 +60,18 @@ const TYPE: Record<ButtonSize, string> = {
   'icon-lg': '$3',
 }
 
+/** The spinner's CEILING, paired 1:1 with TYPE above. A ceiling rather than a
+ *  size for the reason the height ladder gives: a pin clips, a bound does not.
+ *  A spinner stands in for the label, so it may not outgrow the label's line. */
+const SPIN: Record<ButtonSize, number> = {
+  default: 16,
+  sm: 14,
+  lg: 16,
+  icon: 16,
+  'icon-sm': 14,
+  'icon-lg': 16,
+}
+
 const Frame = styled(GuiButton.Frame, {
   name: 'Button',
   items: 'center',
@@ -232,7 +244,12 @@ function Button({
       className={buttonVariants({ variant, size, className })}
       {...props}
     >
-      {isLoading && <Spinner size="small" />}
+      {/* Bounded in pixels, not by `size="small"`. gui's Spinner drops that prop
+          on web and the indicator then takes its container: measured 300×305,
+          which made `<Button isLoading>loading</Button>` render 389×309 — a
+          button wider than a phone, and the only element on the whole surface
+          that overflowed at 390px. */}
+      {isLoading && <Spinner size="small" maxWidth={SPIN[resolved]} maxHeight={SPIN[resolved]} />}
       {ink(body, GuiButton.Text as never, { fontSize: TYPE[resolved] })}
     </Frame>
   )

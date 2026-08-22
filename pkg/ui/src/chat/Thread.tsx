@@ -59,6 +59,14 @@ export const Thread = /* @__PURE__ */ forwardRef<Scroller, ThreadProps>(function
       {...slot('thread')}
       flex={1}
       width="100%"
+      // A thread CONTAINS its turns. gui's ScrollView leaves `overflow` visible
+      // on web, so a thread given less room than its content did not scroll —
+      // it painted every turn straight over the composer below it and kept
+      // going. `minHeight: 0` is the other half: a flex item's automatic minimum
+      // is its content, so without it the item refuses to shrink under 976px and
+      // there is nothing to scroll inside.
+      overflowY="auto"
+      minHeight={0}
       scrollEventThrottle={16}
       onContentSizeChange={grew}
       onScroll={(e: any) => {
