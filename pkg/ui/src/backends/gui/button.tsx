@@ -98,9 +98,15 @@ const Frame = styled(GuiButton.Frame, {
       // The strongest control WITHOUT a white slab — the macOS dark pushbutton:
       // an elevated gray fill, white text, hairline. On an otherwise quiet page
       // this IS the loudest thing; a $color12 fill read as a glare, not a CTA.
+      // …and it is the control the ACCENT rides on. `$accentBackground` defaults
+      // to the same raised rung this used to name literally, so nothing moves
+      // until an app sets `--primary` — at which point the loud control follows
+      // it instead of staying grey. Naming the rung directly is what left the
+      // accent knob connected to nothing: the pair was declared in the config,
+      // no component asked for it, and setting `--primary` changed zero pixels.
       primary: {
-        bg: '$color5',
-        color: '$color12',
+        bg: '$accentBackground',
+        color: '$accentColor',
         borderColor: '$color6',
         hoverStyle: { bg: '$color6', borderColor: '$color7' },
       },
