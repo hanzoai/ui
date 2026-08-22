@@ -22,7 +22,12 @@ const Checkbox = (props: CheckboxProps) => (
     flexShrink={0}
     borderRadius="$2"
     borderWidth={1}
-    borderColor="$borderColor"
+    // A CONTROL boundary, not a surface hairline. `$borderColor` is 10% white —
+    // right for a card edge sitting on its own fill, and 1.26:1 against the
+    // ground, where WCAG 1.4.11 asks 3:1 for the visible boundary of a control.
+    // An unchecked box was therefore not quiet, it was absent. `$color7` is
+    // 3.45:1. The two jobs shared one token and only one of them was satisfied.
+    borderColor="$color7"
     backgroundColor="transparent"
     {...touch(BOX)}
     {...props}
