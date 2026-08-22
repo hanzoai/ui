@@ -46,6 +46,20 @@ export interface DotsProps {
   color?: string
   /** Animate. A `field` moves; an image or text holds still, so this is ignored for them. */
   animate?: boolean
+  /**
+   * Dissolve the field at its edges instead of ending it on a line.
+   *
+   * `true` fades all four sides. An object fades only the sides named, each
+   * value being the fraction of that axis the fade occupies (`0.2` = the outer
+   * fifth). A field that stops abruptly reads as a rectangle someone pasted on;
+   * one that dissolves reads as part of the page.
+   *
+   * This is a mask, not a second overlaid element, so nothing has to be kept in
+   * sync with the canvas and the page background shows through exactly.
+   * Asymmetric values are the useful case: hold the field back where type sits
+   * and let it run where the page is empty.
+   */
+  fade?: boolean | { top?: number; bottom?: number; left?: number; right?: number }
   className?: string
   style?: React.CSSProperties
 }
@@ -58,6 +72,21 @@ const SWELL: Field = (x, y, t) => {
   return Math.max(0, v) ** 1.6
 }
 
+/** The two gradients a `fade` compiles to — one per axis, intersected. */
+const dissolve = (fade: DotsProps['fade']): string | undefined => {
+  if (!fade) return undefined
+  const f = fade === true ? { top: 0.2, bottom: 0.2, left: 0.2, right: 0.2 } : fade
+  const stop = (n?: number) => Math.max(0, Math.min(0.5, n ?? 0))
+  const axis = (a: number, b: number, dir: string) =>
+    a || b
+      ? `linear-gradient(to ${dir}, ${a ? 'transparent' : '#fff'}, #fff ${(a * 100).toFixed(1)}%, ` +
+        `#fff ${((1 - b) * 100).toFixed(1)}%, ${b ? 'transparent' : '#fff'})`
+      : null
+  return [axis(stop(f.top), stop(f.bottom), 'bottom'), axis(stop(f.left), stop(f.right), 'right')]
+    .filter(Boolean)
+    .join(', ')
+}
+
 const Dots = ({
   src,
   text,
@@ -65,6 +94,7 @@ const Dots = ({
   cell = 6,
   color,
   animate = true,
+  fade,
   className,
   style,
 }: DotsProps) => {
@@ -204,12 +234,29 @@ const Dots = ({
     }
   }, [src, text, field, cell, color, animate])
 
+  const mask = dissolve(fade)
   return (
     <canvas
       ref={ref}
       data-slot="dots"
       className={className}
-      style={{ display: 'block', width: '100%', height: '100%', ...style }}
+      style={{
+        display: 'block',
+        width: '100%',
+        height: '100%',
+        // Both spellings: WebKit still wants the prefix for mask-composite, and
+        // a single unprefixed declaration silently drops the second gradient on
+        // Safari — which reads as "the fade only works on one axis".
+        ...(mask
+          ? {
+              WebkitMaskImage: mask,
+              maskImage: mask,
+              WebkitMaskComposite: 'source-in',
+              maskComposite: 'intersect',
+            }
+          : null),
+        ...style,
+      }}
     />
   )
 }
