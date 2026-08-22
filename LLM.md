@@ -89,7 +89,9 @@ Three things used to be each app's job:
    stylesheet containing ZERO of either, every gui-styled element unstyled in
    production, green build throughout. The render happens at OUR publish time now
    (`scripts/gen-css.mjs` renders `src/gallery.tsx` in both themes and writes
-   `dist/styles.css` — 381 KB, 35 KB gzipped, 340 atomic selectors), and
+   `dist/styles.css` — 362 KB, 71 KB gzipped, 611 atomic selectors, plus
+   react-native-web's own sheet, which is 13 KB of that and is not gui's to
+   generate), and
    `<Hanzo>` imports it. Styles gui generates at RUNTIME for props we could not
    know at publish time still reach the document through `insertStyleRules`;
    the shipped sheet is what makes the FIRST paint and every SSR/static render
@@ -121,9 +123,10 @@ styled by one and missed by another.
 
 | Layer | Command | What it catches |
 |---|---|---|
-| `src/styles.test.tsx` | `pnpm test:unit` | every atomic class the gallery renders vs every class `dist/styles.css` defines a rule for. Not "the intersection is large" — TOTAL. Catches a stale sheet. |
+| `src/styles.test.tsx` | `pnpm test:unit` | every class the gallery renders — gui's `_…` AND react-native-web's `r-…`/`css-…` — vs every class `dist/styles.css` defines a rule for. Not "the intersection is large" — TOTAL. Catches a stale sheet. |
 | `src/backends/gui/render.test.tsx` | `pnpm test:unit` | the surface mounts under the real provider; a component that throws on first paint fails. |
 | `test/consumer.spec.ts` | `pnpm test:consumer` | packs the tarball, installs it into a temp app OUTSIDE the repo (never a workspace link — that hides `files`/`exports`/`workspace:*` defects), builds, serves, and asserts COMPUTED styles + screenshots at 390 and 1280 in both themes. |
+| `test/stress.tsx` | `pnpm test:contain` | every shell given LESS room than its content: what escapes, what is merely clipped, and what actually scrolls. Mounts in a browser, and checks the stylesheets arrived before it believes a box. |
 
 The consumer spec also fails on a solid-white border (the `@hanzo/design`
 `border-card: var(--white…)` defect — borders are low-alpha hairlines) and on any
@@ -161,6 +164,58 @@ element that has a text child and a zero-height box.
   forwarded it, next to an eye offering to reveal what was already visible).
   Render it and read the markup before you believe a prop works.
 
+### TWO stylesheets, and only one of them was being shipped
+
+Components here render through gui, and gui renders through react-native-web, so
+the markup carries classes from both: gui's atomic `_…` classes, and rnw's `r-…`
+(one declaration each) and `css-…` (a component's base rule). **Both are written
+by the running app** — rnw appends its `<style>` on import, gui inserts a rule the
+first time a prop renders — and `scripts/gen-css.mjs` collected only gui's.
+
+So `dist/styles.css` shipped 20 rnw classes with no rule anywhere, including the
+`overflow-y: auto` that makes every `ScrollView` scroll. A browser hid it: rnw
+appends that sheet itself, so a client-rendered app was always fine and only
+server-rendered markup was bare. `dist/gallery.html` is server-rendered — so the
+gallery drew those components as unstyled block-level HTML, and `responsive.mjs`
+measured that page.
+
+`styles.test.tsx` claimed a TOTAL match of classes-to-rules and stayed green
+throughout, because it read only tokens starting `_`. It reads `r-` and `css-`
+too now, which is the guard that closes this rather than the fix that patched it.
+
+**A harness renders the way an app renders.** `scripts/contain.mjs` mounts
+`test/stress.tsx` in a real browser through vite, and refuses to report a number
+until it has confirmed both base rules arrived (`display:flex`, `min-height:0`).
+That check is not decoration. A document with no styles fails every containment
+question AND fails the negative control, which reads exactly like a good run — an
+earlier server-rendering version of this harness reported the sidebar and the
+drawer as broken shells on that basis, and both are fine.
+
+### The shell contract, measured
+
+A shell is something pinned top, something pinned bottom, and a middle that takes
+what is left and scrolls. `Screen` and `Fill` (`backends/gui/screen.tsx`) are that
+shape; `ScrollView` is the other way to get it, and it is the one that also works
+off the web. `scripts/contain.mjs` over-fills all of them and asks three
+questions: does visible content escape the frame, is clipped content reachable,
+and what actually scrolls.
+
+Measured at 24 rows in a 320px column and 90 rows in a 900px drawer: nothing
+escapes, and the scroller in each case is real — the sidebar's middle holds 804px
+of rows in 193px and the user chip stays pinned inside the frame; the drawer's
+body holds 2884px in 844px.
+
+On web, the half of the folklore that does the work is **declaring the overflow**.
+`minHeight: 0` is already zero before anyone writes it — rnw's `View` base and
+gui's own stack base both set `min-height: 0` and `min-width: 0`, measured on the
+rendered element, not read off a source file. The gate keeps one frame of each as
+a control: `only-overflow` (overflow, no `minH`) contains and scrolls;
+`only-minh` (`minH`, no overflow) escapes by 310px and is REQUIRED to fail, since
+a gate nobody has watched fail is not known to run.
+
+Nothing here says what happens on native. This harness is a browser and cannot
+answer it, so no claim is recorded.
+
 ### Subpaths
 
 | Subpath | What |
@@ -179,6 +234,7 @@ element that has a text child and a zero-height box.
 | `@hanzo/ui/product/*` · `/primitives/*` | deep imports — one module without its barrel |
 | `@hanzo/ui/product/pure` | the product layer's RULES with none of the layer (below) |
 | `@hanzo/ui/product/theme-toggle-next` | the `@hanzogui/next-theme` binding, off the barrel on purpose (below) |
+| `@hanzo/ui/grid` | `Grid` + `Cell` — a real CSS grid, so web-only and off the barrel (below) |
 | `@hanzo/ui/css` | `substitute()` — resolve a `var()` chain, for tests jsdom cannot answer (below) |
 
 Everything ships COMPILED from `dist` — every `exports` target is a real file in
@@ -226,6 +282,34 @@ jsdom mounts no design sheet, so the fallback IS what a browser computes. It is
 NOT part of `@hanzo/ui/core` — that subpath is ESM-only because @hanzo/design
 publishes no `require` condition, and a jest consumer is the caller that needs
 this. Importing nothing is what lets it ship both formats.
+
+### `Grid` is off the barrel — 8.2.0
+
+It renders a `div` and sets `display: grid`, and neither exists on React Native,
+so it ships at `@hanzo/ui/grid` beside `@hanzo/ui/dots` rather than on the surface
+that promises to run everywhere. That is a statement about the file, not a claim
+about anyone's bundle.
+
+One prop carries the tracks. `columns` takes a count, a list, a written track
+list, or `{min, max}` — the responsive `repeat(auto-fill, minmax(…))` form, which
+is why there are no breakpoint props. `rows` is the same down the page, and `Cell`
+takes `col`/`row`, where a number spans and a string places. `min`/`cols`/`max`
+are gone with no alias; the seven `trust/site` call sites moved in the same
+change.
+
+Two formulas in `tracks()` look like verbosity and are each one tidy-up away from
+the ragged row this component exists to prevent, so `grid.test.ts` asserts both
+against the shorter spelling they must NOT produce. A count is `minmax(0, 1fr)`,
+never a bare `1fr`, because `1fr` means `minmax(auto, 1fr)` and `auto` floors the
+track at its content. A fit floor is `min(Npx, 100%)`, never a bare `Npx`, because
+`minmax(240px, 1fr)` forces a 240px track into a 390px phone: measured at 390, the
+900px-min grid lays out one 342px track and the document does not scroll sideways.
+
+The min-width floor grid children need is `[data-slot='grid'] > *` in
+`styles/motion.css`, declared once. `Cell` does not restate it inline — a
+`grid-column` only applies to a direct child of the grid, so a Cell is always in
+range of that selector, and the computed floor is 0px on every cell at both 390
+and 1280.
 
 ### One DropdownMenu
 
