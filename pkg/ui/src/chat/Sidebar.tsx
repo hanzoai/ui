@@ -50,7 +50,7 @@ export function Sidebar({ children, width = WIDTH }: SidebarProps) {
       height="100%"
       gap="$1"
       p="$2"
-      bg="$color2"
+      bg="$panel"
       borderRightWidth={1}
       borderColor="$borderColor"
     >
@@ -82,8 +82,8 @@ export function SidebarHeader({
         shrink={1}
         cursor={onOpenSwitcher ? 'pointer' : undefined}
         onPress={onOpenSwitcher}
-        hoverStyle={onOpenSwitcher ? { bg: '$color4' } : undefined}
-        pressStyle={onOpenSwitcher ? { bg: '$color5' } : undefined}
+        hoverStyle={onOpenSwitcher ? { bg: '$edge' } : undefined}
+        pressStyle={onOpenSwitcher ? { bg: '$raised' } : undefined}
       >
         <SizableText size="$3" fontWeight="600" numberOfLines={1}>
           {title}
@@ -131,8 +131,8 @@ export function SidebarIconButton({ label, onPress, children }: SidebarIconButto
       tabIndex={0}
       aria-label={label}
       {...tip(label)}
-      hoverStyle={{ bg: '$color4', opacity: 1 }}
-      pressStyle={{ bg: '$color5' }}
+      hoverStyle={{ bg: '$edge', opacity: 1 }}
+      pressStyle={{ bg: '$raised' }}
     >
       {children}
     </XStack>
@@ -155,8 +155,8 @@ export function SidebarNewChat({ label = 'New chat', onPress }: SidebarNewChatPr
       onPress={onPress}
       role="button"
       tabIndex={0}
-      hoverStyle={{ bg: '$color4' }}
-      pressStyle={{ bg: '$color5' }}
+      hoverStyle={{ bg: '$edge' }}
+      pressStyle={{ bg: '$raised' }}
     >
       <SquarePen size={16} />
       <SizableText size="$2" fontWeight="500">
@@ -184,7 +184,7 @@ export function SidebarSection({ label, children }: SidebarSectionProps) {
   return (
     <YStack {...slot('sidebar-section')} mt="$3" gap="$0.5">
       {label ? (
-        <SizableText size="$1" px="$2" py="$1" color="$color10" fontWeight="500">
+        <SizableText size="$1" px="$2" py="$1" color="$soft" fontWeight="500">
           {label}
         </SizableText>
       ) : null}
@@ -219,12 +219,12 @@ export function SidebarItem({ children, active = false, onPress, icon }: Sidebar
       role="button"
       tabIndex={0}
       aria-current={active ? 'page' : undefined}
-      bg={active ? '$color4' : undefined}
-      hoverStyle={{ bg: active ? '$color4' : '$color3' }}
-      pressStyle={{ bg: '$color5' }}
+      bg={active ? '$edge' : undefined}
+      hoverStyle={{ bg: active ? '$edge' : '$hover' }}
+      pressStyle={{ bg: '$raised' }}
     >
       {icon ? <YStack opacity={0.7}>{icon}</YStack> : null}
-      <SizableText size="$2" numberOfLines={1} flex={1} color={active ? '$color' : '$color11'}>
+      <SizableText size="$2" numberOfLines={1} flex={1} color={active ? '$color' : '$quiet'}>
         {children}
       </SizableText>
     </XStack>
@@ -274,8 +274,8 @@ export function SidebarFolder({
         role="button"
         tabIndex={0}
         aria-expanded={open}
-        hoverStyle={{ bg: '$color3' }}
-        pressStyle={{ bg: '$color5' }}
+        hoverStyle={{ bg: '$hover' }}
+        pressStyle={{ bg: '$raised' }}
       >
         {open ? (
           <ChevronDown size={14} opacity={0.6} />
@@ -283,7 +283,7 @@ export function SidebarFolder({
           <ChevronRight size={14} opacity={0.6} />
         )}
         <Folder size={16} opacity={0.7} />
-        <SizableText size="$2" numberOfLines={1} flex={1} color="$color11">
+        <SizableText size="$2" numberOfLines={1} flex={1} color="$quiet">
           {name}
         </SizableText>
       </XStack>
@@ -325,8 +325,8 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp }: Sideba
         onPress={onPress}
         role="button"
         tabIndex={0}
-        hoverStyle={{ bg: '$color3' }}
-        pressStyle={{ bg: '$color5' }}
+        hoverStyle={{ bg: '$hover' }}
+        pressStyle={{ bg: '$raised' }}
       >
         <XStack
           width={24}
@@ -334,7 +334,7 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp }: Sideba
           rounded={9999}
           items="center"
           justify="center"
-          bg="$color5"
+          bg="$raised"
           overflow="hidden"
         >
           {avatar ?? (
@@ -348,7 +348,7 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp }: Sideba
             {name}
           </SizableText>
           {secondary ? (
-            <SizableText size="$1" color="$color10" numberOfLines={1}>
+            <SizableText size="$1" color="$soft" numberOfLines={1}>
               {secondary}
             </SizableText>
           ) : null}

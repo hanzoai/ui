@@ -89,8 +89,8 @@ export function HeaderButton({ label, onPress, children }: HeaderButtonProps) {
       tabIndex={0}
       aria-label={label}
       {...tip(label)}
-      hoverStyle={{ bg: '$color4', opacity: 1 }}
-      pressStyle={{ bg: '$color5' }}
+      hoverStyle={{ bg: '$edge', opacity: 1 }}
+      pressStyle={{ bg: '$raised' }}
     >
       {children}
     </XStack>
@@ -123,8 +123,8 @@ export function ShareButton({ label = 'Share', onPress }: ShareButtonProps) {
       onPress={onPress}
       role="button"
       tabIndex={0}
-      hoverStyle={{ bg: '$color4', opacity: 1 }}
-      pressStyle={{ bg: '$color5' }}
+      hoverStyle={{ bg: '$edge', opacity: 1 }}
+      pressStyle={{ bg: '$raised' }}
     >
       <Share2 size={14} />
       <SizableText size="$1" fontWeight="500">

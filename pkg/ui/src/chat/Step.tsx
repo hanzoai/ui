@@ -39,13 +39,13 @@ const MARK = 13
 const mark = (status: Ran) => {
   switch (status) {
     case 'running':
-      return <Spinner size={MARK} color="$color11" />
+      return <Spinner size={MARK} color="$quiet" />
     case 'done':
-      return <Check size={MARK} color="$color11" />
+      return <Check size={MARK} color="$quiet" />
     case 'error':
-      return <TriangleAlert size={MARK} color="$color11" />
+      return <TriangleAlert size={MARK} color="$quiet" />
     case 'cancelled':
-      return <Ban size={MARK} color="$color11" />
+      return <Ban size={MARK} color="$quiet" />
   }
 }
 
@@ -86,16 +86,16 @@ export function Step({
       <XStack width={MARK + 1} items="center" justify="center" shrink={0}>
         {mark(status)}
       </XStack>
-      <SizableText size="$1" color="$color12" numberOfLines={1}>
+      <SizableText size="$1" color="$ink" numberOfLines={1}>
         {name}
       </SizableText>
       {detail ? (
-        <SizableText size="$1" color="$color10" numberOfLines={1} shrink={1}>
+        <SizableText size="$1" color="$soft" numberOfLines={1} shrink={1}>
           {detail}
         </SizableText>
       ) : null}
       <XStack flex={1} />
-      {opens ? <ChevronDown size={13} color="$color10" /> : null}
+      {opens ? <ChevronDown size={13} color="$soft" /> : null}
     </XStack>
   )
 
@@ -111,8 +111,8 @@ export function Step({
       borderWidth={1}
       // An edge, not a red fill — `product/tone.ts` marks `stopped` the same
       // way, so it survives a brand that retunes the ramp.
-      borderColor={status === 'error' ? '$color9' : '$borderColor'}
-      bg="$color2"
+      borderColor={status === 'error' ? '$faint' : '$borderColor'}
+      bg="$panel"
       overflow="hidden"
       {...props}
     >

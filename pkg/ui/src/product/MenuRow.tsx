@@ -27,7 +27,7 @@ import { Check } from '@hanzogui/lucide-icons-2'
 
 /** The tier hue a row may carry. Monochrome by default — only the genuine states
  *  take a colour (a live network green, a caution amber). */
-export type DotColor = '$green10' | '$yellow10' | '$color10' | '$color9' | '$color8'
+export type DotColor = '$green10' | '$yellow10' | '$soft' | '$faint' | '$dim'
 
 export type MenuRowProps = {
   label: string
@@ -56,16 +56,16 @@ export function MenuRow({ label, sub, dot, icon, active, danger, onPress }: Menu
       px="$2"
       py="$2"
       rounded="$3"
-      bg={active ? '$color4' : 'transparent'}
-      hoverStyle={{ bg: '$color5' }}
+      bg={active ? '$edge' : 'transparent'}
+      hoverStyle={{ bg: '$raised' }}
     >
       {dot ? <YStack width={8} height={8} rounded="$10" bg={dot} /> : icon}
       <YStack flex={1} minW={0}>
-        <Text fontSize="$2" color={danger ? '$red10' : '$color12'} numberOfLines={1}>
+        <Text fontSize="$2" color={danger ? '$red10' : '$ink'} numberOfLines={1}>
           {label}
         </Text>
         {sub ? (
-          <Text fontSize="$1" color="$color10" numberOfLines={1}>
+          <Text fontSize="$1" color="$soft" numberOfLines={1}>
             {sub}
           </Text>
         ) : null}
@@ -85,7 +85,7 @@ export function MenuRow({ label, sub, dot, icon, active, danger, onPress }: Menu
  */
 export function MenuLabel({ children }: { children: ReactNode }) {
   return (
-    <Text px="$2" py="$1" fontSize="$1" color="$color10" fontWeight="500">
+    <Text px="$2" py="$1" fontSize="$1" color="$soft" fontWeight="500">
       {children}
     </Text>
   )

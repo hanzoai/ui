@@ -90,14 +90,14 @@ const Frame = styled(GuiButton.Frame, {
       // same value as `primary` (white filled), so every unstyled <Button> in
       // every app shouted — the loudest treatment must be asked for by name.
       default: {
-        bg: '$color2',
-        color: '$color12',
+        bg: '$panel',
+        color: '$ink',
         borderColor: '$borderColor',
-        hoverStyle: { bg: '$color3', borderColor: '$color6' },
+        hoverStyle: { bg: '$hover', borderColor: '$rim' },
       },
       // The strongest control WITHOUT a white slab — the macOS dark pushbutton:
       // an elevated gray fill, white text, hairline. On an otherwise quiet page
-      // this IS the loudest thing; a $color12 fill read as a glare, not a CTA.
+      // this IS the loudest thing; a $ink fill read as a glare, not a CTA.
       // …and it is the control the ACCENT rides on. `$accentBackground` defaults
       // to the same raised rung this used to name literally, so nothing moves
       // until an app sets `--primary` — at which point the loud control follows
@@ -107,24 +107,24 @@ const Frame = styled(GuiButton.Frame, {
       primary: {
         bg: '$accentBackground',
         color: '$accentColor',
-        borderColor: '$color6',
-        hoverStyle: { bg: '$color6', borderColor: '$color7' },
+        borderColor: '$rim',
+        hoverStyle: { bg: '$rim', borderColor: '$bound' },
       },
       destructive: { bg: '$red9', color: '$white1', hoverStyle: { opacity: 0.9 } },
       outline: {
         bg: '$background',
-        color: '$color12',
+        color: '$ink',
         borderColor: '$borderColor',
-        hoverStyle: { bg: '$color3' },
+        hoverStyle: { bg: '$hover' },
       },
-      secondary: { bg: '$color4', color: '$color12', hoverStyle: { opacity: 0.8 } },
-      ghost: { bg: 'transparent', color: '$color12', hoverStyle: { bg: '$color3' } },
-      link: { bg: 'transparent', color: '$color12', hoverStyle: { textDecorationLine: 'underline' } },
-      linkFG: { bg: 'transparent', color: '$color12', hoverStyle: { textDecorationLine: 'underline' } },
+      secondary: { bg: '$edge', color: '$ink', hoverStyle: { opacity: 0.8 } },
+      ghost: { bg: 'transparent', color: '$ink', hoverStyle: { bg: '$hover' } },
+      link: { bg: 'transparent', color: '$ink', hoverStyle: { textDecorationLine: 'underline' } },
+      linkFG: { bg: 'transparent', color: '$ink', hoverStyle: { textDecorationLine: 'underline' } },
       linkMuted: {
         bg: 'transparent',
-        color: '$color11',
-        hoverStyle: { color: '$color12', textDecorationLine: 'underline' },
+        color: '$quiet',
+        hoverStyle: { color: '$ink', textDecorationLine: 'underline' },
       },
     },
     size: {

@@ -39,7 +39,7 @@ const HeaderFrame = styled(YStack, {
 })
 
 const TitleFrame = styled(SizableText, { name: 'CardTitle', size: '$4', fontWeight: '600' })
-const DescriptionFrame = styled(SizableText, { name: 'CardDescription', size: '$2', color: '$color11' })
+const DescriptionFrame = styled(SizableText, { name: 'CardDescription', size: '$2', color: '$quiet' })
 const ActionFrame = styled(XStack, { name: 'CardAction', self: 'flex-end', shrink: 0 })
 const ContentFrame = styled(YStack, { name: 'CardContent', px: PAD })
 const FooterFrame = styled(XStack, { name: 'CardFooter', px: PAD, items: 'center' })
@@ -71,8 +71,8 @@ const Card = ({ interactive, onPress, ...p }: CardProps) => (
           role: 'button',
           tabIndex: 0,
           cursor: 'pointer',
-          hoverStyle: { borderColor: '$color8' },
-          focusStyle: { borderColor: '$color8', outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$color8' },
+          hoverStyle: { borderColor: '$dim' },
+          focusStyle: { borderColor: '$dim', outlineWidth: 2, outlineStyle: 'solid', outlineColor: '$dim' },
           // A div with role="button" is not a button: the browser gives it no
           // keyboard activation, so it has to be spelled out or the card is
           // mouse-only. Space must also preventDefault or the page scrolls.

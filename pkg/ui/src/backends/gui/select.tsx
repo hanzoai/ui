@@ -90,8 +90,8 @@ const SelectItem = ({ children, ...props }: SelectItemProps) => (
     rounded="$2"
     cursor="pointer"
     {...touch(ROW_H, 44, 'y')}
-    hoverStyle={{ bg: '$color5' }}
-    focusStyle={{ bg: '$color5' }}
+    hoverStyle={{ bg: '$raised' }}
+    focusStyle={{ bg: '$raised' }}
     {...props}
   >
     <GuiSelect.ItemText>{children}</GuiSelect.ItemText>
@@ -132,7 +132,7 @@ const SelectContent = ({ children, ...props }: SelectContentProps) => {
       <GuiSelect.Viewport
         minW={128}
         p="$1"
-        bg="$color2"
+        bg="$panel"
         borderWidth={1}
         borderColor="$borderColor"
         rounded="$4"
@@ -145,7 +145,7 @@ const SelectContent = ({ children, ...props }: SelectContentProps) => {
 }
 
 const SelectLabel = (props: SelectLabelProps) => (
-  <GuiSelect.Label {...slot('select-label')} px="$2" py="$1.5" fontSize="$1" color="$color11" {...props} />
+  <GuiSelect.Label {...slot('select-label')} px="$2" py="$1.5" fontSize="$1" color="$quiet" {...props} />
 )
 
 const SelectSeparator = (props: SelectSeparatorProps) => (

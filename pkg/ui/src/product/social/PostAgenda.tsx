@@ -47,7 +47,7 @@ export function PostAgenda({ posts, onOpen }: { posts: Post[]; onOpen: (p: Post)
     <YStack gap="$4">
       {days.map((d) => (
         <YStack key={d.label} gap="$2">
-          <Text fontSize="$3" fontWeight="500" color="$color11">
+          <Text fontSize="$3" fontWeight="500" color="$quiet">
             {d.label}
           </Text>
           {d.items.map((p) => (
@@ -62,16 +62,16 @@ export function PostAgenda({ posts, onOpen }: { posts: Post[]; onOpen: (p: Post)
               px="$4"
               py="$3"
               cursor="pointer"
-              hoverStyle={{ bg: '$color2' }}
+              hoverStyle={{ bg: '$panel' }}
               onPress={() => onOpen(p)}
             >
               <YStack gap="$1" flex={1}>
                 <Text fontSize="$3">{postPreview(p.content)}</Text>
                 <XStack gap="$2" items="center">
-                  <Text fontSize="$1" color="$color10">
+                  <Text fontSize="$1" color="$soft">
                     {p.channel}
                   </Text>
-                  <Text fontSize="$1" color="$color10">
+                  <Text fontSize="$1" color="$soft">
                     · {formatPostTime(p.scheduleAt ?? 0)}
                   </Text>
                 </XStack>

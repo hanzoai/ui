@@ -31,7 +31,7 @@ type Stack = Omit<ComponentProps<typeof XStack>, 'children' | 'role'>
  * already live-announces the text.
  */
 export function Caret() {
-  return <YStack {...slot('caret')} width={2} height={15} rounded={1} bg="$color12" aria-hidden />
+  return <YStack {...slot('caret')} width={2} height={15} rounded={1} bg="$ink" aria-hidden />
 }
 
 export interface MessageProps extends Stack {
@@ -67,7 +67,7 @@ export function Message({
         py="$2"
         {...props}
       >
-        <Text fontSize="$1" color="$color10" text="center">
+        <Text fontSize="$1" color="$soft" text="center">
           {children}
         </Text>
       </XStack>
@@ -95,7 +95,7 @@ export function Message({
         maxW={mine ? '85%' : '100%'}
         flex={mine ? undefined : 1}
         {...(mine && {
-          bg: '$color3',
+          bg: '$hover',
           rounded: '$5',
           px: '$3',
           py: '$2',

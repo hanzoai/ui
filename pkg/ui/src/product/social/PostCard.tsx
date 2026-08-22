@@ -42,20 +42,20 @@ export function PostCard({
         </XStack>
       </XStack>
 
-      <Text fontSize="$3" color="$color12">
+      <Text fontSize="$3" color="$ink">
         {post.content}
       </Text>
 
       <XStack items="center" justify="space-between" gap="$2">
         {post.scheduleAt ? (
-          <Text fontSize="$1" color="$color11">
+          <Text fontSize="$1" color="$quiet">
             {formatPostTime(post.scheduleAt)}
           </Text>
         ) : (
           <YStack />
         )}
         {mediaCount ? (
-          <Text fontSize="$1" color="$color10">
+          <Text fontSize="$1" color="$soft">
             {mediaCount} media
           </Text>
         ) : null}

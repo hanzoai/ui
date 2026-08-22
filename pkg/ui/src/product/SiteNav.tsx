@@ -86,18 +86,18 @@ function ProductCell({ product, link, icon, close }: { product: Product; link: L
         href: product.url,
         onNavigate: close,
         children: (
-          <XStack gap="$2.5" items="flex-start" p="$2.5" rounded="$4" borderWidth={1} borderColor="$borderColor" hoverStyle={{ bg: '$color4' }}>
+          <XStack gap="$2.5" items="flex-start" p="$2.5" rounded="$4" borderWidth={1} borderColor="$borderColor" hoverStyle={{ bg: '$edge' }}>
             {glyph ? <YStack pt="$0.5">{glyph}</YStack> : null}
             <YStack minW={0} gap="$0.5">
               {product.verb ? (
-                <Text fontSize={11} color="$color10" textTransform="uppercase" letterSpacing={0.4}>
+                <Text fontSize={11} color="$soft" textTransform="uppercase" letterSpacing={0.4}>
                   {product.verb}
                 </Text>
               ) : null}
-              <Text fontSize="$3" color="$color12">
+              <Text fontSize="$3" color="$ink">
                 {product.name}
               </Text>
-              <Text fontSize={12} color="$color10" lineHeight={16}>
+              <Text fontSize={12} color="$soft" lineHeight={16}>
                 {product.job}
               </Text>
             </YStack>
@@ -112,17 +112,17 @@ function ProductCell({ product, link, icon, close }: { product: Product; link: L
 function Column({ title, links, link, icon, close }: { title: string; links: Link[]; link: LinkRender; icon?: (id: string) => ReactNode; close: () => void }) {
   return (
     <YStack minW={160} flex={1} gap="$1">
-      <Text fontSize={11} color="$color10" textTransform="uppercase" letterSpacing={0.5} px="$2" pb="$1">
+      <Text fontSize={11} color="$soft" textTransform="uppercase" letterSpacing={0.5} px="$2" pb="$1">
         {title}
       </Text>
       {links.map((l) => (
-        <XStack key={l.id} px="$2" py="$1" rounded="$3" hoverStyle={{ bg: '$color4' }} gap="$2" items="center">
+        <XStack key={l.id} px="$2" py="$1" rounded="$3" hoverStyle={{ bg: '$edge' }} gap="$2" items="center">
           {icon?.(l.id) ?? null}
           {link({
             href: l.href,
             onNavigate: close,
             children: (
-              <Text fontSize="$2" color="$color11">
+              <Text fontSize="$2" color="$quiet">
                 {l.label}
               </Text>
             ),
@@ -155,7 +155,7 @@ function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: Link
       overflow="scroll"
     >
       <XStack items="center" gap="$3" flexWrap="wrap">
-        <Text fontSize="$2" color="$color11">
+        <Text fontSize="$2" color="$quiet">
           {menu.eyebrow}
         </Text>
         <XStack ml="auto">
@@ -163,7 +163,7 @@ function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: Link
             href: menu.allProducts.href,
             onNavigate: close,
             children: (
-              <Text fontSize="$2" color="$color12">
+              <Text fontSize="$2" color="$ink">
                 {menu.allProducts.label} →
               </Text>
             ),
@@ -190,7 +190,7 @@ function Launcher({ menu, link, icon, close }: { menu: MeetHanzoMenu; link: Link
 /** The primary call-to-action — filled, so it reads as the one action on the bar. */
 function Cta({ action, link }: { action: Action; link: LinkRender }) {
   return (
-    <XStack bg="$color12" px="$3" py="$1.5" rounded="$3" hoverStyle={{ opacity: 0.9 }}>
+    <XStack bg="$ink" px="$3" py="$1.5" rounded="$3" hoverStyle={{ opacity: 0.9 }}>
       {link({
         href: action.href,
         children: (
@@ -227,12 +227,12 @@ function MobilePanel({ header, menu, link, icon, close }: { header: SiteHeader; 
     >
       <YStack gap="$1">
         {header.localNav.map((l) => (
-          <XStack key={l.id} px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$color4' }}>
+          <XStack key={l.id} px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$edge' }}>
             {link({
               href: l.href,
               onNavigate: close,
               children: (
-                <Text fontSize="$3" color="$color12">
+                <Text fontSize="$3" color="$ink">
                   {l.label}
                 </Text>
               ),
@@ -246,13 +246,13 @@ function MobilePanel({ header, menu, link, icon, close }: { header: SiteHeader; 
           <Separator />
           <YStack gap="$1">
             {menu.products.map((p) => (
-              <XStack key={p.id} px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$color4' }} gap="$2" items="center">
+              <XStack key={p.id} px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$edge' }} gap="$2" items="center">
                 {icon?.(p.id) ?? null}
                 {link({
                   href: p.url,
                   onNavigate: close,
                   children: (
-                    <Text fontSize="$3" color="$color12">
+                    <Text fontSize="$3" color="$ink">
                       {p.name}
                     </Text>
                   ),
@@ -312,13 +312,13 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
             px="$2.5"
             py="$1.5"
             rounded="$3"
-            bg={launcher ? '$color4' : 'transparent'}
-            hoverStyle={{ bg: '$color4' }}
+            bg={launcher ? '$edge' : 'transparent'}
+            hoverStyle={{ bg: '$edge' }}
             onPress={() => setLauncher(!launcher)}
             accessibilityRole="button"
             aria-expanded={launcher}
           >
-            <Text fontSize="$2" color="$color12">
+            <Text fontSize="$2" color="$ink">
               {meetLabel}
             </Text>
           </XStack>
@@ -335,13 +335,13 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
               px="$2.5"
               py="$1.5"
               rounded="$3"
-              hoverStyle={{ bg: '$color4' }}
+              hoverStyle={{ bg: '$edge' }}
               onMouseEnter={() => launcher && setLauncher(false)}
             >
               {link({
                 href: l.href,
                 children: (
-                  <Text fontSize="$2" color={active === l.id ? '$color12' : '$color11'}>
+                  <Text fontSize="$2" color={active === l.id ? '$ink' : '$quiet'}>
                     {l.label}
                   </Text>
                 ),
@@ -360,12 +360,12 @@ export function SiteNav({ header, menu, brand, actions, link = defaultLink, icon
             px="$2"
             py="$1.5"
             rounded="$3"
-            hoverStyle={{ bg: '$color4' }}
+            hoverStyle={{ bg: '$edge' }}
             onPress={() => setMobile(!mobile)}
             accessibilityRole="button"
             aria-label={mobile ? 'Close menu' : 'Open menu'}
           >
-            <Text fontSize="$2" color="$color12">
+            <Text fontSize="$2" color="$ink">
               {mobile ? 'Close' : 'Menu'}
             </Text>
           </XStack>

@@ -102,7 +102,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
         <FieldRow label="Media">
           <YStack gap="$1">
             {post.media.map((m) => (
-              <Text key={m} fontSize="$2" color="$color11">
+              <Text key={m} fontSize="$2" color="$quiet">
                 {m}
               </Text>
             ))}

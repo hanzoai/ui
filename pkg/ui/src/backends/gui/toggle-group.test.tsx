@@ -47,7 +47,7 @@ const tag = (markup: string, slot: string) => tags(markup, slot)[0] ?? ''
 
 /**
  * The compiled class for one style property AT REST, e.g. cls(el, 'bg') ->
- * '_bg-color12'. Pseudo-state classes share the prefix (`_bg-0hover-color3`),
+ * '_bg-ink'. Pseudo-state classes share the prefix (`_bg-0hover-hover`),
  * and matching one of those by accident is how an assertion ends up comparing
  * two hover styles and reporting that the resting fills differ.
  */
@@ -141,7 +141,7 @@ describe('ToggleGroup', () => {
     )[0]
     expect(fromItem).toContain('data-size="sm"')
     expect(cls(fromItem, 'height')).toBe('_height-32px')
-    expect(cls(fromItem, 'bg')).toBe('_bg-color3')
+    expect(cls(fromItem, 'bg')).toBe('_bg-hover')
   })
 
   // A state expressed as one step of grey is legible beside its neighbours and
@@ -167,8 +167,8 @@ describe('ToggleGroup', () => {
     const [on] = tags(items('single', 'a' as never), 'toggle-group-item')
     const classes = on.match(/class="([^"]*)"/)?.[1] ?? ''
 
-    expect(classes).toContain('_bg-0hover-color6')
-    expect(classes).toContain('_bg-0focus-color6')
+    expect(classes).toContain('_bg-0hover-rim')
+    expect(classes).toContain('_bg-0focus-rim')
   })
 
   it('lifts a 32px segment to the 44px touch floor', () => {

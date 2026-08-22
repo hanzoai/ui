@@ -24,7 +24,7 @@ export function PageHeader({
           {title}
         </Text>
         {subtitle ? (
-          <Text fontSize="$3" color="$color11">
+          <Text fontSize="$3" color="$quiet">
             {subtitle}
           </Text>
         ) : null}

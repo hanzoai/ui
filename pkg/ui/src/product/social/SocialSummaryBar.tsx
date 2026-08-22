@@ -28,7 +28,7 @@ export function SocialSummaryBar({ summary }: { summary: SocialSummary }) {
           py="$3"
           minW={140}
         >
-          <Text fontSize="$1" color="$color10">
+          <Text fontSize="$1" color="$soft">
             {c.label}
           </Text>
           <Text fontSize="$6" fontWeight="500" className="hz-tnum">

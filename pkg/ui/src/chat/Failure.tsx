@@ -40,11 +40,11 @@ export function Failure({ children, onRetry, retryLabel = 'Try again', ...props 
       rounded="$4"
       borderWidth={1}
       // The `stopped` register from `product/tone.ts`: an outline, not a hue.
-      borderColor="$color9"
-      bg="$color4"
+      borderColor="$faint"
+      bg="$edge"
       {...props}
     >
-      {ink(children, undefined, { size: '$2', color: '$color12' })}
+      {ink(children, undefined, { size: '$2', color: '$ink' })}
       {onRetry ? (
         // A real Button: a View wearing `role="button"` takes focus and then
         // ignores Enter and Space.

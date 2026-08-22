@@ -10,7 +10,7 @@
  * Prop-driven and pure: the accent hex is resolved by the caller (registry-curated
  * → per-user override → stable hash, via `useProductColors().colorOf`) and passed
  * in as `color`, so this component owns only the look, never the palette. With no
- * color it falls back to a tasteful neutral chip ($color12 fill + $color1 glyph) —
+ * color it falls back to a tasteful neutral chip ($ink fill + $sunken glyph) —
  * never a random hue — matching the first-party `ProviderLogo` mark, so first-party
  * marks and product tiles read as one family.
  *
@@ -54,8 +54,8 @@ export function ProductIcon({
 
   // No accent — a tasteful neutral chip (consistent with ProviderLogo's mark).
   return (
-    <XStack width={size} height={size} items="center" justify="center" rounded={radius} bg="$color12">
-      <Icon size={glyph} color="$color1" />
+    <XStack width={size} height={size} items="center" justify="center" rounded={radius} bg="$ink">
+      <Icon size={glyph} color="$sunken" />
     </XStack>
   )
 }

@@ -166,7 +166,7 @@ export function SlideOver({
         {...edge}
         width="100%"
         $lg={{ width: size, maxW: '100vw' }}
-        bg="$color1"
+        bg="$sunken"
         borderLeftWidth={side === 'right' ? 1 : 0}
         borderRightWidth={side === 'left' ? 1 : 0}
         borderColor="$borderColor"
@@ -199,7 +199,7 @@ export function SlideOver({
               borderColor="$borderColor"
             >
               {Icon ? <Icon size={18} color={iconColor ? asColor(iconColor) : undefined} /> : null}
-              <Text flex={1} fontSize="$5" fontWeight="700" color="$color12" numberOfLines={1}>
+              <Text flex={1} fontSize="$5" fontWeight="700" color="$ink" numberOfLines={1}>
                 {title}
               </Text>
               {headerRight}

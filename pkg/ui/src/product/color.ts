@@ -3,7 +3,7 @@ import type { GetThemeValueForKey } from '@hanzo/gui'
 
 /**
  * Bridge between raw CSS colors (product hex accents) and Gui's typed `color`
- * prop. Gui types `color` as a theme-token template (`$color12`, …), but ANY CSS
+ * prop. Gui types `color` as a theme-token template (`$ink`, …), but ANY CSS
  * color is valid at runtime — so tinting an icon with a product hex needs one
  * sanctioned cast, in ONE place, rather than `as any` scattered around.
  */

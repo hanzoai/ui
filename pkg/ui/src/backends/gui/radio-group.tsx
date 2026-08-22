@@ -61,9 +61,9 @@ const RadioGroupItem = ({ disabled, children, ...props }: RadioGroupItemProps) =
     // A CONTROL boundary, not a surface hairline. `$borderColor` is 10% white —
     // right for a card edge sitting on its own fill, and 1.26:1 against the
     // ground, where WCAG 1.4.11 asks 3:1 for the visible boundary of a control.
-    // An unchecked box was therefore not quiet, it was absent. `$color7` is
+    // An unchecked box was therefore not quiet, it was absent. `$bound` is
     // 3.45:1. The two jobs shared one token and only one of them was satisfied.
-    borderColor="$color7"
+    borderColor="$bound"
     backgroundColor="transparent"
     // Stated rather than left to gui's `disabled` variant, which turns off
     // pointer events without dimming: a dead control that looks live invites a
@@ -75,7 +75,7 @@ const RadioGroupItem = ({ disabled, children, ...props }: RadioGroupItemProps) =
     {...props}
   >
     {/* Mounts only while checked — presence IS the state, and it is the one
-        affordance a 16px control has room for. `$color12` against the
+        affordance a 16px control has room for. `$ink` against the
         transparent well reads at any size; gui's default `$color` is the muted
         rung and vanished on a lifted surface. */}
     <GuiRadioGroup.Indicator
@@ -83,7 +83,7 @@ const RadioGroupItem = ({ disabled, children, ...props }: RadioGroupItemProps) =
       width={DOT}
       height={DOT}
       borderRadius={1000}
-      backgroundColor="$color12"
+      backgroundColor="$ink"
     />
     {children}
   </GuiRadioGroup.Item>

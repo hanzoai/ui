@@ -111,12 +111,12 @@ export function LegendDot({ color, label, value }: { color: string; label: strin
     <XStack items="center" gap="$2" justify="space-between">
       <XStack items="center" gap="$2">
         <YStack width={10} height={10} rounded="$1" bg={color as never} />
-        <Text fontSize="$2" color="$color11">
+        <Text fontSize="$2" color="$quiet">
           {label}
         </Text>
       </XStack>
       {value != null ? (
-        <Text fontSize="$2" color="$color12" fontWeight="500" className="hz-mono">
+        <Text fontSize="$2" color="$ink" fontWeight="500" className="hz-mono">
           {value}
         </Text>
       ) : null}
@@ -152,7 +152,7 @@ export function MetricCard({
       <XStack items="center" gap="$2" justify="space-between">
         <XStack items="center" gap="$2">
           {icon}
-          <Text fontSize="$2" color="$color11" fontWeight="500">
+          <Text fontSize="$2" color="$quiet" fontWeight="500">
             {label}
           </Text>
         </XStack>
@@ -163,13 +163,13 @@ export function MetricCard({
         ) : null}
       </XStack>
       <XStack items="flex-end" justify="space-between" gap="$2">
-        <Text fontSize="$8" fontWeight="500" color="$color12" numberOfLines={1} className="hz-mono">
+        <Text fontSize="$8" fontWeight="500" color="$ink" numberOfLines={1} className="hz-mono">
           {value}
         </Text>
         {spark && spark.length >= 2 ? <Sparkline points={spark} color={sparkColor ?? SERIES[0]} /> : null}
       </XStack>
       {caption ? (
-        <Text fontSize="$1" color="$color10" numberOfLines={1}>
+        <Text fontSize="$1" color="$soft" numberOfLines={1}>
           {caption}
         </Text>
       ) : null}
@@ -253,7 +253,7 @@ export function Panel({
       <XStack items="center" justify="space-between" gap="$2">
         <XStack items="center" gap="$2" flex={1} minW={0}>
           {icon}
-          <Text fontSize="$4" fontWeight="500" color="$color12">
+          <Text fontSize="$4" fontWeight="500" color="$ink">
             {title}
           </Text>
         </XStack>
@@ -262,7 +262,7 @@ export function Panel({
       {description ? (
         // Under the title, not beside it: a description sharing the line with a
         // right-hand control is the first thing to wrap on a phone.
-        <Text fontSize="$2" color="$color11">
+        <Text fontSize="$2" color="$quiet">
           {description}
         </Text>
       ) : null}

@@ -21,18 +21,18 @@ const Progress = ({ value, indicatorClassName, ...props }: ProgressProps) => (
     value={value ?? 0}
     height={8}
     width="100%"
-    bg="$color4"
+    bg="$edge"
     rounded="$10"
     overflow="hidden"
     {...props}
   >
     <GuiProgress.Indicator
       {...slot('progress-indicator')}
-      // Same reason as the slider's fill: `$color12` is the foreground rung, and
+      // Same reason as the slider's fill: `$ink` is the foreground rung, and
       // a type colour stretched across a bar is a lit slab. 6.93:1 over the
       // track against WCAG 1.4.11's 3:1 — legible with room to spare, and no
       // longer competing with the text beside it for attention.
-      bg="$color10"
+      bg="$soft"
       className={indicatorClassName}
     />
   </GuiProgress>

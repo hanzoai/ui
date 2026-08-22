@@ -71,14 +71,14 @@ export function Fieldset({
       rounded="$4"
       borderWidth={1}
       borderColor={edge}
-      bg="$color2"
+      bg="$panel"
     >
       {title || action ? (
         <XStack items="center" gap="$2" justify="space-between" flexWrap="wrap">
           <XStack items="center" gap="$2" flex={1} minW={0}>
             {icon}
             {title ? (
-              <Text fontSize="$3" fontWeight="500" color={danger ? '$red10' : '$color12'}>
+              <Text fontSize="$3" fontWeight="500" color={danger ? '$red10' : '$ink'}>
                 {title}
               </Text>
             ) : null}
@@ -90,7 +90,7 @@ export function Fieldset({
       {description ? (
         // Sits under the legend, not beside it: a description that shares the
         // line with the title competes with it and wraps first on a phone.
-        <Text fontSize="$2" color="$color11">
+        <Text fontSize="$2" color="$quiet">
           {description}
         </Text>
       ) : null}

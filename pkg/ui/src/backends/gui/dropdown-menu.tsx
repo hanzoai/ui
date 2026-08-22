@@ -37,7 +37,7 @@ const INDICATOR_SLOT = 14
 const ICON = 16
 
 const panel = {
-  bg: "$color2",
+  bg: "$panel",
   borderColor: "$borderColor",
   borderWidth: 1,
   rounded: "$4",
@@ -58,9 +58,9 @@ const row = {
   select: "none",
   cursor: "pointer",
   ...touch(ROW_H, TAP_MIN, "y"),
-  hoverStyle: { bg: "$color5" },
-  focusStyle: { bg: "$color5" },
-  pressStyle: { bg: "$color6" },
+  hoverStyle: { bg: "$raised" },
+  focusStyle: { bg: "$raised" },
+  pressStyle: { bg: "$rim" },
 } as const
 
 /** Left indicator well shared by checkbox + radio rows. */
@@ -160,11 +160,11 @@ const renderSpec = (spec: MenuItemSpec, i: number) => {
         </XStack>
       ) : null}
       <YStack flex={1} minW={0}>
-        <Text fontSize="$2" color="$color12" numberOfLines={1}>
+        <Text fontSize="$2" color="$ink" numberOfLines={1}>
           {spec.label}
         </Text>
         {spec.description ? (
-          <Text fontSize="$1" color="$color11" numberOfLines={1}>
+          <Text fontSize="$1" color="$quiet" numberOfLines={1}>
             {spec.description}
           </Text>
         ) : null}
@@ -337,7 +337,7 @@ const DropdownMenuLabel = /* @__PURE__ */ React.forwardRef<
       pl={inset ? INSET_PL : ROW_PX}
       fontSize="$2"
       fontWeight="500"
-      color="$color12"
+      color="$ink"
       select="none"
       {...props}
     />
@@ -369,7 +369,7 @@ function DropdownMenuShortcut(props: React.ComponentProps<typeof Text>) {
       ml="auto"
       fontSize="$1"
       letterSpacing={1}
-      color="$color11"
+      color="$quiet"
       {...props}
     />
   )
