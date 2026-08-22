@@ -23,12 +23,17 @@
  * clip built in, and a caller cannot forget a thing it does not have to write.
  *
  * WHY NOT CSS GRID, which expresses this as one line — `grid-template-rows: auto
- * 1fr auto` — with no escape hatch at all: because this package's premise is that
- * one import runs on web AND native, and React Native lays out through Yoga,
- * which implements flexbox and has no grid. That is not a gap a fork can close;
- * Yoga is the native runtime's engine. Grid is right where the target is a
- * browser, and `Grid` exists for that. A shell has to work on both, so it is
- * flexbox on the inside and neither caller has to know.
+ * 1fr auto` — with no escape hatch at all: because React Native lays out through
+ * Yoga, and Yoga ships flexbox only. That is a gap a fork CAN close — Yoga is
+ * open-source C++, and an experimental patch adds a real `YGDisplayGrid`
+ * (GridLayout.cpp, AutoPlacement.h, TrackSizing.h) with working iOS and Android
+ * builds, native layout rather than a webview. It is not closed here yet: the
+ * patch wants React Native 0.83-rc and an Expo canary, and taking it means this
+ * fork carries a C++ layout-engine patch rebased on every upgrade.
+ *
+ * So the reason is a pin, not a law, and `Screen` is what the shell looks like
+ * either way — a caller writes the same two components whether the inside is
+ * flexbox today or grid later. `Grid` already exists for web-only surfaces.
  */
 import { YStack, type YStackProps } from '@hanzo/gui'
 import { slot } from './slot'
