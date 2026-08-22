@@ -198,3 +198,47 @@ describe('the pure subpath', () => {
     expect(node(script)).toBe('ok')
   })
 })
+
+/**
+ * dist/gallery.html — the render, kept.
+ *
+ * `gen-css.mjs` mounts src/gallery.tsx to harvest the atomic rules; the markup
+ * that harvest produces is the only picture of this package that cannot drift
+ * from it, so it is written out beside the sheet it generated.
+ *
+ * The assertion is coverage, because the failure it guards is the one this whole
+ * script exists for and it is silent: markup whose classes no rule defines
+ * renders unstyled, with a green build. Split on `</head>`, never on `<body>` —
+ * the token layer carries a comment mentioning `<body>`, and splitting there
+ * truncates the sheet and reports total coverage as zero.
+ */
+describe('the kept render', () => {
+  const page = () => readFileSync(join(DIST, 'gallery.html'), 'utf8')
+
+  it.runIf(built)('is emitted', () => {
+    expect(existsSync(join(DIST, 'gallery.html')), needsBuild).toBe(true)
+  })
+
+  it.runIf(built)('carries a rule for every atomic class it renders', () => {
+    const html = page()
+    const cut = html.indexOf('</head>')
+    expect(cut, 'no </head> — the page is not a document').toBeGreaterThan(0)
+
+    const body = html.slice(cut)
+    const used = new Set(
+      [...body.matchAll(/class="([^"]+)"/g)]
+        .flatMap((m) => m[1].split(/\s+/))
+        .filter((c) => c.startsWith('_')),
+    )
+    const sheet = new Set([...html.slice(0, cut).matchAll(/\.(_[\w-]+)/g)].map((m) => m[1]))
+
+    expect(used.size, 'nothing rendered — the gallery is empty').toBeGreaterThan(100)
+    expect([...used].filter((c) => !sheet.has(c))).toEqual([])
+  })
+
+  it.runIf(built)('shows the chat surface', () => {
+    const html = page()
+    for (const slot of ['thread', 'message', 'composer', 'step', 'code', 'sources'])
+      expect(html, `chat is missing ${slot}`).toContain(`data-slot="${slot}"`)
+  })
+})

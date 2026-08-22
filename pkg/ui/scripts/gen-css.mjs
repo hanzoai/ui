@@ -55,8 +55,9 @@ try {
   // Both themes: a theme is a set of custom-property values, but the styles that
   // READ them are per-theme classes, and a component only renders the ones its
   // theme resolves. Rendering dark alone leaves the light sheet incomplete.
+  const markup = {}
   for (const theme of ['dark', 'light'])
-    renderToStaticMarkup(
+    markup[theme] = renderToStaticMarkup(
       createElement(GuiProvider, { config, defaultTheme: theme }, createElement(Gallery)),
     )
 
@@ -87,6 +88,22 @@ try {
   console.log(
     `dist/styles.css — ${css.length.toLocaleString()} bytes, ${atomic.toLocaleString()} atomic selectors`,
   )
+
+  // The same render, kept. Every component this package has, in the markup it
+  // actually produces, against the sheet just extracted from it — so what a
+  // reader looks at and what a consumer installs cannot disagree. gui stamps the
+  // theme on the body, which is why the class is here and not on a wrapper.
+  const page = [
+    '<!doctype html><html lang="en"><head><meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    `<title>@hanzo/ui ${JSON.parse(readFileSync(join(UI, 'package.json'), 'utf8')).version}</title>`,
+    `<style>${css}</style>`,
+    '</head><body class="t_dark">',
+    markup.dark,
+    '</body></html>',
+  ].join('')
+  writeFileSync(join(UI, 'dist/gallery.html'), page)
+  console.log(`dist/gallery.html — ${page.length.toLocaleString()} bytes`)
 } finally {
   await server.close()
 }
