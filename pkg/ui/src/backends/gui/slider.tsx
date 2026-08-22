@@ -41,7 +41,15 @@ const Slider = (props: SliderProps) => {
   return (
     <GuiSlider {...slot('slider')} width="100%" {...rest}>
       <GuiSlider.Track {...slot('slider-track')} height={TRACK} bg="$color4" rounded="$10">
-        <GuiSlider.TrackActive {...slot('slider-range')} bg="$color12" />
+        {/* The FILL is not text. `$color12` is the foreground rung — a type
+            colour — and spread across a full-width bar it reads as a lit slab
+            rather than a value. Measured over the track (10% white on #0a0a0a,
+            so rgb(34,34,34)): `$color12` is 12.63:1 where WCAG 1.4.11 asks 3:1
+            for a non-text control. `$color10` is 6.93:1 — still more than double
+            the requirement, and no longer the brightest thing on the page.
+            The THUMB keeps the brighter rung: it is small and it is the grab
+            target, so it should be the most legible part of the control. */}
+        <GuiSlider.TrackActive {...slot('slider-range')} bg="$color10" />
       </GuiSlider.Track>
       <GuiSlider.Thumb
         {...slot('slider-thumb')}

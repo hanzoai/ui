@@ -28,7 +28,11 @@ const Progress = ({ value, indicatorClassName, ...props }: ProgressProps) => (
   >
     <GuiProgress.Indicator
       {...slot('progress-indicator')}
-      bg="$color12"
+      // Same reason as the slider's fill: `$color12` is the foreground rung, and
+      // a type colour stretched across a bar is a lit slab. 6.93:1 over the
+      // track against WCAG 1.4.11's 3:1 — legible with room to spare, and no
+      // longer competing with the text beside it for attention.
+      bg="$color10"
       className={indicatorClassName}
     />
   </GuiProgress>
