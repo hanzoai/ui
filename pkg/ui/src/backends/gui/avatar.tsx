@@ -27,13 +27,13 @@ const AvatarImage = (props: AvatarImageProps) => (
 const AvatarFallback = ({ children, ...props }: AvatarFallbackProps) => (
   <GuiAvatar.Fallback
     data-slot="avatar-fallback"
-    bg="$color4"
+    bg="$edge"
     items="center"
     justify="center"
     {...props}
   >
     {typeof children === 'string' || typeof children === 'number' ? (
-      <SizableText size="$2" color="$color11">
+      <SizableText size="$2" color="$quiet">
         {children}
       </SizableText>
     ) : (

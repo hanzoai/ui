@@ -14,7 +14,7 @@
  *
  * The look comes from `glass(level)` in `@hanzo/ui/glass`, not from a `styled`
  * of its own. It used to be both, and they disagreed: the frame's stand-in
- * ground was `$color2` while the material is 72% of `--background`, so a
+ * ground was `$panel` while the material is 72% of `--background`, so a
  * browser that could blur and one that could not showed two different colours
  * of menu. A component and a recipe describing the same material in two places
  * is how they end up describing two materials. This is the component FORM of
@@ -23,7 +23,7 @@
  * names (dialog, popover, select, dropdown, tooltip) is glass by slot and needs
  * neither.
  *
- * Page sections never wear glass; they sit on the surface ladder ($color2/3).
+ * Page sections never wear glass; they sit on the surface ladder ($panel/3).
  */
 import { YStack } from '@hanzo/gui'
 import type { ComponentProps } from 'react'

@@ -137,7 +137,7 @@ export function Palette({
         onValueChange={setSearch}
         placeholder={placeholder}
         color="$color"
-        placeholderTextColor="$color11"
+        placeholderTextColor="$quiet"
       />
       <XStack minH={height}>
         {/* THE LAST ROW MUST BE ABLE TO CLEAR THE BOTTOM EDGE. With equal
@@ -167,7 +167,7 @@ export function Palette({
         >
           {groups.length === 0 && (
             <CommandEmpty>
-              <SizableText color="$color11">{empty}</SizableText>
+              <SizableText color="$quiet">{empty}</SizableText>
             </CommandEmpty>
           )}
           {groups.map(([group, items]) => (
@@ -187,7 +187,7 @@ export function Palette({
                       {op.label}
                     </SizableText>
                     {op.hint ? (
-                      <SizableText numberOfLines={1} flex={1} fontSize="$1" color="$color11">
+                      <SizableText numberOfLines={1} flex={1} fontSize="$1" color="$quiet">
                         {op.hint}
                       </SizableText>
                     ) : null}
@@ -233,7 +233,7 @@ function Method({ of }: { of: Op }) {
       fontFamily="$mono"
       fontSize={10}
       letterSpacing={0.4}
-      color={of.method === SAFE ? "$color11" : "$color"}
+      color={of.method === SAFE ? "$quiet" : "$color"}
     >
       {of.method}
     </SizableText>

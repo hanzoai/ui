@@ -382,7 +382,7 @@ export function ResizableHandle({
     >
       <Separator
         vertical={axis}
-        borderColor={state === "idle" ? "$borderColor" : "$color8"}
+        borderColor={state === "idle" ? "$borderColor" : "$dim"}
       />
       {withHandle && (
         <XStack
@@ -392,7 +392,7 @@ export function ResizableHandle({
           width={12}
           height={20}
           rounded="$2"
-          bg="$color5"
+          bg="$raised"
           borderWidth={1}
           borderColor="$borderColor"
           rotate={axis ? "0deg" : "90deg"}

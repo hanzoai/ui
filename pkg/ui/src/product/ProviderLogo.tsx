@@ -79,7 +79,7 @@ export function ProviderLogo({ provider, size = 24 }: { provider: string; size?:
     const markSize = Math.round(size * 0.66)
     const isZen = provider.trim().toLowerCase() === 'zen'
     return (
-      <XStack width={size} height={size} items="center" justify="center" rounded={radius} bg="$color12">
+      <XStack width={size} height={size} items="center" justify="center" rounded={radius} bg="$ink">
         {isZen ? <EnsoMark size={markSize} color={fg} /> : <HanzoHMark size={Math.round(size * 0.56)} color={fg} />}
       </XStack>
     )
@@ -95,11 +95,11 @@ export function ProviderLogo({ provider, size = 24 }: { provider: string; size?:
         items="center"
         justify="center"
         rounded={radius}
-        bg="$color3"
+        bg="$hover"
         borderWidth={1}
         borderColor="$borderColor"
       >
-        <Known size={iconSize} color="$color11" />
+        <Known size={iconSize} color="$quiet" />
       </XStack>
     )
   }
@@ -112,11 +112,11 @@ export function ProviderLogo({ provider, size = 24 }: { provider: string; size?:
       items="center"
       justify="center"
       rounded={radius}
-      bg="$color3"
+      bg="$hover"
       borderWidth={1}
       borderColor="$borderColor"
     >
-      <Text fontSize={Math.round(size * 0.4)} fontWeight="800" color="$color11">
+      <Text fontSize={Math.round(size * 0.4)} fontWeight="800" color="$quiet">
         {providerInitials(provider)}
       </Text>
     </XStack>
@@ -126,8 +126,8 @@ export function ProviderLogo({ provider, size = 24 }: { provider: string; size?:
 /** A generic fallback mark for an unspecified provider (used sparingly). */
 export function GenericLogo({ size = 24 }: { size?: number }) {
   return (
-    <XStack width={size} height={size} items="center" justify="center" rounded={Math.round(size * 0.28)} bg="$color3" borderWidth={1} borderColor="$borderColor">
-      <Server size={Math.round(size * 0.56)} color="$color11" />
+    <XStack width={size} height={size} items="center" justify="center" rounded={Math.round(size * 0.28)} bg="$hover" borderWidth={1} borderColor="$borderColor">
+      <Server size={Math.round(size * 0.56)} color="$quiet" />
     </XStack>
   )
 }

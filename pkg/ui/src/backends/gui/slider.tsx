@@ -40,29 +40,29 @@ const Slider = (props: SliderProps) => {
   const { name, rest } = named(props as Record<string, unknown>)
   return (
     <GuiSlider {...slot('slider')} width="100%" {...rest}>
-      <GuiSlider.Track {...slot('slider-track')} height={TRACK} bg="$color4" rounded="$10">
-        {/* The FILL is not text. `$color12` is the foreground rung — a type
+      <GuiSlider.Track {...slot('slider-track')} height={TRACK} bg="$edge" rounded="$10">
+        {/* The FILL is not text. `$ink` is the foreground rung — a type
             colour — and spread across a full-width bar it reads as a lit slab
             rather than a value. Measured over the track (10% white on #0a0a0a,
-            so rgb(34,34,34)): `$color12` is 12.63:1 where WCAG 1.4.11 asks 3:1
-            for a non-text control. `$color10` is 6.93:1 — still more than double
+            so rgb(34,34,34)): `$ink` is 12.63:1 where WCAG 1.4.11 asks 3:1
+            for a non-text control. `$soft` is 6.93:1 — still more than double
             the requirement, and no longer the brightest thing on the page.
             The THUMB keeps the brighter rung: it is small and it is the grab
             target, so it should be the most legible part of the control. */}
-        <GuiSlider.TrackActive {...slot('slider-range')} bg="$color10" />
+        <GuiSlider.TrackActive {...slot('slider-range')} bg="$soft" />
       </GuiSlider.Track>
       <GuiSlider.Thumb
         {...slot('slider-thumb')}
         index={0}
         circular
         size={THUMB}
-        // A FILLED knob, no ring. It used to be a dark knob ringed in `$color12`,
+        // A FILLED knob, no ring. It used to be a dark knob ringed in `$ink`,
         // which is #fff on dark — the one border value the identity does not
         // allow. `$borderColor` is not the fix either: gui gives the thumb its own
         // `SliderThumb` sub-theme, where that token is white as well. A filled
-        // knob needs no border, and `$color12` reads on both themes (white on
+        // knob needs no border, and `$ink` reads on both themes (white on
         // dark, near-black on light).
-        bg="$color12"
+        bg="$ink"
         borderWidth={0}
         {...touch(THUMB)}
         {...name}

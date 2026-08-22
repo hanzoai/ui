@@ -12,7 +12,7 @@ const Label = (props: LabelProps) => (
     {...slot('label')}
     fontSize="$2"
     fontWeight="500"
-    color="$color12"
+    color="$ink"
     select="none"
     cursor="pointer"
     {...props}

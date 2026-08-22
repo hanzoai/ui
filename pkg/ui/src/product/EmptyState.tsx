@@ -75,7 +75,7 @@ export function EmptyState({
         items="center"
         justify="center"
         rounded="$4"
-        bg="$color3"
+        bg="$hover"
       >
         <Icon size={24} />
       </YStack>
@@ -84,7 +84,7 @@ export function EmptyState({
         <Text fontSize="$6" fontWeight="500" text="center" letterSpacing={-0.3}>
           {title}
         </Text>
-        <Text fontSize="$3" color="$color11" text="center">
+        <Text fontSize="$3" color="$quiet" text="center">
           {description}
         </Text>
       </YStack>
@@ -94,9 +94,9 @@ export function EmptyState({
           {bullets.map((b) => (
             <XStack key={b} gap="$2" items="flex-start">
               <YStack pt="$1">
-                <Check size={14} color="$color10" />
+                <Check size={14} color="$soft" />
               </YStack>
-              <Text fontSize="$3" color="$color11" flex={1}>
+              <Text fontSize="$3" color="$quiet" flex={1}>
                 {b}
               </Text>
             </XStack>

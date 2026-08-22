@@ -13,7 +13,7 @@ import type { ProviderCapability } from './api'
 export function ProviderReadinessList({ providers }: { providers: ProviderCapability[] }) {
   return (
     <YStack gap="$2">
-      <Text fontSize="$2" color="$color10">
+      <Text fontSize="$2" color="$soft">
         Network publish-readiness
       </Text>
       {providers.map((p) => (
@@ -26,7 +26,7 @@ export function ProviderReadinessList({ providers }: { providers: ProviderCapabi
             )}
             <Text fontSize="$2">{p.provider}</Text>
           </XStack>
-          <Text fontSize="$1" color="$color10">
+          <Text fontSize="$1" color="$soft">
             {p.credentialsConfigured ? 'Ready' : `needs ${p.missingCredentials.join(', ')}`}
           </Text>
         </XStack>

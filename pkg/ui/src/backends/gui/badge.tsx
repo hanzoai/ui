@@ -56,14 +56,14 @@ const BadgeFrame = styled(XStack, {
 
   variants: {
     variant: {
-      default: { bg: '$color12' },
-      secondary: { bg: '$color4' },
+      default: { bg: '$ink' },
+      secondary: { bg: '$edge' },
       destructive: { bg: '$red9' },
       outline: { bg: '$background', borderColor: '$borderColor' },
-      ghost: { bg: 'transparent', hoverStyle: { bg: '$color3' } },
+      ghost: { bg: 'transparent', hoverStyle: { bg: '$hover' } },
       link: { bg: 'transparent' },
-      inputAdornment: { bg: '$color3', px: '$2' },
-      tags: { bg: '$color3', borderColor: '$borderColor', rounded: '$3' },
+      inputAdornment: { bg: '$hover', px: '$2' },
+      tags: { bg: '$hover', borderColor: '$borderColor', rounded: '$3' },
     },
   } as const,
 
@@ -78,14 +78,14 @@ const BadgeText = styled(SizableText, {
 
   variants: {
     variant: {
-      default: { color: '$color1' },
-      secondary: { color: '$color12' },
+      default: { color: '$sunken' },
+      secondary: { color: '$ink' },
       destructive: { color: '$white1' },
-      outline: { color: '$color12' },
-      ghost: { color: '$color12' },
-      link: { color: '$color12', textDecorationLine: 'underline' },
-      inputAdornment: { color: '$color12', fontWeight: '500' },
-      tags: { color: '$color11', fontWeight: '400', textTransform: 'capitalize' },
+      outline: { color: '$ink' },
+      ghost: { color: '$ink' },
+      link: { color: '$ink', textDecorationLine: 'underline' },
+      inputAdornment: { color: '$ink', fontWeight: '500' },
+      tags: { color: '$quiet', fontWeight: '400', textTransform: 'capitalize' },
     },
   } as const,
 })

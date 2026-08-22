@@ -100,8 +100,8 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
       tabIndex={0}
       aria-label={copied ? 'Copied' : name}
       {...tip(copied ? 'Copied' : name)}
-      hoverStyle={{ bg: '$color4', opacity: 1 }}
-      pressStyle={{ bg: '$color5' }}
+      hoverStyle={{ bg: '$edge', opacity: 1 }}
+      pressStyle={{ bg: '$raised' }}
       {...props}
     >
       {copied ? <Check size={glyph} /> : <Copy size={glyph} />}
@@ -109,7 +109,7 @@ export function CopyButton({ value, children, label, size = 24, id, props }: Cop
         // The word carries the confirmation too. A tick alone, at 14px, beside
         // text that did not change is the smallest possible way to say the thing
         // the control exists to say.
-        <Text fontSize="$2" color="$color12" numberOfLines={1}>
+        <Text fontSize="$2" color="$ink" numberOfLines={1}>
           {copied ? 'Copied' : children}
         </Text>
       )}

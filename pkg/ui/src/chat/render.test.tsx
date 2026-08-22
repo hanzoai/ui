@@ -84,17 +84,17 @@ describe('Code', () => {
    *  from the ELEMENTS: gui inlines the whole stylesheet ahead of them, and that
    *  sheet defines a rule for every rung whether or not anything renders one. */
   const rung = (markup: string) =>
-    [...markup.replace(/<style[\s\S]*?<\/style>/g, '').matchAll(/_col-(color\d+)/g)].map((m) => m[1])
+    [...markup.replace(/<style[\s\S]*?<\/style>/g, '').matchAll(/_col-(sunken|panel|hover|edge|raised|rim|bound|dim|faint|soft|quiet|ink|color\d+)/g)].map((m) => m[1])
 
   it('typesets the language label on the readable secondary rung', () => {
-    // It was `$color10` — the rung below the one chrome text belongs on. On the
+    // It was `$soft` — the rung below the one chrome text belongs on. On the
     // package's own ramp that still cleared 4.5:1, but a host that redeclares
     // `--color10` at `:root` (hanzo.ai does) took it to 2.97:1 on a 11px label,
     // and a shared component should not need the host to be careful.
     // `gui-config.test.ts` measures both rungs; this pins which one Code uses.
     const markup = html(<Code language="typescript">const x = 1</Code>)
     expect(markup).toContain('typescript')
-    expect(rung(markup)).toContain('color11')
-    expect(rung(markup)).not.toContain('color10')
+    expect(rung(markup)).toContain('quiet')
+    expect(rung(markup)).not.toContain('soft')
   })
 })

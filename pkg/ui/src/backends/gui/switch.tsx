@@ -39,6 +39,14 @@
  * rgb(26,26,26) and `$color1` to the on track's rgb(255,255,255). The tests
  * passed, because they asked whether the two states DIFFER from each other and
  * never whether either one differs from the thing behind it.
+ *
+ * THE SEMANTIC ALIASES DO NOT WORK HERE, and this is the only component where
+ * that is true. `$panel`, `$ink` and the rest are declared on the two ROOT
+ * themes, so each resolves to one value wherever it is read. The ramp does not:
+ * `t_SwitchThumb` INVERTS it, which is the entire mechanism above. Migrating
+ * this file was measured — both thumbs came out the same colour as the track
+ * behind them, off and on, exactly as 8.0.57 did. A flat name cannot say "and
+ * the opposite of that, one level down", so this file names rungs on purpose.
  */
 import { Switch as GuiSwitch } from '@hanzo/gui'
 import type { ComponentProps } from 'react'

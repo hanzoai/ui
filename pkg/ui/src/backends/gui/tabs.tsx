@@ -25,7 +25,7 @@ const TabsList = (p: TabsListProps) => (
     height={ROW_H}
     p={3}
     gap={2}
-    bg="$color3"
+    bg="$hover"
     rounded="$4"
     {...p}
   />
@@ -43,8 +43,8 @@ const TabsTrigger = ({ children, ...p }: TabsTriggerProps) => (
     rounded="$3"
     cursor="pointer"
     {...touch(ROW_H, 44, 'y')}
-    hoverStyle={{ bg: '$color4' }}
-    focusStyle={{ bg: '$color4' }}
+    hoverStyle={{ bg: '$edge' }}
+    focusStyle={{ bg: '$edge' }}
     {...p}
   >
     {ink(children, undefined, { size: '$2', fontWeight: '500' })}

@@ -53,7 +53,7 @@ const INDICATOR_SLOT = 14
 const ICON = 16
 
 const panel = {
-  bg: '$color2',
+  bg: '$panel',
   borderColor: '$borderColor',
   borderWidth: 1,
   rounded: '$4',
@@ -74,13 +74,13 @@ const row = {
   select: 'none',
   cursor: 'pointer',
   ...touch(ROW_H, TAP_MIN, 'y'),
-  hoverStyle: { bg: '$color5' },
-  focusStyle: { bg: '$color5' },
-  pressStyle: { bg: '$color6' },
+  hoverStyle: { bg: '$raised' },
+  focusStyle: { bg: '$raised' },
+  pressStyle: { bg: '$rim' },
 } as const
 
 /** Row text style — free-form children go through `ink()` so a bare string renders on native. */
-const label = { size: '$2', color: '$color12' } as const
+const label = { size: '$2', color: '$ink' } as const
 
 /** Left indicator well shared by checkbox + radio rows. */
 const Indicator = ({ children }: { children: React.ReactNode }) => (
@@ -277,7 +277,7 @@ const ContextMenuLabel = /* @__PURE__ */ React.forwardRef<
       pl={inset ? INSET_PL : ROW_PX}
       fontSize="$2"
       fontWeight="500"
-      color="$color12"
+      color="$ink"
       select="none"
       {...props}
     />
@@ -309,7 +309,7 @@ function ContextMenuShortcut(props: React.ComponentProps<typeof Text>) {
       ml="auto"
       fontSize="$1"
       letterSpacing={1}
-      color="$color11"
+      color="$quiet"
       {...props}
     />
   )

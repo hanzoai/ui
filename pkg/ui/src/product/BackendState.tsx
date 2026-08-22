@@ -113,11 +113,11 @@ export function BackendStateCard({
           {TITLES[state.kind]}
         </Text>
       </XStack>
-      <Text fontSize="$3" color="$color11">
+      <Text fontSize="$3" color="$quiet">
         {BODIES[state.kind] || state.message}
       </Text>
       {hint ? (
-        <Text fontSize="$2" color="$color10">
+        <Text fontSize="$2" color="$soft">
           {hint}
         </Text>
       ) : null}

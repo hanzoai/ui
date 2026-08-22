@@ -25,7 +25,7 @@ const CollapsibleTrigger = ({ children, ...p }: CollapsibleTriggerProps) => (
     {...touch(28)}
     {...p}
   >
-    {ink(children, undefined, { color: '$color12' })}
+    {ink(children, undefined, { color: '$ink' })}
   </GuiCollapsible.Trigger>
 )
 const CollapsibleContent = (p: CollapsibleContentProps) => (

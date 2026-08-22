@@ -66,7 +66,7 @@ describe('Step', () => {
   it('marks a failed step with an edge, never a colour', () => {
     // `product/tone.ts` marks `stopped` with a border, so it survives a brand
     // that retunes the ramp.
-    expect(html(<Step name="s" status="error" />)).toContain('_btc-color9')
+    expect(html(<Step name="s" status="error" />)).toContain('_btc-faint')
     expect(html(<Step name="s" status="done" />)).toContain('_btc-borderColor')
   })
 
@@ -90,7 +90,7 @@ describe('Failure', () => {
   })
 
   it('carries the same failure edge as a failed step', () => {
-    expect(html(<Failure>x</Failure>)).toContain('_btc-color9')
+    expect(html(<Failure>x</Failure>)).toContain('_btc-faint')
   })
 
   it('offers retry only when there is something to retry', () => {
@@ -124,12 +124,12 @@ describe('the module is open', () => {
 
   it('lets a caller restyle the bubble without rebuilding the turn', () => {
     const markup = html(
-      <Message role="user" body={{ className: 'glass', bg: '$color5' }}>
+      <Message role="user" body={{ className: 'glass', bg: '$raised' }}>
         hi
       </Message>,
     )
     expect(markup).toContain('glass')
-    expect(markup).toContain('_bg-color5')
+    expect(markup).toContain('_bg-raised')
   })
 
   it('names the turn a hover group, so an action strip can reveal itself', () => {

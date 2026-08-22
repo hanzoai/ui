@@ -428,7 +428,7 @@ const CommandEmpty = /* @__PURE__ */ forwardRef<GuiElement, CommandEmptyProps>(
     return (
       <YStack ref={ref} data-slot="command-empty" py="$4" items="center" {...rest}>
         {typeof children === 'string' ? (
-          <SizableText size="$3" color="$color11">
+          <SizableText size="$3" color="$quiet">
             {children}
           </SizableText>
         ) : (
@@ -459,7 +459,7 @@ const CommandGroup = /* @__PURE__ */ forwardRef<GuiElement, CommandGroupProps>(
             <SizableText
               data-slot="command-group-heading"
               size="$1"
-              color="$color11"
+              color="$quiet"
               fontWeight="500"
               textTransform="uppercase"
               letterSpacing={0.6}
@@ -544,7 +544,7 @@ const CommandShortcut = (props: CommandShortcutProps) => (
     data-slot="command-shortcut"
     ml="auto"
     size="$1"
-    color="$color11"
+    color="$quiet"
     letterSpacing={1.5}
     {...props}
   />

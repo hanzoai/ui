@@ -49,7 +49,7 @@ export function ConfirmDelete({
 
   return (
     <YStack gap="$3">
-      <Text fontSize="$3" color="$color11">
+      <Text fontSize="$3" color="$quiet">
         {message}
       </Text>
       {err ? (

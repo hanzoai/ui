@@ -121,8 +121,8 @@ export function SecretInput({
         tabIndex={0}
         aria-label={shown ? 'Hide secret' : 'Show secret'}
         {...tip(shown ? 'Hide' : 'Show')}
-        hoverStyle={disabled ? undefined : { bg: '$color4', opacity: 1 }}
-        pressStyle={disabled ? undefined : { bg: '$color5' }}
+        hoverStyle={disabled ? undefined : { bg: '$edge', opacity: 1 }}
+        pressStyle={disabled ? undefined : { bg: '$raised' }}
       >
         {shown ? <EyeOff size={14} /> : <Eye size={14} />}
       </XStack>

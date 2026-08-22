@@ -48,7 +48,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
       />
       {pages(page, count, around).map((slot, i) =>
         slot === GAP ? (
-          <Text key={`gap-${i}`} px="$1.5" fontSize="$2" color="$color10" aria-hidden>
+          <Text key={`gap-${i}`} px="$1.5" fontSize="$2" color="$soft" aria-hidden>
             {GAP}
           </Text>
         ) : (
@@ -59,7 +59,7 @@ export function Pagination({ page, count, onChange, around = 1 }: PaginationProp
             onPress={() => go(slot)}
             aria-label={`Page ${slot}`}
             aria-current={slot === page ? 'page' : undefined}
-            bg={slot === page ? '$color4' : undefined}
+            bg={slot === page ? '$edge' : undefined}
           >
             {String(slot)}
           </Button>

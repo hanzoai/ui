@@ -480,6 +480,41 @@ const themes = Object.fromEntries(
             color5: `var(--surface-3, ${SURFACE[s].raised})`,
             borderColor: `var(--border, ${EDGE[s]})`,
             color12: `var(--foreground, ${LABEL[s]})`,
+
+            // NAMES FOR THE RAMP, so a component can say what it means.
+            //
+            // `$color1..$color12` is a monotonic scale inherited from upstream.
+            // It says how light a value is and nothing about what it is FOR, so
+            // every component encoded its intent in a number and the intent was
+            // unreadable: `$color12` on a slider fill was the foreground rung
+            // doing a fill's job, and nobody could see that from the call site.
+            // Each name below resolves to exactly the rung it replaces, so
+            // adopting one changes no pixels — the value is identical, only the
+            // reason is now legible.
+            //
+            // The names avoid every custom property @hanzo/design publishes (300
+            // of them, checked). That is not tidiness: gui emits each THEME key
+            // as a bare `--<key>` at `:root.t_dark`, so a key called `muted`
+            // would shadow design's `--muted`, and pointing a key at the name it
+            // shadows is the self-reference that computes EMPTY — the defect
+            // that left `--border` blank and put a white hairline on every
+            // pricing card. A name is a namespace decision here, not a label.
+            //
+            // Verified: a key defined on the two ROOT themes resolves inside all
+            // 390 sub-themes (`dark_Button` reads it), so nothing nested needs a
+            // second declaration.
+            sunken: String(theme.color1),
+            panel: `var(--surface-1, ${SURFACE[s].base})`,
+            hover: `var(--surface-2, ${SURFACE[s].hover})`,
+            edge: `var(--border, ${EDGE[s]})`,
+            raised: `var(--surface-3, ${SURFACE[s].raised})`,
+            rim: String(theme.color6),
+            bound: String(theme.color7),
+            dim: String(theme.color8),
+            faint: String(theme.color9),
+            soft: String(theme.color10),
+            quiet: String(theme.color11),
+            ink: `var(--foreground, ${LABEL[s]})`,
             background: GROUND[s],
             color: `var(--foreground, ${LABEL[s]})`,
             placeholderColor: `var(--text-tertiary, ${MUTED[s]})`,

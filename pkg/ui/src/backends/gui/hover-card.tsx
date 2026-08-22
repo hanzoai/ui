@@ -133,7 +133,7 @@ const HoverCardContent = ({
     <PortalTheme name={themeName}>
       <GuiPopover.Content
         {...slot('hover-card-content')}
-        bg="$color2"
+        bg="$panel"
         borderWidth={1}
         borderColor="$borderColor"
         rounded="$4"

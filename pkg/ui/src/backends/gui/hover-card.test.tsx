@@ -138,7 +138,7 @@ describe('HoverCard', () => {
 
     const panel = card()!
     expect(cls(panel, 'width')).toBe('_width-256px')
-    expect(cls(panel, 'bg')).toBe('_bg-color2')
+    expect(cls(panel, 'bg')).toBe('_bg-panel')
     expect(cls(panel, 'btw')).toBe('_btw-1px')
     expect(cls(panel, 'btc')).toBe('_btc-borderColor')
     expect([...panel.classList]).toContain('text-xs')

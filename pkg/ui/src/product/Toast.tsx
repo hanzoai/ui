@@ -60,7 +60,7 @@ const ACCENT = {
   success: '$green10',
   error: '$red10',
   warning: '$yellow10',
-  info: '$color11',
+  info: '$quiet',
 } as const
 
 const ICON: Record<ToastKind, typeof Info> = {
@@ -87,7 +87,7 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
       maxWidth="90%"
       p="$3"
       gap="$2"
-      bg="$color2"
+      bg="$panel"
       borderWidth={1}
       borderColor="$borderColor"
       borderLeftWidth={3}
@@ -102,11 +102,11 @@ function ToastCard({ t, onClose }: { t: Toast; onClose: () => void }) {
           </YStack>
         ) : null}
         <YStack flex={1} gap="$1">
-          <Text fontSize="$3" fontWeight="700" color="$color12">
+          <Text fontSize="$3" fontWeight="700" color="$ink">
             {t.title}
           </Text>
           {t.description ? (
-            <Text fontSize="$2" color="$color11">
+            <Text fontSize="$2" color="$quiet">
               {t.description}
             </Text>
           ) : null}

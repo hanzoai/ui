@@ -44,7 +44,9 @@ describe('the tone treatments', () => {
     // The pills are monochrome by construction. A red `$red9` here would read as
     // an alarm on a dark canvas and as a warning on a light one, and neither is
     // a decision this component gets to make for a whole fleet.
-    const ladder = /^\$color\d+$|^transparent$/
+    // The ladder is named now, not numbered. Both spellings pass: the ramp is
+    // still legal (Switch needs it) and every other component reads a name.
+    const ladder = /^\$(?:sunken|panel|hover|edge|raised|rim|bound|dim|faint|soft|quiet|ink)$|^\$color\d+$|^transparent$/
     for (const [name, t] of Object.entries(TONE))
       for (const [prop, value] of Object.entries(t))
         expect([name, prop, ladder.test(value)]).toEqual([name, prop, true])

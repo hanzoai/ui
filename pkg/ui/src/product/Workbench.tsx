@@ -125,7 +125,7 @@ export function Dock({
       cursor={horizontal ? 'col-resize' : 'row-resize'}
       width={horizontal ? 5 : undefined}
       height={horizontal ? undefined : 5}
-      hoverStyle={{ bg: '$color6' }}
+      hoverStyle={{ bg: '$rim' }}
     />
   )
 
@@ -153,7 +153,7 @@ export function Dock({
               // dock's own surface showing through.
               rounded="$3"
               {...(on ? sheet(2) : { backgroundColor: 'transparent' })}
-              hoverStyle={{ bg: on ? undefined : '$color2' }}
+              hoverStyle={{ bg: on ? undefined : '$panel' }}
             >
               <YStack onPress={() => setActive(t.id)}>
                 <XStack items="center" gap="$1.5">
@@ -182,7 +182,7 @@ export function Dock({
       {/* Where the tab sheet meets the pane, edge-on. */}
       <Separator opacity={0.4} />
       {/* The pane is the active tab CONTINUED, so it stands on the same rung.
-          It was `$color3` — the selected-item fill, a state and not a surface,
+          It was `$hover` — the selected-item fill, a state and not a surface,
           which is the one substitution `panel` exists to stop. */}
       <YStack flex={1} overflow="hidden" {...sheet(2)}>
         {current.content}
@@ -217,7 +217,7 @@ export type WorkbenchProps = {
  */
 export function Workbench({ left, right, bottom, children }: WorkbenchProps) {
   return (
-    <XStack flex={1} overflow="hidden" bg="$color1">
+    <XStack flex={1} overflow="hidden" bg="$sunken">
       {left ? <Dock side="left" {...left} /> : null}
       <YStack flex={1} overflow="hidden">
         <YStack flex={1} overflow="hidden">

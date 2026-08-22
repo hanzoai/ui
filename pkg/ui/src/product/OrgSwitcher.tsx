@@ -278,18 +278,18 @@ export function OrgSwitcher({
                 // 15px hold its own as a peer, and it turns 17px into a shout.
                 fontSize={lead ? '$6' : '$4'}
                 fontWeight={lead ? '700' : '800'}
-                color="$color12"
+                color="$ink"
                 numberOfLines={1}
               >
                 {currentLabel}
               </Text>
               {sub ? (
-                <Text minW={0} fontSize="$1" color="$color10" numberOfLines={1}>
+                <Text minW={0} fontSize="$1" color="$soft" numberOfLines={1}>
                   {sub}
                 </Text>
               ) : null}
             </YStack>
-            <ChevronsUpDown size={16} color="$color9" />
+            <ChevronsUpDown size={16} color="$faint" />
           </XStack>
         </Button>
       </Popover.Trigger>
@@ -319,14 +319,14 @@ export function OrgSwitcher({
         px="$1"
         py="$1"
         width={300}
-        bg="$color2"
+        bg="$panel"
         borderColor="$borderColor"
         className={className}
         style={style}
       >
         {creating ? (
           <YStack gap="$2">
-            <Text fontSize="$2" color="$color12" fontWeight="700">
+            <Text fontSize="$2" color="$ink" fontWeight="700">
               Create organization
             </Text>
             <Input
@@ -359,7 +359,7 @@ export function OrgSwitcher({
         ) : (
           <YStack gap="$1">
             {heading ? (
-              <Text px="$2" py="$1" fontSize="$1" color="$color10" fontWeight="500">
+              <Text px="$2" py="$1" fontSize="$1" color="$soft" fontWeight="500">
                 {heading}
               </Text>
             ) : null}
@@ -391,13 +391,13 @@ export function OrgSwitcher({
             >
               {loading ? (
                 <XStack items="center" gap="$2" px="$2" py="$3">
-                  <Spinner size="small" color="$color11" />
-                  <Text fontSize="$2" color="$color10">
+                  <Spinner size="small" color="$quiet" />
+                  <Text fontSize="$2" color="$soft">
                     Loading organizations…
                   </Text>
                 </XStack>
               ) : visible.length === 0 ? (
-                <Text px="$2" py="$2" fontSize="$2" color="$color10">
+                <Text px="$2" py="$2" fontSize="$2" color="$soft">
                   {query.trim() ? `No organizations match “${query.trim()}”.` : 'No organizations yet.'}
                 </Text>
               ) : (
@@ -423,14 +423,14 @@ export function OrgSwitcher({
 
               {loadingMore ? (
                 <XStack items="center" gap="$2" px="$2" py="$2">
-                  <Spinner size="small" color="$color11" />
-                  <Text fontSize="$1" color="$color10">
+                  <Spinner size="small" color="$quiet" />
+                  <Text fontSize="$1" color="$soft">
                     Loading more…
                   </Text>
                 </XStack>
               ) : hasMore ? (
-                <XStack onPress={loadMore} cursor="pointer" items="center" justify="center" px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$color4' }}>
-                  <Text fontSize="$1" color="$color11" fontWeight="600">
+                <XStack onPress={loadMore} cursor="pointer" items="center" justify="center" px="$2" py="$1.5" rounded="$3" hoverStyle={{ bg: '$edge' }}>
+                  <Text fontSize="$1" color="$quiet" fontWeight="600">
                     Load more
                   </Text>
                 </XStack>
@@ -455,12 +455,12 @@ export function OrgSwitcher({
                 rounded="$3"
                 borderTopWidth={1}
                 borderColor="$borderColor"
-                hoverStyle={{ bg: '$color5' }}
+                hoverStyle={{ bg: '$raised' }}
               >
-                <YStack width={22} height={22} rounded="$3" bg="$color3" items="center" justify="center">
+                <YStack width={22} height={22} rounded="$3" bg="$hover" items="center" justify="center">
                   <Plus size={14} />
                 </YStack>
-                <Text fontSize="$2" color="$color12">
+                <Text fontSize="$2" color="$ink">
                   Create organization
                 </Text>
               </XStack>
@@ -479,12 +479,12 @@ export function OrgSwitcher({
                 px="$2"
                 py="$2"
                 rounded="$3"
-                hoverStyle={{ bg: '$color5' }}
+                hoverStyle={{ bg: '$raised' }}
               >
-                <YStack width={22} height={22} rounded="$3" bg="$color3" items="center" justify="center">
+                <YStack width={22} height={22} rounded="$3" bg="$hover" items="center" justify="center">
                   <LayoutGrid size={14} />
                 </YStack>
-                <Text fontSize="$2" color="$color12">
+                <Text fontSize="$2" color="$ink">
                   All organizations
                 </Text>
               </XStack>

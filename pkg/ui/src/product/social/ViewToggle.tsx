@@ -36,8 +36,8 @@ export function ViewToggle({
             px="$3"
             py="$2"
             cursor="pointer"
-            bg={active ? '$color4' : 'transparent'}
-            hoverStyle={{ bg: active ? '$color4' : '$color2' }}
+            bg={active ? '$edge' : 'transparent'}
+            hoverStyle={{ bg: active ? '$edge' : '$panel' }}
             onPress={() => onChange(o.id)}
           >
             <Icon size={14} />
