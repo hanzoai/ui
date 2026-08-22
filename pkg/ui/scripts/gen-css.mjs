@@ -93,12 +93,18 @@ try {
   // actually produces, against the sheet just extracted from it — so what a
   // reader looks at and what a consumer installs cannot disagree. gui stamps the
   // theme on the body, which is why the class is here and not on a wrapper.
+  // The theme class goes on <html>, because that is where gui's own generated
+  // CSS scopes the palette: every colour token is declared under `:root.t_dark`.
+  // On <body> the selector cannot match, so `var(--red9)` and every sibling
+  // resolve to nothing, each declaration reading them is dropped as invalid, and
+  // the page renders as bare high-contrast outlines — variants indistinguishable,
+  // spacing collapsed. It looks like a design, which is why it needs saying.
   const page = [
-    '<!doctype html><html lang="en"><head><meta charset="utf-8">',
+    '<!doctype html><html lang="en" class="t_dark"><head><meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width,initial-scale=1">',
     `<title>@hanzo/ui ${JSON.parse(readFileSync(join(UI, 'package.json'), 'utf8')).version}</title>`,
     `<style>${css}</style>`,
-    '</head><body class="t_dark">',
+    '</head><body>',
     markup.dark,
     '</body></html>',
   ].join('')
