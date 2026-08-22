@@ -22,7 +22,7 @@ const TooltipContent = ({ sideOffset: _sideOffset, children, ...props }: Tooltip
     <PortalTheme name={themeName}>
       <GuiTooltip.Content
         {...slot('tooltip-content')}
-        bg="$color2"
+        bg="$panel"
         borderWidth={1}
         borderColor="$borderColor"
         rounded="$3"

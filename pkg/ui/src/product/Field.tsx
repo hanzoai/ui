@@ -43,7 +43,7 @@ export function FieldRow({ label, children }: { label: string; children: ReactNo
   return (
     <FieldNameContext.Provider value={label}>
     <XStack gap="$3" items="flex-start" flexWrap="wrap">
-      <Label width="100%" pt="$2" color="$color11" fontSize="$3" $md={{ width: 180 }}>
+      <Label width="100%" pt="$2" color="$quiet" fontSize="$3" $md={{ width: 180 }}>
         {label}
       </Label>
       <YStack flex={1} minW={0} $md={{ minW: 240 }}>
@@ -265,7 +265,7 @@ export function FieldSlider({
   const track = useFieldTrack('FieldSlider')
   return (
     <XStack gap="$3" items="center">
-      <Text width={56} fontSize="$3" color="$color11">
+      <Text width={56} fontSize="$3" color="$quiet">
         {value}
       </Text>
       <Slider

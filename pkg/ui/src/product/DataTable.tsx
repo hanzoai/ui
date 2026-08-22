@@ -104,7 +104,7 @@ export function DataTable<T>({
         <YStack minW={minTableW}>
           {/* Header — quiet, uppercase-free, Medium. A hairline under it separates
               the head from the body without a heavy fill. */}
-          <XStack bg="$color1" py="$2.5" px="$3" gap="$3" borderBottomWidth={1} borderColor="$borderColor" role="row">
+          <XStack bg="$sunken" py="$2.5" px="$3" gap="$3" borderBottomWidth={1} borderColor="$borderColor" role="row">
             {columns.map((c) => {
               // Sortable needs BOTH the column opt-in and a caller handler — a column
               // can never look clickable with nothing listening.
@@ -137,13 +137,13 @@ export function DataTable<T>({
                   <Text
                     fontSize="$1"
                     fontWeight="500"
-                    color={active ? '$color12' : '$color10'}
+                    color={active ? '$ink' : '$soft'}
                     text={c.align === 'right' ? 'right' : 'left'}
                     className={c.mono ? 'hz-tnum' : undefined}
                   >
                     {c.header}
                   </Text>
-                  {Caret ? <Caret size={12} color={active ? '$color12' : '$color9'} /> : null}
+                  {Caret ? <Caret size={12} color={active ? '$ink' : '$faint'} /> : null}
                 </XStack>
               )
             })}
@@ -165,8 +165,8 @@ export function DataTable<T>({
                   borderTopWidth={1}
                   borderColor="$borderColor"
                   items="center"
-                  bg={expanded ? '$color2' : undefined}
-                  hoverStyle={onRowPress ? { bg: '$color2' } : undefined}
+                  bg={expanded ? '$panel' : undefined}
+                  hoverStyle={onRowPress ? { bg: '$panel' } : undefined}
                   cursor={onRowPress ? 'pointer' : undefined}
                   onPress={
                     onRowPress
@@ -200,7 +200,7 @@ export function DataTable<T>({
                           <Text
                             fontSize="$3"
                             numberOfLines={1}
-                            color="$color12"
+                            color="$ink"
                             text={c.align === 'right' ? 'right' : 'left'}
                             className={c.mono ? 'hz-mono' : undefined}
                           >
@@ -214,7 +214,7 @@ export function DataTable<T>({
                   })}
                 </XStack>
                 {expanded && renderExpanded ? (
-                  <YStack borderTopWidth={1} borderColor="$borderColor" bg="$color1">
+                  <YStack borderTopWidth={1} borderColor="$borderColor" bg="$sunken">
                     {renderExpanded(row)}
                   </YStack>
                 ) : null}
@@ -231,7 +231,7 @@ export function DataTable<T>({
           scrolls, but "Nothing here yet." must never be clipped off the right edge. */}
       {!loading && rows.length === 0 ? (
         <YStack py="$8" px="$4" items="center" gap="$1" borderTopWidth={1} borderColor="$borderColor">
-          <Text color="$color10" fontSize="$3" text="center">
+          <Text color="$soft" fontSize="$3" text="center">
             {empty}
           </Text>
         </YStack>

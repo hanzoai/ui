@@ -48,10 +48,10 @@ export function Sources({ sources, title = 'Sources', onOpen, ...props }: Source
   return (
     <YStack {...slot('sources')} gap="$2" {...props}>
       <XStack items="center" gap="$1.5">
-        <SizableText size="$1" fontWeight="500" color="$color10">
+        <SizableText size="$1" fontWeight="500" color="$soft">
           {title}
         </SizableText>
-        <SizableText size="$1" color="$color9">
+        <SizableText size="$1" color="$faint">
           {sources.length}
         </SizableText>
       </XStack>
@@ -94,7 +94,7 @@ export function SourceCard({ source, index, onOpen, ...props }: SourceCardProps)
       rounded="$4"
       borderWidth={1}
       borderColor="$borderColor"
-      bg="$color2"
+      bg="$panel"
       cursor={press ? 'pointer' : undefined}
       onPress={press}
       role={press ? 'button' : undefined}
@@ -102,13 +102,13 @@ export function SourceCard({ source, index, onOpen, ...props }: SourceCardProps)
       // One target, named by the title; the parts inside are not announced.
       aria-label={source.title}
       {...tip(source.title)}
-      hoverStyle={press ? { borderColor: '$color8' } : undefined}
-      pressStyle={press ? { bg: '$color4' } : undefined}
+      hoverStyle={press ? { borderColor: '$dim' } : undefined}
+      pressStyle={press ? { bg: '$edge' } : undefined}
       {...props}
     >
       <XStack items="center" gap="$1.5">
         {index != null ? (
-          <SizableText size="$1" color="$color9">
+          <SizableText size="$1" color="$faint">
             {index}
           </SizableText>
         ) : null}
@@ -120,21 +120,21 @@ export function SourceCard({ source, index, onOpen, ...props }: SourceCardProps)
           justify="center"
           rounded="$1"
           overflow="hidden"
-          bg="$color4"
+          bg="$edge"
         >
           {source.icon ?? (
-            <SizableText size="$1" color="$color11">
+            <SizableText size="$1" color="$quiet">
               {label.charAt(0).toUpperCase()}
             </SizableText>
           )}
         </XStack>
-        <SizableText size="$1" color="$color10" numberOfLines={1}>
+        <SizableText size="$1" color="$soft" numberOfLines={1}>
           {label}
         </SizableText>
       </XStack>
 
       {/* The tiebreaker under the host, not the thing being read. */}
-      <SizableText size="$1" color="$color12" numberOfLines={3}>
+      <SizableText size="$1" color="$ink" numberOfLines={3}>
         {source.title}
       </SizableText>
     </YStack>

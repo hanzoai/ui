@@ -31,7 +31,7 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
           <Text fontSize="$4" fontWeight="700">
             {campaign.name}
           </Text>
-          <Text fontSize="$2" color="$color11">
+          <Text fontSize="$2" color="$quiet">
             {campaign.channel}
           </Text>
         </YStack>
@@ -39,22 +39,22 @@ export function CampaignCard({ campaign }: { campaign: Campaign }) {
       </XStack>
 
       {campaign.objective ? (
-        <Text fontSize="$2" color="$color11">
+        <Text fontSize="$2" color="$quiet">
           {campaign.objective}
         </Text>
       ) : null}
 
       <YStack gap="$1.5">
         <XStack justify="space-between">
-          <Text fontSize="$1" color="$color11">
+          <Text fontSize="$1" color="$quiet">
             {money(campaign.spend)} spent
           </Text>
-          <Text fontSize="$1" color="$color11">
+          <Text fontSize="$1" color="$quiet">
             {money(campaign.budget)} budget
           </Text>
         </XStack>
-        <YStack height={6} rounded="$2" bg="$color3" overflow="hidden">
-          <YStack height={6} rounded="$2" bg="$color9" width={`${pct}%` as never} />
+        <YStack height={6} rounded="$2" bg="$hover" overflow="hidden">
+          <YStack height={6} rounded="$2" bg="$faint" width={`${pct}%` as never} />
         </YStack>
       </YStack>
     </Card>

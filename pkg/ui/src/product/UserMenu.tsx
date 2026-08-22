@@ -166,7 +166,7 @@ export function UserMenu({
           px="$2"
           rounded="$3"
           minW={0}
-          hoverStyle={{ bg: '$color4' }}
+          hoverStyle={{ bg: '$edge' }}
           role="button"
           tabIndex={0}
           data-testid={testId}
@@ -180,7 +180,7 @@ export function UserMenu({
             <UserRound size={18} />
           )}
           {label && shown ? (
-            <Text fontSize="$3" fontWeight="600" color="$color12" numberOfLines={1} maxW={160}>
+            <Text fontSize="$3" fontWeight="600" color="$ink" numberOfLines={1} maxW={160}>
               {shown}
             </Text>
           ) : null}
@@ -189,7 +189,7 @@ export function UserMenu({
               that does not appear to, side by side in one rail — which is a
               caption over a control, the exact thing both files say they are
               not. It is the affordance, so it belongs to both or to neither. */}
-          {label && shown ? <ChevronsUpDown size={16} color="$color9" /> : null}
+          {label && shown ? <ChevronsUpDown size={16} color="$faint" /> : null}
         </XStack>
       </Popover.Trigger>
 
@@ -214,7 +214,7 @@ export function UserMenu({
         px="$1"
         py="$1"
         width={240}
-        bg="$color2"
+        bg="$panel"
         borderColor="$borderColor"
         className={className}
         style={style}
@@ -224,14 +224,14 @@ export function UserMenu({
             {shown || email ? (
               <YStack gap="$0.5" px="$2" py="$1.5">
                 {shown ? (
-                  <Text fontSize="$2" fontWeight="700" color="$color12" numberOfLines={1}>
+                  <Text fontSize="$2" fontWeight="700" color="$ink" numberOfLines={1}>
                     {shown}
                   </Text>
                 ) : null}
                 {/* The email is shown only when it is not already the name — a
                     menu that prints one address twice reads as a rendering bug. */}
                 {email && email !== shown ? (
-                  <Text fontSize="$1" color="$color10" numberOfLines={1}>
+                  <Text fontSize="$1" color="$soft" numberOfLines={1}>
                     {email}
                   </Text>
                 ) : null}
@@ -264,7 +264,7 @@ export function UserMenu({
               <>
                 <Separator borderColor="$borderColor" my="$1" />
                 <XStack items="center" gap="$2.5" px="$2" py="$1" rounded="$3">
-                  <Text flex={1} fontSize="$2" color="$color12">
+                  <Text flex={1} fontSize="$2" color="$ink">
                     Theme
                   </Text>
                   {theme ?? <ThemeToggle />}

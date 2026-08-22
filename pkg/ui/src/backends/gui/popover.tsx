@@ -67,7 +67,7 @@ const PopoverContent = ({ sideOffset = DEFAULT_OFFSET, align, ...props }: Popove
     <PortalTheme name={themeName}>
       <GuiPopover.Content
         {...slot('popover-content')}
-        bg="$color2"
+        bg="$panel"
         borderWidth={1}
         borderColor="$borderColor"
         rounded="$4"

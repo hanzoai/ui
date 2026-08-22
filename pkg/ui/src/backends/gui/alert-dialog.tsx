@@ -102,7 +102,7 @@ const AlertDialogDescription = (props: ComponentProps<typeof GuiAlertDialog.Desc
   <GuiAlertDialog.Description
     {...slot('alert-dialog-description')}
     size="$2"
-    color="$color11"
+    color="$quiet"
     {...props}
   />
 )

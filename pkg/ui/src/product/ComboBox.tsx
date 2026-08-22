@@ -103,14 +103,14 @@ export function ComboBox({
       >
         {loading ? (
           <XStack items="center" gap="$2" px="$2" py="$2">
-            <Spinner size="small" color="$color11" />
-            <Text fontSize="$2" color="$color10">
+            <Spinner size="small" color="$quiet" />
+            <Text fontSize="$2" color="$soft">
               Loading options…
             </Text>
           </XStack>
         ) : error ? (
           <XStack items="center" gap="$2" px="$2" py="$2">
-            <Text fontSize="$2" color="$color10" flex={1} numberOfLines={2}>
+            <Text fontSize="$2" color="$soft" flex={1} numberOfLines={2}>
               {error}
             </Text>
             {onRetry ? (
@@ -118,7 +118,7 @@ export function ComboBox({
             ) : null}
           </XStack>
         ) : filtered.length === 0 ? (
-          <Text fontSize="$2" color="$color10" px="$2" py="$2">
+          <Text fontSize="$2" color="$soft" px="$2" py="$2">
             {emptyText}
           </Text>
         ) : (

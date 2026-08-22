@@ -8,7 +8,7 @@
  * person, so a workspace and a user read as peers. It is never a house mark: a
  * customer's console must show the customer's identity, not ours.
  *
- * Monochrome by construction (`$color4` tile, `$color12` glyph) so it belongs to
+ * Monochrome by construction (`$edge` tile, `$ink` glyph) so it belongs to
  * the chrome; colour stays with content — with one exception: an emoji logo is
  * rendered in full colour, because a monochrome emoji is not the emoji.
  *
@@ -137,12 +137,12 @@ export function OrgMark({ org, size = 22, maxW }: OrgMarkProps) {
       width={size}
       height={size}
       rounded="$3"
-      bg="$color4"
+      bg="$edge"
       items="center"
       justify="center"
       style={{ flexShrink: 0 }}
     >
-      <Text fontSize={glyphToken(size)} fontWeight="800" color="$color12">
+      <Text fontSize={glyphToken(size)} fontWeight="800" color="$ink">
         {monogram(org.displayName || org.name)}
       </Text>
     </YStack>

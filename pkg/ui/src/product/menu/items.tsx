@@ -4,16 +4,16 @@
  * The ONE menu-item spec — every menu across the fleet renders through these
  * presentational primitives, so DropdownMenu, ContextMenu, SelectMenu and ComboBox
  * are pixel-identical. Geometry is literal px on a strict 8-grid (never random);
- * colour is theme-adaptive tokens ($color2/$color11/$color12/$borderColor) so light
+ * colour is theme-adaptive tokens ($panel/$quiet/$ink/$borderColor) so light
  * and dark both work, over the design tokens `@hanzo/ui/theme.css` defines.
  *
  * Style props use the @hanzo/gui config shorthands (bg/items/justify/px/py/p/mx/my/
  * minW/maxH/rounded/select/shrink) — the config omits the longhand aliases.
  *
- * Panel   — bg $color2 (#111 dark), hairline border, radius 12, inner pad 4, subtle
+ * Panel   — bg $panel (#111 dark), hairline border, radius 12, inner pad 4, subtle
  *           border+ambient elevation.
  * Item    — height 32 (the DropdownMenu row), px 8, gap 8, radius 7; icon in a fixed 16px slot
- *           on the left; label 13px $color12; right affordance (shortcut / check /
+ *           on the left; label 13px $ink; right affordance (shortcut / check /
  *           chevron) right-aligned. States: hover/active/focus → accent surface,
  *           focus visible; selected → check in primary; disabled → muted, no hover.
  * Separator — 1px hairline, 4px vertical margin.
@@ -105,7 +105,7 @@ export function MenuPanel({
       // so it is env-agnostic — the ref type is strict under the pkg build, loose here.
       ref={panelRef as never}
       role="menu"
-      bg="$color2"
+      bg="$panel"
       borderColor="$borderColor"
       borderWidth={1}
       rounded={PANEL_RADIUS}
@@ -155,7 +155,7 @@ export function MenuItemView({
       choose()
     }
   }
-  const labelColor = destructive ? DANGER : '$color12'
+  const labelColor = destructive ? DANGER : '$ink'
   return (
     <XStack
       role="menuitem"
@@ -190,14 +190,14 @@ export function MenuItemView({
           {label}
         </Text>
         {description ? (
-          <Text fontSize={FONT_MUTED} lineHeight={14} color="$color11" numberOfLines={1}>
+          <Text fontSize={FONT_MUTED} lineHeight={14} color="$quiet" numberOfLines={1}>
             {description}
           </Text>
         ) : null}
       </YStack>
 
       {shortcut ? (
-        <Text fontSize={FONT_SHORTCUT} color="$color11" shrink={0}>
+        <Text fontSize={FONT_SHORTCUT} color="$quiet" shrink={0}>
           {shortcut}
         </Text>
       ) : null}
@@ -217,7 +217,7 @@ export function MenuLabelView({ children }: { children: ReactNode }) {
   return (
     <Text
       fontSize={FONT_MUTED}
-      color="$color11"
+      color="$quiet"
       px={ITEM_PX}
       py={SEP_MARGIN}
       textTransform="uppercase"

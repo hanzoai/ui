@@ -73,11 +73,11 @@ export function SelectMenu<T extends string>({
           justify="space-between"
           borderWidth={1}
           borderColor="$borderColor"
-          bg={!required && value !== null ? '$color5' : 'transparent'}
+          bg={!required && value !== null ? '$raised' : 'transparent'}
           icon={icon}
           iconAfter={<ChevronDown size={14} opacity={0.6} />}
         >
-          <Text fontSize="$2" color="$color12" numberOfLines={1} flex={1}>
+          <Text fontSize="$2" color="$ink" numberOfLines={1} flex={1}>
             {triggerLabel}
           </Text>
         </Button>

@@ -27,10 +27,10 @@ export type Tone = 'settled' | 'moving' | 'stopped' | 'quiet'
 /** The gui tokens each tone paints with. `as const` keeps the literal types the
  *  `bg`/`color`/`borderColor` unions require. */
 export const TONE = {
-  settled: { bg: '$color5', color: '$color12', borderColor: 'transparent' },
-  moving: { bg: '$color4', color: '$color12', borderColor: 'transparent' },
-  stopped: { bg: '$color4', color: '$color12', borderColor: '$color9' },
-  quiet: { bg: '$color3', color: '$color11', borderColor: 'transparent' },
+  settled: { bg: '$raised', color: '$ink', borderColor: 'transparent' },
+  moving: { bg: '$edge', color: '$ink', borderColor: 'transparent' },
+  stopped: { bg: '$edge', color: '$ink', borderColor: '$faint' },
+  quiet: { bg: '$hover', color: '$quiet', borderColor: 'transparent' },
 } as const
 
 /** `Past Due`, `past-due` and `PAST_DUE` are the same status. Fold the shapes a

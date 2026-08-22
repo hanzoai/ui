@@ -109,18 +109,18 @@ export function AppHeader({
           <Popover.Trigger asChild>
             <Button size="$2" chromeless icon={<Grip size={16} />} aria-label="Apps" />
           </Popover.Trigger>
-          <Popover.Content bordered elevate p="$2" width={230} bg="$color2" borderColor="$borderColor">
+          <Popover.Content bordered elevate p="$2" width={230} bg="$panel" borderColor="$borderColor">
             <YStack gap="$1">
               {items.map((s) => {
                 const Icon = SURFACE_ICON[s.id]
                 return (
-                  <XStack key={s.id} onPress={() => launch(s)} cursor="pointer" items="center" gap="$2.5" px="$2" py="$2" rounded="$3" hoverStyle={{ bg: '$color5' }}>
+                  <XStack key={s.id} onPress={() => launch(s)} cursor="pointer" items="center" gap="$2.5" px="$2" py="$2" rounded="$3" hoverStyle={{ bg: '$raised' }}>
                     <Icon size={16} />
-                    <Text flex={1} fontSize="$2" fontWeight="600" color="$color12">
+                    <Text flex={1} fontSize="$2" fontWeight="600" color="$ink">
                       {s.label}
                     </Text>
                     {s.hint ? (
-                      <Text fontSize="$1" color="$color10">
+                      <Text fontSize="$1" color="$soft">
                         {s.hint}
                       </Text>
                     ) : null}

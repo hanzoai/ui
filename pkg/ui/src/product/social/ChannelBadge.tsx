@@ -53,7 +53,7 @@ export function ChannelBadge({
         </Text>
       </YStack>
       {showLabel ? (
-        <Text fontSize="$3" color="$color12">
+        <Text fontSize="$3" color="$ink">
           {m.label}
         </Text>
       ) : null}

@@ -115,7 +115,7 @@ export function PostComposer({
       {unconfigured ? (
         <XStack items="flex-start" gap="$2">
           <AlertTriangle size={14} color="var(--yellow10)" />
-          <Text fontSize="$1" color="$color10">
+          <Text fontSize="$1" color="$soft">
             {channel} isn’t configured to publish yet — needs {cap?.missingCredentials.join(', ')}. The post is saved and
             marked failed on publish until credentials are supplied.
           </Text>

@@ -42,16 +42,16 @@ export function Segmented<T extends string>({
           <Button
             key={o.value}
             size={size}
-            bg={active ? '$color5' : 'transparent'}
+            bg={active ? '$raised' : 'transparent'}
             borderWidth={1}
-            borderColor={active ? '$color7' : '$borderColor'}
+            borderColor={active ? '$bound' : '$borderColor'}
             aria-pressed={active}
             onPress={() => {
               track({ component: 'Segmented', action: 'filter', id: name, value: o.value })
               onChange(o.value)
             }}
           >
-            <Text fontSize="$2" fontWeight={active ? '700' : '500'} color={active ? '$color12' : '$color11'}>
+            <Text fontSize="$2" fontWeight={active ? '700' : '500'} color={active ? '$ink' : '$quiet'}>
               {o.label}
             </Text>
           </Button>
@@ -82,8 +82,8 @@ export function SearchInput({
     onChange(v)
   }
   return (
-    <XStack flex={1} minW={180} items="center" gap="$2" px="$3" borderWidth={1} borderColor="$borderColor" rounded="$4" bg="$color1">
-      <Search size={16} color="$color10" />
+    <XStack flex={1} minW={180} items="center" gap="$2" px="$3" borderWidth={1} borderColor="$borderColor" rounded="$4" bg="$sunken">
+      <Search size={16} color="$soft" />
       <Input flex={1} value={value} onChangeText={onChangeTracked} placeholder={placeholder} borderWidth={0} bg="transparent" px="$0" fontSize="$3" />
     </XStack>
   )

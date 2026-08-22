@@ -338,7 +338,7 @@ export function Donut({
   if (total <= 0) {
     return (
       <XStack items="center" justify="center" height={size}>
-        <Text fontSize="$6" color="$color10">
+        <Text fontSize="$6" color="$soft">
           —
         </Text>
       </XStack>
@@ -398,10 +398,10 @@ export function Donut({
                 opacity: s.color ? 1 : rampOpacity(i, positive.length),
               }}
             />
-            <Text fontSize="$2" color="$color11" flex={1} numberOfLines={1}>
+            <Text fontSize="$2" color="$quiet" flex={1} numberOfLines={1}>
               {s.label}
             </Text>
-            <Text fontSize="$2" color="$color12" fontWeight="600">
+            <Text fontSize="$2" color="$ink" fontWeight="600">
               {Math.round((s.value / total) * 100)}%
             </Text>
           </XStack>
@@ -450,7 +450,7 @@ export function BarRows({ bars }: { bars: Slice[] }) {
   const max = Math.max(0, ...bars.map((b) => b.value))
   if (max <= 0) {
     return (
-      <Text fontSize="$3" color="$color10">
+      <Text fontSize="$3" color="$soft">
         —
       </Text>
     )
@@ -459,13 +459,13 @@ export function BarRows({ bars }: { bars: Slice[] }) {
     <YStack gap="$2.5">
       {bars.map((b) => (
         <XStack key={b.label} gap="$3" items="center">
-          <Text width={64} fontSize="$2" color="$color11" text="right">
+          <Text width={64} fontSize="$2" color="$quiet" text="right">
             {b.label}
           </Text>
-          <YStack flex={1} height={10} bg="$color3" rounded="$2" overflow="hidden">
-            <YStack height={10} width={`${Math.max(2, (b.value / max) * 100)}%`} bg="$color9" rounded="$2" />
+          <YStack flex={1} height={10} bg="$hover" rounded="$2" overflow="hidden">
+            <YStack height={10} width={`${Math.max(2, (b.value / max) * 100)}%`} bg="$faint" rounded="$2" />
           </YStack>
-          <Text width={56} fontSize="$2" color="$color12" fontWeight="600">
+          <Text width={56} fontSize="$2" color="$ink" fontWeight="600">
             {b.value.toLocaleString()}
           </Text>
         </XStack>

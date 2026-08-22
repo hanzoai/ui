@@ -107,14 +107,14 @@ const AccordionTrigger = ({
       // The same two rungs every row in this backend uses for hover and for the
       // keyboard's arrow-key landing — an unstyled trigger has no focus ring of
       // its own, and roving focus that shows nothing is roving nowhere.
-      hoverStyle={{ bg: '$color2' }}
-      focusStyle={{ bg: '$color3' }}
-      pressStyle={{ bg: '$color3' }}
+      hoverStyle={{ bg: '$panel' }}
+      focusStyle={{ bg: '$hover' }}
+      pressStyle={{ bg: '$hover' }}
       {...p}
     >
       {(({ open }: { open: boolean }) => (
         <>
-          {ink(children, undefined, { fontSize: '$3', fontWeight: '500', color: '$color12' })}
+          {ink(children, undefined, { fontSize: '$3', fontWeight: '500', color: '$ink' })}
           {hideArrow ? null : (
             <XStack
               {...slot('accordion-chevron')}
@@ -135,7 +135,7 @@ const AccordionTrigger = ({
 
 const AccordionContent = ({ children, ...p }: AccordionContentProps) => (
   <GuiAccordion.Content {...slot('accordion-content')} unstyled overflow="hidden" pb="$3" {...p}>
-    {ink(children, undefined, { fontSize: '$2', color: '$color11' })}
+    {ink(children, undefined, { fontSize: '$2', color: '$quiet' })}
   </GuiAccordion.Content>
 )
 

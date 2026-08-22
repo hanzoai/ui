@@ -51,7 +51,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
           <YStack gap="$2" minW={200} flex={1}>
             {brand}
             {tagline ? (
-              <Text fontSize={12} color="$color10" lineHeight={18} maxW={280}>
+              <Text fontSize={12} color="$soft" lineHeight={18} maxW={280}>
                 {tagline}
               </Text>
             ) : null}
@@ -60,7 +60,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
 
         {footer.columns.map((column) => (
           <YStack key={column.id} gap="$1.5" minW={140}>
-            <Text fontSize={11} color="$color10" textTransform="uppercase" letterSpacing={0.5} pb="$1">
+            <Text fontSize={11} color="$soft" textTransform="uppercase" letterSpacing={0.5} pb="$1">
               {column.title}
             </Text>
             {column.links.map((l) => (
@@ -68,7 +68,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
                 {link({
                   href: l.href,
                   children: (
-                    <Text fontSize="$2" color="$color11">
+                    <Text fontSize="$2" color="$quiet">
                       {l.label}
                     </Text>
                   ),
@@ -82,7 +82,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
       <Separator />
 
       <XStack items="center" gap="$3" flexWrap="wrap">
-        <Text fontSize={12} color="$color10">
+        <Text fontSize={12} color="$soft">
           {footer.legal.copyright}
         </Text>
         <XStack items="center" gap="$3" flexWrap="wrap">
@@ -91,7 +91,7 @@ export function SiteFooter({ footer, brand, tagline, meta, link = defaultLink }:
               {link({
                 href: l.href,
                 children: (
-                  <Text fontSize={12} color="$color10">
+                  <Text fontSize={12} color="$soft">
                     {l.label}
                   </Text>
                 ),

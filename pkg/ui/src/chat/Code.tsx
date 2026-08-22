@@ -51,7 +51,7 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
       rounded="$4"
       borderWidth={1}
       borderColor="$borderColor"
-      bg="$color2"
+      bg="$panel"
       overflow="hidden"
       {...props}
     >
@@ -63,13 +63,13 @@ export function Code({ children, language = 'text', value, actions, ...props }: 
         borderBottomWidth={1}
         borderColor="$borderColor"
       >
-        {/* `$color11`, not `$color10`. The label sits on `$color2` at 11px, and
-            `$color10` measures 2.97:1 there — under WCAG's 4.5:1 for body text
+        {/* `$quiet`, not `$soft`. The label sits on `$panel` at 11px, and
+            `$soft` measures 2.97:1 there — under WCAG's 4.5:1 for body text
             and under even the 3:1 large-text floor this is too small to claim.
-            `$color11` is the ramp's readable secondary and clears it. The bar is
+            `$quiet` is the ramp's readable secondary and clears it. The bar is
             chrome, so it stays quieter than the code; quiet is a rung, not an
             excuse to be unreadable. */}
-        <SizableText size="$1" style={MONO} color="$color11">
+        <SizableText size="$1" style={MONO} color="$quiet">
           {language}
         </SizableText>
         <XStack flex={1} />

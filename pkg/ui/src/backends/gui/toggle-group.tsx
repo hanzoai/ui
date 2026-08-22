@@ -57,14 +57,14 @@ const TYPE = { default: '$3', sm: '$2', lg: '$3' } as const
 /** Resting fill per variant. `outline` is the one that draws its own edge. */
 const REST = {
   default: {
-    backgroundColor: '$color3',
+    backgroundColor: '$hover',
     borderColor: 'transparent',
-    hoverStyle: { backgroundColor: '$color4' },
+    hoverStyle: { backgroundColor: '$edge' },
   },
   outline: {
     backgroundColor: 'transparent',
     borderColor: '$borderColor',
-    hoverStyle: { backgroundColor: '$color3' },
+    hoverStyle: { backgroundColor: '$hover' },
   },
 } as const
 
@@ -76,8 +76,8 @@ const REST = {
  * and the label brightens alongside it (see `ink` below).
  */
 const ON = {
-  default: { backgroundColor: '$color6', borderColor: '$color7' },
-  outline: { backgroundColor: '$color5', borderColor: '$color7' },
+  default: { backgroundColor: '$rim', borderColor: '$bound' },
+  outline: { backgroundColor: '$raised', borderColor: '$bound' },
 } as const
 
 /** The system's WCAG-checked ring — `unstyled` items lose gui's, so restore it. */
@@ -210,7 +210,7 @@ function ToggleGroupItem({ variant, size, disabled, children, ...props }: Toggle
       {ink(children, undefined, {
         size: TYPE[s],
         fontWeight: '500',
-        color: on ? '$color12' : '$color11',
+        color: on ? '$ink' : '$quiet',
       })}
     </GuiToggleGroup.Item>
   )

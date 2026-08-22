@@ -156,7 +156,7 @@ export function Composer({
         {children}
         <XStack flex={1} />
         {hint ? (
-          <SizableText size="$1" color="$color10">
+          <SizableText size="$1" color="$soft">
             {hint}
           </SizableText>
         ) : null}

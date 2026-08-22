@@ -108,7 +108,7 @@ const DialogTitle = (props: ComponentProps<typeof GuiDialog.Title>) => (
 )
 
 const DialogDescription = (props: ComponentProps<typeof GuiDialog.Description>) => (
-  <GuiDialog.Description {...slot('dialog-description')} size="$2" color="$color11" {...props} />
+  <GuiDialog.Description {...slot('dialog-description')} size="$2" color="$quiet" {...props} />
 )
 
 export {

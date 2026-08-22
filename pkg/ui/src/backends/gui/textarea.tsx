@@ -85,7 +85,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       // landed on 20 — so the one field a form makes tall was also the one
       // indented differently from the two above it.
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
-      placeholderTextColor="$color10"
+      placeholderTextColor="$soft"
       fontSize="$3"
       opacity={props.disabled ? 0.5 : 1}
       {...(props as Record<string, unknown>)}
