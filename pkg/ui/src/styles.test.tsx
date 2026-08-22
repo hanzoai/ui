@@ -36,11 +36,20 @@ const markup = (theme: 'dark' | 'light') =>
     </GuiProvider>,
   )
 
-/** Class tokens gui compiled into the markup. Its atomic classes all start `_`. */
+/**
+ * Class tokens the render compiled into the markup, from BOTH style systems.
+ *
+ * gui's atomic classes start `_`. react-native-web's start `r-` (one declaration
+ * each) or `css-` (a component's base rule), and they were not read here — so
+ * "total" was total over one of the two systems. Twenty rnw classes, including
+ * the `overflow-y: auto` that makes every ScrollView scroll, sat in the markup
+ * with no rule in the shipped sheet and this test stayed green.
+ */
 const referenced = (html: string) => {
   const out = new Set<string>()
   for (const m of html.matchAll(/class="([^"]*)"/g))
-    for (const token of m[1].split(/\s+/)) if (token.startsWith('_')) out.add(token)
+    for (const token of m[1].split(/\s+/))
+      if (/^(_|r-|css-)/.test(token)) out.add(token)
   return out
 }
 
