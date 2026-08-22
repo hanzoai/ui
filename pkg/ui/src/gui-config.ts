@@ -199,6 +199,26 @@ const STEP: Record<string, number> = {
  */
 const step = (px: number): string | number => (px === 0 ? 0 : `calc(${px}px * var(--density, 1))`)
 
+/**
+ * Radius, on the same terms as spacing — `--radius-scale` retunes every corner
+ * at once, so "softer" or "sharper" is one number a person sets rather than a
+ * table someone forks.
+ *
+ * A pill is exempt and that is not an oversight: 9999 is not a measurement, it
+ * is the instruction "however round it takes to be a capsule". Scaling it says
+ * nothing and a scale below 1 would visibly un-round a pill into a lozenge —
+ * the one shape in the set whose meaning is its shape.
+ *
+ * `@hanzo/appearance` already publishes `--radius-full`, so the knob it was
+ * writing for finally has something reading it.
+ */
+const round = (px: number): string | number =>
+  px === 0 || px >= 9999 ? px : `calc(${px}px * var(--radius-scale, 1))`
+
+const rounded = Object.fromEntries(
+  Object.entries(RADIUS).map(([k, v]) => [k, round(v)]),
+) as unknown as typeof RADIUS
+
 const space: Record<string, string | number> = {}
 for (const [k, v] of Object.entries(STEP)) {
   space[`$${k}`] = step(v)
@@ -496,7 +516,7 @@ const base = {
   settings: { ...defaultConfig.settings, shouldAddPrefersColorThemes: false },
   tokens: {
     ...defaultConfig.tokens,
-    radius: RADIUS,
+    radius: rounded,
     space,
   },
   fonts: {
