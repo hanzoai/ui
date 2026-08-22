@@ -44,7 +44,7 @@ export {
   DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator,
   DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger,
-  DropdownMenuTrigger, Em, Glass, Fill, Grid, H1, H2, H3, H4, H5, H6, Heading, Image, Input,
+  DropdownMenuTrigger, Em, Glass, Fill, H1, H2, H3, H4, H5, H6, Heading, Image, Input,
   Label, Popover, PopoverAnchor, PopoverClose,
   PopoverContent,
   PopoverTrigger, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,

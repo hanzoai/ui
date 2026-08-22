@@ -12,7 +12,7 @@ import * as ui from '../index'
 const PRIMITIVES = [
   'XStack', 'YStack', 'ZStack', 'View', 'Text', 'SizableText', 'Paragraph',
   'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Heading', 'Spacer', 'Span', 'Strong',
-  'Em', 'Image', 'ScrollView', 'Grid', 'Glass', 'Section', 'CardMedia',
+  'Em', 'Image', 'ScrollView', 'Glass', 'Section', 'CardMedia',
 ] as const
 
 describe('the root barrel resolves what it exports', () => {
