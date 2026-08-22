@@ -128,7 +128,9 @@ export {
   type DropdownMenuProps,
 } from './dropdown-menu'
 export { Glass, type GlassProps } from './glass'
-export { Grid, type GridProps } from './grid'
+// Grid is not part of this surface. It renders a `div` with `display: grid`,
+// neither of which exists on React Native, so it ships at `@hanzo/ui/grid`.
+
 export {
   HoverCard,
   HoverCardTrigger,
