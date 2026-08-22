@@ -109,17 +109,60 @@ const LINE_HEIGHT = {
   4: `calc(22px * var(--type-scale, 1))`,
   5: `calc(22px * var(--type-scale, 1))`,
   6: `calc(24px * var(--type-scale, 1))`,
-  7: `calc(28px * var(--type-scale, 1))`,
-  8: `calc(32px * var(--type-scale, 1))`,
-  9: `calc(32px * var(--type-scale, 1))`,
-  10: `calc(38px * var(--type-scale, 1))`,
-  11: `calc(46px * var(--type-scale, 1))`,
-  12: `calc(54px * var(--type-scale, 1))`,
-  13: `calc(62px * var(--type-scale, 1))`,
-  14: `calc(70px * var(--type-scale, 1))`,
-  15: `calc(86px * var(--type-scale, 1))`,
-  16: `calc(102px * var(--type-scale, 1))`,
+  // Display leading TIGHTENS as size grows, which is the whole difference
+  // between type that is set and type that is merely large. Measured on
+  // hanzo.ai, whose typography this scale is meant to express: 40px sits on 40px
+  // (1.00) and 21px on 20px (0.95), while this table asked for 46px and 28px —
+  // 1.15 and 1.33. Leading a headline like body copy is what made every large
+  // rung read airy beside the marketing site.
+  //
+  // The body rungs above are NOT touched: 17px/24px is 1.41 here and 1.40 there,
+  // so reading sizes were already right and only the display end had drifted.
+  7: `calc(22px * var(--type-scale, 1))`,
+  8: `calc(28px * var(--type-scale, 1))`,
+  9: `calc(28px * var(--type-scale, 1))`,
+  10: `calc(34px * var(--type-scale, 1))`,
+  11: `calc(42px * var(--type-scale, 1))`,
+  12: `calc(50px * var(--type-scale, 1))`,
+  13: `calc(58px * var(--type-scale, 1))`,
+  14: `calc(66px * var(--type-scale, 1))`,
+  15: `calc(82px * var(--type-scale, 1))`,
+  16: `calc(98px * var(--type-scale, 1))`,
   true: `calc(20px * var(--type-scale, 1))`,
+} as const
+
+/**
+ * Optical tracking — the other half of what makes hanzo.ai's headlines read as
+ * set rather than scaled.
+ *
+ * Measured there: −1px on 40px and −0.525px on 21px, both exactly −0.025em, and
+ * nothing at all below 21px. That is the classic optical rule — a face drawn for
+ * text has too much sidebearing when it is enlarged, and none to spare when it
+ * is small — and this package expressed none of it: `letterSpacing` appeared
+ * ZERO times in this config, so every rung shipped at the face's natural fit.
+ *
+ * Stated in `em` so one value serves the whole rung whatever `--type-scale` does
+ * to it; a px tracking would silently stop matching the moment a person changed
+ * the scale.
+ */
+const TRACKING = {
+  1: 0,
+  2: 0,
+  3: 0,
+  4: 0,
+  5: 0,
+  6: 0,
+  7: '-0.025em',
+  8: '-0.025em',
+  9: '-0.025em',
+  10: '-0.025em',
+  11: '-0.025em',
+  12: '-0.025em',
+  13: '-0.025em',
+  14: '-0.025em',
+  15: '-0.025em',
+  16: '-0.025em',
+  true: 0,
 } as const
 
 /** Radius — FOUR values, no more. 6 control · 8 input/row · 12 panel · pill.
@@ -531,8 +574,20 @@ const base = {
   },
   fonts: {
     ...defaultConfig.fonts,
-    body: { ...defaultConfig.fonts.body, family: GEIST, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
-    heading: { ...defaultConfig.fonts.heading, family: GEIST, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
+    body: {
+      ...defaultConfig.fonts.body,
+      family: GEIST,
+      size: asSizes(FONT_SIZE),
+      lineHeight: asSizes(LINE_HEIGHT),
+      letterSpacing: asSizes(TRACKING),
+    },
+    heading: {
+      ...defaultConfig.fonts.heading,
+      family: GEIST,
+      size: asSizes(FONT_SIZE),
+      lineHeight: asSizes(LINE_HEIGHT),
+      letterSpacing: asSizes(TRACKING),
+    },
     // `$mono` was NOT defined here, and gui emits NO class for a font token it
     // does not know — no warning, no fallback, a green build and text that is
     // simply not monospace. 260 `fontFamily="$mono"` call sites across 74 files
