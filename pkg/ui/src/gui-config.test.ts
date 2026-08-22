@@ -51,6 +51,13 @@ const token = (name: string, theme: 'dark' | 'light'): string => {
  *  a saturated rung would be a hue this system does not spend, so it throws
  *  rather than quietly approximating one. */
 const parse = (colour: string): [number, number, number, number] => {
+  // A re-based rung is `var(--name, LITERAL)`, and the LITERAL is the one of the
+  // two a test can hold to: it is what a host that mounts no design sheet
+  // computes, so asserting contrast on it asserts the FLOOR. A host that does
+  // mount design's sheet follows the live cascade to a value this file already
+  // checks separately, against design's own stylesheet, in `token()`.
+  const ref = colour.match(/^var\(\s*--[\w-]+\s*,\s*(.+)\)$/s)
+  if (ref) return parse(ref[1].trim())
   const hex = colour.match(/^#([0-9a-f]{6})$/i)
   if (hex) return [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16)).concat(1) as never
   const hsl = colour.match(/^hsla?\(\s*[\d.]+\s*,\s*([\d.]+)%\s*,\s*([\d.]+)%\s*(?:,\s*([\d.]+)\s*)?\)$/)
@@ -216,12 +223,35 @@ describe('the rungs design already decided read the token', () => {
   })
 
   it('the rest of the ramp is left alone — this is a re-base, not a fork', () => {
-    // Every other rung is a grey in a scale of greys and design has no opinion
-    // about it. Restating them here would be a second palette, which is the
-    // thing the re-base exists to stop.
+    // The rule is not "three rungs". The rule is: a rung is re-based WHEN design
+    // has already decided it and the ramp says otherwise — anything more is a
+    // second palette, which is the thing the re-base exists to stop.
+    //
+    // color2/3/5 moved from this list to the one below because design turned out
+    // to have an opinion about surfaces all along: `--surface-1/2/3` resolve to
+    // `--card`, `--muted` and `--secondary`. They qualify on exactly the grounds
+    // color4 and color12 did. The rungs still here are greys in a scale of greys
+    // with nothing published against them.
     for (const theme of ['dark', 'light'] as const)
-      for (const rung of ['color1', 'color2', 'color3', 'color5', 'color6', 'color11'])
+      for (const rung of ['color1', 'color6', 'color11'])
         expect([theme, rung, themed(theme, rung)]).toEqual([theme, rung, expect.stringMatching(/^hsla?\(/)])
+  })
+
+  it('the surface rungs read design instead of shadowing it', () => {
+    // A fill is the larger case of the argument the edge already won: a solid
+    // hex stops being a lift and becomes an unrelated grey the moment it lands
+    // on a lifted surface. Named, so a rung cannot quietly go solid again.
+    for (const theme of ['dark', 'light'] as const)
+      for (const [rung, name] of [
+        ['color2', 'surface-1'],
+        ['color3', 'surface-2'],
+        ['color5', 'surface-3'],
+      ] as const)
+        expect([theme, rung, themed(theme, rung)]).toEqual([
+          theme,
+          rung,
+          expect.stringContaining(`var(--${name},`),
+        ])
   })
 })
 
@@ -241,13 +271,21 @@ describe('the readable-secondary rung', () => {
    * component asks for, and a component that asks for the readable one survives
    * a host that dims the other.
    */
+  /**
+   * The surface is COMPOSITED before it is measured, because it is translucent.
+   * `lum()` reads r,g,b and ignores alpha, so a 3%-white lift measured raw reads
+   * as pure white and every ratio against it is nonsense — 1.61 where the eye
+   * gets 15.9. An opaque rung never needed this; a lift always does.
+   */
+  const lifted = (theme: 'dark' | 'light') =>
+    over(themed(theme, 'color2'), themed(theme, 'background'))
+
   it.each(['dark', 'light'] as const)('%s: secondary text clears 4.5:1 on the surface it sits on', (theme) => {
-    const surface = themed(theme, 'color2')
-    expect(contrast(themed(theme, 'color11'), surface)).toBeGreaterThanOrEqual(4.5)
+    expect(contrast(themed(theme, 'color11'), lifted(theme))).toBeGreaterThanOrEqual(4.5)
   })
 
   it.each(['dark', 'light'] as const)('%s: and is strictly more legible than the rung below it', (theme) => {
-    const surface = themed(theme, 'color2')
+    const surface = lifted(theme)
     expect(contrast(themed(theme, 'color11'), surface)).toBeGreaterThan(
       contrast(themed(theme, 'color10'), surface),
     )
