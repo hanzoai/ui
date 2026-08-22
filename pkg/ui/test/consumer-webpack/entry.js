@@ -14,6 +14,10 @@ import '@hanzo/ui/theme.css'
 
 // The JS too, so module resolution through `exports` is exercised under webpack
 // and not only under Vite. dist is already compiled, so no JSX loader is needed.
-import { Button, Card, Grid } from '@hanzo/ui'
+import { Button, Card } from '@hanzo/ui'
+// A subpath as well as the root: `exports` resolves the two by different rules,
+// and `./grid` is where the web-only grid lives.
+import { Cell, Grid } from '@hanzo/ui/grid'
 
-if (!Button || !Card || !Grid) throw new Error('@hanzo/ui did not resolve under webpack')
+if (!Button || !Card) throw new Error('@hanzo/ui did not resolve under webpack')
+if (!Grid || !Cell) throw new Error('@hanzo/ui/grid did not resolve under webpack')
