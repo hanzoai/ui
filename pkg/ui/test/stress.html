@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" class="t_dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>@hanzo/ui containment</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- What a bundler supplies. The gui packages read `process.env` at module
+         scope, and every app that ships them runs through webpack, Vite or Metro,
+         all of which define it. A raw dev server does not. -->
+    <script>
+      window.process = { env: { NODE_ENV: 'development' } }
+    </script>
+    <script type="module" src="/test/stress.mount.tsx"></script>
+  </body>
+</html>
