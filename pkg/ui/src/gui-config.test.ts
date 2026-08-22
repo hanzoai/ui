@@ -486,8 +486,12 @@ describe('a person and a brand can both move this', () => {
     const refOf = (k: string) => String(dark[k]?.val ?? dark[k] ?? '')
     expect(refOf('color')).toContain('var(--foreground')
     expect(refOf('placeholderColor')).toContain('var(--text-tertiary')
-    expect(refOf('accentBackground')).toContain('var(--primary')
-    expect(refOf('accentColor')).toContain('var(--primary-foreground')
+    // Accent reads ACCENT. It used to read `--primary`, and while nothing in the
+    // package consumed the pair that was merely an odd mapping; the moment
+    // Button's loud control started reading it, the difference became the
+    // difference between #262626 and a white slab.
+    expect(refOf('accentBackground')).toContain('var(--accent')
+    expect(refOf('accentColor')).toContain('var(--accent-foreground')
     expect(refOf('borderColor')).toContain('var(--border')
     expect(refOf('outlineColor')).toContain('var(--ring')
   })

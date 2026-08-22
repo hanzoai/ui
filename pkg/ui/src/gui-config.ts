@@ -440,8 +440,18 @@ const themes = Object.fromEntries(
             background: GROUND[s],
             color: `var(--foreground, ${LABEL[s]})`,
             placeholderColor: `var(--text-tertiary, ${MUTED[s]})`,
-            accentBackground: `var(--primary, ${LOUD[s]})`,
-            accentColor: `var(--primary-foreground, ${LOUD_LABEL[s]})`,
+            // The pair reads design's ACCENT, not its primary — the names match
+            // 1:1 and, decisively, so do the values: design publishes
+            // `--accent: #262626`, which is what Button's loud control already
+            // renders, while `--primary: #fafafa` is the white slab that control
+            // deliberately stopped being. Pointing at primary connects the knob
+            // and silently turns every accented control back into a glare;
+            // pointing at accent connects it and changes nothing until asked.
+            //
+            // It was pointed at primary before, and NOTHING read the pair, so
+            // the mismatch never showed: setting either name moved zero pixels.
+            accentBackground: `var(--accent, ${SURFACE[s].raised})`,
+            accentColor: `var(--accent-foreground, ${LABEL[s]})`,
           }
         : ringed,
     ]
