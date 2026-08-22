@@ -102,10 +102,33 @@ const SOURCES: Source[] = [
  *  it out with the components under test would make a layout bug read as a
  *  styling bug. Rows wrap so the same tree is legible at 390px and at 1280px,
  *  which is what makes the screenshot baselines worth comparing. */
+/**
+ * A wrapped row, and deliberately NOT a grid.
+ *
+ * A grid was tried — `auto-fit` + `minmax(min(100%, 220px), 1fr)` — and it laid
+ * out cleanly at all fifteen width×density combinations while looking markedly
+ * worse: a section holds nine 36px buttons AND a 320px panel, so a uniform track
+ * gives every chip a 220px cell and scatters one row of buttons across three
+ * columns of mostly air. A grid is the right tool for a set of things that are
+ * alike. These are not alike, and `flex-wrap` sizing each item to itself is the
+ * standard that fits.
+ *
+ * `align-items: flex-start` is the part that was actually wrong before. It was
+ * `center`, which floated every item against the tallest in its wrapped line, so
+ * a 36px button sat halfway down beside a 320px panel with no relationship to
+ * it. Most of what read as raggedness was that one word.
+ */
 const Section = ({ name, children }: { name: string; children: ReactNode }) => (
   <section
     data-gallery={name}
-    style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', maxWidth: 880 }}
+    style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 12,
+      alignItems: 'flex-start',
+      width: '100%',
+      maxWidth: 880,
+    }}
   >
     {children}
   </section>
@@ -484,7 +507,7 @@ export const Gallery = () => (
           scroll, which is the one thing a page may never do. A component with an
           intrinsic minimum width scrolls inside its OWN box; the body does not
           scroll for it. */}
-      <div style={{ display: 'flex', height: 220, width: 880, maxWidth: '100%', overflowX: 'auto' }}>
+      <div style={{ display: 'flex', height: 220, width: '100%', maxWidth: 880, overflowX: 'auto' }}>
         <Workbench
           left={{ tabs: [{ id: 'files', title: 'Files', content: <CardTitle>left</CardTitle> }] }}
           right={{
@@ -513,7 +536,7 @@ export const Gallery = () => (
         static render. The Skeleton widths are enumerated because 100% and 60%
         are two distinct values and each needs its own rule. */}
     <Section name="product-arrangements">
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 320 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 320 }}>
         <Skeleton width={120} />
         <Skeleton width="100%" height={72} rounded="$4" />
         <Skeleton.Text lines={3} />
@@ -608,7 +631,7 @@ export const Gallery = () => (
       <Aside>
         <Sources sources={SOURCES} />
       </Aside>
-      <div style={{ display: 'flex', width: 260, height: 320 }}>
+      <div style={{ display: 'flex', width: '100%', maxWidth: 260, height: 320 }}>
         <Sidebar>
           <SidebarHeader title="Hanzo" onOpenSwitcher={NOOP} onSearch={NOOP} onCollapse={NOOP} />
           <SidebarNewChat onPress={NOOP} />
