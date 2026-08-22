@@ -178,6 +178,7 @@ export {
   SelectScrollDownButton,
 } from './select'
 export { Section, type SectionProps } from './section'
+export { Screen, Fill, type ScreenProps, type FillProps } from './screen'
 export { Separator } from './separator'
 export { Slider } from './slider'
 export { Spinner, type SpinnerProps } from './spinner'
