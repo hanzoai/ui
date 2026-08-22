@@ -66,7 +66,7 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog, Spinner,
+  TooltipTrigger, Grid, Section as PageSection, CardMedia, CommandDialog, Spinner, Text,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
 
@@ -140,6 +140,21 @@ const Section = ({ name, children }: { name: string; children: ReactNode }) => (
  */
 export const Gallery = () => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 28, padding: 24, maxWidth: 928 }}>
+    {/* The type scale, rendered. Nothing else in this gallery sets text above
+        16px, so rungs 7–16 — every display size — had no rule extracted, no
+        screenshot, and no coverage: the leading and tracking they carry could be
+        anything and all three test layers would still pass. A scale is part of
+        the surface a package styles, so it is specified here like a component. */}
+    <Section name="type">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%' }}>
+        {([11, 10, 9, 7, 6, 4, 3, 2, 1] as const).map((rung) => (
+          <Text key={rung} fontSize={`$${rung}` as never} lineHeight={`$${rung}` as never} letterSpacing={`$${rung}` as never}>
+            Hanzo — the Open AI Cloud
+          </Text>
+        ))}
+      </div>
+    </Section>
+
     <Section name="button">
       {BUTTON_VARIANTS.map((variant) => (
         <Button key={variant} variant={variant}>
