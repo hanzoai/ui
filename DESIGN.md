@@ -15,42 +15,55 @@ and the dark-black palette.
 
 ---
 
-## 1. Typography — Basel Grotesk + Geist Mono
+## 1. Typography — Zen
+
+One family, ours. `@hanzo/font` publishes it and `@hanzo/design` ships the binaries
+and declares the `@font-face`, so a surface that imports `@hanzo/design/styles.css`
+has the faces with nothing further to do. No app self-hosts a licensed third-party
+face any more.
 
 | Role | Family | Notes |
 |------|--------|-------|
-| UI / body / display / heading (`sans`) | **Basel Grotesk** | Self-hosted. Book = weight **400**, Medium = weight **500**. |
-| code / data / mono (`mono`) | **Geist Mono** | `next/font/google` (`Geist_Mono`) or the geist CDN. |
+| UI / body / display / heading (`sans`) | **Zen** | Variable weight; bound through `--font-sans`. |
+| code / data / mono (`mono`) | **Zen Mono** | Bound through `--font-mono`. |
 | Arabic / Hebrew (`--font-ar` / `--font-he`) | unchanged | i18n only — keep. |
 
-**Dropped as defaults:** Geist Sans, DM Sans, Figtree, Inter, PT Sans, Roboto Mono.
+**The token names the ROLE, not the face** — `--font-sans` / `--font-mono`. A token
+spelled `--font-geist-sans` or `--font-zen-sans` goes stale the next time the face
+moves, which is exactly what the first one did.
 
-Basel is a **licensed, non-Google** face — **self-host** the woff2/woff, do NOT use
-`next/font/google` for it. Canonical files (mirror lux.exchange):
-`Basel-Grotesk-Book.woff2/.woff` (400), `Basel-Grotesk-Medium.woff2/.woff` (500).
+**Dropped as defaults:** Basel Grotesk, Druk Wide, Geist, DM Sans, Figtree, Inter,
+PT Sans, Roboto Mono.
 
-`@font-face` (weights 400/500, `font-display: swap`, `font-style: normal`):
+### Where the old faces land
 
-```css
-@font-face {
-  font-family: 'Basel';
-  font-style: normal;
-  font-weight: 400; /* Book; 500 = Medium */
-  font-display: swap;
-  src: url('.../Basel-Grotesk-Book.woff2') format('woff2'),
-       url('.../Basel-Grotesk-Book.woff') format('woff');
-}
-```
+`@hanzo/font/presets.css` (≥ 1.8.1) defines these as real classes — `.zen-air`,
+`.zen-book`, `.zen-medium`, `.zen-wide`, `.zen-round`. Use the class; do not restate
+the numbers. Nothing in this repo needs one: every face replaced here was Geist,
+which is a plain family swap with no register to reconstruct.
 
-Per-app adoption (converge the value, keep each app's own mechanism):
-- **@hanzo/ui / Next apps** → `next/font/local` for Basel (`--font-basel-sans`) +
-  `next/font/google` `Geist_Mono` (`--font-geist-mono`). See `app/lib/fonts.ts`;
-  tailwind `sans → var(--font-basel-sans)`, `mono → var(--font-geist-mono)`.
-- **Vite + Tailwind apps** (chat, launcher, desktop) → self-host Basel `@font-face`
-  + geist-mono CDN import; tailwind `fontFamily.sans = ['Basel', …]`,
-  `mono = ['Geist Mono', …]`.
-- **Tamagui (console)** → Basel `@font-face` in globals + override the Tamagui
-  `body`/`heading` font `family` to Basel; Geist Mono for `code`/`pre`.
+| Was | Now | Class |
+|-----|-----|-------|
+| Basel Grotesk Book | Zen wght **497** | `.zen-book` |
+| Basel Grotesk Medium | Zen wght **606** | `.zen-medium` |
+| Druk Wide | Zen wght **845** + `scaleX(1.56)` + `-0.04em` | `.zen-wide` |
+| Geist / Geist Sans | Zen | plain family swap |
+| Geist Mono | Zen Mono | plain family swap |
+
+**x-height.** Basel's x-height is 0.718 of its cap and Zen's is 0.746, so at one
+font-size Zen's lowercase renders ~4% larger. Where Zen REPLACES Basel, multiply the
+font-size by **0.962** at the one place the size is stated. It does NOT apply where
+Geist was replaced — Zen and Geist share a lineage and their x-heights agree. Every
+face replaced in this repo was Geist, so no size moved here.
+
+Per-app adoption:
+- **Any React surface** → `import '@hanzo/ui/theme.css'` (which composes design's
+  tokens) or `@hanzo/design/styles.css` directly, and bind nothing.
+- **A host that loads Zen itself** (next/font, @fontsource) binds `--font-sans` /
+  `--font-mono` to its generated family. Ours are declared in `@layer hanzo.font`,
+  so the host's unlayered binding wins whatever the source order.
+- **A host that wants a different face entirely** binds `--font-sans-provided` /
+  `--font-mono-provided`.
 
 ---
 

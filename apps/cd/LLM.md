@@ -69,7 +69,7 @@ ingress or backend change: publish the bundle, retire the old ArgoCD `ui/` + the
   `@hanzo/gui` installs.
 - **`@hanzo/ui-shadcn` shared shell** (`HanzoHeader` + org/project switcher + ⌘K)
   needs a full monorepo install (its Tailwind deps aren't in the offline store).
-  This app ships a lean self-contained topbar (Geist, small mark, env scope) in the
+  This app ships a lean self-contained topbar (Zen, small mark, env scope) in the
   interim; swap to the shared shell once installed. The **org/project↔IAM switcher**
   additionally needs `/v1/iam` routed on cd.hanzo.ai (today the SuperAdmin cookie
   sees the whole fleet; env is the scope control).

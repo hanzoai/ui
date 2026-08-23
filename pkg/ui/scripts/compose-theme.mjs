@@ -6,7 +6,7 @@
 // declare its own `--background`/`--primary`/`--border` palette, which is
 // exactly that fork: 19 declarations restating values design already publishes.
 // They are gone; what remains in src/theme.css is only what design does NOT
-// ship (the chart ramp, the sidebar set, the Geist bindings) plus this package's
+// ship (the chart ramp, the sidebar set, the Zen bindings) plus this package's
 // own rules.
 //
 // Order matters and is deliberate: design first, ours second, so a remaining
@@ -37,7 +37,7 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
 /**
  * Drop design's @font-face blocks. FONT DELIVERY HAS ONE OWNER AND IT IS NOT US.
  *
- * design self-hosts Geist and its sheet says "the url()s are relative to THIS
+ * design self-hosts Zen and its sheet says "the url()s are relative to THIS
  * file, so they resolve wherever the package is" — true of design's file, false
  * the instant it is inlined into ours. Composed here, `url(./assets/fonts/…)`
  * resolves against @hanzo/ui/dist, which has no assets, and webpack's css-loader

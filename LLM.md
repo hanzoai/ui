@@ -61,10 +61,10 @@ superseded, being retired.
 ```
 pkg/ui/src/
   core/            design core: cn.ts (clsx+tailwind-merge),
-                   tokens.ts (re-export of @hanzo/tokens), fonts.ts (Geist vars)
+                   tokens.ts (re-export of @hanzo/tokens), fonts.ts (Zen vars)
   root.tsx         <Hanzo> — the root. Carries the gui config AND the stylesheet.
   gallery.tsx      EVERY component, once, in every variant. The one list.
-  theme.css        SELF-CONTAINED token CSS vars + Geist Sans/Mono — the identity
+  theme.css        SELF-CONTAINED token CSS vars + Zen / Zen Mono — the identity
   backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
   models/          the unified ModelSelector + catalog helpers
@@ -229,8 +229,8 @@ answer it, so no claim is recorded.
 | `@hanzo/ui/components` | alias of the root surface, for hosts that shim the package through a `declare module` |
 | `@hanzo/ui/product` | the product/app layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
 | `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
-| `@hanzo/ui/core` · `/tokens` | cn, Geist font vars, the @hanzo/tokens color/theme/radii/spacing scale |
-| `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Geist + touch/elevation) |
+| `@hanzo/ui/core` · `/tokens` | cn, Zen font vars, the @hanzo/tokens color/theme/radii/spacing scale |
+| `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Zen + touch/elevation) |
 | `@hanzo/ui/styles.css` | the COMPLETE sheet — tokens + motion + the generated gui atomic/theme CSS. `<Hanzo>` imports it, so an app never has to |
 | `@hanzo/ui/gallery` | every component, once — what the generator, the unit test and the consumer test all render |
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
