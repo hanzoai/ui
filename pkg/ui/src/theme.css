@@ -25,10 +25,25 @@
 
 /* Geist family fallbacks — a host that binds --font-geist-sans/-mono (e.g. via
    next/font) overrides these; otherwise the named Geist families are used if
-   installed, with a final generic fallback. Never Inter. */
-:root {
-  --font-geist-sans: var(--font-geist-sans-provided, 'Geist');
-  --font-geist-mono: var(--font-geist-mono-provided, 'Geist Mono');
+   installed, with a final generic fallback. Never Inter.
+
+   In a LAYER, and that is the whole reason the sentence above is true. next/font
+   binds its generated family through a class on <html>, which is `:root`'s own
+   element and `:root`'s own specificity, so unlayered these two declarations
+   merely tie with the host's and win on source order — this sheet loads last.
+   The host's binding lost, `--font-geist-sans` resolved to the literal 'Geist',
+   and a page rendered in Geist only where Geist happened to be INSTALLED: on a
+   developer's machine it looks right and on a visitor's it silently falls
+   through to the generic. Measured exactly that way at 8.3.0 on ui.hanzo.ai's
+   own surface, with the self-hosted faces loaded and unreferenced.
+
+   An unlayered declaration beats every layered one whatever the specificity, so
+   layering ours is what makes the host's the one that wins. */
+@layer hanzo.font {
+  :root {
+    --font-geist-sans: var(--font-geist-sans-provided, 'Geist');
+    --font-geist-mono: var(--font-geist-mono-provided, 'Geist Mono');
+  }
 }
 
 /* Light identity (the counterpart to dark-first). */
