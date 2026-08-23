@@ -12,10 +12,10 @@
  *
  * Dark-first Hanzo identity: neutral zinc-on-black, calm, high-contrast. Add
  * `class="dark"` on <html> for the canonical dark look; `:root` is the light
- * counterpart. Typography is Geist Sans (UI/body) + Geist Mono (code) — bound
- * through `--font-geist-sans` / `--font-geist-mono`; a host that loads Geist
- * (next/font, @fontsource, CDN) binds those variables and everything inherits
- * it. No Inter, no system-stack default anywhere.
+ * counterpart. Typography is Zen — our own family, sans for UI/body and mono for
+ * code — bound through `--font-sans` / `--font-mono`. The package SHIPS the
+ * faces, so those resolve with no work from the host; a host that prefers its
+ * own binds `--font-sans-provided`. No Inter, no system-stack default anywhere.
  *
  * Plain CSS, nothing else: `:root`/`.dark` custom properties plus the base font
  * and the touch/elevation rules the components name. The Tailwind v4 `@theme
@@ -23,26 +23,42 @@
  */
 
 
-/* Geist family fallbacks — a host that binds --font-geist-sans/-mono (e.g. via
-   next/font) overrides these; otherwise the named Geist families are used if
-   installed, with a final generic fallback. Never Inter.
+/* The typeface, and the package now BRINGS one.
+
+   `@hanzo/font` ships Zen — our own family, sans and mono, self-hosted woff2 —
+   so the fallback is a face that exists rather than a name that has to be
+   installed. That import is the whole integration: a host still binds
+   `--font-*-provided` to override, and one that binds nothing now gets Zen
+   instead of falling through to the browser's generic.
 
    In a LAYER, and that is the whole reason the sentence above is true. next/font
    binds its generated family through a class on <html>, which is `:root`'s own
-   element and `:root`'s own specificity, so unlayered these two declarations
-   merely tie with the host's and win on source order — this sheet loads last.
-   The host's binding lost, `--font-geist-sans` resolved to the literal 'Geist',
-   and a page rendered in Geist only where Geist happened to be INSTALLED: on a
-   developer's machine it looks right and on a visitor's it silently falls
-   through to the generic. Measured exactly that way at 8.3.0 on ui.hanzo.ai's
-   own surface, with the self-hosted faces loaded and unreferenced.
+   element and `:root`'s own specificity, so unlayered these declarations merely
+   tie with the host's and win on source order — this sheet loads last. The
+   host's binding lost, the variable resolved to a literal family name, and a
+   page rendered in that face only where it happened to be INSTALLED: right on a
+   developer's machine, generic on a visitor's. Measured exactly that way at
+   8.3.0 on ui.hanzo.ai's own surface, with the self-hosted faces loaded and
+   unreferenced. An unlayered declaration beats every layered one whatever the
+   specificity, so layering ours is what makes the host's the one that wins.
 
-   An unlayered declaration beats every layered one whatever the specificity, so
-   layering ours is what makes the host's the one that wins. */
+   THE TOKEN NAMES THE ROLE, NOT THE FACE. It was `--font-geist-sans`, which
+   named a face rather than the job it does. Naming it `--font-zen-sans` would
+   repeat the mistake with our own brand: the next face makes it a lie again.
+   `--font-sans` is what it has always meant.
+
+   NO @import HERE, and that is measured rather than stylistic. This file is
+   composed into the MIDDLE of the built theme.css, and CSS drops an @import that
+   does not precede every other rule — in Chromium, against the built sheet, a
+   raw <link> loaded ZERO faces and requested not one woff2, while --font-sans
+   resolved to a family nobody ships. The faces come from @hanzo/design's
+   `tokens/fonts.css`, which declares @font-face directly; an @font-face has no
+   ordering rule, so it survives being flattened. */
+
 @layer hanzo.font {
   :root {
-    --font-geist-sans: var(--font-geist-sans-provided, 'Geist');
-    --font-geist-mono: var(--font-geist-mono-provided, 'Geist Mono');
+    --font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+    --font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
   }
 }
 
@@ -100,15 +116,15 @@
 
 /* Dark-first Hanzo identity — neutral zinc-on-black. */
 
-/* Geist by default — UI/body inherits Geist Sans; code/mono surfaces get Geist
-   Mono. Components never hard-code a family; they inherit this or bind
-   `font-sans`/`font-mono` (which resolve to Geist above). */
+/* Zen by default — UI/body inherits Zen, code/mono surfaces get Zen Mono.
+   Components never hard-code a family; they inherit this or bind
+   `font-sans`/`font-mono`, which resolve above. */
 :where(html, body) {
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }
 
 :where(code, kbd, samp, pre) {
-  font-family: var(--font-geist-mono), monospace;
+  font-family: var(--font-mono), monospace;
 }
 
 /* ── Touch targets ────────────────────────────────────────────────────────────
