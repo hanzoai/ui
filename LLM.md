@@ -247,7 +247,7 @@ the tarball, including `theme.css` and all 90 `primitives/*` entrypoints.
 `src/dist.test.ts` asserts that against the built output, wildcards included; a
 subpath pointing at a file tsc never emitted is invisible from source.
 
-### Three doors that exist because the barrel is not one
+### Three entry points that exist because the barrel is not one
 
 `@hanzo/ui/product` mounts the whole gui runtime to give you one component, and
 for three kinds of caller that is not a cost — it is a wall.
@@ -508,10 +508,10 @@ resolves the tenant.
    `-> { accepted, dropped }`. Tenant from the session or a publishable `pk_` key.
 2. **Error plane** — every captured exception is ALSO framed as a real **Sentry
    envelope** and POSTed to `POST {dsn.base}/envelope/?sentry_key=…`, i.e. the
-   SAME `/v1/event` door the stream uses: `/v1/event/{projectId}/envelope/`.
+   SAME `/v1/event` address the stream uses: `/v1/event/{projectId}/envelope/`.
    This is the ONLY thing that reaches the error dashboard.
 
-   ONE door, from 0.3.29. Both planes are `/v1/event` — the error plane used to
+   ONE address, from 0.3.29. Both planes are `/v1/event` — the error plane used to
    be spelled `/v1/sentry/{projectId}/envelope/`, a second public address for the
    same wire. And it was written THREE times: `dsnForProduct` minted it,
    `parseDsn` threw the DSN's path away and rebuilt it as a literal, and
@@ -539,22 +539,22 @@ posting a bare JSON array of `{site, ts, type, …}` to a second collector behin
 identical path spelling — and 0.3.7 deleted both.
 
 This package no longer ships a script tag at all. 0.3.33 deleted `hz.js`: the
-hosted tag is the DOOR'S, served at `GET https://api.hanzo.ai/v1/event/tag.js`
+hosted tag is CLOUD'S, served at `GET https://api.hanzo.ai/v1/event/tag.js`
 from `hanzoai/cloud` (`apps/event/tag.go`, which splices this package's
 `src/anon.js` ahead of it so both distributions resolve ONE anonymous id). It
-versions with the door it posts to, which is what keeps a tag from drifting off
+versions with the address it posts to, which is what keeps a tag from drifting off
 its own wire. `data-key` is the attribute, `pk-…` the value, and no key means the
 tag installs nothing — a keyless beacon lands in a tenant its owner cannot read,
 so silence is the honest failure.
 
-`/v1/event.js` was that tag's address until the ingest door took the app's name.
+`/v1/event.js` was that tag's address until the ingest endpoint took the app's name.
 `.js` is part of a segment rather than a child of one, so the tag became a CHILD
 of `/v1/event`; the old sibling 404s and there is no alias behind it. Its config
-door moved the same way: `/v1/projects/tags`, never `/v1/tags`.
+endpoint moved the same way: `/v1/projects/tags`, never `/v1/tags`.
 
-So this package is the client for a surface that BUILDS, and the door's tag is
+So this package is the client for a surface that BUILDS, and the hosted tag is
 the client for one that does not. A page runs exactly one of them — both post
-pageviews to the same door, so a page carrying both counts every one twice.
+pageviews to the same endpoint, so a page carrying both counts every one twice.
 
 Entries: `.` (framework-agnostic: `createAnalytics`, `EVENTS`, `GOALS`,
 attribution + DSN/scrub helpers) and `./react` (`AnalyticsProvider`,

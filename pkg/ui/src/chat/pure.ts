@@ -7,7 +7,7 @@
 //   import { sends, ready, pinned, SLACK } from '@hanzo/ui/chat/pure'
 //
 // `@hanzo/ui/product/pure` re-exports all four, because none of them is a chat
-// rule and that is the door a non-chat surface looks behind.
+// rule and that is the entry point a non-chat surface imports them from.
 
 // Enter, and whether a draft may go. Read `sends` before writing another one:
 // the IME guard is the point.

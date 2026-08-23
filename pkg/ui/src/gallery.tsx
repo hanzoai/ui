@@ -325,7 +325,7 @@ export const Gallery = () => (
           palette's props it rendered `<Command>` bare, `onValueChange` never
           reached a host, and a two-pane palette was impossible — which is why
           hanzo.app rebuilt the dialog by hand. `shouldFilter` comes through the
-          same door, so typing must narrow the list. */}
+          same forwarding, so typing must narrow the list. */}
       <CommandDialog
         open
         defaultValue="alpha"
@@ -662,7 +662,7 @@ export const Gallery = () => (
             <Failure>Rate limited.</Failure>
           </Message>
           {/* A caller's own bubble material: a different fill is a different
-              rule, and this is the door chat needs for its `glass` turn. */}
+              rule, and `body` is what chat needs for its `glass` turn. */}
           <Message role="user" body={{ bg: '$color5', rounded: '$3' }}>
             restyled bubble
           </Message>

@@ -4,7 +4,7 @@
 //
 // These frames ride the error Event to POST /v1/event so the warehouse stores
 // WHERE a crash happened, not just that one did. Nothing here talks to Sentry:
-// the client has one door and one credential. The frame shape is deliberately the
+// the client has one entry point and one credential. The frame shape is deliberately the
 // conventional one (function/filename/abs_path/lineno/colno/in_app) because it is
 // what every stack tool already speaks — including a future grouper built over
 // the warehouse.

@@ -8,7 +8,7 @@
 //   await sentinel.updateIssue(items![0].id!, { status: 'resolved' })
 //
 // This is the READ side. Reporting an error is @hanzo/event's job, at the ingest
-// door its DSN names. Neither package imports the other.
+// endpoint its DSN names. Neither package imports the other.
 
 export { createSentinel } from './sentinel'
 export { SentinelError } from './error'

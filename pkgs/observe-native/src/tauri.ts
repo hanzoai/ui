@@ -3,7 +3,7 @@
 // A Tauri window renders a webview, so the DOM lives: bindTauri runs the
 // @hanzo/observe DOM engine to capture the in-webview UI exactly like the web, AND
 // forwards Tauri's native window/app events. Both arrive as canonical @hanzo/event
-// events at the ONE front door. Calling it outside a Tauri runtime is safe — the
+// events at the ONE entry point. Calling it outside a Tauri runtime is safe — the
 // native bridge simply no-ops (the DOM capture still runs in any webview).
 
 import { observe as domEngine, wireProps } from '@hanzo/observe'

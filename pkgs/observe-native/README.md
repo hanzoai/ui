@@ -3,7 +3,7 @@
 Native + desktop binding for [`@hanzo/observe`](../observe). Makes
 [`@hanzo/gui`](https://github.com/hanzoai/gui) (Tamagui) / React Native apps and
 Tauri desktop emit the **same canonical Events** as the web — same semantic
-hierarchy, same privacy gate, same ONE front door (`POST /v1/event` via
+hierarchy, same privacy gate, same ONE entry point (`POST /v1/event` via
 [`@hanzo/event`](../event)).
 
 Native has no DOM to walk, so the semantic hierarchy is composed from explicit

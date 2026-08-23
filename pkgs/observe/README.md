@@ -5,7 +5,7 @@ Default-on interaction capture for React, on top of [`@hanzo/event`](../event).
 Mount one provider and every click, input, navigation, and (opt-in) visibility is
 captured — each one **annotated with a semantic hierarchy** auto-derived from the
 tree (component path / role / `data-testid` / accessible name) — and emitted
-through `@hanzo/event` to the ONE front door (`POST /v1/event`). Privacy-gated
+through `@hanzo/event` to the ONE entry point (`POST /v1/event`). Privacy-gated
 (input redaction) and fail-soft by default. A live event-stream hook powers
 session playback.
 

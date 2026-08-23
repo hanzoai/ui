@@ -54,7 +54,7 @@ export type HanzoProps = {
    *   <Hanzo analytics={{ product: 'console' }}>     // named surface
    *
    * `true` is the whole setup: every click, form change, submit and route
-   * change inside this tree arrives on the ONE front door (`POST /v1/event`)
+   * change inside this tree arrives on the ONE entry point (`POST /v1/event`)
    * annotated with the component it happened on — `card/button[Save]` — with
    * input values withheld. Nothing to instrument at a call site.
    *

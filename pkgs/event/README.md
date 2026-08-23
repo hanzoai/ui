@@ -34,8 +34,8 @@ starve the other:
 ```
 
 That one line is the whole install, and it is the same line for a published site,
-hanzo.team and a customer's own page. The tag is served by the door that eats the
-events, so a caller allowlists ONE host and the tag can never drift from the wire
+hanzo.team and a customer's own page. The tag is served by the endpoint that eats
+the events, so a caller allowlists ONE host and the tag can never drift from the wire
 it posts to — `.js` is part of a segment rather than a child of one, so the tag
 sits UNDER `/v1/event` rather than beside it, and the old sibling `/v1/event.js`
 404s.
@@ -48,18 +48,18 @@ config from `/v1/projects/tags`, so a pixel is configured on the project rather
 than pasted into the page.
 
 > A bundled app should NOT add this tag. Both clients post pageviews to the same
-> door, so a page running `@hanzo/event` and the tag counts every pageview twice.
+> endpoint, so a page running `@hanzo/event` and the tag counts every pageview twice.
 > One surface, one client.
 
 > **`data-key` is a publishable `pk-`, and without one the tag is INERT.** A write
-> the door cannot attribute is refused (`401 ingest_key_required`) silently, so a
+> the edge cannot attribute is refused (`401 ingest_key_required`) silently, so a
 > keyless tag measures fine in the browser and files nothing. A project mints one
 > with itself: `POST /v1/projects`. A key that names no project is refused
-> `403 ingest_key_unknown` — the door fails closed rather than filing a write it
+> `403 ingest_key_unknown` — the edge fails closed rather than filing a write it
 > cannot attribute.
 
 This package is the client for a surface that **builds**. There is no second
-script-tag distribution here: one wire, one door, one tag.
+script-tag distribution here: one wire, one endpoint, one tag.
 
 It honours the same consent sources the bundled stack does: an explicit stored
 choice (`hz_consent`, the key a Hanzo consent banner writes) outranks the browser
@@ -72,8 +72,8 @@ refusals. A React app does not need this file — mount `<Hanzo analytics>` from
 > behind an identical path spelling, served by a second collector with its own
 > database. `POST api.hanzo.ai/v1/event {"batch":[]}` answered 200 while
 > `POST analytics.hanzo.ai/v1/event []` answered 204, and a client pointed at the
-> wrong host failed silently. Both the second door and the second collector are
-> deleted. One wire, one door, one client home — this package.
+> wrong host failed silently. Both the second endpoint and the second collector
+> are deleted. One wire, one endpoint, one client home — this package.
 
 - **Batched** with a size + interval flush, and **beacon-on-unload**
   (`sendBeacon` for cookie/publishable-key apps, `fetch(keepalive)` for token apps).

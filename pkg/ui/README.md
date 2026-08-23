@@ -125,7 +125,7 @@ import { Hanzo } from '@hanzo/ui'
 ```
 
 That is the entire wiring. Every click, form change, submit and route change
-inside the tree arrives on the ONE front door (`POST /v1/event`) annotated with
+inside the tree arrives on the ONE entry point (`POST /v1/event`) annotated with
 the component it happened on — no `onClick` handler anywhere reports anything,
 and no call site changes:
 
@@ -187,11 +187,11 @@ org with `POST /v1/keys {"type":"publishable"}`. Omit it and the client reads
 fleet already carries end to end (KMS holds `deploy/PUBLISHABLE_KEY`; the
 Dockerfile takes it as a build-arg and re-exports it with the `NEXT_PUBLIC_`
 prefix Next needs to inline it). A surface with no key reports only for whoever
-is signed in and silently drops every logged-out visitor — the door refuses an
+is signed in and silently drops every logged-out visitor — the edge refuses an
 unattributable write rather than filing it where its owner cannot read it.
 
 For a page with no build step at all, the same wire ships as a hosted tag, served
-by the door it posts to:
+by the address it posts to:
 `<script defer src="https://api.hanzo.ai/v1/event/tag.js" data-key="pk-…">`.
 It is one or the other — a page running both counts every pageview twice.
 

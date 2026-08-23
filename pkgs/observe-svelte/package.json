@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/observe-svelte",
   "version": "0.1.0",
-  "description": "Svelte adaptor for @hanzo/observe — default-on semantic interaction capture. A createObserver bootstrap, an `observe` action for stable component names, and a Svelte-store view of the live event stream for session playback. Emits through @hanzo/event to the ONE front door (POST /v1/event).",
+  "description": "Svelte adaptor for @hanzo/observe — default-on semantic interaction capture. A createObserver bootstrap, an `observe` action for stable component names, and a Svelte-store view of the live event stream for session playback. Emits through @hanzo/event to the ONE entry point (POST /v1/event).",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",

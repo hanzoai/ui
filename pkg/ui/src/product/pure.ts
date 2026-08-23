@@ -56,6 +56,6 @@ export {
 
 // Committing a field with the keyboard, and staying at the bottom of a
 // scroller. Neither is a chat rule — a SQL editor, a file explorer and a
-// command palette all ask the first one — so the general door is here.
+// command palette all ask the first one — so the general entry point is here.
 export { ready, sends, type Mods } from '../chat/send'
 export { pinned, SLACK, type Track } from '../chat/stick'

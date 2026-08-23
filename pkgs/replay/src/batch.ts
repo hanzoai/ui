@@ -10,7 +10,7 @@
 
 import type { ReplayIds, ReplayTransport, eventWithTime } from './types'
 
-export const REPLAY_PATH = '/v1/replay' // the ONE replay ingest door
+export const REPLAY_PATH = '/v1/replay' // the ONE replay ingest entry point
 export const DEFAULT_ENDPOINT = 'https://api.hanzo.ai'
 
 /** A publishable key — the only kind that may ride a URL. `sendBeacon` cannot set

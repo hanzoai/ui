@@ -11,8 +11,8 @@
 //
 // The explicit named blocks below are ALSO the manifest that
 // `scripts/gen-primitives.mjs` reads to emit the per-member `./primitives/*`
-// entrypoints, so root, `./primitives` and `./primitives/*` are three doors into
-// one room. Re-run after changing the surface:
+// entrypoints, so root, `./primitives` and `./primitives/*` are three entry
+// points onto the same surface. Re-run after changing the surface:
 //   node scripts/gen-primitives.mjs
 
 export {

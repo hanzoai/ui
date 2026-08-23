@@ -25,7 +25,7 @@ export interface ReplayBatch extends ReplayIds {
 }
 
 /** Where a serialized batch goes. Swappable so a test can read the exact bytes
- *  the door would receive. */
+ *  the endpoint would receive. */
 export interface ReplayTransport {
   send(
     url: string,

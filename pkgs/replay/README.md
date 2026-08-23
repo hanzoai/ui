@@ -21,7 +21,7 @@ They answer different questions and both ship.
 |---|---|---|
 | Captures | what the user **did** | what the user **saw** |
 | Produces | a readable semantic hierarchy | a DOM movie |
-| Door | `POST /v1/event` | `POST /v1/replay` |
+| Endpoint | `POST /v1/event` | `POST /v1/replay` |
 
 The player is rrweb-native, which is why this package is rrweb-native: raw
 `eventWithTime` events go on the wire, so playback needs no translation layer.

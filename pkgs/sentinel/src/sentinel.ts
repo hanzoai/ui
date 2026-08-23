@@ -33,7 +33,7 @@ export interface Config {
   /** token is the caller's session credential, sent as `Authorization: Bearer`.
    *  Omit it in a browser on a Hanzo origin and the session cookie carries the
    *  request instead. A publishable `pk-` key does not belong here: it can write
-   *  to the ingest door and read nothing, so the face refuses it. */
+   *  to the ingest endpoint and read nothing, so the face refuses it. */
   token?: string
   /** fetch replaces the global one — a test stub, or a wrapper that adds a
    *  timeout or an abort signal. */
