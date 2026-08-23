@@ -165,10 +165,10 @@
   font-feature-settings: 'tnum' 1;
 }
 
-/* Data/numeric face — Geist Mono + tabular figures for metric values, prices, IDs
+/* Data/numeric face — Zen Mono + tabular figures for metric values, prices, IDs
    and counts, so numbers read as precise, column-aligned data. */
 .hz-mono {
-  font-family: var(--font-mono, 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  font-family: var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
   letter-spacing: -0.01em;

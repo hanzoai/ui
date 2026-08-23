@@ -24,8 +24,8 @@ import { CopyButton } from '../product/CopyButton'
  * There is no mono family in the token set — only `$body` and `$heading` — so a
  * `fontFamily="$mono"` would not typecheck, and picking `$body` would set code
  * in a proportional face, where columns stop aligning and l/1/I stop being
- * distinguishable. The CSS variable is honoured when the host defines Geist
- * Mono and falls back to the platform's own monospace when it does not.
+ * distinguishable. The CSS variable is honoured when the host defines Zen Mono
+ * and falls back to the platform's own monospace when it does not.
  */
 const MONO = {
   fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)',
