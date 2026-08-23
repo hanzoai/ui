@@ -163,8 +163,8 @@ importers:
   pkg/appearance:
     dependencies:
       '@hanzo/design':
-        specifier: ^0.5.17
-        version: 0.5.17
+        specifier: ^0.5.21
+        version: 0.5.21
     devDependencies:
       '@types/react':
         specifier: 19.2.14
@@ -240,11 +240,11 @@ importers:
         specifier: '>=0.1.0'
         version: link:../../pkgs/canvas
       '@hanzo/design':
-        specifier: ^0.5.16
-        version: 0.5.17
+        specifier: ^0.5.21
+        version: 0.5.21
       '@hanzo/font':
-        specifier: ^1.8.0
-        version: 1.8.0(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
+        specifier: ^1.8.2
+        version: 1.8.2(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       '@hanzo/logo':
         specifier: ^1.0.13
         version: 1.0.20(react@19.2.4)
@@ -1962,12 +1962,12 @@ packages:
       '@hanzo/gui': '>=7.2.2'
       react: 19.2.4
 
-  '@hanzo/design@0.5.17':
-    resolution: {integrity: sha512-jkYV9Tcz8NC2g0aOetGvJTMoFA3Z4+m2Aet23Dzd5X78Zgk56rpYy0R5SMO0MMUrYYIyGSQ62332KG9S4q5aXQ==}
+  '@hanzo/design@0.5.21':
+    resolution: {integrity: sha512-E2g6DZCn2IUf2AQKqPMwlVV5fz2wvIpAagFRLx33gIsJfmpyubFnx0LINjFs7UoMI1ajnwSa73k7rPteVSemUw==}
     hasBin: true
 
-  '@hanzo/event@0.3.34':
-    resolution: {integrity: sha512-aXlsbbETCWaRi+bwTUfgVDuXtphAPOCvB5xRBy0CFY8b8WxOpaDlUCFc0wzWnltrbRhuklKfFyJd6EbST07Phw==}
+  '@hanzo/event@0.3.36':
+    resolution: {integrity: sha512-cOUlLMVRCqCG/i00Ho7PQkF4EIOkrjtRmd/RDDuPQIK1VhuPSzCHSyqVbM60WzF2J83s1952QVmOGHk2rTn0tQ==}
     peerDependencies:
       react: 19.2.4
     peerDependenciesMeta:
@@ -1977,8 +1977,8 @@ packages:
   '@hanzo/events@0.2.2':
     resolution: {integrity: sha512-jF800OFibLfnuEqMJUpTyLIs4fmezzXFKGGUPAHjK40FrTWsiAb4j3j1N5sbqBLAv5Ty7FA56dOo67Y+kUSqyA==}
 
-  '@hanzo/font@1.8.0':
-    resolution: {integrity: sha512-6xP+E37OMTciZqQXf5oTMXdBXYaruimdxyDMkR5wzqrlo5WDdzn4a/bnd+JXLNbdo8y0Y2Qn76zZ0dDjfKGvdQ==}
+  '@hanzo/font@1.8.2':
+    resolution: {integrity: sha512-Ag9gldPYdVoBn7sXIyXFf7GQtruW2hbs8UDwFPmr1JQX78V8n9wcFrwrRVySkepAb3DrJZ2VQ7Lj3gy1yRqq9Q==}
     peerDependencies:
       next: '>=13.2.0'
 
@@ -5042,8 +5042,8 @@ packages:
   '@types/d3-selection@3.0.11':
     resolution: {integrity: sha512-bhAXu23DJWsrI45xafYpkQ4NtcKMwWnAC/vKrd2l+nxMFuvOT3XMYTIj2opv8vq8AO5Yh7Qac/nSeP/3zjTK0w==}
 
-  '@types/d3-shape@3.1.8':
-    resolution: {integrity: sha512-lae0iWfcDeR7qt7rA88BNiqdvPS5pFVPpo5OfjElwNaT2yyekbM0C9vK+yqBqEmHr6lDkRnYNoTBYlAgJa7a4w==}
+  '@types/d3-shape@3.2.0':
+    resolution: {integrity: sha512-kVd74ta9eof3eJOvbNd1vGKS/XERRyQbT26Og63hIsvDO84cjD5gEOhsXf26w3FSoNlPVz84DOFcKv/oou+fMw==}
 
   '@types/d3-time@3.0.4':
     resolution: {integrity: sha512-yuzZug1nkAAaBlBBikKZTgzCeA+k1uy4ZFwWANOfKw5z5LRhV0gNA7gNkKm7HoK+HRN0wX3EkxGk0fpbWhmB7g==}
@@ -5411,15 +5411,13 @@ packages:
   '@vitest/utils@4.1.8':
     resolution: {integrity: sha512-uOJamYALNhfJ6iolExyQM40yIQwDqYnkKtQ5VCiSe17E33H0aQ/u+1GlRuz4LZBk6Mm3sg90G9hEbmEt37C1Zg==}
 
-  '@xmldom/xmldom@0.8.14':
-    resolution: {integrity: sha512-T4EDRUBVZYRldYApjEJiU0e1stYWaRAX7CuSnKzrpwdZKo53zGV8/pqfzV6FfwNl9YThD2OumQYvqtvjvgG7aQ==}
+  '@xmldom/xmldom@0.8.15':
+    resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
     engines: {node: '>=10.0.0'}
-    deprecated: this version has critical issues, please update to the latest version
 
-  '@xmldom/xmldom@0.9.11':
-    resolution: {integrity: sha512-tW8bcK3hsG0/uqSnNz6TK4BkcuZSezoU7DlnYssILmZDktPnSHHuDJJFM0AJv+13gz2r0iGdrj6qqKeUnxXEDg==}
+  '@xmldom/xmldom@0.9.12':
+    resolution: {integrity: sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==}
     engines: {node: '>=14.6'}
-    deprecated: this version has critical issues, please update to the latest version
 
   '@xstate/fsm@1.6.5':
     resolution: {integrity: sha512-b5o1I6aLNeYlU/3CPlj/Z91ybk1gUsKT+5NAJI+2W4UjvS5KLG28K9v5UvNoFVjHV8PajVZ00RH3vnjyQO7ZAw==}
@@ -5655,6 +5653,11 @@ packages:
 
   baseline-browser-mapping@2.11.17:
     resolution: {integrity: sha512-KAUDn1OSS0fmPlGO+NOUMRcOQ/b/shUBH3OgkG73mPgdf+JD/BQ6fHboGxNOxnUmlwcq+lLq3dTkayRPuSfXwg==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  baseline-browser-mapping@2.11.18:
+    resolution: {integrity: sha512-1iEmLEYSiE1SeBoAfPo/Mnx3PzfzHUkDK61ASkCpuk3YXugYLH5DYK1SzqV55F8FMI6s0F+/tCP7Polz1QRjxw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -10441,7 +10444,7 @@ snapshots:
 
   '@expo/plist@0.8.1':
     dependencies:
-      '@xmldom/xmldom': 0.8.14
+      '@xmldom/xmldom': 0.8.15
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
 
@@ -10557,9 +10560,9 @@ snapshots:
       '@hanzo/gui': 8.1.0(react-dom@19.2.4(react@19.2.4))(react-native@0.87.0(@babel/core@7.29.7)(@react-native/metro-config@0.87.0(@babel/core@7.29.7))(@types/react@19.2.14)(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@hanzo/design@0.5.17': {}
+  '@hanzo/design@0.5.21': {}
 
-  '@hanzo/event@0.3.34(react@19.2.4)':
+  '@hanzo/event@0.3.36(react@19.2.4)':
     dependencies:
       '@hanzo/events': 0.2.2
     optionalDependencies:
@@ -10567,7 +10570,7 @@ snapshots:
 
   '@hanzo/events@0.2.2': {}
 
-  '@hanzo/font@1.8.0(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))':
+  '@hanzo/font@1.8.2(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))':
     dependencies:
       next: 16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@25.9.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
@@ -10731,7 +10734,7 @@ snapshots:
 
   '@hanzo/observe@0.1.7(react@19.2.4)':
     dependencies:
-      '@hanzo/event': 0.3.34(react@19.2.4)
+      '@hanzo/event': 0.3.36(react@19.2.4)
     optionalDependencies:
       react: 19.2.4
 
@@ -13649,7 +13652,7 @@ snapshots:
 
   '@hanzogui/telemetry@8.1.0(react@19.2.4)':
     dependencies:
-      '@hanzo/event': 0.3.34(react@19.2.4)
+      '@hanzo/event': 0.3.36(react@19.2.4)
       '@hanzo/observe': 0.1.7(react@19.2.4)
       react: 19.2.4
 
@@ -15906,7 +15909,7 @@ snapshots:
 
   '@types/d3-selection@3.0.11': {}
 
-  '@types/d3-shape@3.1.8':
+  '@types/d3-shape@3.2.0':
     dependencies:
       '@types/d3-path': 3.1.1
 
@@ -16270,9 +16273,9 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@xmldom/xmldom@0.8.14': {}
+  '@xmldom/xmldom@0.8.15': {}
 
-  '@xmldom/xmldom@0.9.11': {}
+  '@xmldom/xmldom@0.9.12': {}
 
   '@xstate/fsm@1.6.5': {}
 
@@ -16614,6 +16617,8 @@ snapshots:
 
   baseline-browser-mapping@2.11.17: {}
 
+  baseline-browser-mapping@2.11.18: {}
+
   bidi-js@1.0.3:
     dependencies:
       require-from-string: 2.0.2
@@ -16663,7 +16668,7 @@ snapshots:
 
   browserslist@4.28.8:
     dependencies:
-      baseline-browser-mapping: 2.11.17
+      baseline-browser-mapping: 2.11.18
       caniuse-lite: 1.0.30001809
       electron-to-chromium: 1.5.412
       node-releases: 2.0.53
@@ -19210,7 +19215,7 @@ snapshots:
 
   plist@3.1.1:
     dependencies:
-      '@xmldom/xmldom': 0.9.11
+      '@xmldom/xmldom': 0.9.12
       base64-js: 1.5.1
       xmlbuilder: 15.1.1
 
@@ -20412,7 +20417,7 @@ snapshots:
       '@types/d3-ease': 3.0.2
       '@types/d3-interpolate': 3.0.4
       '@types/d3-scale': 4.0.9
-      '@types/d3-shape': 3.1.8
+      '@types/d3-shape': 3.2.0
       '@types/d3-time': 3.0.4
       '@types/d3-timer': 3.0.2
       d3-array: 3.2.4
