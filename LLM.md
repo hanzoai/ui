@@ -145,15 +145,20 @@ element that has a text child and a zero-height box.
   `/* @__PURE__ */` and nothing assigns `displayName`, so importing one symbol
   never drags a neighbour in. A one-symbol import bundles ~4.7KB against ~29KB
   for the whole barrel.
-- Utility classes carry `hz-`. This sheet used to claim `.row`, `.skeleton`,
-  `.fade`, `.mono`, `.drag` and `.tnum` at the document level, in a package an
-  app imports once at its root; an app with its own `.row` got no warning, it got
-  whichever rule the cascade preferred. The unprefixed selectors survive as
-  aliases on the same rules and are **REMOVED IN 8.2.0** (8.1.0 was the target and went out carrying additions instead).
-  Nothing here emits them — `styles.test.tsx` scans every `className=` literal in
-  `src/` and fails on an unprefixed one. `glass`/`elevation-N` are the one family
-  still bare: they are an API VALUE (`glass(3).className`), not a typed literal,
-  so they move on their own change.
+- Utility classes carry `hz-`, and **as of 8.3.0 that is the only spelling**.
+  This sheet claimed twelve bare names at the document level — `collapse`, `drag`,
+  `fade`, `fade-up`, `menu-in`, `mono`, `paper`, `row`, `row-in`, `skeleton`,
+  `slide`, `tnum` — in a package an app imports once at its root; an app with its
+  own `.row` got no warning, it got whichever rule the cascade preferred. Each was
+  a second selector on a rule the `hz-` form already carried, so removing them
+  changed 21 selectors and no declarations.
+  Nothing here emitted them — `styles.test.tsx` scans every `className=` literal in
+  `src/` and fails on an unprefixed one, which is why this was a promise to
+  outside callers rather than a migration of our own. Two earlier releases named
+  themselves as the one that would do it and shipped carrying them anyway; a
+  removal scheduled in prose is not scheduled. `glass`/`elevation-N` are the one
+  family still bare: they are an API VALUE (`glass(3).className`), not a typed
+  literal, so they move on their own change.
 - A prop must actually arrive. gui is not the DOM, and two measured cases prove
   it in both directions: **`name` is gui's OWN prop** (it names a styled component
   and a theme) and is consumed before it reaches the element, so a `name` on a
@@ -531,13 +536,25 @@ unaffected); assert `client.errorPlaneEnabled` if you need to know.
 
 There is NO third plane. Web analytics used to be one — `analytics.hanzo.ai/hz.js`
 posting a bare JSON array of `{site, ts, type, …}` to a second collector behind an
-identical path spelling — and 0.3.7 deleted both. `hz.js` now lives in this package
-as the script-tag DISTRIBUTION of this client: same `WireEvent`, same
-`{ batch: [ … ] }`, same `POST {host}/v1/event`. Point everything at the API host.
+identical path spelling — and 0.3.7 deleted both.
 
-It could not authenticate until 0.3.12: it sent no `Authorization` and no
-`?ingest_key=`, so a keyed static surface's writes were unattributed, the door
-refused them (`401`), and nothing in the page said so. `data-ingest-key="pk-…"`.
+This package no longer ships a script tag at all. 0.3.33 deleted `hz.js`: the
+hosted tag is the DOOR'S, served at `GET https://api.hanzo.ai/v1/event/tag.js`
+from `hanzoai/cloud` (`apps/event/tag.go`, which splices this package's
+`src/anon.js` ahead of it so both distributions resolve ONE anonymous id). It
+versions with the door it posts to, which is what keeps a tag from drifting off
+its own wire. `data-key` is the attribute, `pk-…` the value, and no key means the
+tag installs nothing — a keyless beacon lands in a tenant its owner cannot read,
+so silence is the honest failure.
+
+`/v1/event.js` was that tag's address until the ingest door took the app's name.
+`.js` is part of a segment rather than a child of one, so the tag became a CHILD
+of `/v1/event`; the old sibling 404s and there is no alias behind it. Its config
+door moved the same way: `/v1/projects/tags`, never `/v1/tags`.
+
+So this package is the client for a surface that BUILDS, and the door's tag is
+the client for one that does not. A page runs exactly one of them — both post
+pageviews to the same door, so a page carrying both counts every one twice.
 
 Entries: `.` (framework-agnostic: `createAnalytics`, `EVENTS`, `GOALS`,
 attribution + DSN/scrub helpers) and `./react` (`AnalyticsProvider`,
