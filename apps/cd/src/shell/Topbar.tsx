@@ -2,7 +2,7 @@
  * The Hanzo CD topbar — the shared shell chrome for the dedicated dashboard: the
  * small Hanzo mark + wordmark (top-left), the environment scope switcher (the CD
  * "project" dimension — main/test/dev, the operator namespaces), a refresh, and
- * sign-out. Lean + self-contained (dark, Geist) so the static SPA has no heavy
+ * sign-out. Lean + self-contained (dark, Zen) so the static SPA has no heavy
  * shell dependency; the org/project↔IAM switcher lights up when /v1/iam is routed
  * on cd.hanzo.ai (today the SuperAdmin cookie sees the whole fleet).
  */

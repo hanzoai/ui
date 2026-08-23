@@ -1,13 +1,13 @@
 /**
  * Hanzo typography tokens.
  *
- * Primary font: Geist Sans (--font-sans fallback chain from Hanzo UI CSS).
- * Mono font: Geist Mono.
+ * Primary font: Zen (--font-sans fallback chain from Hanzo UI CSS).
+ * Mono font: Zen Mono.
  */
 
 export const fontFamily = {
-  sans: "'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-  mono: "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  sans: "'Zen', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  mono: "'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 } as const
 
 export const fontSize = {

@@ -24,21 +24,23 @@ import { createGui, type CreateGuiProps } from '@hanzo/gui'
 // onto the same numbers for the component layer. Change a value here, the whole
 // product moves. Adding a fourth spelling of a size is the thing to refuse.
 //
-// Canonical face: Geist Sans for UI, Geist Mono for anything numeric/code/id
-// (`.mono`). The host self-hosts both faces, so the token READS the host's
-// binding (`--font-sans`/`--font-mono`) rather than restating a stack of its
-// own — restating it is how a host that loads Geist through next/font lost the
+// Canonical face: Zen for UI, Zen Mono for anything numeric/code/id (`.mono`).
+// The constant names the ROLE, not the face — theme.css records why, and a
+// constant named after a family goes stale the moment the family moves. The
+// host self-hosts both faces, so the token READS the host's binding
+// (`--font-sans`/`--font-mono`) rather than restating a stack of its own —
+// restating it is how a host that loads its family through next/font lost the
 // metric-matched fallback on every element gui styles. The literal survives as
 // the var's fallback, for a host that mounts no token layer.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const GEIST = "var(--font-sans, 'Geist', system-ui, -apple-system, sans-serif)"
+const SANS = "var(--font-sans, 'Zen', system-ui, -apple-system, sans-serif)"
 
 /** The numeric/code/id face. The same stack `.mono` sets in styles/motion.css —
  *  the class and the `$mono` token have to resolve to the same face or the same
  *  number renders in two different fonts depending on which one a component
  *  reached for. */
-const GEIST_MONO = "var(--font-mono, 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
+const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
 
 /** Type — the same SIX sizes, now DEFERRED to @hanzo/design rather than restated.
  *  $1 label · $2 nav + dense body · $3 base · $4/$5 emphasis · $6 section head ·
@@ -631,14 +633,14 @@ const base = {
     ...defaultConfig.fonts,
     body: {
       ...defaultConfig.fonts.body,
-      family: GEIST,
+      family: SANS,
       size: asSizes(FONT_SIZE),
       lineHeight: asSizes(LINE_HEIGHT),
       letterSpacing: asSizes(TRACKING),
     },
     heading: {
       ...defaultConfig.fonts.heading,
-      family: GEIST,
+      family: SANS,
       size: asSizes(FONT_SIZE),
       lineHeight: asSizes(LINE_HEIGHT),
       letterSpacing: asSizes(TRACKING),
@@ -648,7 +650,7 @@ const base = {
     // simply not monospace. 260 `fontFamily="$mono"` call sites across 74 files
     // in hanzo.app were dead on that alone. A missing token has to be a defined
     // token, not a silent no-op, so it is defined.
-    mono: { ...defaultConfig.fonts.body, family: GEIST_MONO, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
+    mono: { ...defaultConfig.fonts.body, family: MONO, size: asSizes(FONT_SIZE), lineHeight: asSizes(LINE_HEIGHT) },
   },
 }
 

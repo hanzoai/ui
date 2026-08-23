@@ -1,6 +1,6 @@
 /* Hanzo CD — app chrome. The @hanzo/gitops components bring their OWN scoped CSS
    (GitopsStyles + THEME_VARS); this is only the shell + page shell, dark-first,
-   Geist. Mobile-first: nothing scrolls the body horizontally. */
+   Zen. Mobile-first: nothing scrolls the body horizontally. */
 
 :root {
   color-scheme: dark;
@@ -13,8 +13,8 @@
   --cd-fg-muted: #8b949e;
   --cd-fg-strong: #f0f6fc;
   --cd-accent: #2f81f7;
-  --cd-sans: "Geist", "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --cd-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --cd-sans: "Zen", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cd-mono: "Zen Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 * {

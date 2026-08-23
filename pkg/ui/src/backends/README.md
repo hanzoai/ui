@@ -10,8 +10,8 @@ src/
   core/                design core, runtime-free
     cn.ts              class-name composer (clsx)
     tokens.ts          re-export of @hanzo/design (the token source of truth)
-    fonts.ts           Geist Sans / Geist Mono family variables
-  theme.css            self-contained token vars + Geist (the identity)
+    fonts.ts           Zen / Zen Mono family variables
+  theme.css            self-contained token vars + Zen (the identity)
   backends/gui/        the component surface — index.ts is its manifest
   product/             the product/app layer, same substrate (@hanzo/ui/product)
   primitives/          GENERATED per-member entrypoints (see below)
@@ -21,7 +21,7 @@ src/
 
 - Style through gui props and theme tokens (`$background`, `$color12`,
   `$borderColor`) — never a utility class string, never a hard-coded font
-  family. Typography inherits Geist through the token config.
+  family. Typography inherits Zen through the token config.
 - Touch targets meet the 44px floor via `hitSlop`, never via padding: visual
   density and hit area are two concerns.
 - Behaviour (focus management, portalling, keyboard, a11y) comes from the

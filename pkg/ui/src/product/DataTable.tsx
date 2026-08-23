@@ -7,7 +7,7 @@
  * renderer. Built on Hanzo GUI Stacks (shorthand style props per the v5 config)
  * so it adapts across platforms. Loading and empty states are first-class:
  * loading paints SKELETON ROWS in the real column layout (an honest "loading",
- * never a spinner void); numeric columns opt into right-aligned Geist Mono
+ * never a spinner void); numeric columns opt into right-aligned Zen Mono
  * tabular figures so amounts/counts/IDs read as precise, column-aligned data.
  *
  * SORTING is opt-in and caller-owned: a column marks itself `sortable`, the caller
@@ -31,7 +31,7 @@ export type Column<T> = {
   width?: number
   /** Horizontal alignment — `right` for numeric/amount columns. */
   align?: 'left' | 'right'
-  /** Typeset the default cell + header as Geist Mono tabular (counts, amounts, IDs). */
+  /** Typeset the default cell + header as Zen Mono tabular (counts, amounts, IDs). */
   mono?: boolean
   /** Clickable header that reports `onSortChange(key)` (needs both table props). */
   sortable?: boolean

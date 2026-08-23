@@ -1,7 +1,7 @@
 // @hanzo/ui — design core.
 //
 // Backend-agnostic foundation every backend draws from: the class-name composer,
-// the design tokens (from @hanzo/design), and the Geist typography variables.
+// the design tokens (from @hanzo/design), and the Zen typography variables.
 //
 // ESM-ONLY, and so is `@hanzo/ui/tokens`: @hanzo/design is `"type": "module"`
 // with no `require` condition, so a CJS build of this subpath cannot load it.
