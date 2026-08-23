@@ -28,7 +28,7 @@ import { CopyButton } from '../product/CopyButton'
  * Mono and falls back to the platform's own monospace when it does not.
  */
 const MONO = {
-  fontFamily: 'var(--font-geist-mono, ui-monospace, SFMono-Regular, Menlo, monospace)',
+  fontFamily: 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace)',
 } as const
 
 export interface CodeProps extends Omit<ComponentProps<typeof YStack>, 'children'> {
