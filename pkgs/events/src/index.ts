@@ -10,7 +10,7 @@
  * there is only one definition, here.
  *
  * The catalog also ships as `catalog.json` beside the built output, because the
- * ingest door is Go and cannot import TypeScript. One source, two readers.
+ * ingest endpoint is Go and cannot import TypeScript. One source, two readers.
  */
 
 export { EVENTS, PAGEVIEW, EXCEPTION } from './names.js'
@@ -34,7 +34,7 @@ export const RESERVED: readonly string[] = Object.freeze([PAGEVIEW, EXCEPTION])
 /**
  * Is this a name the vocabulary knows?
  *
- * The ingest door RECORDS an unknown event rather than refusing it, and flags
+ * The ingest endpoint RECORDS an unknown event rather than refusing it, and flags
  * it. Refusing would mean a surface shipping a new event before the catalog
  * does loses the data outright, and the data is the thing you cannot recover;
  * a flag you can act on later. So this answers a question about the catalog,

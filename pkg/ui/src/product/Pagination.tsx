@@ -6,7 +6,7 @@
  * The RULE it pages by — a fixed-width run of page numbers with ellipses
  * standing in for what was skipped — is `pages`, and it lives in `./pages`
  * because it needs no browser. Re-exported here so the product barrel still
- * carries it; `@hanzo/ui/product/pure` is the door that costs no gui runtime.
+ * carries it; `@hanzo/ui/product/pure` is the entry point that costs no gui runtime.
  */
 import { Button, Text, XStack } from '@hanzo/gui'
 import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'

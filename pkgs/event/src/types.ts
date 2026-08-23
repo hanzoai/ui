@@ -100,7 +100,7 @@ export interface Cohort {
 
 /** One event as sent on the wire — the canonical Hanzo Cloud event. Maps 1:1 to
  *  the cloud `CaptureEvent` (camelCase JSON keys); a batch of these is POSTed to
- *  the ONE front door `/v1/event` as `{ batch: [WireEvent, …] }`. tenant/org is
+ *  the ONE entry point `/v1/event` as `{ batch: [WireEvent, …] }`. tenant/org is
  *  NEVER a field here — the server stamps it from the validated session/key. */
 export interface WireEvent {
   messageId: string
@@ -168,7 +168,7 @@ export interface AnalyticsConfig {
    *  (the client then relies on same-origin credentials). */
   getToken?: () => string | undefined | null
   /** Publishable ingest key (pk-…). When set, the client attributes writes to the
-   *  ONE front door `/v1/event` with this key instead of a bearer/cookie: it rides
+   *  ONE entry point `/v1/event` with this key instead of a bearer/cookie: it rides
    *  Authorization: Bearer pk-… on fetch and ?ingest_key=pk-… on a headerless
    *  page-unload beacon, so ANONYMOUS traffic is attributed and unload beacons work
    *  without a bearer. The key is write-only — it attributes a write and never mints
@@ -184,7 +184,7 @@ export interface AnalyticsConfig {
    *
    *  A surface with no key at all still reports for whoever is SIGNED IN (the
    *  session credential attributes them), and drops every logged-out visitor: the
-   *  door refuses an unattributable write rather than filing it where its owner
+   *  edge refuses an unattributable write rather than filing it where its owner
    *  cannot read it. That failure is invisible from the page, which is why the key
    *  belongs in the env next to the DSN and not in a checklist.
    *

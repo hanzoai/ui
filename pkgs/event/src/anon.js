@@ -7,15 +7,15 @@
  *
  * The two call sites:
  *   1. src/storage.ts        — the bundled npm client; IMPORTS this file.
- *   2. hanzoai/cloud apps/analytics/tag.js — the tag the door hosts at
+ *   2. hanzoai/cloud apps/analytics/tag.js — the tag served at
  *      /v1/event.js; vendors this file and its tag.go serves the marked region
- *      with the tag as one asset, so the door holds no second copy either.
+ *      with the tag as one asset, so cloud holds no second copy either.
  *
  * (2) has no bundler and cannot import anything, which is why the chain lives in a
  * file that is plain ES5 rather than in a .ts: the region between the BEGIN and END
  * markers is COPIED VERBATIM. Keep it ES5, dependency-free, `hz`-prefixed (it is
  * spliced into other people's scopes) and unformatted — a reformat here is a diff
- * against the vendored copy. After editing, resync the door:
+ * against the vendored copy. After editing, resync that copy:
  *
  *   curl -fsSL https://unpkg.com/@hanzo/event/src/anon.js -o apps/analytics/anon.js
  */

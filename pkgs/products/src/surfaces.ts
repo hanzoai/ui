@@ -42,7 +42,7 @@ export interface Surface {
   id: SurfaceId
   /** Menu label. */
   label: string
-  /** Absolute front-door URL. */
+  /** Absolute entry-point URL. */
   href: string
   /** The domain, shown as the tile subtitle. */
   domain: string

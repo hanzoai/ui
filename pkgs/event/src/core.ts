@@ -2,7 +2,7 @@
 // planes, sharing one session and one identity:
 //
 //   1. EVENT STREAM — buffered pageview/event/identify/group, flushed as ONE
-//      batch to the Hanzo Cloud front door:
+//      batch to the Hanzo Cloud entry point:
 //        POST {host}/v1/event   body: { batch: [Event, …] }  -> { accepted, dropped }
 //      Cloud resolves the tenant server-side (validated session, or the signed
 //      publishable key) and stamps it; the client NEVER sends the org.
@@ -17,20 +17,20 @@
 // GET /v1/errors) — that is product signal, not error tracking. There is no
 // server-side fan-out from /v1/event into Sentry; without the envelope below,
 // nothing ever reaches sentry.hanzo.ai. An earlier revision of this file claimed
-// the one door was "lensed server-side into … error tracking (sentry)". It was
+// the one entry point was "lensed server-side into … error tracking (sentry)". It was
 // wrong, and it silently cost the fleet all of its error telemetry.
 //
 // The error plane is inert (fail-safe) when no DSN is configured: nothing is
 // sent, nothing throws, and the event stream is unaffected.
 //
-// Auth is orthogonal — the SAME body to the SAME door, differing only in how the
+// Auth is orthogonal — the SAME body to the SAME endpoint, differing only in how the
 // caller proves its tenant:
 //
 //   • cookie/session app (host:'')  — same-origin credentials ride the request.
 //   • bearer app (getToken)         — Authorization: Bearer <jwt>.
 //   • publishable-key app (ingestKey: 'pk-…') — ?ingest_key=pk-… on the query, on
 //     the fetch and the beacon alike, with a text/plain body. Write-only and safe
-//     to ship in a bundle; the door resolves it to an org server-side. The query
+//     to ship in a bundle; the endpoint resolves it to an org server-side. The query
 //     is the carrier neither send needs a header for, which is what keeps both
 //     CORS-simple and therefore sendable from a customer's own origin.
 //
@@ -81,13 +81,13 @@ import { VERSION } from './version'
 
 export { VERSION }
 
-const EVENT_PATH = '/v1/event' // the ONE canonical ingestion front door
+const EVENT_PATH = '/v1/event' // the ONE canonical ingestion entry point
 const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
 const ENVELOPE_CONTENT_TYPE = 'application/x-sentry-envelope'
 // The beacon body's type. text/plain is CORS-SAFELISTED, which is the whole
 // property: a safelisted type makes the POST a SIMPLE request, and a simple
 // request needs no preflight. An unloading document does not get a second round
-// trip, so cross-origin a preflighted beacon is never sent at all. The door reads
+// trip, so cross-origin a preflighted beacon is never sent at all. The endpoint reads
 // the raw body and dispatches on its first non-space byte, so the type names the
 // CORS class and nothing else.
 const BEACON_CONTENT_TYPE = 'text/plain'
@@ -292,10 +292,10 @@ export class Analytics {
       // so before this the only way to report was to commit a key literal, and the
       // fleet grew one copy per site of a value with a single source.
       //
-      // A surface no brand claims still has no key, and the door REFUSES an
+      // A surface no brand claims still has no key, and the edge REFUSES an
       // unattributed event (401 `ingest_key_required`) — the reserved `$public`
       // tenant that once caught keyless beacons is retired, and anonymous ingest is
-      // refused at every door on every brand host. So there is no quiet fallback to
+      // refused at every edge on every brand host. So there is no quiet fallback to
       // rely on: an event lands in the org a credential names, or it does not land.
       ingestKey:
         config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY') ?? keyForPage(),
@@ -497,7 +497,7 @@ export class Analytics {
   }
 
   /** flush drains the buffer to the server as ONE batch through the ONE ingest
-   *  front door POST /v1/event, body { batch: [Event…] }. beacon=true selects the
+   *  endpoint POST /v1/event, body { batch: [Event…] }. beacon=true selects the
    *  unload-safe transport. Auth is orthogonal to the wire:
    *
    *    • publishable key set → rides ?ingest_key=pk-… on both sends, keeping each
@@ -513,7 +513,7 @@ export class Analytics {
     this.queue = []
     this.clearTimer()
 
-    // A publishable key and a bearer JWT are mutually exclusive doors, and the
+    // A publishable key and a bearer JWT are mutually exclusive credentials, and the
     // BEARER WINS. It names a real principal and resolves to THAT person's org;
     // a pk- names one org for everybody holding it. So the key is what attributes
     // a visitor nobody has vouched for, and it must never displace someone who
@@ -672,7 +672,7 @@ export class Analytics {
 //
 // A page has ONE event stream per (host, product): one queue, one anon id, one
 // credential. Two clients on it split the batch and double the pageview, and
-// the half built by the caller that had no key is refused at the door — so the
+// the half built by the caller that had no key is refused at the edge — so the
 // same page is both over- and under-counted, and neither number says so.
 //
 // Two callers ask for that stream on any real page and both are right to: the

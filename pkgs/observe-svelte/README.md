@@ -1,7 +1,7 @@
 # @hanzo/observe-svelte
 
 Svelte adaptor for [`@hanzo/observe`](../observe). Same engine, same semantic
-capture, same ONE front door (`POST /v1/event` via [`@hanzo/event`](../event)) —
+capture, same ONE entry point (`POST /v1/event` via [`@hanzo/event`](../event)) —
 bound to Svelte idioms: a bootstrap, an action, and a store.
 
 ## Bootstrap

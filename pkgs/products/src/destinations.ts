@@ -16,7 +16,7 @@ export const ORIGIN = {
   root: "https://hanzo.ai",
   /** The one documentation site. */
   docs: "https://docs.hanzo.ai",
-  /** The AI cloud property — also the developer console's front door. */
+  /** The AI cloud property — also the developer console's entry point. */
   cloud: "https://cloud.hanzo.ai",
   /** The launcher's console surface. */
   console: "https://console.hanzo.ai",
@@ -63,7 +63,7 @@ export const DESTINATIONS = {
   docs: ORIGIN.docs,
   /** The API reference. */
   apiReference: `${ORIGIN.docs}/reference`,
-  /** The developer console — Cloud's front door (see `family.test.ts`). */
+  /** The developer console — Cloud's entry point (see `family.test.ts`). */
   console: ORIGIN.cloud,
   /** The status page. */
   status: ORIGIN.status,

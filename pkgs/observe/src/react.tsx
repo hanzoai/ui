@@ -12,7 +12,7 @@
 //
 // ObserveProvider reads the @hanzo/event client from context (or takes an explicit
 // one), installs the engine, and streams every captured Interaction through it to
-// the ONE front door. useEventStream gives a live view of the same stream for a
+// the ONE entry point. useEventStream gives a live view of the same stream for a
 // session-playback UI. Nothing here throws into the app.
 
 import {

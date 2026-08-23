@@ -1,7 +1,7 @@
 /**
  * Emit catalog.json — the same catalog, for a reader that is not TypeScript.
  *
- * The ingest door and the funnel lens are Go. They need to answer "is this name
+ * The ingest endpoint and the funnel lens are Go. They need to answer "is this name
  * in the vocabulary" and "what are this funnel's steps" without a second copy of
  * either, so the build writes the data out once and Go reads that. Generated,
  * never edited.

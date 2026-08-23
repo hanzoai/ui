@@ -7,7 +7,7 @@
 //
 // The behavioural contract is proven where the chain runs: storage.test.ts. This
 // file proves the region is SPLICEABLE and that it ships, which is what lets the
-// door vendor it instead of writing a second one.
+// cloud vendor it instead of writing a second one.
 
 import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
@@ -33,7 +33,7 @@ const region = (src: string, what: string): string => src.slice(...span(src, wha
 const ANON = read('./anon.js')
 
 describe('the shared anon chain', () => {
-  it('is marked, so the door can splice exactly it', () => {
+  it('is marked, so cloud can splice exactly it', () => {
     // cloud's tag.go slices between these markers and PANICS if it cannot find
     // them, so losing a marker ships a tag whose every event carries an undefined
     // identity. To change the chain, edit this file; never patch a copy.
@@ -50,7 +50,7 @@ describe('the shared anon chain', () => {
     }
   })
 
-  it('ships in the published package, for the door to vendor', () => {
+  it('ships in the published package, for cloud to vendor', () => {
     // hanzoai/cloud vendors this file whole and its tag.go serves the region with
     // the tag as one asset, so the second call site holds no copy of its own.
     const pkg = JSON.parse(read('../package.json')) as { files: string[] }

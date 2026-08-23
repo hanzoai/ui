@@ -94,7 +94,7 @@ describe('the exports map', () => {
     expect((pkg.exports['./css'] as Record<string, string>).require).toBe('./dist/core/css.cjs')
   })
 
-  it('gives the Next theme binding a door of its own', () => {
+  it('gives the Next theme binding an entry point of its own', () => {
     expect(pkg.exports['./product/theme-toggle-next']).toBeTruthy()
   })
 

@@ -68,7 +68,7 @@ class FakeTransport implements Transport {
 }
 
 let tx: FakeTransport
-// Default to same-origin (host:'') so path assertions read the bare /v1/event door;
+// Default to same-origin (host:'') so path assertions read the bare /v1/event path;
 // tests that care about the edge host pass it explicitly.
 // `test-app` is deliberately NOT a product in the DSN registry (src/dsn.ts), so
 // the default client here has no error plane and these tests exercise the client
@@ -91,7 +91,7 @@ describe('Analytics capture', () => {
     a.flush()
     expect(tx.sent).toHaveLength(1)
     expect(tx.sent[0].url).toBe('/v1/event')
-    // The body is the canonical { batch: [...] } envelope, exactly one door.
+    // The body is the canonical { batch: [...] } envelope, exactly one entry point.
     const parsed = JSON.parse(tx.sent[0].raw)
     expect(Array.isArray(parsed.batch)).toBe(true)
     const e = tx.all[0]
@@ -110,7 +110,7 @@ describe('Analytics capture', () => {
     a.identify('user-9')
     a.capture(EVENTS.ORDER_COMPLETED, { kind: 'plan' }, { productId: 'plan_pro', revenue: 49, quantity: 1, currency: 'usd' })
     a.flush()
-    // ONE POST, ONE door, ONE batched envelope.
+    // ONE POST, ONE endpoint, ONE batched envelope.
     expect(tx.sent).toHaveLength(1)
     expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/event')
     const parsed = JSON.parse(tx.sent[0].raw) as { batch: WireEvent[] }
@@ -358,7 +358,7 @@ describe('Analytics capture', () => {
 
   it('reads the ingest key from the build env when config omits it', () => {
     // The failure this closes is silent: a surface with no key attributes nothing
-    // for a logged-out visitor, the door refuses the write, and the page shows no
+    // for a logged-out visitor, the edge refuses the write, and the page shows no
     // sign of it. The key must resolve from the env exactly as the DSN does.
     process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-from-env'
     try {
@@ -515,10 +515,10 @@ describe('Event error capture', () => {
     expect(p.$exception_fingerprint).not.toBe('forged')
   })
 
-  it('an error is still an event on the ONE stream — same /v1/event door + product', () => {
+  it('an error is still an event on the ONE stream — same /v1/event endpoint + product', () => {
     const a = mk({ host: 'https://api.hanzo.ai' })
     a.captureError(new Error('x'))
-    // Same batched door as any other event — one pipe, not a second SDK.
+    // Same batched endpoint as any other event — one pipe, not a second SDK.
     expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/event')
     expect(tx.sent[0].raw.startsWith('{"batch":')).toBe(true)
     expect(tx.all[0].product).toBe('test-app')
