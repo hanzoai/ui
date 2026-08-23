@@ -458,6 +458,24 @@ export const Gallery = () => (
         <Card><CardContent>wide</CardContent></Card>
       </Grid>
 
+      {/* The other two spellings of a track list, so all four reach the
+          generator and the consumer test. A LIST is one entry per track — a
+          bare number in it is px, anything else is already a track size — and a
+          STRING is a written track list, passed through untouched so the prop
+          never becomes the reason to drop out of the component. Neither can be
+          inferred from the count form: `list()` takes a different branch for
+          each, and a branch nothing renders is a branch nothing measures. */}
+      <Grid columns={['2fr', '1fr']} gap="$3" style={{ width: '100%' }} data-grid="list">
+        <Card><CardContent>2fr</CardContent></Card>
+        <Card><CardContent>1fr</CardContent></Card>
+      </Grid>
+
+      <Grid columns="repeat(3, 1fr)" gap="$3" style={{ width: '100%' }} data-grid="written">
+        <Card><CardContent>a</CardContent></Card>
+        <Card><CardContent>b</CardContent></Card>
+        <Card><CardContent>c</CardContent></Card>
+      </Grid>
+
       {/* Fixed count, and one child holds an unbreakable string. `minmax(0,1fr)`
           is the only reason this row stays even. */}
       {/* The wrapper clips: in the HEALTHY case the nowrap span is wider than its
@@ -487,7 +505,12 @@ export const Gallery = () => (
           measurement is that its box really is two tracks plus one gap. */}
       <Grid columns={3} rows={2} gap="$3" style={{ width: '100%' }} data-grid="cells">
         <Cell col={2} data-cell="span2"><Card><CardContent>spans two</CardContent></Card></Cell>
+        {/* Down the page, which is the axis `rows` names and the one nothing here
+            exercised: `place()` is one function for both, but `gridRow` and
+            `gridColumn` are two properties and only one of them was ever set. */}
+        <Cell row={2} data-cell="rows2"><Card><CardContent>spans two rows</CardContent></Card></Cell>
         <Cell data-cell="plain"><Card><CardContent>one</CardContent></Card></Cell>
+        <Cell row="2 / 4" data-cell="rowplaced"><Card><CardContent>placed down</CardContent></Card></Cell>
         <Cell col="1 / -1" data-cell="full"><Card><CardContent>the whole row</CardContent></Card></Cell>
       </Grid>
 
