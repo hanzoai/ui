@@ -13,7 +13,7 @@
  * `Popover hoverable`, which stay shut on `mouseOver` here while a press opens
  * the popover fine. So the hover timing (`openDelay`/`closeDelay`) belongs to a
  * browser test, and the panel is opened here through the `open`/`defaultOpen`
- * props — which are the Radix API too, not a test-only door.
+ * props — which are the Radix API too, and not a test-only one.
  */
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import { act, cleanup, fireEvent, render } from '@testing-library/react'

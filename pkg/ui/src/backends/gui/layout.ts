@@ -12,7 +12,7 @@
  * View, Text, GuiElement — because there was nowhere else to get them.
  *
  * An app reaching past its component library is not a style problem. It is the
- * library failing to be the one door: the app then pins its own @hanzo/gui
+ * library failing to be the one entry point: the app then pins its own @hanzo/gui
  * version, resolves a second copy of the runtime (which is how "Missing theme."
  * happens), and every primitive it draws sits outside anything this package can
  * restyle, theme or fix centrally.

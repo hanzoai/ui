@@ -12,7 +12,7 @@
 // This is the CURATED half. `<Hanzo analytics>` already reports every click,
 // change, submit and route change on its own, annotated with the component it
 // happened on — what autocapture cannot know is that a click WAS a checkout.
-// That is what this names. Same client, same stream, same front door.
+// That is what this names. Same client, same stream, same entry point.
 //
 // ONE event name, structured properties — the taxonomy in @hanzo/event is a
 // CLOSED set, and its own rule for a product-specific moment is "the `action`
@@ -22,7 +22,7 @@
 // are emitted by the surface that owns them, not by a button.
 //
 // One stream: `track` from @hanzogui/telemetry — already a dependency of this
-// package and already THE front door (POST api.hanzo.ai/v1/event). No second
+// package and already THE entry point (POST api.hanzo.ai/v1/event). No second
 // client, no CDN script, no `window` poking. It is SSR-safe, consent-aware,
 // honors DNT/GPC, and is fail-soft by construction, so this module inherits all
 // of that and adds no error policy of its own.

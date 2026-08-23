@@ -69,7 +69,7 @@ export function record(config: ReplayConfig): ReplayHandle {
   // A PUBLISHABLE key and nothing else. This runs in a browser, so whatever is
   // handed here is readable by anyone who opens devtools — a secret key would be
   // published by the act of using it, on every batch, in an Authorization header.
-  // The beacon path already refused one; refusing at the door means there is no
+  // The beacon path already refused one; refusing at the entry point means there is no
   // carrier on which a secret can leave, rather than one carrier that happens to.
   if (!publishable(config.ingestKey)) {
     fail(new Error('replay: ingestKey must be a publishable key (pk-…) — never a secret key'))

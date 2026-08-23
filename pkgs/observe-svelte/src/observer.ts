@@ -1,6 +1,6 @@
 // The bootstrap. Call createObserver once (a root +layout's onMount) with a
 // @hanzo/event client; it starts the framework-agnostic engine from @hanzo/observe
-// and wires every captured Interaction through the client to the ONE front door.
+// and wires every captured Interaction through the client to the ONE entry point.
 //
 // The running engine is held as a module singleton so the `observe` action and the
 // `stream` store can reach it without threading a reference through Svelte context.

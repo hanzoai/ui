@@ -15,7 +15,7 @@ describe("FOOTER — the unified footer", () => {
     ])
   })
 
-  it("PRODUCTS column is the six family front doors (single source) plus Dev", () => {
+  it("PRODUCTS column is the six family entry points (single source) plus Dev", () => {
     const products = FOOTER.columns.find((c) => c.id === "products")!
     expect(products.links.map((l) => l.id)).toEqual(["chat", "app", "team", "studio", "bot", "cloud", "dev"])
     // the six product hrefs come straight from FAMILY — they cannot drift

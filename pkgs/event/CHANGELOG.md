@@ -23,9 +23,9 @@
 
 ### Patch Changes
 
-- **The hosted tag's address here was one the door does not answer.** 0.3.33 removed
+- **The hosted tag's address here was one the ingest endpoint does not answer.** 0.3.33 removed
   `hz.js` and pointed readers at `api.hanzo.ai/v1/event.js`. Hours later the ingest
-  door took the app's name, and the tag moved UNDER it: `.js` is part of a segment
+  endpoint took the app's name, and the tag moved UNDER it: `.js` is part of a segment
   rather than a child of one, so a tag beside `/v1/event` could not be routed by the
   prefix that serves it. The address is `GET /v1/event/tag.js`, there is no alias
   behind the old one, and this README was sending people to a 404.
@@ -37,12 +37,12 @@
   `window.hanzo`. A page reading the old paragraph would have shipped a tag
   expecting a heatmap and got none.
 
-- Its config door is `/v1/projects/tags`, not `/v1/tags` — the config follows the
+- Its config endpoint is `/v1/projects/tags`, not `/v1/tags` — the config follows the
   project store it reads. A key is minted with `POST /v1/projects`, not a keys
   endpoint of its own, and one that names no project is refused `403`.
 
 - Says plainly that a surface runs the tag OR this client, never both: they post
-  pageviews to the same door, so a page carrying both counts every one twice.
+  pageviews to the same endpoint, so a page carrying both counts every one twice.
 
 ## 0.3.34
 
@@ -78,8 +78,8 @@
 
 - **One anonymous identity chain, in one file, for all three distributions.**
   0.3.14 moved `anonId()` onto a shared cookie, but only in the bundled client:
-  `hz.js` still minted into `hz_id` — a KEY OF ITS OWN — and the tag the door
-  hosts at `/v1/event.js` had a third implementation of the same idea. A page
+  `hz.js` still minted into `hz_id` — a KEY OF ITS OWN — and the tag hosted
+  at `/v1/event.js` had a third implementation of the same idea. A page
   carrying two of them counted one visitor as two people, and which snippet a
   surface happened to load decided who the visitor was. The chain now lives in
   `src/anon.js` and nothing else implements it: `src/storage.ts` imports it,
@@ -141,12 +141,12 @@
 - **`hz.js` can finally present a key, so a keyed static surface stops filing
   nothing.** Through 0.3.11 the script tag sent no credential on either
   transport — no `Authorization`, no `?ingest_key=` — so every write from an
-  origin other than the door's own was unattributed, and the door refuses an
+  origin other than the endpoint's own was unattributed, and the edge refuses an
   unattributable write (`401 ingest_key_required`). Nothing here reads the
   response, so the tag measured fine in the browser and the surface was simply
   absent from the warehouse. `data-ingest-key="pk-…"` now rides
   `Authorization: Bearer` on fetch and `?ingest_key=` on the headerless unload
-  beacon — the same pair `core.ts` uses, so the door cannot tell the
+  beacon — the same pair `core.ts` uses, so the endpoint cannot tell the
   distributions apart.
 - **The tag honours the consent the rest of the stack honours.** It read Do Not
   Track only. It now also obeys Global Privacy Control (the signal CPRA actually
@@ -177,7 +177,7 @@
   `POST analytics.hanzo.ai/v1/event []` answered 204, so a client pointed at the
   wrong host failed silently. The tag now emits the canonical `WireEvent` shape as
   `{ batch: [ … ] }` to `POST {host}/v1/event`, defaulting to `api.hanzo.ai`; the
-  Next.js door and the collector it fed are deleted. One wire, one door, one home.
+  Next.js endpoint and the collector it fed are deleted. One wire, one endpoint, one home.
 - **DOM autocapture reaches the one stream.** `$click` (with a compact, PII-light
   element locator), `$outbound`, `$scroll` depth, `$form` and `$vitals` — what a
   bundled app does not need and a plain page cannot get. `data-product` names the
@@ -283,11 +283,11 @@
 
 ### Minor Changes
 
-- Repointed the whole client onto the ONE canonical Hanzo Cloud ingestion front
-  door: **`POST /v1/event`** with the batched `{ batch: [Event, …] }` wire,
+- Repointed the whole client onto the ONE canonical Hanzo Cloud ingestion
+  endpoint: **`POST /v1/event`** with the batched `{ batch: [Event, …] }` wire,
   replacing the deprecated `/v1/analytics` + `/v1/tracker` split (and the
-  interim `/v1/ingest` publishable-key door — publishable keys now authenticate
-  directly on `/v1/event`). One door, one wire, for cookie, bearer, and
+  interim `/v1/ingest` publishable-key endpoint — publishable keys now authenticate
+  directly on `/v1/event`). One endpoint, one wire, for cookie, bearer, and
   publishable-key auth alike.
 - Errors now reliably reach the error-tracking lens. The batched Event wire
   carries the `type` field, which Cloud folds to `event_type='error'`; the

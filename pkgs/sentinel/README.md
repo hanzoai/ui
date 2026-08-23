@@ -2,8 +2,8 @@
 
 The client for **Sentinel**, Hanzo Cloud's error plane, at `/v1/sentinel`.
 
-`@hanzo/event` is the write side: it reports errors to the ingest door its DSN
-names. This is the read side — the fifteen operations that list issues, resolve
+`@hanzo/event` is the write side: it reports errors to the ingest endpoint its
+DSN names. This is the read side — the fifteen operations that list issues, resolve
 them, read the captured errors behind them, manage the projects that receive
 them, and query logs, rates, traces and aggregates. Neither package imports the
 other.
@@ -29,8 +29,8 @@ Sentinel reads are session-authenticated. Pass a `token` and it rides as
 `Authorization: Bearer`; omit it in a browser on a Hanzo origin and the session
 cookie carries the request instead.
 
-A publishable `pk-` key does not belong here. It can write to the ingest door and
-read nothing, so the face refuses it.
+A publishable `pk-` key does not belong here. It can write to the ingest endpoint
+and read nothing, so the face refuses it.
 
 ## Operations
 

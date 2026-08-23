@@ -13,7 +13,7 @@
  *
  * It lives here rather than in `Pagination.tsx` because it needs no DOM and no
  * gui runtime, and a consumer must be able to check the rule its pager depends
- * on without mounting one. `@hanzo/ui/product/pure` is that door.
+ * on without mounting one. `@hanzo/ui/product/pure` is that entry point.
  */
 
 /** A gap in the run. Rendered as an ellipsis; never selectable. */

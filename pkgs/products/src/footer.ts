@@ -35,7 +35,7 @@ export interface Footer {
   }
 }
 
-/** The PRODUCTS column: the six family products (short label → front door) + Dev. */
+/** The PRODUCTS column: the six family products (short label → entry point) + Dev. */
 const productLinks: Link[] = [
   ...FAMILY.map((p) => ({ id: p.id, label: p.short, href: p.url })),
   { id: "dev", label: "Dev", href: `${ORIGIN.root}/dev` },

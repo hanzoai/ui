@@ -4,7 +4,7 @@
  * These names used to be declared here. They moved to @hanzo/events — the
  * plural package is the catalog (many events, what each means, what each
  * carries), this one is the client (one call sends one event). Splitting them
- * that way is what lets the ingest door read the same catalog: the door is Go
+ * that way is what lets the ingest endpoint read the same catalog: it is Go
  * and cannot import TypeScript, so @hanzo/events also ships the data as JSON,
  * and there is still exactly one definition.
  *

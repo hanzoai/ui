@@ -68,7 +68,7 @@ describe("every product row is complete and honest", () => {
 })
 
 describe("family ↔ destinations consistency", () => {
-  it("Cloud's front door is the developer console destination", () => {
+  it("Cloud's entry point is the developer console destination", () => {
     expect(findProduct("cloud")!.url).toBe(DESTINATIONS.console)
   })
 })

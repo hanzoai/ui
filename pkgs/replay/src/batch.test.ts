@@ -61,7 +61,7 @@ group('the wire body', () => {
   })
 })
 
-group('the ingest door', () => {
+group('the ingest endpoint', () => {
   it('is POST {endpoint}/v1/replay', () => {
     expect(replayUrl()).toBe('https://api.hanzo.ai/v1/replay')
     expect(replayUrl('https://api.hanzo.ai/')).toBe('https://api.hanzo.ai/v1/replay')

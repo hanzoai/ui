@@ -44,7 +44,7 @@ const NONE: Readonly<Record<string, PropSpec>> = {}
 
 /**
  * The catalog, keyed by the wire name (the value in EVENTS, not the constant).
- * Keying by the wire name is deliberate: it is what arrives at the door, what
+ * Keying by the wire name is deliberate: it is what arrives at the endpoint, what
  * lands in the warehouse, and therefore what anything reading this has in hand.
  */
 export const SCHEMA: Readonly<Record<string, EventSpec>> = {

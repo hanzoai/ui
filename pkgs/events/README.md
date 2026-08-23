@@ -11,7 +11,7 @@ SCHEMA['first_action']
 //   props: { action: { type:'string', values:['api_call','app_live','chat_reply'] } } }
 
 isKnown('deploy_succeeded')  // true
-isKnown('deploy_static_ok')  // false — flagged at the door, not refused
+isKnown('deploy_static_ok')  // false — flagged on ingest, not refused
 ```
 
 To **send** an event, use [`@hanzo/event`](https://www.npmjs.com/package/@hanzo/event).
@@ -36,8 +36,8 @@ exhaustive set. A property absent here is undocumented, not forbidden.
 
 ## For readers that are not TypeScript
 
-`catalog.json` ships in the package — the same catalog as data. The ingest door
-is Go and cannot import TypeScript, so it reads that. One source, two readers.
+`catalog.json` ships in the package — the same catalog as data. The ingest
+endpoint is Go and cannot import TypeScript, so it reads that. One source, two readers.
 
 ```
 @hanzo/events/catalog.json
@@ -46,7 +46,8 @@ is Go and cannot import TypeScript, so it reads that. One source, two readers.
 
 ## Unknown events are recorded, not refused
 
-The door records an event whose name is not in this catalog and flags it.
+The ingest endpoint records an event whose name is not in this catalog and flags
+it.
 Refusing would mean a surface that ships a new event before the catalog does
 loses the data outright — and the data is the part you cannot recover. A flag
 you can act on later.

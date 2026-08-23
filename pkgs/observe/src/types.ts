@@ -3,7 +3,7 @@
 // The engine turns a raw DOM event into an `Interaction`: a `kind`, the reserved
 // autocapture event `name`, a redacted value context, and — the point of this
 // package — a `Semantic` hierarchy auto-derived from the tree. The React binding
-// then emits each Interaction through @hanzo/event to the ONE front door.
+// then emits each Interaction through @hanzo/event to the ONE entry point.
 
 /** A single node in the derived semantic hierarchy — one element on the path from
  *  the tree root down to the element actually interacted with. */

@@ -8,7 +8,7 @@
  *
  * Each product owns exactly ONE job, named by its menu verb:
  *   Chat → Use · App → Build · Team → Work · Studio → Create AI · Bot → Deploy · Cloud → Operate.
- * The journey the family tells: Chat is the front door, App builds things, Team runs
+ * The journey the family tells: Chat is the entry point, App builds things, Team runs
  * work, Studio creates intelligence, Bot distributes it, Cloud operates everything.
  *
  * Pure data, React-free.
@@ -28,7 +28,7 @@ export interface Product {
   short: string
   /** The property's domain, shown as a subtitle, e.g. `"hanzo.chat"`. */
   domain: string
-  /** Absolute front-door URL — always `https://<domain>`. */
+  /** Absolute entry-point URL — always `https://<domain>`. */
   url: string
   /** The one job this product owns, in a line. */
   job: string

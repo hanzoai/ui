@@ -12,7 +12,7 @@
 // WHY THE FULLY-DERIVED SHAPE. Upstream, a server stage (Cymbal) symbolicates
 // frames and computes `$exception_fingerprint`, `$exception_types`, `_values`,
 // `_sources`, `_functions`, then REPLACES the property bag. That stage is not in
-// Hanzo's path: the door writes `event.fact` and a materialized view projects it
+// Hanzo's path: the ingest endpoint writes `event.fact` and a materialized view projects it
 // into `insights.events`, so nothing between the client and the warehouse derives
 // anything. Whatever the product reads, the client has to have sent. Two
 // consequences are load-bearing rather than cosmetic:

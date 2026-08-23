@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/replay",
   "version": "0.1.0",
-  "description": "Hanzo Replay \u2014 browser session-replay recorder. Wraps rrweb to capture a replayable DOM movie, batches it, and POSTs it to the ONE ingest door (POST /v1/replay) attributed by a publishable pk- key. Masks at CAPTURE time using @hanzo/observe's redaction policy \u2014 inputs masked by default, marked subtrees excluded, credential-bearing URLs redacted through @hanzo/event, and no recording at all on OAuth callback routes. Orthogonal to @hanzo/observe: semantic capture there, pixels here.",
+  "description": "Hanzo Replay \u2014 browser session-replay recorder. Wraps rrweb to capture a replayable DOM movie, batches it, and POSTs it to the ONE ingest endpoint (POST /v1/replay) attributed by a publishable pk- key. Masks at CAPTURE time using @hanzo/observe's redaction policy \u2014 inputs masked by default, marked subtrees excluded, credential-bearing URLs redacted through @hanzo/event, and no recording at all on OAuth callback routes. Orthogonal to @hanzo/observe: semantic capture there, pixels here.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",

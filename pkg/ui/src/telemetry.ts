@@ -8,7 +8,7 @@
 // That is the whole setup. With no configuration it wires all three planes —
 // errors + session capture (sentry.hanzo.ai), pageviews (analytics.hanzo.ai),
 // and product events incl. analytics_errors (insights.hanzo.ai) — through the
-// ONE front door, POST api.hanzo.ai/v1/event. Honors DNT/GPC, consent-aware,
+// ONE entry point, POST api.hanzo.ai/v1/event. Honors DNT/GPC, consent-aware,
 // SSR-safe, fail-soft, no CDN script.
 //
 // Optional peer — only pulled when the subpath is used.
