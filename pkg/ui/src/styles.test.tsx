@@ -200,10 +200,22 @@ describe('the utility class namespace', () => {
     expect(orphan, `${orphan.join(', ')} is emitted with no rule in motion.css`).toEqual([])
   })
 
-  it('still answers to the old names, for one more minor version', () => {
-    // The window: a consumer who typed `className="skeleton"` against the old
-    // sheet keeps working. REMOVED IN 8.2.0 — nothing in this package emits them.
-    for (const old of ['skeleton', 'row', 'tnum', 'mono', 'fade', 'drag', 'slide', 'fade-up'])
-      expect([old, motion.includes(`\n.${old} `) || motion.includes(`\n.${old},`) || motion.includes(`.${old}[`)]).toEqual([old, true])
+  it('claims no unprefixed name at the document level', () => {
+    // Removed in 8.3.0. The hazard was never that a consumer typed
+    // `className="skeleton"` — nothing in this package emits these, and the scan
+    // above already fails on an unprefixed literal in `src/`. It was that a
+    // package an app imports once at its ROOT put `.row` in the document scope,
+    // so an app with its own `.row` got whichever rule the cascade preferred and
+    // no warning either way. Each bare name was a second selector on a rule the
+    // `hz-` form already carried, so this took 21 selectors and no declarations.
+    for (const bare of ['collapse', 'drag', 'fade', 'fade-up', 'menu-in', 'mono',
+                        'paper', 'row', 'row-in', 'skeleton', 'slide', 'tnum']) {
+      const claimed =
+        motion.includes(`\n.${bare} `) || motion.includes(`\n.${bare},`) || motion.includes(`.${bare}[`)
+      expect([bare, claimed]).toEqual([bare, false])
+      // The prefixed form is what carries the rule now — asserting only the
+      // absence would pass just as well on a deleted stylesheet.
+      expect([bare, motion.includes(`.hz-${bare}`)]).toEqual([bare, true])
+    }
   })
 })

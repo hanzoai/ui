@@ -36,48 +36,41 @@
   }
 }
 
-.hz-fade-up,
-.fade-up {
+.hz-fade-up {
   animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-fade-up,
-  .fade-up {
+  .hz-fade-up {
     animation: none;
   }
 }
 
 /* Shell chrome motion — sidebar collapse (width) and the Linear-style two-level
    nav slide (transform); backdrop cross-fade behind a SlideOver / dialog. */
-.hz-collapse,
-.collapse {
+.hz-collapse {
   transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
 }
 
-.hz-slide,
-.slide {
+.hz-slide {
   transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
-.hz-fade,
-.fade {
+.hz-fade {
   transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity;
 }
 
 /* Drag-to-reorder — a pinned row while it is being dragged (pointer DnD). The
    lifted row gets a subtle lift; siblings ease into place via `.hz-slide`. */
-.hz-drag,
-.drag {
+.hz-drag {
   touch-action: none;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hz-drag[data-dragging='true'],
-.drag[data-dragging='true'] {
+.hz-drag[data-dragging='true'] {
   transition: none;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   opacity: 0.96;
@@ -86,13 +79,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hz-collapse,
-  .collapse,
   .hz-slide,
-  .slide,
   .hz-fade,
-  .fade,
-  .hz-drag,
-  .drag {
+  .hz-drag {
     transition: none;
   }
 }
@@ -112,8 +101,7 @@
   }
 }
 
-.hz-skeleton,
-.skeleton {
+.hz-skeleton {
   background-color: var(--color3, rgba(128, 128, 128, 0.14));
   background-image: linear-gradient(
     90deg,
@@ -151,18 +139,15 @@
   }
 }
 
-.hz-row-in,
-.row-in {
+.hz-row-in {
   animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-skeleton,
-  .skeleton {
+  .hz-skeleton {
     animation: none;
   }
-  .hz-row-in,
-  .row-in {
+  .hz-row-in {
     animation: none;
   }
 }
@@ -175,16 +160,14 @@
    correctly. The elevation/ring variables fall back to sane values, so a host
    that defines its own `--hz-*` theme tokens (the console does) still wins. */
 
-.hz-tnum,
-.tnum {
+.hz-tnum {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
 }
 
 /* Data/numeric face — Geist Mono + tabular figures for metric values, prices, IDs
    and counts, so numbers read as precise, column-aligned data. */
-.hz-mono,
-.mono {
+.hz-mono {
   font-family: var(--font-mono, 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
@@ -204,8 +187,7 @@
    order — so paper lost its drop on dark exactly the way the rungs did. The
    fallback stays because this sheet ships on its own: a host that imports
    motion.css without glass.css has no ladder to read. */
-.hz-paper,
-.paper {
+.hz-paper {
   box-shadow: var(--shadow-inset-hairline, inset 0 0 0 1px rgb(255 255 255 / .10)),
     var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
     var(--glass-shadow-2, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
@@ -220,20 +202,17 @@
   }
 }
 
-.hz-menu-in,
-.menu-in {
+.hz-menu-in {
   animation: hz-menu-in 140ms ease-out both;
   will-change: opacity;
 }
 
-.hz-row,
-.row {
+.hz-row {
   transition: background-color 140ms ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-menu-in,
-  .menu-in {
+  .hz-menu-in {
     animation: none;
   }
 }
