@@ -56,10 +56,20 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
   messages: Turn[]
   /** A turn is arriving: the last one carries the caret and the composer stops. */
   streaming?: boolean
-  /** Send the draft. The composer clears itself once this is called. */
-  onSend: (text: string) => void
+  /**
+   * Send the draft. The composer clears itself once this is called.
+   *
+   * Named `send`, not `onSend`, and the distinction is the reason this component
+   * is usable at all. A leaf control announces an event that happened TO it, so
+   * `Composer` takes `onSend`. This is a container handed a whole conversation,
+   * and the thing it is handed is a hook result whose actions are verbs —
+   * `useChat` answers `{ messages, streaming, send, stop }`. Spelling these
+   * `onSend`/`onStop` meant `<Chat {...useChat(…)} />` did not typecheck, which
+   * is the ONE call this exists to make work.
+   */
+  send: (text: string) => void
   /** End the turn in flight. Absent, the composer offers no stop. */
-  onStop?: () => void
+  stop?: () => void
   /**
    * Render a turn's body. Defaults to its text.
    *
@@ -78,8 +88,8 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
 export function Chat({
   messages,
   streaming = false,
-  onSend,
-  onStop,
+  send: onSend,
+  stop: onStop,
   body,
   empty,
   composer,
