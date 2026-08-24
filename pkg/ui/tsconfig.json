@@ -15,9 +15,17 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    // `import './styles.css'` names a file gen-css.mjs writes into dist after
+    // tsc runs; src/styles.d.css.ts is how the compiler is told its type.
+    "allowArbitraryExtensions": true,
     "forceConsistentCasingInFileNames": true,
+    // The suites here read the built package off disk and shell out to a child
+    // node process, so node's own types are part of what this project compiles.
+    // TypeScript 7 no longer sweeps every installed @types into scope, so a
+    // project that names any of them has to name all of them.
     "types": [
-      "react"
+      "react",
+      "node"
     ]
   },
   "include": [

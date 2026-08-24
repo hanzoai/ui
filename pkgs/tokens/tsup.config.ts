@@ -12,7 +12,7 @@ export default defineConfig({
     "src/gui.ts",
   ],
   format: ["cjs", "esm"],
-  dts: true,
+  dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,
   clean: true,
   sourcemap: true,
 })

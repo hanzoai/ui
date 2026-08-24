@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/tokens",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Design tokens for Hanzo UI: colors, spacing, radii, typography, themes",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -52,7 +52,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "clean": "rm -rf dist"
   },
@@ -67,7 +67,7 @@
   "license": "MIT",
   "devDependencies": {
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "publishConfig": {
     "access": "public"
