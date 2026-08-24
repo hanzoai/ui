@@ -148,10 +148,13 @@ jobs:
           # KMS_NPM_PATH variable to move it without editing this file.
           KMS_NPM_PATH: ${{ vars.KMS_NPM_PATH || '' }}
         run: |
-          # Build the body with jq so a quote or backslash in the secret cannot
-          # break the JSON — a hand-interpolated "{\"clientId\":\"$X\"}" does.
-          body=$(jq -nc --arg id "$KMS_CLIENT_ID" --arg sec "$KMS_CLIENT_SECRET" \
-                   '{clientId:$id, clientSecret:$sec}')
+          # The body is interpolated, not built with `jq -n`. Building it with jq
+          # is tidier and this runner's jq answers that form with
+          # `parse error: Invalid numeric literal at line 1, column 6` — an
+          # error about INPUT, from a call that reads none. Interpolation is what
+          # has actually published from this runner, so it stays until someone
+          # can say why the other form fails here.
+          body="{\"clientId\":\"${KMS_CLIENT_ID}\",\"clientSecret\":\"${KMS_CLIENT_SECRET}\"}"
           # NO -f, and no pipe into jq. `-f` throws the response body away, so a
           # KMS answer that is not JSON arrives as `jq: Invalid numeric literal`
           # with no status, no message and jq's exit 4 as the step's verdict —
