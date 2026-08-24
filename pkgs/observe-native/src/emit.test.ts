@@ -24,7 +24,12 @@ group('emit', () => {
     expect(client.capture).toHaveBeenCalledTimes(1)
     const [name, props] = client.capture.mock.calls[0]
     expect(name).toBe('$click')
-    expect(props.$el).toBe('Dashboard/UserCard/SaveButton')
+    // The leaf carries a testid, so the label keeps it. `labelOf` used to drop
+    // the qualifier whenever a component name was present; it stopped once
+    // `data-slot` made those names universal in production, and this binding
+    // reads the same `labelFor` from @hanzo/observe that web does — one label,
+    // so a tap and a click group together.
+    expect(props.$el).toBe('Dashboard/UserCard/SaveButton[save]')
     expect(props.$component).toBe('SaveButton')
     expect(props.$testid).toBe('save')
     expect(props.$path).toEqual(['Dashboard', 'UserCard', 'SaveButton'])
