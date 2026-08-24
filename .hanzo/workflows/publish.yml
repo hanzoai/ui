@@ -184,9 +184,22 @@ jobs:
           # `parse error: Invalid numeric literal at line 1, column 6`, and
           # `-o pipefail` made jq's exit 4 the step's verdict — so the message
           # below, written to name exactly this case, could never be reached.
-          out=$(curl -sS -w '\n%{http_code}' "${secret_url}" -H "Authorization: Bearer ${token}")
-          code=${out##*$'\n'}
-          resp=${out%$'\n'*}
+          # Retried, and ONLY on 5xx. This read answered 524 — a Cloudflare origin
+          # timeout, whose body is the plain text `error code: 524` — while the
+          # login beside it and the unauthenticated rejection both answer in under
+          # a third of a second, so it is the authenticated fetch that hangs. A
+          # gateway timeout is transient and must not cost a release; a 401/403/404
+          # is a real answer and retrying it only delays the report.
+          for attempt in 1 2 3 4 5; do
+            out=$(curl -sS -w '\n%{http_code}' "${secret_url}" -H "Authorization: Bearer ${token}")
+            code=${out##*$'\n'}
+            resp=${out%$'\n'*}
+            case "$code" in
+              200) break ;;
+              5*)  echo "KMS secret read HTTP $code (attempt $attempt/5); waiting 15s"; sleep 15 ;;
+              *)   break ;;
+            esac
+          done
           if [ "$code" != "200" ]; then
             echo "::error::KMS secret read returned HTTP $code at ${secret_url}: $(printf '%s' "$resp" | head -c 200)"
             exit 1
