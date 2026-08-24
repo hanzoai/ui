@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/sentinel",
   "version": "0.1.1",
-  "description": "Hanzo Sentinel \u2014 the client for the error plane's read face. Lists and resolves grouped issues, reads captured errors, manages projects and their DSNs, and queries logs, stats, traces and aggregates over /v1/sentinel. The write side is @hanzo/event.",
+  "description": "Hanzo Sentinel — the client for the error plane's read face. Lists and resolves grouped issues, reads captured errors, manages projects and their DSNs, and queries logs, stats, traces and aggregates over /v1/sentinel. The write side is @hanzo/event.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
