@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Hanzo CD — the dedicated deploy dashboard served at cd.hanzo.ai (a @hanzo/cd + @hanzo/canvas SPA over /v1/deploy). Replaces the ArgoCD UI fork.",
+  "description": "Hanzo CD \u2014 the dedicated deploy dashboard served at cd.hanzo.ai (a @hanzo/cd + @hanzo/canvas SPA over /v1/deploy). Replaces the ArgoCD UI fork.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -20,7 +20,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
-    "typescript": "~6.0.2",
+    "typescript": "^7.0.2",
     "vite": "^8.1.4"
   }
 }

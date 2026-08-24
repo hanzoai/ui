@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/event",
-  "version": "0.3.36",
+  "version": "0.3.37",
   "description": "Hanzo Event \u2014 the ONE telemetry client. Emits pageview/event/identify/group to the Hanzo Cloud event stream (POST /v1/event), AND reports errors to Sentry as real Sentry envelopes \u2014 the error plane needs a DSN, without one nothing reaches Sentry. First-touch attribution, beacon-on-unload, auto error capture, client-side secret/PII scrubbing, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -37,10 +37,10 @@
     "hanzo"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
-    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "clean": "rm -rf dist"
   },
   "exports": {
@@ -78,7 +78,7 @@
     "@types/react": "19.2.14",
     "react": "19.2.4",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   },
   "dependencies": {

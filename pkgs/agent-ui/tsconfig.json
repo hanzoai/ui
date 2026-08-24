@@ -8,6 +8,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "dist",
+    // Stated, not inferred: TypeScript 7 requires it once an outDir is set.
+    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -18,6 +20,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "primitives", "util"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/products",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "The canonical Hanzo product catalog: one typed contract + icon/color code-maps + a commerce-backed client with a checked-in snapshot fallback. Single source of truth for console, docs, site, and pricing.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,7 +24,7 @@
     "snapshot"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "sync": "node scripts/sync.mjs",
     "test": "vitest run && node scripts/sync.mjs --check",
@@ -58,7 +58,7 @@
     "@types/react": "^19.0.0",
     "react": "^19.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.8"
   },
   "publishConfig": {

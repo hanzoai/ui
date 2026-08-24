@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React package for building AI-powered applications with generative UI",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -36,7 +36,7 @@
     "model-context-protocol"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
@@ -48,26 +48,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./hooks": {
-      "types": "./dist/hooks/index.d.ts",
-      "import": "./dist/hooks/index.mjs",
-      "require": "./dist/hooks/index.js"
-    },
-    "./components": {
-      "types": "./dist/components/index.d.ts",
-      "import": "./dist/components/index.mjs",
-      "require": "./dist/components/index.js"
-    },
-    "./tools": {
-      "types": "./dist/tools/index.d.ts",
-      "import": "./dist/tools/index.mjs",
-      "require": "./dist/tools/index.js"
-    },
-    "./mcp": {
-      "types": "./dist/mcp/index.d.ts",
-      "import": "./dist/mcp/index.mjs",
-      "require": "./dist/mcp/index.js"
     }
   },
   "dependencies": {
@@ -92,7 +72,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   }
 }

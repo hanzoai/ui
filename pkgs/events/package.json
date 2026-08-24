@@ -22,12 +22,12 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsgo -p tsconfig.json && tsgo -p tsconfig.cjs.json && node ../../pkg/ui/scripts/postbuild.mjs . index,names,schema,funnels && node scripts/catalog.mjs && node ../../pkg/ui/scripts/check-exports.mjs .",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && node ../../pkg/ui/scripts/postbuild.mjs . index,names,schema,funnels && node scripts/catalog.mjs && node ../../pkg/ui/scripts/check-exports.mjs .",
     "test": "node --test test/*.mjs",
-    "typecheck": "tsgo --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
-    "typescript": "^5.6.0"
+    "typescript": "^7.0.2"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/replay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hanzo Replay \u2014 browser session-replay recorder. Wraps rrweb to capture a replayable DOM movie, batches it, and POSTs it to the ONE ingest endpoint (POST /v1/replay) attributed by a publishable pk- key. Masks at CAPTURE time using @hanzo/observe's redaction policy \u2014 inputs masked by default, marked subtrees excluded, credential-bearing URLs redacted through @hanzo/event, and no recording at all on OAuth callback routes. Orthogonal to @hanzo/observe: semantic capture there, pixels here.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -35,10 +35,10 @@
     "hanzo"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
-    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "clean": "rm -rf dist"
   },
   "exports": {
@@ -65,7 +65,7 @@
     "happy-dom": "^20.0.0",
     "rrweb": "^2.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   }
 }

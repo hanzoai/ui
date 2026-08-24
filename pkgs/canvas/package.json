@@ -1,22 +1,22 @@
 {
   "name": "@hanzo/canvas",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "description": "Railway-grade PaaS project canvas \u2014 a pannable/zoomable board of service nodes with live status, metric sparklines, deploy timelines, an environment switcher, and a service detail drawer. Host-agnostic @hanzo/gui React surface, brand/white-label aware, shared by every Hanzo console (hanzo/lux/zoo).",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./pure": {
-      "types": "./src/pure.ts",
-      "default": "./src/pure.ts"
+      "types": "./dist/pure.d.ts",
+      "default": "./dist/pure.js"
     }
   },
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "module": "./src/index.ts",
-  "types": "./src/index.ts",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "src",
@@ -45,7 +45,7 @@
   "scripts": {
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true",
+    "build": "tsc --outDir dist --rootDir src --declaration --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop --skipLibCheck --sourceMap",
     "test": "bun test"
   },
   "peerDependencies": {
@@ -69,7 +69,7 @@
     "@xyflow/react": "^12.11.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "typescript": "^5.7.2"
+    "typescript": "^7.0.2"
   },
   "publishConfig": {
     "access": "public"

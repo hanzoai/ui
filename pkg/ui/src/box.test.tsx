@@ -13,8 +13,12 @@ import { GuiProvider } from '@hanzo/gui'
 import config from './gui-config'
 import { Box } from './box'
 
+// Dark is this package's identity, and the provider requires the theme rather
+// than picking one — `<Hanzo>` passes it for the same reason.
 const html = (ui: React.ReactNode) =>
-  renderToStaticMarkup(<GuiProvider config={config as never}>{ui}</GuiProvider>)
+  renderToStaticMarkup(
+    <GuiProvider config={config as never} defaultTheme="dark">{ui}</GuiProvider>,
+  )
 
 describe('Box', () => {
   it('renders, which a style prop gui cannot take would prevent', () => {
@@ -72,7 +76,9 @@ describe('Box', () => {
   })
 
   it('lets an explicit prop win over the class that says the same thing', () => {
-    const out = html(<Box className="px-6" paddingLeft={2}>x</Box>)
+    // `pl`, not `paddingLeft`: gui's config registers the shorthands, so the
+    // longhand is not a typed prop here and appears nowhere else in this package.
+    const out = html(<Box className="px-6" pl={2}>x</Box>)
     expect(out).toBeTruthy()
   })
 })

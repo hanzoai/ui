@@ -3,7 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: ['src/index.ts', 'src/react.tsx'],
   format: ['cjs', 'esm'],
-  dts: true,
+  dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,
   clean: true,
   external: ['react'],
   minify: false,

@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/observe-svelte",
-  "version": "0.1.0",
-  "description": "Svelte adaptor for @hanzo/observe — default-on semantic interaction capture. A createObserver bootstrap, an `observe` action for stable component names, and a Svelte-store view of the live event stream for session playback. Emits through @hanzo/event to the ONE entry point (POST /v1/event).",
+  "version": "0.1.1",
+  "description": "Svelte adaptor for @hanzo/observe \u2014 default-on semantic interaction capture. A createObserver bootstrap, an `observe` action for stable component names, and a Svelte-store view of the live event stream for session playback. Emits through @hanzo/event to the ONE entry point (POST /v1/event).",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -35,7 +35,7 @@
     "hanzo"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
@@ -69,7 +69,7 @@
     "@types/node": "^25.5.0",
     "happy-dom": "^20.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   }
 }

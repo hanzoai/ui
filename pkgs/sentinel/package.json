@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/sentinel",
-  "version": "0.1.0",
-  "description": "Hanzo Sentinel — the client for the error plane's read face. Lists and resolves grouped issues, reads captured errors, manages projects and their DSNs, and queries logs, stats, traces and aggregates over /v1/sentinel. The write side is @hanzo/event.",
+  "version": "0.1.1",
+  "description": "Hanzo Sentinel \u2014 the client for the error plane's read face. Lists and resolves grouped issues, reads captured errors, manages projects and their DSNs, and queries logs, stats, traces and aggregates over /v1/sentinel. The write side is @hanzo/event.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -33,7 +33,7 @@
     "hanzo"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   }
 }

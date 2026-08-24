@@ -5,7 +5,7 @@ export default defineConfig({
   // bridge (a vanilla Tauri app imports it without pulling React).
   entry: ['src/index.ts', 'src/tauri.ts'],
   format: ['cjs', 'esm'],
-  dts: true,
+  dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,
   clean: true,
   external: ['react', 'react-native', '@tamagui/core', 'tamagui', '@hanzo/observe', '@hanzo/event'],
   minify: false,
