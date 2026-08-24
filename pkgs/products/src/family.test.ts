@@ -1,6 +1,17 @@
 import { describe, expect, it } from "vitest"
-import { FAMILY, ROOT, PRODUCTS, familyFor, findProduct, visibleTo, type MenuVerb, type Viewer } from "./family"
+
 import { DESTINATIONS } from "./destinations"
+import {
+  admits,
+  FAMILY,
+  findProduct,
+  listed,
+  listing,
+  PRODUCTS,
+  ROOT,
+  type MenuVerb,
+  type Viewer,
+} from "./family"
 
 describe("FAMILY — exactly the six flagship products", () => {
   it("has exactly six products", () => {
@@ -8,7 +19,14 @@ describe("FAMILY — exactly the six flagship products", () => {
   })
 
   it("is the canonical journey order chat → app → team → studio → bot → cloud", () => {
-    expect(FAMILY.map((p) => p.id)).toEqual(["chat", "app", "team", "studio", "bot", "cloud"])
+    expect(FAMILY.map((p) => p.id)).toEqual([
+      "chat",
+      "app",
+      "team",
+      "studio",
+      "bot",
+      "cloud",
+    ])
   })
 
   it("assigns each product its one menu verb, one each", () => {
@@ -23,7 +41,14 @@ describe("FAMILY — exactly the six flagship products", () => {
     })
     const verbs = FAMILY.map((p) => p.verb)
     expect(new Set(verbs).size).toBe(6) // all distinct
-    const expected: MenuVerb[] = ["Use", "Build", "Work", "Create AI", "Deploy", "Operate"]
+    const expected: MenuVerb[] = [
+      "Use",
+      "Build",
+      "Work",
+      "Create AI",
+      "Deploy",
+      "Operate",
+    ]
     expect(new Set(verbs)).toEqual(new Set(expected))
   })
 })
@@ -36,7 +61,10 @@ describe("ROOT — the hanzo.ai umbrella", () => {
     expect(ROOT.verb).toBeUndefined()
   })
   it("its action is Open Chat (per the header table)", () => {
-    expect(ROOT.action).toEqual({ label: "Open Chat", href: "https://hanzo.chat" })
+    expect(ROOT.action).toEqual({
+      label: "Open Chat",
+      href: "https://hanzo.chat",
+    })
   })
 })
 
@@ -84,38 +112,46 @@ describe("findProduct", () => {
 })
 
 describe("staged rollout", () => {
-  // Day 1 is the smallest honest surface: the three core properties plus the
-  // cloud console. Everything else is reachable, by someone, on purpose.
-  it("GA is hanzo.ai, chat, app and cloud — and nothing else", () => {
-    expect(familyFor("anon").map((p) => p.id).sort()).toEqual(["app", "chat", "cloud"])
-    expect(ROOT.stage).toBe("ga")
+  const ids = (v: Viewer) => listing(v).map((p) => p.id)
+
+  it("offers everything but the secret one to a stranger", () => {
+    // The floor for being SEEN is anonymous for ga and beta alike: a marketing
+    // site's job is offering what you cannot use yet. Only alpha is secret.
+    expect(ids("anon")).toEqual(["chat", "app", "team", "bot", "cloud"])
+    expect(ids("anon")).not.toContain("studio")
   })
 
-  it("beta adds bot and team for a signed-in customer, and no more", () => {
-    const gained = familyFor("customer")
-      .filter((p) => !familyFor("anon").includes(p))
-      .map((p) => p.id)
-      .sort()
-    expect(gained).toEqual(["bot", "team"])
+  it("hides studio from a customer and shows it to staff", () => {
+    expect(ids("customer")).not.toContain("studio")
+    expect(ids("staff")).toContain("studio")
+    expect(listing("staff")).toHaveLength(FAMILY.length)
   })
 
-  it("studio is alpha — staff only, and invisible to a customer", () => {
-    expect(FAMILY.find((p) => p.id === "studio")!.stage).toBe("alpha")
-    expect(familyFor("customer").some((p) => p.id === "studio")).toBe(false)
-    expect(familyFor("staff").some((p) => p.id === "studio")).toBe(true)
+  it("offers beta to a stranger but does not let them in", () => {
+    // The whole reason `listed` and `admits` are two questions. Collapsing them
+    // hid bot and team from the public footer -- including hanzo.bot's own.
+    for (const p of FAMILY.filter((p) => p.stage === "beta")) {
+      expect(listed(p.stage, "anon"), `${p.id} must be offered`).toBe(true)
+      expect(admits(p.stage, "anon"), `${p.id} must not open`).toBe(false)
+      expect(admits(p.stage, "customer")).toBe(true)
+    }
   })
 
-  // The rule is an ordering, so reach only ever widens. A stage that let an anon
-  // see more than a customer would be a hole no per-surface check could close.
-  it("reach is monotone: anon ⊆ customer ⊆ staff", () => {
-    const ids = (v: Viewer) => new Set(familyFor(v).map((p) => p.id))
-    const [a, c, s] = [ids("anon"), ids("customer"), ids("staff")]
-    expect([...a].every((id) => c.has(id))).toBe(true)
-    expect([...c].every((id) => s.has(id))).toBe(true)
-    expect(s.size).toBe(FAMILY.length)
+  it("never admits what it does not offer", () => {
+    // The invariant that makes the two floors safe to state separately: a door
+    // you cannot see is one you cannot be let through.
+    for (const p of FAMILY)
+      for (const v of ["anon", "customer", "staff"] as const)
+        if (admits(p.stage, v))
+          expect(listed(p.stage, v), `${p.id}/${v}`).toBe(true)
   })
 
-  it("every product declares a stage — silence must not read as GA", () => {
-    for (const p of [ROOT, ...FAMILY]) expect(p.stage).toBeDefined()
+  it("widens monotonically, so a stranger never sees more than staff", () => {
+    expect(ids("anon").every((id) => ids("customer").includes(id))).toBe(true)
+    expect(ids("customer").every((id) => ids("staff").includes(id))).toBe(true)
+  })
+
+  it("gives every product a stage", () => {
+    for (const p of FAMILY) expect(["alpha", "beta", "ga"]).toContain(p.stage)
   })
 })
