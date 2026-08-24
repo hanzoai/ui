@@ -17,10 +17,13 @@ and the dark-black palette.
 
 ## 1. Typography — Zen
 
-One family, ours. `@hanzo/font` publishes it and `@hanzo/design` ships the binaries
-and declares the `@font-face`, so a surface that imports `@hanzo/design/styles.css`
-has the faces with nothing further to do. No app self-hosts a licensed third-party
-face any more.
+One family, ours. `@hanzo/font` publishes it — the binaries and the `@font-face`,
+under the SIL Open Font License — and it is the ONLY place they live. `@hanzo/ui`
+names the two roles and delivers no bytes: `scripts/compose-theme.mjs` strips every
+`@font-face` and rejects every `url()` it would have to carry, because this package
+ships `dist` alone and a relative asset reference in a composed sheet resolves to
+nothing. So a surface spends one import on the faces and one on the tokens. No app
+self-hosts a licensed third-party face any more.
 
 | Role | Family | Notes |
 |------|--------|-------|
@@ -29,36 +32,47 @@ face any more.
 | Arabic / Hebrew (`--font-ar` / `--font-he`) | unchanged | i18n only — keep. |
 
 **The token names the ROLE, not the face** — `--font-sans` / `--font-mono`. A token
-spelled `--font-geist-sans` or `--font-zen-sans` goes stale the next time the face
-moves, which is exactly what the first one did.
+that carries a family's own name goes stale the next time the face moves, which is
+exactly what the previous one did; `--font-zen-sans` would repeat it with our own
+family. Ours were renamed for that reason, and the rename is why ~40 surfaces that
+were only obeying this package can now be corrected in one place.
 
-**Dropped as defaults:** Basel Grotesk, Druk Wide, Geist, DM Sans, Figtree, Inter,
-PT Sans, Roboto Mono.
+**Dropped as defaults:** every third-party face this repo used to name — grotesks,
+display faces and the two the token names used to be spelled after. Zen and Zen Mono
+are the whole list now.
 
 ### Where the old faces land
 
 `@hanzo/font/presets.css` (≥ 1.8.1) defines these as real classes — `.zen-air`,
 `.zen-book`, `.zen-medium`, `.zen-wide`, `.zen-round`. Use the class; do not restate
-the numbers. Nothing in this repo needs one: every face replaced here was Geist,
-which is a plain family swap with no register to reconstruct.
+the numbers. Nothing in this repo needs one: every face replaced here shared Zen's
+lineage, so it is a plain family swap with no register to reconstruct.
 
 | Was | Now | Class |
 |-----|-----|-------|
-| Basel Grotesk Book | Zen wght **497** | `.zen-book` |
-| Basel Grotesk Medium | Zen wght **606** | `.zen-medium` |
-| Druk Wide | Zen wght **845** + `scaleX(1.56)` + `-0.04em` | `.zen-wide` |
-| Geist / Geist Sans | Zen | plain family swap |
-| Geist Mono | Zen Mono | plain family swap |
+| a grotesk at book weight | Zen wght **497** | `.zen-book` |
+| the same grotesk at medium | Zen wght **606** | `.zen-medium` |
+| a wide display face | Zen wght **845** + `scaleX(1.56)` + `-0.04em` | `.zen-wide` |
+| the previous sans | Zen | plain family swap |
+| the previous mono | Zen Mono | plain family swap |
 
-**x-height.** Basel's x-height is 0.718 of its cap and Zen's is 0.746, so at one
-font-size Zen's lowercase renders ~4% larger. Where Zen REPLACES Basel, multiply the
-font-size by **0.962** at the one place the size is stated. It does NOT apply where
-Geist was replaced — Zen and Geist share a lineage and their x-heights agree. Every
-face replaced in this repo was Geist, so no size moved here.
+**x-height.** The grotesk's x-height is 0.718 of its cap and Zen's is 0.746, so at one
+font-size Zen's lowercase renders ~4% larger. Where Zen REPLACES that grotesk, multiply
+the font-size by **0.962** at the one place the size is stated. It does NOT apply to the
+sans and mono the token names used to be spelled after: those share Zen's lineage and
+their x-heights agree, and they are the only faces this repo ever named — so no size
+moved here.
 
 Per-app adoption:
-- **Any React surface** → `import '@hanzo/ui/theme.css'` (which composes design's
-  tokens) or `@hanzo/design/styles.css` directly, and bind nothing.
+- **Any React surface** → two imports at the root, in this order, and bind nothing:
+
+  ```ts
+  import '@hanzo/font/css'      // the faces — @font-face, and nothing else
+  import '@hanzo/ui/theme.css'  // the tokens — names --font-sans / --font-mono
+  ```
+
+  `@hanzo/font` is a dependency of `@hanzo/ui`, so the specifier resolves without
+  the surface adding it. theme.css alone names the families and loads no bytes.
 - **A host that loads Zen itself** (next/font, @fontsource) binds `--font-sans` /
   `--font-mono` to its generated family. Ours are declared in `@layer hanzo.font`,
   so the host's unlayered binding wins whatever the source order.

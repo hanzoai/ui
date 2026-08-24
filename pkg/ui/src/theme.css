@@ -13,9 +13,11 @@
  * Dark-first Hanzo identity: neutral zinc-on-black, calm, high-contrast. Add
  * `class="dark"` on <html> for the canonical dark look; `:root` is the light
  * counterpart. Typography is Zen — our own family, sans for UI/body and mono for
- * code — bound through `--font-sans` / `--font-mono`. The package SHIPS the
- * faces, so those resolve with no work from the host; a host that prefers its
- * own binds `--font-sans-provided`. No Inter, no system-stack default anywhere.
+ * code — bound through `--font-sans` / `--font-mono`. This sheet NAMES the two
+ * families; `@hanzo/font` DELIVERS them, and a surface imports it once at its
+ * root (`import '@hanzo/font/css'`) — see the font block below for why the two
+ * halves cannot live in one file. A host that prefers its own face binds
+ * `--font-sans-provided`. No system-stack default anywhere.
  *
  * Plain CSS, nothing else: `:root`/`.dark` custom properties plus the base font
  * and the touch/elevation rules the components name. The Tailwind v4 `@theme
@@ -23,13 +25,19 @@
  */
 
 
-/* The typeface, and the package now BRINGS one.
+/* The typeface. TWO NAMES HERE, THE FACES FROM `@hanzo/font`.
 
-   `@hanzo/font` ships Zen — our own family, sans and mono, self-hosted woff2 —
-   so the fallback is a face that exists rather than a name that has to be
-   installed. That import is the whole integration: a host still binds
-   `--font-*-provided` to override, and one that binds nothing now gets Zen
-   instead of falling through to the browser's generic.
+   Zen is the family — ours, sans and mono, self-hosted woff2 under the SIL Open
+   Font License. `@hanzo/font` is where it is authored and the only place the
+   binaries live; this sheet states which family each role wants and nothing
+   more. A surface imports the faces once at its root:
+
+       import '@hanzo/font/css'   // @font-face, and nothing else
+       import '@hanzo/ui/theme.css'
+
+   The split is forced, not stylistic — see the @import note at the bottom of
+   this comment. It is also why `@hanzo/font` is a real dependency of this
+   package: the specifier resolves for every consumer without them adding it.
 
    In a LAYER, and that is the whole reason the sentence above is true. next/font
    binds its generated family through a class on <html>, which is `:root`'s own
@@ -42,18 +50,23 @@
    unreferenced. An unlayered declaration beats every layered one whatever the
    specificity, so layering ours is what makes the host's the one that wins.
 
-   THE TOKEN NAMES THE ROLE, NOT THE FACE. It was `--font-geist-sans`, which
-   named a face rather than the job it does. Naming it `--font-zen-sans` would
-   repeat the mistake with our own brand: the next face makes it a lie again.
-   `--font-sans` is what it has always meant.
+   THE TOKEN NAMES THE ROLE, NOT THE FACE. It used to carry the face's own name,
+   which is the job's name only until the face moves — and it moved. Naming it
+   `--font-zen-sans` would repeat the mistake with our own family: the next face
+   makes it a lie again. `--font-sans` is what it has always meant.
 
    NO @import HERE, and that is measured rather than stylistic. This file is
    composed into the MIDDLE of the built theme.css, and CSS drops an @import that
    does not precede every other rule — in Chromium, against the built sheet, a
    raw <link> loaded ZERO faces and requested not one woff2, while --font-sans
-   resolved to a family nobody ships. The faces come from @hanzo/design's
-   `tokens/fonts.css`, which declares @font-face directly; an @font-face has no
-   ordering rule, so it survives being flattened. */
+   resolved to a family nobody ships. A COPY of the faces is out for a different
+   reason: this package ships `dist` alone, so every url() in the composed sheet
+   points at a file that is not there and webpack's css-loader fails the
+   consumer's build (8.0.46 went out exactly that way). Both doors are shut, so
+   delivery belongs to `@hanzo/font` and the host spends one import on it.
+   scripts/compose-theme.mjs enforces the half that is ours: it strips any
+   @font-face it inlines, rejects any url(), and rejects any family name in the
+   composed sheet that is not Zen. */
 
 @layer hanzo.font {
   :root {
