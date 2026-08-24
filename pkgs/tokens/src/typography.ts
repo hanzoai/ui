@@ -1,13 +1,16 @@
 /**
  * Hanzo typography tokens.
  *
- * Primary font: Zen (--font-sans fallback chain from Hanzo UI CSS).
- * Mono font: Zen Mono.
+ * The two names are `--font-sans` and `--font-mono` — the role, never the face —
+ * and `@hanzo/ui/theme.css` is what binds them. These read that binding first so
+ * a face change upstream lands here with no edit; Zen sits behind it for a Tailwind
+ * consumer that has the faces (`@hanzo/font`) but not the token sheet, and the
+ * system chain behind that is what paints while the webfont loads.
  */
 
 export const fontFamily = {
-  sans: "'Zen', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-  mono: "'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  sans: "var(--font-sans, 'Zen'), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  mono: "var(--font-mono, 'Zen Mono'), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 } as const
 
 export const fontSize = {

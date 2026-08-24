@@ -13,8 +13,18 @@
   --cd-fg-muted: #8b949e;
   --cd-fg-strong: #f0f6fc;
   --cd-accent: #2f81f7;
-  --cd-sans: "Zen", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --cd-mono: "Zen Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Two names for the two roles, and this app states neither face. `@hanzo/font`
+     publishes --font-zen-sans / --font-zen-mono beside its @font-face (main.tsx
+     imports it); binding them to --font-sans / --font-mono is the same pair
+     @hanzo/ui/theme.css publishes, so the shell reads one contract wherever the
+     sheet came from. Everything below reads --cd-sans / --cd-mono, which are
+     this app's own names and now point at the shared ones rather than repeating
+     a family — a face change upstream is zero edits here. The system chain
+     stays: it is what paints while the webfont loads. */
+  --font-sans: var(--font-zen-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-zen-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --cd-sans: var(--font-sans);
+  --cd-mono: var(--font-mono);
 }
 
 * {

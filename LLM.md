@@ -230,7 +230,7 @@ answer it, so no claim is recorded.
 | `@hanzo/ui/product` | the product/app layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
 | `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
 | `@hanzo/ui/core` · `/tokens` | cn, Zen font vars, the @hanzo/tokens color/theme/radii/spacing scale |
-| `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Zen + touch/elevation) |
+| `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Zen + touch/elevation). NAMES the families; import `@hanzo/font/css` beside it for the faces |
 | `@hanzo/ui/styles.css` | the COMPLETE sheet — tokens + motion + the generated gui atomic/theme CSS. `<Hanzo>` imports it, so an app never has to |
 | `@hanzo/ui/gallery` | every component, once — what the generator, the unit test and the consumer test all render |
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
