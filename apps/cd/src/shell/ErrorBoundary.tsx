@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { error: E
   render() {
     if (!this.state.error) return this.props.children
     return (
-      <div style={{ maxWidth: 520, margin: "12vh auto", padding: "0 24px", textAlign: "center", fontFamily: "'Zen', ui-sans-serif, system-ui, sans-serif" }}>
+      <div style={{ maxWidth: 520, margin: "12vh auto", padding: "0 24px", textAlign: "center", fontFamily: "var(--cd-sans)" }}>
         <h1 style={{ fontSize: 20, fontWeight: 700, margin: "0 0 8px" }}>Something went wrong</h1>
         <p style={{ color: "#8a8a8a", fontSize: 14, margin: "0 0 20px" }}>
           A view failed to render. Your fleet is unaffected — this is only the dashboard.

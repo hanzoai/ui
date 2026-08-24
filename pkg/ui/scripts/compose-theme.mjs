@@ -43,7 +43,7 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * resolves against @hanzo/ui/dist, which has no assets, and webpack's css-loader
  * hard-fails the build:
  *
- *   HookWebpackError: Cannot find module './assets/fonts/Geist-Variable.woff2'
+ *   HookWebpackError: Cannot find module './assets/fonts/<face>-Variable.woff2'
  *
  * That shipped in 8.0.46. Vite tolerates the missing asset, webpack does not,
  * and the consumer test was Vite-only — so the whole class was invisible. There
@@ -53,10 +53,12 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * real problem: two packages shipping the same font, which is one fact in two
  * homes and the exact thing retiring @hanzo/tokens was about. So the rule is
  * dropped instead. This package NAMES the families — it always has; gui-config
- * says "the host self-hosts both faces (its own fonts.css) — this only names
- * them" — and a consumer that wants them self-hosted imports
- * `@hanzo/design/styles.css`, whose url()s resolve against design, where the
- * files actually are.
+ * says "the host self-hosts both faces — this only names them" — and the faces
+ * come from `@hanzo/font`, which is where Zen is authored and the only place the
+ * binaries live. A surface spends one import on it:
+ *
+ *   import '@hanzo/font/css'
+ *   import '@hanzo/ui/theme.css'
  */
 const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
 
@@ -120,7 +122,57 @@ if (urls.length) {
     `theme.css references ${urls.length} external asset(s): ${[...new Set(urls)].join(', ')}\n` +
       `  This package ships only "dist", so a relative url() here resolves to nothing and\n` +
       `  webpack's css-loader fails the consumer's build. Font delivery belongs to\n` +
-      `  @hanzo/design, which self-hosts the files; this sheet only names the families.`,
+      `  @hanzo/font, which self-hosts the files; this sheet only names the families.`,
+  )
+}
+
+// ONE FAMILY, AND THE BUILD IS WHERE THAT IS SETTLED.
+//
+// The families arrive from @hanzo/design, not from this repo, so "we renamed the
+// token" is not the same as "the sheet says Zen": a pin one patch behind puts a
+// foreign family back into --font-sans, and it wins, because design declares it
+// unlayered at :root while ours sits in @layer hanzo.font. That is how a face
+// nobody chose reached ~40 surfaces — every one of them was obeying this file.
+//
+// So the composed sheet is read back and every family it names must be one of
+// ours or a face the reader already has. The second set is not a loophole: those
+// are what paints while the webfont loads, they ship with the OS, and dropping
+// them would replace a near-match with the browser's default. A WEBFONT anyone
+// has to download, on the other hand, is a choice, and the only one we make is
+// Zen.
+//
+// Only the family-bearing tokens are read. `--font-feature-settings: normal` and
+// `--font-size-*` are not families and a blanket `--font-*` sweep flags them.
+const INSTALLED = new Set([
+  // generics and the CSS-wide keywords
+  'ui-sans-serif', 'ui-serif', 'ui-monospace', 'ui-rounded', 'system-ui', 'sans-serif',
+  'serif', 'monospace', 'cursive', 'fantasy', 'math', 'emoji', 'fangsong',
+  'inherit', 'initial', 'unset', 'revert',
+  // the OS UI faces a system chain resolves to
+  '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+  'Helvetica', 'Arial', 'Noto Sans', 'Ubuntu', 'Cantarell', 'Oxygen',
+  // preinstalled serifs and monos
+  'Georgia', 'Times New Roman', 'Times', 'Cambria', 'Charter', 'Palatino',
+  'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New',
+  // emoji, which every chain ends with
+  'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+])
+const isOurs = (name) => /^Zen( Mono| Pixel .+)?$/.test(name)
+const foreign = [
+  ...composed.matchAll(
+    /(?:font-family|--font-(?:sans|mono|serif|display|ar|he)(?:-provided)?)\s*:\s*([^;{}]+)/g,
+  ),
+]
+  .flatMap((m) => m[1].split(','))
+  .map((part) => part.trim().replace(/^['"]|['"]$/g, '').replace(/\)+$/, '').trim())
+  .filter((n) => n && !n.startsWith('var(') && !n.includes('(') && !INSTALLED.has(n) && !isOurs(n))
+if (foreign.length) {
+  throw new Error(
+    `theme.css names a webfont that is not Zen: ${[...new Set(foreign)].join(', ')}\n` +
+      `  Zen is the Hanzo family and @hanzo/font is where it is authored. A family named\n` +
+      `  here reaches every surface that imports this package. Bump @hanzo/design to a\n` +
+      `  version whose tokens ship Zen rather than editing it out downstream. If the name\n` +
+      `  is a face the reader already has, add it to INSTALLED above.`,
   )
 }
 
