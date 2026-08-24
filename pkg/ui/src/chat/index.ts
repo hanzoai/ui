@@ -28,6 +28,7 @@
  * they ship at `@hanzo/ui/models` and `@hanzo/ui/product`. Nobody hunting for a
  * copy button looks in a chat module.
  */
+export { Chat, type ChatProps, type Turn } from './Chat'
 export { Composer, ASK, type ComposerProps } from './Composer'
 export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
