@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/observe-native",
-  "version": "0.1.0",
-  "description": "Native + desktop binding for @hanzo/observe. Instruments @hanzo/gui (Tamagui) / React Native presses and inputs, and bridges Tauri desktop, so native and desktop emit the SAME canonical Events as the web — through @hanzo/event to the ONE entry point (POST /v1/event). Same semantic hierarchy, same privacy gate, fail-soft.",
+  "version": "0.1.1",
+  "description": "Native + desktop binding for @hanzo/observe. Instruments @hanzo/gui (Tamagui) / React Native presses and inputs, and bridges Tauri desktop, so native and desktop emit the SAME canonical Events as the web \u2014 through @hanzo/event to the ONE entry point (POST /v1/event). Same semantic hierarchy, same privacy gate, fail-soft.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -35,7 +35,7 @@
     "hanzo"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
@@ -87,7 +87,7 @@
     "react-dom": "19.2.4",
     "@types/react-dom": "19.2.4",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   }
 }

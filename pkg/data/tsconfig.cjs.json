@@ -1,12 +1,12 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    // `moduleResolution` is stated here rather than inherited, for the same
-    // reason it is stated in @hanzo/ui's copy: under TypeScript 5 a `bundler`
-    // resolution inherited into a `commonjs` module target is a hard TS5095
-    // error and the build emits nothing at all.
+    // `module: commonjs` is stated here; `moduleResolution` is not. Under
+    // TypeScript 5 a `bundler` resolution inherited into a `commonjs` target
+    // was a hard TS5095 error, so this named `node` to escape it. TypeScript 7
+    // removed `node10` outright (TS5108) and accepts the inherited `bundler`
+    // beside `commonjs`, so the escape is now the thing that fails.
     "module": "commonjs",
-    "moduleResolution": "node",
     "outDir": "./dist-cjs",
     "declaration": false,
     "declarationMap": false,

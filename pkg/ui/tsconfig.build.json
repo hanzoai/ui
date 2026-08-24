@@ -6,7 +6,13 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    // Back to react alone. The check config adds "node" for the suites, which
+    // read the built package off disk; the emitted declarations are a browser
+    // library's surface and must not carry node's globals into a consumer.
+    "types": [
+      "react"
+    ]
   },
   "include": ["src"],
   "exclude": [

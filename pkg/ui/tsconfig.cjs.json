@@ -1,29 +1,16 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    // `moduleResolution` is set explicitly here, and that is the whole point of
-    // this override.
+    // Only the module format is overridden. `moduleResolution` is INHERITED, and
+    // must not be stated: TypeScript 7 removed `node10` (TS5108), and it also
+    // dropped the TS5095 rule that `bundler` resolution needs an ES module
+    // target — so the base config's `bundler` is correct beside `commonjs` here.
     //
-    // It previously relied on TypeScript 7 semantics: TS7 dropped the TS5095 rule
-    // that `bundler` resolution requires an ES module target, so the CJS pass
-    // could inherit `bundler` from the base config and override only the module
-    // format. Under TypeScript 5 that inheritance is a hard error —
-    //   tsconfig.cjs.json(3,3): error TS5095: Option 'bundler' can only be used
-    //   when 'module' is set to 'preserve' or to 'es2015' or later
-    // — and the build stops before emitting anything.
-    //
-    // The repo is back on TypeScript 5.9.3 because TS7 breaks `rollup-plugin-dts`,
-    // which tsup uses for declaration output:
-    //   TypeError: Cannot read properties of undefined (reading 'useCaseSensitiveFileNames')
-    // That killed the build of every tsup package here (@hanzo/cd, @hanzo/products,
-    // @hanzo/tokens), and @hanzo/ui cannot compile without their emitted types.
-    // The TS7 bump had reached only 2 of 19 packages; the other 17 pin 5.x.
-    //
-    // ⚠️ Returning to TS7 means reverting this line AND both `typescript` pins —
-    // `node` resolution (node10) was removed in TS7. Do that once tsup ships a
-    // TS7-compatible rollup-plugin-dts, not before.
+    // Under TypeScript 5 those two facts were reversed, which is why this file
+    // used to name `node`. That is also why the CJS pass is worth watching when
+    // the compiler moves: it emits nothing at all when the pair disagrees, and a
+    // package with no `require` build still installs.
     "module": "commonjs",
-    "moduleResolution": "node",
     "outDir": "./dist-cjs",
     "declaration": false,
     "declarationMap": false,

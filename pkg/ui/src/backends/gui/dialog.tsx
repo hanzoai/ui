@@ -21,7 +21,17 @@ const DialogTrigger: typeof GuiDialog.Trigger = GuiDialog.Trigger
 const DialogPortal: typeof GuiDialog.Portal = GuiDialog.Portal
 const DialogClose: typeof GuiDialog.Close = GuiDialog.Close
 
-export type DialogOverlayProps = ComponentProps<typeof GuiDialog.Overlay>
+/* gui's own props for the overlay, plus the two things it demonstrably takes and
+ * does not report. `overlay` exists so a caller can say which surface dims which,
+ * and stacking is the whole of that question — but `ComponentProps` of the
+ * compound member lists `opacity` and `bg` while omitting `zIndex`, so the one
+ * prop the feature was built for did not type. A `data-*` marker is the same
+ * story: it reaches the element (that is how `data-slot` gets there) and is
+ * absent from the type. Both are measured in dialog.test.tsx, which reads the
+ * COMPUTED z-index off a mounted overlay. */
+export type DialogOverlayProps = ComponentProps<typeof GuiDialog.Overlay> & {
+  zIndex?: number
+} & { [attr: `data-${string}`]: string | undefined }
 
 const DialogOverlay = (props: DialogOverlayProps) => (
   <GuiDialog.Overlay

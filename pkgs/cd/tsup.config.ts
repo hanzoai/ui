@@ -7,7 +7,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: ['src/index.ts', 'src/pure.ts'],
   format: ['cjs', 'esm'],
-  dts: true,
+  dts: false, // tsc emits these — rollup-plugin-dts cannot load on TS7,
   clean: true,
   external: ['react', 'react-dom', '@hanzo/canvas', '@hanzo/canvas/pure'],
   minify: false,

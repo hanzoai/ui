@@ -367,6 +367,53 @@ dragged in `chunk-RCMDRI6V.js` (48K of source). Measured with esbuild, `import
 from `tsc` output. Dropping `rollup-plugin-dts` (tsup's `dts` worker) is also
 what makes the package build on TypeScript 7, which it cannot do otherwise.
 
+**Every package here emits declarations the same way, and none of them use
+tsup's `dts`.** That worker loads `rollup-plugin-dts`, which reads `ts.sys` at
+import time; TypeScript 7 moved the compiler API behind `./unstable/*`, so it
+throws `Cannot read properties of undefined (reading 'useCaseSensitiveFileNames')`
+before writing anything and takes the whole build down. A tsup package therefore
+builds `tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node
+../../scripts/dts.mjs` — one spelling, everywhere.
+
+`scripts/dts.mjs` is the last step because tsc will not write the same
+declaration under two extensions, and a dual-format package promises `.d.cts`
+beside `.d.ts`. It reads the package's OWN `exports`, copies each missing alias
+from the `.d.ts` tsc emitted, and **exits non-zero if a promised declaration has
+no source**. That check is the point: a subpath with no types resolves to `any`
+for every consumer without erroring anywhere, which is how `@hanzo/react` came to
+publish four subpaths — `./hooks`, `./components`, `./tools`, `./mcp` — that
+resolved to nothing at all, two of them with no source directory in the repo.
+They are gone; the root barrel already exported everything they named.
+
+Three things TypeScript 7 requires that 5 did not, each of which failed as
+"cannot find" rather than as a config error:
+
+- **`types` is now the whole list.** TS7 stops sweeping every installed
+  `@types` package into scope, so a project naming any of them must name all of
+  them — `pkg/ui` said `["react"]` and lost `node:fs` in its own suites. Add it
+  to the CHECK config only; `tsconfig.build.json` overrides back to `["react"]`
+  so node's globals stay out of a browser library's declarations.
+- **A relative specifier is resolved strictly.** `declare module '*.css'` no
+  longer covers `import './styles.css'`, and that file is GENERATED into `dist`
+  after tsc runs. `allowArbitraryExtensions` plus `src/styles.d.css.ts` is the
+  form the compiler asks for, and it beats a placeholder stylesheet in `src`
+  that would shadow the real one.
+- **`moduleResolution: node10` is removed** (TS5108), and the TS5095 rule that
+  `bundler` needs an ES module target went with it. Every CJS config here used
+  to state `node` to escape TS5095; they inherit `bundler` now.
+
+`pkgs/annotate` is the one package still on TypeScript 5, and it stays there: it
+consumes the compiler API (`ts.ScriptKind`, `ts.Node`), which TS7 does not
+publish from its main export.
+
+**`@hanzo/canvas` ships compiled, from 0.2.3.** Its `exports` pointed at
+`./src/index.ts` and `./src/pure.ts`, so every consumer had to transpile it —
+the same defect `@hanzo/data` carried until 1.2.2 — and it also put this
+package's source inside a CONSUMER's program: `@hanzo/cd` then spanned two
+packages, its common root became the repo, and tsc refused to emit anything for
+it (TS5011). `gui.config.ts` and `gui.d.ts` moved into `src/` in the same change
+so nothing lands outside `dist`.
+
 Everything under `src/` is emitted, so every `exports` subpath resolves by
 construction — no hand-maintained entry list to drift.
 
@@ -376,22 +423,23 @@ globs `pkg/*/package.json` AND `pkgs/*/package.json`. This line used to say the
 opposite ("the maintainer flow, not publish.yml"), and the workflow's own comment
 records why nobody should trust prose here: "It guessed wrong twice, in opposite
 directions." Measured — bumping this package's version and pushing main put
-8.0.115 on npm with no further step. Read the glob, not this paragraph. Because the
-optional-peer kits (canvas/dashboard/gitops/usage) are not on the public
-registry, a standalone install must skip auto-installing peers. `.npmrc` and
-`pnpm-lock.yaml` are gitignored here, so create the `.npmrc` once:
+8.0.115 on npm with no further step. Read the glob, not this paragraph.
+
+**Install from the REPO ROOT, not from `pkg/ui`.** This package depends on
+siblings by `workspace:*` (`@hanzo/cd` among them), so `pnpm install
+--ignore-workspace` here cannot resolve them and stops at
+`ERR_PNPM_WORKSPACE_PKG_NOT_FOUND` — the standalone recipe this paragraph used to
+give. One root `pnpm install` links every sibling and this package with it:
 
 ```bash
-cd pkg/ui
-printf 'auto-install-peers=false\nstrict-peer-dependencies=false\n' > .npmrc
-pnpm install --ignore-workspace     # component-surface deps (radix, cmdk, sonner, …) + @hanzo/tokens
-pnpm gen:primitives                 # refresh the per-member entrypoints
-pnpm typecheck:ui                   # scoped typecheck of the component surface (green)
+pnpm install                        # from the repo root
+pnpm --filter @hanzo/ui gen:primitives   # refresh the per-member entrypoints
+pnpm --filter @hanzo/ui exec tsc --noEmit
 ```
 
-`@hanzo/tokens` (`pkgs/tokens`) must be built first (`pnpm --filter @hanzo/tokens build`)
-so the `file:` link resolves. The scoped `typecheck:ui` excludes the optional-peer
-subpaths, whose homes aren't installed standalone.
+The reason given for going standalone was that the optional-peer kits are not on
+the public registry. They are: `@hanzo/canvas`, `@hanzo/dashboard`,
+`@hanzo/gitops` and `@hanzo/usage` all resolve on npmjs.
 
 The **kits** = canvas, wallet, network, billing, dashboard, usage, gitops, data.
 Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name` export

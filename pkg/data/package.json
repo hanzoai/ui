@@ -2,7 +2,7 @@
   "name": "@hanzo/data",
   "version": "1.2.4",
   "type": "module",
-  "description": "Hanzo Data — cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.",
+  "description": "Hanzo Data \u2014 cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -65,7 +65,7 @@
     "@hanzogui/web": "7.3.0",
     "@types/react": "^19.1.10",
     "react": "^19.0.0",
-    "typescript": "^5.7.2",
+    "typescript": "^7.0.2",
     "vitest": "^4.1.0"
   },
   "publishConfig": {
