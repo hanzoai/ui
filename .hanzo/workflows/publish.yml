@@ -148,12 +148,26 @@ jobs:
           # KMS_NPM_PATH variable to move it without editing this file.
           KMS_NPM_PATH: ${{ vars.KMS_NPM_PATH || '' }}
         run: |
-          token=$(curl -fsS "${KMS_ENDPOINT}/v1/kms/auth/login" \
-            -H 'Content-Type: application/json' \
-            -d "{\"clientId\":\"${KMS_CLIENT_ID}\",\"clientSecret\":\"${KMS_CLIENT_SECRET}\"}" \
-            | jq -r '.accessToken // empty')
+          # Build the body with jq so a quote or backslash in the secret cannot
+          # break the JSON — a hand-interpolated "{\"clientId\":\"$X\"}" does.
+          body=$(jq -nc --arg id "$KMS_CLIENT_ID" --arg sec "$KMS_CLIENT_SECRET" \
+                   '{clientId:$id, clientSecret:$sec}')
+          # NO -f, and no pipe into jq. `-f` throws the response body away, so a
+          # KMS answer that is not JSON arrives as `jq: Invalid numeric literal`
+          # with no status, no message and jq's exit 4 as the step's verdict —
+          # which is exactly how this failed, and it says nothing about what KMS
+          # replied. Capture the status AND the body, then say which was wrong.
+          out=$(curl -sS -w '\n%{http_code}' "${KMS_ENDPOINT}/v1/kms/auth/login" \
+                  -H 'Content-Type: application/json' --data-binary "$body")
+          code=${out##*$'\n'}
+          resp=${out%$'\n'*}
+          if [ "$code" != "200" ]; then
+            echo "::error::KMS login returned HTTP $code at ${KMS_ENDPOINT}: $(printf '%s' "$resp" | head -c 200)"
+            exit 1
+          fi
+          token=$(printf '%s' "$resp" | jq -r '.accessToken // empty' 2>/dev/null || true)
           if [ -z "${token}" ]; then
-            echo "::error::KMS login failed at ${KMS_ENDPOINT}/v1/kms/auth/login (check KMS_CLIENT_ID/KMS_CLIENT_SECRET)."
+            echo "::error::KMS login was 200 but carried no accessToken: $(printf '%s' "$resp" | head -c 200)"
             exit 1
           fi
           # The read is org-scoped by the TOKEN's owner claim, not by a path
