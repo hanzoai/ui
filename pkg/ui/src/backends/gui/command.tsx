@@ -509,7 +509,7 @@ const CommandItem: FC<CommandItemProps & RefAttributes<GuiElement>> = /* @__PURE
 
     useEffect(() => register(id, entry), [id, register])
     // Only what the filter reads needs to re-derive the visible slice.
-    useEffect(touch, [touch, self, disabled, keywords?.join(' ')])
+    useEffect(touch, [touch, self, disabled, keywords?.join('\u0000')])
 
     const isSelected = !!self && selected === self
 
