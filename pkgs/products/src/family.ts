@@ -16,7 +16,50 @@
 import type { Action } from "./link"
 
 /** The one verb naming each flagship product's job. Exactly six, one per product. */
-export type MenuVerb = "Use" | "Build" | "Work" | "Create AI" | "Deploy" | "Operate"
+export type MenuVerb =
+  | "Use"
+  | "Build"
+  | "Work"
+  | "Create AI"
+  | "Deploy"
+  | "Operate"
+
+/**
+ * How far a product has rolled out, and therefore WHO may see and use it.
+ *
+ * This is NOT `ProductStatus` (`enabled` | `soon`), which answers whether a
+ * product EXISTS. A thing can exist and still not be yours to open. One field,
+ * three readers: the menus decide whether to offer it, the surface decides
+ * whether to serve it, and a marketing page decides whether to claim it — so a
+ * product cannot be hidden in the launcher and advertised on the home page.
+ *
+ *   ga    — everyone, signed in or not.
+ *   beta  — any signed-in customer. Discoverable and usable; not yet promised.
+ *   alpha — Hanzo staff only.
+ *
+ * `alpha` deliberately reuses the ONE identity predicate this fleet already has
+ * — membership of the reserved `admin` org (SuperAdmin) — rather than a list of
+ * addresses. A list is a second source of truth for who someone is, it drifts
+ * the day somebody joins, and it cannot be revoked centrally. Widening alpha to
+ * a cohort later is an IAM group, still asked here, still one predicate.
+ */
+export type Stage = "alpha" | "beta" | "ga"
+
+/** What a viewer is, as far as staged rollout cares. Nothing finer is needed. */
+export type Viewer = "anon" | "customer" | "staff"
+
+/** Rank, so the rule below is an ordering rather than a table of special cases. */
+const REACH: Record<Stage, number> = { ga: 0, beta: 1, alpha: 2 }
+const CAN: Record<Viewer, number> = { anon: 0, customer: 1, staff: 2 }
+
+/** Whether `viewer` may see and use a product at `stage`. Total, pure, and the
+ *  only place the rule is written. */
+export const visibleTo = (stage: Stage, viewer: Viewer): boolean =>
+  CAN[viewer] >= REACH[stage]
+
+/** The products `viewer` may be shown, in canonical order. */
+export const familyFor = (viewer: Viewer): Product[] =>
+  FAMILY.filter((p) => visibleTo(p.stage, viewer))
 
 /** One product in the family — the unit the menu grid, footer, and headers render. */
 export interface Product {
@@ -36,6 +79,8 @@ export interface Product {
   verb?: MenuVerb
   /** The mega-menu call-to-action, e.g. `{ label: "Open Chat", href: "https://hanzo.chat" }`. */
   action: Action
+  /** How far it has rolled out, and so who may see it. See `Stage`. */
+  stage: Stage
 }
 
 /**
@@ -52,6 +97,7 @@ export const FAMILY: Product[] = [
     job: "Talk to Hanzo — use models and agents.",
     verb: "Use",
     action: { label: "Open Chat", href: "https://hanzo.chat" },
+    stage: "ga",
   },
   {
     id: "app",
@@ -62,6 +108,7 @@ export const FAMILY: Product[] = [
     job: "Build AI websites and apps.",
     verb: "Build",
     action: { label: "Start building", href: "https://hanzo.app" },
+    stage: "ga",
   },
   {
     id: "team",
@@ -72,6 +119,7 @@ export const FAMILY: Product[] = [
     job: "Shared work and AI coworkers — channels, projects, tasks, and knowledge.",
     verb: "Work",
     action: { label: "Open Team", href: "https://hanzo.team" },
+    stage: "beta",
   },
   {
     id: "studio",
@@ -82,6 +130,7 @@ export const FAMILY: Product[] = [
     job: "Design, test, evaluate, and version models, prompts, tools, and agents.",
     verb: "Create AI",
     action: { label: "Open Studio", href: "https://studio.hanzo.ai" },
+    stage: "alpha",
   },
   {
     id: "bot",
@@ -92,6 +141,7 @@ export const FAMILY: Product[] = [
     job: "Publish agents to your site, support, Slack, Discord, and channels.",
     verb: "Deploy",
     action: { label: "Create a bot", href: "https://hanzo.bot" },
+    stage: "beta",
   },
   {
     id: "cloud",
@@ -102,6 +152,7 @@ export const FAMILY: Product[] = [
     job: "Run the infrastructure — deploy, observe, secure, and bill.",
     verb: "Operate",
     action: { label: "Open Cloud", href: "https://cloud.hanzo.ai" },
+    stage: "ga",
   },
 ]
 
@@ -114,10 +165,13 @@ export const ROOT: Product = {
   url: "https://hanzo.ai",
   job: "AI for every way you build and work.",
   action: { label: "Open Chat", href: "https://hanzo.chat" },
+  // The umbrella is the front door; it is never staged behind anything it leads to.
+  stage: "ga",
 }
 
 /** The root plus the six family products — the full product set. */
 export const PRODUCTS: Product[] = [ROOT, ...FAMILY]
 
 /** Find a product by id across the root + family; `undefined` when unknown. */
-export const findProduct = (id: string): Product | undefined => PRODUCTS.find((p) => p.id === id)
+export const findProduct = (id: string): Product | undefined =>
+  PRODUCTS.find((p) => p.id === id)
