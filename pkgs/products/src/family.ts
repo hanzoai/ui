@@ -48,18 +48,44 @@ export type Stage = "alpha" | "beta" | "ga"
 /** What a viewer is, as far as staged rollout cares. Nothing finer is needed. */
 export type Viewer = "anon" | "customer" | "staff"
 
-/** Rank, so the rule below is an ordering rather than a table of special cases. */
-const REACH: Record<Stage, number> = { ga: 0, beta: 1, alpha: 2 }
-const CAN: Record<Viewer, number> = { anon: 0, customer: 1, staff: 2 }
+/** Viewers rank, so the rules below are an ordering and not a pile of cases. */
+const RANK: Record<Viewer, number> = { anon: 0, customer: 1, staff: 2 }
 
-/** Whether `viewer` may see and use a product at `stage`. Total, pure, and the
- *  only place the rule is written. */
-export const visibleTo = (stage: Stage, viewer: Viewer): boolean =>
-  CAN[viewer] >= REACH[stage]
+/**
+ * Being OFFERED a product and being LET IN are different questions, and a stage
+ * answers both — with different floors.
+ *
+ * Collapsing them into one predicate hides three products to hide one. Studio is
+ * the only thing not ready to be SEEN; Bot and Team are ready to be seen by
+ * anyone and ready to be opened by a customer. A menu renders to an anonymous
+ * reader, so one predicate at the anonymous floor drops Bot and Team out of the
+ * public footer too — measured: Studio was linked from five live surfaces, all
+ * anonymous loads, and all five are this package's menu and footer.
+ *
+ * A marketing site's whole job is offering something you cannot use yet. So
+ * `see` is about SECRECY and `open` is about READINESS, and only alpha is
+ * secret.
+ */
+const FLOOR: Record<Stage, { see: Viewer; open: Viewer }> = {
+  ga: { see: "anon", open: "anon" },
+  beta: { see: "anon", open: "customer" },
+  alpha: { see: "staff", open: "staff" },
+}
 
-/** The products `viewer` may be shown, in canonical order. */
-export const familyFor = (viewer: Viewer): Product[] =>
-  FAMILY.filter((p) => visibleTo(p.stage, viewer))
+const reaches = (viewer: Viewer, floor: Viewer): boolean =>
+  RANK[viewer] >= RANK[floor]
+
+/** Whether `viewer` may be shown a product at `stage` at all. */
+export const listed = (stage: Stage, viewer: Viewer): boolean =>
+  reaches(viewer, FLOOR[stage].see)
+
+/** Whether `viewer` may actually open a product at `stage`. */
+export const admits = (stage: Stage, viewer: Viewer): boolean =>
+  reaches(viewer, FLOOR[stage].open)
+
+/** The products `viewer` may be shown, in canonical order. What a menu renders. */
+export const listing = (viewer: Viewer): Product[] =>
+  FAMILY.filter((p) => listed(p.stage, viewer))
 
 /** One product in the family — the unit the menu grid, footer, and headers render. */
 export interface Product {
