@@ -690,13 +690,13 @@ export const Gallery = () => (
         <Chat
           messages={TURNS}
           streaming
-          onSend={NOOP}
-          onStop={NOOP}
+          send={NOOP}
+          stop={NOOP}
           composer={{ placeholder: 'Ask anything' }}
         />
       </Screen>
       <Screen height="min(72vh, 620px)" minH={420} maxW={720} gap="$3">
-        <Chat messages={[]} onSend={NOOP} empty={<Message role="system">nothing yet</Message>} />
+        <Chat messages={[]} send={NOOP} empty={<Message role="system">nothing yet</Message>} />
       </Screen>
       {/* The rail is its own column and never wraps into the one above. */}
       <Aside>
