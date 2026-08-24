@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/annotate",
   "version": "0.1.2",
-  "description": "The build-time half of @hanzo/observe \u2014 annotates every component's root element with its own name (data-observe=\"ComponentName\") so a production build keeps the semantic hierarchy React's dev-only fiber owner would have given you. Parses with TypeScript and splices text, so line numbers and formatting are untouched. Ships a webpack/Next loader and a Vite plugin.",
+  "description": "The build-time half of @hanzo/observe — annotates every component's root element with its own name (data-observe=\"ComponentName\") so a production build keeps the semantic hierarchy React's dev-only fiber owner would have given you. Parses with TypeScript and splices text, so line numbers and formatting are untouched. Ships a webpack/Next loader and a Vite plugin.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
