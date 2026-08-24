@@ -31,6 +31,7 @@ import {
   Aside,
   AsideToggle,
   Code,
+  Chat,
   Composer,
   Failure,
   Header as ChatHeader,
@@ -90,6 +91,12 @@ const BUTTON_VARIANTS: ButtonVariant[] = [
 ]
 const BUTTON_SIZES: ButtonSize[] = ['default', 'sm', 'lg', 'icon', 'icon-sm', 'icon-lg']
 const BADGE_VARIANTS: BadgeVariant[] = ['default', 'secondary', 'destructive', 'outline']
+
+/** A thread for `Chat`, which takes the turns as data rather than as children. */
+const TURNS = [
+  { id: 't1', role: 'user' as const, content: 'ask' },
+  { id: 't2', role: 'assistant' as const, content: 'answering' },
+]
 
 /** The chat shell is callbacks-out, and this list only needs them to exist. */
 const NOOP = () => {}
@@ -672,6 +679,24 @@ export const Gallery = () => (
           <Badge>tool</Badge>
         </Composer>
         <Composer value="" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
+      </Screen>
+
+      {/* `Chat` is the block above, composed. Everything it renders is already
+          enumerated there, so this adds no atomic rule — it is here because the
+          gallery is also what the render test and the consumer test mount, and a
+          component absent from the list is one three layers do not check. Both
+          states, because `empty` replaces the thread rather than sitting in it. */}
+      <Screen height="min(72vh, 620px)" minH={420} maxW={720} gap="$3">
+        <Chat
+          messages={TURNS}
+          streaming
+          onSend={NOOP}
+          onStop={NOOP}
+          composer={{ placeholder: 'Ask anything' }}
+        />
+      </Screen>
+      <Screen height="min(72vh, 620px)" minH={420} maxW={720} gap="$3">
+        <Chat messages={[]} onSend={NOOP} empty={<Message role="system">nothing yet</Message>} />
       </Screen>
       {/* The rail is its own column and never wraps into the one above. */}
       <Aside>
