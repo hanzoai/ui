@@ -48,22 +48,34 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
   // on text would notice.
   'fontVariantNumeric'] as const
 
-export type BoxProps = Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> & {
-  className?: ClassValue
-  children?: ReactNode
-  /**
-   * The element to render. Omitted, Box is the `<div>` it has always been.
-   */
-  tag?: keyof React.JSX.IntrinsicElements
-  /**
-   * ARIA states are strings in markup and gui types this one as a boolean, so
-   * both spellings are taken and normalised. Rejecting `"true"` would make a
-   * correct attribute a type error.
-   */
-  'aria-hidden'?: boolean | 'true' | 'false'
-}
+/**
+ * The props of the element being stood in for, ALONGSIDE gui's.
+ *
+ * A `<button>` carries `type` and `disabled`, a `<form>` carries `onSubmit`, a
+ * `<select>` carries `value` and `onChange`. None of those are gui props, so a
+ * Box typed only as a Stack rejects the very markup it exists to replace — and
+ * an app converting a form finds fifteen type errors that read as a broken
+ * component rather than as a missing generic. `style` and `ref` come from each
+ * side and are taken from gui's, which is the one that reaches the DOM.
+ */
+export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
+  Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> &
+  Omit<React.JSX.IntrinsicElements[T], 'style' | 'ref' | 'children' | 'className' | 'color'> & {
+    className?: ClassValue
+    children?: ReactNode
+    /**
+     * The element to render. Omitted, Box is the `<div>` it has always been.
+     */
+    tag?: T
+    /**
+     * ARIA states are strings in markup and gui types this one as a boolean, so
+     * both spellings are taken and normalised. Rejecting `"true"` would make a
+     * correct attribute a type error.
+     */
+    'aria-hidden'?: boolean | 'true' | 'false'
+  }
 
-export const Box = forwardRef<any, BoxProps>(function Box(
+export const Box = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(function Box(
   { className, children, 'aria-hidden': hidden, tag, ...rest },
   ref,
 ) {
