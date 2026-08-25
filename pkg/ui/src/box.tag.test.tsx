@@ -75,3 +75,15 @@ describe('Box drops nothing a frame would swallow', () => {
     expect(html(<Box className="flex">x</Box>)).toMatch(/min-width:\s*auto/)
   })
 })
+
+describe("Box hands the element its own attributes", () => {
+  it('puts href on the anchor, where a link needs it', () => {
+    // With asChild these used to ride on the frame, which has no use for them —
+    // an <a> with no href is not a link, and nothing about it looks wrong.
+    expect(html(<Box tag="a" href="/x">x</Box>)).toMatch(/<a[^>]*href="\/x"/)
+  })
+
+  it('puts type on the button', () => {
+    expect(html(<Box tag="button" type="submit">x</Box>)).toMatch(/<button[^>]*type="submit"/)
+  })
+})

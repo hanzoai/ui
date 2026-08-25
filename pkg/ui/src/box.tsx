@@ -59,10 +59,17 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
  * side and are taken from gui's, which is the one that reaches the DOM.
  */
 export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
-  Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> &
+  // The ELEMENT wins every name they share. Both sides declare `onChange` and
+  // `ref`, and a union of the two types the event target as
+  // `HTMLDivElement | HTMLSelectElement` — so reading `e.target.value` off a
+  // converted <select> is an error on the one element that has it. A component
+  // whose whole job is to BE that element should answer with the element's.
+  Omit<React.ComponentProps<typeof YStack>,
+    'aria-hidden' | 'ref' | keyof React.JSX.IntrinsicElements[T]> &
   Omit<React.JSX.IntrinsicElements[T], 'style' | 'ref' | 'children' | 'className' | 'color'> & {
     className?: ClassValue
     children?: ReactNode
+    ref?: React.Ref<any>
     /**
      * The element to render. Omitted, Box is the `<div>` it has always been.
      */
@@ -117,7 +124,10 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
       shrink={1}
       aria-hidden={hidden === undefined ? undefined : hidden !== 'false' && hidden !== false}
       {...(props as object)}
-      {...rest}
+      // With a tag, everything the caller passed belongs to the ELEMENT, not to
+      // the frame: `href`, `type` and `onSubmit` are the element's and gui has no
+      // use for them. Without one, this IS the element and they ride here.
+      {...(tag ? {} : (rest as object))}
       className={tag ? undefined : unread || undefined}
       style={tag ? undefined : style}
     >
@@ -125,7 +135,11 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
           so the class it could not read and the text styles a frame would drop
           both belong here — on the element that survives. */}
       {tag
-        ? createElement(tag, { ref, className: unread || undefined, style }, children)
+        ? createElement(
+            tag,
+            { ...(rest as object), ref, className: unread || undefined, style },
+            children,
+          )
         : children}
     </YStack>
   )
