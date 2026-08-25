@@ -29,7 +29,7 @@
 //
 // It is maintained BY HAND — `scripts/gen-primitives.mjs` writes `src/primitives/`,
 // not this file, so nothing regenerates it and nothing used to notice when the two
-// drifted. Glass, Grid, Section and CardMedia were all exported by the backend and
+// drifted. Glass, Grid, Band and CardMedia were all exported by the backend and
 // absent here, which means a consumer could not import them AT ALL: the component
 // existed, the docs named it, and `import { Grid } from '@hanzo/ui'` was undefined.
 // `src/__tests__/barrel.test.ts` now fails when the two disagree.
@@ -50,7 +50,7 @@ export {
   PopoverTrigger, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,
   ScrollBar, Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
   SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue,
-  Paragraph, Screen, ScrollView, Section, Separator, SizableText, Slider, Spacer, Span, Spinner, Strong,
+  Paragraph, Screen, ScrollView, Band, Separator, SizableText, Slider, Spacer, Span, Spinner, Strong,
   Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea,
   Toaster,
