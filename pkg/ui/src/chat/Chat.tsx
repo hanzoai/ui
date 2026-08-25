@@ -33,6 +33,7 @@ import { YStack } from '@hanzo/gui'
 import { useCallback, useState, type ReactNode } from 'react'
 
 import { ink } from '../backends/gui/ink'
+import { slot } from '../backends/gui/slot'
 import { Composer, type ComposerProps } from './Composer'
 import { Message, type Role } from './Message'
 import { Thread, type ThreadProps } from './Thread'
@@ -113,8 +114,14 @@ export function Chat({
   // set it already, measured on the rendered element — and gui publishes no
   // such prop, so writing it type-errors rather than silently doing nothing,
   // which is the one member of that family this substrate catches for you.
+  // The frame is marked, like every other component here. It is not decoration:
+  // `data-slot` is what `componentName()` reads for analytics, and it is the only
+  // way a browser check can find this frame — a probe that walks N parents up
+  // from the composer lands on a `display: contents` wrapper or on the page,
+  // and then reports a component that is fine as broken, or one that is broken
+  // as fine.
   return (
-    <YStack flex={1} width="100%">
+    <YStack flex={1} width="100%" {...slot('chat')}>
       {messages.length === 0 && empty ? (
         empty
       ) : (
