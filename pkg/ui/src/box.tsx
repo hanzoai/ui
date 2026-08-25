@@ -59,17 +59,33 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
  * side and are taken from gui's, which is the one that reaches the DOM.
  */
 export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
-  // The ELEMENT wins every name they share. Both sides declare `onChange` and
-  // `ref`, and a union of the two types the event target as
+  // The ELEMENT wins every name they share. Both sides declare `onChange`, and a
+  // union of the two types the event target as
   // `HTMLDivElement | HTMLSelectElement` — so reading `e.target.value` off a
   // converted <select> is an error on the one element that has it. A component
   // whose whole job is to BE that element should answer with the element's.
+  //
+  // The overlap is NAMED rather than computed. `keyof IntrinsicElements[T]` reads
+  // like the same statement and does nothing: with T still generic TypeScript
+  // does not resolve the key set, so the Omit removes nothing and the union comes
+  // back. Written out, it is checked.
   Omit<React.ComponentProps<typeof YStack>,
-    'aria-hidden' | 'ref' | keyof React.JSX.IntrinsicElements[T]> &
+    | 'aria-hidden' | 'ref' | 'style' | 'children' | 'className' | 'color' | 'id'
+    | 'role' | 'tabIndex' | 'title' | 'onChange' | 'onClick' | 'onSubmit'
+    | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onKeyUp' | 'onKeyPress'
+    | 'onMouseEnter' | 'onMouseLeave' | 'onMouseDown' | 'onMouseUp'
+    | 'onScroll' | 'onLayout' | 'disabled'> &
   Omit<React.JSX.IntrinsicElements[T], 'style' | 'ref' | 'children' | 'className' | 'color'> & {
     className?: ClassValue
     children?: ReactNode
     ref?: React.Ref<any>
+    /**
+     * Plain CSS, because that is where it lands: Box hands `style` to the DOM
+     * element, not to a native view. gui types it as a react-native style and a
+     * caller passing `CSSProperties` — which every converted app does — was an
+     * error on a prop that works.
+     */
+    style?: React.CSSProperties
     /**
      * The element to render. Omitted, Box is the `<div>` it has always been.
      */
