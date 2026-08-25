@@ -16,7 +16,21 @@ import type { ComponentProps, ReactNode } from 'react'
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
 
-export type Role = 'user' | 'assistant' | 'system'
+/**
+ * Who is speaking — and it is the WIRE's set, not a presentation set of our own.
+ *
+ * This was `user | assistant | system`, three roles that look different, which is
+ * a reasonable thing to want and the wrong place to want it. A completion carries
+ * `tool` too, so `@hanzo/ai`'s `useChat` holds turns this could not accept and
+ * `<Chat {...useChat(…)} />` did not typecheck for ANY surface — the one call the
+ * pair exists to make work. A component fed by the SDK has to take the SDK's
+ * vocabulary; narrowing it here just moves the mismatch to every caller.
+ *
+ * `tool` presents as the aside `system` does: it is machine chatter about the
+ * turn rather than speech in it. A surface that wants tool calls drawn properly
+ * has `Step` for that and passes it as children.
+ */
+export type Role = 'user' | 'assistant' | 'system' | 'tool'
 
 /** What a gui stack accepts. `role` is dropped: here it names the speaker, not
  *  an ARIA role. `aria-label` still reaches the row. */
@@ -57,11 +71,16 @@ export function Message({
   body,
   ...props
 }: MessageProps) {
-  if (role === 'system')
+  // `tool` takes the aside too — see the Role note above. Machine chatter about
+  // a turn, not speech in it.
+  if (role === 'system' || role === 'tool')
     return (
       <XStack
         {...slot('message')}
-        data-role="system"
+        // The attribute says which role it IS, not which branch drew it. It was
+        // the literal "system", so a tool turn reported itself as a system one to
+        // every gate and every analytics read that keys on this.
+        data-role={role}
         width="100%"
         justify="center"
         py="$2"
