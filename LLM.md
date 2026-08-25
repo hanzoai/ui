@@ -835,6 +835,51 @@ primitives exist and `ink()` wraps bare text children in a Text host. That stale
 answer is what a consumer repo reads to decide the migration is blocked, so it
 costs a whole conversion.
 
+**The deepest instance of this family is NOT ours to fix: a ref to dialog content
+never reaches the DOM.** `src/backends/gui/dialog.ref.test.tsx` pins it, and its
+assertions are deliberately wrong — they describe the defect, so the day it is
+fixed the file goes red and is deleted.
+
+Measured on `@hanzo/gui` **8.1.0 AND 8.2.0**, so it is not a version anyone can
+upgrade past today. The reading is only trustworthy because of three controls,
+and each was needed:
+
+- a bare gui stack in the identical harness DOES deliver a node, so a zero is a
+  fact about Dialog rather than about jsdom or the provider;
+- the content is proven MOUNTED — a dialog that never opened answers zero refs
+  *correctly* and reads identical;
+- `role="dialog"` is in the document, which is `DialogContentFrame`'s and marks
+  the one branch of gui's `DialogContentImpl` that DOES attach the composed ref
+  (the adapt/portal-item branch attaches none). So the ref-attaching branch ran
+  and the ref still never arrived — it is lost inside gui between
+  `DialogContent`'s `.styleable` wrapper and that frame.
+
+The callback fires ZERO times, not once with `null`, and the distinction is
+worth keeping: an object ref cannot tell "never attached" from "attached then
+detached", which is why the pin uses a callback.
+
+**Do not "fix" this by adding `forwardRef` here.** It would forward into a
+component that discards it, producing a wrapper that typechecks, renders and
+delivers nothing — worse than the honest gap, because the next reader stops
+looking. Only 7 of the 49 gui components take a ref at all today.
+
+What it costs: any consumer whose behaviour is a DOM measurement on the content
+— drag, snap, `getComputedStyle().transform`, `getBoundingClientRect` — silently
+no-ops. No crash, no type error, no failing build. It is why the de-Tailwind
+sweep correctly REFUSED to convert `react-drawer`, whose whole mechanism is
+`drawerRef.current`.
+
+One trap to skip on re-measure: the run emits React's "error during concurrent
+rendering but React was able to recover", and vitest flags it as possibly
+causing false positives — alarming, since a broken render is the other thing
+that yields zero calls. It fires in all three cases INCLUDING the control, and
+the control still delivers, so it is ambient to mounting `<Hanzo>`.
+
+**And bumping `@hanzo/gui` alone to check is not a check — it is the SPLIT this
+file already warns about.** Dev-bumping to 8.2.0 left `@hanzogui/web` resolved at
+8.1.0 and every dialog render died on `Missing theme.` before any ref could be
+observed. Move `pnpm.overrides` with it or measure on the pinned version.
+
 ## Two packages removed public exports in a PATCH — decided, not an oversight
 
 `@hanzo/agent-ui` 0.1.0→**0.1.1** dropped `getStatusTone`,
