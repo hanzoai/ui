@@ -40,7 +40,13 @@ import { tw, type ClassValue } from './tw'
 /** Properties a frame ignores and a DOM element passes to its children. */
 const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
   'textTransform', 'fontFamily', 'fontStyle', 'textAlign', 'color',
-  'textDecorationLine', 'whiteSpace'] as const
+  'textDecorationLine', 'whiteSpace',
+  // `tabular-nums` is the one class on a checkout that MUST survive: it is what
+  // makes a column of figures line up. tw converts it to fontVariantNumeric,
+  // which a frame drops like the rest of these, and the loss shows as a money
+  // column going ragged — a 25px total measuring 27px, which no test asserting
+  // on text would notice.
+  'fontVariantNumeric'] as const
 
 export type BoxProps = Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> & {
   className?: ClassValue
@@ -66,6 +72,9 @@ export const Box = forwardRef<any, BoxProps>(function Box(
   // flex or grid child its automatic minimum size. Pinned, a converted child of
   // a row of indefinite height measured 0px and its content vanished.
   if (!('minHeight' in props)) props.minHeight = 'auto'
+  // The same fact on the other axis. A View pins `min-width: 0`, a div's is
+  // auto, and auto is what stops a flex child shrinking below its content.
+  if (!('minWidth' in props)) props.minWidth = 'auto'
   // gui drops a text property set on a frame — `fontSize` is not a frame style
   // prop, so it silently rendered at the inherited size and a page carrying
   // `text-xs` on a box came out three pixels larger everywhere. A div DOES pass
