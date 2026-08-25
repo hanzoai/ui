@@ -142,3 +142,31 @@ if (existsSync(CJS)) {
 }
 
 for (const f of files(DIST)) if (/\.(js|cjs)$/.test(f)) useClient(f)
+
+// ── A NODE ENTRY, because a stylesheet is not a module node can load ─────────
+//
+// `<Hanzo>` imports its own stylesheet, deliberately: the sheet is a real cached
+// file rather than something inlined on every streaming flush. Node has no loader
+// for `.css`, so ANY consumer whose test runner resolves this package under node
+// fails to COLLECT — "Unknown file extension .css" against a package path, which
+// reads as a broken dependency and is really a missing entry point. That is one
+// broken suite per app, and there are dozens of apps.
+//
+// So the package publishes a node entry with the side effect removed. Nothing
+// else differs: same components, same exports, same code. What it loses is the
+// stylesheet, which a jsdom document could not have painted anyway; <Hanzo>'s
+// dev-time check for `--hanzo-ui-styles` then reports the sheet missing, which is
+// exactly what it should say and what root.test.tsx already declares a marker for.
+{
+  const root = join(DIST, 'root.js')
+  const index = join(DIST, 'index.js')
+  if (existsSync(root) && existsSync(index)) {
+    const rootSrc = readFileSync(root, 'utf8').replace(
+      /^\s*import\s+['"]\.\/styles\.css['"];?\s*$/m,
+      "// styles.css is omitted from the node entry: node cannot load a stylesheet.",
+    )
+    writeFileSync(join(DIST, 'root.node.js'), rootSrc)
+    const indexSrc = readFileSync(index, 'utf8').replace(/'\.\/root\.js'/g, "'./root.node.js'")
+    writeFileSync(join(DIST, 'index.node.js'), indexSrc)
+  }
+}

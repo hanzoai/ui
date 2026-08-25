@@ -37,6 +37,22 @@ import { createElement, forwardRef, type ReactNode } from 'react'
 import { YStack } from '@hanzo/gui'
 import { tw, type ClassValue } from './tw'
 
+/**
+ * The display each element has before any class touches it.
+ *
+ * Box stated `block` for everything, which is the div's answer and wrong for the
+ * inline ones: a converted `<a>` became a full-width block, so two links that had
+ * sat side by side in a sentence stacked and the footer grew from 47px to 112px.
+ * Anything absent here is `block`, which is right for div, p, section, the
+ * headings, the lists and the landmarks.
+ *
+ * A class still wins — `flex` says flex, and silence says whatever the element
+ * already was.
+ */
+const INLINE = new Set(['a', 'span', 'em', 'strong', 'b', 'i', 'u', 's', 'small',
+  'abbr', 'cite', 'code', 'kbd', 'samp', 'var', 'sub', 'sup', 'mark', 'q', 'time',
+  'label', 'output', 'bdi', 'bdo', 'ruby', 'wbr'])
+
 /** Properties a frame ignores and a DOM element passes to its children. */
 const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
   'textTransform', 'fontFamily', 'fontStyle', 'textAlign', 'color',
@@ -121,6 +137,10 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
   // a converted box grew a few pixels per line of text. Stated only when no
   // class said otherwise, so `leading-relaxed` still wins.
   if (!('lineHeight' in text)) text.lineHeight = 'inherit'
+  // A list item needs `display: list-item` or it loses its marker, and gui's
+  // display prop has no such value — its set is block/contents/flex/inline/…
+  // So it rides as a plain style, where it also outranks the class gui emits.
+  if (tag === 'li' && !('display' in props)) text.display = 'list-item'
   const style = Object.keys(text).length
     ? { ...text, ...(rest as any).style }
     : (rest as any).style
@@ -130,7 +150,7 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
     <YStack
       ref={tag ? undefined : ref}
       asChild={tag ? true : undefined}
-      display="block"
+      display={tag && INLINE.has(tag) ? 'inline' : 'block'}
       // A View does not shrink; a div does. Left at the View's default, every
       // converted flex child held its full basis and overflowed its row instead
       // of sharing it — two half-width columns came out 608px each in a 1216px
