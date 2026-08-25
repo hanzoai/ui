@@ -343,12 +343,12 @@ test.describe('layout', () => {
     expect(Math.round(h)).toBe(36)
   })
 
-  test('a Section centres a measure and keeps its gutter', async ({ page }) => {
+  test('a Band centres a measure and keeps its gutter', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await load(page, 'dark')
     const { outer, inner } = await page.evaluate(() => {
       const o = document.querySelector('[data-section="demo"]')!.getBoundingClientRect()
-      const i = document.querySelector('[data-section="demo"] [data-slot="section-inner"]')!.getBoundingClientRect()
+      const i = document.querySelector('[data-section="demo"] [data-slot="band-inner"]')!.getBoundingClientRect()
       return { outer: { x: o.x, w: o.width }, inner: { x: i.x, w: i.width } }
     })
     expect(inner.w, 'the measure is not capped').toBeLessThanOrEqual(600)

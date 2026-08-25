@@ -47,9 +47,19 @@ export {
   Strong,
   Em,
 
-  // Leaves — a link, an image, a gap, a scroller.
+  // Leaves — a link, an image, a gap, a rule, a scroller.
+  //
+  // `Separator` is here rather than in a wrapper of its own. This package used
+  // to ship one, and all it did was rename gui's `vertical` boolean to a
+  // Radix-shaped `orientation` string, accept a `decorative` prop it threw
+  // away, and re-declare `borderColor` because gui's separator took
+  // `$backgroundFocus` — the colour a surface goes when FOCUSED — and drew an
+  // invisible line on a white page. gui takes `$borderColor` now, so the
+  // override is gone and with it the reason for the wrapper: two exported
+  // `Separator`s with two prop names for one axis.
   Anchor,
   Image,
+  Separator,
   Spacer,
   ScrollView,
 

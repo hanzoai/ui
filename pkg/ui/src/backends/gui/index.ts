@@ -163,7 +163,7 @@ export {
 export {
   XStack, YStack, ZStack,
   SizableText, Paragraph, Heading, H1, H2, H3, H4, H5, H6, Span, Strong, Em,
-  Anchor, Image, Spacer, ScrollView, View, Text,
+  Anchor, Image, Separator, Spacer, ScrollView, View, Text,
   type GuiElement,
 } from './layout'
 export { ScrollArea, ScrollBar } from './scroll-area'
@@ -179,9 +179,8 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from './select'
-export { Section, type SectionProps } from './section'
+export { Band, type BandProps } from './band'
 export { Screen, Fill, type ScreenProps, type FillProps } from './screen'
-export { Separator } from './separator'
 export { Slider } from './slider'
 export { Spinner, type SpinnerProps } from './spinner'
 export { Switch } from './switch'
