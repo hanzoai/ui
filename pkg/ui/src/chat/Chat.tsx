@@ -37,6 +37,7 @@ import { slot } from '../backends/gui/slot'
 import { Composer, type ComposerProps } from './Composer'
 import { Message, type Role } from './Message'
 import { Thread, type ThreadProps } from './Thread'
+import { words, type Said } from './words'
 
 /**
  * One turn, as little of it as a picture needs: who spoke, what they said, and
@@ -49,7 +50,16 @@ import { Thread, type ThreadProps } from './Thread'
 export interface Turn {
   id: string
   role: Role
-  content?: string
+  /**
+   * What was said — a string, or the wire's parts.
+   *
+   * This was `string` alone, which is the same mistake `Role` made one field
+   * over: a completion's content is `string | ContentPart[]` (text beside an
+   * image), so a turn holding an attachment could not be handed to this at all.
+   * Narrowing the wire in a component fed BY the wire just relocates the
+   * mismatch to every caller. `words` is the flattener.
+   */
+  content?: Said
 }
 
 export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
@@ -132,7 +142,7 @@ export function Chat({
               role={turn.role}
               busy={streaming && i === last && turn.role === 'assistant'}
             >
-              {body ? body(turn) : ink(turn.content ?? '')}
+              {body ? body(turn) : ink(words(turn.content))}
             </Message>
           ))}
         </Thread>

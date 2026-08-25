@@ -4,7 +4,7 @@
 // spec, and in a server component. `@hanzo/ui/chat` cannot: it is TSX behind a
 // client directive.
 //
-//   import { sends, ready, pinned, SLACK } from '@hanzo/ui/chat/pure'
+//   import { sends, ready, pinned, SLACK, words } from '@hanzo/ui/chat/pure'
 //
 // `@hanzo/ui/product/pure` re-exports all four, because none of them is a chat
 // rule and that is the entry point a non-chat surface imports them from.
@@ -15,3 +15,6 @@ export { ready, sends, type Mods } from './send'
 
 // Stay-at-the-bottom, as a distance test.
 export { pinned, SLACK, type Track } from './stick'
+
+// The text of a turn whose content may be a string or the wire's parts.
+export { words, type Part, type Said } from './words'
