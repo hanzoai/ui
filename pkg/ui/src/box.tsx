@@ -18,8 +18,22 @@
  * 77 of 225 elements on one page into flex containers that were never asked to
  * be: an inline run became a column, a heading's width collapsed to its text,
  * and a page grew 8% taller.
+ *
+ * `tag` renders the element Box is standing in for, and it is what makes the
+ * migration reach past `<div>`. Divs are about a third of what carries a
+ * className in these apps; the rest are `p`, `span`, `li`, `h2`, `section`, `a`.
+ * Converting those to a div-only Box would read as a rename and would in fact
+ * strip the document of its headings, lists and paragraphs — every one of them a
+ * thing a screen reader navigates by.
+ *
+ * It goes through `asChild` because gui does NOT honour a `tag` prop: asked for
+ * one it renders its own element anyway AND passes `tag` through to the DOM,
+ * where it is an invalid attribute. `asChild` is the supported way to say "style
+ * this element instead of yours", so the semantics come from the element and the
+ * styling still comes from gui — one substrate, not a second styling path for
+ * everything that is not a div.
  */
-import { forwardRef, type ReactNode } from 'react'
+import { createElement, forwardRef, type ReactNode } from 'react'
 import { YStack } from '@hanzo/gui'
 import { tw, type ClassValue } from './tw'
 
@@ -32,6 +46,10 @@ export type BoxProps = Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> 
   className?: ClassValue
   children?: ReactNode
   /**
+   * The element to render. Omitted, Box is the `<div>` it has always been.
+   */
+  tag?: keyof React.JSX.IntrinsicElements
+  /**
    * ARIA states are strings in markup and gui types this one as a boolean, so
    * both spellings are taken and normalised. Rejecting `"true"` would make a
    * correct attribute a type error.
@@ -40,7 +58,7 @@ export type BoxProps = Omit<React.ComponentProps<typeof YStack>, 'aria-hidden'> 
 }
 
 export const Box = forwardRef<any, BoxProps>(function Box(
-  { className, children, 'aria-hidden': hidden, ...rest },
+  { className, children, 'aria-hidden': hidden, tag, ...rest },
   ref,
 ) {
   const { props, rest: unread } = tw(className)
@@ -59,11 +77,15 @@ export const Box = forwardRef<any, BoxProps>(function Box(
   // a converted box grew a few pixels per line of text. Stated only when no
   // class said otherwise, so `leading-relaxed` still wins.
   if (!('lineHeight' in text)) text.lineHeight = 'inherit'
+  const style = Object.keys(text).length
+    ? { ...text, ...(rest as any).style }
+    : (rest as any).style
   // Explicit props win: a caller who states a value directly means it, and the
   // classes are what they are migrating away from.
-  return (
+  const frame = (
     <YStack
-      ref={ref}
+      ref={tag ? undefined : ref}
+      asChild={tag ? true : undefined}
       display="block"
       // A View does not shrink; a div does. Left at the View's default, every
       // converted flex child held its full basis and overflowed its row instead
@@ -75,12 +97,19 @@ export const Box = forwardRef<any, BoxProps>(function Box(
       aria-hidden={hidden === undefined ? undefined : hidden !== 'false' && hidden !== false}
       {...(props as object)}
       {...rest}
-      className={unread || undefined}
-      style={Object.keys(text).length ? { ...text, ...(rest as any).style } : (rest as any).style}
+      className={tag ? undefined : unread || undefined}
+      style={tag ? undefined : style}
     >
-      {children}
+      {/* Under `asChild` gui styles THIS element and renders no frame of its own,
+          so the class it could not read and the text styles a frame would drop
+          both belong here — on the element that survives. */}
+      {tag
+        ? createElement(tag, { ref, className: unread || undefined, style }, children)
+        : children}
     </YStack>
   )
+
+  return frame
 })
 
 export default Box
