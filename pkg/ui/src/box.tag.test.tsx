@@ -57,3 +57,21 @@ describe('Box tag', () => {
     expect(html(<Box tag="p" className="text-xs">x</Box>)).toMatch(/font-size:\s*var\(--text-xs\)/)
   })
 })
+
+describe('Box drops nothing a frame would swallow', () => {
+  it('keeps tabular-nums, which is what lines a money column up', () => {
+    // tw converts it to fontVariantNumeric; a frame drops that like any other
+    // text property, and the loss shows only as a figure measuring a couple of
+    // pixels wider — invisible to a test that asserts on text.
+    expect(html(<Box className="tabular-nums">x</Box>))
+      .toMatch(/font-variant-numeric:\s*tabular-nums/)
+    expect(html(<Box tag="span" className="tabular-nums">x</Box>))
+      .toMatch(/font-variant-numeric:\s*tabular-nums/)
+  })
+
+  it('leaves min-width auto, like the div it replaces', () => {
+    // A View pins min-width 0; auto is what stops a flex child shrinking below
+    // its own content.
+    expect(html(<Box className="flex">x</Box>)).toMatch(/min-width:\s*auto/)
+  })
+})
