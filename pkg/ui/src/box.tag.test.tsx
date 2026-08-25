@@ -18,6 +18,18 @@ const html = (ui: React.ReactNode) =>
     <GuiProvider config={config as never} defaultTheme="dark">{ui}</GuiProvider>,
   )
 
+/**
+ * The class list on the element we asked for.
+ *
+ * Anchored on the CONTENT, because the provider wraps everything in a span of
+ * its own — so a test asking about `<span>` otherwise reads the wrapper's
+ * classes and reports that Box did nothing.
+ */
+const classOf = (out: string, tag: string) =>
+  new RegExp(`<${tag}[^>]*class="([^"]*)"[^>]*>x`).exec(
+    out.replace(/<style[\s\S]*?<\/style>/g, ''),
+  )?.[1] ?? ''
+
 /** The element holding the content, past the stylesheet gui injects first. */
 const elementOf = (out: string) =>
   /<(\w+)[^>]*>x/.exec(out.replace(/<style[\s\S]*?<\/style>/g, ''))?.[1]
@@ -85,5 +97,46 @@ describe("Box hands the element its own attributes", () => {
 
   it('puts type on the button', () => {
     expect(html(<Box tag="button" type="submit">x</Box>)).toMatch(/<button[^>]*type="submit"/)
+  })
+})
+
+describe('Box starts from the element it renders, not from a div', () => {
+  it('leaves inline elements inline', () => {
+    // Stating block for everything made a converted <a> a full-width block, so
+    // two links that sat side by side in a sentence stacked, and one footer grew
+    // from 47px to 112px.
+    for (const tag of ['a', 'span', 'em', 'strong', 'label'] as const) {
+      const cls = classOf(html(<Box tag={tag}>x</Box>), tag)
+      expect(cls, tag).toMatch(/_dsp-inline/)
+    }
+  })
+
+  it('keeps block elements block', () => {
+    for (const tag of ['p', 'section', 'h2', 'ul', 'main'] as const) {
+      const cls = classOf(html(<Box tag={tag}>x</Box>), tag)
+      expect(cls, tag).toMatch(/_dsp-block/)
+    }
+  })
+
+  it('still lets a class decide', () => {
+    const cls = classOf(html(<Box tag="a" className="flex">x</Box>), 'a')
+    expect(cls).toMatch(/_dsp-flex/)
+  })
+})
+
+describe('Box lays out on grid', () => {
+  it('emits display:grid and a template', () => {
+    // grid is the layout to reach for first: two axes stated once, instead of a
+    // tree of nested flex rows. tw already spoke the whole vocabulary; only
+    // gui's display TYPE refused the value, never its runtime.
+    const out = html(<Box className="grid grid-cols-3 gap-4">x</Box>)
+    expect(classOf(out, 'div')).toMatch(/_dsp-grid/)
+    expect(out).toMatch(/grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\)/)
+  })
+
+  it('gives a list item its marker', () => {
+    // Without display:list-item a converted <li> loses its bullet, and a list
+    // stops reading as a list.
+    expect(html(<Box tag="li">x</Box>)).toMatch(/display:\s*list-item/)
   })
 })
