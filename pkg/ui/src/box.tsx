@@ -75,7 +75,7 @@ export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
     'aria-hidden'?: boolean | 'true' | 'false'
   }
 
-export const Box = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(function Box(
+const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(function Box(
   { className, children, 'aria-hidden': hidden, tag, ...rest },
   ref,
 ) {
@@ -132,5 +132,17 @@ export const Box = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(
 
   return frame
 })
+
+/**
+ * `forwardRef` cannot carry a generic through, so the props of every element
+ * collapse into a UNION — and a union demands a prop be valid for ALL of them,
+ * which makes `href`, `type` and `onSubmit` errors on the very elements that
+ * own them. The cast is what restores inference from `tag`, and it is the
+ * standard shape for a polymorphic component: the implementation stays checked
+ * against the union, the CALLER gets the one element it named.
+ */
+export const Box = BoxInner as <T extends keyof React.JSX.IntrinsicElements = 'div'>(
+  props: BoxProps<T> & { ref?: React.Ref<any> },
+) => React.ReactElement | null
 
 export default Box
