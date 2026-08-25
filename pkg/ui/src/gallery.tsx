@@ -67,7 +67,7 @@ import {
   ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea, Select, SelectContent,
   SelectItem, SelectTrigger, SelectValue, Separator, Slider, Switch, Tabs, TabsContent,
   TabsList, TabsTrigger, Textarea, Toaster, Tooltip, TooltipContent, TooltipProvider,
-  TooltipTrigger, Section as PageSection, CardMedia, CommandDialog, Spinner, Text,
+  TooltipTrigger, Band, CardMedia, CommandDialog, Spinner, Text,
   Screen, Fill,
   type BadgeVariant, type ButtonSize, type ButtonVariant,
 } from './backends/gui'
@@ -539,9 +539,9 @@ export const Gallery = () => (
         <CardHeader><CardTitle>Interactive card</CardTitle></CardHeader>
       </Card>
 
-      <PageSection maxWidth={600} data-section="demo">
+      <Band measure={600} data-section="demo">
         <CardTitle>Section</CardTitle>
-      </PageSection>
+      </Band>
 
       {/* The Button constraint. A Button PINS its height, correctly — it is a
           control. Given a block child it must not silently clip it to a sliver,
