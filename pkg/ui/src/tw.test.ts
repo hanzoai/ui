@@ -226,3 +226,21 @@ describe('an arbitrary text- value is a size when it is a length', () => {
     expect(tw('text-4xl').props.fontSize).toBe('var(--text-4xl)')
   })
 })
+
+describe('tracking and underline offset', () => {
+  it('an arbitrary tracking value is a letter spacing', () => {
+    // Wide display type is set in em so it tracks the size —
+    // `tracking-[0.2em]` on a small uppercase label is the idiom.
+    expect(tw('tracking-[0.2em]')).toEqual({ props: { letterSpacing: '0.2em' }, rest: '' })
+    expect(tw('tracking-widest').props.letterSpacing).toBe(1.6)
+  })
+
+  it('underline offset reads, and does not shadow underline', () => {
+    expect(tw('underline-offset-2')).toEqual({ props: { textUnderlineOffset: '2px' }, rest: '' })
+    expect(tw('underline')).toEqual({ props: { textDecorationLine: 'underline' }, rest: '' })
+    expect(tw('underline underline-offset-4')).toEqual({
+      props: { textDecorationLine: 'underline', textUnderlineOffset: '4px' },
+      rest: '',
+    })
+  })
+})
