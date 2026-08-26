@@ -204,3 +204,25 @@ describe('the xs rung lands at the base', () => {
     expect(tw('nope:h-2')).toEqual({ props: {}, rest: 'nope:h-2' })
   })
 })
+
+describe('an arbitrary text- value is a size when it is a length', () => {
+  // `text-` means size OR colour, and only the value can say which. Every
+  // arbitrary one reached the colour branch, so `text-[96px]` returned
+  // `{ color: '96px' }` — which the browser drops, leaving the element on its
+  // inherited size with nothing reporting a problem. Found on lux/bitcoin's
+  // 404, where a heading written at 96px rendered at 28.
+  it('a length is a font size', () => {
+    expect(tw('text-[96px]')).toEqual({ props: { fontSize: '96px' }, rest: '' })
+    expect(tw('text-[1.05rem]')).toEqual({ props: { fontSize: '1.05rem' }, rest: '' })
+    expect(tw('text-[50%]')).toEqual({ props: { fontSize: '50%' }, rest: '' })
+  })
+
+  it('a colour is still a colour', () => {
+    expect(tw('text-[#fff]')).toEqual({ props: { color: '#fff' }, rest: '' })
+    expect(tw('text-[var(--ink)]')).toEqual({ props: { color: 'var(--ink)' }, rest: '' })
+  })
+
+  it('the named scale is untouched', () => {
+    expect(tw('text-4xl').props.fontSize).toBe('var(--text-4xl)')
+  })
+})
