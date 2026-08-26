@@ -312,6 +312,16 @@ function one(c: string): Props | null {
       // heading losing 8px of height and the page under it rising to match.
       if (v in FONT_SIZE) return { fontSize: FONT_SIZE[v], lineHeight: `var(--text-${v}--line-height)` }
       if (v === 'left' || v === 'center' || v === 'right' || v === 'justify') return { textAlign: v }
+      // `text-` sets a size OR a colour, and an arbitrary value has to say
+      // which. A LENGTH is a size: `text-[96px]` was reaching the colour branch
+      // and returning `{ color: '96px' }` — a declaration the browser drops, so
+      // the heading kept its inherited size and nothing anywhere reported a
+      // problem. Measured on lux/bitcoin's 404, where a 96px numeral rendered
+      // at 28px.
+      const arb = /^\[(.+)]$/.exec(v)
+      if (arb && /^-?[\d.]+(px|rem|em|ch|ex|vw|vh|vmin|vmax|%|pt)?$/.test(arb[1])) {
+        return { fontSize: arb[1] }
+      }
       const col = color(v)
       return col ? { color: col } : null
     }
