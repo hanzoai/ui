@@ -187,6 +187,23 @@ function one(c: string): Props | null {
     case 'inline': return { display: 'inline' }
     case 'inline-block': return { display: 'inline-block' }
     case 'hidden': return { display: 'none' }
+    // `invisible` keeps the box and hides what is in it, which is what a spacer
+    // wants — `hidden` above would collapse the very space it exists to take.
+    //
+    // Rendered as opacity rather than `visibility`, which the native target has
+    // no equivalent for. The two differ in one way that matters: `visibility:
+    // hidden` also takes the subtree out of the accessibility tree and the tab
+    // order, and opacity does not. Anything decorative therefore still needs
+    // `aria-hidden` — it always did, since `visibility` cannot cross to native
+    // at all.
+    case 'invisible': return { opacity: 0 }
+    case 'visible': return { opacity: 1 }
+    // Where padding and border sit relative to a declared width. `content-box`
+    // is the css default but NOT the default here: the browser reset every one
+    // of these apps loads sets `border-box` on everything, so an element asking
+    // for `box-content` is asking to opt back out and needs the property said.
+    case 'box-content': return { boxSizing: 'content-box' }
+    case 'box-border': return { boxSizing: 'border-box' }
     case 'flex-col': return { flexDirection: 'column' }
     case 'flex-row': return { flexDirection: 'row' }
     case 'flex-col-reverse': return { flexDirection: 'column-reverse' }
@@ -346,6 +363,10 @@ function one(c: string): Props | null {
     case 'transition': return TRANSITION[v] ? { transitionProperty: TRANSITION[v] } : null
     case 'duration': return DURATION[v] !== undefined ? { transitionDuration: `${DURATION[v]}ms` } : null
     case 'delay': return DURATION[v] !== undefined ? { transitionDelay: `${DURATION[v]}ms` } : null
+    // `ease` was in the head list with no case, so `transition duration-500
+    // ease-out` converted two thirds of one declaration and left the curve on
+    // the element as a dead class. The three named curves are Tailwind's own.
+    case 'ease': return EASE[v] ? { transitionTimingFunction: EASE[v] } : null
     case 'blur': return BLUR[v] !== undefined ? { filter: `blur(${BLUR[v]}px)` } : null
     case 'backdrop-blur': return BLUR[v] !== undefined ? { backdropFilter: `blur(${BLUR[v]}px)` } : null
     // `space-y` is deliberately NOT converted. It sets margins on the CHILDREN,
@@ -362,10 +383,22 @@ function one(c: string): Props | null {
   return null
 }
 
+const EASE: Record<string, string> = {
+  linear: 'linear',
+  in: 'cubic-bezier(0.4, 0, 1, 1)',
+  out: 'cubic-bezier(0, 0, 0.2, 1)',
+  'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
+}
+
 const MAX_W: Record<string, string | number> = {
   none: 'none', xs: 320, sm: 384, md: 448, lg: 512, xl: 576, '2xl': 672,
   '3xl': 768, '4xl': 896, '5xl': 1024, '6xl': 1152, '7xl': 1280, full: '100%',
   prose: '65ch', screen: '100vw',
+  // `max-w-screen-<rung>` is the BREAKPOINT width, not the size ramp above —
+  // the idiom for "hold the content to the width this layout was designed at".
+  // Unlisted, `max-w-screen-xl` fell through as an unread class and the
+  // container it bounds grew to whatever the viewport was.
+  'screen-sm': 640, 'screen-md': 768, 'screen-lg': 1024, 'screen-xl': 1280, 'screen-2xl': 1536,
 }
 
 const CORNER: Record<string, string> = {
@@ -375,6 +408,18 @@ const CORNER: Record<string, string> = {
 
 /** Where a prefixed class lands: a gui media prop, or a pseudo-style. */
 const VARIANT: Record<string, string> = {
+  // `xs` is the smallest rung, so it lands at the BASE — an empty destination,
+  // not a `$xs` bucket. gui publishes no `$xs` media prop because there is
+  // nothing below it: a style with no media wrapper already applies there, and
+  // every larger rung overrides it in turn. That is also what `xs` meant in the
+  // tailwind config this notation came from, where it was a custom screen at
+  // the bottom rather than one of tailwind's own.
+  //
+  // It has to be HERE rather than absent: content authored on 5.x writes the
+  // rung out explicitly (`SPACE_DEFAULTS` and `GridDef.at` both start at `xs`),
+  // and an unlisted prefix keeps the whole class as an unconverted string — so
+  // the smallest rung of every ladder would be the one silently dropped.
+  xs: '',
   sm: '$sm', md: '$md', lg: '$lg', xl: '$xl', '2xl': '$2xl',
   hover: 'hoverStyle', focus: 'focusStyle', 'focus-visible': 'focusVisibleStyle',
   active: 'pressStyle', disabled: 'disabledStyle', dark: '$theme-dark',
@@ -428,7 +473,11 @@ export function tw(input: ClassValue): Parsed {
     if (!parts.length) { Object.assign(props, found); continue }
 
     const key = VARIANT[parts[parts.length - 1]]
-    if (!key) { rest.push(raw); continue }
+    if (key === undefined) { rest.push(raw); continue }
+    // An empty destination is the base rung (`xs:`), which is where a style with
+    // no media wrapper already lives — so it merges into props rather than
+    // opening a bucket gui would never read.
+    if (!key) { Object.assign(props, found); continue }
     const bucket = (props[key] ??= {}) as Props
     Object.assign(bucket, found)
   }
