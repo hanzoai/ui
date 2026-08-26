@@ -215,8 +215,9 @@
    Scoped under `.hz-prose` and applied with `>` only one level down, so a nested
    component keeps its own type. */
 .hz-prose {
-  display: flex;
-  flex-direction: column;
+  /* One implicit column with a gap — a grid states the stack without also
+     having to state a direction to run in. */
+  display: grid;
   gap: var(--space-3, 0.75rem);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
