@@ -87,6 +87,7 @@ const HEADS = [
   'min-w', 'min-h', 'max-w', 'max-h', 'grid-cols', 'grid-rows', 'col-span',
   'row-span', 'translate-x', 'translate-y', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
   'transition', 'duration', 'delay', 'ease', 'blur', 'backdrop-blur', 'shadow',
+  'underline-offset',
   'overflow',
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
   'whitespace', 'align', 'inset', 'items', 'justify', 'content', 'self',
@@ -336,7 +337,23 @@ function one(c: string): Props | null {
       if (v in LEADING) return { lineHeight: LEADING[v] }
       return v in SPACE ? { lineHeight: SPACE[v] } : null
     }
-    case 'tracking': return TRACKING[v] !== undefined ? { letterSpacing: TRACKING[v] } : null
+    case 'tracking': {
+      if (TRACKING[v] !== undefined) return { letterSpacing: TRACKING[v] }
+      // The named steps are the common case, but wide display type is usually
+      // set in em so it tracks the size — `tracking-[0.2em]` on a small
+      // uppercase label is the idiom, and it was staying on the element.
+      const arb = /^\[(.+)]$/.exec(v)
+      return arb ? { letterSpacing: arb[1] } : null
+    }
+    // How far an underline sits below the text. Tailwind's ramp is in px, and
+    // the point of using it is that a link in running text can clear the
+    // descenders instead of cutting through them.
+    case 'underline-offset': {
+      const arb = /^\[(.+)]$/.exec(v)
+      if (arb) return { textUnderlineOffset: arb[1] }
+      return /^\d+$/.test(v) ? { textUnderlineOffset: `${v}px` }
+        : v === 'auto' ? { textUnderlineOffset: 'auto' } : null
+    }
     case 'rounded': {
       if (v in RADIUS) return { borderRadius: RADIUS[v] }
       const side = /^([trbl]|tl|tr|br|bl)-(.+)$/.exec(v)
