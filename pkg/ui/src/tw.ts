@@ -85,6 +85,8 @@ const SIDE: Record<string, string> = { t: 'Top', r: 'Right', b: 'Bottom', l: 'Le
 /** Longest first, so `max-w` wins over `max` and `gap-x` over `gap`. */
 const HEADS = [
   'min-w', 'min-h', 'max-w', 'max-h', 'grid-cols', 'grid-rows', 'col-span',
+  'auto-cols', 'auto-rows', 'grid-flow', 'col-start', 'col-end', 'row-start', 'row-end',
+  'place-items', 'place-content', 'place-self', 'justify-items', 'justify-self',
   'row-span', 'translate-x', 'translate-y', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
   'transition', 'duration', 'delay', 'ease', 'blur', 'backdrop-blur', 'shadow',
   'underline-offset',
@@ -130,6 +132,38 @@ const SHADOW: Record<string, string> = {
 
 const BLUR: Record<string, number> = {
   none: 0, xs: 4, sm: 8, DEFAULT: 8, md: 12, lg: 16, xl: 24, '2xl': 40, '3xl': 64,
+}
+
+/** How an implicit grid track is sized. */
+const AUTO: Record<string, string> = {
+  auto: 'auto', min: 'min-content', max: 'max-content', fr: 'minmax(0, 1fr)',
+}
+
+const FLOW: Record<string, string> = {
+  row: 'row', col: 'column', dense: 'dense',
+  'row-dense': 'row dense', 'col-dense': 'column dense',
+}
+
+/**
+ * A track list: a count of equal tracks, an explicit list, or none.
+ *
+ * Tailwind writes an arbitrary list with underscores because a class name
+ * cannot hold a space — `grid-cols-[1fr_auto]` is `1fr auto`. An escaped
+ * underscore (`\_`) is a literal one, which matters inside a `minmax()` or a
+ * custom property name.
+ */
+function track(v: string, prop: string): Props | null {
+  if (v === 'none') return { [prop]: 'none' }
+  if (/^\d+$/.test(v)) return { [prop]: `repeat(${v}, minmax(0, 1fr))` }
+  const arb = /^\[(.+)]$/.exec(v)
+  if (!arb) return null
+  return { [prop]: arb[1].replace(/\\_/g, '\u0000').replace(/_/g, ' ').replace(/\u0000/g, '_') }
+}
+
+/** A grid LINE — a number, a negative number counting from the end, or auto. */
+function line(v: string, prop: string): Props | null {
+  if (v === 'auto') return { [prop]: 'auto' }
+  return /^-?\d+$/.test(v) ? { [prop]: +v } : null
 }
 
 /** A size word, a fraction, or a step on the ramp. */
@@ -184,6 +218,9 @@ function one(c: string): Props | null {
     case 'flex': return { display: 'flex', flexDirection: 'row' }
     case 'inline-flex': return { display: 'inline-flex', flexDirection: 'row' }
     case 'grid': return { display: 'grid' }
+    // A grid that sits in a line of text, sized to its content — the grid
+    // counterpart of `inline-flex`, and the shape a row of buttons wants.
+    case 'inline-grid': return { display: 'inline-grid' }
     case 'block': return { display: 'block' }
     case 'inline': return { display: 'inline' }
     case 'inline-block': return { display: 'inline-block' }
@@ -377,12 +414,37 @@ function one(c: string): Props | null {
       return n === undefined ? null : { [head]: n }
     }
     case 'inset': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { top: n, right: n, bottom: n, left: n } }
-    case 'grid-cols': return /^\d+$/.test(v)
-      ? { gridTemplateColumns: `repeat(${v}, minmax(0, 1fr))` } : null
-    case 'grid-rows': return /^\d+$/.test(v)
-      ? { gridTemplateRows: `repeat(${v}, minmax(0, 1fr))` } : null
+    // ── Grid ────────────────────────────────────────────────────────────────
+    // A track list is written three ways and all three have to read, because a
+    // real layout uses all three: a COUNT of equal tracks (`grid-cols-3`), an
+    // explicit list (`grid-cols-[1fr_auto]`, where Tailwind's underscores stand
+    // in for the spaces a class name cannot hold), or `none`.
+    case 'grid-cols': return track(v, 'gridTemplateColumns')
+    case 'grid-rows': return track(v, 'gridTemplateRows')
+    // How IMPLICIT tracks are sized — the property that decides whether a grid
+    // row behaves like a flex row. `grid-flow-col` alone gives every child an
+    // equal `1fr` share, so a row of buttons comes out stretched; with
+    // `auto-cols-max` each track is its own content's width, which is what a
+    // flex row does and what the caller almost always meant.
+    case 'auto-cols': return AUTO[v] ? { gridAutoColumns: AUTO[v] } : null
+    case 'auto-rows': return AUTO[v] ? { gridAutoRows: AUTO[v] } : null
+    case 'grid-flow': return FLOW[v] ? { gridAutoFlow: FLOW[v] } : null
     case 'col-span': return v === 'full'
       ? { gridColumn: '1 / -1' } : /^\d+$/.test(v) ? { gridColumn: `span ${v} / span ${v}` } : null
+    // A line, not a span. `-1` is the last line, which is how a cell is pinned
+    // to the end of a row whose track count is not known here.
+    case 'col-start': return line(v, 'gridColumnStart')
+    case 'col-end': return line(v, 'gridColumnEnd')
+    case 'row-start': return line(v, 'gridRowStart')
+    case 'row-end': return line(v, 'gridRowEnd')
+    // `place-*` sets the block and inline axes at once. On a grid that is the
+    // ordinary way to centre something, and it is one class rather than the two
+    // a flex container needs.
+    case 'place-items': return { alignItems: ALIGN[v] ?? v, justifyItems: ALIGN[v] ?? v }
+    case 'place-content': return { alignContent: ALIGN[v] ?? v, justifyContent: ALIGN[v] ?? v }
+    case 'place-self': return { alignSelf: ALIGN[v] ?? v, justifySelf: ALIGN[v] ?? v }
+    case 'justify-items': return { justifyItems: ALIGN[v] ?? v }
+    case 'justify-self': return { justifySelf: ALIGN[v] ?? v }
     case 'aspect': return v === 'square' ? { aspectRatio: 1 } : v === 'video' ? { aspectRatio: 16 / 9 } : null
     case 'object': return { objectFit: v }
     case 'whitespace': return { whiteSpace: v }
