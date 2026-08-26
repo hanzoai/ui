@@ -182,3 +182,25 @@ describe('tw — the vocabulary it was built for', () => {
     expect(missed).toEqual([])
   })
 })
+
+describe('the xs rung lands at the base', () => {
+  // Content authored on the 5.x line writes the smallest rung out by name —
+  // SPACE_DEFAULTS and GridDef.at both start at `xs` — and gui has no `$xs`
+  // media prop to put it in. Unlisted, the prefix kept the whole class as an
+  // unconverted string, so the FLOOR of every responsive ladder was the one
+  // value that never arrived.
+  it('applies with no media wrapper', () => {
+    expect(tw('xs:h-2')).toEqual({ props: { height: 8 }, rest: '' })
+  })
+
+  it('is overridden by every larger rung, in order', () => {
+    expect(tw('xs:h-2 sm:h-4 md:h-5')).toEqual({
+      props: { height: 8, $sm: { height: 16 }, $md: { height: 20 } },
+      rest: '',
+    })
+  })
+
+  it('a genuinely unknown prefix is still kept whole', () => {
+    expect(tw('nope:h-2')).toEqual({ props: {}, rest: 'nope:h-2' })
+  })
+})

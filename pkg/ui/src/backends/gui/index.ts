@@ -196,3 +196,23 @@ export {
   type ToggleGroupSize,
 } from './toggle-group'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'
+export {
+  ApplyTypography,
+  type ApplyTypographyProps,
+  type ProseTag,
+  type TypographySize,
+} from './prose'
+export {
+  Link,
+  useLink,
+  MDXLink,
+  LinkElement,
+  type LinkComponent,
+  type LinkElementProps,
+} from './link'
+export {
+  VideoPlayer,
+  YouTubeEmbed,
+  type VideoPlayerProps,
+  type YouTubeEmbedProps,
+} from './video'

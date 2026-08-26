@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.4.13",
+  "version": "8.5.0",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -10,6 +10,12 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
+    },
+    "./blocks": {
+      "types": "./dist/blocks/index.d.ts",
+      "import": "./dist/blocks/index.js",
+      "require": "./dist/blocks/index.cjs",
+      "default": "./dist/blocks/index.js"
     },
     "./gallery": {
       "types": "./dist/gallery.d.ts",
@@ -194,6 +200,12 @@
       "types": "./dist/grid.d.ts",
       "import": "./dist/grid.js",
       "require": "./dist/grid.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js",
+      "require": "./dist/types.cjs",
+      "default": "./dist/types.js"
     }
   },
   "main": "./dist/index.cjs",
