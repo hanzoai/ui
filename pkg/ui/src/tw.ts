@@ -358,7 +358,16 @@ function one(c: string): Props | null {
       // at 28px.
       const arb = /^\[(.+)]$/.exec(v)
       if (arb && /^-?[\d.]+(px|rem|em|ch|ex|vw|vh|vmin|vmax|%|pt)?$/.test(arb[1])) {
-        return { fontSize: arb[1] }
+        // A size sets BOTH, exactly as the named steps do. Left alone, the line
+        // height stays whatever gui last resolved — a fixed value that does not
+        // track the glyph — so a 96px numeral sat in a 20px box and the
+        // paragraph after it printed straight through the digits. Measured on
+        // lux/bitcoin's 404.
+        //
+        // `normal` rather than a ratio: it is what a browser does for a font
+        // this size, and it is the one value that is right without knowing the
+        // unit — `1.05rem` and `50%` cannot be multiplied out here.
+        return { fontSize: arb[1], lineHeight: 'normal' }
       }
       const col = color(v)
       return col ? { color: col } : null
