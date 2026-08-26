@@ -212,9 +212,13 @@ describe('an arbitrary text- value is a size when it is a length', () => {
   // inherited size with nothing reporting a problem. Found on lux/bitcoin's
   // 404, where a heading written at 96px rendered at 28.
   it('a length is a font size', () => {
-    expect(tw('text-[96px]')).toEqual({ props: { fontSize: '96px' }, rest: '' })
-    expect(tw('text-[1.05rem]')).toEqual({ props: { fontSize: '1.05rem' }, rest: '' })
-    expect(tw('text-[50%]')).toEqual({ props: { fontSize: '50%' }, rest: '' })
+    // A size sets BOTH, as the named steps do. Without the line height the box
+    // keeps whatever gui last resolved and does not grow with the glyph — a
+    // 96px numeral sat in a 20px box and the paragraph after it printed through
+    // the digits.
+    expect(tw('text-[96px]')).toEqual({ props: { fontSize: '96px', lineHeight: 'normal' }, rest: '' })
+    expect(tw('text-[1.05rem]')).toEqual({ props: { fontSize: '1.05rem', lineHeight: 'normal' }, rest: '' })
+    expect(tw('text-[50%]')).toEqual({ props: { fontSize: '50%', lineHeight: 'normal' }, rest: '' })
   })
 
   it('a colour is still a colour', () => {
