@@ -199,3 +199,104 @@
    `--hz-elevation-*` variable, so every one of those resolved to its fallback:
    an indirection through a name that does not exist, with a hardcoded shadow
    behind it, next to a design system that publishes real ones. */
+
+/* ── Prose ───────────────────────────────────────────────────────────────────
+   What `<ApplyTypography>` turns on: running text — a heading, a byline, a
+   paragraph, a list — styled by TAG, so a block of authored content needs no
+   class on any element inside it. That is the whole point; the content comes
+   from a CMS or an .mdx file and cannot carry classes.
+
+   The 5.x line did this with a tailwind typography plugin, so the sizes lived
+   in a plugin config and arrived as `typography typography-sm` utilities. Those
+   are gone with the engine. These are the same sizes as real rules on the
+   @hanzo/design ramp, which is where every other surface already reads them —
+   so prose and a Button now round to the same scale instead of two.
+
+   Scoped under `.hz-prose` and applied with `>` only one level down, so a nested
+   component keeps its own type. */
+.hz-prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-base, var(--leading-normal));
+}
+
+.hz-prose > h1, .hz-prose > h2, .hz-prose > h3,
+.hz-prose > h4, .hz-prose > h5, .hz-prose > h6 {
+  font-family: var(--font-display, var(--font-sans)), sans-serif;
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+.hz-prose > h1 { font-size: var(--text-4xl) }
+.hz-prose > h2 { font-size: var(--text-3xl) }
+.hz-prose > h3 { font-size: var(--text-2xl) }
+.hz-prose > h4 { font-size: var(--text-xl) }
+.hz-prose > h5 { font-size: var(--text-lg) }
+/* h6 is the byline rung: heading TAG, body weight and colour, because that is
+   what a byline is — subordinate text that happens to sit in the heading
+   stack. */
+.hz-prose > h6 {
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.hz-prose > p { margin: 0 }
+.hz-prose > ul, .hz-prose > ol { margin: 0; padding-inline-start: 1.5em }
+.hz-prose li { margin-block: 0.25em }
+.hz-prose > blockquote {
+  margin: 0;
+  padding-inline-start: 1em;
+  border-inline-start: 2px solid var(--border);
+  color: var(--muted-foreground);
+}
+.hz-prose code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.9em;
+}
+.hz-prose a { color: inherit; text-decoration: underline }
+.hz-prose strong { font-weight: 600 }
+.hz-prose :where(img, video) { max-width: 100%; height: auto }
+
+/* The named rungs. `responsive` is the default and is the only one that moves
+   with the viewport — a t-shirt size is a DECISION, so it stays put. */
+.hz-prose-sm { font-size: var(--text-sm); gap: var(--space-3, 0.75rem) }
+.hz-prose-sm > h1 { font-size: var(--text-3xl) }
+.hz-prose-sm > h2 { font-size: var(--text-2xl) }
+.hz-prose-sm > h3 { font-size: var(--text-xl) }
+.hz-prose-sm > p  { font-size: var(--text-sm) }
+
+.hz-prose-lg { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
+.hz-prose-lg > h1 { font-size: var(--text-5xl) }
+.hz-prose-lg > h2 { font-size: var(--text-4xl) }
+.hz-prose-lg > h3 { font-size: var(--text-3xl) }
+.hz-prose-lg > p  { font-size: var(--text-lg) }
+
+.hz-prose-xl { font-size: var(--text-lg); gap: var(--space-6, 1.5rem) }
+.hz-prose-xl > h1 { font-size: var(--text-6xl) }
+.hz-prose-xl > h2 { font-size: var(--text-5xl) }
+.hz-prose-xl > h3 { font-size: var(--text-4xl) }
+.hz-prose-xl > p  { font-size: var(--text-lg) }
+
+/* Responsive: start at the small rung and climb. Written as min-width so the
+   phone case is the unprefixed one and needs no query at all. */
+@media (min-width: 640px) {
+  .hz-prose-responsive { gap: var(--space-4, 1rem) }
+}
+@media (min-width: 1024px) {
+  .hz-prose-responsive { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
+  .hz-prose-responsive > h1 { font-size: var(--text-5xl) }
+  .hz-prose-responsive > h2 { font-size: var(--text-4xl) }
+  .hz-prose-responsive > h3 { font-size: var(--text-3xl) }
+}
+@media (min-width: 1280px) {
+  .hz-prose-responsive { gap: var(--space-6, 1.5rem) }
+  .hz-prose-responsive > h1 { font-size: var(--text-6xl) }
+  .hz-prose-responsive > h2 { font-size: var(--text-5xl) }
+}

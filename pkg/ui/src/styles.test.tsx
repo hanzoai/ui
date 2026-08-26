@@ -140,11 +140,49 @@ const emitted = (dir: string, out = { any: new Set<string>(), box: new Set<strin
       const src = readFileSync(p, 'utf8')
         .replace(/\/\*[\s\S]*?\*\//g, '')
         .replace(/(^|[^:])\/\/[^\n]*/g, '$1')
+        // NOT EVERY STRING INSIDE `className={…}` IS A CLASS. The scan reads the
+        // first quoted literal it finds there, and three shapes put a string in
+        // that position that never reaches an element:
+        //   spec('mobile-small-text') — a layout hint being LOOKED UP
+        //   variant: 'link'           — a property value, or its `??` default
+        //   agent === 'phone'         — a comparison
+        // Read as classes they are reported as collisions that cannot happen,
+        // and the noise is what makes a real one easy to wave through.
+        .replace(/\b(?:spec|has|specified)\(([^()]*)\)/g, '()')
+        .replace(/\b[\w$]+:\s*'[^']*'/g, '$:0')
+        .replace(/[=!]==?\s*'[^']*'/g, '==0')
+        .replace(/\?\?\s*'[^']*'/g, '??0')
       // A `<Box className="…">` opening tag. Box takes the classes as INPUT, so
       // its literal is checked against `tw` below instead of the namespace.
+      //
+      // `sx('…')` is the same input by another door — the conversion Box does
+      // for a host element, for a gui component that has to stay itself. It is
+      // held to the same rule, because it buys the same exemption: what `tw`
+      // reads becomes style props and never reaches the document.
       const onBox = new Set<string>()
-      for (const m of src.matchAll(/<Box\s[^>]*?className="([^"{}]*)"/g))
+      // Both spellings. Only the quoted one was read, so `<Box className={x ?
+      // 'mr-1' : 'mb-2'}>` fell through to the namespace check below — the
+      // element that is exempt BY CONSTRUCTION, reported as a collision.
+      for (const m of src.matchAll(
+        /<Box\s[^>]*?className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g,
+      ))
+        for (const token of (m[1] ?? m[2] ?? '').split(/\s+/).filter(Boolean)) onBox.add(token)
+      for (const m of src.matchAll(/\bsx\((?:[^()'"]*)?'([^']*)'/g))
         for (const token of m[1].split(/\s+/).filter(Boolean)) onBox.add(token)
+
+      // The block renderers take `className` as INPUT too — every one of them
+      // hands it to `Box` or to `sx` before anything reaches an element, which
+      // is the same exemption for the same reason.
+      //
+      // A name list is a proxy and proxies rot, so it is not the guarantee:
+      // `blocks.test.tsx` renders every block type and fails on any unqualified
+      // token in the markup. That is the assertion; this only keeps the source
+      // scan from reporting a class the render proves never ships.
+      for (const m of src.matchAll(
+        /<(?:\w*BlockComponent|ApplyTypography|Content|Column|Columns|Header|Body|Foot|Mark|Poster|Backdrop|LinkOut)\s[^>]*?className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g,
+      ))
+        for (const token of (m[1] ?? m[2] ?? '').split(/\s+/).filter(Boolean)) onBox.add(token)
+
       for (const token of onBox) out.box.add(token)
 
       for (const m of src.matchAll(/className=(?:"([^"{}]*)"|\{[^}]*?'([a-z][\w -]*)')/g))
@@ -160,6 +198,7 @@ describe('the utility class namespace', () => {
   const ours = [...scanned.any].sort()
   const onBox = [...scanned.box].sort()
   const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
+  const theme = readFileSync(join(SRC, 'theme.css'), 'utf8')
 
   it('found the classes to check — an empty scan proves nothing', () => {
     expect(ours.length).toBeGreaterThan(5)
@@ -184,7 +223,11 @@ describe('the utility class namespace', () => {
     // to carry a real utility string or `gen-css` writes none of the rules Box
     // compiles, and today the only way to say that was to say something this
     // file forbids.
-    const unread = onBox.filter((c) => tw(c).rest !== '')
+    // A namespaced class is exempt from the OTHER half of the pair by having a
+    // rule of its own — `hz-prose` is real css in theme.css, and `tw` is not
+    // meant to know about it. It stays on the element, qualified, which is
+    // exactly what the namespace exists for.
+    const unread = onBox.filter((c) => !c.startsWith('hz-') && tw(c).rest !== '')
     expect(
       unread,
       `${unread.join(', ')} on <Box> — tw does not read these, so they stay on the element unqualified`,
@@ -196,8 +239,14 @@ describe('the utility class namespace', () => {
   })
 
   it('defines a rule for each of them', () => {
-    const orphan = ours.filter((c) => c.startsWith('hz-') && !motion.includes(`.${c}`))
-    expect(orphan, `${orphan.join(', ')} is emitted with no rule in motion.css`).toEqual([])
+    // Across every stylesheet the package ships, not just motion.css — that was
+    // the only `hz-` family when this was written, and `hz-prose` (theme.css) is
+    // the second. The invariant is "a class we emit has a rule we ship", and
+    // naming one file made it "…has a rule in this file", which a correct second
+    // family fails.
+    const sheets = motion + theme
+    const orphan = ours.filter((c) => c.startsWith('hz-') && !sheets.includes(`.${c}`))
+    expect(orphan, `${orphan.join(', ')} is emitted with no rule in any shipped stylesheet`).toEqual([])
   })
 
   it('claims no unprefixed name at the document level', () => {
