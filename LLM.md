@@ -875,10 +875,48 @@ causing false positives — alarming, since a broken render is the other thing
 that yields zero calls. It fires in all three cases INCLUDING the control, and
 the control still delivers, so it is ambient to mounting `<Hanzo>`.
 
-**And bumping `@hanzo/gui` alone to check is not a check — it is the SPLIT this
-file already warns about.** Dev-bumping to 8.2.0 left `@hanzogui/web` resolved at
+**And bumping `@hanzo/gui` alone to check is not a check — it is the split the
+next section is about.** Dev-bumping to 8.2.0 left `@hanzogui/web` resolved at
 8.1.0 and every dialog render died on `Missing theme.` before any ref could be
-observed. Move `pnpm.overrides` with it or measure on the pinned version.
+observed. Move the whole train, or measure on the pinned version.
+
+## The gui packages are one train, and a lone bump is a split
+
+`@hanzo/gui` re-exports `@hanzogui/web` and `@hanzogui/core`, and
+`src/gui-env.d.ts` augments `GuiCustomConfig` inside both. That augmentation is
+what gives every component its shorthand props — `bg`, `px`, `items`, `rounded`
+— and the compiled `.d.ts` bakes the result in, so a consumer never re-declares
+it.
+
+A `declare module` binds to a resolved FILE, not to a name. Move `@hanzo/gui`
+alone and pnpm nests the NEW `@hanzogui/web` under gui while this package keeps
+the old one: the augmentation lands on a file nothing reads, `GuiCustomConfig`
+stays empty, and every shorthand collapses at once. Measured here, only the pins
+changing:
+
+| pins | `tsc --noEmit -p tsconfig.json` |
+|---|---|
+| whole train 8.1.0 | 0 |
+| `@hanzo/gui` 8.2.1, rest of train 8.1.0 | **462** |
+| whole train 8.2.0 | 0 |
+| whole train 8.2.1 | 0 |
+
+So there is no 8.2.0 regression, and the 462 are one fact wearing 462 masks:
+unknown-property errors on shorthands (`items` ×122, `bg` ×100, `minW` ×33, `p`
+×27, `rounded` ×22, `px` ×22), not one of which names a version or a package.
+The shape reads as an upstream API break with every call site wrong. None were.
+
+`src/gui.test.ts` is the guard. It resolves `@hanzogui/web` and `@hanzogui/core`
+from this package AND from `@hanzo/gui`, and fails when the two are different
+files, printing both paths — so the answer is the version numbers in the store
+path rather than a hunt through 462 errors. It reads the INSTALL, not the pins:
+pnpm keeps a satisfied lockfile entry rather than re-resolving, so a pin is what
+was asked for and a resolved path is what arrived.
+
+The peer floors move WITH the train (`>=8.2.1` as of 8.4.13). Left at `>=8.1.0`,
+a consumer satisfies them with 8.1.0 beside gui 8.2.1 and rebuilds the same two
+copies in their app, where it surfaces as `Missing theme.` at first paint rather
+than as 462 errors at compile time.
 
 ## Two packages removed public exports in a PATCH — decided, not an oversight
 
