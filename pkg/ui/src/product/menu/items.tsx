@@ -68,7 +68,7 @@ export type MenuItemSpec =
       description?: string
       /** Right-aligned shortcut / hint text (e.g. "⌘K"). */
       shortcut?: string
-      /** Renders a right check + purple tint. */
+      /** Renders a right check + the ACCENT_SOFT row wash. */
       selected?: boolean
       disabled?: boolean
       /** Danger styling (red label/icon). */
