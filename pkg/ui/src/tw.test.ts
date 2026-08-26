@@ -244,3 +244,73 @@ describe('tracking and underline offset', () => {
     })
   })
 })
+
+describe('grid is a first-class notation, not a partial one', () => {
+  // Seven of these read before; eighteen did not, which meant a layout could be
+  // STARTED in grid and not finished — `grid grid-cols-3` worked while
+  // `grid-flow-col auto-cols-max` beside it stayed a string on the element.
+  // A notation you cannot finish a layout in is not one you can author in.
+
+  it('both displays', () => {
+    expect(tw('grid').props).toEqual({ display: 'grid' })
+    expect(tw('inline-grid').props).toEqual({ display: 'inline-grid' })
+  })
+
+  it('a track list, three ways', () => {
+    expect(tw('grid-cols-3').props).toEqual({
+      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    })
+    expect(tw('grid-cols-none').props).toEqual({ gridTemplateColumns: 'none' })
+    // A class name cannot hold a space, so Tailwind writes the list with
+    // underscores. `1fr auto` is the commonest real template there is.
+    expect(tw('grid-cols-[1fr_auto]').props).toEqual({ gridTemplateColumns: '1fr auto' })
+    expect(tw('grid-rows-[auto_1fr]').props).toEqual({ gridTemplateRows: 'auto 1fr' })
+  })
+
+  it('an escaped underscore stays an underscore', () => {
+    // It has to, or a custom property name inside a template loses its shape.
+    expect(tw('grid-cols-[var(--a\\_b)]').props).toEqual({
+      gridTemplateColumns: 'var(--a_b)',
+    })
+  })
+
+  it('implicit tracks — the property that makes a grid row behave like a flex row', () => {
+    // `grid-flow-col` alone gives every child an equal 1fr share, so a row of
+    // buttons comes out stretched. `auto-cols-max` sizes each track to its own
+    // content, which is what a flex row does and what the caller meant.
+    expect(tw('grid-flow-col').props).toEqual({ gridAutoFlow: 'column' })
+    expect(tw('grid-flow-row-dense').props).toEqual({ gridAutoFlow: 'row dense' })
+    expect(tw('auto-cols-max').props).toEqual({ gridAutoColumns: 'max-content' })
+    expect(tw('auto-cols-fr').props).toEqual({ gridAutoColumns: 'minmax(0, 1fr)' })
+    expect(tw('auto-rows-min').props).toEqual({ gridAutoRows: 'min-content' })
+  })
+
+  it('placement by line, including from the end', () => {
+    expect(tw('col-start-2').props).toEqual({ gridColumnStart: 2 })
+    expect(tw('col-end-3').props).toEqual({ gridColumnEnd: 3 })
+    // -1 is the last line, which is how a cell reaches the end of a row whose
+    // track count is not known where the class is written.
+    expect(tw('col-end--1').props).toEqual({ gridColumnEnd: -1 })
+    expect(tw('row-start-auto').props).toEqual({ gridRowStart: 'auto' })
+  })
+
+  it('place-* sets both axes, which is the grid way to centre', () => {
+    expect(tw('place-items-center').props).toEqual({
+      alignItems: 'center', justifyItems: 'center',
+    })
+    expect(tw('place-content-between').props).toEqual({
+      alignContent: 'space-between', justifyContent: 'space-between',
+    })
+    expect(tw('justify-items-start').props).toEqual({ justifyItems: 'flex-start' })
+  })
+
+  it('a vertical stack is the same layout in either notation', () => {
+    // This is the swap that covers most of an app: a flex column with a gap and
+    // a grid with a gap put the same children in the same places.
+    const flex = tw('flex flex-col gap-4').props
+    const grid = tw('grid gap-4').props
+    expect(flex.gap).toBe(grid.gap)
+    expect(flex.display).toBe('flex')
+    expect(grid.display).toBe('grid')
+  })
+})
