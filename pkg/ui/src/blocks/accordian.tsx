@@ -35,7 +35,12 @@ export const AccordianBlockComponent = ({ block, className }: BlockComponentProp
             </ApplyTypography>
           </AccordionTrigger>
           <AccordionContent {...sx('p-4 border-t')}>
-            <ApplyTypography className="items-start">
+            {/* `justify-items`, not `items`: prose is a grid of implicit rows,
+                so the INLINE axis — the one that decides whether a paragraph
+                stretches or shrinks to its text — is justify. On a flex column
+                the two were swapped, which is why this reads differently from
+                the 5.x original it came from. */}
+            <ApplyTypography className="justify-items-start">
               {typeof item.content === 'string' ? <Box tag="p">{item.content}</Box> : item.content}
             </ApplyTypography>
           </AccordionContent>
