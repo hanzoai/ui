@@ -192,6 +192,36 @@ describe('the api', () => {
     expect(api!.selectedScrollSnap()).toBe(0)
   })
 
+  it('reports one resting position per slide, which is what a dot strip counts', async () => {
+    // Counting the API rather than the source array is what keeps the dots right
+    // when the slides are conditional. jsdom lays nothing out, so the positions
+    // are all 0 — the LENGTH is the claim.
+    const { render } = await import('@testing-library/react')
+    let api: CarouselApi | undefined
+    render(
+      <GuiProvider config={config as never} defaultTheme="dark">
+        {three({ setApi: (a: CarouselApi) => { api = a } })}
+      </GuiProvider>,
+    )
+    expect(api!.scrollSnapList()).toHaveLength(3)
+  })
+
+  it('takes subscribers, and lets them go', async () => {
+    const { render } = await import('@testing-library/react')
+    let api: CarouselApi | undefined
+    render(
+      <GuiProvider config={config as never} defaultTheme="dark">
+        {three({ setApi: (a: CarouselApi) => { api = a } })}
+      </GuiProvider>,
+    )
+    const fn = vi.fn()
+    // Attached once in an effect and expected to stay attached — so the
+    // subscriber list has to outlive a render.
+    expect(() => api!.on('select', fn)).not.toThrow()
+    expect(() => api!.off('select', fn)).not.toThrow()
+    expect(fn).not.toHaveBeenCalled()
+  })
+
   it('does not announce a selection nobody made', () => {
     // A carousel that fires its select handler on mount tells the page the user
     // chose the first slide when all they did was load it — in a shop, that is

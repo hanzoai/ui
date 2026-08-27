@@ -229,6 +229,16 @@ export type ButtonProps = Omit<
    * rather than a lost attribute. Reaches the element the same way title does.
    */
   type?: 'button' | 'submit' | 'reset'
+  /**
+   * How the button identifies itself to the form it submits.
+   *
+   * A submitter contributes its own `name`/`value` pair to the form data, which
+   * is how one form tells "save" from "save and close" — so dropping these is
+   * losing which button was pressed, not losing an attribute. They reach the
+   * element the same way `type` does.
+   */
+  name?: string
+  value?: string
 } & Microdata
 
 function Button({

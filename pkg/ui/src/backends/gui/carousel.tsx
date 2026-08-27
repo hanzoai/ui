@@ -47,8 +47,14 @@ export type CarouselOptions = {
 
 /** What a caller can ask of a mounted carousel. */
 export type CarouselApi = {
-  /** Centre slide `index`. Out of range clamps, or wraps when `loop`. */
-  scrollTo: (index: number) => void
+  /**
+   * Centre slide `index`. Out of range clamps, or wraps when `loop`.
+   *
+   * `jump` arrives there without animating, which is what opening ON a slide
+   * wants — animating from the first one reads as the carousel moving by
+   * itself the moment it appears.
+   */
+  scrollTo: (index: number, jump?: boolean) => void
   scrollPrev: () => void
   scrollNext: () => void
   /** The slide nearest the centre, or -1 when there are none. */
@@ -56,6 +62,17 @@ export type CarouselApi = {
   canScrollPrev: () => boolean
   canScrollNext: () => boolean
   slideCount: () => number
+  /**
+   * Where each slide comes to rest, in scroll pixels.
+   *
+   * Its length is the number of slides, which is what a dot strip beneath a
+   * carousel counts — and counting the API rather than the source array is what
+   * keeps the dots right when the slides are conditional.
+   */
+  scrollSnapList: () => number[]
+  /** Subscribe. `select` fires when the settled slide changes. */
+  on: (event: 'select', listener: () => void) => void
+  off: (event: 'select', listener: () => void) => void
 }
 
 const slides = (el: HTMLElement): HTMLElement[] => Array.from(el.children) as HTMLElement[]
@@ -133,6 +150,9 @@ export const Carousel = ({
 }: CarouselProps) => {
   const scroller = React.useRef<HTMLElement | null>(null)
   const api = React.useRef<CarouselApi | null>(null)
+  // Subscribers, held across renders so `on` may be called once in an effect
+  // and stay attached — which is how every caller uses it.
+  const listeners = React.useRef(new Map<string, Set<() => void>>())
   const [selected, setSelected] = React.useState<number | null>(null)
   const loop = !!options?.loop
 
@@ -148,14 +168,14 @@ export const Carousel = ({
       const e = el()
       return e ? nearest(e) : -1
     }
-    const go = (index: number) => {
+    const go = (index: number, jump = false) => {
       const e = el()
       if (!e) return
       const kids = slides(e)
       const n = kids.length
       if (!n) return
       const i = loop ? ((index % n) + n) % n : Math.max(0, Math.min(n - 1, index))
-      center(e, kids[i], 'smooth')
+      center(e, kids[i], jump ? 'auto' : 'smooth')
     }
     api.current = {
       scrollTo: go,
@@ -165,6 +185,19 @@ export const Carousel = ({
       canScrollPrev: () => loop || at() > 0,
       canScrollNext: () => loop || at() < count() - 1,
       slideCount: count,
+      scrollSnapList: () => {
+        const e = el()
+        if (!e) return []
+        return slides(e).map((k) => k.offsetLeft - (e.clientWidth - k.offsetWidth) / 2)
+      },
+      on: (event, listener) => {
+        const m = listeners.current
+        if (!m.has(event)) m.set(event, new Set())
+        m.get(event)!.add(listener)
+      },
+      off: (event, listener) => {
+        listeners.current.get(event)?.delete(listener)
+      },
     }
   }
 
@@ -210,6 +243,7 @@ export const Carousel = ({
       last = i
       setSelected(i)
       if (api.current) announce.current?.(api.current)
+      listeners.current.get('select')?.forEach((fire) => fire())
     }
     // Scroll fires per frame during a drag; coalescing to one rAF keeps the
     // measuring off the critical path.
