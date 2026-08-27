@@ -3,9 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-
 import {
+  cn,
   ApplyTypography,
   type CarouselApi,
   Carousel,
@@ -14,8 +13,7 @@ import {
   CarouselPrevious,
   CarouselNext,
   MediaStack,
-} from '@hanzo/ui/primitives'
-
+} from '@hanzo/ui'
 import type { MultiFamilySelectorProps, LineItem } from '../../../types'
 import { 
   formatCurrencyValue, 
@@ -238,7 +236,7 @@ const AllVariantsCarousel: React.FC<MultiFamilySelectorProps> = ({
           <CarouselContent>
           {r.current.items.map((item) => (
             <CarouselItem key={item.sku} className={cn('p-2 flex flex-col justify-center items-center', itemClx)}>
-              <MediaStack media={item} constrainTo={mediaConstraint} clx='my-4'/>
+              <MediaStack media={item} constrainTo={mediaConstraint} className='my-4'/>
             </CarouselItem>
           ))}
           </CarouselContent>

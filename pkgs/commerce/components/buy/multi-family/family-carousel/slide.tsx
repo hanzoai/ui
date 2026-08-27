@@ -3,14 +3,13 @@ import React from 'react'
 
 import {
   ApplyTypography,
-  MediaStack
-} from '@hanzo/ui/primitives'
+  MediaStack,
+  cn,
+} from '@hanzo/ui'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorOptions, Family, LineItem, ItemSelector } from '../../../../types'
 import { ButtonItemSelector } from '../../..'
-import { cn } from '@hanzo/ui/util'
-
 const FamilySlide: React.FC<Omit<ItemSelector, 'items'> & {
   family: Family
   mediaConstraint: Dimensions

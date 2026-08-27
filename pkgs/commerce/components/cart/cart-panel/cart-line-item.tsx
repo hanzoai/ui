@@ -3,9 +3,10 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-import { Image } from '@hanzo/ui/primitives'
-
+import {
+  cn,
+  MediaStack,
+} from '@hanzo/ui'
 import type { LineItem } from '../../../types'
 import { formatCurrencyValue } from '../../../util'
 import AddToCartWidget from '../../add-to-cart-widget'
@@ -53,7 +54,7 @@ const CartLineItem: React.FC<{
     >
       <div className='flex flex-row justify-between items-center gap-1' >
         {item.img ? (
-          <Image def={item.img} constrainTo={{w: imgSizePx, h: imgSizePx}} />
+          <MediaStack media={item} constrainTo={{w: imgSizePx, h: imgSizePx}} />
         ) : ( // placeholder so things align
           <div style={{height: imgSizePx, width: imgSizePx}} className='bg-level-3'/>
         )}

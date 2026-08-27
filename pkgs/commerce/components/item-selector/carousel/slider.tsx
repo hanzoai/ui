@@ -1,8 +1,9 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 
-import { Slider } from '@hanzo/ui/primitives'
-
+import {
+  Slider,
+} from '@hanzo/ui'
 const ItemCarouselSlider: React.FC<{
   clx?: string
   setScrollTo: (scrollTo: (index: number) => void) => void
@@ -22,11 +23,7 @@ const ItemCarouselSlider: React.FC<{
 
   return ( 
     <Slider 
-      className={clx} 
-      thumbClx='w-8 border-muted border-2 bg-level-1 focus-visible:ring-0 focus-visible:ring-offset-0 transition-none' 
-      trackBgClx='bg-level-3'
-      rangeBgClx='bg-level-3'
-      thumbSlidingClx='bg-muted-2' 
+      className={clx}   
       defaultValue={[0]} 
       min={0}
       max={numStops - 1} 

@@ -4,13 +4,13 @@ import { observer } from 'mobx-react-lite'
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 
-import { 
-  Image, 
-  Label, 
-  RadioGroup, 
-  ScrollArea 
-} from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
+import {
+  Label,
+  RadioGroup,
+  ScrollArea,
+  cn,
+  MediaStack,
+} from '@hanzo/ui'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorProps, LineItem } from '../../types'
@@ -70,7 +70,7 @@ const ImageRadioGroupItem = React.forwardRef<
       value={item.sku}
     >
       {img ? (
-        <Image def={img} constrainTo={constrainTo} preload className=''/>
+        <MediaStack media={{img}} constrainTo={constrainTo} />
       ) : ( // placeholder so things align
         <div style={{height: constrainTo.h, width: constrainTo.w}}/>
       )}

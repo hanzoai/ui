@@ -9,18 +9,14 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check } from 'lucide-react'
 
-import { 
-  Button, 
-  Input 
-} from '@hanzo/ui/primitives'
-
 import {
+  Button,
+  Input,
   Form,
   FormControl,
   FormField,
   FormItem,
-} from '@hanzo/ui/form'
-
+} from '@hanzo/ui'
 import { useCommerce } from '../../../service/context'
 import type { Promo } from '../../../types'
 import getPromoFromApi from '../../../util/promo-codes'

@@ -1,9 +1,12 @@
 'use client'
 import React, { useState } from 'react'
 
-import { ToggleGroup, ToggleGroupItem} from "@hanzo/ui/primitives"
-import { cn } from '@hanzo/ui/util'
-
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+  cn,
+  type ToggleGroupSize,
+} from '@hanzo/ui'
 import type { CategoryNode, StringMutator, StringArrayMutator } from '../../types'
 import NodeImage from './node-image'
 
@@ -19,7 +22,7 @@ const NodeTabs: React.FC<{
   buttonClx?: string
   itemClx?: string
   mobile?: boolean
-  tabSize?: string
+  tabSize?: ToggleGroupSize
   show?: 'image' | 'label' | 'image-and-label'
 }> = ({
   levelNodes,
@@ -46,51 +49,41 @@ const NodeTabs: React.FC<{
     if (selected) { setLast(selected) }
   }
 
-  const roundedToSpread: any = {}
-  if (multiple) {
-    roundedToSpread.rounded = 'xl'   
-  }
+  const val = multiple
+    ? (mutator as StringArrayMutator).get()
+    : (mutator as StringMutator).get()
 
-  const val = multiple ? 
-    (mutator as StringArrayMutator).get() 
-    : 
-    (mutator as StringMutator).get()
-
+  // The per-item `rounded` that used to ride here named a 5.x variant. The
+  // group owns the segmented look now, so passing it did nothing but say it did.
   return (
-    <ToggleGroup 
-      type={multiple ? 'multiple' : 'single'} 
+    <ToggleGroup
+      type={multiple ? 'multiple' : 'single'}
       value={val}
       variant='default'
       size={tabSize ? tabSize : (mobile ? 'sm' : 'default')}
       onValueChange={multiple ? handleChangeMultiple : handleChangeSingle}
       className={className}
-      style={style}
-      {...roundedToSpread}
+      // The two type systems meet here. gui types `style` as a native view
+      // style; on web it hands the object straight to the DOM element, and a
+      // `grid-template-columns` written this way arrives as inline CSS
+      // (measured). The cast says which of the two platforms this is.
+      style={style as React.ComponentProps<typeof ToggleGroup>['style']}
     >
-    {levelNodes.map((treeNode, index) => {
-      const roundedToSpread: any = {}
-      if (!multiple) {
-        roundedToSpread.rounded = 'none'   
-        if (index === 0) { roundedToSpread.rounded = 'llg' }
-        else if (index === levelNodes.length - 1) { roundedToSpread.rounded = 'rlg' } 
-      }
-      return (
-        <ToggleGroupItem 
-          key={treeNode.skuToken}
-          value={treeNode.skuToken} 
-          disabled={(last && last === treeNode.skuToken || treeNode.skuToken === mutator.get())} 
-          aria-label={`Select ${treeNode.label}`}
-          {...roundedToSpread}
-          className={buttonClx}
-        >
-          <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
-            {!(show === 'label') && (<NodeImage treeNode={treeNode} />) }
-            {(!(show === 'image') || !treeNode.img) && (<span className='whitespace-nowrap'>{treeNode.label}</span>)}
-          </span>
-        </ToggleGroupItem>
-      )
-    })}
-    </ToggleGroup>  
+    {levelNodes.map((treeNode) => (
+      <ToggleGroupItem
+        key={treeNode.skuToken}
+        value={treeNode.skuToken}
+        disabled={(last && last === treeNode.skuToken || treeNode.skuToken === mutator.get())}
+        aria-label={`Select ${treeNode.label}`}
+        className={buttonClx}
+      >
+        <span className={cn('flex flex-row justify-center gap-1 h-6 items-center', itemClx)} >
+          {!(show === 'label') && (<NodeImage treeNode={treeNode} />) }
+          {(!(show === 'image') || !treeNode.img) && (<span className='whitespace-nowrap'>{treeNode.label}</span>)}
+        </span>
+      </ToggleGroupItem>
+    ))}
+    </ToggleGroup>
   )
 }
 

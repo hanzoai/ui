@@ -11,17 +11,13 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
-} from '@hanzo/ui/primitives'
-
-import {
+  SelectValue,
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@hanzo/ui/form'
-
+} from '@hanzo/ui'
 import { useCommerce } from '../../service/context'
 
 import countries from '../../util/countries'

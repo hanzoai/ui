@@ -2,8 +2,9 @@
 import React, { Suspense } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-
+import {
+  cn,
+} from '@hanzo/ui'
 import { formatCurrencyValue } from '../../../util'
 import PromoCode from './promo-code'
 import { useCommerce } from '../../../service/context'
