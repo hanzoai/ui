@@ -25,6 +25,9 @@ import type { ReactNode } from 'react'
 import { Box } from './box'
 import { Workbench } from './product/Workbench'
 import { Skeleton } from './product/Skeleton'
+import { ConnectionBadge } from './product/ConnectionBadge'
+import { ProjectThumb } from './product/ProjectThumb'
+import { Split } from './product/Split'
 import { TooltipAnchor } from './product/TooltipAnchor'
 import { DialogTemplate } from './product/DialogTemplate'
 import {
@@ -298,6 +301,26 @@ export const Gallery = () => (
         <ResizableHandle />
         <ResizablePanel />
       </ResizablePanelGroup>
+    </Section>
+
+    <Section name="connection-badge">
+      <ConnectionBadge method="OAuth" extra="acme/site" onDisconnect={() => {}} />
+      <ConnectionBadge method="API key" onDisconnect={() => {}} disconnecting />
+    </Section>
+
+    <Section name="project-thumb">
+      {/* No slug and no live URL: the monogram, which is the state that carries
+          this component's own styling. A capture or a frame is a picture from
+          somewhere else and paints no rules of ours. */}
+      <div style={{ width: 240 }}>
+        <ProjectThumb name="Acme" />
+      </div>
+    </Section>
+
+    <Section name="split">
+      <div style={{ width: 360, height: 120 }}>
+        <Split left={<Box>left</Box>} right={<Box>right</Box>} />
+      </div>
     </Section>
 
     <Section name="spinner">
