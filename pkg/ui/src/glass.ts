@@ -117,6 +117,84 @@ const SHEET_FILL = {
 } as const
 
 /**
+ * Which of a surface's edges lies UNDER a neighbour. Omit for both, which is
+ * what a pane between two other panes needs.
+ */
+export type Edge = 'left' | 'right'
+
+/**
+ * The crease — the valley where a neighbouring sheet lies over this one.
+ *
+ *   <YStack {...paper(sheet(0), crease('right'))}>
+ *
+ * The ladder's drops fall straight down (design's rule is one light, above), so
+ * it has nothing to say about a VERTICAL seam — and an app shell is nothing but
+ * vertical seams. Three sheets a rung apart, side by side, still read as three
+ * abutting rectangles. This is the mark that makes them read as paper: the
+ * ground going dark in the valley, which is what a sheet actually lays on the
+ * one beside it.
+ *
+ * It goes on the sheet that is COVERED, on the edge the neighbour lies over —
+ * a rail with a sidebar to its right takes `crease('right')`. Nothing can paint
+ * outside its own box, so the receiver draws it; the caster only has to be
+ * higher up the ladder.
+ *
+ * Spend it at a seam and nowhere else. A crease down the side of a card with
+ * nothing beside it is a gradient somebody liked.
+ */
+export const crease = (edge?: Edge) =>
+  ({ className: 'hz-crease', ...(edge ? { 'data-crease': edge } : {}) }) as const
+
+/**
+ * Unfold — how a sheet ARRIVES: turning open about the edge it is hinged on,
+ * rather than fading up as a rectangle.
+ *
+ *   <YStack {...paper(sheet(2), unfold('right'))}>
+ *
+ * The hinge is the only knob, and it sets the direction of the turn with it, so
+ * a sheet cannot be asked to swing the wrong way. A drawer off the left wall is
+ * `unfold()`; a pane folding in from the right edge is `unfold('right')`.
+ *
+ * Motion only — it says nothing about what the surface is made of, so it
+ * composes with `sheet`, `glass` or neither. Off under reduced motion, in
+ * `styles/motion.css` beside every other keyframe this package ships.
+ */
+export const unfold = (hinge: Edge = 'left') =>
+  ({ className: 'hz-unfold', ...(hinge === 'right' ? { 'data-hinge': 'right' } : {}) }) as const
+
+interface Mark {
+  className?: string
+}
+
+/**
+ * Compose marks onto one surface, without losing a class.
+ *
+ *   <YStack {...paper(sheet(1), crease('left'), fold)}>
+ *
+ * SPREADING TWO RECIPES SILENTLY DROPS ONE. `{...sheet(1)} {...fold}` — the
+ * composition `fold`'s own documentation shows — keeps only the last
+ * `className`, so the sheet arrives with its fill and its fold and WITHOUT
+ * `elevation-1`: the surface is a shade lighter than the page and flat, which
+ * looks like a design decision rather than a lost property. JSX assigns whole
+ * keys, and `className` is one key; this repo already records the same shape
+ * costing a breakpoint object.
+ *
+ * So marks are composed through here rather than beside each other. Every other
+ * key still takes the last writer, which is what a caller means by ordering
+ * them; only the class list accumulates.
+ */
+export function paper<A extends Mark>(a: A): A
+export function paper<A extends Mark, B extends Mark>(a: A, b: B): A & B
+export function paper<A extends Mark, B extends Mark, C extends Mark>(a: A, b: B, c: C): A & B & C
+export function paper(...marks: Mark[]): Mark {
+  const className = marks
+    .map((mark) => mark.className)
+    .filter(Boolean)
+    .join(' ')
+  return { ...Object.assign({}, ...marks), ...(className ? { className } : {}) }
+}
+
+/**
  * The fold — a corner turned back, and the ONE mark that says an item opens.
  *
  *   <YStack {...sheet(1)} {...fold}>
