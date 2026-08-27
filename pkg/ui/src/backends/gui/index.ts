@@ -284,6 +284,7 @@ export {
   Drawer,
   DrawerContent,
   DrawerHandle,
+  DrawerTrigger,
   type DrawerContentProps,
   type DrawerProps,
   type SnapPoint,

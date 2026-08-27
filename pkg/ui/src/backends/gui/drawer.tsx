@@ -15,7 +15,7 @@
  */
 import * as React from 'react'
 
-import { Box } from '../../box'
+import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
 
 /** A height: `'620px'`, or a fraction of the viewport. */
@@ -200,6 +200,34 @@ export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeo
       {...props}
     >
       <Box className="rounded-full bg-muted" style={{ width: 48, height: 4 }} />
+    </Box>
+  )
+}
+
+/**
+ * What opens the sheet.
+ *
+ * `asChild` hands the press to the element you already wrote rather than
+ * wrapping it in a button — a button inside a button is invalid markup and a
+ * keyboard reaches only the outer one.
+ */
+export const DrawerTrigger = ({
+  asChild,
+  children,
+  onClick,
+  ...props
+}: BoxProps<'button'> & { asChild?: boolean }) => {
+  const { onOpenChange } = useDrawer()
+  const open = (e: React.MouseEvent) => {
+    onOpenChange?.(true)
+    ;(onClick as ((e: React.MouseEvent) => void) | undefined)?.(e)
+  }
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children, { onClick: open } as Record<string, unknown>)
+  }
+  return (
+    <Box tag="button" type="button" onClick={open} {...props}>
+      {children}
     </Box>
   )
 }
