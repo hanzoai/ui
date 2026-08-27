@@ -318,8 +318,22 @@
    property rides on the component so only this half needs a sheet. */
 .hz-scroller::-webkit-scrollbar { display: none }
 
-/* Motion is a preference, and both of the above are decoration. */
+/* The drawn caret in a one-time-code box. The real one is hidden, because it
+   would sit at the left edge of an invisible full-width field rather than in
+   the box the next keystroke lands in. */
+@keyframes hz-caret {
+  0%, 49% { opacity: 1 }
+  50%, 100% { opacity: 0 }
+}
+.hz-caret {
+  background: var(--foreground);
+  animation: hz-caret 1s steps(1) infinite;
+}
+
+/* Motion is a preference, and all of the above is decoration. A caret that does
+   not blink is still a caret; one that does can trigger a migraine. */
 @media (prefers-reduced-motion: reduce) {
   .hz-pulse { animation: none }
+  .hz-caret { animation: none }
   .hz-scroller { scroll-behavior: auto }
 }
