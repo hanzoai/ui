@@ -1,8 +1,9 @@
 import React from 'react'
 
-import { ApplyTypography } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
-
+import {
+  ApplyTypography,
+  cn,
+} from '@hanzo/ui'
 const TitleAndByline: React.FC<{
   title: string | undefined
   byline?: string | undefined

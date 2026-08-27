@@ -3,10 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-import type { Dimensions } from '@hanzo/ui/types'
-
 import {
+  cn,
   ApplyTypography,
   type CarouselOptions,
   type CarouselApi,
@@ -16,7 +14,8 @@ import {
   CarouselPrevious,
   CarouselNext,
   MediaStack,
-} from '@hanzo/ui/primitives'
+} from '@hanzo/ui'
+import type { Dimensions } from '@hanzo/ui/types'
 
 import type { ItemSelectorProps, LineItem } from '../../../types'
 import { formatCurrencyValue, accessItemOptions } from '../../../util'
@@ -43,7 +42,7 @@ const ItemSlide: React.FC<{
   clx=''
 }) => (
   <CarouselItem className={cn('p-2 flex flex-col justify-center items-center', clx)}>
-    <MediaStack media={item} constrainTo={constrainTo} clx='my-4' />
+    <MediaStack media={item} constrainTo={constrainTo} className='my-4' />
   </CarouselItem>
 ) 
 

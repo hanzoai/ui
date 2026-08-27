@@ -6,8 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@hanzo/ui/primitives'
-
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@hanzo/ui'
 import { useCommerce } from '../../../service/context'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
 import type { CheckoutStepComponentProps, TransactionStatus } from '../../../types'

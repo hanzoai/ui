@@ -30,6 +30,8 @@ import { Button } from './button'
 export type CarouselOptions = {
   /** Past the last slide, go to the first — and the reverse. */
   loop?: boolean
+  /** The slide it opens on. Default 0. */
+  startIndex?: number
 }
 
 /** What a caller can ask of a mounted carousel. */
@@ -46,6 +48,16 @@ export type CarouselApi = {
 }
 
 const slides = (el: HTMLElement): HTMLElement[] => Array.from(el.children) as HTMLElement[]
+
+/**
+ * Put slide `k` in the middle of scroller `el`.
+ *
+ * By setting scrollLeft rather than calling `scrollIntoView`, which also scrolls
+ * every ancestor — that would jump the PAGE to bring a carousel deep in a
+ * document into view.
+ */
+const center = (el: HTMLElement, k: HTMLElement, behavior: ScrollBehavior) =>
+  el.scrollTo({ left: k.offsetLeft - (el.clientWidth - k.offsetWidth) / 2, behavior })
 
 /**
  * The slide whose centre is nearest the scroller's.
@@ -131,11 +143,7 @@ export const Carousel = ({
       const n = kids.length
       if (!n) return
       const i = loop ? ((index % n) + n) % n : Math.max(0, Math.min(n - 1, index))
-      const k = kids[i]
-      // Centre it by setting scrollLeft rather than calling scrollIntoView,
-      // which also scrolls every ancestor and would jump the PAGE to bring a
-      // carousel deep in a document into view.
-      e.scrollTo({ left: k.offsetLeft - (e.clientWidth - k.offsetWidth) / 2, behavior: 'smooth' })
+      center(e, kids[i], 'smooth')
     }
     api.current = {
       scrollTo: go,
@@ -162,6 +170,15 @@ export const Carousel = ({
   React.useEffect(() => {
     const e = scroller.current
     if (!e) return
+    // Where it opens. Instant rather than smooth — this is the carousel's
+    // starting position, and animating to it from slide one reads as the page
+    // scrolling on its own the moment it loads.
+    const start = options?.startIndex
+    if (start) {
+      const kids = slides(e)
+      const k = kids[Math.max(0, Math.min(kids.length - 1, start))]
+      if (k) center(e, k, 'auto')
+    }
     // Where we already are. Published WITHOUT announcing: a carousel that fires
     // its select handler on mount tells a page the user chose the first slide
     // when all they did was load it — and in a shop that is a selected sku.

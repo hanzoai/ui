@@ -1,5 +1,6 @@
-import { Button } from '@hanzo/ui/primitives'
-
+import {
+  Button,
+} from '@hanzo/ui'
 import PaymentMethods from './card-icon-row'
 import type { PropsWithChildren } from 'react'
 

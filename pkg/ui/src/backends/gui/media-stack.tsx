@@ -45,10 +45,9 @@ export const MediaStack = ({ media, constrainTo, className, ...props }: MediaSta
   const scale = media?.mediaTransform?.scale ?? 1
   const { offsetX = 0, offsetY = 0 } = media?.mediaTransform ?? {}
 
-  // Richest first. `animation` renders as its poster: a Lottie document needs a
-  // player, no content in this estate carries one, and a still is a better
-  // answer than an empty box for content that does.
-  const anim = media?.animation
+  // Richest first, and richest that can be PLAYED here: an animation is a url
+  // to a document needing a player this does not carry, so a stack holding one
+  // falls to its video or its still rather than rendering an empty box.
   const video = media?.video
   const img = media?.img
 
@@ -65,9 +64,7 @@ export const MediaStack = ({ media, constrainTo, className, ...props }: MediaSta
         />
       )
     }
-    const still = anim?.poster
-      ? { src: anim.poster, alt: '', dim: anim.dim }
-      : img
+    const still = img
     if (!still?.src) return null
     const d = fit(still.dim ?? constrainTo, constrainTo, scale)
     return (

@@ -3,8 +3,10 @@
 import React from 'react'
 import { Copy } from 'lucide-react'
 
-import { Button, toast } from '@hanzo/ui/primitives'
-
+import {
+  Button,
+  toast,
+} from '@hanzo/ui'
 import type { PaymentMethodComponentProps } from '../../../../types'
 
 import ContactForm from '../contact-form'

@@ -41,7 +41,7 @@
  * what the prop actually does.
  */
 import { ToggleGroup as GuiToggleGroup, useControllableState } from '@hanzo/gui'
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react'
+import { createContext, useContext, type CSSProperties, type ComponentProps, type ReactNode } from 'react'
 import { ink } from './ink'
 import { slot } from './slot'
 import { touch } from './gesture'
@@ -104,14 +104,69 @@ const GroupContext = /* @__PURE__ */ createContext<GroupContextValue>({
   selected: [],
 })
 
-export type ToggleGroupProps = Omit<ComponentProps<typeof GuiToggleGroup>, 'size'> & {
+/**
+ * Written out rather than derived from gui's, which cannot be used here.
+ *
+ * gui discriminates `single` from `multiple` by unioning its ENTIRE prop set
+ * twice, and that prop set is the whole style vocabulary — hundreds of
+ * properties, each with theme, media and pseudo variants. TypeScript will not
+ * represent the union: `error TS2590: Expression produces a union type that is
+ * too complex to represent`, at the JSX site, on correct markup. A literal
+ * `type` does not help, because the union is built before anything narrows it.
+ *
+ * `Omit` cannot cut it down either. gui's props carry a string index signature,
+ * and `Omit` is `Pick<T, Exclude<keyof T, K>>` — `Exclude<string, 'value'>` is
+ * still `string`, so the signature comes back with everything else. Worse, a
+ * declared property must SATISFY the index signature it sits beside, so
+ * narrowing `value` to `string | string[]` produced "Property 'value' is
+ * incompatible with index signature" — an array being measured against a style
+ * value.
+ *
+ * So this is the surface, stated. It is the whole surface: the style props were
+ * never declared by gui either — they arrived through that same index signature
+ * — and no call site in this estate passes one to a toggle group.
+ */
+type ToggleGroupBase = {
   variant?: ToggleGroupVariant
   size?: ToggleGroupSize
   children?: ReactNode
+  className?: string
+  /**
+   * Plain CSS, because that is what it is on web: gui hands the object to the
+   * DOM element, and a `gridTemplateColumns` written this way arrives as inline
+   * `grid-template-columns` (measured). A caller laying tabs out in a computed
+   * number of columns has no other way to say it — a count is data, and data
+   * cannot be a class name.
+   */
+  style?: CSSProperties
+  orientation?: 'horizontal' | 'vertical'
+  /** Clicking the selected segment clears it, unless this says otherwise. */
+  disableDeactivation?: boolean
+  disabled?: boolean
+  id?: string
+  'aria-label'?: string
+  'aria-labelledby'?: string
+}
+
+export type ToggleGroupProps = ToggleGroupBase & {
+  type?: 'single' | 'multiple'
+  value?: string | string[]
+  defaultValue?: string | string[]
+  /**
+   * METHOD syntax, deliberately. It is bivariant where the arrow form is
+   * contravariant, so a handler written for the single case, `(v: string) =>
+   * …`, and one written for the many case are both assignable — which is what a
+   * caller choosing between them at runtime needs.
+   *
+   * A discriminated union would say this more precisely and cannot be written
+   * here at all: see the base type above. Between a union the compiler refuses
+   * and one bivariant parameter, this is the half to give up.
+   */
+  onValueChange?(value: string | string[]): void
 }
 
 function ToggleGroup({
-  type,
+  type = 'single',
   value,
   defaultValue,
   onValueChange,

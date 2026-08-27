@@ -6,18 +6,17 @@ import { observer } from 'mobx-react-lite'
 
 import { ethers } from 'ethers'
 
-import { 
-  Button, 
-  Input, 
-  Select, 
-  SelectContent, 
-  SelectGroup, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue, 
-  toast 
-} from '@hanzo/ui/primitives'
-
+import {
+  Button,
+  Input,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  toast,
+} from '@hanzo/ui'
 import Eth from '../crypto-icons/eth'
 import { useCommerce } from '../../../../service/context'
 import type { PaymentMethodComponentProps } from '../../../../types'
@@ -178,7 +177,7 @@ const PayWithCrypto: React.FC<PaymentMethodComponentProps> = observer(({
         <div className='flex gap-2 grid grid-cols-3'>
           <Select onValueChange={(token) => {/*ONLY ETH  setSelectedToken(token) */}} defaultValue='eth'>
             <SelectTrigger>
-              <SelectValue defaultValue='eth' />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
