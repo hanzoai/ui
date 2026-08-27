@@ -348,7 +348,20 @@ function one(c: string): Props | null {
       // `--text-*--line-height`, and emitting the size alone leaves the element
       // on whatever leading it inherits. That measured as every converted
       // heading losing 8px of height and the page under it rising to match.
-      if (v in FONT_SIZE) return { fontSize: FONT_SIZE[v], lineHeight: `var(--text-${v}--line-height)` }
+      // A size sets BOTH — Tailwind pairs every `--text-*` with a
+      // `--text-*--line-height`, and emitting the size alone leaves the element
+      // on whatever leading it inherits.
+      //
+      // The `normal` fallback is load-bearing, not decoration. NOTHING in the
+      // shipped theme declares those paired variables — measured: zero of them
+      // in dist/theme.css — so every named size resolved to an undefined
+      // custom property, the declaration was dropped, and the element kept the
+      // fixed leading gui had already put on it. A 48px heading came out in a
+      // 20px box, at every size, everywhere. With the fallback the box tracks
+      // the glyph, and a sheet that DOES declare the pair still wins.
+      if (v in FONT_SIZE) {
+        return { fontSize: FONT_SIZE[v], lineHeight: `var(--text-${v}--line-height, normal)` }
+      }
       if (v === 'left' || v === 'center' || v === 'right' || v === 'justify') return { textAlign: v }
       // `text-` sets a size OR a colour, and an arbitrary value has to say
       // which. A LENGTH is a size: `text-[96px]` was reaching the colour branch

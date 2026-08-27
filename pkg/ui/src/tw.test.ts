@@ -62,17 +62,17 @@ describe('tw — one class', () => {
     // hardcoded scale silently resized every converted element.
     expect(props('text-xs')).toEqual({
       fontSize: 'var(--text-xs)',
-      lineHeight: 'var(--text-xs--line-height)',
+      lineHeight: 'var(--text-xs--line-height, normal)',
     })
     // A size utility carries its own leading. Emitting the size alone left
     // every converted heading 8px shorter than the one beside it.
-    expect(props('text-2xl').lineHeight).toBe('var(--text-2xl--line-height)')
+    expect(props('text-2xl').lineHeight).toBe('var(--text-2xl--line-height, normal)')
   })
 
   it('distinguishes a size, an alignment and a colour under one head', () => {
     expect(props('text-sm')).toEqual({
       fontSize: 'var(--text-sm)',
-      lineHeight: 'var(--text-sm--line-height)',
+      lineHeight: 'var(--text-sm--line-height, normal)',
     })
     expect(props('text-center')).toEqual({ textAlign: 'center' })
     expect(props('text-muted-foreground')).toEqual({ color: 'var(--muted-foreground)' })
@@ -349,5 +349,18 @@ describe('bg- is a colour or a background sub-property', () => {
     expect(t.props.backgroundClip).toBe('text')
     expect(t.props.color).toBe('transparent')
     expect(t.rest).toBe('')
+  })
+})
+
+describe('a named size carries a line height that resolves', () => {
+  it('falls back to normal, because nothing declares the pair', () => {
+    // Measured: dist/theme.css declares ZERO `--text-*--line-height` variables.
+    // Without the fallback every named size resolved to an undefined custom
+    // property, the declaration was dropped, and the element kept the fixed
+    // leading gui had already put on it — a 48px heading in a 20px box, at
+    // every size, everywhere.
+    for (const s of ['sm', 'base', 'lg', '4xl', '7xl']) {
+      expect(tw(`text-${s}`).props.lineHeight).toBe(`var(--text-${s}--line-height, normal)`)
+    }
   })
 })
