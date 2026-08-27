@@ -60,7 +60,13 @@ export {
   ApplyTypography, Link, LinkElement, MDXLink, VideoPlayer, YouTubeEmbed, useLink,
   Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, useFormField,
   Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
-  Skeleton, MediaStack, fit,
+  Skeleton, MediaStack, fit, NavItems, StepIndicator,
+  Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
+  BreadcrumbPage, BreadcrumbSeparator,
+  InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot,
+  NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
+  NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle,
+  Drawer, DrawerContent, DrawerHandle,
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
@@ -70,6 +76,8 @@ export type {
   AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
   ToggleGroupSize, ToggleGroupVariant,
   CarouselApi, CarouselOptions, CarouselProps, MediaStackProps,
+  NavItemsProps, StepIndicatorProps, InputOTPProps, OTPSlot,
+  DrawerProps, DrawerContentProps, SnapPoint,
 } from './backends/gui'
 
 // LAYOUT — the stacks and the type scale reach consumers through the component
