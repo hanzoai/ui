@@ -61,6 +61,8 @@ export {
   Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, useFormField,
   Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
   Skeleton, MediaStack, fit, NavItems, StepIndicator,
+  Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader,
+  SheetOverlay, SheetPortal, SheetTitle, SheetTrigger,
   Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
   InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot,
@@ -77,7 +79,7 @@ export type {
   ToggleGroupSize, ToggleGroupVariant,
   CarouselApi, CarouselOptions, CarouselProps, MediaStackProps,
   NavItemsProps, StepIndicatorProps, InputOTPProps, OTPSlot,
-  DrawerProps, DrawerContentProps, SnapPoint,
+  DrawerProps, DrawerContentProps, SnapPoint, SheetContentProps, SheetSide,
 } from './backends/gui'
 
 // LAYOUT — the stacks and the type scale reach consumers through the component
