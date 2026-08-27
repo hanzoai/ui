@@ -12,6 +12,7 @@
  * text owns color/weight/case. Nothing reads `variant` twice by hand.
  */
 import { SizableText, XStack, createStyledContext, styled } from '@hanzo/gui'
+import { sx } from '../../sx'
 import * as React from 'react'
 import { ink } from './ink'
 import { touch } from './gesture'
@@ -122,7 +123,7 @@ export function Badge({
       asChild={asChild}
       render={asChild ? undefined : 'span'}
       {...touch(HEIGHT, MIN_TOUCH, 'y')}
-      className={[badgeVariants({ variant }), className].filter(Boolean).join(' ')}
+      {...sx([badgeVariants({ variant }), className].filter(Boolean).join(' '))}
       {...(props as React.ComponentProps<typeof BadgeFrame>)}
     >
       {asChild ? children : ink(children, BadgeText)}

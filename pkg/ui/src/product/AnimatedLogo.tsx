@@ -20,6 +20,7 @@
  */
 
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { sx } from '../sx'
 
 import { HANZO, type BrandIdentity } from './brand'
 import {
@@ -135,7 +136,7 @@ export function AnimatedLogo({
       onClick={onClick}
       aria-label={label}
       title={label}
-      className={className}
+      {...sx(className)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}

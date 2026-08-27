@@ -14,6 +14,7 @@
  * rather than pushing across it.
  */
 import * as React from 'react'
+import { sx } from '../../sx'
 
 import { cn } from '../../core/cn'
 import {
@@ -70,7 +71,7 @@ export const SheetContent = ({ side = 'right', className, ...props }: SheetConte
     // to outrank that — hence `position` here rather than relying on the frame.
     position="fixed"
     {...PLACE[side]}
-    className={cn(className)}
+    {...sx(className)}
     {...props}
   />
 )
@@ -79,5 +80,5 @@ export const SheetContent = ({ side = 'right', className, ...props }: SheetConte
 const slot = (side: SheetSide) => ({ 'data-slot': 'sheet-content', 'data-side': side })
 
 export const SheetHeader = ({ className, ...props }: React.ComponentProps<typeof DialogHeader>) => (
-  <DialogHeader className={cn(className)} {...props} />
+  <DialogHeader {...sx(className)} {...props} />
 )
