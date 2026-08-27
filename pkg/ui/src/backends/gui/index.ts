@@ -226,3 +226,15 @@ export {
   type VideoPlayerProps,
   type YouTubeEmbedProps,
 } from './video'
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  type CarouselApi,
+  type CarouselOptions,
+  type CarouselProps,
+} from './carousel'
+export { Skeleton } from './skeleton'
+export { MediaStack, fit, type MediaStackProps } from './media-stack'

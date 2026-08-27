@@ -59,6 +59,8 @@ export {
   toast,
   ApplyTypography, Link, LinkElement, MDXLink, VideoPlayer, YouTubeEmbed, useLink,
   Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, useFormField,
+  Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
+  Skeleton, MediaStack, fit,
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
@@ -67,6 +69,7 @@ export type {
   ResizablePanelGroupProps, ResizablePanelProps,
   AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
   ToggleGroupSize, ToggleGroupVariant,
+  CarouselApi, CarouselOptions, CarouselProps, MediaStackProps,
 } from './backends/gui'
 
 // LAYOUT — the stacks and the type scale reach consumers through the component

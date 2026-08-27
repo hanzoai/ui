@@ -65,6 +65,24 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
   'fontVariantNumeric'] as const
 
 /**
+ * Properties gui has no style prop for, which must reach the DOM as plain CSS.
+ *
+ * An unrecognised prop is not dropped — it is FORWARDED, so it lands on the
+ * element as an attribute: `scrollSnapType="x mandatory"` sitting in the markup
+ * where `scroll-snap-type` was meant. The element renders, the attribute is
+ * inert, and a carousel scrolls freely past its slides with nothing to say why.
+ * Same shape as the text properties above, different reason: those are dropped
+ * by the frame, these were never known to it.
+ *
+ * Exactly the properties `tw` emits that gui's tables do not name. gui DOES
+ * carry `backgroundClip` and `backgroundOrigin`, so those stay with it; it does
+ * not carry the `-webkit-` half of the pair, which is the one Safari reads for
+ * clipping a gradient to text.
+ */
+const CSS_PROPS = ['scrollSnapType', 'scrollSnapAlign', 'scrollSnapStop',
+  'WebkitBackgroundClip'] as const
+
+/**
  * The props of the element being stood in for, ALONGSIDE gui's.
  *
  * A `<button>` carries `type` and `disabled`, a `<form>` carries `onSubmit`, a
@@ -133,6 +151,7 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
   // browser inherits from.
   const text: Record<string, unknown> = {}
   for (const k of TEXT_PROPS) if (k in props) { text[k] = props[k]; delete props[k] }
+  for (const k of CSS_PROPS) if (k in props) { text[k] = props[k]; delete props[k] }
   // A div's line-height comes from the cascade; gui's Stack stamps its own, so
   // a converted box grew a few pixels per line of text. Stated only when no
   // class said otherwise, so `leading-relaxed` still wins.
