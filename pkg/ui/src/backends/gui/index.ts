@@ -238,3 +238,39 @@ export {
 } from './carousel'
 export { Skeleton } from './skeleton'
 export { MediaStack, fit, type MediaStackProps } from './media-stack'
+export { NavItems, type NavItemsProps } from './nav-items'
+export {
+  Breadcrumb,
+  BreadcrumbEllipsis,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from './breadcrumb'
+export { StepIndicator, type StepIndicatorProps } from './step-indicator'
+export {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+  type InputOTPProps,
+  type OTPSlot,
+} from './input-otp'
+export {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from './navigation-menu'
+export {
+  Drawer,
+  DrawerContent,
+  DrawerHandle,
+  type DrawerContentProps,
+  type DrawerProps,
+  type SnapPoint,
+} from './drawer'

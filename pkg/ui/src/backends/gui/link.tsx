@@ -83,6 +83,12 @@ export type LinkElementProps = React.PropsWithChildren<{
    */
   className?: string
   style?: React.CSSProperties
+  /**
+   * `page` on the link to where you already are. It is how a screen reader
+   * says "this one" in a navigation list — the colour that marks it visually
+   * says nothing at all.
+   */
+  'aria-current'?: 'page' | 'true' | false
 }>
 
 /**
@@ -103,11 +109,13 @@ export const LinkElement = ({
   className,
   style,
   children,
+  'aria-current': current,
 }: LinkElementProps) => {
   const Comp = useLink()
   const { href, newTab, title } = def
 
   const nav: Record<string, unknown> = {}
+  if (current) nav['aria-current'] = current
   if (external(href)) {
     nav.rel = 'noreferrer noopener'
     // An external link opens in a new tab unless the def says otherwise.

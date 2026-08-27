@@ -92,7 +92,7 @@ const HEADS = [
   'row-span', 'translate-x', 'translate-y', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
   'transition', 'duration', 'delay', 'ease', 'blur', 'backdrop-blur', 'shadow',
   'underline-offset',
-  'overflow',
+  'cursor', 'overflow',
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
   'whitespace', 'align', 'inset', 'items', 'justify', 'content', 'self',
   'opacity', 'text', 'font', 'bg', 'gap', 'top', 'right', 'bottom', 'left',
@@ -286,7 +286,6 @@ function one(c: string): Props | null {
     case 'my-auto': return { marginTop: 'auto', marginBottom: 'auto' }
     case 'border': return { borderWidth: 1 }
     case 'rounded': return { borderRadius: RADIUS[''] }
-    case 'cursor-pointer': return { cursor: 'pointer' }
     // SCROLL SNAP — how a carousel is built without a carousel library. The
     // browser does the paging; `scrollTo` and a scroll listener are the whole
     // API surface on top of it.
@@ -482,6 +481,12 @@ function one(c: string): Props | null {
     }
     case 'opacity': return /^\d+$/.test(v) ? { opacity: +v / 100 } : null
     case 'z': return /^\d+$/.test(v) ? { zIndex: +v } : null
+    // Every cursor, not a list of them. Tailwind's names ARE the CSS values —
+    // `grab`, `not-allowed`, `zoom-in` — so enumerating them would be copying
+    // the CSS spec into a table that then goes stale one keyword at a time.
+    // `cursor-pointer` was the only one spelled out, and a drag handle asking
+    // for `cursor-grab` got a class no sheet serves.
+    case 'cursor': return { cursor: v }
     case 'overflow': return { overflow: v }
     case 'overflow-x': return { overflowX: v }
     case 'overflow-y': return { overflowY: v }
