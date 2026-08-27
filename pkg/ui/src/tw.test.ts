@@ -112,10 +112,14 @@ describe('tw — one class', () => {
     expect(props('leading-6')).toEqual({ lineHeight: '24px' })
   })
 
-  it('declines space-y, whose spacing lives on the children', () => {
-    // `gap` reproduces it on a flex container and silently loses it on a block
-    // one, so the class stays and the rule that works keeps working.
-    expect(tw('space-y-6')).toEqual({ props: {}, rest: 'space-y-6' })
+  it('reads space-y as the row gap', () => {
+    // This used to be declined, on the reasoning that `gap` reproduces it on a
+    // flex container and loses it on a block one — sound while a Tailwind rule
+    // existed to lose. None does: the class reached the document and did
+    // nothing, 76 times across the estate. A gap is right wherever the
+    // container lays anything out and no worse than nothing where it does not.
+    expect(tw('space-y-6')).toEqual({ props: { rowGap: 24 }, rest: '' })
+    expect(tw('space-x-6')).toEqual({ props: { columnGap: 24 }, rest: '' })
   })
 
   it('gives flex its direction, since a row is not the browser default', () => {
@@ -164,9 +168,15 @@ describe('tw — what it does not know', () => {
   it('returns an unknown class rather than dropping it', () => {
     // `group` is a marker another class selects on; losing it would break the
     // rule that reads it.
+    // `group` is the marker; `container` is read now, so the unknown left over
+    // is the marker alone.
     expect(tw('flex group container')).toEqual({
-      props: { display: 'flex', flexDirection: 'row' },
-      rest: 'group container',
+      props: {
+        display: 'flex', flexDirection: 'row', width: '100%',
+        $sm: { maxWidth: 640 }, $md: { maxWidth: 768 },
+        $lg: { maxWidth: 1024 }, $xl: { maxWidth: 1280 },
+      },
+      rest: 'group',
     })
   })
 
