@@ -37,7 +37,7 @@
     "@hanzogui/lucide-icons-2": "8.1.0",
     "@hanzogui/web": "8.1.0",
     "@types/react": "^19.1.10",
-    "react": "^19.0.0",
+    "react": "19.2.8",
     "typescript": "^7.0.2"
   },
   "publishConfig": {

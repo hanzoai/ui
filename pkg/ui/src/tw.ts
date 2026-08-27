@@ -94,7 +94,7 @@ const HEADS = [
   'underline-offset',
   'cursor', 'overflow',
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
-  'whitespace', 'align', 'inset', 'items', 'justify', 'content', 'self',
+  'whitespace', 'align', 'inset', 'inset-x', 'inset-y', 'items', 'justify', 'content', 'self',
   'opacity', 'text', 'font', 'bg', 'gap', 'top', 'right', 'bottom', 'left',
   'w', 'h', 'z', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl',
   'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml',
@@ -160,12 +160,15 @@ const FLOW: Record<string, string> = {
  * underscore (`\_`) is a literal one, which matters inside a `minmax()` or a
  * custom property name.
  */
+/** Inside a bracket an `_` stands for a space; `\_` is a literal underscore. */
+const unscore = (s: string) => s.replace(/\\_/g, '\u0000').replace(/_/g, ' ').replace(/\u0000/g, '_')
+
 function track(v: string, prop: string): Props | null {
   if (v === 'none') return { [prop]: 'none' }
   if (/^\d+$/.test(v)) return { [prop]: `repeat(${v}, minmax(0, 1fr))` }
   const arb = /^\[(.+)]$/.exec(v)
   if (!arb) return null
-  return { [prop]: arb[1].replace(/\\_/g, '\u0000').replace(/_/g, ' ').replace(/\u0000/g, '_') }
+  return { [prop]: unscore(arb[1]) }
 }
 
 /** A grid LINE — a number, a negative number counting from the end, or auto. */
@@ -551,7 +554,19 @@ function one(c: string): Props | null {
       : { transform: `translateX(${typeof n === 'number' ? n + 'px' : n})` } }
     case 'translate-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null
       : { transform: `translateY(${typeof n === 'number' ? n + 'px' : n})` } }
-    case 'shadow': return SHADOW[v] ? { boxShadow: SHADOW[v] } : null
+    // A named rung, or a shadow written out. The written-out form is not an
+    // edge case: a hard offset shadow — `shadow-[8px_8px_0_0_#000]` — has no
+    // rung to name, and a design built on one loses every shadow it has
+    // without this. Underscores stand for spaces, as everywhere in a bracket.
+    case 'shadow': {
+      if (SHADOW[v]) return { boxShadow: SHADOW[v] }
+      const arb = /^\[(.+)]$/.exec(v)
+      return arb ? { boxShadow: unscore(arb[1]) } : null
+    }
+    // `inset-0` sets all four; the axis forms set a pair. They arrive here as
+    // their own head, which is why each needs naming.
+    case 'inset-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { left: n, right: n } }
+    case 'inset-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { top: n, bottom: n } }
   }
   return null
 }

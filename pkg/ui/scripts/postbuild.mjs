@@ -54,6 +54,7 @@ const DATA = new Set(
         'core/cn',
         'tw',
         'sx',
+        'css',
         'types',
         'core/tokens',
         'core/css',
