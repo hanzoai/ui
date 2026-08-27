@@ -91,6 +91,12 @@ function withGui(nextConfig = {}, dir = process.cwd()) {
     '@hanzo/gui',
     '@hanzo/ui',
     'react-native-web',
+    // The icon set draws through this, and it ships `ReactNativeSVG.web.js`
+    // beside the native entry. Rule (1) only reaches inside a package that is
+    // transpiled, so leaving it out picks the native half and lands in the
+    // Flow parse error above — naming react-native, from a package nothing in
+    // the app imports directly.
+    'react-native-svg',
     ...guiPackages(dir),
   ])
   const turbo = nextConfig.turbopack || {}
