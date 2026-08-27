@@ -59,9 +59,23 @@ describe('it composes rather than replaces', () => {
   })
 
   it('keeps the rest of the config untouched', () => {
-    const c = withGui({ output: 'export', transpilePackages: ['@hanzo/ui'] })
+    const c = withGui({ output: 'export', transpilePackages: ['@luxfi/ui'] })
     expect(c.output).toBe('export')
-    expect(c.transpilePackages).toEqual(['@hanzo/ui'])
+    // theirs is kept, ours is added, and nothing is listed twice
+    expect(c.transpilePackages).toContain('@luxfi/ui')
+    expect(c.transpilePackages).toContain('@hanzo/gui')
+    expect(new Set(c.transpilePackages).size).toBe(c.transpilePackages.length)
+  })
+
+  it('transpiles the gui graph, or the first two settings never reach inside it', () => {
+    const c = withGui({}, '/home/z/work/hanzo/ui/pkg/ui')
+    expect(c.transpilePackages).toContain('react-native-web')
+    // Discovered, not listed: the set moves, and a stale list fails as a parse
+    // error in a dependency rather than as anything naming the package. How
+    // MANY depends on what the host has hoisted, so the claim is that discovery
+    // ran at all — a hardcoded count would be a second stale list.
+    expect(c.transpilePackages.filter((p: string) => p.startsWith('@hanzogui/')).length)
+      .toBeGreaterThan(0)
   })
 
   it("keeps a caller's own turbopack aliases", () => {

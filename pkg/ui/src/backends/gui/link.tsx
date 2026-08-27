@@ -116,7 +116,10 @@ export const LinkElement = ({
 
   const nav: Record<string, unknown> = {}
   if (current) nav['aria-current'] = current
-  if (external(href)) {
+  // The scheme decides unless the def says otherwise. It can only be wrong in
+  // one direction — a same-origin absolute url that is not really a departure —
+  // so the derivation is the default and the field is the override.
+  if (def.external ?? external(href)) {
     nav.rel = 'noreferrer noopener'
     // An external link opens in a new tab unless the def says otherwise.
     if (newTab ?? true) nav.target = '_blank'
