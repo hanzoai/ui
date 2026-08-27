@@ -242,3 +242,35 @@ describe('the kept render', () => {
       expect(html, `chat is missing ${slot}`).toContain(`data-slot="${slot}"`)
   })
 })
+
+/**
+ * `'use client'` marks a module as a client REFERENCE on React's server layer,
+ * not as code. That is right for a component and wrong for a function: a page
+ * composing `cn('grid', x)` for an element it renders on the server gets
+ *
+ *     Attempted to call cn() from the server but cn is on the client
+ *
+ * which stops the PRERENDER, so the app fails to BUILD rather than failing to
+ * render. It is invisible from source — the directive is stamped in postbuild —
+ * and invisible to every test that imports through vite, which does not enforce
+ * the boundary. Only the tarball is true or false about it.
+ */
+describe('the client boundary is on the components, not the functions', () => {
+  const stamped = (rel: string) => {
+    const f = join(DIST, rel)
+    if (!existsSync(f)) throw new Error(`dist/${rel} missing — run pnpm build`)
+    return readFileSync(f, 'utf8').trimStart().startsWith("'use client'")
+  }
+
+  it('the pure layer is callable from a server component', () => {
+    for (const m of ['core/cn.js', 'tw.js', 'sx.js', 'types.js']) {
+      expect(stamped(m), `dist/${m} is stamped, so calling it on the server throws`).toBe(false)
+    }
+  })
+
+  it('a component still declares itself a client module', () => {
+    for (const m of ['box.js', 'backends/gui/carousel.js', 'backends/gui/drawer.js']) {
+      expect(stamped(m), `dist/${m} is not stamped, so Next cannot mount it`).toBe(true)
+    }
+  })
+})

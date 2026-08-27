@@ -45,6 +45,16 @@ const DATA = new Set(
     ? process.argv[3].split(',').filter(Boolean)
     : [
         'gui-config',
+        // The class-name layer is pure functions over strings, and a server
+        // component calls them: a page composing `cn('grid', x)` for an element
+        // it renders on the server got "Attempted to call cn() from the server
+        // but cn is on the client", which stops the PRERENDER — so the build
+        // fails rather than the page. `tw` and `sx` are the same function under
+        // other names, and `types` is a vocabulary with no runtime at all.
+        'core/cn',
+        'tw',
+        'sx',
+        'types',
         'core/tokens',
         'core/css',
         'framework/core',
