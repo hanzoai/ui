@@ -1,0 +1,75 @@
+/* The element ground.
+ *
+ * gui resets the elements IT renders — every rule in the generated sheet hangs
+ * off a `.is_View`/`.css-view-*` class. A `<ul>` the app wrote itself gets none
+ * of that, so removing a utility engine hands those elements straight back to
+ * browser defaults: list markers return, headings grow margins, a button turns
+ * grey with a border, a link goes blue and underlined.
+ *
+ * Measured: with this absent, the lux nav rendered a bullet before its first
+ * item and every consumer had to re-state the same dozen rules in its own
+ * globals.css — or forget to, which is the same thing with no error.
+ *
+ * These are the defaults stated, nothing more. Anything with an opinion belongs
+ * in a token or a component.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+ol, ul, menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button, input, select, textarea, optgroup {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Replaced elements are blocks: inline leaves a gap under every image for the
+   text baseline that is not there. `max-width` keeps one from widening the
+   page — the single commonest cause of a document that scrolls sideways. */
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  max-width: 100%;
+}
+
+/* Preformatted text cannot wrap, so left alone it is the other commonest cause
+   of a sideways-scrolling document. It scrolls inside itself instead. */
+pre {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* A long word — a hash, an address, a URL — must not decide the page width. */
+body {
+  overflow-wrap: break-word;
+}

@@ -71,6 +71,10 @@ try {
   // components reference tokens the sheet never declares.
   const tokens = readFileSync(join(UI, 'dist/theme.css'), 'utf8')
   const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
+  // The element ground. It sits after rnw's base and before gui's atomics, so a
+  // component still wins over it while an element the app wrote itself is not
+  // left on browser defaults.
+  const base = readFileSync(join(UI, 'src/styles/base.css'), 'utf8')
 
   // `--hanzo-ui-styles` is what <Hanzo> looks up to tell a consumer, in
   // development, that this file never reached the document.
@@ -91,6 +95,7 @@ try {
     ':root { --hanzo-ui-styles: 1; }',
     tokens,
     rnw,
+    base,
     motion,
     gui,
   ].join('\n')
