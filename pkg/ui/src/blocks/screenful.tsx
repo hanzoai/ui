@@ -61,6 +61,9 @@ const Backdrop = ({
           loop
           muted
           playsInline
+          // Without this a video is a black rectangle until the first frame
+          // decodes — which on a hero is the whole composition, missing.
+          poster={block.poster}
           style={{ margin: 0, height: '100%', width: '100%', objectFit: 'cover' }}
         >
           {block.sources?.map((src, i) => (
@@ -207,11 +210,15 @@ export const ScreenfulBlockComponent = ({
   const oneColumn = b.contentColumns.length === 1
   const vertCenter = spec('vert-center')
 
+  // The gutter GROWS with the viewport. It used to be `px-[8vw] xl:px-[1vw]`,
+  // which shrank from 8% of the screen to 1% at exactly the width where there
+  // is most room — measured at 1280px: 13px of margin and 82 characters to the
+  // line. `--gutter` is a clamp, so it opens up to 6rem and stops.
   const gutters = spec('narrow-gutters')
-    ? cn('px-6 lg:px-8 2xl:px-2 pb-4 lg:pb-6 xl:pb-8', snapTile && 'pt-15 md:pt-26 lg:pt-28')
+    ? cn('px-6 lg:px-8 pb-4 lg:pb-6 xl:pb-8', snapTile && 'pt-15 md:pt-26 lg:pt-28')
     : spec('no-gutters')
       ? cn('px-0 pb-0', snapTile && 'pt-11 lg:pt-20')
-      : 'px-[8vw] xl:px-[1vw] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)]'
+      : 'px-[var(--gutter)] pb-[8vh] pt-[calc(44px+4vh)] md:pt-[calc(80px+6vh)]'
 
   return (
     <Box
@@ -241,7 +248,11 @@ export const ScreenfulBlockComponent = ({
           <Box
             className={cn(
               'xl:mx-auto overflow-y-hidden h-full',
-              !spec('full-screen-width') && 'max-w-screen-xl',
+              // `max-w-screen-xl` is 1280px — exactly the width most desktops
+            // are, so it capped nothing where it mattered. `--frame` is wider
+            // and is a real bound: the composition stops, the gutter takes the
+            // rest, and the column centres.
+            !spec('full-screen-width') && 'max-w-[var(--frame)]',
               gutters,
               agent && agent !== 'desktop' && 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8',
               snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full',

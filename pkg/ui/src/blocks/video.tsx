@@ -54,6 +54,10 @@ export const VideoBlockComponent = ({
     <VideoPlayer
       {...sx(cn('mx-auto', className))}
       sources={b.sources ?? []}
+      // The block already knows the poster and draws it while it waits for a
+      // window measurement — but the <video> that replaces it had none, so the
+      // hero went black the moment the player mounted.
+      poster={b.poster}
       width={dim.w}
       height={dim.h}
       {...b.videoProps}

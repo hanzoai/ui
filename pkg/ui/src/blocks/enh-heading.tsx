@@ -94,7 +94,10 @@ export const EnhHeadingBlockComponent = ({
     },
     b.byline && {
       Tag: tag(b.byline.level, DEFAULT.byline.tag),
-      cls: at.byline,
+      // The byline is running text whatever tag it is given. Content here sets
+      // `level` as a SIZE — a byline arrives as an h6 — so a rule keyed on `p`
+      // never reaches it, and the line ran to 75 characters. Bound by role.
+      cls: cn(at.byline, 'max-w-[var(--measure)]'),
       text: b.byline.text,
     },
   ].filter(Boolean) as { Tag: string; cls: string; text: string }[]
