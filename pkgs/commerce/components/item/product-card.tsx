@@ -1,16 +1,14 @@
 import React from 'react'
 
-import { 
+import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-  MediaStack
-} from '@hanzo/ui/primitives'
-
-import { cn } from '@hanzo/ui/util'
-
+  MediaStack,
+  cn,
+} from '@hanzo/ui'
 import { formatCurrencyValue } from '../../util'
 import type { LineItem } from '../../types'
 
@@ -29,7 +27,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
     itemScope
     itemType='https://schema.org/Product'
     className={cn('max-h-[360px] lg:min-w-[200px] max-w-[260px] overflow-hidden', className)}
-    {...props}
+    // A div's whole attribute set, spread onto a cross-platform component that
+    // names a few of them differently. The element a Card renders IS a div, and
+    // it is the one these reach.
+    {...(props as object)}
   >
     {/* Standard schema.org Product microdata. Neutral and analytics-agnostic:
         track.js `annotate`, GA4 Merchant, or any reader picks up the item with
@@ -38,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <meta itemProp='name' content={item.title} />
     <meta itemProp='sku' content={item.sku} />
     <CardHeader className='w-full border-b p-6 min-h-[180px] max-h-[240px] relative'>
-      <MediaStack media={item} constrainTo={{w: 700, h:700}} clx='p-6' />
+      <MediaStack media={item} constrainTo={{w: 700, h:700}} className='p-6' />
     </CardHeader>
     <CardContent className='grid gap-2.5 p-4'>
       <CardTitle className='text-sm sm:text-base flex flex-col justify-start items-center line-clap-3'>

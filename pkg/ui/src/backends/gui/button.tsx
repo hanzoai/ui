@@ -23,8 +23,15 @@
  * as well as native — visual density stays at 36/32/40px.
  */
 import { Button as GuiButton, Spinner, styled } from '@hanzo/gui'
-import { createElement, isValidElement, type ComponentProps, type ReactNode } from 'react'
+import {
+  createElement,
+  isValidElement,
+  type ComponentProps,
+  type MouseEventHandler,
+  type ReactNode,
+} from 'react'
 
+import type { Microdata } from './microdata'
 import { ink } from './ink'
 import { touch } from './gesture'
 
@@ -182,11 +189,27 @@ export const buttonVariants = ({
   [...new Set([`btn`, `btn-${variant ?? 'default'}`, `btn-${size ?? 'default'}`, className].filter(Boolean))]
     .join(' ')
 
-export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' | 'children'> & {
+export type ButtonProps = Omit<
+  ComponentProps<typeof Frame>,
+  'variant' | 'size' | 'children' | 'onClick'
+> & {
   variant?: ButtonVariant | null
   size?: ButtonSize | null
   isLoading?: boolean
   children?: ReactNode
+  /**
+   * The DOM click. Frame types this from the cross-platform stack, where the
+   * event carries `currentTarget: number | ReactNativeElement` — so a handler
+   * written the way every web caller writes it, `(e: React.MouseEvent) => …`,
+   * is a type error on a prop that works perfectly.
+   *
+   * On web the handler IS a DOM handler: props spread onto Frame, which renders
+   * a real <button>, and React hands it a MouseEvent. Declaring what actually
+   * arrives is the same trade as `title` below, and for the same reason — the
+   * alternative is call sites re-declaring the component as `any`, which hides
+   * every real error in the file along with this one.
+   */
+  onClick?: MouseEventHandler<HTMLElement>
   /**
    * The DOM tooltip. Already reached the element -- every unrecognised prop is
    * spread onto Frame, which forwards it -- but the Frame's props come from the
@@ -206,7 +229,7 @@ export type ButtonProps = Omit<ComponentProps<typeof Frame>, 'variant' | 'size' 
    * rather than a lost attribute. Reaches the element the same way title does.
    */
   type?: 'button' | 'submit' | 'reset'
-}
+} & Microdata
 
 function Button({
   className,
@@ -248,7 +271,13 @@ function Button({
       disabled={disabled || isLoading}
       {...touch(HEIGHT[resolved], 44, 'y')}
       className={buttonVariants({ variant, size, className })}
-      {...props}
+      // `as object`, because this spread is where two spellings of one prop
+      // meet. `title` and `type` above pass through untouched — Frame does not
+      // declare them, and a spread carries extra properties without complaint.
+      // `onClick` it DOES declare, with the cross-platform event; the one that
+      // actually arrives on the rendered <button> is the DOM's. Declared above
+      // as what arrives, handed on here as what the frame will forward.
+      {...(props as object)}
     >
       {/* Bounded in pixels, not by `size="small"`. gui's Spinner drops that prop
           on web and the indicator then takes its container: measured 300×305,

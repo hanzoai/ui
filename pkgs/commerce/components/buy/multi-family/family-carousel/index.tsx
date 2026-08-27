@@ -1,17 +1,15 @@
 'use client'
 import React, { useCallback, useRef } from 'react'
 
-import { cn } from '@hanzo/ui/util'
-
 import {
+  cn,
   type CarouselApi,
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from '@hanzo/ui/primitives'
-
+} from '@hanzo/ui'
 import type { MultiFamilySelectorProps } from '../../../../types'
 
 import FamilySlide from './slide'

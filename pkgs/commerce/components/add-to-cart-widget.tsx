@@ -3,9 +3,12 @@ import React, { useEffect, useRef } from 'react'
 import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { Button, buttonVariants } from '@hanzo/ui/primitives'
-import { cn, type VariantProps } from '@hanzo/ui/util'
-
+import {
+  Button,
+  buttonVariants,
+  cn,
+  sx,
+} from '@hanzo/ui'
 import Icons from './Icons'
 import type { LineItem } from '../types'
 import { sendFBEvent, sendGAEvent } from '../util/analytics'
@@ -48,7 +51,6 @@ const AddToCartWidget: React.FC<{
   // only for as long as some OTHER file in whatever the consumer scans spells it
   // literally. Tailwind reads source text; a template literal is not a class
   // name, so this one was borrowing a rule it did not ask for.
-  const ROUNDED_VAL = 'lg'          // the `rounded=` variant prop on Button
   const ROUNDED_CLX = ' rounded-lg ' // the class
 
   const ghost = variant === 'minimal'
@@ -115,7 +117,7 @@ const AddToCartWidget: React.FC<{
   return ( item.isInCart ? (
     <div className={cn(
       'flex flex-row items-stretch justify-between ',
-        // should match 'xs' and 'default' button heights
+        // should match 'sm' and 'default' button heights
       (ghost || priSmaller ? 'h-8' : 'h-9'),
       ROUNDED_CLX,
       (primary || priSmaller ? 'bg-primary' : 'bg-transparent'), 
@@ -124,9 +126,9 @@ const AddToCartWidget: React.FC<{
     )}>
       <Button
         aria-label={'Remove a ' + item.title + ' from the cart'}
-        size={ghost || priSmaller ? 'xs' : 'default'}
+        size={ghost || priSmaller ? 'sm' : 'default'}
         variant={primary || priSmaller ? 'primary' : 'ghost'}
-        rounded={ghost ? 'full' : ROUNDED_VAL}
+        {...sx(ghost ? 'rounded-full' : 'rounded-lg')}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-start group', 
           (ghost || priSmaller ? 'px-1' : 'px-2'), 
@@ -155,10 +157,10 @@ const AddToCartWidget: React.FC<{
         itemProp='potentialAction'
         itemScope
         itemType='https://schema.org/AddAction'
-        size={ghost || priSmaller ? 'xs' : 'default'}
+        size={ghost || priSmaller ? 'sm' : 'default'}
 
         variant={primary || priSmaller ? 'primary' : 'ghost'}
-        rounded={ghost ? 'full' : ROUNDED_VAL}
+        {...sx(ghost ? 'rounded-full' : 'rounded-lg')}
         className={cn(
           'lg:min-w-0 lg:px-2 grow justify-end group', 
           (ghost || priSmaller ? 'px-1' : 'px-2'), 
@@ -178,9 +180,9 @@ const AddToCartWidget: React.FC<{
       itemProp='potentialAction'
       itemScope
       itemType='https://schema.org/AddAction'
-      size={ghost || priSmaller ? 'xs' : 'default'}
+      size={ghost || priSmaller ? 'sm' : 'default'}
       variant={ghost ? 'ghost' : (primary || priSmaller ? 'primary' : 'outline')}
-      rounded={ROUNDED_VAL}
+      {...sx('rounded-lg')}
       className={cn(buttonClx, className)}
       onClick={inc}
     >

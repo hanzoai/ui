@@ -11,6 +11,7 @@ import type { ComponentProps } from 'react'
 import { AspectRatio, type AspectRatioProps } from './aspect-ratio'
 import { ink } from './ink'
 import { slot } from './slot'
+import type { Microdata } from './microdata'
 
 const PAD = 24
 
@@ -55,7 +56,7 @@ export type CardProps = ComponentProps<typeof CardFrame> & {
    * it.
    */
   interactive?: boolean
-}
+} & Microdata
 export type CardHeaderProps = ComponentProps<typeof HeaderFrame>
 export type CardTitleProps = ComponentProps<typeof TitleFrame>
 export type CardDescriptionProps = ComponentProps<typeof DescriptionFrame>

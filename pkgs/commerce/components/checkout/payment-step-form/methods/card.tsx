@@ -11,10 +11,8 @@ import {
   Button,
   Separator,
   Skeleton,
-} from '@hanzo/ui/primitives'
-
-import { cn } from '@hanzo/ui/util'
-
+  cn,
+} from '@hanzo/ui'
 import { useCommerce } from '../../../../service/context'
 import { processSquareCardPayment } from '../../../../util'
 import type { PaymentMethodComponentProps } from '../../../../types'

@@ -110,15 +110,15 @@ export interface VideoDef {
   sizing?: Record<string, unknown>
 }
 
-/** A frame sequence or Lottie document, played in place of a still. */
-export interface AnimationDef {
-  /** A url to a Lottie JSON document, or the parsed document itself. */
-  src: string | Record<string, unknown>
-  dim: Dimensions
-  loop?: boolean
-  autoplay?: boolean
-  poster?: string
-}
+/**
+ * A url to an animation document, played in place of a still.
+ *
+ * A url and not a record: that is what the content in this estate holds
+ * (`ActualLineItem.animation?: string` is the only concrete declaration of it),
+ * and a richer shape would be a type describing data nobody writes. Named for
+ * what it is so the field reads the same as its neighbours.
+ */
+export type AnimationDef = string
 
 /**
  * How a stack's media sits inside the box it was given.

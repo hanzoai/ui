@@ -3,9 +3,11 @@ import React, { useRef, useEffect, type ComponentType } from 'react'
 import { reaction, type IReactionDisposer } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-import { ApplyTypography, MediaStack } from '@hanzo/ui/primitives'
-
+import {
+  cn,
+  ApplyTypography,
+  MediaStack,
+} from '@hanzo/ui'
 import type { 
   ItemSelectorProps, 
   ItemSelectorCompProps,
@@ -242,7 +244,7 @@ const BuyCard: React.FC<{
       <TitleArea title={famTitle} clx=''/>
     )}
     {(cmmc.currentItem && showItemMedia) && (
-      <MediaStack media={cmmc.currentItem} constrainTo={{w: 200, h: 200}} clx={(scroll ? 'shrink-0' : '')}/>
+      <MediaStack media={cmmc.currentItem} constrainTo={{w: 200, h: 200}} className={(scroll ? 'shrink-0' : '')}/>
     )} 
     {itemsToShow && (
       <Selector 

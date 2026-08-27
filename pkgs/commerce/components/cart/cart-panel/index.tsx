@@ -3,9 +3,12 @@ import React, { useLayoutEffect, type PropsWithChildren } from 'react'
 import { reaction } from 'mobx'
 import { observer } from 'mobx-react-lite'
 
-import { Button, ScrollArea } from '@hanzo/ui/primitives'
-import { cn } from '@hanzo/ui/util'
-
+import {
+  Button,
+  ScrollArea,
+  cn,
+  sx,
+} from '@hanzo/ui'
 import type { LineItem } from '../../../types'
 import { useCommerce } from '../../../service/context'
 import { sendFBEvent, sendGAEvent } from '../../../util/analytics'
@@ -141,7 +144,7 @@ const CartPanel: React.FC<PropsWithChildren & {
         <Button 
           onClick={_handleCheckout} 
           variant='primary' 
-          rounded='lg' 
+          {...sx('rounded-lg')}
           className={cn('mt-12 mx-auto w-full sm:max-w-[220px]', buttonClx)} 
         >
           Checkout

@@ -7,8 +7,9 @@ import React, {
 } from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { cn } from '@hanzo/ui/util'
-
+import {
+  cn,
+} from '@hanzo/ui'
 import type { 
   ItemSelectorProps, 
   LineItem, 

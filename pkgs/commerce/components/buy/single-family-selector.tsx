@@ -1,7 +1,11 @@
 import React from 'react'
 import { observer } from 'mobx-react-lite'
 
-import { MediaStack, Skeleton } from '@hanzo/ui/primitives'
+import {
+  MediaStack,
+  Skeleton,
+  cn,
+} from '@hanzo/ui'
 import type { Dimensions } from '@hanzo/ui/types'
 
 import { useCommerce } from '../..'
@@ -9,9 +13,6 @@ import { useCommerce } from '../..'
 import type { ItemSelectorOptions, ItemSelectorProps, LineItem } from '../../types'
 import TitleAndByline from './title-and-byline'
 import { accessItemOptions } from '../../util'
-import { cn } from '@hanzo/ui/util'
-
-
 const DEF_MEDIA_CONSTRAINT = {w: 200, h: 200}
 
 const SingleFamilySelector: React.FC<{
@@ -61,7 +62,7 @@ const SingleFamilySelector: React.FC<{
       <MediaStack 
         media={cmmc.currentItem!} 
         constrainTo={mediaConstraint} 
-        clx={'mb-2 ' + (scrollable ? 'shrink-0' : '')}
+        className={'mb-2 ' + (scrollable ? 'shrink-0' : '')}
       />
     ) : (
       <Skeleton className={'w-[200px] h-[200px] my-2 ' + (scrollable ? 'shrink-0' : '')}/>
