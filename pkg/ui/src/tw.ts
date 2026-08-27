@@ -409,12 +409,19 @@ function one(c: string): Props | null {
     case 'font': return WEIGHT[v] !== undefined ? { fontWeight: WEIGHT[v] }
       : FAMILY[v] ? { fontFamily: FAMILY[v] } : null
     case 'leading': {
-      // A named step is a RATIO and must stay unitless; a numbered one
-      // (`leading-6`) is a length off the spacing ramp and stays a number.
+      // A named step is a RATIO and stays unitless. A numbered one
+      // (`leading-8`) is a LENGTH off the spacing ramp — and it has to say so.
+      //
+      // It used to be emitted as a bare number, on the reasoning that a length
+      // is a number. But a bare number in a line-height position is a RATIO,
+      // and that is how it was read: `leading-8` became a 32x multiplier, so a
+      // 15px paragraph got a 480px line box and two lines of text stood 960px
+      // tall. Measured on lux/mint, where it opened a 700px hole in the middle
+      // of the page that read as a layout problem rather than a unit one.
       const arb = /^\[(.+)]$/.exec(v)
       if (arb) return { lineHeight: arb[1] }
       if (v in LEADING) return { lineHeight: LEADING[v] }
-      return v in SPACE ? { lineHeight: SPACE[v] } : null
+      return v in SPACE ? { lineHeight: `${SPACE[v]}px` } : null
     }
     case 'tracking': {
       if (TRACKING[v] !== undefined) return { letterSpacing: TRACKING[v] }
