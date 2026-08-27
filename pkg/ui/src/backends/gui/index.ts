@@ -197,6 +197,16 @@ export {
 } from './toggle-group'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'
 export {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  useFormField,
+} from './form'
+export {
   ApplyTypography,
   type ApplyTypographyProps,
   type ProseTag,
