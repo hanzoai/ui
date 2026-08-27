@@ -177,6 +177,25 @@ function line(v: string, prop: string): Props | null {
   return /^-?\d+$/.test(v) ? { [prop]: +v } : null
 }
 
+/**
+ * An arbitrary value, made valid.
+ *
+ * `calc()` REQUIRES whitespace around `+` and `-`; without it the whole
+ * declaration is a parse error and the browser drops it. A class cannot hold a
+ * space, so `pt-[calc(44px+4vh)]` is what an author writes and
+ * `padding-top: calc(44px+4vh)` is what it becomes — silently nothing.
+ * Measured: it left the lux hero with no top padding at all, tucked under a
+ * fixed 80px header.
+ *
+ * `*` and `/` do not need the space and are left alone. A `-` is only an
+ * operator between two values — never inside `var(--name)`, and never leading
+ * a negative number — which is what the lookaround checks.
+ */
+const operable = (s: string): string =>
+  s.includes('calc(')
+    ? s.replace(/(?<=[\w%)])\s*\+\s*/g, ' + ').replace(/(?<=[\w%)])\s*-\s*(?=[\d.(])/g, ' - ')
+    : s
+
 /** A size word, a fraction, or a step on the ramp. */
 function size(v: string): string | number | undefined {
   if (v === 'full') return '100%'
@@ -186,7 +205,7 @@ function size(v: string): string | number | undefined {
   const frac = /^(\d+)\/(\d+)$/.exec(v)
   if (frac) return `${((+frac[1] / +frac[2]) * 100).toFixed(4).replace(/\.?0+$/, '')}%`
   const arb = /^\[(.+)]$/.exec(v)
-  if (arb) return arb[1]
+  if (arb) return operable(unscore(arb[1]))
   return undefined
 }
 
