@@ -95,7 +95,7 @@ const HEADS = [
   'cursor', 'overflow',
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
   'whitespace', 'align', 'inset', 'inset-x', 'inset-y', 'items', 'justify', 'content', 'self',
-  'opacity', 'text', 'font', 'bg', 'gap', 'top', 'right', 'bottom', 'left',
+  'opacity', 'text', 'font', 'bg', 'gap', 'space-x', 'space-y', 'top', 'right', 'bottom', 'left',
   'w', 'h', 'z', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl',
   'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml',
 ].sort((a, b) => b.length - a.length)
@@ -285,6 +285,15 @@ function one(c: string): Props | null {
     case 'line-through': return { textDecorationLine: 'line-through' }
     case 'no-underline': return { textDecorationLine: 'none' }
     case 'truncate': return { overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }
+    // A content column: full width, then bounded at each step up. Tailwind's
+    // container is not centred on its own — `mx-auto` does that, and writing
+    // both is the idiom, so centring here would silently widen the one caller
+    // who wants a left-aligned column.
+    case 'container': return {
+      width: '100%',
+      $sm: { maxWidth: 640 }, $md: { maxWidth: 768 },
+      $lg: { maxWidth: 1024 }, $xl: { maxWidth: 1280 },
+    }
     case 'mx-auto': return { marginLeft: 'auto', marginRight: 'auto' }
     case 'my-auto': return { marginTop: 'auto', marginBottom: 'auto' }
     case 'border': return { borderWidth: 1 }
@@ -360,6 +369,14 @@ function one(c: string): Props | null {
 
   switch (head) {
     case 'gap': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { gap: n } }
+    // Space BETWEEN children, which is what a gap is. Tailwind spelled it as a
+    // margin on every child but the first, because it predates gap and had to
+    // work inside a plain block; on a grid or a flex row the axis gap is the
+    // same result with none of the first-child arithmetic. Named by axis, so
+    // `space-y` is the ROW gap even when the container later becomes a grid
+    // flowing the other way.
+    case 'space-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { rowGap: n } }
+    case 'space-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { columnGap: n } }
     case 'gap-x': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { columnGap: n } }
     case 'gap-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null : { rowGap: n } }
     case 'items': return ALIGN[v] ? { alignItems: ALIGN[v] } : null
