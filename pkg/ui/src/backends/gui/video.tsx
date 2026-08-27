@@ -14,6 +14,7 @@
  * defers its cookie until playback starts.
  */
 import * as React from 'react'
+import { Box } from '../../box'
 
 export type VideoPlayerProps = Omit<React.ComponentPropsWithoutRef<'video'>, 'src'> & {
   sources: string[]
@@ -76,7 +77,7 @@ export const YouTubeEmbed = ({
     // autoplay is honoured because the iframe mounts inside a click.
     const q = `${timeAt ? `?t=${timeAt}&` : '?'}rel=0&autoplay=1`
     return (
-      <div className={className}>
+      <Box className={className}>
         <iframe
           width={width}
           height={height}
@@ -86,12 +87,12 @@ export const YouTubeEmbed = ({
           title={title || 'YouTube video'}
           style={{ aspectRatio: '16 / 9', width: '100%', height: '100%', border: 0, padding: 0 }}
         />
-      </div>
+      </Box>
     )
   }
 
   return (
-    <div className={className}>
+    <Box className={className}>
       <button
         type="button"
         onClick={() => setPlaying(true)}
@@ -143,6 +144,6 @@ export const YouTubeEmbed = ({
           </p>
         )}
       </button>
-    </div>
+    </Box>
   )
 }

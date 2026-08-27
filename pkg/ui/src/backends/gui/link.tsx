@@ -20,6 +20,8 @@
  * ever live in a `primitives/next/` folder that a non-Next host could not touch.
  */
 import * as React from 'react'
+import { css } from '../../css'
+import { tw } from '../../tw'
 import { cn } from '../../core/cn'
 import type { LinkDef } from '../../types'
 import { type ButtonSize, type ButtonVariant, buttonVariants } from './button'
@@ -142,21 +144,32 @@ export const LinkElement = ({
     )
   }
 
+  const classes = cn(
+    buttonVariants({
+      variant: variant ?? def.variant ?? 'link',
+      size: size ?? def.size ?? 'default',
+    }),
+    className,
+  )
+
   return (
     <Comp
       href={href}
-      className={cn(
-        buttonVariants({
-          variant: variant ?? def.variant ?? 'link',
-          size: size ?? def.size ?? 'default',
-        }),
-        className,
-      )}
+      // The host's link component takes a `style` and forwards everything else
+      // to the anchor, so notation is CONVERTED here rather than handed over:
+      // `w-full` on an <a> is two characters of nothing otherwise. What tw does
+      // not read stays a class, which is how `btn`/`btn-link` — real rules in
+      // our stylesheet — keep working.
+      className={tw(classes).rest || undefined}
       // A def with no href and no handler is a LABEL, not a link. Written as a
       // style rather than a utility class because this renders a bare `<a>` and
       // nothing in the shipped stylesheet defines `pointer-events-none` — the
       // class would have been three dead tokens and a clickable label.
-      style={href.length > 0 || onClick ? style : { ...style, pointerEvents: 'none' }}
+      style={{
+        ...css(classes),
+        ...style,
+        ...(href.length > 0 || onClick ? null : { pointerEvents: 'none' }),
+      }}
       {...(onClick ? { onClick } : {})}
       {...nav}
     >

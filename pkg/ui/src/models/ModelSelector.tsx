@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { sx } from '../sx'
 import { Check, ChevronsUpDown } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack } from '@hanzo/gui'
 
@@ -92,7 +93,7 @@ export function ModelSelector({
             disabled={disabled}
             justify="flex-start"
             width="100%"
-            className={className}
+            {...sx(className)}
           >
           <SizableText numberOfLines={1} size={isSm ? '$1' : '$2'} color="$color12">
             {selectedLabel}

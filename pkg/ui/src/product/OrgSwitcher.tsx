@@ -15,6 +15,7 @@
  * new org.
  */
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { sx } from '../sx'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
@@ -321,7 +322,7 @@ export function OrgSwitcher({
         width={300}
         bg="$panel"
         borderColor="$borderColor"
-        className={className}
+        {...sx(className)}
         style={style}
       >
         {creating ? (

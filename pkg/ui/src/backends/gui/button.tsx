@@ -32,6 +32,7 @@ import {
 } from 'react'
 
 import type { Microdata } from './microdata'
+import { sx } from '../../sx'
 import { ink } from './ink'
 import { touch } from './gesture'
 
@@ -280,7 +281,13 @@ function Button({
         : null)}
       disabled={disabled || isLoading}
       {...touch(HEIGHT[resolved], 44, 'y')}
-      className={buttonVariants({ variant, size, className })}
+      // Class notation is READ here, not forwarded. A caller writing
+      // `<Button className="w-full mt-4">` is writing the same notation Box
+      // reads, and handing it to the DOM instead would put two tokens on the
+      // element with nothing behind them. `sx` converts what it knows and hands
+      // back the rest as classes, so `btn`/`btn-link` — which are real rules in
+      // our stylesheet — arrive intact.
+      {...sx(buttonVariants({ variant, size, className }))}
       // `as object`, because this spread is where two spellings of one prop
       // meet. `title` and `type` above pass through untouched — Frame does not
       // declare them, and a spread carries extra properties without complaint.

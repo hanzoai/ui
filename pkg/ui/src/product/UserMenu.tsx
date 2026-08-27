@@ -20,6 +20,7 @@
  * identity rather than a caption over a control.
  */
 import { useState, type CSSProperties, type ReactNode } from 'react'
+import { sx } from '../sx'
 import { Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronsUpDown, LogOut, UserRound } from '@hanzogui/lucide-icons-2'
 
@@ -216,7 +217,7 @@ export function UserMenu({
         width={240}
         bg="$panel"
         borderColor="$borderColor"
-        className={className}
+        {...sx(className)}
         style={style}
       >
         {children ?? (

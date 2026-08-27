@@ -2,6 +2,7 @@
 
 /** Progress — determinate bar; `value` is 0–100. */
 import { Progress as GuiProgress } from '@hanzo/gui'
+import { sx } from '../../sx'
 import type { ComponentProps } from 'react'
 import { slot } from './slot'
 
@@ -33,7 +34,7 @@ const Progress = ({ value, indicatorClassName, ...props }: ProgressProps) => (
       // track against WCAG 1.4.11's 3:1 — legible with room to spare, and no
       // longer competing with the text beside it for attention.
       bg="$soft"
-      className={indicatorClassName}
+      {...sx(indicatorClassName)}
     />
   </GuiProgress>
 )
