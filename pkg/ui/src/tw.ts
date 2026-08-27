@@ -372,7 +372,27 @@ function one(c: string): Props | null {
       const col = color(v)
       return col ? { color: col } : null
     }
-    case 'bg': { const col = color(v); return col ? { backgroundColor: col } : null }
+    case 'bg': {
+      // `bg-` is a colour OR a background sub-property, and only the value says
+      // which. `bg-clip-text` was reaching the colour branch and returning
+      // `backgroundColor: var(--clip-text)` — a variable nothing declares, so
+      // the declaration was dropped and `background-clip` was never set.
+      //
+      // That one matters more than it looks: `bg-gradient-* … bg-clip-text
+      // text-transparent` is how gradient TEXT is written, and without the clip
+      // the gradient paints the whole box instead of the glyphs. Measured on
+      // lux/mint, where a heading rendered as a solid gradient bar.
+      const clip = /^clip-(text|border|padding|content)$/.exec(v)
+      if (clip) {
+        const box = clip[1] === 'text' ? 'text' : `${clip[1]}-box`
+        // Safari still wants the prefix for the text value.
+        return { backgroundClip: box, WebkitBackgroundClip: box }
+      }
+      const origin = /^origin-(border|padding|content)$/.exec(v)
+      if (origin) return { backgroundOrigin: `${origin[1]}-box` }
+      const col = color(v)
+      return col ? { backgroundColor: col } : null
+    }
     case 'font': return WEIGHT[v] !== undefined ? { fontWeight: WEIGHT[v] }
       : FAMILY[v] ? { fontFamily: FAMILY[v] } : null
     case 'leading': {

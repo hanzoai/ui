@@ -318,3 +318,36 @@ describe('grid is a first-class notation, not a partial one', () => {
     expect(grid.display).toBe('grid')
   })
 })
+
+describe('bg- is a colour or a background sub-property', () => {
+  // Only the value says which, and the colour branch was taking everything.
+  // `bg-clip-text` returned `backgroundColor: var(--clip-text)` — a variable
+  // nothing declares — so background-clip was never set.
+  it('clip, with the prefix Safari still wants', () => {
+    expect(tw('bg-clip-text').props).toEqual({
+      backgroundClip: 'text', WebkitBackgroundClip: 'text',
+    })
+    expect(tw('bg-clip-border').props).toEqual({
+      backgroundClip: 'border-box', WebkitBackgroundClip: 'border-box',
+    })
+  })
+
+  it('origin', () => {
+    expect(tw('bg-origin-content').props).toEqual({ backgroundOrigin: 'content-box' })
+  })
+
+  it('a colour is still a colour', () => {
+    expect(tw('bg-background').props).toEqual({ backgroundColor: 'var(--background)' })
+    expect(tw('bg-white').props).toEqual({ backgroundColor: '#fff' })
+  })
+
+  it('gradient TEXT — the whole reason clip matters', () => {
+    // Without the clip the gradient paints the box instead of the glyphs, which
+    // is a solid bar where a heading should be.
+    const t = tw('bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent')
+    expect(t.props.backgroundImage).toContain('linear-gradient(to right')
+    expect(t.props.backgroundClip).toBe('text')
+    expect(t.props.color).toBe('transparent')
+    expect(t.rest).toBe('')
+  })
+})
