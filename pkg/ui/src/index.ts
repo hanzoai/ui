@@ -58,6 +58,7 @@ export {
   ZStack, badgeVariants, buttonVariants,
   toast,
   ApplyTypography, Link, LinkElement, MDXLink, VideoPlayer, YouTubeEmbed, useLink,
+  Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, useFormField,
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
@@ -98,7 +99,7 @@ export { Hanzo, type HanzoProps } from './root'
 // The type goes with the function. `cn(...inputs: ClassValue[])` cannot be
 // typed at a call site without it, so exporting one and not the other left
 // every consumer reaching into a subpath for half of a pair.
-export { cn, type ClassValue } from './core/cn'
+export { cn, capitalize, type ClassValue } from './core/cn'
 
 // The design-token scale (colors, dark/light themes, radii, spacing, typography)
 // lives on the `@hanzo/ui/core` / `@hanzo/ui/tokens` subpath — pure data, no
