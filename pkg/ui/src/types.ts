@@ -177,8 +177,18 @@ export interface LinkDef {
   iconAfter?: boolean
   href: string
   /**
-   * External links open in a new tab, internal ones in the same tab.
-   * `newTab` overrides both. ('external' means the url starts with `http`.)
+   * Whether following this LEAVES the site.
+   *
+   * Derived from the href when absent — `http:`, `https:`, `mailto:` and `tel:`
+   * all count — so content rarely needs to say it. Stating it is for the cases
+   * the scheme cannot tell you: a same-origin absolute url that is not really a
+   * departure, or a relative path that hands off to something else.
+   *
+   * An external link gets `rel="noreferrer noopener"` and opens in a new tab.
+   */
+  external?: boolean
+  /**
+   * Which tab it opens in, overriding what `external` implies.
    */
   newTab?: boolean
   /** Renders disabled: default cursor, and pointer events stop here. */
