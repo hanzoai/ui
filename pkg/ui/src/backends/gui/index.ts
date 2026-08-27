@@ -236,6 +236,20 @@ export {
   type CarouselOptions,
   type CarouselProps,
 } from './carousel'
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetOverlay,
+  SheetPortal,
+  SheetTitle,
+  SheetTrigger,
+  type SheetContentProps,
+  type SheetSide,
+} from './sheet'
 export { Skeleton } from './skeleton'
 export { MediaStack, fit, type MediaStackProps } from './media-stack'
 export { NavItems, type NavItemsProps } from './nav-items'
