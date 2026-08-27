@@ -24,7 +24,7 @@ import { css } from '../../css'
 import { tw } from '../../tw'
 import { cn } from '../../core/cn'
 import type { LinkDef } from '../../types'
-import { type ButtonSize, type ButtonVariant, buttonVariants } from './button'
+import { Button, type ButtonSize, type ButtonVariant, buttonVariants } from './button'
 
 /** Anything that takes an `href` and renders children. */
 export type LinkComponent = React.ElementType
@@ -152,14 +152,13 @@ export const LinkElement = ({
     className,
   )
 
-  return (
+  const anchor = (
     <Comp
       href={href}
       // The host's link component takes a `style` and forwards everything else
       // to the anchor, so notation is CONVERTED here rather than handed over:
       // `w-full` on an <a> is two characters of nothing otherwise. What tw does
-      // not read stays a class, which is how `btn`/`btn-link` — real rules in
-      // our stylesheet — keep working.
+      // not read stays a class, which is how a host's own selectors keep working.
       className={tw(classes).rest || undefined}
       // A def with no href and no handler is a LABEL, not a link. Written as a
       // style rather than a utility class because this renders a bare `<a>` and
@@ -175,5 +174,24 @@ export const LinkElement = ({
     >
       {label()}
     </Comp>
+  )
+
+  // A link that LOOKS like a button IS one, rendering an anchor.
+  //
+  // `buttonVariants` names a variant — `btn btn-primary` — and nothing defines
+  // those selectors: they are a handle for a host to hook, not a rule. So a def
+  // asking for `variant: 'primary'` used to come out as underlined body text,
+  // measured on every call-to-action across the lux sites. Appearance is decided
+  // in exactly one place, the Button, and `asChild` hands it this anchor.
+  //
+  // `link` and its two relatives are the exception on purpose: they mean "look
+  // like a link", which is what the bare anchor already is.
+  const look = variant ?? def.variant ?? 'link'
+  if (look === 'link' || look === 'linkFG' || look === 'linkMuted') return anchor
+
+  return (
+    <Button asChild variant={look} size={size ?? def.size ?? 'default'}>
+      {anchor}
+    </Button>
   )
 }
