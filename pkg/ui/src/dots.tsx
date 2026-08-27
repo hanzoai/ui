@@ -29,6 +29,7 @@
  * ships a correctly-sized element and no layout moves when the paint lands.
  */
 import { useEffect, useRef } from 'react'
+import { css } from './css'
 
 /** Brightness at a point, 0 (dark, no dot) to 1 (full dot). `t` is seconds. */
 export type Field = (x: number, y: number, t: number) => number
@@ -241,6 +242,10 @@ const Dots = ({
       data-slot="dots"
       className={className}
       style={{
+        // Notation on a canvas is notation: it takes a style and reads no
+        // classes, so it is converted rather than forwarded. The pinned values
+        // below follow, so a caller cannot accidentally unsize the surface.
+        ...css(className),
         display: 'block',
         width: '100%',
         height: '100%',
