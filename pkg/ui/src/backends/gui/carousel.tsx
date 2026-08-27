@@ -32,6 +32,17 @@ export type CarouselOptions = {
   loop?: boolean
   /** The slide it opens on. Default 0. */
   startIndex?: number
+  /** Where a slide settles in the viewport. Default `center`. */
+  align?: 'start' | 'center' | 'end'
+  /**
+   * Advance every N milliseconds.
+   *
+   * Stops while the pointer is over the carousel or focus is inside it, and
+   * never starts at all under `prefers-reduced-motion` — a carousel that moves
+   * on its own is the canonical vestibular trigger, and it also steals the
+   * slide out from under someone still reading it.
+   */
+  autoplay?: number
 }
 
 /** What a caller can ask of a mounted carousel. */
@@ -89,6 +100,7 @@ type Ctx = {
   /** `null` until the scroller exists — on the server, and before mount. */
   selected: number | null
   loop: boolean
+  align: 'start' | 'center' | 'end'
 }
 
 const CarouselCtx = /* @__PURE__ */ React.createContext<Ctx | null>(null)
@@ -211,12 +223,35 @@ export const Carousel = ({
     }
   }, [])
 
+  // Advance on its own, unless something says not to. Held over the whole
+  // region rather than the scroller, so the pause covers the arrows too.
+  const [held, setHeld] = React.useState(false)
+  const every = options?.autoplay
+  React.useEffect(() => {
+    if (!every || held) return
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return
+    }
+    const t = setInterval(() => api.current?.scrollNext(), every)
+    return () => clearInterval(t)
+  }, [every, held])
+
   return (
-    <CarouselCtx.Provider value={{ scroller, api, selected, loop }}>
+    <CarouselCtx.Provider
+      value={{ scroller, api, selected, loop, align: options?.align ?? 'center' }}
+    >
       <Box
         className={cn('relative', className)}
         role="region"
         aria-roledescription="carousel"
+        {...(every
+          ? {
+              onMouseEnter: () => setHeld(true),
+              onMouseLeave: () => setHeld(false),
+              onFocusCapture: () => setHeld(true),
+              onBlurCapture: () => setHeld(false),
+            }
+          : null)}
         {...props}
       >
         {children}
@@ -249,15 +284,23 @@ export const CarouselContent = ({ className, ...props }: React.ComponentProps<ty
   )
 }
 
-export const CarouselItem = ({ className, ...props }: React.ComponentProps<typeof Box>) => (
-  <Box
-    role="group"
-    aria-roledescription="slide"
-    // `min-w-0` is what lets a long title wrap instead of widening the column.
-    className={cn('snap-center min-w-0', className)}
-    {...props}
-  />
-)
+const SNAP = { start: 'snap-start', center: 'snap-center', end: 'snap-end' } as const
+
+export const CarouselItem = ({ className, ...props }: React.ComponentProps<typeof Box>) => {
+  // Read directly, not through `useCarousel`: an item is legible on its own and
+  // rejecting a loose one would reject markup that works. Centred is the
+  // default a carousel would have given it anyway.
+  const align = React.useContext(CarouselCtx)?.align ?? 'center'
+  return (
+    <Box
+      role="group"
+      aria-roledescription="slide"
+      // `min-w-0` is what lets a long title wrap instead of widening the column.
+      className={cn(SNAP[align], 'min-w-0', className)}
+      {...props}
+    />
+  )
+}
 
 type ArrowProps = Omit<React.ComponentProps<typeof Button>, 'onPress' | 'onClick'>
 
