@@ -24,6 +24,7 @@ import { ChevronLeft, ChevronRight } from '@hanzogui/lucide-icons-2'
 
 import { Box } from '../../box'
 import { cn } from '../../core/cn'
+import { sx } from '../../sx'
 import { Button } from './button'
 
 export type CarouselOptions = {
@@ -273,7 +274,11 @@ const arrow = (
         onClick={() => {
           if (api.current) move(api.current)
         }}
-        className={cn('absolute top-1/2 -translate-y-1/2 rounded-full', side, className)}
+        // `sx`, not `className`. Box reads classes; a gui component does not —
+        // it forwards `className` to the DOM untouched, where `absolute` is a
+        // name no stylesheet serves. The arrows rendered, and sat in the flow
+        // BELOW the carousel instead of over it.
+        {...sx('absolute top-1/2 -translate-y-1/2 rounded-full', side, className)}
         {...props}
       >
         <Icon size={16} />
