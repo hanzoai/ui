@@ -95,7 +95,10 @@ export {
 export { Hanzo, type HanzoProps } from './root'
 
 // `cn` — the class-name composer, surfaced for convenience.
-export { cn } from './core/cn'
+// The type goes with the function. `cn(...inputs: ClassValue[])` cannot be
+// typed at a call site without it, so exporting one and not the other left
+// every consumer reaching into a subpath for half of a pair.
+export { cn, type ClassValue } from './core/cn'
 
 // The design-token scale (colors, dark/light themes, radii, spacing, typography)
 // lives on the `@hanzo/ui/core` / `@hanzo/ui/tokens` subpath — pure data, no
