@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.11.2",
+  "version": "8.12.0",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -206,7 +206,8 @@
       "import": "./dist/types.js",
       "require": "./dist/types.cjs",
       "default": "./dist/types.js"
-    }
+    },
+    "./next": "./dist/next.cjs"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -222,7 +223,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
