@@ -14,6 +14,41 @@
  * in a token or a component.
  */
 
+/* ── The measure ──────────────────────────────────────────────────────────
+   How wide a thing is allowed to get, which the token set had no answer for.
+   Type and spacing were both tokenised; width was left to whatever class the
+   page happened to carry, and the lux slides ended up setting 82 characters to
+   the line at 1280px with 13px of gutter — the viewport, not a column.
+
+   Three values, because a page needs three different widths:
+
+     --measure   running text. 68 characters is the top of the comfortable
+                 range; past it the eye loses its place on the line return.
+                 In `ch` so it follows the type rather than fighting it.
+     --frame     the outer bound of a full-width composition — a slide, a
+                 header, a footer. Wider than the measure because a two-column
+                 layout is not running text.
+     --gutter    the margin outside the frame. It GROWS with the viewport: a
+                 wider screen should give the content more air, not less. The
+                 lux slides had this inverted — 8vw below xl, 1vw above — so
+                 the design got tighter exactly as the room appeared. */
+:root {
+  --measure: 68ch;
+  --frame: 90rem;
+  --gutter: clamp(1.25rem, 5vw, 6rem);
+}
+
+/* Running text is bounded; a heading is not. A heading is short, and the width
+   is what gives it presence — so only the elements that set paragraphs are
+   capped. A max-width can never make something wider, so this is safe inside a
+   card or a column that is already narrower. */
+.hz-prose > p,
+.hz-prose > ul,
+.hz-prose > ol,
+.hz-prose > blockquote {
+  max-width: var(--measure);
+}
+
 *,
 *::before,
 *::after {
@@ -73,3 +108,27 @@ table {
 body {
   overflow-wrap: break-word;
 }
+
+/* ── Prose meets a control ────────────────────────────────────────────────
+   `.hz-prose a` is underlined on purpose: in running text an underline is what
+   marks a link. A link wearing a button is not running text — it already reads
+   as a control from its fill and its border — so the underline is noise inside
+   it. Measured on every call to action across the lux slides, each of which
+   sits inside prose. */
+.hz-prose [data-slot="button"] a,
+.hz-prose a[data-slot="button"],
+.hz-prose button a {
+  text-decoration: none;
+}
+
+/* ── Space under a heading ────────────────────────────────────────────────
+   Proportional to the heading, because a fixed margin cannot be right for both
+   a 52px display line and a 17px sub-head: 8px under the display line read as
+   the byline touching it. `em` here is the heading's own size, so the ratio
+   holds at every rung. A caller setting its own margin still wins. */
+.hz-prose > h1 { margin-block-end: .34em }
+.hz-prose > h2 { margin-block-end: .38em }
+.hz-prose > h3 { margin-block-end: .42em }
+.hz-prose > h4,
+.hz-prose > h5,
+.hz-prose > h6 { margin-block-end: .5em }

@@ -36,3 +36,23 @@ describe('the shipped sheet resets elements', () => {
     expect(css.indexOf('ol, ul, menu')).toBeLessThan(css.lastIndexOf('.is_View'))
   })
 })
+
+describe('the measure', () => {
+  it('bounds running text but not headings', () => {
+    // A heading is short and the width is what gives it presence; a paragraph
+    // past ~68 characters loses the reader on the line return.
+    expect(css).toMatch(/\.hz-prose > p,[\s\S]{0,80}max-width:\s*var\(--measure\)/)
+    expect(css).not.toMatch(/\.hz-prose > h1\s*\{[^}]*max-width/)
+  })
+
+  it('declares a gutter that grows with the viewport', () => {
+    const m = /--gutter:\s*clamp\(([^)]*)\)/.exec(css)
+    if (!m) throw new Error('no --gutter clamp in the shipped sheet')
+    const [min, , max] = m[1].split(',').map((s) => s.trim())
+    expect(parseFloat(max)).toBeGreaterThan(parseFloat(min))
+  })
+
+  it('sets the measure in ch, so it follows the type', () => {
+    expect(css).toMatch(/--measure:\s*\d+ch/)
+  })
+})
