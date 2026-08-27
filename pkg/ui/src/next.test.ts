@@ -11,8 +11,8 @@ import { describe, expect, it } from 'vitest'
 import { createRequire } from 'node:module'
 
 const withGui = createRequire(import.meta.url)('../dist/next.cjs') as {
-  (c?: Record<string, unknown>): any
-  withGui: (c?: Record<string, unknown>) => any
+  (c?: Record<string, unknown>, dir?: string): any
+  withGui: (c?: Record<string, unknown>, dir?: string) => any
   GUI_ALIAS: Record<string, string>
 }
 
