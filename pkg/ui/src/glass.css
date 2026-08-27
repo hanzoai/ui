@@ -244,6 +244,73 @@
   border-bottom-right-radius: 0 !important;
 }
 
+/* ── The crease — the valley where one sheet lies over another ───────────────
+   The ladder lifts a sheet with a drop that falls STRAIGHT DOWN: design's rule
+   is one light, above, and `check-tokens.mjs` fails the build on a sideways
+   offset. That is right, and it means the ladder has nothing to say about a
+   VERTICAL seam — and an app shell is nothing but vertical seams. A rail beside
+   a sidebar beside a pane, each a step apart on the ladder, still reads as three
+   abutting rectangles with lines ruled between them, because the only mark at
+   the seam is the hairline.
+
+   What a real sheet lays on the one beneath it, side by side under a light from
+   above, is not a cast shadow — it is the valley going dark. Ambient occlusion
+   has no direction of its own, which is both why it is honest here and why it is
+   NOT spelled as a --shadow-*: those are directional by definition and this is
+   not one.
+
+   A PSEUDO-ELEMENT, at z-index -1 inside an isolated stacking context, so it
+   paints above the sheet's own fill and below every child. That ordering is the
+   whole reason it is not a `background-image` (which `.fold` already claims on
+   this same element, !important, so the two would silently fight) and not an
+   inset `box-shadow` (which `.elevation-*` claims, likewise).
+
+   No side named -> both edges, which is what a pane with a neighbour on each
+   hand needs. Name one and the other stops being drawn. */
+:root {
+  --crease-ink: rgb(0 0 0 / .28);
+  --crease-depth: 20px;
+}
+
+.light, :root.t_light, .t_light {
+  /* On white the valley is a smudge, not a shadow — the same redistribution the
+     drops make, and for the same reason. */
+  --crease-ink: rgb(0 0 0 / .05);
+}
+
+.hz-crease {
+  position: relative;
+  /* Without this the -1 escapes and paints behind an ancestor's fill, which is
+     indistinguishable from the crease not being there at all. */
+  isolation: isolate;
+}
+
+.hz-crease::before,
+.hz-crease::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--crease-depth);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hz-crease::before {
+  left: 0;
+  background-image: linear-gradient(to right, var(--crease-ink), transparent);
+}
+
+.hz-crease::after {
+  right: 0;
+  background-image: linear-gradient(to left, var(--crease-ink), transparent);
+}
+
+.hz-crease[data-crease="left"]::after,
+.hz-crease[data-crease="right"]::before {
+  content: none;
+}
+
 /* ── The scrim ──────────────────────────────────────────────────────────────
    The dim that makes a floating panel read as floating rather than as more
    page. gui's overlay dims TWICE — a translucent ground under a further
