@@ -101,6 +101,17 @@ describe('the arrows', () => {
     expect(m).toContain('aria-label="Next slide"')
   })
 
+  it('are laid over the carousel, not left in the flow below it', () => {
+    // A gui component forwards `className` to the DOM untouched — only Box
+    // READS classes — so `absolute` on a Button is a name no stylesheet serves.
+    // The arrows still render, still work, and sit under the carousel.
+    const m = html(three())
+    expect(m).toContain('_pos-absolute')
+    // A standalone token, delimited by space or quote — `\b` would match inside
+    // `_pos-absolute` itself, since a hyphen is not a word character.
+    expect(m).not.toMatch(/class="[^"]*(?:^|\s)absolute(?:\s|")/)
+  })
+
   it('are both unavailable on the server, where there is nothing to measure', () => {
     const m = html(three())
     expect(off(m, 'Previous slide')).toBe(true)
