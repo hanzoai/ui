@@ -11,7 +11,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Drawer, DrawerContent, DrawerHandle } from './drawer'
+import { Drawer, DrawerContent, DrawerHandle, DrawerTrigger } from './drawer'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -120,5 +120,42 @@ describe('taking focus', () => {
     )
     expect(document.activeElement).toBe(input)
     input.remove()
+  })
+})
+
+describe('what opens it', () => {
+  it('asks the caller to open, rather than opening itself', async () => {
+    // The sheet is controlled, so the trigger reports the intent and the owner
+    // of the state decides — that is what keeps one source of truth for `open`.
+    const { render } = await import('@testing-library/react')
+    const onOpenChange = vi.fn()
+    const { getByText } = render(
+      <GuiProvider config={config as never} defaultTheme="dark">
+        <Drawer open={false} onOpenChange={onOpenChange} snapPoints={POINTS}>
+          <DrawerTrigger>open me</DrawerTrigger>
+        </Drawer>
+      </GuiProvider>,
+    )
+    getByText('open me').click()
+    expect(onOpenChange).toHaveBeenCalledWith(true)
+  })
+
+  it('asChild hands the press to the element you already wrote', async () => {
+    // A button inside a button is invalid markup, and a keyboard reaches only
+    // the outer one.
+    const { render } = await import('@testing-library/react')
+    const onOpenChange = vi.fn()
+    const { container, getByText } = render(
+      <GuiProvider config={config as never} defaultTheme="dark">
+        <Drawer open={false} onOpenChange={onOpenChange} snapPoints={POINTS}>
+          <DrawerTrigger asChild>
+            <button type="button">mine</button>
+          </DrawerTrigger>
+        </Drawer>
+      </GuiProvider>,
+    )
+    expect(container.querySelectorAll('button')).toHaveLength(1)
+    getByText('mine').click()
+    expect(onOpenChange).toHaveBeenCalledWith(true)
   })
 })
