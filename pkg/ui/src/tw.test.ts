@@ -88,7 +88,7 @@ describe('tw — one class', () => {
     // gui reads a bare number as pixels, so a ratio sent as a number lands as
     // `1.625px` — a line box smaller than the type inside it.
     expect(props('leading-relaxed')).toEqual({ lineHeight: '1.625' })
-    expect(props('leading-6')).toEqual({ lineHeight: 24 })
+    expect(props('leading-6')).toEqual({ lineHeight: '24px' })
   })
 
   it('declines space-y, whose spacing lives on the children', () => {
@@ -362,5 +362,26 @@ describe('a named size carries a line height that resolves', () => {
     for (const s of ['sm', 'base', 'lg', '4xl', '7xl']) {
       expect(tw(`text-${s}`).props.lineHeight).toBe(`var(--text-${s}--line-height, normal)`)
     }
+  })
+})
+
+describe('a numbered leading is a length, and says so', () => {
+  it('carries px, because a bare number is a ratio', () => {
+    // Emitted bare, `leading-8` was read as a 32x MULTIPLIER: a 15px paragraph
+    // got a 480px line box and two lines stood 960px tall. Measured on
+    // lux/mint, where it opened a 700px hole that read as a layout problem
+    // rather than a unit one.
+    expect(tw('leading-8').props).toEqual({ lineHeight: '32px' })
+    expect(tw('leading-6').props).toEqual({ lineHeight: '24px' })
+  })
+
+  it('a NAMED step is genuinely a ratio and stays unitless', () => {
+    expect(tw('leading-tight').props).toEqual({ lineHeight: '1.25' })
+    expect(tw('leading-none').props).toEqual({ lineHeight: '1' })
+  })
+
+  it('an arbitrary value is passed through as written', () => {
+    expect(tw('leading-[1.7]').props).toEqual({ lineHeight: '1.7' })
+    expect(tw('leading-[28px]').props).toEqual({ lineHeight: '28px' })
   })
 })
