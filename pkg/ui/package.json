@@ -207,7 +207,13 @@
       "require": "./dist/types.cjs",
       "default": "./dist/types.js"
     },
-    "./next": "./dist/next.cjs"
+    "./next": "./dist/next.cjs",
+    "./agents": {
+      "types": "./dist/agents/index.d.ts",
+      "import": "./dist/agents/index.js",
+      "require": "./dist/agents/index.cjs",
+      "default": "./dist/agents/index.js"
+    }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
