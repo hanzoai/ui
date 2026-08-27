@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.7.5",
+  "version": "8.8.0",
   "type": "module",
   "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -263,7 +263,8 @@
     "next-themes": ">=0.2.1",
     "react": ">=19",
     "react-dom": ">=19",
-    "react-native-web": ">=0.21"
+    "react-native-web": ">=0.21",
+    "react-hook-form": ">=7"
   },
   "peerDependenciesMeta": {
     "@hanzo/canvas": {
@@ -288,6 +289,9 @@
       "optional": true
     },
     "react-native-web": {
+      "optional": true
+    },
+    "react-hook-form": {
       "optional": true
     }
   },
@@ -314,7 +318,8 @@
     "react-dom": "^19.0.0",
     "react-native-web": "^0.21.2",
     "typescript": "^7.0.2",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "react-hook-form": "^7.71.1"
   },
   "publishConfig": {
     "access": "public"

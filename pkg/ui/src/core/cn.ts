@@ -47,3 +47,8 @@ export function flatten(v: ClassValue, out: string[] = []): string[] {
 export function cn(...inputs: ClassValue[]): string {
   return flatten(inputs).join(' ')
 }
+
+/** First letter up, rest untouched — a label from a machine-readable name. */
+export function capitalize(s: string): string {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s
+}
