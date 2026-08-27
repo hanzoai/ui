@@ -27,8 +27,15 @@ export type DrawerProps = React.PropsWithChildren<{
   /** Blocks the page behind it and dims it. */
   modal?: boolean
   snapPoints?: SnapPoint[]
-  activeSnapPoint?: SnapPoint
+  /** `null` is "not decided yet", which a store holding this can be. */
+  activeSnapPoint?: SnapPoint | null
   setActiveSnapPoint?: (point: SnapPoint) => void
+  /**
+   * The sheet was dismissed by a GESTURE — dragged or flicked below its
+   * shortest point — as opposed to closed by the app. Worth telling apart: one
+   * is the person saying no, the other is the flow moving on.
+   */
+  handleCloseGesture?: () => void
   /** Only the handle starts a drag — so the content can scroll. */
   dragHandleOnly?: boolean
   /** A fast flick goes to the far end rather than the next point along. */
@@ -76,6 +83,7 @@ export const Drawer = ({
   dragHandleOnly = false,
   fastDragSkipsToEnd = true,
   handleHandleClicked,
+  handleCloseGesture,
   extendHandleDragRegion = false,
   children,
 }: DrawerProps) => {
@@ -94,7 +102,10 @@ export const Drawer = ({
   const heights = points.map((p) => px(p, viewport))
   const tallest = Math.max(...heights, 0)
 
-  const activePx = activeSnapPoint !== undefined ? px(activeSnapPoint, viewport) : tallest
+  const activePx =
+    activeSnapPoint !== undefined && activeSnapPoint !== null
+      ? px(activeSnapPoint, viewport)
+      : tallest
 
   const [offset, setOffset] = React.useState(0)
   const [dragging, setDragging] = React.useState(false)
@@ -104,6 +115,7 @@ export const Drawer = ({
     for (const h of heights) if (Math.abs(h - target) < Math.abs(best - target)) best = h
     // Below the shortest point by more than half of it, this is a dismissal.
     if (target < Math.min(...heights) / 2) {
+      handleCloseGesture?.()
       onOpenChange?.(false)
       return
     }
@@ -195,16 +207,37 @@ export const DrawerHandle = ({ className, ...props }: React.ComponentProps<typeo
 export type DrawerContentProps = React.ComponentProps<typeof Box> & {
   /** The sheet draws its own handle unless the caller draws one. */
   defaultHandle?: boolean
+  /**
+   * Fires as the sheet takes focus. `preventDefault()` leaves focus where it
+   * was — which is what a sheet that opens beside a form the person is still
+   * typing in wants.
+   */
+  onOpenAutoFocus?: (e: Event) => void
 }
 
 export const DrawerContent = ({
   className,
   children,
   defaultHandle = true,
+  onOpenAutoFocus,
   ...props
 }: DrawerContentProps) => {
   const { open, modal, heights, active, offset, dragging, onOpenChange, dragHandleOnly, drag } =
     useDrawer()
+
+  // A modal sheet that does not take focus leaves the keyboard behind it, on
+  // a page the sheet is covering. Held in a ref so an inline handler does not
+  // re-run this on every render.
+  const panel = React.useRef<HTMLElement | null>(null)
+  const announce = React.useRef(onOpenAutoFocus)
+  announce.current = onOpenAutoFocus
+  React.useEffect(() => {
+    if (!open) return
+    const e = new Event('openAutoFocus', { cancelable: true })
+    announce.current?.(e)
+    if (!e.defaultPrevented) panel.current?.focus()
+  }, [open])
+
   if (!open) return null
   const tallest = Math.max(...heights, 0)
   // Rendered at its tallest and slid down to the active point, so the content
@@ -223,8 +256,12 @@ export const DrawerContent = ({
         />
       )}
       <Box
+        ref={panel as React.Ref<any>}
         role="dialog"
         aria-modal={modal}
+        // Focusable but not tabbable: the sheet itself is the focus target when
+        // it opens, and the tab order inside it belongs to its contents.
+        tabIndex={-1}
         className={cn('bg-background', className)}
         style={{
           position: 'fixed',
