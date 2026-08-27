@@ -54,6 +54,19 @@ describe('the paging is real CSS, not an attribute', () => {
     expect([...m.matchAll(/scroll-snap-align:\s*center/g)]).toHaveLength(3)
   })
 
+  it('align decides where a slide settles, and reaches every slide', () => {
+    const m = html(three({ options: { align: 'start' } }))
+    expect([...m.matchAll(/scroll-snap-align:\s*start/g)]).toHaveLength(3)
+    expect(m).not.toContain('scroll-snap-align:center')
+  })
+
+  it('a slide outside a carousel still centres itself', () => {
+    // An item is legible on its own; rejecting a loose one would reject markup
+    // that works, and centred is what a carousel would have told it anyway.
+    const m = html(<CarouselItem>loose</CarouselItem>)
+    expect(m).toContain('scroll-snap-align:center')
+  })
+
   it('no scroll-snap property leaks to the DOM as an attribute', () => {
     // The whole point. `scrollSnapType="x mandatory"` is valid markup, invalid
     // CSS, and invisible to every assertion that is not this one.
