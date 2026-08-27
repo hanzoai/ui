@@ -77,7 +77,7 @@ export const NavigationMenuItem = ({ className, children, ...props }: React.Comp
  * A stable class handle for hosts that hook menu triggers from CSS. Styling
  * lives in the tokens; this only names the part.
  */
-export const navigationMenuTriggerStyle = () => 'nav-menu-trigger'
+export const navigationMenuTriggerStyle = () => 'hz-nav-menu-trigger'
 
 export const NavigationMenuTrigger = ({
   className,

@@ -262,8 +262,9 @@ export const DrawerContent = ({
         // Focusable but not tabbable: the sheet itself is the focus target when
         // it opens, and the tab order inside it belongs to its contents.
         tabIndex={-1}
-        className={cn('bg-background', className)}
+        className={cn(className)}
         style={{
+          background: 'var(--background)',
           position: 'fixed',
           left: 0,
           right: 0,
