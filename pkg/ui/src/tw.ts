@@ -141,6 +141,12 @@ const AUTO: Record<string, string> = {
   auto: 'auto', min: 'min-content', max: 'max-content', fr: 'minmax(0, 1fr)',
 }
 
+/** A named implicit track, or an arbitrary one written in brackets. */
+const auto = (v: string): string | null => {
+  const arb = /^\[(.+)]$/.exec(v)
+  return arb ? arb[1] : (AUTO[v] ?? null)
+}
+
 const FLOW: Record<string, string> = {
   row: 'row', col: 'column', dense: 'dense',
   'row-dense': 'row dense', 'col-dense': 'column dense',
@@ -281,6 +287,25 @@ function one(c: string): Props | null {
     case 'border': return { borderWidth: 1 }
     case 'rounded': return { borderRadius: RADIUS[''] }
     case 'cursor-pointer': return { cursor: 'pointer' }
+    // SCROLL SNAP — how a carousel is built without a carousel library. The
+    // browser does the paging; `scrollTo` and a scroll listener are the whole
+    // API surface on top of it.
+    case 'snap-none': return { scrollSnapType: 'none' }
+    case 'snap-x': return { scrollSnapType: 'x mandatory' }
+    case 'snap-y': return { scrollSnapType: 'y mandatory' }
+    case 'snap-both': return { scrollSnapType: 'both mandatory' }
+    // The axis classes above already say `mandatory`, which is the only
+    // strictness this estate asks for. Tailwind spells it as a SECOND class,
+    // so content copied from there carries one — absorb it rather than leave a
+    // dead class behind, and let `snap-proximity` fall through to `rest` where
+    // it is visible instead of silently reading as mandatory.
+    case 'snap-mandatory': return {}
+    case 'snap-start': return { scrollSnapAlign: 'start' }
+    case 'snap-end': return { scrollSnapAlign: 'end' }
+    case 'snap-center': return { scrollSnapAlign: 'center' }
+    case 'snap-align-none': return { scrollSnapAlign: 'none' }
+    case 'snap-normal': return { scrollSnapStop: 'normal' }
+    case 'snap-always': return { scrollSnapStop: 'always' }
     case 'select-none': return { userSelect: 'none' }
     case 'pointer-events-none': return { pointerEvents: 'none' }
     case 'sr-only': return { position: 'absolute', width: 1, height: 1, overflow: 'hidden' }
@@ -477,8 +502,11 @@ function one(c: string): Props | null {
     // equal `1fr` share, so a row of buttons comes out stretched; with
     // `auto-cols-max` each track is its own content's width, which is what a
     // flex row does and what the caller almost always meant.
-    case 'auto-cols': return AUTO[v] ? { gridAutoColumns: AUTO[v] } : null
-    case 'auto-rows': return AUTO[v] ? { gridAutoRows: AUTO[v] } : null
+    // An arbitrary track sits beside the named ones. `auto-cols-[100%]` is how a
+    // carousel says "one slide per view", and it is the only way to say it —
+    // the named set is auto/min/max/fr and none of them is a page.
+    case 'auto-cols': { const a = auto(v); return a ? { gridAutoColumns: a } : null }
+    case 'auto-rows': { const a = auto(v); return a ? { gridAutoRows: a } : null }
     case 'grid-flow': return FLOW[v] ? { gridAutoFlow: FLOW[v] } : null
     case 'col-span': return v === 'full'
       ? { gridColumn: '1 / -1' } : /^\d+$/.test(v) ? { gridColumn: `span ${v} / span ${v}` } : null

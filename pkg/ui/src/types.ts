@@ -110,6 +110,46 @@ export interface VideoDef {
   sizing?: Record<string, unknown>
 }
 
+/** A frame sequence or Lottie document, played in place of a still. */
+export interface AnimationDef {
+  /** A url to a Lottie JSON document, or the parsed document itself. */
+  src: string | Record<string, unknown>
+  dim: Dimensions
+  loop?: boolean
+  autoplay?: boolean
+  poster?: string
+}
+
+/**
+ * How a stack's media sits inside the box it was given.
+ *
+ * `scale` is a fraction of the constraint, not a CSS transform: a product shot
+ * that fills its frame and a swatch that should read as small are the same
+ * image at two sizes, and the content says which. Content in this estate
+ * authors `scale` and nothing else; the offsets are here because a scaled image
+ * that is not centred has no other way to say so.
+ */
+export interface MediaTransform {
+  scale?: number
+  offsetX?: number
+  offsetY?: number
+}
+
+/**
+ * One subject, in whatever media the content happens to have for it.
+ *
+ * The renderer picks in order — animation, then video, then image — so a family
+ * can gain a video later without every consumer learning about it. Everything
+ * is optional because a stack with nothing in it is a real state (an item whose
+ * art has not landed yet) and must type, not throw.
+ */
+export interface MediaStackDef {
+  animation?: AnimationDef
+  video?: VideoDef
+  img?: ImageDef
+  mediaTransform?: MediaTransform
+}
+
 // ── Link and button ─────────────────────────────────────────────────────────
 
 export interface BulletItem {

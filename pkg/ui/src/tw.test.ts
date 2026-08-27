@@ -28,6 +28,27 @@ describe('tw — one class', () => {
     expect(props('text-transparent')).toEqual({ color: 'transparent' })
   })
 
+  it('reads scroll snap, which is how a carousel is built without a library', () => {
+    expect(props('snap-x')).toEqual({ scrollSnapType: 'x mandatory' })
+    expect(props('snap-y')).toEqual({ scrollSnapType: 'y mandatory' })
+    expect(props('snap-both')).toEqual({ scrollSnapType: 'both mandatory' })
+    expect(props('snap-none')).toEqual({ scrollSnapType: 'none' })
+    expect(props('snap-center')).toEqual({ scrollSnapAlign: 'center' })
+    expect(props('snap-start')).toEqual({ scrollSnapAlign: 'start' })
+    expect(props('snap-always')).toEqual({ scrollSnapStop: 'always' })
+  })
+
+  it('absorbs the strictness class it already implies, and keeps the one it does not', () => {
+    // `snap-x snap-mandatory` is the Tailwind idiom and says one thing twice.
+    expect(tw('snap-x snap-mandatory')).toEqual({
+      props: { scrollSnapType: 'x mandatory' },
+      rest: '',
+    })
+    // `snap-proximity` means something this does NOT emit, so it stays visible
+    // as an unread class rather than silently reading as mandatory.
+    expect(tw('snap-x snap-proximity').rest).toBe('snap-proximity')
+  })
+
   it('applies an alpha without knowing what the variable holds', () => {
     expect(props('bg-foreground/5')).toEqual({
       backgroundColor: 'color-mix(in srgb, var(--foreground) 5%, transparent)',
