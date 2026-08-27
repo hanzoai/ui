@@ -140,3 +140,27 @@ describe('Box lays out on grid', () => {
     expect(html(<Box tag="li">x</Box>)).toMatch(/display:\s*list-item/)
   })
 })
+
+describe('Box: ARIA states', () => {
+  it('takes an aria state in its markup spelling', () => {
+    // gui types these as boolean and markup writes them as strings, so a
+    // component spreading `ComponentPropsWithoutRef<'a'>` into a Box used to
+    // fail on whichever aria the caller reached for.
+    const out = html(
+      <Box tag="a" href="#x" aria-modal="false" aria-expanded="true" aria-hidden="false">link</Box>,
+    )
+    expect(out).toContain('aria-modal="false"')
+    expect(out).toContain('aria-expanded="true"')
+  })
+
+  it('takes the element\'s own handlers, capture phase included', () => {
+    // A component forwarding `ComponentPropsWithoutRef<'a'>` into a Box hands
+    // over every handler React declares, not the few named by hand.
+    const props: React.ComponentPropsWithoutRef<'a'> = {
+      onClickCapture: (e) => void e.currentTarget.href,
+      onPointerDown: () => {},
+      onAnimationEnd: () => {},
+    }
+    expect(html(<Box tag="a" href="#x" {...props}>link</Box>)).toContain('<a')
+  })
+})

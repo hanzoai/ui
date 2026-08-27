@@ -122,12 +122,20 @@ export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
   // like the same statement and does nothing: with T still generic TypeScript
   // does not resolve the key set, so the Omit removes nothing and the union comes
   // back. Written out, it is checked.
+  // Every ARIA state goes to the element's side, not gui's. In markup they are
+  // strings — `aria-modal="false"` — which React types as `Booleanish` and gui
+  // types as `boolean`, so spreading `ComponentPropsWithoutRef<'a'>` into a Box
+  // failed on whichever aria the caller happened to use. Naming them one at a
+  // time only moves the failure to the next one; `keyof AriaAttributes` is the
+  // whole set.
+  // `AllHTMLAttributes` IS that overlap, computed. The enumeration this replaces
+  // was correct for the names it listed and silent about the rest, and the rest
+  // kept arriving: `aria-modal` typed boolean where markup writes a string,
+  // `onClickCapture` typed as a react-native event whose target is a native
+  // view, `content` typed as align-content where HTML has an attribute of that
+  // name. Each was one line and the next one was always waiting.
   Omit<React.ComponentProps<typeof YStack>,
-    | 'aria-hidden' | 'ref' | 'style' | 'children' | 'className' | 'color' | 'id'
-    | 'role' | 'tabIndex' | 'title' | 'onChange' | 'onClick' | 'onSubmit'
-    | 'onFocus' | 'onBlur' | 'onKeyDown' | 'onKeyUp' | 'onKeyPress'
-    | 'onMouseEnter' | 'onMouseLeave' | 'onMouseDown' | 'onMouseUp'
-    | 'onScroll' | 'onLayout' | 'disabled'> &
+    keyof React.AllHTMLAttributes<never> | 'ref' | 'onLayout'> &
   Omit<React.JSX.IntrinsicElements[T], 'style' | 'ref' | 'children' | 'className' | 'color'> & {
     className?: ClassValue
     children?: ReactNode
