@@ -11,6 +11,14 @@
  *
  * Presentational: no routing, no fetching, no active-id resolution. `active` is
  * passed in, `onPress` is raised out.
+ *
+ * Every part spreads its RESIDUAL props onto its root, last, so a caller's value
+ * wins over the default. That is the module contract for the rest of the chat
+ * surface and these nine were the exception: each destructured a fixed set and
+ * dropped everything else on the floor, so a surface that wanted one more pixel
+ * of padding had to wrap the row in a div and reach through it with `!important`.
+ * A component that cannot be adjusted gets forked instead, which is how one
+ * sidebar becomes four.
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import {
@@ -22,20 +30,25 @@ import {
   Search,
   SquarePen,
 } from '@hanzogui/lucide-icons-2'
-import { useState, type ReactNode } from 'react'
+import { useState, type ComponentProps, type ReactNode } from 'react'
 
 import { slot, tip } from '../backends/gui/slot'
+
+/** The props of the primitive each part is built on, minus what the part names. */
+type Row = Omit<ComponentProps<typeof XStack>, 'children'>
+type Col = Omit<ComponentProps<typeof YStack>, 'children'>
+type Scroll = Omit<ComponentProps<typeof ScrollView>, 'children'>
 
 const WIDTH = 264
 const ROW = { px: '$2', py: '$1.5', rounded: '$3' } as const
 
-export interface SidebarProps {
+export interface SidebarProps extends Col {
   children?: ReactNode
   /** Column width in px. */
   width?: number
 }
 
-export function Sidebar({ children, width = WIDTH }: SidebarProps) {
+export function Sidebar({ children, width = WIDTH, ...rest }: SidebarProps) {
   return (
     <YStack
       {...slot('sidebar')}
@@ -53,13 +66,14 @@ export function Sidebar({ children, width = WIDTH }: SidebarProps) {
       bg="$panel"
       borderRightWidth={1}
       borderColor="$borderColor"
+      {...rest}
     >
       {children}
     </YStack>
   )
 }
 
-export interface SidebarHeaderProps {
+export interface SidebarHeaderProps extends Row {
   /** Product name. Not the workspace or account — those belong in SidebarUser. */
   title: string
   onOpenSwitcher?: () => void
@@ -72,9 +86,10 @@ export function SidebarHeader({
   onOpenSwitcher,
   onSearch,
   onCollapse,
+  ...rest
 }: SidebarHeaderProps) {
   return (
-    <XStack {...slot('sidebar-header')} items="center" gap="$1" px="$1" py="$1.5">
+    <XStack {...slot('sidebar-header')} items="center" gap="$1" px="$1" py="$1.5" {...rest}>
       <XStack
         {...ROW}
         items="center"
@@ -106,7 +121,7 @@ export function SidebarHeader({
   )
 }
 
-export interface SidebarIconButtonProps {
+export interface SidebarIconButtonProps extends Row {
   /**
    * Required. Becomes the accessible name — an icon-only control without one is
    * unreadable to a screen reader, and these controls are the whole navigation.
@@ -116,7 +131,7 @@ export interface SidebarIconButtonProps {
   children?: ReactNode
 }
 
-export function SidebarIconButton({ label, onPress, children }: SidebarIconButtonProps) {
+export function SidebarIconButton({ label, onPress, children, ...rest }: SidebarIconButtonProps) {
   return (
     <XStack
       width={28}
@@ -133,18 +148,19 @@ export function SidebarIconButton({ label, onPress, children }: SidebarIconButto
       {...tip(label)}
       hoverStyle={{ bg: '$edge', opacity: 1 }}
       pressStyle={{ bg: '$raised' }}
+      {...rest}
     >
       {children}
     </XStack>
   )
 }
 
-export interface SidebarNewChatProps {
+export interface SidebarNewChatProps extends Row {
   label?: string
   onPress?: () => void
 }
 
-export function SidebarNewChat({ label = 'New chat', onPress }: SidebarNewChatProps) {
+export function SidebarNewChat({ label = 'New chat', onPress, ...rest }: SidebarNewChatProps) {
   return (
     <XStack
       {...slot('sidebar-new-chat')}
@@ -157,6 +173,7 @@ export function SidebarNewChat({ label = 'New chat', onPress }: SidebarNewChatPr
       tabIndex={0}
       hoverStyle={{ bg: '$edge' }}
       pressStyle={{ bg: '$raised' }}
+      {...rest}
     >
       <SquarePen size={16} />
       <SizableText size="$2" fontWeight="500">
@@ -167,22 +184,31 @@ export function SidebarNewChat({ label = 'New chat', onPress }: SidebarNewChatPr
 }
 
 /** SidebarScroll — the scrolling middle, so header and user chip stay pinned. */
-export function SidebarScroll({ children }: { children?: ReactNode }) {
+export interface SidebarScrollProps extends Scroll {
+  children?: ReactNode
+}
+
+export function SidebarScroll({ children, ...rest }: SidebarScrollProps) {
   return (
-    <ScrollView {...slot('sidebar-scroll')} flex={1} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      {...slot('sidebar-scroll')}
+      flex={1}
+      showsVerticalScrollIndicator={false}
+      {...rest}
+    >
       <YStack gap="$0.5">{children}</YStack>
     </ScrollView>
   )
 }
 
-export interface SidebarSectionProps {
+export interface SidebarSectionProps extends Col {
   label?: string
   children?: ReactNode
 }
 
-export function SidebarSection({ label, children }: SidebarSectionProps) {
+export function SidebarSection({ label, children, ...rest }: SidebarSectionProps) {
   return (
-    <YStack {...slot('sidebar-section')} mt="$3" gap="$0.5">
+    <YStack {...slot('sidebar-section')} mt="$3" gap="$0.5" {...rest}>
       {label ? (
         <SizableText size="$1" px="$2" py="$1" color="$soft" fontWeight="500">
           {label}
@@ -193,7 +219,7 @@ export function SidebarSection({ label, children }: SidebarSectionProps) {
   )
 }
 
-export interface SidebarItemProps {
+export interface SidebarItemProps extends Row {
   children?: ReactNode
   active?: boolean
   onPress?: () => void
@@ -207,7 +233,7 @@ export interface SidebarItemProps {
  * run long, and a wrapping row makes the list's scan height irregular while the
  * first few words are what identify a conversation anyway.
  */
-export function SidebarItem({ children, active = false, onPress, icon }: SidebarItemProps) {
+export function SidebarItem({ children, active = false, onPress, icon, ...rest }: SidebarItemProps) {
   return (
     <XStack
       {...slot('sidebar-item')}
@@ -222,6 +248,7 @@ export function SidebarItem({ children, active = false, onPress, icon }: Sidebar
       bg={active ? '$edge' : undefined}
       hoverStyle={{ bg: active ? '$edge' : '$hover' }}
       pressStyle={{ bg: '$raised' }}
+      {...rest}
     >
       {icon ? <YStack opacity={0.7}>{icon}</YStack> : null}
       <SizableText size="$2" numberOfLines={1} flex={1} color={active ? '$color' : '$quiet'}>
@@ -231,7 +258,7 @@ export function SidebarItem({ children, active = false, onPress, icon }: Sidebar
   )
 }
 
-export interface SidebarFolderProps {
+export interface SidebarFolderProps extends Col {
   name: string
   children?: ReactNode
   /** Uncontrolled initial state. Ignored when `open` is passed. */
@@ -253,6 +280,7 @@ export function SidebarFolder({
   defaultOpen = false,
   open: openProp,
   onOpenChange,
+  ...rest
 }: SidebarFolderProps) {
   const [own, setOwn] = useState(defaultOpen)
   const controlled = openProp !== undefined
@@ -264,7 +292,7 @@ export function SidebarFolder({
   }
 
   return (
-    <YStack {...slot('sidebar-folder')}>
+    <YStack {...slot('sidebar-folder')} {...rest}>
       <XStack
         {...ROW}
         items="center"
@@ -296,7 +324,7 @@ export function SidebarFolder({
   )
 }
 
-export interface SidebarUserProps {
+export interface SidebarUserProps extends Row {
   name: string
   secondary?: string
   /** Avatar slot. Falls back to the first letter of `name`. */
@@ -305,7 +333,7 @@ export interface SidebarUserProps {
   onHelp?: () => void
 }
 
-export function SidebarUser({ name, secondary, avatar, onPress, onHelp }: SidebarUserProps) {
+export function SidebarUser({ name, secondary, avatar, onPress, onHelp, ...rest }: SidebarUserProps) {
   return (
     <XStack
       {...slot('sidebar-user')}
@@ -315,6 +343,7 @@ export function SidebarUser({ name, secondary, avatar, onPress, onHelp }: Sideba
       pt="$2"
       borderTopWidth={1}
       borderColor="$borderColor"
+      {...rest}
     >
       <XStack
         {...ROW}
