@@ -36,6 +36,25 @@
 import { createElement, forwardRef, type ReactNode } from 'react'
 import { YStack } from '@hanzo/gui'
 import { tw, type ClassValue } from './tw'
+import { config } from './gui-config'
+
+/**
+ * The process-global gui config, named as a VALUE so it survives bundling.
+ *
+ * A rendered gui component resolves `$background` and friends against one
+ * config, and it is `gui-config.ts` calling `createGui` at module scope that
+ * installs it. `<Hanzo>` names it too — but an app that imports only `Box`
+ * never loads `<Hanzo>`, so nothing installed it and the first render throws
+ *
+ *     Error: Err0
+ *
+ * which in production is the whole message. A bare `import './gui-config'`
+ * does not fix it: Vite 8 ignores a package.json `sideEffects` ARRAY, so the
+ * side-effect-only import is shaken out. A value the module references cannot
+ * be. Measured on zoo.industries, where 58 files render Box and none mount
+ * Hanzo directly.
+ */
+if (!config) throw new Error('@hanzo/ui: the gui config did not install')
 
 /**
  * The display each element has before any class touches it.
