@@ -16,6 +16,8 @@
  * does today rather than to an unstyled one.
  */
 
+import { flatten, type ClassValue } from './core/cn'
+
 export type Props = Record<string, unknown>
 
 /** Recognized props, plus the classes that stay class names. */
@@ -564,20 +566,10 @@ const VARIANT: Record<string, string> = {
   'group-hover': 'groupHoverStyle',
 }
 
-export type ClassValue =
-  | string | number | null | undefined | false
-  | ClassValue[]
-  | Record<string, unknown>
-
-/** clsx's input shapes, since callers already write class names that way. */
-function flatten(v: ClassValue, out: string[] = []): string[] {
-  if (!v) return out
-  if (typeof v === 'string') { for (const s of v.split(/\s+/)) if (s) out.push(s); return out }
-  if (typeof v === 'number') { out.push(String(v)); return out }
-  if (Array.isArray(v)) { for (const x of v) flatten(x, out); return out }
-  for (const k in v) if ((v as Record<string, unknown>)[k]) out.push(k)
-  return out
-}
+// The class list and the way it is flattened belong to `cn`, which is where
+// both this and every caller already needed them. Re-exported so the existing
+// `import { type ClassValue } from '@hanzo/ui/tw'` keeps working.
+export type { ClassValue } from './core/cn'
 
 /**
  * `tw('flex items-center gap-4 md:gap-8 hover:bg-muted')` becomes
