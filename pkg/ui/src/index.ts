@@ -103,3 +103,4 @@ export { cn } from './core/cn'
 
 export { tw, type Parsed, type Props as TwProps } from './tw'
 export { Box, type BoxProps } from './box'
+export { sx } from './sx'
