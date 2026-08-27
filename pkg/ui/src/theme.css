@@ -301,3 +301,25 @@
   .hz-prose-responsive > h1 { font-size: var(--text-6xl) }
   .hz-prose-responsive > h2 { font-size: var(--text-5xl) }
 }
+
+/* The two things a style PROP cannot say, because neither is a property of an
+   element: a keyframe, and a scrollbar. */
+
+/* Skeleton's pulse. Opacity only — animating a colour or a size would repaint
+   or reflow every frame for a placeholder nobody is looking at. */
+@keyframes hz-pulse {
+  50% { opacity: 0.5 }
+}
+.hz-pulse { animation: hz-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite }
+
+/* A carousel scrolls but must not show a bar: the arrows and the snap already
+   say it scrolls, and a bar that appears mid-drag shifts the slides under the
+   pointer. Firefox reads the property, WebKit the pseudo-element, and the
+   property rides on the component so only this half needs a sheet. */
+.hz-scroller::-webkit-scrollbar { display: none }
+
+/* Motion is a preference, and both of the above are decoration. */
+@media (prefers-reduced-motion: reduce) {
+  .hz-pulse { animation: none }
+  .hz-scroller { scroll-behavior: auto }
+}
