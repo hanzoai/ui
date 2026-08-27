@@ -1,34 +1,10 @@
-import { cn } from '../core/cn'
-import { type ClassValue, tw } from '../tw'
+// The one definition lives at the root, beside Box and tw — it is public API,
+// not a blocks-local helper.
+export { sx } from '../sx'
+
 import type { Dimensions } from '../types'
 import type { Block } from './def'
 
-/**
- * Class notation as gui style props.
- *
- * A gui component takes `className` and passes it STRAIGHT to the element, so
- * `<Card className="flex w-full">` renders `class="… flex w-full"` — four dead
- * tokens against a stylesheet that defines none of them, since there is no
- * Tailwind here to define them. Measured: every token survives to the DOM and
- * nothing styles it.
- *
- * `<Box>` already solves this for host elements by converting the string first.
- * This is the same conversion for the case Box cannot cover — a gui component
- * that must stay itself. The classes become style props, gui compiles them to
- * its own atomic rules, and no unqualified name reaches the document.
- *
- * So: `<Box className="…">` for an element, `{...sx('…')}` for a component.
- *
- * Anything `tw` does not read is handed back as `className`, exactly as Box
- * does with it — dropping it would be worse than leaking it, because a class
- * with a real rule behind it (`hz-prose`) is not something `tw` should be
- * expected to know about, and silently discarding it would unstyle the element
- * with nothing to show for it.
- */
-export const sx = (...classes: ClassValue[]): Record<string, unknown> => {
-  const { props, rest } = tw(cn(...classes))
-  return rest ? { ...props, className: rest } : (props as Record<string, unknown>)
-}
 
 /**
  * What every renderer is handed: the block to draw, plus the two things only
