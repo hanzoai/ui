@@ -142,3 +142,33 @@ body {
 .hz-prose > h4:not(:first-child),
 .hz-prose > h5:not(:first-child),
 .hz-prose > h6:not(:first-child) { margin-block-start: 1.4em }
+
+/* ── The line-height a converted box inherits ─────────────────────────────
+   gui's Stack stamps its own leading, which is right for a native view and
+   wrong for a div: a div takes its line-height from the cascade, and a box
+   converted from one used to grow a few pixels per line of text.
+
+   Stated HERE rather than as an inline style on the element. Inline beats every
+   selector, so the previous form silently defeated the app's own vocabulary — a
+   `.display` class asking for 1.15 lost to it and its headings overlapped. As a
+   rule it is a default: gui's own leading classes come later and win, and an
+   app's sheet comes later still and wins over both, which is the right order. */
+:root .is_View {
+  line-height: inherit;
+}
+
+/* ── An icon inside a control ─────────────────────────────────────────────
+   Decoration, and it must not intercept the click that was aimed at the
+   control. gui wraps a child in a `display: contents` span, which leaves the
+   SVG itself as the topmost thing under the pointer — so a click on a button's
+   icon landed on the `<line>` and never reached the button. Measured on a phone
+   menu whose close button could not be clicked at all.
+
+   Not `pointer-events: none` on every svg: a chart or a map is a control in its
+   own right. Only where one already sits inside something clickable. */
+button svg,
+a svg,
+[role='button'] svg,
+[data-slot='button'] svg {
+  pointer-events: none;
+}
