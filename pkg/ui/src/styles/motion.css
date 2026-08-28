@@ -456,3 +456,30 @@
    a diagonal hatch drawn by the UA that matches nothing. A composer that grows
    with its content does not need one. */
 :where([data-slot='textarea'], [data-slot='composer-field']) { resize: none; }
+
+/* A top-level nav item.
+ *
+ * `navigationMenuTriggerStyle()` returned this name and nothing declared it, so
+ * every trigger in the estate rendered as bare text: the lux.network nav read as
+ * one run-together string — "AI Cards Ecosystem Network Resources" — because the
+ * only thing separating the items was the list's 4px gap.
+ *
+ * A class name is a string and a string always compiles, which is why this
+ * shipped. `prose.test.ts` now diffs the names the components use against the
+ * names the sheets declare, so a rule cannot go missing again.
+ *
+ * Padding rather than a wider gap: the padding is also the hit area, and a nav
+ * item wants a target bigger than its glyphs. */
+.hz-nav-menu-trigger {
+  padding-inline: 0.75rem;
+  padding-block: 0.5rem;
+  border-radius: var(--radius, 0.5rem);
+  color: var(--muted-foreground);
+  transition: color 150ms, background-color 150ms;
+}
+
+.hz-nav-menu-trigger:hover,
+.hz-nav-menu-trigger[data-state='open'] {
+  color: var(--foreground);
+  background: var(--muted);
+}
