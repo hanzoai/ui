@@ -52,3 +52,45 @@ export function cn(...inputs: ClassValue[]): string {
 export function capitalize(s: string): string {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s
 }
+
+/**
+ * A variant table, as a function from a selection to its classes.
+ *
+ *   const chip = variants('inline-flex rounded', {
+ *     variants: { tone: { warn: 'bg-amber-500', calm: 'bg-slate-500' } },
+ *     defaultVariants: { tone: 'calm' },
+ *   })
+ *   chip({ tone: 'warn' })      // 'inline-flex rounded bg-amber-500'
+ *
+ * A lookup and a join. It reads exactly like `cva`, whose shape every component
+ * in this estate is already written against, so adopting it is a rename — but it
+ * is fifteen lines beside `cn` rather than a dependency, and one of the two
+ * class-name libraries this package used to carry to do what it already did.
+ */
+export type Variants = Record<string, Record<string, ClassValue>>
+
+/** The selection: for each axis, one of the keys that axis offers. */
+export type Choice<V extends Variants> = { [K in keyof V]?: keyof V[K] }
+
+/** The props a component accepts, read back off its own table. */
+export type VariantProps<F> = F extends (choice?: infer C) => string
+  ? Omit<NonNullable<C>, 'class' | 'className'>
+  : never
+
+export function variants<V extends Variants>(
+  base?: ClassValue,
+  config?: { variants?: V; defaultVariants?: Choice<V> },
+) {
+  const table = config?.variants ?? ({} as V)
+  const fallback = config?.defaultVariants ?? ({} as Choice<V>)
+  return (choice?: Choice<V> & { class?: ClassValue; className?: ClassValue }): string => {
+    const picked: ClassValue[] = [base]
+    for (const axis in table) {
+      // An explicit `undefined` means "not chosen" and falls back, which is what
+      // `<Button size={undefined}>` means at a call site.
+      const key = choice?.[axis] ?? fallback[axis]
+      if (key != null) picked.push(table[axis][key as string])
+    }
+    return cn(...picked, choice?.class, choice?.className)
+  }
+}
