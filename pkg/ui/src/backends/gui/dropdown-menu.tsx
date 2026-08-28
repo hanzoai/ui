@@ -84,6 +84,11 @@ const Indicator = ({ children }: { children: React.ReactNode }) => (
 const OffsetContext = /* @__PURE__ */ React.createContext<
   ((n: number) => void) | null
 >(null)
+/** Alignment travels the same way: gui puts placement on the Popper root. */
+type Placement = NonNullable<React.ComponentProps<typeof Menu>['placement']>
+const AlignContext = /* @__PURE__ */ React.createContext<
+  ((p: Placement | undefined) => void) | null
+>(null)
 const DEFAULT_OFFSET = 4
 
 export type DropdownMenuProps = Omit<
@@ -113,10 +118,12 @@ function DropdownMenu({
   ...props
 }: DropdownMenuProps) {
   const [current, setOffset] = React.useState(offset)
+  const [placement, setPlacement] = React.useState<Placement | undefined>(undefined)
   React.useEffect(() => setOffset(offset), [offset])
   return (
     <OffsetContext.Provider value={setOffset}>
-      <Menu offset={current} {...props}>
+      <AlignContext.Provider value={setPlacement}>
+      <Menu offset={current} {...(placement ? { placement } : null)} {...props}>
         {trigger ? (
           <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
         ) : null}
@@ -127,6 +134,7 @@ function DropdownMenu({
         ) : null}
         {children}
       </Menu>
+      </AlignContext.Provider>
     </OffsetContext.Provider>
   )
 }
@@ -190,18 +198,39 @@ const DropdownMenuRadioGroup: typeof Menu.RadioGroup = Menu.RadioGroup
 // ── Content — self-portalling, theme-forwarded ──────────────────────────────────
 type ContentProps = React.ComponentProps<typeof Menu.Content> & {
   sideOffset?: number
+  /**
+   * Which edge of the panel lines up with the trigger.
+   *
+   * `end` is what a menu hanging off a right-aligned trigger wants: the panel
+   * grows leftward and stays on screen. gui states side and alignment as one
+   * floating-ui placement string, so this is that string's suffix — `center`
+   * being the plain side with no suffix at all.
+   */
+  align?: 'start' | 'center' | 'end'
+}
+
+/** `align` as the suffix of a floating-ui placement, against the side given. */
+const placementFor = (
+  side: Placement | undefined,
+  align: 'start' | 'center' | 'end' | undefined,
+): Placement | undefined => {
+  if (!align) return side
+  const base = (side?.split('-')[0] ?? 'bottom') as Placement
+  return (align === 'center' ? base : `${base}-${align}`) as Placement
 }
 
 const DropdownMenuContent = /* @__PURE__ */ React.forwardRef<
   GuiElement,
   ContentProps
 >(function DropdownMenuContent(
-  { sideOffset = DEFAULT_OFFSET, children, ...props },
+  { sideOffset = DEFAULT_OFFSET, align, children, ...props },
   ref
 ) {
   const themeName = useThemeName()
   const setOffset = React.useContext(OffsetContext)
+  const setPlacement = React.useContext(AlignContext)
   React.useEffect(() => setOffset?.(sideOffset), [setOffset, sideOffset])
+  React.useEffect(() => setPlacement?.(placementFor(undefined, align)), [setPlacement, align])
   return (
     <Menu.Portal>
       <PortalTheme name={themeName}>
