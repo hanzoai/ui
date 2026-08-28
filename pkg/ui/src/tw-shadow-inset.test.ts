@@ -39,3 +39,18 @@ describe('tw: inset by axis', () => {
     expect(tw('inset-x-4').props).toEqual({ left: 16, right: 16 })
   })
 })
+
+describe('tw: z-index', () => {
+  it('reads a rung and a value written out', () => {
+    expect(tw('z-50').props).toEqual({ zIndex: 50 })
+    // `z-[60]` is how anything above the named scale is spelled. Unread, a phone
+    // menu asking to sit over a z-50 header got no z-index and the header kept
+    // the click — the close button could not be pressed at all.
+    expect(tw('z-[60]').props).toEqual({ zIndex: 60 })
+    expect(tw('z-[60]').rest).toBe('')
+  })
+
+  it('reads a negative one', () => {
+    expect(tw('z-[-1]').props).toEqual({ zIndex: -1 })
+  })
+})
