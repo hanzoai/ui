@@ -337,6 +337,10 @@ function one(c: string): Props | null {
     case 'snap-normal': return { scrollSnapStop: 'normal' }
     case 'snap-always': return { scrollSnapStop: 'always' }
     case 'select-none': return { userSelect: 'none' }
+    // The focus ring a component removes to draw its own. Falling through left
+    // it as a class name, so the ring the component had already replaced was
+    // still painted underneath by the browser default.
+    case 'outline-none': return { outlineStyle: 'none' }
     case 'pointer-events-none': return { pointerEvents: 'none' }
     case 'sr-only': return { position: 'absolute', width: 1, height: 1, overflow: 'hidden' }
     case 'tabular-nums': return { fontVariantNumeric: 'tabular-nums' }

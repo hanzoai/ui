@@ -18,7 +18,7 @@
  * and they are compared. Adding a reset to `base.css` without a restore fails
  * here rather than in a screenshot nobody takes.
  */
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
@@ -99,5 +99,36 @@ describe('prose resolves through tokens', () => {
         .map((v) => `${sel.trim()} -> ${v}`),
     )
     expect(literals).toEqual([])
+  })
+})
+
+describe('every class the components name, the sheets declare', () => {
+  it('has no name without a rule', () => {
+    // The cheapest bug in this package to write and the hardest to see. A class
+    // name is a string, so a name nothing declares compiles, renders, and styles
+    // nothing — `navigationMenuTriggerStyle()` returned `hz-nav-menu-trigger`
+    // and no sheet had ever declared it, so every nav item in the estate was
+    // bare text and the lux.network header read as one run-together string.
+    //
+    // Only the `hz-` namespace, because that is the one this package owns. A
+    // consumer's own class is not ours to account for, and gui's atomics are
+    // generated rather than written.
+    const named = new Set<string>()
+    const withRule = new Set<string>()
+    const walk = (dir: string) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        const p = join(dir, e.name)
+        if (e.isDirectory()) { walk(p); continue }
+        if (/\.test\./.test(e.name)) continue
+        const t = readFileSync(p, 'utf8')
+        if (e.name.endsWith('.css')) {
+          for (const [ , c ] of t.matchAll(/\.(hz-[a-z0-9-]+)/g)) withRule.add(c)
+        } else if (/\.tsx?$/.test(e.name)) {
+          for (const [ , c ] of t.matchAll(/['"`](hz-[a-z0-9-]+)['"`]/g)) named.add(c)
+        }
+      }
+    }
+    walk(SRC)
+    expect([ ...named ].filter((c) => !withRule.has(c)).sort()).toEqual([])
   })
 })
