@@ -1,3 +1,4 @@
+import { XStack, YStack } from '@hanzo/gui'
 import * as React from 'react'
 
 import { Card, CardContent, CardFooter, CardHeader } from '../backends/gui/card'
@@ -63,19 +64,19 @@ export const CarteBlancheBlockComponent = ({
     <Card {...sx(cn('flex flex-col', className, spec('no-outer-borders') && 'border-none'))}>
       {sideways ? (
         <>
-          <Box className="flex gap-2">
+          <XStack gap={8}>
             {b.topContent && (
               <Content blocks={b.topContent} agent={agent} className="self-center ml-6 mt-6" />
             )}
-            <Box className="flex flex-col">
+            <YStack>
               <Heading />
               {b.content && (
                 <CardContent {...sx(cn('flex flex-col justify-start', body, className))}>
                   <Content blocks={b.content} agent={agent} />
                 </CardContent>
               )}
-            </Box>
-          </Box>
+            </YStack>
+          </XStack>
           <Foot className="mx-auto" />
         </>
       ) : (

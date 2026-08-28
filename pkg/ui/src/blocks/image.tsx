@@ -1,3 +1,4 @@
+import { View, YStack } from '@hanzo/gui'
 import * as React from 'react'
 
 import { Box } from '../box'
@@ -47,7 +48,7 @@ export const ImageBlockComponent = ({
 
   if (phone && (spec('mobile-full-width') || fullWidthOnMobile)) {
     return (
-      <Box className="flex flex-col items-center w-full">
+      <YStack items="center" width="100%">
         <Box
           tag="img"
           src={src}
@@ -58,7 +59,7 @@ export const ImageBlockComponent = ({
           style={{ width: '100%', height: 'auto', maxWidth: 420 }}
           className={cn(svgFillClass, className)}
         />
-      </Box>
+      </YStack>
     )
   }
 
@@ -72,7 +73,7 @@ export const ImageBlockComponent = ({
 
   if (props?.fill) {
     return (
-      <Box className="relative w-full h-full">
+      <View position="relative" width="100%" height="100%">
         <Box
           tag="img"
           src={src}
@@ -81,7 +82,7 @@ export const ImageBlockComponent = ({
           {...props}
           className={cn(svgFillClass, 'max-w-[70vw] mx-auto', className)}
         />
-      </Box>
+      </View>
     )
   }
 

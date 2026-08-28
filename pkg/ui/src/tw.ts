@@ -89,7 +89,9 @@ const HEADS = [
   'min-w', 'min-h', 'max-w', 'max-h', 'grid-cols', 'grid-rows', 'col-span',
   'auto-cols', 'auto-rows', 'grid-flow', 'col-start', 'col-end', 'row-start', 'row-end',
   'place-items', 'place-content', 'place-self', 'justify-items', 'justify-self',
-  'row-span', 'translate-x', 'translate-y', 'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
+  'row-span', 'translate-x', 'translate-y', 'scale', 'scale-x', 'scale-y', 'rotate',
+  'basis', 'will-change', 'mix-blend',
+  'gap-x', 'gap-y', 'space-x', 'space-y', 'overflow-x', 'overflow-y',
   'transition', 'duration', 'delay', 'ease', 'blur', 'backdrop-blur', 'shadow',
   'underline-offset',
   'cursor', 'overflow',
@@ -337,6 +339,15 @@ function one(c: string): Props | null {
     case 'snap-normal': return { scrollSnapStop: 'normal' }
     case 'snap-always': return { scrollSnapStop: 'always' }
     case 'select-none': return { userSelect: 'none' }
+    // A long word — a hash, an address — decides the line break rather than the
+    // page width.
+    case 'break-words': return { overflowWrap: 'break-word' }
+    case 'break-all': return { wordBreak: 'break-all' }
+    case 'break-normal': return { overflowWrap: 'normal', wordBreak: 'normal' }
+    case 'break-keep': return { wordBreak: 'keep-all' }
+    // A hint to composite on the GPU. `transform` already says translateZ(0);
+    // this is the same promise spelled the way the class does.
+    case 'transform-gpu': return { transform: 'translateZ(0)' }
     // The focus ring a component removes to draw its own. Falling through left
     // it as a class name, so the ring the component had already replaced was
     // still painted underneath by the browser default.
@@ -605,7 +616,17 @@ function one(c: string): Props | null {
       : { transform: `translateX(${typeof n === 'number' ? n + 'px' : n})` } }
     case 'translate-y': { const n = SPACE[v] ?? size(v); return n === undefined ? null
       : { transform: `translateY(${typeof n === 'number' ? n + 'px' : n})` } }
-    // A named rung, or a shadow written out. The written-out form is not an
+    // The rest of the transform family. `translate-*` was here alone, so an
+    // `active:scale-95` — the commonest press affordance there is — converted to
+    // nothing and the button did not move.
+    case 'scale': { const n = Number(v); return Number.isFinite(n) ? { transform: `scale(${n / 100})` } : null }
+    case 'scale-x': { const n = Number(v); return Number.isFinite(n) ? { transform: `scaleX(${n / 100})` } : null }
+    case 'scale-y': { const n = Number(v); return Number.isFinite(n) ? { transform: `scaleY(${n / 100})` } : null }
+    case 'rotate': { const n = Number(v); return Number.isFinite(n) ? { transform: `rotate(${n}deg)` } : null }
+    case 'basis': { const n = size(v); return n === undefined ? null : { flexBasis: n } }
+    case 'will-change': return { willChange: v }
+    case 'mix-blend': return { mixBlendMode: v }
+        // A named rung, or a shadow written out. The written-out form is not an
     // edge case: a hard offset shadow — `shadow-[8px_8px_0_0_#000]` — has no
     // rung to name, and a design built on one loses every shadow it has
     // without this. Underscores stand for spaces, as everywhere in a bracket.
