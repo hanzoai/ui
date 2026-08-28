@@ -16,6 +16,6 @@
     "hanzo"
   ],
   "dependencies": {
-    "@hanzo/logo": "^1.0.21"
+    "@hanzo/logo": "catalog:"
   }
 }

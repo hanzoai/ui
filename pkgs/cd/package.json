@@ -62,7 +62,7 @@
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
-    "@hanzo/canvas": ">=0.2.0",
+    "@hanzo/canvas": ">=0.2.3",
     "react": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {

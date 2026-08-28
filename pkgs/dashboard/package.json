@@ -26,12 +26,12 @@
     "test": "bun test"
   },
   "peerDependencies": {
-    "@hanzo/gui": ">=8.0.0",
+    "@hanzo/gui": ">=8.3.0",
     "@hanzogui/lucide-icons-2": ">=7.2.2",
     "react": ">=19"
   },
   "devDependencies": {
-    "@hanzo/gui": "8.1.0",
+    "@hanzo/gui": "catalog:",
     "@hanzogui/config": "8.1.0",
     "@hanzogui/core": "8.1.0",
     "@hanzogui/lucide-icons-2": "8.1.0",

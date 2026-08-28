@@ -24,7 +24,7 @@
     "test": "turbo run test",
     "check": "bash scripts/check-no-brand-pkg.sh && turbo lint typecheck format:check"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@11.24.0",
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",

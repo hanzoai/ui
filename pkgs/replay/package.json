@@ -54,8 +54,8 @@
     }
   },
   "dependencies": {
-    "@hanzo/event": "^0.3.28",
-    "@hanzo/observe": "^0.1.7"
+    "@hanzo/event": "catalog:",
+    "@hanzo/observe": "catalog:"
   },
   "peerDependencies": {
     "rrweb": "^2.0.0"

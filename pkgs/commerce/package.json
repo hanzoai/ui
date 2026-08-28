@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.7.1",
+  "version": "7.7.2",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -26,19 +26,43 @@
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
   "exports": {
-    ".": "./index.ts",
-    "./types": "./types/index.ts",
-    "./client": "./client.ts",
-    "./billing": "./billing.ts",
-    "./metering": "./metering.ts",
-    "./debug": "./service/debug.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "default": "./dist/types/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "default": "./dist/client.js"
+    },
+    "./billing": {
+      "types": "./dist/billing.d.ts",
+      "import": "./dist/billing.js",
+      "default": "./dist/billing.js"
+    },
+    "./metering": {
+      "types": "./dist/metering.d.ts",
+      "import": "./dist/metering.js",
+      "default": "./dist/metering.js"
+    },
+    "./debug": {
+      "types": "./dist/service/debug.d.ts",
+      "import": "./dist/service/debug.js",
+      "default": "./dist/service/debug.js"
+    }
   },
   "dependencies": {
     "ethers": "^6.16.0",
     "next-usequerystate": "^1.20.0"
   },
   "peerDependencies": {
-    "@hanzo/ui": "^8.9.3",
+    "@hanzo/ui": ">=8.25.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-radio-group": "^1.1.3",
     "lucide-react": ">=0.456.0",
@@ -52,10 +76,15 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@hanzo/ui": "^8.9.3",
+    "@hanzo/ui": "catalog:",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "cross-fetch": "^4.1.0",
     "typescript": "^7.0.2"
-  }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
 }
