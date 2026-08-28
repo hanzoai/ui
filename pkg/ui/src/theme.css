@@ -248,8 +248,39 @@
 }
 
 .hz-prose > p { margin: 0 }
-.hz-prose > ul, .hz-prose > ol { margin: 0; padding-inline-start: 1.5em }
+/* The marker is RESTORED here. `base.css` takes it off every list in the
+   document, because a nav and a card grid are both lists and neither wants one.
+   Authored prose is the one place it belongs, and setting only the indent left
+   an indented list with nothing at the start of the line — measured on the lux
+   blog, where every bulleted list read as loose paragraphs. */
+.hz-prose > ul, .hz-prose ul ul { list-style: disc }
+.hz-prose > ol, .hz-prose ol ol { list-style: decimal }
+.hz-prose ul, .hz-prose ol { margin: 0; padding-inline-start: 1.5em }
 .hz-prose li { margin-block: 0.25em }
+.hz-prose li::marker { color: var(--muted-foreground) }
+
+/* A code block is a SURFACE, not just a change of typeface. Without the panel
+   it sits directly on the page ground and reads as body text that happens to be
+   monospaced — which is exactly what a reader scanning for the command must not
+   have to work out. `pre` already scrolls inside itself (base.css); this gives
+   it the ground to scroll on. */
+.hz-prose > pre {
+  margin: 0;
+  padding: var(--space-4, 1rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 0.5rem);
+  background: var(--muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+/* Inside a block the panel IS the surface, so the inline treatment would draw a
+   second one around every line. */
+.hz-prose > pre code { background: none; padding: 0; border: 0; font-size: inherit }
+.hz-prose :not(pre) > code {
+  padding: 0.15em 0.35em;
+  border-radius: calc(var(--radius, 0.5rem) / 2);
+  background: var(--muted);
+}
 .hz-prose > blockquote {
   margin: 0;
   padding-inline-start: 1em;
