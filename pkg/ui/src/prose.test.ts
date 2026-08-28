@@ -8,15 +8,13 @@
  * carrying no classes at all, so `.hz-prose` styling it BY TAG is the only
  * handle there is.
  *
- * That makes the pairing load-bearing and invisible: a reset with no matching
- * restore is not an error anywhere. It shipped that way — `.hz-prose` set
- * `padding-inline-start` on its lists but never `list-style`, so every bulleted
- * list in the lux blog rendered indented with nothing at the start of the line,
- * reading as loose paragraphs. Nothing failed; it just looked wrong.
+ * The pairing is load-bearing and invisible: a reset with no matching restore
+ * is an error nowhere. `padding-inline-start` without `list-style` renders an
+ * indented list with nothing at the start of the line, and nothing fails.
  *
  * So the reset half is read from one file and the restore half from the other,
- * and they are compared. Adding a reset to `base.css` without a restore fails
- * here rather than in a screenshot nobody takes.
+ * and they are compared. A reset added to `base.css` with no restore fails here
+ * rather than in a screenshot nobody takes.
  */
 import { readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'

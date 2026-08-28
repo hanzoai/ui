@@ -250,9 +250,8 @@
 .hz-prose > p { margin: 0 }
 /* The marker is RESTORED here. `base.css` takes it off every list in the
    document, because a nav and a card grid are both lists and neither wants one.
-   Authored prose is the one place it belongs, and setting only the indent left
-   an indented list with nothing at the start of the line — measured on the lux
-   blog, where every bulleted list read as loose paragraphs. */
+   Authored prose is the one place it belongs. Setting only the indent leaves an
+   indented list with nothing at the start of the line. */
 .hz-prose > ul, .hz-prose ul ul { list-style: disc }
 .hz-prose > ol, .hz-prose ol ol { list-style: decimal }
 .hz-prose ul, .hz-prose ol { margin: 0; padding-inline-start: 1.5em }
