@@ -243,8 +243,8 @@ importers:
         specifier: ^0.5.21
         version: 0.5.21
       '@hanzo/font':
-        specifier: ^1.8.2
-        version: 1.8.2(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        specifier: ^1.9.1
+        version: 1.9.1(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@hanzo/logo':
         specifier: ^1.0.13
         version: 1.0.20(react@19.2.8)
@@ -1980,8 +1980,8 @@ packages:
   '@hanzo/events@0.2.2':
     resolution: {integrity: sha512-jF800OFibLfnuEqMJUpTyLIs4fmezzXFKGGUPAHjK40FrTWsiAb4j3j1N5sbqBLAv5Ty7FA56dOo67Y+kUSqyA==}
 
-  '@hanzo/font@1.8.2':
-    resolution: {integrity: sha512-Ag9gldPYdVoBn7sXIyXFf7GQtruW2hbs8UDwFPmr1JQX78V8n9wcFrwrRVySkepAb3DrJZ2VQ7Lj3gy1yRqq9Q==}
+  '@hanzo/font@1.9.1':
+    resolution: {integrity: sha512-fZv8lzxUnz8g7SUP6yPoE1qKwJ6/yR0+PFhud5Vv6lEfxFdGCbsl3q86T6ZntzkC8ohoojXnNuhDAzvZCNVcCw==}
     peerDependencies:
       next: '>=13.2.0'
 
@@ -10050,7 +10050,7 @@ snapshots:
 
   '@hanzo/events@0.2.2': {}
 
-  '@hanzo/font@1.8.2(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@hanzo/font@1.9.1(next@16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
       next: 16.3.2(@babel/core@7.29.7)(@playwright/test@1.62.1)(@types/node@22.20.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
