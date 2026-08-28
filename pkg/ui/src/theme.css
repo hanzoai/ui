@@ -15,7 +15,7 @@
  * counterpart. Typography is Zen — our own family, sans for UI/body and mono for
  * code — bound through `--font-sans` / `--font-mono`. The package SHIPS the
  * faces, so those resolve with no work from the host; a host that prefers its
- * own binds `--font-sans-provided`. No Inter, no system-stack default anywhere.
+ * own binds `--font-sans-provided`. No system-stack default anywhere.
  *
  * Plain CSS, nothing else: `:root`/`.dark` custom properties plus the base font
  * and the touch/elevation rules the components name. The Tailwind v4 `@theme
@@ -42,10 +42,9 @@
    unreferenced. An unlayered declaration beats every layered one whatever the
    specificity, so layering ours is what makes the host's the one that wins.
 
-   THE TOKEN NAMES THE ROLE, NOT THE FACE. It was `--font-geist-sans`, which
-   named a face rather than the job it does. Naming it `--font-zen-sans` would
-   repeat the mistake with our own brand: the next face makes it a lie again.
-   `--font-sans` is what it has always meant.
+   THE TOKEN NAMES THE ROLE, NOT THE FACE. A token spelled for a typeface —
+   somebody else's or our own — turns into a lie the next time the face moves,
+   and the job it does never changed. `--font-sans` is what it has always meant.
 
    NO @import HERE, and that is measured rather than stylistic. This file is
    composed into the MIDDLE of the built theme.css, and CSS drops an @import that
