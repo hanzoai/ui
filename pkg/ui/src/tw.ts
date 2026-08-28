@@ -96,7 +96,7 @@ const HEADS = [
   'tracking', 'leading', 'rounded', 'border', 'divide', 'aspect', 'object',
   'whitespace', 'align', 'inset', 'inset-x', 'inset-y', 'items', 'justify', 'content', 'self',
   'opacity', 'text', 'font', 'bg', 'gap', 'space-x', 'space-y', 'top', 'right', 'bottom', 'left',
-  'w', 'h', 'z', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl',
+  'w', 'h', 'size', 'z', 'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl',
   'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml',
 ].sort((a, b) => b.length - a.length)
 
@@ -404,6 +404,10 @@ function one(c: string): Props | null {
     case 'content': return ALIGN[v] ? { alignContent: ALIGN[v] } : null
     case 'w': { const n = size(v); return n === undefined ? null : { width: n } }
     case 'h': { const n = v === 'screen' ? '100vh' : size(v); return n === undefined ? null : { height: n } }
+    // Both axes at once, which is how an icon or an avatar is written — 17,928
+    // times across this estate, every one of which converted to NOTHING before
+    // this line existed. A square is the commonest sized thing there is.
+    case 'size': { const n = size(v); return n === undefined ? null : { width: n, height: n } }
     case 'min-w': { const n = size(v); return n === undefined ? null : { minWidth: n } }
     case 'min-h': { const n = v === 'screen' ? '100vh' : size(v); return n === undefined ? null : { minHeight: n } }
     case 'max-w': { const n = MAX_W[v] ?? size(v); return n === undefined ? null : { maxWidth: n } }

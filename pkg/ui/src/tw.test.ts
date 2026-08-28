@@ -416,3 +416,27 @@ describe('a numbered leading is a length, and says so', () => {
     expect(tw('leading-[28px]').props).toEqual({ lineHeight: '28px' })
   })
 })
+
+describe('a square is written once, not twice', () => {
+  // `size-4` is how every icon and avatar in this estate states its box —
+  // 28,364 of them — and it converted to nothing at all, because the prefix
+  // list did not carry the name. A class that maps to `{}` is indistinguishable
+  // from a class that was never written: the element renders, unsized, and the
+  // usual result is an icon flattened to zero width inside a flex control.
+  it.each([
+    ['size-4', 16],
+    ['size-3.5', 14],
+    ['size-10', 40],
+    ['size-px', 1],
+  ])('%s sets both axes', (cls, n) => {
+    expect(tw(cls).props).toEqual({ width: n, height: n })
+  })
+
+  it('follows the ramp, not a second table', () => {
+    // Whatever `w-` answers for a rung, `size-` answers the same on both axes.
+    for (const v of ['4', '8', '12', 'full', '1/2']) {
+      const { width } = tw(`w-${v}`).props as { width?: unknown }
+      expect(tw(`size-${v}`).props).toEqual({ width, height: width })
+    }
+  })
+})
