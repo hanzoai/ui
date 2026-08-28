@@ -117,13 +117,36 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
     )
   }
 
+  /**
+   * No merchant credentials, no card form.
+   *
+   * `<PaymentForm>` mounts an internal ErrorScreen that THROWS whenever
+   * `NODE_ENV !== 'development'` and either id is empty. Both values are inlined
+   * at build time, so a deployment with no Square merchant resolves them to ''
+   * and mounting unwinds React to the global error boundary — the whole route
+   * white-screens with "Application error: a client-side exception has
+   * occurred", taking the cart and the order summary down with the card form.
+   *
+   * Returning early keeps the rest of checkout intact and says what is true.
+   * After the hooks, so the order of hook calls does not depend on it.
+   */
+  const applicationId = process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID ?? ''
+  const locationId = process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID ?? ''
+  if (!applicationId || !locationId) {
+    return (
+      <div className='text-muted-1 text-sm py-4'>
+        Card payment is not available yet.
+      </div>
+    )
+  }
+
   return (
     <PaymentForm
       /**
        * Identifies the calling form with a verified application ID generated from
        * the Square Application Dashboard.
        */
-      applicationId={process.env.NEXT_PUBLIC_SQUARE_APPLICATION_ID ?? ''}
+      applicationId={applicationId}
       /**
        * Invoked when payment form receives the result of a tokenize generation
        * request. The result will be a valid credit card or wallet token, or an error.
@@ -144,7 +167,7 @@ const PayWithCard: React.FC<PaymentMethodComponentProps> = observer(({
        * Identifies the location of the merchant that is taking the payment.
        * Obtained from the Square Application Dashboard - Locations tab.
        */
-      locationId={process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID ?? ''}
+      locationId={locationId}
     >
       <ApplyTypography className='flex flex-col mt-6 gap-1'>
         {transactionStatus === 'paid' ? (
