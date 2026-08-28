@@ -117,16 +117,30 @@ const Column = ({
     ? cn('items-start', spec('mobile-vert-center') ? 'justify-center' : 'justify-start')
     : cn(
         spec('right') ? 'items-end' : spec('center') ? 'items-center' : 'items-start',
-        spec('bottom') ? 'justify-end' : spec('vert-center') ? 'justify-center' : 'justify-start',
+        // CENTRED unless asked otherwise. A screenful is a full viewport tall
+        // whatever it holds, so a section with 430px of content used to leave
+        // 470px of void beneath it — measured across the lux home page at 6-25%
+        // of each frame covered. The base class on this column already said
+        // `justify-center`; this line was overriding it to the top on every
+        // slide that had not opted in. `vert-top` opts out.
+        spec('bottom') ? 'justify-end' : spec('vert-top') ? 'justify-start' : 'justify-center',
         // Right-aligned running text is hard to read at phone widths, so this
         // is a desktop-only hint on purpose.
         spec('text-align-right') ? 'text-right' : 'text-left',
       )
 
-  // h-full is what makes the vertical placement above mean anything — without a
-  // height there is no free space for `justify-*` to distribute.
+  // `self-stretch` is what makes the vertical placement above mean anything.
+  // `h-full` alone did not: `height: 100%` resolves against a parent's DEFINITE
+  // height, and every ancestor here has only `min-height: 100vh` — so it came
+  // out `auto`, the column was as tall as its content, and there was no free
+  // space for `justify-*` to distribute. Measured on the key-features slide: a
+  // 298px column inside a 900px section, content at the top, 470px of void
+  // under it. Stretching along the cross axis has no such precondition — but it
+  // only applies while the cross size is AUTO, so `h-full` had to go rather
+  // than sit beside it: a percentage height that resolves to auto is still a
+  // specified value, and it switched the stretch off.
   return (
-    <Box className={cn('flex flex-col justify-center h-full', place, className)}>
+    <Box className={cn('flex flex-col justify-center self-stretch', place, className)}>
       <Blocks blocks={blocks} agent={agent} />
     </Box>
   )
@@ -225,7 +239,14 @@ export const ScreenfulBlockComponent = ({
       tag="section"
       {...(b.anchorId ? { id: b.anchorId } : {})}
       className={cn(
-        snapTile ? 'snap-start snap-always h-[100vh]' : 'min-h-screen',
+        // A screenful is a screen tall when it is a SLIDE — a snap stop has to
+        // be exactly a viewport or it can never be scrolled to, and a section
+        // with a banner behind it needs the height to show the banner. A plain
+        // section of copy does not: forcing it left the lux home page 13,868px
+        // long with 3-25% of each screenful covered, which reads as a site that
+        // failed to load rather than one with room to breathe. Its own height
+        // plus the vertical padding already in `gutters` is the whole design.
+        snapTile ? 'snap-start snap-always h-[100vh]' : b.banner ? 'min-h-screen' : '',
         bottom && 'flex flex-col',
         className,
       )}
@@ -255,7 +276,7 @@ export const ScreenfulBlockComponent = ({
             !spec('full-screen-width') && 'max-w-[var(--frame)]',
               gutters,
               agent && agent !== 'desktop' && 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8',
-              snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : 'flex min-h-screen w-full',
+              snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : cn('flex w-full', b.banner && 'min-h-screen'),
               contentClassName,
               vertCenter && cn('self-center', oneColumn && 'py-0'),
             )}
