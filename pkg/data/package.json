@@ -55,11 +55,11 @@
     "@hanzogui/lucide-icons-2": ">=7.3.0"
   },
   "peerDependencies": {
-    "@hanzo/gui": ">=7.2.2",
+    "@hanzo/gui": ">=8.3.0",
     "react": ">=19"
   },
   "devDependencies": {
-    "@hanzo/gui": "7.3.0",
+    "@hanzo/gui": "catalog:",
     "@hanzogui/config": "7.3.0",
     "@hanzogui/core": "7.3.0",
     "@hanzogui/web": "7.3.0",

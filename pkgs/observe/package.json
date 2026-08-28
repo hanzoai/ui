@@ -64,7 +64,7 @@
     }
   },
   "dependencies": {
-    "@hanzo/event": "^0.3.28"
+    "@hanzo/event": "catalog:"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

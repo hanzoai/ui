@@ -54,8 +54,8 @@
     }
   },
   "dependencies": {
-    "@hanzo/event": "^0.3.28",
-    "@hanzo/observe": "^0.1.0"
+    "@hanzo/event": "catalog:",
+    "@hanzo/observe": "catalog:"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0"
