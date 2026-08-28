@@ -38,7 +38,7 @@
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true"
   },
   "peerDependencies": {
-    "@hanzo/commerce": "^7.3.0",
+    "@hanzo/commerce": ">=7.7.2",
     "lucide-react": ">=0.456.0",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",

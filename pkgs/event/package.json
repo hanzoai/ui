@@ -82,6 +82,6 @@
     "vitest": "^4.1.0"
   },
   "dependencies": {
-    "@hanzo/events": "^0.2.1"
+    "@hanzo/events": "catalog:"
   }
 }

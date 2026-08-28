@@ -42,7 +42,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzo/design": "^0.5.21"
+    "@hanzo/design": "catalog:"
   },
   "peerDependencies": {
     "react": ">=19"

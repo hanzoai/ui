@@ -64,8 +64,8 @@
     }
   },
   "dependencies": {
-    "@hanzo/event": "^0.3.28",
-    "@hanzo/observe": "^0.1.0"
+    "@hanzo/event": "catalog:",
+    "@hanzo/observe": "catalog:"
   },
   "peerDependencies": {
     "@tauri-apps/api": ">=1.0.0",
