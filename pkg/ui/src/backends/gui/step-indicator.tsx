@@ -1,5 +1,6 @@
 'use client'
 
+import { View } from '@hanzo/gui'
 /**
  * StepIndicator — how far along a sequence you are.
  *
@@ -48,7 +49,7 @@ export const StepIndicator = ({
       {steps.map((name, i) => {
         const done = i <= currentStep
         return (
-          <Box key={name} className="grid justify-items-center gap-1 relative">
+          <View key={name} display="grid" justifyItems="center" gap={4} position="relative">
             {/* The rule to the NEXT dot, drawn from this one. Behind the dot,
                 and absent on the last step, which has nothing to join. */}
             {i < steps.length - 1 && (
@@ -71,7 +72,7 @@ export const StepIndicator = ({
             <Box tag="span" className={done ? 'text-foreground' : 'text-muted-foreground'}>
               {name}
             </Box>
-          </Box>
+          </View>
         )
       })}
     </Box>

@@ -1,5 +1,6 @@
 'use client'
 
+import { XStack, YStack } from '@hanzo/gui'
 /**
  * The gallery — every component @hanzo/ui exports, rendered once, in every
  * variant that carries its own styling.
@@ -749,12 +750,12 @@ export const Gallery = () => (
     {/* Box renders whatever `tw` read out of the classes, so the gallery has to
         carry a real utility string or none of those rules get written. */}
     <Section name="box">
-      <Box className="flex items-center gap-4 px-6 py-3 rounded-lg border">
+      <XStack items="center" gap={16} px={24} py={12} rounded="var(--radius-lg, 0.75rem)" borderWidth={1}>
         <CardTitle>utility classes</CardTitle>
-      </Box>
-      <Box className="flex-col gap-2 max-w-3xl mx-auto overflow-hidden">
+      </XStack>
+      <YStack gap={8} maxW={768} ml="auto" mr="auto" overflow="hidden">
         <CardTitle>column</CardTitle>
-      </Box>
+      </YStack>
     </Section>
 
   </div>

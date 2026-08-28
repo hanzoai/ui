@@ -440,3 +440,32 @@ describe('a square is written once, not twice', () => {
     }
   })
 })
+
+describe('the transform family is whole', () => {
+  // `translate-*` was here alone, so `active:scale-95` — the commonest press
+  // affordance there is — converted to nothing and the button did not move.
+  it.each([
+    ['scale-95', { transform: 'scale(0.95)' }],
+    ['scale-x-50', { transform: 'scaleX(0.5)' }],
+    ['rotate-45', { transform: 'rotate(45deg)' }],
+    ['transform-gpu', { transform: 'translateZ(0)' }],
+  ])('%s', (cls, want) => {
+    expect(tw(cls).props).toEqual(want)
+  })
+
+  it('carries into a state variant', () => {
+    expect(tw('active:scale-95').props).toEqual({ pressStyle: { transform: 'scale(0.95)' } })
+  })
+})
+
+describe('a long word does not decide the page width', () => {
+  it.each([
+    ['break-words', { overflowWrap: 'break-word' }],
+    ['break-all', { wordBreak: 'break-all' }],
+    ['basis-full', { flexBasis: '100%' }],
+    ['will-change-transform', { willChange: 'transform' }],
+    ['mix-blend-screen', { mixBlendMode: 'screen' }],
+  ])('%s', (cls, want) => {
+    expect(tw(cls).props).toEqual(want)
+  })
+})
