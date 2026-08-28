@@ -459,14 +459,8 @@
 
 /* A top-level nav item.
  *
- * `navigationMenuTriggerStyle()` returned this name and nothing declared it, so
- * every trigger in the estate rendered as bare text: the lux.network nav read as
- * one run-together string — "AI Cards Ecosystem Network Resources" — because the
- * only thing separating the items was the list's 4px gap.
- *
- * A class name is a string and a string always compiles, which is why this
- * shipped. `prose.test.ts` now diffs the names the components use against the
- * names the sheets declare, so a rule cannot go missing again.
+ * `navigationMenuTriggerStyle()` returns this name, so a trigger with no rule
+ * behind it is bare text separated only by the list's gap.
  *
  * Padding rather than a wider gap: the padding is also the hit area, and a nav
  * item wants a target bigger than its glyphs. */
