@@ -519,7 +519,14 @@ function one(c: string): Props | null {
       return col ? { borderColor: col } : null
     }
     case 'opacity': return /^\d+$/.test(v) ? { opacity: +v / 100 } : null
-    case 'z': return /^\d+$/.test(v) ? { zIndex: +v } : null
+    // A rung OR a value written out. `z-[60]` is how anything above the named
+    // scale is spelled, and it was unread — so a phone menu asking to sit over a
+    // `z-50` header got no z-index at all, and the header kept the click.
+    case 'z': {
+      if (/^-?\d+$/.test(v)) return { zIndex: +v }
+      const arb = /^\[(-?\d+)]$/.exec(v)
+      return arb ? { zIndex: +arb[1] } : null
+    }
     // Every cursor, not a list of them. Tailwind's names ARE the CSS values —
     // `grab`, `not-allowed`, `zoom-in` — so enumerating them would be copying
     // the CSS spec into a table that then goes stale one keyword at a time.

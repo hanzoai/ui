@@ -179,10 +179,13 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
   const text: Record<string, unknown> = {}
   for (const k of TEXT_PROPS) if (k in props) { text[k] = props[k]; delete props[k] }
   for (const k of CSS_PROPS) if (k in props) { text[k] = props[k]; delete props[k] }
-  // A div's line-height comes from the cascade; gui's Stack stamps its own, so
-  // a converted box grew a few pixels per line of text. Stated only when no
-  // class said otherwise, so `leading-relaxed` still wins.
-  if (!('lineHeight' in text)) text.lineHeight = 'inherit'
+  // NOT stated inline. A div's line-height comes from the cascade and gui's
+  // Stack stamps its own, so a converted box grows a few pixels per line — but
+  // writing `line-height: inherit` as an inline style beat EVERY selector,
+  // including the app's own vocabulary. Measured: a site whose `.display` class
+  // asked for 1.15 rendered its 40px headings on a 20px leading, two lines
+  // overlapping, and no stylesheet could reach it. The default lives in
+  // `styles/base.css` instead, where a class can still win.
   // A list item needs `display: list-item` or it loses its marker, and gui's
   // display prop has no such value — its set is block/contents/flex/inline/…
   // So it rides as a plain style, where it also outranks the class gui emits.
