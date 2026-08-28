@@ -126,9 +126,19 @@ body {
    a 52px display line and a 17px sub-head: 8px under the display line read as
    the byline touching it. `em` here is the heading's own size, so the ratio
    holds at every rung. A caller setting its own margin still wins. */
-.hz-prose > h1 { margin-block-end: .34em }
-.hz-prose > h2 { margin-block-end: .38em }
-.hz-prose > h3 { margin-block-end: .42em }
+.hz-prose > h1 { margin-block-end: .5em }
+.hz-prose > h2 { margin-block-end: .55em }
+.hz-prose > h3 { margin-block-end: .6em }
 .hz-prose > h4,
 .hz-prose > h5,
-.hz-prose > h6 { margin-block-end: .5em }
+.hz-prose > h6 { margin-block-end: .75em }
+
+/* Space ABOVE a heading is larger than the space below it — that asymmetry is
+   what groups a heading with the text it introduces rather than the text it
+   follows. Not applied to the first child, which has nothing to separate from. */
+.hz-prose > h1:not(:first-child) { margin-block-start: 1.1em }
+.hz-prose > h2:not(:first-child) { margin-block-start: 1.2em }
+.hz-prose > h3:not(:first-child),
+.hz-prose > h4:not(:first-child),
+.hz-prose > h5:not(:first-child),
+.hz-prose > h6:not(:first-child) { margin-block-start: 1.4em }

@@ -7,10 +7,21 @@ import type { EnhHeadingBlock } from './def'
 import { type BlockComponentProps, has } from './spec'
 
 const DEFAULT = {
-  preheading: { tag: 'h4', mb: 2 },
-  heading: { tag: 'h1', mb: 2 },
+  preheading: { tag: 'h4' },
+  heading: { tag: 'h1' },
   byline: { tag: 'h6' },
 } as const
+
+/**
+ * The margin under a part, ONLY when the content asked for one.
+ *
+ * There used to be a default of `mb-2` here, which is 8px — and 8px is a
+ * reasonable gap under a 15px line and far too little under a 52px one. Worse,
+ * it was emitted always, so it outranked the proportional margin the prose
+ * sheet sets per rung and every heading in the estate got the same 8px whatever
+ * its size. Absent, the sheet decides; present, the content still wins.
+ */
+const gap = (mb: number | undefined) => (mb === undefined ? '' : `mb-${mb}`)
 
 /** 0 is a paragraph; 1–6 are the heading tags. */
 const tag = (level: number | undefined, fallback: string): string =>
@@ -84,12 +95,12 @@ export const EnhHeadingBlockComponent = ({
   const parts = [
     b.preheading && {
       Tag: tag(b.preheading.level, DEFAULT.preheading.tag),
-      cls: cn(`mb-${b.preheading.mb ?? DEFAULT.preheading.mb}`, at.heading, headFont),
+      cls: cn(gap(b.preheading.mb), at.heading, headFont),
       text: b.preheading.text,
     },
     {
       Tag: tag(b.heading.level, DEFAULT.heading.tag),
-      cls: cn(`mb-${b.heading.mb ?? DEFAULT.heading.mb}`, at.heading),
+      cls: cn(gap(b.heading.mb), at.heading),
       text: b.heading.text,
     },
     b.byline && {
