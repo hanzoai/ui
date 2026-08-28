@@ -276,7 +276,13 @@ export const ScreenfulBlockComponent = ({
             !spec('full-screen-width') && 'max-w-[var(--frame)]',
               gutters,
               agent && agent !== 'desktop' && 'pt-15 sm:pt-17 pb-0 px-3 sm:px-8',
-              snapTile ? 'absolute left-0 right-0 top-0 bottom-0' : cn('flex w-full', b.banner && 'min-h-screen'),
+              // `flex` on BOTH branches. A snap tile's content box is absolutely
+            // positioned and so has a definite height, but it was a BLOCK — and
+            // `align-self` means nothing to a block's child, so the column stayed
+            // 77px tall at the top of a 900px slide.
+            snapTile
+              ? 'absolute left-0 right-0 top-0 bottom-0 flex'
+              : cn('flex w-full', b.banner && 'min-h-screen'),
               contentClassName,
               vertCenter && cn('self-center', oneColumn && 'py-0'),
             )}
