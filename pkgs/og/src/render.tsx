@@ -7,7 +7,7 @@ const TEXT = '#ffffff'
 const MUTED = '#888888'
 const BORDER = '#2a2a2a'
 const CARD = '#111111'
-const FONT = 'Inter, system-ui, sans-serif'
+const FONT = 'Zen, system-ui, sans-serif'
 const MONO = 'JetBrains Mono, Menlo, monospace'
 
 function BrandMark({ svgIcon, accentColor }: { svgIcon?: string; accentColor: string }) {
