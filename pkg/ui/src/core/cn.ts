@@ -62,10 +62,8 @@ export function capitalize(s: string): string {
  *   })
  *   chip({ tone: 'warn' })      // 'inline-flex rounded bg-amber-500'
  *
- * A lookup and a join. It reads exactly like `cva`, whose shape every component
- * in this estate is already written against, so adopting it is a rename — but it
- * is fifteen lines beside `cn` rather than a dependency, and one of the two
- * class-name libraries this package used to carry to do what it already did.
+ * A lookup and a join — the shape every component in this estate is written
+ * against, in fifteen lines beside `cn` and with no dependency.
  */
 export type Variants = Record<string, Record<string, ClassValue>>
 

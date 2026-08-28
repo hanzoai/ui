@@ -175,8 +175,7 @@ a svg,
      the initial `flex-shrink: 1` lets one shrink to fit — so a button whose
      padding leaves less room than the icon needs resolves by making the ICON
      zero-wide rather than the button wider. Nothing reports it: the element is
-     present, visible, correctly coloured, and 0px across. Measured on the lux
-     blog's back button, which rendered as an empty outlined square with the
-     arrow's paths laid out inside a box clipped to nothing. */
+     present, visible, correctly coloured, and 0px across — an empty outlined
+     square with the icon's paths laid out inside a box clipped to nothing. */
   flex-shrink: 0;
 }
