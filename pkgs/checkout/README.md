@@ -160,7 +160,7 @@ checkout.openPopup(session.id)
   primaryColor: '#0066FF',
   backgroundColor: '#FFFFFF',
   borderRadius: '8px',
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Zen, sans-serif',
   variables: {
     '--hanzo-spacing': '16px'
   }
@@ -194,7 +194,7 @@ The checkout widget uses CSS custom properties for easy theming:
   --hanzo-text-secondary: #666666;
   --hanzo-border: #E5E5E5;
   --hanzo-radius: 8px;
-  --hanzo-font: 'Inter', -apple-system, sans-serif;
+  --hanzo-font: 'Zen', -apple-system, sans-serif;
 }
 ```
 
