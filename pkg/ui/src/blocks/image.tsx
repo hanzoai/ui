@@ -1,3 +1,4 @@
+'use client'
 import { View, YStack } from '@hanzo/gui'
 import * as React from 'react'
 

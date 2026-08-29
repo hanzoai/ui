@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * MediaStack — one subject, in whatever media the content happens to have.
@@ -28,11 +29,8 @@ import { VideoPlayer } from './video'
  * image occupies the space it draws in, so a swatch at 0.25 leaves room around
  * it instead of overlapping its neighbours the way `transform: scale` would.
  */
-export const fit = (dim: Dimensions, to: Dimensions, scale = 1): Dimensions => {
-  if (!dim?.w || !dim?.h) return to
-  const r = Math.min(to.w / dim.w, to.h / dim.h) * scale
-  return { w: Math.round(dim.w * r), h: Math.round(dim.h * r) }
-}
+import { fit } from '../../style'
+export { fit }
 
 export type MediaStackProps = Omit<React.ComponentProps<typeof Box>, 'children'> & {
   media: MediaStackDef

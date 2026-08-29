@@ -69,12 +69,40 @@ function guiPackages(dir) {
   return []
 }
 
+/**
+ * An imported `.svg` is a COMPONENT.
+ *
+ * Without a loader saying so the import resolves to the asset descriptor Next
+ * hands `next/image`, and rendering it reads: "Element type is invalid: expected
+ * a string or a class/function but got: object" — which names no file and no
+ * import. Every site that draws an inline mark carried its own copy of this
+ * rule, for webpack only, so the same page compiled under `next dev` and threw
+ * under a Turbopack build.
+ *
+ * A site that imports no SVG matches nothing and pays nothing.
+ */
+const SVG_LOADER = '@svgr/webpack'
+
 /** Webpack's half. */
 function webpackGui(config) {
   config.resolve = config.resolve || {}
   config.resolve.alias = { ...config.resolve.alias, ...ALIAS }
   const had = config.resolve.extensions || ['.tsx', '.ts', '.jsx', '.js']
   config.resolve.extensions = [...EXTENSIONS, ...had.filter((e) => !EXTENSIONS.includes(e))]
+
+  config.module = config.module || {}
+  config.module.rules = config.module.rules || []
+  if (!config.module.rules.some((r) => String(r && r.use).includes(SVG_LOADER))) {
+    // Next's own rule still answers `foo.svg?url`, so a site that wants the
+    // file rather than the drawing keeps it by saying so at the import.
+    const asset = config.module.rules.find((r) => r && r.test && r.test.test && r.test.test('.svg'))
+    if (asset) asset.resourceQuery = { ...(asset.resourceQuery || {}), not: [/^$/] }
+    config.module.rules.push({
+      test: /\.svg$/i,
+      resourceQuery: { not: [/url/] },
+      use: [SVG_LOADER],
+    })
+  }
   return config
 }
 
@@ -115,6 +143,10 @@ function withGui(nextConfig = {}, dir = process.cwd()) {
         ...EXTENSIONS,
         ...(turbo.resolveExtensions || ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.json']),
       ],
+      rules: {
+        '*.svg': { loaders: [SVG_LOADER], as: '*.js' },
+        ...turbo.rules,
+      },
     },
     webpack(config, options) {
       return webpackGui(theirs ? theirs(config, options) : config)

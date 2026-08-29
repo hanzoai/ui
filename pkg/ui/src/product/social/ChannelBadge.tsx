@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * ChannelBadge — the ONE way a social network is marked (brand color + glyph +

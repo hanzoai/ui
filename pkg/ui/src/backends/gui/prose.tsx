@@ -1,3 +1,4 @@
+'use client'
 /**
  * ApplyTypography — turn on running-text styling for a subtree.
  *

@@ -1,3 +1,4 @@
+'use client'
 import type { ComponentType } from 'react'
 import type { GetThemeValueForKey } from '@hanzo/gui'
 

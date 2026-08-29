@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Breadcrumb — where you are, in a trail.

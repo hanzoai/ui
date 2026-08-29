@@ -1,3 +1,4 @@
+'use client'
 
 /** Slider — 6px track, 16px thumb, `touch()` to the 44px floor on every target. */
 import { Slider as GuiSlider } from '@hanzo/gui'

@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Button — the gui-backend original.
@@ -178,16 +179,8 @@ const Frame = styled(GuiButton.Frame, {
  * A stable class handle for hosts that hook buttons from CSS. Styling lives in
  * the tokens; this only names the variant and size.
  */
-export const buttonVariants = ({
-  variant,
-  size,
-  className,
-}: { variant?: ButtonVariant | null; size?: ButtonSize | null; className?: string } = {}) =>
-  // Variant and size share the `btn-` namespace, so the two defaults collide on
-  // `btn-default`. A Set emits it once; no name is used by both a variant and a
-  // size, so nothing else can merge.
-  [...new Set([`btn`, `btn-${variant ?? 'default'}`, `btn-${size ?? 'default'}`, className].filter(Boolean))]
-    .join(' ')
+import { buttonVariants } from '../../style'
+export { buttonVariants }
 
 export type ButtonProps = Omit<
   ComponentProps<typeof Frame>,
