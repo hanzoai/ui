@@ -255,7 +255,8 @@
     "@hanzo/font": "catalog:",
     "@hanzo/logo": "catalog:",
     "@hanzo/products": "catalog:",
-    "react-native-svg": "npm:react-native-svg-web@^1.0.9"
+    "react-native-svg": "npm:react-native-svg-web@^1.0.9",
+    "react-native-web": "^0.21"
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.2.3",
@@ -274,8 +275,7 @@
     "next-themes": ">=0.2.1",
     "react": ">=19.2.8",
     "react-dom": ">=19.2.8",
-    "react-hook-form": ">=7",
-    "react-native-web": ">=0.21"
+    "react-hook-form": ">=7"
   },
   "peerDependenciesMeta": {
     "@hanzo/canvas": {
@@ -297,9 +297,6 @@
       "optional": true
     },
     "next-themes": {
-      "optional": true
-    },
-    "react-native-web": {
       "optional": true
     },
     "react-hook-form": {
