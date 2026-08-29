@@ -7,14 +7,6 @@ packages:
   - "!**/temp/**"
   - "!deprecated/**"
 
-# esbuild's install script is what puts its platform binary in place, and the
-# builds here run on it — a dependency that resolves but cannot transform is no
-# use. pnpm 11 refuses an unapproved install script fatally (strictDepBuilds
-# defaults on), so without this the publish job exits at ERR_PNPM_IGNORED_BUILDS
-# before it reads a manifest.
-allowBuilds:
-  esbuild: true
-
 # OUR OWN PACKAGES ARE NOT A SUPPLY-CHAIN WINDOW.
 #
 # The minimum-release-age gate exists to keep a package published minutes ago
@@ -84,5 +76,10 @@ public-hoist-pattern:
   - 'zod'
   - '@hookform/resolvers'
 
+# esbuild's install script is what puts its platform binary in place, and the
+# builds here run on it — a dependency that resolves but cannot transform is no
+# use. pnpm 11 refuses an unapproved script fatally (strictDepBuilds defaults
+# on) and it wrote this key unanswered, so the install stopped at
+# ERR_PNPM_IGNORED_BUILDS before reading a manifest.
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
