@@ -70,7 +70,7 @@
     "react-square-web-payments-sdk": "^3.2.4"
   },
   "peerDependencies": {
-    "@hanzo/ui": ">=8.26.5",
+    "@hanzo/ui": ">=8.27.0",
     "@hookform/resolvers": ">=5",
     "@radix-ui/react-radio-group": ">=1",
     "lucide-react": ">=1",
