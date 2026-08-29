@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/vite",
   "version": "0.1.1",
-  "description": "The Vite config every Hanzo app shares — one runtime, one compiler, one way.",
+  "description": "The Vite config every Hanzo app shares \u2014 one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,11 +20,11 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "vite": ">=6"
+    "vite": ">=8"
   },
   "devDependencies": {
     "typescript": "catalog:",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.11"
   },
   "publishConfig": {
     "access": "public"

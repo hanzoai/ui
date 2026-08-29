@@ -27,15 +27,15 @@
   },
   "peerDependencies": {
     "@hanzo/gui": ">=8.3.0",
-    "@hanzogui/lucide-icons-2": ">=7.2.2",
+    "@hanzogui/lucide-icons-2": "8.3.1",
     "react": ">=19.2.8"
   },
   "devDependencies": {
     "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "8.1.0",
-    "@hanzogui/core": "8.1.0",
-    "@hanzogui/lucide-icons-2": "8.1.0",
-    "@hanzogui/web": "8.1.0",
+    "@hanzogui/config": "8.3.1",
+    "@hanzogui/core": "8.3.1",
+    "@hanzogui/lucide-icons-2": "8.3.1",
+    "@hanzogui/web": "8.3.1",
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:"
