@@ -2,13 +2,13 @@
   "name": "@hanzo/ui",
   "version": "8.27.1",
   "type": "module",
-  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "node": {
         "import": "./dist/index.node.js",
-        "require": "./dist/index.cjs"
+        "require": "./dist/index.node.cjs"
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
@@ -254,7 +254,8 @@
     "@hanzo/design": "catalog:",
     "@hanzo/font": "catalog:",
     "@hanzo/logo": "catalog:",
-    "@hanzo/products": "catalog:"
+    "@hanzo/products": "catalog:",
+    "react-native-svg": "npm:react-native-svg-web@^1.0.9"
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.2.3",

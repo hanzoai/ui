@@ -34,11 +34,11 @@ catalog:
   '@hanzo/event': 0.3.37
   '@hanzo/events': 0.2.2
   '@hanzo/font': 1.9.2
-  '@hanzo/gui': 8.2.1
+  '@hanzo/gui': 8.3.0
   '@hanzo/logo': 1.0.26
   '@hanzo/observe': 0.1.8
   '@hanzo/products': 0.2.6
-  '@hanzo/ui': 8.25.0
+  '@hanzo/ui': 8.25.2
   '@hanzo/usage': 0.1.7
   '@types/node': 26.4.0
   '@types/react': 19.2.18
