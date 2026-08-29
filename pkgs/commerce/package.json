@@ -65,9 +65,9 @@
     }
   },
   "dependencies": {
-    "ethers": "^6.17.0",
-    "next-usequerystate": "^1.20.0",
-    "react-square-web-payments-sdk": "^3.2.4"
+    "ethers": "catalog:",
+    "next-usequerystate": "catalog:",
+    "react-square-web-payments-sdk": "catalog:"
   },
   "peerDependencies": {
     "@hanzo/ui": ">=8.27.0",
@@ -87,7 +87,7 @@
     "@hanzo/ui": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "cross-fetch": "^4.1.0",
+    "cross-fetch": "catalog:",
     "typescript": "catalog:"
   },
   "main": "./dist/index.js",

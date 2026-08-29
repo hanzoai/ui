@@ -7,12 +7,12 @@
   "dependencies": {
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "catalog:"
   },
   "devDependencies": {
-    "css-loader": "^7.1.5",
-    "style-loader": "^4.0.0",
-    "webpack": "^5.110.1",
-    "webpack-cli": "^7.2.3"
+    "css-loader": "catalog:",
+    "style-loader": "catalog:",
+    "webpack": "catalog:",
+    "webpack-cli": "catalog:"
   }
 }

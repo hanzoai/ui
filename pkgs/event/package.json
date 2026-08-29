@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/event",
   "version": "0.3.37",
-  "description": "Hanzo Event — the ONE telemetry client. Emits pageview/event/identify/group to the Hanzo Cloud event stream (POST /v1/event), AND reports errors to Sentry as real Sentry envelopes — the error plane needs a DSN, without one nothing reaches Sentry. First-touch attribution, beacon-on-unload, auto error capture, client-side secret/PII scrubbing, a shared event + goal vocabulary. Subsumes @sentry.",
+  "description": "Hanzo Event \u2014 the ONE telemetry client. Emits pageview/event/identify/group to the Hanzo Cloud event stream (POST /v1/event), AND reports errors to Sentry as real Sentry envelopes \u2014 the error plane needs a DSN, without one nothing reaches Sentry. First-touch attribution, beacon-on-unload, auto error capture, client-side secret/PII scrubbing, a shared event + goal vocabulary. Subsumes @sentry.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -77,9 +77,9 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "react": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@hanzo/events": "catalog:"

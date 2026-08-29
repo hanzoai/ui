@@ -9,12 +9,12 @@
   "dependencies": {
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-native-web": "^0.21.2",
+    "react-native-web": "catalog:",
     "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "8.3.1"
+    "@hanzogui/config": "catalog:"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.1.1",
-    "vite": "^8.2.2"
+    "@vitejs/plugin-react": "catalog:",
+    "vite": "catalog:"
   }
 }

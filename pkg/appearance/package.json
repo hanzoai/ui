@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/appearance",
   "version": "0.2.2",
-  "description": "A person's own reading of the Hanzo design system — type size, density, accent — stored, applied and adjustable.",
+  "description": "A person's own reading of the Hanzo design system \u2014 type size, density, accent \u2014 stored, applied and adjustable.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -51,10 +51,10 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^30.0.1",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   }
 }

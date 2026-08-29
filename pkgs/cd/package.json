@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/cd",
   "version": "0.1.2",
-  "description": "Hanzo GitOps — a presentational, data-prop-driven React surface for a full CD/GitOps console: an applications list, an app detail shell, a health/sync color-coded resource-tree topology (reusing @hanzo/canvas's deterministic layout), resource node info (live manifest, desired-vs-live diff, events, logs) and sync/rollback panels. A clean-room port of the Argo CD UI (argoproj/argo-cd, Apache-2.0). Backend-agnostic: the host wires /v1/gitops and passes typed props.",
+  "description": "Hanzo GitOps \u2014 a presentational, data-prop-driven React surface for a full CD/GitOps console: an applications list, an app detail shell, a health/sync color-coded resource-tree topology (reusing @hanzo/canvas's deterministic layout), resource node info (live manifest, desired-vs-live diff, events, logs) and sync/rollback panels. A clean-room port of the Argo CD UI (argoproj/argo-cd, Apache-2.0). Backend-agnostic: the host wires /v1/gitops and passes typed props.",
   "type": "module",
   "license": "Apache-2.0",
   "author": "Hanzo AI <dev@hanzo.ai>",
@@ -72,14 +72,14 @@
   },
   "devDependencies": {
     "@hanzo/canvas": "workspace:*",
-    "@testing-library/react": "^16.3.3",
+    "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "happy-dom": "^20.12.0",
+    "happy-dom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   }
 }
