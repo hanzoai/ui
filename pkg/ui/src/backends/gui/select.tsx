@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Select — the compound picker on @hanzogui/select.

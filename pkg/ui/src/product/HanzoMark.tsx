@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * The Hanzo "H" — the house mark, static, inheriting `currentColor`.

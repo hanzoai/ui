@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * FadeIn — the ONE entrance animation for the console.

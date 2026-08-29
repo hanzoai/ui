@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * SocialSummaryBar — the per-org social roll-up (posts / scheduled / published /

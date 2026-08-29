@@ -443,13 +443,13 @@ export class Commerce {
     params: { user: string; currency?: string; amount: number; notes?: string; tags?: string[]; expiresIn?: string },
     token?: string,
   ): Promise<Transaction> {
-    return this.request<Transaction>('/v1/billing/deposit', {
+    return this.request<Transaction>('/v1/billing/crypto/deposit', {
       method: 'POST', body: params, token,
     })
   }
 
   async grantStarterCredit(user: string, token?: string): Promise<Transaction> {
-    return this.request<Transaction>('/v1/billing/credit', {
+    return this.request<Transaction>('/v1/billing/credits', {
       method: 'POST', body: { user }, token,
     })
   }
@@ -608,7 +608,7 @@ export class Commerce {
    * Returns the referral code/link the user can share.
    */
   async getOrCreateReferrer(userId: string, token?: string): Promise<Referrer> {
-    return this.request<Referrer>('/v1/referrer', {
+    return this.request<Referrer>('/v1/referral', {
       method: 'POST', body: { userId }, token,
     })
   }

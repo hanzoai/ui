@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Glass — the ONE frosted material, for FLOATING chrome only (menus, dialogs,

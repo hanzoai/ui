@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Checkbox — 16px box, `touch()` to the 44px floor on web and native alike.

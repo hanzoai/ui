@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * TooltipAnchor — a hint on one element, in one prop.

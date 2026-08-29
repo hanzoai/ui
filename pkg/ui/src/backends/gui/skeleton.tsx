@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Skeleton — the shape of content that has not arrived.

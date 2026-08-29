@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * SiteFooter — the ONE footer, rendering `@hanzo/products`' `FOOTER`.

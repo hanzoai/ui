@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * The ONE way this backend does a drag, and the ONE way it meets the 44px touch

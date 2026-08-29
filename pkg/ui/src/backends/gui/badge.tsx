@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Badge — the gui-backend original.

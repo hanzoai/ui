@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * LAYOUT — the primitives an app lays a screen out with.

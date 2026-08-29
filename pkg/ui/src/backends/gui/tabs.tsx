@@ -1,4 +1,3 @@
-'use client'
 
 /** Tabs — `TabsTrigger` is gui's `Tabs.Tab`; rows meet the 44px touch floor. */
 import { Tabs as GuiTabs } from '@hanzo/gui'

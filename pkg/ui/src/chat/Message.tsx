@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Message — one turn in a thread.

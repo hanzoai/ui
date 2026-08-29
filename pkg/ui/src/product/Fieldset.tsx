@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Fieldset — a titled group of settings, and the surface it sits on.
