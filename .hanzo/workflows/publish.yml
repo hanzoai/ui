@@ -116,9 +116,13 @@ jobs:
 
       - uses: pnpm/action-setup@v4
 
+      # 24, because this repo runs pnpm 11 (packageManager) and pnpm 11 imports
+      # node:sqlite. Node 20 has no such module, so `pnpm install` died on
+      # ERR_UNKNOWN_BUILTIN_MODULE before it read a single manifest — every
+      # release since sat unpublished while npmjs served an older one.
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
