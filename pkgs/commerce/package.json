@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.8.0",
+  "version": "7.8.2",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -60,10 +60,11 @@
   },
   "dependencies": {
     "ethers": "^6.17.0",
-    "next-usequerystate": "^1.20.0"
+    "next-usequerystate": "^1.20.0",
+    "react-square-web-payments-sdk": "^3.2.4"
   },
   "peerDependencies": {
-    "@hanzo/ui": ">=8.26.0",
+    "@hanzo/ui": ">=8.26.1",
     "@hookform/resolvers": ">=5",
     "@radix-ui/react-radio-group": ">=1",
     "lucide-react": ">=1",

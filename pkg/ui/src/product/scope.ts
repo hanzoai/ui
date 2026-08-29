@@ -1,3 +1,4 @@
+'use client'
 /**
  * orgScope — the active-organization contract every Hanzo surface shares
  * (hoisted from the console; see hanzoai/ui#36).

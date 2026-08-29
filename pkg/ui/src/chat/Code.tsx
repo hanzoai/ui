@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Code — a labelled, copyable code region.

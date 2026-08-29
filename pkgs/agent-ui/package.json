@@ -101,7 +101,7 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "@hanzo/ui": ">=8.26.0",
+    "@hanzo/ui": ">=8.26.1",
     "@xyflow/react": ">=12",
     "lucide-react": ">=1",
     "react": ">=19.2.8",

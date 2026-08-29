@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * PortalTheme — the ONE fix for "themed content escapes its theme through a portal".

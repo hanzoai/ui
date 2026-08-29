@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Donut — a tiny dependency-free SVG ring for a categorical breakdown

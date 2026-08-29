@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Screen — an app shell, once, so nobody re-derives it.

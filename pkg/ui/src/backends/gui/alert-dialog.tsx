@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * AlertDialog — the modal that INTERRUPTS. It is not a Dialog with different

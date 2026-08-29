@@ -1,3 +1,4 @@
+'use client'
 // The ONE place a shared component says what a user just did.
 //
 // Instrumenting the COMPONENT beats instrumenting 100 apps: a product that
