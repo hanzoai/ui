@@ -27,7 +27,7 @@ on:
 
 jobs:
   detect-changes:
-    runs-on: hanzo-build-linux-amd64
+    runs-on: [hanzo-build-linux-amd64]
     outputs:
       packages: ${{ steps.changed.outputs.packages }}
     steps:
@@ -90,7 +90,7 @@ jobs:
   publish:
     needs: detect-changes
     if: needs.detect-changes.outputs.packages != '[]'
-    runs-on: hanzo-build-linux-amd64
+    runs-on: [hanzo-build-linux-amd64]
     # NO MATRIX, and that is the whole point of this job's shape.
     #
     # This was `strategy.matrix.package: ${{ fromJson(…) }}`, and Hanzo Git
