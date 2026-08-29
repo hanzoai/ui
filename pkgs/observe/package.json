@@ -77,10 +77,10 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "happy-dom": "^20.0.0",
+    "happy-dom": "^20.12.0",
     "react": "catalog:",
     "tsup": "^8.5.1",
     "typescript": "catalog:",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }

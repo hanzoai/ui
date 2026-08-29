@@ -52,7 +52,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzogui/lucide-icons-2": ">=7.3.0"
+    "@hanzogui/lucide-icons-2": "8.3.1"
   },
   "peerDependencies": {
     "@hanzo/gui": ">=8.3.0",
@@ -60,13 +60,13 @@
   },
   "devDependencies": {
     "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "7.3.0",
-    "@hanzogui/core": "7.3.0",
-    "@hanzogui/web": "7.3.0",
+    "@hanzogui/config": "8.3.1",
+    "@hanzogui/core": "8.3.1",
+    "@hanzogui/web": "8.3.1",
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   },
   "publishConfig": {
     "access": "public"

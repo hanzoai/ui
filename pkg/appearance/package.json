@@ -51,10 +51,10 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "react": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.11"
   }
 }
