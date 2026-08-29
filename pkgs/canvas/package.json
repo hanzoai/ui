@@ -51,8 +51,8 @@
   "peerDependencies": {
     "@hanzo/gui": ">=8.3.0",
     "@xyflow/react": ">=12",
-    "react": ">=19",
-    "react-dom": ">=19"
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8"
   },
   "peerDependenciesMeta": {
     "@xyflow/react": {
@@ -64,12 +64,12 @@
     "@hanzogui/config": "8.1.0",
     "@hanzogui/core": "8.1.0",
     "@hanzogui/web": "8.1.0",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@xyflow/react": "^12.11.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "typescript": "^7.0.2"
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:"
   },
   "publishConfig": {
     "access": "public"

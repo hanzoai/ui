@@ -1,11 +1,4 @@
-import { 
-  computed, 
-  makeObservable, 
-  observable, 
-  runInAction, 
-  action,
-  toJS
-} from 'mobx'
+import { action, computed, makeObservable, observable, observableDeep, observableShallow, runInAction, toJS } from 'mobx'
 
 import { computedFn } from 'mobx-utils'
 
@@ -85,9 +78,9 @@ class StandaloneService
         '_promo' | 
         '_cartItems' 
     >(this, {
-      _selectedPaths : observable.deep,
-      _currentItem: observable.shallow,
-      _currentFamily: observable.shallow,
+      _selectedPaths : observableDeep,
+      _currentItem: observableShallow,
+      _currentFamily: observableShallow,
       _promo: observable,
       _cartItems: computed
     })

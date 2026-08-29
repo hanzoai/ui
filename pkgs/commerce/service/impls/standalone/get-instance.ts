@@ -1,12 +1,8 @@
-import { enableStaticRendering } from 'mobx-react-lite'
-
 import type { CommerceService, CommerceConfig } from '../../../types'
 import { StandaloneService }  from './index'
 import { initSelectionUI } from '../../../util'
 
 import { readSnapshot, writeSnapshotsOnChange } from './persistence'
-
-enableStaticRendering(typeof window === "undefined")
 
 const _LOG = false
 const _log = (s: string) => {
@@ -16,7 +12,6 @@ const _log = (s: string) => {
   console.log(s)
 }
 
-// https://dev.to/ivandotv/mobx-server-side-rendering-with-next-js-4m18
 
 let instance: StandaloneService | undefined =  undefined
 

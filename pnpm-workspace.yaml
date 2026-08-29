@@ -12,7 +12,7 @@ catalog:
   '@hanzo/brand': 1.4.8
   '@hanzo/canvas': 0.2.3
   '@hanzo/cd': 0.1.2
-  '@hanzo/commerce': 7.7.2
+  '@hanzo/commerce': 7.7.5
   '@hanzo/dashboard': 0.2.0
   '@hanzo/data': 1.2.4
   '@hanzo/design': 0.5.24
@@ -25,3 +25,38 @@ catalog:
   '@hanzo/products': 0.2.6
   '@hanzo/ui': 8.25.0
   '@hanzo/usage': 0.1.7
+  '@types/node': 26.4.0
+  '@types/react': 19.2.18
+  '@types/react-dom': 19.2.5
+  'next': 16.3.3
+  'react': 19.2.8
+  'react-dom': 19.2.8
+  'typescript': 7.0.2
+
+overrides:
+  'got@<11.8.5': '>=11.8.5'
+  'axios@>=0.8.1 <0.28.0': '>=0.28.0'
+  'undici@>=6.0.0 <6.21.1': '>=6.21.1'
+  'esbuild@<=0.24.2': '>=0.25.0'
+  'axios@<0.30.0': '>=0.30.0'
+  'undici@>=6.0.0 <6.21.2': '>=6.21.2'
+  'cross-spawn@<6.0.6': '>=6.0.6'
+  'prismjs@<1.30.0': '>=1.30.0'
+  'axios@<0.30.2': '>=0.30.2'
+  'happy-dom@<20.0.0': '>=20.0.0'
+  'happy-dom@<20.0.2': '>=20.0.2'
+  'vite@>=5.2.6 <=5.4.20': '>=5.4.21'
+  'vite@>=7.1.0 <=7.1.10': '>=7.1.11'
+  'validator@<13.15.20': '>=13.15.20'
+  'tar@=7.5.1': '>=7.5.2'
+  'zod@>4': '4.3.6'
+  '@hookform/resolvers': '3.10.0'
+  react: '19.2.8'
+  react-dom: '19.2.8'
+  '@types/react': '19.2.18'
+  '@types/react-dom': '19.2.5'
+  typescript-eslint: '8.57.2'
+
+public-hoist-pattern:
+  - 'zod'
+  - '@hookform/resolvers'
