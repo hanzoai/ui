@@ -7,8 +7,8 @@
     "preview": "vite preview --strictPort"
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-native-web": "^0.21.2",
     "@hanzo/gui": "catalog:",
     "@hanzogui/config": "^8.1.0"
