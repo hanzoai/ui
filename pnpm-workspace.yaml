@@ -7,6 +7,21 @@ packages:
   - "!**/temp/**"
   - "!deprecated/**"
 
+# OUR OWN PACKAGES ARE NOT A SUPPLY-CHAIN WINDOW.
+#
+# The minimum-release-age gate exists to keep a package published minutes ago
+# out of a build before anyone has looked at it — a real defence against a
+# compromised THIRD-PARTY release. Every entry it caught here is ours: this
+# workspace consumes @hanzo/design, @hanzo/font, @hanzo/commerce and @hanzo/ui
+# itself, so a normal afternoon of fleet releases made this repo unbuildable,
+# and an unbuildable repo cannot ship the fix for the thing that broke.
+#
+# The same exclusion the sibling SDK already carries, so the two agree about
+# which packages the rule is for.
+minimumReleaseAgeExclude:
+  - '@hanzo/*'
+  - '@hanzogui/*'
+
 catalog:
   '@hanzo/appearance': 0.2.2
   '@hanzo/brand': 1.4.8
