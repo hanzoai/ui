@@ -111,6 +111,26 @@ const CSS_PROPS = ['scrollSnapType', 'scrollSnapAlign', 'scrollSnapStop',
  * component rather than as a missing generic. `style` and `ref` come from each
  * side and are taken from gui's, which is the one that reaches the DOM.
  */
+/**
+ * Names `AllHTMLAttributes` carries for SOME element and gui carries as a
+ * layout prop for EVERY one.
+ *
+ * The overlap subtracted below is computed across every HTML element, which is
+ * what makes it complete — and what makes it wrong for exactly these two.
+ * `width` and `height` are attributes of `img`, `canvas` and `input`; they are
+ * not attributes of a `div`. So the subtraction took gui's `width` off a div,
+ * which had no `width` of its own to give back, and `<Box width="100%">` — the
+ * plainest thing this component exists to express — stopped type checking
+ * everywhere. It is not a small blast radius: a consumer's production build
+ * type checks, so the whole site stops shipping on a prop that renders
+ * correctly.
+ *
+ * They stay on gui's side because that is where they mean one thing for every
+ * element. An element that declares its own still contributes it from the other
+ * half of the intersection, so `<Box tag="img" width={16}>` is unchanged.
+ */
+type Layout = 'width' | 'height'
+
 export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
   // The ELEMENT wins every name they share. Both sides declare `onChange`, and a
   // union of the two types the event target as
@@ -135,7 +155,7 @@ export type BoxProps<T extends keyof React.JSX.IntrinsicElements = 'div'> =
   // view, `content` typed as align-content where HTML has an attribute of that
   // name. Each was one line and the next one was always waiting.
   Omit<React.ComponentProps<typeof YStack>,
-    keyof React.AllHTMLAttributes<never> | 'ref' | 'onLayout'> &
+    Exclude<keyof React.AllHTMLAttributes<never>, Layout> | 'ref' | 'onLayout'> &
   Omit<React.JSX.IntrinsicElements[T], 'style' | 'ref' | 'children' | 'className' | 'color'> & {
     className?: ClassValue
     children?: ReactNode
