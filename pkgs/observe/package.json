@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/observe",
   "version": "0.1.8",
-  "description": "Hanzo Observe — default-on interaction capture for React. Watches every click/input/nav/visibility across the tree, annotates each with a semantic hierarchy (component path / role / data-testid / aria) auto-derived from the DOM, and emits it through @hanzo/event to the ONE entry point (POST /v1/event). Privacy-gated (input redaction) and fail-soft by default; ships a real-time event stream hook for session playback.",
+  "description": "Hanzo Observe \u2014 default-on interaction capture for React. Watches every click/input/nav/visibility across the tree, annotates each with a semantic hierarchy (component path / role / data-testid / aria) auto-derived from the DOM, and emits it through @hanzo/event to the ONE entry point (POST /v1/event). Privacy-gated (input redaction) and fail-soft by default; ships a real-time event stream hook for session playback.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -77,10 +77,10 @@
   "devDependencies": {
     "@types/node": "catalog:",
     "@types/react": "catalog:",
-    "happy-dom": "^20.12.0",
+    "happy-dom": "catalog:",
     "react": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   }
 }

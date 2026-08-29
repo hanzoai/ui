@@ -53,13 +53,13 @@
     }
   },
   "devDependencies": {
-    "@hanzogui/lucide-icons-2": "8.3.1",
+    "@hanzogui/lucide-icons-2": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "react": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "access": "public"

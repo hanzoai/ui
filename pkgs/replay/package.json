@@ -62,10 +62,10 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
-    "happy-dom": "^20.12.0",
-    "rrweb": "^2.1.1",
-    "tsup": "^8.5.1",
+    "happy-dom": "catalog:",
+    "rrweb": "catalog:",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   }
 }

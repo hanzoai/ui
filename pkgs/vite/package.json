@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "access": "public"

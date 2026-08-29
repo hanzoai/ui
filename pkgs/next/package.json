@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/next",
   "version": "0.1.0",
-  "description": "The Next.js config every Hanzo app shares — one runtime, one compiler, one way.",
+  "description": "The Next.js config every Hanzo app shares \u2014 one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "access": "public"
