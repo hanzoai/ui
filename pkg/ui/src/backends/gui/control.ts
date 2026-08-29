@@ -36,6 +36,22 @@ export const CONTROL_H = 36
 export const GUTTER = 12
 
 /**
+ * The gutter ABOVE the text, for a field that stacks its lines from the top.
+ *
+ * An `<input>` centres its one line inside a fixed height, so its text lands
+ * (CONTROL_H − 2 borders − line height) / 2 = 7px below the edge. A `<textarea>`
+ * stacks from the top and had no vertical gutter at all, so its first line sat
+ * 1px below the edge — measured, and the seven pixels between them are visible
+ * the moment the two are stacked in one form: the tall field looks like the text
+ * is falling out of the top of it.
+ *
+ * Seven is that arithmetic, not a taste — the number is whatever makes a
+ * textarea's first line land where an input's only line does, and it is stated
+ * here so the two cannot drift apart in different files.
+ */
+export const RISER = (CONTROL_H - 2 - 20) / 2
+
+/**
  * The edge, the gutter and the radius every field wears.
  *
  * Spread FIRST, so a call site can still say otherwise where it has a reason to:

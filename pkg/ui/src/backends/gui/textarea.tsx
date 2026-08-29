@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
-import { FIELD } from "./control"
+import { FIELD, RISER } from "./control"
 import { slot } from "./slot"
 
 /** Floor for the grown row count. */
@@ -80,10 +80,19 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       {...FIELD}
       width="100%"
       minH={64}
-      // The gutter has to be NAMED. Left unsaid it came from gui's
-      // `textAreaSizeVariant`, which computes its own horizontal padding and
-      // landed on 20 — so the one field a form makes tall was also the one
-      // indented differently from the two above it.
+      // The gutter has to be NAMED, both ways. Left unsaid the HORIZONTAL one
+      // came from gui's `textAreaSizeVariant`, which computes its own and landed
+      // on 20 — so the one field a form makes tall was also the one indented
+      // differently from the two above it.
+      //
+      // The VERTICAL one was simply absent, which is the same fault seen from
+      // the other side: an input centres its single line inside a fixed height
+      // and a textarea stacks from the top, so with no gutter the tall field's
+      // first line sat 1px under the edge where its neighbours' sat at 8. In a
+      // form the two are read together, and the text looked like it was falling
+      // out of the top of the box. RISER is that arithmetic.
+      pt={RISER}
+      pb={RISER}
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
       placeholderTextColor="$soft"
       fontSize="$3"
