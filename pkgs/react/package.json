@@ -51,28 +51,28 @@
     }
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "nanoid": "^6.0.1",
-    "openai": "^7.8.0",
-    "swr": "^2.5.1",
-    "zod": "^4.5.2",
-    "zustand": "^5.0.15"
+    "@modelcontextprotocol/sdk": "catalog:",
+    "nanoid": "catalog:",
+    "openai": "catalog:",
+    "swr": "catalog:",
+    "zod": "catalog:",
+    "zustand": "catalog:"
   },
   "peerDependencies": {
     "react": ">=19.2.8",
     "react-dom": ">=19.2.8"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.3.3",
+    "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitest/coverage-v8": "^4.1.11",
-    "@vitest/ui": "^4.1.11",
+    "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   }
 }

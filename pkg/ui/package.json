@@ -2,7 +2,7 @@
   "name": "@hanzo/ui",
   "version": "8.27.1",
   "type": "module",
-  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -262,8 +262,8 @@
     "@hanzo/logo": "catalog:",
     "@hanzo/products": "catalog:",
     "react-native-svg": "npm:react-native-svg-web@^1.0.9",
-    "react-native-web": "^0.21.2",
-    "@icons-pack/react-simple-icons": "^13.15.1"
+    "react-native-web": "catalog:",
+    "@icons-pack/react-simple-icons": "catalog:"
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.2.3",
@@ -316,25 +316,25 @@
     "@hanzo/data": "catalog:",
     "@hanzo/gui": "catalog:",
     "@hanzo/usage": "catalog:",
-    "@hanzogui/animations-css": "8.3.1",
-    "@hanzogui/config": "8.3.1",
-    "@hanzogui/core": "8.3.1",
-    "@hanzogui/lucide-icons-2": "8.3.1",
-    "@hanzogui/next-theme": "8.3.1",
-    "@hanzogui/telemetry": "8.3.1",
-    "@hanzogui/toast": "8.3.1",
-    "@hanzogui/web": "8.3.1",
-    "@playwright/test": "^1.62.1",
+    "@hanzogui/animations-css": "catalog:",
+    "@hanzogui/config": "catalog:",
+    "@hanzogui/core": "catalog:",
+    "@hanzogui/lucide-icons-2": "catalog:",
+    "@hanzogui/next-theme": "catalog:",
+    "@hanzogui/telemetry": "catalog:",
+    "@hanzogui/toast": "catalog:",
+    "@hanzogui/web": "catalog:",
+    "@playwright/test": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "next-themes": "^0.4.6",
+    "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.86.0",
-    "react-native-web": "^0.21.2",
+    "react-hook-form": "catalog:",
+    "react-native-web": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "access": "public"

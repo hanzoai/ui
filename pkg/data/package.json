@@ -2,7 +2,7 @@
   "name": "@hanzo/data",
   "version": "1.2.4",
   "type": "module",
-  "description": "Hanzo Data — cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.",
+  "description": "Hanzo Data \u2014 cross-platform, metadata-driven data-app components (typed fields, record table, kanban board, record detail, saved views) on @hanzo/gui. The universal object/field/record/view layer that powers any Base-backed CRM, CMS, or commerce app on web, native (iOS), and desktop. Airtable/Twenty-class polish, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -52,7 +52,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@hanzogui/lucide-icons-2": "8.3.1"
+    "@hanzogui/lucide-icons-2": "catalog:"
   },
   "peerDependencies": {
     "@hanzo/gui": ">=8.3.0",
@@ -60,13 +60,13 @@
   },
   "devDependencies": {
     "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "8.3.1",
-    "@hanzogui/core": "8.3.1",
-    "@hanzogui/web": "8.3.1",
+    "@hanzogui/config": "catalog:",
+    "@hanzogui/core": "catalog:",
+    "@hanzogui/web": "catalog:",
     "@types/react": "catalog:",
     "react": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.11"
+    "vitest": "catalog:"
   },
   "publishConfig": {
     "access": "public"

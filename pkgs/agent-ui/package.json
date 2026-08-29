@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/agent-ui",
   "version": "0.1.1",
-  "description": "Hanzo Agent Cloud UI components — dashboard, nodes, workflows, executions, identity, compute",
+  "description": "Hanzo Agent Cloud UI components \u2014 dashboard, nodes, workflows, executions, identity, compute",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -119,7 +119,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "tsup": "^8.5.1",
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }
