@@ -45,6 +45,19 @@ const TabsTrigger = ({ children, ...p }: TabsTriggerProps) => (
     {...touch(ROW_H, 44, 'y')}
     hoverStyle={{ bg: '$edge' }}
     focusStyle={{ bg: '$edge' }}
+    // The selected tab. gui's `Tabs.Tab` spreads `activeStyle` only for the tab
+    // whose `value` is current, and the `unstyled` frame drops its OWN active
+    // default (`...!unstyled && !activeStyle && {…}` in the compiled frame) — so
+    // without this the active tab is painted identically to the rest and the row
+    // reads as though nothing is chosen. A raised `$background` pill on the
+    // `$hover` track: shadcn's `data-[state=active]:bg-background shadow-sm`.
+    activeStyle={{
+      bg: '$background',
+      shadowColor: '$shadowColor',
+      shadowOpacity: 0.12,
+      shadowRadius: 3,
+      shadowOffset: { width: 0, height: 1 },
+    }}
     {...p}
   >
     {ink(children, undefined, { size: '$2', fontWeight: '500' })}
