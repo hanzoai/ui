@@ -2,7 +2,7 @@
   "name": "@hanzo/canvas",
   "version": "0.2.3",
   "type": "module",
-  "description": "Railway-grade PaaS project canvas — a pannable/zoomable board of service nodes with live status, metric sparklines, deploy timelines, an environment switcher, and a service detail drawer. Host-agnostic @hanzo/gui React surface, brand/white-label aware, shared by every Hanzo console (hanzo/lux/zoo).",
+  "description": "Railway-grade PaaS project canvas \u2014 a pannable/zoomable board of service nodes with live status, metric sparklines, deploy timelines, an environment switcher, and a service detail drawer. Host-agnostic @hanzo/gui React surface, brand/white-label aware, shared by every Hanzo console (hanzo/lux/zoo).",
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -61,9 +61,9 @@
   },
   "devDependencies": {
     "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "8.1.0",
-    "@hanzogui/core": "8.1.0",
-    "@hanzogui/web": "8.1.0",
+    "@hanzogui/config": "8.2.1",
+    "@hanzogui/core": "8.2.1",
+    "@hanzogui/web": "8.2.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xyflow/react": "^12.11.1",
