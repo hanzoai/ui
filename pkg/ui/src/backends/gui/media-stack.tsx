@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * MediaStack — one subject, in whatever media the content happens to have.

@@ -127,9 +127,25 @@ const reexportOnly = (src) =>
     .replace(/export\s*\{[\s\S]*?\};?/g, '')
     .trim() === ''
 
+/**
+ * The source file decides, and only the source file.
+ *
+ * Stamping every output and exempting a list marks modules the boundary does
+ * not apply to — a block registry is a Map and a lookup, so a page that
+ * registers a type of its own can do it while rendering on the server. Marked,
+ * `registerBlockType` becomes callable only from the browser, the server render
+ * finds nothing under the key, and React reports an undefined element type from
+ * a component nobody wrote.
+ *
+ * It also costs: a module in the client graph is a module in the bundle.
+ */
 const useClient = (file) => {
-  if (DATA.has(relative(DIST, file).replace(/\.(js|cjs)$/, ''))) return
+  const rel = relative(DIST, file).replace(/\.(js|cjs)$/, '')
+  const from = ['.tsx', '.ts'].map((x) => join(UI, 'src', rel + x)).find(existsSync)
+  if (!from || !/^\s*['"]use client['"]/.test(readFileSync(from, 'utf8'))) return
   const src = readFileSync(file, 'utf8')
+  // Next's flight loader rejects `export *` inside a client boundary, so a
+  // barrel stays a barrel however its leaves are marked.
   if (reexportOnly(src)) return
   if (!/^['"]use client['"]/.test(src)) writeFileSync(file, DIRECTIVE + src)
 }

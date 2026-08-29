@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Grid — a real CSS grid whose tracks come from the CONTAINER, not the children.

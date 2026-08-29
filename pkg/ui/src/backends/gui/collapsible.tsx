@@ -1,4 +1,3 @@
-'use client'
 
 /** Collapsible — @hanzogui/collapsible's three parts under the flat names. */
 import { Collapsible as GuiCollapsible } from '@hanzo/gui'

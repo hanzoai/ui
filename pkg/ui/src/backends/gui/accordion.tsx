@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Accordion — @hanzogui/accordion's five parts under the four shadcn names.

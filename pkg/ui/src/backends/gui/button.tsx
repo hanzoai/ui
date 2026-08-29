@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Button — the gui-backend original.

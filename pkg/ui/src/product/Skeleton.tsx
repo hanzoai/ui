@@ -1,4 +1,3 @@
-'use client'
 
 /**
  * Skeleton — the honest "loading", never fabricated content.

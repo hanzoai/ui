@@ -1,4 +1,3 @@
-'use client'
 
 import { View } from '@hanzo/gui'
 /**

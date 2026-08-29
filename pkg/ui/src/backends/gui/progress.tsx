@@ -1,4 +1,3 @@
-'use client'
 
 /** Progress — determinate bar; `value` is 0–100. */
 import { Progress as GuiProgress } from '@hanzo/gui'

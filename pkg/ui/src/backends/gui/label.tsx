@@ -1,4 +1,3 @@
-'use client'
 
 /** Label — form-control caption bound to its field by @hanzogui/label. */
 import { Label as GuiLabel } from '@hanzo/gui'
