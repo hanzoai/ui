@@ -38,7 +38,7 @@ catalog:
   '@hanzo/logo': 1.0.26
   '@hanzo/observe': 0.1.8
   '@hanzo/products': 0.2.6
-  '@hanzo/ui': 8.25.2
+  '@hanzo/ui': 8.25.5
   '@hanzo/usage': 0.1.7
   '@types/node': 26.4.0
   '@types/react': 19.2.18
