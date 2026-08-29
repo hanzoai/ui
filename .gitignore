@@ -55,7 +55,6 @@ QWEN.md
 
 .playwright-mcp
 app/out
-app/.source
 
 # test artifacts
 tests/reports/
