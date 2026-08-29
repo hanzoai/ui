@@ -63,7 +63,7 @@
   },
   "peerDependencies": {
     "@hanzo/canvas": ">=0.2.3",
-    "react": "^18.0.0 || ^19.0.0"
+    "react": ">=19.2.8"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -73,13 +73,13 @@
   "devDependencies": {
     "@hanzo/canvas": "workspace:*",
     "@testing-library/react": "^16.3.2",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "happy-dom": "^20.10.6",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tsup": "^8.5.1",
-    "typescript": "^7.0.2",
+    "typescript": "catalog:",
     "vitest": "^4.1.0"
   }
 }

@@ -61,11 +61,11 @@
     "rrweb": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "catalog:",
     "happy-dom": "^20.0.0",
     "rrweb": "^2.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^7.0.2",
+    "typescript": "catalog:",
     "vitest": "^4.1.0"
   }
 }

@@ -45,16 +45,16 @@
     "@hanzo/design": "catalog:"
   },
   "peerDependencies": {
-    "react": ">=19"
+    "react": ">=19.2.8"
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.0",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "jsdom": "^29.1.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "typescript": "^7.0.2",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
     "vitest": "^4.1.8"
   }
 }

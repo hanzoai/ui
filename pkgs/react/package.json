@@ -59,20 +59,20 @@
     "zustand": "^5.0.12"
   },
   "peerDependencies": {
-    "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.2",
-    "@types/node": "^25.5.0",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@vitest/coverage-v8": "^4.1.0",
     "@vitest/ui": "^4.1.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tsup": "^8.5.1",
-    "typescript": "^7.0.2",
+    "typescript": "catalog:",
     "vitest": "^4.1.0"
   }
 }
