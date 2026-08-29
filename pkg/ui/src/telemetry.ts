@@ -1,3 +1,4 @@
+'use client'
 // @hanzo/ui/telemetry — the ONE telemetry surface, re-exported from its home in
 // the framework layer (@hanzogui/telemetry) so an app that already depends on
 // @hanzo/ui adds no new dependency and nothing is defined twice:

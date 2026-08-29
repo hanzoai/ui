@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Sheet — a dialog that arrives from an edge.

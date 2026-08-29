@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Switch — a 36×20 pill, 16px thumb, `touch()` to the 44px floor everywhere.

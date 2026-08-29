@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Avatar — circular image with a text fallback.

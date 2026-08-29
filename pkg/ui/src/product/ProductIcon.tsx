@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * ProductIcon — the Linear-style product tile: a rounded-square block filled with

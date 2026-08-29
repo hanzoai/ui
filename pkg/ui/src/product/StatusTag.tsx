@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Status pill — one status string, one pill, everywhere.

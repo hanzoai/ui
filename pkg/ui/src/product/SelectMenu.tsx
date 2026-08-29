@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * SelectMenu — a compact, reusable dropdown select. Renders a labelled trigger ("All

@@ -56,7 +56,6 @@ export const getFacetValuesMutator = (level: number, cmmc: CommerceService): Str
   } satisfies StringMutator
 }
 
-export { default as useSyncSkuParamWithCurrentItem } from './use-sync-sku-param-w-current-item'
 export { default as processSquareCardPayment } from './square-payment'
 export { default as ObsStringMutator } from './obs-string-mutator'
 export { default as ProductMediaAccessor } from './product-media-accessor'

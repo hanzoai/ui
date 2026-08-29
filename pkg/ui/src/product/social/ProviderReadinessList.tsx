@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * ProviderReadinessList — each network's LIVE publish-readiness: ready, or the

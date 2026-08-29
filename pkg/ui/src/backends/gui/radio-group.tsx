@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * RadioGroup — one-of-many, on @hanzogui/radio-group.

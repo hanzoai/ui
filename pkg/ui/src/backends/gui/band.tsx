@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Band — the page's vertical rhythm, in one place.

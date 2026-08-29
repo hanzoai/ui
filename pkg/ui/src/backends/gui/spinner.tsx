@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Spinner — an arc in motion, sized in pixels and inked from the text around it.
