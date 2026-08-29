@@ -83,7 +83,11 @@ export function ModelSelector({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <XStack width="100%" onLayout={(e: any) => setTriggerW(e.nativeEvent.layout.width)}>
+      {/* No width. In a row the picker is content-sized; in a column the
+          stretch default fills it. Declaring 100% collapses those two into
+          the second, and a row then belongs entirely to the picker. This
+          measurement is what the panel below matches, either way. */}
+      <XStack onLayout={(e: any) => setTriggerW(e.nativeEvent.layout.width)}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -92,7 +96,6 @@ export function ModelSelector({
             aria-expanded={open}
             disabled={disabled}
             justify="flex-start"
-            width="100%"
             {...sx(className)}
           >
           <SizableText numberOfLines={1} size={isSm ? '$1' : '$2'} color="$color12">
