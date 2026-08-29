@@ -68,7 +68,7 @@
     "@hanzo/observe": "catalog:"
   },
   "peerDependencies": {
-    "@tauri-apps/api": ">=1.0.0",
+    "@tauri-apps/api": ">=2",
     "react": ">=19.2.8"
   },
   "peerDependenciesMeta": {
@@ -83,11 +83,11 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "happy-dom": "^20.0.0",
+    "happy-dom": "^20.12.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tsup": "^8.5.1",
     "typescript": "catalog:",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }

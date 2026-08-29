@@ -27,7 +27,7 @@ catalog:
   '@hanzo/brand': 1.4.8
   '@hanzo/canvas': 0.2.3
   '@hanzo/cd': 0.1.2
-  '@hanzo/commerce': 7.7.5
+  '@hanzo/commerce': 7.8.0
   '@hanzo/dashboard': 0.2.0
   '@hanzo/data': 1.2.4
   '@hanzo/design': 0.5.24
@@ -38,7 +38,7 @@ catalog:
   '@hanzo/logo': 1.0.26
   '@hanzo/observe': 0.1.8
   '@hanzo/products': 0.2.6
-  '@hanzo/ui': 8.25.5
+  '@hanzo/ui': 8.26.0
   '@hanzo/usage': 0.1.7
   '@types/node': 26.4.0
   '@types/react': 19.2.18
@@ -49,6 +49,96 @@ catalog:
   'typescript': 7.0.2
 
 overrides:
+  '@hanzogui/adapt': '8.3.1'
+  '@hanzogui/animate': '8.3.1'
+  '@hanzogui/animate-presence': '8.3.1'
+  '@hanzogui/animations-css': '8.3.1'
+  '@hanzogui/animations-moti': '8.3.1'
+  '@hanzogui/animations-react-native': '8.3.1'
+  '@hanzogui/babel-plugin': '8.3.1'
+  '@hanzogui/build': '8.3.1'
+  '@hanzogui/button': '8.3.1'
+  '@hanzogui/checkbox-headless': '8.3.1'
+  '@hanzogui/cli': '8.3.1'
+  '@hanzogui/collapsible': '8.3.1'
+  '@hanzogui/collection': '8.3.1'
+  '@hanzogui/colors': '8.3.1'
+  '@hanzogui/component-helpers': '8.3.1'
+  '@hanzogui/compose-refs': '8.3.1'
+  '@hanzogui/config': '8.3.1'
+  '@hanzogui/config-default': '8.3.1'
+  '@hanzogui/constants': '8.3.1'
+  '@hanzogui/core': '8.3.1'
+  '@hanzogui/create-context': '8.3.1'
+  '@hanzogui/create-menu': '8.3.1'
+  '@hanzogui/dialog': '8.3.1'
+  '@hanzogui/dismissable': '8.3.1'
+  '@hanzogui/element': '8.3.1'
+  '@hanzogui/floating': '8.3.1'
+  '@hanzogui/focus-guard': '8.3.1'
+  '@hanzogui/focus-scope': '8.3.1'
+  '@hanzogui/focusable': '8.3.1'
+  '@hanzogui/font-size': '8.3.1'
+  '@hanzogui/get-button-sized': '8.3.1'
+  '@hanzogui/get-font-sized': '8.3.1'
+  '@hanzogui/get-token': '8.3.1'
+  '@hanzogui/group': '8.3.1'
+  '@hanzogui/helpers': '8.3.1'
+  '@hanzogui/helpers-icon': '8.3.1'
+  '@hanzogui/image': '8.3.1'
+  '@hanzogui/input': '8.3.1'
+  '@hanzogui/label': '8.3.1'
+  '@hanzogui/list-item': '8.3.1'
+  '@hanzogui/loader': '8.3.1'
+  '@hanzogui/lucide-icons-2': '8.3.1'
+  '@hanzogui/native': '8.3.1'
+  '@hanzogui/next-plugin': '8.3.1'
+  '@hanzogui/next-theme': '8.3.1'
+  '@hanzogui/polyfill-dev': '8.3.1'
+  '@hanzogui/popover': '8.3.1'
+  '@hanzogui/popper': '8.3.1'
+  '@hanzogui/portal': '8.3.1'
+  '@hanzogui/radio-headless': '8.3.1'
+  '@hanzogui/react-native-media-driver': '8.3.1'
+  '@hanzogui/react-native-svg': '8.3.1'
+  '@hanzogui/react-native-use-pressable': '8.3.1'
+  '@hanzogui/react-native-use-responder-events': '8.3.1'
+  '@hanzogui/react-native-web-lite': '8.3.1'
+  '@hanzogui/remove-scroll': '8.3.1'
+  '@hanzogui/roving-focus': '8.3.1'
+  '@hanzogui/scroll-view': '8.3.1'
+  '@hanzogui/separator': '8.3.1'
+  '@hanzogui/shapes': '8.3.1'
+  '@hanzogui/sheet': '8.3.1'
+  '@hanzogui/shell': '8.3.1'
+  '@hanzogui/sizable-context': '8.3.1'
+  '@hanzogui/spacer': '8.3.1'
+  '@hanzogui/stacks': '8.3.1'
+  '@hanzogui/start-transition': '8.3.1'
+  '@hanzogui/switch-headless': '8.3.1'
+  '@hanzogui/telemetry': '8.3.1'
+  '@hanzogui/text': '8.3.1'
+  '@hanzogui/theme': '8.3.1'
+  '@hanzogui/theme-base': '8.3.1'
+  '@hanzogui/themes': '8.3.1'
+  '@hanzogui/toast': '8.3.1'
+  '@hanzogui/use-async': '8.3.1'
+  '@hanzogui/use-callback-ref': '8.3.1'
+  '@hanzogui/use-constant': '8.3.1'
+  '@hanzogui/use-controllable-state': '8.3.1'
+  '@hanzogui/use-debounce': '8.3.1'
+  '@hanzogui/use-did-finish-ssr': '8.3.1'
+  '@hanzogui/use-direction': '8.3.1'
+  '@hanzogui/use-escape-keydown': '8.3.1'
+  '@hanzogui/use-event': '8.3.1'
+  '@hanzogui/use-force-update': '8.3.1'
+  '@hanzogui/use-keyboard-visible': '8.3.1'
+  '@hanzogui/use-presence': '8.3.1'
+  '@hanzogui/use-previous': '8.3.1'
+  '@hanzogui/visually-hidden': '8.3.1'
+  '@hanzogui/vite-plugin': '8.3.1'
+  '@hanzogui/web': '8.3.1'
+  '@hanzogui/z-index-stack': '8.3.1'
   'got@<11.8.5': '>=11.8.5'
   'axios@>=0.8.1 <0.28.0': '>=0.28.0'
   'undici@>=6.0.0 <6.21.1': '>=6.21.1'
@@ -65,14 +155,14 @@ overrides:
   'validator@<13.15.20': '>=13.15.20'
   'tar@=7.5.1': '>=7.5.2'
   'zod@>4': '4.3.6'
-  '@hookform/resolvers': '3.10.0'
+  '@hookform/resolvers': '^5.9.1'
   react: '19.2.8'
   react-dom: '19.2.8'
   '@types/react': '19.2.18'
   '@types/react-dom': '19.2.5'
-  typescript-eslint: '8.57.2'
+  typescript-eslint: '^8.68.0'
 
-public-hoist-pattern:
+publicHoistPattern:
   - 'zod'
   - '@hookform/resolvers'
 

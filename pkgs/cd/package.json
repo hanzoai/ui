@@ -72,14 +72,14 @@
   },
   "devDependencies": {
     "@hanzo/canvas": "workspace:*",
-    "@testing-library/react": "^16.3.2",
+    "@testing-library/react": "^16.3.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "happy-dom": "^20.10.6",
+    "happy-dom": "^20.12.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tsup": "^8.5.1",
     "typescript": "catalog:",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.11"
   }
 }

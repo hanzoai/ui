@@ -61,12 +61,18 @@
   },
   "devDependencies": {
     "@hanzo/gui": "catalog:",
+<<<<<<< HEAD
     "@hanzogui/config": "8.2.1",
     "@hanzogui/core": "8.2.1",
     "@hanzogui/web": "8.2.1",
+=======
+    "@hanzogui/config": "8.3.1",
+    "@hanzogui/core": "8.3.1",
+    "@hanzogui/web": "8.3.1",
+>>>>>>> 6584f9385 (Give every dependency one version)
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@xyflow/react": "^12.11.1",
+    "@xyflow/react": "^12.11.5",
     "react": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:"
