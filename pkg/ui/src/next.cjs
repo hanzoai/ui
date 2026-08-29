@@ -36,6 +36,11 @@ const { join } = require('node:path')
  * The registry is named separately because it is the one module react-native-web
  * does not answer to under the same path — an `Image` reaches for
  * `@react-native/assets-registry/registry` and finds nothing.
+ *
+ * Both are module specifiers, resolved from the app. Turbopack reads an absolute
+ * path as a relative one and reports it back with a `./` in front, so the app is
+ * the one that has to see `react-native-web` — every web app on this stack
+ * declares it, the same way it declares react-dom.
  */
 const ALIAS = {
   'react-native': 'react-native-web',
