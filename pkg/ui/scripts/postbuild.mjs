@@ -168,16 +168,19 @@ for (const f of files(DIST)) if (/\.(js|cjs)$/.test(f)) useClient(f)
 // stylesheet, which a jsdom document could not have painted anyway; <Hanzo>'s
 // dev-time check for `--hanzo-ui-styles` then reports the sheet missing, which is
 // exactly what it should say and what root.test.tsx already declares a marker for.
-{
-  const root = join(DIST, 'root.js')
-  const index = join(DIST, 'index.js')
-  if (existsSync(root) && existsSync(index)) {
-    const rootSrc = readFileSync(root, 'utf8').replace(
-      /^\s*import\s+['"]\.\/styles\.css['"];?\s*$/m,
-      "// styles.css is omitted from the node entry: node cannot load a stylesheet.",
-    )
-    writeFileSync(join(DIST, 'root.node.js'), rootSrc)
-    const indexSrc = readFileSync(index, 'utf8').replace(/'\.\/root\.js'/g, "'./root.node.js'")
-    writeFileSync(join(DIST, 'index.node.js'), indexSrc)
-  }
+// Both module systems, because `require` reaches this package too — a jest setup
+// naming `@hanzo/ui/gui-config` resolves under the same conditions. Deriving only
+// the ESM half left `node`+`require` with nothing to name, so it pointed at the
+// web build and a `require` landed back on the stylesheet it exists to avoid.
+for (const ext of ['.js', '.cjs']) {
+  const root = join(DIST, `root${ext}`)
+  const index = join(DIST, `index${ext}`)
+  if (!existsSync(root) || !existsSync(index)) continue
+  const rootSrc = readFileSync(root, 'utf8').replace(
+    /^\s*(?:import\s+|require\()['"]\.\/styles\.css['"]\)?;?\s*$/m,
+    '// styles.css is omitted from the node entry: node cannot load a stylesheet.',
+  )
+  writeFileSync(join(DIST, `root.node${ext}`), rootSrc)
+  const indexSrc = readFileSync(index, 'utf8').replaceAll(`./root${ext}`, `./root.node${ext}`)
+  writeFileSync(join(DIST, `index.node${ext}`), indexSrc)
 }
