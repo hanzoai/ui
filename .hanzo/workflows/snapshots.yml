@@ -36,7 +36,7 @@ jobs:
   update:
     # The label the gate uses. `ubuntu-*` is not advertised to this fleet, and an
     # unmatched label does not error here — the job queues until it times out.
-    runs-on: hanzo-build-linux-amd64
+    runs-on: [hanzo-build-linux-amd64]
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4

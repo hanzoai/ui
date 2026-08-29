@@ -75,3 +75,6 @@ overrides:
 public-hoist-pattern:
   - 'zod'
   - '@hookform/resolvers'
+
+allowBuilds:
+  esbuild: set this to true or false
