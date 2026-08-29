@@ -1,3 +1,4 @@
+'use client'
 import { SizableText } from '@hanzo/gui'
 import { Children, createElement, type ComponentType, type ReactNode } from 'react'
 

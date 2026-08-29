@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Dialog — modal surface, flattened from @hanzogui/dialog's compound parts.

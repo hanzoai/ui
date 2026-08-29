@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * AspectRatio — a box that holds a width-to-height ratio.

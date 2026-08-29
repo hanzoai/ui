@@ -10,8 +10,8 @@ export { default as ButtonItemSelector } from './components/item-selector/button
 export { default as CarouselItemSelector, type CarouselItemSelectorPropsExt } from './components/item-selector/carousel'
   // Impl-dependent, so leave w impl
 export type { StandaloneServiceOptions as ServiceOptions } from './service/impls/standalone'
+export { default as useSyncSkuParamWithCurrentItem } from './util/use-sync-sku-param-w-current-item'
 export {
-  useSyncSkuParamWithCurrentItem,
   getFacetValuesMutator,
   formatCurrencyValue,
   ProductMediaAccessor,

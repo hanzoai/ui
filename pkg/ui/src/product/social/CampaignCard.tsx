@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * CampaignCard — one marketing campaign (name, channel, lifecycle, budget/spend

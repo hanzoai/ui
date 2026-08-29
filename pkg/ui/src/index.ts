@@ -55,20 +55,18 @@ export {
   TabsList, TabsTrigger, Textarea,
   Toaster,
   Text, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, View, XStack, YStack,
-  ZStack, badgeVariants, buttonVariants,
-  toast,
+  ZStack, toast,
   ApplyTypography, Link, LinkElement, MDXLink, VideoPlayer, YouTubeEmbed, useLink,
   Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, useFormField,
   Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext,
-  Skeleton, MediaStack, fit, NavItems, StepIndicator,
+  Skeleton, MediaStack, NavItems, StepIndicator,
   Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader,
   SheetOverlay, SheetPortal, SheetTitle, SheetTrigger,
   Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
   InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot,
   NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
-  NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle,
-  Drawer, DrawerContent, DrawerHandle, DrawerTrigger,
+  NavigationMenuList, NavigationMenuTrigger, Drawer, DrawerContent, DrawerHandle, DrawerTrigger,
   Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
@@ -126,3 +124,5 @@ export { tw, type Parsed, type Props as TwProps } from './tw'
 export { Box, type BoxProps } from './box'
 export { sx } from './sx'
 export { css } from './css'
+
+export { buttonVariants, badgeVariants, navigationMenuTriggerStyle, fit } from './style'

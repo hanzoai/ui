@@ -1,3 +1,4 @@
+'use client'
 
 /**
  * Badge — the gui-backend original.
@@ -94,8 +95,8 @@ const BadgeText = styled(SizableText, {
  * A stable class handle for hosts that hook badges from CSS. Styling lives in
  * the tokens; this only names the variant.
  */
-export const badgeVariants = ({ variant }: { variant?: BadgeVariant | null } = {}) =>
-  `badge badge-${variant ?? 'default'}`
+import { badgeVariants } from '../../style'
+export { badgeVariants }
 
 /**
  * Typed as span props because that is the contract every existing call site was

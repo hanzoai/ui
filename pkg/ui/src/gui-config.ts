@@ -1,3 +1,4 @@
+'use client'
 import { defaultConfig } from '@hanzogui/config/v5'
 import { createAnimations } from '@hanzogui/animations-css'
 import { createGui, type CreateGuiProps } from '@hanzo/gui'
