@@ -24,25 +24,8 @@ export { initSelectionUI, getSelectionUISpecifier } from './util/selection-ui-sp
 export { Commerce, CommerceApiError, hanzoCommerce } from './client'
 export type {
   CommerceClientConfig,
-  Balance,
-  TierResponse,
   Transaction,
   Subscription,
-  Plan,
-  Payment,
-  UsageRecord,
-  Coupon,
-  CouponType,
-  CouponValidateResult,
-  Discount,
-  CheckoutItem,
-  CheckoutSessionRequest,
-  CheckoutSessionResponse,
-  PaymentMethod,
-  PaymentMethodType,
-  Referral,
-  Referrer,
-  Affiliate,
   CreditGrant,
 } from './client'
 
