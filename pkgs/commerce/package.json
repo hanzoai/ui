@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/commerce",
-  "version": "7.8.3",
+  "version": "7.9.0",
   "description": "e-commerce framework.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -24,7 +24,8 @@
     "pub": "npm publish",
     "tc": "tsc --noEmit",
     "build": "pnpm clean && tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true",
-    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "client": "python3 scripts/generate-client.py"
   },
   "exports": {
     ".": {

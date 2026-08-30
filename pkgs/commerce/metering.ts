@@ -179,8 +179,8 @@ export class Metering {
     const headers = orgHeader(id.org ?? this.org)
     try {
       const available = this.tierAware
-        ? (await this.commerce.getTier(user, { headers })).balance.effectiveAvailable
-        : (await this.commerce.getBalance(user, id.currency ?? 'usd', undefined, headers)).available
+        ? (await this.commerce.getBillingTier<{ balance: { effectiveAvailable: number } }>({ headers })).balance.effectiveAvailable
+        : (await this.commerce.getBillingBalance<{ available: number }>({ headers })).available
 
       if (available > 0) return { allowed: true, available }
       return { allowed: false, reason: 'insufficient_balance', available }
@@ -219,7 +219,7 @@ export class Metering {
       status: usage.status,
       clientIp: usage.clientIp,
     }
-    const tx = await this.commerce.addUsageRecord(body as never, undefined, headers)
+    const tx = await this.commerce.request<RecordResult>('POST', '/v1/billing/usage', { body, headers })
     // Commerce returns { transactionId, user, amount, currency, type }.
     return tx as unknown as RecordResult
   }
@@ -232,9 +232,9 @@ export class Metering {
     const decision = await this.authorize(id)
     if (decision.allowed) return
     if (decision.reason === 'insufficient_balance') {
-      throw new CommerceApiError(402, 'Insufficient balance. Please add credits at console.hanzo.ai')
+      throw new CommerceApiError(402, 'Insufficient balance. Please add credits at console.hanzo.ai', undefined)
     }
-    throw new CommerceApiError(503, 'Billing temporarily unavailable')
+    throw new CommerceApiError(503, 'Billing temporarily unavailable', undefined)
   }
 }
 
