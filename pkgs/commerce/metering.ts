@@ -21,7 +21,7 @@
  * rather than re-implementing the HTTP layer.
  *
  * Auth is the commerce service token (admin-scoped S2S), sent as
- * `Authorization: Bearer <token>` plus the tenant org as `X-IAM-Org-Id`. The
+ * `Authorization: Bearer <token>` plus the tenant org as `X-Org-Id`. The
  * token is a secret and MUST come from KMS (the operator wires it into
  * COMMERCE_SERVICE_TOKEN); this module never reads it from disk.
  *
@@ -58,7 +58,7 @@ export type MeteringConfig = {
   baseUrl?: string
   /** Commerce service token (admin-scoped S2S). MUST be KMS-sourced. */
   token?: string
-  /** Default tenant org slug sent as X-IAM-Org-Id (default "hanzo"). */
+  /** Default tenant org slug sent as X-Org-Id (default "hanzo"). */
   org?: string
   /**
    * Gate on the tier-aware effective balance (prepaid + included plan
@@ -72,6 +72,12 @@ export type MeteringConfig = {
   failOpen?: boolean
   /** Request timeout in ms. Default 5000 (the gateway's value). */
   timeoutMs?: number
+  /**
+   * Send every call to commerce's TEST ledger (org.Live=false), so balances and
+   * debits hit the sandbox books rather than real money. The Go meter spells
+   * this the same way; a product opts in with METERING_TEST.
+   */
+  test?: boolean
 }
 
 /** Who to authorize / charge. user is the IAM "org/sub" identity. */
@@ -127,6 +133,7 @@ export class Metering {
   private readonly org: string
   private readonly tierAware: boolean
   private readonly failOpen: boolean
+  private readonly test: boolean
 
   constructor(config: MeteringConfig = {}) {
     const baseUrl = (config.baseUrl ?? '').replace(/\/+$/, '')
@@ -136,6 +143,7 @@ export class Metering {
     this.org = (config.org ?? '').trim()
     this.tierAware = config.tierAware ?? false
     this.failOpen = config.failOpen ?? false
+    this.test = config.test ?? false
   }
 
   /**
@@ -151,12 +159,19 @@ export class Metering {
       org: (env.COMMERCE_SERVICE_ORG ?? '').trim() || 'hanzo',
       tierAware: truthy(env.METERING_TIER_AWARE),
       failOpen: truthy(env.METERING_FAIL_OPEN),
+      test: truthy(env.METERING_TEST),
     })
   }
 
   /** Whether a commerce base URL is configured. */
   get enabled(): boolean {
     return this.commerce !== null
+  }
+
+  /** The headers every call carries: which org, and which ledger. */
+  private wire(org?: string): Record<string, string> | undefined {
+    const h = { ...orgHeader(org ?? this.org), ...(this.test ? { 'X-Hanzo-Test': 'true' } : {}) }
+    return Object.keys(h).length ? h : undefined
   }
 
   /**
@@ -176,7 +191,7 @@ export class Metering {
       return this.failOpen ? { allowed: true } : { allowed: false, reason: 'balance_unavailable' }
     }
 
-    const headers = orgHeader(id.org ?? this.org)
+    const headers = this.wire(id.org)
     try {
       const available = this.tierAware
         ? (await this.commerce.getBillingTier<{ balance: { effectiveAvailable: number } }>({ headers })).balance.effectiveAvailable
@@ -201,7 +216,7 @@ export class Metering {
     if (!this.commerce || usage.amount <= 0) return null
     if (!usage.user?.trim()) throw new Error('metering: record requires a user')
 
-    const headers = orgHeader(usage.org ?? this.org)
+    const headers = this.wire(usage.org)
     // Commerce's usageRequest field names map one-for-one; org travels via the
     // header, never the body.
     const body = {
@@ -272,9 +287,21 @@ export function identityFromHeaders(
 // internals
 // ---------------------------------------------------------------------------
 
+/**
+ * The org this usage belongs to, under the one name commerce reads.
+ *
+ * `X-Org-Id`, and getting it wrong is SILENT. Commerce selects the org as
+ * stashed-org -> `X-Org-Id` -> `COMMERCE_SERVICE_ORG` -> `"hanzo"` and never
+ * refuses (middleware/accesstoken.go:110,167-173), so a name it does not know
+ * is not an error — it debits the house org for every tenant. This sent
+ * `X-IAM-Org-Id`, which commerce reads nowhere.
+ *
+ * `X-Hanzo-Org` is a real header but travels the other way: cloud stamps it on
+ * responses as the acting org. Request header in, guardrail out.
+ */
 function orgHeader(org: string): Record<string, string> | undefined {
   const o = (org ?? '').trim()
-  return o ? { 'X-IAM-Org-Id': o } : undefined
+  return o ? { 'X-Org-Id': o } : undefined
 }
 
 function truthy(v: string | undefined): boolean {
