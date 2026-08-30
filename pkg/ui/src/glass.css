@@ -486,3 +486,34 @@
     animation: none;
   }
 }
+
+/* FOCUS RINGS THE CONTROL A PERSON SEES, WHICH IS THE WHOLE COMPOSER.
+
+   `Composer` is a bordered box holding a field above a toolbar row, so it reads
+   as one control the way a chat composer everywhere does. The field inside it is
+   an ordinary textarea, so the indicator was drawn round the field alone: a
+   second rounded rectangle nested inside the box, stopping above the mic and the
+   send button, which reads as the top half being selected. WCAG 2.4.11 asks the
+   indicator to enclose the control, and the control here is the composer.
+
+   THE FIELD DOES NOT ABSTAIN, and control.ts is right that it must not: gui
+   compiles `focusVisibleStyle` to `:root:root:root:root … !important`, past any
+   sheet, so a field that says `outlineWidth: 0` deletes the indicator on every
+   surface at once. What gui declares is `outline-color: var(--outlineColor)` —
+   a VARIABLE — so the colour is re-pointed for this one field instead, in the
+   same breath as the host taking the ring up. The declaration gui emits is
+   untouched and `focus.test.tsx` still reads it.
+
+   Both rules turn on the SAME condition, which is what makes it safe: where
+   `:has` is unsupported neither applies and the field keeps drawing its own
+   ring, so no browser reaches a state with a focused composer and no indicator
+   anywhere. */
+[data-slot='composer']:has([data-slot='composer-field']:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+[data-slot='composer']:has([data-slot='composer-field']:focus-visible)
+  [data-slot='composer-field'] {
+  --outlineColor: transparent;
+}
