@@ -37,6 +37,7 @@ import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
 import { Code } from './Code'
 import { Failure } from './Failure'
+import { Preview } from './Preview'
 import { Sources, type Source } from './Sources'
 import { Step, type Ran } from './Step'
 import type { Part } from './words'
@@ -66,8 +67,22 @@ export type MessagePart =
   | { type: 'file'; name: string; url?: string; mime?: string; size?: number; text?: string }
   /** What the answer was drawn from. */
   | { type: 'citation'; sources: Source[]; text?: string }
-  /** Something the turn produced and the surface can open. */
-  | { type: 'artifact'; title: string; kind: ArtifactKind; id?: string; text?: string }
+  /**
+   * Something the turn produced and the surface can open.
+   *
+   * `markup` is the thing ITSELF — a self-contained HTML document the model
+   * wrote — and when it is there the part draws as a `Preview` rather than as a
+   * card, because a card offering to open a thing we are holding is a worse
+   * answer than showing it. Absent, the card is all there is to draw.
+   */
+  | {
+      type: 'artifact'
+      title: string
+      kind: ArtifactKind
+      id?: string
+      markup?: string
+      text?: string
+    }
   /**
    * A resource the model offers as an interface.
    *
@@ -250,7 +265,12 @@ export function Piece({ part, prose, onRetry, onOpen, onSource }: PieceProps) {
       return <Sources sources={part.sources} onOpen={onSource} />
 
     case 'artifact':
-      return (
+      // Held, so shown. `Preview` renders it with scripting disabled, which is
+      // what makes drawing model-authored markup a different question from
+      // loading a `uiResource`'s url — see that arm, and `Preview`'s own note.
+      return part.markup ? (
+        <Preview title={part.title} markup={part.markup} />
+      ) : (
         <ArtifactCard
           title={part.title}
           kind={part.kind}
