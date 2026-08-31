@@ -17,10 +17,9 @@ and the dark-black palette.
 
 ## 1. Typography — Zen
 
-One family, ours. `@hanzo/font` publishes it and `@hanzo/design` ships the binaries
-and declares the `@font-face`, so a surface that imports `@hanzo/design/styles.css`
-has the faces with nothing further to do. No app self-hosts a licensed third-party
-face any more.
+One family, ours. `@hanzo/font` publishes it, carries the binaries and declares the
+`@font-face`, so a surface that imports `@hanzo/font/css` has the faces with nothing
+further to do. No app self-hosts a face of its own.
 
 | Role | Family | Notes |
 |------|--------|-------|
@@ -29,41 +28,23 @@ face any more.
 | Arabic / Hebrew (`--font-ar` / `--font-he`) | unchanged | i18n only — keep. |
 
 **The token names the ROLE, not the face** — `--font-sans` / `--font-mono`. A token
-spelled `--font-geist-sans` or `--font-zen-sans` goes stale the next time the face
-moves, which is exactly what the first one did.
+spelled for a face goes stale the moment the face moves.
 
-**Dropped as defaults:** Basel Grotesk, Druk Wide, Geist, DM Sans, Figtree, Inter,
-PT Sans, Roboto Mono.
+**The stack.** Zen first, then the native faces, then the generic:
 
-### Where the old faces land
+```css
+--font-sans: Zen, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+--font-mono: Zen Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+```
 
-`@hanzo/font/presets.css` (≥ 1.8.1) defines these as real classes — `.zen-air`,
-`.zen-book`, `.zen-medium`, `.zen-wide`, `.zen-round`. Use the class; do not restate
-the numbers. Nothing in this repo needs one: every face replaced here was Geist,
-which is a plain family swap with no register to reconstruct.
-
-| Was | Now | Class |
-|-----|-----|-------|
-| Basel Grotesk Book | Zen wght **497** | `.zen-book` |
-| Basel Grotesk Medium | Zen wght **606** | `.zen-medium` |
-| Druk Wide | Zen wght **845** + `scaleX(1.56)` + `-0.04em` | `.zen-wide` |
-| Geist / Geist Sans | Zen | plain family swap |
-| Geist Mono | Zen Mono | plain family swap |
-
-**x-height.** Basel's x-height is 0.718 of its cap and Zen's is 0.746, so at one
-font-size Zen's lowercase renders ~4% larger. Where Zen REPLACES Basel, multiply the
-font-size by **0.962** at the one place the size is stated. It does NOT apply where
-Geist was replaced — Zen and Geist share a lineage and their x-heights agree. Every
-face replaced in this repo was Geist, so no size moved here.
+**Registers.** `@hanzo/font/presets.css` defines `.zen-air`, `.zen-book`,
+`.zen-medium`, `.zen-wide`, `.zen-round`. Use the class; do not restate the numbers.
 
 Per-app adoption:
-- **Any React surface** → `import '@hanzo/ui/theme.css'` (which composes design's
-  tokens) or `@hanzo/design/styles.css` directly, and bind nothing.
-- **A host that loads Zen itself** (next/font, @fontsource) binds `--font-sans` /
-  `--font-mono` to its generated family. Ours are declared in `@layer hanzo.font`,
-  so the host's unlayered binding wins whatever the source order.
-- **A host that wants a different face entirely** binds `--font-sans-provided` /
-  `--font-mono-provided`.
+- **Any React surface** → `import '@hanzo/font/css'` and bind nothing.
+- **A host that loads Zen itself** binds `--font-sans` / `--font-mono` to its
+  generated family. Ours are declared in `@layer hanzo.font`, so the host's
+  unlayered binding wins whatever the source order.
 
 ---
 
