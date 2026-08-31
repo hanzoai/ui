@@ -39,6 +39,12 @@
       "require": "./dist/chat/index.cjs",
       "default": "./dist/chat/index.js"
     },
+    "./backdrop": {
+      "types": "./dist/backdrop/index.d.ts",
+      "import": "./dist/backdrop/index.js",
+      "require": "./dist/backdrop/index.cjs",
+      "default": "./dist/backdrop/index.js"
+    },
     "./chat/pure": {
       "types": "./dist/chat/pure.d.ts",
       "import": "./dist/chat/pure.js",
