@@ -8,7 +8,9 @@
  * turn is a muted aside. The contrast is what says who is speaking, so there is
  * no name and no timestamp, and `icon` is opt-in.
  *
- * Content is `children`: the markdown pipeline stays with the surface.
+ * Content is `children`: the markdown pipeline stays with the surface. A turn
+ * that arrived as a list of parts puts `<Parts>` there — `Chat` does exactly
+ * that — so this component keeps knowing nothing about the wire.
  */
 import { Text, XStack, YStack } from '@hanzo/gui'
 import type { ComponentProps, ReactNode } from 'react'
