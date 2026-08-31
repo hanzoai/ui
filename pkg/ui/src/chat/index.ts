@@ -87,6 +87,32 @@ export { Code, type CodeProps } from './Code'
 export { Step, type StepProps, type Ran } from './Step'
 export { Failure, type FailureProps } from './Failure'
 
+/**
+ * Generative UI — the model drives the interface.
+ *
+ * `TOOLS` are three ordinary Anthropic tools a caller hands to
+ * `messages.stream`; `stage` folds the raw `content_block_*` events into what
+ * is on screen, so the persona moves whether or not the model calls anything;
+ * `Preview` draws an interface the model wrote, inert; `Inspector` is the side
+ * panel that says what the run did. `answer` closes the round trip.
+ */
+export {
+  TOOLS,
+  EMPTY,
+  stage,
+  read,
+  answer,
+  made,
+  type Directive,
+  type Facts,
+  type Frame,
+  type Report,
+  type Stage,
+  type Tool,
+} from './directive'
+export { Preview, type PreviewProps } from './Preview'
+export { Inspector, type InspectorProps, type Section } from './Inspector'
+
 export {
   Sources,
   SourceCard,

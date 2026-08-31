@@ -324,6 +324,63 @@ Portal, Sub*, RadioGroup) AND it accepts the declarative `trigger` + `items`
 spec, which it renders through those very same parts. `@hanzo/ui` and
 `@hanzo/ui/product` export the same component; there is no second shape.
 
+### Generative UI — the model drives the interface (`@hanzo/ui/chat`)
+
+Three tools the model calls to move the interface, and no second protocol beside
+tool use. A caller passes `TOOLS` to `messages.stream`, folds the events through
+`stage`, and hands the pieces to three components:
+
+```tsx
+const s = frames.reduce(stage, EMPTY)          // Frame[] from content_block_*
+<Persona scenes={scenes} emotion={s.emotion} /> // feel  → the clip switches
+<Parts parts={s.parts} />                       // show  → an inert Preview
+<Aside><Inspector summary={s.report?.summary} …/></Aside>   // report → the panel
+```
+
+`feel({emotion})` · `show({title, kind, markup})` · `report({summary, inputs,
+outputs})`. **ONE WORD EACH, AND NO DOTS** — a tool name is `[a-zA-Z0-9_-]{1,64}`,
+so `persona.set` is rejected by the API before the model ever sees the request,
+and the rejection names the request rather than the name.
+
+**The persona moves whether or not the model calls anything.** `stage` reads the
+raw stream — a `thinking` block or delta reads as thinking, the first text as
+speaking, `message_stop` as rest — so a turn with no directives still animates. A
+`feel` directive then OUTRANKS that reading and is held (`Stage.held`) until the
+model changes it; it survives `message_stop`, so a turn that ended happy rests
+happy, and only `message_start` clears it. Resetting at the end of the turn would
+flatten every deliberate ending.
+
+**`Preview` renders model-authored markup under `sandbox=""`.** An empty
+allow-list is the strictest setting the attribute has, not a lax one: no scripts,
+no same-origin, no forms, no navigation. The document lays out and paints and can
+do nothing else — which is the whole shape of a mockup, so nothing is lost. This
+is why `Parts` now draws an `artifact` carrying `markup` and still refuses a
+`uiResource`: a `uiResource` is a URL, and loading one pulls a third-party origin
+into the page over the network. `Preview.test.tsx` reads the ATTRIBUTE, because
+jsdom does not reflect `sandbox` as a `DOMTokenList` (`iframe.sandbox` is
+`undefined` there and every question asked of it answers `undefined`), and it
+asserts `toEqual([])` rather than "no allow-scripts" — a MISSING attribute is a
+fully trusted frame and would satisfy the weaker form.
+
+**Nothing imports `@hanzo/ai`.** `Frame` is open and insists only on `type`, the
+way `words`'s `Part` is open, and `content_block`/`delta` are `unknown` on
+purpose: a narrower spelling makes half the event union unassignable (a delta
+typed with all-optional fields trips weak-type detection against
+`message_delta`), and this is a boundary where reading defensively is correct
+anyway. `Tool` is a `type` alias and not an `interface` for the same class of
+reason — only a type literal gets an implicit index signature, and an interface
+compiles here and fails at every call site against `AnthropicTool`'s
+`[key: string]: unknown`. `directive.test.ts` restates both `@hanzo/ai` types
+verbatim and assigns across them; those assignments are checked by `tsc`, not by
+vitest.
+
+`Inspector` is the CONTENTS of the right rail; `Aside` is the column. A section
+carries `facts` (name to value) or `parts`, and `MessagePart` already covers
+every shape a run produces — steps and artifacts for a chat turn, files and
+console output for a coding run, `citation` for a research run's sources — so one
+panel serves all three. An empty section does not render at all: a heading over
+blank space reads as "produced nothing" when the truth is "not reported".
+
 ### modularizeImports support
 
 `scripts/gen-primitives.mjs` reads the gui backend barrel and emits one
