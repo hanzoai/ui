@@ -77,6 +77,32 @@ describe('the exports map', () => {
     expect(missing, `${missing.length} subpath(s) resolve to nothing`).toEqual([])
   })
 
+  it.runIf(built)('emits no two files that differ only by case', () => {
+    // Half the people who install this package are on macOS, whose default
+    // filesystem is case-INSENSITIVE: two emitted files whose names differ only
+    // in case are one file there, and the second write silently replaces the
+    // first. The build is green, the tarball packs, and a consumer gets one
+    // module where two belong.
+    //
+    // Measured, not hypothetical: a pure `backdrop/backdrop.ts` beside its
+    // component `backdrop/Backdrop.tsx` emitted five colliding pairs
+    // (`.js`/`.cjs`/`.d.ts`/`.d.ts.map`/`.js.map`) the first time this directory
+    // was built. The convention that avoids it is already the house one —
+    // lowercase for a module of rules, capitalised for a component — so the
+    // rename was `scene.ts`, and this is what holds the line.
+    const files = execFileSync('find', [DIST, '-type', 'f'], { encoding: 'utf8' }).split('\n')
+    const seen = new Map<string, string>()
+    const clashes: string[] = []
+    for (const path of files) {
+      if (!path) continue
+      const key = path.toLowerCase()
+      const first = seen.get(key)
+      if (first) clashes.push(`${first} <-> ${path}`)
+      else seen.set(key, path)
+    }
+    expect(clashes, `${clashes.length} file(s) collide on a case-insensitive disk`).toEqual([])
+  })
+
   it('opens the product and primitive layers to deep imports', () => {
     // Without these, reaching one component means importing the barrel, and the
     // barrel is the whole layer. Four surface migrations wrote their own copies
