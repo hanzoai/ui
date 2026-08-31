@@ -80,3 +80,14 @@ export {
   type SourcesProps,
   type SourceCardProps,
 } from './Sources'
+
+/**
+ * The canvas behind the conversation, and the persona on it.
+ *
+ * `Backdrop` lives at `@hanzo/ui/backdrop` — it is web-only and nothing about it
+ * is chat-specific — and is re-exported here because a chat surface is what
+ * mounts one. `Persona` is chat's own: an emotion picks a clip, and the
+ * backdrop's crossfade plays it.
+ */
+export * from '../backdrop'
+export { Persona, clip, type Emotion, type PersonaProps, type Scenes } from './Persona'
