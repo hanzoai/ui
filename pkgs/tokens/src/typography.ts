@@ -51,15 +51,26 @@ export const lineHeight = {
   loose:   "2",
 } as const
 
+/**
+ * Zen's register, not the generic ladder.
+ *
+ * A variable face has its own optical scale, and 400/500/600 are only the
+ * numbers a static family inherited from metal. Ours sit where Zen actually
+ * reads on a screen: body at 497 sets the same colour on a page that 400 does
+ * in a lighter face, and 606 is where emphasis separates without going bold.
+ *
+ * The named steps stay — normal, medium, semibold — because the name is the
+ * role. The numbers under them are ours to choose, and these are chosen.
+ */
 export const fontWeight = {
-  thin:       "100",
-  extralight: "200",
-  light:      "300",
-  normal:     "400",
-  medium:     "500",
-  semibold:   "600",
-  bold:       "700",
-  extrabold:  "800",
+  thin:       "120",
+  extralight: "220",
+  light:      "360",
+  normal:     "497",
+  medium:     "606",
+  semibold:   "680",
+  bold:       "760",
+  extrabold:  "840",
   black:      "900",
 } as const
 

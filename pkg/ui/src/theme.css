@@ -227,7 +227,7 @@
 .hz-prose > h1, .hz-prose > h2, .hz-prose > h3,
 .hz-prose > h4, .hz-prose > h5, .hz-prose > h6 {
   font-family: var(--font-display, var(--font-sans)), sans-serif;
-  font-weight: 600;
+  font-weight: 606;
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   margin: 0;
@@ -243,7 +243,7 @@
    stack. */
 .hz-prose > h6 {
   font-size: var(--text-base);
-  font-weight: 400;
+  font-weight: 497;
   color: var(--muted-foreground);
 }
 
@@ -291,7 +291,7 @@
   font-size: 0.9em;
 }
 .hz-prose a { color: inherit; text-decoration: underline }
-.hz-prose strong { font-weight: 600 }
+.hz-prose strong { font-weight: 606 }
 .hz-prose :where(img, video) { max-width: 100%; height: auto }
 
 /* The named rungs. `responsive` is the default and is the only one that moves
