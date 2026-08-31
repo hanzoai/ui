@@ -25,6 +25,10 @@
  * component reads it, and lifting it would put a keystroke through the surface's
  * state on every letter.
  *
+ * That same call now draws a turn whose content is a LIST, through `Parts` — so
+ * an image, a tool call, a citation and an artifact reach the screen with
+ * nothing added at the call site. They used to be dropped there.
+ *
  * No transport, no store, no routing — `@hanzo/ui` stays fetch-free, so nothing
  * here imports `@hanzo/ai`. `messages` is read structurally, which is what lets
  * that hold while the two packages still compose exactly.
@@ -36,6 +40,7 @@ import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
 import { Composer, type ComposerProps } from './Composer'
 import { Message, type Role } from './Message'
+import { Parts, type MessagePart } from './Parts'
 import { Thread, type ThreadProps } from './Thread'
 import { words, type Said } from './words'
 
@@ -57,7 +62,7 @@ export interface Turn {
    * over: a completion's content is `string | ContentPart[]` (text beside an
    * image), so a turn holding an attachment could not be handed to this at all.
    * Narrowing the wire in a component fed BY the wire just relocates the
-   * mismatch to every caller. `words` is the flattener.
+   * mismatch to every caller. `words` flattens it to prose; `Parts` draws it.
    */
   content?: Said
 }
@@ -82,12 +87,15 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
   /** End the turn in flight. Absent, the composer offers no stop. */
   stop?: () => void
   /**
-   * Render a turn's body. Defaults to its text.
+   * Render a turn's body. Defaults to `Parts` for a list and the words for a
+   * string.
    *
    * A surface with a markdown pipeline passes it here — the plugin set is
    * per-surface (nine plugins, one plugin, or a regex under a bundle ceiling
    * that cannot afford a parser), so this package ships none and renders the
-   * words plainly until someone says otherwise.
+   * words plainly until someone says otherwise. The usual form hands the
+   * pipeline to `Parts` rather than replacing it:
+   * `body={(t) => <Parts parts={t.content as MessagePart[]} prose={md} />}`.
    */
   body?: (turn: Turn) => ReactNode
   /** Shown instead of the thread while nothing has been said. */
@@ -95,6 +103,29 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
   /** The composer's own props — placeholder, hint, the send control, the field. */
   composer?: Partial<ComposerProps>
 }
+
+/**
+ * A turn's content, drawn by what it is.
+ *
+ * A string is prose and always was. A LIST goes to `Parts`, which is the change:
+ * it used to go to `words`, which keeps the text and drops the image, the tool
+ * call and the citation — so a surface passing the wire's own turns saw only the
+ * prose in them, and had to write its own switch to see the rest.
+ *
+ * Nothing regresses on the way through. `Parts` joins adjacent prose before it
+ * draws (the wire splits a sentence mid-word), and a part whose type it does not
+ * know contributes its text, so an all-text turn renders the identical string
+ * `words` produced.
+ *
+ * The cast is the one place the open wire meets the closed union, and it is safe
+ * in exactly that direction: `Parts` reads `type` before it reads anything else.
+ */
+const draw = (said: Said) =>
+  typeof said === 'string' || said == null ? (
+    ink(words(said))
+  ) : (
+    <Parts parts={said as MessagePart[]} />
+  )
 
 export function Chat({
   messages,
@@ -142,7 +173,7 @@ export function Chat({
               role={turn.role}
               busy={streaming && i === last && turn.role === 'assistant'}
             >
-              {body ? body(turn) : ink(words(turn.content))}
+              {body ? body(turn) : draw(turn.content)}
             </Message>
           ))}
         </Thread>
