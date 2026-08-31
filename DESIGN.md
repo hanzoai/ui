@@ -37,6 +37,18 @@ spelled for a face goes stale the moment the face moves.
 --font-mono: Zen Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 ```
 
+**Weights are Zen's, not the generic ladder.** A variable face has its own optical
+scale; 400/500/600 are numbers a static family inherited from metal. Ours sit where
+Zen reads on a screen, and the named step is the role — the number under it is ours.
+
+| Step | Weight | Use |
+|------|--------|-----|
+| `normal` | **497** | body, and the default everywhere |
+| `medium` | **606** | emphasis that must not read as bold |
+| `semibold` | **680** | headings |
+| `bold` | **760** | the strongest text in ordinary copy |
+| `air` / `black` | 220 / 900 | display only |
+
 **Registers.** `@hanzo/font/presets.css` defines `.zen-air`, `.zen-book`,
 `.zen-medium`, `.zen-wide`, `.zen-round`. Use the class; do not restate the numbers.
 
