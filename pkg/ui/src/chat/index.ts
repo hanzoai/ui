@@ -7,9 +7,14 @@
  *
  * The markdown pipeline is the surface's and arrives as `children`: the three
  * surfaces run nine plugins, one plugin, and a regex under a bundle ceiling
- * that cannot afford a parser. There is no `renderPart` prop for the same
- * reason — the part union is per-surface too, so a callback here would take a
- * Part type matching nobody's.
+ * that cannot afford a parser.
+ *
+ * THE PART UNION IS NOT PER-SURFACE, and this file used to say it was — which is
+ * why it refused a `renderPart` callback and why every surface then wrote the
+ * same switch. There is one canonical set (`MessagePart`), it is CLOSED, and
+ * `Parts` is the dispatcher over it: no callback to hand in, because each arm
+ * already resolves to a piece that ships here. `words`'s `Part` stays open
+ * beside it — that one reads the wire, and the wire is not ours to close.
  *
  * Everything else about a turn is presentational and lives here: the code
  * frame, the step disclosure, the failure, the streaming caret.
@@ -30,6 +35,15 @@
  */
 export { Chat, type ChatProps, type Turn } from './Chat'
 export { words, type Part, type Said } from './words'
+export {
+  Parts,
+  Piece,
+  join,
+  type MessagePart,
+  type PartActions,
+  type PartsProps,
+  type PieceProps,
+} from './Parts'
 export { Composer, ASK, type ComposerProps } from './Composer'
 export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
