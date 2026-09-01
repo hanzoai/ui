@@ -49,7 +49,7 @@
     "test": "bun test"
   },
   "peerDependencies": {
-    "@hanzo/gui": ">=8.3.0",
+    "@hanzo/gui": ">=8.3.1",
     "@xyflow/react": ">=12",
     "react": ">=19.2.8",
     "react-dom": ">=19.2.8"

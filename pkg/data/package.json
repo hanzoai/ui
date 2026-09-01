@@ -55,7 +55,7 @@
     "@hanzogui/lucide-icons-2": "catalog:"
   },
   "peerDependencies": {
-    "@hanzo/gui": ">=8.3.0",
+    "@hanzo/gui": ">=8.3.1",
     "react": ">=19.2.8"
   },
   "devDependencies": {
