@@ -1,8 +1,19 @@
 /**
- * Hanzo theme definitions.
+ * Hanzo theme definitions — the shadcn-shaped, RESOLVED projection.
  *
- * Dark theme is primary. All oklch values are taken directly from
- * the canonical hanzo-default-colors.css.
+ * src/theme.ts is the source of truth for the colour system (and the CSS the
+ * whole estate embeds). This module is its resolved, flat view for the small set
+ * of consumers that want a shadcn-style object of concrete values a JavaScript
+ * runtime can use directly — no `var()` to dereference, because JS cannot. Every
+ * value below is the RESOLVED form of the matching token in theme.ts (e.g.
+ * `--border: var(--white-10)` resolves to `rgb(255 255 255 / .10)`). When theme.ts
+ * changes, these change with it; they are not a second opinion.
+ *
+ * Dark is primary. The monochrome rule holds here too — the earlier revision had
+ * drifted to stock shadcn oklch neutrals (a washed near-#252525 background, a
+ * lighter card, a blue-violet sidebarPrimary), which made an app on @hanzo/ui and
+ * an app on @hanzo/design not resemble each other. Values are hex/rgb, matching
+ * theme.ts exactly.
  */
 
 export interface ThemeTokens {
@@ -36,80 +47,68 @@ export interface ThemeTokens {
   sidebarRing: string
 }
 
-/** Hanzo dark theme (primary).
- *
- * THESE ARE @hanzo/design's VALUES, and they must stay that way. This module is
- * the TS mirror of tokens/colors.css over there — the CSS is the source of
- * truth, and a second set of numbers here is not a second opinion, it is drift.
- *
- * It had drifted: stock shadcn oklch neutrals, so `background` was oklch(0.145)
- * — a washed near-#252525 — where the system says true black, and `card` was
- * lighter still, which is the grey-box-on-grey look. An app built on @hanzo/ui
- * and an app built on @hanzo/design did not resemble each other.
- *
- * destructiveForeground was also unreadable: oklch(0.58 0.22 27) is the same
- * saturated red as `destructive`, so error text sat on its own background. */
+/** Hanzo dark theme (primary) — resolved from theme.ts. */
 export const dark: ThemeTokens = {
-  background:              "#000000",
-  foreground:              "#ededed",
-  card:                    "#0a0a0a",
-  cardForeground:          "#f5f5f5",
-  popover:                 "#0a0a0a",
-  popoverForeground:       "#f5f5f5",
-  primary:                 "#ffffff",
-  primaryForeground:       "#000000",
-  secondary:               "#1a1a1a",
-  secondaryForeground:     "#f5f5f5",
-  muted:                   "#101010",
-  mutedForeground:         "#888888",
-  accent:                  "#1a1a1a",
-  accentForeground:        "#f5f5f5",
+  background:              "#0a0a0a",
+  foreground:              "#fafafa",
+  card:                    "#0f0f0f",
+  cardForeground:          "#fafafa",
+  popover:                 "#0f0f0f",
+  popoverForeground:       "#fafafa",
+  primary:                 "#fafafa",
+  primaryForeground:       "#0a0a0a",
+  secondary:               "#262626",
+  secondaryForeground:     "#fafafa",
+  muted:                   "#171717",
+  mutedForeground:         "#a3a3a3",
+  accent:                  "#262626",
+  accentForeground:        "#fafafa",
   destructive:             "#ef4444",
-  destructiveForeground:   "#f5f5f5",
-  border:                  "#1f1f1f",
-  input:                   "#1f1f1f",
-  ring:                    "#737373",
+  destructiveForeground:   "#fafafa",
+  border:                  "rgb(255 255 255 / .10)",
+  input:                   "rgb(255 255 255 / .15)",
+  ring:                    "rgb(255 255 255 / .40)",
   radius:                  "0.5rem",
-  sidebar:                 "oklch(0.205 0 0)",
-  sidebarForeground:       "oklch(0.985 0 0)",
-  sidebarPrimary:          "oklch(0.488 0.243 264.376)",
-  sidebarPrimaryForeground: "oklch(0.985 0 0)",
-  sidebarAccent:           "oklch(0.269 0 0)",
-  sidebarAccentForeground: "oklch(0.985 0 0)",
-  sidebarBorder:           "oklch(1 0 0 / 10%)",
-  sidebarRing:             "oklch(0.439 0 0)",
+  sidebar:                 "#0f0f0f",
+  sidebarForeground:       "#fafafa",
+  sidebarPrimary:          "#fafafa",
+  sidebarPrimaryForeground: "#0a0a0a",
+  sidebarAccent:           "#262626",
+  sidebarAccentForeground: "#fafafa",
+  sidebarBorder:           "rgb(255 255 255 / .10)",
+  sidebarRing:             "rgb(255 255 255 / .40)",
 }
 
-/** Hanzo light theme -- oklch values */
+/** Hanzo light theme — resolved from theme.ts (.light). */
 export const light: ThemeTokens = {
-  background:              "oklch(1 0 0)",
-  foreground:              "oklch(0.145 0 0)",
-  card:                    "oklch(1 0 0)",
-  cardForeground:          "oklch(0.145 0 0)",
-  popover:                 "oklch(1 0 0)",
-  popoverForeground:       "oklch(0.145 0 0)",
-  primary:                 "oklch(0.205 0 0)",
-  primaryForeground:       "oklch(0.985 0 0)",
-  secondary:               "oklch(0.97 0 0)",
-  secondaryForeground:     "oklch(0.205 0 0)",
-  muted:                   "oklch(0.97 0 0)",
-  mutedForeground:         "oklch(0.556 0 0)",
-  accent:                  "oklch(0.97 0 0)",
-  accentForeground:        "oklch(0.205 0 0)",
-  destructive:             "oklch(0.577 0.245 27.325)",
-  destructiveForeground:   "oklch(0.97 0.01 17)",
-  border:                  "oklch(0.922 0 0)",
-  input:                   "oklch(0.922 0 0)",
-  ring:                    "oklch(0.708 0 0)",
+  background:              "#f7f7f7",
+  foreground:              "#0a0a0a",
+  card:                    "#f2f2f2",
+  cardForeground:          "#0a0a0a",
+  popover:                 "#fbfbfb",
+  popoverForeground:       "#0a0a0a",
+  primary:                 "#0a0a0a",
+  primaryForeground:       "#fafafa",
+  secondary:               "#e4e4e4",
+  secondaryForeground:     "#0a0a0a",
+  muted:                   "#ededed",
+  mutedForeground:         "#525252",
+  accent:                  "#e4e4e4",
+  accentForeground:        "#0a0a0a",
+  destructive:             "#ef4444",
+  destructiveForeground:   "#ffffff",
+  border:                  "rgb(0 0 0 / .10)",
+  input:                   "rgb(0 0 0 / .15)",
+  ring:                    "rgb(0 0 0 / .5)",
   radius:                  "0.5rem",
-  sidebar:                 "oklch(0.985 0 0)",
-  sidebarForeground:       "oklch(0.145 0 0)",
-  sidebarPrimary:          "oklch(0.205 0 0)",
-  sidebarPrimaryForeground: "oklch(0.985 0 0)",
-  sidebarAccent:           "oklch(0.97 0 0)",
-  sidebarAccentForeground: "oklch(0.205 0 0)",
-  sidebarBorder:           "oklch(0.922 0 0)",
-  sidebarRing:             "oklch(0.708 0 0)",
+  sidebar:                 "#f2f2f2",
+  sidebarForeground:       "#0a0a0a",
+  sidebarPrimary:          "#0a0a0a",
+  sidebarPrimaryForeground: "#fafafa",
+  sidebarAccent:           "#e4e4e4",
+  sidebarAccentForeground: "#0a0a0a",
+  sidebarBorder:           "rgb(0 0 0 / .10)",
+  sidebarRing:             "rgb(0 0 0 / .5)",
 }
 
 export const themes = { dark, light } as const

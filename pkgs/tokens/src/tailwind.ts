@@ -6,7 +6,7 @@
  *   export default { theme: { extend: hanzoTheme } }
  */
 
-import { colors, zinc } from "./colors"
+import { colors, neutral, zinc } from "./colors"
 import { spacing } from "./spacing"
 import { radii } from "./radii"
 import { fontFamily, fontSize, fontWeight, lineHeight, letterSpacing } from "./typography"
@@ -14,6 +14,7 @@ import { fontFamily, fontSize, fontWeight, lineHeight, letterSpacing } from "./t
 export const hanzoTheme = {
   colors: {
     ...colors,
+    neutral,
     zinc,
   },
   spacing,
@@ -25,4 +26,4 @@ export const hanzoTheme = {
   letterSpacing,
 } as const
 
-export { colors, zinc, spacing, radii, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing }
+export { colors, neutral, zinc, spacing, radii, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing }

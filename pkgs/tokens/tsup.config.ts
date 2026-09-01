@@ -8,6 +8,7 @@ export default defineConfig({
     "src/radii.ts",
     "src/typography.ts",
     "src/themes.ts",
+    "src/theme.ts",
     "src/tailwind.ts",
     "src/gui.ts",
   ],

@@ -37,6 +37,12 @@
       "require": "./dist/themes.js"
     },
     "./css": "./dist/tokens.css",
+    "./css/colors": "./dist/colors.css",
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.mjs",
+      "require": "./dist/theme.js"
+    },
     "./tailwind": {
       "types": "./dist/tailwind.d.ts",
       "import": "./dist/tailwind.mjs",
@@ -52,7 +58,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs && node scripts/gen-css.mjs",
+    "gen-css": "tsup --silent && node scripts/gen-css.mjs",
     "dev": "tsup --watch",
     "clean": "rm -rf dist"
   },
