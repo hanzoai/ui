@@ -57,7 +57,7 @@ describe('Tabs selected state', () => {
     const tags = triggerTags(html(three()))
     expect(tags).toHaveLength(3)
 
-    const [active, inactive] = [classesOf(tags[0]), classesOf(tags[1])]
+    const [active, inactive] = [classesOf(tags[0]!), classesOf(tags[1]!)]
 
     // The bug: identical class sets — nothing tells the reader which tab is chosen.
     expect([...active].sort()).not.toEqual([...inactive].sort())
@@ -65,6 +65,6 @@ describe('Tabs selected state', () => {
     // The activeStyle background lands on the active tab and on no other.
     const onlyActive = [...active].filter((c) => !inactive.has(c))
     expect(bgClass(new Set(onlyActive))).not.toBe('')
-    expect(bgClass(classesOf(tags[2]))).toBe(bgClass(inactive)) // c is inactive, like b
+    expect(bgClass(classesOf(tags[2]!))).toBe(bgClass(inactive)) // c is inactive, like b
   })
 })
