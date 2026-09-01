@@ -5,6 +5,23 @@
  * the canonical Hanzo UI dark/light theme CSS variables.
  */
 
+/** Neutral ladder (hex) — the canonical base ramp (Tailwind neutral). This is
+ *  the ladder the CSS custom properties (`--neutral-*` in theme.ts) are cut from;
+ *  prefer it over `zinc` below, which stays only for back-compat. */
+export const neutral = {
+  50:  "#fafafa",
+  100: "#f5f5f5",
+  200: "#e5e5e5",
+  300: "#d4d4d4",
+  400: "#a3a3a3",
+  500: "#737373",
+  600: "#525252",
+  700: "#404040",
+  800: "#262626",
+  900: "#171717",
+  950: "#0a0a0a",
+} as const
+
 /** Zinc neutral palette (hex, for non-CSS consumers) */
 export const zinc = {
   50:  "#fafafa",
@@ -59,35 +76,37 @@ export const hsl = {
 } as const
 
 /**
- * Flat hex color primitives for use in any runtime.
- * These are the canonical Hanzo brand colors.
+ * Flat hex color primitives for use in any runtime — the RESOLVED dark palette.
+ * These mirror theme.ts (the source of truth): a #0a0a0a ground, #fafafa ink,
+ * the 0a/0f/17/26 surface ladder, and alpha-white hairlines. The earlier revision
+ * had drifted to true-black ground with zinc surfaces and a grey primary.
  */
 export const colors = {
   black:   "#000000",
-  white:   "#ffffff",
-  background: "#000000",
-  surface:    "#0a0a0a",
-  surface2:   "#18181b",
-  surface3:   "#27272a",
-  text:       "#ffffff",
-  textMuted:  "#a1a1aa",
-  textSubtle: "#71717a",
+  white:   "#fafafa",
+  background: "#0a0a0a",
+  surface:    "#0f0f0f",
+  surface2:   "#171717",
+  surface3:   "#262626",
+  text:       "#fafafa",
+  textMuted:  "#a3a3a3",
+  textSubtle: "#737373",
   border:     "rgba(255, 255, 255, 0.10)",
   input:      "rgba(255, 255, 255, 0.15)",
-  ring:       "#71717a",
-  primary:         "#e4e4e7",
-  primaryForeground: "#18181b",
-  secondary:        "#27272a",
+  ring:       "rgba(255, 255, 255, 0.40)",
+  primary:         "#fafafa",
+  primaryForeground: "#0a0a0a",
+  secondary:        "#262626",
   secondaryForeground: "#fafafa",
-  muted:            "#27272a",
-  mutedForeground:  "#a1a1aa",
-  accent:           "#3f3f46",
+  muted:            "#171717",
+  mutedForeground:  "#a3a3a3",
+  accent:           "#262626",
   accentForeground: "#fafafa",
-  destructive:      "#dc2626",
+  destructive:      "#ef4444",
   destructiveForeground: "#fafafa",
-  card:             "#18181b",
+  card:             "#0f0f0f",
   cardForeground:   "#fafafa",
-  popover:          "#27272a",
+  popover:          "#0f0f0f",
   popoverForeground: "#fafafa",
 } as const
 
