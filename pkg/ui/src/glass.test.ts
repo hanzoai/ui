@@ -201,7 +201,7 @@ describe('Depth is a ladder, and it has three rungs', () => {
 
 describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => {
   const require = createRequire(import.meta.url)
-  const design = rules(readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8'))
+  const design = rules(readFileSync(require.resolve('@hanzo/font/css'), 'utf8'))
 
   /**
    * Every declaration of a token, paired with the selector that scopes it.
