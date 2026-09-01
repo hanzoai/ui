@@ -16,7 +16,7 @@
 // design's own entry point gives: a bare specifier is not resolvable by a
 // browser, and a nested @import must precede all other rules or it is dropped
 // silently. Inlining is the only form that survives every consumer's bundler.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -127,11 +127,19 @@ mkdirSync(join(UI, 'dist'), { recursive: true })
 writeFileSync(join(UI, 'dist/theme.css'), composed)
 writeFileSync(join(UI, 'dist/glass.css'), glass)
 
-// design's exports map does not expose ./package.json, so the version is read
-// off the resolved stylesheet's own directory rather than by specifier.
-const version = JSON.parse(
-  readFileSync(join(dirname(require.resolve('@hanzo/font/css')), 'package.json'), 'utf8'),
-).version
+// font's exports map does not expose ./package.json, and its stylesheet
+// resolves inside `dist/`, so the version is read from the nearest
+// package.json above the resolved sheet.
+const version = JSON.parse(readFileSync(nearestPackage(dirname(require.resolve('@hanzo/font/css'))), 'utf8')).version
 console.log(
   `dist/theme.css — ${composed.length.toLocaleString()} bytes (@hanzo/design ${version} + this package)`,
 )
+
+/** The package.json that owns `dir`: the first one found walking up. */
+function nearestPackage(dir) {
+  for (let d = dir; ; d = dirname(d)) {
+    const p = join(d, 'package.json')
+    if (existsSync(p)) return p
+    if (dirname(d) === d) throw new Error(`no package.json above ${dir}`)
+  }
+}
