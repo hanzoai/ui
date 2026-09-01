@@ -66,7 +66,7 @@ describe('control ladder', () => {
   // The two field controls must read at the same size or every form looks broken.
   it('Input and SelectTrigger render their text at the same size', () => {
     const inputSize = read('input.tsx').match(/fontSize="(\$\d+)"/)?.[1]
-    const selectSize = read('select.tsx').match(/ink\(children[^)]*size:\s*'(\$\d+)'/)?.[1]
+    const selectSize = read('select.tsx').match(/ink\(children[^)]*size:\s*["'](\$\d+)["']/)?.[1]
 
     expect(inputSize, 'input.tsx declares no fontSize').toBeDefined()
     expect(selectSize, 'select.tsx declares no ink size').toBeDefined()
