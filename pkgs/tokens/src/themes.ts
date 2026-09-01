@@ -50,11 +50,11 @@ export interface ThemeTokens {
 /** Hanzo dark theme (primary) — resolved from theme.ts. */
 export const dark: ThemeTokens = {
   background:              "#0a0a0a",
-  foreground:              "#fafafa",
+  foreground:              "#e5e5e5",
   card:                    "#0f0f0f",
-  cardForeground:          "#fafafa",
+  cardForeground:          "#e5e5e5",
   popover:                 "#0f0f0f",
-  popoverForeground:       "#fafafa",
+  popoverForeground:       "#e5e5e5",
   primary:                 "#fafafa",
   primaryForeground:       "#0a0a0a",
   secondary:               "#262626",
