@@ -57,6 +57,15 @@ describe('Box tag', () => {
     expect(cls).toMatch(/_dsp-flex/)
   })
 
+  it('carries transition and truncation as style, not as attributes', () => {
+    const out = html(<Box tag="a" className="transition duration-150 truncate">x</Box>)
+    expect(out).not.toMatch(/transitionproperty=|transitionduration=|textoverflow=/i)
+    const style = /<a[^>]*style="([^"]*)"[^>]*>x/.exec(out)?.[1] ?? ''
+    expect(style).toContain('transition-property')
+    expect(style).toContain('transition-duration:150ms')
+    expect(style).toContain('text-overflow:ellipsis')
+  })
+
   it('still keeps a class it could not read', () => {
     // `group` is selected on by another rule; dropping it breaks that rule
     // silently, and under asChild the class rides on the child or nowhere.
