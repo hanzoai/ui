@@ -66,3 +66,48 @@ export {
   type PaneTab,
   type SystemLineProps,
 } from './Pane'
+
+export {
+  SwarmBar,
+  type AgentDescriptor,
+  type SwarmBarProps,
+} from './SwarmBar'
+
+export {
+  MCPHub,
+  type MCPServerInfo,
+  type MCPHubProps,
+} from './MCPHub'
+
+export {
+  DiffViewer,
+  type DiffViewerProps,
+} from './DiffViewer'
+
+export {
+  LiveVoiceCall,
+  type LiveVoiceCallProps,
+} from './LiveVoiceCall'
+
+export {
+  ChannelNotes,
+  type ChannelNotesProps,
+} from './ChannelNotes'
+
+export {
+  ChannelMembers,
+  type ChannelMember,
+  type ChannelMembersProps,
+} from './ChannelMembers'
+
+export {
+  ThemeCustomizer,
+  type ThemeConfig,
+  type ThemeCustomizerProps,
+} from './ThemeCustomizer'
+
+export {
+  ShortcutsSheet,
+  type ShortcutItem,
+  type ShortcutsSheetProps,
+} from './ShortcutsSheet'
