@@ -66,6 +66,12 @@ describe('Box tag', () => {
     expect(style).toContain('text-overflow:ellipsis')
   })
 
+  it('keeps a table a table', () => {
+    const out = html(<Box tag="td" className="px-4">x</Box>)
+    const style = /<td[^>]*style="([^"]*)"[^>]*>x/.exec(out)?.[1] ?? ''
+    expect(style).toContain('display:table-cell')
+  })
+
   it('still keeps a class it could not read', () => {
     // `group` is selected on by another rule; dropping it breaks that rule
     // silently, and under asChild the class rides on the child or nowhere.

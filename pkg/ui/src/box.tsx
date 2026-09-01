@@ -98,6 +98,12 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
  * not carry the `-webkit-` half of the pair, which is the one Safari reads for
  * clipping a gradient to text.
  */
+const TABLE = {
+  table: 'table', thead: 'table-header-group', tbody: 'table-row-group',
+  tfoot: 'table-footer-group', tr: 'table-row', td: 'table-cell', th: 'table-cell',
+  caption: 'table-caption', colgroup: 'table-column-group', col: 'table-column',
+} as const
+
 const CSS_PROPS = ['scrollSnapType', 'scrollSnapAlign', 'scrollSnapStop',
   'WebkitBackgroundClip',
   // `transition` and `truncate` land here too: gui has no transition props and
@@ -216,6 +222,9 @@ const BoxInner = forwardRef<any, BoxProps<keyof React.JSX.IntrinsicElements>>(fu
   // display prop has no such value — its set is block/contents/flex/inline/…
   // So it rides as a plain style, where it also outranks the class gui emits.
   if (tag === 'li' && !('display' in props)) text.display = 'list-item'
+  // A table is a table only while its parts keep their display values; the
+  // block gui stamps on a `td` stacks every cell into one column.
+  if (tag && tag in TABLE && !('display' in props)) text.display = TABLE[tag as keyof typeof TABLE]
   const style = Object.keys(text).length
     ? { ...text, ...(rest as any).style }
     : (rest as any).style
