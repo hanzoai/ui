@@ -254,7 +254,6 @@ export const light: TokenSection[] = [
  * (`dist/tokens.css`) alongside the colours. These are the canonical scales the
  * whole estate already ships — the tight app-first type register (base 14px, the
  * linear.app / vercel.com density, not a roomy marketing scale), the 4px spacing
- * ramp, and the semantic radii. Geist + Geist Mono are the only two faces, self-
  * hosted. @hanzo/design keeps its own richer typography.css/spacing.css (they
  * carry runtime knobs and breakpoint overrides a flat token cannot); this block
  * is what a bare consumer (@hanzo/brand, a Go surface) needs with nothing to wire.
@@ -279,12 +278,12 @@ export const scale: TokenSection[] = [
       {
         name: 'font-sans',
         value:
-          "'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+          "'Zen', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
       },
       {
         name: 'font-mono',
         value:
-          "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+          "'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
       },
       { name: 'font-size-xs', value: '0.6875rem', comment: '11px — eyebrows / section labels' },
       { name: 'font-size-sm', value: '0.8125rem', comment: '13px — nav labels, dense body' },
