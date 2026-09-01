@@ -12,7 +12,7 @@
 // Order matters and is deliberate: design first, ours second, so a remaining
 // declaration here can still override a token when it genuinely has to.
 //
-// Flattened rather than `@import '@hanzo/font/css'` for the reason
+// Flattened rather than `@import '@hanzo/design/styles.css'` for the reason
 // design's own entry point gives: a bare specifier is not resolvable by a
 // browser, and a nested @import must precede all other rules or it is dropped
 // silently. Inlining is the only form that survives every consumer's bundler.
@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url'
 const require = createRequire(import.meta.url)
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
 
-const designRaw = readFileSync(require.resolve('@hanzo/font/css'), 'utf8')
+const designRaw = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8')
 const ours = readFileSync(join(UI, 'src/theme.css'), 'utf8')
 
 // The chrome material — its own entry point AND part of this sheet. A host that
@@ -54,7 +54,7 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * dropped instead. This package NAMES the families — it always has; gui-config
  * says "the host self-hosts both faces (its own fonts.css) — this only names
  * them" — and a consumer that wants them self-hosted imports
- * `@hanzo/font/css`, whose url()s resolve against design, where the
+ * `@hanzo/font/css`, whose url()s resolve against font, where the
  * files actually are.
  */
 const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
@@ -127,10 +127,9 @@ mkdirSync(join(UI, 'dist'), { recursive: true })
 writeFileSync(join(UI, 'dist/theme.css'), composed)
 writeFileSync(join(UI, 'dist/glass.css'), glass)
 
-// font's exports map does not expose ./package.json, and its stylesheet
-// resolves inside `dist/`, so the version is read from the nearest
-// package.json above the resolved sheet.
-const version = JSON.parse(readFileSync(nearestPackage(dirname(require.resolve('@hanzo/font/css'))), 'utf8')).version
+// design's exports map does not expose ./package.json, so the version is
+// read from the nearest package.json above the resolved sheet.
+const version = JSON.parse(readFileSync(nearestPackage(dirname(require.resolve('@hanzo/design/styles.css'))), 'utf8')).version
 console.log(
   `dist/theme.css — ${composed.length.toLocaleString()} bytes (@hanzo/design ${version} + this package)`,
 )
