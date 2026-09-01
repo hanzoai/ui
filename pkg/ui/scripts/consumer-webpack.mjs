@@ -3,11 +3,9 @@
 // about a whole class of defect and only one of them was ever asked.
 //
 // 8.0.46 shipped a stylesheet whose @font-face pointed at
-// `./assets/fonts/Geist-Variable.woff2`, a file @hanzo/ui does not pack. Vite
 // leaves an unresolvable url() alone and the Vite consumer went green; webpack's
 // css-loader resolves it against the declaring file and fails the build:
 //
-//   HookWebpackError: Cannot find module './assets/fonts/Geist-Variable.woff2'
 //
 // hanzo.app found that, not this suite. So the suite now runs both.
 //
