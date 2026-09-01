@@ -16,7 +16,6 @@ export const FONT_MONO_VAR = '--font-mono' as const
 
 /**
  * UI / body / display / heading stack — Zen, then the CSS generic only.
- * No Inter, no named system fonts: the host always binds `--font-sans`
  * (next/font, @fontsource, CDN), so the generic is a last-resort generic, never
  * a system-UI look.
  */

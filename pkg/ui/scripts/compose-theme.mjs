@@ -12,7 +12,7 @@
 // Order matters and is deliberate: design first, ours second, so a remaining
 // declaration here can still override a token when it genuinely has to.
 //
-// Flattened rather than `@import '@hanzo/design/styles.css'` for the reason
+// Flattened rather than `@import '@hanzo/font/css'` for the reason
 // design's own entry point gives: a bare specifier is not resolvable by a
 // browser, and a nested @import must precede all other rules or it is dropped
 // silently. Inlining is the only form that survives every consumer's bundler.
@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url'
 const require = createRequire(import.meta.url)
 const UI = dirname(dirname(fileURLToPath(import.meta.url)))
 
-const designRaw = readFileSync(require.resolve('@hanzo/design/styles.css'), 'utf8')
+const designRaw = readFileSync(require.resolve('@hanzo/font/css'), 'utf8')
 const ours = readFileSync(join(UI, 'src/theme.css'), 'utf8')
 
 // The chrome material — its own entry point AND part of this sheet. A host that
@@ -43,7 +43,6 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * resolves against @hanzo/ui/dist, which has no assets, and webpack's css-loader
  * hard-fails the build:
  *
- *   HookWebpackError: Cannot find module './assets/fonts/Geist-Variable.woff2'
  *
  * That shipped in 8.0.46. Vite tolerates the missing asset, webpack does not,
  * and the consumer test was Vite-only — so the whole class was invisible. There
@@ -55,7 +54,7 @@ const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
  * dropped instead. This package NAMES the families — it always has; gui-config
  * says "the host self-hosts both faces (its own fonts.css) — this only names
  * them" — and a consumer that wants them self-hosted imports
- * `@hanzo/design/styles.css`, whose url()s resolve against design, where the
+ * `@hanzo/font/css`, whose url()s resolve against design, where the
  * files actually are.
  */
 const designNoFonts = designRaw.replace(/@font-face\s*\{[^}]*\}/g, '')
@@ -131,7 +130,7 @@ writeFileSync(join(UI, 'dist/glass.css'), glass)
 // design's exports map does not expose ./package.json, so the version is read
 // off the resolved stylesheet's own directory rather than by specifier.
 const version = JSON.parse(
-  readFileSync(join(dirname(require.resolve('@hanzo/design/styles.css')), 'package.json'), 'utf8'),
+  readFileSync(join(dirname(require.resolve('@hanzo/font/css')), 'package.json'), 'utf8'),
 ).version
 console.log(
   `dist/theme.css — ${composed.length.toLocaleString()} bytes (@hanzo/design ${version} + this package)`,
