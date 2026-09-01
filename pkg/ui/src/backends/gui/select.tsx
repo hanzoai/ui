@@ -44,14 +44,21 @@ export type SelectProps = ComponentProps<typeof GuiSelect> & {
   disabled?: boolean
 }
 
-const Select = /* @__PURE__ */ Object.assign(
+/**
+ * The root's own signature, then the compound statics gui hangs off it. Written
+ * out because the inferred type of an `Object.assign` cannot be named in a
+ * declaration file, and this package emits one.
+ */
+type SelectRoot = ((props: SelectProps) => ReactNode) & typeof GuiSelect
+
+const Select: SelectRoot = /* @__PURE__ */ Object.assign(
   ({ disabled = false, ...props }: SelectProps) => (
     <Disabled.Provider value={disabled}>
       <GuiSelect {...props} />
     </Disabled.Provider>
   ),
   GuiSelect
-)
+) as SelectRoot
 const SelectGroup: typeof GuiSelect.Group = GuiSelect.Group
 const SelectValue: typeof GuiSelect.Value = GuiSelect.Value
 
