@@ -88,7 +88,7 @@ export const colors = {
   surface:    "#0f0f0f",
   surface2:   "#171717",
   surface3:   "#262626",
-  text:       "#fafafa",
+  text:       "#e5e5e5",
   textMuted:  "#a3a3a3",
   textSubtle: "#737373",
   border:     "rgba(255, 255, 255, 0.10)",
@@ -105,9 +105,9 @@ export const colors = {
   destructive:      "#ef4444",
   destructiveForeground: "#fafafa",
   card:             "#0f0f0f",
-  cardForeground:   "#fafafa",
+  cardForeground:   "#e5e5e5",
   popover:          "#0f0f0f",
-  popoverForeground: "#fafafa",
+  popoverForeground: "#e5e5e5",
 } as const
 
 export type ColorToken = keyof typeof colors
