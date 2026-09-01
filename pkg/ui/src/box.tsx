@@ -99,7 +99,13 @@ const TEXT_PROPS = ['fontSize', 'lineHeight', 'fontWeight', 'letterSpacing',
  * clipping a gradient to text.
  */
 const CSS_PROPS = ['scrollSnapType', 'scrollSnapAlign', 'scrollSnapStop',
-  'WebkitBackgroundClip'] as const
+  'WebkitBackgroundClip',
+  // `transition` and `truncate` land here too: gui has no transition props and
+  // no `textOverflow`, so on the `tag` path they were forwarded as attributes —
+  // `transitionProperty="color, …"` in the markup, a React warning per element,
+  // and a link whose hover colour snapped instead of easing.
+  'transitionProperty', 'transitionDuration', 'transitionDelay',
+  'transitionTimingFunction', 'textOverflow'] as const
 
 /**
  * The props of the element being stood in for, ALONGSIDE gui's.
