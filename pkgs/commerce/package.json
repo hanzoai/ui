@@ -71,7 +71,7 @@
     "react-square-web-payments-sdk": "catalog:"
   },
   "peerDependencies": {
-    "@hanzo/ui": ">=8.27.5",
+    "@hanzo/ui": ">=8.27.7",
     "@hookform/resolvers": ">=5",
     "@radix-ui/react-radio-group": ">=1",
     "lucide-react": ">=1",
