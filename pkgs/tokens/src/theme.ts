@@ -273,7 +273,7 @@ export const scale: TokenSection[] = [
     ],
   },
   {
-    title: 'type — Geist + Geist Mono, self-hosted',
+    title: 'type — Zen + Zen Mono, self-hosted',
     vars: [
       {
         name: 'font-sans',
