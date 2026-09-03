@@ -6,6 +6,7 @@ export interface DiffViewerProps {
   filename?: string
   language?: string
   className?: string
+  style?: React.CSSProperties
 }
 
 interface DiffLine {
@@ -38,7 +39,7 @@ function computeDiff(original: string, modified: string): DiffLine[] {
     } else if (i < origLines.length) {
       lines.push({ type: 'remove', content: origLines[i], oldNum: i + 1 })
       i++
-    } else if (j < modLines.length) {
+    } else {
       lines.push({ type: 'add', content: modLines[j], newNum: j + 1 })
       j++
     }
@@ -50,8 +51,10 @@ function computeDiff(original: string, modified: string): DiffLine[] {
 export const DiffViewer: React.FC<DiffViewerProps> = ({
   originalCode,
   modifiedCode,
-  filename,
+  filename = 'changes.diff',
+  language = 'typescript',
   className = '',
+  style,
 }) => {
   const diffLines = useMemo(() => computeDiff(originalCode, modifiedCode), [originalCode, modifiedCode])
 
@@ -59,43 +62,57 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   const deletions = diffLines.filter((l) => l.type === 'remove').length
 
   return (
-    <div className={`flex flex-col border border-white/10 rounded-xl overflow-hidden bg-neutral-950/80 font-mono text-xs ${className}`}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#0c0c0e',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 12,
+        overflow: 'hidden',
+        fontSize: 12,
+        fontFamily: 'monospace',
+        ...style,
+      }}
+      aria-label="Code Diff Viewer"
+    >
       {filename && (
-        <div className="flex items-center justify-between px-3 py-2 bg-neutral-900/80 border-b border-white/10">
-          <span className="text-neutral-300 font-semibold">{filename}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-emerald-400 font-semibold">+{additions}</span>
-            <span className="text-rose-400 font-semibold">-{deletions}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: 'rgba(23, 23, 23, 0.8)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <span style={{ color: '#d4d4d4', fontWeight: 600 }}>{filename}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ color: '#34d399', fontWeight: 600 }}>+{additions}</span>
+            <span style={{ color: '#fb7185', fontWeight: 600 }}>-{deletions}</span>
           </div>
         </div>
       )}
 
-      <div className="overflow-x-auto divide-y divide-white/5 py-1">
-        {diffLines.map((line, idx) => (
-          <div
-            key={idx}
-            className={`flex items-stretch px-2 py-0.5 leading-5 select-text ${
-              line.type === 'add'
-                ? 'bg-emerald-950/40 text-emerald-300'
-                : line.type === 'remove'
-                ? 'bg-rose-950/40 text-rose-300'
-                : 'text-neutral-400 hover:bg-white/5'
-            }`}
-          >
-            <div className="w-8 text-right pr-2 text-neutral-600 select-none shrink-0 font-mono">
-              {line.oldNum || ''}
+      <div style={{ overflowX: 'auto', padding: '4px 0' }}>
+        {diffLines.map((line, idx) => {
+          const isAdd = line.type === 'add'
+          const isRemove = line.type === 'remove'
+          const bg = isAdd ? 'rgba(16, 185, 129, 0.12)' : isRemove ? 'rgba(244, 63, 94, 0.12)' : 'transparent'
+          const textColor = isAdd ? '#6ee7b7' : isRemove ? '#fda4af' : '#d4d4d4'
+
+          return (
+            <div
+              key={idx}
+              style={{ display: 'flex', alignItems: 'flex-start', padding: '1px 8px', backgroundColor: bg, color: textColor }}
+            >
+              <div style={{ width: 32, textAlign: 'right', paddingRight: 8, color: '#525252', userSelect: 'none', flexShrink: 0, fontFamily: 'monospace' }}>
+                {line.oldNum ?? ''}
+              </div>
+              <div style={{ width: 32, textAlign: 'right', paddingRight: 8, color: '#525252', userSelect: 'none', flexShrink: 0, fontFamily: 'monospace' }}>
+                {line.newNum ?? ''}
+              </div>
+              <div style={{ width: 16, textAlign: 'center', userSelect: 'none', flexShrink: 0 }}>
+                {isAdd ? '+' : isRemove ? '-' : ' '}
+              </div>
+              <pre style={{ flex: 1, overflowX: 'auto', whiteSpace: 'pre', fontFamily: 'monospace', paddingLeft: 4, margin: 0 }}>
+                {line.content || ' '}
+              </pre>
             </div>
-            <div className="w-8 text-right pr-2 text-neutral-600 select-none shrink-0 font-mono">
-              {line.newNum || ''}
-            </div>
-            <div className="w-4 text-center select-none shrink-0">
-              {line.type === 'add' ? '+' : line.type === 'remove' ? '-' : ' '}
-            </div>
-            <pre className="flex-1 overflow-x-auto whitespace-pre font-mono pl-1">
-              {line.content || ' '}
-            </pre>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
