@@ -224,4 +224,13 @@ publicHoistPattern:
 # on) and it wrote this key unanswered, so the install stopped at
 # ERR_PNPM_IGNORED_BUILDS before reading a manifest.
 allowBuilds:
+  '@swc/core': set this to true or false
+  core-js: set this to true or false
   esbuild: true
+  workerd: set this to true or false
+
+# Native builds nothing here runs: refusing them is what pnpm 11 does when they are unlisted.
+ignoredBuiltDependencies:
+  - "@swc/core"
+  - core-js
+  - workerd
