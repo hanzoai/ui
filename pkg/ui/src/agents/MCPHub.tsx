@@ -3,101 +3,105 @@ import React from 'react'
 export interface MCPServerInfo {
   id: string
   name: string
-  status: 'connected' | 'connecting' | 'disconnected' | 'error'
   transport: 'sse' | 'stdio' | 'websocket'
-  endpoint?: string
+  status: 'connected' | 'disconnected' | 'error'
   toolsCount: number
   resourcesCount: number
-  tools: { name: string; description: string; enabled: boolean }[]
 }
 
 export interface MCPHubProps {
   servers: MCPServerInfo[]
-  onToggleTool: (serverId: string, toolName: string, enabled: boolean) => void
-  onReconnect: (serverId: string) => void
-  onAddServer?: () => void
+  onConnectServer?: (serverId: string) => void
+  onDisconnectServer?: (serverId: string) => void
+  onOpenSettings?: () => void
   className?: string
+  style?: React.CSSProperties
 }
 
 export const MCPHub: React.FC<MCPHubProps> = ({
   servers,
-  onToggleTool,
-  onReconnect,
-  onAddServer,
+  onConnectServer,
+  onDisconnectServer,
+  onOpenSettings,
   className = '',
+  style,
 }) => {
   return (
     <div
-      className={`flex flex-col gap-3 p-4 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl ${className}`}
-      aria-label="Model Context Protocol Hub"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        padding: 20,
+        backgroundColor: '#0c0c0e',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 16,
+        ...style,
+      }}
+      aria-label="MCP Server Hub"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🔌</span>
-          <h3 className="text-sm font-semibold text-white">Model Context Protocol (MCP)</h3>
-          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-white/10 text-neutral-300 font-mono">
-            {servers.length} servers
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 18 }}>🔌</span>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>Model Context Protocol (MCP)</h3>
+          <span style={{ padding: '2px 6px', borderRadius: 9999, fontSize: 10, backgroundColor: 'rgba(255, 255, 255, 0.1)', color: '#d4d4d4', fontFamily: 'monospace' }}>
+            {servers.length} Active
           </span>
         </div>
-        {onAddServer && (
+
+        {onOpenSettings && (
           <button
-            onClick={onAddServer}
-            className="px-2.5 py-1 text-xs font-medium text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/30 rounded-lg transition-all"
+            onClick={onOpenSettings}
+            style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#a5b4fc', backgroundColor: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: 8, cursor: 'pointer' }}
           >
-            + Add Server
+            Manage Servers
           </button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {servers.map((server) => (
-          <div
-            key={server.id}
-            className="p-3 bg-white/5 border border-white/10 rounded-xl flex flex-col gap-2.5"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    server.status === 'connected'
-                      ? 'bg-emerald-400 shadow-sm shadow-emerald-400/50'
-                      : server.status === 'connecting'
-                      ? 'bg-amber-400 animate-pulse'
-                      : 'bg-rose-400'
-                  }`}
-                />
-                <span className="text-xs font-semibold text-white">{server.name}</span>
-                <span className="text-[10px] text-neutral-400 font-mono uppercase bg-white/5 px-1 py-0.5 rounded">
-                  {server.transport}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+        {servers.map((server) => {
+          const isConnected = server.status === 'connected'
+          return (
+            <div
+              key={server.id}
+              style={{ padding: 12, backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 12, display: 'flex', flexDirection: 'column', gap: 10 }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      backgroundColor: isConnected ? '#34d399' : '#f87171',
+                    }}
+                  />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#ffffff' }}>{server.name}</span>
+                  <span style={{ fontSize: 10, color: '#a3a3a3', fontFamily: 'monospace', textTransform: 'uppercase', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 4px', borderRadius: 4 }}>
+                    {server.transport}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => (isConnected ? onDisconnectServer?.(server.id) : onConnectServer?.(server.id))}
+                  style={{ fontSize: 11, color: '#a3a3a3', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  {isConnected ? 'Disconnect' : 'Connect'}
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
+                  🛠️ {server.toolsCount} tools
+                </span>
+                <span style={{ fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '2px 6px', borderRadius: 4 }}>
+                  📦 {server.resourcesCount} resources
                 </span>
               </div>
-              <button
-                onClick={() => onReconnect(server.id)}
-                className="text-[11px] text-neutral-400 hover:text-white transition-colors"
-                title="Reconnect server"
-              >
-                ↻
-              </button>
             </div>
-
-            <div className="flex flex-wrap gap-1.5">
-              {server.tools.map((tool) => (
-                <button
-                  key={tool.name}
-                  onClick={() => onToggleTool(server.id, tool.name, !tool.enabled)}
-                  className={`px-2 py-0.5 rounded text-[11px] font-mono transition-all border ${
-                    tool.enabled
-                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                      : 'bg-white/5 text-neutral-500 border-white/5 line-through opacity-60'
-                  }`}
-                  title={tool.description}
-                >
-                  {tool.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
