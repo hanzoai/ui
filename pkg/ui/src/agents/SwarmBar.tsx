@@ -3,84 +3,89 @@ import React from 'react'
 export interface AgentDescriptor {
   id: string
   name: string
-  role: string
+  handle: string
   icon: string
-  color: string
-  status: 'idle' | 'working' | 'ready'
-  capabilities: string[]
+  role: string
+  active?: boolean
 }
 
 export interface SwarmBarProps {
   agents: AgentDescriptor[]
-  activeAgentId: string
-  swarmMode: boolean
-  onSelectAgent: (id: string) => void
-  onToggleSwarm: (enabled: boolean) => void
+  selectedAgentId?: string
+  onSelectAgent?: (agentId: string) => void
+  onAddAgent?: () => void
   className?: string
+  style?: React.CSSProperties
 }
 
 export const SwarmBar: React.FC<SwarmBarProps> = ({
   agents,
-  activeAgentId,
-  swarmMode,
+  selectedAgentId,
   onSelectAgent,
-  onToggleSwarm,
+  onAddAgent,
   className = '',
+  style,
 }) => {
   return (
     <div
-      className={`flex items-center justify-between gap-2 px-3 py-2 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-xl ${className}`}
-      role="toolbar"
-      aria-label="Swarm & Agents Bar"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '6px 12px',
+        backgroundColor: '#0c0c0e',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 16,
+        ...style,
+      }}
+      aria-label="Multi-Agent Swarm Bar"
     >
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, overflowX: 'auto' }}>
         {agents.map((agent) => {
-          const isActive = agent.id === activeAgentId
+          const isSelected = agent.id === selectedAgentId
           return (
             <button
               key={agent.id}
-              onClick={() => onSelectAgent(agent.id)}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                isActive
-                  ? 'bg-white/15 text-white shadow-sm border border-white/20'
-                  : 'text-neutral-400 hover:text-neutral-200 hover:bg-white/5'
-              }`}
-              title={`${agent.name} — ${agent.role}`}
+              onClick={() => onSelectAgent?.(agent.id)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '4px 10px',
+                borderRadius: 10,
+                fontSize: 12,
+                fontWeight: 500,
+                border: isSelected ? '1px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: isSelected ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                color: isSelected ? '#c7d2fe' : '#d4d4d4',
+                cursor: 'pointer',
+              }}
+              title={agent.role}
             >
-              <span className="text-sm">{agent.icon}</span>
-              <span>{agent.name}</span>
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  agent.status === 'working'
-                    ? 'bg-amber-400 animate-pulse'
-                    : agent.status === 'ready'
-                    ? 'bg-emerald-400'
-                    : 'bg-neutral-500'
-                }`}
-              />
+              <span style={{ fontSize: 14 }}>{agent.icon}</span>
+              <span>{agent.handle}</span>
             </button>
           )
         })}
-      </div>
 
-      <button
-        onClick={() => onToggleSwarm(!swarmMode)}
-        className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all border shrink-0 ${
-          swarmMode
-            ? 'bg-indigo-600/30 text-indigo-300 border-indigo-500/40 shadow-sm shadow-indigo-500/20'
-            : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-        }`}
-        title="Swarm Mode coordinates multi-agent task execution"
-      >
-        <span>⚡ Swarm</span>
-        <span
-          className={`px-1 py-0.2 rounded text-[10px] ${
-            swarmMode ? 'bg-indigo-500 text-white font-bold' : 'bg-neutral-800 text-neutral-400'
-          }`}
-        >
-          {swarmMode ? 'ON' : 'OFF'}
-        </span>
-      </button>
+        {onAddAgent && (
+          <button
+            onClick={onAddAgent}
+            style={{
+              padding: '4px 8px',
+              fontSize: 12,
+              borderRadius: 8,
+              border: '1px dashed rgba(255, 255, 255, 0.2)',
+              backgroundColor: 'transparent',
+              color: '#a3a3a3',
+              cursor: 'pointer',
+            }}
+            title="Add Agent to Swarm"
+          >
+            + Add
+          </button>
+        )}
+      </div>
     </div>
   )
 }
