@@ -126,16 +126,22 @@ const source = (root: string) => {
       if (!code.includes('react/jsx-dev-runtime')) return
       return { code: code.replaceAll('react/jsx-dev-runtime', '@hanzo/source/jsx-dev-runtime'), map: null }
     },
-    transformIndexHtml() {
-      if (!serving) return
-      return [
-        {
-          tag: 'script',
-          attrs: { type: 'module' },
-          children: "import { listen } from '@hanzo/source/client'\nlisten()",
-          injectTo: 'body',
-        },
-      ]
+    // `pre`, so Vite's own HTML pass still runs over the injected script and
+    // resolves its import; a script added after that pass reaches the browser
+    // with a bare specifier the browser cannot resolve.
+    transformIndexHtml: {
+      order: 'pre' as const,
+      handler() {
+        if (!serving) return
+        return [
+          {
+            tag: 'script',
+            attrs: { type: 'module' },
+            children: "import { listen } from '@hanzo/source/client'\nlisten()",
+            injectTo: 'body',
+          },
+        ]
+      },
     },
   }
 }
