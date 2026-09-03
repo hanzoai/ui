@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/next",
-  "version": "0.1.0",
-  "description": "The Next.js config every Hanzo app shares \u2014 one runtime, one compiler, one way.",
+  "version": "0.1.1",
+  "description": "The Next.js config every Hanzo app shares — one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",

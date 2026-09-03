@@ -29,7 +29,10 @@
  * keeping symlinks does under webpack. One runtime either way, two mechanisms —
  * because the bundlers genuinely differ, not because we changed our minds.
  */
-import { resolve } from 'node:path'
+import { createRequire } from 'node:module'
+import { dirname, resolve } from 'node:path'
+
+const need = createRequire(import.meta.url)
 
 /** The subset of a Vite config this package touches. Structural on purpose: it
  *  must not pin a `vite` version to type-check. */
@@ -75,15 +78,64 @@ export function hanzo(config: Config = {}, options: Options): Config {
       find: /^@react-native\/assets-registry\/registry$/,
       replacement: 'react-native-web/dist/modules/AssetRegistry',
     },
+    // The source runtime is this package's dependency, not the app's, and an
+    // isolated node_modules does not let the app see it. Naming the resolved
+    // copy here is what keeps an app on `hanzo()` free of configuration.
+    { find: /^@hanzo\/source\/(.+)$/, replacement: `${dirname(need.resolve('@hanzo/source/package.json'))}/dist/$1.js` },
   ]
+
+  const appBuild = (config.build as Record<string, unknown>) ?? {}
+  const appPlugins = Array.isArray(config.plugins) ? (config.plugins as unknown[]) : []
 
   return {
     ...config,
+    // A production bundle names the source it came from. A stack trace, an
+    // error report and an edit widget all read that map; without it every one
+    // of them points at a minified line.
+    build: { sourcemap: true, ...appBuild },
+    plugins: [...appPlugins, source(root)],
     resolve: {
       ...appResolve,
       alias: aliases,
       dedupe: [...new Set([...RUNTIME, ...dedupe, ...(appResolve.dedupe ?? [])])],
       extensions: appResolve.extensions ?? [...WEB_FIRST, ...DEFAULT_EXT],
+    },
+  }
+}
+
+/**
+ * Where a rendered element came from, in development.
+ *
+ * The React plugin emits `import { jsxDEV } from 'react/jsx-dev-runtime'` in
+ * every app module. Pointing that import at `@hanzo/source` instead keeps the
+ * position the compiler already passes, as `data-source` on host elements, and
+ * the injected listener opens it in the editor on Alt + right click through
+ * Vite's own `/__open-in-editor`. Only modules under the app root are
+ * redirected, so the runtime's own import of React is never rewritten into
+ * itself; a production build is untouched.
+ */
+const source = (root: string) => {
+  let serving = false
+  return {
+    name: 'hanzo:source',
+    configResolved(resolved: { command: string }) {
+      serving = resolved.command === 'serve'
+    },
+    transform(code: string, id: string) {
+      if (!serving || !id.startsWith(root) || id.includes('/node_modules/')) return
+      if (!code.includes('react/jsx-dev-runtime')) return
+      return { code: code.replaceAll('react/jsx-dev-runtime', '@hanzo/source/jsx-dev-runtime'), map: null }
+    },
+    transformIndexHtml() {
+      if (!serving) return
+      return [
+        {
+          tag: 'script',
+          attrs: { type: 'module' },
+          children: "import { listen } from '@hanzo/source/client'\nlisten()",
+          injectTo: 'body',
+        },
+      ]
     },
   }
 }
