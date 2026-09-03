@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/react",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React package for building AI-powered applications with generative UI",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -51,12 +51,8 @@
     }
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "catalog:",
     "nanoid": "catalog:",
-    "openai": "catalog:",
-    "swr": "catalog:",
-    "zod": "catalog:",
-    "zustand": "catalog:"
+    "zod": "catalog:"
   },
   "peerDependencies": {
     "react": ">=19.2.8",
