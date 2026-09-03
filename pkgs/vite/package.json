@@ -1,7 +1,7 @@
 {
   "name": "@hanzo/vite",
-  "version": "0.1.1",
-  "description": "The Vite config every Hanzo app shares \u2014 one runtime, one compiler, one way.",
+  "version": "0.1.2",
+  "description": "The Vite config every Hanzo app shares — one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -33,5 +33,8 @@
     "type": "git",
     "url": "git+https://github.com/hanzoai/ui.git",
     "directory": "pkgs/vite"
+  },
+  "dependencies": {
+    "@hanzo/source": "workspace:*"
   }
 }
