@@ -73,3 +73,10 @@ describe('@hanzo/next', () => {
     expect(result.resolve.alias['@extra']).toBe('/x')
   })
 })
+
+describe('the platform answer', () => {
+  it('tells gui it is the web build through env', () => {
+    const out = hanzo({ env: { FOO: 'bar' } }, { root: '/app' }) as { env: Record<string, string> }
+    expect(out.env).toEqual({ GUI_TARGET: 'web', FOO: 'bar' })
+  })
+})

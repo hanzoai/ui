@@ -86,9 +86,16 @@ export function hanzo(config: Config = {}, options: Options): Config {
 
   const appBuild = (config.build as Record<string, unknown>) ?? {}
   const appPlugins = Array.isArray(config.plugins) ? (config.plugins as unknown[]) : []
+  const appDefine = (config.define as Record<string, string>) ?? {}
 
   return {
     ...config,
+    // gui reads `process.env.*` at module scope, and a browser has no process.
+    // `process.env` becomes an empty object so those reads answer undefined
+    // instead of throwing, and the one key the runtime branches on — which
+    // platform it is on — is answered here: a Vite app is the web build. The
+    // longer key wins the replacement, so the two do not fight.
+    define: { 'process.env': '{}', 'process.env.GUI_TARGET': '"web"', ...appDefine },
     // A production bundle names the source it came from. A stack trace, an
     // error report and an edit widget all read that map; without it every one
     // of them points at a minified line.

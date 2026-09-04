@@ -113,6 +113,9 @@ export function hanzo(config: Config = {}, options: Options): Config {
 
   return {
     ...config,
+    // gui branches on `process.env.GUI_TARGET`; Next inlines what `env` states
+    // into both bundles, and a Next app is the web build.
+    env: { GUI_TARGET: 'web', ...((config.env as Record<string, string>) ?? {}) },
     transpilePackages: transpileList(root, [
       ...transpile,
       ...((config.transpilePackages as string[]) ?? []),
