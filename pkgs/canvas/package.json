@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/canvas",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "type": "module",
   "description": "Pannable/zoomable PaaS project canvas \u2014 a board of service nodes with live status, metric sparklines, deploy timelines, an environment switcher, and a service detail drawer. Host-agnostic @hanzo/gui React surface, brand/white-label aware, shared by every Hanzo console (hanzo/lux/zoo).",
   "exports": {
@@ -44,7 +44,7 @@
   "scripts": {
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "build": "tsc --outDir dist --rootDir src --declaration --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop --skipLibCheck --sourceMap",
+    "build": "rm -rf dist && tsc --outDir dist --rootDir src --declaration --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop --skipLibCheck --sourceMap && node ../../pkg/ui/scripts/postbuild.mjs .",
     "test": "bun test"
   },
   "peerDependencies": {
