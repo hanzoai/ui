@@ -763,3 +763,34 @@ export const monochrome = createGui({
 })
 
 export type Conf = typeof config
+
+/**
+ * The registration ships with the package, so a host laying out with @hanzo/gui
+ * stacks under <Hanzo> types its shorthands against this config.
+ *
+ * It is derived from `defaultConfig`, not from `config` above: this file imports
+ * @hanzo/gui, whose types read the augmentation, and naming the real config
+ * would close that cycle and collapse every style prop to `any`. Whatever
+ * `config` adds on top of `defaultConfig` is therefore restated here, the
+ * `mono` font and the twelve ramp names, and a new addition belongs beside them.
+ */
+type Base = ReturnType<typeof createGui<typeof defaultConfig>>
+
+type Ramp = Record<
+  | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
+  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink',
+  Base['themes']['dark']['color12']
+>
+
+type Registered = Omit<Base, 'fonts' | 'themes'> & {
+  fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
+  themes: { [K in keyof Base['themes']]: Base['themes'][K] & Ramp }
+}
+
+declare module '@hanzogui/web' {
+  interface GuiCustomConfig extends Registered {}
+}
+
+declare module '@hanzogui/core' {
+  interface GuiCustomConfig extends Registered {}
+}
