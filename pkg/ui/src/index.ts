@@ -126,3 +126,7 @@ export { sx } from './sx'
 export { css } from './css'
 
 export { buttonVariants, badgeVariants, navigationMenuTriggerStyle, fit } from './style'
+
+// The config the components are styled against, for a host that lays out with
+// @hanzo/gui stacks of its own.
+export { config, type Conf } from './gui-config'
