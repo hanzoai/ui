@@ -2,7 +2,7 @@
 
 /**
  * The project canvas — a pannable/zoomable board of service nodes and the honest
- * connections between them (Railway-style). Read-only: positions come from the
+ * connections between them. Read-only: positions come from the
  * deterministic auto-layout (or explicit `positions`), nodes are draggable for
  * exploration but never connectable, edges are computed, not drawn.
  *

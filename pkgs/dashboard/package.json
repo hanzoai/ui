@@ -2,7 +2,7 @@
   "name": "@hanzo/dashboard",
   "version": "0.1.0",
   "type": "module",
-  "description": "Hanzo Dashboard \u2014 the reusable dashboard layer on @hanzo/gui: monochrome SVG charts, a videogame-like LivingOverview (count-up KPIs, live sparklines, streaming feed, health), the ProductLanding kit, and a RailwayPipeline deploy animation. Pure (data via props/loaders), typed, reduced-motion-guarded. Extracted from the Hanzo Cloud Console so every Hanzo app composes ONE dashboard system.",
+  "description": "Hanzo Dashboard \u2014 the reusable dashboard layer on @hanzo/gui: monochrome SVG charts, a videogame-like LivingOverview (count-up KPIs, live sparklines, streaming feed, health), the ProductLanding kit, and a Pipeline deploy animation. Pure (data via props/loaders), typed, reduced-motion-guarded. Extracted from the Hanzo Cloud Console so every Hanzo app composes ONE dashboard system.",
   "exports": {
     ".": {
       "types": "./src/index.ts",

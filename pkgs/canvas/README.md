@@ -1,8 +1,8 @@
 # @hanzo/canvas
 
-A **Railway-grade PaaS project canvas** for any Hanzo console — a pannable /
-zoomable board of service nodes with live status, metric sparklines, deploy
-timelines, an environment switcher, and a service detail drawer.
+A **pannable/zoomable PaaS project canvas** for any Hanzo console — a board of
+service nodes with live status, metric sparklines, deploy timelines, an
+environment switcher, and a service detail drawer.
 
 Built on [`@hanzo/gui`](https://github.com/hanzoai/ui) (so it is **brand /
 white-label aware** via the design tokens — the same components render in the

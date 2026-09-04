@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [#239](https://github.com/hanzoai/ui/pull/239) [`520886f`](https://github.com/hanzoai/ui/commit/520886fcc2dc13dd35e987ee02087ec062c2804c) Thanks [@zeekay](https://github.com/zeekay)! - feat: new `@hanzo/canvas` package — a Railway-grade PaaS project canvas.
+- [#239](https://github.com/hanzoai/ui/pull/239) [`520886f`](https://github.com/hanzoai/ui/commit/520886fcc2dc13dd35e987ee02087ec062c2804c) Thanks [@zeekay](https://github.com/zeekay)! - feat: new `@hanzo/canvas` package — a pannable/zoomable PaaS project canvas.
 
   A pannable/zoomable board of service nodes (`ProjectCanvas`) with live status
   (`ServiceStatusBadge`), metric sparklines (`MetricSparkline`), deploy timelines
