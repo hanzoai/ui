@@ -4,9 +4,9 @@
  * Nodes are assigned to columns by longest-path layering over the edges (a
  * source with no incoming edge sits in column 0; every other node sits one
  * column right of its deepest parent), then stacked and vertically centered
- * within each column on a shared axis so tiers read as clean columns — the
- * Railway "left-to-right dependency flow" look. Isolated nodes (no edges) fall
- * into column 0. The same graph always yields byte-identical positions.
+ * within each column on a shared axis so tiers read as clean columns in a
+ * left-to-right dependency flow. Isolated nodes (no edges) fall into column 0.
+ * The same graph always yields byte-identical positions.
  */
 
 export interface XYPosition {

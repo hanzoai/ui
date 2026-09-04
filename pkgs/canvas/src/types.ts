@@ -9,9 +9,8 @@
  */
 
 /**
- * A service's live lifecycle, normalized to one small, glanceable vocabulary
- * (Railway-style). `unknown` is honest — a missing signal is never guessed up
- * to `active`.
+ * A service's live lifecycle, normalized to one small, glanceable vocabulary.
+ * `unknown` is honest — a missing signal is never guessed up to `active`.
  */
 export type ServiceStatus =
   | "active" // running / live / healthy
