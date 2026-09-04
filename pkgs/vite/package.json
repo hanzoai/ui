@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/vite",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "The Vite config every Hanzo app shares — one runtime, one compiler, one way.",
   "license": "MIT OR Apache-2.0",
   "type": "module",
