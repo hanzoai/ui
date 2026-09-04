@@ -56,3 +56,17 @@ describe('@hanzo/vite', () => {
     expect((hanzo({ base: '/x' }, { root: ROOT }) as any).base).toBe('/x')
   })
 })
+
+describe('the platform answer', () => {
+  it('tells gui it is the web build, and gives process.env a body', () => {
+    const out = hanzo({}, { root: '/app' }) as { define: Record<string, string> }
+    expect(out.define['process.env.GUI_TARGET']).toBe('"web"')
+    expect(out.define['process.env']).toBe('{}')
+  })
+
+  it('lets the app add its own definitions', () => {
+    const out = hanzo({ define: { 'process.env.FOO': '"bar"' } }, { root: '/app' }) as { define: Record<string, string> }
+    expect(out.define['process.env.FOO']).toBe('"bar"')
+    expect(out.define['process.env.GUI_TARGET']).toBe('"web"')
+  })
+})
