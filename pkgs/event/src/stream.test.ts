@@ -8,7 +8,7 @@
 // Authorization at all (401, ingest_key_required) — because the library asked
 // first and had no key. Both batches held a $pageview for the same page.
 import { describe, it, expect, beforeEach } from 'vitest'
-import { Analytics, createAnalytics } from './core'
+import { Analytics, createAnalytics, resetClients } from './core'
 import { PAGEVIEW } from './events'
 import type { Transport, WireEvent } from './types'
 
@@ -57,7 +57,7 @@ const app = () =>
 
 beforeEach(() => {
   tx = new FakeTransport()
-  delete (globalThis as unknown as Record<symbol, unknown>)[Symbol.for('hanzo.event.clients')]
+  resetClients() // each `it` is its own page load
   window.history.replaceState(null, '', '/pricing')
 })
 
@@ -133,6 +133,18 @@ describe('one stream, one client', () => {
   it('leaves new Analytics outside the registry', () => {
     const own = new Analytics({ product: 'site', host: HOST })
     expect(createAnalytics({ product: 'site', host: HOST })).not.toBe(own)
+  })
+
+  // The registry is page state, and only a new page may drop it. A consumer that
+  // dropped it from its own code — @hanzogui/telemetry did this on every provider
+  // unmount — gives the next caller a client that has never seen this page, and
+  // the view is counted a second time. So the reset is named here, where a test
+  // runner can say "new page" and nothing else can say it by accident.
+  it('drops the page clients on reset, and only then', () => {
+    const before = createAnalytics({ product: 'site', host: HOST })
+    expect(createAnalytics({ product: 'site', host: HOST })).toBe(before)
+    resetClients()
+    expect(createAnalytics({ product: 'site', host: HOST })).not.toBe(before)
   })
 
   // The package publishes two entries and the react one carries its own copy of

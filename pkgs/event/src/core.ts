@@ -699,6 +699,23 @@ function registry(): Map<string, Analytics> {
   return fresh
 }
 
+/** resetClients drops the page's clients, so the next `createAnalytics` for a
+ *  stream builds a fresh one.
+ *
+ *  A real page loads once and never needs this. A TEST RUNNER is what it exists
+ *  for: one document, many mounts, each meant to be its own page. The second one
+ *  gets a client that already counted this location, so its pageview is
+ *  correctly suppressed and the suite reads it as "nothing was emitted".
+ *
+ *  It is exported so a suite calls this instead of reaching for the slot itself.
+ *  A consumer that deletes the registry from its own code path takes the
+ *  guarantee with it: `<Provider/>` unmount/remount is not a new page, and the
+ *  fresh client it would get counts the same view again. */
+export function resetClients(): void {
+  const g = globalThis as unknown as Record<symbol, Map<string, Analytics> | undefined>
+  delete g[CLIENTS]
+}
+
 /** createAnalytics returns the client for a stream, building it on first ask.
  *  This is the ONE way to get a client: `new Analytics` bypasses the registry
  *  and is for tests and for a deliberately separate instance. */
