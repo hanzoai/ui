@@ -20,6 +20,7 @@
     "src"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "tc": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "build": "tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop true --skipLibCheck true --sourceMap true",

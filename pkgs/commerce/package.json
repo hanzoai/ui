@@ -20,6 +20,7 @@
     "hanzo"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "lat": "npm show @hanzo/commerce version",
     "pub": "npm publish",
     "tc": "tsc --noEmit",

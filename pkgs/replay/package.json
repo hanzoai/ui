@@ -35,6 +35,7 @@
     "hanzo"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",

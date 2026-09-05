@@ -24,6 +24,7 @@
     "snapshot"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "sync": "node scripts/sync.mjs",

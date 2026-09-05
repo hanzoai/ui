@@ -22,6 +22,7 @@
     "README.md"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "rm -rf dist dist-cjs && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && node ../../pkg/ui/scripts/postbuild.mjs . index,names,schema,funnels && node scripts/catalog.mjs && node ../../pkg/ui/scripts/check-exports.mjs .",
     "test": "node --test test/*.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json"
