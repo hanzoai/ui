@@ -47,3 +47,13 @@ test:
       # file the package does not pack.
       pnpm run test:consumer
       pnpm run test:consumer:webpack
+
+# ui.hanzo.ai. Static documentation and interactive component catalog
+# pre-rendered via One SSG in apps/ui.hanzo.ai. All 48 components and examples
+# export to static HTML served directly by the ingress staticFiles middleware.
+site:
+  slug: ui
+  dir: apps/ui.hanzo.ai/dist/client
+  on: [main]
+  build: pnpm --filter @hanzo/ui... build && pnpm --filter ui.hanzo.ai run build
+
