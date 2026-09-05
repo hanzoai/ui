@@ -7,7 +7,14 @@
 //
 // React apps use the './react' entry for the provider + hooks + error boundary.
 
-export { Analytics, createAnalytics, VERSION, getCohort, getFirstTouch } from './core'
+export {
+  Analytics,
+  createAnalytics,
+  resetClients,
+  VERSION,
+  getCohort,
+  getFirstTouch,
+} from './core'
 export { parseDsn, buildSentryEvent, buildEnvelope, framesFromStack } from './sentry'
 export { uuidv7, uuidv7Time } from './uid'
 export { PRODUCT_PROJECT, dsnForProduct } from './dsn'
