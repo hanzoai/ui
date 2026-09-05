@@ -18,44 +18,52 @@ const steps = [
 /** Default — three slides with the previous and next arrows. */
 export function Default() {
   return (
-    <Carousel width="100%" maxW={360}>
-      <CarouselContent>
-        {steps.map(([title, body]) => (
-          <CarouselItem key={title}>
-            <YStack
-              p="$5"
-              gap="$2"
-              rounded="$4"
-              borderWidth={1}
-              borderColor="$borderColor"
-            >
-              <Text fontWeight="600">{title}</Text>
-              <Paragraph color="$color11">{body}</Paragraph>
-            </YStack>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <YStack width="100%" px={40}>
+      <Carousel width="100%" maxW={360}>
+        <CarouselContent>
+          {steps.map(([title, body]) => (
+            <CarouselItem key={title}>
+              <YStack
+                p="$5"
+                gap="$2"
+                rounded="$4"
+                borderWidth={1}
+                borderColor="$borderColor"
+              >
+                <Text fontWeight="600">{title}</Text>
+                <Paragraph color="$color11">{body}</Paragraph>
+              </YStack>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </YStack>
   )
 }
 
 /** Loop and autoplay — wraps at the ends and advances every four seconds until the pointer is over it. */
 export function LoopAutoplay() {
   return (
-    <Carousel width="100%" maxW={360} options={{ loop: true, autoplay: 4000 }}>
-      <CarouselContent>
-        {steps.map(([title, body]) => (
-          <CarouselItem key={title}>
-            <YStack p="$5" gap="$2" rounded="$4" bg="$color3">
-              <Text fontWeight="600">{title}</Text>
-              <Paragraph color="$color11">{body}</Paragraph>
-            </YStack>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+    <YStack width="100%" px={40}>
+      <Carousel
+        width="100%"
+        maxW={360}
+        options={{ loop: true, autoplay: 4000 }}
+      >
+        <CarouselContent>
+          {steps.map(([title, body]) => (
+            <CarouselItem key={title}>
+              <YStack p="$5" gap="$2" rounded="$4" bg="$color3">
+                <Text fontWeight="600">{title}</Text>
+                <Paragraph color="$color11">{body}</Paragraph>
+              </YStack>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </YStack>
   )
 }
 
@@ -65,21 +73,23 @@ export function WithApi() {
   const [index, setIndex] = useState(0)
   return (
     <YStack gap="$3" items="flex-start">
-      <Carousel
-        width={360}
-        setApi={setApi}
-        onCarouselSelect={(a) => setIndex(a.selectedScrollSnap())}
-      >
-        <CarouselContent>
-          {steps.map(([title]) => (
-            <CarouselItem key={title}>
-              <YStack p="$5" rounded="$4" bg="$color3">
-                <Text fontWeight="600">{title}</Text>
-              </YStack>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+      <YStack width="100%" px={40}>
+        <Carousel
+          width={360}
+          setApi={setApi}
+          onCarouselSelect={(a) => setIndex(a.selectedScrollSnap())}
+        >
+          <CarouselContent>
+            {steps.map(([title]) => (
+              <CarouselItem key={title}>
+                <YStack p="$5" rounded="$4" bg="$color3">
+                  <Text fontWeight="600">{title}</Text>
+                </YStack>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </YStack>
       <Paragraph color="$color11">
         Slide {index + 1} of {steps.length}
       </Paragraph>
