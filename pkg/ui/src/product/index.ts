@@ -108,6 +108,9 @@ export * from './Workbench'
 export * from './EmptyState'
 export * from './FadeIn'
 export * from './Field'
+// `Fact` is `Field`'s read-only counterpart: a settings form is a stack of
+// `Field`s, a detail pane is a stack of these.
+export * from './Fact'
 export * from './HanzoMark'
 export * from './PageHeader'
 
@@ -125,6 +128,9 @@ export * from './Reorder'
 export * from './SelectMenu'
 export * from './Skeleton'
 export * from './SlideOver'
+// `DetailPane` is the one mount point over `SlideOver` for a descriptor-driven
+// item view: a caller writes `{ title, content, footer? }`, never a drawer.
+export * from './DetailPane'
 export * from './StatusTag'
 export * from './Split'
 export * from './tone'
@@ -136,6 +142,11 @@ export * from './ThemeToggle'
 // those shapes; reaching for them is the signal you have left the common case.
 export * from './DialogTemplate'
 export * from './TooltipAnchor'
+
+// `ChunkGuard` — the window-level net for a stale-deploy chunk 404 (see
+// `chunkGuard.logic.ts` for the pure decisions). Mount it once near the shell
+// root; it renders nothing.
+export * from './ChunkGuard'
 
 // `ThemeToggleNext` is NOT re-exported here, and that is the whole reason this
 // comment exists. It is the @hanzogui/next-theme binding, and next-theme's
