@@ -1,0 +1,32 @@
+{
+  "name": "ui.hanzo.ai",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ui.hanzo.ai — the @hanzo/ui docs. One route per documented export, rendered to a real HTML file per route by one on Vite, built from @hanzo/ui and @hanzo/gui components.",
+  "scripts": {
+    "dev": "one dev --port 3003",
+    "build": "one build",
+    "preview": "one serve --port 3003",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@hanzo/gui": "catalog:",
+    "@hanzo/ui": "workspace:*",
+    "@hanzogui/code-to-html": "catalog:",
+    "@hanzogui/config": "catalog:",
+    "@hanzogui/lucide-icons-2": "catalog:",
+    "one": "^1.25.13",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-hook-form": "catalog:",
+    "react-native-web": "catalog:",
+    "vite": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}
