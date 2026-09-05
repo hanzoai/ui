@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": [
+        "./*"
+      ]
+    },
+    "strict": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "module": "Preserve",
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "types": [
+      "node",
+      "react",
+      "vite/client"
+    ],
+    "isolatedModules": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "app",
+    "components",
+    "pages.ts",
+    "vite.config.ts",
+    "examples",
+    "catalog.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

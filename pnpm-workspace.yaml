@@ -40,6 +40,7 @@ catalog:
   '@hanzo/ui': '8.27.3'
   '@hanzo/usage': '0.1.7'
   '@hanzogui/animations-css': '8.3.1'
+  '@hanzogui/code-to-html': '8.3.1'
   '@hanzogui/config': '8.3.1'
   '@hanzogui/core': '8.3.1'
   '@hanzogui/lucide-icons-2': '8.3.1'
