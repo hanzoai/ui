@@ -1,0 +1,61 @@
+html,
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--color);
+}
+
+a {
+  color: inherit;
+}
+
+.code {
+  margin: 0;
+  padding: 16px 18px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--color2);
+  border: 1px solid var(--borderColor);
+  font-family: var(--f-family-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.code .token.comment,
+.code .token.prolog,
+.code .token.doctype,
+.code .token.cdata {
+  color: var(--color9);
+}
+
+.code .token.punctuation,
+.code .token.operator {
+  color: var(--color10);
+}
+
+.code .token.keyword,
+.code .token.tag,
+.code .token.selector {
+  color: var(--purple10);
+}
+
+.code .token.string,
+.code .token.attr-value,
+.code .token.char {
+  color: var(--green10);
+}
+
+.code .token.function,
+.code .token.class-name,
+.code .token.attr-name,
+.code .token.builtin {
+  color: var(--blue10);
+}
+
+.code .token.number,
+.code .token.boolean,
+.code .token.constant {
+  color: var(--orange10);
+}
