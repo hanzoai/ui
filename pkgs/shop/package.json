@@ -31,6 +31,7 @@
     "./topup": "./components/HanzoTopup.tsx"
   },
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "lat": "npm show @hanzo/shop version",
     "pub": "npm publish",
     "tc": "tsc --noEmit",

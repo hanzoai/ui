@@ -16,6 +16,7 @@
     "dist"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "tsc -p tsconfig.json",
     "test": "vitest run"
   },

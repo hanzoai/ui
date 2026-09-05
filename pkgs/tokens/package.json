@@ -58,6 +58,7 @@
     "dist"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs && node scripts/gen-css.mjs",
     "gen-css": "tsup --silent && node scripts/gen-css.mjs",
     "dev": "tsup --watch",

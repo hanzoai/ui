@@ -43,6 +43,7 @@
     "dist"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . theme,table/logic,board/logic,view/logic,view/types,field/types,field/registry",
     "clean": "rm -rf dist dist-cjs types",
     "prepack": "pnpm run build",

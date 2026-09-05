@@ -24,6 +24,7 @@
     "access": "public"
   },
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "rm -rf dist && tsc -p tsconfig.build.json && cp src/composer.css dist/composer.css && node ../ui/scripts/postbuild.mjs . index && node ../ui/scripts/check-exports.mjs .",
     "clean": "rm -rf dist",
     "prepack": "pnpm run build",
