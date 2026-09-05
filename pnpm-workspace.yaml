@@ -35,7 +35,7 @@ catalog:
   '@hanzo/font': '1.9.2'
   '@hanzo/gui': '8.3.1'
   '@hanzo/logo': '1.0.26'
-  '@hanzo/observe': '0.1.8'
+  '@hanzo/observe': '0.1.11'
   '@hanzo/products': '0.2.6'
   '@hanzo/ui': '8.27.3'
   '@hanzo/usage': '0.1.7'
