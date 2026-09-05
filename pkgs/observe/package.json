@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/observe",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Hanzo Observe — default-on interaction capture for React. Watches every click/input/nav/visibility across the tree, annotates each with a semantic hierarchy (component path / role / data-testid / aria) auto-derived from the DOM, and emits it through @hanzo/event to the ONE entry point (POST /v1/event). Privacy-gated (input redaction) and fail-soft by default; ships a real-time event stream hook for session playback.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -35,6 +35,7 @@
     "hanzo"
   ],
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
