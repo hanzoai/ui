@@ -32,6 +32,7 @@
     "./hooks": "./hooks/index.ts"
   },
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "lat": "npm show @hanzo/checkout version",
     "pub": "npm publish",
     "tc": "tsc --noEmit",

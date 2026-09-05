@@ -39,7 +39,7 @@
     "build:watch": "tsup --watch",
     "clean": "rm -rf dist",
     "tc": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs && npm run build"
   },
   "exports": {
     "./package.json": "./package.json",

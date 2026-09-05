@@ -253,7 +253,7 @@
     "typecheck:ui": "tsc -p tsconfig.check.json",
     "test": "pnpm run test:unit",
     "test:watch": "vitest",
-    "prepublishOnly": "node -e \"if(!process.env.npm_config_user_agent||!/pnpm/.test(process.env.npm_config_user_agent))throw new Error('publish with pnpm, not npm: only pnpm rewrites workspace:* deps (8.0.17/8.0.19 shipped broken)')\"",
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "test:responsive": "node scripts/responsive.mjs",
     "test:contain": "node scripts/contain.mjs",
     "test:consumer": "node scripts/consumer-test.mjs",

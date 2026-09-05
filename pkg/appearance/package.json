@@ -33,6 +33,7 @@
     "access": "public"
   },
   "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
     "build": "rm -rf dist dist-cjs types && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . state && node ../ui/scripts/check-exports.mjs .",
     "clean": "rm -rf dist types",
     "prepack": "pnpm run build",
