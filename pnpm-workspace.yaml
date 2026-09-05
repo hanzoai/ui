@@ -30,7 +30,7 @@ catalog:
   '@hanzo/dashboard': '0.2.0'
   '@hanzo/data': '1.2.4'
   '@hanzo/design': '0.5.24'
-  '@hanzo/event': '0.3.37'
+  '@hanzo/event': '0.3.38'
   '@hanzo/events': '0.2.2'
   '@hanzo/font': '1.9.2'
   '@hanzo/gui': '8.3.1'
