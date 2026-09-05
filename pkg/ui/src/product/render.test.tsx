@@ -16,6 +16,7 @@ import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
 import { CopyButton } from './CopyButton'
+import { Fact } from './Fact'
 import { Fieldset } from './Fieldset'
 import { Panel } from './Metric'
 import { Pagination } from './Pagination'
@@ -26,6 +27,7 @@ import { UserMenu, displayName } from './UserMenu'
 import { Skeleton } from './Skeleton'
 import { TooltipAnchor } from './TooltipAnchor'
 import { DialogTemplate } from './DialogTemplate'
+import { DetailPane, useDetailPane, type DetailPaneApi } from './DetailPane'
 import { Dialog } from '../backends/gui/dialog'
 import { createRoot } from 'react-dom/client'
 import { act } from 'react'
@@ -194,6 +196,29 @@ describe('FieldText', () => {
   })
 })
 
+describe('Fact', () => {
+  it('renders the label and a string value', () => {
+    const markup = html(<Fact label="Region" value="us-east-1" />)
+    expect(markup).toContain('Region')
+    expect(markup).toContain('us-east-1')
+    clean(markup)
+  })
+
+  it('renders a non-string value as given, not stringified', () => {
+    // The regression this locks: the narrower of the two console originals
+    // rendered every value through a <Text>, so a status badge passed as a
+    // value would have printed as "[object Object]" instead of rendering.
+    const markup = html(<Fact label="Status" value={<span data-marker="node" />} />)
+    expect(markup).toContain('data-marker="node"')
+  })
+
+  it('sets the monospace face only when asked', () => {
+    const mono = els(html(<Fact label="Id" value="abc123" mono />))
+    const plain = els(html(<Fact label="Id" value="abc123" />))
+    expect(mono).not.toBe(plain)
+  })
+})
+
 describe('UserMenu', () => {
   it('names the account from the email when no name was given', () => {
     expect(displayName(undefined, 'ada@hanzo.ai')).toBe('ada')
@@ -359,5 +384,80 @@ describe('DialogTemplate', () => {
       <DialogTemplate title="Deleting" busy confirm={{ label: 'Delete' }} />,
     )
     expect(markup.match(/disabled/g)?.length ?? 0).toBeGreaterThanOrEqual(2)
+  })
+})
+
+describe('DetailPane', () => {
+  /** Mounted, not server-rendered: `open`/`close` are imperative, so the
+   *  test needs a live tree to call them against. */
+  const mount = (node: ReactNode) => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    act(() => {
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          {node}
+        </GuiProvider>,
+      )
+    })
+    return {
+      host,
+      markup: () => els(host.innerHTML),
+      unmount: () => {
+        act(() => root.unmount())
+        host.remove()
+      },
+    }
+  }
+
+  /** Reads the api out during render — the imperative surface under test,
+   *  not a button a click event would have to reach through gui's press
+   *  handling. */
+  function Capture({ onApi }: { onApi: (api: DetailPaneApi) => void }) {
+    onApi(useDetailPane())
+    return null
+  }
+
+  it('renders nothing of the descriptor until something opens it', () => {
+    const { markup, unmount } = mount(
+      <DetailPane>
+        <Capture onApi={() => {}} />
+      </DetailPane>,
+    )
+    expect(markup()).not.toContain('Machine gpu-1')
+    unmount()
+  })
+
+  it('opens with the descriptor — title, subtitle, content and footer', () => {
+    let api!: DetailPaneApi
+    const { markup, unmount } = mount(
+      <DetailPane>
+        <Capture onApi={(a) => (api = a)} />
+      </DetailPane>,
+    )
+    act(() => {
+      api.open({ title: 'Machine gpu-1', subtitle: 'Running', content: <span>body</span>, footer: <span>footer</span> })
+    })
+    const opened = markup()
+    for (const s of ['Machine gpu-1', 'Running', 'body', 'footer']) expect(opened, s).toContain(s)
+    unmount()
+  })
+
+  it('closes on request, and stays keyed to the last descriptor through the exit', () => {
+    // The pane does not unmount its content on close — that is what lets the
+    // exit transition animate with the real content instead of an empty
+    // shell — so the honest signal that it closed is `aria-hidden`, not an
+    // absent title.
+    let api!: DetailPaneApi
+    const { host, unmount } = mount(
+      <DetailPane>
+        <Capture onApi={(a) => (api = a)} />
+      </DetailPane>,
+    )
+    act(() => api.open({ title: 'Machine gpu-1', content: <span>body</span> }))
+    act(() => api.close())
+    expect(host.querySelector('[aria-hidden="true"]')).toBeTruthy()
+    unmount()
   })
 })
