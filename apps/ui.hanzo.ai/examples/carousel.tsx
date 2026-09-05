@@ -18,7 +18,7 @@ const steps = [
 /** Default — three slides with the previous and next arrows. */
 export function Default() {
   return (
-    <YStack width="100%" px={40}>
+    <YStack width="100%" minW={0} px={40}>
       <Carousel width="100%" maxW={360}>
         <CarouselContent>
           {steps.map(([title, body]) => (
@@ -46,7 +46,7 @@ export function Default() {
 /** Loop and autoplay — wraps at the ends and advances every four seconds until the pointer is over it. */
 export function LoopAutoplay() {
   return (
-    <YStack width="100%" px={40}>
+    <YStack width="100%" minW={0} px={40}>
       <Carousel
         width="100%"
         maxW={360}
@@ -72,8 +72,8 @@ export function WithApi() {
   const [api, setApi] = useState<CarouselApi | null>(null)
   const [index, setIndex] = useState(0)
   return (
-    <YStack gap="$3" items="flex-start">
-      <YStack width="100%" px={40}>
+    <YStack gap="$3">
+      <YStack width="100%" minW={0} px={40}>
         <Carousel
           width={360}
           setApi={setApi}
