@@ -41,14 +41,27 @@ describe('a capped fit cannot fit one more track', () => {
   // The floor also has to be at least one Mth of the row: subtract the M-1 gaps
   // first, then divide. Below that width the max() picks Npx again and the grid
   // wraps normally, which is why a cap costs nothing on a phone.
+  //
+  // The gap arrives as a CSS length rather than a number, so the subtraction is
+  // written for the browser to do. That is what lets a token gap through: a
+  // `var()` cannot be multiplied in JavaScript and can be multiplied in `calc`.
   it('floors at one Mth of the row, gaps removed', () => {
-    expect(tracks({ min: 160, max: 4 }, 12)).toBe(
-      'repeat(auto-fill, minmax(max(min(160px, 100%), calc((100% - 36px) / 4)), 1fr))',
+    expect(tracks({ min: 160, max: 4 }, '12px')).toBe(
+      'repeat(auto-fill, minmax(max(min(160px, 100%), calc((100% - 3 * 12px) / 4)), 1fr))',
     )
   })
 
   it('counts M-1 gaps, not M', () => {
-    expect(tracks({ min: 160, max: 4 }, 12)).not.toContain('100% - 48px')
+    expect(tracks({ min: 160, max: 4 }, '12px')).toContain('100% - 3 * 12px')
+  })
+
+  it('subtracts a token gap the same way', () => {
+    // The case that was silently wrong: every `$n` gap resolved to the 12px
+    // fallback, so a four-column fit reserved 36px of gutter whatever the
+    // caller asked for.
+    expect(tracks({ min: 160, max: 4 }, 'var(--space-6, 12px)')).toContain(
+      'calc((100% - 3 * var(--space-6, 12px)) / 4)',
+    )
   })
 })
 
