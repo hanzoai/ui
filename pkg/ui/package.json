@@ -241,7 +241,9 @@
     "./dist/product/social/api.js"
   ],
   "files": [
-    "dist"
+    "dist",
+    "LICENSE-APACHE",
+    "LICENSE-MIT"
   ],
   "scripts": {
     "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
@@ -345,6 +347,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
+  "license": "Apache-2.0 OR MIT",
   "author": "Hanzo AI <dev@hanzo.ai>"
 }

@@ -7,7 +7,7 @@ substrate, so the same import runs on web, native and desktop.
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@hanzo/ui"><img src="https://img.shields.io/npm/v/@hanzo/ui?color=black&label=%40hanzo%2Fui" alt="npm"></a>
-  <a href="./LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-black" alt="MIT"></a>
+  <a href="./LICENSE-APACHE"><img src="https://img.shields.io/badge/license-Apache--2.0%20OR%20MIT-black" alt="Apache-2.0 OR MIT"></a>
   <a href="https://ui.hanzo.ai"><img src="https://img.shields.io/badge/docs-ui.hanzo.ai-black" alt="docs"></a>
 </p>
 
@@ -99,4 +99,4 @@ pnpm --filter @hanzo/ui... build   # the `...` builds workspace deps first
 The `shadcn` CLI, the component registry and the docs sites live in
 [hanzoai/shadcn](https://github.com/hanzoai/shadcn).
 
-Docs at [ui.hanzo.ai](https://ui.hanzo.ai). MIT.
+Docs at [ui.hanzo.ai](https://ui.hanzo.ai). Licensed Apache-2.0 OR MIT, at your option.
