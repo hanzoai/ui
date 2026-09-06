@@ -35,7 +35,6 @@
  * so a `Cell` is always in range of that selector, and a second copy inline
  * would be a second place for the same invariant to be edited.
  */
-import { getTokenValue } from '@hanzo/gui'
 import type { ComponentProps, CSSProperties, ReactNode } from 'react'
 
 /**
@@ -80,12 +79,27 @@ export interface GridProps extends Omit<ComponentProps<'div'>, 'children'> {
 }
 
 /** `'$3'` -> 12. A raw number passes through as px. */
-const space = (v: number | string | undefined, fallback: number): number => {
-  if (v == null) return fallback
-  if (typeof v === 'number') return v
-  const t = getTokenValue(v as never, 'space')
-  return typeof t === 'number' ? t : fallback
-}
+/**
+ * A gap, as a CSS length.
+ *
+ * This asked `getTokenValue` for a number and fell back to 12 when it did not
+ * get one. It never got one: measured across a consuming app, every `$n` gap
+ * rendered at 12px — `gap="$4"` drew 12 where `--space-4` is 16, and thirty of
+ * thirty-four call sites were silently wrong. The four that looked right were
+ * the ones passing a bare number.
+ *
+ * The ladder those tokens name is already in the document as custom properties
+ * and already correct, so this reads it there. That fixes the number and gains
+ * the property the JS lookup could not have: `var(--space-4)` follows the
+ * ladder while the page is open, so a person moving density in an appearance
+ * panel moves every grid with it. A number resolved at render is fixed at
+ * render.
+ */
+const space = (v: number | string | undefined, fallback: number): string =>
+  v == null ? `${fallback}px`
+  : typeof v === 'number' ? `${v}px`
+  : v.startsWith('$') ? `var(--space-${v.slice(1)}, ${fallback}px)`
+  : v
 
 const fit = (v: unknown): v is Fit => typeof v === 'object' && v !== null && !Array.isArray(v)
 
@@ -117,9 +131,9 @@ const list = (t: Tracks): string => {
  * normally — so the cap costs nothing on small screens, which is the whole point
  * of expressing it as a floor rather than a breakpoint.
  */
-const fitted = ({ min, max }: Fit, gap: number): string => {
+const fitted = ({ min, max }: Fit, gap: string): string => {
   const floor = max
-    ? `max(min(${min}px, 100%), calc((100% - ${(max - 1) * gap}px) / ${max}))`
+    ? `max(min(${min}px, 100%), calc((100% - ${max - 1} * ${gap}) / ${max}))`
     : `min(${min}px, 100%)`
   return `repeat(auto-fill, minmax(${floor}, 1fr))`
 }
@@ -131,7 +145,7 @@ const fitted = ({ min, max }: Fit, gap: number): string => {
  * the whole reason this component exists and are each one edit away from being
  * tidied back into the ragged row.
  */
-export const tracks = (columns: Tracks | Fit, gap = 0): string =>
+export const tracks = (columns: Tracks | Fit, gap = '0px'): string =>
   fit(columns) ? fitted(columns, gap) : list(columns)
 
 const Grid = ({ columns = { min: 240 }, rows, gap = '$3', style, ...props }: GridProps) => {
