@@ -215,4 +215,5 @@ emit({ component: 'PlanCard', action: 'select', id: 'pro' })
 - **Clean-room** — original implementation, no GPL / Twenty code. Airtable/Twenty-*class* polish, our own code.
 - **Cross-platform** — web + native + desktop, because it's only `@hanzo/gui`.
 
-MIT · Hanzo AI — see [LICENSE.md](../../LICENSE.md). HIP-0137 (`hanzoai/hips`).
+Hanzo AI, Inc — licensed [Apache-2.0](./LICENSE-APACHE) OR [MIT](./LICENSE-MIT), at your
+option. HIP-0137 (`hanzoai/hips`).
