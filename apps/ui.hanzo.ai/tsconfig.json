@@ -28,7 +28,8 @@
     "pages.ts",
     "vite.config.ts",
     "examples",
-    "catalog.ts"
+    "catalog.ts",
+    "font.d.ts"
   ],
   "exclude": [
     "node_modules",
