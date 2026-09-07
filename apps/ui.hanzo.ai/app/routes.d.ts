@@ -9,11 +9,12 @@ declare module 'one' {
       StaticRoutes:
         | `/`
         | `/_sitemap`
-      DynamicRoutes: `/ui/${OneRouter.SingleRoutePart<T>}`
-      DynamicRouteTemplate: `/ui/[name]`
+      DynamicRoutes: `/ui/${OneRouter.SingleRoutePart<T>}` | `/product/${OneRouter.SingleRoutePart<T>}`
+      DynamicRouteTemplate: `/ui/[name]` | `/product/[name]`
       IsTyped: true
       RouteTypes: {
         '/ui/[name]': RouteInfo<{ name: string }>
+        '/product/[name]': RouteInfo<{ name: string }>
       }
     }
   }

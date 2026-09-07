@@ -8,7 +8,7 @@ export async function loader() {
   return { primitives: asCards(catalog()), product: asCards(productCatalog()) }
 }
 
-const Cards = ({ base, entries }: { base: string; entries: { name: string; title: string; members: number }[] }) => (
+const Cards = ({ base, entries }: { base: 'ui' | 'product'; entries: { name: string; title: string; members: number }[] }) => (
   <XStack flexWrap="wrap" gap="$3">
     {entries.map((e) => (
       <Link key={e.name} href={`/${base}/${e.name}`} style={{ textDecorationLine: 'none' }}>
