@@ -1,8 +1,8 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.27.12",
+  "version": "8.27.13",
   "type": "module",
-  "description": "Hanzo UI \u2014 the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
+  "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -242,8 +242,10 @@
   ],
   "files": [
     "dist",
+    "LICENSE.md",
     "LICENSE-APACHE",
-    "LICENSE-MIT"
+    "LICENSE-MIT",
+    "NOTICE"
   ],
   "scripts": {
     "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
@@ -278,14 +280,14 @@
     "@hanzo/cd": ">=0.1.2",
     "@hanzo/dashboard": ">=0.2.0",
     "@hanzo/data": ">=1.2.4",
-    "@hanzo/gui": ">=8.3.1",
+    "@hanzo/gui": "^8.3.1",
     "@hanzo/usage": ">=0.1.13",
-    "@hanzogui/animations-css": "8.3.1",
-    "@hanzogui/config": "8.3.1",
-    "@hanzogui/lucide-icons-2": "8.3.1",
-    "@hanzogui/next-theme": "8.3.1",
-    "@hanzogui/telemetry": "8.3.1",
-    "@hanzogui/toast": "8.3.1",
+    "@hanzogui/animations-css": "^8.3.1",
+    "@hanzogui/config": "^8.3.1",
+    "@hanzogui/lucide-icons-2": "^8.3.1",
+    "@hanzogui/next-theme": "^8.3.1",
+    "@hanzogui/telemetry": "^8.3.1",
+    "@hanzogui/toast": "^8.3.1",
     "next": ">=16.3.3",
     "next-themes": ">=0",
     "react": ">=19.2.8",
