@@ -36,9 +36,17 @@ owns a pixel of layout.
 **`./prose`** — one message's markdown as HTML.
 
 `@hanzo/ui/chat` takes a `prose` callback and deliberately ships no parser,
-because the plugin set is a surface's decision. This is Hanzo's answer to that
-callback: one dialect (`marked`, gfm, breaks) and one safety rule, so a fence
-means the same thing on every surface.
+because the plugin set is a surface's decision. This is the Hanzo dialect for
+it — `marked`, gfm, breaks — and one safety rule, so a fence means the same
+thing on every surface.
+
+It answers HTML, not nodes, so the callback wraps it. `(text) => string`
+satisfies `(text, part) => ReactNode` on its own, which means the compiler will
+not catch the omission and the reader sees the tags spelled out:
+
+```tsx
+<Parts parts={parts} prose={(t) => <div dangerouslySetInnerHTML={{ __html: prose(t) }} />} />
+```
 
 Safe by construction rather than by cleanup. Raw HTML is escaped at the token
 and never produced, an image becomes its alt text, and a link keeps only a

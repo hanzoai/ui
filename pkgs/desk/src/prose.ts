@@ -5,10 +5,17 @@
 // answer. `marked` reads it, and it is the engine the rest of the estate reads
 // markdown with, so a fence means the same thing wherever it is written.
 //
-// THIS IS THE FUNCTION `@hanzo/ui/chat` ASKS FOR. `Parts` takes a `prose`
-// callback and ships no parser of its own, because the plugin set is a
-// surface's decision. This is the Hanzo answer to that callback: one dialect,
-// one safety rule, every surface.
+// THIS IS THE PARSER `@hanzo/ui/chat` DECLINES TO SHIP. `Parts` takes a `prose`
+// callback because the plugin set is a surface's decision; this is the Hanzo
+// dialect for it — one grammar, one safety rule, every surface.
+//
+// IT IS NOT ITSELF THE CALLBACK, and the difference is invisible to a compiler.
+// `Parts` wants nodes, this answers HTML, and `(text) => string` satisfies
+// `(text, part) => ReactNode` because a string IS a ReactNode — so passing it
+// straight in typechecks and then renders the tags as words on screen. Hand the
+// bytes to the DOM at the call site:
+//
+//   <Parts parts={parts} prose={(t) => <div dangerouslySetInnerHTML={{ __html: prose(t) }} />} />
 //
 // SAFE BY CONSTRUCTION RATHER THAN BY CLEANUP. Rendering everything and handing
 // the result to DOMPurify needs a DOM, and a server pass has none — so nothing

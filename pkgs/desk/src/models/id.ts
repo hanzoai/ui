@@ -38,7 +38,10 @@ const ORG_ALIASES: Record<string, string> = {
 export function canonicalOrg(org?: string): string {
   if (!org) return 'hanzo'
   const base = org.replace(/^~/, '')
-  return ORG_ALIASES[base] ?? base
+  // Own rows only. A plain object answers `toString` and `constructor` from the
+  // prototype, and a namespace is a string off the wire, so a plain lookup hands
+  // back a function where the signature promises a name.
+  return Object.hasOwn(ORG_ALIASES, base) ? ORG_ALIASES[base] : base
 }
 
 /** What a lab is called, where its namespace is not already its name. */
@@ -112,5 +115,5 @@ const ORG_DISPLAY_NAMES: Record<string, string> = {
 
 export function orgDisplayName(org?: string): string {
   if (!org) return 'Hanzo'
-  return ORG_DISPLAY_NAMES[org] ?? org
+  return Object.hasOwn(ORG_DISPLAY_NAMES, org) ? ORG_DISPLAY_NAMES[org] : org
 }
