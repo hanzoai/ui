@@ -42,7 +42,7 @@
   "author": "Hanzo AI",
   "license": "MIT",
   "peerDependencies": {
-    "@hanzogui/lucide-icons-2": "8.3.1",
+    "@hanzogui/lucide-icons-2": "^8.3.5",
     "react": ">=19.2.8"
   },
   "peerDependenciesMeta": {
