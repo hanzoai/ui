@@ -1,0 +1,48 @@
+{
+  "name": "@hanzo/desk",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0 OR MIT",
+  "description": "What a Hanzo surface must know without asking: what a model id means, what a lab is called and how its mark is drawn, and what a message may contain.",
+  "packageManager": "pnpm@11.24.0",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    "./prose": {
+      "types": "./dist/prose.d.ts",
+      "default": "./dist/prose.js"
+    },
+    "./models": {
+      "types": "./dist/models/index.d.ts",
+      "default": "./dist/models/index.js"
+    }
+  },
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@hanzo/logo": "catalog:",
+    "marked": "18.0.11",
+    "simple-icons": "16.30.0"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkgs/desk"
+  }
+}
