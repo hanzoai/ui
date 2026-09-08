@@ -53,17 +53,16 @@ import {
 } from 'simple-icons'
 
 /** Mono `currentColor` bodies, keyed by their `hanzoai/icons` slug. */
-const MARKS: Record<string, string> = {
+const MARKS = {
   // Enso is ours, and comes from @hanzo/logo, the ONE canonical source: the
-  // CLOSED brush ring, and NOT the Hanzo H (drawing the H for it, which this
-  // page once did, says a family and the lab serving it are one thing).
+  // CLOSED brush ring, and NOT the Hanzo H. A family and the lab serving it are
+  // two things, and drawing the house mark for the family says they are one.
   enso: ENSO_MARK,
   // Hanzo — the house mark, the canonical seven-path shaded H from `@hanzo/logo`
-  // (`MARK_PATHS`), the ONE source every Hanzo surface draws. Its viewBox is 67
-  // units and there is no 24-unit cut, so it is scaled by 24/67 in a transform
-  // rather than rewriting its coordinates: exact, and the same file. The
-  // hand-copied subset that used to sit here held only three of the seven paths,
-  // so it drew half an H with the whole right column missing.
+  // (`MARK_PATHS`), the ONE source every Hanzo surface draws. All seven paths
+  // come from it, so the shading is whole. Its viewBox is 67 units and there is
+  // no 24-unit cut, so it is scaled by 24/67 in a transform rather than by
+  // rewriting its coordinates: exact, and the same file.
   hanzo: `<g transform="scale(0.3582089552238806)">${MARK_PATHS}</g>`,
 
   ai2:
@@ -189,12 +188,18 @@ const MARKS: Record<string, string> = {
   youtube: `<path d="${siYoutube.path}"></path>`,
 }
 
+/** A slug `MARKS` actually holds. Naming it lets the alias table and the hue
+ *  table point INTO the marks by type, so a row that reaches nothing cannot be
+ *  written in the first place. */
+type Mark = keyof typeof MARKS
+
 /**
  * Family or lab slug -> mark, for the ones whose name differs from the icon's.
  * A slug that already names its mark needs no entry, so this map only ever holds
- * the renames.
+ * the renames. Every value is a `Mark`, so a rename pointing at a slug MARKS
+ * does not hold is a compile error rather than a lab silently drawn as a letter.
  */
-const OF: Record<string, string> = {
+const OF: Record<string, Mark> = {
   'aion-labs': 'aionlabs',
   allenai: 'ai2',
   amazon: 'aws',
@@ -230,8 +235,14 @@ const OF: Record<string, string> = {
  * and the hue are both read under this one key, so a lab cannot end up wearing
  * one lab's glyph in another lab's colour.
  */
-const look = (key: string): string | undefined =>
-  !key ? undefined : MARKS[key] ? key : MARKS[OF[key] ?? ''] ? OF[key] : undefined
+// OWN ROWS ONLY, on both tables. A namespace is a string off the wire, and
+// `'toString' in MARKS` is true — the body it would then paint is a function
+// off the prototype. `OF`'s values are `Mark`s, so an own row needs no recheck.
+const own = Object.hasOwn
+const isMark = (key: string): key is Mark => own(MARKS, key)
+
+const look = (key: string): Mark | undefined =>
+  !key ? undefined : isMark(key) ? key : own(OF, key) ? OF[key] : undefined
 
 /**
  * A lab's own colour. Every body here is `currentColor`, so ONE declaration on
@@ -253,11 +264,11 @@ const look = (key: string): string | undefined =>
  * Enso is absent for its own reason: our ring is house ink by design, not a
  * lab's brand, and it stays the colour of the text it sits beside.
  */
-const HUE: Record<string, string> = {
+const HUE: Partial<Record<Mark, string>> = {
   // KEYED TO `MARKS`, not to the lab's common name: MARKS files Anthropic under
   // `claude`, Google under `google` and Z.ai under `zai`, and a hue filed under
-  // the company instead of the mark reaches nothing and leaves that lab grey.
-  // Every key below is a key in MARKS, and the suite proves it.
+  // the company instead of the mark would reach nothing and leave that lab grey.
+  // `Mark` is why it cannot be: `anthropic` here does not compile.
   alibaba: '#FF6A00',
   aws: '#FF9900',
   baidu: '#2932E1',
@@ -308,7 +319,7 @@ const HUE: Record<string, string> = {
  * all three. A family is the leading run of letters in the id, so `zen5-pro` is
  * `zen` and `o3` is `o`.
  */
-function markOf(org: string, id?: string): string | undefined {
+function markOf(org: string, id?: string): Mark | undefined {
   const family = id ? getOrgAndSlug(id).slug.toLowerCase().match(/^[a-z]+/)?.[0] : undefined
   // `~anthropic` is the latest-alias namespace of the same lab, not another lab.
   return look(family ?? '') ?? look(org.replace(/^~/, '').toLowerCase())

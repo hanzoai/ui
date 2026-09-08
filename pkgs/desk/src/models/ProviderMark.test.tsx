@@ -61,6 +61,16 @@ describe('a lab we have no mark for', () => {
     expect(html).toContain('>s<')
   })
 
+  it('draws a monogram for a namespace named after a prototype member, rather than throwing', () => {
+    // `MARKS`, `OF` and the name table all answer `toString` from the prototype
+    // unless the lookup is own-rows-only, and the mark would then be a function.
+    for (const org of ['toString', 'constructor', 'valueOf', 'hasOwnProperty']) {
+      const html = draw({ org })
+      expect(drawn(html)).toBe('monogram')
+      expect(html).toContain(`>${org[0]}<`)
+    }
+  })
+
   it('takes the initial from the lab\'s display name, not its namespace', () => {
     // `sao10k` is named `Sao10K`; both begin with the same letter, so use one
     // where the table changes the case that reaches the screen.

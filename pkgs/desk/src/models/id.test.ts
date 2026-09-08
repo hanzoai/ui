@@ -51,6 +51,15 @@ describe('one lab, however it reaches the gateway', () => {
   it('leaves a lab it has never heard of alone rather than inventing a fold', () => {
     expect(canonicalOrg('some-new-lab')).toBe('some-new-lab')
   })
+
+  it('reads only its own rows, so a namespace named after a prototype member is a lab', () => {
+    // A namespace arrives off the wire, and a plain lookup answers these from
+    // Object.prototype — a function where the signature promises a name.
+    for (const org of ['toString', 'constructor', 'valueOf', 'hasOwnProperty']) {
+      expect(canonicalOrg(org)).toBe(org)
+      expect(typeof canonicalOrg(org)).toBe('string')
+    }
+  })
 })
 
 describe('what a lab is called', () => {
@@ -68,6 +77,12 @@ describe('what a lab is called', () => {
 
   it('answers with the namespace itself for a lab not in the table', () => {
     expect(orgDisplayName('some-new-lab')).toBe('some-new-lab')
+  })
+
+  it('answers a name, never a prototype member, whatever the namespace is called', () => {
+    for (const org of ['toString', 'constructor', 'valueOf', 'hasOwnProperty']) {
+      expect(orgDisplayName(org)).toBe(org)
+    }
   })
 
   it('names both namespaces of a folded lab, because either can arrive', () => {
