@@ -190,6 +190,43 @@ html:root .hz-composer :is(button, a).hz-round {
   flex-shrink: 0;
 }
 
+/* THE PAINT, not only the shape. This sheet sized these controls and left
+   their colour to the host, so every host wrote the same six rules against the
+   package's own class names — hanzo.ai carried them under `hz-round`, which is
+   the one reason a site had to spell this package's namespace in its own sheet.
+   Every value here is a @hanzo/design token, so the paint follows whatever
+   brand the host mounts and a host that wants its own can still say so after.
+   `data-fill` is the send control: one shape, filled when it is the thing to do. */
+.hz-round {
+  background-color: var(--neutral-800);
+  color: var(--text-secondary);
+  /* `outline-color` rides the list although nothing here changes it: a control
+     that could flash on focus is only proved not to by transitioning it. */
+  transition:
+    background-color var(--duration-fast) var(--ease-in-out),
+    color var(--duration-fast) var(--ease-in-out),
+    outline-color var(--duration-fast) var(--ease-in-out);
+}
+
+.hz-round:hover {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.hz-round:disabled {
+  opacity: 0.4;
+}
+
+.hz-round[data-fill] {
+  background-color: var(--pure-white);
+  color: var(--pure-black);
+  transition: opacity var(--duration-fast) var(--ease-in-out);
+}
+
+.hz-round[data-fill]:hover {
+  opacity: 0.9;
+}
+
 /* Still lit, no drift. */
 @media (prefers-reduced-motion: reduce) {
   .hz-composer::before,

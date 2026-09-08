@@ -114,8 +114,15 @@
   animation: hz-shimmer 1.2s ease-in-out infinite;
 }
 
-/* Live-feed pulse — the "Live" dot on a streaming panel. */
-@keyframes hz-pulse {
+/* Live-feed pulse — the "Live" dot on a streaming panel.
+
+   NAMED APART FROM THE SKELETON'S. Both sheets shipped a `@keyframes hz-pulse`
+   and `styles.css` concatenates them, so the later one — this one — won for
+   every consumer and `.hz-pulse` animated a placeholder by RESIZING it. That is
+   the thing theme.css's own comment forbids: "animating a colour or a size
+   would repaint or reflow every frame for a placeholder nobody is looking at".
+   Nothing referenced this keyframe by name, which is why it went unnoticed. */
+@keyframes hz-live {
   0%,
   100% {
     opacity: 1;
@@ -125,6 +132,39 @@
     opacity: 0.45;
     transform: scale(0.82);
   }
+}
+
+/* THE TWO CLASSES THE COMPONENTS STAMP, in the sheet a host imports.
+   `skeleton.js` emits `hz-pulse` and `input-otp.js` emits `hz-caret`, and their
+   rules lived only in theme.css — the sheet that inlines the whole design system
+   and which a host with its own tokens cannot take. So every host either mounted
+   110KB it did not want or wrote these two rules by hand; hanzo.ai carried them
+   for exactly that reason. A library that stamps a class owns its rule, and this
+   is the sheet it owns it in. */
+@keyframes hz-dim {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.hz-pulse {
+  animation: hz-dim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes hz-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.hz-caret {
+  background: var(--foreground);
+  animation: hz-blink 1s steps(1) infinite;
 }
 
 /* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
@@ -148,6 +188,12 @@
     animation: none;
   }
   .hz-row-in {
+    animation: none;
+  }
+  .hz-pulse {
+    animation: none;
+  }
+  .hz-caret {
     animation: none;
   }
 }
@@ -209,6 +255,15 @@
 
 .hz-row {
   transition: background-color 140ms ease-out;
+}
+
+/* AND WHAT IT TRANSITIONS TO. Stating the transition without the destination
+   left every host to invent the affordance — a row that announces it responds
+   and then does not. The colour is @hanzo/design's `--surface-card-quiet`,
+   which carries a value in both themes, so this needs nothing of the host it
+   has not already mounted. */
+.hz-row:hover {
+  background-color: var(--surface-card-quiet);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,77 +5,90 @@ export interface ChannelMember {
   name: string
   role: string
   avatar?: string
+  status: 'online' | 'offline' | 'busy'
   isAgent?: boolean
-  online?: boolean
 }
 
 export interface ChannelMembersProps {
   members: ChannelMember[]
-  onInvite?: () => void
   onDirectMessage?: (memberId: string) => void
+  onInviteMember?: () => void
   className?: string
+  style?: React.CSSProperties
 }
 
 export const ChannelMembers: React.FC<ChannelMembersProps> = ({
   members,
-  onInvite,
   onDirectMessage,
+  onInviteMember,
   className = '',
+  style,
 }) => {
   return (
     <div
-      className={`flex flex-col gap-3 p-4 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl ${className}`}
-      aria-label="Channel Members Roster"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        padding: 16,
+        backgroundColor: 'rgba(23, 23, 23, 0.6)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 16,
+        ...style,
+      }}
+      aria-label="Channel Member Roster"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-base">👥</span>
-          <h3 className="text-xs font-semibold text-white uppercase tracking-wider">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 16 }}>👥</span>
+          <h3 style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
             Members ({members.length})
           </h3>
         </div>
-        {onInvite && (
+
+        {onInviteMember && (
           <button
-            onClick={onInvite}
-            className="px-2.5 py-1 text-xs font-medium text-neutral-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-all"
+            onClick={onInviteMember}
+            style={{ padding: '4px 10px', fontSize: 12, fontWeight: 500, color: '#d4d4d4', backgroundColor: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: 8, cursor: 'pointer' }}
           >
             + Invite
           </button>
         )}
       </div>
 
-      <div className="flex flex-col gap-1.5 max-h-56 overflow-y-auto pr-1">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 224, overflowY: 'auto', paddingRight: 4 }}>
         {members.map((m) => (
           <div
             key={m.id}
-            className="flex items-center justify-between p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 8, borderRadius: 12, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
           >
-            <div className="flex items-center gap-2.5">
-              <div className="relative">
-                <div className="w-7 h-7 rounded-full bg-neutral-800 flex items-center justify-center text-xs font-semibold text-neutral-300 border border-white/10">
-                  {m.avatar || m.name.slice(0, 2).toUpperCase()}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ position: 'relative' }}>
+                <div style={{ width: 28, height: 28, borderRadius: '50%', backgroundColor: '#262626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#d4d4d4', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                  {m.name.charAt(0)}
                 </div>
-                {m.online && (
-                  <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-neutral-900" />
+                {m.status === 'online' && (
+                  <span style={{ position: 'absolute', bottom: 0, right: 0, width: 8, height: 8, borderRadius: '50%', backgroundColor: '#34d399', border: '1px solid #171717' }} />
                 )}
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-medium text-white flex items-center gap-1.5">
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#ffffff', display: 'flex', alignItems: 'center', gap: 6 }}>
                   {m.name}
                   {m.isAgent && (
-                    <span className="px-1.5 py-0.2 rounded text-[9px] bg-indigo-500/20 text-indigo-300 font-bold border border-indigo-500/30">
-                      AGENT
+                    <span style={{ padding: '1px 6px', borderRadius: 4, fontSize: 9, backgroundColor: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', fontWeight: 700, border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                      AI
                     </span>
                   )}
                 </span>
-                <span className="text-[10px] text-neutral-400">{m.role}</span>
+                <span style={{ fontSize: 10, color: '#a3a3a3' }}>{m.role}</span>
               </div>
             </div>
 
-            {onDirectMessage && !m.isAgent && (
+            {onDirectMessage && (
               <button
                 onClick={() => onDirectMessage(m.id)}
-                className="px-2 py-0.5 text-[11px] text-neutral-400 hover:text-white bg-white/5 rounded-md transition-colors"
+                style={{ padding: '2px 8px', fontSize: 11, color: '#a3a3a3', backgroundColor: 'rgba(255, 255, 255, 0.05)', borderRadius: 6, border: 'none', cursor: 'pointer' }}
               >
                 DM
               </button>

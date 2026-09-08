@@ -1,135 +1,156 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export interface LiveVoiceCallProps {
-  active: boolean
-  muted: boolean
   title?: string
-  statusText?: string
-  transcripts?: { speaker: string; text: string; time: string }[]
-  onToggleMute: () => void
-  onEndCall: () => void
+  status?: 'connecting' | 'connected' | 'speaking' | 'listening' | 'ended'
+  onEndCall?: () => void
+  onToggleMute?: (muted: boolean) => void
+  isMuted?: boolean
+  transcripts?: Array<{ speaker: string; text: string; time: string }>
   className?: string
+  style?: React.CSSProperties
 }
 
 export const LiveVoiceCall: React.FC<LiveVoiceCallProps> = ({
-  active,
-  muted,
-  title = 'Duplex Voice Session',
-  statusText = 'Connected · 24kHz Opus',
-  transcripts = [],
-  onToggleMute,
+  title = 'AI Voice Call',
+  status = 'connected',
   onEndCall,
+  onToggleMute,
+  isMuted = false,
+  transcripts = [],
   className = '',
+  style,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animFrameRef = useRef<number | null>(null)
+  const [muted, setMuted] = useState(isMuted)
 
+  // Animated visualizer
   useEffect(() => {
-    if (!active) return
-
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    let animationFrameId: number
     let phase = 0
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const width = canvas.width
-      const height = canvas.height
-      const centerY = height / 2
+      const centerY = canvas.height / 2
+      const numBars = 32
+      const barWidth = 4
+      const spacing = (canvas.width - numBars * barWidth) / (numBars - 1)
 
-      const bars = 36
-      const barWidth = width / bars - 2
+      for (let i = 0; i < numBars; i++) {
+        const x = i * (barWidth + spacing)
+        const height =
+          status === 'speaking' || status === 'listening'
+            ? Math.sin(phase + i * 0.25) * 20 + 24
+            : 6
 
-      for (let i = 0; i < bars; i++) {
-        const amplitude = muted
-          ? 4
-          : Math.sin(phase + i * 0.3) * 18 + Math.cos(phase * 1.5 + i * 0.2) * 12 + 22
-        const barHeight = Math.max(4, Math.abs(amplitude))
+        ctx.fillStyle =
+          status === 'speaking'
+            ? '#34d399'
+            : status === 'listening'
+            ? '#818cf8'
+            : '#737373'
 
-        const gradient = ctx.createLinearGradient(0, centerY - barHeight, 0, centerY + barHeight)
-        if (muted) {
-          gradient.addColorStop(0, '#71717a')
-          gradient.addColorStop(1, '#3f3f46')
-        } else {
-          gradient.addColorStop(0, '#818cf8')
-          gradient.addColorStop(0.5, '#c084fc')
-          gradient.addColorStop(1, '#38bdf8')
-        }
-
-        ctx.fillStyle = gradient
         ctx.beginPath()
-        ctx.roundRect(i * (barWidth + 2), centerY - barHeight / 2, barWidth, barHeight, 4)
+        ctx.roundRect(x, centerY - height / 2, barWidth, height, 2)
         ctx.fill()
       }
 
-      phase += muted ? 0.02 : 0.08
-      animFrameRef.current = requestAnimationFrame(render)
+      phase += 0.08
+      animationFrameId = requestAnimationFrame(render)
     }
 
     render()
+    return () => cancelAnimationFrame(animationFrameId)
+  }, [status])
 
-    return () => {
-      if (animFrameRef.current) {
-        cancelAnimationFrame(animFrameRef.current)
-      }
-    }
-  }, [active, muted])
+  const handleMute = () => {
+    const next = !muted
+    setMuted(next)
+    onToggleMute?.(next)
+  }
 
-  if (!active) return null
+  const statusText =
+    status === 'speaking'
+      ? 'Agent is speaking...'
+      : status === 'listening'
+      ? 'Listening to you...'
+      : status === 'connecting'
+      ? 'Connecting stream...'
+      : 'Call active'
 
   return (
     <div
-      className={`flex flex-col gap-4 p-5 bg-neutral-900/80 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl ${className}`}
-      role="dialog"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        padding: 20,
+        backgroundColor: '#0c0c0e',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 16,
+        ...style,
+      }}
       aria-label="Live Voice Call"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          <h3 className="text-sm font-semibold text-white">{title}</h3>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: '#34d399' }} />
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#ffffff', margin: 0 }}>{title}</h3>
         </div>
-        <span className="text-xs text-neutral-400 font-mono">{statusText}</span>
+        <span style={{ fontSize: 12, color: '#a3a3a3', fontFamily: 'monospace' }}>{statusText}</span>
       </div>
 
-      <div className="flex items-center justify-center p-4 bg-neutral-950/60 rounded-xl border border-white/5">
-        <canvas ref={canvasRef} width={380} height={70} className="w-full h-[70px]" />
+      {/* Visualizer */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, backgroundColor: 'rgba(10, 10, 10, 0.6)', borderRadius: 12, border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <canvas ref={canvasRef} width={380} height={70} style={{ width: '100%', height: 70 }} />
       </div>
 
+      {/* Live transcript stream */}
       {transcripts.length > 0 && (
-        <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 160, overflowY: 'auto', paddingRight: 4 }}>
           {transcripts.map((t, idx) => (
-            <div key={idx} className="flex flex-col gap-0.5 text-xs">
-              <div className="flex items-center justify-between text-[11px] text-neutral-500">
-                <span className="font-semibold text-neutral-300">{t.speaker}</span>
+            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: 2, fontSize: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 11, color: '#737373' }}>
+                <span style={{ fontWeight: 600, color: '#d4d4d4' }}>{t.speaker}</span>
                 <span>{t.time}</span>
               </div>
-              <p className="text-neutral-200 bg-white/5 p-2 rounded-lg">{t.text}</p>
+              <p style={{ color: '#e5e5e5', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: 8, borderRadius: 8, margin: 0 }}>{t.text}</p>
             </div>
           ))}
         </div>
       )}
 
-      <div className="flex items-center justify-center gap-3 pt-2">
+      {/* Call controls */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, paddingTop: 8 }}>
         <button
-          onClick={onToggleMute}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border ${
-            muted
-              ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30'
-              : 'bg-white/10 text-white border-white/20 hover:bg-white/15'
-          }`}
+          onClick={handleMute}
+          style={{
+            padding: '8px 16px',
+            fontSize: 12,
+            fontWeight: 500,
+            borderRadius: 12,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            cursor: 'pointer',
+            backgroundColor: muted ? 'rgba(244, 63, 94, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+            color: muted ? '#fda4af' : '#d4d4d4',
+          }}
         >
-          <span>{muted ? '🔇 Unmute' : '🎙️ Mute'}</span>
+          {muted ? 'Unmute Mic' : 'Mute Mic'}
         </button>
 
-        <button
-          onClick={onEndCall}
-          className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold rounded-xl transition-all shadow-lg shadow-rose-600/30"
-        >
-          <span>📞 Leave Call</span>
-        </button>
+        {onEndCall && (
+          <button
+            onClick={onEndCall}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', backgroundColor: '#e11d48', color: '#ffffff', fontSize: 12, fontWeight: 600, borderRadius: 12, border: 'none', cursor: 'pointer' }}
+          >
+            End Call
+          </button>
+        )}
       </div>
     </div>
   )

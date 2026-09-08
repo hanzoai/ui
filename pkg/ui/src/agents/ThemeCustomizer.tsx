@@ -10,6 +10,7 @@ export interface ThemeCustomizerProps {
   config: ThemeConfig
   onChange: (config: ThemeConfig) => void
   className?: string
+  style?: React.CSSProperties
 }
 
 const ACCENTS = [
@@ -25,50 +26,71 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({
   config,
   onChange,
   className = '',
+  style,
 }) => {
   return (
     <div
-      className={`flex flex-col gap-4 p-4 bg-neutral-900/60 backdrop-blur-md border border-white/10 rounded-2xl ${className}`}
-      aria-label="Liquid Glass Theme Customizer"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        padding: 20,
+        backgroundColor: '#0c0c0e',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: 16,
+        ...style,
+      }}
+      aria-label="Theme Customizer"
     >
-      <div className="flex items-center gap-2">
-        <span className="text-base">🎨</span>
-        <h3 className="text-xs font-semibold text-white uppercase tracking-wider">
-          Appearance & Liquid Glass
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 16 }}>🎨</span>
+        <h3 style={{ fontSize: 12, fontWeight: 600, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+          Appearance & Glassmorphism
         </h3>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-xs text-neutral-400 font-medium">Accent Palette</label>
-        <div className="flex items-center gap-2">
+      {/* Accent selection */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <label style={{ fontSize: 12, color: '#a3a3a3', fontWeight: 500 }}>Accent Palette</label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {ACCENTS.map((accent) => (
             <button
               key={accent.value}
               onClick={() => onChange({ ...config, accentColor: accent.value })}
-              className={`w-6 h-6 rounded-full transition-transform ${
-                config.accentColor === accent.value
-                  ? 'ring-2 ring-white ring-offset-2 ring-offset-neutral-900 scale-110'
-                  : 'hover:scale-105 opacity-80 hover:opacity-100'
-              }`}
-              style={{ backgroundColor: accent.value }}
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: '50%',
+                backgroundColor: accent.value,
+                cursor: 'pointer',
+                border: config.accentColor === accent.value ? '2px solid #ffffff' : 'none',
+                boxShadow: config.accentColor === accent.value ? '0 0 10px ' + accent.value : 'none',
+              }}
               title={accent.name}
             />
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="text-xs text-neutral-400 font-medium">Glassmorphism Intensity</label>
-        <div className="grid grid-cols-4 gap-1.5">
+      {/* Blur / Glass level */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <label style={{ fontSize: 12, color: '#a3a3a3', fontWeight: 500 }}>Glassmorphism Intensity</label>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
           {(['low', 'medium', 'high', 'ultra'] as const).map((level) => (
             <button
               key={level}
               onClick={() => onChange({ ...config, blurLevel: level })}
-              className={`py-1 rounded-lg text-xs font-medium capitalize transition-all border ${
-                config.blurLevel === level
-                  ? 'bg-white/20 text-white border-white/30 font-semibold'
-                  : 'bg-white/5 text-neutral-400 border-white/10 hover:text-white'
-              }`}
+              style={{
+                padding: '6px 0',
+                fontSize: 12,
+                fontWeight: 500,
+                textTransform: 'capitalize',
+                borderRadius: 8,
+                border: config.blurLevel === level ? '1px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: config.blurLevel === level ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                color: config.blurLevel === level ? '#c7d2fe' : '#a3a3a3',
+                cursor: 'pointer',
+              }}
             >
               {level}
             </button>
