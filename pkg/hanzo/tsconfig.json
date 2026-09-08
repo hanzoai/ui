@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["react", "node"],
+    // The suite loads the real @hanzo/ui and @hanzo/gui, and node cannot parse
+    // react-native's entry — it is Flow. So devDependencies put react-native-web
+    // under the name `react-native`, the substitution every web bundler makes.
+    // The web build ships no declarations and @hanzogui's sources are written
+    // against react-native's, so tsc reads those from the same package under a
+    // second name. Runtime and types then each get the one that is right for it.
+    "paths": { "react-native": ["./node_modules/react-native-types"] }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "dist-cjs"]
+}
