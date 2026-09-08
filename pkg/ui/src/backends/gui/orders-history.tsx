@@ -147,8 +147,8 @@ function OrderRow({
           {...slot('orders-history-cancel')}
           variant="outline"
           size="sm"
-          onPress={(e) => {
-            e.stopPropagation()
+          onPress={(e: { stopPropagation?: () => void }) => {
+            e.stopPropagation?.()
             onCancelOrder(order.id)
           }}
         >

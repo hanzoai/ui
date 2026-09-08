@@ -204,6 +204,14 @@ export type ButtonProps = Omit<
    */
   onClick?: MouseEventHandler<HTMLElement>
   /**
+   * The label's colour. It reaches the label through gui's text context, which
+   * the Frame's own props do not name, so the value works and the type refused
+   * it. Same trade as `title` below.
+   */
+  color?: string
+  /** The label's weight, carried the same way `color` is. */
+  fontWeight?: string
+  /**
    * The DOM tooltip. Already reached the element -- every unrecognised prop is
    * spread onto Frame, which forwards it -- but the Frame's props come from the
    * cross-platform stack and name no DOM attribute, so passing it did not type.

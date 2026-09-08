@@ -315,10 +315,11 @@ const DropdownMenuCheckboxItem = /* @__PURE__ */ React.forwardRef<
 const DropdownMenuRadioItem = /* @__PURE__ */ React.forwardRef<
   GuiElement,
   React.ComponentProps<typeof Menu.RadioItem>
->(function DropdownMenuRadioItem({ children, ...props }, ref) {
+>(function DropdownMenuRadioItem({ children, value, ...props }, ref) {
   return (
     <Menu.RadioItem
       ref={ref}
+      value={value}
       data-slot="dropdown-menu-radio-item"
       {...row}
       pl={INSET_PL}

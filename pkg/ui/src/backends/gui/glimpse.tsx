@@ -33,6 +33,7 @@ import {
   useEffect,
   useState,
   type ComponentProps,
+  type SyntheticEvent,
 } from 'react'
 
 import { AspectRatio } from './aspect-ratio'
@@ -155,12 +156,11 @@ const GlimpseImage = ({ ratio = DEFAULT_RATIO, onError, ...props }: GlimpseImage
           width="100%"
           height="100%"
           objectFit="cover"
-          onError={(event) => {
+          // gui's Image intersects RN's and web's onError, two incompatible
+          // event types; this branch is always the web one.
+          // @ts-expect-error see above
+          onError={(event: SyntheticEvent<HTMLImageElement>) => {
             setFailed(true)
-            // gui's Image intersects RN's and web's onError, two incompatible
-            // event types; this branch is always the web one, forwarding it
-            // through the union-typed prop is what the cast is for.
-            // @ts-expect-error see above
             onError?.(event)
           }}
           {...props}

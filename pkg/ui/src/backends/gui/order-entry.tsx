@@ -92,10 +92,6 @@ function OrderEntry({
               disabled={disabled}
               onPress={() => setOrderSide(side)}
               bg={orderSide === side ? SIDE_ON[side] : ('$hover' as const)}
-              // `color` reaches Button.Frame through gui's own text-context —
-              // applied at runtime but never declared on the Frame's own prop
-              // type, the same gap `toggle-group.tsx` casts around elsewhere.
-              // @ts-expect-error color is a real, working prop the Frame's type omits
               color={orderSide === side ? '$white1' : '$quiet'}
               hoverStyle={orderSide === side ? { bg: SIDE_ON[side] } : { bg: '$edge' }}
               fontWeight="600"
@@ -122,7 +118,6 @@ function OrderEntry({
                 disabled={disabled}
                 onPress={() => setOrderType(kind)}
                 bg={orderType === kind ? ('$rim' as const) : ('$hover' as const)}
-                // @ts-expect-error color is a real, working prop the Frame's type omits
                 color={orderType === kind ? '$ink' : '$quiet'}
                 hoverStyle={orderType === kind ? { bg: '$rim' } : { bg: '$edge' }}
               >
@@ -168,7 +163,6 @@ function OrderEntry({
         disabled={!canSubmit}
         onPress={submit}
         bg={SIDE_ON[orderSide]}
-        // @ts-expect-error color is a real, working prop the Frame's type omits
         color="$white1"
         fontWeight="600"
         hoverStyle={{ bg: SIDE_ON[orderSide], opacity: 0.9 }}

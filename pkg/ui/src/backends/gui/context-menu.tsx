@@ -240,7 +240,8 @@ const ContextMenuRadioItem = /* @__PURE__ */ React.forwardRef<
  * in one place, so the part keeps the ref every other row in this file has.
  */
 const SubTriggerBase = GuiContextMenu.SubTrigger as React.FC<
-  React.ComponentProps<typeof GuiContextMenu.SubTrigger> & React.RefAttributes<GuiElement>
+  Omit<React.ComponentProps<typeof GuiContextMenu.SubTrigger>, 'key'> &
+    React.RefAttributes<GuiElement>
 >
 
 const ContextMenuSubTrigger = /* @__PURE__ */ React.forwardRef<
