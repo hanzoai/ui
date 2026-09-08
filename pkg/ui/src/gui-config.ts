@@ -354,7 +354,10 @@ const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as con
 const ALIASES = [
   'sunken', 'panel', 'hover', 'edge', 'raised', 'rim',
   'bound', 'dim', 'faint', 'soft', 'quiet', 'ink',
+  'bad', 'good',
 ] as const
+/** The two state colours design publishes, so an error or a success is a rung. */
+const STATE = { bad: 'var(--state-error, #ef4444)', good: 'var(--state-success, #22c55e)' } as const
 
 type Alias = Record<(typeof ALIASES)[number], string>
 
@@ -529,6 +532,8 @@ const themes = Object.fromEntries(
             soft: String(theme.color10),
             quiet: String(theme.color11),
             ink: `var(--foreground, ${LABEL[s]})`,
+            bad: STATE.bad,
+            good: STATE.good,
             background: GROUND[s],
             color: `var(--foreground, ${LABEL[s]})`,
             placeholderColor: `var(--text-tertiary, ${MUTED[s]})`,
@@ -778,11 +783,12 @@ type Base = ReturnType<typeof createGui<typeof defaultConfig>>
 
 type Ramp = Record<
   | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
-  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink',
+  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good',
   Base['themes']['dark']['color12']
 >
 
-type Registered = Omit<Base, 'fonts' | 'themes'> & {
+type Registered = Omit<Base, 'fonts' | 'themes' | 'animations'> & {
+  animations: typeof animations
   fonts: Base['fonts'] & { mono: Base['fonts']['body'] }
   themes: { [K in keyof Base['themes']]: Base['themes'][K] & Ramp }
 }
