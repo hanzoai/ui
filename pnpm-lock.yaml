@@ -545,9 +545,18 @@ importers:
 
   pkg/hanzo:
     dependencies:
+      '@hanzo/ai':
+        specifier: ^0.6.16
+        version: 0.6.16(react@19.2.8)
+      '@hanzo/event':
+        specifier: ^0.3.40
+        version: 0.3.40(react@19.2.8)
       '@hanzo/gui':
         specifier: ^8.3.5
         version: 8.3.5(react-dom@19.2.8(react@19.2.8))(react-native-web@0.21.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)
+      '@hanzo/iam':
+        specifier: ^0.21.18
+        version: 0.21.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@hanzo/ui':
         specifier: ^8.27.10
         version: 8.27.10(66d5e6e26a434f19d8be307252ca4896)
@@ -2639,6 +2648,15 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
+  '@hanzo/ai@0.6.16':
+    resolution: {integrity: sha512-MgnRooi4D+3n1YnJ9BDmYBB15noscN+nhRerYrGm/zpI5jC002Il1jj53uNIRhVX736/fOxFJjErlpnKjy4C1w==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: 19.2.8
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@hanzo/appearance@0.2.2':
     resolution: {integrity: sha512-HsH2wT82EbjHF1zY/TWubUQv7N5tBolVyBtXuQD8I+3E7xQ+Qoy7u79Xz1lw0EVkBESM2dr6VMaPWWThnytzZg==}
     peerDependencies:
@@ -2738,6 +2756,14 @@ packages:
       react:
         optional: true
 
+  '@hanzo/event@0.3.40':
+    resolution: {integrity: sha512-D/qmUHbrTZpbShD4CSvKUzeUTjjIu6LSHQHKZNZLtwfd9Fap6gMGo+JZGHX0sxKimtmRnZDMz6aG+LAmUbn3qQ==}
+    peerDependencies:
+      react: 19.2.8
+    peerDependenciesMeta:
+      react:
+        optional: true
+
   '@hanzo/events@0.2.2':
     resolution: {integrity: sha512-jF800OFibLfnuEqMJUpTyLIs4fmezzXFKGGUPAHjK40FrTWsiAb4j3j1N5sbqBLAv5Ty7FA56dOo67Y+kUSqyA==}
 
@@ -2757,6 +2783,18 @@ packages:
     hasBin: true
     peerDependencies:
       react: 19.2.8
+
+  '@hanzo/iam@0.21.18':
+    resolution: {integrity: sha512-IQNxp9xO3X5ZBizzstWPmRneMk4sV4wpMNmvpV3+u/Y0n54PITLFMdiNkJr43GeFy/YH0oRefe9HXgUd9VOghw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: 19.2.8
+      react-dom: 19.2.8
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@hanzo/logo@1.0.26':
     resolution: {integrity: sha512-acPRsdTD/pfsDLUias989cDZCCg4Q9rCCrlOWVqlAzcN7xyoi3Vl4DjM7Z+feOL5SDPxWY1M0hJn9B1xqGjK4g==}
@@ -6067,6 +6105,10 @@ packages:
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
+  base64url@3.0.1:
+    resolution: {integrity: sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==}
+    engines: {node: '>=6.0.0'}
+
   baseline-browser-mapping@2.11.19:
     resolution: {integrity: sha512-Grytf1xOxOEMTGRwx6rLGKkTabd4vMg3VrKdj/7joCmV0qgh4QwMMO6xh34YEXQqirAuUdgQGa5orJQQ+69RBw==}
     engines: {node: '>=6.0.0'}
@@ -7749,6 +7791,9 @@ packages:
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
 
+  jose@6.2.12:
+    resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
+
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
@@ -7848,6 +7893,9 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.13.12:
+    resolution: {integrity: sha512-uLVeV1c9OTk6qkdqnj+mpMD+ZdnZ0szVyWu58HwMmpwkHA1gCEkyjd3veZQXDnuw9KEwSRjcc9B1pS9XKIN1fA==}
 
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
@@ -8508,6 +8556,9 @@ packages:
   nullthrows@1.1.1:
     resolution: {integrity: sha512-2vPPEi+Z7WqML2jZYddDIfy5Dqb0r2fze2zTxNNknZaFpVHU3mFB3R+DWeJWGVx0ecvttSGlJTI+WG+8Z4cDWw==}
 
+  oauth@0.10.2:
+    resolution: {integrity: sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==}
+
   ob1@0.84.5:
     resolution: {integrity: sha512-aH9RkoZc7w/90HBamFxTw8ZLFr05wXS+iOnvmrgo53Ep8Pyrm5FieQSaPIVROkfFVQISeD/zo92fes26TOwe+A==}
     engines: {node: ^20.19.4 || ^22.13.0 || ^24.3.0 || >= 25.0.0}
@@ -8720,6 +8771,14 @@ packages:
   parseurl@1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
     engines: {node: '>= 0.8'}
+
+  passport-oauth2@1.8.0:
+    resolution: {integrity: sha512-cjsQbOrXIDE4P8nNb3FQRCCmJJ/utnFKEz2NX209f7KOHPoX18gF7gBzBbLLsj2/je4KrgiwLLGjf0lm9rtTBA==}
+    engines: {node: '>= 0.4.0'}
+
+  passport-strategy@1.0.0:
+    resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
+    engines: {node: '>= 0.4.0'}
 
   path-exists@3.0.0:
     resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
@@ -9828,6 +9887,9 @@ packages:
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
+
+  uid2@0.0.4:
+    resolution: {integrity: sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA==}
 
   unbox-primitive@1.1.0:
     resolution: {integrity: sha512-nWJ91DjeOkej/TA8pXQ3myruKpKEYgqvpw9lz4OPHj/NWFNluYrjbz9j01CJ8yKQd2g4jFoOkINCTW2I5LEEyw==}
@@ -11772,6 +11834,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
+  '@hanzo/ai@0.6.16(react@19.2.8)':
+    optionalDependencies:
+      react: 19.2.8
+
   '@hanzo/appearance@0.2.2(react@19.2.8)':
     dependencies:
       '@hanzo/design': 0.5.21
@@ -11918,6 +11984,12 @@ snapshots:
       react: 19.2.8
 
   '@hanzo/event@0.3.39(react@19.2.8)':
+    dependencies:
+      '@hanzo/events': 0.2.2
+    optionalDependencies:
+      react: 19.2.8
+
+  '@hanzo/event@0.3.40(react@19.2.8)':
     dependencies:
       '@hanzo/events': 0.2.2
     optionalDependencies:
@@ -12216,6 +12288,15 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
       - react-native
+
+  '@hanzo/iam@0.21.18(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      jose: 6.2.12
+      libphonenumber-js: 1.13.12
+      passport-oauth2: 1.8.0
+    optionalDependencies:
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   '@hanzo/logo@1.0.26(react@19.2.8)':
     optionalDependencies:
@@ -16514,6 +16595,8 @@ snapshots:
 
   base64-js@1.5.1: {}
 
+  base64url@3.0.1: {}
+
   baseline-browser-mapping@2.11.19: {}
 
   bcp-47-match@2.0.3: {}
@@ -18450,6 +18533,8 @@ snapshots:
 
   jju@1.4.0: {}
 
+  jose@6.2.12: {}
+
   joycon@3.1.1: {}
 
   js-tokens@10.0.0: {}
@@ -18547,6 +18632,8 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
+
+  libphonenumber-js@1.13.12: {}
 
   lighthouse-logger@1.4.2(supports-color@10.2.2):
     dependencies:
@@ -19470,6 +19557,8 @@ snapshots:
 
   nullthrows@1.1.1: {}
 
+  oauth@0.10.2: {}
+
   ob1@0.84.5:
     dependencies:
       flow-enums-runtime: 0.0.6
@@ -19800,6 +19889,16 @@ snapshots:
       entities: 8.0.0
 
   parseurl@1.3.3: {}
+
+  passport-oauth2@1.8.0:
+    dependencies:
+      base64url: 3.0.1
+      oauth: 0.10.2
+      passport-strategy: 1.0.0
+      uid2: 0.0.4
+      utils-merge: 1.0.1
+
+  passport-strategy@1.0.0: {}
 
   path-exists@3.0.0: {}
 
@@ -21321,6 +21420,8 @@ snapshots:
   ua-parser-js@1.0.41: {}
 
   ufo@1.6.4: {}
+
+  uid2@0.0.4: {}
 
   unbox-primitive@1.1.0:
     dependencies:

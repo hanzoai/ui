@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
+import { plan } from '../scripts/gen.mjs'
 import { gui, ui, version } from './index'
 
 // Paths are read against the package root, which is vitest's root here — the
@@ -24,14 +25,14 @@ const targets = (node: unknown): string[] =>
 const STATIC = /\b(?:import|export)\s+(?:[^;]*?\sfrom\s+)?['"]@hanzo\/(?:ui|gui)['"]/
 
 describe('the exports map', () => {
-  const promised = targets(pkg.exports)
-
-  it('promises something', () => {
-    expect(promised.length).toBeGreaterThan(0)
+  // The map on disk is what a consumer resolves against, and the members are
+  // what it owes. Anything published by a member and missing here is a subpath
+  // that answers ERR_PACKAGE_PATH_NOT_EXPORTED under a name that promises it.
+  it('says what the members say', () => {
+    expect(Object.keys(pkg.exports)).toEqual(['.', './package.json', ...plan().map((f) => f.subpath)])
   })
 
-  it.each(promised)('%s is in dist', (target) => {
-    expect(target.startsWith('./dist/')).toBe(true)
+  it.each(targets(pkg.exports))('%s is in the package', (target) => {
     expect(existsSync(at(target))).toBe(true)
   })
 })
@@ -57,8 +58,7 @@ describe('the root entry', () => {
 // undone for types.
 //
 // A loader loads a whole component library — @hanzo/ui's module graph takes
-// about a minute in node, which is a minute the 5s default does not have. The
-// budget belongs to these two and not to the seventeen assertions above.
+// about a minute in node, which is a minute the 5s default does not have.
 const LOAD = 180_000
 
 describe('the loaders', () => {
