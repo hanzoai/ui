@@ -83,6 +83,7 @@ catalog:
   'react': '19.2.8'
   'react-dom': '19.2.8'
   'react-hook-form': '^7.86.0'
+  'react-native-svg': '^15.15.5'
   'react-native-web': '^0.21.2'
   'react-square-web-payments-sdk': '^3.3.0'
   'rrweb': '^2.1.1'
