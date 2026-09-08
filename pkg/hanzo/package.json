@@ -1,0 +1,70 @@
+{
+  "name": "hanzo",
+  "version": "9.0.0",
+  "type": "module",
+  "description": "One import for the Hanzo frontend. `hanzo/ui` and `hanzo/gui` are the libraries; the root is two loaders that fetch them on demand.",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.js",
+      "require": "./dist/ui.cjs",
+      "default": "./dist/ui.js"
+    },
+    "./gui": {
+      "types": "./dist/gui.d.ts",
+      "import": "./dist/gui.js",
+      "require": "./dist/gui.cjs",
+      "default": "./dist/gui.js"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.ts"
+  ],
+  "scripts": {
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs .",
+    "clean": "rm -rf dist dist-cjs",
+    "prepack": "pnpm run build",
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "typecheck": "tsc --noEmit",
+    "tc": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@hanzo/gui": "^8.3.5",
+    "@hanzo/ui": "^8.27.10"
+  },
+  "peerDependencies": {
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "npm:react-native-web@^0.21.2",
+    "react-native-svg": "npm:react-native-svg-web@^1.0.9",
+    "react-native-types": "npm:react-native@^0.86.2",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0 OR MIT",
+  "author": "Hanzo AI <dev@hanzo.ai>"
+}
