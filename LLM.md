@@ -47,7 +47,7 @@ gotchas) follow below.
 ## v8 — the canonical `@hanzo/ui` (`pkg/ui`)
 
 `@hanzo/ui@8` (`pkg/ui`) is THE Hanzo component library, and there is ONE
-substrate: every component renders through `@hanzo/gui` (Tamagui) primitives on
+substrate: every component renders through `@hanzo/gui` primitives on
 the `@hanzo/tokens` scale, so one import works on web, native (expo) and desktop
 (Tauri). The Radix + Tailwind surface it used to ship alongside is gone — it
 lives on as its own package, `@hanzo/shadcn`, and `@hanzo/ui` no longer depends
@@ -788,7 +788,7 @@ belongs to `hanzoai/shadcn` now, along with the registry itself.
 
 ## Tech Stack
 
-React 19, `@hanzo/gui` (Tamagui) on the `@hanzo/tokens` scale, plain `tsc` (no
+React 19, `@hanzo/gui` on the `@hanzo/tokens` scale, plain `tsc` (no
 bundler), Turborepo + pnpm, vitest + playwright.
 
 ## Upstream Sync
