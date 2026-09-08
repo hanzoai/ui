@@ -143,7 +143,7 @@ export const DirectoryModal: React.FC<DirectoryModalProps> = ({
               </span>
               <Input
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
                 placeholder={`Search ${currentTab}...`}
                 style={{ paddingLeft: 32, height: 34, fontSize: 12, borderRadius: 10, backgroundColor: 'var(--color2)', borderColor: 'var(--borderColor)' }}
               />
