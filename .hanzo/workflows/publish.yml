@@ -249,6 +249,14 @@ jobs:
             # them, which read like a source problem in @hanzo/ui and are not.
             pnpm --filter "$PKG"... build || return 1
 
+            # A build EMITS; it does not check. tsup and tsc -p both stop at the
+            # files they are asked to write, so a program-wide error sits outside
+            # what either reads -- eleven of them sat on main while this lane was
+            # green, because the lane built and tested and never typechecked.
+            # `--if-present`, so a package with no typecheck script is skipped
+            # rather than failed.
+            pnpm --filter "$PKG" run --if-present typecheck || return 1
+
             PKG_DIR=$(pnpm --filter "$PKG" exec pwd | tail -1)
             [ -n "$PKG_DIR" ] || { echo "::error::$PKG matched no workspace package"; return 1; }
 
