@@ -8,7 +8,7 @@
 # HERE, in the container the gate runs in, and commit what it produced.
 #
 # It is deliberately NOT part of cicd.yml. That lane calls
-# `hanzoai/ci/.hanzo/workflows/build.yml@v1`, which runs `pnpm run test:consumer`
+# `hanzoai/ci/.github/workflows/build.yml@v1`, which runs `pnpm run test:consumer`
 # from `hanzo.yml` and fails the build when the render drifts. A gate allowed to
 # rewrite its own expected value is not a gate — it would go green against
 # whatever it just produced, and a real regression would land as a baseline.
