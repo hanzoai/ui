@@ -18,4 +18,4 @@ export const ui = () => import('@hanzo/ui')
 /** Load @hanzo/gui — the primitive substrate @hanzo/ui renders through. */
 export const gui = () => import('@hanzo/gui')
 
-export const version = '9.0.0'
+export const version = '9.0.1'

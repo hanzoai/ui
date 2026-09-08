@@ -1,8 +1,8 @@
 {
   "name": "hanzo",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "type": "module",
-  "description": "One import for the Hanzo frontend. `hanzo/ui` and `hanzo/gui` are the libraries; the root is two loaders that fetch them on demand.",
+  "description": "One import for the Hanzo frontend. Every subpath of every library it covers is reachable under one name.",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -10,30 +10,2154 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
     },
-    "./ui": {
-      "types": "./dist/ui.d.ts",
-      "import": "./dist/ui.js",
-      "require": "./dist/ui.cjs",
-      "default": "./dist/ui.js"
+    "./package.json": "./package.json",
+    "./ai": {
+      "types": "./dist/ai.d.ts",
+      "import": "./dist/ai.js",
+      "require": "./dist/ai.cjs",
+      "default": "./dist/ai.js"
+    },
+    "./ai/react": {
+      "types": "./dist/ai/react.d.ts",
+      "import": "./dist/ai/react.js",
+      "require": "./dist/ai/react.cjs",
+      "default": "./dist/ai/react.js"
+    },
+    "./event": {
+      "types": "./dist/event.d.ts",
+      "import": "./dist/event.js",
+      "require": "./dist/event.cjs",
+      "default": "./dist/event.js"
+    },
+    "./event/react": {
+      "types": "./dist/event/react.d.ts",
+      "import": "./dist/event/react.js",
+      "require": "./dist/event/react.cjs",
+      "default": "./dist/event/react.js"
+    },
+    "./gui/css-check": {
+      "import": "./dist/gui/css-check.js",
+      "default": "./dist/gui/css-check.js"
     },
     "./gui": {
       "types": "./dist/gui.d.ts",
       "import": "./dist/gui.js",
       "require": "./dist/gui.cjs",
       "default": "./dist/gui.js"
+    },
+    "./gui/web": {
+      "types": "./dist/gui/web.d.ts",
+      "import": "./dist/gui/web.js",
+      "require": "./dist/gui/web.cjs",
+      "default": "./dist/gui/web.js"
+    },
+    "./gui/linear-gradient": {
+      "types": "./dist/gui/linear-gradient.d.ts",
+      "import": "./dist/gui/linear-gradient.js",
+      "require": "./dist/gui/linear-gradient.cjs",
+      "default": "./dist/gui/linear-gradient.js"
+    },
+    "./iam": {
+      "types": "./dist/iam.d.ts",
+      "import": "./dist/iam.js",
+      "require": "./dist/iam.cjs",
+      "default": "./dist/iam.js"
+    },
+    "./iam/auth": {
+      "types": "./dist/iam/auth.d.ts",
+      "import": "./dist/iam/auth.js",
+      "require": "./dist/iam/auth.cjs",
+      "default": "./dist/iam/auth.js"
+    },
+    "./iam/browser": {
+      "types": "./dist/iam/browser.d.ts",
+      "import": "./dist/iam/browser.js",
+      "require": "./dist/iam/browser.cjs",
+      "default": "./dist/iam/browser.js"
+    },
+    "./iam/session": {
+      "types": "./dist/iam/session.d.ts",
+      "import": "./dist/iam/session.js",
+      "require": "./dist/iam/session.cjs",
+      "default": "./dist/iam/session.js"
+    },
+    "./iam/paths": {
+      "types": "./dist/iam/paths.d.ts",
+      "import": "./dist/iam/paths.js",
+      "require": "./dist/iam/paths.cjs",
+      "default": "./dist/iam/paths.js"
+    },
+    "./iam/server": {
+      "types": "./dist/iam/server.d.ts",
+      "import": "./dist/iam/server.js",
+      "require": "./dist/iam/server.cjs",
+      "default": "./dist/iam/server.js"
+    },
+    "./iam/types": {
+      "types": "./dist/iam/types.d.ts",
+      "import": "./dist/iam/types.js",
+      "require": "./dist/iam/types.cjs",
+      "default": "./dist/iam/types.js"
+    },
+    "./iam/react": {
+      "types": "./dist/iam/react.d.ts",
+      "import": "./dist/iam/react.js",
+      "require": "./dist/iam/react.cjs",
+      "default": "./dist/iam/react.js"
+    },
+    "./iam/views": {
+      "types": "./dist/iam/views.d.ts",
+      "import": "./dist/iam/views.js",
+      "require": "./dist/iam/views.cjs",
+      "default": "./dist/iam/views.js"
+    },
+    "./iam/nextauth": {
+      "types": "./dist/iam/nextauth.d.ts",
+      "import": "./dist/iam/nextauth.js",
+      "require": "./dist/iam/nextauth.cjs",
+      "default": "./dist/iam/nextauth.js"
+    },
+    "./iam/sveltekit": {
+      "types": "./dist/iam/sveltekit.d.ts",
+      "import": "./dist/iam/sveltekit.js",
+      "require": "./dist/iam/sveltekit.cjs",
+      "default": "./dist/iam/sveltekit.js"
+    },
+    "./iam/remix": {
+      "types": "./dist/iam/remix.d.ts",
+      "import": "./dist/iam/remix.js",
+      "require": "./dist/iam/remix.cjs",
+      "default": "./dist/iam/remix.js"
+    },
+    "./iam/express": {
+      "types": "./dist/iam/express.d.ts",
+      "import": "./dist/iam/express.js",
+      "require": "./dist/iam/express.cjs",
+      "default": "./dist/iam/express.js"
+    },
+    "./iam/hono": {
+      "types": "./dist/iam/hono.d.ts",
+      "import": "./dist/iam/hono.js",
+      "require": "./dist/iam/hono.cjs",
+      "default": "./dist/iam/hono.js"
+    },
+    "./iam/passport": {
+      "types": "./dist/iam/passport.d.ts",
+      "import": "./dist/iam/passport.js",
+      "require": "./dist/iam/passport.cjs",
+      "default": "./dist/iam/passport.js"
+    },
+    "./iam/betterauth": {
+      "types": "./dist/iam/betterauth.d.ts",
+      "import": "./dist/iam/betterauth.js",
+      "require": "./dist/iam/betterauth.cjs",
+      "default": "./dist/iam/betterauth.js"
+    },
+    "./iam/validation": {
+      "types": "./dist/iam/validation.d.ts",
+      "import": "./dist/iam/validation.js",
+      "require": "./dist/iam/validation.cjs",
+      "default": "./dist/iam/validation.js"
+    },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.js",
+      "require": "./dist/ui.cjs",
+      "default": "./dist/ui.js"
+    },
+    "./ui/blocks": {
+      "types": "./dist/ui/blocks.d.ts",
+      "import": "./dist/ui/blocks.js",
+      "require": "./dist/ui/blocks.cjs",
+      "default": "./dist/ui/blocks.js"
+    },
+    "./ui/gallery": {
+      "types": "./dist/ui/gallery.d.ts",
+      "import": "./dist/ui/gallery.js",
+      "require": "./dist/ui/gallery.cjs",
+      "default": "./dist/ui/gallery.js"
+    },
+    "./ui/styles.css": "./dist/ui/styles.css",
+    "./ui/models": {
+      "types": "./dist/ui/models.d.ts",
+      "import": "./dist/ui/models.js",
+      "require": "./dist/ui/models.cjs",
+      "default": "./dist/ui/models.js"
+    },
+    "./ui/chat": {
+      "types": "./dist/ui/chat.d.ts",
+      "import": "./dist/ui/chat.js",
+      "require": "./dist/ui/chat.cjs",
+      "default": "./dist/ui/chat.js"
+    },
+    "./ui/backdrop": {
+      "types": "./dist/ui/backdrop.d.ts",
+      "import": "./dist/ui/backdrop.js",
+      "require": "./dist/ui/backdrop.cjs",
+      "default": "./dist/ui/backdrop.js"
+    },
+    "./ui/chat/pure": {
+      "types": "./dist/ui/chat/pure.d.ts",
+      "import": "./dist/ui/chat/pure.js",
+      "require": "./dist/ui/chat/pure.cjs",
+      "default": "./dist/ui/chat/pure.js"
+    },
+    "./ui/core": {
+      "types": "./dist/ui/core.d.ts",
+      "import": "./dist/ui/core.js",
+      "default": "./dist/ui/core.js"
+    },
+    "./ui/tokens": {
+      "types": "./dist/ui/tokens.d.ts",
+      "import": "./dist/ui/tokens.js",
+      "default": "./dist/ui/tokens.js"
+    },
+    "./ui/css": {
+      "types": "./dist/ui/css.d.ts",
+      "import": "./dist/ui/css.js",
+      "require": "./dist/ui/css.cjs",
+      "default": "./dist/ui/css.js"
+    },
+    "./ui/theme.css": "./dist/ui/theme.css",
+    "./ui/glass.css": "./dist/ui/glass.css",
+    "./ui/glass": {
+      "types": "./dist/ui/glass.d.ts",
+      "import": "./dist/ui/glass.js",
+      "require": "./dist/ui/glass.cjs",
+      "default": "./dist/ui/glass.js"
+    },
+    "./ui/product": {
+      "types": "./dist/ui/product.d.ts",
+      "import": "./dist/ui/product.js",
+      "require": "./dist/ui/product.cjs",
+      "default": "./dist/ui/product.js"
+    },
+    "./ui/gui-config": {
+      "types": "./dist/ui/gui-config.d.ts",
+      "import": "./dist/ui/gui-config.js",
+      "require": "./dist/ui/gui-config.cjs",
+      "default": "./dist/ui/gui-config.js"
+    },
+    "./ui/product/pure": {
+      "types": "./dist/ui/product/pure.d.ts",
+      "import": "./dist/ui/product/pure.js",
+      "require": "./dist/ui/product/pure.cjs",
+      "default": "./dist/ui/product/pure.js"
+    },
+    "./ui/product/theme-toggle-next": {
+      "types": "./dist/ui/product/theme-toggle-next.d.ts",
+      "import": "./dist/ui/product/theme-toggle-next.js",
+      "require": "./dist/ui/product/theme-toggle-next.cjs",
+      "default": "./dist/ui/product/theme-toggle-next.js"
+    },
+    "./ui/product/social": {
+      "types": "./dist/ui/product/social.d.ts",
+      "import": "./dist/ui/product/social.js",
+      "require": "./dist/ui/product/social.cjs",
+      "default": "./dist/ui/product/social.js"
+    },
+    "./ui/product/social/api": {
+      "types": "./dist/ui/product/social/api.d.ts",
+      "import": "./dist/ui/product/social/api.js",
+      "require": "./dist/ui/product/social/api.cjs",
+      "default": "./dist/ui/product/social/api.js"
+    },
+    "./ui/product/AnimatedLogo": {
+      "types": "./dist/ui/product/AnimatedLogo.d.ts",
+      "import": "./dist/ui/product/AnimatedLogo.js",
+      "require": "./dist/ui/product/AnimatedLogo.cjs",
+      "default": "./dist/ui/product/AnimatedLogo.js"
+    },
+    "./ui/product/AppHeader": {
+      "types": "./dist/ui/product/AppHeader.d.ts",
+      "import": "./dist/ui/product/AppHeader.js",
+      "require": "./dist/ui/product/AppHeader.cjs",
+      "default": "./dist/ui/product/AppHeader.js"
+    },
+    "./ui/product/BackendState": {
+      "types": "./dist/ui/product/BackendState.d.ts",
+      "import": "./dist/ui/product/BackendState.js",
+      "require": "./dist/ui/product/BackendState.cjs",
+      "default": "./dist/ui/product/BackendState.js"
+    },
+    "./ui/product/BrandMark": {
+      "types": "./dist/ui/product/BrandMark.d.ts",
+      "import": "./dist/ui/product/BrandMark.js",
+      "require": "./dist/ui/product/BrandMark.cjs",
+      "default": "./dist/ui/product/BrandMark.js"
+    },
+    "./ui/product/Charts": {
+      "types": "./dist/ui/product/Charts.d.ts",
+      "import": "./dist/ui/product/Charts.js",
+      "require": "./dist/ui/product/Charts.cjs",
+      "default": "./dist/ui/product/Charts.js"
+    },
+    "./ui/product/ChunkGuard": {
+      "types": "./dist/ui/product/ChunkGuard.d.ts",
+      "import": "./dist/ui/product/ChunkGuard.js",
+      "require": "./dist/ui/product/ChunkGuard.cjs",
+      "default": "./dist/ui/product/ChunkGuard.js"
+    },
+    "./ui/product/ComboBox": {
+      "types": "./dist/ui/product/ComboBox.d.ts",
+      "import": "./dist/ui/product/ComboBox.js",
+      "require": "./dist/ui/product/ComboBox.cjs",
+      "default": "./dist/ui/product/ComboBox.js"
+    },
+    "./ui/product/CommerceResource": {
+      "types": "./dist/ui/product/CommerceResource.d.ts",
+      "import": "./dist/ui/product/CommerceResource.js",
+      "require": "./dist/ui/product/CommerceResource.cjs",
+      "default": "./dist/ui/product/CommerceResource.js"
+    },
+    "./ui/product/ConfirmDelete": {
+      "types": "./dist/ui/product/ConfirmDelete.d.ts",
+      "import": "./dist/ui/product/ConfirmDelete.js",
+      "require": "./dist/ui/product/ConfirmDelete.cjs",
+      "default": "./dist/ui/product/ConfirmDelete.js"
+    },
+    "./ui/product/ConnectionBadge": {
+      "types": "./dist/ui/product/ConnectionBadge.d.ts",
+      "import": "./dist/ui/product/ConnectionBadge.js",
+      "require": "./dist/ui/product/ConnectionBadge.cjs",
+      "default": "./dist/ui/product/ConnectionBadge.js"
+    },
+    "./ui/product/CopyButton": {
+      "types": "./dist/ui/product/CopyButton.d.ts",
+      "import": "./dist/ui/product/CopyButton.js",
+      "require": "./dist/ui/product/CopyButton.cjs",
+      "default": "./dist/ui/product/CopyButton.js"
+    },
+    "./ui/product/DataTable": {
+      "types": "./dist/ui/product/DataTable.d.ts",
+      "import": "./dist/ui/product/DataTable.js",
+      "require": "./dist/ui/product/DataTable.cjs",
+      "default": "./dist/ui/product/DataTable.js"
+    },
+    "./ui/product/DetailPane": {
+      "types": "./dist/ui/product/DetailPane.d.ts",
+      "import": "./dist/ui/product/DetailPane.js",
+      "require": "./dist/ui/product/DetailPane.cjs",
+      "default": "./dist/ui/product/DetailPane.js"
+    },
+    "./ui/product/DialogTemplate": {
+      "types": "./dist/ui/product/DialogTemplate.d.ts",
+      "import": "./dist/ui/product/DialogTemplate.js",
+      "require": "./dist/ui/product/DialogTemplate.cjs",
+      "default": "./dist/ui/product/DialogTemplate.js"
+    },
+    "./ui/product/Donut": {
+      "types": "./dist/ui/product/Donut.d.ts",
+      "import": "./dist/ui/product/Donut.js",
+      "require": "./dist/ui/product/Donut.cjs",
+      "default": "./dist/ui/product/Donut.js"
+    },
+    "./ui/product/EmptyState": {
+      "types": "./dist/ui/product/EmptyState.d.ts",
+      "import": "./dist/ui/product/EmptyState.js",
+      "require": "./dist/ui/product/EmptyState.cjs",
+      "default": "./dist/ui/product/EmptyState.js"
+    },
+    "./ui/product/Fact": {
+      "types": "./dist/ui/product/Fact.d.ts",
+      "import": "./dist/ui/product/Fact.js",
+      "require": "./dist/ui/product/Fact.cjs",
+      "default": "./dist/ui/product/Fact.js"
+    },
+    "./ui/product/FadeIn": {
+      "types": "./dist/ui/product/FadeIn.d.ts",
+      "import": "./dist/ui/product/FadeIn.js",
+      "require": "./dist/ui/product/FadeIn.cjs",
+      "default": "./dist/ui/product/FadeIn.js"
+    },
+    "./ui/product/Field": {
+      "types": "./dist/ui/product/Field.d.ts",
+      "import": "./dist/ui/product/Field.js",
+      "require": "./dist/ui/product/Field.cjs",
+      "default": "./dist/ui/product/Field.js"
+    },
+    "./ui/product/Fieldset": {
+      "types": "./dist/ui/product/Fieldset.d.ts",
+      "import": "./dist/ui/product/Fieldset.js",
+      "require": "./dist/ui/product/Fieldset.cjs",
+      "default": "./dist/ui/product/Fieldset.js"
+    },
+    "./ui/product/Filters": {
+      "types": "./dist/ui/product/Filters.d.ts",
+      "import": "./dist/ui/product/Filters.js",
+      "require": "./dist/ui/product/Filters.cjs",
+      "default": "./dist/ui/product/Filters.js"
+    },
+    "./ui/product/HanzoMark": {
+      "types": "./dist/ui/product/HanzoMark.d.ts",
+      "import": "./dist/ui/product/HanzoMark.js",
+      "require": "./dist/ui/product/HanzoMark.cjs",
+      "default": "./dist/ui/product/HanzoMark.js"
+    },
+    "./ui/product/MenuRow": {
+      "types": "./dist/ui/product/MenuRow.d.ts",
+      "import": "./dist/ui/product/MenuRow.js",
+      "require": "./dist/ui/product/MenuRow.cjs",
+      "default": "./dist/ui/product/MenuRow.js"
+    },
+    "./ui/product/Metric": {
+      "types": "./dist/ui/product/Metric.d.ts",
+      "import": "./dist/ui/product/Metric.js",
+      "require": "./dist/ui/product/Metric.cjs",
+      "default": "./dist/ui/product/Metric.js"
+    },
+    "./ui/product/OrgMark": {
+      "types": "./dist/ui/product/OrgMark.d.ts",
+      "import": "./dist/ui/product/OrgMark.js",
+      "require": "./dist/ui/product/OrgMark.cjs",
+      "default": "./dist/ui/product/OrgMark.js"
+    },
+    "./ui/product/OrgSwitcher": {
+      "types": "./dist/ui/product/OrgSwitcher.d.ts",
+      "import": "./dist/ui/product/OrgSwitcher.js",
+      "require": "./dist/ui/product/OrgSwitcher.cjs",
+      "default": "./dist/ui/product/OrgSwitcher.js"
+    },
+    "./ui/product/PageHeader": {
+      "types": "./dist/ui/product/PageHeader.d.ts",
+      "import": "./dist/ui/product/PageHeader.js",
+      "require": "./dist/ui/product/PageHeader.cjs",
+      "default": "./dist/ui/product/PageHeader.js"
+    },
+    "./ui/product/Pagination": {
+      "types": "./dist/ui/product/Pagination.d.ts",
+      "import": "./dist/ui/product/Pagination.js",
+      "require": "./dist/ui/product/Pagination.cjs",
+      "default": "./dist/ui/product/Pagination.js"
+    },
+    "./ui/product/Palette": {
+      "types": "./dist/ui/product/Palette.d.ts",
+      "import": "./dist/ui/product/Palette.js",
+      "require": "./dist/ui/product/Palette.cjs",
+      "default": "./dist/ui/product/Palette.js"
+    },
+    "./ui/product/PrimaryButton": {
+      "types": "./dist/ui/product/PrimaryButton.d.ts",
+      "import": "./dist/ui/product/PrimaryButton.js",
+      "require": "./dist/ui/product/PrimaryButton.cjs",
+      "default": "./dist/ui/product/PrimaryButton.js"
+    },
+    "./ui/product/ProductIcon": {
+      "types": "./dist/ui/product/ProductIcon.d.ts",
+      "import": "./dist/ui/product/ProductIcon.js",
+      "require": "./dist/ui/product/ProductIcon.cjs",
+      "default": "./dist/ui/product/ProductIcon.js"
+    },
+    "./ui/product/ProjectThumb": {
+      "types": "./dist/ui/product/ProjectThumb.d.ts",
+      "import": "./dist/ui/product/ProjectThumb.js",
+      "require": "./dist/ui/product/ProjectThumb.cjs",
+      "default": "./dist/ui/product/ProjectThumb.js"
+    },
+    "./ui/product/ProviderLogo": {
+      "types": "./dist/ui/product/ProviderLogo.d.ts",
+      "import": "./dist/ui/product/ProviderLogo.js",
+      "require": "./dist/ui/product/ProviderLogo.cjs",
+      "default": "./dist/ui/product/ProviderLogo.js"
+    },
+    "./ui/product/Reorder": {
+      "types": "./dist/ui/product/Reorder.d.ts",
+      "import": "./dist/ui/product/Reorder.js",
+      "require": "./dist/ui/product/Reorder.cjs",
+      "default": "./dist/ui/product/Reorder.js"
+    },
+    "./ui/product/SecretInput": {
+      "types": "./dist/ui/product/SecretInput.d.ts",
+      "import": "./dist/ui/product/SecretInput.js",
+      "require": "./dist/ui/product/SecretInput.cjs",
+      "default": "./dist/ui/product/SecretInput.js"
+    },
+    "./ui/product/SelectMenu": {
+      "types": "./dist/ui/product/SelectMenu.d.ts",
+      "import": "./dist/ui/product/SelectMenu.js",
+      "require": "./dist/ui/product/SelectMenu.cjs",
+      "default": "./dist/ui/product/SelectMenu.js"
+    },
+    "./ui/product/SiteFooter": {
+      "types": "./dist/ui/product/SiteFooter.d.ts",
+      "import": "./dist/ui/product/SiteFooter.js",
+      "require": "./dist/ui/product/SiteFooter.cjs",
+      "default": "./dist/ui/product/SiteFooter.js"
+    },
+    "./ui/product/SiteNav": {
+      "types": "./dist/ui/product/SiteNav.d.ts",
+      "import": "./dist/ui/product/SiteNav.js",
+      "require": "./dist/ui/product/SiteNav.cjs",
+      "default": "./dist/ui/product/SiteNav.js"
+    },
+    "./ui/product/Skeleton": {
+      "types": "./dist/ui/product/Skeleton.d.ts",
+      "import": "./dist/ui/product/Skeleton.js",
+      "require": "./dist/ui/product/Skeleton.cjs",
+      "default": "./dist/ui/product/Skeleton.js"
+    },
+    "./ui/product/SlideOver": {
+      "types": "./dist/ui/product/SlideOver.d.ts",
+      "import": "./dist/ui/product/SlideOver.js",
+      "require": "./dist/ui/product/SlideOver.cjs",
+      "default": "./dist/ui/product/SlideOver.js"
+    },
+    "./ui/product/Split": {
+      "types": "./dist/ui/product/Split.d.ts",
+      "import": "./dist/ui/product/Split.js",
+      "require": "./dist/ui/product/Split.cjs",
+      "default": "./dist/ui/product/Split.js"
+    },
+    "./ui/product/StatusTag": {
+      "types": "./dist/ui/product/StatusTag.d.ts",
+      "import": "./dist/ui/product/StatusTag.js",
+      "require": "./dist/ui/product/StatusTag.cjs",
+      "default": "./dist/ui/product/StatusTag.js"
+    },
+    "./ui/product/ThemeToggle": {
+      "types": "./dist/ui/product/ThemeToggle.d.ts",
+      "import": "./dist/ui/product/ThemeToggle.js",
+      "require": "./dist/ui/product/ThemeToggle.cjs",
+      "default": "./dist/ui/product/ThemeToggle.js"
+    },
+    "./ui/product/ThemeToggleNext": {
+      "types": "./dist/ui/product/ThemeToggleNext.d.ts",
+      "import": "./dist/ui/product/ThemeToggleNext.js",
+      "require": "./dist/ui/product/ThemeToggleNext.cjs",
+      "default": "./dist/ui/product/ThemeToggleNext.js"
+    },
+    "./ui/product/Toast": {
+      "types": "./dist/ui/product/Toast.d.ts",
+      "import": "./dist/ui/product/Toast.js",
+      "require": "./dist/ui/product/Toast.cjs",
+      "default": "./dist/ui/product/Toast.js"
+    },
+    "./ui/product/TooltipAnchor": {
+      "types": "./dist/ui/product/TooltipAnchor.d.ts",
+      "import": "./dist/ui/product/TooltipAnchor.js",
+      "require": "./dist/ui/product/TooltipAnchor.cjs",
+      "default": "./dist/ui/product/TooltipAnchor.js"
+    },
+    "./ui/product/UserMenu": {
+      "types": "./dist/ui/product/UserMenu.d.ts",
+      "import": "./dist/ui/product/UserMenu.js",
+      "require": "./dist/ui/product/UserMenu.cjs",
+      "default": "./dist/ui/product/UserMenu.js"
+    },
+    "./ui/product/Workbench": {
+      "types": "./dist/ui/product/Workbench.d.ts",
+      "import": "./dist/ui/product/Workbench.js",
+      "require": "./dist/ui/product/Workbench.cjs",
+      "default": "./dist/ui/product/Workbench.js"
+    },
+    "./ui/product/accent": {
+      "types": "./dist/ui/product/accent.d.ts",
+      "import": "./dist/ui/product/accent.js",
+      "require": "./dist/ui/product/accent.cjs",
+      "default": "./dist/ui/product/accent.js"
+    },
+    "./ui/product/animatedLogo.logic": {
+      "types": "./dist/ui/product/animatedLogo.logic.d.ts",
+      "import": "./dist/ui/product/animatedLogo.logic.js",
+      "require": "./dist/ui/product/animatedLogo.logic.cjs",
+      "default": "./dist/ui/product/animatedLogo.logic.js"
+    },
+    "./ui/product/brand": {
+      "types": "./dist/ui/product/brand.d.ts",
+      "import": "./dist/ui/product/brand.js",
+      "require": "./dist/ui/product/brand.cjs",
+      "default": "./dist/ui/product/brand.js"
+    },
+    "./ui/product/chunkGuard.logic": {
+      "types": "./dist/ui/product/chunkGuard.logic.d.ts",
+      "import": "./dist/ui/product/chunkGuard.logic.js",
+      "require": "./dist/ui/product/chunkGuard.logic.cjs",
+      "default": "./dist/ui/product/chunkGuard.logic.js"
+    },
+    "./ui/product/color": {
+      "types": "./dist/ui/product/color.d.ts",
+      "import": "./dist/ui/product/color.js",
+      "require": "./dist/ui/product/color.cjs",
+      "default": "./dist/ui/product/color.js"
+    },
+    "./ui/product/combobox/filter": {
+      "types": "./dist/ui/product/combobox/filter.d.ts",
+      "import": "./dist/ui/product/combobox/filter.js",
+      "require": "./dist/ui/product/combobox/filter.cjs",
+      "default": "./dist/ui/product/combobox/filter.js"
+    },
+    "./ui/product/host": {
+      "types": "./dist/ui/product/host.d.ts",
+      "import": "./dist/ui/product/host.js",
+      "require": "./dist/ui/product/host.cjs",
+      "default": "./dist/ui/product/host.js"
+    },
+    "./ui/product/index": {
+      "types": "./dist/ui/product/index.d.ts",
+      "import": "./dist/ui/product/index.js",
+      "require": "./dist/ui/product/index.cjs",
+      "default": "./dist/ui/product/index.js"
+    },
+    "./ui/product/instrument": {
+      "types": "./dist/ui/product/instrument.d.ts",
+      "import": "./dist/ui/product/instrument.js",
+      "require": "./dist/ui/product/instrument.cjs",
+      "default": "./dist/ui/product/instrument.js"
+    },
+    "./ui/product/match": {
+      "types": "./dist/ui/product/match.d.ts",
+      "import": "./dist/ui/product/match.js",
+      "require": "./dist/ui/product/match.cjs",
+      "default": "./dist/ui/product/match.js"
+    },
+    "./ui/product/menu/ContextMenu": {
+      "types": "./dist/ui/product/menu/ContextMenu.d.ts",
+      "import": "./dist/ui/product/menu/ContextMenu.js",
+      "require": "./dist/ui/product/menu/ContextMenu.cjs",
+      "default": "./dist/ui/product/menu/ContextMenu.js"
+    },
+    "./ui/product/menu/FloatingMenu": {
+      "types": "./dist/ui/product/menu/FloatingMenu.d.ts",
+      "import": "./dist/ui/product/menu/FloatingMenu.js",
+      "require": "./dist/ui/product/menu/FloatingMenu.cjs",
+      "default": "./dist/ui/product/menu/FloatingMenu.js"
+    },
+    "./ui/product/menu/index": {
+      "types": "./dist/ui/product/menu/index.d.ts",
+      "import": "./dist/ui/product/menu/index.js",
+      "require": "./dist/ui/product/menu/index.cjs",
+      "default": "./dist/ui/product/menu/index.js"
+    },
+    "./ui/product/menu/items": {
+      "types": "./dist/ui/product/menu/items.d.ts",
+      "import": "./dist/ui/product/menu/items.js",
+      "require": "./dist/ui/product/menu/items.cjs",
+      "default": "./dist/ui/product/menu/items.js"
+    },
+    "./ui/product/menu/portal-theme": {
+      "types": "./dist/ui/product/menu/portal-theme.d.ts",
+      "import": "./dist/ui/product/menu/portal-theme.js",
+      "require": "./dist/ui/product/menu/portal-theme.cjs",
+      "default": "./dist/ui/product/menu/portal-theme.js"
+    },
+    "./ui/product/menu/roving": {
+      "types": "./dist/ui/product/menu/roving.d.ts",
+      "import": "./dist/ui/product/menu/roving.js",
+      "require": "./dist/ui/product/menu/roving.cjs",
+      "default": "./dist/ui/product/menu/roving.js"
+    },
+    "./ui/product/name": {
+      "types": "./dist/ui/product/name.d.ts",
+      "import": "./dist/ui/product/name.js",
+      "require": "./dist/ui/product/name.cjs",
+      "default": "./dist/ui/product/name.js"
+    },
+    "./ui/product/pages": {
+      "types": "./dist/ui/product/pages.d.ts",
+      "import": "./dist/ui/product/pages.js",
+      "require": "./dist/ui/product/pages.cjs",
+      "default": "./dist/ui/product/pages.js"
+    },
+    "./ui/product/scope": {
+      "types": "./dist/ui/product/scope.d.ts",
+      "import": "./dist/ui/product/scope.js",
+      "require": "./dist/ui/product/scope.cjs",
+      "default": "./dist/ui/product/scope.js"
+    },
+    "./ui/product/social/CampaignCard": {
+      "types": "./dist/ui/product/social/CampaignCard.d.ts",
+      "import": "./dist/ui/product/social/CampaignCard.js",
+      "require": "./dist/ui/product/social/CampaignCard.cjs",
+      "default": "./dist/ui/product/social/CampaignCard.js"
+    },
+    "./ui/product/social/ChannelBadge": {
+      "types": "./dist/ui/product/social/ChannelBadge.d.ts",
+      "import": "./dist/ui/product/social/ChannelBadge.js",
+      "require": "./dist/ui/product/social/ChannelBadge.cjs",
+      "default": "./dist/ui/product/social/ChannelBadge.js"
+    },
+    "./ui/product/social/PostAgenda": {
+      "types": "./dist/ui/product/social/PostAgenda.d.ts",
+      "import": "./dist/ui/product/social/PostAgenda.js",
+      "require": "./dist/ui/product/social/PostAgenda.cjs",
+      "default": "./dist/ui/product/social/PostAgenda.js"
+    },
+    "./ui/product/social/PostCard": {
+      "types": "./dist/ui/product/social/PostCard.d.ts",
+      "import": "./dist/ui/product/social/PostCard.js",
+      "require": "./dist/ui/product/social/PostCard.cjs",
+      "default": "./dist/ui/product/social/PostCard.js"
+    },
+    "./ui/product/social/PostComposer": {
+      "types": "./dist/ui/product/social/PostComposer.d.ts",
+      "import": "./dist/ui/product/social/PostComposer.js",
+      "require": "./dist/ui/product/social/PostComposer.cjs",
+      "default": "./dist/ui/product/social/PostComposer.js"
+    },
+    "./ui/product/social/ProviderReadinessList": {
+      "types": "./dist/ui/product/social/ProviderReadinessList.d.ts",
+      "import": "./dist/ui/product/social/ProviderReadinessList.js",
+      "require": "./dist/ui/product/social/ProviderReadinessList.cjs",
+      "default": "./dist/ui/product/social/ProviderReadinessList.js"
+    },
+    "./ui/product/social/SocialResource": {
+      "types": "./dist/ui/product/social/SocialResource.d.ts",
+      "import": "./dist/ui/product/social/SocialResource.js",
+      "require": "./dist/ui/product/social/SocialResource.cjs",
+      "default": "./dist/ui/product/social/SocialResource.js"
+    },
+    "./ui/product/social/SocialSummaryBar": {
+      "types": "./dist/ui/product/social/SocialSummaryBar.d.ts",
+      "import": "./dist/ui/product/social/SocialSummaryBar.js",
+      "require": "./dist/ui/product/social/SocialSummaryBar.cjs",
+      "default": "./dist/ui/product/social/SocialSummaryBar.js"
+    },
+    "./ui/product/social/ViewToggle": {
+      "types": "./dist/ui/product/social/ViewToggle.d.ts",
+      "import": "./dist/ui/product/social/ViewToggle.js",
+      "require": "./dist/ui/product/social/ViewToggle.cjs",
+      "default": "./dist/ui/product/social/ViewToggle.js"
+    },
+    "./ui/product/social/format": {
+      "types": "./dist/ui/product/social/format.d.ts",
+      "import": "./dist/ui/product/social/format.js",
+      "require": "./dist/ui/product/social/format.cjs",
+      "default": "./dist/ui/product/social/format.js"
+    },
+    "./ui/product/social/index": {
+      "types": "./dist/ui/product/social/index.d.ts",
+      "import": "./dist/ui/product/social/index.js",
+      "require": "./dist/ui/product/social/index.cjs",
+      "default": "./dist/ui/product/social/index.js"
+    },
+    "./ui/product/surfaces.data": {
+      "types": "./dist/ui/product/surfaces.data.d.ts",
+      "import": "./dist/ui/product/surfaces.data.js",
+      "require": "./dist/ui/product/surfaces.data.cjs",
+      "default": "./dist/ui/product/surfaces.data.js"
+    },
+    "./ui/product/tone": {
+      "types": "./dist/ui/product/tone.d.ts",
+      "import": "./dist/ui/product/tone.js",
+      "require": "./dist/ui/product/tone.cjs",
+      "default": "./dist/ui/product/tone.js"
+    },
+    "./ui/product/useCommandK": {
+      "types": "./dist/ui/product/useCommandK.d.ts",
+      "import": "./dist/ui/product/useCommandK.js",
+      "require": "./dist/ui/product/useCommandK.cjs",
+      "default": "./dist/ui/product/useCommandK.js"
+    },
+    "./ui/data": {
+      "types": "./dist/ui/data.d.ts",
+      "import": "./dist/ui/data.js",
+      "require": "./dist/ui/data.cjs",
+      "default": "./dist/ui/data.js"
+    },
+    "./ui/framework": {
+      "types": "./dist/ui/framework.d.ts",
+      "import": "./dist/ui/framework.js",
+      "require": "./dist/ui/framework.cjs",
+      "default": "./dist/ui/framework.js"
+    },
+    "./ui/framework/core": {
+      "types": "./dist/ui/framework/core.d.ts",
+      "import": "./dist/ui/framework/core.js",
+      "require": "./dist/ui/framework/core.cjs",
+      "default": "./dist/ui/framework/core.js"
+    },
+    "./ui/dropdown-menu": {
+      "types": "./dist/ui/dropdown-menu.d.ts",
+      "import": "./dist/ui/dropdown-menu.js",
+      "require": "./dist/ui/dropdown-menu.cjs",
+      "default": "./dist/ui/dropdown-menu.js"
+    },
+    "./ui/primitives": {
+      "types": "./dist/ui/primitives.d.ts",
+      "import": "./dist/ui/primitives.js",
+      "require": "./dist/ui/primitives.cjs",
+      "default": "./dist/ui/primitives.js"
+    },
+    "./ui/primitives/bases/data": {
+      "types": "./dist/ui/primitives/bases/data.d.ts",
+      "import": "./dist/ui/primitives/bases/data.js",
+      "require": "./dist/ui/primitives/bases/data.cjs",
+      "default": "./dist/ui/primitives/bases/data.js"
+    },
+    "./ui/primitives/Accordion": {
+      "types": "./dist/ui/primitives/Accordion.d.ts",
+      "import": "./dist/ui/primitives/Accordion.js",
+      "require": "./dist/ui/primitives/Accordion.cjs",
+      "default": "./dist/ui/primitives/Accordion.js"
+    },
+    "./ui/primitives/AccordionContent": {
+      "types": "./dist/ui/primitives/AccordionContent.d.ts",
+      "import": "./dist/ui/primitives/AccordionContent.js",
+      "require": "./dist/ui/primitives/AccordionContent.cjs",
+      "default": "./dist/ui/primitives/AccordionContent.js"
+    },
+    "./ui/primitives/AccordionItem": {
+      "types": "./dist/ui/primitives/AccordionItem.d.ts",
+      "import": "./dist/ui/primitives/AccordionItem.js",
+      "require": "./dist/ui/primitives/AccordionItem.cjs",
+      "default": "./dist/ui/primitives/AccordionItem.js"
+    },
+    "./ui/primitives/AccordionTrigger": {
+      "types": "./dist/ui/primitives/AccordionTrigger.d.ts",
+      "import": "./dist/ui/primitives/AccordionTrigger.js",
+      "require": "./dist/ui/primitives/AccordionTrigger.cjs",
+      "default": "./dist/ui/primitives/AccordionTrigger.js"
+    },
+    "./ui/primitives/AlertDialog": {
+      "types": "./dist/ui/primitives/AlertDialog.d.ts",
+      "import": "./dist/ui/primitives/AlertDialog.js",
+      "require": "./dist/ui/primitives/AlertDialog.cjs",
+      "default": "./dist/ui/primitives/AlertDialog.js"
+    },
+    "./ui/primitives/AlertDialogAction": {
+      "types": "./dist/ui/primitives/AlertDialogAction.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogAction.js",
+      "require": "./dist/ui/primitives/AlertDialogAction.cjs",
+      "default": "./dist/ui/primitives/AlertDialogAction.js"
+    },
+    "./ui/primitives/AlertDialogCancel": {
+      "types": "./dist/ui/primitives/AlertDialogCancel.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogCancel.js",
+      "require": "./dist/ui/primitives/AlertDialogCancel.cjs",
+      "default": "./dist/ui/primitives/AlertDialogCancel.js"
+    },
+    "./ui/primitives/AlertDialogContent": {
+      "types": "./dist/ui/primitives/AlertDialogContent.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogContent.js",
+      "require": "./dist/ui/primitives/AlertDialogContent.cjs",
+      "default": "./dist/ui/primitives/AlertDialogContent.js"
+    },
+    "./ui/primitives/AlertDialogDescription": {
+      "types": "./dist/ui/primitives/AlertDialogDescription.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogDescription.js",
+      "require": "./dist/ui/primitives/AlertDialogDescription.cjs",
+      "default": "./dist/ui/primitives/AlertDialogDescription.js"
+    },
+    "./ui/primitives/AlertDialogFooter": {
+      "types": "./dist/ui/primitives/AlertDialogFooter.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogFooter.js",
+      "require": "./dist/ui/primitives/AlertDialogFooter.cjs",
+      "default": "./dist/ui/primitives/AlertDialogFooter.js"
+    },
+    "./ui/primitives/AlertDialogHeader": {
+      "types": "./dist/ui/primitives/AlertDialogHeader.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogHeader.js",
+      "require": "./dist/ui/primitives/AlertDialogHeader.cjs",
+      "default": "./dist/ui/primitives/AlertDialogHeader.js"
+    },
+    "./ui/primitives/AlertDialogOverlay": {
+      "types": "./dist/ui/primitives/AlertDialogOverlay.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogOverlay.js",
+      "require": "./dist/ui/primitives/AlertDialogOverlay.cjs",
+      "default": "./dist/ui/primitives/AlertDialogOverlay.js"
+    },
+    "./ui/primitives/AlertDialogPortal": {
+      "types": "./dist/ui/primitives/AlertDialogPortal.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogPortal.js",
+      "require": "./dist/ui/primitives/AlertDialogPortal.cjs",
+      "default": "./dist/ui/primitives/AlertDialogPortal.js"
+    },
+    "./ui/primitives/AlertDialogTitle": {
+      "types": "./dist/ui/primitives/AlertDialogTitle.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogTitle.js",
+      "require": "./dist/ui/primitives/AlertDialogTitle.cjs",
+      "default": "./dist/ui/primitives/AlertDialogTitle.js"
+    },
+    "./ui/primitives/AlertDialogTrigger": {
+      "types": "./dist/ui/primitives/AlertDialogTrigger.d.ts",
+      "import": "./dist/ui/primitives/AlertDialogTrigger.js",
+      "require": "./dist/ui/primitives/AlertDialogTrigger.cjs",
+      "default": "./dist/ui/primitives/AlertDialogTrigger.js"
+    },
+    "./ui/primitives/Anchor": {
+      "types": "./dist/ui/primitives/Anchor.d.ts",
+      "import": "./dist/ui/primitives/Anchor.js",
+      "require": "./dist/ui/primitives/Anchor.cjs",
+      "default": "./dist/ui/primitives/Anchor.js"
+    },
+    "./ui/primitives/ApplyTypography": {
+      "types": "./dist/ui/primitives/ApplyTypography.d.ts",
+      "import": "./dist/ui/primitives/ApplyTypography.js",
+      "require": "./dist/ui/primitives/ApplyTypography.cjs",
+      "default": "./dist/ui/primitives/ApplyTypography.js"
+    },
+    "./ui/primitives/AspectRatio": {
+      "types": "./dist/ui/primitives/AspectRatio.d.ts",
+      "import": "./dist/ui/primitives/AspectRatio.js",
+      "require": "./dist/ui/primitives/AspectRatio.cjs",
+      "default": "./dist/ui/primitives/AspectRatio.js"
+    },
+    "./ui/primitives/Avatar": {
+      "types": "./dist/ui/primitives/Avatar.d.ts",
+      "import": "./dist/ui/primitives/Avatar.js",
+      "require": "./dist/ui/primitives/Avatar.cjs",
+      "default": "./dist/ui/primitives/Avatar.js"
+    },
+    "./ui/primitives/AvatarFallback": {
+      "types": "./dist/ui/primitives/AvatarFallback.d.ts",
+      "import": "./dist/ui/primitives/AvatarFallback.js",
+      "require": "./dist/ui/primitives/AvatarFallback.cjs",
+      "default": "./dist/ui/primitives/AvatarFallback.js"
+    },
+    "./ui/primitives/AvatarImage": {
+      "types": "./dist/ui/primitives/AvatarImage.d.ts",
+      "import": "./dist/ui/primitives/AvatarImage.js",
+      "require": "./dist/ui/primitives/AvatarImage.cjs",
+      "default": "./dist/ui/primitives/AvatarImage.js"
+    },
+    "./ui/primitives/Badge": {
+      "types": "./dist/ui/primitives/Badge.d.ts",
+      "import": "./dist/ui/primitives/Badge.js",
+      "require": "./dist/ui/primitives/Badge.cjs",
+      "default": "./dist/ui/primitives/Badge.js"
+    },
+    "./ui/primitives/Band": {
+      "types": "./dist/ui/primitives/Band.d.ts",
+      "import": "./dist/ui/primitives/Band.js",
+      "require": "./dist/ui/primitives/Band.cjs",
+      "default": "./dist/ui/primitives/Band.js"
+    },
+    "./ui/primitives/Breadcrumb": {
+      "types": "./dist/ui/primitives/Breadcrumb.d.ts",
+      "import": "./dist/ui/primitives/Breadcrumb.js",
+      "require": "./dist/ui/primitives/Breadcrumb.cjs",
+      "default": "./dist/ui/primitives/Breadcrumb.js"
+    },
+    "./ui/primitives/BreadcrumbEllipsis": {
+      "types": "./dist/ui/primitives/BreadcrumbEllipsis.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbEllipsis.js",
+      "require": "./dist/ui/primitives/BreadcrumbEllipsis.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbEllipsis.js"
+    },
+    "./ui/primitives/BreadcrumbItem": {
+      "types": "./dist/ui/primitives/BreadcrumbItem.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbItem.js",
+      "require": "./dist/ui/primitives/BreadcrumbItem.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbItem.js"
+    },
+    "./ui/primitives/BreadcrumbLink": {
+      "types": "./dist/ui/primitives/BreadcrumbLink.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbLink.js",
+      "require": "./dist/ui/primitives/BreadcrumbLink.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbLink.js"
+    },
+    "./ui/primitives/BreadcrumbList": {
+      "types": "./dist/ui/primitives/BreadcrumbList.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbList.js",
+      "require": "./dist/ui/primitives/BreadcrumbList.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbList.js"
+    },
+    "./ui/primitives/BreadcrumbPage": {
+      "types": "./dist/ui/primitives/BreadcrumbPage.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbPage.js",
+      "require": "./dist/ui/primitives/BreadcrumbPage.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbPage.js"
+    },
+    "./ui/primitives/BreadcrumbSeparator": {
+      "types": "./dist/ui/primitives/BreadcrumbSeparator.d.ts",
+      "import": "./dist/ui/primitives/BreadcrumbSeparator.js",
+      "require": "./dist/ui/primitives/BreadcrumbSeparator.cjs",
+      "default": "./dist/ui/primitives/BreadcrumbSeparator.js"
+    },
+    "./ui/primitives/Button": {
+      "types": "./dist/ui/primitives/Button.d.ts",
+      "import": "./dist/ui/primitives/Button.js",
+      "require": "./dist/ui/primitives/Button.cjs",
+      "default": "./dist/ui/primitives/Button.js"
+    },
+    "./ui/primitives/Card": {
+      "types": "./dist/ui/primitives/Card.d.ts",
+      "import": "./dist/ui/primitives/Card.js",
+      "require": "./dist/ui/primitives/Card.cjs",
+      "default": "./dist/ui/primitives/Card.js"
+    },
+    "./ui/primitives/CardAction": {
+      "types": "./dist/ui/primitives/CardAction.d.ts",
+      "import": "./dist/ui/primitives/CardAction.js",
+      "require": "./dist/ui/primitives/CardAction.cjs",
+      "default": "./dist/ui/primitives/CardAction.js"
+    },
+    "./ui/primitives/CardContent": {
+      "types": "./dist/ui/primitives/CardContent.d.ts",
+      "import": "./dist/ui/primitives/CardContent.js",
+      "require": "./dist/ui/primitives/CardContent.cjs",
+      "default": "./dist/ui/primitives/CardContent.js"
+    },
+    "./ui/primitives/CardDescription": {
+      "types": "./dist/ui/primitives/CardDescription.d.ts",
+      "import": "./dist/ui/primitives/CardDescription.js",
+      "require": "./dist/ui/primitives/CardDescription.cjs",
+      "default": "./dist/ui/primitives/CardDescription.js"
+    },
+    "./ui/primitives/CardFooter": {
+      "types": "./dist/ui/primitives/CardFooter.d.ts",
+      "import": "./dist/ui/primitives/CardFooter.js",
+      "require": "./dist/ui/primitives/CardFooter.cjs",
+      "default": "./dist/ui/primitives/CardFooter.js"
+    },
+    "./ui/primitives/CardHeader": {
+      "types": "./dist/ui/primitives/CardHeader.d.ts",
+      "import": "./dist/ui/primitives/CardHeader.js",
+      "require": "./dist/ui/primitives/CardHeader.cjs",
+      "default": "./dist/ui/primitives/CardHeader.js"
+    },
+    "./ui/primitives/CardMedia": {
+      "types": "./dist/ui/primitives/CardMedia.d.ts",
+      "import": "./dist/ui/primitives/CardMedia.js",
+      "require": "./dist/ui/primitives/CardMedia.cjs",
+      "default": "./dist/ui/primitives/CardMedia.js"
+    },
+    "./ui/primitives/CardTitle": {
+      "types": "./dist/ui/primitives/CardTitle.d.ts",
+      "import": "./dist/ui/primitives/CardTitle.js",
+      "require": "./dist/ui/primitives/CardTitle.cjs",
+      "default": "./dist/ui/primitives/CardTitle.js"
+    },
+    "./ui/primitives/Carousel": {
+      "types": "./dist/ui/primitives/Carousel.d.ts",
+      "import": "./dist/ui/primitives/Carousel.js",
+      "require": "./dist/ui/primitives/Carousel.cjs",
+      "default": "./dist/ui/primitives/Carousel.js"
+    },
+    "./ui/primitives/CarouselContent": {
+      "types": "./dist/ui/primitives/CarouselContent.d.ts",
+      "import": "./dist/ui/primitives/CarouselContent.js",
+      "require": "./dist/ui/primitives/CarouselContent.cjs",
+      "default": "./dist/ui/primitives/CarouselContent.js"
+    },
+    "./ui/primitives/CarouselItem": {
+      "types": "./dist/ui/primitives/CarouselItem.d.ts",
+      "import": "./dist/ui/primitives/CarouselItem.js",
+      "require": "./dist/ui/primitives/CarouselItem.cjs",
+      "default": "./dist/ui/primitives/CarouselItem.js"
+    },
+    "./ui/primitives/CarouselNext": {
+      "types": "./dist/ui/primitives/CarouselNext.d.ts",
+      "import": "./dist/ui/primitives/CarouselNext.js",
+      "require": "./dist/ui/primitives/CarouselNext.cjs",
+      "default": "./dist/ui/primitives/CarouselNext.js"
+    },
+    "./ui/primitives/CarouselPrevious": {
+      "types": "./dist/ui/primitives/CarouselPrevious.d.ts",
+      "import": "./dist/ui/primitives/CarouselPrevious.js",
+      "require": "./dist/ui/primitives/CarouselPrevious.cjs",
+      "default": "./dist/ui/primitives/CarouselPrevious.js"
+    },
+    "./ui/primitives/Checkbox": {
+      "types": "./dist/ui/primitives/Checkbox.d.ts",
+      "import": "./dist/ui/primitives/Checkbox.js",
+      "require": "./dist/ui/primitives/Checkbox.cjs",
+      "default": "./dist/ui/primitives/Checkbox.js"
+    },
+    "./ui/primitives/Collapsible": {
+      "types": "./dist/ui/primitives/Collapsible.d.ts",
+      "import": "./dist/ui/primitives/Collapsible.js",
+      "require": "./dist/ui/primitives/Collapsible.cjs",
+      "default": "./dist/ui/primitives/Collapsible.js"
+    },
+    "./ui/primitives/CollapsibleContent": {
+      "types": "./dist/ui/primitives/CollapsibleContent.d.ts",
+      "import": "./dist/ui/primitives/CollapsibleContent.js",
+      "require": "./dist/ui/primitives/CollapsibleContent.cjs",
+      "default": "./dist/ui/primitives/CollapsibleContent.js"
+    },
+    "./ui/primitives/CollapsibleTrigger": {
+      "types": "./dist/ui/primitives/CollapsibleTrigger.d.ts",
+      "import": "./dist/ui/primitives/CollapsibleTrigger.js",
+      "require": "./dist/ui/primitives/CollapsibleTrigger.cjs",
+      "default": "./dist/ui/primitives/CollapsibleTrigger.js"
+    },
+    "./ui/primitives/Command": {
+      "types": "./dist/ui/primitives/Command.d.ts",
+      "import": "./dist/ui/primitives/Command.js",
+      "require": "./dist/ui/primitives/Command.cjs",
+      "default": "./dist/ui/primitives/Command.js"
+    },
+    "./ui/primitives/CommandDialog": {
+      "types": "./dist/ui/primitives/CommandDialog.d.ts",
+      "import": "./dist/ui/primitives/CommandDialog.js",
+      "require": "./dist/ui/primitives/CommandDialog.cjs",
+      "default": "./dist/ui/primitives/CommandDialog.js"
+    },
+    "./ui/primitives/CommandEmpty": {
+      "types": "./dist/ui/primitives/CommandEmpty.d.ts",
+      "import": "./dist/ui/primitives/CommandEmpty.js",
+      "require": "./dist/ui/primitives/CommandEmpty.cjs",
+      "default": "./dist/ui/primitives/CommandEmpty.js"
+    },
+    "./ui/primitives/CommandGroup": {
+      "types": "./dist/ui/primitives/CommandGroup.d.ts",
+      "import": "./dist/ui/primitives/CommandGroup.js",
+      "require": "./dist/ui/primitives/CommandGroup.cjs",
+      "default": "./dist/ui/primitives/CommandGroup.js"
+    },
+    "./ui/primitives/CommandInput": {
+      "types": "./dist/ui/primitives/CommandInput.d.ts",
+      "import": "./dist/ui/primitives/CommandInput.js",
+      "require": "./dist/ui/primitives/CommandInput.cjs",
+      "default": "./dist/ui/primitives/CommandInput.js"
+    },
+    "./ui/primitives/CommandItem": {
+      "types": "./dist/ui/primitives/CommandItem.d.ts",
+      "import": "./dist/ui/primitives/CommandItem.js",
+      "require": "./dist/ui/primitives/CommandItem.cjs",
+      "default": "./dist/ui/primitives/CommandItem.js"
+    },
+    "./ui/primitives/CommandList": {
+      "types": "./dist/ui/primitives/CommandList.d.ts",
+      "import": "./dist/ui/primitives/CommandList.js",
+      "require": "./dist/ui/primitives/CommandList.cjs",
+      "default": "./dist/ui/primitives/CommandList.js"
+    },
+    "./ui/primitives/CommandSeparator": {
+      "types": "./dist/ui/primitives/CommandSeparator.d.ts",
+      "import": "./dist/ui/primitives/CommandSeparator.js",
+      "require": "./dist/ui/primitives/CommandSeparator.cjs",
+      "default": "./dist/ui/primitives/CommandSeparator.js"
+    },
+    "./ui/primitives/CommandShortcut": {
+      "types": "./dist/ui/primitives/CommandShortcut.d.ts",
+      "import": "./dist/ui/primitives/CommandShortcut.js",
+      "require": "./dist/ui/primitives/CommandShortcut.cjs",
+      "default": "./dist/ui/primitives/CommandShortcut.js"
+    },
+    "./ui/primitives/ContextMenu": {
+      "types": "./dist/ui/primitives/ContextMenu.d.ts",
+      "import": "./dist/ui/primitives/ContextMenu.js",
+      "require": "./dist/ui/primitives/ContextMenu.cjs",
+      "default": "./dist/ui/primitives/ContextMenu.js"
+    },
+    "./ui/primitives/ContextMenuCheckboxItem": {
+      "types": "./dist/ui/primitives/ContextMenuCheckboxItem.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuCheckboxItem.js",
+      "require": "./dist/ui/primitives/ContextMenuCheckboxItem.cjs",
+      "default": "./dist/ui/primitives/ContextMenuCheckboxItem.js"
+    },
+    "./ui/primitives/ContextMenuContent": {
+      "types": "./dist/ui/primitives/ContextMenuContent.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuContent.js",
+      "require": "./dist/ui/primitives/ContextMenuContent.cjs",
+      "default": "./dist/ui/primitives/ContextMenuContent.js"
+    },
+    "./ui/primitives/ContextMenuGroup": {
+      "types": "./dist/ui/primitives/ContextMenuGroup.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuGroup.js",
+      "require": "./dist/ui/primitives/ContextMenuGroup.cjs",
+      "default": "./dist/ui/primitives/ContextMenuGroup.js"
+    },
+    "./ui/primitives/ContextMenuItem": {
+      "types": "./dist/ui/primitives/ContextMenuItem.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuItem.js",
+      "require": "./dist/ui/primitives/ContextMenuItem.cjs",
+      "default": "./dist/ui/primitives/ContextMenuItem.js"
+    },
+    "./ui/primitives/ContextMenuLabel": {
+      "types": "./dist/ui/primitives/ContextMenuLabel.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuLabel.js",
+      "require": "./dist/ui/primitives/ContextMenuLabel.cjs",
+      "default": "./dist/ui/primitives/ContextMenuLabel.js"
+    },
+    "./ui/primitives/ContextMenuPortal": {
+      "types": "./dist/ui/primitives/ContextMenuPortal.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuPortal.js",
+      "require": "./dist/ui/primitives/ContextMenuPortal.cjs",
+      "default": "./dist/ui/primitives/ContextMenuPortal.js"
+    },
+    "./ui/primitives/ContextMenuRadioGroup": {
+      "types": "./dist/ui/primitives/ContextMenuRadioGroup.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuRadioGroup.js",
+      "require": "./dist/ui/primitives/ContextMenuRadioGroup.cjs",
+      "default": "./dist/ui/primitives/ContextMenuRadioGroup.js"
+    },
+    "./ui/primitives/ContextMenuRadioItem": {
+      "types": "./dist/ui/primitives/ContextMenuRadioItem.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuRadioItem.js",
+      "require": "./dist/ui/primitives/ContextMenuRadioItem.cjs",
+      "default": "./dist/ui/primitives/ContextMenuRadioItem.js"
+    },
+    "./ui/primitives/ContextMenuSeparator": {
+      "types": "./dist/ui/primitives/ContextMenuSeparator.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuSeparator.js",
+      "require": "./dist/ui/primitives/ContextMenuSeparator.cjs",
+      "default": "./dist/ui/primitives/ContextMenuSeparator.js"
+    },
+    "./ui/primitives/ContextMenuShortcut": {
+      "types": "./dist/ui/primitives/ContextMenuShortcut.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuShortcut.js",
+      "require": "./dist/ui/primitives/ContextMenuShortcut.cjs",
+      "default": "./dist/ui/primitives/ContextMenuShortcut.js"
+    },
+    "./ui/primitives/ContextMenuSub": {
+      "types": "./dist/ui/primitives/ContextMenuSub.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuSub.js",
+      "require": "./dist/ui/primitives/ContextMenuSub.cjs",
+      "default": "./dist/ui/primitives/ContextMenuSub.js"
+    },
+    "./ui/primitives/ContextMenuSubContent": {
+      "types": "./dist/ui/primitives/ContextMenuSubContent.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuSubContent.js",
+      "require": "./dist/ui/primitives/ContextMenuSubContent.cjs",
+      "default": "./dist/ui/primitives/ContextMenuSubContent.js"
+    },
+    "./ui/primitives/ContextMenuSubTrigger": {
+      "types": "./dist/ui/primitives/ContextMenuSubTrigger.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuSubTrigger.js",
+      "require": "./dist/ui/primitives/ContextMenuSubTrigger.cjs",
+      "default": "./dist/ui/primitives/ContextMenuSubTrigger.js"
+    },
+    "./ui/primitives/ContextMenuTrigger": {
+      "types": "./dist/ui/primitives/ContextMenuTrigger.d.ts",
+      "import": "./dist/ui/primitives/ContextMenuTrigger.js",
+      "require": "./dist/ui/primitives/ContextMenuTrigger.cjs",
+      "default": "./dist/ui/primitives/ContextMenuTrigger.js"
+    },
+    "./ui/primitives/Dialog": {
+      "types": "./dist/ui/primitives/Dialog.d.ts",
+      "import": "./dist/ui/primitives/Dialog.js",
+      "require": "./dist/ui/primitives/Dialog.cjs",
+      "default": "./dist/ui/primitives/Dialog.js"
+    },
+    "./ui/primitives/DialogClose": {
+      "types": "./dist/ui/primitives/DialogClose.d.ts",
+      "import": "./dist/ui/primitives/DialogClose.js",
+      "require": "./dist/ui/primitives/DialogClose.cjs",
+      "default": "./dist/ui/primitives/DialogClose.js"
+    },
+    "./ui/primitives/DialogContent": {
+      "types": "./dist/ui/primitives/DialogContent.d.ts",
+      "import": "./dist/ui/primitives/DialogContent.js",
+      "require": "./dist/ui/primitives/DialogContent.cjs",
+      "default": "./dist/ui/primitives/DialogContent.js"
+    },
+    "./ui/primitives/DialogDescription": {
+      "types": "./dist/ui/primitives/DialogDescription.d.ts",
+      "import": "./dist/ui/primitives/DialogDescription.js",
+      "require": "./dist/ui/primitives/DialogDescription.cjs",
+      "default": "./dist/ui/primitives/DialogDescription.js"
+    },
+    "./ui/primitives/DialogFooter": {
+      "types": "./dist/ui/primitives/DialogFooter.d.ts",
+      "import": "./dist/ui/primitives/DialogFooter.js",
+      "require": "./dist/ui/primitives/DialogFooter.cjs",
+      "default": "./dist/ui/primitives/DialogFooter.js"
+    },
+    "./ui/primitives/DialogHeader": {
+      "types": "./dist/ui/primitives/DialogHeader.d.ts",
+      "import": "./dist/ui/primitives/DialogHeader.js",
+      "require": "./dist/ui/primitives/DialogHeader.cjs",
+      "default": "./dist/ui/primitives/DialogHeader.js"
+    },
+    "./ui/primitives/DialogOverlay": {
+      "types": "./dist/ui/primitives/DialogOverlay.d.ts",
+      "import": "./dist/ui/primitives/DialogOverlay.js",
+      "require": "./dist/ui/primitives/DialogOverlay.cjs",
+      "default": "./dist/ui/primitives/DialogOverlay.js"
+    },
+    "./ui/primitives/DialogPortal": {
+      "types": "./dist/ui/primitives/DialogPortal.d.ts",
+      "import": "./dist/ui/primitives/DialogPortal.js",
+      "require": "./dist/ui/primitives/DialogPortal.cjs",
+      "default": "./dist/ui/primitives/DialogPortal.js"
+    },
+    "./ui/primitives/DialogTitle": {
+      "types": "./dist/ui/primitives/DialogTitle.d.ts",
+      "import": "./dist/ui/primitives/DialogTitle.js",
+      "require": "./dist/ui/primitives/DialogTitle.cjs",
+      "default": "./dist/ui/primitives/DialogTitle.js"
+    },
+    "./ui/primitives/DialogTrigger": {
+      "types": "./dist/ui/primitives/DialogTrigger.d.ts",
+      "import": "./dist/ui/primitives/DialogTrigger.js",
+      "require": "./dist/ui/primitives/DialogTrigger.cjs",
+      "default": "./dist/ui/primitives/DialogTrigger.js"
+    },
+    "./ui/primitives/Drawer": {
+      "types": "./dist/ui/primitives/Drawer.d.ts",
+      "import": "./dist/ui/primitives/Drawer.js",
+      "require": "./dist/ui/primitives/Drawer.cjs",
+      "default": "./dist/ui/primitives/Drawer.js"
+    },
+    "./ui/primitives/DrawerContent": {
+      "types": "./dist/ui/primitives/DrawerContent.d.ts",
+      "import": "./dist/ui/primitives/DrawerContent.js",
+      "require": "./dist/ui/primitives/DrawerContent.cjs",
+      "default": "./dist/ui/primitives/DrawerContent.js"
+    },
+    "./ui/primitives/DrawerHandle": {
+      "types": "./dist/ui/primitives/DrawerHandle.d.ts",
+      "import": "./dist/ui/primitives/DrawerHandle.js",
+      "require": "./dist/ui/primitives/DrawerHandle.cjs",
+      "default": "./dist/ui/primitives/DrawerHandle.js"
+    },
+    "./ui/primitives/DrawerTrigger": {
+      "types": "./dist/ui/primitives/DrawerTrigger.d.ts",
+      "import": "./dist/ui/primitives/DrawerTrigger.js",
+      "require": "./dist/ui/primitives/DrawerTrigger.cjs",
+      "default": "./dist/ui/primitives/DrawerTrigger.js"
+    },
+    "./ui/primitives/DropdownMenu": {
+      "types": "./dist/ui/primitives/DropdownMenu.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenu.js",
+      "require": "./dist/ui/primitives/DropdownMenu.cjs",
+      "default": "./dist/ui/primitives/DropdownMenu.js"
+    },
+    "./ui/primitives/DropdownMenuCheckboxItem": {
+      "types": "./dist/ui/primitives/DropdownMenuCheckboxItem.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuCheckboxItem.js",
+      "require": "./dist/ui/primitives/DropdownMenuCheckboxItem.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuCheckboxItem.js"
+    },
+    "./ui/primitives/DropdownMenuContent": {
+      "types": "./dist/ui/primitives/DropdownMenuContent.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuContent.js",
+      "require": "./dist/ui/primitives/DropdownMenuContent.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuContent.js"
+    },
+    "./ui/primitives/DropdownMenuGroup": {
+      "types": "./dist/ui/primitives/DropdownMenuGroup.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuGroup.js",
+      "require": "./dist/ui/primitives/DropdownMenuGroup.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuGroup.js"
+    },
+    "./ui/primitives/DropdownMenuItem": {
+      "types": "./dist/ui/primitives/DropdownMenuItem.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuItem.js",
+      "require": "./dist/ui/primitives/DropdownMenuItem.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuItem.js"
+    },
+    "./ui/primitives/DropdownMenuLabel": {
+      "types": "./dist/ui/primitives/DropdownMenuLabel.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuLabel.js",
+      "require": "./dist/ui/primitives/DropdownMenuLabel.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuLabel.js"
+    },
+    "./ui/primitives/DropdownMenuPortal": {
+      "types": "./dist/ui/primitives/DropdownMenuPortal.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuPortal.js",
+      "require": "./dist/ui/primitives/DropdownMenuPortal.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuPortal.js"
+    },
+    "./ui/primitives/DropdownMenuRadioGroup": {
+      "types": "./dist/ui/primitives/DropdownMenuRadioGroup.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuRadioGroup.js",
+      "require": "./dist/ui/primitives/DropdownMenuRadioGroup.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuRadioGroup.js"
+    },
+    "./ui/primitives/DropdownMenuRadioItem": {
+      "types": "./dist/ui/primitives/DropdownMenuRadioItem.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuRadioItem.js",
+      "require": "./dist/ui/primitives/DropdownMenuRadioItem.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuRadioItem.js"
+    },
+    "./ui/primitives/DropdownMenuSeparator": {
+      "types": "./dist/ui/primitives/DropdownMenuSeparator.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuSeparator.js",
+      "require": "./dist/ui/primitives/DropdownMenuSeparator.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuSeparator.js"
+    },
+    "./ui/primitives/DropdownMenuShortcut": {
+      "types": "./dist/ui/primitives/DropdownMenuShortcut.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuShortcut.js",
+      "require": "./dist/ui/primitives/DropdownMenuShortcut.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuShortcut.js"
+    },
+    "./ui/primitives/DropdownMenuSub": {
+      "types": "./dist/ui/primitives/DropdownMenuSub.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuSub.js",
+      "require": "./dist/ui/primitives/DropdownMenuSub.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuSub.js"
+    },
+    "./ui/primitives/DropdownMenuSubContent": {
+      "types": "./dist/ui/primitives/DropdownMenuSubContent.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuSubContent.js",
+      "require": "./dist/ui/primitives/DropdownMenuSubContent.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuSubContent.js"
+    },
+    "./ui/primitives/DropdownMenuSubTrigger": {
+      "types": "./dist/ui/primitives/DropdownMenuSubTrigger.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuSubTrigger.js",
+      "require": "./dist/ui/primitives/DropdownMenuSubTrigger.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuSubTrigger.js"
+    },
+    "./ui/primitives/DropdownMenuTrigger": {
+      "types": "./dist/ui/primitives/DropdownMenuTrigger.d.ts",
+      "import": "./dist/ui/primitives/DropdownMenuTrigger.js",
+      "require": "./dist/ui/primitives/DropdownMenuTrigger.cjs",
+      "default": "./dist/ui/primitives/DropdownMenuTrigger.js"
+    },
+    "./ui/primitives/Em": {
+      "types": "./dist/ui/primitives/Em.d.ts",
+      "import": "./dist/ui/primitives/Em.js",
+      "require": "./dist/ui/primitives/Em.cjs",
+      "default": "./dist/ui/primitives/Em.js"
+    },
+    "./ui/primitives/Fill": {
+      "types": "./dist/ui/primitives/Fill.d.ts",
+      "import": "./dist/ui/primitives/Fill.js",
+      "require": "./dist/ui/primitives/Fill.cjs",
+      "default": "./dist/ui/primitives/Fill.js"
+    },
+    "./ui/primitives/Form": {
+      "types": "./dist/ui/primitives/Form.d.ts",
+      "import": "./dist/ui/primitives/Form.js",
+      "require": "./dist/ui/primitives/Form.cjs",
+      "default": "./dist/ui/primitives/Form.js"
+    },
+    "./ui/primitives/FormControl": {
+      "types": "./dist/ui/primitives/FormControl.d.ts",
+      "import": "./dist/ui/primitives/FormControl.js",
+      "require": "./dist/ui/primitives/FormControl.cjs",
+      "default": "./dist/ui/primitives/FormControl.js"
+    },
+    "./ui/primitives/FormDescription": {
+      "types": "./dist/ui/primitives/FormDescription.d.ts",
+      "import": "./dist/ui/primitives/FormDescription.js",
+      "require": "./dist/ui/primitives/FormDescription.cjs",
+      "default": "./dist/ui/primitives/FormDescription.js"
+    },
+    "./ui/primitives/FormField": {
+      "types": "./dist/ui/primitives/FormField.d.ts",
+      "import": "./dist/ui/primitives/FormField.js",
+      "require": "./dist/ui/primitives/FormField.cjs",
+      "default": "./dist/ui/primitives/FormField.js"
+    },
+    "./ui/primitives/FormItem": {
+      "types": "./dist/ui/primitives/FormItem.d.ts",
+      "import": "./dist/ui/primitives/FormItem.js",
+      "require": "./dist/ui/primitives/FormItem.cjs",
+      "default": "./dist/ui/primitives/FormItem.js"
+    },
+    "./ui/primitives/FormLabel": {
+      "types": "./dist/ui/primitives/FormLabel.d.ts",
+      "import": "./dist/ui/primitives/FormLabel.js",
+      "require": "./dist/ui/primitives/FormLabel.cjs",
+      "default": "./dist/ui/primitives/FormLabel.js"
+    },
+    "./ui/primitives/FormMessage": {
+      "types": "./dist/ui/primitives/FormMessage.d.ts",
+      "import": "./dist/ui/primitives/FormMessage.js",
+      "require": "./dist/ui/primitives/FormMessage.cjs",
+      "default": "./dist/ui/primitives/FormMessage.js"
+    },
+    "./ui/primitives/Glass": {
+      "types": "./dist/ui/primitives/Glass.d.ts",
+      "import": "./dist/ui/primitives/Glass.js",
+      "require": "./dist/ui/primitives/Glass.cjs",
+      "default": "./dist/ui/primitives/Glass.js"
+    },
+    "./ui/primitives/H1": {
+      "types": "./dist/ui/primitives/H1.d.ts",
+      "import": "./dist/ui/primitives/H1.js",
+      "require": "./dist/ui/primitives/H1.cjs",
+      "default": "./dist/ui/primitives/H1.js"
+    },
+    "./ui/primitives/H2": {
+      "types": "./dist/ui/primitives/H2.d.ts",
+      "import": "./dist/ui/primitives/H2.js",
+      "require": "./dist/ui/primitives/H2.cjs",
+      "default": "./dist/ui/primitives/H2.js"
+    },
+    "./ui/primitives/H3": {
+      "types": "./dist/ui/primitives/H3.d.ts",
+      "import": "./dist/ui/primitives/H3.js",
+      "require": "./dist/ui/primitives/H3.cjs",
+      "default": "./dist/ui/primitives/H3.js"
+    },
+    "./ui/primitives/H4": {
+      "types": "./dist/ui/primitives/H4.d.ts",
+      "import": "./dist/ui/primitives/H4.js",
+      "require": "./dist/ui/primitives/H4.cjs",
+      "default": "./dist/ui/primitives/H4.js"
+    },
+    "./ui/primitives/H5": {
+      "types": "./dist/ui/primitives/H5.d.ts",
+      "import": "./dist/ui/primitives/H5.js",
+      "require": "./dist/ui/primitives/H5.cjs",
+      "default": "./dist/ui/primitives/H5.js"
+    },
+    "./ui/primitives/H6": {
+      "types": "./dist/ui/primitives/H6.d.ts",
+      "import": "./dist/ui/primitives/H6.js",
+      "require": "./dist/ui/primitives/H6.cjs",
+      "default": "./dist/ui/primitives/H6.js"
+    },
+    "./ui/primitives/Heading": {
+      "types": "./dist/ui/primitives/Heading.d.ts",
+      "import": "./dist/ui/primitives/Heading.js",
+      "require": "./dist/ui/primitives/Heading.cjs",
+      "default": "./dist/ui/primitives/Heading.js"
+    },
+    "./ui/primitives/HoverCard": {
+      "types": "./dist/ui/primitives/HoverCard.d.ts",
+      "import": "./dist/ui/primitives/HoverCard.js",
+      "require": "./dist/ui/primitives/HoverCard.cjs",
+      "default": "./dist/ui/primitives/HoverCard.js"
+    },
+    "./ui/primitives/HoverCardContent": {
+      "types": "./dist/ui/primitives/HoverCardContent.d.ts",
+      "import": "./dist/ui/primitives/HoverCardContent.js",
+      "require": "./dist/ui/primitives/HoverCardContent.cjs",
+      "default": "./dist/ui/primitives/HoverCardContent.js"
+    },
+    "./ui/primitives/HoverCardTrigger": {
+      "types": "./dist/ui/primitives/HoverCardTrigger.d.ts",
+      "import": "./dist/ui/primitives/HoverCardTrigger.js",
+      "require": "./dist/ui/primitives/HoverCardTrigger.cjs",
+      "default": "./dist/ui/primitives/HoverCardTrigger.js"
+    },
+    "./ui/primitives/Image": {
+      "types": "./dist/ui/primitives/Image.d.ts",
+      "import": "./dist/ui/primitives/Image.js",
+      "require": "./dist/ui/primitives/Image.cjs",
+      "default": "./dist/ui/primitives/Image.js"
+    },
+    "./ui/primitives/Input": {
+      "types": "./dist/ui/primitives/Input.d.ts",
+      "import": "./dist/ui/primitives/Input.js",
+      "require": "./dist/ui/primitives/Input.cjs",
+      "default": "./dist/ui/primitives/Input.js"
+    },
+    "./ui/primitives/InputOTP": {
+      "types": "./dist/ui/primitives/InputOTP.d.ts",
+      "import": "./dist/ui/primitives/InputOTP.js",
+      "require": "./dist/ui/primitives/InputOTP.cjs",
+      "default": "./dist/ui/primitives/InputOTP.js"
+    },
+    "./ui/primitives/InputOTPGroup": {
+      "types": "./dist/ui/primitives/InputOTPGroup.d.ts",
+      "import": "./dist/ui/primitives/InputOTPGroup.js",
+      "require": "./dist/ui/primitives/InputOTPGroup.cjs",
+      "default": "./dist/ui/primitives/InputOTPGroup.js"
+    },
+    "./ui/primitives/InputOTPSeparator": {
+      "types": "./dist/ui/primitives/InputOTPSeparator.d.ts",
+      "import": "./dist/ui/primitives/InputOTPSeparator.js",
+      "require": "./dist/ui/primitives/InputOTPSeparator.cjs",
+      "default": "./dist/ui/primitives/InputOTPSeparator.js"
+    },
+    "./ui/primitives/InputOTPSlot": {
+      "types": "./dist/ui/primitives/InputOTPSlot.d.ts",
+      "import": "./dist/ui/primitives/InputOTPSlot.js",
+      "require": "./dist/ui/primitives/InputOTPSlot.cjs",
+      "default": "./dist/ui/primitives/InputOTPSlot.js"
+    },
+    "./ui/primitives/Label": {
+      "types": "./dist/ui/primitives/Label.d.ts",
+      "import": "./dist/ui/primitives/Label.js",
+      "require": "./dist/ui/primitives/Label.cjs",
+      "default": "./dist/ui/primitives/Label.js"
+    },
+    "./ui/primitives/Link": {
+      "types": "./dist/ui/primitives/Link.d.ts",
+      "import": "./dist/ui/primitives/Link.js",
+      "require": "./dist/ui/primitives/Link.cjs",
+      "default": "./dist/ui/primitives/Link.js"
+    },
+    "./ui/primitives/LinkElement": {
+      "types": "./dist/ui/primitives/LinkElement.d.ts",
+      "import": "./dist/ui/primitives/LinkElement.js",
+      "require": "./dist/ui/primitives/LinkElement.cjs",
+      "default": "./dist/ui/primitives/LinkElement.js"
+    },
+    "./ui/primitives/MDXLink": {
+      "types": "./dist/ui/primitives/MDXLink.d.ts",
+      "import": "./dist/ui/primitives/MDXLink.js",
+      "require": "./dist/ui/primitives/MDXLink.cjs",
+      "default": "./dist/ui/primitives/MDXLink.js"
+    },
+    "./ui/primitives/MediaStack": {
+      "types": "./dist/ui/primitives/MediaStack.d.ts",
+      "import": "./dist/ui/primitives/MediaStack.js",
+      "require": "./dist/ui/primitives/MediaStack.cjs",
+      "default": "./dist/ui/primitives/MediaStack.js"
+    },
+    "./ui/primitives/NavItems": {
+      "types": "./dist/ui/primitives/NavItems.d.ts",
+      "import": "./dist/ui/primitives/NavItems.js",
+      "require": "./dist/ui/primitives/NavItems.cjs",
+      "default": "./dist/ui/primitives/NavItems.js"
+    },
+    "./ui/primitives/NavigationMenu": {
+      "types": "./dist/ui/primitives/NavigationMenu.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenu.js",
+      "require": "./dist/ui/primitives/NavigationMenu.cjs",
+      "default": "./dist/ui/primitives/NavigationMenu.js"
+    },
+    "./ui/primitives/NavigationMenuContent": {
+      "types": "./dist/ui/primitives/NavigationMenuContent.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenuContent.js",
+      "require": "./dist/ui/primitives/NavigationMenuContent.cjs",
+      "default": "./dist/ui/primitives/NavigationMenuContent.js"
+    },
+    "./ui/primitives/NavigationMenuItem": {
+      "types": "./dist/ui/primitives/NavigationMenuItem.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenuItem.js",
+      "require": "./dist/ui/primitives/NavigationMenuItem.cjs",
+      "default": "./dist/ui/primitives/NavigationMenuItem.js"
+    },
+    "./ui/primitives/NavigationMenuLink": {
+      "types": "./dist/ui/primitives/NavigationMenuLink.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenuLink.js",
+      "require": "./dist/ui/primitives/NavigationMenuLink.cjs",
+      "default": "./dist/ui/primitives/NavigationMenuLink.js"
+    },
+    "./ui/primitives/NavigationMenuList": {
+      "types": "./dist/ui/primitives/NavigationMenuList.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenuList.js",
+      "require": "./dist/ui/primitives/NavigationMenuList.cjs",
+      "default": "./dist/ui/primitives/NavigationMenuList.js"
+    },
+    "./ui/primitives/NavigationMenuTrigger": {
+      "types": "./dist/ui/primitives/NavigationMenuTrigger.d.ts",
+      "import": "./dist/ui/primitives/NavigationMenuTrigger.js",
+      "require": "./dist/ui/primitives/NavigationMenuTrigger.cjs",
+      "default": "./dist/ui/primitives/NavigationMenuTrigger.js"
+    },
+    "./ui/primitives/Paragraph": {
+      "types": "./dist/ui/primitives/Paragraph.d.ts",
+      "import": "./dist/ui/primitives/Paragraph.js",
+      "require": "./dist/ui/primitives/Paragraph.cjs",
+      "default": "./dist/ui/primitives/Paragraph.js"
+    },
+    "./ui/primitives/Popover": {
+      "types": "./dist/ui/primitives/Popover.d.ts",
+      "import": "./dist/ui/primitives/Popover.js",
+      "require": "./dist/ui/primitives/Popover.cjs",
+      "default": "./dist/ui/primitives/Popover.js"
+    },
+    "./ui/primitives/PopoverAnchor": {
+      "types": "./dist/ui/primitives/PopoverAnchor.d.ts",
+      "import": "./dist/ui/primitives/PopoverAnchor.js",
+      "require": "./dist/ui/primitives/PopoverAnchor.cjs",
+      "default": "./dist/ui/primitives/PopoverAnchor.js"
+    },
+    "./ui/primitives/PopoverClose": {
+      "types": "./dist/ui/primitives/PopoverClose.d.ts",
+      "import": "./dist/ui/primitives/PopoverClose.js",
+      "require": "./dist/ui/primitives/PopoverClose.cjs",
+      "default": "./dist/ui/primitives/PopoverClose.js"
+    },
+    "./ui/primitives/PopoverContent": {
+      "types": "./dist/ui/primitives/PopoverContent.d.ts",
+      "import": "./dist/ui/primitives/PopoverContent.js",
+      "require": "./dist/ui/primitives/PopoverContent.cjs",
+      "default": "./dist/ui/primitives/PopoverContent.js"
+    },
+    "./ui/primitives/PopoverTrigger": {
+      "types": "./dist/ui/primitives/PopoverTrigger.d.ts",
+      "import": "./dist/ui/primitives/PopoverTrigger.js",
+      "require": "./dist/ui/primitives/PopoverTrigger.cjs",
+      "default": "./dist/ui/primitives/PopoverTrigger.js"
+    },
+    "./ui/primitives/Progress": {
+      "types": "./dist/ui/primitives/Progress.d.ts",
+      "import": "./dist/ui/primitives/Progress.js",
+      "require": "./dist/ui/primitives/Progress.cjs",
+      "default": "./dist/ui/primitives/Progress.js"
+    },
+    "./ui/primitives/RadioGroup": {
+      "types": "./dist/ui/primitives/RadioGroup.d.ts",
+      "import": "./dist/ui/primitives/RadioGroup.js",
+      "require": "./dist/ui/primitives/RadioGroup.cjs",
+      "default": "./dist/ui/primitives/RadioGroup.js"
+    },
+    "./ui/primitives/RadioGroupItem": {
+      "types": "./dist/ui/primitives/RadioGroupItem.d.ts",
+      "import": "./dist/ui/primitives/RadioGroupItem.js",
+      "require": "./dist/ui/primitives/RadioGroupItem.cjs",
+      "default": "./dist/ui/primitives/RadioGroupItem.js"
+    },
+    "./ui/primitives/ResizableHandle": {
+      "types": "./dist/ui/primitives/ResizableHandle.d.ts",
+      "import": "./dist/ui/primitives/ResizableHandle.js",
+      "require": "./dist/ui/primitives/ResizableHandle.cjs",
+      "default": "./dist/ui/primitives/ResizableHandle.js"
+    },
+    "./ui/primitives/ResizablePanel": {
+      "types": "./dist/ui/primitives/ResizablePanel.d.ts",
+      "import": "./dist/ui/primitives/ResizablePanel.js",
+      "require": "./dist/ui/primitives/ResizablePanel.cjs",
+      "default": "./dist/ui/primitives/ResizablePanel.js"
+    },
+    "./ui/primitives/ResizablePanelGroup": {
+      "types": "./dist/ui/primitives/ResizablePanelGroup.d.ts",
+      "import": "./dist/ui/primitives/ResizablePanelGroup.js",
+      "require": "./dist/ui/primitives/ResizablePanelGroup.cjs",
+      "default": "./dist/ui/primitives/ResizablePanelGroup.js"
+    },
+    "./ui/primitives/Screen": {
+      "types": "./dist/ui/primitives/Screen.d.ts",
+      "import": "./dist/ui/primitives/Screen.js",
+      "require": "./dist/ui/primitives/Screen.cjs",
+      "default": "./dist/ui/primitives/Screen.js"
+    },
+    "./ui/primitives/ScrollArea": {
+      "types": "./dist/ui/primitives/ScrollArea.d.ts",
+      "import": "./dist/ui/primitives/ScrollArea.js",
+      "require": "./dist/ui/primitives/ScrollArea.cjs",
+      "default": "./dist/ui/primitives/ScrollArea.js"
+    },
+    "./ui/primitives/ScrollBar": {
+      "types": "./dist/ui/primitives/ScrollBar.d.ts",
+      "import": "./dist/ui/primitives/ScrollBar.js",
+      "require": "./dist/ui/primitives/ScrollBar.cjs",
+      "default": "./dist/ui/primitives/ScrollBar.js"
+    },
+    "./ui/primitives/ScrollView": {
+      "types": "./dist/ui/primitives/ScrollView.d.ts",
+      "import": "./dist/ui/primitives/ScrollView.js",
+      "require": "./dist/ui/primitives/ScrollView.cjs",
+      "default": "./dist/ui/primitives/ScrollView.js"
+    },
+    "./ui/primitives/Select": {
+      "types": "./dist/ui/primitives/Select.d.ts",
+      "import": "./dist/ui/primitives/Select.js",
+      "require": "./dist/ui/primitives/Select.cjs",
+      "default": "./dist/ui/primitives/Select.js"
+    },
+    "./ui/primitives/SelectContent": {
+      "types": "./dist/ui/primitives/SelectContent.d.ts",
+      "import": "./dist/ui/primitives/SelectContent.js",
+      "require": "./dist/ui/primitives/SelectContent.cjs",
+      "default": "./dist/ui/primitives/SelectContent.js"
+    },
+    "./ui/primitives/SelectGroup": {
+      "types": "./dist/ui/primitives/SelectGroup.d.ts",
+      "import": "./dist/ui/primitives/SelectGroup.js",
+      "require": "./dist/ui/primitives/SelectGroup.cjs",
+      "default": "./dist/ui/primitives/SelectGroup.js"
+    },
+    "./ui/primitives/SelectItem": {
+      "types": "./dist/ui/primitives/SelectItem.d.ts",
+      "import": "./dist/ui/primitives/SelectItem.js",
+      "require": "./dist/ui/primitives/SelectItem.cjs",
+      "default": "./dist/ui/primitives/SelectItem.js"
+    },
+    "./ui/primitives/SelectLabel": {
+      "types": "./dist/ui/primitives/SelectLabel.d.ts",
+      "import": "./dist/ui/primitives/SelectLabel.js",
+      "require": "./dist/ui/primitives/SelectLabel.cjs",
+      "default": "./dist/ui/primitives/SelectLabel.js"
+    },
+    "./ui/primitives/SelectScrollDownButton": {
+      "types": "./dist/ui/primitives/SelectScrollDownButton.d.ts",
+      "import": "./dist/ui/primitives/SelectScrollDownButton.js",
+      "require": "./dist/ui/primitives/SelectScrollDownButton.cjs",
+      "default": "./dist/ui/primitives/SelectScrollDownButton.js"
+    },
+    "./ui/primitives/SelectScrollUpButton": {
+      "types": "./dist/ui/primitives/SelectScrollUpButton.d.ts",
+      "import": "./dist/ui/primitives/SelectScrollUpButton.js",
+      "require": "./dist/ui/primitives/SelectScrollUpButton.cjs",
+      "default": "./dist/ui/primitives/SelectScrollUpButton.js"
+    },
+    "./ui/primitives/SelectSeparator": {
+      "types": "./dist/ui/primitives/SelectSeparator.d.ts",
+      "import": "./dist/ui/primitives/SelectSeparator.js",
+      "require": "./dist/ui/primitives/SelectSeparator.cjs",
+      "default": "./dist/ui/primitives/SelectSeparator.js"
+    },
+    "./ui/primitives/SelectTrigger": {
+      "types": "./dist/ui/primitives/SelectTrigger.d.ts",
+      "import": "./dist/ui/primitives/SelectTrigger.js",
+      "require": "./dist/ui/primitives/SelectTrigger.cjs",
+      "default": "./dist/ui/primitives/SelectTrigger.js"
+    },
+    "./ui/primitives/SelectValue": {
+      "types": "./dist/ui/primitives/SelectValue.d.ts",
+      "import": "./dist/ui/primitives/SelectValue.js",
+      "require": "./dist/ui/primitives/SelectValue.cjs",
+      "default": "./dist/ui/primitives/SelectValue.js"
+    },
+    "./ui/primitives/Separator": {
+      "types": "./dist/ui/primitives/Separator.d.ts",
+      "import": "./dist/ui/primitives/Separator.js",
+      "require": "./dist/ui/primitives/Separator.cjs",
+      "default": "./dist/ui/primitives/Separator.js"
+    },
+    "./ui/primitives/Sheet": {
+      "types": "./dist/ui/primitives/Sheet.d.ts",
+      "import": "./dist/ui/primitives/Sheet.js",
+      "require": "./dist/ui/primitives/Sheet.cjs",
+      "default": "./dist/ui/primitives/Sheet.js"
+    },
+    "./ui/primitives/SheetClose": {
+      "types": "./dist/ui/primitives/SheetClose.d.ts",
+      "import": "./dist/ui/primitives/SheetClose.js",
+      "require": "./dist/ui/primitives/SheetClose.cjs",
+      "default": "./dist/ui/primitives/SheetClose.js"
+    },
+    "./ui/primitives/SheetContent": {
+      "types": "./dist/ui/primitives/SheetContent.d.ts",
+      "import": "./dist/ui/primitives/SheetContent.js",
+      "require": "./dist/ui/primitives/SheetContent.cjs",
+      "default": "./dist/ui/primitives/SheetContent.js"
+    },
+    "./ui/primitives/SheetDescription": {
+      "types": "./dist/ui/primitives/SheetDescription.d.ts",
+      "import": "./dist/ui/primitives/SheetDescription.js",
+      "require": "./dist/ui/primitives/SheetDescription.cjs",
+      "default": "./dist/ui/primitives/SheetDescription.js"
+    },
+    "./ui/primitives/SheetFooter": {
+      "types": "./dist/ui/primitives/SheetFooter.d.ts",
+      "import": "./dist/ui/primitives/SheetFooter.js",
+      "require": "./dist/ui/primitives/SheetFooter.cjs",
+      "default": "./dist/ui/primitives/SheetFooter.js"
+    },
+    "./ui/primitives/SheetHeader": {
+      "types": "./dist/ui/primitives/SheetHeader.d.ts",
+      "import": "./dist/ui/primitives/SheetHeader.js",
+      "require": "./dist/ui/primitives/SheetHeader.cjs",
+      "default": "./dist/ui/primitives/SheetHeader.js"
+    },
+    "./ui/primitives/SheetOverlay": {
+      "types": "./dist/ui/primitives/SheetOverlay.d.ts",
+      "import": "./dist/ui/primitives/SheetOverlay.js",
+      "require": "./dist/ui/primitives/SheetOverlay.cjs",
+      "default": "./dist/ui/primitives/SheetOverlay.js"
+    },
+    "./ui/primitives/SheetPortal": {
+      "types": "./dist/ui/primitives/SheetPortal.d.ts",
+      "import": "./dist/ui/primitives/SheetPortal.js",
+      "require": "./dist/ui/primitives/SheetPortal.cjs",
+      "default": "./dist/ui/primitives/SheetPortal.js"
+    },
+    "./ui/primitives/SheetTitle": {
+      "types": "./dist/ui/primitives/SheetTitle.d.ts",
+      "import": "./dist/ui/primitives/SheetTitle.js",
+      "require": "./dist/ui/primitives/SheetTitle.cjs",
+      "default": "./dist/ui/primitives/SheetTitle.js"
+    },
+    "./ui/primitives/SheetTrigger": {
+      "types": "./dist/ui/primitives/SheetTrigger.d.ts",
+      "import": "./dist/ui/primitives/SheetTrigger.js",
+      "require": "./dist/ui/primitives/SheetTrigger.cjs",
+      "default": "./dist/ui/primitives/SheetTrigger.js"
+    },
+    "./ui/primitives/SizableText": {
+      "types": "./dist/ui/primitives/SizableText.d.ts",
+      "import": "./dist/ui/primitives/SizableText.js",
+      "require": "./dist/ui/primitives/SizableText.cjs",
+      "default": "./dist/ui/primitives/SizableText.js"
+    },
+    "./ui/primitives/Skeleton": {
+      "types": "./dist/ui/primitives/Skeleton.d.ts",
+      "import": "./dist/ui/primitives/Skeleton.js",
+      "require": "./dist/ui/primitives/Skeleton.cjs",
+      "default": "./dist/ui/primitives/Skeleton.js"
+    },
+    "./ui/primitives/Slider": {
+      "types": "./dist/ui/primitives/Slider.d.ts",
+      "import": "./dist/ui/primitives/Slider.js",
+      "require": "./dist/ui/primitives/Slider.cjs",
+      "default": "./dist/ui/primitives/Slider.js"
+    },
+    "./ui/primitives/Spacer": {
+      "types": "./dist/ui/primitives/Spacer.d.ts",
+      "import": "./dist/ui/primitives/Spacer.js",
+      "require": "./dist/ui/primitives/Spacer.cjs",
+      "default": "./dist/ui/primitives/Spacer.js"
+    },
+    "./ui/primitives/Span": {
+      "types": "./dist/ui/primitives/Span.d.ts",
+      "import": "./dist/ui/primitives/Span.js",
+      "require": "./dist/ui/primitives/Span.cjs",
+      "default": "./dist/ui/primitives/Span.js"
+    },
+    "./ui/primitives/Spinner": {
+      "types": "./dist/ui/primitives/Spinner.d.ts",
+      "import": "./dist/ui/primitives/Spinner.js",
+      "require": "./dist/ui/primitives/Spinner.cjs",
+      "default": "./dist/ui/primitives/Spinner.js"
+    },
+    "./ui/primitives/StepIndicator": {
+      "types": "./dist/ui/primitives/StepIndicator.d.ts",
+      "import": "./dist/ui/primitives/StepIndicator.js",
+      "require": "./dist/ui/primitives/StepIndicator.cjs",
+      "default": "./dist/ui/primitives/StepIndicator.js"
+    },
+    "./ui/primitives/Strong": {
+      "types": "./dist/ui/primitives/Strong.d.ts",
+      "import": "./dist/ui/primitives/Strong.js",
+      "require": "./dist/ui/primitives/Strong.cjs",
+      "default": "./dist/ui/primitives/Strong.js"
+    },
+    "./ui/primitives/Switch": {
+      "types": "./dist/ui/primitives/Switch.d.ts",
+      "import": "./dist/ui/primitives/Switch.js",
+      "require": "./dist/ui/primitives/Switch.cjs",
+      "default": "./dist/ui/primitives/Switch.js"
+    },
+    "./ui/primitives/Tabs": {
+      "types": "./dist/ui/primitives/Tabs.d.ts",
+      "import": "./dist/ui/primitives/Tabs.js",
+      "require": "./dist/ui/primitives/Tabs.cjs",
+      "default": "./dist/ui/primitives/Tabs.js"
+    },
+    "./ui/primitives/TabsContent": {
+      "types": "./dist/ui/primitives/TabsContent.d.ts",
+      "import": "./dist/ui/primitives/TabsContent.js",
+      "require": "./dist/ui/primitives/TabsContent.cjs",
+      "default": "./dist/ui/primitives/TabsContent.js"
+    },
+    "./ui/primitives/TabsList": {
+      "types": "./dist/ui/primitives/TabsList.d.ts",
+      "import": "./dist/ui/primitives/TabsList.js",
+      "require": "./dist/ui/primitives/TabsList.cjs",
+      "default": "./dist/ui/primitives/TabsList.js"
+    },
+    "./ui/primitives/TabsTrigger": {
+      "types": "./dist/ui/primitives/TabsTrigger.d.ts",
+      "import": "./dist/ui/primitives/TabsTrigger.js",
+      "require": "./dist/ui/primitives/TabsTrigger.cjs",
+      "default": "./dist/ui/primitives/TabsTrigger.js"
+    },
+    "./ui/primitives/Text": {
+      "types": "./dist/ui/primitives/Text.d.ts",
+      "import": "./dist/ui/primitives/Text.js",
+      "require": "./dist/ui/primitives/Text.cjs",
+      "default": "./dist/ui/primitives/Text.js"
+    },
+    "./ui/primitives/Textarea": {
+      "types": "./dist/ui/primitives/Textarea.d.ts",
+      "import": "./dist/ui/primitives/Textarea.js",
+      "require": "./dist/ui/primitives/Textarea.cjs",
+      "default": "./dist/ui/primitives/Textarea.js"
+    },
+    "./ui/primitives/Toaster": {
+      "types": "./dist/ui/primitives/Toaster.d.ts",
+      "import": "./dist/ui/primitives/Toaster.js",
+      "require": "./dist/ui/primitives/Toaster.cjs",
+      "default": "./dist/ui/primitives/Toaster.js"
+    },
+    "./ui/primitives/ToggleGroup": {
+      "types": "./dist/ui/primitives/ToggleGroup.d.ts",
+      "import": "./dist/ui/primitives/ToggleGroup.js",
+      "require": "./dist/ui/primitives/ToggleGroup.cjs",
+      "default": "./dist/ui/primitives/ToggleGroup.js"
+    },
+    "./ui/primitives/ToggleGroupItem": {
+      "types": "./dist/ui/primitives/ToggleGroupItem.d.ts",
+      "import": "./dist/ui/primitives/ToggleGroupItem.js",
+      "require": "./dist/ui/primitives/ToggleGroupItem.cjs",
+      "default": "./dist/ui/primitives/ToggleGroupItem.js"
+    },
+    "./ui/primitives/Tooltip": {
+      "types": "./dist/ui/primitives/Tooltip.d.ts",
+      "import": "./dist/ui/primitives/Tooltip.js",
+      "require": "./dist/ui/primitives/Tooltip.cjs",
+      "default": "./dist/ui/primitives/Tooltip.js"
+    },
+    "./ui/primitives/TooltipContent": {
+      "types": "./dist/ui/primitives/TooltipContent.d.ts",
+      "import": "./dist/ui/primitives/TooltipContent.js",
+      "require": "./dist/ui/primitives/TooltipContent.cjs",
+      "default": "./dist/ui/primitives/TooltipContent.js"
+    },
+    "./ui/primitives/TooltipProvider": {
+      "types": "./dist/ui/primitives/TooltipProvider.d.ts",
+      "import": "./dist/ui/primitives/TooltipProvider.js",
+      "require": "./dist/ui/primitives/TooltipProvider.cjs",
+      "default": "./dist/ui/primitives/TooltipProvider.js"
+    },
+    "./ui/primitives/TooltipTrigger": {
+      "types": "./dist/ui/primitives/TooltipTrigger.d.ts",
+      "import": "./dist/ui/primitives/TooltipTrigger.js",
+      "require": "./dist/ui/primitives/TooltipTrigger.cjs",
+      "default": "./dist/ui/primitives/TooltipTrigger.js"
+    },
+    "./ui/primitives/VideoPlayer": {
+      "types": "./dist/ui/primitives/VideoPlayer.d.ts",
+      "import": "./dist/ui/primitives/VideoPlayer.js",
+      "require": "./dist/ui/primitives/VideoPlayer.cjs",
+      "default": "./dist/ui/primitives/VideoPlayer.js"
+    },
+    "./ui/primitives/View": {
+      "types": "./dist/ui/primitives/View.d.ts",
+      "import": "./dist/ui/primitives/View.js",
+      "require": "./dist/ui/primitives/View.cjs",
+      "default": "./dist/ui/primitives/View.js"
+    },
+    "./ui/primitives/XStack": {
+      "types": "./dist/ui/primitives/XStack.d.ts",
+      "import": "./dist/ui/primitives/XStack.js",
+      "require": "./dist/ui/primitives/XStack.cjs",
+      "default": "./dist/ui/primitives/XStack.js"
+    },
+    "./ui/primitives/YStack": {
+      "types": "./dist/ui/primitives/YStack.d.ts",
+      "import": "./dist/ui/primitives/YStack.js",
+      "require": "./dist/ui/primitives/YStack.cjs",
+      "default": "./dist/ui/primitives/YStack.js"
+    },
+    "./ui/primitives/YouTubeEmbed": {
+      "types": "./dist/ui/primitives/YouTubeEmbed.d.ts",
+      "import": "./dist/ui/primitives/YouTubeEmbed.js",
+      "require": "./dist/ui/primitives/YouTubeEmbed.cjs",
+      "default": "./dist/ui/primitives/YouTubeEmbed.js"
+    },
+    "./ui/primitives/ZStack": {
+      "types": "./dist/ui/primitives/ZStack.d.ts",
+      "import": "./dist/ui/primitives/ZStack.js",
+      "require": "./dist/ui/primitives/ZStack.cjs",
+      "default": "./dist/ui/primitives/ZStack.js"
+    },
+    "./ui/primitives/badgeVariants": {
+      "types": "./dist/ui/primitives/badgeVariants.d.ts",
+      "import": "./dist/ui/primitives/badgeVariants.js",
+      "require": "./dist/ui/primitives/badgeVariants.cjs",
+      "default": "./dist/ui/primitives/badgeVariants.js"
+    },
+    "./ui/primitives/bases/data/index": {
+      "types": "./dist/ui/primitives/bases/data/index.d.ts",
+      "import": "./dist/ui/primitives/bases/data/index.js",
+      "require": "./dist/ui/primitives/bases/data/index.cjs",
+      "default": "./dist/ui/primitives/bases/data/index.js"
+    },
+    "./ui/primitives/buttonVariants": {
+      "types": "./dist/ui/primitives/buttonVariants.d.ts",
+      "import": "./dist/ui/primitives/buttonVariants.js",
+      "require": "./dist/ui/primitives/buttonVariants.cjs",
+      "default": "./dist/ui/primitives/buttonVariants.js"
+    },
+    "./ui/primitives/fit": {
+      "types": "./dist/ui/primitives/fit.d.ts",
+      "import": "./dist/ui/primitives/fit.js",
+      "require": "./dist/ui/primitives/fit.cjs",
+      "default": "./dist/ui/primitives/fit.js"
+    },
+    "./ui/primitives/index": {
+      "types": "./dist/ui/primitives/index.d.ts",
+      "import": "./dist/ui/primitives/index.js",
+      "require": "./dist/ui/primitives/index.cjs",
+      "default": "./dist/ui/primitives/index.js"
+    },
+    "./ui/primitives/navigationMenuTriggerStyle": {
+      "types": "./dist/ui/primitives/navigationMenuTriggerStyle.d.ts",
+      "import": "./dist/ui/primitives/navigationMenuTriggerStyle.js",
+      "require": "./dist/ui/primitives/navigationMenuTriggerStyle.cjs",
+      "default": "./dist/ui/primitives/navigationMenuTriggerStyle.js"
+    },
+    "./ui/primitives/toast": {
+      "types": "./dist/ui/primitives/toast.d.ts",
+      "import": "./dist/ui/primitives/toast.js",
+      "require": "./dist/ui/primitives/toast.cjs",
+      "default": "./dist/ui/primitives/toast.js"
+    },
+    "./ui/primitives/useFormField": {
+      "types": "./dist/ui/primitives/useFormField.d.ts",
+      "import": "./dist/ui/primitives/useFormField.js",
+      "require": "./dist/ui/primitives/useFormField.cjs",
+      "default": "./dist/ui/primitives/useFormField.js"
+    },
+    "./ui/primitives/useLink": {
+      "types": "./dist/ui/primitives/useLink.d.ts",
+      "import": "./dist/ui/primitives/useLink.js",
+      "require": "./dist/ui/primitives/useLink.cjs",
+      "default": "./dist/ui/primitives/useLink.js"
+    },
+    "./ui/gitops": {
+      "types": "./dist/ui/gitops.d.ts",
+      "import": "./dist/ui/gitops.js",
+      "require": "./dist/ui/gitops.cjs",
+      "default": "./dist/ui/gitops.js"
+    },
+    "./ui/canvas": {
+      "types": "./dist/ui/canvas.d.ts",
+      "import": "./dist/ui/canvas.js",
+      "require": "./dist/ui/canvas.cjs",
+      "default": "./dist/ui/canvas.js"
+    },
+    "./ui/dashboard": {
+      "types": "./dist/ui/dashboard.d.ts",
+      "import": "./dist/ui/dashboard.js",
+      "require": "./dist/ui/dashboard.cjs",
+      "default": "./dist/ui/dashboard.js"
+    },
+    "./ui/usage": {
+      "types": "./dist/ui/usage.d.ts",
+      "import": "./dist/ui/usage.js",
+      "require": "./dist/ui/usage.cjs",
+      "default": "./dist/ui/usage.js"
+    },
+    "./ui/oss": {
+      "types": "./dist/ui/oss.d.ts",
+      "import": "./dist/ui/oss.js",
+      "require": "./dist/ui/oss.cjs",
+      "default": "./dist/ui/oss.js"
+    },
+    "./ui/telemetry": {
+      "types": "./dist/ui/telemetry.d.ts",
+      "import": "./dist/ui/telemetry.js",
+      "require": "./dist/ui/telemetry.cjs",
+      "default": "./dist/ui/telemetry.js"
+    },
+    "./ui/styles/motion.css": "./dist/ui/styles/motion.css",
+    "./ui/tw": {
+      "types": "./dist/ui/tw.d.ts",
+      "import": "./dist/ui/tw.js",
+      "require": "./dist/ui/tw.cjs",
+      "default": "./dist/ui/tw.js"
+    },
+    "./ui/dots": {
+      "types": "./dist/ui/dots.d.ts",
+      "import": "./dist/ui/dots.js",
+      "require": "./dist/ui/dots.cjs",
+      "default": "./dist/ui/dots.js"
+    },
+    "./ui/grid": {
+      "types": "./dist/ui/grid.d.ts",
+      "import": "./dist/ui/grid.js",
+      "require": "./dist/ui/grid.cjs",
+      "default": "./dist/ui/grid.js"
+    },
+    "./ui/types": {
+      "types": "./dist/ui/types.d.ts",
+      "import": "./dist/ui/types.js",
+      "require": "./dist/ui/types.cjs",
+      "default": "./dist/ui/types.js"
+    },
+    "./ui/next": {
+      "import": "./dist/ui/next.js",
+      "require": "./dist/ui/next.cjs",
+      "default": "./dist/ui/next.js"
+    },
+    "./ui/agents": {
+      "types": "./dist/ui/agents.d.ts",
+      "import": "./dist/ui/agents.js",
+      "require": "./dist/ui/agents.cjs",
+      "default": "./dist/ui/agents.js"
+    },
+    "./ui/brands": {
+      "types": "./dist/ui/brands.d.ts",
+      "import": "./dist/ui/brands.js",
+      "require": "./dist/ui/brands.cjs",
+      "default": "./dist/ui/brands.js"
     }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist",
     "src",
-    "!src/**/*.test.ts"
+    "!src/**/*.test.ts",
+    "LICENSE.md",
+    "LICENSE-APACHE",
+    "LICENSE-MIT",
+    "NOTICE"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs .",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && node ../ui/scripts/postbuild.mjs . && node scripts/gen.mjs",
     "clean": "rm -rf dist dist-cjs",
     "prepack": "pnpm run build",
     "prepublishOnly": "node ../../scripts/guard-publish.mjs",
@@ -43,7 +2167,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@hanzo/ai": "^0.6.16",
+    "@hanzo/event": "^0.3.40",
     "@hanzo/gui": "^8.3.5",
+    "@hanzo/iam": "^0.21.18",
     "@hanzo/ui": "^8.27.10"
   },
   "peerDependencies": {

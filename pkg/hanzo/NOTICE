@@ -1,0 +1,7 @@
+hanzo
+Copyright (c) 2023 Hanzo AI, Inc.
+
+This package re-exports @hanzo/ui, which includes software from shadcn/ui
+(https://github.com/shadcn-ui/ui), licensed under MIT:
+
+    Copyright (c) 2023 shadcn
