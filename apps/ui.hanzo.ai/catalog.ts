@@ -1,31 +1,71 @@
 /**
- * The catalog — every export of @hanzo/ui, read from the package itself.
+ * The catalog — every export of the package, read from the package itself.
  *
- * Two groups, one mechanism. `primitives` mirrors `backends/gui/index.ts`,
- * whose named `export { … } from './x'` blocks list each module's members
- * explicitly (`gen-primitives.mjs` depends on that shape). `product` mirrors
- * `product/index.ts`, a plain `export * from './x'` barrel instead — a `*`
- * block names no members, so a product entry's members are read from the
- * TARGET file's own declarations, the same way `types()` already reads a
- * module's exported types rather than the barrel that re-exports them.
+ * Three groups, one mechanism. Each is a barrel: `backends/gui/index.ts` names
+ * each module's members in `export { … } from './x'` blocks, `product/index.ts`
+ * and `blocks/index.ts` mostly `export * from './x'`. A named block already
+ * says the public names; a `*` block names none, so THOSE members are read from
+ * the target file's own declarations, the same way `typesOf` reads a module's
+ * exported types rather than the barrel that re-exports them.
  *
- * Server only: the routes reach it through a dynamic import inside their loaders,
- * so nothing here is bundled for the browser. Paths start from the working
- * directory, which is this app whether one builds or serves it; the bundle the
- * build writes this into lives elsewhere.
+ * Server only: the routes reach it through a dynamic import inside their
+ * loaders, so nothing here is bundled for the browser. Paths start from the
+ * working directory, which is this app whether one builds or serves it.
  */
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
+import { codeToHTML } from '@hanzogui/code-to-html'
+
+import { brand, house } from './brand'
+import type { Item, Section } from './features/docs'
 
 const root = join(process.cwd(), '..', '..')
-const source = join(root, 'pkg', 'ui', 'src', 'backends', 'gui')
-const examplesDir = join(process.cwd(), 'examples')
-const productSource = join(root, 'pkg', 'ui', 'src', 'product')
-const productExamplesDir = join(process.cwd(), 'examples', 'product')
+const src = join(root, 'pkg', 'ui', 'src')
+export const docsDir = join(process.cwd(), 'data', 'docs')
 
+export type Group = 'ui' | 'product' | 'blocks'
 export type Member = { name: string; type: boolean }
 export type Entry = { name: string; title: string; members: Member[] }
 export type Example = { name: string; title: string; description: string; source: string }
+
+/** The groups, in the order the site lists them: a barrel, its examples, its route and its import path. */
+const GROUPS: Record<Group, { title: string; blurb: string; source: string; examples: string; route: string; path: string }> = {
+  ui: {
+    title: 'Primitives',
+    blurb: 'The component API — one cross-platform primitive per name, importable from the package root.',
+    source: join(src, 'backends', 'gui'),
+    examples: join(process.cwd(), 'examples'),
+    route: '/ui',
+    path: '',
+  },
+  product: {
+    title: 'Product',
+    blurb: 'The app layer — charts, status tags, page chrome, detail panes.',
+    source: join(src, 'product'),
+    examples: join(process.cwd(), 'examples', 'product'),
+    route: '/product',
+    path: '/product',
+  },
+  blocks: {
+    title: 'Blocks',
+    blurb: 'Content as data, and the renderers that draw it.',
+    source: join(src, 'blocks'),
+    examples: join(process.cwd(), 'examples', 'blocks'),
+    route: '/blocks',
+    path: '/blocks',
+  },
+}
+
+export const groups = Object.keys(GROUPS) as Group[]
+
+/** The specifier a module of this group is imported from, as this build spells the package. */
+export const from = (group: Group) => brand.name + GROUPS[group].path
+
+/** A name this build may show. The house shows every one; another brand none that carries the house's. */
+const ours = (name: string) => brand === house || !name.toLowerCase().includes(house.id)
+
+/** Source as this build spells the package. */
+export const sample = (text: string) => text.replaceAll(house.name, brand.name)
 
 const title = (name: string) =>
   name
@@ -33,56 +73,135 @@ const title = (name: string) =>
     .map((w) => w[0].toUpperCase() + w.slice(1))
     .join(' ')
 
-/** One entry per module the barrel exports from, in barrel order. */
-export function catalog(): Entry[] {
-  const barrel = readFileSync(join(source, 'index.ts'), 'utf8')
-  const seen = new Map<string, Entry>()
-  for (const m of barrel.matchAll(/export\s*\{([^}]*)\}\s*from\s*'\.\/([^']+)'/g)) {
-    const name = m[2].replace(/\.tsx?$/, '')
-    const entry = seen.get(name) ?? { name, title: title(name), members: [] }
-    for (const raw of m[1].split(',')) {
-      const piece = raw.trim()
-      if (!piece) continue
-      const type = piece.startsWith('type ')
-      const named = piece.replace(/^type\s+/, '')
-      const alias = named.includes(' as ') ? named.split(' as ')[1].trim() : named
-      entry.members.push({ name: alias, type })
-    }
-    seen.set(name, entry)
+/** The members a named block lists: `A, type B, C as D`. */
+function named(block: string): Member[] {
+  const out: Member[] = []
+  for (const raw of block.split(',')) {
+    const piece = raw.trim()
+    if (!piece) continue
+    const type = piece.startsWith('type ')
+    const name = piece.replace(/^type\s+/, '')
+    out.push({ name: name.includes(' as ') ? name.split(' as ')[1].trim() : name, type })
   }
-  return [...seen.values()]
+  return out
 }
 
-/**
- * One entry per module `product/index.ts` names — star or named blocks alike
- * — in barrel order. A named block (`Sparkline as MetricSparkline`) already
- * tells us the public name, same as the primitives group; only a `*` block
- * names no members, so THOSE fall back to the target's own declarations
- * (`moduleMembers`, recursing through any re-export it makes in turn).
- */
-export function productCatalog(): Entry[] {
-  const barrel = readFileSync(join(productSource, 'index.ts'), 'utf8')
+/** One entry per module the group's barrel exports from, in barrel order. */
+export function entries(group: Group): Entry[] {
+  const { source } = GROUPS[group]
+  const barrel = readFileSync(join(source, 'index.ts'), 'utf8')
   const seen = new Map<string, Entry>()
   for (const m of barrel.matchAll(/export\s+(?:\*|\{([^}]*)\})\s*from\s*'\.\/([^']+)'/g)) {
     const name = m[2].replace(/\.tsx?$/, '')
     const entry = seen.get(name) ?? { name, title: title(name), members: [] }
     if (m[1] === undefined) {
       // `*` — nothing named in the barrel itself.
-      if (entry.members.length === 0) entry.members.push(...moduleMembers(productSource, name))
-    } else {
-      for (const raw of m[1].split(',')) {
-        const piece = raw.trim()
-        if (!piece) continue
-        const type = piece.startsWith('type ')
-        const named = piece.replace(/^type\s+/, '')
-        const alias = named.includes(' as ') ? named.split(' as ')[1].trim() : named
-        entry.members.push({ name: alias, type })
-      }
-    }
+      if (entry.members.length === 0) entry.members.push(...membersOf(resolveModuleFile(join(source, name))))
+    } else entry.members.push(...named(m[1]))
     seen.set(name, entry)
   }
   return [...seen.values()]
+    .filter((e) => ours(e.name))
+    .map((e) => ({ ...e, members: e.members.filter((m) => ours(m.name)) }))
 }
+
+/**
+ * The docs pages, in reading order. A page not named here follows the named
+ * ones, alphabetically; a slug with a slash is a page of the section its first
+ * segment names, and that section's own page is the one at the segment.
+ */
+const ORDER = [
+  'index',
+  'installation',
+  'installation/vite',
+  'installation/next',
+  'installation/one',
+  'installation/expo',
+  'installation/tauri',
+  'theming',
+  'dark-mode',
+  'typography',
+  'grid',
+  'blocks',
+  'charts',
+  'white-label',
+  'testing',
+  'changelog',
+  'about',
+]
+
+/** Every page under data/docs, one directory deep, in reading order. */
+export function slugs(): string[] {
+  if (!existsSync(docsDir)) return []
+  const out: string[] = []
+  for (const f of readdirSync(docsDir, { withFileTypes: true })) {
+    if (f.isFile() && f.name.endsWith('.mdx')) out.push(f.name.replace(/\.mdx$/, ''))
+    else if (f.isDirectory())
+      for (const g of readdirSync(join(docsDir, f.name)))
+        if (g.endsWith('.mdx')) out.push(`${f.name}/${g.replace(/\.mdx$/, '')}`)
+  }
+  const rank = (s: string) => (ORDER.includes(s) ? ORDER.indexOf(s) : ORDER.length)
+  return out.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
+}
+
+/** A page as the sidebar lists it. Its title is the frontmatter's, else its slug's; the index is /docs itself. */
+const item = (slug: string): Item => {
+  const file = join(docsDir, `${slug}.mdx`)
+  const head = existsSync(file) ? readFileSync(file, 'utf8').match(/^title:\s*['"]?(.+?)['"]?\s*$/m) : null
+  return { name: slug, title: head?.[1] ?? title(slug.split('/').pop()!), href: slug === 'index' ? '/docs' : `/docs/${slug}` }
+}
+
+/** The docs sections: the pages, then each directory of pages under its own page's title. */
+export function docs(): Section[] {
+  const all = slugs()
+  const top = all.filter((s) => !s.includes('/'))
+  const dirs = [...new Set(all.filter((s) => s.includes('/')).map((s) => s.split('/')[0]))]
+  return [
+    ...(top.length ? [{ title: 'Docs', items: top.map(item) }] : []),
+    ...dirs.map((d) => ({ title: item(d).title, items: all.filter((s) => s.startsWith(`${d}/`)).map(item) })),
+  ]
+}
+
+/** The sidebar: the docs pages, then each group. */
+export function sections(): Section[] {
+  return [
+    ...docs(),
+    ...groups.map((g) => ({
+      title: GROUPS[g].title,
+      items: entries(g).map((e) => ({ name: e.name, title: e.title, href: `${GROUPS[g].route}/${e.name}` })),
+    })),
+  ]
+}
+
+/** A group as its index page shows it: one card per module. */
+export function overview(group: Group) {
+  const { title, blurb, route } = GROUPS[group]
+  return {
+    group,
+    title,
+    blurb,
+    from: from(group),
+    entries: entries(group).map((e) => ({ name: e.name, title: e.title, members: e.members.length, href: `${route}/${e.name}` })),
+  }
+}
+
+export type Overview = ReturnType<typeof overview>
+
+/** One module of a group: its examples rendered to HTML beside their source, and its types. */
+export function page(group: Group, name: string) {
+  const entry = entries(group).find((e) => e.name === name)
+  if (!entry) throw new Error(`no ${group} module named ${name}`)
+  const { source, examples } = GROUPS[group]
+  return {
+    ...entry,
+    from: from(group),
+    sections: sections(),
+    types: typesOf(source, name).map((t) => codeToHTML(sample(t), 'tsx')),
+    examples: examplesOf(examples, name).map(({ source, ...x }) => ({ ...x, html: codeToHTML(sample(source), 'tsx') })),
+  }
+}
+
+export type Doc = ReturnType<typeof page>
 
 /** The end of the statement that starts at `start`: the first newline at depth zero
  *  that the next line does not continue with `|` or `&`. */
@@ -107,66 +226,41 @@ function resolveModuleFile(base: string): string {
   return candidates.find(existsSync) ?? candidates[0]
 }
 
-/** A module's source. */
-function readModule(dir: string, name: string): string {
-  return readFileSync(resolveModuleFile(join(dir, name)), 'utf8')
-}
-
 /**
- * A module's own exported value and type names — the one thing neither a `*`
- * nor a named re-export block leaves in the barrel for `productCatalog` to
- * read directly. Recurses through the module's OWN re-exports (`menu` and
- * `social` are barrels one level down, not files with direct declarations),
- * bounded by `seenFiles` since these are trees, not cycles. An external
- * specifier (`@hanzo/data`) is left alone — nothing of ours to open.
+ * A module's own exported value and type names — the one thing a `*` block
+ * leaves out of the barrel. Recurses through the module's OWN re-exports
+ * (`menu` and `social` are barrels one level down, not files with direct
+ * declarations), bounded by `seen` since these are trees, not cycles. An
+ * external specifier (`@hanzo/data`) is left alone — nothing of ours to open.
  */
-function membersOf(file: string, seenFiles: Set<string> = new Set()): Member[] {
-  if (seenFiles.has(file) || !existsSync(file)) return []
-  seenFiles.add(file)
+function membersOf(file: string, seen: Set<string> = new Set()): Member[] {
+  if (seen.has(file) || !existsSync(file)) return []
+  seen.add(file)
   const text = readFileSync(file, 'utf8')
   const dir = dirname(file)
   const out: Member[] = []
-  const seenNames = new Set<string>()
+  const names = new Set<string>()
   const add = (n: string, type: boolean) => {
-    if (seenNames.has(n)) return
-    seenNames.add(n)
+    if (names.has(n)) return
+    names.add(n)
     out.push({ name: n, type })
   }
   for (const m of text.matchAll(/^export\s+(?:async\s+)?function\s+(\w+)/gm)) add(m[1], false)
   for (const m of text.matchAll(/^export\s+(?:const|class)\s+(\w+)/gm)) add(m[1], false)
   for (const m of text.matchAll(/^export\s+(?:type|interface)\s+(\w+)/gm)) add(m[1], true)
   for (const block of text.matchAll(/export\s*\{([^}]*)\}\s*from\s*'([^']+)'/g)) {
-    for (const raw of block[1].split(',')) {
-      const piece = raw.trim()
-      if (!piece) continue
-      const type = piece.startsWith('type ')
-      const named = piece.replace(/^type\s+/, '')
-      add(named.includes(' as ') ? named.split(' as ')[1].trim() : named, type)
-    }
+    for (const mem of named(block[1])) add(mem.name, mem.type)
   }
   for (const m of text.matchAll(/export\s+\*\s*from\s*'([^']+)'/g)) {
     if (!m[1].startsWith('.')) continue
-    for (const mem of membersOf(resolveModuleFile(join(dir, m[1])), seenFiles)) add(mem.name, mem.type)
+    for (const mem of membersOf(resolveModuleFile(join(dir, m[1])), seen)) add(mem.name, mem.type)
   }
   return out
 }
 
-function moduleMembers(dir: string, name: string): Member[] {
-  return membersOf(resolveModuleFile(join(dir, name)))
-}
-
 /** The exported types of a module, quoted from its source. */
-export function types(name: string): string[] {
-  return typesOf(source, name)
-}
-
-/** The exported types of a `product` module, quoted from its source. */
-export function productTypes(name: string): string[] {
-  return typesOf(productSource, name)
-}
-
 function typesOf(dir: string, name: string): string[] {
-  const text = readModule(dir, name)
+  const text = readFileSync(resolveModuleFile(join(dir, name)), 'utf8')
   const out: string[] = []
   for (const m of text.matchAll(/^export (?:type|interface) \w+/gm)) {
     out.push(text.slice(m.index, statementEnd(text, m.index)).trimEnd())
@@ -174,17 +268,8 @@ function typesOf(dir: string, name: string): string[] {
   return out
 }
 
-/** The examples of a module: each exported function of `examples/<name>.tsx`, with
+/** The examples of a module: each exported function of `<dir>/<name>.tsx`, with
  *  the doc comment above it as title and description, and its source. */
-export function examples(name: string): Example[] {
-  return examplesOf(examplesDir, name)
-}
-
-/** The examples of a `product` module, from `examples/product/<name>.tsx`. */
-export function productExamples(name: string): Example[] {
-  return examplesOf(productExamplesDir, name)
-}
-
 function examplesOf(dir: string, name: string): Example[] {
   const file = join(dir, `${name}.tsx`)
   if (!existsSync(file)) return []

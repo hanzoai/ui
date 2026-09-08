@@ -1,0 +1,97 @@
+---
+title: Typography
+description: Zen and Zen Mono, a type ladder every component reads, and a prose container for text you did not write.
+---
+
+## The faces
+
+Zen is the reading face; Zen Mono is for code, identifiers and anything
+numeric. Both ship with the package and are bound to two custom properties
+that name the role rather than the face:
+
+```css
+--font-sans: var(--font-sans-provided, 'Zen', ui-sans-serif, system-ui, sans-serif);
+--font-mono: var(--font-mono-provided, 'Zen Mono', ui-monospace, monospace);
+```
+
+Components read the two variables and never a family name. A host that
+prefers its own face binds `--font-sans-provided`; the package's own binding
+sits in a cascade layer so the host's unlayered one wins. A host that binds
+nothing gets Zen.
+
+<Preview>
+  <YStack gap="$2">
+    <Text fontSize="$8" fontWeight="600">The quick brown fox jumps over the lazy dog</Text>
+    <Text fontSize="$4" color="$color11">Zen at the section and body rungs, tracked and leaded for the size.</Text>
+    <Text fontFamily="$mono" fontSize="$3">pnpm add @hanzo/ui — Zen Mono for code and numbers 0123456789</Text>
+  </YStack>
+</Preview>
+
+## The ladder
+
+There is one type ladder and every component is on it. `Text` takes
+`fontSize="$n"` with the leading and tracking of that rung; the headings and
+`Paragraph` take `size="$n"` and set all three together.
+
+```tsx
+import { H1, H2, Paragraph, SizableText, Text } from '@hanzo/ui'
+
+<H1>A page title</H1>
+<H2 size="$6">A section</H2>
+<Paragraph size="$4">Body copy at the base rung.</Paragraph>
+<SizableText size="$2" color="$color11">A label.</SizableText>
+<Text fontFamily="$mono" fontSize="$2">an identifier</Text>
+```
+
+Never a number. `fontSize={14}` is fixed at 14; `fontSize="$3"` is 14 today
+and whatever a person's type scale makes of it, because the rung resolves
+through `var(--text-base)` and the knob multiplies the ramp. The
+[Theming](/docs/theming) page has the table.
+
+## Prose
+
+Authored content — a CMS field, a Markdown file, a block's body — arrives as
+bare tags. Nothing inside it can carry a prop, so the styling has to come from
+an ancestor and reach down by tag. `ApplyTypography` is that ancestor.
+
+```tsx
+import { ApplyTypography } from '@hanzo/ui'
+
+<ApplyTypography size="base">
+  <h2>Install</h2>
+  <p>
+    Add the package, then wrap the app once at the root. The full guide is
+    at <a href="https://ui.hanzo.ai">ui.hanzo.ai</a>.
+  </p>
+  <pre>
+    <code>{"pnpm add @hanzo/ui\npnpm dev"}</code>
+  </pre>
+  <ol>
+    <li>
+      Render <strong>Hanzo</strong> once, around the whole tree.
+    </li>
+    <li>
+      Import <code>Button</code> or any other component from the same
+      package.
+    </li>
+    <li>Pass it the props its type declares.</li>
+  </ol>
+  <blockquote>
+    Components read their colours from the theme, so a token changed there
+    changes every surface at once.
+  </blockquote>
+</ApplyTypography>
+```
+
+<Preview>
+  <ProseBlocks />
+</Preview>
+
+`size` is `responsive` by default — the one rung that moves with the viewport
+— or `sm`, `base`, `lg`, `xl`, which stay put, because a size the caller
+chose is a decision and not a suggestion. `asTag` picks the element, any of
+`div`, `section`, `nav`, `main`, `article`, `aside`. The rules live in the
+stylesheet under `.hz-prose`, namespaced so a site part-way off another
+typography plugin does not have two sheets fighting over one selector. The
+[prose](/ui/prose) page renders every rung, and a container nested in a
+container.

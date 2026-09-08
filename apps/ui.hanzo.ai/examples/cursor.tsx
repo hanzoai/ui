@@ -1,52 +1,34 @@
-import { Paragraph, YStack } from "@hanzo/gui"
+import { YStack, SizableText } from "@hanzo/gui"
 import { Cursor } from "@hanzo/ui"
 
-/** Default — move the mouse over the frame to see the dot follow it. */
+/** Default — a bare dot follows the pointer over the wrapped area. */
 export function Default() {
   return (
     <Cursor>
-      <YStack
-        minH={200}
-        items="center"
-        justify="center"
-        rounded="$4"
-        bg="$color2"
-      >
-        <Paragraph>Move your mouse over this area</Paragraph>
+      <YStack p="$8" items="center" justify="center" bg="$color2" rounded="$4">
+        <SizableText>Move your mouse over this area</SizableText>
       </YStack>
     </Cursor>
   )
 }
 
-/** With a label — cursorText renders inside the dot, and cursorSize sets its diameter. */
-export function WithLabel() {
+/** Labelled — cursorText draws a short label inside the dot. */
+export function Labelled() {
   return (
-    <Cursor cursorText="✨" cursorSize={32}>
-      <YStack
-        minH={200}
-        items="center"
-        justify="center"
-        rounded="$4"
-        bg="$color2"
-      >
-        <Paragraph>Hover for a labeled cursor</Paragraph>
+    <Cursor cursorText="✨" cursorSize={28}>
+      <YStack p="$8" items="center" justify="center" bg="$color2" rounded="$4">
+        <SizableText>A label rides along with the dot</SizableText>
       </YStack>
     </Cursor>
   )
 }
 
 /** Small dot — a tighter cursorSize for a subtler effect. */
-export function SmallDot() {
+export function Small() {
   return (
-    <Cursor cursorSize={12}>
-      <YStack
-        minH={200}
-        items="center"
-        justify="center"
-        rounded="$4"
-        bg="$color2"
-      >
-        <Paragraph>A smaller tracking dot</Paragraph>
+    <Cursor cursorSize={10}>
+      <YStack p="$8" items="center" justify="center" bg="$color2" rounded="$4">
+        <SizableText>A smaller follower</SizableText>
       </YStack>
     </Cursor>
   )

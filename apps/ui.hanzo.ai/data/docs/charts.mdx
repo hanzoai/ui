@@ -1,0 +1,174 @@
+---
+title: Charts
+description: A trend, a series, a share and a distribution. Inline SVG, no dependency, and never a fabricated point.
+---
+
+```tsx
+import { BarChart, BarRows, Donut, LineChart, Sparkline } from '@hanzo/ui/product'
+```
+
+The charts draw with inline SVG and take their colours from the live theme, so
+they invert with it. They are honest by construction: a sparkline with fewer
+than two points renders nothing, a donut with no positive value renders an em
+dash, and no chart invents a trend. Callers pass real series.
+
+Two shapes carry the data. A `ChartPoint` is a labelled value on a sequential
+axis; a `Slice` is a labelled magnitude in a categorical one, with an optional
+colour and a hint.
+
+```ts
+type ChartPoint = { label: string; value: number }
+type Slice = { label: string; value: number; color?: string; hint?: string }
+```
+
+## Sparkline
+
+A fixed-size trend for a metric card. `values` is a plain array; `width`,
+`height` and `color` are optional.
+
+```tsx
+<Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+```
+
+<Preview>
+  <Sparkline values={[3, 5, 4, 8, 7, 11, 9, 14]} width={160} height={40} />
+</Preview>
+
+## Line chart
+
+A value over time. It measures its container, so it is as wide as the box it
+is in, and hovering reads the nearest point out beside a guide line.
+`formatValue` formats the read-out.
+
+```tsx
+<LineChart
+  data={[
+    { label: 'Mon', value: 120 },
+    { label: 'Tue', value: 180 },
+    { label: 'Wed', value: 150 },
+    { label: 'Thu', value: 260 },
+    { label: 'Fri', value: 230 },
+    { label: 'Sat', value: 310 },
+    { label: 'Sun', value: 290 },
+  ]}
+  height={200}
+  formatValue={(v) => `${v} req`}
+/>
+```
+
+<Preview>
+  <LineChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+    formatValue={(v) => `${v} req`}
+  />
+</Preview>
+
+## Bar chart
+
+The same data, as bars. The same props.
+
+```tsx
+<BarChart data={points} height={200} />
+```
+
+<Preview>
+  <BarChart
+    data={[
+      { label: 'Mon', value: 120 },
+      { label: 'Tue', value: 180 },
+      { label: 'Wed', value: 150 },
+      { label: 'Thu', value: 260 },
+      { label: 'Fri', value: 230 },
+      { label: 'Sat', value: 310 },
+      { label: 'Sun', value: 290 },
+    ]}
+    height={200}
+  />
+</Preview>
+
+## Donut
+
+A share. Colour is data, not a mode: a slice with a `color` is drawn in it,
+and a slice without one takes a monochrome ramp off the foreground, so one
+component serves a categorical chart and an on-brand one. `center` renders
+inside the ring; `legend` draws a built-in label and percentage list, off by
+default so a consumer can compose a richer one.
+
+```tsx
+<Donut
+  slices={[
+    { label: 'zen-4', value: 62 },
+    { label: 'zen-3', value: 28 },
+    { label: 'other', value: 10 },
+  ]}
+  center="62%"
+  legend
+/>
+```
+
+<Preview>
+  <XStack gap="$8" flexWrap="wrap" items="center">
+    <Donut
+      slices={[
+        { label: 'zen-4', value: 62 },
+        { label: 'zen-3', value: 28 },
+        { label: 'other', value: 10 },
+      ]}
+      center="62%"
+      legend
+    />
+    <Donut
+      slices={[
+        { label: 'compute', value: 540, color: '#7c5cff' },
+        { label: 'storage', value: 220, color: '#23c562' },
+        { label: 'egress', value: 90, color: '#ff9f45' },
+      ]}
+      size={120}
+      thickness={16}
+    />
+  </XStack>
+</Preview>
+
+`CHART_PALETTE` is the eight distinct hues for a categorical series, tuned
+for the dark ground; `CHART_OTHER` is the muted tone for a remainder.
+
+## Bar rows
+
+A distribution as labelled horizontal bars, drawn with the layout primitives
+so it themes like the shell. Takes the same `Slice` shape.
+
+```tsx
+<BarRows
+  bars={[
+    { label: 'us-east', value: 1240 },
+    { label: 'eu-west', value: 860 },
+    { label: 'ap-south', value: 410 },
+  ]}
+/>
+```
+
+<Preview>
+  <BarRows
+    bars={[
+      { label: 'us-east', value: 1240 },
+      { label: 'eu-west', value: 860 },
+      { label: 'ap-south', value: 410 },
+    ]}
+  />
+</Preview>
+
+## Measuring the box
+
+`useContainerWidth` is exported too: a `ref` and the width it last measured,
+kept by a `ResizeObserver`. It is what the line and bar charts use, and what a
+chart of your own can use to draw to the box it is given rather than a
+number it guessed.

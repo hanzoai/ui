@@ -1,0 +1,131 @@
+---
+title: Theming
+description: Tokens resolve against the theme, custom properties carry the identity, and three knobs let a person retune the whole of it.
+---
+
+Nothing in the library names a colour. A component asks for `$background` or
+`$color12`, the theme answers, and the answer differs between dark and light
+without the component knowing. A brand changes the answer by setting a custom
+property; a person changes it by moving a knob the ramps multiply by.
+
+## Tokens
+
+A prop value starting with `$` is a token. The colour ramp runs from surface
+to text: `$color1` is the quietest ground, `$color12` the loudest text.
+
+| Token | What it is |
+| --- | --- |
+| `$background` | The page ground. Reads `--background`, so a brand's stylesheet answers it. |
+| `$color` | The default text colour. |
+| `$color1` – `$color12` | The neutral ramp: `$color2`/`$color3` are raised surfaces, `$color10`/`$color11` muted text, `$color12` the loudest. |
+| `$borderColor` | The hairline. Translucent, so it reads as a lighter line on any surface rather than an unrelated grey. |
+| `$accentBackground` / `$accentColor` | The one loud control a page is allowed. Read `--primary`, so the accent knob reaches them. |
+
+<Preview>
+  <XStack gap="$2" flexWrap="wrap">
+    <Button>Default</Button>
+    <Button variant="secondary">Secondary</Button>
+    <Button variant="outline">Outline</Button>
+    <Button variant="ghost">Ghost</Button>
+    <Button variant="destructive">Destructive</Button>
+  </XStack>
+  <XStack gap="$2" flexWrap="wrap">
+    <Badge>default</Badge>
+    <Badge variant="secondary">secondary</Badge>
+    <Badge variant="destructive">destructive</Badge>
+    <Badge variant="outline">outline</Badge>
+  </XStack>
+</Preview>
+
+## The ladders
+
+Size, space and radius are the same numbers on every host, and every rung
+carries a knob.
+
+**Type.** `fontSize="$n"`, never a number. Twelve rungs read the design ramp,
+`--text-xs` through `--text-9xl`, and the four between rungs interpolate their
+neighbours, so a person's scale moves all sixteen and the ladder stays a
+ladder.
+
+| Rung | `$1` | `$2` | `$3` | `$4` | `$5` | `$6` | `$7` | `$8` | `$9` | `$10` | `$11` | `$14` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| px | 11 | 13 | 14 | 15 | 15 | 17 | 21 | 26 | 26 | 32 | 40 | 64 |
+
+`$1` is a label, `$2` navigation and dense body, `$3` base, `$6` a section
+heading, `$7` a page title, `$8` and up display. Display rungs tighten their
+leading and track at −0.025em, which is the difference between type that is
+set and type that is merely large.
+
+**Space.** The 4px ramp, and only the 4px ramp: `$1` 4, `$2` 8, `$3` 12, `$4`
+16, `$5` 24, `$6` 32, `$8` 48, `$10` 64. Every step is multiplied by
+`--density`.
+
+**Radius.** Four values. `$1` and `$2` are 6, a control; `$3` and `$4` are 8,
+an input or a row; `$5` through `$9` are 12, a panel; `$10` and above are the
+pill. Everything but the pill is multiplied by `--radius-scale`.
+
+## Custom properties
+
+The identity is a set of custom properties on `:root`, dark first, with
+`.light` retuning them. `Hanzo` stamps `.t_dark` or `.t_light` on the body and
+the CSS answers to both spellings, so the component tokens and the stylesheet
+name one theme.
+
+```css
+:root {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #fafafa;
+  --border: rgb(255 255 255 / .10);
+  --ring: rgb(255 255 255 / .40);
+  --font-sans: 'Zen', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Zen Mono', ui-monospace, monospace;
+}
+```
+
+The full set is `--background`, `--foreground`, `--card`, `--popover`,
+`--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`, each with
+its `-foreground`, then `--border`, `--input`, `--ring`, `--radius`,
+`--chart-1` through `--chart-5`, and the `--sidebar-*` family. They come from
+`@hanzo/design` and are composed into the stylesheet the root imports; a host
+that also mounts design's own sheet follows it live.
+
+A brand retunes by declaring the same names later in the cascade. A host that
+brings its own face binds `--font-sans-provided` rather than `--font-sans`,
+because the package's binding sits in a layer and an unlayered declaration
+wins whatever its specificity.
+
+## The appearance knobs
+
+`@hanzo/design` publishes three knobs that every ramp multiplies by, and
+`@hanzo/appearance` is the panel that sets them for a person:
+
+| Knob | Moves |
+| --- | --- |
+| `--type-scale` | Every `--text-*` rung, and with it every `fontSize="$n"`. |
+| `--type-ratio` | How far apart the rungs sit. |
+| `--density` | Every `--space-*` step, and every gui gap and padding. |
+| `--primary` / `--accent` | The one loud colour. |
+| `--font-sans` | The reading face: the brand's, the system's, a serif, or mono. |
+| `--container-max` / `--container-prose` / `--container-wide` | The three measures a page lays out to. |
+
+They land as inline properties on `html`, which is `:root`, so they win over
+every stylesheet without a selector to out-specify, and they reach the
+components because gui resolves a size in JavaScript as `var(--text-base)`
+and the var still reads the cascade at the element. An axis nobody set is
+absent rather than neutral: writing `1` would look the same and silently
+outrank a brand that published its own scale.
+
+```tsx
+import { Appearance } from '@hanzo/appearance'
+import { bootScript } from '@hanzo/appearance/state'
+
+// In <head>, so the first paint is already correct.
+<script dangerouslySetInnerHTML={{ __html: bootScript() }} />
+
+// Wherever the product keeps settings.
+<Appearance />
+```
+
+`Hanzo` re-applies the stored preference on every mount, so a choice made on
+one page holds on the next. The control in this site's header is that panel.

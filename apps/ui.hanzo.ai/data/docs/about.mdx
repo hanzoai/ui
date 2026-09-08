@@ -1,0 +1,32 @@
+---
+title: About
+description: What the library is made of, and the terms it ships under.
+---
+
+{brand.name} is the {brand.org} component library. It is one package on one
+substrate, and the substrate is why one import runs on the web, on a phone
+and in a desktop window.
+
+## Made of
+
+| Package | What it contributes |
+| --- | --- |
+| [@hanzo/gui](https://gui.hanzo.ai) | The style engine: styles as props, compiled to atomic CSS on the web and to native styles on a phone, with the behaviour — focus, portalling, keyboard — of each primitive. |
+| `@hanzo/design` | The tokens: the monochrome palette, the type ramp, spacing, radius, elevation, motion, and the three knobs every ramp multiplies by. |
+| `@hanzo/font` | Zen and Zen Mono, self-hosted, under the SIL Open Font License. |
+| `@hanzo/appearance` | A person's own reading of the system — type size, density, accent — stored and applied. |
+
+The components are an original implementation on those four. There is no
+Radix, no Tailwind, no class-variance-authority and no registry underneath;
+the identity is plain CSS custom properties, and the stylesheet is produced
+by rendering every component when the package is published.
+
+## Where
+
+- Source and issues: [{brand.github}]({brand.github})
+- Package: [{brand.npm}]({brand.npm})
+- This site: [{brand.site}]({brand.site})
+
+## Licence
+
+Apache-2.0 or MIT, at your option.

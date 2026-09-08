@@ -1,10 +1,4 @@
-import { XStack } from "@hanzo/gui"
-import {
-  Badge,
-  DataTable,
-  DataTableColumnHeader,
-  type DataTableColumnDef,
-} from "@hanzo/ui"
+import { Badge, Button, DataTable, DataTableColumnHeader, type DataTableColumnDef } from "@hanzo/ui"
 
 type Payment = {
   id: string
@@ -14,72 +8,72 @@ type Payment = {
 }
 
 const payments: Payment[] = [
-  { id: "m5gr84i9", amount: 316, status: "success", email: "ken99@example.com" },
-  { id: "3u1reuv4", amount: 242, status: "success", email: "abe45@example.com" },
-  { id: "derv1ws0", amount: 837, status: "processing", email: "monserrat44@example.com" },
-  { id: "5kma53ae", amount: 874, status: "success", email: "silas22@example.com" },
-  { id: "bhqecj4p", amount: 721, status: "failed", email: "carmella@example.com" },
+  { id: "728ed52f", amount: 100, status: "pending", email: "m@example.com" },
+  { id: "489e1d42", amount: 125, status: "processing", email: "sam@example.com" },
+  { id: "a1b2c3d4", amount: 316, status: "success", email: "ken99@example.com" },
+  { id: "d5e6f7a8", amount: 242, status: "success", email: "abe45@example.com" },
+  { id: "b9c0d1e2", amount: 837, status: "failed", email: "monserrat44@example.com" },
 ]
 
-const columns: Array<DataTableColumnDef<Payment>> = [
-  { id: "status", accessorKey: "status", header: "Status" },
-  { id: "email", accessorKey: "email", header: "Email" },
-  {
-    id: "amount",
-    accessorKey: "amount",
-    align: "right",
-    header: () => <XStack justify="flex-end" width="100%">Amount</XStack>,
-    cell: ({ row }) => (
-      <XStack justify="flex-end" width="100%">
-        {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-          row.original.amount,
-        )}
-      </XStack>
-    ),
-  },
-]
-
-/** Basic — a column list bound to an array; each cell falls back to the row's raw value when a column names no `cell`. */
+/** Basic — one column per field, read straight off the row by `accessorKey`. */
 export function Basic() {
-  return <DataTable columns={columns} data={payments} pageSize={0} />
+  const columns: DataTableColumnDef<Payment>[] = [
+    { id: "status", accessorKey: "status", header: "Status" },
+    { id: "email", accessorKey: "email", header: "Email" },
+    { id: "amount", accessorKey: "amount", header: "Amount", align: "right" },
+  ]
+  return <DataTable columns={columns} data={payments} />
 }
 
-/** Sortable and filterable — `DataTableColumnHeader` turns a header into a toggle, and `filterColumnId` wires a text box to one column. */
-export function SortableAndFilterable() {
-  const sortable: Array<DataTableColumnDef<Payment>> = [
+/** Sortable and filterable — a custom `cell` formats the amount and colors the
+ * status; `DataTableColumnHeader` gives the email column a click-to-sort
+ * button; the toolbar's text field searches it. */
+export function SortableFilterable() {
+  const columns: DataTableColumnDef<Payment>[] = [
+    {
+      id: "status",
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as Payment["status"]
+        const variant = status === "failed" ? "destructive" : status === "success" ? "default" : "secondary"
+        return <Badge variant={variant}>{status}</Badge>
+      },
+    },
     {
       id: "email",
       accessorKey: "email",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
     },
     {
-      id: "status",
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => (
-        <Badge variant={row.original.status === "failed" ? "destructive" : "secondary"}>
-          {row.original.status}
-        </Badge>
-      ),
+      id: "amount",
+      accessorKey: "amount",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+      align: "right",
+      cell: ({ row }) =>
+        new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(row.getValue("amount") as number),
     },
-    columns[2],
   ]
-  return (
-    <DataTable
-      columns={sortable}
-      data={payments}
-      filterColumnId="email"
-      filterPlaceholder="Filter emails…"
-      pageSize={0}
-    />
-  )
+  return <DataTable columns={columns} data={payments} filterColumnId="email" filterPlaceholder="Filter emails…" pageSize={3} />
 }
 
-/** Row selection and pagination — a `select` column with no `header`/`cell` gets a checkbox for free, and `pageSize` turns on the Previous/Next footer. */
-export function SelectableAndPaginated() {
-  const withSelection: Array<DataTableColumnDef<Payment>> = [
+/** Selectable with row actions — an `id: 'select'` column gets its checkbox
+ * for free; an `id: 'actions'` column is just a normal `cell` reading
+ * `row.original`, the same convention the upstream guide's own demo uses. */
+export function SelectableWithActions() {
+  const columns: DataTableColumnDef<Payment>[] = [
     { id: "select", enableSorting: false, enableHiding: false },
-    ...columns,
+    { id: "email", accessorKey: "email", header: "Email" },
+    { id: "amount", accessorKey: "amount", header: "Amount", align: "right" },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => (
+        <Button variant="ghost" size="sm" onClick={() => navigator.clipboard?.writeText(row.original.id)}>
+          Copy ID
+        </Button>
+      ),
+    },
   ]
-  return <DataTable columns={withSelection} data={payments} pageSize={2} />
+  return <DataTable columns={columns} data={payments} />
 }

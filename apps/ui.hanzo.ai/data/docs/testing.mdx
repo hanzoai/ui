@@ -1,0 +1,107 @@
+---
+title: Testing
+description: Mount under the root, find by slot, resolve the cascade yourself, and let a browser compute the rest.
+---
+
+Every component stamps a `data-slot` with its name, so a test can find a
+control without depending on markup that a version may change. Mount under
+`Hanzo`, the way the app does; the root carries the config every token
+resolves against, and a component with no root theme throws.
+
+## Unit tests
+
+```bash
+pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
+```
+
+```ts title="vitest.config.ts"
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  resolve: { alias: { 'react-native': 'react-native-web' } },
+  test: {
+    environment: 'jsdom',
+    server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },
+  },
+})
+```
+
+The alias is the same one the bundler carries. The `inline` list matters: the
+engine's packages are shipped as CommonJS that re-exports ESM, and left
+external they resolve to a second copy of the module that owns the theme, so
+the provider writes one context and every themed component reads another and
+throws `Missing theme`.
+
+```tsx title="deploy.test.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
+import { Deploy } from './deploy'
+
+const mount = (node: React.ReactNode) => render(<Hanzo>{node}</Hanzo>)
+
+it('deploys on press', async () => {
+  const onDeploy = vi.fn()
+  mount(<Deploy onDeploy={onDeploy} />)
+  await userEvent.click(screen.getByRole('button', { name: 'Deploy' }))
+  expect(onDeploy).toHaveBeenCalledOnce()
+})
+
+it('renders the control', () => {
+  const { container } = mount(<Deploy onDeploy={() => {}} />)
+  expect(container.querySelector('[data-slot="button"]')).not.toBeNull()
+})
+```
+
+## Colours in a DOM without a cascade
+
+jsdom does not resolve `var()`; it hands a test the text verbatim. The theme
+rungs are written `var(--border, rgb(255 255 255 / .10))` on purpose — follow
+the live cascade where a design sheet is mounted, keep the audited literal
+where it is not — so asserting a border's contrast in jsdom compared a colour
+to a function call. `substitute` takes the step jsdom does not.
+
+```ts
+import { substitute } from '@hanzo/ui/css'
+
+const border = substitute(getComputedStyle(el).borderColor)
+// 'rgb(255 255 255 / .10)'
+```
+
+With no `vars` map that is exact rather than approximate: jsdom mounts no
+design sheet, so nothing declares `--border`, so the fallback is what a
+browser would compute under the same conditions. Pass a map to model a host
+that declares its own tokens. The module imports nothing and ships both
+formats, so it loads under any runner.
+
+## What a browser computed
+
+A build, a typecheck and a unit test all pass on a stylesheet that never
+reached the page. The proof is a browser: build the app, serve it, and assert
+computed styles rather than the markup's claims.
+
+```ts title="e2e/app.spec.ts"
+import { expect, test } from '@playwright/test'
+
+test('the button is styled', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (e) => errors.push(e.message))
+  await page.goto('/')
+  const button = page.locator('[data-slot="button"]').first()
+  await expect(button).toBeVisible()
+  const bg = await button.evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(bg).not.toBe('rgba(0, 0, 0, 0)')
+  expect(errors).toEqual([])
+})
+```
+
+This is how the package tests itself. Its gallery is one list of every
+component in every variant; the stylesheet generator renders that list, a
+unit test renders it under the real provider and checks every slot marker
+arrived, and a consumer test packs the tarball, installs it into an app
+outside the repository — never a workspace link, which resolves through the
+source tree and hides a file missing from the tarball — builds it, and asserts
+computed styles and screenshots at 390 and 1280 in both themes. A workspace
+link would have shipped every one of the defects that test exists to catch.

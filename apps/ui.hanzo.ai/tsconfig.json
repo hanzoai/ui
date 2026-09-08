@@ -29,6 +29,9 @@
     "vite.config.ts",
     "examples",
     "catalog.ts",
+    "mdx.ts",
+    "brand.ts",
+    "features",
     "font.d.ts"
   ],
   "exclude": [

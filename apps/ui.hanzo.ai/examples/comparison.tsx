@@ -1,66 +1,64 @@
-import { Comparison, type ComparisonColumn } from "@hanzo/ui"
+import { Comparison } from "@hanzo/ui"
 
-const plans: ComparisonColumn[] = [
-  {
-    title: "Free",
-    items: [
-      { label: "Users", value: "5" },
-      { label: "Storage", value: "10GB" },
-      { label: "Support", value: false },
-      { label: "Custom domain", value: false },
-    ],
-  },
-  {
-    title: "Pro",
-    highlighted: true,
-    items: [
-      { label: "Users", value: "25" },
-      { label: "Storage", value: "100GB" },
-      { label: "Support", value: true },
-      { label: "Custom domain", value: true },
-    ],
-  },
-  {
-    title: "Enterprise",
-    items: [
-      { label: "Users", value: "Unlimited" },
-      { label: "Storage", value: "1TB" },
-      { label: "Support", value: true },
-      { label: "Custom domain", value: true },
-    ],
-  },
-]
-
-/** Pricing table — three plans side by side, the middle one highlighted. */
-export function Default() {
-  return <Comparison columns={plans} />
+/** Pricing plans — three columns, boolean and text rows, the middle one highlighted. */
+export function Plans() {
+  return (
+    <Comparison
+      columns={[
+        {
+          title: "Free",
+          items: [
+            { label: "Users", value: "5" },
+            { label: "Storage", value: "10GB" },
+            { label: "Support", value: false },
+            { label: "Custom domain", value: false },
+          ],
+        },
+        {
+          title: "Pro",
+          highlighted: true,
+          items: [
+            { label: "Users", value: "25" },
+            { label: "Storage", value: "100GB" },
+            { label: "Support", value: true },
+            { label: "Custom domain", value: true },
+          ],
+        },
+        {
+          title: "Enterprise",
+          items: [
+            { label: "Users", value: "Unlimited" },
+            { label: "Storage", value: "1TB" },
+            { label: "Support", value: true },
+            { label: "Custom domain", value: true },
+          ],
+        },
+      ]}
+    />
+  )
 }
 
-/** Two plans — the grid tracks follow the column count, not a fixed layout. */
-export function TwoColumns() {
-  return <Comparison columns={plans.slice(0, 2)} />
-}
-
-/** Feature list — every row a boolean, read as a checklist rather than a price. */
-export function FeatureChecklist() {
-  const columns: ComparisonColumn[] = [
-    {
-      title: "Basic",
-      items: [
-        { label: "API access", value: true },
-        { label: "SSO", value: false },
-        { label: "Audit log", value: false },
-      ],
-    },
-    {
-      title: "Team",
-      highlighted: true,
-      items: [
-        { label: "API access", value: true },
-        { label: "SSO", value: true },
-        { label: "Audit log", value: false },
-      ],
-    },
-  ]
-  return <Comparison columns={columns} />
+/** Two-way — the minimum shape, one plan against another. */
+export function TwoWay() {
+  return (
+    <Comparison
+      columns={[
+        {
+          title: "Before",
+          items: [
+            { label: "Setup time", value: "2 weeks" },
+            { label: "Automated tests", value: false },
+          ],
+        },
+        {
+          title: "After",
+          highlighted: true,
+          items: [
+            { label: "Setup time", value: "1 day" },
+            { label: "Automated tests", value: true },
+          ],
+        },
+      ]}
+    />
+  )
 }

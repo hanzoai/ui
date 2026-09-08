@@ -173,6 +173,7 @@ function DockItem({
       <ItemFrame
         {...slot('dock-item')}
         render="button"
+        {...({ type: 'button' } as object)}
         onClick={onClick}
         onPointerEnter={() => setHovered(true)}
         onPointerMove={handleMove}

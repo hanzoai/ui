@@ -1,0 +1,59 @@
+---
+title: Vite
+description: Two lines of resolve, and the root.
+---
+
+## Create the project
+
+```bash
+pnpm create vite@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+`react-native-web` is what `react-native` resolves to on the web, so the app
+declares it the same way it declares `react-dom`.
+
+## Configure Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: { 'react-native': 'react-native-web' },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+That is the whole config. There is no entry for the package in it — no alias
+to it, no CSS pipeline, no plugin, no transpile list. The two resolutions
+belong to react-native-web, and every app that renders through it carries
+them: react-native-svg's web build imports bare `react-native`, and its entry
+only reaches that build when `.web.js` outranks `.js`.
+
+## Mount the root
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+No stylesheet link in `index.html` and no `class="dark"` on it: the root brings
+both.
+
+## Dark and light
+
+`Hanzo` takes `theme`. To let a person choose, keep the choice in state and
+hand it to the root and to a toggle — [Dark mode](/docs/dark-mode).

@@ -1,21 +1,29 @@
-import { YStack } from '@hanzo/gui'
-import { Editor } from '@hanzo/ui'
+import { YStack } from "@hanzo/gui"
+import { Editor } from "@hanzo/ui"
 
-/** Default — an empty rich-text surface with the formatting toolbar. */
+/** Default — a bold/italic/list toolbar above a blank contentEditable field. */
 export function Default() {
-  return <Editor placeholder="Start typing..." />
-}
-
-/** Controlled — the value and its updates are owned by the caller. */
-export function Controlled() {
   return (
-    <YStack gap="$2">
-      <Editor value="<p>Edit me and watch <b>onChange</b> fire.</p>" onChange={() => {}} />
+    <YStack width="100%" minH={280} items="center" justify="center">
+      <Editor width="100%" maxW={480} />
     </YStack>
   )
 }
 
-/** Read only — the surface renders content without accepting edits. */
-export function ReadOnly() {
-  return <Editor readOnly value="<p>This note is locked.</p>" />
+/** With content — starts the region with existing HTML rather than empty. */
+export function WithContent() {
+  return (
+    <YStack width="100%" minH={280} items="center" justify="center">
+      <Editor width="100%" maxW={480} value="<p><strong>Hello</strong> there — <em>start editing</em>.</p>" />
+    </YStack>
+  )
+}
+
+/** Custom placeholder — shown by the surrounding app's CSS when the field is empty. */
+export function CustomPlaceholder() {
+  return (
+    <YStack width="100%" minH={280} items="center" justify="center">
+      <Editor width="100%" maxW={480} placeholder="Write your notes here..." />
+    </YStack>
+  )
 }

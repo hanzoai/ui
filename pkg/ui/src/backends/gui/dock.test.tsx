@@ -53,6 +53,9 @@ describe('Dock', () => {
     expect(markup).toContain('data-slot="dock"')
     const items = [...markup.matchAll(/<button[^>]*data-slot="dock-item"[^>]*>/g)]
     expect(items).toHaveLength(2)
+    // A bare <button> defaults to type="submit" and fires a surrounding form;
+    // a dock item is never that.
+    for (const item of items) expect(item[0]).toContain('type="button"')
   })
 
   it('carries the requested position as an attribute', () => {

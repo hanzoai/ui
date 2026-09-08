@@ -1,0 +1,76 @@
+---
+title: Tauri
+description: A web view over a Vite build. The Vite setup, and a theme toggle that needs no framework.
+---
+
+A Tauri app is a Vite app in a native window, so the web setup is the whole
+setup: the alias, the extension order and the root are the ones on the
+[Vite](/docs/installation/vite) page.
+
+## Create the project
+
+```bash
+pnpm create tauri-app@latest my-app --template react-ts
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configure Vite
+
+```ts title="vite.config.ts"
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [react()],
+  clearScreen: false,
+  server: { port: 1420, strictPort: true },
+  resolve: {
+    alias: { 'react-native': 'react-native-web' },
+    extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
+  },
+})
+```
+
+`server.port` and `clearScreen` are Tauri's own conventions for the dev
+window; the `resolve` block is the library's.
+
+## Mount the root
+
+```tsx title="src/main.tsx"
+import { createRoot } from 'react-dom/client'
+import { Hanzo } from '@hanzo/ui'
+
+import { App } from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <Hanzo>
+    <App />
+  </Hanzo>,
+)
+```
+
+## The theme toggle without a framework
+
+`ThemeToggle` from `@hanzo/ui/product` works with no framework dependency.
+Controlled, it draws the button and reports the next theme; the app keeps the
+value and hands it to the root.
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App() {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+    </Hanzo>
+  )
+}
+```
+
+The Next binding of the same toggle lives at its own subpath,
+`@hanzo/ui/product/theme-toggle-next`, precisely so that a Tauri, Vite or
+Express host never pulls Next into its graph by importing the product layer.

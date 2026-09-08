@@ -1,5 +1,5 @@
-import { YStack } from '@hanzo/gui'
-import { ForexScreener } from '@hanzo/ui'
+import { YStack } from "@hanzo/gui"
+import { ForexScreener } from "@hanzo/ui"
 
 /** Default — the forex market, dark theme, with the toolbar shown. */
 export function Default() {

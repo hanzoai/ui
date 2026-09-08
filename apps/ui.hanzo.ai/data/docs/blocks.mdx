@@ -1,0 +1,131 @@
+---
+title: Blocks
+description: Content as data. A page is a list of blocks; each names its type, the type picks the renderer, and the renderer reads the rest.
+---
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+<Content blocks={page} />
+```
+
+A block is data: `blockType` picks the renderer and the other fields are that
+renderer's input. So a page can be authored in a CMS, checked into a
+repository or produced by a server, and it is typed either way. Every
+`specifiers` field is a space-separated bag of layout hints the renderer
+reads; it is a string rather than a union, so a site adds a hint by typing
+one and an unknown hint is ignored rather than failing a build.
+
+## A page
+
+```tsx
+import { Content, type Block } from '@hanzo/ui/blocks'
+
+const page: Block[] = [
+  {
+    blockType: 'enh-heading',
+    preheading: { text: 'Blocks' },
+    heading: { text: 'Content as data', level: 2 },
+    byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'bullet-cards',
+    grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+    cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+  },
+  { blockType: 'space', sizes: 4 },
+  {
+    blockType: 'cta',
+    elements: [
+      { title: 'Read the docs', href: '/docs' },
+      { title: 'Source', href: 'https://github.com/hanzoai/ui', variant: 'outline' },
+    ],
+  },
+]
+
+<Content blocks={page} />
+```
+
+<Preview>
+  <Content
+    blocks={[
+      {
+        blockType: 'enh-heading',
+        preheading: { text: 'Blocks' },
+        heading: { text: 'Content as data', level: 2 },
+        byline: { text: 'A page is a list of blocks; the type picks the renderer.' },
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'bullet-cards',
+        grid: { at: { xs: { columns: 1, gap: 2 }, md: { columns: 3, gap: 3 } } },
+        cards: [{ text: 'Typed either way' }, { text: 'Authored anywhere' }, { text: 'Rendered once' }],
+      },
+      { blockType: 'space', sizes: 4 },
+      {
+        blockType: 'cta',
+        elements: [
+          { title: 'Read the docs', href: '/docs' },
+          { title: 'Source', href: brand.github, variant: 'outline' },
+        ],
+      },
+    ]}
+  />
+</Preview>
+
+## The vocabulary
+
+| Type | What it draws |
+| --- | --- |
+| `heading` | A heading with an optional byline, `level` 0 for a paragraph and 1 to 6 for the tags. |
+| `enh-heading` | The parts named: a pre-heading above, the heading, a byline below, each with its own level and margin. |
+| `image` | An image from an `ImageDef` — `src`, `alt`, `dim` — with alignment and phone hints in `specifiers`. |
+| `video` | A `VideoDef`: sources, a poster, sizing per rung. |
+| `space` | Vertical space in spacing units, per rung or one number for all. |
+| `cta` | A row of links and buttons: `fill`, `left`, `right`, and the phone hints. |
+| `card` | A titled panel with media, content and a call to action. |
+| `bullet-cards` | A grid of one-line cards, each an icon beside its text. |
+| `grid` | A `GridDef` — columns and gap per rung, in ascending order — over `cells`. |
+| `group` | A wrapper over `elements`, for hints that apply to the lot. |
+| `accordian` | Triggers and their content. |
+| `carte-blanche` | A free-form panel: anything above, a heading, anything below, a call to action at the foot. |
+| `screenful` | One screenful: an optional banner over one to three columns, with a phone order. |
+| `element` | A node the author already built. It has no renderer, by design, which is what lets a page of blocks hold anything. |
+
+Every shape is exported as a type from the same subpath — `HeadingBlock`,
+`CTABlock`, `ScreenfulBlock` and the rest — beside the definitions they
+share: `GridDef`, `ImageDef`, `VideoDef`, `LinkDef`, `ButtonDef`. A `LinkDef`
+with an `http` or `mailto` href is external on its own and opens in a new tab
+with `rel="noreferrer noopener"`; state `external` only where the scheme
+cannot tell.
+
+## The device is a prop
+
+Every renderer takes `agent`, the device class, rather than reading a media
+query. These blocks render on a server that has to emit the right markup the
+first time: a phone layout that arrives as desktop markup and corrects itself
+on hydration is a visible jump, and for the video blocks a wasted download.
+
+```tsx
+<Content blocks={page} agent={isPhone ? 'phone' : 'desktop'} />
+```
+
+## Your own types
+
+The map from type to renderer is the extension point. A host adds a type of
+its own, or replaces one — which is how a Next app substitutes its optimizing
+image, and how anything the library does not ship reaches the page.
+
+```tsx
+import { registerBlockType, type BlockComponentProps } from '@hanzo/ui/blocks'
+
+registerBlockType('quote', ({ block }: BlockComponentProps) => (
+  <blockquote>{(block as { text: string }).text}</blockquote>
+))
+```
+
+`has(specifiers, token)` answers whether a hint is in a bag, and
+`fit(dim, within)` is the largest box of one aspect ratio inside another;
+both are exported for a renderer of your own. The [Blocks](/blocks) catalog
+renders each renderer's examples beside its types.

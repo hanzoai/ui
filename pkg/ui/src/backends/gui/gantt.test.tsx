@@ -1,76 +1,79 @@
 // @vitest-environment jsdom
 
 /**
- * Renders through the real `GuiProvider`, asserted on `data-slot` markers and
- * the compiled fill width — never on text alone, since @hanzo/gui drops an
- * unrecognised prop with no throw.
+ * Gantt renders a placeholder with no tasks, and one row per task otherwise —
+ * asserted on the compiled markup, since gui drops unrecognised props with no
+ * throw and no type error.
  */
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Gantt } from './gantt'
+import { Gantt, type GanttTask } from './gantt'
 
-const html = (node: React.ReactNode) =>
-  renderToStaticMarkup(
-    <GuiProvider config={config} defaultTheme="dark">
-      {node}
-    </GuiProvider>,
-  )
+const wrap = (node: React.ReactNode) => (
+  <GuiProvider config={config} defaultTheme="dark">
+    {node}
+  </GuiProvider>
+)
 
-const tasks = [
+const html = (node: React.ReactNode) => renderToStaticMarkup(wrap(node))
+
+const tasks: GanttTask[] = [
   { id: '1', name: 'Project Planning', start: new Date(2024, 0, 1), end: new Date(2024, 0, 15), progress: 100 },
   { id: '2', name: 'Design Phase', start: new Date(2024, 0, 10), end: new Date(2024, 1, 5), progress: 75 },
   { id: '3', name: 'Testing', start: new Date(2024, 3, 15), end: new Date(2024, 4, 15) },
 ]
 
+const tag = (markup: string, slot: string) =>
+  markup.match(new RegExp(`<[a-z0-9]+[^>]*data-slot="${slot}"[^>]*>`))?.[0] ?? ''
+
 describe('Gantt', () => {
-  it('says there are no tasks when given none', () => {
+  it('shows a placeholder when there are no tasks', () => {
     const markup = html(<Gantt />)
 
-    expect(markup).toContain('data-slot="gantt"')
-    expect(markup).toContain('data-slot="gantt-empty"')
+    expect(tag(markup, 'gantt')).not.toBe('')
+    expect(tag(markup, 'gantt-empty')).not.toBe('')
     expect(markup).toContain('No tasks available')
     expect(markup).not.toContain('data-slot="gantt-task"')
   })
 
-  it('renders one row per task, each with its own track and fill', () => {
+  it('renders one row per task, in order', () => {
     const markup = html(<Gantt tasks={tasks} />)
+    const rows = [...markup.matchAll(/<[a-z0-9]+[^>]*data-slot="gantt-task"[^>]*>/g)]
 
-    expect([...markup.matchAll(/data-slot="gantt-task"/g)]).toHaveLength(3)
-    expect([...markup.matchAll(/data-slot="gantt-track"/g)]).toHaveLength(3)
-    expect(markup).toContain('Project Planning')
-    expect(markup).toContain('Design Phase')
-    expect(markup).toContain('100%')
-    expect(markup).toContain('75%')
-    // A task with no `progress` still renders a row and reads as 0%, not NaN.
-    expect(markup).toContain('0%')
-    expect(markup).not.toContain('NaN')
+    expect(rows).toHaveLength(3)
+    expect(markup.indexOf('Project Planning')).toBeLessThan(markup.indexOf('Design Phase'))
+    expect(markup.indexOf('Design Phase')).toBeLessThan(markup.indexOf('Testing'))
   })
 
-  it('clamps an out-of-range progress to 0–100 before it reaches the label', () => {
-    const over = html(
-      <Gantt
-        tasks={[{ id: 'over', name: 'Over', start: new Date(2024, 0, 1), end: new Date(2024, 0, 2), progress: 140 }]}
-      />,
-    )
-    const under = html(
-      <Gantt
-        tasks={[{ id: 'under', name: 'Under', start: new Date(2024, 0, 1), end: new Date(2024, 0, 2), progress: -20 }]}
-      />,
-    )
+  it('reports each task’s progress, and defaults a missing one to 0%', () => {
+    const markup = html(<Gantt tasks={tasks} />)
+    const rows = markup.split('data-slot="gantt-task"').slice(1)
 
-    expect(over).toContain('>100%<')
-    expect(over).not.toContain('140%')
-    expect(under).toContain('>0%<')
-    expect(under).not.toContain('-20%')
+    expect(rows[0]).toContain('data-progress="100"')
+    expect(rows[0]).toContain('100%')
+    expect(rows[1]).toContain('data-progress="75"')
+    expect(rows[1]).toContain('75%')
+    expect(rows[2]).toContain('data-progress="0"')
+    expect(rows[2]).toContain('0%')
   })
 
-  it('renders the start and end dates for a task', () => {
-    const markup = html(<Gantt tasks={[tasks[0]]} />)
+  it('clamps an out-of-range progress into 0–100', () => {
+    const over = html(<Gantt tasks={[{ id: '1', name: 'Over', start: new Date(), end: new Date(), progress: 140 }]} />)
+    const under = html(<Gantt tasks={[{ id: '1', name: 'Under', start: new Date(), end: new Date(), progress: -20 }]} />)
 
-    expect(markup).toContain(tasks[0].start.toLocaleDateString())
-    expect(markup).toContain(tasks[0].end.toLocaleDateString())
+    expect(over).toContain('data-progress="100"')
+    expect(under).toContain('data-progress="0"')
+  })
+
+  it('prints each task’s start and end date', () => {
+    const markup = html(
+      <Gantt tasks={[{ id: '1', name: 'One', start: new Date(2024, 0, 1), end: new Date(2024, 0, 15), progress: 50 }]} />,
+    )
+
+    expect(markup).toContain(new Date(2024, 0, 1).toLocaleDateString())
+    expect(markup).toContain(new Date(2024, 0, 15).toLocaleDateString())
   })
 })

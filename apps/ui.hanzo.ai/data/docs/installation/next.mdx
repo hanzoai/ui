@@ -1,0 +1,75 @@
+---
+title: Next
+description: One wrapper for both bundlers, and the root in a client boundary.
+---
+
+## Create the project
+
+```bash
+pnpm create next-app@latest my-app --typescript --app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Wrap the config
+
+```js title="next.config.js"
+const withGui = require('@hanzo/ui/next')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = withGui(nextConfig, __dirname)
+```
+
+`withGui` sets three things, for webpack and Turbopack together: `.web.*`
+resolves first, `react-native` is `react-native-web`, and every `@hanzogui/*`
+package in `node_modules` is transpiled so the first two reach inside them. It
+composes with what is already there — an existing `webpack()` hook, Turbopack
+settings and `transpilePackages` are kept and extended. Pass `__dirname` so
+the package is discovered from the app's own `node_modules` rather than
+wherever the task runner happens to be.
+
+Declared once for both bundlers, because a webpack-only setting is silently
+absent under Turbopack, and then `next dev` and `next build` disagree about
+whether the app compiles.
+
+## Mount the root
+
+The root is a client component, so it lives in a file with the directive and
+the layout renders it.
+
+```tsx title="app/providers.tsx"
+'use client'
+
+import { Hanzo } from '@hanzo/ui'
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+```tsx title="app/layout.tsx"
+import { Providers } from './providers'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  )
+}
+```
+
+`suppressHydrationWarning` on `html` is for the theme class a toggle writes
+there before React mounts — see [Dark mode](/docs/dark-mode).
+
+## Server components
+
+Everything under `@hanzo/ui` is a client boundary; a server component renders
+it by importing it, the way it would any client component. The rules with no
+component attached — `pages`, `masked`, `tone`, `resolveBrand` — are at
+`@hanzo/ui/product/pure` and import nothing, so a server component or a route
+handler can call them without loading a component tree.
