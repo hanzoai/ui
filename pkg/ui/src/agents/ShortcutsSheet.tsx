@@ -41,8 +41,7 @@ export const ShortcutsSheet: React.FC<ShortcutsSheetProps> = ({
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(8px)',
+        backgroundColor: 'var(--surface-scrim, rgb(0 0 0 / .75))',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

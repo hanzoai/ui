@@ -26,13 +26,12 @@ export const ChannelMembers: React.FC<ChannelMembersProps> = ({
 }) => {
   return (
     <div
+      className="glass"
       style={{
         display: 'flex',
         flexDirection: 'column',
         gap: 12,
         padding: 16,
-        backgroundColor: 'rgba(23, 23, 23, 0.6)',
-        backdropFilter: 'blur(12px)',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         borderRadius: 16,
         ...style,
