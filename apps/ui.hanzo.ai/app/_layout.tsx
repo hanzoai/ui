@@ -3,10 +3,15 @@ import '@hanzo/ui/styles.css'
 import '~/app.css'
 import mono from '@hanzo/font/dist/fonts/zen-mono/ZenMono-Variable.woff2?url'
 import sans from '@hanzo/font/dist/fonts/zen-sans/Zen-Variable.woff2?url'
-import { Text, XStack } from '@hanzo/gui'
+import { YStack } from '@hanzo/gui'
 import { Hanzo } from '@hanzo/ui'
 import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
-import { Link, Slot } from 'one'
+import { Slot } from 'one'
+
+import { brand } from '~/brand'
+import { Docs } from '~/features/docs'
+import { Footer } from '~/features/footer'
+import { Header } from '~/features/header'
 
 /**
  * The document. The theme class is on <html> in the HTML itself and the scheme
@@ -22,7 +27,7 @@ export default function Layout() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="dark light" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href={brand.icon} type="image/svg+xml" />
         <link rel="preload" href={sans} as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href={mono} as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
@@ -39,33 +44,13 @@ function Site() {
   const { value } = useUserScheme()
   return (
     <Hanzo theme={value}>
-      <XStack
-        items="center"
-        justify="space-between"
-        px="$5"
-        height={52}
-        borderBottomWidth={1}
-        borderColor="$borderColor"
-      >
-        <Link href="/" style={{ textDecorationLine: 'none' }}>
-          <Text fontWeight="600" fontSize={15}>
-            @hanzo/ui
-          </Text>
-        </Link>
-        <XStack gap="$4">
-          <Link href="https://github.com/hanzoai/ui" target="_blank" style={{ textDecorationLine: 'none' }}>
-            <Text fontSize={13} color="$color11">
-              GitHub
-            </Text>
-          </Link>
-          <Link href="https://www.npmjs.com/package/@hanzo/ui" target="_blank" style={{ textDecorationLine: 'none' }}>
-            <Text fontSize={13} color="$color11">
-              npm
-            </Text>
-          </Link>
-        </XStack>
-      </XStack>
-      <Slot />
+      <Docs>
+        <YStack minH="100vh">
+          <Header />
+          <Slot />
+          <Footer />
+        </YStack>
+      </Docs>
     </Hanzo>
   )
 }

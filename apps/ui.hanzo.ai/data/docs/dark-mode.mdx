@@ -1,0 +1,98 @@
+---
+title: Dark mode
+description: Dark first, light by one prop, and a toggle for whichever host you are on.
+---
+
+The identity is dark. `:root` holds the dark palette and `.light` opts out,
+which is the opposite of most stylesheets, and it is deliberate: a page that
+mounts the root and says nothing else comes out on the brand's ground, not on
+white.
+
+## The root decides
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+
+<Hanzo theme="light">{children}</Hanzo>
+```
+
+`theme` is the whole API. The root stamps `.t_light` or `.t_dark` on the body,
+every token resolves against that theme, and the stylesheet's custom
+properties answer to the same class. A host that wants the choice to be a
+person's keeps it in state and hands it to the root.
+
+## A toggle
+
+`ThemeToggle` from `@hanzo/ui/product` draws the button and reports the next
+theme. Controlled, it is one line beside the root:
+
+```tsx
+import { useState } from 'react'
+import { Hanzo } from '@hanzo/ui'
+import { ThemeToggle, type ThemeMode } from '@hanzo/ui/product'
+
+export function App({ children }) {
+  const [theme, setTheme] = useState<ThemeMode>('dark')
+  return (
+    <Hanzo theme={theme}>
+      <ThemeToggle theme={theme} onToggle={setTheme} />
+      {children}
+    </Hanzo>
+  )
+}
+```
+
+Uncontrolled — `<ThemeToggle onThemeChange={fn} />` — it toggles the `.dark`
+and `.light` classes on the document element itself and remembers the choice
+under the `theme` key in localStorage, for a host that has no state to keep
+it in. Either way it shows the target: a sun in dark mode, a moon in light.
+
+## Next
+
+Next hosts already run `@hanzogui/next-theme`, and the toggle's binding to it
+is at its own subpath so no other host pulls Next into its graph by importing
+the product layer.
+
+```tsx
+import { ThemeToggleNext } from '@hanzo/ui/product/theme-toggle-next'
+
+<ThemeToggleNext />
+```
+
+`<ThemeToggle />` with no props at all reaches the same binding by dynamic
+import and falls back to the document toggle where it is absent.
+
+## One and Vite
+
+This site keeps the choice with `@vxrn/color-scheme`, which settles the
+stored scheme before the first paint and reports it to the root:
+
+```tsx
+import { Hanzo } from '@hanzo/ui'
+import { SchemeProvider, useUserScheme } from '@vxrn/color-scheme'
+
+function Site({ children }) {
+  const { value } = useUserScheme()
+  return <Hanzo theme={value}>{children}</Hanzo>
+}
+
+export default function Layout({ children }) {
+  return (
+    <SchemeProvider defaultScheme="dark">
+      <Site>{children}</Site>
+    </SchemeProvider>
+  )
+}
+```
+
+`useUserScheme` also exposes `setting` — `system`, `dark` or `light` — and
+`set`, which is what the toggle in this site's header drives.
+
+## No flash
+
+Whichever host, the theme class has to be on the document before the
+stylesheet paints, or the page paints dark and repaints light. The Next
+binding and `@vxrn/color-scheme` both write it from an inline script; a hand
+written toggle should do the same. Put `suppressHydrationWarning` on the
+`html` element, since the class the script wrote is not the one React
+rendered.

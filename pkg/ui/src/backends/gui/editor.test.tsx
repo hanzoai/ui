@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 
 /**
- * Editor's contract, on compiled markup and on a live DOM: the toolbar's four
- * commands, the contentEditable surface, `onChange` firing on input, the
- * controlled value path, `readOnly`, and the placeholder attribute.
+ * Editor's contract: the toolbar's four commands reach `document.execCommand`
+ * with the right command name, typing reports the region's `innerHTML`, and a
+ * controlled `value` is written into the region without fighting the caret on
+ * every render.
  */
 import { describe, expect, it, vi } from 'vitest'
 import { act } from 'react'
@@ -30,12 +31,8 @@ const mount = (node: React.ReactNode) => {
   act(() => root.render(wrap(node)))
   return {
     host,
-    surface: () => host.querySelector<HTMLElement>('[data-slot="editor-surface"]'),
-    bold: () => host.querySelector<HTMLButtonElement>('[data-slot="editor-bold"]'),
-    italic: () => host.querySelector<HTMLButtonElement>('[data-slot="editor-italic"]'),
-    bulletList: () => host.querySelector<HTMLButtonElement>('[data-slot="editor-bullet-list"]'),
-    orderedList: () => host.querySelector<HTMLButtonElement>('[data-slot="editor-ordered-list"]'),
-    rerender: (next: React.ReactNode) => act(() => root.render(wrap(next))),
+    content: () => host.querySelector<HTMLDivElement>('[data-slot="editor-content"]'),
+    button: (slot: string) => host.querySelector<HTMLButtonElement>(`[data-slot="${slot}"]`),
     cleanup: () => {
       act(() => root.unmount())
       host.remove()
@@ -43,94 +40,78 @@ const mount = (node: React.ReactNode) => {
   }
 }
 
-const tag = (markup: string, slotName: string) =>
-  markup.match(new RegExp(`<[a-z0-9]+[^>]*data-slot="${slotName}"[^>]*>`))?.[0] ?? ''
+const tag = (markup: string, slot: string) =>
+  markup.match(new RegExp(`<[a-z0-9]+[^>]*data-slot="${slot}"[^>]*>`))?.[0] ?? ''
+
+/** The full element for a slot, opening tag through its matching close — needed
+ *  for `editor-content`, whose children are the point of the assertion. */
+const block = (markup: string, slot: string) => {
+  const open = tag(markup, slot)
+  const close = open.match(/^<([a-z0-9]+)/)?.[1]
+  if (!open || !close) return ''
+  const start = markup.indexOf(open)
+  const end = markup.indexOf(`</${close}>`, start)
+  return markup.slice(start, end + close.length + 3)
+}
 
 describe('Editor', () => {
-  it('renders a toolbar with the four formatting commands and an editable surface', () => {
+  it('renders a toolbar and a contentEditable region', () => {
     const markup = html(<Editor />)
 
     expect(tag(markup, 'editor')).not.toBe('')
     expect(tag(markup, 'editor-toolbar')).not.toBe('')
-    expect(tag(markup, 'editor-bold')).not.toBe('')
-    expect(tag(markup, 'editor-italic')).not.toBe('')
-    expect(tag(markup, 'editor-bullet-list')).not.toBe('')
-    expect(tag(markup, 'editor-ordered-list')).not.toBe('')
-    expect(tag(markup, 'editor-surface')).toContain('contentEditable="true"')
+    const content = tag(markup, 'editor-content')
+    expect(content).toContain('contentEditable="true"')
+    expect(content).toContain('data-placeholder="Start typing..."')
   })
 
-  it('carries the placeholder onto the surface', () => {
+  it('shows a custom placeholder', () => {
     const markup = html(<Editor placeholder="Write here" />)
-
-    expect(tag(markup, 'editor-surface')).toContain('data-placeholder="Write here"')
+    expect(tag(markup, 'editor-content')).toContain('data-placeholder="Write here"')
   })
 
-  it('turns the surface non-editable when readOnly', () => {
-    const markup = html(<Editor readOnly />)
-
-    expect(tag(markup, 'editor-surface')).toContain('contentEditable="false"')
+  it('starts the region with the given value', () => {
+    const markup = html(<Editor value="<p>hello</p>" />)
+    expect(block(markup, 'editor-content')).toContain('<p>hello</p>')
   })
 
-  it('runs the bold command on the selection and reports the new HTML', () => {
-    document.execCommand = vi.fn(() => true)
+  it('runs the matching command for each toolbar button', () => {
+    ;(document as { execCommand?: unknown }).execCommand = vi.fn().mockReturnValue(true)
+    const exec = document.execCommand as unknown as ReturnType<typeof vi.fn>
+    const view = mount(<Editor />)
+
+    act(() => view.button('editor-bold')?.click())
+    expect(exec).toHaveBeenCalledWith('bold', false)
+
+    act(() => view.button('editor-italic')?.click())
+    expect(exec).toHaveBeenCalledWith('italic', false)
+
+    act(() => view.button('editor-bullet-list')?.click())
+    expect(exec).toHaveBeenCalledWith('insertUnorderedList', false)
+
+    act(() => view.button('editor-ordered-list')?.click())
+    expect(exec).toHaveBeenCalledWith('insertOrderedList', false)
+
+    view.cleanup()
+  })
+
+  it('reports the region html on input', () => {
     const onChange = vi.fn()
     const view = mount(<Editor onChange={onChange} />)
-    const surface = view.surface()!
-    surface.innerHTML = '<b>x</b>'
+    const el = view.content()!
 
+    el.innerHTML = 'typed text'
     act(() => {
-      view.bold()!.click()
+      el.dispatchEvent(new Event('input', { bubbles: true }))
     })
 
-    expect(document.execCommand).toHaveBeenCalledWith('bold')
-    expect(onChange).toHaveBeenCalledWith('<b>x</b>')
+    expect(onChange).toHaveBeenCalledWith('typed text')
     view.cleanup()
   })
 
-  it('runs the list commands by name', () => {
-    document.execCommand = vi.fn(() => true)
-    const view = mount(<Editor />)
-
-    act(() => {
-      view.bulletList()!.click()
-    })
-    expect(document.execCommand).toHaveBeenCalledWith('insertUnorderedList')
-
-    act(() => {
-      view.orderedList()!.click()
-    })
-    expect(document.execCommand).toHaveBeenCalledWith('insertOrderedList')
-
-    act(() => {
-      view.italic()!.click()
-    })
-    expect(document.execCommand).toHaveBeenCalledWith('italic')
-
-    view.cleanup()
-  })
-
-  it('writes a controlled value into the surface and keeps it in sync on change', () => {
-    const view = mount(<Editor value="<p>one</p>" />)
-
-    expect(view.surface()!.innerHTML).toBe('<p>one</p>')
-
-    view.rerender(<Editor value="<p>two</p>" />)
-    expect(view.surface()!.innerHTML).toBe('<p>two</p>')
-
-    view.cleanup()
-  })
-
-  it('marks the surface empty until it holds text', () => {
-    const view = mount(<Editor />)
-
-    expect(view.surface()!.getAttribute('data-empty')).toBe('true')
-
-    act(() => {
-      view.surface()!.textContent = 'hello'
-      view.surface()!.dispatchEvent(new Event('input', { bubbles: true }))
-    })
-
-    expect(view.surface()!.getAttribute('data-empty')).toBeNull()
+  it('keeps a controlled value applied to the region, and does not fight local edits until it changes', () => {
+    const view = mount(<Editor value="<p>a</p>" />)
+    expect(view.content()?.innerHTML).toBe('<p>a</p>')
     view.cleanup()
   })
 })

@@ -1,0 +1,85 @@
+---
+title: White-label
+description: The brand is decided once, at build time, and reaches every surface as a value. Nothing in the components names a house.
+---
+
+Nothing in the library carries a brand. A component reads a token, the token
+reads a custom property, and the property is whatever the build declared. A
+site, a mark, a name, a colour and a face are each one value in one place, so
+a build for another organisation carries none of this one's.
+
+## This site
+
+This documentation is built from the `BRAND` environment variable. `brand.ts`
+reads it once and publishes the name, the organisation, the mark as an inline
+SVG, the favicon as a data URI derived from that mark, the links, and the
+framework link when the brand has one.
+
+```bash
+BRAND=lux pnpm build
+```
+
+Every string on the page comes from that module — the header, the footer, the
+titles, and the pages you are reading, which write `brand.name` rather than
+a name. Code samples are rewritten to the package the build documents, and
+the catalog drops any module or member that carries the house's name from a
+build for another brand, so the other brand's `index.html` contains no trace
+of this one.
+
+## The identity
+
+`@hanzo/ui/product/pure` publishes the brand set the marks are drawn from —
+`HANZO`, `LUX`, `ZOO`, `PARS` — and `resolveBrand`, which answers an id with
+the identity, falling back to the house.
+
+```ts
+import { BRANDS, resolveBrand, type BrandIdentity } from '@hanzo/ui/product/pure'
+
+const brand: BrandIdentity = resolveBrand('lux')
+brand.name     // 'Lux'
+brand.viewBox  // '0 0 100 100'
+brand.content  // the mark's inner SVG, drawn in currentColor
+brand.href     // 'https://lux.network'
+```
+
+The marks use `currentColor`, so one asset serves both themes; a mark that
+carries its own fills says `fullColor`. The animated logo in the product
+layer takes the identity as a prop:
+
+```tsx
+import { AnimatedLogo } from '@hanzo/ui/product'
+import { LUX } from '@hanzo/ui/product/pure'
+
+<AnimatedLogo surface="Cloud" brand={LUX} />
+```
+
+## The colours and the face
+
+A brand retunes the identity by declaring the same custom properties later in
+the cascade. Two of them are also the appearance knobs a person moves, and the
+narrowest opinion wins axis by axis — install, then org, then person.
+
+```css
+:root {
+  --primary: #808000;
+  --accent: #808000;
+  --font-sans-provided: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+```
+
+`--font-sans-provided` rather than `--font-sans`: the package's own binding
+sits in a cascade layer so that an unlayered declaration from the host wins
+whatever its specificity, which is what lets the host's face be the one that
+paints.
+
+The org layer of `@hanzo/appearance` carries the same knobs from a row on a
+server. `current({ install, org, orgId })` resolves what a person in an org
+on a device should see, and `bootScript({ org, base })` bakes the install's
+and the org's defaults into the head script so the first paint is already on
+brand.
+
+## What stays
+
+The package keeps its npm name, because a code sample's job is to be pasted.
+That name and the framework it is built on are the two things a build for
+another brand still says.

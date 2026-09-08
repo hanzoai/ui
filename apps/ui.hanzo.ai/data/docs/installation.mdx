@@ -1,0 +1,106 @@
+---
+title: Installation
+description: Install the package, mount the root, and tell your bundler one thing.
+---
+
+Setup is the same on every host. The one part that differs is where the
+bundler setting goes, and each host has a page for it.
+
+## Install
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+`react` and `react-dom` are peers at 19 or later. `@hanzo/gui` is a peer on
+purpose: it hands out a React context, and a second physical copy would be a
+second context, with the root writing into one while every component reads the
+other. Keep it one version, declared by the app.
+
+## Mount the root
+
+```tsx title="main.tsx"
+import { Hanzo } from '@hanzo/ui'
+
+export default function App({ children }) {
+  return <Hanzo>{children}</Hanzo>
+}
+```
+
+`Hanzo` is the only thing an app mounts. It carries the gui config as a value,
+imports the generated stylesheet, and sets the theme — dark by default,
+`theme="light"` to retune. Every component throws without a root theme, so
+forgetting it is a crash on first paint, never a page that quietly renders
+unstyled.
+
+In development the root checks that the stylesheet reached the document and
+says so in the console when it did not. The fix it names is one import,
+`@hanzo/ui/styles.css`, for a bundler that dropped the package's own.
+
+## Tell the bundler
+
+The engine's dependency graph names `react-native`, and one package in it,
+`react-native-svg` under the icon set, ships a native entry beside a `.web.js`
+sibling. Pick the native one on a web build and the error is a parse failure
+in Flow source inside a dependency, which reads like a broken package rather
+than a missing setting. Two settings prevent it:
+
+- `react-native` resolves to `react-native-web`.
+- `.web.js` outranks `.js`.
+
+Under Next both are one wrapper, `@hanzo/ui/next`. Under Vite they are two
+lines of `resolve`. Under One the framework already does both. Under Expo
+there is nothing to set, because Metro speaks react-native natively.
+
+- [Vite](/docs/installation/vite)
+- [Next](/docs/installation/next)
+- [One](/docs/installation/one)
+- [Expo and React Native](/docs/installation/expo)
+- [Tauri](/docs/installation/tauri)
+
+## Render something
+
+```tsx
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, XStack } from '@hanzo/ui'
+
+export function Sample() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Deploy</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Input placeholder="name" />
+        <XStack gap="$2" mt="$3">
+          <Button>Deploy</Button>
+          <Button variant="outline">Cancel</Button>
+          <Badge variant="secondary">preview</Badge>
+        </XStack>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+<Preview>
+  <Card>
+    <CardHeader>
+      <CardTitle>Deploy</CardTitle>
+    </CardHeader>
+    <CardContent>
+      <Input placeholder="name" />
+      <XStack gap="$2" mt="$3">
+        <Button>Deploy</Button>
+        <Button variant="outline">Cancel</Button>
+        <Badge variant="secondary">preview</Badge>
+      </XStack>
+    </CardContent>
+  </Card>
+</Preview>
+
+## Fonts
+
+The package ships Zen and Zen Mono and binds them to `--font-sans` and
+`--font-mono`, so a host that binds nothing gets the faces with no work. A host
+with a face of its own sets `--font-sans-provided` and wins — see
+[Typography](/docs/typography).

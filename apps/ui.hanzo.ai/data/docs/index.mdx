@@ -1,0 +1,112 @@
+---
+title: Introduction
+description: One component library for web, native and desktop, on one substrate. One import, one root, and nothing to configure.
+---
+
+{brand.name} is the {brand.org} component library. Every component renders
+through [@hanzo/gui](https://gui.hanzo.ai), a style engine for React and React
+Native that takes styles as props and compiles them to atomic CSS on the web.
+Because the engine is cross-platform, so is the library: the same `Switch`
+renders as a `div` in a browser and as a native view on a phone.
+
+There is no utility-class build here. No Tailwind, no PostCSS plugin, no Radix
+primitive underneath a component, no registry, no `components.json`, and no
+CLI that copies source into your repository. You install a package and import
+from it.
+
+## Install and render
+
+```bash
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+```tsx title="main.tsx"
+import { Hanzo, Button } from '@hanzo/ui'
+
+export default function App() {
+  return (
+    <Hanzo>
+      <Button>Ship</Button>
+    </Hanzo>
+  )
+}
+```
+
+That is the whole setup. `Hanzo` is the root, and it carries three things that
+used to be each app's job: the gui config the tokens resolve against, the
+stylesheet, and the theme. There is no CSS to import and no generator to run
+— the sheet is produced when the package is published, by rendering every
+component and harvesting the CSS that render produces, so the first paint and
+every server render already have their rules.
+
+The one thing a host still does is tell its bundler that `react-native` means
+`react-native-web`. That is one alias, and each host page under
+[Installation](/docs/installation) shows where it goes.
+
+## Styling is props
+
+A style is a prop on the component, and a responsive style is the same prop
+under a breakpoint key.
+
+```tsx
+import { Button, Text, XStack, YStack } from '@hanzo/ui'
+
+<YStack gap="$4" p="$5" $md={{ p: '$8' }}>
+  <Text fontSize="$5" color="$color11">
+    Balance
+  </Text>
+  <XStack gap="$2">
+    <Button>Send</Button>
+    <Button variant="outline">Receive</Button>
+  </XStack>
+</YStack>
+```
+
+Breakpoints are mobile-first minimum widths: `$sm` 640, `$md` 768, `$lg` 1024,
+`$xl` 1280. A value that starts with `$` is a token — a colour, a size, a step
+of the spacing ramp — and resolves against the theme, so `$background` is a
+different colour in light and dark without the call site knowing. Font size is
+always a token, never a number: `fontSize="$3"`, not `fontSize={14}`. A person
+can set their own type scale and the ramp `$n` reads moves with it; a
+hardcoded 14 cannot. [Theming](/docs/theming) has the ladders.
+
+## Layout
+
+Stacks are flex. `XStack` lays out in a row, `YStack` in a column, and both
+take `gap`, `items` and `justify`. A grid is a real CSS grid, at
+`@hanzo/ui/grid`, whose tracks come from the container rather than the
+children — see [Grid](/docs/grid).
+
+## What is where
+
+| Import | What it is |
+| --- | --- |
+| `@hanzo/ui` | The component API — every primitive, the stacks, the type scale, and `Hanzo`. |
+| `@hanzo/ui/product` | The app layer: charts, page chrome, status tags, detail panes, the theme toggle. |
+| `@hanzo/ui/blocks` | Content as data, and the renderers that draw it. |
+| `@hanzo/ui/grid` | `Grid` and `Cell`, web only. |
+| `@hanzo/ui/product/pure` | The rules the product layer runs on, with no component attached. |
+| `@hanzo/ui/css` | `substitute`, for tests a DOM without a cascade cannot answer. |
+| `@hanzo/ui/next` | The Next wrapper that sets the web aliases for both bundlers. |
+
+The catalog pages on this site — [Components](/ui), [Blocks](/blocks),
+[Product](/product) — are read from the package itself: each one renders a
+module's examples beside their source and quotes its types.
+
+## Questions
+
+**Do I need Tailwind?** No. Components take style props, and the identity is
+plain CSS custom properties. If an app arrives with class strings, `Box`, `sx`
+and `css` read them through `tw` and turn them into the same props; nothing
+reaches the DOM as a class the package did not define.
+
+**Is this copy-and-paste?** No. Install the package and import from it. The
+components are versioned with the package, and the export map is what a
+subpath resolves through, so a deep import keeps working across patches.
+
+**Which frameworks?** Any React 19 renderer, once the bundler knows the
+`react-native` alias. There are pages for [Vite](/docs/installation/vite),
+[Next](/docs/installation/next), [One](/docs/installation/one),
+[Expo](/docs/installation/expo) and [Tauri](/docs/installation/tauri).
+
+**Can I use it commercially?** Yes. Apache-2.0 or MIT, at your option.

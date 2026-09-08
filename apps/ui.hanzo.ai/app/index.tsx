@@ -1,71 +1,50 @@
-import { H1, H2, Paragraph, Text, XStack, YStack } from '@hanzo/gui'
-import { Head, Link, useLoader } from 'one'
+import { H1, H2, Paragraph, Text, YStack } from '@hanzo/gui'
+import { Head, useLoader } from 'one'
+import { useMemo } from 'react'
+
+import { brand } from '~/brand'
+import { Frame, slug, type Heading } from '~/features/docs'
+import { Cards } from '~/features/group'
 
 export async function loader() {
-  const { catalog, productCatalog } = await import('~/catalog')
-  const asCards = (entries: ReturnType<typeof catalog>) =>
-    entries.map((e) => ({ name: e.name, title: e.title, members: e.members.length }))
-  return { primitives: asCards(catalog()), product: asCards(productCatalog()) }
+  const { groups, overview, sections } = await import('~/catalog')
+  return { groups: groups.map(overview), sections: sections() }
 }
 
-const Cards = ({ base, entries }: { base: 'ui' | 'product'; entries: { name: string; title: string; members: number }[] }) => (
-  <XStack flexWrap="wrap" gap="$3">
-    {entries.map((e) => (
-      <Link key={e.name} href={`/${base}/${e.name}`} style={{ textDecorationLine: 'none' }}>
-        <YStack
-          width={240}
-          p="$4"
-          gap="$1"
-          rounded="$4"
-          borderWidth={1}
-          borderColor="$borderColor"
-          hoverStyle={{ borderColor: '$color8' }}
-        >
-          <Text fontWeight="600">{e.title}</Text>
-          <Text fontSize={12} color="$color10">
-            {e.members} export{e.members === 1 ? '' : 's'}
-          </Text>
-        </YStack>
-      </Link>
-    ))}
-  </XStack>
-)
-
-/** Every module @hanzo/ui exports, one card each, in the order the package names them. */
+/** Every module the package exports, one card each, in the order the package names them. */
 export default function Index() {
-  const { primitives, product } = useLoader(loader)
+  const { groups, sections } = useLoader(loader)
+  const headings = useMemo<Heading[]>(() => groups.map((g) => ({ id: slug(g.title), title: g.title, level: 2 })), [groups])
   return (
-    <YStack maxW={1100} width="100%" self="center" px="$5" py="$8" gap="$8">
+    <Frame sections={sections} headings={headings}>
       <Head>
-        <title>@hanzo/ui</title>
-        <meta name="description" content="Every component @hanzo/ui ships, rendered from the package itself." />
+        <title>{brand.name}</title>
+        <meta name="description" content={`Every component ${brand.name} ships, rendered from the package itself.`} />
       </Head>
       <YStack gap="$3">
-        <H1>@hanzo/ui</H1>
+        <H1>{brand.name}</H1>
         <Paragraph size="$5" color="$color11" maxW={640}>
-          One component layer for web, native and desktop, built on @hanzo/gui. Each page below is
-          a module the package exports: what it renders, the code that rendered it, and its types
-          quoted from the source.
+          One component layer for web, native and desktop{brand.framework ? `, built on ${brand.framework.name}` : ''}. Each page
+          is a module the package exports: what it renders, the code that rendered it, and its types quoted from the source.
         </Paragraph>
         <Text fontFamily="$mono" fontSize={13} color="$color11">
-          npm install @hanzo/ui
+          npm install {brand.name}
         </Text>
       </YStack>
-      <YStack gap="$3">
-        <H2 size="$7">Primitives</H2>
-        <Paragraph color="$color11" maxW={640}>
-          The component API — one cross-platform primitive per name, importable from the package root.
-        </Paragraph>
-        <Cards base="ui" entries={primitives} />
-      </YStack>
-      <YStack gap="$3">
-        <H2 size="$7">Product</H2>
-        <Paragraph color="$color11" maxW={640}>
-          The app layer — charts, status tags, page chrome, detail panes — from{' '}
-          <Text fontFamily="$mono">@hanzo/ui/product</Text>.
-        </Paragraph>
-        <Cards base="product" entries={product} />
-      </YStack>
-    </YStack>
+      {groups.map((g) => (
+        <YStack key={g.group} gap="$3">
+          <H2 id={slug(g.title)} size="$7">
+            {g.title}
+          </H2>
+          <Paragraph color="$color11" maxW={640}>
+            {g.blurb}
+          </Paragraph>
+          <Text fontFamily="$mono" fontSize={13} color="$color11">
+            {g.from}
+          </Text>
+          <Cards entries={g.entries} />
+        </YStack>
+      ))}
+    </Frame>
   )
 }

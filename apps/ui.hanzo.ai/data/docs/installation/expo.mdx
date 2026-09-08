@@ -1,0 +1,50 @@
+---
+title: Expo and React Native
+description: The same import, with nothing to alias. Metro already speaks react-native.
+---
+
+The library renders through @hanzo/gui, which is React Native first: a stack
+is a `View`, text is `Text`, and a style prop is a style. So the same
+components that draw a `div` on the web draw a native view here, and the theme
+tokens, the spacing ramp and the type ladder mean the same thing on both.
+
+## Install
+
+```bash
+pnpm create expo-app@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui
+```
+
+There is no bundler setting. The `react-native` alias the web hosts set is
+what makes a web bundler read a native package; Metro is the native bundler,
+and reads it as written. The stylesheet import the root carries is a no-op
+under Metro on native and applies on Expo web.
+
+## Mount the root
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Stack } from 'expo-router'
+
+export default function Layout() {
+  return (
+    <Hanzo>
+      <Stack />
+    </Hanzo>
+  )
+}
+```
+
+## What stays on the web
+
+`@hanzo/ui/grid` renders a `div` with `display: grid`, and neither exists on
+React Native — Yoga has no grid algorithm — which is why it ships at its own
+subpath rather than on the root barrel. Lay out with `XStack` and `YStack`
+there; a native grid engine changes that one file and no call site. The charts
+in `@hanzo/ui/product` draw inline SVG and measure their container with
+`ResizeObserver`, so they too are web components today.
+
+Touch targets meet the 44 point floor through `hitSlop`, never through
+padding, so a control's box is the same size on both platforms and its
+touchable area is not.

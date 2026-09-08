@@ -1,0 +1,142 @@
+---
+title: Grid
+description: A real CSS grid whose tracks come from the container, not the children. One prop for the columns, and no breakpoints.
+---
+
+A hand-rolled grid — every child at `width: calc(25% - 7.5px)` — is only even
+while every child agrees, and one long word makes the row ragged. Nothing
+fixes that by tuning the number. Here the parent declares the tracks once and
+the children have no say: equal columns are structural, and no child can
+widen its own track.
+
+```tsx
+import { Cell, Grid } from '@hanzo/ui/grid'
+```
+
+`Grid` is at its own subpath because it renders a `div` with `display: grid`,
+and neither exists on React Native. The API is named in CSS-grid terms —
+`columns` and `rows` are track lists, `Cell` places and spans — so a native
+grid engine changes the file and not the call sites.
+
+## Columns
+
+`columns` takes any spelling of a track list: a count, a list, or a written
+track list.
+
+```tsx
+<Grid columns={3} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={3} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+  </Grid>
+</Preview>
+
+A count becomes `repeat(3, minmax(0, 1fr))` and not `1fr`, because `1fr`
+alone means `minmax(auto, 1fr)` and `auto` floors the track at the content —
+one unbroken string then pushes its own column wider. That is the ragged row
+the component exists to prevent, so the longer spelling is the point.
+
+```tsx
+<Grid columns={['2fr', '1fr']} gap="$3">
+  <Tile>main</Tile>
+  <Tile>aside</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={['2fr', '1fr']} gap="$3">
+    <Tile>main</Tile>
+    <Tile>aside</Tile>
+  </Grid>
+</Preview>
+
+A number in a list is pixels; anything else is already a track size.
+
+## As many as fit
+
+The responsive form is a value of `columns`, not a second prop, and there is
+no breakpoint in it. `min` is the narrowest a column may get before the grid
+drops one, and `max` caps the count.
+
+```tsx
+<Grid columns={{ min: 160, max: 4 }} gap="$3">
+  <Tile>1</Tile>
+  <Tile>2</Tile>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Tile>5</Tile>
+  <Tile>6</Tile>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={{ min: 160, max: 4 }} gap="$3">
+    <Tile>1</Tile>
+    <Tile>2</Tile>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Tile>5</Tile>
+    <Tile>6</Tile>
+  </Grid>
+</Preview>
+
+Resize the window: the count follows the column the grid is in, so the same
+block is right inside a sidebar it has never seen. `min` is written as
+`min(160px, 100%)` rather than a bare `160px`, so a phone narrower than the
+floor gets one full-width track instead of a sideways scroll. `max` folds into
+the same floor — one Mth of the row, gaps subtracted — so the cap costs
+nothing on a small screen.
+
+## Cells
+
+A plain child needs no wrapper. A `Cell` exists to span or to place: a number
+spans that many tracks, a string is a `grid-column` as written.
+
+```tsx
+<Grid columns={4} gap="$3">
+  <Cell col={2}><Tile>col=2</Tile></Cell>
+  <Tile>3</Tile>
+  <Tile>4</Tile>
+  <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+</Grid>
+```
+
+<Preview>
+  <Grid columns={4} gap="$3">
+    <Cell col={2}><Tile>col=2</Tile></Cell>
+    <Tile>3</Tile>
+    <Tile>4</Tile>
+    <Cell col="1 / -1"><Tile>col="1 / -1"</Tile></Cell>
+  </Grid>
+</Preview>
+
+`row` is the same down the page. `rows` on the grid sizes the row tracks;
+without it rows size to content.
+
+## Gap
+
+`gap` is a space token or a raw pixel number. A token reads the ramp in the
+document — `gap="$4"` is `var(--space-4)` — so a person moving density in the
+appearance panel moves every grid with it. A number resolved at render is
+fixed at render.
+
+## The track list itself
+
+`tracks(columns, gap)` is exported, because it is the component's whole
+decision: any spelling of `columns` to the one track list it means, with the
+two invariants above inside it.
+
+```ts
+import { tracks } from '@hanzo/ui/grid'
+
+tracks(3)                       // 'repeat(3, minmax(0, 1fr))'
+tracks({ min: 240 })            // 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))'
+```

@@ -12,6 +12,8 @@ export default {
       ssr: { dedupeSymlinkedModules: true },
     }),
   ],
+  // The brand is decided once, here, and reaches both bundles as a literal.
+  define: { 'process.env.BRAND': JSON.stringify(process.env.BRAND ?? 'hanzo') },
   resolve: {
     alias: {
       '~': import.meta.dirname,
@@ -21,5 +23,7 @@ export default {
     },
     dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
   },
-  ssr: { noExternal: true },
+  // The MDX compiler is a native binding (satteri, Rust) and runs only in the
+  // loaders at build time; it stays a Node module rather than a bundled one.
+  ssr: { noExternal: true, external: ['@vxrn/mdx-rust', 'satteri', 'satteri-expressive-code'] },
 } satisfies UserConfig

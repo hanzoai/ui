@@ -9,12 +9,26 @@ declare module 'one' {
       StaticRoutes:
         | `/`
         | `/_sitemap`
-      DynamicRoutes: `/ui/${OneRouter.SingleRoutePart<T>}` | `/product/${OneRouter.SingleRoutePart<T>}`
-      DynamicRouteTemplate: `/ui/[name]` | `/product/[name]`
+        | `/blocks`
+        | `/docs`
+        | `/product`
+        | `/ui`
+      DynamicRoutes:
+        | `/blocks/${OneRouter.SingleRoutePart<T>}`
+        | `/docs/${string}`
+        | `/product/${OneRouter.SingleRoutePart<T>}`
+        | `/ui/${OneRouter.SingleRoutePart<T>}`
+      DynamicRouteTemplate:
+        | `/blocks/[name]`
+        | `/docs/[...slug]`
+        | `/product/[name]`
+        | `/ui/[name]`
       IsTyped: true
       RouteTypes: {
-        '/ui/[name]': RouteInfo<{ name: string }>
+        '/blocks/[name]': RouteInfo<{ name: string }>
+        '/docs/[...slug]': RouteInfo<{ slug: string[] }>
         '/product/[name]': RouteInfo<{ name: string }>
+        '/ui/[name]': RouteInfo<{ name: string }>
       }
     }
   }

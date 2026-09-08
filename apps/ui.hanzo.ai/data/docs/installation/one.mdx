@@ -1,0 +1,68 @@
+---
+title: One
+description: The framework this site is built with. The alias, the dedupe list, and the root in the document.
+---
+
+[One](https://onestack.dev) is a Vite framework for React and React Native
+with file routes. This site is a One app rendered to static HTML, and the
+configuration below is its own.
+
+## Create the project
+
+```bash
+pnpm create one@latest my-app
+cd my-app
+pnpm add @hanzo/ui @hanzo/gui react-native-web
+```
+
+## Configure Vite
+
+```ts title="vite.config.ts"
+import { one } from 'one/vite'
+import type { UserConfig } from 'vite'
+
+export default {
+  plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
+  resolve: {
+    alias: { 'react-native': 'react-native-web' },
+    dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
+  },
+  ssr: { noExternal: true },
+} satisfies UserConfig
+```
+
+The alias is the same one every host sets. The dedupe list is what keeps the
+engine a single instance across the client and server bundles: the theme is a
+React context, and two copies of the module that owns it are two contexts.
+
+## Mount the root
+
+One renders the whole document from `_layout.tsx`, so the root goes there.
+
+```tsx title="app/_layout.tsx"
+import { Hanzo } from '@hanzo/ui'
+import { Slot } from 'one'
+
+export default function Layout() {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <Hanzo>
+          <Slot />
+        </Hanzo>
+      </body>
+    </html>
+  )
+}
+```
+
+## Static rendering
+
+With `defaultRenderMode: 'ssg'` every route is rendered once at build time to a
+real HTML file, and the package's stylesheet is in that file — the sheet is
+generated when the package is published, not when a browser first renders a
+component, which is what makes a static page correct before any script runs.

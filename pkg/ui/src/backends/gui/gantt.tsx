@@ -1,19 +1,18 @@
 'use client'
 
 /**
- * Gantt — a vertical list of tasks, each drawn as a labelled progress bar
- * spanning its own start and end date.
+ * Gantt — a task list with a per-row progress track and a start/end date.
  *
- * One row is one task: a name and a percentage on top, a filled track for
- * progress in the middle, the start and end dates below. No timeline axis is
- * computed — each row's fill is just `progress`, so the component stays a
- * plain list (one YStack, one axis) rather than a two-dimensional layout, and
- * needs no `Grid`.
+ * One row is three lines: name and percent, a filled track, then the two
+ * dates. The substrate is @hanzo/gui: `styled()` frames and theme tokens, so
+ * it renders on web, native (expo) and Tauri. An empty task list renders a
+ * placeholder rather than nothing.
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
-import type { ComponentProps } from 'react'
 import { ink } from './ink'
 import { slot } from './slot'
+
+const TRACK_HEIGHT = 32
 
 export interface GanttTask {
   id: string
@@ -24,40 +23,39 @@ export interface GanttTask {
   progress?: number
 }
 
-const Frame = styled(YStack, {
+const GanttFrame = styled(YStack, {
   name: 'Gantt',
   bg: '$background',
   borderWidth: 1,
   borderColor: '$borderColor',
   rounded: '$6',
   p: '$6',
-  gap: '$4',
 })
 
-const Track = styled(YStack, {
+const RowFrame = styled(YStack, { name: 'GanttRow', gap: '$2' })
+
+const TrackFrame = styled(YStack, {
   name: 'GanttTrack',
-  height: 32,
+  height: TRACK_HEIGHT,
   rounded: '$3',
   bg: '$edge',
   overflow: 'hidden',
 })
 
-const Fill = styled(YStack, {
-  name: 'GanttFill',
+const BarFrame = styled(YStack, {
+  name: 'GanttBar',
   height: '100%',
   rounded: '$3',
   bg: '$accentBackground',
 })
 
-const clamp = (n: number) => Math.min(100, Math.max(0, n))
-
-export type GanttProps = ComponentProps<typeof Frame> & {
+export type GanttProps = Omit<import('react').ComponentProps<typeof GanttFrame>, 'children'> & {
   tasks?: GanttTask[]
 }
 
-function Gantt({ tasks = [], ...props }: GanttProps) {
+export function Gantt({ tasks = [], ...props }: GanttProps) {
   return (
-    <Frame {...slot('gantt')} {...props}>
+    <GanttFrame {...slot('gantt')} {...props}>
       {tasks.length === 0 ? (
         <XStack {...slot('gantt-empty')} items="center" justify="center" p="$8">
           {ink('No tasks available. Add tasks to display Gantt chart.', SizableText, {
@@ -66,27 +64,27 @@ function Gantt({ tasks = [], ...props }: GanttProps) {
           })}
         </XStack>
       ) : (
-        tasks.map((task) => {
-          const progress = clamp(task.progress ?? 0)
-          return (
-            <YStack key={task.id} {...slot('gantt-task')} gap="$2">
-              <XStack justify="space-between">
-                {ink(task.name, SizableText, { size: '$2', fontWeight: '600' })}
-                {ink(`${progress}%`, SizableText, { size: '$2', color: '$quiet' })}
-              </XStack>
-              <Track {...slot('gantt-track')}>
-                <Fill {...slot('gantt-fill')} width={`${progress}%`} />
-              </Track>
-              <XStack justify="space-between">
-                {ink(task.start.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
-                {ink(task.end.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
-              </XStack>
-            </YStack>
-          )
-        })
+        <YStack gap="$4">
+          {tasks.map((task) => {
+            const progress = Math.min(100, Math.max(0, task.progress ?? 0))
+            return (
+              <RowFrame key={task.id} {...slot('gantt-task')} data-progress={progress}>
+                <XStack justify="space-between" items="center">
+                  {ink(task.name, SizableText, { size: '$3', fontWeight: '600' })}
+                  {ink(`${progress}%`, SizableText, { size: '$3', color: '$quiet' })}
+                </XStack>
+                <TrackFrame {...slot('gantt-track')}>
+                  <BarFrame {...slot('gantt-bar')} width={`${progress}%`} />
+                </TrackFrame>
+                <XStack justify="space-between">
+                  {ink(task.start.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
+                  {ink(task.end.toLocaleDateString(), SizableText, { size: '$1', color: '$quiet' })}
+                </XStack>
+              </RowFrame>
+            )
+          })}
+        </YStack>
       )}
-    </Frame>
+    </GanttFrame>
   )
 }
-
-export { Gantt }

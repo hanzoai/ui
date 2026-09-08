@@ -1,20 +1,18 @@
 'use client'
 
 /**
- * Comparison — a pricing/feature table laid out as one column per plan.
+ * Comparison — a plan/feature grid: one column per plan, one row per feature.
  *
- * Each column lists the same rows in the same order; a row's value is either a
- * boolean (rendered as a check or a cross) or a string (rendered as text), so
- * a caller mixes "Users: 25" with "Support: yes" in one column without two
- * component shapes. `highlighted` marks the plan the table wants to sell.
- *
- * Layout is `../../grid`'s real CSS grid — equal tracks, one per column — with
- * `YStack`/`XStack` for the card and its rows.
+ * Columns are laid out with `Grid`/`Cell` (real CSS grid, tracks owned by the
+ * container) rather than a row of stacks, so every column stays the same
+ * width regardless of its content. A boolean item renders as a check or an
+ * cross; a string item renders as text.
  */
 import { SizableText, YStack, XStack, styled } from '@hanzo/gui'
 import { Check, X } from '@hanzogui/lucide-icons-2'
 import type { ReactNode } from 'react'
-import { Grid } from '../../grid'
+import { Grid, Cell, type GridProps } from '../../grid'
+import { ink } from './ink'
 import { slot } from './slot'
 
 export interface ComparisonItem {
@@ -25,80 +23,67 @@ export interface ComparisonItem {
 export interface ComparisonColumn {
   title: string
   items: ComparisonItem[]
-  /** Marks the plan the table wants to sell: a raised border and shadow. */
   highlighted?: boolean
 }
 
-export interface ComparisonProps {
-  columns: ComparisonColumn[]
-  children?: never
-}
-
-const ICON = 20
-
-const Card = styled(YStack, {
+const ColumnFrame = styled(YStack, {
   name: 'ComparisonColumn',
-  p: '$5',
-  rounded: '$4',
   borderWidth: 1,
   borderColor: '$borderColor',
+  rounded: '$4',
+  p: '$5',
   gap: '$4',
 
   variants: {
     highlighted: {
-      true: {
-        borderColor: '$color9',
-        shadowColor: '$shadowColor',
-        shadowRadius: 12,
-        shadowOffset: { width: 0, height: 4 },
-      },
+      true: { borderColor: '$color', shadowColor: '$shadowColor', shadowRadius: 12, shadowOpacity: 0.15 },
     },
   } as const,
 })
 
-const Row = ({ item }: { item: ComparisonItem }): ReactNode => (
-  <XStack {...slot('comparison-item')} items="center" gap="$3">
-    {typeof item.value === 'boolean' ? (
-      item.value ? (
-        <Check
-          {...slot('comparison-item-check')}
-          size={ICON}
-          color="$green9"
-        />
-      ) : (
-        <X {...slot('comparison-item-cross')} size={ICON} color="$red9" />
-      )
-    ) : (
-      <SizableText {...slot('comparison-item-value')} fontWeight="600">
-        {item.value}
-      </SizableText>
-    )}
-    <SizableText size="$3">{item.label}</SizableText>
-  </XStack>
-)
+const Title = styled(SizableText, { name: 'ComparisonTitle', size: '$5', fontWeight: '600' })
+const Label = styled(SizableText, { name: 'ComparisonLabel', size: '$2' })
+const Value = styled(SizableText, { name: 'ComparisonValue', size: '$2', fontWeight: '600' })
 
-export function Comparison({ columns }: ComparisonProps) {
+const Row = styled(XStack, { name: 'ComparisonRow', items: 'center', gap: '$3' })
+
+const mark = (value: boolean | string): ReactNode =>
+  typeof value === 'boolean' ? (
+    value ? (
+      <Check {...slot('comparison-item-check')} size={18} color="$green9" />
+    ) : (
+      <X {...slot('comparison-item-cross')} size={18} color="$red9" />
+    )
+  ) : (
+    <Value>{value}</Value>
+  )
+
+export type ComparisonProps = Omit<GridProps, 'columns' | 'children'> & {
+  columns: ComparisonColumn[]
+}
+
+export function Comparison({ columns, gap = '$4', ...props }: ComparisonProps) {
   return (
-    <div {...slot('comparison')} style={{ overflowX: 'auto' }}>
-      <Grid columns={columns.length} gap="$4">
-        {columns.map((column, index) => (
-          <Card
-            key={column.title || index}
+    <Grid {...slot('comparison')} columns={columns.length || 1} gap={gap} {...props}>
+      {columns.map((column, i) => (
+        <Cell key={i}>
+          <ColumnFrame
             {...slot('comparison-column')}
             data-highlighted={column.highlighted ? '' : undefined}
             highlighted={column.highlighted}
           >
-            <SizableText size="$6" fontWeight="600">
-              {column.title}
-            </SizableText>
+            {ink(column.title, Title)}
             <YStack gap="$3">
-              {column.items.map((item, itemIndex) => (
-                <Row key={item.label || itemIndex} item={item} />
+              {column.items.map((item, j) => (
+                <Row key={j} {...slot('comparison-item')}>
+                  {mark(item.value)}
+                  <Label>{item.label}</Label>
+                </Row>
               ))}
             </YStack>
-          </Card>
-        ))}
-      </Grid>
-    </div>
+          </ColumnFrame>
+        </Cell>
+      ))}
+    </Grid>
   )
 }
