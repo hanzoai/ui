@@ -124,7 +124,7 @@ const ORDER = [
   'grid',
   'blocks',
   'charts',
-  'white-label',
+  'branding',
   'testing',
   'changelog',
   'about',
