@@ -271,7 +271,7 @@
     "@hanzo/font": "catalog:",
     "@hanzo/logo": "catalog:",
     "@hanzo/products": "catalog:",
-    "react-native-svg": "npm:react-native-svg-web@^1.0.9",
+    "react-native-svg": "catalog:",
     "react-native-web": "catalog:",
     "@icons-pack/react-simple-icons": "catalog:"
   },
