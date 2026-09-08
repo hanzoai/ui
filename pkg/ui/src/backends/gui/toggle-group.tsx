@@ -223,15 +223,16 @@ export type ToggleGroupItemProps = Omit<
   size?: ToggleGroupSize
 }
 
-function ToggleGroupItem({ variant, size, disabled, children, ...props }: ToggleGroupItemProps) {
+function ToggleGroupItem({ variant, size, disabled, children, value, ...props }: ToggleGroupItemProps) {
   const group = useContext(GroupContext)
   const v = group.variant ?? variant ?? 'default'
   const s = group.size ?? size ?? 'default'
-  const on = group.selected.includes(props.value)
+  const on = group.selected.includes(value)
   const off = disabled || group.disabled
 
   return (
     <GuiToggleGroup.Item
+      value={value}
       {...slot('toggle-group-item')}
       data-variant={v}
       data-size={s}

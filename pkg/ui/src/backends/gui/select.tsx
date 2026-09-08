@@ -122,8 +122,9 @@ const SelectTrigger = ({
   )
 }
 
-const SelectItem = ({ children, ...props }: SelectItemProps) => (
+const SelectItem = ({ children, value, ...props }: SelectItemProps) => (
   <GuiSelect.Item
+    value={value}
     {...slot("select-item")}
     unstyled
     index={props.index ?? 0}

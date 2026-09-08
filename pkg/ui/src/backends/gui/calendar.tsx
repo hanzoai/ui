@@ -267,7 +267,7 @@ function Calendar(props: CalendarProps) {
                     disabled={!!disabled?.(d)}
                     tabIndex={same(d, focus) && (!outside || !inside(focus)) ? 0 : -1}
                     onFocus={() => setFocused(d)}
-                    onKeyDown={(e) => move(e, d)}
+                    onKeyDown={(e: KeyboardEvent<HTMLElement>) => move(e, d)}
                     onClick={() => pick(props, d)}
                   >
                     {d.getDate()}

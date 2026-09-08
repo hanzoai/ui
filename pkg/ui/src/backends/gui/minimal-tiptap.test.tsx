@@ -48,7 +48,7 @@ describe('MinimalTiptap', () => {
 
   it('reports typed text through onChange as a plain string', () => {
     let got: string | undefined
-    mount(<MinimalTiptap value="" onChange={(v) => { got = v }} />)
+    mount(<MinimalTiptap value="" onChange={(v: string) => { got = v }} />)
     const el = host.querySelector('textarea') as HTMLTextAreaElement
     const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')!.set!
     act(() => {
