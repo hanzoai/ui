@@ -34,6 +34,12 @@ try {
   if (!tgz) throw new Error('pnpm pack produced no tarball')
 
   console.log(`· installing ${tgz} into ${app}`)
+  // test/consumer is the ONE manifest in this repo that states its versions
+  // rather than reading the catalog. It is copied out of the workspace and
+  // installed by npm, which has no catalogs: a `catalog:` range here reaches
+  // npm verbatim and the gate dies on EUNSUPPORTEDPROTOCOL before it renders
+  // anything — the same failure guard-publish.mjs exists to keep off the
+  // registry.
   cpSync(join(UI, 'test/consumer'), app, { recursive: true })
   run('npm', ['i', '--no-audit', '--no-fund', '--silent'], app)
   run('npm', ['i', '--no-audit', '--no-fund', '--silent', `./${tgz}`], app)
