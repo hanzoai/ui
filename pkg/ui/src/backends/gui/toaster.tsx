@@ -13,7 +13,7 @@
  * styling channel that also exists on native. They stay in the type so existing
  * call sites keep compiling.
  */
-import type { GuiElement } from '@hanzogui/core'
+import type { GuiElement } from '@hanzo/gui'
 import {
   Toaster as GuiToaster,
   toast,
