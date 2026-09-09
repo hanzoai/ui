@@ -156,9 +156,6 @@ const GlimpseImage = ({ ratio = DEFAULT_RATIO, onError, ...props }: GlimpseImage
           width="100%"
           height="100%"
           objectFit="cover"
-          // gui's Image intersects RN's and web's onError, two incompatible
-          // event types; this branch is always the web one.
-          // @ts-expect-error see above
           onError={(event: SyntheticEvent<HTMLImageElement>) => {
             setFailed(true)
             onError?.(event)
