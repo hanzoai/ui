@@ -7,14 +7,14 @@
     "preview": "vite preview --strictPort"
   },
   "dependencies": {
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-native-web": "catalog:",
-    "@hanzo/gui": "catalog:",
-    "@hanzogui/config": "catalog:"
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-native-web": "^0.21.2",
+    "@hanzo/gui": "8.3.5",
+    "@hanzogui/config": "8.3.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "catalog:",
-    "vite": "catalog:"
+    "@vitejs/plugin-react": "^6.0.2",
+    "vite": "^8.2.2"
   }
 }
