@@ -5,14 +5,14 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-native-web": "catalog:"
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
-    "css-loader": "catalog:",
-    "style-loader": "catalog:",
-    "webpack": "catalog:",
-    "webpack-cli": "catalog:"
+    "css-loader": "^7.1.5",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.110.1",
+    "webpack-cli": "^7.2.3"
   }
 }
