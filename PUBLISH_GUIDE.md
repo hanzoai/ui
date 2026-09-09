@@ -2,14 +2,13 @@
 
 One lane, one trigger. No changesets, no version-PR bot.
 
-Bump a package's `version` in `pkg/<name>/package.json` or `pkgs/<name>/package.json`
-and merge to `main`. `.hanzo/workflows/publish.yml` builds and publishes it to npm
-(`NPM_TOKEN`, read from KMS on the forge runner). Patch bumps only (`x.y.z` → `x.y.z+1`).
+Bump a package's `version` in `pkg/<name>/package.json` and merge to `main`.
+`.github/workflows/publish.yml` builds and publishes it to npm (`NPM_TOKEN`, read
+from KMS on the forge runner). Patch bumps only (`x.y.z` → `x.y.z+1`).
 
-Both roots, not just `pkgs/*`: `@hanzo/ui` and `@hanzo/data` live under `pkg/`
-(singular) and were invisible to a `pkgs/*` glob, so no bump of either could reach
-npm. Nothing publishes by hand — a local `npm publish` skips the gate that proves
-the tarball builds.
+One root, one glob: every package lives in `pkg/`, so a bump anywhere in the
+family reaches npm by the same path. Nothing publishes by hand — a local
+`npm publish` skips the gate that proves the tarball builds.
 
 ## What decides a publish
 

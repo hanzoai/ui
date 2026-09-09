@@ -1,0 +1,100 @@
+{
+  "name": "@hanzo/commerce",
+  "version": "7.9.1",
+  "description": "e-commerce framework.",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI, Inc.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/commerce"
+  },
+  "keywords": [
+    "cart",
+    "hanzoai",
+    "hanzo"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "lat": "npm show @hanzo/commerce version",
+    "pub": "npm publish",
+    "tc": "tsc --noEmit",
+    "build": "pnpm clean && tsc --outDir dist --declaration --emitDeclarationOnly false --module ESNext --esModuleInterop true --skipLibCheck true --sourceMap true",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "client": "python3 scripts/generate-client.py"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.js",
+      "default": "./dist/types/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "default": "./dist/client.js"
+    },
+    "./billing": {
+      "types": "./dist/billing.d.ts",
+      "import": "./dist/billing.js",
+      "default": "./dist/billing.js"
+    },
+    "./metering": {
+      "types": "./dist/metering.d.ts",
+      "import": "./dist/metering.js",
+      "default": "./dist/metering.js"
+    },
+    "./debug": {
+      "types": "./dist/service/debug.d.ts",
+      "import": "./dist/service/debug.js",
+      "default": "./dist/service/debug.js"
+    },
+    "./util": {
+      "types": "./dist/util/index.d.ts",
+      "import": "./dist/util/index.js",
+      "require": "./dist/util/index.cjs",
+      "default": "./dist/util/index.js"
+    }
+  },
+  "dependencies": {
+    "ethers": "catalog:",
+    "next-usequerystate": "catalog:",
+    "react-square-web-payments-sdk": "catalog:"
+  },
+  "peerDependencies": {
+    "@hanzo/ui": ">=8.27.7",
+    "@hookform/resolvers": ">=5",
+    "@radix-ui/react-radio-group": ">=1",
+    "lucide-react": ">=1",
+    "mobx": ">=7",
+    "mobx-react-lite": ">=5",
+    "mobx-utils": ">=6",
+    "next": ">=16.3.3",
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8",
+    "react-hook-form": ">=7",
+    "zod": ">=4"
+  },
+  "devDependencies": {
+    "@hanzo/ui": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "cross-fetch": "catalog:",
+    "typescript": "catalog:"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ]
+}

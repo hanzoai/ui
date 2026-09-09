@@ -22,8 +22,8 @@ export default defineConfig({
   resolve: {
     dedupe: ["react", "react-dom"],
     alias: {
-      "@hanzo/cd": r("../../pkgs/cd/dist/index.mjs"),
-      "@hanzo/canvas/pure": r("../../pkgs/canvas/src/pure.ts"),
+      "@hanzo/cd": r("../../pkg/cd/dist/index.mjs"),
+      "@hanzo/canvas/pure": r("../../pkg/canvas/src/pure.ts"),
     },
   },
   // Plain CSS only — override the monorepo-root PostCSS/Tailwind config discovery

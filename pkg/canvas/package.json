@@ -1,0 +1,79 @@
+{
+  "name": "@hanzo/canvas",
+  "version": "0.2.4",
+  "type": "module",
+  "description": "Pannable/zoomable PaaS project canvas \u2014 a board of service nodes with live status, metric sparklines, deploy timelines, an environment switcher, and a service detail drawer. Host-agnostic @hanzo/gui React surface, brand/white-label aware, shared by every Hanzo console (hanzo/lux/zoo).",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./pure": {
+      "types": "./dist/pure.d.ts",
+      "default": "./dist/pure.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/canvas"
+  },
+  "keywords": [
+    "paas",
+    "canvas",
+    "service-map",
+    "deployments",
+    "dashboard",
+    "hanzo",
+    "hanzo-ai",
+    "hanzoai",
+    "gui",
+    "react"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "tc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc --outDir dist --rootDir src --declaration --module ESNext --moduleResolution bundler --jsx react-jsx --esModuleInterop --skipLibCheck --sourceMap && node ../ui/scripts/postbuild.mjs .",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "@hanzo/gui": ">=8.3.5",
+    "@xyflow/react": ">=12",
+    "react": ">=19.2.8",
+    "react-dom": ">=19.2.8"
+  },
+  "peerDependenciesMeta": {
+    "@xyflow/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hanzo/gui": "catalog:",
+    "@hanzogui/config": "catalog:",
+    "@hanzogui/core": "catalog:",
+    "@hanzogui/web": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@xyflow/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "author": "Hanzo AI <dev@hanzo.ai>"
+}

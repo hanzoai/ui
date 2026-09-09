@@ -1,0 +1,50 @@
+{
+  "name": "@hanzo/events",
+  "version": "0.2.2",
+  "description": "The canonical Hanzo event schema: which events exist, what each means, and what it carries.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./catalog.json": "./dist/catalog.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.json && tsc -p tsconfig.cjs.json && node ../ui/scripts/postbuild.mjs . index,names,schema,funnels && node scripts/catalog.mjs && node ../ui/scripts/check-exports.mjs .",
+    "test": "node --test test/*.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/events"
+  },
+  "homepage": "https://github.com/hanzoai/ui/tree/main/pkg/events",
+  "keywords": [
+    "hanzo",
+    "analytics",
+    "events",
+    "schema",
+    "taxonomy"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
+}

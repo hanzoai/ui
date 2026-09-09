@@ -149,17 +149,17 @@ New in **`pkg/ui`** (was a bare `src/` staging dir — no package):
 
 ## Naming / version — DONE: `@hanzo/ui@8`, shadcn retired to `@hanzo/ui-shadcn`
 
-**Decision:** the gui-based unified library takes the `@hanzo/ui` name **forward at `8.0.0`** (aligning with the "Hanzo Cloud 8.x" umbrella; major = breaking re-platform). The legacy shadcn/Radix line (`pkgs/ui`, v5.7.0) is **retired by renaming** to `@hanzo/ui-shadcn` (never hard-deleted) — it stays fully alive under the new name, freeing `@hanzo/ui` for v8. Precedent: `pkg/data@1.2.0` already superseded `pkgs/data@1.1.0` under the same name.
+**Decision:** the gui-based unified library takes the `@hanzo/ui` name **forward at `8.0.0`** (aligning with the "Hanzo Cloud 8.x" umbrella; major = breaking re-platform). The legacy shadcn/Radix line (`pkgs/ui`, v5.7.0) is **retired by renaming** to `@hanzo/ui-shadcn` (never hard-deleted) — it stays fully alive under the new name, freeing `@hanzo/ui` for v8. Precedent: `pkg/data@1.2.0` already superseded `pkg/data@1.1.0` under the same name.
 
 This is **DONE (repo-local):** `pkg/ui/package.json` is `@hanzo/ui@8.0.0`, GREEN. The rest is a coordinated, **sequenced** retire — because publishing `@hanzo/ui@8` (a different, gui-based API with no shadcn `Button/Card/Dialog`) under the name ~20 repos consume for shadcn primitives will BREAK any consumer that resolves to `@8`. So order matters:
 
-**Blast radius (measured across `~/work/hanzo`).** Declared deps on `@hanzo/ui` in ~20 repos. Most pin `^5.x` (semver-safe from an `@8` bump): paas, chat, platform, app, hanzo.ai, o11y, docs, mdx, hanzobot, ui-repo `pkgs/checkout` `^5.3`, `pkgs/agent-ui` `^5.0`. **Would break on `@8`:** `hanzoai/identity/app` (`"latest"`), ui-repo `pkgs/commerce` (`>=5.0.0`); `app/` uses `workspace:^`. The `ui.hanzo.ai` docs app + `pkgs/{commerce,checkout,agent-ui}` import the shadcn line internally.
+**Blast radius (measured across `~/work/hanzo`).** Declared deps on `@hanzo/ui` in ~20 repos. Most pin `^5.x` (semver-safe from an `@8` bump): paas, chat, platform, app, hanzo.ai, o11y, docs, mdx, hanzobot, ui-repo `pkg/checkout` `^5.3`, `pkg/agent-ui` `^5.0`. **Would break on `@8`:** `hanzoai/identity/app` (`"latest"`), ui-repo `pkg/commerce` (`>=5.0.0`); `app/` uses `workspace:^`. The `ui.hanzo.ai` docs app + `pkg/{commerce,checkout,agent-ui}` import the shadcn line internally.
 
 **Publish reality.** `.github/workflows/publish-on-tag.yml` publishes **`pkgs/ui`** (the shadcn line) as `@hanzo/ui` on a `v*` tag — it does not reference `pkg/ui`. So a tag push today publishes shadcn, not v8. Publishing v8 needs the workflow rewired to build/publish `pkg/ui`. `npm` is not authed locally (`npm whoami` empty) — per house rules, publish goes through **CI (self-hosted runners, canonical org `NPM_TOKEN`)**, not a local `npm publish`.
 
 **Safe sequence to fully land v8 (each step reversible until the tag push):**
 1. ✅ `pkg/ui` = `@hanzo/ui@8.0.0`, GREEN (done, committed to a branch).
-2. Rename `pkgs/ui` name → `@hanzo/ui-shadcn`; update the internal ui-repo consumers (`app/`, `pkgs/{commerce,checkout,agent-ui}`) + `check-no-hanzogui`/registry scripts that reference it.
+2. Rename `pkgs/ui` name → `@hanzo/ui-shadcn`; update the internal ui-repo consumers (`app/`, `pkg/{commerce,checkout,agent-ui}`) + `check-no-hanzogui`/registry scripts that reference it.
 3. Migrate external consumers off `@hanzo/ui`→`@hanzo/ui-shadcn` (start with the break-risk ones: `identity` `latest`, `commerce` `>=5`; the `^5` pins are safe to migrate at leisure). ~20 repos — do as a tracked sweep or flag per-repo.
 4. Rewire `publish-on-tag.yml` (and `release.yml`) to build + publish `pkg/ui` as `@hanzo/ui@8`, and `pkgs/ui-shadcn` as `@hanzo/ui-shadcn`.
 5. `npm deprecate '@hanzo/ui@<8' 'moved to @hanzo/ui-shadcn; @hanzo/ui@8+ is the @hanzo/gui-based unified lib'`.
