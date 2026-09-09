@@ -23,17 +23,22 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { 'react-native': 'react-native-web' },
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
     extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
 })
 ```
 
 That is the whole config. There is no entry for the package in it — no alias
-to it, no CSS pipeline, no plugin, no transpile list. The two resolutions
+to it, no CSS pipeline, no plugin, no transpile list. The three resolutions
 belong to react-native-web, and every app that renders through it carries
-them: react-native-svg's web build imports bare `react-native`, and its entry
-only reaches that build when `.web.js` outranks `.js`.
+them: react-native-svg's web build imports bare `react-native`, its entry only
+reaches that build when `.web.js` outranks `.js`, and its asset path names
+`@react-native/assets-registry/registry`, which on the web is react-native-web's
+own AssetRegistry module.
 
 ## Mount the root
 

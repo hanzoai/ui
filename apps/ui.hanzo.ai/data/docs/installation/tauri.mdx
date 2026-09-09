@@ -26,7 +26,10 @@ export default defineConfig({
   clearScreen: false,
   server: { port: 1420, strictPort: true },
   resolve: {
-    alias: { 'react-native': 'react-native-web' },
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
     extensions: ['.web.js', '.web.jsx', '.web.ts', '.web.tsx', '.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
   },
 })

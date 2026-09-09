@@ -18,8 +18,10 @@ export default {
     alias: {
       '~': import.meta.dirname,
       // @hanzo/gui renders through react-native-web; the react-native-svg web
-      // build still names bare `react-native`.
+      // build still names bare `react-native`, and its asset path still names
+      // the react-native asset registry.
       'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
     },
     dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
   },
