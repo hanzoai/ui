@@ -33,7 +33,6 @@ import {
   useEffect,
   useState,
   type ComponentProps,
-  type SyntheticEvent,
 } from 'react'
 
 import { AspectRatio } from './aspect-ratio'
@@ -132,9 +131,16 @@ const GlimpseContent = ({
   )
 }
 
-export type GlimpseImageProps = Omit<ImageProps, 'width' | 'height'> & {
+export type GlimpseImageProps = Omit<ImageProps, 'width' | 'height' | 'onError'> & {
   /** Width divided by height of the preview frame. 16:9 by default. */
   ratio?: number
+  /**
+   * The `src` failed to load and the frame now shows the fallback glyph. The
+   * platform event is not passed on: gui's `Image` types `onError` as the
+   * intersection of React Native's and the web's handler, and a value drawn
+   * from one of two incompatible signatures cannot be handed back to the other.
+   */
+  onError?: () => void
 }
 
 /**
@@ -156,9 +162,9 @@ const GlimpseImage = ({ ratio = DEFAULT_RATIO, onError, ...props }: GlimpseImage
           width="100%"
           height="100%"
           objectFit="cover"
-          onError={(event: SyntheticEvent<HTMLImageElement>) => {
+          onError={() => {
             setFailed(true)
-            onError?.(event)
+            onError?.()
           }}
           {...props}
         />
