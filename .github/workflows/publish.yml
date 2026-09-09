@@ -4,25 +4,13 @@ on:
   push:
     branches: [main]
     # No `paths:` filter, deliberately. There is ONE question here — "does npmjs
-    # serve something older than this tree?" — and detect-changes already answers
-    # it against the registry itself. A path gate in front of it is a second,
-    # WORSE answer to the same question: it guesses from the shape of a diff.
-    #
-    # It guessed wrong twice, in opposite directions. Matching `pkgs/*` only made
-    # every `pkg/*` package unreachable, and @hanzo/ui 8.0.29 sat unpublished
-    # while npmjs served 8.0.28 — consumers on `^8.0.17` silently resolved a
-    # version with no `./chat` entrypoint. Adding `pkg/*` fixed that case and
-    # left the shape intact, so the second one landed anyway: 8.0.72 bumped
-    # cleanly, the run failed on a stale lockfile, and the lockfile-only FIX
-    # then matched no path and could not re-run the job it repaired.
-    #
-    # Both are the same defect. A version reaches users through the registry
-    # comparison, so anything that can veto the job before that comparison runs
-    # is a way to lose a release. Deleting the gate leaves exactly one, and it
-    # is the one that reads the truth: detect-changes publishes whatever is
-    # ahead of npmjs and nothing when nothing is, so running it on every push to
-    # main is idempotent by construction — the same property that makes the
-    # manual dispatch below safe.
+    # serve something older than this tree?" — and detect-changes answers it
+    # against the registry itself. A path gate in front of it is a second, worse
+    # answer to the same question: it guesses from the shape of a diff, and
+    # anything that can veto the job before the registry comparison runs is a way
+    # to lose a release. With one gate, and that gate reading the registry,
+    # publishing whatever is ahead of npmjs is idempotent by construction — the
+    # same property that makes the manual dispatch below safe.
   workflow_dispatch:
 
 jobs:
@@ -39,10 +27,7 @@ jobs:
         id: changed
         run: |
           CHANGED=()
-          # Both package roots. `@hanzo/ui` and `@hanzo/data` live under pkg/ (singular)
-          # and were invisible to a `pkgs/*` glob, so no version bump of either could
-          # ever reach npmjs from here.
-          for pkg_json in pkg/*/package.json pkgs/*/package.json; do
+          for pkg_json in pkg/*/package.json; do
             [ ! -f "$pkg_json" ] && continue
             # Skip private packages
             IS_PRIVATE=$(jq -r '.private // false' "$pkg_json")

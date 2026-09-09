@@ -9,7 +9,7 @@ Published as `@hanzo/ui` (v8) on npm. Docs at https://ui.hanzo.ai. Dev port: 300
 frontend components, not an SDK. It sits alongside the two SDK lines (full cloud
 SDK generated from OpenAPI in `hanzo-<lang>/sdk` + wrapper in `hanzoai/<lang>-sdk`;
 AI/agents lib `hanzo` in `hanzoai/python-sdk` flagship, `@hanzo/ai` in `hanzo-js/ai`).
-`@hanzo/event` (telemetry, `POST /v1/event`) lives here in `pkgs/event`. DRY: one
+`@hanzo/event` (telemetry, `POST /v1/event`) lives here in `pkg/event`. DRY: one
 impl, one place — link out, never duplicate.
 
 **Brand rules (hard).**
@@ -27,7 +27,7 @@ pnpm install && pnpm --filter @hanzo/ui... build
 ```
 
 **Key entry points.** `pkg/ui/` (core lib + v8 subpaths: /product /data /canvas
-/dashboard /usage /gitops) · `pkgs/*` (auto-published `@hanzo/*` packages) ·
+/dashboard /usage /gitops) · `pkg/*` (the auto-published `@hanzo/*` family) ·
 `apps/cd` (the @hanzo/cd demo). Publish = bump a package `version` + merge to
 main (`.hanzo/workflows/publish.yml`).
 
@@ -459,7 +459,7 @@ Three things TypeScript 7 requires that 5 did not, each of which failed as
   `bundler` needs an ES module target went with it. Every CJS config here used
   to state `node` to escape TS5095; they inherit `bundler` now.
 
-`pkgs/annotate` is the one package still on TypeScript 5, and it stays there: it
+`pkg/annotate` is the one package still on TypeScript 5, and it stays there: it
 consumes the compiler API (`ts.ScriptKind`, `ts.Node`), which TS7 does not
 publish from its main export.
 
@@ -474,13 +474,10 @@ so nothing lands outside `dist`.
 Everything under `src/` is emitted, so every `exports` subpath resolves by
 construction — no hand-maintained entry list to drift.
 
-NOTE: `pkg/ui` (singular) sits OUTSIDE the `pkgs/*` pnpm workspace and installs
-standalone — but it DOES publish through `.hanzo/workflows/publish.yml`, which
-globs `pkg/*/package.json` AND `pkgs/*/package.json`. This line used to say the
-opposite ("the maintainer flow, not publish.yml"), and the workflow's own comment
-records why nobody should trust prose here: "It guessed wrong twice, in opposite
-directions." Measured — bumping this package's version and pushing main put
-8.0.115 on npm with no further step. Read the glob, not this paragraph.
+NOTE: `pkg/ui` publishes through `.github/workflows/publish.yml` like every
+other package here — the workflow globs `pkg/*/package.json`, one root. Measured
+— bumping this package's version and pushing main put 8.0.115 on npm with no
+further step. Read the glob, not this paragraph.
 
 **Install from the REPO ROOT, not from `pkg/ui`.** This package depends on
 siblings by `workspace:*` (`@hanzo/cd` among them), so `pnpm install
@@ -501,8 +498,8 @@ the public registry. They are: `@hanzo/canvas`, `@hanzo/dashboard`,
 The **kits** = canvas, wallet, network, billing, dashboard, usage, gitops, data.
 Add one by mirroring `src/gitops.ts` (a one-line `export *`) + a `./name` export
 + an optional peer/devDep. `pkg/*` is a pnpm workspace member (for `workspace:*`
-dev links), but `pkg/ui` publishes via the maintainer flow, not `publish.yml`
-(which auto-publishes only `pkgs/*` on a version bump — see PUBLISH_GUIDE.md). The
+dev links), and `pkg/ui` publishes on a version bump like the rest — see
+PUBLISH_GUIDE.md. The
 shared shell lives here too: `AppHeader` + `BrandMark` (@hanzo/logo) +
 `OrgSwitcher` + `orgScope` (the console org-scope contract, hoisted per #36). Lux
 surfaces use `@luxfi/web3` for wallet/login; `@hanzo/ui/wallet`+`/network` are the
@@ -512,23 +509,21 @@ Hanzo-branded equivalents.
 
 ```
 ui/
-  pkg/                   published, and the reason this repo exists
+  pkg/                   every package, and the reason this repo exists
     ui/                  @hanzo/ui@8 — the core library (npm)
-    appearance/          @hanzo/appearance
-    composer/            @hanzo/composer
-    data/                @hanzo/data
-  pkgs/                  the rest of the @hanzo/* family, auto-published
+    appearance/          @hanzo/appearance     composer/ @hanzo/composer
+    data/                @hanzo/data           hanzo/    the CLI
     event/               telemetry client — POST /v1/event
     observe/             capture engine        og/       OG image generation
     commerce/  checkout/  shop/  products/     canvas/   cd/   dashboard/
-    agent-ui/  annotate/  react/  replay/      sentinel/ tokens/
-    events/    next/      vite/   observe-native/  observe-svelte/
+    agent-ui/  annotate/  react/  replay/      sentinel/ tokens/  desk/
+    events/    next/      vite/   source/      observe-native/  observe-svelte/
   apps/
     cd/                  demo app for @hanzo/cd
 ```
 
-Both roots publish: `.hanzo/workflows/publish.yml` globs `pkg/*/package.json`
-AND `pkgs/*/package.json`. A package in either place ships on a version bump.
+One root: `.github/workflows/publish.yml` globs `pkg/*/package.json`. A package
+there ships on a version bump.
 
 ## Build Order
 
@@ -556,7 +551,7 @@ One way, and it runs on our own stack:
 
     push  ->  git.hanzo.ai/hanzoai/ui           CANONICAL
               .hanzo/workflows/cicd.yml         the whole pipeline, from hanzo.yml
-              .hanzo/workflows/publish.yml      publishes pkg/* and pkgs/*
+              .github/workflows/publish.yml     publishes pkg/*
               .hanzo/workflows/snapshots.yml    refreshes the visual baselines
       ->  npmjs                                 @hanzo/ui and the @hanzo/* family
         github.com/hanzoai/ui                   a mirror, pushed alongside;
@@ -582,7 +577,7 @@ One way: bump a package's `version` in its `package.json` and merge to `main`.
 it to npm (needs `NPM_TOKEN` as a forge secret). No changesets, no version-PR bot
 — the semver bump is the trigger.
 
-It is the SOLE publisher of every non-private `@hanzo/*` in `pkg/*` and `pkgs/*`,
+It is the SOLE publisher of every non-private `@hanzo/*` in `pkg/*`,
 and it mirrors the same tarball to `api.hanzo.ai/v1/packages/hanzo/npm` when
 `HANZO_REGISTRY_TOKEN` is present. That mirror is best-effort by construction: no
 token means a notice, not a failure, and npmjs stays authoritative either way.
@@ -602,7 +597,7 @@ imports `AssetRegistry`, which `react-native-web@0.21.2` does not export, so the
 consumer app fails to build. The fix is a version pin on that chain, which is its
 own decision — do not paper over it here.
 
-## Telemetry — `@hanzo/event` is the ONE client (`pkgs/event`)
+## Telemetry — `@hanzo/event` is the ONE client (`pkg/event`)
 
 `@hanzo/event` is the single canonical telemetry client for every Hanzo surface.
 ONE API surface over **TWO** planes — the client never sends the org; the server
@@ -686,8 +681,8 @@ Four packages, one of each concern, no duplication:
 
 | Concern | Where | Note |
 |---|---|---|
-| client + wire | `@hanzo/event` (`pkgs/event`) | one endpoint, one key |
-| capture engine | `@hanzo/observe` (`pkgs/observe`) | delegated listeners, semantic annotation, redaction |
+| client + wire | `@hanzo/event` (`pkg/event`) | one endpoint, one key |
+| capture engine | `@hanzo/observe` (`pkg/observe`) | delegated listeners, semantic annotation, redaction |
 | provider + consent | `@hanzogui/telemetry` (`~/work/hanzo/gui`) | `<TelemetryProvider/>`; owns DNT/GPC + stored choice |
 | curated events | `@hanzo/ui/product` `instrument.ts` | `emit({component, action})` — what autocapture cannot know |
 
@@ -695,7 +690,7 @@ Four packages, one of each concern, no duplication:
 start a network conversation the app did not ask for. Off, no provider renders.
 
 **Component names are real in production.** Every primitive already carries a
-`data-slot` (via `slot()`); `componentName()` in `pkgs/observe/src/annotate.ts`
+`data-slot` (via `slot()`); `componentName()` in `pkg/observe/src/annotate.ts`
 reads it, ranked ABOVE the React fiber owner deliberately — the fiber name is
 dev-only, so grouping on it silently empties the dashboard at deploy. Labels keep
 the qualifier: `card/button[Save]`.
@@ -755,10 +750,10 @@ silence and correctness look identical in a network panel.
 
 | Package | Status | Note |
 |---|---|---|
-| `@hanzo/event` | **canonical** | `pkgs/event`, posts `/v1/event` only |
+| `@hanzo/event` | **canonical** | `pkg/event`, posts `/v1/event` only |
 | `@hanzo/capture` (npm) | **deprecated → `@hanzo/event`** | the old name of this package; `@hanzo/event` is a superset |
 | `pkgs/capture` (`@hanzo/analytics@0.1.0` dup) | **deleted** | stale in-repo duplicate, removed |
-| `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkgs/event` only. |
+| `hanzoai/analytics` `packages/event` (`@hanzo/event@0.2.0`) | **deleted** | An unpublished FORK of this package in another repo. It was the only copy that could actually reach Sentry, while the published one here could not — the fleet's error telemetry died in that gap. Its envelope + scrub implementation was merged here in 0.3.2. Never fork this package again; it publishes from `pkg/event` only. |
 
 ## Package Exports
 
@@ -810,7 +805,7 @@ appearing in `pkg/ui/src` is a mistake. (One exception, on purpose:
 arbitrary class survives the merge, and that gui's own width outranks it — that
 is the interop contract for call sites still on Tailwind.)
 
-**Product — the v5 holdouts.** `pkgs/commerce`, `pkgs/checkout` and `pkgs/shop`
+**Product — the v5 holdouts.** `pkg/commerce`, `pkg/checkout` and `pkg/shop`
 still emit Tailwind class strings against the `@hanzo/ui-shadcn@^5` peer.
 Tailwind there is the deliverable, not a defect. The registry and the CLI that
 hand those classes to customers moved to `hanzoai/shadcn` — do not "clean up" a

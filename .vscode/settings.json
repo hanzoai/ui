@@ -8,9 +8,6 @@
     },
     {
       "pattern": "pkg/*/"
-    },
-    {
-      "pattern": "pkgs/*/"
     }
   ],
   "vitest.debugExclude": [

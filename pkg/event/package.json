@@ -1,0 +1,88 @@
+{
+  "name": "@hanzo/event",
+  "version": "0.3.41",
+  "description": "Hanzo Event \u2014 the ONE telemetry client. Emits pageview/event/identify/group to the Hanzo Cloud event stream (POST /v1/event), AND reports errors to Sentry as real Sentry envelopes \u2014 the error plane needs a DSN, without one nothing reaches Sentry. First-touch attribution, beacon-on-unload, auto error capture, client-side secret/PII scrubbing, a shared event + goal vocabulary. Subsumes @sentry.",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "scope": "@hanzo"
+  },
+  "author": "Hanzo AI <dev@hanzo.ai>",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "TAXONOMY.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/event"
+  },
+  "keywords": [
+    "analytics",
+    "product-analytics",
+    "telemetry",
+    "events",
+    "error-tracking",
+    "sentry",
+    "attribution",
+    "funnel",
+    "hanzo"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "tsup && tsc --emitDeclarationOnly --declaration --outDir dist && node ../../scripts/dts.mjs",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react.d.ts",
+        "default": "./dist/react.mjs"
+      },
+      "require": {
+        "types": "./dist/react.d.cts",
+        "default": "./dist/react.cjs"
+      }
+    }
+  },
+  "peerDependencies": {
+    "react": ">=19.2.8"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@hanzo/events": "catalog:"
+  }
+}

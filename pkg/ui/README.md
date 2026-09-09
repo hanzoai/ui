@@ -149,8 +149,8 @@ on itself: `data-hz-name="SaveButton"` outranks everything.
 
 | Concern | Package | There is exactly one |
 |---|---|---|
-| Client + wire | [`@hanzo/event`](../../pkgs/event) | endpoint `POST /v1/event`, batched, beacon-on-unload |
-| Capture engine | [`@hanzo/observe`](../../pkgs/observe) | delegated listeners, semantic annotation, redaction |
+| Client + wire | [`@hanzo/event`](../event) | endpoint `POST /v1/event`, batched, beacon-on-unload |
+| Capture engine | [`@hanzo/observe`](../observe) | delegated listeners, semantic annotation, redaction |
 | Provider + consent | `@hanzogui/telemetry` | `<TelemetryProvider/>`, which `analytics` renders |
 
 `analytics` is a **prop, not a default**. Mounting a component library must
