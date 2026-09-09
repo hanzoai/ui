@@ -76,17 +76,22 @@ export const ORG_DOMAIN: Readonly<Record<string, readonly string[]>> = Object.fr
 })
 
 /**
- * Each org's publishable key — the same values `universe`'s `SPA_INGEST_KEYRING`
- * serves to the identity hosts, which are each brand's own insights team token.
- * Add an org here the day its project exists, never before.
+ * Each org's publishable key, and a copy: the values live in universe at
+ * infra/k8s/id/configmap.yaml as SPA_INGEST_KEYRING, which serves them to the
+ * identity hosts, and this table is what a statically exported page carries when
+ * it cannot ask. The two must say the same thing. Add an org the day its project
+ * exists, never before.
  *
- * A key is only as real as the project it names: recreate the project and this
- * file moves with it, or every beacon answers 403 and reports nowhere.
+ * A key is only as real as the project it names, and these had stopped naming
+ * one: all three answered `403 ingest_key_unknown` against /v1/event, so every
+ * page that fell back to this table reported nowhere while looking fine. The
+ * copy drifted silently because nothing compares it to the keyring. If you
+ * recreate a project, move BOTH.
  */
 export const ORG_KEY: Keyring = Object.freeze({
-  hanzo: 'pk-bCcNBDOLwdIovV349jVGH1ShEOq7rAcaKLsX_bLnRMo',
-  lux: 'pk-GxCDhpEn89qajMyuMdMs6mcE4UVQBkv8F2swEKHC67Y',
-  zoo: 'pk-bS-xKESMhuhK_wfSmpRf1H_IH8A3x6Y5NV70TD7ycWE',
+  hanzo: 'pk-rM_CdaF2MQckGCrla113SrR1oH4zvqN8xh2I95Z9tY8',
+  lux: 'pk-gUZp6ZVfhJzSwK-rb4oLbVkpCnMBx5uSCpxf_5yEhQk',
+  zoo: 'pk-3TKpKnERV9AQSsBUERWkZejC1O1mUxc1jRzsP3MPbs4',
 })
 
 /** `pk-` is publishable; `sk-` is not, and there is no third thing. Checked at the
