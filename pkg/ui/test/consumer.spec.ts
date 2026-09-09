@@ -460,7 +460,9 @@ for (const [themeClass, expected] of Object.entries(DESIGN))
 test('a Spinner spins, at the size it was asked for', async ({ page }) => {
   await load(page, 'dark')
   const spinners = await page.evaluate(() =>
-    [...document.querySelectorAll('[data-slot="spinner"]')].map((el) => ({
+    // Scoped to the spinner section: a Spinner used as another component's icon
+    // is not one of the four sizes this asserts.
+    [...document.querySelectorAll('[data-gallery="spinner"] [data-slot="spinner"]')].map((el) => ({
       spun: [...el.querySelectorAll('*')].some((n) => {
         const c = getComputedStyle(n)
         return c.animationName !== 'none' && c.animationIterationCount === 'infinite'
