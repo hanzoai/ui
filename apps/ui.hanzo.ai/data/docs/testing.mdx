@@ -18,7 +18,12 @@ pnpm add -D vitest jsdom @testing-library/react @testing-library/user-event
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-  resolve: { alias: { 'react-native': 'react-native-web' } },
+  resolve: {
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
+  },
   test: {
     environment: 'jsdom',
     server: { deps: { inline: [/@hanzogui\//, /@hanzo\/gui/, /react-native/] } },

@@ -24,7 +24,10 @@ import type { UserConfig } from 'vite'
 export default {
   plugins: [one({ web: { defaultRenderMode: 'ssg' } })],
   resolve: {
-    alias: { 'react-native': 'react-native-web' },
+    alias: {
+      'react-native': 'react-native-web',
+      '@react-native/assets-registry/registry': 'react-native-web/dist/modules/AssetRegistry',
+    },
     dedupe: ['react', 'react-dom', 'react-native-web', '@hanzo/gui', '@hanzogui/core', '@hanzogui/web'],
   },
   ssr: { noExternal: true },
