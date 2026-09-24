@@ -26,6 +26,8 @@ export function Footer() {
           <FootLink href="/ui">Components</FootLink>
           <FootLink href="/blocks">Blocks</FootLink>
           <FootLink href="/product">Product</FootLink>
+          <FootLink href="/chat">Chat</FootLink>
+          <FootLink href="/agents">Agents</FootLink>
         </Column>
         <Column title="Family">
           <FootLink href={brand.site}>{brand.name}</FootLink>

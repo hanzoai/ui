@@ -31,12 +31,17 @@ import { ProjectThumb } from './product/ProjectThumb'
 import { Split } from './product/Split'
 import { TooltipAnchor } from './product/TooltipAnchor'
 import { DialogTemplate } from './product/DialogTemplate'
+import { ChipSelect } from './product/ChipSelect'
+import { RepoSelect } from './product/RepoSelect'
+import { BranchSelect } from './product/BranchSelect'
 import {
   Aside,
   AsideToggle,
   Code,
   Chat,
   Composer,
+  ComposerTool,
+  EmptyPrompt,
   Failure,
   Header as ChatHeader,
   Message,
@@ -50,6 +55,7 @@ import {
   SidebarScroll,
   SidebarSection,
   SidebarUser,
+  SessionRail,
   Sources,
   Thread,
   type Source,
@@ -122,6 +128,18 @@ const TURNS = [
 
 /** The chat shell is callbacks-out, and this list only needs them to exist. */
 const NOOP = () => {}
+
+/** The sessions a rail lists: every status, because each draws its own dot. */
+const SESSIONS = [
+  { id: 's1', title: 'Rolling update and bootstrap CD', status: 'running' as const },
+  { id: 's2', title: 'Reset to 2025 version', status: 'done' as const },
+  { id: 's3', title: 'Paused audit', status: 'paused' as const },
+  { id: 's4', title: 'Enterprise/OSS feature audit', status: 'error' as const },
+  { id: 's5', title: 'Idle one', status: 'idle' as const },
+]
+
+/** A loader that never needs to answer — the chips render closed. */
+const NONE = async () => ({ repos: [], branches: [], items: [] })
 
 /** Two: one with a host and one without, so the card's second line and its
  *  letter fallback are both rendered rules. */
@@ -836,6 +854,60 @@ export const Gallery = () => (
       </div>
       <div style={{ display: 'flex', width: 360 }}>
         <Console lines={[]} height={36} onHeight={NOOP} />
+      </div>
+    </Section>
+
+    {/* The sessions surface: the rail in both widths, the empty pane's
+        question, and the composer in its one-line shape with the context row
+        above it and the controls below — chips plain and quiet, idle and busy,
+        because each is its own set of values. */}
+    <Section name="sessions">
+      <div style={{ display: 'flex', width: '100%', maxWidth: 560, height: 420, gap: 12 }}>
+        <SessionRail
+          onNew={NOOP}
+          fresh
+          links={[{ id: 'a', label: 'Artifacts', icon: <Badge>a</Badge> }]}
+          more={[{ id: 'p', label: 'Projects', icon: <Badge>p</Badge> }]}
+          recents={SESSIONS}
+          active="s2"
+          onOpen={NOOP}
+          onSort={NOOP}
+          account={{ name: 'z@hanzo.ai', onPress: NOOP }}
+          onSettings={NOOP}
+          onSearch={NOOP}
+          onCollapse={NOOP}
+        />
+        <SessionRail onNew={NOOP} recents={SESSIONS} onOpen={NOOP} collapsed onCollapse={NOOP} account={{ name: 'z' }} />
+      </div>
+      <EmptyPrompt mark={<Badge>h</Badge>} />
+      <div style={{ width: '100%', maxWidth: 768 }}>
+        <Composer
+          inline
+          value=""
+          onChange={NOOP}
+          onSend={NOOP}
+          placeholder="Describe a task or ask a question"
+          head={
+            <>
+              <ChipSelect name="Environment" label="Default" onChange={NOOP} items={[]} />
+              <RepoSelect value={{ owner: 'hanzo-inc', name: 'cloud' }} onChange={NOOP} load={NONE} />
+              <BranchSelect value="main" onChange={NOOP} load={NONE} />
+              <ChipSelect name="Disabled" label="off" onChange={NOOP} items={[]} disabled />
+            </>
+          }
+          foot={
+            <>
+              <ComposerTool label="Attach" icon={<Badge>+</Badge>} onPress={NOOP} />
+              <ComposerTool label="Mode" text="Auto" caret onPress={NOOP} />
+              <ComposerTool label="Disabled" text="off" disabled />
+              <XStack flex={1} />
+              <ChipSelect name="Model" label="Zen 5" onChange={NOOP} items={[]} quiet />
+            </>
+          }
+        />
+      </div>
+      <div style={{ width: '100%', maxWidth: 768 }}>
+        <Composer inline value="a draft" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
       </div>
     </Section>
 

@@ -20,7 +20,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
-import { Composer } from './Composer'
+import { audit } from '../../test/axe'
+import { Composer, ComposerTool } from './Composer'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -155,5 +156,125 @@ describe('the field is bounded at both ends', () => {
   it('takes a ceiling, for a surface with a narrower frame', () => {
     mount(<Composer value="" onChange={() => {}} onSend={() => {}} maxHeight={110} />)
     expect(classes()).toContain('_maxH-110px')
+  })
+})
+
+describe('the context row above and the controls below', () => {
+  it('draws no wrapper when there is nothing above or below — the frame is the root', () => {
+    mount(<Composer value="" onChange={() => {}} onSend={() => {}} />)
+    const frame = host.querySelector('[data-slot="composer"]')!
+    expect(host.querySelector('[data-slot="composer-shell"]')).toBeNull()
+    // The provider's own wrapper is the only thing between host and frame.
+    expect(frame.parentElement?.parentElement).toBe(host)
+  })
+
+  it('draws `head` above the frame and `foot` under it, outside the frame', () => {
+    mount(
+      <Composer
+        value=""
+        onChange={() => {}}
+        onSend={() => {}}
+        head={<span data-testid="chips">chips</span>}
+        foot={<span data-testid="tools">tools</span>}
+      />,
+    )
+    const shell = host.querySelector('[data-slot="composer-shell"]')!
+    const parts = [...shell.children].map((c) => c.getAttribute('data-slot'))
+    expect(parts).toEqual(['composer-head', 'composer', 'composer-foot'])
+    const frame = host.querySelector('[data-slot="composer"]')!
+    expect(frame.querySelector('[data-testid="chips"]')).toBeNull()
+    expect(frame.querySelector('[data-testid="tools"]')).toBeNull()
+  })
+})
+
+describe('the one-line frame', () => {
+  it('puts the field and the send mark in one row inside the frame', () => {
+    mount(<Composer inline value="hi" onChange={() => {}} onSend={() => {}} />)
+    const frame = host.querySelector('[data-slot="composer"]')!
+    const send = frame.querySelector('[data-slot="composer-send"]')!
+    expect(send.parentElement).toBe(frame)
+    expect(frame.contains(field())).toBe(true)
+    expect(send.getAttribute('aria-label')).toBe('Send')
+    expect(send.getAttribute('aria-disabled')).toBe('false')
+  })
+
+  it('keeps the Enter rule and the IME guard', () => {
+    const onSend = vi.fn()
+    mount(<Composer inline value="にほん" onChange={() => {}} onSend={onSend} />)
+    expect(keydown('Enter', { isComposing: true })).toBe(false)
+    expect(onSend).not.toHaveBeenCalled()
+    expect(keydown('Enter')).toBe(true)
+    expect(onSend).toHaveBeenCalledOnce()
+  })
+
+  it('sends from the mark by pointer and by keyboard, and not while empty', () => {
+    const onSend = vi.fn()
+    mount(<Composer inline value="" onChange={() => {}} onSend={onSend} />)
+    const send = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
+    expect(send.getAttribute('aria-disabled')).toBe('true')
+    act(() => send.click())
+    expect(onSend).not.toHaveBeenCalled()
+
+    mount(<Composer inline value="go" onChange={() => {}} onSend={onSend} />)
+    const live = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
+    act(() => live.click())
+    act(() => {
+      live.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
+    })
+    expect(onSend).toHaveBeenCalledTimes(2)
+  })
+
+  it('becomes Stop while busy', () => {
+    const onStop = vi.fn()
+    mount(<Composer inline value="" busy onChange={() => {}} onSend={() => {}} onStop={onStop} />)
+    const send = host.querySelector<HTMLElement>('[data-slot="composer-send"]')!
+    expect(send.getAttribute('aria-label')).toBe('Stop')
+    act(() => send.click())
+    expect(onStop).toHaveBeenCalledOnce()
+  })
+
+  it('stands one line tall', () => {
+    mount(<Composer inline value="" onChange={() => {}} onSend={() => {}} />)
+    expect(field().className).toContain('_minH-38px')
+  })
+})
+
+describe('ComposerTool', () => {
+  it('is a named control that answers the keyboard', () => {
+    const onPress = vi.fn()
+    mount(<ComposerTool label="Attach" onPress={onPress} />)
+    const tool = host.querySelector<HTMLElement>('[data-slot="composer-tool"]')!
+    expect(tool.getAttribute('aria-label')).toBe('Attach')
+    act(() => {
+      tool.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }))
+    })
+    act(() => tool.click())
+    expect(onPress).toHaveBeenCalledTimes(2)
+  })
+
+  it('says it opens a menu when it carries a caret', () => {
+    mount(<ComposerTool label="Mode" text="Auto" caret />)
+    const tool = host.querySelector<HTMLElement>('[data-slot="composer-tool"]')!
+    expect(tool.getAttribute('aria-haspopup')).toBe('menu')
+    expect(tool.textContent).toBe('Auto')
+  })
+})
+
+describe('accessibility', () => {
+  it('has no axe violations in either layout, with a head and a foot', async () => {
+    mount(
+      <Composer
+        inline
+        value="draft"
+        onChange={() => {}}
+        onSend={() => {}}
+        label="Describe a task"
+        head={<ComposerTool label="Environment" text="Default" />}
+        foot={<ComposerTool label="Attach" />}
+      />,
+    )
+    expect(await audit(host)).toEqual([])
+    mount(<Composer value="draft" onChange={() => {}} onSend={() => {}} hint="Enter to send" />)
+    expect(await audit(host)).toEqual([])
   })
 })

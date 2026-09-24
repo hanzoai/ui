@@ -44,7 +44,14 @@ export {
   type PartsProps,
   type PieceProps,
 } from './Parts'
-export { Composer, ASK, type ComposerProps } from './Composer'
+export {
+  Composer,
+  ComposerTool,
+  ASK,
+  type ComposerProps,
+  type ComposerToolProps,
+} from './Composer'
+export { EmptyPrompt, NEXT, type EmptyPromptProps } from './EmptyPrompt'
 export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
 export { ready, sends, type Mods } from './send'
@@ -69,6 +76,16 @@ export {
   type SidebarFolderProps,
   type SidebarUserProps,
 } from './Sidebar'
+
+export {
+  SessionRail,
+  StatusDot,
+  type RailAccount,
+  type RailLink,
+  type RailSession,
+  type SessionRailProps,
+  type SessionStatus,
+} from './SessionRail'
 
 export {
   Header,
