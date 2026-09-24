@@ -31,10 +31,10 @@ export interface Account {
   /** IAM's origin, e.g. `https://hanzo.id`. */
   base: string
   /**
-   * A bearer, for a caller on another origin. Omit it on IAM's own host, where
-   * the session is a first-party cookie and rides along on its own — that is how
-   * the portal reads the account today, and requiring a token there would mean
-   * inventing one to satisfy a signature.
+   * A bearer, for a caller on another origin; given one, no cookie is sent. Omit
+   * it on IAM's own host, where the session is a first-party cookie and rides
+   * along on its own — that is how the portal reads the account today, and
+   * requiring a token there would mean inventing one to satisfy a signature.
    */
   token?: string
   signal?: AbortSignal
@@ -87,9 +87,12 @@ async function post(
 ): Promise<Record<string, unknown> | undefined> {
   const res = await fetch(`${base.replace(/\/+$/, '')}/v1/iam/preferences`, {
     method: 'POST',
-    // Sent either way: on IAM's own host this IS the session, and cross-origin it
-    // is harmless next to the bearer. One request shape rather than two.
-    credentials: 'include',
+    // The bearer when there is one, the session cookie only when there is not.
+    // The cookie is IAM's own host's credential: the edge withholds
+    // Access-Control-Allow-Credentials on this route from every page that is not
+    // an identity origin, so a cross-origin call that asked for credentials would
+    // fail its preflight and take the bearer down with it.
+    credentials: token ? 'omit' : 'include',
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),

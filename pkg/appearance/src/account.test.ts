@@ -47,6 +47,17 @@ describe('the account layer', () => {
     vi.unstubAllGlobals()
   })
 
+  // Another origin gets no credentialed answer on this route, so a bearer call
+  // that also asked for the cookie would fail its preflight.
+  it('sends no cookie beside a bearer', async () => {
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({}) }))
+    vi.stubGlobal('fetch', fetchSpy)
+    await load({ base, token: 't' })
+    const [, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit]
+    expect(init.credentials).toBe('omit')
+    vi.unstubAllGlobals()
+  })
+
   it('answers whether it stuck, because a caller promised "saved"', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, json: async () => ({}) })))
     expect(await save({ type: 1 }, { base, token: 't' })).toBe(false)
