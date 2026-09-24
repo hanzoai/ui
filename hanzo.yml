@@ -41,7 +41,11 @@ test:
       pnpm install
       pnpm --filter @hanzo/ui... build
       cd pkg/ui
-      pnpm exec playwright install --with-deps chromium
+      # The runner cannot sudo, so --with-deps fails before a browser lands; the
+      # image already carries chromium's libraries. Its baked browsers sit under
+      # /opt as root, so the job's own copy goes where the job may write.
+      export PLAYWRIGHT_BROWSERS_PATH="$PWD/.cache/ms-playwright"
+      pnpm exec playwright install chromium
       # Both bundlers. They disagree about css url() asset resolution, and a
       # Vite-only gate is how 8.0.46 shipped a stylesheet pointing at a font
       # file the package does not pack.
