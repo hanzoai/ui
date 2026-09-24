@@ -7,6 +7,11 @@
  * text node as "needs review", which reads as a pass. Contrast is the
  * consumer suite's job, in a real browser.
  *
+ * Frames are not descended into (`iframes: false`): what a frame shows is
+ * another document — a previewed page on another origin — and not the
+ * component's markup. The `<iframe>` element itself is still checked (its
+ * `title` is its name).
+ *
  * Test-only. Nothing in the shipped surface imports this module, so the
  * dependency on axe-core stays a dev dependency.
  */
@@ -24,6 +29,7 @@ export async function audit(node: Element): Promise<Finding[]> {
     runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] },
     rules: { 'color-contrast': { enabled: false } },
     resultTypes: ['violations'],
+    iframes: false,
   })
   return result.violations.map((v) => ({
     id: v.id,

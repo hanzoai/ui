@@ -4,3 +4,22 @@ Copyright (c) 2023 Hanzo AI, Inc.
 This product includes software from shadcn/ui (https://github.com/shadcn-ui/ui), licensed under MIT:
 
     Copyright (c) 2023 shadcn
+
+This product includes software derived from Hanzo Build v2
+(https://github.com/hanzoai/build-v2), licensed under MIT:
+
+    Copyright (c) 2025 Hanzo AI, Inc.
+
+which is derived from OSW Studio (https://github.com/o-stahl/osw-studio),
+licensed under MIT:
+
+    Copyright (c) 2025 Otto Stahl
+
+which is itself derived from DeepSite v2
+(https://huggingface.co/spaces/enzostvs/deepsite), by enzostvs and the
+DeepSite authors, licensed under MIT.
+
+The derived files are the builder workspace in pkg/ui/src/agents:
+Workspace, Choice, FileTree, FileTabs, PreviewFrame, Console, Suggestions,
+Attachments and Feedback (.tsx), and tree, log and bridge (.ts). The MIT
+permission notice that governs them is the one in LICENSE-MIT.

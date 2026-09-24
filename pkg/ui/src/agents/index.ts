@@ -131,3 +131,84 @@ export {
   type TerminalTab,
   type TerminalViewerProps,
 } from './TerminalViewer'
+
+/**
+ * The builder's workspace — ported from build-v2's editor (MIT, derived from
+ * OSW Studio and DeepSite; see NOTICE). The frame and its bar (`Workspace`,
+ * `Views`, `ProjectChip`, `PageSelect`), the work (`PreviewFrame`, `FileTree`,
+ * `FileTabs`), the dock (`Console`), and the chat column's own pieces
+ * (`ModeSelect`, `Suggestions`, `Attachments`, `Feedback`) — which compose with
+ * `@hanzo/ui/chat`'s `Thread`, `Message` and `Composer` rather than repeat them.
+ *
+ * `tree`, `log` and `bridge` are the pure halves: the file listing and its keys,
+ * the console's lines and height, and the origin-checked preview protocol.
+ */
+export {
+  Workspace,
+  Views,
+  ProjectChip,
+  VIEWS,
+  CHAT,
+  DEVICES,
+  CONTROL,
+  type WorkspaceProps,
+  type View,
+  type ViewsProps,
+  type ProjectChipProps,
+} from './Workspace'
+
+export {
+  ModeSelect,
+  PageSelect,
+  type Option,
+  type ModeSelectProps,
+  type PageSelectProps,
+} from './Choice'
+
+export { FileTree, glyph, type FileTreeProps } from './FileTree'
+
+export { FileTabs, type FileTabsProps, type OpenFile } from './FileTabs'
+
+export {
+  PreviewFrame,
+  PHONE,
+  type PreviewFrameProps,
+  type PreviewHandle,
+} from './PreviewFrame'
+
+export { Console, type ConsoleProps, type ConsoleTab } from './Console'
+
+export { Suggestions, SUGGESTIONS, type SuggestionsProps } from './Suggestions'
+
+export { Attachments, type Attachment, type AttachmentsProps } from './Attachments'
+
+export { Feedback, type FeedbackProps, type Verdict } from './Feedback'
+
+export {
+  ancestors,
+  base,
+  dir,
+  filter,
+  group,
+  language,
+  put,
+  rows,
+  sort,
+  step,
+  type Entry,
+  type Listing,
+  type Move,
+  type Row,
+} from './tree'
+
+export { cap, count, level, split, HEAD, LIMIT, OPEN, type Level, type Line } from './log'
+
+export {
+  accept,
+  script,
+  web,
+  type FrameCommand,
+  type FrameEvent,
+  type Picked,
+  type Rect,
+} from './bridge'

@@ -77,6 +77,24 @@ import {
 } from './backends/gui'
 // Off the barrel — web-only, so it is imported the way a consumer imports it.
 import { Cell, Grid } from './grid'
+import {
+  Attachments,
+  CHAT,
+  Console,
+  DEVICES,
+  Feedback,
+  FileTabs,
+  FileTree,
+  ModeSelect,
+  PageSelect,
+  PreviewFrame,
+  ProjectChip,
+  Suggestions,
+  SUGGESTIONS,
+  VIEWS,
+  Views,
+  Workspace,
+} from './agents'
 
 /** A real <img> with real intrinsic pixels, inline so nothing hits the network.
  *  120x40 on purpose: the wrong ratio for every box it goes in, so a frame that
@@ -744,6 +762,80 @@ export const Gallery = () => (
           </SidebarScroll>
           <SidebarUser name="z" secondary="z@hanzo.ai" onPress={NOOP} onHelp={NOOP} />
         </Sidebar>
+      </div>
+    </Section>
+
+    {/* The builder's workspace (@hanzo/ui/agents). Every state that carries its
+        own styling: the chosen and idle segment, the chosen and idle tree row
+        and tab, a dirty tab and an unreadable file, an empty and a framed
+        preview with its toolbar, a shut and an open console with every level,
+        and a pressed and idle verdict. */}
+    <Section name="workspace">
+      <div style={{ display: 'flex', width: '100%', height: 420 }}>
+        <Workspace
+          start={<ProjectChip name="MEGA Shop" onPress={NOOP} />}
+          middle={
+            <>
+              <Views views={[...VIEWS, CHAT]} value="preview" onChange={NOOP} label="Editor view" />
+              <Views views={DEVICES} value="desktop" onChange={NOOP} label="Device" labels="none" />
+              <PageSelect pages={[{ id: '/', label: 'Homepage' }]} value="/" onChange={NOOP} />
+            </>
+          }
+          end={<Button size="sm">Publish</Button>}
+          chat={
+            <>
+              <Suggestions items={SUGGESTIONS} onPick={NOOP} onDismiss={NOOP} />
+              <Attachments
+                items={[
+                  { id: 'a', kind: 'file', label: 'src/app.tsx' },
+                  { id: 'b', kind: 'element', label: '<button> .cta' },
+                  { id: 'c', kind: 'upload', label: 'shot.png' },
+                ]}
+                onRemove={NOOP}
+              />
+              <Feedback text="reply" verdict="up" onVerdict={NOOP} />
+              <ModeSelect modes={[{ id: 'build', label: 'Build' }, { id: 'plan', label: 'Plan' }]} value="build" onChange={NOOP} />
+            </>
+          }
+          dock={
+            <Console
+              lines={[
+                { id: 1, level: 'log', text: 'log', source: 'run' },
+                { id: 2, level: 'info', text: 'info' },
+                { id: 3, level: 'warn', text: 'warn' },
+                { id: 4, level: 'error', text: 'error' },
+                { id: 5, level: 'debug', text: 'debug' },
+              ]}
+              height={200}
+              onHeight={NOOP}
+              onClear={NOOP}
+              onRun={NOOP}
+            />
+          }
+        >
+          <PreviewFrame src="https://hanzo.ai/" toolbar={<Button size="icon-sm" variant="ghost">+</Button>} />
+        </Workspace>
+      </div>
+      <div style={{ display: 'flex', width: 280, height: 240 }}>
+        <FileTree files={['src/app.tsx', 'src/lib/a.ts', 'README.md']} value="src/lib/a.ts" onSelect={NOOP} />
+      </div>
+      <div style={{ display: 'flex', width: 360, height: 240 }}>
+        <FileTabs
+          files={[
+            { path: 'src/app.tsx', content: 'export {}', dirty: true },
+            { path: 'big.bin', error: 'Too large to show here.' },
+          ]}
+          value="src/app.tsx"
+          onSelect={NOOP}
+          onClose={NOOP}
+          onChange={NOOP}
+        />
+      </div>
+      <div style={{ display: 'flex', width: 280, height: 160 }}>
+        <PreviewFrame src={null} />
+      </div>
+      <div style={{ display: 'flex', width: 360 }}>
+        <Console lines={[]} height={36} onHeight={NOOP} />
       </div>
     </Section>
 

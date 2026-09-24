@@ -115,6 +115,12 @@ export interface CodeEditorProps extends Omit<YStackProps, 'children' | 'height'
   showCopyButton?: boolean
   showLanguageSelector?: boolean
   availableLanguages?: readonly string[]
+  /**
+   * The field's accessible name. A text field with none is announced as
+   * "edit text" with nothing to say what it holds; a file's path is the usual
+   * answer. Defaults to "Code".
+   */
+  label?: string
 }
 
 export function CodeEditor({
@@ -133,6 +139,7 @@ export function CodeEditor({
   showCopyButton = true,
   showLanguageSelector = true,
   availableLanguages = LANGUAGES,
+  label = 'Code',
   ...props
 }: CodeEditorProps) {
   const [typed, setTyped] = React.useState(defaultValue)
@@ -287,6 +294,7 @@ export function CodeEditor({
         <TextArea
           ref={field as never}
           {...slot('code-editor-textarea')}
+          aria-label={label}
           value={text}
           onChangeText={change}
           onKeyDown={key}
