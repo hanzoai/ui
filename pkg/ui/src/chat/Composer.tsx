@@ -19,11 +19,11 @@
  * the field. `rows` is the floor, `maxHeight` the ceiling.
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
-import { ArrowUp, Square } from '@hanzogui/lucide-icons-2'
+import { ArrowUp, ChevronDown, CornerDownLeft, Square } from '@hanzogui/lucide-icons-2'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { Button, Textarea } from '../backends/gui'
-import { slot } from '../backends/gui/slot'
+import { slot, tip } from '../backends/gui/slot'
 import { ready, sends, type Mods } from './send'
 
 /** `onChange` is dropped: here it carries the draft, not a DOM change event. */
@@ -40,6 +40,18 @@ const CEILING = 200
 /** Floor for the field, px. `Textarea` defaults to 64, which is three lines of
  *  chrome before anything is typed. 44 is the touch-target floor. */
 const FLOOR = 44
+
+/**
+ * The one-line frame: 40px outside, so the field inside is 38 — a 20px line
+ * with 9px above and below it. The frame is the target, not the glyph, which
+ * is why the send control can be a 28px mark inside a row a thumb already hits.
+ */
+const LINE = 40
+const LINE_FIELD = LINE - 2
+const LINE_PAD = (LINE_FIELD - 20) / 2
+
+/** The inline send mark: a glyph in the field's own row, never a filled slab. */
+const MARK = 28
 
 /**
  * The resting placeholder.
@@ -83,6 +95,26 @@ export interface ComposerProps extends Stack {
   /** Replaces the send control. `children` is the START of the footer row, so a
    *  second commit mode has nowhere else to go. */
   send?: ReactNode
+  /**
+   * Drawn ABOVE the frame — the row of context a draft is sent with (where it
+   * runs, which repository, which branch). Outside the frame on purpose: it
+   * says what the draft is about, and the field says what it is.
+   */
+  head?: ReactNode
+  /**
+   * Drawn UNDER the frame — attach, voice, mode at its start and the model at
+   * its end, as the host arranges them. Unlike `children`, which lives inside
+   * the frame beside the send control.
+   */
+  foot?: ReactNode
+  /**
+   * One line: the field and the send control share a single row inside the
+   * frame, and the send control is a glyph at the field's end — Enter's own
+   * mark while idle, Stop while busy. `children` and `hint` join that row
+   * before it. Unset, the frame is the stacked field-over-toolbar it has
+   * always been.
+   */
+  inline?: boolean
 }
 
 export function Composer({
@@ -100,6 +132,9 @@ export function Composer({
   label,
   field,
   send,
+  head,
+  foot,
+  inline = false,
   ...props
 }: ComposerProps) {
   const sendable = ready(value, busy, disabled)
@@ -121,7 +156,91 @@ export function Composer({
     if (sendable) onSend()
   }
 
-  return (
+  const input = (
+    <Textarea
+      {...slot('composer-field')}
+      rows={rows}
+      placeholder={placeholder}
+      disabled={disabled}
+      borderWidth={0}
+      {...(inline
+        ? {
+            flex: 1,
+            minW: 0,
+            minH: LINE_FIELD,
+            px: 0,
+            pt: LINE_PAD,
+            pb: LINE_PAD,
+            bg: 'transparent',
+          }
+        : { minH: FLOOR })}
+      maxH={maxHeight}
+      aria-label={label ?? placeholder}
+      {...field}
+      // After `field`: spread over, a caller's `onKeyDown` would replace the
+      // Enter rule and the IME guard. Theirs runs first and can claim the key.
+      value={value}
+      onChangeText={onChange}
+      onKeyDown={(e: any) => {
+        field?.onKeyDown?.(e)
+        if (!e?.defaultPrevented) keyed(e)
+      }}
+    />
+  )
+
+  const said = hint ? (
+    <SizableText size="$1" color="$soft">
+      {hint}
+    </SizableText>
+  ) : null
+
+  const frame = inline ? (
+    <XStack
+      {...slot('composer')}
+      width="100%"
+      items="center"
+      rounded="$3"
+      borderWidth={1}
+      borderColor="$rim"
+      bg="$hover"
+      pl="$3"
+      pr="$1.5"
+      gap="$1.5"
+      {...props}
+    >
+      {input}
+      {children}
+      {said}
+      {send ?? (
+        <XStack
+          {...slot('composer-send')}
+          {...tip(busy ? 'Stop' : 'Send')}
+          role="button"
+          tabIndex={busy ? (onStop ? 0 : -1) : sendable ? 0 : -1}
+          aria-label={busy ? 'Stop' : 'Send'}
+          aria-disabled={busy ? !onStop : !sendable}
+          width={MARK}
+          height={MARK}
+          shrink={0}
+          rounded="$2"
+          items="center"
+          justify="center"
+          cursor={(busy ? onStop : sendable) ? 'pointer' : 'default'}
+          opacity={(busy ? onStop : sendable) ? 1 : 0.6}
+          hoverStyle={{ bg: '$raised' }}
+          onPress={() => (busy ? onStop?.() : sendable ? onSend() : undefined)}
+          onKeyDown={(e: any) => {
+            if (e?.key !== 'Enter' && e?.key !== ' ') return
+            e.preventDefault?.()
+            if (busy) onStop?.()
+            else if (sendable) onSend()
+          }}
+        >
+          {busy ? <Square size={12} color="$soft" /> : <CornerDownLeft size={14} color="$soft" />}
+        </XStack>
+      )}
+    </XStack>
+  ) : (
     <YStack
       {...slot('composer')}
       width="100%"
@@ -133,33 +252,11 @@ export function Composer({
       gap={PAD}
       {...props}
     >
-      <Textarea
-        {...slot('composer-field')}
-        rows={rows}
-        placeholder={placeholder}
-        disabled={disabled}
-        borderWidth={0}
-        minH={FLOOR}
-        maxH={maxHeight}
-        aria-label={label ?? placeholder}
-        {...field}
-        // After `field`: spread over, a caller's `onKeyDown` would replace the
-        // Enter rule and the IME guard. Theirs runs first and can claim the key.
-        value={value}
-        onChangeText={onChange}
-        onKeyDown={(e: any) => {
-          field?.onKeyDown?.(e)
-          if (!e?.defaultPrevented) keyed(e)
-        }}
-      />
+      {input}
       <XStack items="center" gap={PAD}>
         {children}
         <XStack flex={1} />
-        {hint ? (
-          <SizableText size="$1" color="$soft">
-            {hint}
-          </SizableText>
-        ) : null}
+        {said}
         {send ?? (
           <Button
             {...slot('composer-send')}
@@ -173,5 +270,98 @@ export function Composer({
         )}
       </XStack>
     </YStack>
+  )
+
+  // With nothing above or below it the composer IS the frame, exactly as it
+  // was before either existed — no wrapper, so every caller's tree is unchanged.
+  if (!head && !foot) return frame
+
+  return (
+    <YStack {...slot('composer-shell')} width="100%" gap="$2.5">
+      {head ? (
+        <XStack {...slot('composer-head')} items="center" gap="$1.5" flexWrap="wrap">
+          {head}
+        </XStack>
+      ) : null}
+      {frame}
+      {foot ? (
+        <XStack {...slot('composer-foot')} items="center" gap="$2" px="$1.5" mt={-4}>
+          {foot}
+        </XStack>
+      ) : null}
+    </YStack>
+  )
+}
+
+type Row = Omit<ComponentProps<typeof XStack>, 'children'>
+
+export interface ComposerToolProps extends Row {
+  /** The control's name — what a screen reader says and the tooltip shows. */
+  label: string
+  icon?: ReactNode
+  /** Words drawn after the icon — a mode, a model. Absent, the tool is icon-only. */
+  text?: string
+  /** A trailing caret: this opens a menu. */
+  caret?: boolean
+  onPress?: () => void
+  disabled?: boolean
+}
+
+/**
+ * ComposerTool — one quiet control in a composer's `foot` or `head`: attach,
+ * voice, a mode, the model. 24px tall, muted until pointed at, and a real
+ * button to the keyboard. Its name is `label` whether or not it shows words,
+ * because an icon-only control is the whole navigation for someone who cannot
+ * see the icon.
+ */
+export function ComposerTool({
+  label,
+  icon,
+  text,
+  caret = false,
+  onPress,
+  disabled = false,
+  ...rest
+}: ComposerToolProps) {
+  return (
+    <XStack
+      {...slot('composer-tool')}
+      {...tip(label)}
+      role="button"
+      tabIndex={disabled ? -1 : 0}
+      aria-label={label}
+      aria-disabled={disabled || undefined}
+      aria-haspopup={caret ? 'menu' : undefined}
+      height={24}
+      px={text ? '$1.5' : '$1'}
+      gap="$1"
+      items="center"
+      rounded="$2"
+      shrink={0}
+      cursor={disabled ? 'default' : 'pointer'}
+      opacity={disabled ? 0.5 : 1}
+      hoverStyle={disabled ? undefined : { bg: '$hover' }}
+      focusVisibleStyle={{ outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' }}
+      hitSlop={{ top: 10, bottom: 10, left: 2, right: 2 }}
+      onPress={disabled ? undefined : onPress}
+      onKeyDown={(e: any) => {
+        if (disabled || (e?.key !== 'Enter' && e?.key !== ' ')) return
+        e.preventDefault?.()
+        onPress?.()
+      }}
+      {...rest}
+    >
+      {icon ? (
+        <XStack aria-hidden items="center">
+          {icon}
+        </XStack>
+      ) : null}
+      {text ? (
+        <SizableText size="$2" color="$quiet" numberOfLines={1}>
+          {text}
+        </SizableText>
+      ) : null}
+      {caret ? <ChevronDown size={12} color="$soft" aria-hidden /> : null}
+    </XStack>
   )
 }

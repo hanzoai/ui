@@ -23,7 +23,7 @@ const root = join(process.cwd(), '..', '..')
 const src = join(root, 'pkg', 'ui', 'src')
 export const docsDir = join(process.cwd(), 'data', 'docs')
 
-export type Group = 'ui' | 'product' | 'blocks'
+export type Group = 'ui' | 'product' | 'chat' | 'agents' | 'blocks'
 export type Member = { name: string; type: boolean }
 export type Entry = { name: string; title: string; members: Member[] }
 export type Example = { name: string; title: string; description: string; source: string }
@@ -45,6 +45,22 @@ const GROUPS: Record<Group, { title: string; blurb: string; source: string; exam
     examples: join(process.cwd(), 'examples', 'product'),
     route: '/product',
     path: '/product',
+  },
+  chat: {
+    title: 'Chat',
+    blurb: 'The conversation shell — composer, thread, message, rail, and the empty pane that asks what is next.',
+    source: join(src, 'chat'),
+    examples: join(process.cwd(), 'examples', 'chat'),
+    route: '/chat',
+    path: '/chat',
+  },
+  agents: {
+    title: 'Agents',
+    blurb: 'The working view of a run — its transcript, its controls, and the workspace it builds in.',
+    source: join(src, 'agents'),
+    examples: join(process.cwd(), 'examples', 'agents'),
+    route: '/agents',
+    path: '/agents',
   },
   blocks: {
     title: 'Blocks',

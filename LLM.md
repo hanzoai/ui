@@ -381,6 +381,44 @@ console output for a coding run, `citation` for a research run's sources — so 
 panel serves all three. An empty section does not render at all: a heading over
 blank space reads as "produced nothing" when the truth is "not reported".
 
+### The sessions surface — `SessionRail`, `EmptyPrompt`, `Composer` one-line, `ChipSelect`
+
+A coding surface's landing is four pieces, each in the home its kind already had:
+
+| Piece | Home | What it is |
+|---|---|---|
+| `Composer` `inline` · `head` · `foot` | `@hanzo/ui/chat` | `inline` puts field and send in ONE row inside the frame (↵ idle, Stop busy); `head` is drawn ABOVE the frame (the context chips), `foot` UNDER it (attach, voice, mode … model). With neither, the frame is the root exactly as before — no wrapper — so existing callers' trees are unchanged. `ComposerTool` is one quiet 24px control for those rows. |
+| `EmptyPrompt` | `@hanzo/ui/chat` | the pane's question, a `role=heading`, aligned to the composer COLUMN (`column`, default 768), not centred on the pane. The mark is a slot; no brand is picked here. |
+| `SessionRail` | `@hanzo/ui/chat` | New · `links` · a More disclosure · Recents (status dots, sort control) · account + settings + search. Built on `Sidebar`/`SidebarIconButton`. The sidebar canon: collapse is `collapsed` in / `onCollapse` out (the host persists), collapsed is a 56px icon rail whose top row expands, and below `md` the column is `display:none` and the same contents open as a left `Sheet` (`open`/`onOpenChange`); choosing from the drawer closes it. |
+| `ChipSelect` · `RepoSelect` · `BranchSelect` | `@hanzo/ui/product` | a chip that opens an UPWARD (flipping) searchable list: chosen row pinned first with ✓, `footer`, `cta`, the search at the BOTTOM. Data is `load(q, after) → {items, next}` (debounced, paged on reaching the end, stale answers dropped by generation) or a whole `items` list searched in place. `quiet` is the plain look for a choice in a row of words. Repo/Branch are thin wrappers over the host's loader and link; no git host is baked in. |
+
+Rules these carry, each learned by building them:
+
+- **gui does not activate `role="button"` on Enter.** Measured: a keydown Enter on an
+  `XStack` with `onPress` fires nothing; a click fires once. So every control here
+  handles Enter/Space itself — and that cannot double-fire, for the same reason.
+- **A listbox option may not contain a control** (axe `aria-required-children` /
+  `nested-interactive`). A row's second action ("Add to project") is therefore a
+  DECLARED `action {label, onPress, when}`: drawn on the active row for the pointer,
+  run by Ctrl/⌘+Enter for the keyboard, announced through `aria-describedby`.
+- **A loader is read through a ref, never a dependency.** Hosts pass inline
+  functions; keying the fetch on the loader's identity refetches on every render.
+- **The cursor lands after the first page.** A loader answers after the panel opens;
+  until the cursor is set on that first row, Enter chooses nothing.
+- **`followable(href)`** gates every link out of the panel: a same-origin path or
+  http(s). `javascript:`, `data:` and protocol-relative `//host` are not drawn.
+- Focus: the search field takes focus on open (not the first focusable, which is a
+  footer link), the field owns the cursor through `aria-activedescendant`, and
+  closing returns focus to the chip.
+
+Every mounted suite runs `audit()` (`pkg/ui/test/axe.ts`: axe-core, WCAG 2.2 A/AA,
+contrast left to the browser) and asserts zero violations.
+
+The docs (`apps/ui.hanzo.ai`, published by `hanzo.yml`'s `site: ui` — not from
+`hanzoai/shadcn`, whatever the header above says) have `chat` and `agents` groups
+beside `ui`/`product`/`blocks`; an example file is named EXACTLY after its module
+(`examples/product/ChipSelect.tsx`), because the page looks it up by module name.
+
 ### modularizeImports support
 
 `scripts/gen-primitives.mjs` reads the gui backend barrel and emits one

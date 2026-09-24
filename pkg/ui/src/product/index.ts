@@ -38,6 +38,41 @@ export { Donut as DonutRing, type DonutSegment } from './Donut'
 export { ComboBox } from './ComboBox'
 export * from './combobox/filter'
 
+// ChipSelect — the composer's context chip: a searchable, paged list that opens
+// upward from a small chip. RepoSelect and BranchSelect are it over `owner/name`
+// and branch names, with the data a host loader's and no git host baked in.
+export {
+  ChipSelect,
+  type ChipAction,
+  type ChipPlacement,
+  type ChipSelectProps,
+} from './ChipSelect'
+export {
+  merge,
+  pin,
+  narrow,
+  move,
+  wants,
+  near,
+  PAGE,
+  type ChipItem,
+  type ChipLoad,
+  type ChipPage,
+  type Move,
+} from './chipSelect.logic'
+export {
+  RepoSelect,
+  FooterLink,
+  address,
+  followable,
+  type Repo,
+  type RepoItem,
+  type RepoLink,
+  type RepoLoad,
+  type RepoSelectProps,
+} from './RepoSelect'
+export { BranchSelect, branchName, type Branch, type BranchLoad, type BranchSelectProps } from './BranchSelect'
+
 // The shared shell — brand mark, org scope + switcher, account menu, app header
 // (the console's org-scope contract + switcher hoisted here; hanzoai/ui#36).
 // `surfaces.data` is the ONE canonical cross-surface list every launcher consumes.
