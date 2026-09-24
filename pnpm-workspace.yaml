@@ -63,6 +63,7 @@ catalog:
   '@vitest/coverage-v8': '^4.1.11'
   '@vitest/ui': '^4.1.11'
   '@xyflow/react': '^12.11.5'
+  'axe-core': '4.12.1'
   'cross-fetch': '^4.1.0'
   'css-loader': '^7.1.5'
   'eslint': '^10.9.1'
