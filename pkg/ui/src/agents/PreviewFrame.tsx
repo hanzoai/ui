@@ -109,9 +109,15 @@ export function PreviewFrame({
   const here = typeof window === 'undefined' ? undefined : window.location.href
   const url = useMemo(() => web(src, here), [src, here])
   const foreign = Boolean(url && typeof window !== 'undefined' && url.origin !== window.location.origin)
-  const sandbox = ['allow-scripts', 'allow-forms', 'allow-popups', 'allow-popups-to-escape-sandbox']
+  // No `allow-popups-to-escape-sandbox`: an escaped popup keeps a handle on this
+  // window and can move it — a framed page could send the builder's own tab to
+  // a look-alike sign-in.
+  const sandbox = ['allow-scripts', 'allow-forms', 'allow-popups']
     .concat(foreign ? ['allow-same-origin'] : [])
     .join(' ')
+  // Whether the host asked the page to let a person pick: until it has, a
+  // pick or a hover the page reports on its own is not a person's.
+  const picking = useRef(false)
 
   useEffect(() => setLoading(true), [url?.href, nonce])
 
@@ -121,6 +127,7 @@ export function PreviewFrame({
       reload: () => setNonce((n) => n + 1),
       post: (command) => {
         if (!url || !foreign) return
+        if (command.type === 'preview:editable') picking.current = command.active
         frame.current?.contentWindow?.postMessage(command, url.origin)
       },
     }),
@@ -132,7 +139,9 @@ export function PreviewFrame({
     const origin = url.origin
     const listen = (event: MessageEvent) => {
       const said = accept(event, frame.current, origin)
-      if (said) onBridge(said)
+      if (!said) return
+      if ((said.type === 'preview:select' || said.type === 'preview:hover') && !picking.current) return
+      onBridge(said)
     }
     window.addEventListener('message', listen)
     return () => window.removeEventListener('message', listen)

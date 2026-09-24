@@ -76,6 +76,10 @@ describe('followable', () => {
     expect(followable('//evil.example/x')).toBe(false)
     expect(followable('javascript:alert(1)')).toBe(false)
     expect(followable('data:text/html,<script>')).toBe(false)
+    // Browsers read a backslash as a slash and drop tabs: each of these leaves the site.
+    expect(followable('/\\evil.example')).toBe(false)
+    expect(followable('/\t/evil.example')).toBe(false)
+    expect(followable('/ /evil.example')).toBe(false)
   })
 })
 

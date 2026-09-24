@@ -264,7 +264,9 @@ describe('PreviewFrame', () => {
     const frame = host.querySelector('iframe')!
     expect(frame.getAttribute('src')).toBe('https://app.example/')
     expect(frame.getAttribute('title')).toBe('Preview of app')
-    expect(attr()).toEqual(['allow-scripts', 'allow-forms', 'allow-popups', 'allow-popups-to-escape-sandbox', 'allow-same-origin'])
+    expect(attr()).toEqual(['allow-scripts', 'allow-forms', 'allow-popups', 'allow-same-origin'])
+    // An escaped popup keeps a handle on this window and could move it.
+    expect(attr()).not.toContain('allow-popups-to-escape-sandbox')
     expect(attr()).not.toContain('allow-top-navigation')
     expect(await audit(host)).toEqual([])
   })

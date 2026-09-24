@@ -80,7 +80,7 @@ const item = (repo: Repo): RepoItem => ({
  * troubleshoot" would run in the page, so it is not drawn as a link at all.
  */
 export const followable = (href: string): boolean =>
-  /^\/(?!\/)/.test(href) || /^https?:\/\//i.test(href)
+  !/[\s\u0000-\u001f\u007f\\]/.test(href) && (/^\/(?![\/\\])/.test(href) || /^https?:\/\//i.test(href))
 
 /** A link in the footer: underlined, quiet, and a real control either way. */
 export function FooterLink({ label, href, onPress }: RepoLink) {

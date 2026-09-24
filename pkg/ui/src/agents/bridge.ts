@@ -64,6 +64,21 @@ const TYPES = new Set(['preview:ready', 'preview:hover', 'preview:select', 'prev
 const str = (v: unknown): v is string => typeof v === 'string'
 const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)
 
+/** A control character or a line break: nothing a selector, a tag or a path carries. */
+const CONTROL = /[\u0000-\u001f\u007f\u2028\u2029]/
+
+/**
+ * A selector the host may show and put in a prompt: short, one line. A page
+ * that could send a long one could write the person's next ask for them.
+ */
+const selector = (v: unknown): v is string => str(v) && v.length > 0 && v.length <= 256 && !CONTROL.test(v)
+
+/** An element's tag name, as the DOM spells one. */
+const tag = (v: unknown): v is string => str(v) && /^[a-z][a-z0-9-]{0,31}$/i.test(v)
+
+/** A path on the framed page's own origin: one leading slash, never two, never a backslash. */
+const path = (v: unknown): v is string => str(v) && v.length <= 512 && /^\/(?![\/\\])/.test(v) && !CONTROL.test(v) && !v.includes('\\')
+
 /**
  * The address a frame may load: an absolute http(s) URL, resolved against
  * `base`. Anything else — `javascript:`, `data:`, `blob:`, a malformed string —
@@ -99,30 +114,30 @@ export function accept(
     case 'preview:hover': {
       if (m.selector === null) return { type: 'preview:hover', selector: null }
       const r = m.rect as Record<string, unknown> | undefined
-      if (!str(m.selector) || !r || !num(r.top) || !num(r.left) || !num(r.width) || !num(r.height)) return null
+      if (!selector(m.selector) || !r || !num(r.top) || !num(r.left) || !num(r.width) || !num(r.height)) return null
       return {
         type: 'preview:hover',
         selector: m.selector,
         rect: { top: r.top, left: r.left, width: r.width, height: r.height },
-        tag: str(m.tag) ? m.tag : undefined,
+        tag: tag(m.tag) ? m.tag : undefined,
       }
     }
     case 'preview:select': {
       const i = m.info as Record<string, unknown> | undefined
-      if (!i || !str(i.selector) || !str(i.tag) || !str(i.html)) return null
+      if (!i || !selector(i.selector) || !tag(i.tag) || !str(i.html)) return null
       return {
         type: 'preview:select',
         info: {
           selector: i.selector,
           tag: i.tag,
-          id: str(i.id) ? i.id : undefined,
+          id: str(i.id) && i.id.length <= 128 && !CONTROL.test(i.id) ? i.id : undefined,
           text: str(i.text) ? i.text.slice(0, 200) : undefined,
           html: i.html.slice(0, 8000),
         },
       }
     }
     case 'preview:navigate':
-      return str(m.path) ? { type: 'preview:navigate', path: m.path } : null
+      return path(m.path) ? { type: 'preview:navigate', path: m.path } : null
     case 'preview:console': {
       return str(m.text) ? { type: 'preview:console', level: level(m.level), text: m.text.slice(0, 4000) } : null
     }
