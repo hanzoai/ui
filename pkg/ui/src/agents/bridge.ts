@@ -68,16 +68,19 @@ const num = (v: unknown): v is number => typeof v === 'number' && Number.isFinit
 const CONTROL = /[\u0000-\u001f\u007f\u2028\u2029]/
 
 /**
- * A selector the host may show and put in a prompt: short, one line. A page
- * that could send a long one could write the person's next ask for them.
+ * A selector in the one shape `script` writes — `body`, a plain `#id`, or a
+ * `body > tag:nth-of-type(n) > …` path — and nothing else. A page is free to
+ * post anything, and a free-text "selector" is the person's next ask written
+ * by the page; this shape carries no words.
  */
-const selector = (v: unknown): v is string => str(v) && v.length > 0 && v.length <= 256 && !CONTROL.test(v)
+const SELECTOR = /^(?:body|#[A-Za-z][A-Za-z0-9_-]{0,63}|body(?: > [a-z][a-z0-9-]{0,31}(?::nth-of-type\([1-9][0-9]{0,3}\))?){1,24})$/
+const selector = (v: unknown): v is string => str(v) && v.length <= 256 && SELECTOR.test(v)
 
 /** An element's tag name, as the DOM spells one. */
 const tag = (v: unknown): v is string => str(v) && /^[a-z][a-z0-9-]{0,31}$/i.test(v)
 
-/** A path on the framed page's own origin: one leading slash, never two, never a backslash. */
-const path = (v: unknown): v is string => str(v) && v.length <= 512 && /^\/(?![\/\\])/.test(v) && !CONTROL.test(v) && !v.includes('\\')
+/** A path on the framed page's own origin: one leading slash, never two, no backslash, no whitespace, short. */
+const path = (v: unknown): v is string => str(v) && v.length <= 128 && /^\/(?![\/\\])[^\s\\]*$/.test(v) && !CONTROL.test(v)
 
 /**
  * The address a frame may load: an absolute http(s) URL, resolved against
@@ -164,7 +167,7 @@ export function script(parent: string): string {
   function send(m) { try { window.parent.postMessage(m, PARENT); } catch (e) {} }
   function sel(el) {
     if (!el || el === document.body || el === document.documentElement) return 'body';
-    if (el.id && document.querySelectorAll('#' + CSS.escape(el.id)).length === 1) return '#' + CSS.escape(el.id);
+    if (el.id && /^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(el.id) && document.querySelectorAll('#' + el.id).length === 1) return '#' + el.id;
     var parts = [], node = el;
     while (node && node !== document.body && node.nodeType === 1) {
       var p = node.parentNode; if (!p) break;

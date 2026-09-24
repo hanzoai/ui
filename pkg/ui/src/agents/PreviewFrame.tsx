@@ -119,15 +119,20 @@ export function PreviewFrame({
   // pick or a hover the page reports on its own is not a person's.
   const picking = useRef(false)
 
-  useEffect(() => setLoading(true), [url?.href, nonce])
+  // A new document has not been asked to let anyone pick: the gate closes on
+  // every load, and the host opens it again once the page says it is ready.
+  useEffect(() => {
+    setLoading(true)
+    picking.current = false
+  }, [url?.href, nonce])
 
   useImperativeHandle(
     ref,
     () => ({
       reload: () => setNonce((n) => n + 1),
       post: (command) => {
-        if (!url || !foreign) return
         if (command.type === 'preview:editable') picking.current = command.active
+        if (!url || !foreign) return
         frame.current?.contentWindow?.postMessage(command, url.origin)
       },
     }),
