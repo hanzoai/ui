@@ -49,64 +49,76 @@
   max-width: var(--measure);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* ── The element defaults, in a cascade layer ────────────────────────────
+   A rule outside a layer beats every rule inside one, however specific — so
+   these, unlayered, outranked every Tailwind utility and every `prose` rule on
+   any site that imports this sheet beside its own. docs.hanzo.ai showed both:
+   `a { color: inherit }` beat `text-fd-primary-foreground`, so its primary
+   button printed near-white on its white fill, and `p { margin: 0 }` beat the
+   typography plugin, so every paragraph on the site touched the next. Defaults
+   have to lose to anything an app states on purpose; in `base`, the layer the
+   tokens already use, they do. gui's atomic classes are unlayered and still win
+   over them, as before. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-h1, h2, h3, h4, h5, h6,
-p, figure, blockquote, dl, dd {
-  margin: 0;
-}
+  h1, h2, h3, h4, h5, h6,
+  p, figure, blockquote, dl, dd {
+    margin: 0;
+  }
 
-ol, ul, menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+  ol, ul, menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-button, input, select, textarea, optgroup {
-  font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
-}
+  button, input, select, textarea, optgroup {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
 
-button {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
+  button {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-/* Replaced elements are blocks: inline leaves a gap under every image for the
-   text baseline that is not there. `max-width` keeps one from widening the
-   page — the single commonest cause of a document that scrolls sideways. */
-img, svg, video, canvas, audio, iframe, embed, object {
-  display: block;
-  max-width: 100%;
-}
+  /* Replaced elements are blocks: inline leaves a gap under every image for the
+     text baseline that is not there. `max-width` keeps one from widening the
+     page — the single commonest cause of a document that scrolls sideways. */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    max-width: 100%;
+  }
 
-/* Preformatted text cannot wrap, so left alone it is the other commonest cause
-   of a sideways-scrolling document. It scrolls inside itself instead. */
-pre {
-  overflow-x: auto;
-  max-width: 100%;
-}
+  /* Preformatted text cannot wrap, so left alone it is the other commonest cause
+     of a sideways-scrolling document. It scrolls inside itself instead. */
+  pre {
+    overflow-x: auto;
+    max-width: 100%;
+  }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 
-/* A long word — a hash, an address, a URL — must not decide the page width. */
-body {
-  overflow-wrap: break-word;
+  /* A long word — a hash, an address, a URL — must not decide the page width. */
+  body {
+    overflow-wrap: break-word;
+  }
 }
 
 /* ── Prose meets a control ────────────────────────────────────────────────

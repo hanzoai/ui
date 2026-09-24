@@ -32,6 +32,21 @@ describe('the shipped sheet resets elements', () => {
     expect(css).toMatch(/\bpre\s*\{[^}]*overflow-x:\s*auto/)
   })
 
+  // Outside a layer these outranked every layered rule an app writes, however
+  // specific: on docs.hanzo.ai `a { color: inherit }` beat a Tailwind text
+  // utility on the primary button (near-white on its white fill) and
+  // `p { margin: 0 }` beat the typography plugin on every paragraph.
+  it('states the ground inside a cascade layer, so an app\'s own rules win', () => {
+    const layer = css.indexOf('@layer base {\n  *,')
+    expect(layer).toBeGreaterThan(-1)
+    const close = css.indexOf('\n}\n', layer)
+    for (const rule of ['ol, ul, menu', 'p, figure, blockquote', '  a {\n    color: inherit']) {
+      const at = css.indexOf(rule, layer)
+      expect(at).toBeGreaterThan(layer)
+      expect(at).toBeLessThan(close)
+    }
+  })
+
   it('puts the ground BEFORE gui, so a component still wins', () => {
     expect(css.indexOf('ol, ul, menu')).toBeLessThan(css.lastIndexOf('.is_View'))
   })
