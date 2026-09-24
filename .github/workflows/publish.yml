@@ -295,7 +295,7 @@ jobs:
             PUB=$?
             echo "$OUT"
             case "$OUT" in
-              *EPUBLISHCONFLICT*|*"cannot publish over"*|*"previously published versions"*)
+              *EPUBLISHCONFLICT*|*"cannot publish over"*|*"Cannot publish over"*|*"previously published versions"*)
                 echo "::notice::$PKG is already on npmjs at this version — nothing to do" ;;
               *)
                 # RETRIED, because npmjs is read-after-write eventually
@@ -307,7 +307,10 @@ jobs:
                 # version to "fix" it.
                 landed=
                 for attempt in 1 2 3 4 5 6; do
-                  if npm view "$NAME@$WANT" version >/dev/null 2>&1; then landed=1; break; fi
+                  # The version's own document, not the packument `npm view`
+                  # reads: the packument lags a publish by minutes, the version
+                  # document answers as soon as the release exists.
+                  if curl -fsS -o /dev/null "https://registry.npmjs.org/$NAME/$WANT" 2>/dev/null; then landed=1; break; fi
                   echo "$NAME@$WANT not visible to npmjs yet (attempt $attempt/6); waiting 10s"
                   sleep 10
                 done
