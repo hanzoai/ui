@@ -41,8 +41,8 @@
  * control still delivers its node. So it is ambient to mounting `<Hanzo>` and
  * cannot be what separates the control from the dialog.
  */
-import { render } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { cleanup, render } from '@testing-library/react'
+import { afterAll, describe, expect, it } from 'vitest'
 import { Dialog as GuiDialog, YStack } from '@hanzo/gui'
 
 import { Hanzo } from '../../root'
@@ -53,6 +53,15 @@ import { Dialog, DialogContent } from './dialog'
 const calls = (bucket: unknown[]) => (el: unknown) => void bucket.push(el)
 
 describe('a ref to dialog content', () => {
+  // An open dialog schedules its first focus on idle (gui's FocusScope, up to
+  // 200ms) and reads `document` when that lands. Unmount, then let it land
+  // while jsdom still exists — otherwise it throws after teardown and the run
+  // reports an unhandled rejection against a file whose tests all passed.
+  afterAll(async () => {
+    cleanup()
+    await new Promise((settle) => setTimeout(settle, 250))
+  })
+
   it('CONTROL: a bare gui stack delivers a real DOM node', () => {
     const got: unknown[] = []
     render(
