@@ -39,6 +39,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
 import { slot, tip } from '../backends/gui/slot'
 import {
+  frame,
   merge,
   move,
   narrow,
@@ -261,6 +262,15 @@ export function ChipSelect<T extends ChipItem>({
 
   const pages = usePages(load, q, delay, open)
 
+  // Sized once per open, from what is known then — see `frame`.
+  const [tall, setTall] = useState(height)
+  useEffect(() => {
+    if (open)
+      setTall(frame({ pending: Boolean(load) || loadingProp, count: (items?.length ?? 0) + (chosen ? 1 : 0), row: ROW_H, ceiling: height }))
+    // Only at open: a panel that resized while open would leave its placement.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
   // What is drawn: the loader's rows as answered, or the given list narrowed
   // here — then the chosen row pinned on top while the search could match it.
   const rows = useMemo(() => {
@@ -453,7 +463,7 @@ export function ChipSelect<T extends ChipItem>({
 
         <ScrollView
           ref={list as never}
-          maxH={height}
+          height={tall}
           showsVerticalScrollIndicator
           scrollEventThrottle={64}
           onScroll={onScroll}

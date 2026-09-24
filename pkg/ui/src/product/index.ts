@@ -48,6 +48,7 @@ export {
   type ChipSelectProps,
 } from './ChipSelect'
 export {
+  frame,
   merge,
   pin,
   narrow,

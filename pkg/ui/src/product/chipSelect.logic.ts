@@ -146,3 +146,19 @@ export function wants(opts: { next?: string | null; loading: boolean; at: number
 export function near(top: number, height: number, content: number, slack = 48): boolean {
   return top + height >= content - slack
 }
+
+/**
+ * The list's height while a panel is open, decided once, at open.
+ *
+ * The panel is placed from its size at open: the popper watches the chip and
+ * not the panel (watching the panel loops), so a panel that grows afterwards
+ * grows past its own placement — a top-placed panel down over its chip and off
+ * the screen. So nothing may resize it while it is open. A list whose length is
+ * not known yet — pages from a loader, or rows still loading — takes the whole
+ * `ceiling`; a known list its own length, capped there.
+ */
+export function frame(opts: { pending: boolean; count: number; row: number; ceiling: number; pad?: number }): number {
+  const { pending, count, row, ceiling, pad = 8 } = opts
+  if (pending) return ceiling
+  return Math.min(ceiling, Math.max(count, 1) * row + pad)
+}

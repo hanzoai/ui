@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { PAGE, merge, move, narrow, near, pin, wants, type ChipItem } from './chipSelect.logic'
+import { PAGE, frame, merge, move, narrow, near, pin, wants, type ChipItem } from './chipSelect.logic'
 
 const rows = (...ids: string[]): ChipItem[] => ids.map((id) => ({ id, label: id }))
 
@@ -125,5 +125,18 @@ describe('near', () => {
   it('is true within the slack of the bottom', () => {
     expect(near(200, 276, 500)).toBe(true)
     expect(near(0, 276, 1200)).toBe(false)
+  })
+})
+
+describe('frame', () => {
+  it('holds a list of unknown length at the ceiling for the whole open', () => {
+    expect(frame({ pending: true, count: 0, row: 24, ceiling: 276 })).toBe(276)
+    expect(frame({ pending: true, count: 400, row: 24, ceiling: 276 })).toBe(276)
+  })
+
+  it('sizes a known list to its rows, capped at the ceiling, never to nothing', () => {
+    expect(frame({ pending: false, count: 3, row: 24, ceiling: 276 })).toBe(80)
+    expect(frame({ pending: false, count: 0, row: 24, ceiling: 276 })).toBe(32)
+    expect(frame({ pending: false, count: 50, row: 24, ceiling: 276 })).toBe(276)
   })
 })
