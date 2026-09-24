@@ -381,6 +381,43 @@ console output for a coding run, `citation` for a research run's sources — so 
 panel serves all three. An empty section does not render at all: a heading over
 blank space reads as "produced nothing" when the truth is "not reported".
 
+### The builder workspace (`@hanzo/ui/agents`)
+
+Ported from build-v2's editor (`hanzoai/build-v2`, MIT, itself from OSW Studio
+and DeepSite — attribution in `NOTICE`). v2 was one app that owned its project,
+pages, frames and fetches; the port keeps the SCREEN and hands every one of
+those back to the host, so the builder, a console page and a desktop shell can
+compose the same frame over their own transport.
+
+| Piece | What it is |
+|---|---|
+| `Workspace` | the frame: bar (`start` · `middle` · `end`), chat column, the view as `children`, `dock`. `collapsed` (wide) and `pane` (phone) are controlled — the host persists them. |
+| `Views` + `VIEWS`/`CHAT`/`DEVICES` | the segmented control, a WAI-ARIA tablist; `CHAT` is drawn only below `md`, which is how a phone switches between the chat and the work with the same control. |
+| `ProjectChip` · `PageSelect` · `ModeSelect` | the bar's project trigger, the page field, the composer's Build/Plan chip. The two selects are one `Choice` over the one `DropdownMenu`. |
+| `PreviewFrame` | frames an ADDRESS (http/https only, `web()`), sandboxed; `allow-same-origin` only for a foreign origin. `ref` → `reload()`/`post()`. |
+| `FileTree` | `files` (flat) or `load(dir)` (one level per call, like `/v1/git/repos/:name/tree`); tree roles and keys from `tree.ts`. |
+| `FileTabs` | open files as tabs over `CodeEditor`; Delete closes; no `onChange` = read-only. Distinct from `CodeTabs` (a snippet in several languages). |
+| `Console` | the dock: one dimension, `height` (`> HEAD` is open), grip drag/keys/click all resolve through `log.ts`; optional `onRun`, extra `tabs`. |
+| `Suggestions` · `Attachments` · `Feedback` | the chat column's chips, the "this turn is about" row, and the copy/thumbs row for `Message actions`. |
+
+**Everything a run or a repo supplies is TEXT** — file contents, paths, log
+lines, picked-element HTML. Nothing in the module renders markup it was given.
+
+**The preview bridge is opt-in and origin-pinned** (`bridge.ts`). A deployed
+page on its own origin is not ours to inject into, so a page that wants element
+picking and console forwarding ships `script(parentOrigin)`; it posts only to
+that origin and obeys only its parent from there, and `accept()` on this side
+believes only the frame's own window at the frame's own origin. v2's live
+style/text edits are NOT in the protocol: a change made inside the frame is gone
+on reload, and the builder's edits are runs that commit.
+
+**`ref` is a plain prop on `PreviewFrame` and `ProjectChip`** (React 19), not
+`forwardRef`: the wrapper's `Omit<Props, 'ref'>` collapses every prop to `any`
+against gui's index signature, which the docs app's typecheck caught.
+
+`test/axe.ts` does not descend into frames (`iframes: false`): a framed page is
+another document, and axe's frame messaging throws in jsdom besides.
+
 ### modularizeImports support
 
 `scripts/gen-primitives.mjs` reads the gui backend barrel and emits one
