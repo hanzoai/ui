@@ -197,6 +197,7 @@ export function Composer({
   const frame = inline ? (
     <XStack
       {...slot('composer')}
+      data-variant="inline"
       width="100%"
       items="center"
       rounded="$3"

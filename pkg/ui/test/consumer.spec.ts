@@ -128,14 +128,25 @@ for (const theme of THEMES) {
       // AlertDialog's cancel drew `rgb(69,69,69)`, while the Select — a
       // `<button>`, which activates no sub-theme — already had design's.
       //
-      // The exceptions are the four elements that reach for a DIFFERENT token,
-      // each named with the one it reads. Anything else appearing here is a
+      // The exceptions are the elements that reach for a DIFFERENT token, each
+      // named with the one it reads. Anything else appearing here is a
       // control disagreeing with the page about where its edge comes from.
       const EXCEPT = [
         { slot: 'button', attr: 'data-variant', value: 'primary', token: '$color6' },
         { slot: 'toggle-group-item', attr: 'data-state', value: 'on', token: '$color7' },
         { slot: 'switch', attr: 'data-state', value: 'checked', token: '$color12' },
         { slot: 'tooltip-content', attr: null, value: null, token: 'its own light surface' },
+        // A control's boundary must reach 3:1 against the page (WCAG 1.4.11);
+        // the hairline does not, so these two read `$bound`.
+        { slot: 'checkbox', attr: null, value: null, token: '$bound' },
+        { slot: 'radio-group-item', attr: null, value: null, token: '$bound' },
+        // The `stopped` register from product/tone.ts: an outline, not a hue.
+        { slot: 'step', attr: 'data-status', value: 'error', token: '$faint' },
+        { slot: 'failure', attr: null, value: null, token: '$faint' },
+        { slot: 'status-dot', attr: null, value: null, token: '$faint, the ring of a hollow dot' },
+        { slot: 'connection-badge', attr: null, value: null, token: '$green3' },
+        // The one-line composer sits on `$hover` and needs an edge the eye finds.
+        { slot: 'composer', attr: 'data-variant', value: 'inline', token: '$rim' },
       ]
       const stray = await page.evaluate((except) => {
         const out: string[] = []

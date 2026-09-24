@@ -14,6 +14,7 @@
 import { Button, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut } from '@hanzogui/lucide-icons-2'
 import type { ReactNode } from 'react'
+import { slot } from '../backends/gui/slot'
 
 export type ConnectionBadgeProps = {
   /** How the connection was made — "OAuth", "API key". */
@@ -37,6 +38,7 @@ export function ConnectionBadge({
   return (
     <YStack>
       <XStack
+        {...slot('connection-badge')}
         items="center"
         justify="space-between"
         p="$2.5"
