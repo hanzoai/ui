@@ -99,9 +99,12 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       {field}
       {toggle ? (
         <XStack
+          // Before `well`: on web `touch` writes `position: relative`, which
+          // after the well's `absolute` put the eye in flow beside the input,
+          // 4px past the field's edge instead of inside its right well.
+          {...touch(20)}
           {...well('r')}
           cursor="pointer"
-          {...touch(20)}
           onPress={() => setRevealed((v) => !v)}
           aria-label={revealed ? 'Hide password' : 'Show password'}
         >

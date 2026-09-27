@@ -303,6 +303,9 @@ export function AppleCardsCarousel({
               data-slot={`apple-carousel-${name}`}
               render={<button type="button" />}
               aria-label={label}
+              // Before `position`: on web `touch` writes `position: relative`,
+              // which after it put the arrows in flow instead of on the cards.
+              {...touch(ARROW, 44)}
               position="absolute"
               display="none"
               $md={{ display: 'flex' }}
@@ -318,7 +321,6 @@ export function AppleCardsCarousel({
               borderWidth={1}
               borderColor={WHITE(0.2)}
               cursor="pointer"
-              {...touch(ARROW, 44)}
               onClick={go}
             >
               <Chevron size={20} color="white" />

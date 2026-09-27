@@ -65,6 +65,10 @@ const Slider = (props: SliderProps) => {
         bg="$ink"
         borderWidth={0}
         {...touch(THUMB)}
+        // Restated after `touch`, which writes `position: relative` on web and
+        // so undid gui's own `absolute` on the thumb: the knob sat in flow,
+        // 7px below the track's axis, instead of centred on it.
+        position="absolute"
         {...name}
       />
     </GuiSlider>

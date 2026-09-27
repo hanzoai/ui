@@ -143,6 +143,18 @@ describe('Input’s reveal', () => {
     expect(eye(html(<Input value="s" readOnly />))).toBe(false)
   })
 
+  it('sits in the field’s right well, not after it', () => {
+    // `touch()` writes `position: relative` on web. Spread after the well's
+    // `absolute` it won, and the eye sat in flow beside the input, past its edge.
+    const tag =
+      html(<Input type="password" value="s" readOnly />).match(
+        /<[a-z]+[^>]*aria-label="Show password"[^>]*>/,
+      )?.[0] ?? ''
+    expect(tag).toMatch(/[\s"]_pos-absolute[\s"]/)
+    expect(tag).not.toMatch(/_pos-relative/)
+    expect(tag).toMatch(/data-touch-x="\d+"/)
+  })
+
   it('yields the control when the caller owns it', () => {
     // `SecretInput` and every locally-masked field own their own reveal. Two
     // controls over one boolean is a field with two states that disagree: press

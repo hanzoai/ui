@@ -81,6 +81,17 @@ describe('Slider', () => {
     expect(thumb(markup)).toContain('aria-valuemax="100"')
   })
 
+  it('keeps the thumb absolute, so gui can centre it on the track', () => {
+    // gui positions the thumb absolutely: `top: 50%` and `left: <value>%`.
+    // `touch()` writes `position: relative` on web, and spread after gui's own
+    // style it dropped the knob into the flow, 7px off the track's axis.
+    const tag = thumb(html(<Slider defaultValue={[40]} max={100} />))
+    expect(tag).toMatch(/[\s"]_pos-absolute[\s"]/)
+    expect(tag).not.toMatch(/_pos-relative/)
+    // The 44px hit area still arrives: 16px knob, 14px each side.
+    expect(tag).toContain('data-touch-x="14"')
+  })
+
   it('still renders track, range and thumb slots', () => {
     const markup = html(<Slider defaultValue={[50]} max={100} />)
     for (const s of ['slider', 'slider-track', 'slider-range', 'slider-thumb']) {

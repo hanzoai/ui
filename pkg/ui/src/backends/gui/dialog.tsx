@@ -84,13 +84,17 @@ const DialogContent = ({
             <GuiDialog.Close asChild>
               <XStack
                 {...slot('dialog-close')}
+                // Before `position`: on web `touch` writes `position: relative`
+                // to host its hit-area overlay, and placed after the pin it drew
+                // the ✕ in flow at the content's bottom-left. An absolute box
+                // hosts that overlay just as well.
+                {...touch(16)}
                 position="absolute"
                 t={16}
                 r={16}
                 cursor="pointer"
                 opacity={0.7}
                 hoverStyle={{ opacity: 1 }}
-                {...touch(16)}
                 aria-label="Close"
               >
                 <X size={16} />

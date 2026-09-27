@@ -126,6 +126,14 @@ describe('AppleCardsCarousel', () => {
       expect(arrow).toMatch(/_dsp-_md_flex/)
     }
     expect(tags(shown, 'apple-carousel-dot')).toHaveLength(3)
+    // Laid over the card's edges, not in flow under it. `touch()` writes
+    // `position: relative` on web; spread after the arrow's own `absolute` it
+    // won, and the arrows stacked below the deck.
+    for (const arrow of arrows) {
+      expect(arrow).toMatch(/[\s"]_pos-absolute[\s"]/)
+      expect(arrow).not.toMatch(/_pos-relative/)
+      expect(arrow).toMatch(/data-touch-x="\d+"/)
+    }
 
     const bare = html(<AppleCardsCarousel cards={three} showArrows={false} showDots={false} />)
     expect(bare).not.toContain('apple-carousel-previous')

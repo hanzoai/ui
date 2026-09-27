@@ -87,3 +87,25 @@ describe('it is still a dialog', () => {
     expect(mount(open())).toMatch(/role="dialog"|aria-modal/)
   })
 })
+
+describe('its close button', () => {
+  it('sits in the sheet’s top-right corner on every side', () => {
+    // The phone rail drawer is a LEFT sheet, and there the ✕ landed half off the
+    // screen: `touch()` writes `position: relative` on web, and spread after the
+    // dialog's pin it put the button in flow, 16px left of the sheet's own edge.
+    for (const side of ['left', 'right', 'top', 'bottom'] as const) {
+      mount(open({ side }))
+      const close = document.querySelector('[data-slot="dialog-close"][aria-label="Close"]') as HTMLElement | null
+      expect(close, side).not.toBeNull()
+      expect(close!.closest('[data-slot="sheet-content"]'), side).not.toBeNull()
+      const style = getComputedStyle(close!)
+      expect(style.position, side).toBe('absolute')
+      expect(style.top, side).toBe('16px')
+      expect(style.right, side).toBe('16px')
+      act(() => root?.unmount())
+      host?.remove()
+      root = null
+      host = null
+    }
+  })
+})

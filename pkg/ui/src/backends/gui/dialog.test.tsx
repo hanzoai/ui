@@ -94,3 +94,53 @@ describe('DialogContent’s overlay', () => {
     expect(overlay()).not.toBeNull()
   })
 })
+
+const close = () => document.querySelector('[data-slot="dialog-close"][aria-label="Close"]') as HTMLElement | null
+
+describe('DialogContent’s close button', () => {
+  it('is pinned to the top-right corner, not dropped into the flow', () => {
+    mount(
+      <Dialog open>
+        <DialogContent>
+          <DialogTitle>Pinned</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    )
+    const el = close()
+    expect(el).not.toBeNull()
+    // `touch()` writes `position: relative` on web to host its hit-area overlay.
+    // Spread AFTER the pin it won, and the ✕ drew in flow at the content's
+    // bottom-left — on every dialog, and half off the screen in a left Sheet.
+    // COMPUTED, for the same reason as the overlay's z-index above.
+    const style = getComputedStyle(el!)
+    expect(style.position).toBe('absolute')
+    expect(style.top).toBe('16px')
+    expect(style.right).toBe('16px')
+    expect(style.left).toBe('auto')
+    expect(style.bottom).toBe('auto')
+  })
+
+  it('keeps its 44px hit area after the reorder', () => {
+    mount(
+      <Dialog open>
+        <DialogContent>
+          <DialogTitle>Reachable</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    )
+    // 16px glyph, 14px each side: the same pad `touch(16)` wrote before.
+    expect(close()!.getAttribute('data-touch-x')).toBe('14')
+    expect(close()!.getAttribute('data-touch-y')).toBe('14')
+  })
+
+  it('is absent when the caller says so', () => {
+    mount(
+      <Dialog open>
+        <DialogContent showCloseButton={false}>
+          <DialogTitle>Bare</DialogTitle>
+        </DialogContent>
+      </Dialog>,
+    )
+    expect(close()).toBeNull()
+  })
+})

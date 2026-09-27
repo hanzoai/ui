@@ -553,3 +553,75 @@ for (const [width, want] of [[390, 2], [1280, 4]] as const)
     }))
     expect(overflow.scroll, 'the page scrolls horizontally').toBeLessThanOrEqual(overflow.client + 1)
   })
+
+/**
+ * A pinned control is where it was pinned — measured as a box, not read off a
+ * class.
+ *
+ * `touch()` writes `position: relative` on web to host its 44px hit area, and
+ * every control below had it spread AFTER its own `absolute`. It won, and each
+ * one dropped into the flow: the dialog's ✕ drew at the content's bottom-left
+ * (half off the screen in a left Sheet), the password eye sat 4px past the
+ * field's edge, the slider's knob rode 7px off its track. The unit suites
+ * prove the computed `position`; only a browser says where the box lands, so
+ * each assertion here is a rectangle inside a rectangle.
+ */
+test('every dialog draws its close button in its top-right corner', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await load(page, 'dark')
+  const offsets = await page.evaluate(() =>
+    // The ✕ by its label. DialogTemplate's footer Cancel is a `DialogClose`
+    // too and carries the same slot, in flow where it belongs.
+    [...document.querySelectorAll('[data-slot="dialog-close"][aria-label="Close"]')].map((el) => {
+      const c = el.getBoundingClientRect()
+      const p = el.closest('[data-slot="dialog-content"], [data-slot="sheet-content"]')!.getBoundingClientRect()
+      return { top: c.top - p.top, right: p.right - c.right, bottom: p.bottom - c.bottom, left: c.left - p.left }
+    }),
+  )
+  expect(offsets.length, 'the gallery rendered no dialog close button').toBeGreaterThan(0)
+  for (const o of offsets) {
+    // 16px in from the padding edge, plus the 1px border.
+    expect(o.top, 'the ✕ is not at the top').toBeGreaterThanOrEqual(0)
+    expect(o.top, 'the ✕ is not at the top').toBeLessThanOrEqual(24)
+    expect(o.right, 'the ✕ is not at the right').toBeGreaterThanOrEqual(0)
+    expect(o.right, 'the ✕ is not at the right').toBeLessThanOrEqual(24)
+    expect(o.left, 'the ✕ sits on the left').toBeGreaterThan(o.right)
+    expect(o.bottom, 'the ✕ sits at the bottom').toBeGreaterThan(o.top)
+  }
+})
+
+test('the password eye sits inside its field, at the right', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await load(page, 'dark')
+  const { eye, field } = await page.evaluate(() => {
+    const el = document.querySelector('[data-gallery="form"] [aria-label="Show password"]')!
+    const r = (n: Element) => n.getBoundingClientRect().toJSON() as DOMRect
+    return { eye: r(el), field: r(el.parentElement!.querySelector('input')!) }
+  })
+  expect(eye.left, 'the eye is not in the field’s right half').toBeGreaterThan(field.left + field.width / 2)
+  expect(eye.right, 'the eye runs past the field').toBeLessThanOrEqual(field.right)
+  expect(eye.top, 'the eye rides above the field').toBeGreaterThanOrEqual(field.top - 1)
+  expect(eye.bottom, 'the eye hangs under the field').toBeLessThanOrEqual(field.bottom + 1)
+})
+
+test('the slider knob sits on its track, at its value', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await load(page, 'dark')
+  // The gallery's Slider is `defaultValue={[40]}` on 0–100. gui keeps the knob
+  // inside the track's ends, so its centre lands within a knob's width of 40%.
+  // Polled: gui places the knob once it has measured it.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const root = document.querySelector('[data-gallery="form"] [data-slot="slider"]')!
+          const k = root.querySelector('[data-slot="slider-thumb"]')!.getBoundingClientRect()
+          const t = root.querySelector('[data-slot="slider-track"]')!.getBoundingClientRect()
+          const along = Math.abs(k.left + k.width / 2 - (t.left + t.width * 0.4)) <= k.width
+          const on = Math.abs(k.top + k.height / 2 - (t.top + t.height / 2)) <= 1
+          return along && on
+        }),
+      { message: 'the knob is not on its track at 40%' },
+    )
+    .toBe(true)
+})
