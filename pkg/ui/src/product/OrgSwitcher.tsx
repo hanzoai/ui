@@ -402,14 +402,11 @@ export function OrgSwitcher({
                   {query.trim() ? `No organizations match “${query.trim()}”.` : 'No organizations yet.'}
                 </Text>
               ) : (
-                // A set of organizations exactly one of which holds is a
-                // `radiogroup` of `radio`s — not a bag of divs, which is what
-                // assistive tech was being handed. `radio` rather than the more
-                // obvious `option` because @hanzo/gui's `role` union is React
-                // Native's accessibility-role set: it admits `option` but NOT
-                // `listbox`, so an `option` here could never be given the parent
-                // ARIA requires.
-                <YStack role="radiogroup" aria-label="Organizations" gap="$1">
+                // A set of organizations exactly one of which holds is a named
+                // `group` of `menuitemradio`s — not a bag of divs, which is what
+                // assistive tech was being handed, and not a `radiogroup`, which
+                // a `menu` may not own (MenuRow says why).
+                <YStack role="group" aria-label="Organizations" gap="$1">
                   {visible.map((org) => (
                     <MenuRow
                       key={org.name}

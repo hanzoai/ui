@@ -21,37 +21,18 @@
  */
 import { useState, type CSSProperties, type ReactNode } from 'react'
 import { sx } from '../sx'
-import { Popover, Separator, Text, XStack, YStack } from '@hanzo/gui'
-import { ChevronsUpDown, LogOut, UserRound } from '@hanzogui/lucide-icons-2'
+import { Popover, Text, XStack } from '@hanzo/gui'
+import { ChevronsUpDown, UserRound } from '@hanzogui/lucide-icons-2'
 
+import { Account, type UserMenuGroup } from './account'
 import { useEmit } from './instrument'
-import { MenuLabel, MenuRow } from './MenuRow'
 import { displayName } from './name'
 import { OrgMark } from './OrgMark'
 import { ThemeToggle } from './ThemeToggle'
 
-/** One row. `id` names it in analytics; the label is what the person reads. */
-export type UserMenuItem = {
-  id: string
-  label: string
-  icon?: ReactNode
-  onPress: () => void
-  /** Draws the row in the destructive tone (sign out, delete account). */
-  danger?: boolean
-  /**
-   * Whether this row is the chosen one — for a group that is a CHOICE rather
-   * than a list of actions (which theme, which language). Its presence makes the
-   * group a `radiogroup` and the row a `radio`, so assistive tech is told that
-   * exactly one of them holds, and the chosen row carries a check.
-   */
-  active?: boolean
-}
-
-/** A group of rows, optionally named. A bare array is the unnamed form. */
-export type UserMenuGroup = UserMenuItem[] | { label?: string; items: UserMenuItem[] }
-
-const itemsOf = (g: UserMenuGroup): UserMenuItem[] => (Array.isArray(g) ? g : g.items)
-const nameOf = (g: UserMenuGroup): string | undefined => (Array.isArray(g) ? undefined : g.label)
+// The rows and groups are the body's types — `account.tsx` draws the body both
+// this menu and `SessionRail`'s account menu open.
+export type { UserMenuGroup, UserMenuItem } from './account'
 
 export type UserMenuProps = {
   /** The signed-in person's display name. Falls back to the email's local part. */
@@ -97,23 +78,6 @@ export type UserMenuProps = {
   style?: CSSProperties
 }
 
-function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
-  const track = useEmit()
-  return (
-    <MenuRow
-      label={item.label}
-      icon={item.icon}
-      active={item.active}
-      danger={item.danger}
-      onPress={() => {
-        track({ component: 'UserMenu', action: 'select', id: item.id })
-        onDone()
-        item.onPress()
-      }}
-    />
-  )
-}
-
 // The name to show is a rule over two strings, so it lives in `./name` and is
 // reachable without a gui runtime via `@hanzo/ui/product/pure`. Re-exported
 // here because it was published from this module.
@@ -140,7 +104,6 @@ export function UserMenu({
   const [open, setOpen] = useState(false)
   const track = useEmit()
   const shown = displayName(name, email)
-  const filled = groups.filter((g) => itemsOf(g).length > 0)
   const close = () => setOpen(false)
 
   return (
@@ -221,73 +184,16 @@ export function UserMenu({
         style={style}
       >
         {children ?? (
-          <YStack gap="$1">
-            {shown || email ? (
-              <YStack gap="$0.5" px="$2" py="$1.5">
-                {shown ? (
-                  <Text fontSize="$2" fontWeight="700" color="$ink" numberOfLines={1}>
-                    {shown}
-                  </Text>
-                ) : null}
-                {/* The email is shown only when it is not already the name — a
-                    menu that prints one address twice reads as a rendering bug. */}
-                {email && email !== shown ? (
-                  <Text fontSize="$1" color="$soft" numberOfLines={1}>
-                    {email}
-                  </Text>
-                ) : null}
-              </YStack>
-            ) : null}
-
-            {filled.map((group, i) => {
-              const items = itemsOf(group)
-              const groupName = nameOf(group)
-              // A group whose every row carries a chosen-one is a CHOICE, so it
-              // is a radiogroup — a heading alone would leave the rows unrelated.
-              const choice = items.every((it) => it.active !== undefined)
-              const rows = items.map((item) => <Row key={item.id} item={item} onDone={close} />)
-              return (
-                <YStack key={i} gap="$1">
-                  {i > 0 || shown || email ? <Separator borderColor="$borderColor" my="$1" /> : null}
-                  {groupName ? <MenuLabel>{groupName}</MenuLabel> : null}
-                  {choice ? (
-                    <YStack role="radiogroup" aria-label={groupName} gap="$1">
-                      {rows}
-                    </YStack>
-                  ) : (
-                    rows
-                  )}
-                </YStack>
-              )
-            })}
-
-            {theme !== null ? (
-              <>
-                <Separator borderColor="$borderColor" my="$1" />
-                <XStack items="center" gap="$2.5" px="$2" py="$1" rounded="$3">
-                  <Text flex={1} fontSize="$2" color="$ink">
-                    Theme
-                  </Text>
-                  {theme ?? <ThemeToggle />}
-                </XStack>
-              </>
-            ) : null}
-
-            {onSignOut ? (
-              <>
-                <Separator borderColor="$borderColor" my="$1" />
-                <Row
-                  item={{
-                    id: 'sign-out',
-                    label: signOutLabel,
-                    icon: <LogOut size={16} />,
-                    onPress: onSignOut,
-                  }}
-                  onDone={close}
-                />
-              </>
-            ) : null}
-          </YStack>
+          <Account
+            name={name}
+            email={email}
+            groups={groups}
+            // The default toggle is this menu's, not the shared body's (see account.tsx).
+            theme={theme === undefined ? <ThemeToggle /> : theme}
+            onSignOut={onSignOut}
+            signOutLabel={signOutLabel}
+            onDone={close}
+          />
         )}
       </Popover.Content>
     </Popover>

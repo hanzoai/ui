@@ -12,14 +12,18 @@
  * rows a step apart in their gutter and two different hover tints.
  *
  * A row also has to SAY what it is. A row that can be current is one of a set
- * exactly one of which holds (`radio`, inside the caller's `radiogroup`); a row
- * without the notion is an action (`menuitem`). The presence of `active` decides
- * it, so no call site states it twice and none of them can forget.
+ * exactly one of which holds (`menuitemradio`, inside the caller's `group`); a
+ * row without the notion is an action (`menuitem`). The presence of `active`
+ * decides it, so no call site states it twice and none of them can forget.
  *
- * `radio` rather than the more obvious `option` because @hanzo/gui's `role` union
- * is React Native's accessibility-role set: it admits `option` but NOT `listbox`,
- * so an `option` here could never be given the parent ARIA requires.
- * `radiogroup`/`radio` is the single-select pair gui carries whole.
+ * Every sheet these rows sit in is a `menu`, and a menu owns menu items, groups
+ * and separators — nothing else. The choice used to be a `radiogroup` of `radio`
+ * rows, the pair gui's `role` union carries whole, and axe fails a `radiogroup`
+ * inside a `menu` outright (`aria-required-children`: "children which are not
+ * allowed"). `group` + `menuitemradio` + `aria-checked` is the pair ARIA names
+ * for a single choice inside a menu. gui's union is React Native's role set and
+ * lacks `menuitemradio`, so the one cast below says it; the attribute reaches
+ * the DOM as written.
  */
 import type { ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
@@ -48,7 +52,7 @@ export function MenuRow({ label, sub, dot, icon, active, danger, onPress }: Menu
   return (
     <XStack
       onPress={onPress}
-      role={selectable ? 'radio' : 'menuitem'}
+      {...({ role: selectable ? 'menuitemradio' : 'menuitem' } as object)}
       aria-checked={selectable ? !!active : undefined}
       cursor="pointer"
       items="center"
