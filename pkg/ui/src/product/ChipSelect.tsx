@@ -37,6 +37,7 @@ import {
 } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
+import { RING } from '../backends/gui/press'
 import { slot, tip } from '../backends/gui/slot'
 import {
   frame,
@@ -128,8 +129,6 @@ const ROW_H = 24
 /** The chip: 24px, a hairline, the raised fill. */
 const CHIP_H = 24
 
-/** The keyboard focus ring every control in the package draws. */
-const RING = { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
 const MOVES = new Set<Move>(['ArrowDown', 'ArrowUp', 'Home', 'End', 'PageDown', 'PageUp'])
 

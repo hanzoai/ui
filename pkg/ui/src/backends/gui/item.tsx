@@ -18,13 +18,12 @@ import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
 import type { ComponentProps } from 'react'
 import { Separator } from './layout'
 import { ink } from './ink'
+import { RING } from './press'
 
 export type ItemVariant = 'default' | 'outline' | 'muted'
 export type ItemSize = 'default' | 'sm'
 export type ItemMediaVariant = 'default' | 'icon' | 'image'
 
-/** The system's WCAG-checked ring, restored on the plain `<div>` this renders as. */
-const RING = { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
 const ItemFrame = styled(XStack, {
   name: 'Item',

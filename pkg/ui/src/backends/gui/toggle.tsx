@@ -22,6 +22,7 @@
 import { XStack, styled, useControllableState } from '@hanzo/gui'
 import type { ComponentProps, MouseEventHandler, ReactNode } from 'react'
 import { ink } from './ink'
+import { RING } from './press'
 import { slot } from './slot'
 import { touch } from './gesture'
 
@@ -32,8 +33,6 @@ export type ToggleSize = 'default' | 'sm' | 'lg'
 const HEIGHT: Record<ToggleSize, number> = { default: 36, sm: 32, lg: 40 }
 const PAD = { default: '$3', sm: '$2.5', lg: '$4' } as const
 
-/** The system's WCAG-checked ring — `unstyled` drops gui's, so restore it. */
-const RING = { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
 const ToggleFrame = styled(XStack, {
   name: 'Toggle',

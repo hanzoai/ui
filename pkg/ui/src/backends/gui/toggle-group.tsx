@@ -43,6 +43,7 @@
 import { ToggleGroup as GuiToggleGroup, useControllableState } from '@hanzo/gui'
 import { createContext, useContext, type CSSProperties, type ComponentProps, type ReactNode } from 'react'
 import { ink } from './ink'
+import { RING } from './press'
 import { slot } from './slot'
 import { touch } from './gesture'
 
@@ -80,8 +81,6 @@ const ON = {
   outline: { backgroundColor: '$raised', borderColor: '$bound' },
 } as const
 
-/** The system's WCAG-checked ring — `unstyled` items lose gui's, so restore it. */
-const RING = { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
 type Value = string | string[]
 
