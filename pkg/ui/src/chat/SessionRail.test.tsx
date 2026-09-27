@@ -1,9 +1,11 @@
 // @vitest-environment jsdom
 
 /**
- * SessionRail against a live DOM: the rows are real controls, the collapse is
- * an explicit toggle that only reports (the host persists it), the drawer
- * carries the same contents, and axe finds nothing in any of the three shapes.
+ * SessionRail against a live DOM: the head names the surface and finds a
+ * session, the rows are real controls, the account row opens the account menu
+ * anchored to itself, the collapse is an explicit toggle that only reports (the
+ * host persists it), the drawer carries the same contents and closes on any
+ * choice, the phone bar opens it, and axe finds nothing in any of the shapes.
  */
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
@@ -13,7 +15,7 @@ import { GuiProvider } from '@hanzo/gui'
 import config from '../gui-config'
 import { audit } from '../../test/axe'
 import { EmptyPrompt } from './EmptyPrompt'
-import { SessionRail, type RailSession, type SessionRailProps } from './SessionRail'
+import { RailBar, RailNotice, SessionRail, type RailAccount, type RailSession, type SessionRailProps } from './SessionRail'
 
 declare global {
   // eslint-disable-next-line no-var
@@ -52,8 +54,29 @@ const RECENTS: RailSession[] = [
 
 const Icon = () => <span aria-hidden>·</span>
 
+const ACCOUNT: RailAccount = {
+  name: 'Dave',
+  sub: 'acme',
+  email: 'dave@acme.test',
+  groups: [
+    {
+      label: 'Organizations',
+      items: [
+        { id: 'acme', label: 'acme', active: true, onPress: () => {} },
+        { id: 'zoo', label: 'zoo', active: false, onPress: () => {} },
+      ],
+    },
+    [{ id: 'settings', label: 'Settings', onPress: () => {} }],
+  ],
+  onSignOut: () => {},
+  signOutLabel: 'Log out',
+}
+
 const rail = (over: Partial<SessionRailProps> = {}) => (
   <SessionRail
+    brand="Hanzo Build"
+    onSearch={() => {}}
+    searchLabel="Search runs"
     onNew={() => {}}
     fresh
     links={[
@@ -65,9 +88,7 @@ const rail = (over: Partial<SessionRailProps> = {}) => (
     active="s2"
     onOpen={() => {}}
     onSort={() => {}}
-    account={{ name: 'z@hanzo.ai', onPress: () => {} }}
-    onSettings={() => {}}
-    onSearch={() => {}}
+    account={ACCOUNT}
     onCollapse={() => {}}
     {...over}
   />
@@ -137,23 +158,187 @@ describe('the expanded rail', () => {
     expect(document.getElementById(more.getAttribute('aria-controls')!)).toBeTruthy()
   })
 
-  it('names its icon-only controls', () => {
+  it('names its icon-only controls, and has no second search or settings at the foot', () => {
     const onSort = vi.fn()
-    const onSettings = vi.fn()
-    mount(rail({ onSort, onSettings }))
-    const named = (label: string) => q(`[aria-label="${label}"]`)!
-    act(() => named('Sort and filter').click())
-    act(() => named('Settings').click())
+    mount(rail({ onSort }))
+    const named = (label: string) => q(`[aria-label="${label}"]`)
+    act(() => named('Sort and filter')!.click())
     expect(onSort).toHaveBeenCalledOnce()
-    expect(onSettings).toHaveBeenCalledOnce()
-    expect(named('Search')).toBeTruthy()
-    expect(named('Account: z@hanzo.ai').getAttribute('aria-haspopup')).toBe('menu')
+    expect(named('Account: Dave · acme')!.getAttribute('aria-haspopup')).toBe('menu')
+    const foot = q('[data-slot="rail-foot"]')!
+    expect(foot.querySelector('[aria-label="Settings"]')).toBeNull()
+    expect(foot.querySelector('[aria-label="Search"]')).toBeNull()
+    expect(foot.querySelector('[aria-label="Search runs"]')).toBeNull()
   })
 
   it('shows the empty line when there are no recents', () => {
     mount(rail({ recents: [], empty: 'No sessions yet.' }))
     expect(all('[data-slot="rail-session"]')).toHaveLength(0)
     expect(host.textContent).toContain('No sessions yet.')
+  })
+})
+
+describe('the head', () => {
+  it('draws the brand over the search, above New, in flow', () => {
+    mount(rail())
+    const head = q('[data-slot="rail-head"]')!
+    const nav = q('[data-slot="rail-nav"]')!
+    expect(head.textContent).toBe('Hanzo BuildSearch')
+    // Before the rows in document order: the head is in flow, not laid over them.
+    expect(head.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('starts a new session from the brand, by pointer and by keyboard', () => {
+    const onNew = vi.fn()
+    mount(rail({ onNew }))
+    const brand = q('[data-slot="rail-brand"]')!
+    expect(brand.getAttribute('role')).toBe('button')
+    act(() => brand.click())
+    press(brand)
+    expect(onNew).toHaveBeenCalledTimes(2)
+  })
+
+  it('runs a given brand handler instead of New', () => {
+    const onNew = vi.fn()
+    const onBrand = vi.fn()
+    mount(rail({ onNew, onBrand }))
+    act(() => q('[data-slot="rail-brand"]')!.click())
+    expect(onBrand).toHaveBeenCalledOnce()
+    expect(onNew).not.toHaveBeenCalled()
+  })
+
+  it('opens search from a named box, by pointer and by keyboard', () => {
+    const onSearch = vi.fn()
+    mount(rail({ onSearch }))
+    const box = q('[data-slot="rail-search"]')!
+    expect(box.getAttribute('aria-label')).toBe('Search runs')
+    expect(box.textContent).toBe('Search')
+    act(() => box.click())
+    press(box, ' ')
+    expect(onSearch).toHaveBeenCalledTimes(2)
+  })
+
+  it('draws no head when there is neither brand nor search', () => {
+    mount(rail({ brand: undefined, onSearch: undefined }))
+    expect(q('[data-slot="rail-head"]')).toBeNull()
+  })
+})
+
+describe('the account', () => {
+  const open = () => act(() => q('[data-slot="rail-account"]')!.click())
+  const menu = () => document.querySelector<HTMLElement>('[data-slot="rail-menu"]')
+
+  it('draws the name over its second line', () => {
+    mount(rail())
+    const row = q('[data-slot="rail-account"]')!
+    expect(row.textContent).toBe('DDaveacme')
+    expect(q('[data-slot="rail-account-sub"]')!.textContent).toBe('acme')
+  })
+
+  it('opens the account menu on a press: who, the groups, a named choice, then sign-out', () => {
+    mount(rail())
+    expect(menu()).toBeNull()
+    open()
+    expect(q('[data-slot="rail-account"]')!.getAttribute('aria-expanded')).toBe('true')
+    const m = menu()!
+    expect(m.getAttribute('role')).toBe('menu')
+    expect(m.textContent).toContain('Dave')
+    expect(m.textContent).toContain('dave@acme.test')
+    // Inside a menu a choice is a named group of menuitemradio — a radiogroup
+    // is not a child a menu may own.
+    expect(m.querySelector('[role="radiogroup"], [role="radio"]')).toBeNull()
+    const choice = m.querySelector('[role="group"]')!
+    expect(choice.getAttribute('aria-label')).toBe('Organizations')
+    const radios = [...choice.querySelectorAll('[role="menuitemradio"]')].map((r) => [r.textContent, r.getAttribute('aria-checked')])
+    expect(radios).toEqual([
+      ['acme', 'true'],
+      ['zoo', 'false'],
+    ])
+    const actions = [...m.querySelectorAll('[role="menuitem"]')].map((r) => r.textContent)
+    expect(actions).toEqual(['Settings', 'Log out'])
+    // The rail's menu is the account's: no theme row.
+    expect(m.textContent).not.toContain('Theme')
+  })
+
+  it('opens on Enter from the keyboard', () => {
+    mount(rail())
+    press(q('[data-slot="rail-account"]')!)
+    expect(menu()).toBeTruthy()
+  })
+
+  it('runs a row and closes', async () => {
+    const onPress = vi.fn()
+    const onSignOut = vi.fn()
+    mount(rail({ account: { ...ACCOUNT, groups: [[{ id: 'usage', label: 'Usage', onPress }]], onSignOut } }))
+    open()
+    act(() => [...menu()!.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((r) => r.textContent === 'Usage')!.click())
+    expect(onPress).toHaveBeenCalledOnce()
+    expect(q('[data-slot="rail-account"]')!.getAttribute('aria-expanded')).toBe('false')
+    open()
+    act(() => [...menu()!.querySelectorAll<HTMLElement>('[role="menuitem"]')].find((r) => r.textContent === 'Log out')!.click())
+    expect(onSignOut).toHaveBeenCalledOnce()
+  })
+
+  it('is one action with no menu — a signed-out Sign in', () => {
+    const onPress = vi.fn()
+    mount(rail({ account: { name: 'Sign in', onPress } }))
+    const row = q('[data-slot="rail-account"]')!
+    expect(row.getAttribute('aria-haspopup')).toBeNull()
+    expect(row.getAttribute('role')).toBe('button')
+    press(row)
+    expect(onPress).toHaveBeenCalledOnce()
+    expect(menu()).toBeNull()
+  })
+
+  it('opens beside the collapsed rail too', () => {
+    mount(rail({ collapsed: true }))
+    const row = q('[data-slot="rail-account"]')!
+    expect(row.getAttribute('aria-label')).toBe('Account: Dave · acme')
+    act(() => row.click())
+    expect(menu()).toBeTruthy()
+  })
+})
+
+describe('RailNotice', () => {
+  it('offers its action, described by its title, and dismisses', () => {
+    const onAction = vi.fn()
+    const onDismiss = vi.fn()
+    mount(rail({ notice: <RailNotice title="Try Hanzo in Slack" action="Set up" onAction={onAction} onDismiss={onDismiss} /> }))
+    const action = q('[data-slot="rail-notice-action"]')!
+    expect(action.textContent).toBe('Set up')
+    expect(document.getElementById(action.getAttribute('aria-describedby')!)!.textContent).toBe('Try Hanzo in Slack')
+    press(action)
+    act(() => q('[aria-label="Dismiss"]')!.click())
+    expect(onAction).toHaveBeenCalledOnce()
+    expect(onDismiss).toHaveBeenCalledOnce()
+    // Above the account row, inside the rail.
+    const notice = q('[data-slot="rail-notice"]')!
+    expect(notice.compareDocumentPosition(q('[data-slot="rail-foot"]')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('is not drawn on the collapsed rail', () => {
+    mount(rail({ collapsed: true, notice: <RailNotice title="Try Hanzo in Slack" /> }))
+    expect(q('[data-slot="rail-notice"]')).toBeNull()
+  })
+})
+
+describe('RailBar', () => {
+  it('opens the drawer, names the surface and offers search', () => {
+    const onMenu = vi.fn()
+    const onSearch = vi.fn()
+    const onBrand = vi.fn()
+    mount(<RailBar onMenu={onMenu} menuLabel="Open runs" brand="Hanzo Build" onBrand={onBrand} onSearch={onSearch} searchLabel="Search runs" />)
+    const bar = q('[data-slot="rail-bar"]')!
+    expect(bar.textContent).toBe('Hanzo Build')
+    act(() => q('[aria-label="Open runs"]')!.click())
+    act(() => q('[aria-label="Search runs"]')!.click())
+    press(q('[data-slot="rail-brand"]')!)
+    expect([onMenu, onSearch, onBrand].map((f) => f.mock.calls.length)).toEqual([1, 1, 1])
+  })
+
+  it('draws no search when there is none', () => {
+    mount(<RailBar onMenu={() => {}} brand="Hanzo Build" />)
+    expect(q('[aria-label="Search"]')).toBeNull()
   })
 })
 
@@ -167,15 +352,22 @@ describe('collapse is an explicit toggle', () => {
     expect(q('[data-slot="session-rail"]')!.getAttribute('data-collapsed')).toBe('false')
   })
 
-  it('collapsed, draws the icon rail: no labels, no recents, named icons, and the expand control', () => {
+  it('collapsed, draws the icon rail: no head, no labels, no recents, named icons, and the expand control', () => {
     const onCollapse = vi.fn()
-    mount(rail({ collapsed: true, onCollapse }))
+    const onSearch = vi.fn()
+    mount(rail({ collapsed: true, onCollapse, onSearch }))
     const nav = q('[data-slot="session-rail"]')!
     expect(nav.getAttribute('data-collapsed')).toBe('true')
+    expect(q('[data-slot="rail-head"]')).toBeNull()
     expect(q('[data-slot="rail-recents"]')).toBeNull()
     expect(nav.textContent).not.toContain('Artifacts')
+    expect(nav.textContent).not.toContain('Hanzo Build')
     expect(q('[data-slot="rail-new"]')!.getAttribute('aria-label')).toBe('New')
     expect(q('[aria-label="Artifacts"]')!.getAttribute('title')).toBe('Artifacts')
+    // Search stays one press away on the rail, as an icon.
+    press(q('[data-slot="rail-search"]')!)
+    expect(onSearch).toHaveBeenCalledOnce()
+    expect(q('[data-slot="rail-search"]')!.getAttribute('aria-label')).toBe('Search runs')
     act(() => q('[aria-label="Expand sidebar"]')!.click())
     expect(onCollapse).toHaveBeenCalledWith(false)
   })
@@ -195,6 +387,49 @@ describe('the drawer', () => {
     act(() => rows[0].click())
     expect(onOpenChange).toHaveBeenCalledWith(false)
     expect(onOpen).toHaveBeenCalledWith('s1')
+  })
+
+  it('closes when a link, a More link, the brand, search, New or an account row is chosen', () => {
+    const onOpenChange = vi.fn()
+    const link = vi.fn()
+    const deeper = vi.fn()
+    const row = vi.fn()
+    const onSearch = vi.fn()
+    const onNew = vi.fn()
+    mount(
+      rail({
+        open: true,
+        onOpenChange,
+        onSearch,
+        onNew,
+        links: [{ id: 'artifacts', label: 'Artifacts', icon: <Icon />, onPress: link }],
+        more: [{ id: 'projects', label: 'Projects', icon: <Icon />, onPress: deeper }],
+        account: { ...ACCOUNT, groups: [[{ id: 'usage', label: 'Usage', onPress: row }]] },
+      }),
+    )
+    const drawer = () => document.querySelector<HTMLElement>('[data-slot="session-rail-drawer"]')!
+    // A row's text is its icon's then its label's.
+    const inDrawer = (label: string) =>
+      [...drawer().querySelectorAll<HTMLElement>('[data-slot="rail-row"]')].find((r) => r.textContent?.endsWith(label))!
+
+    act(() => inDrawer('Artifacts').click())
+    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-more"]')!.click())
+    // Unfolding More is not a choice: it does not close the drawer.
+    expect(onOpenChange).toHaveBeenCalledTimes(1)
+    act(() => inDrawer('Projects').click())
+    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-brand"]')!.click())
+    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-search"]')!.click())
+    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-account"]')!.click())
+    act(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-slot="rail-menu"] [role="menuitem"]')]
+        .find((r) => r.textContent === 'Usage')!
+        .click(),
+    )
+
+    expect([link, deeper, onSearch, row].map((f) => f.mock.calls.length)).toEqual([1, 1, 1, 1])
+    // The brand starts a new session.
+    expect(onNew).toHaveBeenCalledOnce()
+    expect(onOpenChange.mock.calls).toEqual([[false], [false], [false], [false], [false]])
   })
 
   it('renders nothing extra while closed', () => {
@@ -235,6 +470,17 @@ describe('accessibility', () => {
   it('has no axe violations as a drawer', async () => {
     mount(rail({ open: true }))
     expect(await audit(document.body)).toEqual([])
+  })
+
+  it('has no axe violations with the account menu open and a notice', async () => {
+    mount(rail({ notice: <RailNotice icon={<Icon />} title="Try Hanzo in Slack" action="Set up" onAction={() => {}} onDismiss={() => {}} /> }))
+    act(() => q('[data-slot="rail-account"]')!.click())
+    expect(await audit(document.body)).toEqual([])
+  })
+
+  it('has no axe violations on the phone bar', async () => {
+    mount(<RailBar onMenu={() => {}} menuLabel="Open runs" brand="Hanzo Build" onBrand={() => {}} onSearch={() => {}} />)
+    expect(await audit(host)).toEqual([])
   })
 
   it('has no axe violations on the empty prompt', async () => {

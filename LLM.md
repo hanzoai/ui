@@ -236,6 +236,8 @@ answer it, so no claim is recorded.
 | `@hanzo/ui/primitives/<Member>` | per-member entrypoints (for hosts that modularize `@hanzo/ui` imports) |
 | `@hanzo/ui/data` | `@hanzo/data`: RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/{canvas,dashboard,usage,gitops}` | the optional-peer kits (each re-exports its home package) |
+| `@hanzo/ui/settings` | a settings page (`Settings`) and the parts every section is drawn from (`Heading`, `Group`, `Card`, `Row`, `Field`, `Soft`, `Note`, `Once`) |
+| `@hanzo/ui/catalog` | a catalogue page (`Shelf`) and its cards (`Tiles`, `Tile`, `Featured`, `Add`) — web-only, on `@hanzo/ui/grid` |
 | `@hanzo/ui/product/*` · `/primitives/*` | deep imports — one module without its barrel |
 | `@hanzo/ui/product/pure` | the product layer's RULES with none of the layer (below) |
 | `@hanzo/ui/product/theme-toggle-next` | the `@hanzogui/next-theme` binding, off the barrel on purpose (below) |
@@ -418,15 +420,36 @@ against gui's index signature, which the docs app's typecheck caught.
 `test/axe.ts` does not descend into frames (`iframes: false`): a framed page is
 another document, and axe's frame messaging throws in jsdom besides.
 
-### The sessions surface — `SessionRail`, `EmptyPrompt`, `Composer` one-line, `ChipSelect`
+### The sessions surface — `SessionRail`, `RailBar`, `Home`, `EmptyPrompt`, `Composer` one-line, `ChipSelect`
 
-A coding surface's landing is four pieces, each in the home its kind already had:
+A coding surface's shell is these pieces, each in the home its kind already
+had. hanzo.build's look is the default: an app that mounts them gets it.
 
 | Piece | Home | What it is |
 |---|---|---|
 | `Composer` `inline` · `head` · `foot` | `@hanzo/ui/chat` | `inline` puts field and send in ONE row inside the frame (↵ idle, Stop busy); `head` is drawn ABOVE the frame (the context chips), `foot` UNDER it (attach, voice, mode … model). With neither, the frame is the root exactly as before — no wrapper — so existing callers' trees are unchanged. `ComposerTool` is one quiet 24px control for those rows. |
-| `EmptyPrompt` | `@hanzo/ui/chat` | the pane's question, a `role=heading`, aligned to the composer COLUMN (`column`, default 768), not centred on the pane. The mark is a slot; no brand is picked here. |
-| `SessionRail` | `@hanzo/ui/chat` | New · `links` · a More disclosure · Recents (status dots, sort control) · account + settings + search. Built on `Sidebar`/`SidebarIconButton`. The sidebar canon: collapse is `collapsed` in / `onCollapse` out (the host persists), collapsed is a 56px icon rail whose top row expands, and below `md` the column is `display:none` and the same contents open as a left `Sheet` (`open`/`onOpenChange`); choosing from the drawer closes it. |
+| `Home` | `@hanzo/ui/chat` | a fresh pane: mark + question ($8, centred, `role=heading`) and the composer as `children`, grouped in the middle of the pane in one column (default 768). |
+| `EmptyPrompt` | `@hanzo/ui/chat` | the smaller question at the TOP of the column, for a pane whose composer stays at the foot. The mark is a slot; no brand is picked here. |
+| `SessionRail` | `@hanzo/ui/chat` | head (`brand` wordmark — press = `onBrand ?? onNew` — over a bordered Search box when `onSearch`) · New · `links` · a More disclosure · Recents (status dots, sort control) · `notice` · account row (`name` over `sub`) with its menu · collapse. Built on `Sidebar`/`SidebarIconButton`. The sidebar canon: collapse is `collapsed` in / `onCollapse` out (the host persists), collapsed is a 56px icon rail whose top row expands (then a search icon), and below `md` the column is `display:none` and the same contents open as a left `Sheet` (`open`/`onOpenChange`); EVERY press in the drawer that leads somewhere closes it — New, a recent, a link, a More link, the brand, search, an account-menu row. |
+| `RailBar` | `@hanzo/ui/chat` | the phone's header, below `md` only: menu (opens the drawer) · brand · search. In flow at the top of the pane. |
+| `RailNotice` | `@hanzo/ui/chat` | the card for `SessionRail notice`: icon, title, one action (`aria-describedby` the title), dismiss. |
+
+One way each: search is the head's box (an icon on the collapsed rail), and
+settings/usage/help/sign-out are rows of the ACCOUNT MENU — the foot has only the
+account row and the collapse control. The account menu is the same body
+`UserMenu` draws (`product/account.tsx`, off the product barrel), in a package
+`Popover` anchored to the account row itself: `top-start` on the open rail,
+`right-end` on the collapsed one. No anchor numbers.
+
+**A choice inside a menu is `group` + `menuitemradio`.** `MenuRow`, `UserMenu`'s
+body and `OrgSwitcher` used a `radiogroup` of `radio` rows inside `role="menu"`,
+and axe fails that outright (`aria-required-children`: "children which are not
+allowed: [role=radiogroup]") — a menu owns menu items, groups and separators. gui's
+`role` union is React Native's and lacks `menuitemradio`, so `MenuRow` casts once.
+
+`press(run)` (`backends/gui/press.ts`) is the one spelling of a stack-drawn button
+— `role=button`, `tabIndex 0`, `onPress`, and Enter/Space — and `RING` beside it is
+the one focus ring (five files each declared their own copy).
 | `ChipSelect` · `RepoSelect` · `BranchSelect` | `@hanzo/ui/product` | a chip that opens an UPWARD (flipping) searchable list: chosen row pinned first with ✓, `footer`, `cta`, the search at the BOTTOM. Data is `load(q, after) → {items, next}` (debounced, paged on reaching the end, stale answers dropped by generation) or a whole `items` list searched in place. `quiet` is the plain look for a choice in a row of words. Repo/Branch are thin wrappers over the host's loader and link; no git host is baked in. |
 
 Rules these carry, each learned by building them:
@@ -451,10 +474,39 @@ Rules these carry, each learned by building them:
 Every mounted suite runs `audit()` (`pkg/ui/test/axe.ts`: axe-core, WCAG 2.2 A/AA,
 contrast left to the browser) and asserts zero violations.
 
+### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
+
+Lifted from hanzo.build's Settings and Customize so every surface draws them the
+same way.
+
+- `Settings` — `entries {id,label,group}`, `groups?` (default: the entries' own,
+  first-seen), `active`, `onPick`, `children` (the open section). From `md` up a
+  220px grouped nav (`role=navigation`, each group a list labelled by its name,
+  `aria-current="page"` on the open entry); below `md` a chip row carrying the same
+  entries; the section in a 760px column. The section parts: `Heading` (level 2),
+  `Group` (level 3), `Card` (a bordered box — NOT a list, since sections put form
+  lines and `Soft` in it), `Row` (`first` draws no rule; `mono` sets `$mono`),
+  `Field`, `Soft` (`action?`), `Note` (`role=status`, nothing when empty), `Once`
+  (value in `$mono` + `CopyButton`).
+- `Shelf` — `title`, `detail`, `tabs` (`View[]`, the kinds, an underlined WAI-ARIA
+  tablist: one tab stop, arrows/Home/End), `view`/`views` (Yours/Discover by
+  default, drawn by `agents`' `Views` — the package's one segmented control),
+  `search`/`query`/`onQuery`, `add`/`onAdd`, `children`.
+  `Tiles` (a named list on `@hanzo/ui/grid` `{ min: 280 }` — the grid there is
+  the one grid, so there is no second `Grid`), `Tile` (press and action are two
+  controls side by side), `Featured`, `Add` (+ button / `role=img` check).
+  `catalog` is its own subpath rather than part of `/product` because it is
+  web-only (a CSS grid `div`), and the product layer promises web + native.
+- A titled dialog and a confirm are `DialogTemplate` / `ConfirmDelete`
+  (`/product`) — not lifted again.
+
 The docs (`apps/ui.hanzo.ai`, published by `hanzo.yml`'s `site: ui` — not from
-`hanzoai/shadcn`, whatever the header above says) have `chat` and `agents` groups
-beside `ui`/`product`/`blocks`; an example file is named EXACTLY after its module
-(`examples/product/ChipSelect.tsx`), because the page looks it up by module name.
+`hanzoai/shadcn`, whatever the header above says) have `chat`, `agents`,
+`settings` and `catalog` groups beside `ui`/`product`/`blocks`; an example file is
+named EXACTLY after its module (`examples/product/ChipSelect.tsx`), because the
+page looks it up by module name. A new group is a `GROUPS` entry in `catalog.ts`,
+`app/<group>/{index,[name]}.tsx`, its lines in `app/routes.d.ts`, and a header and
+footer link.
 
 ### modularizeImports support
 

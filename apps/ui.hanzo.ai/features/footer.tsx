@@ -28,6 +28,8 @@ export function Footer() {
           <FootLink href="/product">Product</FootLink>
           <FootLink href="/chat">Chat</FootLink>
           <FootLink href="/agents">Agents</FootLink>
+          <FootLink href="/settings">Settings</FootLink>
+          <FootLink href="/catalog">Catalog</FootLink>
         </Column>
         <Column title="Family">
           <FootLink href={brand.site}>{brand.name}</FootLink>

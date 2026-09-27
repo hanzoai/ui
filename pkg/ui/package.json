@@ -39,6 +39,18 @@
       "require": "./dist/chat/index.cjs",
       "default": "./dist/chat/index.js"
     },
+    "./settings": {
+      "types": "./dist/settings/index.d.ts",
+      "import": "./dist/settings/index.js",
+      "require": "./dist/settings/index.cjs",
+      "default": "./dist/settings/index.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog/index.d.ts",
+      "import": "./dist/catalog/index.js",
+      "require": "./dist/catalog/index.cjs",
+      "default": "./dist/catalog/index.js"
+    },
     "./backdrop": {
       "types": "./dist/backdrop/index.d.ts",
       "import": "./dist/backdrop/index.js",

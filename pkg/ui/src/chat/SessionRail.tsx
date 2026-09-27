@@ -1,55 +1,70 @@
 'use client'
 
 /**
- * SessionRail — the left rail of a sessions surface: start one, go somewhere,
- * reopen a recent one, and who you are.
+ * SessionRail — the left rail of a sessions surface: who it is, find one, start
+ * one, go somewhere, reopen a recent one, and who you are.
  *
+ *   Hanzo Build                 the brand; pressing it starts a new session
+ *   [⌕ Search              ]    finds a session
  *   + New                       the primary row; the current view on a fresh pane
  *   Artifacts · Customize …     the surface's own places, as `links`
  *   More ⌄                      a disclosure over `more`, when there are more
  *   Recents            ⇅        the sessions, newest first, each with a status dot
- *   (z) z@hanzo.ai ⌄   ⚙ ⌕      the account, then settings and search
+ *   [ Try Hanzo in Slack  × ]   `notice` — a `RailNotice`, when the host has one
+ *   (D) Dave            ⌄  ◧    the account and its menu, then collapse
+ *       acme
  *
  * Presentational: no routing, no fetching. `active` comes in, `onOpen` goes out.
  *
- * THE SIDEBAR CANON (console, hanzo.app, hanzo.chat, the extension):
+ * THE SIDEBAR CANON (console, hanzo.app, hanzo.chat, hanzo.build, the extension):
  *   - Collapse is an EXPLICIT toggle and the host persists it. `collapsed` in,
  *     `onCollapse` out. There is no hover-to-expand and no pin.
  *   - Collapsed is a narrow RAIL that stays on screen — icons only, labels as
  *     tooltips — and its top row is the expand control.
- *   - Below `md` there is no rail at all. The column hides, and the same
- *     contents open as a drawer from the left when the host says so (`open`,
- *     `onOpenChange`) — typically from a menu button only a phone shows.
+ *   - Below `md` there is no rail at all. The column hides, `RailBar` is the
+ *     pane's header (menu · brand · search), and its menu opens the same
+ *     contents as a drawer from the left (`open`, `onOpenChange`). Anything
+ *     chosen in the drawer closes it: the drawer is the way to a place, not a
+ *     place.
+ *
+ * ONE WAY to each thing. Search is the box in the head (an icon on the collapsed
+ * rail); settings, usage and signing out are rows of the account menu. There is
+ * no second search or settings control at the foot.
  *
  * Built from the chat `Sidebar` column and its icon button, so the rail is the
- * same material as every other chat surface's.
+ * same material as every other chat surface's. The account menu is the same
+ * body `UserMenu` draws (`product/account.tsx`), anchored to the account row
+ * itself — above it on the open rail, beside it on the collapsed one.
  */
 import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import {
   ArrowDownUp,
   ChevronDown,
   ChevronUp,
+  Menu,
   PanelLeft,
   Plus,
   Search,
-  Settings,
+  X,
 } from '@hanzogui/lucide-icons-2'
 import { useId, useState, type ComponentProps, type ReactNode } from 'react'
 
+import { Button } from '../backends/gui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
+import { press, RING } from '../backends/gui/press'
 import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { slot, tip } from '../backends/gui/slot'
+import { Account, type UserMenuGroup } from '../product/account'
 import { Sidebar, SidebarIconButton } from './Sidebar'
 
 type Col = Omit<ComponentProps<typeof YStack>, 'children'>
+type Row = Omit<ComponentProps<typeof XStack>, 'children'>
 
 /** Expanded width, px — the column's own width, its hairline outside it. */
 const WIDTH = 272
 
 /** Collapsed width, px. The same rail width every chat surface collapses to. */
 const RAIL = 56
-
-/** The keyboard focus ring every control in the package draws. */
-const RING = { outlineColor: '$outlineColor', outlineWidth: 2, outlineStyle: 'solid' } as const
 
 /** One row: 32px, the 8px radius, icon then label. */
 const ROW = { minH: 32, px: '$2', rounded: '$3', gap: '$2.5' } as const
@@ -73,15 +88,42 @@ export interface RailLink {
 }
 
 export interface RailAccount {
-  /** The line shown — an email or a name. */
+  /** The first line — the person's name, or their email. */
   name: string
+  /** The second line, muted — the organization they act in. */
+  sub?: string
   /** Avatar slot. Falls back to the first letter of `name`. */
   avatar?: ReactNode
-  /** The caret beside the name: the account menu. */
+  /** Heads the menu, under the name, when it is not the name itself. */
+  email?: string
+  /**
+   * The menu's rows, in groups with a rule between. A group whose every row
+   * carries `active` is a choice — a named group, the chosen row checked —
+   * which is how an organization switcher is drawn.
+   */
+  groups?: UserMenuGroup[]
+  /** Sign out, at the foot of the menu. */
+  onSignOut?: () => void
+  signOutLabel?: string
+  /**
+   * With no menu (no `groups`, no `onSignOut`), the row is this one action —
+   * a signed-out rail's "Sign in".
+   */
   onPress?: () => void
 }
 
 export interface SessionRailProps extends Col {
+  /**
+   * The head's first line — the surface's name. A string is drawn as the
+   * wordmark; a node brings its own (and its own accessible name).
+   */
+  brand?: ReactNode
+  /** Pressing the brand. Starts a new session (`onNew`) unless given. */
+  onBrand?: () => void
+  /** Search. The head draws a search box; the collapsed rail an icon. */
+  onSearch?: () => void
+  /** The search control's accessible name — "Search runs". */
+  searchLabel?: string
   /** Starts a new session. */
   onNew?: () => void
   newLabel?: string
@@ -103,11 +145,10 @@ export interface SessionRailProps extends Col {
   sortLabel?: string
   /** Shown in place of the list when there are no recents. */
   empty?: ReactNode
-  /** Drawn above the account row — a notice, a setup card. */
+  /** Drawn above the account row — a `RailNotice`. */
   notice?: ReactNode
+  /** Who is signed in, and their menu. */
   account?: RailAccount
-  onSettings?: () => void
-  onSearch?: () => void
   /** Collapsed to the icon rail. The host owns and persists it. */
   collapsed?: boolean
   onCollapse?: (collapsed: boolean) => void
@@ -151,7 +192,36 @@ const Lead = ({ children }: { children: ReactNode }) => (
   </XStack>
 )
 
-interface RowProps {
+/**
+ * The surface's name, the head's first line and the phone bar's middle. A
+ * press when there is somewhere to go; the words alone otherwise.
+ */
+function Brand({ brand, onPress }: { brand: ReactNode; onPress?: () => void }) {
+  const face =
+    typeof brand === 'string' ? (
+      <SizableText size="$5" fontWeight="600" color="$ink" numberOfLines={1}>
+        {brand}
+      </SizableText>
+    ) : (
+      brand
+    )
+  if (!onPress) return <XStack {...slot('rail-brand')} items="center" minW={0}>{face}</XStack>
+  return (
+    <XStack
+      {...slot('rail-brand')}
+      {...press(onPress)}
+      items="center"
+      minW={0}
+      rounded="$2"
+      cursor="pointer"
+      focusVisibleStyle={RING}
+    >
+      {face}
+    </XStack>
+  )
+}
+
+interface ItemProps {
   label: string
   icon: ReactNode
   onPress?: () => void
@@ -164,17 +234,16 @@ interface RowProps {
 }
 
 /** One nav row. On the rail it is the icon alone, the label its tooltip and name. */
-function Row({ label, icon, onPress, active, rail, quiet, expanded, controls, data = 'rail-row' }: RowProps) {
+function Item({ label, icon, onPress, active, rail, quiet, expanded, controls, data = 'rail-row' }: ItemProps) {
   return (
     <XStack
       {...slot(data)}
       {...(rail ? tip(label) : null)}
+      {...press(onPress)}
       {...ROW}
       items="center"
       justify={rail ? 'center' : 'flex-start'}
       cursor="pointer"
-      role="button"
-      tabIndex={0}
       aria-label={rail ? label : undefined}
       aria-current={active ? 'page' : undefined}
       aria-expanded={expanded}
@@ -183,12 +252,6 @@ function Row({ label, icon, onPress, active, rail, quiet, expanded, controls, da
       hoverStyle={{ bg: active ? '$raised' : '$hover' }}
       pressStyle={{ bg: '$raised' }}
       focusVisibleStyle={RING}
-      onPress={onPress}
-      onKeyDown={(e: any) => {
-        if (e?.key !== 'Enter' && e?.key !== ' ') return
-        e.preventDefault?.()
-        onPress?.()
-      }}
     >
       <Lead>{icon}</Lead>
       {rail ? null : (
@@ -200,8 +263,19 @@ function Row({ label, icon, onPress, active, rail, quiet, expanded, controls, da
   )
 }
 
-/** The account line: avatar, the name clamped, the caret. */
-function Account({ account, rail }: { account: RailAccount; rail: boolean }) {
+/** The menu exists when there is something in it to do. */
+const hasMenu = (a: RailAccount) => Boolean(a.onSignOut || a.groups?.some((g) => (Array.isArray(g) ? g : g.items).length))
+
+/**
+ * The account row: avatar, the name over its second line, the caret — and the
+ * menu it opens, anchored to the row itself.
+ */
+function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
+  const [open, setOpen] = useState(false)
+  const menu = hasMenu(account)
+  const acts = menu || Boolean(account.onPress)
+  const said = account.sub ? `${account.name} · ${account.sub}` : account.name
+
   const face = (
     <XStack
       width={24}
@@ -220,45 +294,113 @@ function Account({ account, rail }: { account: RailAccount; rail: boolean }) {
       )}
     </XStack>
   )
-  return (
-    <XStack
-      {...slot('rail-account')}
-      {...(rail ? tip(account.name) : null)}
-      {...ROW}
-      gap="$2"
-      px="$1"
-      flex={rail ? undefined : 1}
-      minW={0}
-      items="center"
-      justify={rail ? 'center' : 'flex-start'}
-      cursor={account.onPress ? 'pointer' : undefined}
-      role={account.onPress ? 'button' : undefined}
-      tabIndex={account.onPress ? 0 : undefined}
-      aria-label={account.onPress ? `Account: ${account.name}` : undefined}
-      aria-haspopup={account.onPress ? 'menu' : undefined}
-      hoverStyle={account.onPress ? { bg: '$hover' } : undefined}
-      onPress={account.onPress}
-      onKeyDown={(e: any) => {
-        if (!account.onPress || (e?.key !== 'Enter' && e?.key !== ' ')) return
-        e.preventDefault?.()
-        account.onPress()
-      }}
-    >
+
+  const look = {
+    ...slot('rail-account'),
+    ...(rail ? tip(said) : null),
+    ...ROW,
+    gap: '$2',
+    px: '$1',
+    flex: rail ? undefined : 1,
+    minW: 0,
+    items: 'center',
+    justify: rail ? 'center' : 'flex-start',
+    cursor: acts ? 'pointer' : undefined,
+    hoverStyle: acts ? ({ bg: '$hover' } as const) : undefined,
+    focusVisibleStyle: acts ? RING : undefined,
+  } as const
+
+  const body = (
+    <>
       {face}
       {rail ? null : (
         <>
-          <SizableText size="$3" numberOfLines={1} flex={1} minW={0} color="$ink">
-            {account.name}
-          </SizableText>
-          {account.onPress ? <ChevronDown size={14} color="$soft" /> : null}
+          <YStack flex={1} minW={0}>
+            <SizableText size="$3" numberOfLines={1} color="$ink">
+              {account.name}
+            </SizableText>
+            {account.sub ? (
+              <SizableText {...slot('rail-account-sub')} size="$1" numberOfLines={1} color="$soft">
+                {account.sub}
+              </SizableText>
+            ) : null}
+          </YStack>
+          {acts ? <ChevronDown size={14} color="$soft" /> : null}
         </>
       )}
-    </XStack>
+    </>
+  )
+
+  if (!menu)
+    return account.onPress ? (
+      <XStack {...look} {...press(account.onPress)} aria-label={rail ? account.name : undefined}>
+        {body}
+      </XStack>
+    ) : (
+      <XStack {...look}>{body}</XStack>
+    )
+
+  return (
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+      // Above the row on the open rail, where the row spans the column; beside
+      // it on the collapsed rail, where above would cover the rail's icons.
+      placement={rail ? 'right-end' : 'top-start'}
+      allowFlip
+      stayInFrame
+    >
+      <PopoverTrigger asChild>
+        <XStack
+          {...look}
+          role="button"
+          tabIndex={0}
+          aria-label={`Account: ${said}`}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          // The trigger opens on a press; the keyboard is this row's own (gui
+          // does not activate role="button" on Enter).
+          onKeyDown={(e: { key?: string; preventDefault?: () => void }) => {
+            if (e?.key !== 'Enter' && e?.key !== ' ') return
+            e.preventDefault?.()
+            setOpen(!open)
+          }}
+        >
+          {body}
+        </XStack>
+      </PopoverTrigger>
+      <PopoverContent
+        {...slot('rail-menu')}
+        role="menu"
+        aria-label="Account"
+        sideOffset={6}
+        // A menu's rows run its full width; gui's popper centres children.
+        items="stretch"
+        width={260}
+        maxW="92vw"
+        p="$1"
+        rounded="$3"
+        elevation="$2"
+      >
+        <Account
+          name={account.name}
+          email={account.email}
+          groups={account.groups}
+          onSignOut={account.onSignOut}
+          signOutLabel={account.signOutLabel}
+          onDone={() => setOpen(false)}
+        />
+      </PopoverContent>
+    </Popover>
   )
 }
 
 /** The rail's contents — the same tree in the column and in the drawer. */
 function Contents({
+  brand,
+  onBrand,
+  onSearch,
+  searchLabel = 'Search',
   onNew,
   newLabel = 'New',
   fresh = false,
@@ -274,8 +416,6 @@ function Contents({
   empty,
   notice,
   account,
-  onSettings,
-  onSearch,
   collapsed = false,
   onCollapse,
   mark,
@@ -291,7 +431,7 @@ function Contents({
       {rail ? (
         // Collapsed, the top row is the way back: the surface's mark when it has
         // one, the panel glyph otherwise. It is never hover — it is a press.
-        <XStack justify="center" pb="$1">
+        <YStack items="center" gap="$1" pb="$1">
           <SidebarIconButton
             label="Expand sidebar"
             width={36}
@@ -300,23 +440,59 @@ function Contents({
           >
             {mark ?? <PanelLeft size={16} />}
           </SidebarIconButton>
-        </XStack>
+          {onSearch ? (
+            <Item label={searchLabel} icon={<Search size={16} />} onPress={onSearch} rail data="rail-search" />
+          ) : null}
+        </YStack>
+      ) : brand || onSearch ? (
+        // Open, the head: the name, and under it the search. In flow, so the
+        // rows below start where it ends at any font size.
+        <YStack {...slot('rail-head')} gap="$2.5" pt={2} pb="$4" shrink={0}>
+          {brand ? (
+            <XStack px="$2.5">
+              <Brand brand={brand} onPress={onBrand ?? onNew} />
+            </XStack>
+          ) : null}
+          {onSearch ? (
+            <XStack
+              {...slot('rail-search')}
+              {...press(onSearch)}
+              aria-label={searchLabel}
+              items="center"
+              gap="$2"
+              px="$2.5"
+              height={34}
+              rounded="$3"
+              borderWidth={1}
+              borderColor="$borderColor"
+              bg="$panel"
+              cursor="pointer"
+              hoverStyle={{ bg: '$hover' }}
+              focusVisibleStyle={RING}
+            >
+              <Search size={15} color="$soft" />
+              <SizableText size="$2" color="$soft">
+                Search
+              </SizableText>
+            </XStack>
+          ) : null}
+        </YStack>
       ) : null}
 
       <YStack {...slot('rail-nav')} gap="$0" role="list">
         {onNew ? (
           <YStack role="listitem">
-            <Row label={newLabel} icon={<Plus size={16} />} onPress={onNew} active={fresh} rail={rail} data="rail-new" />
+            <Item label={newLabel} icon={<Plus size={16} />} onPress={onNew} active={fresh} rail={rail} data="rail-new" />
           </YStack>
         ) : null}
         {links.map((link) => (
           <YStack key={link.id} role="listitem">
-            <Row label={link.label} icon={link.icon} onPress={link.onPress} active={link.active} rail={rail} />
+            <Item label={link.label} icon={link.icon} onPress={link.onPress} active={link.active} rail={rail} />
           </YStack>
         ))}
         {more.length ? (
           <YStack role="listitem">
-            <Row
+            <Item
               label={moreLabel}
               icon={unfolded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               onPress={() => setUnfolded((v) => !v)}
@@ -330,7 +506,7 @@ function Contents({
               <YStack id={moreId} role="list" gap="$0">
                 {more.map((link) => (
                   <YStack key={link.id} role="listitem">
-                    <Row label={link.label} icon={link.icon} onPress={link.onPress} active={link.active} rail={rail} />
+                    <Item label={link.label} icon={link.icon} onPress={link.onPress} active={link.active} rail={rail} />
                   </YStack>
                 ))}
               </YStack>
@@ -374,22 +550,15 @@ function Contents({
                     <YStack key={s.id} role="listitem">
                       <XStack
                         {...slot('rail-session')}
+                        {...press(() => onOpen(s.id))}
                         {...ROW}
                         items="center"
                         cursor="pointer"
-                        role="button"
-                        tabIndex={0}
                         aria-current={on ? 'page' : undefined}
                         bg={on ? '$raised' : undefined}
                         hoverStyle={{ bg: on ? '$raised' : '$hover' }}
                         pressStyle={{ bg: '$raised' }}
                         focusVisibleStyle={RING}
-                        onPress={() => onOpen(s.id)}
-                        onKeyDown={(e: any) => {
-                          if (e?.key !== 'Enter' && e?.key !== ' ') return
-                          e.preventDefault?.()
-                          onOpen(s.id)
-                        }}
                       >
                         <Lead>
                           <StatusDot status={s.status} />
@@ -419,17 +588,7 @@ function Contents({
         borderColor="$borderColor"
         flexDirection={rail ? 'column' : 'row'}
       >
-        {account ? <Account account={account} rail={rail} /> : <XStack flex={1} />}
-        {onSettings ? (
-          <SidebarIconButton label="Settings" onPress={onSettings}>
-            <Settings size={16} />
-          </SidebarIconButton>
-        ) : null}
-        {onSearch ? (
-          <SidebarIconButton label="Search" onPress={onSearch}>
-            <Search size={16} />
-          </SidebarIconButton>
-        ) : null}
+        {account ? <Who account={account} rail={rail} /> : <XStack flex={1} />}
         {onCollapse && !rail ? (
           <SidebarIconButton label="Collapse sidebar" onPress={() => onCollapse(!collapsed)}>
             <PanelLeft size={16} />
@@ -440,16 +599,25 @@ function Contents({
   )
 }
 
+/** `run`, then close the drawer — or nothing, when there is nothing to run. */
+const closing =
+  (close: () => void) =>
+  <A extends unknown[]>(run?: (...args: A) => void) =>
+    run ? (...args: A) => (close(), run(...args)) : undefined
+
 export function SessionRail(props: SessionRailProps) {
   const {
     // Everything the contents read is named here, so none of it reaches the
     // column as a stray DOM attribute through `rest`.
-    onNew, newLabel, fresh, links, more, moreLabel, recents, recentsLabel, active, onOpen,
-    onSort, sortLabel, empty, notice, account, onSettings, onSearch, collapsed = false,
-    onCollapse, mark, open = false, onOpenChange, label = 'Sessions', width = WIDTH,
+    brand, onBrand, onSearch, searchLabel, onNew, newLabel, fresh, links, more, moreLabel,
+    recents, recentsLabel, active, onOpen, onSort, sortLabel, empty, notice, account,
+    collapsed = false, onCollapse, mark, open = false, onOpenChange, label = 'Sessions',
+    width = WIDTH,
     ...rest
   } = props
   const rail = collapsed
+  const shut = closing(() => onOpenChange?.(false))
+  const relink = (list?: RailLink[]) => list?.map((l) => ({ ...l, onPress: shut(l.onPress) }))
 
   return (
     <>
@@ -477,20 +645,177 @@ export function SessionRail(props: SessionRailProps) {
               {label}
             </SheetTitle>
             <YStack {...slot('session-rail-drawer')} role="navigation" aria-label={label} flex={1} minH={0}>
-              {/* Going somewhere from the drawer closes it: the drawer is the
-                  way to a place, not a place. */}
+              {/* Going anywhere from the drawer closes it: the drawer is the way
+                  to a place, not a place. Every press in it that leads
+                  somewhere is wrapped once, here. */}
               <Contents
                 {...props}
                 rail={false}
                 collapsed={false}
                 onCollapse={undefined}
-                onNew={onNew ? () => (onOpenChange?.(false), onNew()) : undefined}
-                onOpen={(sid) => (onOpenChange?.(false), onOpen(sid))}
+                onBrand={shut(onBrand ?? onNew)}
+                onSearch={shut(onSearch)}
+                onNew={shut(onNew)}
+                onOpen={shut(onOpen)!}
+                links={relink(links)}
+                more={relink(more)}
+                account={
+                  account && {
+                    ...account,
+                    onPress: shut(account.onPress),
+                    onSignOut: shut(account.onSignOut),
+                    groups: account.groups?.map((g) =>
+                      Array.isArray(g)
+                        ? g.map((i) => ({ ...i, onPress: shut(i.onPress)! }))
+                        : { ...g, items: g.items.map((i) => ({ ...i, onPress: shut(i.onPress)! })) },
+                    ),
+                  }
+                }
               />
             </YStack>
           </SheetContent>
         </Sheet>
       ) : null}
     </>
+  )
+}
+
+export interface RailNoticeProps extends Row {
+  /** The notice's mark, ~16px. */
+  icon?: ReactNode
+  /** What is on offer, one line. */
+  title: string
+  /** The action's words — "Set up". */
+  action?: string
+  onAction?: () => void
+  /** Dismissing it. The host remembers that it was. */
+  onDismiss?: () => void
+  dismissLabel?: string
+}
+
+/**
+ * RailNotice — a small card at the rail's foot, above the account: an offer
+ * ("Try Hanzo in Slack"), its one action, and a way to put it away. Pass it as
+ * `SessionRail notice`; the host decides when it shows and remembers a dismissal.
+ */
+export function RailNotice({
+  icon,
+  title,
+  action,
+  onAction,
+  onDismiss,
+  dismissLabel = 'Dismiss',
+  ...rest
+}: RailNoticeProps) {
+  const id = useId()
+  return (
+    <XStack
+      {...slot('rail-notice')}
+      items="center"
+      gap="$2.5"
+      px="$3"
+      py="$2.5"
+      rounded="$3"
+      borderWidth={1}
+      borderColor="$borderColor"
+      bg="$panel"
+      {...rest}
+    >
+      {icon ? (
+        <XStack shrink={0} aria-hidden>
+          {icon}
+        </XStack>
+      ) : null}
+      <YStack flex={1} minW={0} gap="$0.5">
+        <SizableText id={`${id}-title`} size="$2" color="$ink" numberOfLines={1}>
+          {title}
+        </SizableText>
+        {action && onAction ? (
+          <XStack
+            {...slot('rail-notice-action')}
+            {...press(onAction)}
+            // "Set up" alone is ambiguous out of context; the title says what.
+            aria-describedby={`${id}-title`}
+            self="flex-start"
+            cursor="pointer"
+            rounded="$1"
+            focusVisibleStyle={RING}
+          >
+            <SizableText size="$1" color="$soft" textDecorationLine="underline">
+              {action}
+            </SizableText>
+          </XStack>
+        ) : null}
+      </YStack>
+      {onDismiss ? (
+        <XStack
+          {...slot('rail-notice-dismiss')}
+          {...press(onDismiss)}
+          {...tip(dismissLabel)}
+          aria-label={dismissLabel}
+          p="$1"
+          rounded="$2"
+          cursor="pointer"
+          hoverStyle={{ bg: '$hover' }}
+          focusVisibleStyle={RING}
+        >
+          <X size={14} />
+        </XStack>
+      ) : null}
+    </XStack>
+  )
+}
+
+export interface RailBarProps extends Row {
+  /** Opens the rail's drawer. */
+  onMenu: () => void
+  /** The menu button's accessible name — "Open runs". */
+  menuLabel?: string
+  /** The surface's name, as the rail's head draws it. */
+  brand?: ReactNode
+  /** Pressing the brand. */
+  onBrand?: () => void
+  /** Search, as the rail's head offers it. */
+  onSearch?: () => void
+  searchLabel?: string
+}
+
+/**
+ * RailBar — the phone's header for a surface with a `SessionRail`: the menu
+ * that opens the rail's drawer, the brand, and search on the right. Only below
+ * `md`, where there is no rail; from `md` up it draws nothing and the rail's own
+ * head carries the same three. Place it at the top of the pane, in flow.
+ */
+export function RailBar({
+  onMenu,
+  menuLabel = 'Open menu',
+  brand,
+  onBrand,
+  onSearch,
+  searchLabel = 'Search',
+  ...rest
+}: RailBarProps) {
+  return (
+    <XStack
+      {...slot('rail-bar')}
+      height={44}
+      px="$2"
+      gap="$2"
+      items="center"
+      shrink={0}
+      $md={{ display: 'none' }}
+      {...rest}
+    >
+      <Button variant="ghost" size="icon-sm" onPress={onMenu} aria-label={menuLabel}>
+        <Menu size={18} />
+      </Button>
+      {brand ? <Brand brand={brand} onPress={onBrand} /> : null}
+      <XStack flex={1} />
+      {onSearch ? (
+        <Button variant="ghost" size="icon-sm" onPress={onSearch} aria-label={searchLabel}>
+          <Search size={18} />
+        </Button>
+      ) : null}
+    </XStack>
   )
 }

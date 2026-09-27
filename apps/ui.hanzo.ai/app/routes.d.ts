@@ -11,31 +11,39 @@ declare module 'one' {
         | `/_sitemap`
         | `/agents`
         | `/blocks`
+        | `/catalog`
         | `/chat`
         | `/docs`
         | `/product`
+        | `/settings`
         | `/ui`
       DynamicRoutes:
         | `/agents/${OneRouter.SingleRoutePart<T>}`
         | `/blocks/${OneRouter.SingleRoutePart<T>}`
+        | `/catalog/${OneRouter.SingleRoutePart<T>}`
         | `/chat/${OneRouter.SingleRoutePart<T>}`
         | `/docs/${string}`
         | `/product/${OneRouter.SingleRoutePart<T>}`
+        | `/settings/${OneRouter.SingleRoutePart<T>}`
         | `/ui/${OneRouter.SingleRoutePart<T>}`
       DynamicRouteTemplate:
         | `/agents/[name]`
         | `/blocks/[name]`
+        | `/catalog/[name]`
         | `/chat/[name]`
         | `/docs/[...slug]`
         | `/product/[name]`
+        | `/settings/[name]`
         | `/ui/[name]`
       IsTyped: true
       RouteTypes: {
         '/agents/[name]': RouteInfo<{ name: string }>
         '/blocks/[name]': RouteInfo<{ name: string }>
+        '/catalog/[name]': RouteInfo<{ name: string }>
         '/chat/[name]': RouteInfo<{ name: string }>
         '/docs/[...slug]': RouteInfo<{ slug: string[] }>
         '/product/[name]': RouteInfo<{ name: string }>
+        '/settings/[name]': RouteInfo<{ name: string }>
         '/ui/[name]': RouteInfo<{ name: string }>
       }
     }

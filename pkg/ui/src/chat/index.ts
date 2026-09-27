@@ -52,6 +52,7 @@ export {
   type ComposerToolProps,
 } from './Composer'
 export { EmptyPrompt, NEXT, type EmptyPromptProps } from './EmptyPrompt'
+export { Home, type HomeProps } from './Home'
 export { Caret, Message, type MessageProps, type Role } from './Message'
 export { Thread, type ThreadProps } from './Thread'
 export { ready, sends, type Mods } from './send'
@@ -79,9 +80,13 @@ export {
 
 export {
   SessionRail,
+  RailBar,
+  RailNotice,
   StatusDot,
   type RailAccount,
+  type RailBarProps,
   type RailLink,
+  type RailNoticeProps,
   type RailSession,
   type SessionRailProps,
   type SessionStatus,

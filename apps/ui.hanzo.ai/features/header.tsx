@@ -73,6 +73,12 @@ export function Header() {
           <NavLink href="/agents" active={path.startsWith('/agents')}>
             Agents
           </NavLink>
+          <NavLink href="/settings" active={path.startsWith('/settings')}>
+            Settings
+          </NavLink>
+          <NavLink href="/catalog" active={path.startsWith('/catalog')}>
+            Catalog
+          </NavLink>
           {brand.framework ? <NavLink href={brand.framework.url}>Framework</NavLink> : null}
         </XStack>
 

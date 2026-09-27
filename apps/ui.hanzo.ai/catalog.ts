@@ -23,7 +23,7 @@ const root = join(process.cwd(), '..', '..')
 const src = join(root, 'pkg', 'ui', 'src')
 export const docsDir = join(process.cwd(), 'data', 'docs')
 
-export type Group = 'ui' | 'product' | 'chat' | 'agents' | 'blocks'
+export type Group = 'ui' | 'product' | 'chat' | 'agents' | 'settings' | 'catalog' | 'blocks'
 export type Member = { name: string; type: boolean }
 export type Entry = { name: string; title: string; members: Member[] }
 export type Example = { name: string; title: string; description: string; source: string }
@@ -61,6 +61,22 @@ const GROUPS: Record<Group, { title: string; blurb: string; source: string; exam
     examples: join(process.cwd(), 'examples', 'agents'),
     route: '/agents',
     path: '/agents',
+  },
+  settings: {
+    title: 'Settings',
+    blurb: 'A settings page — its sections grouped beside a readable column — and the parts every section is drawn from.',
+    source: join(src, 'settings'),
+    examples: join(process.cwd(), 'examples', 'settings'),
+    route: '/settings',
+    path: '/settings',
+  },
+  catalog: {
+    title: 'Catalog',
+    blurb: 'A catalogue page — kinds as tabs, what you have and what you can add, and the cards. Web-only.',
+    source: join(src, 'catalog'),
+    examples: join(process.cwd(), 'examples', 'catalog'),
+    route: '/catalog',
+    path: '/catalog',
   },
   blocks: {
     title: 'Blocks',

@@ -177,6 +177,23 @@ describe('the product barrel', () => {
   })
 })
 
+describe('the shell subpaths', () => {
+  it.runIf(built)('reach no theme toggle, so no optional Next binding either', () => {
+    // `ThemeToggle` reaches `@hanzogui/next-theme` by a dynamic import, which is
+    // right for the product barrel and wrong for a host that only wanted a rail:
+    // Vite 8 stubs a missing optional peer with no exports and fails the BUILD
+    // on `useThemeSetting`. The rail's account menu shares `UserMenu`'s body, and
+    // the first cut of that body imported the toggle for its default theme row —
+    // the consumer gate died on it. The default stays in `UserMenu`.
+    for (const entry of ['chat/index.js', 'settings/index.js', 'catalog/index.js']) {
+      const graph = closure(join(DIST, entry))
+      expect(graph.size, needsBuild).toBeGreaterThan(3)
+      const toggles = [...graph.keys()].map((f) => f.slice(DIST.length + 1)).filter((f) => f.startsWith('product/ThemeToggle'))
+      expect([entry, toggles]).toEqual([entry, []])
+    }
+  })
+})
+
 describe('the pure subpath', () => {
   it.runIf(built)('has no import at all — that is what makes it pure', () => {
     const graph = closure(join(DIST, 'product/pure.js'))

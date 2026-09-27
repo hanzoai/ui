@@ -147,6 +147,9 @@ for (const theme of THEMES) {
         { slot: 'connection-badge', attr: null, value: null, token: '$green3' },
         // The one-line composer sits on `$hover` and needs an edge the eye finds.
         { slot: 'composer', attr: 'data-variant', value: 'inline', token: '$rim' },
+        // The settings page's chosen chip is outlined in the ink it is written in
+        // — the phone's only mark of where you are.
+        { slot: 'settings-chip', attr: 'aria-current', value: 'page', token: '$ink' },
       ]
       const stray = await page.evaluate((except) => {
         const out: string[] = []
@@ -625,3 +628,126 @@ test('the slider knob sits on its track, at its value', async ({ page }) => {
     )
     .toBe(true)
 })
+
+/**
+ * The shell — hanzo.build's look as the library's default, measured where it
+ * matters: at a phone's width and a desktop's, in both themes. Every answer is a
+ * box a browser computed; none is read off the markup.
+ *
+ *   rail     the column from `md` up (open 272, collapsed 56), gone below it
+ *   bar      the phone's header below `md`, gone from it up
+ *   head     brand over search over New, in flow
+ *   account  the name over its second line
+ *   home     the question centred on the pane, the composer under it
+ *   settings the grouped nav from `md` up, the chips below it, a 760 column
+ *   catalog  one card a row on a phone, as many 280px columns as fit on a desktop
+ */
+const shown = (page: Page, sel: string) =>
+  page.$$eval(sel, (els) => els.map((e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0))
+
+const box = async (page: Page, sel: string) => {
+  const [b] = await boxesIn(page, sel)
+  expect(b, `${sel} did not render`).toBeTruthy()
+  return b
+}
+
+for (const theme of THEMES)
+  for (const width of [390, 1280] as const) {
+    const phone = width < 768
+    test.describe(`the shell, ${theme}, ${width}px`, () => {
+      test.beforeEach(async ({ page }) => {
+        await page.setViewportSize({ width, height: 900 })
+        await load(page, theme)
+      })
+
+      test(phone ? 'the rail is gone and the bar carries menu, brand and search' : 'the rail is a column and the bar is gone', async ({ page }) => {
+        const rails = await shown(page, '[data-rail="shell"] [data-slot="session-rail"]')
+        expect(rails, 'the two rails').toEqual(phone ? [false, false] : [true, true])
+        const [bar] = await shown(page, '[data-slot="rail-bar"]')
+        expect(bar, 'the phone bar').toBe(phone)
+        if (phone) {
+          const b = await box(page, '[data-slot="rail-bar"]')
+          expect(Math.round(b.h)).toBe(44)
+          const named = await page.$$eval('[data-slot="rail-bar"] [aria-label]', (els) => els.map((e) => e.getAttribute('aria-label')))
+          expect(named).toEqual(['Open runs', 'Search runs'])
+        } else {
+          const widths = (await boxesIn(page, '[data-rail="shell"] [data-slot="session-rail"]')).map((r) => Math.round(r.w))
+          expect(widths, 'open and collapsed widths').toEqual([272, 56])
+        }
+      })
+
+      if (!phone)
+        test('the head is in flow: brand over search over New, and the account reads on two lines', async ({ page }) => {
+          const rail = '[data-rail="shell"] [data-slot="session-rail"][data-collapsed="false"]'
+          const brand = await box(page, `${rail} [data-slot="rail-brand"]`)
+          const search = await box(page, `${rail} [data-slot="rail-search"]`)
+          const fresh = await box(page, `${rail} [data-slot="rail-new"]`)
+          expect(brand.y + brand.h, 'the brand sits over the search').toBeLessThanOrEqual(search.y + 1)
+          expect(search.y + search.h, 'the search sits over New').toBeLessThanOrEqual(fresh.y + 1)
+          expect(Math.round(search.h)).toBe(34)
+          const border = await page.$eval(`${rail} [data-slot="rail-search"]`, (e) => parseFloat(getComputedStyle(e).borderTopWidth))
+          expect(border, 'the search box is bordered').toBeGreaterThan(0)
+          const row = await box(page, `${rail} [data-slot="rail-account"]`)
+          const sub = await box(page, `${rail} [data-slot="rail-account-sub"]`)
+          expect(sub.y, 'the org is under the name').toBeGreaterThan(row.y + 8)
+          expect(sub.y + sub.h, 'inside the row').toBeLessThanOrEqual(row.y + row.h + 1)
+          // The notice sits in the rail, above the account.
+          const notice = await box(page, `${rail} [data-slot="rail-notice"]`)
+          expect(notice.y + notice.h).toBeLessThanOrEqual(row.y)
+        })
+
+      test('home centres the question on its pane with the composer under it', async ({ page }) => {
+        const pane = await box(page, '[data-home="demo"] [data-slot="home"]')
+        const mark = await box(page, '[data-home="demo"] [data-slot="home-mark"]')
+        const title = await box(page, '[data-home="demo"] [data-slot="home-title"]')
+        const field = await box(page, '[data-home="demo"] [data-slot="composer"]')
+        // The mark and the question are one line, and it is the LINE that is
+        // centred: the question alone sits off by half the mark and its gap.
+        const start = Math.min(mark.x, title.x)
+        const end = Math.max(mark.x + mark.w, title.x + title.w)
+        const left = start - pane.x
+        const right = pane.x + pane.w - end
+        expect(Math.abs(left - right), `the question is centred: ${left} | ${right}`).toBeLessThanOrEqual(2)
+        expect(Math.abs(mark.y + mark.h / 2 - (title.y + title.h / 2)), 'the mark sits on the line').toBeLessThanOrEqual(4)
+        expect(field.y, 'the composer is under the question').toBeGreaterThan(title.y + title.h - 1)
+        expect(field.w, 'the composer spans the column').toBeGreaterThan(Math.min(pane.w - 40, 700))
+        const size = await page.$eval('[data-home="demo"] [data-slot="home-title"]', (e) => parseFloat(getComputedStyle(e).fontSize))
+        expect(size, 'the question is display-sized').toBeGreaterThanOrEqual(26)
+      })
+
+      test(phone ? 'settings lists its sections as chips over the column' : 'settings lists its sections in a grouped column beside a 760 measure', async ({ page }) => {
+        const [nav] = await shown(page, '[data-settings="demo"] [data-slot="settings-nav"]')
+        const [chips] = await shown(page, '[data-settings="demo"] [data-slot="settings-chips"]')
+        expect([nav, chips]).toEqual(phone ? [false, true] : [true, false])
+        if (!phone) expect(Math.round((await box(page, '[data-settings="demo"] [data-slot="settings-nav"]')).w)).toBe(220)
+        const body = await box(page, '[data-settings="demo"] [data-slot="settings-body"]')
+        expect(body.w, 'the section column is a measure').toBeLessThanOrEqual(760)
+        const current = await page.$$eval(
+          `[data-settings="demo"] [data-slot="${phone ? 'settings-chip' : 'settings-entry'}"][aria-current="page"]`,
+          (els) => els.filter((e) => e.getBoundingClientRect().width > 0).map((e) => e.textContent),
+        )
+        expect(current).toEqual(['General'])
+      })
+
+      test(phone ? 'the catalogue stacks its cards and drops the tab icons' : 'the catalogue lays its cards in as many 280px columns as fit', async ({ page }) => {
+        const tiles = await boxesIn(page, '[data-shelf="demo"] [data-slot="tile"]')
+        expect(tiles.length).toBe(3)
+        // As many 280px tracks as the list holds with its 12px gaps — one on a
+        // phone, and on a desktop whatever the gallery's column gives it.
+        const list = await box(page, '[data-shelf="demo"] [data-slot="grid"]')
+        const fit = Math.max(1, Math.floor((list.w + 12) / (280 + 12)))
+        if (phone) expect(fit).toBe(1)
+        else expect(fit, 'a desktop fits more than one card').toBeGreaterThan(1)
+        const rows = rowsOf(tiles).sort((a, b) => a[0].y - b[0].y)
+        expect(rows[0].length, 'cards in the first row').toBe(Math.min(3, fit))
+        const w = tiles.map((t) => Math.round(t.w))
+        expect(Math.max(...w) - Math.min(...w), `ragged cards: ${w.join(', ')}`).toBeLessThanOrEqual(1)
+        const icons = await page.$$eval('[data-shelf="demo"] [data-slot="shelf-tab"] svg', (els) =>
+          els.map((e) => e.getBoundingClientRect().width > 0),
+        )
+        expect(icons).toEqual(phone ? [false, false] : [true, true])
+        const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+        expect(overflow, 'the page scrolls sideways').toBeLessThanOrEqual(1)
+      })
+    })
+  }

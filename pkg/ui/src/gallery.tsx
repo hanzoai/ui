@@ -43,6 +43,7 @@ import {
   ComposerTool,
   EmptyPrompt,
   Failure,
+  Home,
   Header as ChatHeader,
   Message,
   ShareButton,
@@ -56,6 +57,8 @@ import {
   SidebarSection,
   SidebarUser,
   SessionRail,
+  RailBar,
+  RailNotice,
   Sources,
   Thread,
   type Source,
@@ -83,6 +86,23 @@ import {
 } from './backends/gui'
 // Off the barrel — web-only, so it is imported the way a consumer imports it.
 import { Cell, Grid } from './grid'
+import { BookOpen, Plug } from '@hanzogui/lucide-icons-2'
+// The settings page and its section parts. Aliased where a part shares a word
+// with a primitive above (`Card`, `Field`), exactly as a consumer importing both
+// would have to.
+import {
+  Card as SettingsCard,
+  Field as SettingsField,
+  Group as SettingsGroup,
+  Heading as SettingsHeading,
+  Note,
+  Once,
+  Row as SettingsRow,
+  Settings,
+  Soft,
+} from './settings'
+// A catalogue page — web-only, like the grid its cards lay out on.
+import { Add, Featured, Shelf, Tile, Tiles } from './catalog'
 import {
   Attachments,
   CHAT,
@@ -136,6 +156,19 @@ const SESSIONS = [
   { id: 's3', title: 'Paused audit', status: 'paused' as const },
   { id: 's4', title: 'Enterprise/OSS feature audit', status: 'error' as const },
   { id: 's5', title: 'Idle one', status: 'idle' as const },
+]
+
+/** A settings page's sections, in two groups, so both group labels render. */
+const ENTRIES = [
+  { id: 'general', label: 'General', group: 'Settings' },
+  { id: 'account', label: 'Account', group: 'Settings' },
+  { id: 'keys', label: 'API keys', group: 'Code' },
+]
+
+/** A shelf's kinds, one with an icon and one without, so the tab draws both. */
+const KINDS = [
+  { id: 'skills', label: 'Skills', icon: BookOpen },
+  { id: 'connectors', label: 'Connectors', icon: Plug },
 ]
 
 /** A loader that never needs to answer — the chips render closed. */
@@ -857,13 +890,18 @@ export const Gallery = () => (
       </div>
     </Section>
 
-    {/* The sessions surface: the rail in both widths, the empty pane's
-        question, and the composer in its one-line shape with the context row
-        above it and the controls below — chips plain and quiet, idle and busy,
-        because each is its own set of values. */}
+    {/* The sessions surface: the rail in both widths — the open one with its
+        head (brand, search), a notice and a two-line account with a menu, the
+        collapsed one with its search icon and a signed-out row — the phone's
+        bar, both empty panes, and the composer in its one-line shape with the
+        context row above it and the controls below — chips plain and quiet,
+        idle and busy, because each is its own set of values. */}
     <Section name="sessions">
-      <div style={{ display: 'flex', width: '100%', maxWidth: 560, height: 420, gap: 12 }}>
+      <div data-rail="shell" style={{ display: 'flex', width: '100%', maxWidth: 560, height: 520, gap: 12 }}>
         <SessionRail
+          brand="Hanzo Build"
+          onSearch={NOOP}
+          searchLabel="Search runs"
           onNew={NOOP}
           fresh
           links={[{ id: 'a', label: 'Artifacts', icon: <Badge>a</Badge> }]}
@@ -872,14 +910,35 @@ export const Gallery = () => (
           active="s2"
           onOpen={NOOP}
           onSort={NOOP}
-          account={{ name: 'z@hanzo.ai', onPress: NOOP }}
-          onSettings={NOOP}
-          onSearch={NOOP}
+          notice={<RailNotice icon={<Badge>s</Badge>} title="Try Hanzo in Slack" action="Set up" onAction={NOOP} onDismiss={NOOP} />}
+          account={{
+            name: 'Dave',
+            sub: 'acme',
+            email: 'dave@acme.test',
+            groups: [{ label: 'Organization', items: [{ id: 'acme', label: 'acme', active: true, onPress: NOOP }] }],
+            onSignOut: NOOP,
+          }}
           onCollapse={NOOP}
         />
-        <SessionRail onNew={NOOP} recents={SESSIONS} onOpen={NOOP} collapsed onCollapse={NOOP} account={{ name: 'z' }} />
+        <SessionRail
+          onNew={NOOP}
+          onSearch={NOOP}
+          recents={SESSIONS}
+          onOpen={NOOP}
+          collapsed
+          onCollapse={NOOP}
+          account={{ name: 'Sign in', onPress: NOOP }}
+        />
+      </div>
+      <div style={{ width: '100%', maxWidth: 560 }}>
+        <RailBar onMenu={NOOP} menuLabel="Open runs" brand="Hanzo Build" onBrand={NOOP} onSearch={NOOP} searchLabel="Search runs" />
       </div>
       <EmptyPrompt mark={<Badge>h</Badge>} />
+      <div data-home="demo" style={{ display: 'flex', width: '100%', height: 320 }}>
+        <Home mark={<Badge>h</Badge>}>
+          <Composer inline value="" onChange={NOOP} onSend={NOOP} placeholder="Describe a task or ask a question" />
+        </Home>
+      </div>
       <div style={{ width: '100%', maxWidth: 768 }}>
         <Composer
           inline
@@ -908,6 +967,66 @@ export const Gallery = () => (
       </div>
       <div style={{ width: '100%', maxWidth: 768 }}>
         <Composer inline value="a draft" onChange={NOOP} onSend={NOOP} onStop={NOOP} busy />
+      </div>
+    </Section>
+
+    {/* A settings page (@hanzo/ui/settings): the grouped nav and the chip row
+        (one is always hidden by width, and both carry the chosen entry and an
+        idle one), and a section drawn from every part — a heading with its
+        action, a group over a card whose first row and later row differ by
+        their rule, a mono title, a field with its hint, the quiet line with
+        and without an action, a note, and a credential shown once. */}
+    <Section name="settings">
+      <div data-settings="demo" style={{ display: 'flex', width: '100%', height: 560 }}>
+        <Settings entries={ENTRIES} active="general" onPick={NOOP}>
+          <YStack gap="$6">
+            <SettingsHeading title="General" detail="How this surface looks and listens." action={<Button size="sm">Save</Button>} />
+            <SettingsGroup title="Appearance" detail="Per browser.">
+              <SettingsCard>
+                <SettingsRow first title="Theme" detail="Follows the system." trailing={<Switch />} />
+                <SettingsRow mono title="hk-live-3f9a" leading={<Badge>k</Badge>} />
+              </SettingsCard>
+            </SettingsGroup>
+            <SettingsField label="Call me" hint="What the home page greets you by.">
+              <Input placeholder="Name" aria-label="Call me" />
+            </SettingsField>
+            <SettingsCard>
+              <Soft>No keys yet.</Soft>
+            </SettingsCard>
+            <Soft action={<Button size="sm">Sign in</Button>}>Sign in to see your settings.</Soft>
+            <Note>Saved.</Note>
+            <Once value="hk-live-3f9a0c" label="API key" />
+          </YStack>
+        </Settings>
+      </div>
+    </Section>
+
+    {/* A catalogue page (@hanzo/ui/catalog): the shelf's tabs chosen and idle,
+        Yours/Discover, the search and the Add, and the cards — a featured one,
+        and tiles that open and do not, added and not, busy. */}
+    <Section name="catalog">
+      <div data-shelf="demo" style={{ display: 'flex', width: '100%', height: 720 }}>
+        <Shelf
+          title="Customize"
+          detail="What the agent brings to a run."
+          tabs={KINDS}
+          tab="skills"
+          onTab={NOOP}
+          view="discover"
+          onView={NOOP}
+          search="Search skills"
+          query=""
+          onQuery={NOOP}
+          add="New skill"
+          onAdd={NOOP}
+        >
+          <Featured title="Triage" detail="How we triage an issue." meta="Saved Sep 21" mark={<Badge>t</Badge>} onOpen={NOOP} action={<Add name="Triage" added={false} onPress={NOOP} />} />
+          <Tiles label="Skills to add">
+            <Tile title="git_repos" detail="List the forge's repositories." meta="git" mark={<Badge>g</Badge>} onOpen={NOOP} action={<Add name="git_repos" added={false} onPress={NOOP} />} />
+            <Tile title="git_branches" detail="List a repository's branches." meta="git" onOpen={NOOP} action={<Add name="git_branches" added onPress={NOOP} />} />
+            <Tile title="kms_secrets" detail="Read the names of an org's secrets." action={<Add name="kms_secrets" added={false} busy onPress={NOOP} />} />
+          </Tiles>
+        </Shelf>
       </div>
     </Section>
 
