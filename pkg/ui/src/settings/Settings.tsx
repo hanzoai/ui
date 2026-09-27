@@ -24,7 +24,7 @@
  * The section's own parts — heading, groups, bordered lists, fields, the quiet
  * lines — are in `./Section`, so every section reads as one page.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import { useId, type ComponentProps, type ReactNode } from 'react'
 
 import { press, RING } from '../backends/gui/press'
@@ -74,20 +74,22 @@ export function Settings<E extends Entry>({
 
   return (
     <XStack {...slot('settings')} flex={1} minH={0} minW={0} {...rest}>
+      {/* Both columns scroll in a ScrollView, never a stack told to overflow:
+          `overflow: scroll` on a stack scrolls nothing on native. gui leaves a
+          ScrollView's overflow visible on web, hence `overflowY`. */}
       <YStack
         {...slot('settings-nav')}
         role="navigation"
         aria-label={title}
         width={NAV}
         shrink={0}
+        minH={0}
         borderRightWidth={1}
         borderColor="$borderColor"
-        px="$2"
-        py="$4"
-        gap="$4"
-        overflow="scroll"
         $max-md={{ display: 'none' }}
       >
+        <ScrollView flex={1} minH={0} overflowY="auto" showsVerticalScrollIndicator={false}>
+          <YStack px="$2" py="$4" gap="$4">
         <SizableText size="$4" color="$ink" px="$2">
           {title}
         </SizableText>
@@ -128,9 +130,11 @@ export function Settings<E extends Entry>({
             </YStack>
           )
         })}
+          </YStack>
+        </ScrollView>
       </YStack>
 
-      <YStack flex={1} minW={0} minH={0} overflow="scroll">
+      <ScrollView flex={1} minW={0} minH={0} overflowY="auto">
         <XStack
           {...slot('settings-chips')}
           role="navigation"
@@ -168,7 +172,7 @@ export function Settings<E extends Entry>({
         <YStack {...slot('settings-body')} width="100%" maxW={MEASURE} self="center" px="$5" py="$6">
           {children}
         </YStack>
-      </YStack>
+      </ScrollView>
     </XStack>
   )
 }

@@ -23,7 +23,7 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Plus } from '@hanzogui/lucide-icons-2'
-import { useRef, type ComponentProps, type ReactNode } from 'react'
+import { useId, useRef, type ComponentProps, type ReactNode } from 'react'
 
 import { Views, type View } from '../agents/Workspace'
 import { Button } from '../backends/gui/button'
@@ -89,6 +89,11 @@ export function Shelf({
   ...rest
 }: ShelfProps) {
   const refs = useRef<(HTMLElement | null)[]>([])
+  const id = useId()
+  const panel = `${id}-panel`
+  // The strip's one tab stop is the open kind — or the first, when `tab` names
+  // none, so the strip is never unreachable from the keyboard.
+  const stop = Math.max(0, tabs.findIndex((t) => t.id === tab))
   const move = (e: { key?: string; preventDefault?: () => void }, index: number) => {
     const last = tabs.length - 1
     const to =
@@ -153,9 +158,11 @@ export function Shelf({
                   refs.current[index] = el as HTMLElement | null
                 }}
                 {...slot('shelf-tab')}
+                id={`${id}-tab-${t.id}`}
                 role="tab"
-                tabIndex={on ? 0 : -1}
+                tabIndex={index === stop ? 0 : -1}
                 aria-selected={on}
+                aria-controls={on ? panel : undefined}
                 onPress={() => onTab(t.id)}
                 onKeyDown={(e: { key?: string; preventDefault?: () => void }) => move(e, index)}
                 items="center"
@@ -181,6 +188,15 @@ export function Shelf({
           })}
         </XStack>
 
+        {/* The open kind's panel: its halves, its search, its Add and its cards. */}
+        <YStack
+          {...slot('shelf-panel')}
+          id={panel}
+          role="tabpanel"
+          aria-labelledby={tabs.some((t) => t.id === tab) ? `${id}-tab-${tab}` : undefined}
+          aria-label={tabs.some((t) => t.id === tab) ? undefined : title}
+          gap="$4"
+        >
         <XStack items="center" gap="$2">
           <Views views={views} value={view} onChange={onView} label="Show" labels="all" />
           <XStack flex={1} />
@@ -193,6 +209,7 @@ export function Shelf({
         <Input value={query} onChangeText={onQuery} placeholder={`${search}…`} aria-label={search} />
 
         {children}
+        </YStack>
       </YStack>
     </YStack>
   )

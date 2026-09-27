@@ -142,6 +142,24 @@ describe('Shelf', () => {
     expect(onAdd).toHaveBeenCalledOnce()
   })
 
+  it('controls one tabpanel from the open tab, labelled by it, holding the search and the cards', () => {
+    mount(shelf())
+    const panel = q('[role="tabpanel"]')!
+    const open = all('[data-slot="shelf-tab"]').find((t) => t.getAttribute('aria-selected') === 'true')!
+    expect(open.getAttribute('aria-controls')).toBe(panel.id)
+    expect(panel.getAttribute('aria-labelledby')).toBe(open.id)
+    expect(panel.contains(q('input[aria-label="Search connectors"]'))).toBe(true)
+    expect(panel.contains(q('[role="list"][aria-label="Connectors to add"]'))).toBe(true)
+    // Only the open tab claims the panel.
+    expect(all('[data-slot="shelf-tab"][aria-controls]')).toHaveLength(1)
+  })
+
+  it('keeps the strip reachable when the open kind is none of the tabs', () => {
+    mount(shelf({ tab: 'gone' }))
+    expect(all('[data-slot="shelf-tab"]').map((t) => t.getAttribute('tabindex'))).toEqual(['0', '-1', '-1'])
+    expect(q('[role="tabpanel"]')!.getAttribute('aria-label')).toBe('Customize')
+  })
+
   it('draws no Add when there is none to offer', () => {
     mount(shelf({ add: undefined, onAdd: undefined }))
     expect(host.textContent).not.toContain('Add connector')
@@ -170,7 +188,11 @@ describe('the cards', () => {
       </Tiles>,
     )
     const open = q('[data-slot="tile-open"]')!
-    expect(open.getAttribute('aria-label')).toBe('git_repos')
+    // Named by its title and described by the lines under it — an aria-label
+    // of the title alone hid what it does from a reader.
+    expect(open.getAttribute('aria-label')).toBeNull()
+    expect(document.getElementById(open.getAttribute('aria-labelledby')!)!.textContent).toBe('git_repos')
+    expect(open.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent)).toEqual(['List repositories.'])
     act(() => open.click())
     key(open, 'Enter')
     expect(onOpen).toHaveBeenCalledTimes(2)
@@ -191,17 +213,37 @@ describe('the cards', () => {
     expect(q('[role="button"]')).toBeNull()
   })
 
-  it('say added with a check, and wait while busy', () => {
+  it('say added with a check, and wait while busy — inert, still focusable, still named', () => {
+    const onPress = vi.fn()
     mount(
       <>
-        <Add name="a" added onPress={() => {}} />
-        <Add name="b" added={false} busy onPress={() => {}} />
+        <Add name="a" added onPress={onPress} />
+        <Add name="b" added={false} busy onPress={onPress} />
       </>,
     )
-    const done = q('[data-slot="add-done"]')!
-    expect([done.getAttribute('role'), done.getAttribute('aria-label')]).toEqual(['img', 'a is added'])
+    const a = q('[aria-label="a is added"]')!
     const b = q('[aria-label="Add b"]')!
-    expect(b.hasAttribute('disabled') || b.getAttribute('aria-disabled') === 'true').toBe(true)
+    for (const el of [a, b]) {
+      expect(el.tagName).toBe('BUTTON')
+      expect(el.hasAttribute('disabled')).toBe(false)
+      expect(el.getAttribute('aria-disabled')).toBe('true')
+      act(() => el.click())
+    }
+    expect(b.getAttribute('aria-busy')).toBe('true')
+    expect(onPress).not.toHaveBeenCalled()
+  })
+
+  it('keep focus on the one button when the add lands', () => {
+    function Card({ added }: { added: boolean }) {
+      return <Add name="git_repos" added={added} onPress={() => {}} />
+    }
+    mount(<Card added={false} />)
+    const before = q('[aria-label="Add git_repos"]')!
+    before.focus()
+    mount(<Card added />)
+    const after = q('[aria-label="git_repos is added"]')!
+    expect(after).toBe(before)
+    expect(document.activeElement).toBe(after)
   })
 
   it('feature one card first, under its tag', () => {
@@ -209,6 +251,8 @@ describe('the cards', () => {
     mount(<Featured title="Triage" detail="How we triage." mark={<span aria-hidden>T</span>} onOpen={onOpen} tag="New" />)
     const open = q('[data-slot="featured-open"]')!
     expect(open.textContent).toBe('TNewTriageHow we triage.')
+    expect(document.getElementById(open.getAttribute('aria-labelledby')!)!.textContent).toBe('Triage')
+    expect(open.getAttribute('aria-describedby')!.split(' ').map((id) => document.getElementById(id)!.textContent)).toEqual(['New', 'How we triage.'])
     key(open, ' ')
     expect(onOpen).toHaveBeenCalledOnce()
   })

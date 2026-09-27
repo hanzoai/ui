@@ -19,7 +19,7 @@
  */
 import { SizableText, XStack, YStack } from '@hanzo/gui'
 import { Check, Plus } from '@hanzogui/lucide-icons-2'
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { press, RING } from '../backends/gui/press'
@@ -63,22 +63,33 @@ export interface TileProps {
   onOpen?: () => void
 }
 
+/**
+ * The press's name is the title and its description the lines under it: named
+ * by `aria-label` alone, a reader heard "git_repos, button" and never what it
+ * does or where it comes from.
+ */
+const told = (id: string, ...parts: [string, unknown][]) => {
+  const ids = parts.filter(([, v]) => v).map(([k]) => `${id}-${k}`)
+  return ids.length ? ids.join(' ') : undefined
+}
+
 /** One card: what it is, a few lines about it, a quiet fact, and its action. */
 export function Tile({ title, detail, meta, mark, action, onOpen }: TileProps) {
+  const id = useId()
   const body = (
     <>
       {mark}
       <YStack flex={1} minW={0} gap="$1">
-        <SizableText size="$3" color="$ink" numberOfLines={1}>
+        <SizableText id={`${id}-title`} size="$3" color="$ink" numberOfLines={1}>
           {title}
         </SizableText>
         {detail ? (
-          <SizableText size="$1" color="$soft" numberOfLines={3}>
+          <SizableText id={`${id}-detail`} size="$1" color="$soft" numberOfLines={3}>
             {detail}
           </SizableText>
         ) : null}
         {meta ? (
-          <SizableText size="$1" color="$soft" numberOfLines={1} opacity={0.8}>
+          <SizableText id={`${id}-meta`} size="$1" color="$soft" numberOfLines={1} opacity={0.8}>
             {meta}
           </SizableText>
         ) : null}
@@ -103,7 +114,8 @@ export function Tile({ title, detail, meta, mark, action, onOpen }: TileProps) {
         <XStack
           {...slot('tile-open')}
           {...press(onOpen)}
-          aria-label={title}
+          aria-labelledby={`${id}-title`}
+          aria-describedby={told(id, ['detail', detail], ['meta', meta])}
           flex={1}
           minW={0}
           gap="$3"
@@ -138,6 +150,7 @@ export interface FeaturedProps {
 
 /** The one card the shelf puts first, drawn larger. Its action wraps under it on a phone. */
 export function Featured({ title, detail, meta, mark, action, onOpen, tag = 'Featured' }: FeaturedProps) {
+  const id = useId()
   return (
     <XStack
       {...slot('featured')}
@@ -154,7 +167,8 @@ export function Featured({ title, detail, meta, mark, action, onOpen, tag = 'Fea
       <XStack
         {...slot('featured-open')}
         {...press(onOpen)}
-        aria-label={title}
+        aria-labelledby={`${id}-title`}
+        aria-describedby={told(id, ['tag', tag], ['detail', detail], ['meta', meta])}
         flex={1}
         minW={220}
         gap="$4"
@@ -166,17 +180,17 @@ export function Featured({ title, detail, meta, mark, action, onOpen, tag = 'Fea
       >
         {mark}
         <YStack flex={1} minW={0} gap="$1.5">
-          <SizableText size="$1" color="$soft" textTransform="uppercase" letterSpacing={1}>
+          <SizableText id={`${id}-tag`} size="$1" color="$soft" textTransform="uppercase" letterSpacing={1}>
             {tag}
           </SizableText>
-          <SizableText size="$6" color="$ink" numberOfLines={1}>
+          <SizableText id={`${id}-title`} size="$6" color="$ink" numberOfLines={1}>
             {title}
           </SizableText>
-          <SizableText size="$2" color="$soft" numberOfLines={3}>
+          <SizableText id={`${id}-detail`} size="$2" color="$soft" numberOfLines={3}>
             {detail}
           </SizableText>
           {meta ? (
-            <SizableText size="$1" color="$soft" numberOfLines={1}>
+            <SizableText id={`${id}-meta`} size="$1" color="$soft" numberOfLines={1}>
               {meta}
             </SizableText>
           ) : null}
@@ -197,27 +211,29 @@ export interface AddProps {
   onPress: () => void
 }
 
-/** A card's add control: a plus while it is not yours, a check once it is. */
+/**
+ * A card's add control: a plus while it is not yours, a check once it is.
+ *
+ * ONE button through all three states, so focus stays where it was: swapping
+ * the button for a bare check (or `disabled`, which drops focus) sent a
+ * keyboard user back to the top of the page the moment the add landed. Busy and
+ * added are `aria-disabled` — still focusable, still named, inert.
+ */
 export function Add({ name, added, busy, onPress }: AddProps) {
-  if (added) {
-    return (
-      <XStack
-        {...slot('add-done')}
-        role="img"
-        aria-label={`${name} is added`}
-        width={32}
-        height={32}
-        items="center"
-        justify="center"
-        shrink={0}
-      >
-        <Check size={16} />
-      </XStack>
-    )
-  }
+  const inert = added || busy
   return (
-    <Button size="icon-sm" variant="outline" aria-label={`Add ${name}`} disabled={busy} onPress={onPress}>
-      <Plus size={14} />
+    <Button
+      size="icon-sm"
+      variant={added ? 'ghost' : 'outline'}
+      aria-label={added ? `${name} is added` : `Add ${name}`}
+      aria-disabled={inert || undefined}
+      aria-busy={busy || undefined}
+      onPress={inert ? undefined : onPress}
+      opacity={busy ? 0.5 : 1}
+      cursor={inert ? 'default' : 'pointer'}
+      hoverStyle={added ? { bg: 'transparent' } : undefined}
+    >
+      {added ? <Check size={16} /> : <Plus size={14} />}
     </Button>
   )
 }

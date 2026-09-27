@@ -445,7 +445,39 @@ account row and the collapse control. The account menu is the same body
 body and `OrgSwitcher` used a `radiogroup` of `radio` rows inside `role="menu"`,
 and axe fails that outright (`aria-required-children`: "children which are not
 allowed: [role=radiogroup]") — a menu owns menu items, groups and separators. gui's
-`role` union is React Native's and lacks `menuitemradio`, so `MenuRow` casts once.
+`role` union is React Native's and lacks `menuitemradio`, so `MenuRow` casts once,
+and on native (no such role) the row is `radio`.
+
+**Every account sheet works from the keyboard.** A `MenuRow` is `press(onPress)`
+(focusable, Enter/Space) with the ring; the popover's focus scope then lands on
+the first row when the sheet opens and loops Tab inside it; `menuKeyDown`
+(`product/menu/roving.ts`, now over `menuitem`/`menuitemradio`/`menuitemcheckbox`,
+and leaving a field's own Home/End alone) moves on the arrows with wrap. Escape
+is the popover's — and the RETURN of focus to the trigger is ours: gui's popover
+returns it through a trigger ref that an `asChild` child never fills, so focus
+fell to `<body>`. `UserMenu`, `OrgSwitcher` and the rail's menu each hold a ref
+to their trigger and focus it in `onCloseAutoFocus`. The drawer does the same for
+`RailBar`'s menu button: a dialog returns focus to its own trigger and the drawer
+has none, so `SessionRail` remembers what had focus when it opened and hands it
+back on close (after the closing event, so an overlay tap's mousedown cannot blur
+it again). It reads the opener in RENDER, on the render where `open` turns true:
+gui's Dialog is a native `<dialog>`, Chromium moves focus into it as it opens, and
+then the focus scope's `onOpenAutoFocus` never fires (focus is already inside) —
+the first cut read it there, passed on jsdom (whose `<dialog>` moves nothing) and
+left focus on `<body>` in every browser. So the consumer suite measures it:
+`?page=phone` renders `Phone` from `@hanzo/ui/gallery` (a bar and a drawer on a
+page with nothing else open — the gallery's open modals would take focus back).
+The drawer tells the host `onOpenChange(false)` once per gesture: a choice and the
+dialog's own dismissal can both fire in the turn it unmounts, so a latch collapses
+them and lets go after the turn. Mutation-checked in `SessionRail.test.tsx` /
+`product/menu.test.tsx`.
+
+A stack that should scroll is a `ScrollView` (`overflowY="auto"`, as `Thread`),
+never a stack given `overflow="scroll"` — that scrolls nothing on native. `Home`
+and `Settings` are; `Shelf` is web-only with its grid. `Add` is ONE button through
+add, busy and added (`aria-disabled`, still focusable), so focus does not fall to
+the page when the add lands. A settings `Note`'s `role=status` is always mounted,
+empty when silent — a live region that mounts with its text is often unread.
 
 `press(run)` (`backends/gui/press.ts`) is the one spelling of a stack-drawn button
 — `role=button`, `tabIndex 0`, `onPress`, and Enter/Space — and `RING` beside it is

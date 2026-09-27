@@ -7,12 +7,11 @@
 // exactly the packaging defects this exists to catch.
 import { createRoot } from 'react-dom/client'
 import { Hanzo } from '@hanzo/ui'
-import { Gallery } from '@hanzo/ui/gallery'
+import { Gallery, Phone } from '@hanzo/ui/gallery'
 
-const theme = new URLSearchParams(location.search).get('theme') === 'light' ? 'light' : 'dark'
+const query = new URLSearchParams(location.search)
+const theme = query.get('theme') === 'light' ? 'light' : 'dark'
 
 createRoot(document.getElementById('root')).render(
-  <Hanzo theme={theme}>
-    <Gallery />
-  </Hanzo>,
+  <Hanzo theme={theme}>{query.get('page') === 'phone' ? <Phone /> : <Gallery />}</Hanzo>,
 )

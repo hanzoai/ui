@@ -2,9 +2,14 @@
 
 /**
  * Roving keyboard focus for a menu panel — ArrowUp/Down move focus between enabled
- * `[role="menuitem"]` children, Home/End jump to ends, Escape closes. Web/desktop
- * only (guards on `document`); native menus have no pointer-keyboard nav. Shared by
- * DropdownMenu and ContextMenu so navigation is identical.
+ * menu items (`menuitem`, `menuitemradio`, `menuitemcheckbox`), wrapping at the
+ * ends; Home/End jump to them; Escape closes. Web/desktop only (guards on
+ * `document`); native menus have no pointer-keyboard nav. Shared by DropdownMenu,
+ * ContextMenu and the account sheets (`UserMenu`, `OrgSwitcher`, `SessionRail`'s
+ * menu) so navigation is identical.
+ *
+ * A key typed into a field inside the panel — a sheet's search box — is the
+ * field's: Home and End move its caret, not the menu.
  */
 import type { KeyboardEvent } from 'react'
 
@@ -15,10 +20,14 @@ export function menuKeyDown(e: KeyboardEvent, onClose?: () => void): void {
   }
   if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp' && e.key !== 'Home' && e.key !== 'End') return
   if (typeof document === 'undefined') return
+  const target = e.target as HTMLElement | null
+  if (target && /^(INPUT|TEXTAREA)$/.test(target.tagName)) return
 
   const panel = e.currentTarget as HTMLElement
   const items = Array.from(
-    panel.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'),
+    panel.querySelectorAll<HTMLElement>(
+      ['menuitem', 'menuitemradio', 'menuitemcheckbox'].map((r) => `[role="${r}"]:not([aria-disabled="true"])`).join(', '),
+    ),
   )
   if (items.length === 0) return
   e.preventDefault()

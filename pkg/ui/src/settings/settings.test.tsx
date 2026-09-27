@@ -157,9 +157,12 @@ describe('the section parts', () => {
     expect(rows.map((r) => r.textContent)).toEqual(['·hk-liveMade Sep 27Revoke', 'hk-test'])
   })
 
-  it('says a note once, and nothing when there is nothing to say', () => {
+  it('keeps each note\'s live region mounted, empty when there is nothing to say', () => {
     mount(section)
-    expect(all('[data-slot="settings-note"]').map((n) => [n.getAttribute('role'), n.textContent])).toEqual([['status', 'Saved.']])
+    expect(all('[data-slot="settings-note"]').map((n) => [n.getAttribute('role'), n.textContent])).toEqual([
+      ['status', 'Saved.'],
+      ['status', ''],
+    ])
   })
 
   it('shows a credential once, named, with its copy control', () => {

@@ -47,7 +47,7 @@ import {
   Search,
   X,
 } from '@hanzogui/lucide-icons-2'
-import { useId, useState, type ComponentProps, type ReactNode } from 'react'
+import { useId, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '../backends/gui/popover'
@@ -272,11 +272,15 @@ const hasMenu = (a: RailAccount) => Boolean(a.onSignOut || a.groups?.some((g) =>
  */
 function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
   const [open, setOpen] = useState(false)
+  // The row, so closing the menu can hand focus back to it: the popover's own
+  // return goes through a trigger ref that an `asChild` stack never fills.
+  const row = useRef<HTMLElement | null>(null)
   const menu = hasMenu(account)
   const acts = menu || Boolean(account.onPress)
   const said = account.sub ? `${account.name} · ${account.sub}` : account.name
 
   const face = (
+    // The row's name says who; the initial would only say it again, first.
     <XStack
       width={24}
       height={24}
@@ -286,6 +290,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
       bg="$raised"
       overflow="hidden"
       shrink={0}
+      aria-hidden
     >
       {account.avatar ?? (
         <SizableText size="$1" fontWeight="600" color="$ink">
@@ -333,7 +338,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
 
   if (!menu)
     return account.onPress ? (
-      <XStack {...look} {...press(account.onPress)} aria-label={rail ? account.name : undefined}>
+      <XStack {...look} {...press(account.onPress)} aria-label={`Account: ${said}`}>
         {body}
       </XStack>
     ) : (
@@ -352,6 +357,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
     >
       <PopoverTrigger asChild>
         <XStack
+          ref={row as never}
           {...look}
           role="button"
           tabIndex={0}
@@ -375,12 +381,16 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
         aria-label="Account"
         sideOffset={6}
         // A menu's rows run its full width; gui's popper centres children.
+        // 260 fits a 390 phone's drawer, and the popper keeps it in frame.
         items="stretch"
         width={260}
-        maxW="92vw"
         p="$1"
         rounded="$3"
         elevation="$2"
+        onCloseAutoFocus={(e: Event) => {
+          e.preventDefault()
+          row.current?.focus()
+        }}
       >
         <Account
           name={account.name}
@@ -389,6 +399,7 @@ function Who({ account, rail }: { account: RailAccount; rail: boolean }) {
           onSignOut={account.onSignOut}
           signOutLabel={account.signOutLabel}
           onDone={() => setOpen(false)}
+          component="SessionRail"
         />
       </PopoverContent>
     </Popover>
@@ -471,8 +482,9 @@ function Contents({
               focusVisibleStyle={RING}
             >
               <Search size={15} color="$soft" />
+              {/* The words ARE its name, so what is read and what is said agree. */}
               <SizableText size="$2" color="$soft">
-                Search
+                {searchLabel}
               </SizableText>
             </XStack>
           ) : null}
@@ -616,7 +628,35 @@ export function SessionRail(props: SessionRailProps) {
     ...rest
   } = props
   const rail = collapsed
-  const shut = closing(() => onOpenChange?.(false))
+  // Where focus was when the drawer opened — the phone bar's menu button — and
+  // where it goes back to when the drawer closes, by Escape or by a choice. A
+  // dialog returns focus to its own trigger, and this drawer has none: the host
+  // opens it from `RailBar`, which the dialog cannot see.
+  //
+  // Read in RENDER, on the one render where `open` turns true — before the
+  // drawer exists. gui's Dialog is a native `<dialog>`, and a browser moves focus
+  // into one the moment it opens, so by any effect (the focus scope's own
+  // `onOpenAutoFocus` included, which then never fires because focus is already
+  // inside) the opener is gone. jsdom's `<dialog>` moves nothing, which is why
+  // the unit suite could not see this and the consumer suite asserts it.
+  const back = useRef<HTMLElement | null>(null)
+  const was = useRef(false)
+  if (open && !was.current && typeof document !== 'undefined') back.current = document.activeElement as HTMLElement | null
+  was.current = open
+  // One way out, said ONCE per gesture. A choice closes the drawer, and the
+  // dialog can also report its own dismissal while it unmounts in that same
+  // turn; the host hears one `onOpenChange(false)`. The latch lets go after the
+  // turn, so a host that keeps the drawer open still hears the next choice.
+  const closed = useRef(false)
+  const close = () => {
+    if (closed.current) return
+    closed.current = true
+    setTimeout(() => {
+      closed.current = false
+    }, 0)
+    onOpenChange?.(false)
+  }
+  const shut = closing(close)
   const relink = (list?: RailLink[]) => list?.map((l) => ({ ...l, onPress: shut(l.onPress) }))
 
   return (
@@ -639,8 +679,26 @@ export function SessionRail(props: SessionRailProps) {
       </Sidebar>
 
       {open ? (
-        <Sheet open={open} onOpenChange={onOpenChange}>
-          <SheetContent side="left" width={width} maxW="86%" p="$2" gap="$0" bg="$panel">
+        <Sheet open={open} onOpenChange={(next: boolean) => (next ? onOpenChange?.(true) : close())}>
+          <SheetContent
+            side="left"
+            width={width}
+            maxW="86%"
+            p="$2"
+            gap="$0"
+            bg="$panel"
+            onCloseAutoFocus={(e: Event) => {
+              const to = back.current
+              if (!to?.isConnected) return
+              e.preventDefault()
+              // After the event that closed it: a tap on the overlay dismisses on
+              // pointerdown, and the mousedown that follows would blur this
+              // focus straight back to the page.
+              setTimeout(() => {
+                if (to.isConnected) to.focus()
+              }, 0)
+            }}
+          >
             <SheetTitle {...slot('session-rail-title')} position="absolute" opacity={0} pointerEvents="none">
               {label}
             </SheetTitle>

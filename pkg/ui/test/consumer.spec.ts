@@ -751,3 +751,71 @@ for (const theme of THEMES)
       })
     })
   }
+
+/**
+ * The drawer hands focus back to what opened it — measured in a real browser,
+ * because that is the only place it can fail. gui's Dialog is a native
+ * `<dialog>`, and Chromium moves focus into one as it opens, before any effect
+ * runs: an opener read in an effect was already the drawer's first row, and
+ * every close — Escape, a recent, an account row — left focus on `<body>`
+ * while the unit suite, on jsdom's inert `<dialog>`, stayed green.
+ *
+ * `?page=phone` is `Phone` from the gallery module: the bar and the drawer on a
+ * page with nothing else open. The host counts the closes it is told of; each
+ * way out must tell it exactly once.
+ */
+for (const theme of THEMES)
+  test(`${theme}: the drawer hands focus back to the bar and closes once, by Escape, a recent and an account row`, async ({ page }) => {
+    const errors: string[] = []
+    page.on('pageerror', (e) => errors.push(e.message))
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(`/?page=phone&theme=${theme}`, { waitUntil: 'networkidle' })
+    const opener = page.locator('[data-phone="demo"] [aria-label="Open runs"]')
+    await opener.waitFor()
+    const drawer = page.locator('[data-slot="session-rail-drawer"]')
+    const open = async () => {
+      await opener.focus()
+      await page.keyboard.press('Enter')
+      await drawer.waitFor()
+      // Focus is inside the drawer, where the dialog put it.
+      await expect.poll(() => drawer.evaluate((el) => el.contains(document.activeElement))).toBe(true)
+    }
+    const back = async (how: string) => {
+      await expect(drawer, how).toHaveCount(0)
+      await expect.poll(() => opener.evaluate((el) => el === document.activeElement), { message: `${how}: focus is back on the bar's menu button` }).toBe(true)
+      expect(await page.getAttribute('[data-phone="demo"]', 'data-closes'), `${how}: closes told to the host`).toBe('1')
+    }
+
+    await open()
+    await page.keyboard.press('Escape')
+    await back('Escape')
+
+    await open()
+    await drawer.locator('[data-slot="rail-session"]').first().focus()
+    await page.keyboard.press('Enter')
+    await back('a recent, by Enter')
+
+    await open()
+    await drawer.locator('[data-slot="rail-account"]').focus()
+    await page.keyboard.press('Enter')
+    await expect(page.locator('[data-slot="rail-menu"] [role="menuitem"]').first()).toBeFocused()
+    await page.keyboard.press('Enter')
+    await back('an account row, by Enter')
+
+    await open()
+    await drawer.locator('[data-slot="rail-account"]').focus()
+    await page.keyboard.press('Enter')
+    // The menu's focus scope moves focus in once it is idle; End is pressed in it.
+    await expect(page.locator('[data-slot="rail-menu"] [role="menuitem"]').first()).toBeFocused()
+    await page.keyboard.press('End')
+    await expect(page.locator('[data-slot="rail-menu"] [role="menuitem"]').last()).toBeFocused()
+    await page.keyboard.press('Enter')
+    await back('sign out, by Enter')
+
+    await open()
+    // The overlay, right of the 86%-wide drawer.
+    await page.mouse.click(380, 420)
+    await back('a tap on the overlay')
+
+    expect(errors, 'the page threw').toEqual([])
+  })

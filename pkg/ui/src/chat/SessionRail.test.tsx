@@ -7,7 +7,7 @@
  * host persists it), the drawer carries the same contents and closes on any
  * choice, the phone bar opens it, and axe finds nothing in any of the shapes.
  */
-import { act } from 'react'
+import { act, useState } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GuiProvider } from '@hanzo/gui'
@@ -96,10 +96,23 @@ const rail = (over: Partial<SessionRailProps> = {}) => (
 
 const q = (sel: string) => host.querySelector<HTMLElement>(sel)
 const all = (sel: string, from: ParentNode = host) => [...from.querySelectorAll<HTMLElement>(sel)]
-const press = (el: HTMLElement, k = 'Enter') =>
+const press = (el: HTMLElement, k = 'Enter', init: KeyboardEventInit = {}) =>
   act(() => {
-    el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true }))
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true, ...init }))
   })
+
+/** Let the focus scope's deferred work (idle focus, unmount refocus) run, inside act. */
+const settle = async (ms = 60) => {
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, ms))
+  })
+}
+
+/** What has focus, by the thing a person would name it by. */
+const focused = () => {
+  const el = document.activeElement as HTMLElement | null
+  return el?.getAttribute('aria-label') ?? el?.textContent ?? el?.tagName ?? ''
+}
 
 describe('the expanded rail', () => {
   it('is a named navigation landmark with New first, the links, More and the recents', () => {
@@ -165,6 +178,8 @@ describe('the expanded rail', () => {
     act(() => named('Sort and filter')!.click())
     expect(onSort).toHaveBeenCalledOnce()
     expect(named('Account: Dave · acme')!.getAttribute('aria-haspopup')).toBe('menu')
+    // The initial is the name's first letter again; it is not read.
+    expect(q('[data-slot="rail-account"] [aria-hidden="true"]')!.textContent).toBe('D')
     const foot = q('[data-slot="rail-foot"]')!
     expect(foot.querySelector('[aria-label="Settings"]')).toBeNull()
     expect(foot.querySelector('[aria-label="Search"]')).toBeNull()
@@ -183,7 +198,7 @@ describe('the head', () => {
     mount(rail())
     const head = q('[data-slot="rail-head"]')!
     const nav = q('[data-slot="rail-nav"]')!
-    expect(head.textContent).toBe('Hanzo BuildSearch')
+    expect(head.textContent).toBe('Hanzo BuildSearch runs')
     // Before the rows in document order: the head is in flow, not laid over them.
     expect(head.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
@@ -211,8 +226,9 @@ describe('the head', () => {
     const onSearch = vi.fn()
     mount(rail({ onSearch }))
     const box = q('[data-slot="rail-search"]')!
+    // What it says and what it is called are the same words (label in name).
     expect(box.getAttribute('aria-label')).toBe('Search runs')
-    expect(box.textContent).toBe('Search')
+    expect(box.textContent).toBe('Search runs')
     act(() => box.click())
     press(box, ' ')
     expect(onSearch).toHaveBeenCalledTimes(2)
@@ -279,15 +295,21 @@ describe('the account', () => {
     expect(onSignOut).toHaveBeenCalledOnce()
   })
 
-  it('is one action with no menu — a signed-out Sign in', () => {
+  it('is one action with no menu — a signed-out Sign in, still named as the account', () => {
     const onPress = vi.fn()
     mount(rail({ account: { name: 'Sign in', onPress } }))
     const row = q('[data-slot="rail-account"]')!
     expect(row.getAttribute('aria-haspopup')).toBeNull()
     expect(row.getAttribute('role')).toBe('button')
+    expect(row.getAttribute('aria-label')).toBe('Account: Sign in')
     press(row)
     expect(onPress).toHaveBeenCalledOnce()
     expect(menu()).toBeNull()
+  })
+
+  it('names a one-action row the same way on the collapsed rail', () => {
+    mount(rail({ collapsed: true, account: { name: 'Sign in', onPress: () => {} } }))
+    expect(q('[data-slot="rail-account"]')!.getAttribute('aria-label')).toBe('Account: Sign in')
   })
 
   it('opens beside the collapsed rail too', () => {
@@ -296,6 +318,166 @@ describe('the account', () => {
     expect(row.getAttribute('aria-label')).toBe('Account: Dave · acme')
     act(() => row.click())
     expect(menu()).toBeTruthy()
+  })
+})
+
+describe('the account menu from the keyboard', () => {
+  const rows = () => [
+    ...document.querySelectorAll<HTMLElement>(
+      '[data-slot="rail-menu"] [role="menuitem"], [data-slot="rail-menu"] [role="menuitemradio"]',
+    ),
+  ]
+  const labels = () => rows().map((r) => r.textContent)
+
+  it('opens on Enter with the first row focused, and every row is a tab stop with a ring', async () => {
+    mount(rail())
+    const trigger = q('[data-slot="rail-account"]')!
+    trigger.focus()
+    press(trigger)
+    await settle()
+    expect(labels()).toEqual(['acme', 'zoo', 'Settings', 'Log out'])
+    expect(rows().map((r) => r.getAttribute('tabindex'))).toEqual(['0', '0', '0', '0'])
+    expect(document.activeElement).toBe(rows()[0])
+  })
+
+  it('moves with the arrows, wrapping, and jumps with Home and End', async () => {
+    mount(rail())
+    press(q('[data-slot="rail-account"]')!)
+    await settle()
+    const walk: string[] = []
+    const step = (k: string) => {
+      press(document.activeElement as HTMLElement, k)
+      walk.push(focused())
+    }
+    step('ArrowDown')
+    step('ArrowDown')
+    step('ArrowDown')
+    step('ArrowDown') // past the end: back to the first
+    step('ArrowUp') // before the first: the last
+    step('Home')
+    step('End')
+    expect(walk).toEqual(['zoo', 'Settings', 'Log out', 'acme', 'Log out', 'acme', 'Log out'])
+  })
+
+  it('keeps Tab inside the open menu, looping at both ends', async () => {
+    mount(rail())
+    press(q('[data-slot="rail-account"]')!)
+    await settle()
+    const [first, , , last] = rows()
+    last.focus()
+    press(last, 'Tab')
+    expect(document.activeElement).toBe(first)
+    press(first, 'Tab', { shiftKey: true })
+    expect(document.activeElement).toBe(last)
+  })
+
+  it('runs a row on Enter and on Space', async () => {
+    const onPress = vi.fn()
+    const onSignOut = vi.fn()
+    mount(rail({ account: { ...ACCOUNT, groups: [[{ id: 'usage', label: 'Usage', onPress }]], onSignOut } }))
+    press(q('[data-slot="rail-account"]')!)
+    await settle()
+    press(document.activeElement as HTMLElement)
+    expect(onPress).toHaveBeenCalledOnce()
+    await settle()
+    press(q('[data-slot="rail-account"]')!)
+    await settle()
+    press(rows().at(-1)!, ' ')
+    expect(onSignOut).toHaveBeenCalledOnce()
+  })
+
+  it('closes on Escape and hands focus back to the account row', async () => {
+    mount(rail())
+    const trigger = q('[data-slot="rail-account"]')!
+    trigger.focus()
+    press(trigger)
+    await settle()
+    expect(rows().length).toBeGreaterThan(0)
+    press(document.activeElement as HTMLElement, 'Escape')
+    await settle()
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(trigger)
+  })
+})
+
+describe('the drawer from the keyboard', () => {
+  /** A phone: the bar opens the drawer, and the host keeps it open or shut and counts the closes it hears. */
+  let closes = 0
+  function Phone({ over = {} }: { over?: Partial<SessionRailProps> }) {
+    const [open, setOpen] = useState(false)
+    return (
+      <>
+        <RailBar onMenu={() => setOpen(true)} menuLabel="Open runs" brand="Hanzo Build" onSearch={() => {}} />
+        {rail({
+          open,
+          onOpenChange: (next) => {
+            if (!next) closes++
+            setOpen(next)
+          },
+          ...over,
+        })}
+      </>
+    )
+  }
+  const menu = () => q('[aria-label="Open runs"]')!
+  const drawer = () => document.querySelector<HTMLElement>('[data-slot="session-rail-drawer"]')
+  const openDrawer = async () => {
+    closes = 0
+    menu().focus()
+    act(() => menu().click())
+    await settle()
+    expect(drawer()).toBeTruthy()
+  }
+
+  it('opens the account menu inside the drawer and keeps focus in it, then Escape returns to the row', async () => {
+    mount(<Phone />)
+    await openDrawer()
+    const row = drawer()!.querySelector<HTMLElement>('[data-slot="rail-account"]')!
+    row.focus()
+    press(row)
+    await settle()
+    const items = [...document.querySelectorAll<HTMLElement>('[data-slot="rail-menu"] [role="menuitem"], [data-slot="rail-menu"] [role="menuitemradio"]')]
+    expect(document.activeElement).toBe(items[0])
+    press(items.at(-1)!, 'Tab')
+    expect(document.activeElement).toBe(items[0])
+    press(document.activeElement as HTMLElement, 'Escape')
+    await settle()
+    expect(document.activeElement).toBe(row)
+    expect(drawer()).toBeTruthy()
+  })
+
+  it('hands focus back to the bar\'s menu button when Escape closes the drawer', async () => {
+    mount(<Phone />)
+    await openDrawer()
+    expect(drawer()!.contains(document.activeElement)).toBe(true)
+    press(document.activeElement as HTMLElement, 'Escape')
+    await settle()
+    expect(drawer()).toBeNull()
+    expect(document.activeElement).toBe(menu())
+    expect(closes).toBe(1)
+  })
+
+  it('hands focus back to the bar\'s menu button when a recent is chosen', async () => {
+    mount(<Phone />)
+    await openDrawer()
+    press(drawer()!.querySelectorAll<HTMLElement>('[data-slot="rail-session"]')[0]!)
+    await settle()
+    expect(drawer()).toBeNull()
+    expect(document.activeElement).toBe(menu())
+    expect(closes).toBe(1)
+  })
+
+  it('hands focus back to the bar\'s menu button when an account row is chosen', async () => {
+    mount(<Phone over={{ account: { ...ACCOUNT, groups: [[{ id: 'usage', label: 'Usage', onPress: () => {} }]] } }} />)
+    await openDrawer()
+    const row = drawer()!.querySelector<HTMLElement>('[data-slot="rail-account"]')!
+    press(row)
+    await settle()
+    press(document.activeElement as HTMLElement)
+    await settle()
+    expect(drawer()).toBeNull()
+    expect(document.activeElement).toBe(menu())
+    expect(closes).toBe(1)
   })
 })
 
@@ -389,13 +571,14 @@ describe('the drawer', () => {
     expect(onOpen).toHaveBeenCalledWith('s1')
   })
 
-  it('closes when a link, a More link, the brand, search, New or an account row is chosen', () => {
+  it('closes when a link, a More link, the brand, search, New or an account row is chosen — once per choice', async () => {
     const onOpenChange = vi.fn()
     const link = vi.fn()
     const deeper = vi.fn()
     const row = vi.fn()
     const onSearch = vi.fn()
     const onNew = vi.fn()
+    // The host keeps it open, so every choice is asked of the same drawer.
     mount(
       rail({
         open: true,
@@ -411,25 +594,39 @@ describe('the drawer', () => {
     // A row's text is its icon's then its label's.
     const inDrawer = (label: string) =>
       [...drawer().querySelectorAll<HTMLElement>('[data-slot="rail-row"]')].find((r) => r.textContent?.endsWith(label))!
+    // Each choice is its own gesture, in its own turn.
+    const choose = async (el: () => HTMLElement) => {
+      act(() => el().click())
+      await settle(0)
+    }
 
-    act(() => inDrawer('Artifacts').click())
-    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-more"]')!.click())
+    await choose(() => inDrawer('Artifacts'))
+    await choose(() => drawer().querySelector<HTMLElement>('[data-slot="rail-more"]')!)
     // Unfolding More is not a choice: it does not close the drawer.
     expect(onOpenChange).toHaveBeenCalledTimes(1)
-    act(() => inDrawer('Projects').click())
-    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-brand"]')!.click())
-    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-search"]')!.click())
-    act(() => drawer().querySelector<HTMLElement>('[data-slot="rail-account"]')!.click())
-    act(() =>
-      [...document.querySelectorAll<HTMLElement>('[data-slot="rail-menu"] [role="menuitem"]')]
-        .find((r) => r.textContent === 'Usage')!
-        .click(),
-    )
+    await choose(() => inDrawer('Projects'))
+    await choose(() => drawer().querySelector<HTMLElement>('[data-slot="rail-brand"]')!)
+    await choose(() => drawer().querySelector<HTMLElement>('[data-slot="rail-search"]')!)
+    await choose(() => drawer().querySelector<HTMLElement>('[data-slot="rail-account"]')!)
+    await choose(() => [...document.querySelectorAll<HTMLElement>('[data-slot="rail-menu"] [role="menuitem"]')].find((r) => r.textContent === 'Usage')!)
 
     expect([link, deeper, onSearch, row].map((f) => f.mock.calls.length)).toEqual([1, 1, 1, 1])
     // The brand starts a new session.
     expect(onNew).toHaveBeenCalledOnce()
     expect(onOpenChange.mock.calls).toEqual([[false], [false], [false], [false], [false]])
+  })
+
+  it('tells the host once when a choice and the dialog both report the same close', async () => {
+    const onOpenChange = vi.fn()
+    mount(rail({ open: true, onOpenChange }))
+    const drawer = document.querySelector<HTMLElement>('[data-slot="session-rail-drawer"]')!
+    // One turn: a recent is chosen, and the dialog hears Escape as it goes.
+    act(() => {
+      drawer.querySelector<HTMLElement>('[data-slot="rail-session"]')!.click()
+      drawer.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }))
+    })
+    await settle(0)
+    expect(onOpenChange.mock.calls).toEqual([[false]])
   })
 
   it('renders nothing extra while closed', () => {

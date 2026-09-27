@@ -12,11 +12,12 @@
  * Off the product barrel on purpose: a host wants a whole menu, and gets one
  * from either of those two. This is the part they share.
  */
-import type { ReactNode } from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
 import { Separator, Text, XStack, YStack } from '@hanzo/gui'
 import { LogOut } from '@hanzogui/lucide-icons-2'
 
 import { useEmit } from './instrument'
+import { menuKeyDown } from './menu/roving'
 import { MenuLabel, MenuRow } from './MenuRow'
 import { displayName } from './name'
 
@@ -59,9 +60,11 @@ export type AccountProps = {
   signOutLabel?: string
   /** Called after any row runs — the host closes its popover. */
   onDone: () => void
+  /** The menu that drew this body, as analytics names it — `UserMenu`, `SessionRail`. */
+  component: string
 }
 
-function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
+function Row({ item, onDone, component }: { item: UserMenuItem; onDone: () => void; component: string }) {
   const track = useEmit()
   return (
     <MenuRow
@@ -70,7 +73,7 @@ function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
       active={item.active}
       danger={item.danger}
       onPress={() => {
-        track({ component: 'UserMenu', action: 'select', id: item.id })
+        track({ component, action: 'select', id: item.id })
         onDone()
         item.onPress()
       }}
@@ -81,11 +84,13 @@ function Row({ item, onDone }: { item: UserMenuItem; onDone: () => void }) {
 /** A rule between groups — never above the first thing in the menu. */
 const Rule = () => <Separator borderColor="$borderColor" my="$1" />
 
-export function Account({ name, email, groups = [], theme, onSignOut, signOutLabel = 'Sign out', onDone }: AccountProps) {
+export function Account({ name, email, groups = [], theme, onSignOut, signOutLabel = 'Sign out', onDone, component }: AccountProps) {
   const shown = displayName(name, email)
   const filled = groups.filter((g) => itemsOf(g).length > 0)
   return (
-    <YStack gap="$1">
+    // The arrows, Home and End move between the rows (roving.ts). Escape is the
+    // popover's own: it closes and hands focus back to the trigger.
+    <YStack gap="$1" onKeyDown={(e: KeyboardEvent) => menuKeyDown(e)}>
       {shown || email ? (
         <YStack gap="$0.5" px="$2" py="$1.5">
           {shown ? (
@@ -110,7 +115,7 @@ export function Account({ name, email, groups = [], theme, onSignOut, signOutLab
         // named `group` of `menuitemradio` rows (see MenuRow) — a heading alone
         // would leave the rows unrelated.
         const choice = items.every((it) => it.active !== undefined)
-        const rows = items.map((item) => <Row key={item.id} item={item} onDone={onDone} />)
+        const rows = items.map((item) => <Row key={item.id} item={item} onDone={onDone} component={component} />)
         return (
           <YStack key={i} gap="$1">
             {i > 0 || shown || email ? <Rule /> : null}
@@ -141,7 +146,11 @@ export function Account({ name, email, groups = [], theme, onSignOut, signOutLab
       {onSignOut ? (
         <>
           <Rule />
-          <Row item={{ id: 'sign-out', label: signOutLabel, icon: <LogOut size={16} />, onPress: onSignOut }} onDone={onDone} />
+          <Row
+            item={{ id: 'sign-out', label: signOutLabel, icon: <LogOut size={16} />, onPress: onSignOut }}
+            onDone={onDone}
+            component={component}
+          />
         </>
       ) : null}
     </YStack>

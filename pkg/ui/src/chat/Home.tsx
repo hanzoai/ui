@@ -17,18 +17,18 @@
  * own (`HanzoMark`, an org mark, nothing), and the heading is the same either
  * way.
  */
-import { SizableText, XStack, YStack } from '@hanzo/gui'
+import { ScrollView, SizableText, XStack, YStack } from '@hanzo/gui'
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { NEXT } from './EmptyPrompt'
 
-type Col = Omit<ComponentProps<typeof YStack>, 'children'>
+type Scroll = Omit<ComponentProps<typeof ScrollView>, 'children'>
 
 /** The composer column's width, so the question and the field share it. */
 const COLUMN = 768
 
-export interface HomeProps extends Col {
+export interface HomeProps extends Scroll {
   /** The question. */
   title?: ReactNode
   /** Drawn before the question — a surface's own mark, ~26px. */
@@ -43,20 +43,23 @@ export interface HomeProps extends Col {
 
 export function Home({ title = NEXT, mark, column = COLUMN, level = 1, children, ...rest }: HomeProps) {
   return (
-    <YStack
+    // A scroller, not a stack told to overflow: `overflow: scroll` on a stack
+    // scrolls nothing on native. Its content grows to at least the pane and
+    // centres in it, so a short page sits in the middle and a tall one scrolls.
+    // gui leaves a ScrollView's overflow visible on web, hence `overflowY`.
+    <ScrollView
       {...slot('home')}
       flex={1}
       minH={0}
       minW={0}
-      items="center"
-      justify="center"
-      px="$4"
-      // Weighted a little above the middle, where the eye lands on an empty page.
-      pb="$10"
-      overflow="scroll"
+      overflowY="auto"
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ grow: 1, justify: 'center' }}
       {...rest}
     >
-      <YStack width="100%" maxW={column} gap="$5">
+      {/* Weighted a little above the middle, where the eye lands on an empty page. */}
+      <YStack width="100%" items="center" px="$4" pb="$10">
+        <YStack width="100%" maxW={column} gap="$5">
         <XStack justify="center" items="center" gap="$3" flexWrap="wrap">
           {mark ? (
             <XStack {...slot('home-mark')} shrink={0} items="center" aria-hidden>
@@ -75,7 +78,8 @@ export function Home({ title = NEXT, mark, column = COLUMN, level = 1, children,
           </SizableText>
         </XStack>
         {children ? <YStack gap="$2">{children}</YStack> : null}
+        </YStack>
       </YStack>
-    </YStack>
+    </ScrollView>
   )
 }

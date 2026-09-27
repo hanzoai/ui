@@ -26,8 +26,10 @@
  * the DOM as written.
  */
 import type { ReactNode } from 'react'
-import { Text, XStack, YStack } from '@hanzo/gui'
+import { Text, XStack, YStack, isWeb } from '@hanzo/gui'
 import { Check } from '@hanzogui/lucide-icons-2'
+
+import { press, RING } from '../backends/gui/press'
 
 /** The tier hue a row may carry. Monochrome by default — only the genuine states
  *  take a colour (a live network green, a caution amber). */
@@ -51,8 +53,9 @@ export function MenuRow({ label, sub, dot, icon, active, danger, onPress }: Menu
   const selectable = active !== undefined
   return (
     <XStack
-      onPress={onPress}
-      {...({ role: selectable ? 'menuitemradio' : 'menuitem' } as object)}
+      {...press(onPress)}
+      // After `press`, whose role is `button`: a row is a menu item.
+      {...({ role: selectable ? (isWeb ? 'menuitemradio' : 'radio') : 'menuitem' } as object)}
       aria-checked={selectable ? !!active : undefined}
       cursor="pointer"
       items="center"
@@ -62,6 +65,7 @@ export function MenuRow({ label, sub, dot, icon, active, danger, onPress }: Menu
       rounded="$3"
       bg={active ? '$edge' : 'transparent'}
       hoverStyle={{ bg: '$raised' }}
+      focusVisibleStyle={RING}
     >
       {dot ? <YStack width={8} height={8} rounded="$10" bg={dot} /> : icon}
       <YStack flex={1} minW={0}>

@@ -19,7 +19,7 @@
  * same type — so "which workspace" and "who I am" read as two halves of one
  * identity rather than a caption over a control.
  */
-import { useState, type CSSProperties, type ReactNode } from 'react'
+import { useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { sx } from '../sx'
 import { Popover, Text, XStack } from '@hanzo/gui'
 import { ChevronsUpDown, UserRound } from '@hanzogui/lucide-icons-2'
@@ -102,6 +102,9 @@ export function UserMenu({
   style,
 }: UserMenuProps) {
   const [open, setOpen] = useState(false)
+  // Closing hands focus back to the trigger. The popover's own return goes
+  // through a trigger ref that an `asChild` stack never fills, so it is ours.
+  const trigger = useRef<HTMLElement | null>(null)
   const track = useEmit()
   const shown = displayName(name, email)
   const close = () => setOpen(false)
@@ -123,6 +126,7 @@ export function UserMenu({
     >
       <Popover.Trigger asChild>
         <XStack
+          ref={trigger as never}
           cursor="pointer"
           items="center"
           gap="$2.5"
@@ -135,6 +139,15 @@ export function UserMenu({
           tabIndex={0}
           data-testid={testId}
           aria-label={aria ?? (shown ? `${shown} · account` : 'Account')}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          // gui opens a stack-drawn trigger on a press only; Enter and Space are
+          // the trigger's own (see backends/gui/press.ts).
+          onKeyDown={(e: { key?: string; preventDefault?: () => void }) => {
+            if (e?.key !== 'Enter' && e?.key !== ' ') return
+            e.preventDefault?.()
+            setOpen(!open)
+          }}
         >
           {/* The person wears the same mark treatment as a workspace — an image
               when there is one, a monogram when there is not. */}
@@ -180,6 +193,10 @@ export function UserMenu({
         width={240}
         bg="$panel"
         borderColor="$borderColor"
+        onCloseAutoFocus={(e: Event) => {
+          e.preventDefault()
+          trigger.current?.focus()
+        }}
         {...sx(className)}
         style={style}
       >
@@ -193,6 +210,7 @@ export function UserMenu({
             onSignOut={onSignOut}
             signOutLabel={signOutLabel}
             onDone={close}
+            component="UserMenu"
           />
         )}
       </Popover.Content>

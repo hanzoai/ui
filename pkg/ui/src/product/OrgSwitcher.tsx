@@ -14,12 +14,14 @@
  * `X-Org-Id`). Create posts through the injected hook, then scopes into the
  * new org.
  */
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react'
 import { sx } from '../sx'
 import { Button, Input, Popover, Spinner, Text, XStack, YStack } from '@hanzo/gui'
 import { Check, ChevronsUpDown, LayoutGrid, Plus, Search } from '@hanzogui/lucide-icons-2'
 
+import { press, RING } from '../backends/gui/press'
 import { useEmit } from './instrument'
+import { menuKeyDown } from './menu/roving'
 import { MenuRow } from './MenuRow'
 import { OrgMark } from './OrgMark'
 import { filterOrgs, type Org, type OrgScope } from './scope'
@@ -148,6 +150,9 @@ export function OrgSwitcher({
   const [newName, setNewName] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState<string | null>(null)
+  // Closing hands focus back to the trigger. The popover's own return goes
+  // through a trigger ref an `asChild` child never fills, so it is ours.
+  const trigger = useRef<HTMLElement | null>(null)
   const pageRef = useRef(0)
   const reqRef = useRef(0) // race token — a newer request supersedes older ones
 
@@ -258,6 +263,7 @@ export function OrgSwitcher({
             same type, same hit area — so "which workspace" and "who I am" read
             as the two halves of one identity, not a caption over a control. */}
         <Button
+          ref={trigger as never}
           chromeless
           height={lead ? 56 : 44}
           px="$2"
@@ -322,6 +328,13 @@ export function OrgSwitcher({
         width={300}
         bg="$panel"
         borderColor="$borderColor"
+        // The arrows, Home and End move between the rows; the search field keeps
+        // its own keys (roving.ts). Escape is the popover's.
+        onKeyDown={(e: KeyboardEvent) => menuKeyDown(e)}
+        onCloseAutoFocus={(e: Event) => {
+          e.preventDefault()
+          trigger.current?.focus()
+        }}
         {...sx(className)}
         style={style}
       >
@@ -439,11 +452,12 @@ export function OrgSwitcher({
 
             {create ? (
               <XStack
-                role="menuitem"
-                onPress={() => {
+                {...press(() => {
                   setCreating(true)
                   setErr(null)
-                }}
+                })}
+                role="menuitem"
+                focusVisibleStyle={RING}
                 cursor="pointer"
                 items="center"
                 gap="$2.5"
@@ -466,11 +480,12 @@ export function OrgSwitcher({
 
             {picker ? (
               <XStack
-                role="menuitem"
-                onPress={() => {
+                {...press(() => {
                   setOpen(false)
                   scope.leaveOrg()
-                }}
+                })}
+                role="menuitem"
+                focusVisibleStyle={RING}
                 cursor="pointer"
                 items="center"
                 gap="$2.5"

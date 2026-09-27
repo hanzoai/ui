@@ -169,9 +169,14 @@ export function Soft({ children, action }: { children: string; action?: ReactNod
   )
 }
 
-/** What the last action did, said once, where it was done. Empty, it draws nothing. */
+/**
+ * What the last action did, said once, where it was done.
+ *
+ * The live region is ALWAYS there, empty when there is nothing to say: a
+ * `role=status` that mounts together with its text is often not announced,
+ * because a reader watches regions it already knows about for changes.
+ */
 export function Note({ children }: { children: string }) {
-  if (!children) return null
   return (
     <SizableText {...slot('settings-note')} size="$1" color="$soft" role="status">
       {children}

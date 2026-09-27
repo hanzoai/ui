@@ -22,7 +22,7 @@ import { XStack, YStack } from '@hanzo/gui'
  * Variants are enumerated rather than sampled: gui compiles each distinct style
  * VALUE to its own class, so an unrendered variant is an unwritten rule.
  */
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { Box } from './box'
 import { Workbench } from './product/Workbench'
 import { Skeleton } from './product/Skeleton'
@@ -1043,5 +1043,47 @@ export const Gallery = () => (
 
   </div>
 )
+
+/**
+ * A phone's page, driven: the bar opens the rail's drawer, and the host keeps
+ * it open or shut and counts every close it is told of (`data-closes`).
+ *
+ * Not in the gallery, on purpose. The gallery holds a dozen modal surfaces open
+ * so each is styled, and every one of them takes focus back the moment the
+ * drawer lets go of it — so where focus lands after the drawer closes is a
+ * question only a page with nothing else open can answer. The consumer suite
+ * renders this at `?page=phone`: a real `<dialog>` moves focus on its own, and
+ * jsdom's does not, so this is the only place the drawer's focus return is
+ * measured.
+ */
+export function Phone() {
+  const [open, setOpen] = useState(false)
+  const [closes, setCloses] = useState(0)
+  return (
+    <div data-phone="demo" data-closes={closes} style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <RailBar
+        onMenu={() => {
+          setCloses(0)
+          setOpen(true)
+        }}
+        menuLabel="Open runs"
+        brand="Hanzo Build"
+        onSearch={NOOP}
+      />
+      <SessionRail
+        onNew={NOOP}
+        recents={SESSIONS}
+        onOpen={NOOP}
+        open={open}
+        onOpenChange={(next) => {
+          if (!next) setCloses((n) => n + 1)
+          setOpen(next)
+        }}
+        account={{ name: 'Dave', groups: [[{ id: 'usage', label: 'Usage', onPress: NOOP }]], onSignOut: NOOP }}
+        label="Runs"
+      />
+    </div>
+  )
+}
 
 export default Gallery
