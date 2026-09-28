@@ -132,6 +132,17 @@ The consumer spec also fails on a solid-white border (the `@hanzo/design`
 `border-card: var(--white…)` defect — borders are low-alpha hairlines) and on any
 element that has a text child and a zero-height box.
 
+**Boxes a test compares are read in ONE frame** (`frame(page, {a: sel, b: sel})`).
+The gallery holds its modal surfaces open, and on load their focus scopes pass
+focus down the page and the browser smooth-scrolls after it for a second or more
+past `networkidle`. `getBoundingClientRect` is viewport-relative, so two boxes read
+in two round trips straddle the scroll: 8.27.20's CI read Home's mark 151–491px
+off its own line and the rail's brand 586px under the search it sits above, on a
+layout that was right (both 0 off read together — the published tarball, measured).
+It passed locally because a fast machine measured after the scroll ended. A size
+alone (`w`, `h`) is scroll-invariant; a position is only comparable to another
+read in the same frame.
+
 ### House rules for a component
 
 - Style through gui props and theme tokens (`$background`, `$color12`,

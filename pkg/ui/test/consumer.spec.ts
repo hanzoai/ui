@@ -645,10 +645,31 @@ test('the slider knob sits on its track, at its value', async ({ page }) => {
 const shown = (page: Page, sel: string) =>
   page.$$eval(sel, (els) => els.map((e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0))
 
-const box = async (page: Page, sel: string) => {
-  const [b] = await boxesIn(page, sel)
-  expect(b, `${sel} did not render`).toBeTruthy()
-  return b
+type Box = { x: number; y: number; w: number; h: number }
+
+/**
+ * Every box a test compares, read in ONE frame.
+ *
+ * The gallery holds a dozen modal surfaces open so each is styled, and as the
+ * page loads their focus scopes pass focus down it and the browser scrolls to
+ * follow — thousands of pixels, for a second or more after `networkidle`. A box
+ * is where it is RELATIVE TO THE VIEWPORT, so two boxes read in two round trips
+ * straddle that scroll and disagree about where the page is: CI read a Home mark
+ * 151–491px off its own line, and the rail's brand 586px under the search it sits
+ * above, on a page whose layout was right (read in one frame, both are 0 off).
+ * A comparison is only true of boxes read together.
+ */
+const frame = async <K extends string>(page: Page, sels: Record<K, string>): Promise<Record<K, Box>> => {
+  const got = await page.evaluate((sels) => {
+    const out: Record<string, Box | null> = {}
+    for (const [k, s] of Object.entries(sels)) {
+      const r = document.querySelector(s)?.getBoundingClientRect()
+      out[k] = r ? { x: r.x, y: r.y, w: r.width, h: r.height } : null
+    }
+    return out
+  }, sels as Record<string, string>)
+  for (const [k, b] of Object.entries(got)) expect(b, `${sels[k as K]} did not render`).toBeTruthy()
+  return got as Record<K, Box>
 }
 
 for (const theme of THEMES)
@@ -666,7 +687,7 @@ for (const theme of THEMES)
         const [bar] = await shown(page, '[data-slot="rail-bar"]')
         expect(bar, 'the phone bar').toBe(phone)
         if (phone) {
-          const b = await box(page, '[data-slot="rail-bar"]')
+          const { bar: b } = await frame(page, { bar: '[data-slot="rail-bar"]' })
           expect(Math.round(b.h)).toBe(44)
           const named = await page.$$eval('[data-slot="rail-bar"] [aria-label]', (els) => els.map((e) => e.getAttribute('aria-label')))
           expect(named).toEqual(['Open runs', 'Search runs'])
@@ -679,28 +700,32 @@ for (const theme of THEMES)
       if (!phone)
         test('the head is in flow: brand over search over New, and the account reads on two lines', async ({ page }) => {
           const rail = '[data-rail="shell"] [data-slot="session-rail"][data-collapsed="false"]'
-          const brand = await box(page, `${rail} [data-slot="rail-brand"]`)
-          const search = await box(page, `${rail} [data-slot="rail-search"]`)
-          const fresh = await box(page, `${rail} [data-slot="rail-new"]`)
+          const { brand, search, fresh, row, sub, notice } = await frame(page, {
+            brand: `${rail} [data-slot="rail-brand"]`,
+            search: `${rail} [data-slot="rail-search"]`,
+            fresh: `${rail} [data-slot="rail-new"]`,
+            row: `${rail} [data-slot="rail-account"]`,
+            sub: `${rail} [data-slot="rail-account-sub"]`,
+            notice: `${rail} [data-slot="rail-notice"]`,
+          })
           expect(brand.y + brand.h, 'the brand sits over the search').toBeLessThanOrEqual(search.y + 1)
           expect(search.y + search.h, 'the search sits over New').toBeLessThanOrEqual(fresh.y + 1)
           expect(Math.round(search.h)).toBe(34)
           const border = await page.$eval(`${rail} [data-slot="rail-search"]`, (e) => parseFloat(getComputedStyle(e).borderTopWidth))
           expect(border, 'the search box is bordered').toBeGreaterThan(0)
-          const row = await box(page, `${rail} [data-slot="rail-account"]`)
-          const sub = await box(page, `${rail} [data-slot="rail-account-sub"]`)
           expect(sub.y, 'the org is under the name').toBeGreaterThan(row.y + 8)
           expect(sub.y + sub.h, 'inside the row').toBeLessThanOrEqual(row.y + row.h + 1)
           // The notice sits in the rail, above the account.
-          const notice = await box(page, `${rail} [data-slot="rail-notice"]`)
           expect(notice.y + notice.h).toBeLessThanOrEqual(row.y)
         })
 
       test('home centres the question on its pane with the composer under it', async ({ page }) => {
-        const pane = await box(page, '[data-home="demo"] [data-slot="home"]')
-        const mark = await box(page, '[data-home="demo"] [data-slot="home-mark"]')
-        const title = await box(page, '[data-home="demo"] [data-slot="home-title"]')
-        const field = await box(page, '[data-home="demo"] [data-slot="composer"]')
+        const { pane, mark, title, field } = await frame(page, {
+          pane: '[data-home="demo"] [data-slot="home"]',
+          mark: '[data-home="demo"] [data-slot="home-mark"]',
+          title: '[data-home="demo"] [data-slot="home-title"]',
+          field: '[data-home="demo"] [data-slot="composer"]',
+        })
         // The mark and the question are one line, and it is the LINE that is
         // centred: the question alone sits off by half the mark and its gap.
         const start = Math.min(mark.x, title.x)
@@ -719,8 +744,8 @@ for (const theme of THEMES)
         const [nav] = await shown(page, '[data-settings="demo"] [data-slot="settings-nav"]')
         const [chips] = await shown(page, '[data-settings="demo"] [data-slot="settings-chips"]')
         expect([nav, chips]).toEqual(phone ? [false, true] : [true, false])
-        if (!phone) expect(Math.round((await box(page, '[data-settings="demo"] [data-slot="settings-nav"]')).w)).toBe(220)
-        const body = await box(page, '[data-settings="demo"] [data-slot="settings-body"]')
+        if (!phone) expect(Math.round((await frame(page, { nav: '[data-settings="demo"] [data-slot="settings-nav"]' })).nav.w)).toBe(220)
+        const { body } = await frame(page, { body: '[data-settings="demo"] [data-slot="settings-body"]' })
         expect(body.w, 'the section column is a measure').toBeLessThanOrEqual(760)
         const current = await page.$$eval(
           `[data-settings="demo"] [data-slot="${phone ? 'settings-chip' : 'settings-entry'}"][aria-current="page"]`,
@@ -734,7 +759,7 @@ for (const theme of THEMES)
         expect(tiles.length).toBe(3)
         // As many 280px tracks as the list holds with its 12px gaps — one on a
         // phone, and on a desktop whatever the gallery's column gives it.
-        const list = await box(page, '[data-shelf="demo"] [data-slot="grid"]')
+        const { list } = await frame(page, { list: '[data-shelf="demo"] [data-slot="grid"]' })
         const fit = Math.max(1, Math.floor((list.w + 12) / (280 + 12)))
         if (phone) expect(fit).toBe(1)
         else expect(fit, 'a desktop fits more than one card').toBeGreaterThan(1)
