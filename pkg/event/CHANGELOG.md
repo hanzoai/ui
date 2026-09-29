@@ -1,5 +1,18 @@
 # @hanzo/event
 
+## 0.3.42
+
+### Patch Changes
+
+- **No stamped location carries a fragment.** Every event's `url`, `path` and
+  `referrer` now drop everything from the first `#` before they are scrubbed. A
+  browser never sends a fragment to a server, and apps keep device-only state
+  there — hanzo.ai's `/chat/shared#<secret>` share links among them — so the
+  client sends none either.
+- **A lone 43-character base64url run that mixes case and digits is redacted.**
+  That is the shape of a 256-bit secret written unpadded, which no other secret
+  pattern matched.
+
 ## 0.3.36
 
 ### Patch Changes

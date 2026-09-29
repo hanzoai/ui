@@ -49,7 +49,7 @@ import { dsnForProduct } from './dsn'
 import { keyForPage } from './org'
 import { EXCEPTION, PAGEVIEW } from './events'
 import { exceptionProperties } from './exception'
-import { scrubText } from './scrub'
+import { scrubText, withoutFragment } from './scrub'
 import {
   buildEnvelope,
   buildSentryEvent,
@@ -645,10 +645,13 @@ export class Analytics {
     // definition of "must not leave the browser", already tested, mirroring the
     // server's. Guarded on presence so an absent field stays absent instead of
     // becoming the empty string that `host` derivation reads as a page.
+    //
+    // The fragment goes first and whole: nothing after `#` is ever the server's
+    // (see withoutFragment), so it is dropped rather than scrubbed.
     const capturePII = this.cfg.capturePII ?? false
-    if (wire.url) wire.url = scrubText(wire.url, capturePII)
-    if (wire.path) wire.path = scrubText(wire.path, capturePII)
-    if (wire.referrer) wire.referrer = scrubText(wire.referrer, capturePII)
+    if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
+    if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
+    if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
     return wire
   }
 

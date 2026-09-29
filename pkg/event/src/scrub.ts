@@ -114,11 +114,30 @@ export function redactCredentialParams(s: string): string {
   return s.replace(RE_CREDENTIAL_PARAM, (_m, prefix: string) => prefix + REDACTED)
 }
 
+// A 256-bit secret written as unpadded base64url is exactly 43 characters of
+// [A-Za-z0-9_-] — the shape of a share-link secret, and of any other opaque key
+// minted the same way. The run must stand alone (nothing of the same alphabet on
+// either side), so it never fires inside a longer token, and it must mix upper
+// case, lower case and a digit, which a random 32 bytes does with near
+// certainty and an ordinary word or slug does not. No lookbehind, so it runs on
+// every engine the client ships to.
+const RE_SECRET43 = /(^|[^A-Za-z0-9_-])((?=[A-Za-z0-9_-]{0,42}[0-9])(?=[A-Za-z0-9_-]{0,42}[a-z])(?=[A-Za-z0-9_-]{0,42}[A-Z])[A-Za-z0-9_-]{43})(?![A-Za-z0-9_-])/g
+
 /** redactSecrets removes known secret shapes. Always applied. */
 export function redactSecrets(s: string): string {
   s = redactCredentialParams(s)
   for (const re of SECRET_PATTERNS) s = s.replace(re, REDACTED)
+  s = s.replace(RE_SECRET43, (_m, lead: string) => lead + REDACTED)
   return redactPAN(s)
+}
+
+/** withoutFragment returns a URL with its fragment removed. A browser never
+ *  sends the fragment to any server — it is where an app keeps what must stay
+ *  on the device, a share link's secret among them — so the client does not
+ *  send it either. */
+export function withoutFragment(url: string): string {
+  const at = url.indexOf('#')
+  return at < 0 ? url : url.slice(0, at)
 }
 
 /** scrubPII masks emails and IPs. Applied unless PII capture is enabled. */

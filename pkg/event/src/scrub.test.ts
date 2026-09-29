@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { redactSecrets, scrubPII, scrubText, MAX_SCRUB_LEN } from './scrub'
+import { redactSecrets, scrubPII, scrubText, withoutFragment, MAX_SCRUB_LEN } from './scrub'
 
 describe('redactSecrets (always applied)', () => {
   it('redacts a hanzo key', () => {
@@ -119,5 +119,30 @@ describe('credential params in a URL', () => {
     expect(out).toContain('plan=pro')
     expect(out).toContain('utm_source=hn')
     expect(out).toContain('page=2')
+  })
+})
+
+describe('a 256-bit base64url secret', () => {
+  const secret = 'Zq3LwX0p-Tf9_aB7kQmN2rS8vY1cD4eF6gH5jK0lMnO'
+  it('is redacted wherever it stands alone', () => {
+    expect(secret).toHaveLength(43)
+    for (const s of [secret, 'token ' + secret + ' expired', '/chat/shared/' + secret, '{"token":"' + secret + '"}']) {
+      expect(redactSecrets(s)).not.toContain(secret)
+      expect(redactSecrets(s)).toContain('[redacted]')
+    }
+  })
+  it('leaves a longer or shorter run, and a word-only run, alone', () => {
+    expect(redactSecrets(secret + 'x')).toBe(secret + 'x')
+    expect(redactSecrets(secret.slice(1))).toBe(secret.slice(1))
+    const slug = 'the-quick-brown-fox-jumps-over-the-lazy-dogs'.slice(0, 43)
+    expect(slug).toHaveLength(43)
+    expect(redactSecrets(slug)).toBe(slug)
+  })
+})
+
+describe('withoutFragment', () => {
+  it('drops everything from the first #', () => {
+    expect(withoutFragment('https://hanzo.ai/chat/shared#abc#def')).toBe('https://hanzo.ai/chat/shared')
+    expect(withoutFragment('https://hanzo.ai/pricing?plan=pro')).toBe('https://hanzo.ai/pricing?plan=pro')
   })
 })

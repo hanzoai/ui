@@ -270,6 +270,25 @@ describe('Analytics capture', () => {
       })
     })
 
+    // A share link keeps its secret in the fragment, which a browser never sends
+    // to a server. Stamped from window.location.href, it reached /v1/event on
+    // every event of the page, and a 43-character base64url secret matches no
+    // other secret shape. The fragment is dropped from every stamped location.
+    it('never sends a fragment', () => {
+      const secret = 'Zq3LwX0p-Tf9_aB7kQmN2rS8vY1cD4eF6gH5jK0lMnO'
+      withLocation('https://hanzo.ai/chat/shared#' + secret, 'https://hanzo.ai/login#' + secret, () => {
+        const a = mk()
+        a.pageview()
+        a.capture('$click')
+        a.flush()
+        for (const e of tx.all) {
+          expect(JSON.stringify(e)).not.toContain(secret)
+          expect(e.url).toBe('https://hanzo.ai/chat/shared')
+          expect(e.referrer).toBe('https://hanzo.ai/login')
+        }
+      })
+    })
+
     // A redactor that mangles ordinary URLs would destroy the analytics it
     // exists to protect, so the common case must pass through byte-for-byte.
     it('leaves an ordinary url untouched', () => {
