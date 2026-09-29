@@ -6,6 +6,7 @@ import { Check, ChevronsUpDown } from '@hanzogui/lucide-icons-2'
 import { SizableText, XStack } from '@hanzo/gui'
 
 import {
+  Anchor,
   Button,
   Command,
   CommandEmpty,
@@ -42,6 +43,9 @@ export interface ModelSelectorProps {
   /** Default true: filter to chat-capable models (exclude embedding/image/etc.). */
   chatOnly?: boolean
   className?: string
+  /** Open state, when the host owns it. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 /**
@@ -50,6 +54,12 @@ export interface ModelSelectorProps {
  * Family-grouped picker in a Popover + Command combobox: grouped sections with
  * family headers, premium markers, context suffixes, keyboard navigation, and
  * type-to-filter search for large catalogs.
+ *
+ * A model with `access` is listed and never chosen: its row is disabled, says
+ * why, and links to where a person asks for access. The link sits inside a
+ * list item rather than an option, so it is a control of its own and not one
+ * nested in another; it keeps Enter to itself, which the list would otherwise
+ * take as a pick.
  *
  * Styling is gui style props and tokens throughout — no class strings. The panel
  * matches the trigger's MEASURED width (`onLayout`, which gui implements on web
@@ -65,8 +75,15 @@ export function ModelSelector({
   placeholder = 'Select model',
   chatOnly = true,
   className,
+  open: openProp,
+  onOpenChange,
 }: ModelSelectorProps) {
-  const [open, setOpen] = useState(false)
+  const [own, setOwn] = useState(false)
+  const open = openProp ?? own
+  const setOpen = (next: boolean) => {
+    if (openProp === undefined) setOwn(next)
+    onOpenChange?.(next)
+  }
   const [triggerW, setTriggerW] = useState(0)
 
   const visible = useMemo(() => (chatOnly ? filterChatModels(models) : models), [models, chatOnly])
@@ -120,10 +137,13 @@ export function ModelSelector({
                 {group.models.map((m) => {
                   const label = m.label ?? m.id
                   const ctx = fmtContext(m.context_window)
+                  const locked = m.access === 'research'
                   return (
                     <CommandItem
                       key={m.id}
                       value={`${group.family} ${label} ${m.id}`}
+                      disabled={locked}
+                      aria-disabled={locked || undefined}
                       onSelect={() => {
                         onChange(m.id)
                         setOpen(false)
@@ -138,7 +158,28 @@ export function ModelSelector({
                           ✦
                         </SizableText>
                       )}
-                      {ctx && (
+                      {locked ? (
+                        <XStack ml="auto" shrink={0} pl="$2" gap="$2" items="center">
+                          <SizableText size="$1" color="$color11">
+                            Research preview
+                          </SizableText>
+                          {m.request && (
+                            <Anchor
+                              href={m.request}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              size="$1"
+                              color="$color12"
+                              textDecorationLine="underline"
+                              // The row takes no pointer while disabled; its link does.
+                              pointerEvents="auto"
+                              onKeyDown={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+                            >
+                              Request access
+                            </Anchor>
+                          )}
+                        </XStack>
+                      ) : ctx && (
                         <XStack ml="auto" shrink={0} pl="$2">
                           <SizableText size="$1" color="$color11" fontVariant={['tabular-nums']}>
                             {ctx}

@@ -67,7 +67,9 @@ pkg/ui/src/
   theme.css        SELF-CONTAINED token CSS vars + Zen / Zen Mono — the identity
   backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
-  models/          the unified ModelSelector + catalog helpers
+  models/          the unified ModelSelector + catalog helpers; RESEARCH is the
+                   models nobody can call yet, which hosts append and the
+                   picker draws disabled with a Request access link
   primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)
   index.ts         root barrel = the component surface + cn
 ```

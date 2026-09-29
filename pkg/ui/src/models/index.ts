@@ -13,6 +13,7 @@ export {
   isChatModel,
   filterChatModels,
   fetchModelCatalog,
+  RESEARCH,
 } from './catalog'
 export type { ModelCatalogEntry } from './catalog'
 

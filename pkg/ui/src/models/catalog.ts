@@ -23,7 +23,30 @@ export interface ModelCatalogEntry {
   modality?: string
   context_window?: number
   description?: string
+  /** Absent, anyone may call it. `research`: it exists and nobody can call it yet. */
+  access?: 'research'
+  /** Where a person asks for access to a model they cannot call. */
+  request?: string
 }
+
+/**
+ * The models that exist and cannot be called, said once for every list of
+ * models: a picker draws each one disabled, a catalogue page draws it muted.
+ *
+ * No gateway serves them, and that is the point: `/v1/models` never answers for
+ * one, so nothing can route to it. A host that lists them appends these to what
+ * the gateway said.
+ */
+export const RESEARCH: ModelCatalogEntry[] = [
+  {
+    id: 'zen7',
+    owned_by: 'zenlm',
+    label: 'Zen 7',
+    access: 'research',
+    request: 'https://hanzo.ai/research-access',
+    description: 'The next open-weight generation after Zen 6, in research preview.',
+  },
+]
 
 /**
  * owned_by → display family.

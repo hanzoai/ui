@@ -34,6 +34,7 @@ import { DialogTemplate } from './product/DialogTemplate'
 import { ChipSelect } from './product/ChipSelect'
 import { RepoSelect } from './product/RepoSelect'
 import { BranchSelect } from './product/BranchSelect'
+import { ModelSelector, RESEARCH } from './models'
 import {
   Aside,
   AsideToggle,
@@ -445,6 +446,21 @@ export const Gallery = () => (
         </CommandList>
       </CommandDialog>
       <span data-palette-selected="" />
+    </Section>
+
+    {/* The model picker, OPEN, over a catalogue with a model nobody can call
+        yet: its row is drawn disabled, with its reason and its link. */}
+    <Section name="models">
+      <ModelSelector
+        open
+        value="zen6"
+        onChange={NOOP}
+        models={[
+          { id: 'enso', owned_by: 'hanzo', label: 'Enso', premium: true },
+          { id: 'zen6', owned_by: 'zenlm', label: 'Zen 6', context_window: 1_000_000 },
+          ...RESEARCH,
+        ]}
+      />
     </Section>
 
     {/* Portalled surfaces. Rendered open so their panels produce styles too —
