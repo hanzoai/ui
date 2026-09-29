@@ -69,7 +69,9 @@ pkg/ui/src/
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
   models/          the unified ModelSelector + catalog helpers; RESEARCH is the
                    models nobody can call yet, which hosts append and the
-                   picker draws disabled with a Request access link
+                   picker draws disabled with a Request access link.
+                   `@hanzo/ui/models/catalog` is the pure half, which bare
+                   Node and a server can load; `./models` pulls in gui
   primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)
   index.ts         root barrel = the component surface + cn
 ```

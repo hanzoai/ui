@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.27.21",
+  "version": "8.27.22",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -32,6 +32,12 @@
       "import": "./dist/models/index.js",
       "require": "./dist/models/index.cjs",
       "default": "./dist/models/index.js"
+    },
+    "./models/catalog": {
+      "types": "./dist/models/catalog.d.ts",
+      "import": "./dist/models/catalog.js",
+      "require": "./dist/models/catalog.cjs",
+      "default": "./dist/models/catalog.js"
     },
     "./chat": {
       "types": "./dist/chat/index.d.ts",
