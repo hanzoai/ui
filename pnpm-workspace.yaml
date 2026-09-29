@@ -44,6 +44,7 @@ catalog:
   '@hanzogui/core': '8.3.5'
   '@hanzogui/lucide-icons-2': '8.3.5'
   '@hanzogui/next-theme': '8.3.5'
+  '@hanzogui/shell': '8.3.5'
   '@hanzogui/telemetry': '8.3.5'
   '@hanzogui/toast': '8.3.5'
   '@hanzogui/web': '8.3.5'

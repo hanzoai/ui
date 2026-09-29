@@ -199,6 +199,7 @@ describe('the utility class namespace', () => {
   const onBox = [...scanned.box].sort()
   const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
   const theme = readFileSync(join(SRC, 'theme.css'), 'utf8')
+  const masthead = readFileSync(join(SRC, 'masthead/masthead.css'), 'utf8')
 
   it('found the classes to check — an empty scan proves nothing', () => {
     expect(ours.length).toBeGreaterThan(5)
@@ -239,12 +240,11 @@ describe('the utility class namespace', () => {
   })
 
   it('defines a rule for each of them', () => {
-    // Across every stylesheet the package ships, not just motion.css — that was
-    // the only `hz-` family when this was written, and `hz-prose` (theme.css) is
-    // the second. The invariant is "a class we emit has a rule we ship", and
-    // naming one file made it "…has a rule in this file", which a correct second
-    // family fails.
-    const sheets = motion + theme
+    // Across every stylesheet the package ships: motion.css, theme.css
+    // (`hz-prose`) and masthead.css (`hz-masthead`). The invariant is "a class
+    // we emit has a rule we ship", and naming one file would make it "…has a
+    // rule in this file", which a correct second family fails.
+    const sheets = motion + theme + masthead
     const orphan = ours.filter((c) => c.startsWith('hz-') && !sheets.includes(`.${c}`))
     expect(orphan, `${orphan.join(', ')} is emitted with no rule in any shipped stylesheet`).toEqual([])
   })

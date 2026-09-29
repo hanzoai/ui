@@ -60,6 +60,7 @@ const DATA = new Set(
         'core/css',
         'framework/core',
         'glass',
+        'masthead/nav',
         'product/social/api',
         'product/pure',
         'chat/pure',

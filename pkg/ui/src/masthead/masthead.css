@@ -1,0 +1,502 @@
+/* hanzo.ai's header (Masthead, @hanzo/ui/masthead): the bar, a menu's plane,
+   Log in ▾, and the phone sheet. Imported once by every site that wears it.
+
+   The bar reads the theme's tokens (@hanzo/design via @hanzo/ui/theme.css), so
+   light and dark need no second copy of any of it. The three below are the
+   chrome's own; a site that states them at :root wins, since these sit at zero
+   specificity. */
+:where(:root) {
+  /* The header's height. */
+  --header: 60px;
+  /* One inset for the chrome and the page under it, the shell's GUTTER. */
+  --page-gutter: clamp(20px, 4vw, 72px);
+  /* The ground every chrome menu stands on: @hanzo/design's dropdown panel,
+     opaque, a shade above --background in either theme. */
+  --chrome-panel: var(--popover);
+}
+/* The bar's ink on a light page. The shell writes its inks as
+   `var(--white-92, …)` with white only as the fallback, so stating these names
+   on the bar turns every inline use black at once. Scoped to the bar: the names
+   mean a hue, and a page's own glows and hover fills stay white.
+
+   --white-45 is pushed to .56 rather than mirrored: black on white reads fainter
+   than white on black at the same alpha, and .56 is 4.5:1 on both the bar and
+   the panel. The panel under these inks is --chrome-panel, which flips with the
+   theme at `.light` wherever a menu is mounted. */
+.light .hz-masthead {
+  --white-92: rgb(0 0 0 / 0.92);
+  --white-60: rgb(0 0 0 / 0.6);
+  --white-45: rgb(0 0 0 / 0.56);
+  --white-10: rgb(0 0 0 / 0.1);
+}
+
+/* ==========================================================================
+   THE BAR AND THE SHEET
+
+   One nav tree, two drawings: the bar and the phone sheet. The bar's geometry
+   is @hanzogui/shell's — a 60px row, 34px pills, 13px labels, a 16px mark
+   before each, a 12px chevron after — so it reads as the same chrome the rest
+   of the estate wears. Every ink and ground is a theme token.
+
+   THREE GROUNDS for the bar. Clear over the top of a page; glass once the page
+   moves under it; and the plane's own opaque ground while a menu or the sheet
+   hangs from it, so bar and plane are one surface. The open bar carries no
+   backdrop filter on purpose: a filtered element is a backdrop root, and the
+   veil inside it would then blur the bar instead of the page.
+   ========================================================================== */
+
+.hz-masthead {
+  --wash: color-mix(in srgb, var(--foreground) 6%, transparent);
+  --hairline: color-mix(in srgb, var(--foreground) 10%, transparent);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: content-box;
+  height: var(--header);
+  padding: env(safe-area-inset-top) var(--page-gutter) 0;
+  font-family: var(--font-sans);
+  /* The type the chrome is set in: @hanzo/gui's body, 16px on a 20px line. A
+     fixed line, so every row keeps its height whatever the host's body type. */
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--foreground);
+  transition: background-color 160ms ease;
+}
+
+.hz-masthead[data-grounded] {
+  background: color-mix(in srgb, var(--background) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+}
+
+.hz-masthead:has([aria-expanded='true']) {
+  background: var(--chrome-panel);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.hz-masthead a,
+.hz-masthead button {
+  font-family: inherit;
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ pills */
+
+.hz-masthead .hz-trigger,
+.hz-masthead .hz-find,
+.hz-masthead .hz-brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.hz-masthead .hz-trigger {
+  gap: 6px;
+  padding: 0 12px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+}
+
+.hz-masthead .hz-trigger:hover,
+.hz-masthead .hz-trigger[aria-expanded='true'],
+.hz-masthead .hz-find:hover,
+.hz-masthead .hz-brand:hover,
+.hz-masthead .hz-brand:has([aria-expanded='true']) {
+  color: var(--foreground);
+  background: var(--wash);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-mark {
+  display: inline-flex;
+  opacity: 0.9;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-chevron {
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+
+[aria-expanded='true'] > .hz-chevron,
+details[open] > summary > .hz-chevron {
+  transform: rotate(180deg);
+}
+
+/* The name of the place is never dim, and the chevron beside it is its own stop:
+   the name goes home, the chevron opens the company. */
+.hz-masthead .hz-brand {
+  margin-left: -4px;
+  color: var(--foreground);
+}
+
+.hz-masthead .hz-brand .hz-wordmark {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 12px;
+  color: inherit;
+}
+
+.hz-masthead .hz-brand .hz-company {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 100%;
+  padding: 0 6px 0 0;
+  border: 0;
+  border-radius: 0 999px 999px 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.hz-masthead .hz-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.hz-masthead .hz-find {
+  justify-content: center;
+  width: 34px;
+}
+
+.hz-masthead .hz-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.hz-masthead .hz-menu {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The one filled control in the bar. */
+:is(.hz-masthead, .hz-sheet) .hz-try {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: opacity 120ms ease;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-try:hover {
+  opacity: 0.88;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-out {
+  display: inline-block;
+  margin-left: 0.28em;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+.hz-masthead .hz-toggle {
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  border: 0;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ plane */
+
+/* A menu's panel spans the window under the bar and lays its columns out from
+   the wordmark's column. */
+.hz-masthead .hz-plane {
+  position: fixed;
+  top: calc(var(--header) + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  z-index: calc(var(--z-base) + 1);
+  max-height: calc(100dvh - var(--header));
+  overflow-y: auto;
+  background: var(--chrome-panel);
+  box-shadow: 0 24px 60px -16px color-mix(in srgb, var(--pure-black) 75%, transparent);
+  animation: hz-plane-in 160ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+@keyframes hz-plane-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hz-masthead .hz-veil {
+  position: fixed;
+  top: calc(var(--header) + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-base);
+  background: color-mix(in srgb, var(--pure-black) 40%, transparent);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+}
+
+.hz-masthead .hz-columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-content: start;
+  gap: clamp(24px, 3vw, 64px);
+  padding: 36px calc(var(--page-gutter) + 8px) 48px;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  transition: opacity 160ms ease;
+}
+
+/* The column under the pointer is the one being read; the others step back. */
+.hz-masthead .hz-columns:has(> .hz-column:hover) > .hz-column:not(:hover) {
+  opacity: 0.45;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-column-title {
+  margin: 0 0 10px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+/* `justify-content` is stated on every row: this sheet centres any link whose
+   one element child is an svg, and ↗ is exactly that. A row is as wide as its
+   words, so a keyboard ring hugs the words it names rather than the column. */
+:is(.hz-masthead, .hz-sheet) .hz-column a {
+  display: block;
+  width: fit-content;
+  justify-content: flex-start;
+  margin: 0 -8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+:is(.hz-masthead, .hz-sheet) .hz-column a:hover,
+:is(.hz-masthead, .hz-sheet) .hz-column a:focus-visible {
+  color: var(--foreground);
+}
+
+/* The destinations someone arrives wanting, in display type. */
+.hz-masthead .hz-column[data-lead] a {
+  padding: 2px 8px;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-normal);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+/* ------------------------------------------------------------------ log in */
+
+.hz-masthead .hz-card {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  gap: 2px;
+  min-width: 240px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--chrome-panel);
+  box-shadow: 0 24px 60px -16px color-mix(in srgb, var(--pure-black) 75%, transparent);
+  animation: hz-plane-in 160ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.hz-masthead .hz-card a {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+}
+
+.hz-masthead .hz-card a:hover,
+.hz-masthead .hz-card a:focus-visible {
+  background: color-mix(in srgb, var(--foreground) 6%, transparent);
+}
+
+.hz-masthead .hz-card small {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-normal);
+  color: var(--muted-foreground);
+}
+
+/* ------------------------------------------------------------------ phone */
+
+.hz-sheet {
+  position: fixed;
+  top: calc(var(--header) + env(safe-area-inset-top));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-overlay);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px var(--page-gutter) calc(24px + env(safe-area-inset-bottom));
+  background: var(--chrome-panel);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 20px;
+  animation: hz-plane-in 160ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.hz-sheet details {
+  border-bottom: 1px solid var(--border);
+}
+
+.hz-sheet summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  list-style: none;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-medium);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.hz-sheet summary::-webkit-details-marker {
+  display: none;
+}
+
+.hz-sheet summary .hz-chevron {
+  margin-left: auto;
+}
+
+.hz-sheet .hz-column {
+  padding: 0 0 16px;
+}
+
+.hz-sheet .hz-column-title {
+  margin: 4px 0 2px;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+}
+
+.hz-sheet .hz-column a,
+.hz-sheet .hz-column[data-lead] a {
+  display: flex;
+  width: auto;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-lg);
+  font-weight: var(--weight-normal);
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: normal;
+}
+
+.hz-sheet .hz-column[data-lead] a {
+  font-size: var(--text-xl);
+}
+
+.hz-sheet .hz-doors {
+  display: grid;
+  gap: 4px;
+  padding-top: 20px;
+}
+
+.hz-sheet .hz-door {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 44px;
+  font-size: var(--text-lg);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.hz-sheet .hz-try {
+  height: 48px;
+  margin-top: 12px;
+  font-size: var(--text-base);
+}
+
+/* One compact bar on a phone and a tablet: the name, search, and the menu. */
+@media (max-width: 1023px) {
+  .hz-masthead .hz-nav,
+  .hz-masthead .hz-login,
+  .hz-masthead .hz-end > .hz-try,
+  .hz-masthead .hz-brand .hz-company {
+    display: none;
+  }
+
+  .hz-masthead .hz-brand .hz-wordmark {
+    padding-right: 12px;
+  }
+
+  .hz-masthead .hz-find {
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+  }
+
+  .hz-masthead .hz-end {
+    margin-left: 0;
+  }
+
+  .hz-masthead .hz-toggle {
+    display: inline-grid;
+  }
+}
+
+/* Between a tablet and a wide laptop the row keeps its labels and drops its marks. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .hz-masthead .hz-nav .hz-mark {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hz-masthead .hz-plane,
+  .hz-masthead .hz-card,
+  .hz-sheet {
+    animation: none;
+  }
+}
