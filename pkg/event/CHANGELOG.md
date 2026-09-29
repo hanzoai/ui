@@ -9,9 +9,10 @@
   browser never sends a fragment to a server, and apps keep device-only state
   there — hanzo.ai's `/chat/shared#<secret>` share links among them — so the
   client sends none either.
-- **A lone 43-character base64url run that mixes case and digits is redacted.**
-  That is the shape of a 256-bit secret written unpadded, which no other secret
-  pattern matched.
+- **A lone 43-character base64url run that mixes upper and lower case is
+  redacted**, also where it follows a percent-escape such as the `%23` of an
+  encoded `#`. That is the shape of a 256-bit secret written unpadded, which no
+  other secret pattern matched.
 
 ## 0.3.36
 

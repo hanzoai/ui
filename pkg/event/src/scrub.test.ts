@@ -131,6 +131,14 @@ describe('a 256-bit base64url secret', () => {
       expect(redactSecrets(s)).toContain('[redacted]')
     }
   })
+  it('is redacted with no digit in it, and behind an encoded fragment mark', () => {
+    const letters = 'ZqLwXp-Tf_aBkQmNrSvYcDeFgHjKlMnOpQrStUvWxYz'
+    expect(letters).toHaveLength(43)
+    expect(redactSecrets('token=' + letters)).not.toContain(letters)
+    const returnUrl = 'https://hanzo.ai/login?next=%2Fchat%2Fshared%23' + secret
+    expect(redactSecrets(returnUrl)).not.toContain(secret)
+    expect(redactSecrets(returnUrl)).toContain('%23[redacted]')
+  })
   it('leaves a longer or shorter run, and a word-only run, alone', () => {
     expect(redactSecrets(secret + 'x')).toBe(secret + 'x')
     expect(redactSecrets(secret.slice(1))).toBe(secret.slice(1))

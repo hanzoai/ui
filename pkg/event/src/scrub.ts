@@ -116,12 +116,13 @@ export function redactCredentialParams(s: string): string {
 
 // A 256-bit secret written as unpadded base64url is exactly 43 characters of
 // [A-Za-z0-9_-] — the shape of a share-link secret, and of any other opaque key
-// minted the same way. The run must stand alone (nothing of the same alphabet on
-// either side), so it never fires inside a longer token, and it must mix upper
-// case, lower case and a digit, which a random 32 bytes does with near
-// certainty and an ordinary word or slug does not. No lookbehind, so it runs on
-// every engine the client ships to.
-const RE_SECRET43 = /(^|[^A-Za-z0-9_-])((?=[A-Za-z0-9_-]{0,42}[0-9])(?=[A-Za-z0-9_-]{0,42}[a-z])(?=[A-Za-z0-9_-]{0,42}[A-Z])[A-Za-z0-9_-]{43})(?![A-Za-z0-9_-])/g
+// minted the same way. The run must stand alone — nothing of the same alphabet
+// on either side, a percent-escape such as the `%23` of an encoded `#` counting
+// as a boundary — so it never fires inside a longer token, and it must mix upper
+// and lower case, which a random 32 bytes does with near certainty and an
+// ordinary word or slug does not. No lookbehind, so it runs on every engine the
+// client ships to.
+const RE_SECRET43 = /(^|[^A-Za-z0-9_-]|%[0-9A-Fa-f]{2})((?=[A-Za-z0-9_-]{0,42}[a-z])(?=[A-Za-z0-9_-]{0,42}[A-Z])[A-Za-z0-9_-]{43})(?![A-Za-z0-9_-])/g
 
 /** redactSecrets removes known secret shapes. Always applied. */
 export function redactSecrets(s: string): string {
