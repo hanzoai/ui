@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.52
+
+### Patch Changes
+
+- `useConsent` re-renders when cloud's rule arrives, so a stream started silent for an opt-in visitor and a banner drawn from the time-zone guess both follow the served region.
+
 ## 0.3.51
 
 ### Patch Changes

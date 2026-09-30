@@ -2,8 +2,7 @@
 
 The client for **Sentinel**, Hanzo Cloud's error plane, at `/v1/sentinel`.
 
-`@hanzo/event` is the write side: it reports errors to the ingest endpoint its
-DSN names. This is the read side — the fifteen operations that list issues, resolve
+`@hanzo/event` is the write side: it reports each error to `/v1/event`. This is the read side — the fourteen operations that list issues, resolve
 them, read the captured errors behind them, manage the projects that receive
 them, and query logs, rates, traces and aggregates. Neither package imports the
 other.
@@ -45,7 +44,6 @@ and read nothing, so the face refuses it.
 | `createProject(draft)` | `POST /v1/sentinel/projects` |
 | `project(id)` | `GET /v1/sentinel/projects/{id}` |
 | `deleteProject(id)` | `DELETE /v1/sentinel/projects/{id}` |
-| `rotateKey(id)` | `POST /v1/sentinel/projects/{id}/keys/rotate` |
 | `logs(query)` | `GET /v1/sentinel/logs` |
 | `stats(query)` | `GET /v1/sentinel/stats` |
 | `traces(query)` | `GET /v1/sentinel/traces` |
@@ -75,16 +73,8 @@ try {
 came back — parsed when it was JSON, the raw text when the edge answered
 `404 page not found` instead.
 
-## Projects and DSNs
+## Projects
 
-`projects()`, `createProject()` and `rotateKey()` each answer with the project's
-freshly-derived `dsn`. Hand that string to `@hanzo/event`: the DSN is the one
-place an ingest address is spelled.
-
-```ts
-const project = await sentinel.createProject({ name: 'hanzo-app', platform: 'javascript' })
-project.dsn // https://<key>@api.hanzo.ai/v1/event/<projectId>
-```
-
-Rotating retires every key below the new one, so a surface still holding the old
-DSN stops being able to report until it is redeployed with the new one.
+`projects()`, `createProject()` and `project()` answer with the org's error projects, one
+per site. Errors arrive on `/v1/event` as `type:'error'` under the site's `pk-` key; a
+project has no DSN and no key of its own to rotate.

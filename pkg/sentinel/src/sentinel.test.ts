@@ -46,7 +46,7 @@ function stub(answer: Answer = {}) {
 const ok = (data: unknown) => ({ body: { status: 'success', data } })
 
 /**
- * The fifteen operations, each pinned to the method and address the o11y
+ * The fourteen operations, each pinned to the method and address the o11y
  * plugin's OpenAPI document declares for it. This table is the contract: an
  * operation that moves, or one added without an address, fails here.
  */
@@ -106,12 +106,6 @@ const OPERATIONS: Array<{
     run: (s) => s.deleteProject('p1'),
   },
   {
-    name: 'rotateKey',
-    method: 'POST',
-    url: '/v1/sentinel/projects/p1/keys/rotate',
-    run: (s) => s.rotateKey('p1'),
-  },
-  {
     name: 'logs',
     method: 'GET',
     url: '/v1/sentinel/logs?project=p1',
@@ -144,8 +138,8 @@ const OPERATIONS: Array<{
 ]
 
 describe('the face', () => {
-  it('is fifteen operations and no others', () => {
-    expect(OPERATIONS).toHaveLength(15)
+  it('is fourteen operations and no others', () => {
+    expect(OPERATIONS).toHaveLength(14)
     expect(Object.keys(createSentinel()).sort()).toEqual(
       OPERATIONS.map((op) => op.name).sort()
     )

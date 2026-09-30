@@ -40,7 +40,7 @@ export interface Config {
   fetch?: typeof globalThis.fetch
 }
 
-/** Sentinel is the error plane's read face: the fifteen operations under
+/** Sentinel is the error plane's read face: the fourteen operations under
  *  /v1/sentinel, one function each. */
 export interface Sentinel {
   /** issues lists the org's grouped issues, newest activity first. */
@@ -54,17 +54,15 @@ export interface Sentinel {
   /** event returns one captured error by its id. */
   event(id: string, query: Scope): Promise<Capture>
 
-  /** projects lists the org's projects, each with its DSN. */
+  /** projects lists the org's projects, each one a site. */
   projects(): Promise<Projects>
-  /** createProject opens a project and returns it, DSN included. */
+  /** createProject opens a project and returns it. */
   createProject(draft: ProjectDraft): Promise<Project>
-  /** project returns one project, DSN included. */
+  /** project returns one project. */
   project(id: string): Promise<Project>
-  /** deleteProject closes a project. Its DSN stops resolving at once; retained
+  /** deleteProject closes a project. It stops accepting errors at once; retained
    *  events are untouched. */
   deleteProject(id: string): Promise<void>
-  /** rotateKey mints the project a new DSN key and retires every older one. */
-  rotateKey(id: string): Promise<Project>
 
   /** logs lists a project's captures, newest first. */
   logs(query: LogQuery): Promise<Captures>
@@ -78,7 +76,7 @@ export interface Sentinel {
   discover(query: DiscoverQuery): Promise<Table>
 }
 
-/** createSentinel binds a credential and a host to the fifteen operations.
+/** createSentinel binds a credential and a host to the fourteen operations.
  *
  *     const sentinel = createSentinel({ token })
  *     const { items } = await sentinel.issues({ period: '24h', status: 'unresolved' })
@@ -101,7 +99,6 @@ export function createSentinel(config: Config = {}): Sentinel {
     deleteProject: async (id) => {
       await send(config, 'DELETE', `/projects/${at(id)}`)
     },
-    rotateKey: (id) => call(config, 'POST', `/projects/${at(id)}/keys/rotate`),
 
     logs: (query) => call(config, 'GET', '/logs', query),
     stats: (query) => call(config, 'GET', '/stats', query),

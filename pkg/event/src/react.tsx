@@ -22,7 +22,7 @@ import {
 } from 'react'
 import { Analytics, createAnalytics } from './core'
 import type { AnalyticsConfig } from './types'
-import { CONSENT_EVENT, read, render, type Choice } from './consent'
+import { CONSENT_EVENT, POLICY_EVENT, read, render, type Choice } from './consent'
 
 const Ctx = createContext<Analytics | null>(null)
 
@@ -125,7 +125,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 const listen = (on: () => void) => {
   window.addEventListener(CONSENT_EVENT, on)
-  return () => window.removeEventListener(CONSENT_EVENT, on)
+  window.addEventListener(POLICY_EVENT, on)
+  return () => {
+    window.removeEventListener(CONSENT_EVENT, on)
+    window.removeEventListener(POLICY_EVENT, on)
+  }
 }
 
 /**

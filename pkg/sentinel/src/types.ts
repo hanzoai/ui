@@ -164,7 +164,7 @@ export interface Captures {
   items?: Capture[]
 }
 
-/** Project is an ingest destination and the DSN that addresses it. */
+/** Project is a site's error project. Its errors arrive on /v1/event under the site's pk- key. */
 export interface Project {
   id?: string
   name?: string
@@ -172,9 +172,6 @@ export interface Project {
   platform?: string
   /** status is the lifecycle state: active or disabled. */
   status?: string
-  /** dsn is the project's freshly-derived ingest address. Hand it to
-   *  @hanzo/event; it is the one place an ingest address is spelled. */
-  dsn?: string
   createdAt?: string
   updatedAt?: string
 }
