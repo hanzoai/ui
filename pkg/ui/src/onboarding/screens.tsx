@@ -12,7 +12,7 @@ import { Stepper } from '../backends/gui/stepper'
 import { Textarea } from '../backends/gui/textarea'
 import { ApiError, call } from './api'
 import { IntervalToggle, Line, Panel } from './frame'
-import { ENTERPRISE_FROM, MAX_SEATS, MIN_SEATS, OFFERS, SEAT_ADDON, lines, money, saving, unit, usd, type Interval, type PlanId } from './plans'
+import { ENTERPRISE_FROM, MAX_SEATS, MIN_SEATS, has, lines, money, offer, saving, unit, usd, yearly, type Interval, type PlanId } from './plans'
 import type { Use } from './state'
 
 /** A team's IAM handle from its name: lowercase words joined by hyphens, 39 characters at most. */
@@ -91,26 +91,26 @@ export function UseCards({ onPick, onAsk }: { onPick: (u: Use) => void; onAsk?: 
 
 /* ---------------------------------------------------------------- plans */
 
-function PlanCard({ id, cta, onPick, interval, setInterval, toggle }: { id: PlanId; cta: string; onPick: () => void; interval: Interval; setInterval: (i: Interval) => void; toggle?: boolean }) {
-  const o = OFFERS[id]
+function PlanCard({ id, cta, onPick, interval, setInterval, toggle, from }: { id: PlanId; cta: string; onPick: () => void; interval: Interval; setInterval: (i: Interval) => void; toggle?: boolean; from?: boolean }) {
+  const o = offer(id)
   return (
-    <Card aria-label={o.name} bg="$panel" flex={1} flexBasis={300} maxW={380} gap="$0" py={0}>
+    <Card aria-label={from ? 'Max' : o.name} bg="$panel" flex={1} flexBasis={300} maxW={380} gap="$0" py={0}>
       <YStack p="$5" gap="$3" borderBottomWidth={1} borderBottomColor="$borderColor">
         <XStack minH={36} justify="flex-end">
-          {toggle ? <IntervalToggle interval={interval} onChange={setInterval} name={o.name} /> : null}
+          {toggle && yearly(id) ? <IntervalToggle interval={interval} onChange={setInterval} name={o.name} save={saving(id)} /> : null}
         </XStack>
         <Heading render="h2" size="$7" fontWeight="600" color="$ink" m={0}>
-          {o.name}
+          {from ? 'Max' : o.name}
         </Heading>
         <Paragraph size="$3" color="$quiet" m={0}>
           {o.blurb}
         </Paragraph>
         <XStack items="center" gap="$2" my="$2">
           <SizableText size="$10" fontWeight="600" color="$ink">
-            {money(unit(id, interval))}
+            {`${from ? 'From ' : ''}${money(unit(id, interval))}`}
           </SizableText>
           <SizableText size="$1" color="$quiet">
-            {`USD / month\nbilled ${interval === 'annual' ? 'yearly' : 'monthly'}`}
+            {`USD / month\nbilled ${interval === 'annual' && yearly(id) ? 'yearly' : 'monthly'}`}
           </SizableText>
         </XStack>
         <Primary onClick={onPick}>
@@ -141,8 +141,8 @@ export function Plans({ interval, setInterval, onFree, onPick }: { interval: Int
     <YStack items="center" gap="$4" width="100%">
       <XStack flexWrap="wrap" justify="center" gap="$5" width="100%">
         <PlanCard id="free" cta="Use Hanzo for free" onPick={onFree} interval={interval} setInterval={setInterval} />
-        <PlanCard id="dev" cta="Get Dev plan" onPick={() => onPick('dev')} interval={interval} setInterval={setInterval} toggle />
-        <PlanCard id="max" cta="Get Max plan" onPick={() => onPick('max')} interval={interval} setInterval={setInterval} />
+        <PlanCard id="dev" cta={`Get ${offer('dev').name} plan`} onPick={() => onPick('dev')} interval={interval} setInterval={setInterval} toggle />
+        <PlanCard id="max_5x" cta="Get Max plan" onPick={() => onPick('max_5x')} interval={interval} setInterval={setInterval} from />
       </XStack>
       <Paragraph size="$1" color="$quiet" text="center" m={0}>
         Prices are in US dollars. Usage limits apply, and plans are subject to change.
@@ -190,14 +190,14 @@ export function TeamName({ api, onCreated }: { api: string; onCreated: (org: str
 
 /* ---------------------------------------------------------------- seats */
 
-export function IntervalChoice({ interval, setInterval, price }: { interval: Interval; setInterval: (i: Interval) => void; price: (i: Interval) => string }) {
+export function IntervalChoice({ interval, setInterval, price, save }: { interval: Interval; setInterval: (i: Interval) => void; price: (i: Interval) => string; save: number }) {
   return (
     <ChoiceGroup label="Billing interval" flexWrap="wrap">
-      {(['monthly', 'annual'] as const).map((i) => (
+      {(['monthly', 'annual'] as const).filter((i) => i === 'monthly' || save > 0).map((i) => (
         <ChoiceCard key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
           {i === 'annual' ? (
             <SizableText size="$1" color="$ink" self="flex-end" bg="$edge" px="$2" rounded="$1">
-              {`Save ${saving}%`}
+              {`Save ${save}%`}
             </SizableText>
           ) : null}
           <SizableText size="$3" fontWeight="600" color="$ink">
@@ -231,11 +231,12 @@ export function Seats({
 }) {
   const [adjust, setAdjust] = useState(false)
   const std = value.plan === 'team_standard'
+  const premium = has('team_premium')
   const l = lines(value.plan, interval, value.seats)
   const set = (plan: PlanId, seats: number) => setValue({ plan, seats: Math.max(MIN_SEATS, Math.min(MAX_SEATS, seats)) })
   return (
     <>
-      <IntervalChoice interval={interval} setInterval={setInterval} price={(i) => `${usd(lines(value.plan, i, value.seats).subtotal)}/${i === 'annual' ? 'year' : 'month'} + tax`} />
+      <IntervalChoice interval={interval} setInterval={setInterval} save={saving(value.plan)} price={(i) => `${usd(lines(value.plan, i, value.seats).subtotal)}/${i === 'annual' ? 'year' : 'month'} + tax`} />
       <Panel label="Order details">
         <Heading render="h2" size="$5" fontWeight="600" color="$ink" m={0}>
           Order details
@@ -253,13 +254,15 @@ export function Seats({
         {adjust ? (
           <YStack gap="$3">
             <XStack justify="space-between" items="center" gap="$3">
-              <Line label="Standard seat" note={`Dev + ${usd(SEAT_ADDON)} · ${usd(unit('team_standard', interval))}/seat/month`} value="" />
-              <Stepper label="Standard seats" value={std ? value.seats : 0} min={0} max={MAX_SEATS} onChange={(n) => (n === 0 ? set('team_premium', value.seats) : set('team_standard', n))} />
+              <Line label="Standard seat" note={`${usd(unit('team_standard', interval))}/seat/month`} value="" />
+              <Stepper label="Standard seats" value={std ? value.seats : 0} min={0} max={MAX_SEATS} onChange={(n) => (n === 0 && premium ? set('team_premium', value.seats) : set('team_standard', Math.max(n, MIN_SEATS)))} />
             </XStack>
-            <XStack justify="space-between" items="center" gap="$3">
-              <Line label="Premium seat" note={`Max + ${usd(SEAT_ADDON)} · ${usd(unit('team_premium', interval))}/seat/month`} value="" />
-              <Stepper label="Premium seats" value={std ? 0 : value.seats} min={0} max={MAX_SEATS} onChange={(n) => (n === 0 ? set('team_standard', value.seats) : set('team_premium', n))} />
-            </XStack>
+            {premium ? (
+              <XStack justify="space-between" items="center" gap="$3">
+                <Line label="Premium seat" note={`${usd(unit('team_premium', interval))}/seat/month`} value="" />
+                <Stepper label="Premium seats" value={std ? 0 : value.seats} min={0} max={MAX_SEATS} onChange={(n) => (n === 0 ? set('team_standard', value.seats) : set('team_premium', n))} />
+              </XStack>
+            ) : null}
             {value.seats >= ENTERPRISE_FROM ? (
               <XStack items="center" gap="$1">
                 <SizableText size="$1" color="$quiet">

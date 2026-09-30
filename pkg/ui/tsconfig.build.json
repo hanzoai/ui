@@ -21,6 +21,7 @@
     "dist-cjs",
     "types",
     "**/*.test.ts",
-    "**/*.test.tsx"
+    "**/*.test.tsx",
+    "**/*.fixture.ts"
   ]
 }

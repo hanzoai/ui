@@ -1,34 +1,42 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from 'vitest'
-import { item, lines, OFFERS, period, saving, unit } from './plans'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { CATALOG } from './catalog.fixture'
+import { adopt, has, item, lines, offer, period, saving, unit } from './plans'
 import { chatStep, step } from './state'
 import { ROLES } from './roles'
 
 describe('plans', () => {
-  it('prices Dev and Max from @hanzo/plans and a seat at plan + $5', () => {
-    expect(OFFERS.dev.monthly).toBe(19)
-    expect(OFFERS.max.monthly).toBe(99)
-    expect(OFFERS.team_standard.monthly).toBe(24)
-    expect(OFFERS.team_premium.monthly).toBe(104)
+  beforeAll(() => adopt(CATALOG))
+
+  it('prices every plan from the catalog and lists only what it lists', () => {
+    expect(offer('dev').monthly).toBe(20)
+    expect(offer('dev').name).toBe('Pro')
+    expect(offer('max_5x').monthly).toBe(100)
+    expect(offer('max_20x').monthly).toBe(200)
+    expect(offer('team_standard').monthly).toBe(25)
+    expect(has('team_premium')).toBe(false)
+    expect(() => offer('team_premium')).toThrow(/no team_premium/)
   })
 
-  it('a year is the month times 0.82, paid at once, and saves 18%', () => {
-    expect(unit('dev', 'annual')).toBe(15.58)
-    expect(period('dev', 'annual')).toBe(186.96)
-    expect(saving).toBe(18)
-    expect(period('team_standard', 'annual')).toBe(236.16)
+  it('a year is what the catalog charges once, not the month times anything', () => {
+    expect(period('dev', 'annual')).toBe(200)
+    expect(unit('dev', 'annual')).toBe(16.67)
+    expect(saving('dev')).toBe(17)
+    expect(period('team_standard', 'annual')).toBe(240)
+    expect(saving('team_standard')).toBe(20)
   })
 
   it('a team has two seats at least and a person has one', () => {
     expect(lines('team_standard', 'monthly', 1).seats).toBe(2)
-    expect(lines('team_standard', 'monthly', 2).subtotal).toBe(48)
-    expect(lines('team_premium', 'monthly', 3).subtotal).toBe(312)
+    expect(lines('team_standard', 'monthly', 2).subtotal).toBe(50)
+    expect(lines('team_standard', 'annual', 3).subtotal).toBe(720)
     expect(lines('dev', 'monthly', 9).seats).toBe(1)
   })
 
-  it('states a commerce item in the GA4 shape', () => {
-    expect(item('team_standard', 'annual', 3)).toEqual({ item_id: 'team_standard', item_name: 'Standard seat', item_category: 'team', item_variant: 'annual', price: 236.16, quantity: 3 })
+  it('states a commerce item in the GA4 shape, both Max tiers as max', () => {
+    expect(item('team_standard', 'annual', 3)).toEqual({ item_id: 'team_standard', item_name: 'Standard seat', item_category: 'team', item_variant: 'annual', price: 240, quantity: 3 })
+    expect(item('max_20x', 'monthly')).toMatchObject({ item_id: 'max', item_name: 'Max 20x', price: 200 })
   })
 })
 

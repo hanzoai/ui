@@ -9,10 +9,13 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
 import { ApiError, API, call } from './api'
+import { useCatalog } from './catalog'
 import { Line, Page, Panel } from './frame'
 import { IntervalChoice, Primary } from './screens'
 import type { Track } from './hooks'
-import { item, lines, OFFERS, period, SLUG, unit, usd, type Interval, type PlanId } from './plans'
+import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
+import { SizableText } from '../backends/gui/layout'
+import { item, lines, money, offer, period, saving, SLUG, unit, usd, type Interval, type PlanId } from './plans'
 
 /**
  * THE checkout: one component for the personal path, the team path and every
@@ -34,6 +37,8 @@ export interface CheckoutProps {
   seats?: number
   interval: Interval
   setInterval: (i: Interval) => void
+  /** Where more than one tier of the plan is sold (Max 5x and 20x), the tier is picked here. */
+  setPlan?: (p: PlanId) => void
   track?: Track
   termsPath?: string
   back?: () => void
@@ -64,8 +69,15 @@ const renews = (interval: Interval): string => {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' })
 }
 
-export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, interval, setInterval, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
-  const offer = OFFERS[plan]
+export function Checkout(props: CheckoutProps) {
+  const loaded = useCatalog(props.api ?? API)
+  if (loaded === null) return <Page site={props.site ?? 'Hanzo'} title="" busy />
+  if (!loaded) return <Page site={props.site ?? 'Hanzo'} title="Plans could not be loaded just now" lede="That is ours to fix. Reload to try again." center />
+  return <CheckoutForm {...props} />
+}
+
+function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interval, setInterval, setPlan, track, termsPath = '/terms', back, onPaid }: CheckoutProps) {
+  const o = offer(plan)
   const l = useMemo(() => lines(plan, interval, seats), [plan, interval, seats])
   const scope = useMemo(() => (org ? { 'X-Org-Id': org } : undefined), [org])
 
@@ -180,19 +192,43 @@ export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, inte
   }
 
   const per = interval === 'annual' ? 'year' : 'month'
-  const label = offer.category === 'team' ? `${l.seats} ${offer.name.toLowerCase()}s` : offer.name
+  const label = o.category === 'team' ? `${l.seats} ${o.name.toLowerCase()}s` : o.name
   const every = interval === 'annual' ? 'yearly' : 'monthly'
   return (
     <Page site={site} title="Configure your plan" back={back} width={1000} start>
       <XStack render={<form onSubmit={submit} noValidate />} flexWrap="wrap" gap="$7" items="flex-start" width="100%">
         <YStack flex={1} flexBasis={360} minW={0} gap="$4">
+          {setPlan && plan.startsWith('max') ? (
+            <ChoiceGroup label="Plan" flexWrap="wrap">
+              {(['max_5x', 'max_20x'] as const).map((t) => (
+                <ChoiceCard
+                  key={t}
+                  selected={plan === t}
+                  onSelect={() => {
+                    track?.('plan_changed', { from: plan, to: t, field: 'plan' })
+                    setPlan(t)
+                  }}
+                  flex={1}
+                  flexBasis={200}
+                >
+                  <SizableText size="$3" fontWeight="600" color="$ink">
+                    {offer(t).name}
+                  </SizableText>
+                  <SizableText size="$2" color="$ink">
+                    {`${money(offer(t).monthly)}/month`}
+                  </SizableText>
+                </ChoiceCard>
+              ))}
+            </ChoiceGroup>
+          ) : null}
           <IntervalChoice
+            save={saving(plan)}
             interval={interval}
             setInterval={(i) => {
               track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
               setInterval(i)
             }}
-            price={(i) => `${offer.name} ${i === 'annual' ? 'annual' : 'monthly'} · USD ${usd(lines(plan, i, seats).subtotal)} · billed ${i === 'annual' ? 'yearly' : 'monthly'}`}
+            price={(i) => `${o.name} ${i === 'annual' ? 'annual' : 'monthly'} · USD ${usd(lines(plan, i, seats).subtotal)} · billed ${i === 'annual' ? 'yearly' : 'monthly'}`}
           />
 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>
@@ -240,7 +276,7 @@ export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, inte
         <YStack flex={1} flexBasis={360} minW={0}>
           <Panel label="Order summary">
             <Heading render="h2" size="$5" fontWeight="600" color="$ink" m={0}>
-              {offer.category === 'team' ? 'Team plan' : `${offer.name} plan`}
+              {o.category === 'team' ? 'Team plan' : `${o.name} plan`}
             </Heading>
             <Line muted label={`${label} ${interval === 'annual' ? 'annual' : 'monthly'}`} value={usd(l.subtotal)} />
             <Line muted label="Subtotal" value={usd(l.subtotal)} />
@@ -248,7 +284,7 @@ export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, inte
             <Line strong label="Total due today" value={usd(l.subtotal)} />
             <Paragraph size="$2" color="$ink" m={0} p="$3" borderWidth={1} borderColor="$borderColor" rounded="$3">
               Your subscription will auto-renew on {renews(interval)}. You will be charged {usd(l.subtotal)}/{per}
-              {offer.category === 'team' ? ` (${l.seats} seats × ${usd(unit(plan, interval))}/seat/month${interval === 'annual' ? ', billed yearly' : ''})` : ''}. Cancel any time in Settings → Billing.
+              {o.category === 'team' ? ` (${l.seats} seats × ${usd(unit(plan, interval))}/seat/month${interval === 'annual' ? ', billed yearly' : ''})` : ''}. Cancel any time in Settings → Billing.
             </Paragraph>
             <XStack items="flex-start" gap="$3">
               <Checkbox id="hanzo-consent" checked={agree} onCheckedChange={(v: boolean | 'indeterminate') => setAgree(v === true)} mt="$1" aria-label="Agree to recurring charges" />

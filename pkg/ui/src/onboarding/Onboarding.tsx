@@ -6,7 +6,8 @@ import { Checkout } from './Checkout'
 import { Page } from './frame'
 import { Enterprise, Plans, Seats, TeamName, UseCards } from './screens'
 import { useSession, type Track } from './hooks'
-import { ENTERPRISE_FROM, MIN_SEATS, OFFERS, item, type Interval, type PlanId } from './plans'
+import { useCatalog } from './catalog'
+import { ENTERPRISE_FROM, MIN_SEATS, OFFERS, offer, item, type Interval, type PlanId } from './plans'
 import { step as nextStep, type Use } from './state'
 
 /**
@@ -37,14 +38,19 @@ export interface OnboardingProps {
   onTeam?: (org: string) => void | Promise<void>
   /** Start on this plan's checkout, as the in-app Upgrade entries do. */
   upgrade?: { plan: PlanId; interval?: Interval; seats?: number } | null
+  /** Open on a screen whatever progress says: the personal plans (an Upgrade entry) or the team's name (New organization). */
+  open?: 'plans' | 'team'
+  /** Leave the flow without finishing it: the way back from the screen `open` names. */
+  onClose?: () => void
   /** `from` for upgrade_clicked when opened as an upgrade. */
   from?: string
 }
 
 type View = 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
 
-export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', upgrade = null, onTeam }: OnboardingProps) {
+export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', upgrade = null, open, from, onClose, onTeam }: OnboardingProps) {
   const session = useSession(api)
+  const catalog = useCatalog(api)
   const [view, setView] = useState<View | null>(null)
   const [interval, setInterval] = useState<Interval>(upgrade?.interval ?? 'monthly')
   const [buy, setBuy] = useState<{ plan: PlanId; seats: number } | null>(upgrade ? { plan: upgrade.plan, seats: upgrade.seats ?? 1 } : null)
@@ -53,10 +59,15 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   // The first screen is the first step not yet finished. An upgrade opens the checkout.
   useEffect(() => {
-    if (session.loading || decided.current) return
+    if (session.loading || catalog === null || decided.current) return
     decided.current = true
+    if (upgrade || open === 'plans') track?.('upgrade_clicked', { from: from ?? 'app' })
     if (upgrade) {
       setView('checkout')
+      return
+    }
+    if (open) {
+      setView(open)
       return
     }
     const s = nextStep(session.progress)
@@ -64,14 +75,15 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     else setView(s)
     // Once, when the answer arrives.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session.loading])
+  }, [session.loading, catalog])
 
   useEffect(() => {
-    if (view === 'plans' || view === 'seats') track?.('pricing_viewed', { from: 'onboarding', items: Object.values(OFFERS).filter((o) => (view === 'plans' ? o.category === 'individual' : o.category === 'team')).map((o) => item(o.id, interval)) })
+    if (view === 'plans' || view === 'seats') track?.('pricing_viewed', { from: 'onboarding', items: Object.values(OFFERS).filter((o): o is NonNullable<typeof o> => o !== undefined).filter((o) => (view === 'plans' ? o.category === 'individual' : o.category === 'team')).map((o) => item(o.id, interval)) })
     // A screen is viewed once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view])
 
+  if (catalog === false) return <Page site={site} title="Plans could not be loaded just now" lede="That is ours to fix. Reload to try again." center />
   if (!view) return <Page site={site} title="" busy />
 
   const org = team ?? session.progress.team
@@ -95,7 +107,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'plans') {
     return (
-      <Page site={site} title="Plans that grow with you" width={1140}>
+      <Page site={site} title="Plans that grow with you" width={1140} back={open === 'plans' ? onClose : undefined}>
         <Plans
           interval={interval}
           setInterval={(i) => {
@@ -119,7 +131,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
 
   if (view === 'team') {
     return (
-      <Page site={site} title="Let’s create your team" start back={() => setView('use')} lede="Team plans are best for groups up to 150 people. Choose a team name that invited members will easily recognize.">
+      <Page site={site} title="Let’s create your team" start back={open === 'team' && onClose ? onClose : () => setView('use')} lede="Team plans are best for groups up to 150 people. Choose a team name that invited members will easily recognize.">
         <TeamName
           api={api}
           onCreated={async (handle) => {
@@ -181,17 +193,18 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
     <Checkout
       site={site}
       api={api}
-      org={OFFERS[b.plan].category === 'team' ? org : undefined}
+      org={offer(b.plan).category === 'team' ? org : undefined}
       plan={b.plan}
       seats={b.seats}
       interval={interval}
       setInterval={setInterval}
+      setPlan={(plan) => setBuy({ plan, seats: 1 })}
       track={track}
       termsPath={termsPath}
-      back={() => setView(OFFERS[b.plan].category === 'team' ? 'seats' : 'plans')}
+      back={() => setView(offer(b.plan).category === 'team' ? 'seats' : 'plans')}
       onPaid={() => {
         void session.save({ plan: b.plan })
-        onDone({ use: OFFERS[b.plan].category === 'team' ? 'team' : 'personal', plan: b.plan, org })
+        onDone({ use: offer(b.plan).category === 'team' ? 'team' : 'personal', plan: b.plan, org })
       }}
     />
   )

@@ -8,7 +8,7 @@ import { Card, CardContent } from '../backends/gui/card'
 import { Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { Spinner } from '../backends/gui/spinner'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
-import { saving, type Interval } from './plans'
+import type { Interval } from './plans'
 
 /**
  * One page of onboarding: the product's mark, a title, a line under it, and the
@@ -84,11 +84,11 @@ export function Panel({ children, label }: { children: ReactNode; label?: string
 }
 
 /** Monthly or Yearly, with what a year saves. `name` says which plan it changes, for screen readers. */
-export function IntervalToggle({ interval, onChange, name }: { interval: Interval; onChange: (i: Interval) => void; name: string }) {
+export function IntervalToggle({ interval, onChange, name, save }: { interval: Interval; onChange: (i: Interval) => void; name: string; save: number }) {
   return (
     <ToggleGroup type="single" size="sm" value={interval} disableDeactivation aria-label={`Billing interval for ${name}`} onValueChange={(v) => onChange(v as Interval)}>
       <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
-      <ToggleGroupItem value="annual">{`Yearly · Save ${saving}%`}</ToggleGroupItem>
+      <ToggleGroupItem value="annual">{`Yearly · Save ${save}%`}</ToggleGroupItem>
     </ToggleGroup>
   )
 }
