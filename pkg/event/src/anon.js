@@ -214,6 +214,24 @@ function hzAnonId() {
   return id
 }
 
+/**
+ * hzAnonAdopt makes `id` this browser's anonymous id, replacing whatever it held.
+ *
+ * A visitor who followed a link from another Hanzo host arrives carrying the id that
+ * host minted; keeping the local one splits one journey into two strangers. The
+ * caller has already checked the shape.
+ */
+function hzAnonAdopt(id) {
+  hzAnonMemo = id
+  hzAnonWrite(HZ_ANON_KEY, id)
+  try {
+    var s = hzAnonStore()
+    if (s) s.setItem(HZ_ANON_KEY, id)
+  } catch (e) {
+    /* quota exhausted or a read-only jar — the cookie and memo still carry it */
+  }
+}
+
 /* ── END hz anon chain ─────────────────────────────────────────────────────── */
 
-export { hzAnonId, hzUuidv7 }
+export { hzAnonId, hzAnonAdopt, hzUuidv7 }

@@ -6,7 +6,7 @@
 // the one value the OTHER two distributions must agree with, so its chain lives in
 // ./anon.js and this file only calls it. Everything else here stays origin-local.
 
-import { hzAnonId } from './anon.js'
+import { hzAnonAdopt, hzAnonId } from './anon.js'
 import type { Attribution, Cohort } from './types'
 import { uuidv7 } from './uid'
 
@@ -73,6 +73,19 @@ export function sessionId(now = Date.now()): string | undefined {
   }
   s.setItem(KEY.session, JSON.stringify(state))
   return state.id
+}
+
+/** Make `id` the current session, as if it had begun now. The session a link
+ *  carries is the one the visitor is already in, so the journey stays one session
+ *  across the hop instead of splitting at the host boundary. */
+export function adoptSession(id: string, now = Date.now()): void {
+  const s = ls()
+  if (s) s.setItem(KEY.session, JSON.stringify({ id, last: now }))
+}
+
+/** Make `id` the browser's anonymous id, replacing the one it held. */
+export function adoptAnonId(id: string): void {
+  hzAnonAdopt(id)
 }
 
 /** Read the persisted first-touch attribution. */

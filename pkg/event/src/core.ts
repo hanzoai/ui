@@ -58,6 +58,8 @@ import {
   type ErrorIdentity,
 } from './sentry'
 import {
+  adoptAnonId,
+  adoptSession,
   anonId,
   sessionId,
   getFirstTouch,
@@ -66,6 +68,7 @@ import {
   mergeCohort,
 } from './storage'
 import { uuidv7 } from './uid'
+import { linkUrl, readLink, stripLink } from './link'
 import type {
   AnalyticsConfig,
   Attribution,
@@ -349,10 +352,26 @@ export class Analytics {
     this.started = true
     if (!isBrowser()) return
 
+    // A link from another Hanzo host carries the visitor with it. Adopt it FIRST, so
+    // the first pageview is already the same person, session and first touch.
+    const linked = readLink(window.location.search)
+    if (linked.anonId) adoptAnonId(linked.anonId)
+    if (linked.sessionId) adoptSession(linked.sessionId)
+    const clean = stripLink(window.location.href)
+    if (clean !== undefined) {
+      try {
+        window.history.replaceState(window.history.state, '', clean)
+      } catch {
+        /* a sandboxed frame may refuse; the params are then simply visible */
+      }
+    }
+
     const parsed = parseAttribution(window.location.search, document.referrer)
-    this.attribution = hasAttribution(parsed)
-      ? setFirstTouchOnce(parsed)
-      : getFirstTouch() ?? parsed
+    // The first touch the link carries is the visit's real origin. Without it this
+    // host's own "first touch" would be the referring Hanzo page, which says nothing.
+    const first = linked.firstTouch && !getFirstTouch() ? setFirstTouchOnce(linked.firstTouch) : undefined
+    this.attribution =
+      first ?? (hasAttribution(parsed) ? setFirstTouchOnce(parsed) : getFirstTouch() ?? parsed)
     this.cohort = mergeCohort({
       channel: this.attribution.channel ?? deriveChannel(this.attribution),
       refCode: this.attribution.refCode,
@@ -376,6 +395,29 @@ export class Analytics {
         this.captureError(e.reason, { handled: false })
       })
     }
+  }
+
+  /** link returns `url` carrying this visitor's anonymous id, session and first
+   *  touch when the destination is a Hanzo-owned host, so the journey continues
+   *  across the hop. Any other URL comes back unchanged. */
+  link(url: string): string {
+    if (!isBrowser()) return url
+    if (!this.started) this.init()
+    return linkUrl(
+      url,
+      { anonId: anonId(), sessionId: sessionId(), firstTouch: this.attribution },
+      window.location.hostname,
+      window.location.href,
+    )
+  }
+
+  /** authorize decorates an OAuth authorize URL for the redirect to IAM and flushes
+   *  what is queued, because the page is about to unload. Assign the result to
+   *  `location`. */
+  authorize(url: string): string {
+    const out = this.link(url)
+    this.flush(true)
+    return out
   }
 
   /** identify binds the current visitor to a stable person id (post-login). */

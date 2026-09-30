@@ -17,6 +17,8 @@ export {
 } from './core'
 export { parseDsn, buildSentryEvent, buildEnvelope, framesFromStack } from './sentry'
 export { uuidv7, uuidv7Time } from './uid'
+export { linkUrl, readLink, stripLink, LINK_PARAMS } from './link'
+export type { LinkState } from './link'
 export { PRODUCT_PROJECT, dsnForProduct } from './dsn'
 export type { ErrorIdentity } from './sentry'
 export { scrubText, redactSecrets, scrubPII } from './scrub'

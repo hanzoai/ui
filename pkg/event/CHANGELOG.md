@@ -1,5 +1,19 @@
 # @hanzo/event
 
+## 0.3.43
+
+### Patch Changes
+
+- **A visitor crossing the sign-in redirect became a new person on every host.**
+  hanzo.ai, hanzo.id and hanzo.app share no cookie, so zero anonymous ids matched
+  across them and the journey through IAM could not be read. `Analytics.link(url)`
+  appends `hz_aid`, `hz_sid` and `hz_ft` (anonymous id, session, first touch) when
+  the destination is a host in `ORG_DOMAIN`, and only then. `init()` adopts them
+  before the first pageview, persists the id in the first-party cookie, and strips
+  them from the address bar. `Analytics.authorize(url)` does the same for the OAuth
+  redirect to IAM and flushes the queue, since the page is about to unload. Ids
+  that are not UUIDs are refused. `linkUrl`, `readLink`, `stripLink` are exported.
+
 ## 0.3.42
 
 ### Patch Changes

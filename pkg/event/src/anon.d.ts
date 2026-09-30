@@ -12,3 +12,6 @@ export declare function hzUuidv7(now?: number): string
  * every existing id is adopted, and only a browser holding none is given a new one.
  */
 export declare function hzAnonId(): string
+
+/** Makes `id` this browser's anonymous id, replacing the one it held. */
+export declare function hzAnonAdopt(id: string): void
