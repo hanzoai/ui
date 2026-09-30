@@ -110,6 +110,12 @@
       "require": "./dist/auth/index.cjs",
       "default": "./dist/auth/index.js"
     },
+    "./consent": {
+      "types": "./dist/consent/index.d.ts",
+      "import": "./dist/consent/index.js",
+      "require": "./dist/consent/index.cjs",
+      "default": "./dist/consent/index.js"
+    },
     "./marketing": {
       "types": "./dist/marketing/index.d.ts",
       "import": "./dist/marketing/index.js",
@@ -328,6 +334,7 @@
     "@hanzo/canvas": ">=0.2.3",
     "@hanzo/cd": ">=0.1.2",
     "@hanzo/dashboard": ">=0.2.0",
+    "@hanzo/event": ">=0.3.48",
     "@hanzo/data": ">=1.2.4",
     "@hanzo/gui": "^8.3.5",
     "@hanzo/iam": ">=0.21.21",
@@ -366,6 +373,9 @@
     "@hanzo/cd": {
       "optional": true
     },
+    "@hanzo/event": {
+      "optional": true
+    },
     "@hanzo/usage": {
       "optional": true
     },
@@ -384,6 +394,7 @@
   },
   "devDependencies": {
     "@hanzo/cd": "workspace:*",
+    "@hanzo/event": "workspace:*",
     "@hanzo/dashboard": "catalog:",
     "@hanzo/data": "catalog:",
     "@hanzo/gui": "catalog:",
