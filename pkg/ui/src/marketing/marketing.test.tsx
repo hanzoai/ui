@@ -37,6 +37,7 @@ describe('PageLoading', () => {
 
 import { ClosingCta } from './ClosingCta'
 import { Faq } from './Faq'
+import { Footer } from './Footer'
 import { Hero } from './Hero'
 import { Media } from './Media'
 import { Plans } from './Plans'
@@ -170,6 +171,25 @@ describe('merged', () => {
     expect(plans[1]!.priceMonthly).toBe(100)
     expect(plans[1]!.features).toContain('Choose 5x or 20x more usage than Pro')
     expect([...from]).toEqual(['max5'])
+  })
+})
+
+describe('Footer', () => {
+  it('names each column, draws its doors and puts the ask above them', () => {
+    const out = html(
+      <Footer
+        ask={<form aria-label="Ask Hanzo anything" />}
+        columns={[{ id: 'p', title: 'Product', href: '/products', links: [{ label: 'Models', href: '/models' }, { label: 'Docs', href: 'https://docs.hanzo.ai', out: true }] }]}
+        legal={[{ label: 'Terms', href: '/terms' }]}
+        copyright="© Hanzo"
+      />,
+    )
+    expect(out).toMatch(/<footer/)
+    expect(out.indexOf('Ask Hanzo anything')).toBeLessThan(out.indexOf('Product'))
+    expect(out).toMatch(/<nav[^>]*aria-label="Product"/)
+    expect(out).toMatch(/<a[^>]*href="\/models"[^>]*>Models/)
+    expect(out).toMatch(/<a[^>]*href="https:\/\/docs\.hanzo\.ai"[^>]*target="_blank"/)
+    expect(out).toMatch(/<nav[^>]*aria-label="Terms &amp; Policies"/)
   })
 })
 
