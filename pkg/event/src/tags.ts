@@ -54,6 +54,24 @@ export interface TagOptions {
   domains?: string[]
 }
 
+/**
+ * The publishable key of each site's project, which is how cloud finds the site's
+ * tag set. A `pk-` is public by design (it ships in every page); it names a site,
+ * never a platform id. A host absent here has no tag config unless `start` is
+ * given a key.
+ */
+export const SITE_KEY: Readonly<Record<string, string>> = Object.freeze({
+  'hanzo.ai': 'pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc',
+  'www.hanzo.ai': 'pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc',
+  'hanzo.app': 'pk-wlnXN2a9_vmCm60yTFtQ629Q8TyuaxBNZbY1RWT72gQ',
+  'hanzo.team': 'pk-NCzD2FiHpZv8KUpkCX4olT1LJOJsMxBC_Z8NkiQsOFQ',
+  'pay.hanzo.ai': 'pk-eX6kv7JZNoiYn1WkeJH3tT_8OvkVYScmCXnLMwxTKf8',
+  'platform.hanzo.ai': 'pk-My1RpZLEUnTj8vAdPbWKYdDUuhxZJ4dVjHcwjZN4rZ8',
+  'docs.hanzo.ai': 'pk-jukhtjMT2ymoeBDAeFjINQWlBv-v9sNn1TPztiCrrwk',
+  'hanzo.bot': 'pk-W5d7Mn7ZukT7igyscIy6Pqe8JpA0Ge604Yn4xNR4JCU',
+  'cloud.hanzo.ai': 'pk-RAfEGHPoNdCEU9fnA_cPd_Xo9Tci44rlYQV9xuJ1Ob0',
+})
+
 type Call = (...args: unknown[]) => void
 type Page = {
   dataLayer?: unknown[]
@@ -281,8 +299,10 @@ export function start(o: TagOptions = {}): () => void {
     configured = true
     const base = (o.base ?? 'https://api.hanzo.ai').replace(/\/$/, '')
     const q = new URLSearchParams()
-    if (o.key) q.set('key', o.key)
-    q.set('host', o.host ?? window.location.hostname)
+    const host = o.host ?? window.location.hostname
+    const key = o.key ?? SITE_KEY[host]
+    if (key) q.set('key', key)
+    q.set('host', host)
     const answer = (list: BrowserTag[]) => {
       tags = list
       configAnswered = true

@@ -31,7 +31,7 @@ export {
 } from './consent'
 export type { Choice, Region } from './consent'
 export { CLICK_IDS, capture as captureClick, touch } from './touch'
-export { start as startTags, track, mirror, reach, visit } from './tags'
+export { start as startTags, track, mirror, reach, visit, SITE_KEY } from './tags'
 export type { BrowserTag, TagOptions } from './tags'
 export { GOALS, COHORTS } from './goals'
 export type { GoalDef, CohortDef } from './goals'

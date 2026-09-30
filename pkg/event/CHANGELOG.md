@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.45
+
+### Patch Changes
+
+- `startTags()` finds a site's tag set by host: `SITE_KEY` names each Hanzo site's project key.
+
 ## 0.3.44
 
 ### Patch Changes
