@@ -13,7 +13,7 @@ vi.mock('@hanzo/iam/react', () => ({
   }),
 }))
 
-import { SignIn } from './SignIn'
+import { SignIn, inOrder } from './SignIn'
 import { signOut } from './signout'
 import { bearer, live } from './session'
 
@@ -50,6 +50,20 @@ describe('SignIn', () => {
     expect(out).toContain('Create your Hanzo account')
     expect(out).toContain('href="/legal/terms"')
     expect(out).toContain('href="/login"')
+  })
+})
+
+describe('SignIn order', () => {
+  it('offers Google, then Apple, then GitHub, whatever order IAM lists them in, and others after', () => {
+    const named = (t: string) => ({ name: `provider-${t.toLowerCase()}`, type: t })
+    expect(inOrder([named('GitHub'), named('Apple'), named('Okta'), named('Google')]).map((p) => p.type)).toEqual(['Google', 'Apple', 'GitHub', 'Okta'])
+  })
+
+  it('shows GitHub and Google in that order before IAM answers, with one Email input and no phone', () => {
+    const out = html(<SignIn />).replace(/<style[\s\S]*?<\/style>/g, '')
+    expect(out.indexOf('Continue with Google')).toBeLessThan(out.indexOf('Continue with GitHub'))
+    expect(out).not.toContain('Continue with Apple')
+    expect(out).not.toContain('Email or phone')
   })
 })
 
