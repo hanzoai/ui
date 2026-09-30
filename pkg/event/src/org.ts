@@ -98,6 +98,40 @@ export const ORG_KEY: Keyring = Object.freeze({
   zoo: 'pk-3TKpKnERV9AQSsBUERWkZejC1O1mUxc1jRzsP3MPbs4',
 })
 
+/**
+ * The publishable key of each site's project, which is how cloud finds the site's
+ * tag set and the project its events are filed under. Each site is ONE project with its
+ * own key. A `pk-` is public by design (it ships in every page); it names a site,
+ * never a platform id. A host absent here falls back to its org's key for events and
+ * has no tag config unless `start` is given a key.
+ */
+export const SITE_KEY: Readonly<Record<string, string>> = Object.freeze({
+  'hanzo.ai': 'pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc',
+  'www.hanzo.ai': 'pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc',
+  'hanzo.app': 'pk-wlnXN2a9_vmCm60yTFtQ629Q8TyuaxBNZbY1RWT72gQ',
+  'hanzo.team': 'pk-NCzD2FiHpZv8KUpkCX4olT1LJOJsMxBC_Z8NkiQsOFQ',
+  'pay.hanzo.ai': 'pk-eX6kv7JZNoiYn1WkeJH3tT_8OvkVYScmCXnLMwxTKf8',
+  'platform.hanzo.ai': 'pk-My1RpZLEUnTj8vAdPbWKYdDUuhxZJ4dVjHcwjZN4rZ8',
+  'docs.hanzo.ai': 'pk-jukhtjMT2ymoeBDAeFjINQWlBv-v9sNn1TPztiCrrwk',
+  'hanzo.bot': 'pk-W5d7Mn7ZukT7igyscIy6Pqe8JpA0Ge604Yn4xNR4JCU',
+  'hanzo.chat': 'pk-ATxWeB2jNyRSxDgqnkGoDj3CCbzrmTxSktUh9zlrO-E',
+  'hanzo.id': 'pk-_GVF3KlaqprlPHDumBMRFeFU1lIGOaarQfgimNVDIo8',
+  'hanzo.industries': 'pk-Vh1wvL2HqIAv9qpVvmrznTI9uMHrTD-jyIC-vnlBsgY',
+  'hanzo.market': 'pk-DN3xQFa0H61epUVg9OkiOYLzCdteNt9hE6f-S-ednjQ',
+  'hanzo.network': 'pk-YJ2eiA_7ckLStMPte8Ar8FsmRp_ycmeIeRbpGprZYmM',
+  'hanzo.agency': 'pk-26a2clOaJFe24aKJZ0PkI-GWR9F4EEa8rthHzgy_Efw',
+  'console.hanzo.ai': 'pk-oFNXoiO1wOD8PqGdHYyiSq6jaNCdrd7TpztGpwM2ZiQ',
+  'admin.hanzo.ai': 'pk-RYZwxkomW-tlAnEu2DKo_kAzcxFbSF2YiYcsUY48QL0',
+  'bot.hanzo.ai': 'pk-W5d7Mn7ZukT7igyscIy6Pqe8JpA0Ge604Yn4xNR4JCU',
+  'cloud.hanzo.ai': 'pk-RAfEGHPoNdCEU9fnA_cPd_Xo9Tci44rlYQV9xuJ1Ob0',
+})
+
+/** The project key of the site a host is: its own entry, `www.` stripped, a `*.hanzo.app` site under hanzo.app. */
+export function siteKey(host: string): string | undefined {
+  const h = normalize(host).replace(/^www\./, '')
+  return SITE_KEY[h] ?? (h.endsWith('.hanzo.app') ? SITE_KEY['hanzo.app'] : undefined)
+}
+
 /** `pk-` is publishable; `sk-` is not, and there is no third thing. Checked at the
  *  one point a key becomes something a page will send, so a mistyped entry fails
  *  closed rather than putting a secret in every visitor's tab. */
@@ -142,6 +176,10 @@ export function orgOf(host: string): string | undefined {
  * this SAME function rather than a second copy of it.
  */
 export function keyFor(host: string, keyring: Keyring = ORG_KEY): string | undefined {
+  if (keyring === ORG_KEY) {
+    const site = siteKey(host)
+    if (site) return site
+  }
   const org = orgOf(host)
   if (!org) return undefined
   const key = keyring[org]

@@ -1,7 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest'
 
 import { createAnalytics } from './core'
-import { ORG_KEY, keyFor, keyForPage, orgOf } from './org'
+import { ORG_KEY, SITE_KEY, keyFor, keyForPage, orgOf, siteKey } from './org'
 
 const ENV = 'NEXT_PUBLIC_PUBLISHABLE_KEY'
 
@@ -45,7 +45,6 @@ describe('the org that owns a host', () => {
       'hanzo.codes',
       'hanzoskills.com',
       'hanzo.ventures',
-      'hanzo.team',
     ]) {
       expect(orgOf(host)).toBe('hanzo')
       expect(keyFor(host)).toBe(ORG_KEY.hanzo)
@@ -128,11 +127,32 @@ describe('a surface that configures nothing', () => {
   })
 })
 
-describe('the hanzo org files under the hanzo.ai project', () => {
-  it('names hanzo.network, hanzo.market, hanzo.industries and hanzo.agency', () => {
+describe('the hanzo org names its sites', () => {
+  it('names hanzo.network, hanzo.market, hanzo.industries and hanzo.agency, each with its own project key', () => {
     for (const host of ['hanzo.network', 'hanzo.market', 'hanzo.industries', 'hanzo.agency']) {
       expect(orgOf(host)).toBe('hanzo')
-      expect(keyFor(host)).toBe('pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc')
+      expect(keyFor(host)).toBe(SITE_KEY[host])
     }
+  })
+})
+
+describe('a site files its events under its own project', () => {
+  it('each first-party site resolves to its own key, and its tag set follows', () => {
+    const keys = Object.values(SITE_KEY)
+    expect(keyFor('docs.hanzo.ai')).toBe(SITE_KEY['docs.hanzo.ai'])
+    expect(keyFor('hanzo.chat')).toBe(SITE_KEY['hanzo.chat'])
+    expect(keyFor('hanzo.team')).not.toBe(keyFor('hanzo.ai'))
+    expect(keyFor('hanzo.ai')).toBe(ORG_KEY.hanzo)
+    expect(keys.every((k) => k.startsWith('pk-'))).toBe(true)
+  })
+
+  it('www. and a hanzo.app subdomain reach their site', () => {
+    expect(siteKey('www.hanzo.ai')).toBe(SITE_KEY['hanzo.ai'])
+    expect(siteKey('demo.hanzo.app')).toBe(SITE_KEY['hanzo.app'])
+    expect(siteKey('evil-hanzo.ai')).toBeUndefined()
+  })
+
+  it('a host with no site of its own falls back to its org', () => {
+    expect(keyFor('hanzo.works')).toBe(ORG_KEY.hanzo)
   })
 })

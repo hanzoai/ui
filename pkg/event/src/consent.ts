@@ -15,10 +15,16 @@
 // ads off in every region whatever is stored: California reads GPC as the opt-out
 // of sale and sharing.
 //
-// There is no geo lookup. The page cannot ask a server where the visitor is, so
-// the zone is the browser's own time zone, and a zone that is not a US zone is
-// treated as opt-in. Wrong in the safe direction: a US visitor on a foreign
-// clock is asked, and a European is never presumed to have agreed.
+// The region comes from cloud. The site's tag config (`GET /v1/project/tags`) answers
+// with the rule that binds this visitor, resolved at the edge from where the request
+// came from (`serve`). Until it answers, and if it never does, the zone is the browser's
+// own time zone and a zone that is not a US zone is treated as opt-in: wrong in the
+// safe direction, a US visitor on a foreign clock is asked and a European is never
+// presumed to have agreed.
+//
+// The policy has a version. A choice is stored beside the version it was made under
+// (`hz_consent_v`); when the policy changes, the stored choice no longer counts and the
+// visitor is asked again.
 //
 // The choice is a first-party cookie, `hz_consent`, on the registrable domain
 // for 13 months: the granted categories, comma separated. cloud reads the same
@@ -27,6 +33,12 @@
 import { get, set } from './cookie'
 
 export const CONSENT_COOKIE = 'hz_consent'
+
+/** The policy version the stored choice was made under. */
+export const CONSENT_VERSION_COOKIE = 'hz_consent_v'
+
+/** Fired on `window` when cloud's rule for this visitor arrives. */
+export const POLICY_EVENT = 'hzpolicy'
 
 /** Fired on `window` whenever a choice is stored. */
 export const CONSENT_EVENT = 'hzconsent'
@@ -38,6 +50,40 @@ export interface Choice {
 }
 
 export type Region = 'opt-in' | 'opt-out'
+
+/** The rule cloud resolved for this visitor. */
+export interface Policy {
+  region: string
+  mode: Region
+  defaults: Choice
+  gpc: boolean
+  version: number
+  notice?: string
+}
+
+let served: Policy | undefined
+
+/** Takes cloud's rule for this visitor and tells the page, so a banner drawn early redraws. */
+export function serve(p: unknown): void {
+  if (p == null) {
+    served = undefined
+    return
+  }
+  const d = p as Partial<Policy>
+  if ( (d.mode !== 'opt-in' && d.mode !== 'opt-out') || !d.defaults) return
+  served = {
+    region: String(d.region ?? ''),
+    mode: d.mode,
+    defaults: { analytics: !!d.defaults.analytics, marketing: !!d.defaults.marketing, ads: !!d.defaults.ads },
+    gpc: d.gpc === true,
+    version: Number(d.version) || 0,
+    notice: typeof d.notice === 'string' ? d.notice : undefined,
+  }
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event(POLICY_EVENT))
+}
+
+/** The rule cloud resolved, once it has answered. */
+export const policy = (): Policy | undefined => served
 
 type Nav = { doNotTrack?: string; msDoNotTrack?: string; globalPrivacyControl?: boolean }
 
@@ -60,6 +106,7 @@ export function refused(): boolean {
 
 /** Which rule applies to this visitor. */
 export function region(): Region {
+  if (served) return served.mode
   try {
     const zone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? ''
     return US.test(zone) ? 'opt-out' : 'opt-in'
@@ -70,18 +117,23 @@ export function region(): Region {
 
 /** Whether the visitor has stored a choice. */
 export function stored(): boolean {
-  return get(CONSENT_COOKIE) !== undefined
+  if (get(CONSENT_COOKIE) === undefined) return false
+  return !served || get(CONSENT_VERSION_COOKIE) === String(served.version)
 }
 
 /** The visitor's choice: the stored one, else the regional default, with GPC applied. */
 export function read(): Choice {
-  const kept = get(CONSENT_COOKIE)
+  const kept = stored() ? get(CONSENT_COOKIE) : undefined
   const on =
     kept !== undefined
       ? kept.split(',')
-      : region() === 'opt-in' || refused()
-        ? []
-        : ['analytics', 'marketing', 'ads']
+      : served
+        ? (['analytics', 'marketing', 'ads'] as const).filter((k) => served!.defaults[k])
+        : region() === 'opt-in'
+          ? []
+          : gpc()
+            ? ['analytics']
+            : ['analytics', 'marketing', 'ads']
   const has = (k: string) => on.includes(k)
   return { analytics: has('analytics'), marketing: has('marketing') && !gpc(), ads: has('ads') && !gpc() }
 }
@@ -89,6 +141,11 @@ export function read(): Choice {
 /** Whether the consent banner must be shown: an opt-in visitor who has not chosen. */
 export function asks(): boolean {
   return typeof document !== 'undefined' && region() === 'opt-in' && !stored()
+}
+
+/** Whether a small notice must be shown: an opt-out visitor who has not yet seen it. */
+export function notices(): boolean {
+  return typeof document !== 'undefined' && region() === 'opt-out' && !stored()
 }
 
 /** The choice as the `consent` property and the cookie spell it. */
@@ -106,6 +163,7 @@ export function render(c: Choice): string {
 export function save(c: Choice): void {
   const out: Choice = { analytics: c.analytics, marketing: c.marketing && !gpc(), ads: c.ads && !gpc() }
   set(CONSENT_COOKIE, render(out), 395)
+  set(CONSENT_VERSION_COOKIE, String(served?.version ?? 0), 395)
   if (typeof window !== 'undefined') window.dispatchEvent(new Event(CONSENT_EVENT))
 }
 

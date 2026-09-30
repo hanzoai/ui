@@ -7,10 +7,15 @@
  * manager reacts: nothing from an ad platform loads before Accept, and Google
  * Consent Mode v2 starts denied.
  *
- *  - opt-in zones (EU, UK, CH, anywhere that is not a US zone): a banner with
- *    Accept all, Reject all and Choose, until the visitor has chosen.
- *  - US: no banner; `ConsentLink` ("Do not sell or share my personal
- *    information") in the footer opens the same choices.
+ *  - opt-in regions (EU/EEA, UK, CH, Quebec, Brazil, China, and anywhere cloud
+ *    cannot place the visitor): a banner with Accept all, Reject all and Choose,
+ *    until the visitor has chosen. Nothing from an advertiser loads first.
+ *  - everywhere else (US, rest of Canada, Australia, Japan, ...): everything is
+ *    on, and a small notice says so with Manage and "Do not sell or share my
+ *    personal information"; `ConsentLink` in the footer opens the same choices.
+ *  - cloud resolves the region from where the request came from and serves it
+ *    with the site's tag config. The banner redraws when the answer arrives, and
+ *    asks again when the policy version changes.
  *  - Global Privacy Control: marketing and ads are off and their switches are
  *    locked, in every zone.
  *
@@ -18,7 +23,7 @@
  * link goes and opens the panel from anywhere.
  */
 import { Paragraph, XStack, YStack } from '@hanzo/gui'
-import { acceptAll, asks, gpc, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
+import { acceptAll, asks, consentPolicy, gpc, notices, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
 import { useEffect, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -45,28 +50,45 @@ export type ConsentProps = {
 
 const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   const [shown, setShown] = useState(false)
+  const [notice, setNotice] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
   const locked = typeof window !== 'undefined' && gpc()
 
   useEffect(() => {
-    setShown(asks())
+    const sync = () => {
+      setShown(asks())
+      setNotice(notices())
+    }
+    sync()
     const open = () => {
       setDraft(readConsent())
       setChoosing(true)
       setShown(true)
     }
     window.addEventListener(OPEN, open)
-    return () => window.removeEventListener(OPEN, open)
+    window.addEventListener(POLICY_EVENT, sync)
+    return () => {
+      window.removeEventListener(OPEN, open)
+      window.removeEventListener(POLICY_EVENT, sync)
+    }
   }, [])
 
-  if (!shown) return null
+  if (!shown && !notice) return null
 
   const done = (fn: () => void) => () => {
     fn()
     setShown(false)
+    setNotice(false)
     setChoosing(false)
   }
+  const choose = () => {
+    setDraft(readConsent())
+    setChoosing(true)
+    setShown(true)
+  }
+  const link = consentPolicy()?.notice ?? 'Do not sell or share my personal information'
+  const small = notice && !shown
 
   return (
     <YStack
@@ -92,7 +114,9 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
       <Paragraph size="$3" color="$ink" m={0}>
         {choosing
           ? 'Choose what Hanzo may measure and share. You can change this at any time.'
-          : 'Hanzo uses cookies to count visits and to measure its ads. Nothing from an advertiser loads until you accept.'}{' '}
+          : small
+            ? 'Hanzo uses cookies to count visits and to measure its ads. You can turn any of it off.'
+            : 'Hanzo uses cookies to count visits and to measure its ads. Nothing from an advertiser loads until you accept.'}{' '}
         <a href={privacy} style={{ color: 'inherit', textDecoration: 'underline' }}>
           Privacy policy
         </a>
@@ -134,16 +158,25 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
             </Button>
           </XStack>
         </YStack>
-      ) : (
+      ) : small ? (
         <XStack gap="$3" flexWrap="wrap" justify="flex-end">
           <Button
             type="button"
             variant="link"
-            onClick={() => {
-              setDraft(readConsent())
-              setChoosing(true)
-            }}
+            onClick={done(() => saveConsent({ ...readConsent(), marketing: false, ads: false }))}
           >
+            {link}
+          </Button>
+          <Button type="button" variant="secondary" onClick={choose}>
+            Manage
+          </Button>
+          <Button type="button" onClick={done(() => saveConsent(readConsent()))}>
+            OK
+          </Button>
+        </XStack>
+      ) : (
+        <XStack gap="$3" flexWrap="wrap" justify="flex-end">
+          <Button type="button" variant="link" onClick={choose}>
             Choose
           </Button>
           <Button type="button" variant="secondary" onClick={done(rejectAll)}>

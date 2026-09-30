@@ -1,7 +1,7 @@
 // Consent: opt-in outside the US, opt-out inside it, GPC always wins.
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { CONSENT_COOKIE, acceptAll, asks, read, region, rejectAll, save } from './consent'
+import { CONSENT_COOKIE, CONSENT_VERSION_COOKIE, acceptAll, asks, notices, read, region, rejectAll, save, serve } from './consent'
 import { touch, capture } from './touch'
 
 const g = globalThis as Record<string, unknown>
@@ -42,6 +42,7 @@ function browser(zone: string, opts: { gpc?: boolean; cookie?: string; href?: st
 }
 
 afterEach(() => {
+  serve(null)
   for (const k of ['window', 'document', 'Event']) delete g[k]
   for (const [k, d] of Object.entries(original)) if (d) Object.defineProperty(globalThis, k, d)
   vi.restoreAllMocks()
@@ -77,9 +78,9 @@ describe('the default before a choice', () => {
     expect(asks()).toBe(false)
   })
 
-  it('Global Privacy Control turns marketing off in the US', () => {
+  it('Global Privacy Control turns marketing and ads off in the US, analytics stays', () => {
     browser('America/Denver', { gpc: true })
-    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    expect(read()).toEqual({ analytics: true, marketing: false, ads: false })
   })
 
   it('GPC wins over a stored yes', () => {
@@ -136,5 +137,61 @@ describe('click ids', () => {
     capture({ analytics: true, marketing: false, ads: false })
     expect(b.jar.has('hz_touch')).toBe(false)
     expect(touch({ analytics: true, marketing: false, ads: false })).not.toHaveProperty('gclid')
+  })
+})
+
+describe('the rule cloud serves', () => {
+  const rule = (mode: 'opt-in' | 'opt-out', version = 1) => ({
+    region: mode === 'opt-in' ? 'DE' : 'US',
+    mode,
+    version,
+    gpc: false,
+    defaults:
+      mode === 'opt-in'
+        ? { analytics: false, marketing: false, ads: false }
+        : { analytics: true, marketing: true, ads: true },
+  })
+
+  it('beats the time zone, both ways', () => {
+    browser('America/New_York')
+    serve(rule('opt-in'))
+    expect(region()).toBe('opt-in')
+    expect(asks()).toBe(true)
+    expect(read()).toEqual({ analytics: false, marketing: false, ads: false })
+    browser('Europe/Berlin')
+    serve(rule('opt-out'))
+    expect(asks()).toBe(false)
+    expect(notices()).toBe(true)
+    expect(read()).toEqual({ analytics: true, marketing: true, ads: true })
+  })
+
+  it('tells the page when it arrives, so a banner drawn early redraws', () => {
+    const b = browser('Europe/Berlin')
+    serve(rule('opt-in'))
+    expect(b.fired).toContain('hzpolicy')
+  })
+
+  it('a choice made under an older policy is asked again', () => {
+    const b = browser('Europe/Berlin', { cookie: 'analytics' })
+    b.jar.set(CONSENT_VERSION_COOKIE, '1')
+    serve(rule('opt-in', 1))
+    expect(asks()).toBe(false)
+    serve(rule('opt-in', 2))
+    expect(asks()).toBe(true)
+    expect(read().analytics).toBe(false)
+  })
+
+  it('a choice is stored with the version it was made under', () => {
+    const b = browser('Europe/Berlin')
+    serve(rule('opt-in', 3))
+    acceptAll()
+    expect(b.jar.get(CONSENT_VERSION_COOKIE)).toBe('3')
+    expect(asks()).toBe(false)
+  })
+
+  it('ignores an answer that is not a rule', () => {
+    browser('Europe/Berlin')
+    serve({ tags: [] })
+    expect(region()).toBe('opt-in')
   })
 })

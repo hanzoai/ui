@@ -1,5 +1,13 @@
 # @hanzo/event
 
+## 0.3.51
+
+### Patch Changes
+
+- The region comes from cloud: `startTags` reads the `consent` rule `GET /v1/project/tags` serves for this visitor (opt-in or opt-out, what is on before a choice, GPC) and `serveConsent` applies it; the time zone is only the answer until cloud replies. A choice is stored with the policy version it was made under and asked again when the version changes. `notices()` and `POLICY_EVENT` let a banner draw the opt-out notice and redraw when the rule arrives.
+- Global Privacy Control turns marketing and ads off and leaves analytics as the region says.
+- Each site files its events under its own project: `SITE_KEY` (now in `org`, with `siteKey`) names hanzo.agency, console, admin and bot beside the rest, and `keyFor` answers a site's own key before its org's.
+
 ## 0.3.50
 
 ### Patch Changes

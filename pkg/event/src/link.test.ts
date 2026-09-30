@@ -204,11 +204,12 @@ describe('Analytics.link / authorize / identify', () => {
   })
 })
 
-describe('one ingest key across the journey', () => {
-  it('hanzo.ai, hanzo.id, hanzo.app resolve to the same org key', () => {
+describe('one visitor across the journey, each site its own project', () => {
+  it('www.hanzo.ai is hanzo.ai; every site owns a key; a runtime keyring stays per org', () => {
     const k = keyFor('hanzo.ai')
     expect(k).toBeTruthy()
-    for (const h of ['www.hanzo.ai', 'hanzo.id', 'hanzo.app', 'hanzo.team', 'hanzo.bot']) expect(keyFor(h)).toBe(k)
+    expect(keyFor('www.hanzo.ai')).toBe(k)
+    for (const h of ['hanzo.id', 'hanzo.app', 'hanzo.team', 'hanzo.bot']) expect(keyFor(h)).not.toBe(k)
     const ring = { hanzo: 'pk-runtime' }
     expect(keyFor('hanzo.id', ring)).toBe(keyFor('hanzo.ai', ring))
   })
