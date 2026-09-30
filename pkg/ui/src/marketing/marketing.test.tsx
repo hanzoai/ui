@@ -89,6 +89,12 @@ describe('Hero', () => {
     expect(out).toMatch(/data-slot="hero-media"[^>]*class="[^"]*_aspectRatio-/)
   })
 
+  it('gives a self-shaped picture the column without the card around it', () => {
+    const bare = html(<Hero title="Sign in" media={<i>shot</i>} mediaFrame={false} />)
+    expect(bare).toContain('data-slot="hero-media"')
+    expect(bare).not.toMatch(/data-slot="hero-media"[^>]*class="[^"]*_(aspectRatio|borderTopWidth|overflow)-/)
+  })
+
   it('draws no media column when there is no media', () => {
     expect(html(<Hero title="Sign in" />)).not.toContain('data-slot="hero-media"')
   })

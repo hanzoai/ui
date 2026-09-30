@@ -34,6 +34,12 @@ export type HeroProps = {
   terms?: ReactNode
   download?: { href: string; label: string }
   media?: ReactNode
+  /**
+   * Whether the media sits in the rounded, bordered card. A picture that draws
+   * its own edges and holds its own shape (a layered product shot) passes
+   * `false`; the slot then only gives it the column.
+   */
+  mediaFrame?: boolean
   /** Width over height of the media card at full width. */
   ratio?: number
   /** …and once the columns stack. */
@@ -51,6 +57,7 @@ const Hero = ({
   terms,
   download,
   media,
+  mediaFrame = true,
   ratio = 4 / 3,
   ratioCompact = 4 / 5,
   onView,
@@ -127,7 +134,7 @@ const Hero = ({
         ) : null}
       </YStack>
 
-      {media ? (
+      {media && mediaFrame ? (
         <YStack
           {...slot('hero-media')}
           ref={card as never}
@@ -143,6 +150,10 @@ const Hero = ({
           bg="$panel"
           $lg={{ flex: 7, flexBasis: 0, aspectRatio: ratio }}
         >
+          {media}
+        </YStack>
+      ) : media ? (
+        <YStack {...slot('hero-media')} ref={card as never} flex={0} flexBasis="auto" minW={0} width="100%" $lg={{ flex: 7, flexBasis: 0 }}>
           {media}
         </YStack>
       ) : null}
