@@ -4,7 +4,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
 import { Card, CardContent } from '../backends/gui/card'
-import { Choice, ChoiceGroup } from '../backends/gui/choice'
+import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
 import { Field, FieldError, FieldLabel } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
@@ -194,7 +194,7 @@ export function IntervalChoice({ interval, setInterval, price }: { interval: Int
   return (
     <ChoiceGroup label="Billing interval" flexWrap="wrap">
       {(['monthly', 'annual'] as const).map((i) => (
-        <Choice key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
+        <ChoiceCard key={i} selected={interval === i} onSelect={() => setInterval(i)} flex={1} flexBasis={200}>
           {i === 'annual' ? (
             <SizableText size="$1" color="$ink" self="flex-end" bg="$edge" px="$2" rounded="$1">
               {`Save ${saving}%`}
@@ -206,7 +206,7 @@ export function IntervalChoice({ interval, setInterval, price }: { interval: Int
           <SizableText size="$2" color="$ink">
             {price(i)}
           </SizableText>
-        </Choice>
+        </ChoiceCard>
       ))}
     </ChoiceGroup>
   )

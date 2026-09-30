@@ -323,7 +323,7 @@ export {
   type CalendarSingleProps,
   type ChoiceboxOption,
   type ChoiceboxProps,
-  type ChoiceProps,
+  type ChoiceCardProps,
   type ChoiceGroupProps,
   type StepperProps,
   type CodeBlockDiff,
