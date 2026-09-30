@@ -41,7 +41,7 @@ import { Hero } from './Hero'
 import { Media } from './Media'
 import { Plans } from './Plans'
 import { Feature, FeatureGrid, LogoRow, PageHeader, Quote, Section, Steps } from './blocks'
-import { charge, money, saving, seats, way, type PlanRow } from './plans'
+import { charge, money, saving, seats, way, type PlanRow } from './rows'
 
 const PLANS: PlanRow[] = [
   { id: 'free', name: 'Free', priceMonthly: 0, category: 'personal', features: ['Chat with every model'] },

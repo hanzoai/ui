@@ -64,7 +64,7 @@ describe('session', () => {
 })
 
 describe('signOut', () => {
-  it('revokes refresh then access through this origin, clears, and lands on /login?from=logout', async () => {
+  it('revokes refresh then access, ends IAM\'s session cookie, clears, and lands on /login?from=logout', async () => {
     localStorage.setItem('hanzo_iam_access_token', 'a')
     localStorage.setItem('hanzo_iam_refresh_token', 'r')
     const calls: { url: string; body: string }[] = []
@@ -77,7 +77,7 @@ describe('signOut', () => {
     const seen: string[] = []
     const iam = { clearTokens: () => localStorage.clear() } as unknown as IAM
     await signOut(iam, { clientId: 'hanzo-app', track: (n) => seen.push(n) })
-    expect(calls.map((c) => c.url)).toEqual(['https://hanzo.team/v1/iam/oauth/revoke', 'https://hanzo.team/v1/iam/oauth/revoke'])
+    expect(calls.map((c) => c.url)).toEqual(['https://hanzo.team/v1/iam/oauth/revoke', 'https://hanzo.team/v1/iam/oauth/revoke', 'https://hanzo.team/v1/iam/oauth/logout'])
     expect(calls[0]!.body).toContain('token=r')
     expect(calls[1]!.body).toContain('token=a')
     expect(assign).toHaveBeenCalledWith('/login?from=logout')

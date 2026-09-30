@@ -604,7 +604,7 @@ export { Hanzo, type HanzoProps } from './root'
 export { Slot, type SlotProps } from './slot'
 export {
   cn, capitalize, variants,
-  type ClassValue, type Variants, type Choice, type VariantProps,
+  type ClassValue, type Variants, type VariantProps,
 } from './core/cn'
 
 // The design-token scale (colors, dark/light themes, radii, spacing, typography)

@@ -25,7 +25,7 @@ import { Switch } from '../backends/gui/switch'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
 import { Grid } from '../grid'
 import { Cta } from './Cta'
-import { audience, charge, money, saving, seats, termOf, way, type Audience, type Interval, type PlanRow } from './plans'
+import { audience, charge, money, saving, seats, termOf, way, type Audience, type Interval, type PlanRow } from './rows'
 import { Line } from './type'
 
 const TIGHT = { letterSpacing: '-0.012em', textWrap: 'balance' } as const
