@@ -51,11 +51,15 @@ export const ORG_DOMAIN: Readonly<Record<string, readonly string[]>> = Object.fr
   // separate fact, which is the whole reason this is a table.
   hanzo: Object.freeze([
     'hanzo.ai',
+    'hanzo.agency',
     'hanzo.app',
     'hanzo.bot',
     'hanzo.chat',
     'hanzo.codes',
     'hanzo.id',
+    'hanzo.industries',
+    'hanzo.market',
+    'hanzo.network',
     'hanzo.sh',
     'hanzo.team',
     'hanzo.ventures',

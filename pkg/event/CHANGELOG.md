@@ -1,5 +1,12 @@
 # @hanzo/event
 
+## 0.3.49
+
+### Patch Changes
+
+- An error is ONE `type:'error'` event on `/v1/event` with `error {type, message, frames, stack, handled}`, `level`, `release`, `environment`, `site` and `product`. The `$exception` event, the Sentry envelope, the DSN and its config are gone.
+- `ORG_DOMAIN.hanzo` names hanzo.agency, hanzo.industries, hanzo.market and hanzo.network.
+
 ## 0.3.48
 
 ### Patch Changes

@@ -7,21 +7,10 @@
 //      Cloud resolves the tenant server-side (validated session, or the signed
 //      publishable key) and stamps it; the client NEVER sends the org.
 //
-//   2. ERROR PLANE — every captured exception is ALSO framed as a real Sentry
-//      envelope and POSTed to the error host named by the DSN:
-//        POST {dsn.base}/envelope/?sentry_key=…   ({base} = /v1/event/{projectId})
-//      This is what reaches sentry.hanzo.ai (issues, grouping, stack frames).
-//
-// These are NOT the same pipe and one does NOT feed the other. The event stream
-// stores a `type:'error'` row in the cloud event warehouse (readable via
-// GET /v1/errors) — that is product signal, not error tracking. There is no
-// server-side fan-out from /v1/event into Sentry; without the envelope below,
-// nothing ever reaches sentry.hanzo.ai. An earlier revision of this file claimed
-// the one entry point was "lensed server-side into … error tracking (sentry)". It was
-// wrong, and it silently cost the fleet all of its error telemetry.
-//
-// The error plane is inert (fail-safe) when no DSN is configured: nothing is
-// sent, nothing throws, and the event stream is unaffected.
+//   Errors ride the same pipe: a captured exception is ONE event of type 'error'
+//   carrying {type, message, frames|stack, handled} plus release, environment,
+//   site, product and level. The server files it on the error plane and groups it
+//   into an issue. There is no second endpoint, DSN or envelope.
 //
 // Auth is orthogonal — the SAME body to the SAME endpoint, differing only in how the
 // caller proves its tenant:
@@ -34,29 +23,17 @@
 //     is the carrier neither send needs a header for, which is what keeps both
 //     CORS-simple and therefore sendable from a customer's own origin.
 //
-// The wire is the canonical `Event` (== the cloud CaptureEvent): its `type` field
-// is what Cloud folds to event_type='error', which is how the event WAREHOUSE
-// classifies the row (GET /v1/errors). That is the extent of it — the fold does
-// not forward anything to Sentry. The error dashboard is fed only by the envelope
-// in plane 2 above, and only when a DSN is set.
+// The wire is the canonical `Event` (== the cloud CaptureEvent).
 
 import {
   parseAttribution,
   hasAttribution,
   deriveChannel,
 } from './attribution'
-import { dsnForProduct } from './dsn'
 import { keyForPage } from './org'
-import { EXCEPTION, PAGEVIEW } from './events'
-import { exceptionProperties } from './exception'
+import { PAGEVIEW } from './events'
 import { scrubText, withoutFragment } from './scrub'
-import {
-  buildEnvelope,
-  buildSentryEvent,
-  normalizeError as normalizeThrowable,
-  parseDsn,
-  type ErrorIdentity,
-} from './sentry'
+import { framesFromStack, normalizeError as normalizeThrowable } from './throwable'
 import {
   adoptAnonId,
   adoptSession,
@@ -74,7 +51,6 @@ import type {
   Attribution,
   CaptureErrorOptions,
   Cohort,
-  Dsn,
   EventKind,
   Exception,
   Transport,
@@ -86,7 +62,6 @@ export { VERSION }
 
 const EVENT_PATH = '/v1/event' // the ONE canonical ingestion entry point
 const DEFAULT_HOST = 'https://api.hanzo.ai' // the one edge; cookie apps pass host:''
-const ENVELOPE_CONTENT_TYPE = 'application/x-sentry-envelope'
 // The beacon body's type. text/plain is CORS-SAFELISTED, which is the whole
 // property: a safelisted type makes the POST a SIMPLE request, and a simple
 // request needs no preflight. An unloading document does not get a second round
@@ -95,22 +70,7 @@ const ENVELOPE_CONTENT_TYPE = 'application/x-sentry-envelope'
 // CORS class and nothing else.
 const BEACON_CONTENT_TYPE = 'text/plain'
 
-/** readEnvDsn resolves a DSN from the public env when config omits one, so an app
- *  gets the error plane by setting ONE build-time variable and nothing else.
- *  Next/Vite inline these at build; the access is guarded so it is safe in a bare
- *  browser and during SSR/prerender where `process` may not exist. */
-function readEnvDsn(): string | undefined {
-  try {
-    if (typeof process !== 'undefined' && process.env) {
-      return process.env.NEXT_PUBLIC_HANZO_EVENT_DSN || process.env.HANZO_EVENT_DSN || undefined
-    }
-  } catch {
-    /* no process — browser without inlined env */
-  }
-  return undefined
-}
-
-/** readEnv reads an inlined build-time variable, guarded like readEnvDsn. */
+/** readEnv reads an inlined build-time variable, guarded for SSR. */
 function readEnv(name: string): string | undefined {
   try {
     if (typeof process !== 'undefined' && process.env) return process.env[name] || undefined
@@ -127,14 +87,15 @@ function appendQuery(url: string, key: string, value: string): string {
 }
 
 /** Normalize anything thrown (Error | string | unknown) into an Exception. */
-/** normalizeError adapts the shared, hostile-input-safe normalizer (sentry.ts) to
- *  the event stream's Exception shape. ONE normalizer serves both planes: a thrown
- *  object may define `name`/`message`/`stack` as throwing getters, and when each
- *  plane rolled its own reader the stream still lost the report that the error
- *  plane had already survived. */
+/** normalizeError adapts the hostile-input-safe normalizer (sentry.ts) to the
+ *  stream's Exception shape: a thrown object may define `name`/`message`/`stack`
+ *  as throwing getters. */
 function normalizeError(err: unknown): Exception {
   const n = normalizeThrowable(err)
-  return { type: n.name, message: n.message, stack: n.stack }
+  const frames = framesFromStack(n.stack)
+    .slice(-50)
+    .map((f) => ({ function: f.function, file: f.filename, line: f.lineno, column: f.colno }))
+  return { type: n.name, message: n.message, stack: n.stack, frames }
 }
 
 // React Native defines a `window` but no `document` (and no `window.location`),
@@ -267,8 +228,6 @@ export class Analytics {
   private started = false
   /** The view pageview() last counted — path + location. */
   private counted?: string
-  /** Parsed error-plane DSN, or null when the plane is inert. */
-  private dsn: Dsn | null
   /** Guards against an error thrown *inside* the error path re-entering it. */
   private reentrant = false
 
@@ -304,43 +263,14 @@ export class Analytics {
         config.ingestKey ?? readEnv('NEXT_PUBLIC_PUBLISHABLE_KEY') ?? keyForPage(),
     }
     this.transport = config.transport ?? new DefaultTransport()
-    // Error plane, most specific source first: an explicit DSN wins, then the
-    // inlined build-time env (a per-deploy override), then the product registry —
-    // whose DSN carries the SAME resolved key (not a baked one), so declaring
-    // `product` + providing the key is enough to report errors. Malformed or
-    // absent => null => inert, never throwing into the host app.
-    this.dsn = parseDsn(
-      config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product, this.cfg.ingestKey)
-    )
   }
 
   /** adopt gives this client a credential it does not have. The key belongs to
    *  the stream, not to whichever caller happened to ask for the handle first,
-   *  so a later caller carrying one hands it over. The error plane derives from
-   *  the key, so it comes up here too when it was inert for want of one.
-   *  Present fields are never overwritten: the first caller's key stays. */
+   *  so a later caller carrying one hands it over. Present fields are never overwritten: the first caller's key stays. */
   adopt(config: AnalyticsConfig): void {
     if (config.ingestKey && !this.cfg.ingestKey) this.cfg.ingestKey = config.ingestKey
     if (config.getToken && !this.cfg.getToken) this.cfg.getToken = config.getToken
-    if (!this.dsn) {
-      this.dsn = parseDsn(
-        config.dsn ?? readEnvDsn() ?? dsnForProduct(this.cfg.product, this.cfg.ingestKey),
-      )
-    }
-  }
-
-  /** errorPlaneEnabled reports whether captured exceptions can actually reach the
-   *  error host. False means a DSN was never configured — the documented
-   *  fail-safe. Exposed so an app (or a test) can assert its wiring instead of
-   *  discovering months later that nothing was ever reported. */
-  get errorPlaneEnabled(): boolean {
-    return this.dsn !== null
-  }
-
-  /** errorIngestUrl is the fully-derived envelope endpoint, or undefined when the
-   *  plane is inert. Diagnostics only. */
-  get errorIngestUrl(): string | undefined {
-    return this.dsn?.ingestUrl
   }
 
   /** init is idempotent and browser-only for its side effects: capture first-touch
@@ -383,10 +313,7 @@ export class Analytics {
     window.addEventListener('visibilitychange', flushHidden)
     window.addEventListener('pagehide', () => this.flush(true))
 
-    // Auto error capture — the drop-in @sentry replacement. Unhandled errors and
-    // rejected promises are reported on BOTH planes: a Sentry envelope to the DSN
-    // host (what reaches the error dashboard — requires a DSN) and a type:'error'
-    // event on the stream (product signal in the warehouse).
+    // Unhandled errors and rejected promises are reported as type:'error' events.
     if (this.cfg.captureErrors) {
       window.addEventListener('error', (e: ErrorEvent) => {
         this.captureError(e.error ?? e.message, { handled: false })
@@ -462,71 +389,30 @@ export class Analytics {
   }
 
   /** captureError reports a caught error, an unhandled rejection, a React render
-   *  error, or a manual report to BOTH planes, from one call:
-   *
-   *    - the ERROR PLANE — a real Sentry envelope to the DSN host. This is the one
-   *      that produces an issue in sentry.hanzo.ai (grouping, stack frames, AST).
-   *      Inert when no DSN is configured.
-   *    - the EVENT STREAM — a `type:'error'` row in the cloud event warehouse, so
-   *      an error stays correlated with the session's pageviews for product
-   *      analysis (readable via GET /v1/errors).
-   *
-   *  Both carry the SAME session and subject id, so an error and the pageview
-   *  before it join up. Never throws back into the app; errors are higher-signal
-   *  than pageviews, so both planes flush promptly (a crash may unload the page
-   *  moments later). */
+   *  error, or a manual report as ONE event of type 'error' on the one stream.
+   *  It carries the exception (type, message, frames, stack, handled) and the
+   *  release, environment, site, product and level that group and scope it, and
+   *  flushes promptly (a crash may unload the page moments later). Never throws
+   *  back into the app. */
   captureError(err: unknown, context?: CaptureErrorOptions): void {
     // A failure inside the error path must not recurse through the global handlers.
     if (this.reentrant) return
     this.reentrant = true
     try {
-      // ERROR PLANE FIRST, in its own try. The planes are independent, so neither
-      // may be able to starve the other: `properties` is arbitrary caller data
-      // (a DOM node, a React synthetic event, an axios error — all circular and
-      // all common), and serializing it on the event stream can throw. When the
-      // stream ran first, that throw escaped to the outer catch and the crash
-      // report was never sent — silently losing exactly the signal this client
-      // exists to deliver. Order and isolation are the fix.
-      try {
-        this.sendError(err, context)
-      } catch {
-        /* the error plane must never take the event stream down with it */
-      }
-
-      try {
-        const handled = context?.handled ?? true
-        const ex = normalizeError(err)
-        ex.handled = handled
-        // NAME: the reserved '$exception', never the message. The message was the
-        // name until 0.3.20, which put every distinct error string — one per failed
-        // chunk id, per ResizeObserver notification — permanently into the event
-        // taxonomy, and left Error Tracking (which reads this exact name) at zero.
-        //
-        // TYPE 'event', not 'error'. `type` alone picks the storage plane: 'error'
-        // routes to the error plane, which the product-event projection does not
-        // read, so an exception filed there is invisible to Error Tracking however
-        // well-formed it is. The full error record still reaches the error plane as
-        // a Sentry envelope above — this row is the product-analytics breadcrumb,
-        // which is what keeps a crash correlated with the session's pageviews.
-        //
-        // `error` is still carried: the server folds it into properties.$exception
-        // (scrubbing message and stack on the way), which is the shape existing
-        // readers bind to.
-        this.enqueue('event', EXCEPTION, {
-          error: ex,
-          properties: {
-            ...context?.properties,
-            ...exceptionProperties(err, {
-              handled,
-              id: uuidv7(),
-              level: context?.level,
-            }),
-          },
-        })
-        this.flush()
-      } catch {
-        /* nor the reverse */
-      }
+      const handled = context?.handled ?? true
+      const ex = normalizeError(err)
+      ex.handled = handled
+      this.enqueue('error', undefined, {
+        error: ex,
+        level: context?.level ?? (handled ? 'error' : 'fatal'),
+        release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
+        environment: this.cfg.environment ?? readEnv('NODE_ENV'),
+        site: isBrowser() ? window.location.hostname : undefined,
+        properties: context?.properties,
+      })
+      this.flush()
+    } catch {
+      /* the error path never takes the app down */
     } finally {
       this.reentrant = false
     }
@@ -587,41 +473,6 @@ export class Analytics {
   }
 
   // ── internals ────────────────────────────────────────────────────────────
-
-  /** sendError frames one exception as a Sentry envelope and posts it to the DSN's
-   *  ingest URL. The DSN's own key rides ?sentry_key= (the credential channel the
-   *  server trusts, and the only one a headerless beacon can carry), so NO bearer
-   *  or publishable key is attached here — the two planes authenticate
-   *  independently. Errors are sent one envelope per event, immediately: batching
-   *  a crash report is how you lose it. */
-  private sendError(err: unknown, options?: CaptureErrorOptions): void {
-    if (!this.cfg.enabled || !this.dsn) return
-    const event = buildSentryEvent({
-      error: err,
-      options,
-      identity: this.errorIdentity(),
-      capturePII: this.cfg.capturePII ?? false,
-    })
-    const body = buildEnvelope(event, this.dsn)
-    if (this.cfg.debug) console.debug('[event] error →', this.dsn.ingestUrl, event.event_id)
-    this.transport.send(this.dsn.ingestUrl, body, {
-      beacon: false,
-      contentType: ENVELOPE_CONTENT_TYPE,
-      debug: this.cfg.debug,
-    })
-  }
-
-  /** errorIdentity is the SAME identity the event stream stamps — the OIDC subject
-   *  once identify() has run, else the anon id. Never email/PII. */
-  private errorIdentity(): ErrorIdentity {
-    return {
-      userId: this.personId ?? anonId(),
-      sessionId: sessionId(),
-      product: this.cfg.product,
-      release: this.cfg.release ?? readEnv('NEXT_PUBLIC_HANZO_RELEASE'),
-      environment: this.cfg.environment ?? readEnv('NODE_ENV'),
-    }
-  }
 
   private enqueue(kind: EventKind, event: string | undefined, extra: Partial<WireEvent>): void {
     if (!this.cfg.enabled) return

@@ -1,15 +1,10 @@
 // Public types for the Hanzo Event client.
 
-/** The event kinds — the closed set the server understands. `error` marks the
- *  breadcrumb an exception leaves on the event stream (Cloud stamps
- *  event_type='error' for the warehouse, GET /v1/errors). It does NOT reach the
- *  Sentry dashboard — the envelope on the error plane does that. */
+/** The event kinds — the closed set the server understands. `error` is a captured
+ *  exception; the server files it on the error plane. */
 export type EventKind = 'pageview' | 'event' | 'identify' | 'group' | 'error'
 
-/** A captured exception as it rides the EVENT STREAM — Cloud folds it into
- *  properties.$exception for the warehouse. The richer copy (parsed stack frames,
- *  grouping, release) travels on the error plane as a Sentry envelope; see
- *  AnalyticsConfig.dsn. */
+/** A captured exception, as the `error` field of a `type:'error'` event. */
 export interface Exception {
   /** Constructor/class name, e.g. "TypeError". */
   type?: string
@@ -20,6 +15,8 @@ export interface Exception {
   /** false = an unhandled/global error (window.onerror, unhandledrejection);
    *  true = a caught error the app chose to report. Defaults true. */
   handled?: boolean
+  /** The structured stack, oldest first. */
+  frames?: { function?: string; file?: string; line?: number; column?: number }[]
 }
 
 /** One stack frame as Error Tracking renders it. The key names are the product's
@@ -125,9 +122,13 @@ export interface WireEvent {
   revenue?: number
   currency?: string
   /** Set on `type:'error'` events — the captured exception. Cloud lifts it into
-   *  properties.$exception (foldException) for the event warehouse. Not a Sentry
-   *  path: the envelope on the error plane is what feeds the dashboard. */
+   *  properties.$exception (foldException) for the event warehouse. The
+   *  server files it on the error plane. */
   error?: Exception
+  level?: string
+  release?: string
+  environment?: string
+  site?: string
   properties?: Record<string, unknown>
   library?: string
   libraryVersion?: string
@@ -176,8 +177,7 @@ export interface AnalyticsConfig {
    *  POST /v1/keys {"type":"publishable"}.
    *
    *  Omit it and the client reads NEXT_PUBLIC_PUBLISHABLE_KEY from the inlined
-   *  build env, the same way `dsn` falls back — so a surface declares BOTH planes
-   *  in its build and neither needs code to switch on. That is the ONE spelling
+   *  build env, That is the ONE spelling
    *  the fleet already carries: KMS holds deploy/PUBLISHABLE_KEY, and each
    *  Dockerfile takes PUBLISHABLE_KEY as a build-arg and re-exports it with the
    *  NEXT_PUBLIC_ prefix that makes Next inline it.
@@ -187,9 +187,7 @@ export interface AnalyticsConfig {
    *  edge refuses an unattributable write rather than filing it where its owner
    *  cannot read it. That failure is invisible from the page, which is why the key
    *  belongs in the env next to the DSN and not in a checklist.
-   *
-   *  This attributes the EVENT STREAM only — the error plane authenticates
-   *  independently with `dsn`, and one does not stand in for the other. */
+   */
   ingestKey?: string
   /** Max events buffered before an automatic flush. */
   batchSize?: number
@@ -198,24 +196,13 @@ export interface AnalyticsConfig {
   /** Turn the client off entirely (e.g. opt-out / DNT). Defaults to enabled. */
   enabled?: boolean
   /** Auto-capture unhandled errors + promise rejections (window.onerror,
-   *  unhandledrejection). Browser-only, defaults to enabled. Together with `dsn`
-   *  this is what makes the client a drop-in @sentry replacement — without a
-   *  `dsn` the captures never reach the Sentry dashboard. */
+   *  unhandledrejection). Browser-only, defaults to enabled. */
   captureErrors?: boolean
   /** Override the transport (tests). */
   transport?: Transport
   /** Debug logging. */
   debug?: boolean
 
-  // ── error plane (Sentry envelope -> sentry.hanzo.ai) ──────────────────────
-
-  /** Hanzo-minted Sentry DSN: "https://<version>:<hmac>@<host>/v1/event/<projectId>".
-   *  Publishable — the key authorizes writes to ONE project and can read nothing,
-   *  so it is safe in a browser bundle (same trust class as `ingestKey`). When
-   *  absent the client reads NEXT_PUBLIC_HANZO_EVENT_DSN; when neither is set the
-   *  error plane is inert (fail-safe: nothing sent, nothing thrown, analytics
-   *  unaffected). Mint one per property: POST /v1/sentry/projects. */
-  dsn?: string
   /** Release stamped on error events (a git SHA / app version). */
   release?: string
   /** Deployment environment for error events (production | staging | …). */
@@ -225,8 +212,7 @@ export interface AnalyticsConfig {
   capturePII?: boolean
 }
 
-// ── Sentry envelope wire types (a from-scratch model of the PUBLIC, documented
-//    Sentry ingest protocol — develop.sentry.dev; no upstream code) ───────────
+// ── stack frame and level types ──────────────────────────────────────────────
 
 export type SentryLevel = 'fatal' | 'error' | 'warning' | 'info' | 'debug'
 
@@ -238,52 +224,6 @@ export interface SentryFrame {
   lineno?: number
   colno?: number
   in_app?: boolean
-}
-
-export interface SentryExceptionValue {
-  type?: string
-  value?: string
-  module?: string
-  stacktrace?: { frames: SentryFrame[] }
-}
-
-export interface SentryUser {
-  /** Stable subject id (OIDC sub / anon id). NEVER email/username/ip. */
-  id?: string
-}
-
-export interface SentryEvent {
-  event_id: string
-  timestamp: number
-  platform: 'javascript'
-  level: SentryLevel
-  logger?: string
-  environment?: string
-  release?: string
-  transaction?: string
-  fingerprint?: string[]
-  message?: string
-  exception?: { values: SentryExceptionValue[] }
-  tags?: Record<string, string>
-  user?: SentryUser
-  contexts?: Record<string, Record<string, unknown>>
-  sdk?: { name: string; version: string }
-}
-
-/** Parsed DSN — the public key + the derived ingest URL. */
-export interface Dsn {
-  /** "<version>:<hmac>" public key presented via ?sentry_key= (beacon-safe). */
-  publicKey: string
-  /** Ingest origin, e.g. "https://sentry.hanzo.ai". */
-  origin: string
-  /** Project id segment. */
-  projectId: string
-  /** The DSN's own origin + path, e.g. "https://api.hanzo.ai/v1/event/<projectId>".
-   *  Every URL below is derived from this, so the ingest address is named once —
-   *  in dsnForProduct — and nowhere else. */
-  base: string
-  /** Fully-derived envelope ingest URL incl. ?sentry_key=. */
-  ingestUrl: string
 }
 
 /** Options for Analytics.captureError. */

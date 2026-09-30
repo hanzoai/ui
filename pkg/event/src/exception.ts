@@ -29,7 +29,7 @@
 // throw site. framesFromStack (sentry.ts) already returns that order, which is why
 // this module reuses it rather than re-parsing.
 
-import { framesFromStack, normalizeError } from './sentry'
+import { framesFromStack, normalizeError } from './throwable'
 import type {
   ExceptionEntry,
   ExceptionFrame,

@@ -1,6 +1,6 @@
 import { describe, expect, it, afterEach } from 'vitest'
 import { uuidv7, uuidv7Time } from './uid'
-import { eventId } from './sentry'
+const eventId = () => uuidv7().replace(/-/g, '')
 
 /** The event plane's admission gate, transcribed from the session rollup's own SQL:
  *  `bitAnd(bitShiftRight(toUInt128(accurateCastOrNull(id,'UUID')), 76), 15) = 7`.

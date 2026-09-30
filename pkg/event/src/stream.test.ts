@@ -81,13 +81,6 @@ describe('one stream, one client', () => {
     expect(tx.sent[0].token).toBe(KEY)
   })
 
-  it('brings up the error plane on the key it adopts', () => {
-    const a = createAnalytics({ product: 'console', host: HOST, transport: tx })
-    expect(a.errorPlaneEnabled).toBe(false)
-    createAnalytics({ product: 'console', host: HOST, ingestKey: KEY })
-    expect(a.errorPlaneEnabled).toBe(true)
-  })
-
   it('keeps the first credential rather than overwriting it', () => {
     createAnalytics({ product: 'site', host: HOST, ingestKey: KEY, transport: tx })
     createAnalytics({ product: 'site', host: HOST, ingestKey: 'pk-second' }).capture('x')

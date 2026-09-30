@@ -29,8 +29,6 @@ interface Sent {
 
 // FakeTransport records the EXACT bytes the client would put on the wire, so the
 // tests assert the real POST /v1/event body shape ({ batch: [...] }), not a mock.
-// The error plane puts a newline-delimited Sentry envelope on the same transport,
-// which is deliberately NOT JSON — it is recorded raw, with an empty batch.
 class FakeTransport implements Transport {
   sent: Sent[] = []
   send(
@@ -57,24 +55,11 @@ class FakeTransport implements Transport {
   get all(): WireEvent[] {
     return this.sent.flatMap((s) => s.batch)
   }
-  /** Sends on the error plane — the envelope content type is the discriminator. */
-  get envelopes(): Sent[] {
-    return this.sent.filter((s) => s.contentType === 'application/x-sentry-envelope')
-  }
-  /** Sends on the event stream. */
-  get streams(): Sent[] {
-    return this.sent.filter((s) => s.contentType !== 'application/x-sentry-envelope')
-  }
 }
 
 let tx: FakeTransport
 // Default to same-origin (host:'') so path assertions read the bare /v1/event path;
 // tests that care about the edge host pass it explicitly.
-// `test-app` is deliberately NOT a product in the DSN registry (src/dsn.ts), so
-// the default client here has no error plane and these tests exercise the client
-// itself rather than whichever real products happen to be registered. Tests that
-// want a live error plane pass `dsn:` explicitly; registry resolution is covered
-// in dsn.test.ts.
 function mk(overrides = {}) {
   tx = new FakeTransport()
   return new Analytics({ product: 'test-app', host: '', transport: tx, flushIntervalMs: 999999, ...overrides })
@@ -467,313 +452,56 @@ describe('Analytics capture', () => {
   })
 })
 
-describe('Event error capture', () => {
-  it('emits under the RESERVED $exception name, never under the message', () => {
-    const a = mk()
+describe('error capture', () => {
+  it('is ONE type:error event on the one endpoint, not a second plane', () => {
+    const a = mk({ host: 'https://api.hanzo.ai', release: 'r1', environment: 'production' })
     a.captureError(new TypeError('boom'))
-    // captureError flushes promptly — no explicit flush() needed.
     expect(tx.sent).toHaveLength(1)
+    expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/event')
+    expect(tx.all).toHaveLength(1)
     const e = tx.all[0]
-    // THE NAME. Until 0.3.20 this was `ex.message`, which made every distinct
-    // error string a permanent entry in the event taxonomy and left Error
-    // Tracking — which reads this exact name — at zero rows.
-    expect(e.event).toBe('$exception')
-    // THE TYPE. `type` alone picks the storage plane: 'error' routes to the error
-    // plane, which the product-event projection does not read, so an exception
-    // filed there cannot reach Error Tracking. The full error record still goes to
-    // the error plane as a Sentry envelope.
-    expect(e.type).toBe('event')
-    // The exception STILL rides the TOP-LEVEL `error` field, which is what cloud's
-    // foldException reads to stamp properties.$exception (scrubbing on the way).
+    expect(e.type).toBe('error')
+    expect(e.event).toBeUndefined()
     expect(e.error?.type).toBe('TypeError')
     expect(e.error?.message).toBe('boom')
     expect(e.error?.stack).toBeTruthy()
-    expect(e.error?.handled).toBe(true) // a caught, manually-reported error
-    // The client does not stamp $exception itself — the server fold owns that key.
-    expect(e.properties ?? {}).not.toHaveProperty('$exception')
+    expect(Array.isArray(e.error?.frames)).toBe(true)
+    expect(e.error?.handled).toBe(true)
+    expect(e.level).toBe('error')
+    expect(e.release).toBe('r1')
+    expect(e.environment).toBe('production')
+    expect(e.product).toBe('test-app')
+    expect((e as Record<string, unknown>).tenant).toBeUndefined()
   })
 
-  it('carries the $exception_* bag Error Tracking reads', () => {
+  it('never sends a Sentry envelope or a $exception event', () => {
     const a = mk()
-    a.captureError(new TypeError('boom'))
-    const p = tx.all[0].properties as Record<string, unknown>
-    expect(Array.isArray(p.$exception_list)).toBe(true)
-    // Without a fingerprint the issue query drops the event outright.
-    expect(p.$exception_fingerprint).toMatch(/^[0-9a-f]{32}$/)
-    expect(p.$exception_type).toBe('TypeError')
-    expect(p.$exception_handled).toBe(true)
+    a.captureError(new Error('x'))
+    expect(tx.sent.every((s) => s.contentType === undefined)).toBe(true)
+    expect(tx.all.some((e) => e.event === '$exception')).toBe(false)
   })
 
   it('normalizes a thrown string into an exception', () => {
     const a = mk()
     a.captureError('plain failure')
-    const e = tx.all[0]
-    expect(e.event).toBe('$exception')
-    expect(e.type).toBe('event')
-    expect(e.error?.message).toBe('plain failure')
+    expect(tx.all[0].error?.message).toBe('plain failure')
   })
 
-  it('marks handled=false for unhandled/global errors and carries caller properties', () => {
+  it('an unhandled error is fatal and carries caller properties', () => {
     const a = mk()
     a.captureError(new Error('unhandled'), { handled: false, properties: { source: 'onerror' } })
     const e = tx.all[0]
     expect(e.error?.handled).toBe(false)
-    const p = e.properties as Record<string, unknown>
-    // The caller's own properties survive alongside the exception bag.
-    expect(p.source).toBe('onerror')
-    expect(p.$exception_handled).toBe(false)
+    expect(e.level).toBe('fatal')
+    expect((e.properties as Record<string, unknown>).source).toBe('onerror')
   })
 
-  it("a caller property cannot overwrite the exception bag it shares a name with", () => {
+  it('circular properties do not lose the report', () => {
     const a = mk()
-    a.captureError(new Error('x'), {
-      handled: false,
-      properties: { $exception_fingerprint: 'forged' },
-    })
-    const p = tx.all[0].properties as Record<string, unknown>
-    expect(p.$exception_fingerprint).not.toBe('forged')
-  })
-
-  it('an error is still an event on the ONE stream — same /v1/event endpoint + product', () => {
-    const a = mk({ host: 'https://api.hanzo.ai' })
-    a.captureError(new Error('x'))
-    // Same batched endpoint as any other event — one pipe, not a second SDK.
-    expect(tx.sent[0].url).toBe('https://api.hanzo.ai/v1/event')
-    expect(tx.sent[0].raw.startsWith('{"batch":')).toBe(true)
-    expect(tx.all[0].product).toBe('test-app')
-    // never the tenant — the server stamps it, errors included.
-    expect((tx.all[0] as Record<string, unknown>).tenant).toBeUndefined()
-  })
-})
-
-// ── the error plane ────────────────────────────────────────────────────────
-//
-// The regression these tests exist to prevent: @hanzo/event 0.3.1 documented
-// errors as "lensed server-side into … error tracking (sentry)". No such
-// server-side fan-out exists — POST /v1/event stores an event_type='error' row in
-// the cloud warehouse and stops there. The result was that every Hanzo property
-// silently reported ZERO errors to sentry.hanzo.ai. Reaching Sentry requires the
-// client to emit a real Sentry ENVELOPE to the DSN's ingest URL, which is what
-// these assert.
-
-// A syntactically real Hanzo-minted DSN. The key is "<version>:<hmac>"; this hmac
-// is a dummy (32 zero-bytes hex) — the shape is what the parser cares about, and
-// no test performs network I/O.
-const TEST_DSN =
-  'https://1:' +
-  '0'.repeat(64) +
-  '@sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99'
-
-describe('error plane', () => {
-  it('is INERT without a DSN — nothing sent to sentry, event stream unaffected', () => {
-    const a = mk()
-    expect(a.errorPlaneEnabled).toBe(false)
-    a.captureError(new Error('boom'))
-    expect(tx.envelopes).toHaveLength(0)
-    // fail-safe: the event stream still carries the error, analytics untouched.
-    expect(tx.streams).toHaveLength(1)
-    expect(tx.all[0].event).toBe('$exception')
-  })
-
-  it('with a DSN, an error POSTs a Sentry envelope to the DERIVED ingest URL', () => {
-    const a = mk({ dsn: TEST_DSN })
-    expect(a.errorPlaneEnabled).toBe(true)
-    a.captureError(new TypeError('kaboom'))
-
-    expect(tx.envelopes).toHaveLength(1)
-    const env = tx.envelopes[0]
-    // The exact route the o11y ingest registers, key on the query string.
-    expect(env.url).toBe(
-      'https://sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99/envelope/' +
-        '?sentry_key=1%3A' + '0'.repeat(64),
-    )
-    expect(env.contentType).toBe('application/x-sentry-envelope')
-    expect(a.errorIngestUrl).toBe(env.url)
-  })
-
-  it('never sends an /api/ path — Hanzo routes are /v1/ only', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('x'))
-    for (const s of tx.sent) expect(s.url).not.toContain('/api/')
-  })
-
-  it('frames a VALID envelope: header / item-header / payload, byte length correct', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('framing'))
-    const lines = tx.envelopes[0].raw.split('\n')
-    const header = JSON.parse(lines[0]) as { event_id: string; dsn: string; sent_at: string }
-    const item = JSON.parse(lines[1]) as { type: string; length: number }
-    const payload = lines[2]
-
-    expect(item.type).toBe('event')
-    // The server reads the length-delimited framing first — it must be the UTF-8
-    // byte length, not the JS string length.
-    expect(item.length).toBe(new TextEncoder().encode(payload).length)
-    expect(header.dsn).toBe(
-      'https://sentry.hanzo.ai/v1/event/019f9b1e-5785-7359-ad0b-f75db8e58c99',
-    )
-    const ev = JSON.parse(payload) as {
-      event_id: string
-      exception: { values: { type: string; value: string }[] }
-    }
-    expect(ev.event_id).toBe(header.event_id)
-    expect(ev.exception.values[0].type).toBe('Error')
-    expect(ev.exception.values[0].value).toBe('framing')
-  })
-
-  it('carries the SAME session + subject identity as the event stream', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.identify('user-sub-123')
-    a.captureError(new Error('correlate me'))
-    const ev = JSON.parse(tx.envelopes[0].raw.split('\n')[2]) as {
-      user: { id: string }
-      tags: Record<string, string>
-    }
-    expect(ev.user.id).toBe('user-sub-123')
-    const streamed = tx.all.find((e) => e.type === 'error')
-    expect(ev.tags.session).toBe(streamed?.sessionId)
-    expect(ev.tags.product).toBe('test-app')
-  })
-
-  it('an uncaught error is fatal; a reported one is error', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('uncaught'), { handled: false })
-    a.captureError(new Error('reported'))
-    const lvl = (i: number) =>
-      (JSON.parse(tx.envelopes[i].raw.split('\n')[2]) as { level: string }).level
-    expect(lvl(0)).toBe('fatal')
-    expect(lvl(1)).toBe('error')
-  })
-
-  it('scrubs secrets and PII from the error message before it leaves the browser', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('login failed for tam@hanzo.ai with hk-' + 'a'.repeat(20)))
-    const value = (
-      JSON.parse(tx.envelopes[0].raw.split('\n')[2]) as {
-        exception: { values: { value: string }[] }
-      }
-    ).exception.values[0].value
-    expect(value).not.toContain('tam@hanzo.ai')
-    expect(value).not.toContain('hk-aaaa')
-    expect(value).toContain('[email]')
-    expect(value).toContain('[redacted]')
-  })
-
-  it('does NOT attach the event-stream credential to the sentry request', () => {
-    // The two planes authenticate independently: the DSN key rides ?sentry_key=,
-    // so a publishable ingest key must not leak onto the error host.
-    const a = mk({ dsn: TEST_DSN, ingestKey: 'pk_test.sig', getToken: () => 'jwt-abc' })
-    a.captureError(new Error('x'))
-    const env = tx.envelopes[0]
-    expect(env.ingestKey).toBeUndefined()
-    expect(env.token).toBeUndefined()
-    expect(env.beacon).toBe(false)
-  })
-
-  it('ONE captureError feeds BOTH planes', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('both'))
-    expect(tx.streams).toHaveLength(1)
-    expect(tx.envelopes).toHaveLength(1)
-  })
-
-  it('a malformed DSN leaves the plane inert rather than throwing', () => {
-    const a = mk({ dsn: 'not-a-dsn' })
-    expect(a.errorPlaneEnabled).toBe(false)
-    expect(() => a.captureError(new Error('x'))).not.toThrow()
-    expect(tx.envelopes).toHaveLength(0)
-  })
-
-  it('never throws back into the host app when the transport fails', () => {
-    const a = mk({ dsn: TEST_DSN })
-    tx.send = () => {
-      throw new Error('network down')
-    }
-    expect(() => a.captureError(new Error('x'))).not.toThrow()
-  })
-})
-
-// ── plane independence under hostile input ─────────────────────────────────
-//
-// The regression: captureError ran enqueue()+flush() BEFORE sendError(), all in
-// one try{}. `properties` is arbitrary caller data — hanzoai/app spreads
-// ErrorContext.metadata straight in, and a DOM node, a React synthetic event or
-// an axios error are all circular — so serializing the stream threw, the catch
-// swallowed it, and the CRASH REPORT WAS NEVER SENT. Both planes went to zero on
-// exactly the inputs a real app produces. They must not be able to starve each
-// other.
-
-describe('plane independence', () => {
-  function circular(): Record<string, unknown> {
-    const o: Record<string, unknown> = { name: 'node' }
-    o.self = o
-    return o
-  }
-  const throwingGetter = () =>
-    Object.defineProperty({}, 'boom', {
-      get() {
-        throw new Error('getter exploded')
-      },
-      enumerable: true,
-    }) as Record<string, unknown>
-
-  it('circular properties: the error still reaches Sentry', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('circular payload'), { properties: circular() })
-    expect(tx.envelopes).toHaveLength(1)
-  })
-
-  it('throwing getter in properties: the error still reaches Sentry', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.captureError(new Error('hostile getter'), { properties: throwingGetter() })
-    expect(tx.envelopes).toHaveLength(1)
-    // The exception survives even though the tag did not.
-    const ev = JSON.parse(tx.envelopes[0].raw.split('\n')[2]) as {
-      exception: { values: { value: string }[] }
-    }
-    expect(ev.exception.values[0].value).toBe('hostile getter')
-  })
-
-  it('a throwing event-stream transport does not stop the error plane', () => {
-    const a = mk({ dsn: TEST_DSN })
-    const real = tx.send.bind(tx)
-    tx.send = (url, body, opts) => {
-      if (opts.contentType !== 'application/x-sentry-envelope') throw new Error('stream down')
-      real(url, body, opts)
-    }
-    a.captureError(new Error('stream is broken'))
-    expect(tx.envelopes).toHaveLength(1)
-  })
-
-  it('a throwing error-plane transport does not stop the event stream', () => {
-    const a = mk({ dsn: TEST_DSN })
-    const real = tx.send.bind(tx)
-    tx.send = (url, body, opts) => {
-      if (opts.contentType === 'application/x-sentry-envelope') throw new Error('sentry down')
-      real(url, body, opts)
-    }
-    a.captureError(new Error('sentry is broken'))
-    expect(tx.streams).toHaveLength(1)
-  })
-
-  it('one poisoned event never discards previously buffered clean events', () => {
-    const a = mk({ dsn: TEST_DSN })
-    a.pageview('/one')
-    a.capture('clean_event')
-    // Now poison the buffer, then force a flush.
-    a.capture('poisoned', circular())
-    a.flush()
-    const names = tx.all.map((e) => e.event)
-    expect(names).toContain('$pageview')
-    expect(names).toContain('clean_event')
-    // The poisoned one is kept too — with its payload replaced, not silently lost.
-    const bad = tx.all.find((e) => e.event === 'poisoned')
-    expect(bad?.properties).toEqual({ $unserializable: true })
-  })
-
-  it('never throws into the host app on any of these', () => {
-    const a = mk({ dsn: TEST_DSN })
-    expect(() => a.captureError(new Error('x'), { properties: circular() })).not.toThrow()
-    expect(() => a.captureError(new Error('y'), { properties: throwingGetter() })).not.toThrow()
+    const loop: Record<string, unknown> = {}
+    loop.self = loop
+    a.captureError(new Error('x'), { properties: loop })
+    expect(tx.sent).toHaveLength(1)
+    expect(tx.all[0].error?.message).toBe('x')
   })
 })
