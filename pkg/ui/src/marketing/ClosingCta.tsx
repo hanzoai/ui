@@ -41,10 +41,10 @@ const ClosingCta = ({
     items="center"
     gap="$6"
     px="$6"
-    py={96}
-    $md={{ py: 56 }}
+    py={56}
+    $md={{ py: 96 }}
   >
-    <Line render="h2" m={0} align="center" fontSize="$11" lineHeight="$11" fontWeight={500} $md={{ fontSize: '$9', lineHeight: '$9' }} style={TIGHT}>
+    <Line render="h2" m={0} align="center" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
       {title}
     </Line>
     <XStack flexWrap="wrap" justify="center" gap="$4">

@@ -69,9 +69,9 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
         {ask}
       </YStack>
     ) : null}
-    <XStack flexWrap="wrap" gap={40} $sm={{ gap: 28 }}>
+    <XStack flexWrap="wrap" gap={28} $sm={{ gap: 40 }}>
       {columns.map((c) => (
-        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis={150} flexGrow={1} minW={140} $sm={{ flexBasis: '40%' }} gap={2}>
+        <YStack key={c.id} render="nav" aria-label={c.title} flexBasis="40%" flexGrow={1} minW={140} $sm={{ flexBasis: 150 }} gap={2}>
           {c.href ? (
             <Anchor
               href={c.href}
@@ -104,7 +104,7 @@ const Footer = ({ columns, ask, wordmark, copyright, legal = [], gutter = 'clamp
           {copyright}
         </Line>
       ) : null}
-      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} ml="auto" $sm={{ ml: 0, width: '100%' }}>
+      <XStack render="nav" aria-label="Terms & Policies" flexWrap="wrap" gap={16} rowGap={8} ml={0} width="100%" $sm={{ ml: 'auto', width: 'auto' }}>
         {legal.map((l) => (
           <Anchor key={l.label} href={l.href} {...open(l.out)} color="$faint" fontSize="$1" lineHeight="$1" textDecorationLine="none" hoverStyle={{ color: '$ink' }}>
             {l.label}

@@ -4,7 +4,7 @@
  * Hero — the first screen: the promise and the way in on the left, the product
  * at work on the right.
  *
- * Two columns from 1021px up; below that they stack, the pitch first. The pitch
+ * Two columns from 1024px up; below that they stack, the pitch first. The pitch
  * is centred in its column, so the headline, the sign-in and the download read
  * as one stack.
  *
@@ -72,23 +72,23 @@ const Hero = ({
       width="100%"
       maxW={1320}
       mx="auto"
-      flexDirection="row"
+      flexDirection="column"
       items="center"
-      gap={64}
-      px="$6"
-      pt={120}
-      pb={72}
-      $md={{ flexDirection: 'column', gap: 32, px: '$4', pt: 88, pb: 48 }}
+      gap={32}
+      px="$4"
+      pt={88}
+      pb={48}
+      $lg={{ flexDirection: 'row', gap: 64, px: '$6', pt: 120, pb: 72 }}
     >
       <YStack
         {...slot('hero-copy')}
-        flex={5}
-        flexBasis={0}
+        flex={0}
+        flexBasis="auto"
         minW={0}
         width="100%"
         items="center"
         gap="$5"
-        $md={{ flex: 0, flexBasis: 'auto' }}
+        $lg={{ flex: 5, flexBasis: 0 }}
       >
         <Line
           render="h1"
@@ -97,16 +97,16 @@ const Hero = ({
           maxW={520}
           align="center"
           fontFamily="$heading"
-          fontSize="$13"
-          lineHeight="$13"
+          fontSize="$11"
+          lineHeight="$11"
           fontWeight={500}
-          $md={{ fontSize: '$11', lineHeight: '$11' }}
+          $lg={{ fontSize: '$13', lineHeight: '$13' }}
           style={{ letterSpacing: '-0.012em', textWrap: 'balance' }}
         >
           {title}
         </Line>
         {subtitle ? (
-          <Line render="p" m={0} mt={-4} align="center" tone="muted" fontSize="$7" lineHeight="$7" $md={{ fontSize: '$6', lineHeight: '$6' }}>
+          <Line render="p" m={0} mt={-4} align="center" tone="muted" fontSize="$6" lineHeight="$6" $lg={{ fontSize: '$7', lineHeight: '$7' }}>
             {subtitle}
           </Line>
         ) : null}
@@ -131,17 +131,17 @@ const Hero = ({
         <YStack
           {...slot('hero-media')}
           ref={card as never}
-          flex={7}
-          flexBasis={0}
+          flex={0}
+          flexBasis="auto"
           minW={0}
           width="100%"
-          aspectRatio={ratio}
+          aspectRatio={ratioCompact}
           overflow="hidden"
           rounded={28}
           borderWidth={1}
           borderColor="$edge"
           bg="$panel"
-          $md={{ flex: 0, flexBasis: 'auto', aspectRatio: ratioCompact }}
+          $lg={{ flex: 7, flexBasis: 0, aspectRatio: ratio }}
         >
           {media}
         </YStack>

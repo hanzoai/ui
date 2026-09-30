@@ -118,10 +118,10 @@ const Plans = ({
           m={0}
           align="center"
           fontFamily="$heading"
-          fontSize="$11"
-          lineHeight="$11"
+          fontSize="$9"
+          lineHeight="$9"
           fontWeight={500}
-          $md={{ fontSize: '$9', lineHeight: '$9' }}
+          $md={{ fontSize: '$11', lineHeight: '$11' }}
           style={TIGHT}
         >
           {title}

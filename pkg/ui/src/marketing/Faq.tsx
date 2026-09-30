@@ -27,7 +27,7 @@ export type FaqProps = {
 
 const Faq = ({ items, heading = 'Questions', onOpen }: FaqProps) => (
   <YStack {...slot('faq')} render="section" width="100%" maxW={680} mx="auto" gap="$6" px="$6">
-    <Line render="h2" align="center" fontSize="$11" lineHeight="$11" fontWeight={500} $md={{ fontSize: '$9', lineHeight: '$9' }} style={TIGHT}>
+    <Line render="h2" align="center" fontSize="$9" lineHeight="$9" fontWeight={500} $md={{ fontSize: '$11', lineHeight: '$11' }} style={TIGHT}>
       {heading}
     </Line>
     <YStack borderTopWidth={1} borderColor="$edge">

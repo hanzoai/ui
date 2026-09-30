@@ -43,20 +43,20 @@ const PageHeader = ({ title, lede, eyebrow, actions }: PageHeaderProps) => (
     items="center"
     gap="$4"
     px={GUTTER}
-    pt={120}
-    pb={48}
-    $md={{ pt: 88, pb: 32 }}
+    pt={88}
+    pb={32}
+    $md={{ pt: 120, pb: 48 }}
   >
     {eyebrow ? (
       <Line size="sm" tone="soft" weight="600" style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>
         {eyebrow}
       </Line>
     ) : null}
-    <Line render="h1" m={0} align="center" fontFamily="$heading" fontSize="$12" lineHeight="$12" fontWeight={500} $md={{ fontSize: '$10', lineHeight: '$10' }} style={TIGHT}>
+    <Line render="h1" m={0} align="center" fontFamily="$heading" fontSize="$10" lineHeight="$10" fontWeight={500} $md={{ fontSize: '$12', lineHeight: '$12' }} style={TIGHT}>
       {title}
     </Line>
     {lede ? (
-      <Line render="p" m={0} align="center" tone="muted" fontSize="$7" lineHeight="$7" maxW={640} $md={{ fontSize: '$6', lineHeight: '$6' }}>
+      <Line render="p" m={0} align="center" tone="muted" fontSize="$6" lineHeight="$6" maxW={640} $md={{ fontSize: '$7', lineHeight: '$7' }}>
         {lede}
       </Line>
     ) : null}
@@ -79,12 +79,12 @@ const Section = ({ title, lede, children, measure = 1080 }: SectionProps) => (
     mx="auto"
     gap="$6"
     px={GUTTER}
-    py={64}
-    $md={{ py: 32 }}
+    py={32}
+    $md={{ py: 64 }}
   >
     {title ? (
       <YStack gap="$3" items="center">
-        <Line render="h2" m={0} align="center" fontFamily="$heading" fontSize="$10" lineHeight="$10" fontWeight={500} $md={{ fontSize: '$8', lineHeight: '$8' }} style={TIGHT}>
+        <Line render="h2" m={0} align="center" fontFamily="$heading" fontSize="$8" lineHeight="$8" fontWeight={500} $md={{ fontSize: '$10', lineHeight: '$10' }} style={TIGHT}>
           {title}
         </Line>
         {lede ? (
@@ -175,7 +175,7 @@ export type QuoteProps = { quote: ReactNode; name: string; role?: string }
 
 const Quote = ({ quote, name, role }: QuoteProps) => (
   <YStack {...slot('quote')} render="figure" m={0} maxW={720} mx="auto" gap="$4" items="center" px={GUTTER}>
-    <Line render="blockquote" m={0} align="center" fontSize="$8" lineHeight="$8" fontWeight={500} $md={{ fontSize: '$7', lineHeight: '$7' }}>
+    <Line render="blockquote" m={0} align="center" fontSize="$7" lineHeight="$7" fontWeight={500} $md={{ fontSize: '$8', lineHeight: '$8' }}>
       {quote}
     </Line>
     <YStack render="figcaption" items="center">

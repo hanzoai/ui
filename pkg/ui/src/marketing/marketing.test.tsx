@@ -78,9 +78,9 @@ describe('Hero', () => {
     expect(out).toMatch(/<a[^>]*href="\/download"/)
   })
 
-  it('is two columns that stack: a row with a column step at the medium breakpoint', () => {
-    expect(out).toMatch(/data-slot="hero"[^>]*class="[^"]*_fd-row/)
-    expect(out).toMatch(/_md_fd-column|_fd-column/)
+  it('stacks first and becomes two columns from the large breakpoint', () => {
+    expect(out).toMatch(/data-slot="hero"[^>]*class="[^"]*_fd-column/)
+    expect(out).toMatch(/_lg_fd-row|_fd-_lg_row/)
     expect(out).toContain('data-slot="hero-copy"')
     expect(out).toContain('data-slot="hero-media"')
   })
