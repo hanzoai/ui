@@ -114,3 +114,6 @@ export {
   type PipelineModel,
   type StageState,
 } from './pipeline/stages'
+
+// ── Analytics: web and product views over analytics.hanzo.ai ─────────────────
+export * from './analytics'
