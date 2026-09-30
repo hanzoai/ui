@@ -2,10 +2,10 @@
 
 /**
  * ClosingCta — the last thing on a page: one headline, one way in, one way to
- * read more. The way in is the plan picker, so every page that ends here ends
- * at the same place.
+ * read more. The way in is "Try Hanzo" to sign-in, payment second: `/login`, or
+ * `/login?next=<checkout>` when the page names a plan (`next`).
  *
- * `onCta` hears both links, named `choose_plan` and `read_docs`.
+ * `onCta` hears both links, named `try_hanzo` and `read_docs`.
  */
 import { XStack, YStack } from '@hanzo/gui'
 
@@ -17,21 +17,24 @@ const TIGHT = { letterSpacing: '-0.012em', textWrap: 'balance' } as const
 
 export type ClosingCtaProps = {
   title?: string
+  /** The checkout this page sells, as a path: sign-in first, then this. */
+  next?: string
   primary?: { label: string; href: string }
-  secondary?: { label: string; href: string }
-  onCta?: (cta: 'choose_plan' | 'read_docs') => void
+  secondary?: { label: string; href: string } | null
+  onCta?: (cta: 'try_hanzo' | 'read_docs') => void
 }
 
 const ClosingCta = ({
-  title = 'Pick a plan. Build today.',
-  primary = { label: 'Choose plan', href: '/pricing' },
+  title = 'Build what’s next.',
+  next,
+  primary = { label: 'Try Hanzo', href: next ? `/login?next=${encodeURIComponent(next)}` : '/login' },
   secondary = { label: 'Read the docs', href: 'https://docs.hanzo.ai' },
   onCta,
 }: ClosingCtaProps) => (
   <YStack
     {...slot('closing-cta')}
     render="section"
-    aria-label="Get started"
+    aria-label="Try Hanzo"
     width="100%"
     maxW={1240}
     mx="auto"
@@ -45,12 +48,14 @@ const ClosingCta = ({
       {title}
     </Line>
     <XStack flexWrap="wrap" justify="center" gap="$4">
-      <Cta href={primary.href} onPress={() => onCta?.('choose_plan')}>
+      <Cta href={primary.href} onPress={() => onCta?.('try_hanzo')}>
         {primary.label}
       </Cta>
-      <Cta quiet href={secondary.href} onPress={() => onCta?.('read_docs')}>
-        {secondary.label}
-      </Cta>
+      {secondary ? (
+        <Cta quiet href={secondary.href} onPress={() => onCta?.('read_docs')}>
+          {secondary.label}
+        </Cta>
+      ) : null}
     </XStack>
   </YStack>
 )

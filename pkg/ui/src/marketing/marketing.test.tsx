@@ -41,7 +41,7 @@ import { Hero } from './Hero'
 import { Media } from './Media'
 import { Plans } from './Plans'
 import { Feature, FeatureGrid, LogoRow, PageHeader, Quote, Section, Steps } from './blocks'
-import { charge, money, saving, seats, way, type PlanRow } from './rows'
+import { charge, merged, money, saving, seats, way, type PlanRow } from './rows'
 
 const PLANS: PlanRow[] = [
   { id: 'free', name: 'Free', priceMonthly: 0, category: 'personal', features: ['Chat with every model'] },
@@ -138,8 +138,8 @@ describe('Plans', () => {
   })
 
   it('gives Free its own button and a paid plan the checkout for that plan', () => {
-    expect(out).toMatch(/<a[^>]*href="\/chat"[^>]*>Use Hanzo for free/)
-    expect(out).toMatch(/<a[^>]*href="\/pay\?plan=pro&amp;interval=month"[^>]*>Get Pro/)
+    expect(out).toMatch(/<a[^>]*href="\/login"[^>]*>Try Hanzo/)
+    expect(out).toMatch(/<a[^>]*href="\/login\?next=%2Fpay%3Fplan%3Dpro%26interval%3Dmonth"[^>]*>Try Hanzo/)
     expect(out).toContain('No commitment · Cancel anytime')
   })
 
@@ -150,10 +150,26 @@ describe('Plans', () => {
 
   it('sends Enterprise to sales and quotes a seat floor on Team', () => {
     const team = html(<Plans plans={PLANS.filter((p) => p.category !== 'personal')} checkout={checkout} />)
-    expect(team).toMatch(/<a[^>]*href="\/contact-sales"[^>]*>Contact sales/)
+    expect(team).toMatch(/<a[^>]*href="\/contact-sales"[^>]*>Get Enterprise plan/)
+    expect(team).toMatch(/<a[^>]*href="\/login\?next=[^"]*"[^>]*>Get Team plan/)
     expect(team).toContain('$24')
     expect(team).toContain('USD/seat/month')
     expect(team).toContain('from 2 seats')
+  })
+})
+
+describe('merged', () => {
+  it('offers the Max tiers as one card priced from the cheaper', () => {
+    const rows: PlanRow[] = [
+      PLANS[0]!,
+      { id: 'max5', name: 'Max 5x', priceMonthly: 100, category: 'personal', features: ['Everything in Pro', "5x Pro's usage"] },
+      { id: 'max20', name: 'Max 20x', priceMonthly: 200, category: 'personal', features: ['Everything in Pro', "20x Pro's usage"] },
+    ]
+    const { plans, from } = merged(rows)
+    expect(plans.map((p) => p.name)).toEqual(['Free', 'Max'])
+    expect(plans[1]!.priceMonthly).toBe(100)
+    expect(plans[1]!.features).toContain('Choose 5x or 20x more usage than Pro')
+    expect([...from]).toEqual(['max5'])
   })
 })
 
@@ -168,11 +184,13 @@ describe('Faq', () => {
 })
 
 describe('ClosingCta', () => {
-  it('ends at the plan picker, with the docs as the second way', () => {
+  it('ends at sign-in, payment second, with the docs as the second way', () => {
     const out = html(<ClosingCta />)
-    expect(out).toMatch(/<a[^>]*href="\/pricing"[^>]*>Choose plan/)
+    expect(out).toMatch(/<a[^>]*href="\/login"[^>]*>Try Hanzo/)
+    expect(html(<ClosingCta next="/pay?plan=pro" />)).toMatch(/href="\/login\?next=%2Fpay%3Fplan%3Dpro"/)
     expect(out).toMatch(/<a[^>]*href="https:\/\/docs\.hanzo\.ai"[^>]*>Read the docs/)
     expect(out).not.toContain('Start free')
+    expect(out).not.toContain('Choose plan')
   })
 })
 

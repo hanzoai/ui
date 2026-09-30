@@ -8,8 +8,9 @@
  * sells a year). Every row, price, seat floor and feature is the catalog's,
  * passed as `plans`: this draws them and states no number of its own.
  *
- *   Free        its own button, to `freeHref`
- *   paid        the on-site checkout for that plan and term (`checkout`)
+ *   every card  "Try Hanzo", to sign-in first (`signIn`); payment is second
+ *   Free        `signIn` alone
+ *   paid        `signIn?next=<the on-site checkout for that plan and term>`
  *   quoted      Enterprise: contact sales
  *
  * The host supplies the three addresses and hears the two events, so the same
@@ -25,7 +26,7 @@ import { Switch } from '../backends/gui/switch'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
 import { Grid } from '../grid'
 import { Cta } from './Cta'
-import { audience, charge, money, saving, seats, termOf, way, type Audience, type Interval, type PlanRow } from './rows'
+import { audience, charge, merged, money, saving, seats, termOf, way, type Audience, type Interval, type PlanRow } from './rows'
 import { Line } from './type'
 
 const TIGHT = { letterSpacing: '-0.012em', textWrap: 'balance' } as const
@@ -47,8 +48,10 @@ export type PlansProps = {
   title?: string
   /** The address a paid plan's button opens, for the term on the card. */
   checkout: (plan: PlanRow, interval: Interval) => string
-  freeHref?: string
-  freeLabel?: string
+  /** Where every card starts: sign-in first, payment second. A paid card opens it with `?next=<checkout>`. */
+  signIn?: string
+  /** What every way in says. */
+  cta?: string
   contactHref?: string
   onView?: (tab: Audience, shown: readonly { plan: PlanRow; interval: Interval }[]) => void
   onChoose?: (choice: PlanChoice) => void
@@ -61,8 +64,8 @@ const Plans = ({
   heading = 'h1',
   title = 'Plans that grow with you',
   checkout,
-  freeHref = '/chat',
-  freeLabel = 'Use Hanzo for free',
+  signIn = '/login',
+  cta = 'Try Hanzo',
   contactHref = '/contact-sales',
   onView,
   onChoose,
@@ -73,7 +76,7 @@ const Plans = ({
   const [picked, setPicked] = useState<Audience>('individual')
   const [yearly, setYearly] = useState(false)
   const tab = tabs.some(([a]) => a === picked) ? picked : (tabs[0]?.[0] ?? picked)
-  const here = useMemo(() => all.filter((p) => audience(p) === tab), [all, tab])
+  const { plans: here, from } = useMemo(() => merged(all.filter((p) => audience(p) === tab)), [all, tab])
 
   const savings = here.map(saving).filter((n): n is number => n !== null)
   const most = savings.length ? Math.max(...savings) : 0
@@ -93,10 +96,16 @@ const Plans = ({
       key={p.id}
       plan={p}
       every={termOf(p, yearly)}
+      from={from.has(p.id)}
+      team={tab === 'team'}
       href={
-        way(p) === 'card' ? checkout(p, termOf(p, yearly)) : way(p) === 'free' ? freeHref : contactHref
+        way(p) === 'card'
+          ? `${signIn}?next=${encodeURIComponent(checkout(p, termOf(p, yearly)).replace(/^https:\/\/hanzo\.ai(?=\/)/, ''))}`
+          : way(p) === 'free'
+            ? signIn
+            : contactHref
       }
-      freeLabel={freeLabel}
+      cta={cta}
       onPress={(cta) => onChoose?.({ plan: p, interval: termOf(p, yearly), tab, cta, way: way(p) })}
     />
   )
@@ -189,13 +198,17 @@ function Card({
   plan,
   every,
   href,
-  freeLabel,
+  cta: label,
+  from,
+  team,
   onPress,
 }: {
   plan: PlanRow
   every: Interval
   href: string
-  freeLabel: string
+  cta: string
+  from: boolean
+  team: boolean
   onPress: (cta: string) => void
 }) {
   const how = way(plan)
@@ -203,7 +216,8 @@ function Card({
   // A year is headlined as the month it works out to, with the whole year under it.
   const headline = every === 'year' && year ? Math.round((year / 12) * 100) / 100 : (plan.priceMonthly ?? 0)
   const floor = seats(plan)
-  const cta = how === 'card' ? `Get ${plan.name}` : how === 'free' ? freeLabel : 'Contact sales'
+  // Team and Enterprise name the plan; everyone else is one button.
+  const cta = team ? `Get ${plan.name} plan` : label
 
   return (
     <YStack
@@ -254,6 +268,11 @@ function Card({
         {how === 'card' ? (
           <>
             <YStack display="block">
+              {from ? (
+                <Line size="sm" tone="muted">
+                  From{' '}
+                </Line>
+              ) : null}
               <Line size="x4" weight="600">
                 {money(headline)}
               </Line>{' '}
