@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.47
+
+### Patch Changes
+
+- `commerceItem()` names a plan as GA4's item (`item_id`, `item_category` individual or team, `item_variant` monthly or annual, `price`, `quantity`), the one shape every commerce event carries.
+
 ## 0.3.46
 
 ### Patch Changes
