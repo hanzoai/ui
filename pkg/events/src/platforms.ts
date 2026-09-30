@@ -18,7 +18,9 @@
  *
  * `standard` is the normalized name cloud's adapters that do not name events
  * (Google Ads, Pinterest, Reddit) key on. `ads` marks the moments Google Ads
- * (and so YouTube ads) counts as conversions.
+ * (and so YouTube ads) counts as conversions. `money` marks the moments that
+ * state an amount (a purchase, a change of subscription, a refund): cloud sends
+ * one to a platform only when a peer app or the org's secret key stated it.
  */
 
 export type PlatformName = 'ga4' | 'meta' | 'linkedin' | 'x' | 'tiktok'
@@ -46,6 +48,8 @@ export interface Platforms {
   x?: Name
   tiktok?: Name
   ads?: boolean
+  /** The event states an amount a platform bids on. Only the server may state one. */
+  money?: boolean
 }
 
 export const PLATFORMS: Readonly<Record<string, Platforms>> = {
@@ -90,10 +94,11 @@ export const PLATFORMS: Readonly<Record<string, Platforms>> = {
     x: 'purchase',
     tiktok: 'CompletePayment',
     ads: true,
+    money: true,
   },
-  subscription_changed: { ga4: 'purchase', meta: 'Subscribe' },
+  subscription_changed: { ga4: 'purchase', meta: 'Subscribe', money: true },
   subscription_canceled: { ga4: 'subscription_canceled', meta: 'SubscriptionCanceled' },
-  order_refunded: { ga4: 'refund', meta: 'OrderRefunded' },
+  order_refunded: { ga4: 'refund', meta: 'OrderRefunded', money: true },
 
   // ── Leads ──────────────────────────────────────────────────────
   sales_contacted: {
