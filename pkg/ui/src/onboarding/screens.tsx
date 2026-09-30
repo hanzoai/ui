@@ -153,7 +153,7 @@ export function Plans({ interval, setInterval, onFree, onPick }: { interval: Int
 
 /* ----------------------------------------------------------------- team */
 
-export function TeamName({ api, onCreated }: { api: string; onCreated: (handle: string) => void }) {
+export function TeamName({ api, onCreated }: { api: string; onCreated: (org: string) => void | Promise<void> }) {
   const [name, setName] = useState('')
   const [busy, setBusy] = useState(false)
   const [wrong, setWrong] = useState<string | null>(null)
@@ -164,9 +164,11 @@ export function TeamName({ api, onCreated }: { api: string; onCreated: (handle: 
     setBusy(true)
     setWrong(null)
     try {
-      // The reserved admin org and the brand orgs are never a team's home.
-      await call(api, '/v1/iam/organizations', { method: 'POST', body: JSON.stringify({ owner: 'admin', name: handle, displayName: name.trim() }) })
-      onCreated(handle)
+      // The account's own route makes the organization the caller owns, named by
+      // IAM; the reserved admin org and the brand orgs are never a team's home.
+      const made = await call<{ org?: string }>(api, '/v1/account/orgs', { method: 'POST', body: JSON.stringify({ name: name.trim() }) })
+      if (!made?.org) throw new ApiError('The team was made but its name did not come back. Reload to find it.', 200)
+      await onCreated(made.org)
     } catch (err) {
       setWrong(err instanceof ApiError ? err.message : 'Could not create the team. Try again.')
       setBusy(false)

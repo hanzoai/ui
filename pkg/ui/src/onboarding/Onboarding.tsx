@@ -33,6 +33,8 @@ export interface OnboardingProps {
   /** Opens Hanzo's sales agent; without it the link goes to /contact-sales. */
   onAsk?: () => void
   termsPath?: string
+  /** A team's organization now exists. The host renews the session so its token names it. */
+  onTeam?: (org: string) => void | Promise<void>
   /** Start on this plan's checkout, as the in-app Upgrade entries do. */
   upgrade?: { plan: PlanId; interval?: Interval; seats?: number } | null
   /** `from` for upgrade_clicked when opened as an upgrade. */
@@ -41,7 +43,7 @@ export interface OnboardingProps {
 
 type View = 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
 
-export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', upgrade = null }: OnboardingProps) {
+export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', upgrade = null, onTeam }: OnboardingProps) {
   const session = useSession(api)
   const [view, setView] = useState<View | null>(null)
   const [interval, setInterval] = useState<Interval>(upgrade?.interval ?? 'monthly')
@@ -120,7 +122,8 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
       <Page site={site} title="Let’s create your team" start back={() => setView('use')} lede="Team plans are best for groups up to 150 people. Choose a team name that invited members will easily recognize.">
         <TeamName
           api={api}
-          onCreated={(handle) => {
+          onCreated={async (handle) => {
+            await onTeam?.(handle)
             track?.('team_created', {})
             setTeam(handle)
             void session.save({ team: handle })

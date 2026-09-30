@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { account, API, preferences, rename, saveProgress } from './api'
-import type { Progress, Stored } from './state'
+import { step, type Progress, type Stored } from './state'
 
 export type Track = (name: string, props?: Record<string, unknown>) => void
 
@@ -75,4 +75,23 @@ export function useSession(api: string = API): Session {
   )
 
   return { loading, progress: stored.onboarding ?? {}, trainOptIn: stored.train_opt_in, name, save, setName, setTrain, error }
+}
+
+/**
+ * Whether this person still has an onboarding step to do: `null` while IAM has
+ * not answered, so a gate never flashes the wrong screen. A failed read answers
+ * `false` (nothing to do), because a broken read must not lock anyone out.
+ */
+export function useOnboarded(api: string = API): { pending: boolean | null; plan: string | undefined } {
+  const [state, setState] = useState<{ pending: boolean | null; plan: string | undefined }>({ pending: null, plan: undefined })
+  useEffect(() => {
+    let live = true
+    preferences(api)
+      .then((s) => live && setState({ pending: step(s?.onboarding ?? {}) !== 'done', plan: s?.onboarding?.plan }))
+      .catch(() => live && setState({ pending: false, plan: undefined }))
+    return () => {
+      live = false
+    }
+  }, [api])
+  return state
 }
