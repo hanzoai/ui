@@ -1,5 +1,28 @@
 # @hanzo/event
 
+## 0.3.44
+
+### Patch Changes
+
+- **One tag manager for every Hanzo surface.** `startTags()` fetches the site's tag
+  set from cloud (`GET /v1/project/tags`, non-secret ids) and loads Google (GA4 and
+  Google Ads), Meta, LinkedIn, X and TikTok, each only after consent and none from
+  a site's own code. `track(stream, name, params)` mints one `event_id`, fires every
+  running pixel under the names the platform table in `@hanzo/events` gives, and
+  records the moment on our stream with the consent, the click ids and the list of
+  pixels reached (`tags`), which is what lets cloud send GA4 only what gtag did not
+  and dedupe Meta, TikTok and GA4 purchases by id.
+- **Consent by region.** `readConsent`, `saveConsent`, `acceptAll`, `rejectAll`,
+  `asks`, `region`: opt-in outside the US (nothing until accepted), opt-out in it,
+  Global Privacy Control and Do Not Track always turn marketing off. Google Consent
+  Mode v2 is set denied before gtag.js is fetched and updated on every choice; a
+  choice that allows more loads the rest with no reload.
+- **Click ids.** `captureClick` keeps gclid, gbraid, wbraid, fbclid (and `_fbc`),
+  li_fat_id, twclid and ttclid for 90 days with consent; `touch` is what an event
+  carries for cloud to match it on.
+- Test-mode orders (`test: true`) are debug traffic in the browser and carry no
+  amount. `PLATFORMS` and `namesOn` are re-exported from `@hanzo/events` 0.3.1.
+
 ## 0.3.43
 
 ### Patch Changes

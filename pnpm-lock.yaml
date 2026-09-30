@@ -31,8 +31,8 @@ catalogs:
       specifier: 0.3.39
       version: 0.3.39
     '@hanzo/events':
-      specifier: 0.2.2
-      version: 0.2.2
+      specifier: 0.3.1
+      version: 0.3.1
     '@hanzo/font':
       specifier: 1.9.2
       version: 1.9.2
@@ -819,7 +819,7 @@ importers:
     dependencies:
       '@hanzo/events':
         specifier: 'catalog:'
-        version: 0.2.2
+        version: 0.3.1
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -2774,6 +2774,9 @@ packages:
 
   '@hanzo/events@0.2.2':
     resolution: {integrity: sha512-jF800OFibLfnuEqMJUpTyLIs4fmezzXFKGGUPAHjK40FrTWsiAb4j3j1N5sbqBLAv5Ty7FA56dOo67Y+kUSqyA==}
+
+  '@hanzo/events@0.3.1':
+    resolution: {integrity: sha512-eGK1MTi5tW/luXhddLwrcyK8fq+GE41u/80oIjEKzxHGCfUs8LATiDAGCZ3dYM4D5sxiUS7x8BG2hGuD2gnIUA==}
 
   '@hanzo/font@1.9.2':
     resolution: {integrity: sha512-CXKXhfRgAj9SnhRJtraS6jEToGz74hbrMSJm85Kp8y6uN64zOH+IvohpWT/Surh9Qn1KWIGXsIx216JMa++X6A==}
@@ -11830,6 +11833,8 @@ snapshots:
       react: 19.2.8
 
   '@hanzo/events@0.2.2': {}
+
+  '@hanzo/events@0.3.1': {}
 
   '@hanzo/font@1.9.2(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:

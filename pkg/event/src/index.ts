@@ -25,6 +25,14 @@ export { scrubText, redactSecrets, scrubPII } from './scrub'
 export { EVENTS, EXCEPTION, PAGEVIEW } from './events'
 export { exceptionEntry, exceptionProperties, fingerprint, digest } from './exception'
 export type { EventName } from './events'
+export {
+  CONSENT_COOKIE, CONSENT_EVENT, acceptAll, asks, gpc, read as readConsent, refused, region,
+  rejectAll, render as renderConsent, save as saveConsent, stored as storedConsent,
+} from './consent'
+export type { Choice, Region } from './consent'
+export { CLICK_IDS, capture as captureClick, touch } from './touch'
+export { start as startTags, track, mirror, reach, visit } from './tags'
+export type { BrowserTag, TagOptions } from './tags'
 export { GOALS, COHORTS } from './goals'
 export type { GoalDef, CohortDef } from './goals'
 export { FUNNELS, PRODUCTS, eventsOf } from './funnels'

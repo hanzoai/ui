@@ -17,5 +17,5 @@
  * of the name, one name per user-visible moment shared by every surface.
  */
 
-export { EVENTS, PAGEVIEW, EXCEPTION } from '@hanzo/events'
+export { EVENTS, PAGEVIEW, EXCEPTION, PLATFORMS, namesOn } from '@hanzo/events'
 export type { EventName } from '@hanzo/events'
