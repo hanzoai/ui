@@ -101,6 +101,23 @@ describe('a driven browser', () => {
   })
 })
 
+describe('a teammate’s browser', () => {
+  it('?hz_internal=1 keeps the mark, loads Google tagged internal, and no ad pixel', async () => {
+    const b = browser('America/New_York')
+    ;(g.window as { location: { search: string } }).location.search = '?hz_internal=1'
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.jar.get('hz_internal')).toBe('1')
+    expect(b.scripts.every((s) => s.includes('googletagmanager.com'))).toBe(true)
+    expect(b.scripts.length).toBeGreaterThan(0)
+    const layer = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a))
+    const config = layer.filter((a) => a[0] === 'config')
+    expect(config.length).toBeGreaterThan(0)
+    for (const c of config) expect(c[2]).toMatchObject({ traffic_type: 'internal' })
+  })
+})
+
 describe('after accepting', () => {
   it('loads Google, Meta, LinkedIn, X and TikTok with no reload', async () => {
     const b = browser('Europe/Berlin')

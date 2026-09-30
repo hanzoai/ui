@@ -36,7 +36,7 @@ import { CONSENT_EVENT, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
-import { automated } from './automated'
+import { automated, internal } from './automated'
 import { uuidv7 } from './uid'
 
 export interface BrowserTag {
@@ -180,7 +180,10 @@ function loadGoogle(ids: string[]): void {
   }
   for (const id of fresh) {
     loaded.add(id)
-    gtag('config', id, options.domains ? { linker: { domains: options.domains } } : {})
+    gtag('config', id, {
+      ...(options.domains ? { linker: { domains: options.domains } } : {}),
+      ...(internal() ? { traffic_type: 'internal' } : {}),
+    })
   }
 }
 
@@ -273,8 +276,9 @@ function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
   capture(c)
-  // A driven browser is ours: it loads no platform's pixel (automated.ts).
-  const on = automated() ? [] : tags.filter((t) => allowed(t, c))
+  // A driven browser loads no platform's pixel; a teammate's loads Google
+  // Analytics only, tagged internal (automated.ts).
+  const on = automated() ? [] : tags.filter((t) => allowed(t, c) && (t.type === 'ga' || !internal()))
   const ids = on.filter((t) => t.type === 'ga' || t.type === 'gads').map((t) => t.id)
   if (ids.length) {
     consentMode(c, !loaded.has('consent'))

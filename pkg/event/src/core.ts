@@ -45,7 +45,7 @@ import {
   mergeCohort,
 } from './storage'
 import { uuidv7 } from './uid'
-import { automated } from './automated'
+import { internal } from './automated'
 import { linkUrl, readLink, stripLink } from './link'
 import type {
   AnalyticsConfig,
@@ -544,7 +544,7 @@ export class Analytics {
     if (wire.url) wire.url = scrubText(withoutFragment(wire.url), capturePII)
     if (wire.path) wire.path = scrubText(withoutFragment(wire.path), capturePII)
     if (wire.referrer) wire.referrer = scrubText(withoutFragment(wire.referrer), capturePII)
-    if (automated()) wire.properties = { ...wire.properties, internal: true }
+    if (internal()) wire.properties = { ...wire.properties, internal: true }
     return wire
   }
 
