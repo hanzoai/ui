@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.48
+
+### Patch Changes
+
+- `useConsent()` (`@hanzo/event/react`) is the visitor's consent, live. Pass `enabled: useConsent().analytics` to the provider and a stream that started silent for an EU visitor starts on Accept, with no reload.
+
 ## 0.3.47
 
 ### Patch Changes

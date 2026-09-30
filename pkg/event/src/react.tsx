@@ -16,11 +16,13 @@ import {
   useContext,
   useEffect,
   useRef,
+  useSyncExternalStore,
   type ErrorInfo,
   type ReactNode,
 } from 'react'
 import { Analytics, createAnalytics } from './core'
 import type { AnalyticsConfig } from './types'
+import { CONSENT_EVENT, read, render, type Choice } from './consent'
 
 const Ctx = createContext<Analytics | null>(null)
 
@@ -118,5 +120,25 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     const { fallback } = this.props
     if (typeof fallback === 'function') return fallback(error, this.reset)
     return fallback ?? null
+  }
+}
+
+const listen = (on: () => void) => {
+  window.addEventListener(CONSENT_EVENT, on)
+  return () => window.removeEventListener(CONSENT_EVENT, on)
+}
+
+/**
+ * The visitor's consent, live: what a region presumes until they choose, then
+ * what they chose, re-rendering the moment they do. `enabled: choice.analytics`
+ * on the provider's config is how a stream that started silent for an EU visitor
+ * starts on Accept, with no reload.
+ */
+export function useConsent(): Choice {
+  const kept = useSyncExternalStore(listen, () => render(read()), () => '')
+  return {
+    analytics: kept.includes('analytics'),
+    marketing: kept.includes('marketing'),
+    ads: kept.includes('ads'),
   }
 }
