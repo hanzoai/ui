@@ -59,9 +59,12 @@ describe('a model nobody can call yet', () => {
     mount(<ModelSelector models={MODELS} onChange={() => {}} open />)
     const zen7 = row('Zen 7')
     expect(zen7).toBeTruthy()
-    expect(zen7.getAttribute('aria-disabled')).toBe('true')
-    expect(zen7.textContent).toContain('Research preview')
-    expect(row('Zen 6').getAttribute('aria-disabled')).toBeNull()
+    expect(zen7.getAttribute('data-access')).toBe('research')
+    expect(zen7.querySelector('[aria-disabled="true"]')?.textContent).toContain('Research preview')
+    expect(row('Zen 6').querySelector('[aria-disabled]')).toBeNull()
+    // Nothing that holds the link says it is disabled: that would disable the link too.
+    const link = zen7.querySelector('a')!
+    expect(link.closest('[aria-disabled="true"]')).toBeNull()
   })
 
   it('is never chosen, by the pointer or by Enter', () => {

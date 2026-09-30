@@ -143,48 +143,62 @@ export function ModelSelector({
                       key={m.id}
                       value={`${group.family} ${label} ${m.id}`}
                       disabled={locked}
-                      aria-disabled={locked || undefined}
+                      // gui writes aria-disabled for `disabled`, and that disables
+                      // every focusable descendant: the row's link is the one thing
+                      // on it that works. The model inside says it is disabled.
+                      aria-disabled={locked ? false : undefined}
+                      data-access={m.access}
+                      // The name is muted, not the row: its link has to read as a link.
+                      opacity={1}
                       onSelect={() => {
                         onChange(m.id)
                         setOpen(false)
                       }}
                     >
-                      <Check size={14} shrink={0} opacity={m.id === value ? 1 : 0} />
-                      <SizableText numberOfLines={1} size="$2">
-                        {label}
-                      </SizableText>
-                      {m.premium && (
-                        <SizableText size="$2" color="$color11" aria-label="Premium">
-                          ✦
+                      <XStack
+                        flex={1}
+                        minW={0}
+                        items="center"
+                        gap="$2"
+                        aria-disabled={locked || undefined}
+                        opacity={locked ? 0.5 : 1}
+                      >
+                        <Check size={14} shrink={0} opacity={m.id === value ? 1 : 0} />
+                        <SizableText numberOfLines={1} size="$2">
+                          {label}
                         </SizableText>
-                      )}
-                      {locked ? (
-                        <XStack ml="auto" shrink={0} pl="$2" gap="$2" items="center">
-                          <SizableText size="$1" color="$color11">
+                        {m.premium && (
+                          <SizableText size="$2" color="$color11" aria-label="Premium">
+                            ✦
+                          </SizableText>
+                        )}
+                        {locked ? (
+                          <SizableText ml="auto" shrink={0} pl="$2" size="$1" color="$color11">
                             Research preview
                           </SizableText>
-                          {m.request && (
-                            <Anchor
-                              href={m.request}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              size="$1"
-                              color="$color12"
-                              textDecorationLine="underline"
-                              // The row takes no pointer while disabled; its link does.
-                              pointerEvents="auto"
-                              onKeyDown={(e: { stopPropagation: () => void }) => e.stopPropagation()}
-                            >
-                              Request access
-                            </Anchor>
-                          )}
-                        </XStack>
-                      ) : ctx && (
-                        <XStack ml="auto" shrink={0} pl="$2">
-                          <SizableText size="$1" color="$color11" fontVariant={['tabular-nums']}>
-                            {ctx}
-                          </SizableText>
-                        </XStack>
+                        ) : ctx && (
+                          <XStack ml="auto" shrink={0} pl="$2">
+                            <SizableText size="$1" color="$color11" fontVariant={['tabular-nums']}>
+                              {ctx}
+                            </SizableText>
+                          </XStack>
+                        )}
+                      </XStack>
+                      {locked && m.request && (
+                        <Anchor
+                          href={m.request}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          shrink={0}
+                          size="$1"
+                          color="$color12"
+                          textDecorationLine="underline"
+                          // The row takes no pointer while disabled; its link does.
+                          pointerEvents="auto"
+                          onKeyDown={(e: { stopPropagation: () => void }) => e.stopPropagation()}
+                        >
+                          Request access
+                        </Anchor>
                       )}
                     </CommandItem>
                   )
