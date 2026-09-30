@@ -91,7 +91,19 @@ import { IamProvider } from '@hanzo/iam/react'
 import { SignIn } from './auth'
 import { ChoiceCard, ChoiceGroup, Stepper } from './backends/gui'
 import { Page as OnboardingPage } from './onboarding/frame'
+import { adopt } from './onboarding/plans'
 import { Enterprise, Plans, Seats, TeamName, UseCards } from './onboarding/screens'
+
+// The onboarding screens price from the live catalog, which a render has not read;
+// these rows stand in for it so every screen draws (the prices are not shipped).
+adopt([
+  { slug: 'free', name: 'Free', price: 0 },
+  { slug: 'dev', name: 'Pro', price: 2000, annualTotal: 20000 },
+  { slug: 'max-5x', name: 'Max 5x', price: 10000, annualTotal: 100000 },
+  { slug: 'max-20x', name: 'Max 20x', price: 20000, annualTotal: 200000 },
+  { slug: 'team', name: 'Team', price: 2500, annualTotal: 24000 },
+  { slug: 'team-premium', name: 'Team premium', price: 10400, annualTotal: 104000 },
+])
 import { BookOpen, Plug } from '@hanzogui/lucide-icons-2'
 // The settings page and its section parts. Aliased where a part shares a word
 // with a primitive above (`Card`, `Field`), exactly as a consumer importing both
