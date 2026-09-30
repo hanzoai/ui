@@ -60,6 +60,8 @@ export interface OnboardingProps {
    * the plan steps.
    */
   prepare?: () => Promise<{ plan?: PlanId } | void>
+  /** The organization a team plan is billed to when this flow did not make it: a team already on Free. */
+  org?: string
   /**
    * Take the person to pay for a personal plan somewhere else (hanzo.ai/pay, which
    * returns here once paid). Without it, and for a team's seats, the checkout is drawn in this flow.
@@ -69,7 +71,7 @@ export interface OnboardingProps {
 
 type View = 'account' | 'pro' | 'use' | 'plans' | 'team' | 'seats' | 'enterprise' | 'checkout'
 
-export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', aupPath = '/aup', upgrade = null, open, from, onClose, onTeam, policy, prepare, checkout }: OnboardingProps) {
+export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, termsPath = '/terms', aupPath = '/aup', upgrade = null, open, from, onClose, onTeam, policy, prepare, checkout, org: billed }: OnboardingProps) {
   const session = useSession(api)
   // A different email is a fresh sign-in: end this session and land on /login.
   const other = useSignOut({ to: '/login', track })
@@ -145,7 +147,7 @@ export function Onboarding({ site = 'Hanzo', api = API, track, onDone, onAsk, te
   if (catalog === false) return <Page site={site} title="Plans could not be loaded just now" lede="That is ours to fix. Reload to try again." center />
   if (!view) return <Page site={site} title="" busy />
 
-  const org = team ?? session.progress.team
+  const org = team ?? billed ?? session.progress.team
 
   if (view === 'account' && policy) {
     return (
