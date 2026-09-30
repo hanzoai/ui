@@ -30,7 +30,7 @@ export {
 export type { Choice, Policy as ConsentRule, Region } from './consent'
 export { CLICK_IDS, capture as captureClick, touch } from './touch'
 export { start as startTags, ready as tagsReady, track, mirror, reach, visit } from './tags'
-export type { BrowserTag, TagOptions } from './tags'
+export type { Audience, BrowserTag, TagOptions } from './tags'
 export { commerceItem, worth } from './items'
 export type { CommerceItem, PlanLine } from './items'
 export { GOALS, COHORTS } from './goals'

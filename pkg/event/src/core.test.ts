@@ -525,6 +525,38 @@ describe('a driven browser', () => {
     }
   })
 
+  it('marks the events of a browser cloud named the team’s', async () => {
+    drive(false)
+    const jar = new Map<string, string>()
+    const g = globalThis as Record<string, unknown>
+    g.window = {
+      location: { hostname: 'hanzo.ai', protocol: 'https:', search: '', href: 'https://hanzo.ai/' },
+      addEventListener: () => undefined,
+    }
+    g.document = {
+      get cookie() {
+        return [...jar].map(([k, v]) => `${k}=${v}`).join('; ')
+      },
+      set cookie(line: string) {
+        const [pair] = line.split(';')
+        const i = pair.indexOf('=')
+        jar.set(pair.slice(0, i), pair.slice(i + 1))
+      },
+    }
+    try {
+      const { mark } = await import('./automated')
+      mark()
+      const a = mk()
+      a.capture(EVENTS.SIGNUP_COMPLETED, { plan: 'pro' })
+      a.flush()
+      expect(tx.all[0].properties?.internal).toBe(true)
+    } finally {
+      delete g.window
+      delete g.document
+      if (nav) Object.defineProperty(globalThis, 'navigator', nav)
+    }
+  })
+
   it('leaves a person’s events unmarked', () => {
     drive(false)
     try {

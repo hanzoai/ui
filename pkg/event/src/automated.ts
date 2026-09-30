@@ -28,3 +28,14 @@ export function internal(): boolean {
   }
   return asked === '1' || get(MARK) === '1'
 }
+
+/**
+ * Marks this browser as the team's, as `?hz_internal=1` does. The tag manager
+ * calls it when cloud says the visitor is the site's own team (a member's IAM
+ * bearer, or an address in the project's internal networks), so the browser stays
+ * internal after its person signs out.
+ */
+export function mark(): void {
+  if (typeof document === 'undefined' || typeof document.cookie !== 'string') return
+  set(MARK, '1', 365)
+}

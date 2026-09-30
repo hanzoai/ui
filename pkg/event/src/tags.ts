@@ -22,6 +22,14 @@
 // Consent Mode v2 is set denied before gtag.js is fetched and updated on every
 // choice. A choice that allows more loads the rest with no reload.
 //
+// WHO IS ASKING. Cloud classifies the visitor (`audience` on the tag config), and
+// the page adds what only a browser sees (automated.ts): a program — automation, a
+// crawler, a cloud provider's address, a driven browser — loads nothing; the site's
+// own team — a member of the site's org by the IAM bearer `token` supplies, an
+// address in the project's internal networks, or a browser marked `?hz_internal=1` —
+// loads Google Analytics alone, tagged `traffic_type: internal`, and no ad pixel.
+// Cloud's word marks the browser, so it stays the team's after sign-out.
+//
 // ONE EVENT ID. `track` mints it, fires the browser pixels with it, and records
 // it on our stream with the list of pixels that fired (`tags`). Cloud forwards
 // the same moment server-side under the same id, and each platform keeps one
@@ -36,7 +44,7 @@ import { CONSENT_EVENT, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
-import { automated, internal } from './automated'
+import { automated, internal, mark } from './automated'
 import { uuidv7 } from './uid'
 
 export interface BrowserTag {
@@ -55,7 +63,16 @@ export interface TagOptions {
   base?: string
   /** Domains one visit crosses, so GA4 keeps it one session. */
   domains?: string[]
+  /**
+   * The signed-in person's IAM access token, sent as the bearer on the tag-config
+   * request: a member of the site's org is its own team. A site with IAM passes its
+   * token getter; none, or no token, asks as a stranger.
+   */
+  token?: () => string | undefined
 }
+
+/** Who cloud says the visitor is: a program, the site's own team, or a person. */
+export type Audience = 'bot' | 'internal' | 'person'
 
 type Call = (...args: unknown[]) => void
 type Page = {
@@ -73,6 +90,7 @@ type Page = {
 const page = (): Page => window as unknown as Page
 
 let tags: BrowserTag[] = []
+let audience: Audience = 'person'
 let configured = false
 let options: TagOptions = {}
 const loaded = new Set<string>()
@@ -123,6 +141,12 @@ function script(src: string, onload?: () => void, onerror?: () => void): void {
   if (onerror) s.onerror = onerror
   document.head.appendChild(s)
 }
+
+/** A program: cloud said so, or the browser is driven. */
+const bot = (): boolean => audience === 'bot' || automated()
+
+/** The site's own team: cloud said so, or the browser is marked. */
+const team = (): boolean => audience === 'internal' || internal()
 
 // ── Google ──────────────────────────────────────────────────────────────
 
@@ -182,7 +206,7 @@ function loadGoogle(ids: string[]): void {
     loaded.add(id)
     gtag('config', id, {
       ...(options.domains ? { linker: { domains: options.domains } } : {}),
-      ...(internal() ? { traffic_type: 'internal' } : {}),
+      ...(team() ? { traffic_type: 'internal' } : {}),
     })
   }
 }
@@ -276,9 +300,9 @@ function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
   capture(c)
-  // A driven browser loads no platform's pixel; a teammate's loads Google
-  // Analytics only, tagged internal (automated.ts).
-  const on = automated() ? [] : tags.filter((t) => allowed(t, c) && (t.type === 'ga' || !internal()))
+  // A program loads no platform's pixel; the site's own team loads Google
+  // Analytics only, tagged internal.
+  const on = bot() ? [] : tags.filter((t) => allowed(t, c) && (t.type === 'ga' || !team()))
   const ids = on.filter((t) => t.type === 'ga' || t.type === 'gads').map((t) => t.id)
   if (ids.length) {
     consentMode(c, !loaded.has('consent'))
@@ -321,13 +345,21 @@ export function start(o: TagOptions = {}): () => void {
       configAnswered = true
       apply()
     }
+    const url = `${base}/v1/project/tags?${q}`
+    const bearer = tokenOf(o)
+    const get = (auth?: string) => fetch(url, auth ? { headers: { Authorization: `Bearer ${auth}` } } : undefined)
     // A page never waits on its tag config: an unreachable cloud is an empty set.
     const cap = setTimeout(() => answer([]), 3000)
-    fetch(`${base}/v1/project/tags?${q}`)
+    // An origin cloud does not admit refuses the bearer's preflight; the set is
+    // public, so it is asked for again as a stranger.
+    get(bearer)
+      .catch((e: unknown) => (bearer ? get() : Promise.reject(e)))
       .then((r) => (r.ok ? r.json() : { tags: [] }))
-      .then((j: { tags?: BrowserTag[]; consent?: unknown }) => {
+      .then((j: { tags?: BrowserTag[]; consent?: unknown; audience?: unknown }) => {
         clearTimeout(cap)
         serve(j.consent)
+        if (j.audience === 'bot' || j.audience === 'internal') audience = j.audience
+        if (audience === 'internal') mark()
         answer(Array.isArray(j.tags) ? j.tags : [])
       })
       .catch(() => {
@@ -338,6 +370,15 @@ export function start(o: TagOptions = {}): () => void {
   return () => {
     removeEventListener(CONSENT_EVENT, apply)
     removeEventListener('pagehide', pagehide)
+  }
+}
+
+/** The site's token, or none: a getter that throws asks as a stranger, never breaks the page. */
+function tokenOf(o: TagOptions): string | undefined {
+  try {
+    return o.token?.() || undefined
+  } catch {
+    return undefined
   }
 }
 

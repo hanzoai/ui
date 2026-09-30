@@ -118,6 +118,85 @@ describe('a teammate’s browser', () => {
   })
 })
 
+describe('the audience cloud names', () => {
+  const answering = (b: { requests: string[] }, body: Record<string, unknown>, seen: Array<RequestInit | undefined> = []) =>
+    put('fetch', async (url: string, init?: RequestInit) => {
+      b.requests.push(url)
+      seen.push(init)
+      return { ok: true, json: async () => ({ ...TAGS, ...body }) }
+    })
+
+  it('a bot loads nothing, even where the region presumes consent', async () => {
+    const b = browser('America/New_York')
+    answering(b, { audience: 'bot' })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts).toEqual([])
+  })
+
+  it('the team loads Google alone, tagged internal, and the browser stays marked', async () => {
+    const b = browser('America/New_York')
+    answering(b, { audience: 'internal' })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts.length).toBeGreaterThan(0)
+    expect(b.scripts.every((s) => s.includes('googletagmanager.com'))).toBe(true)
+    const config = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a)).filter((a) => a[0] === 'config')
+    expect(config.length).toBeGreaterThan(0)
+    for (const c of config) expect(c[2]).toMatchObject({ traffic_type: 'internal' })
+    expect(b.jar.get('hz_internal')).toBe('1')
+  })
+
+  it('a person loads every tag, untagged, and is not marked', async () => {
+    const b = browser('America/New_York')
+    answering(b, { audience: 'person' })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.scripts.map((s) => new URL(s).hostname)).toContain('connect.facebook.net')
+    const config = (g.window as { dataLayer: IArguments[] }).dataLayer.map((a) => Array.from(a)).filter((a) => a[0] === 'config')
+    for (const c of config) expect(c[2]).not.toHaveProperty('traffic_type')
+    expect(b.jar.has('hz_internal')).toBe(false)
+  })
+
+  it('sends the site’s IAM token as the bearer, and nothing without one', async () => {
+    const b = browser('America/New_York')
+    const seen: Array<RequestInit | undefined> = []
+    answering(b, {}, seen)
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x', token: () => 'jwt-abc' })
+    await tick()
+    expect(seen[0]).toEqual({ headers: { Authorization: 'Bearer jwt-abc' } })
+
+    vi.resetModules()
+    const c = browser('America/New_York')
+    const none: Array<RequestInit | undefined> = []
+    answering(c, {}, none)
+    const again = await import('./index')
+    again.startTags({ key: 'pk-x', token: () => undefined })
+    await tick()
+    expect(none).toEqual([undefined])
+  })
+
+  it('a refused bearer asks again as a stranger', async () => {
+    const b = browser('America/New_York')
+    const seen: Array<RequestInit | undefined> = []
+    put('fetch', async (url: string, init?: RequestInit) => {
+      seen.push(init)
+      if (init) throw new TypeError('Failed to fetch')
+      b.requests.push(url)
+      return { ok: true, json: async () => TAGS }
+    })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x', token: () => 'jwt-abc' })
+    await tick()
+    expect(seen).toEqual([{ headers: { Authorization: 'Bearer jwt-abc' } }, undefined])
+    expect(b.scripts.map((s) => new URL(s).hostname)).toContain('www.googletagmanager.com')
+  })
+})
+
 describe('after accepting', () => {
   it('loads Google, Meta, LinkedIn, X and TikTok with no reload', async () => {
     const b = browser('Europe/Berlin')
