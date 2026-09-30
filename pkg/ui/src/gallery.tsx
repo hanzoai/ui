@@ -92,7 +92,8 @@ import { SignIn } from './auth'
 import { ChoiceCard, ChoiceGroup, Stepper } from './backends/gui'
 import { Page as OnboardingPage } from './onboarding/frame'
 import { adopt } from './onboarding/plans'
-import { Enterprise, Plans, Seats, TeamName, UseCards } from './onboarding/screens'
+import { CreateAccount } from './onboarding/account'
+import { Enterprise, Plans, Pro, Seats, TeamName, UseCards } from './onboarding/screens'
 
 // The onboarding screens price from the live catalog, which a render has not read;
 // these rows stand in for it so every screen draws (the prices are not shipped).
@@ -1081,12 +1082,17 @@ export const Gallery = () => (
       <IamProvider config={{ serverUrl: 'https://hanzo.id', clientId: 'hanzo-gallery', redirectUri: 'https://hanzo.ai/auth/callback' }} autoInit={false}>
         <SignIn />
         <SignIn mode="signup" />
+        <SignIn frame={false} />
       </IamProvider>
+      <CreateAccount email="you@example.com" onCreate={NOOP} onOther={NOOP} />
+      <OnboardingPage site="Hanzo" title="Do more with Hanzo Pro" width={340}>
+        <Pro interval="annual" setInterval={NOOP} onPro={NOOP} onFree={NOOP} onAll={NOOP} />
+      </OnboardingPage>
       <OnboardingPage site="Hanzo" title="How are you planning to use Hanzo?" back={NOOP}>
         <UseCards onPick={NOOP} />
       </OnboardingPage>
       <OnboardingPage site="Hanzo" title="Plans that grow with you" busy width={1140}>
-        <Plans interval="annual" setInterval={NOOP} onFree={NOOP} onPick={NOOP} />
+        <Plans interval="annual" setInterval={NOOP} onFree={NOOP} onPick={NOOP} onTeam={NOOP} />
       </OnboardingPage>
       <OnboardingPage site="Hanzo" title="Let’s create your team" center>
         <TeamName api="" onCreated={NOOP} />

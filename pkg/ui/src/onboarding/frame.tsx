@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from 'react'
+import { createContext, useContext, type ReactNode } from 'react'
 import { HanzoMark } from '@hanzogui/shell'
 import { ArrowLeft } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
@@ -9,6 +9,16 @@ import { Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui
 import { Spinner } from '../backends/gui/spinner'
 import { ToggleGroup, ToggleGroupItem } from '../backends/gui/toggle-group'
 import type { Interval } from './plans'
+
+const Brand = createContext(true)
+
+/**
+ * Wrap onboarding in a host whose own shell already draws the logo and the page's
+ * `main` (a bare masthead), so the pages draw neither a second logo nor a second `main`.
+ */
+export function Bare({ children }: { children: ReactNode }) {
+  return <Brand.Provider value={false}>{children}</Brand.Provider>
+}
 
 /**
  * One page of onboarding: the product's mark, a title, a line under it, and the
@@ -25,6 +35,7 @@ export function Page({
   width = 480,
   start,
   busy,
+  foot,
 }: {
   site: string
   title: string
@@ -36,20 +47,25 @@ export function Page({
   /** Left-align the title and the line under it with the column, as a form does. */
   start?: boolean
   busy?: boolean
+  /** A quiet line at the foot of the page, under everything: who the email is, a way out. */
+  foot?: ReactNode
 }) {
+  const brand = useContext(Brand)
   return (
-    <YStack render="main" aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
+    <YStack render={brand ? 'main' : 'div'} aria-busy={busy || undefined} bg="$background" minH="100vh" items="center" justify={center ? 'center' : 'flex-start'} gap="$4" pt={center ? 96 : 28} pb={96} px="$4">
       {back ? (
         <Button type="button" variant="ghost" size="icon-lg" aria-label="Back" position="absolute" t={20} l={20} rounded="$10" onClick={back}>
           <ArrowLeft size={18} />
         </Button>
       ) : null}
-      <XStack items="center" gap="$2.5" mb="$5">
-        <HanzoMark size={20} />
-        <SizableText size="$5" fontWeight="500" color="$ink">
-          {site}
-        </SizableText>
-      </XStack>
+      {brand ? (
+        <XStack items="center" gap="$2.5" mb="$5">
+          <HanzoMark size={20} />
+          <SizableText size="$5" fontWeight="500" color="$ink">
+            {site}
+          </SizableText>
+        </XStack>
+      ) : null}
       {title || lede ? (
         <YStack width="100%" maxW={start ? width : 720} items={start ? 'flex-start' : 'center'} gap="$3">
           {title ? (
@@ -68,6 +84,11 @@ export function Page({
       {children ? (
         <YStack width="100%" maxW={width} items="stretch" gap="$4" mt="$2">
           {children}
+        </YStack>
+      ) : null}
+      {foot ? (
+        <YStack position="absolute" b={32} l={0} r={0} items="center" gap="$1" px="$4">
+          {foot}
         </YStack>
       ) : null}
     </YStack>

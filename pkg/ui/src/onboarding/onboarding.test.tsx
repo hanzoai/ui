@@ -3,7 +3,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import { CATALOG } from './catalog.fixture'
 import { adopt, has, item, lines, offer, period, saving, unit } from './plans'
-import { chatStep, step } from './state'
+import { chatStep, NEW_WITHIN, owesTerms, step } from './state'
 import { ROLES } from './roles'
 
 describe('plans', () => {
@@ -41,9 +41,10 @@ describe('plans', () => {
 })
 
 describe('steps', () => {
-  it('walks use, then plans or team, then done, and resumes where it stopped', () => {
-    expect(step({})).toBe('use')
-    expect(step({ use: 'personal' })).toBe('plans')
+  it('opens on Hanzo Pro, then team or done, and resumes where it stopped', () => {
+    expect(step({})).toBe('pro')
+    expect(step({ use: 'personal' })).toBe('pro')
+    expect(step({ plan: 'free' })).toBe('done')
     expect(step({ use: 'personal', plan: 'free' })).toBe('done')
     expect(step({ use: 'team' })).toBe('team')
     expect(step({ use: 'team', team: 'acme' })).toBe('seats')
@@ -58,6 +59,23 @@ describe('steps', () => {
     expect(chatStep({ notice: true }, true)).toBe('role')
     expect(chatStep({ notice: true, named: true }, false)).toBe('role')
     expect(chatStep({ notice: true, role: 'Founder' }, true)).toBe('done')
+  })
+})
+
+describe('terms', () => {
+  const now = Date.parse('2026-09-30T12:00:00Z')
+  const made = (msAgo: number) => new Date(now - msAgo).toISOString()
+  const accepted = { terms: 'terms-2026-09-30', aup: 'aup-2026-09-30', time: made(0), method: 'signed-in' }
+
+  it('asks an account made a moment ago that has accepted nothing', () => {
+    expect(owesTerms(undefined, made(60_000), now)).toBe(true)
+    expect(owesTerms(undefined, made(NEW_WITHIN + 1), now)).toBe(false)
+  })
+
+  it('never asks a returning account, or one that accepted, or one with no creation time', () => {
+    expect(owesTerms(undefined, made(30 * 24 * 3600_000), now)).toBe(false)
+    expect(owesTerms(accepted, made(60_000), now)).toBe(false)
+    expect(owesTerms(undefined, undefined, now)).toBe(false)
   })
 })
 

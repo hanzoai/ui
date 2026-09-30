@@ -1,5 +1,5 @@
 import { bearer } from '../auth/session'
-import type { Progress, Stored } from './state'
+import type { Accepted, Policy, Progress, Stored } from './state'
 
 /** Where the IAM and billing routes answer from. api.hanzo.ai answers CORS for every Hanzo host. */
 export const API = 'https://api.hanzo.ai'
@@ -42,7 +42,12 @@ export interface Account {
   owner?: string
   name?: string
   displayName?: string
+  email?: string
+  createdTime?: string
 }
+
+/** PUT /v1/iam/terms: IAM records that the signed-in caller accepted these versions, with the time and the method. */
+export const acceptTerms = (base: string, policy: Policy) => call<Accepted>(base, '/v1/iam/terms', { method: 'PUT', body: JSON.stringify(policy) })
 
 export const account = (base: string) => call<Account>(base, '/v1/iam/account')
 export const rename = (base: string, displayName: string) => call<Account>(base, '/v1/iam/account', { method: 'PUT', body: JSON.stringify({ displayName }) })

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
+import * as Iam from '@hanzo/iam'
 import { IAM, SecondFactor, type Methods } from '@hanzo/iam'
 import { useIam } from '@hanzo/iam/react'
 import { HanzoMark } from '@hanzogui/shell'
@@ -11,6 +12,8 @@ import { Card, CardContent } from '../backends/gui/card'
 import { Field, FieldError, FieldLabel, FieldSeparator } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
+import { CreateAccount } from '../onboarding/account'
+import type { Policy } from '../onboarding/state'
 
 /**
  * Signing in and signing up, drawn on the host site's own page.
@@ -39,7 +42,7 @@ import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../back
 
 export type Mode = 'login' | 'signup'
 
-type Step = 'email' | 'password' | 'code' | 'create'
+type Step = 'email' | 'password' | 'code' | 'create' | 'terms'
 
 export interface Provider {
   name: string
@@ -48,6 +51,20 @@ export interface Provider {
 
 export interface SignInProps {
   mode?: Mode
+  /**
+   * Draw the card alone, for a page that has its own brand, headline and other-mode
+   * line (a hero): no outer padding or minimum height, no brand row, no heading and
+   * no "New to Hanzo?" line. Default true.
+   */
+  frame?: boolean
+  /**
+   * The versions of the Terms and the Acceptable Use Policy. An address proved by a
+   * code that holds no account is asked to accept them on "Let's create your
+   * account" before IAM makes the account. Without it, that address is refused as
+   * it always was.
+   */
+  policy?: Policy
+  aupPath?: string
   /** The product's name on the card: `Hanzo`. */
   site?: string
   /** Where IAM sends the browser with the code. Default `/auth/callback`. */
@@ -81,10 +98,23 @@ const FIRST: Methods = {
   ],
 }
 
+/** IAM's answer to a proven code for an address with no account (the SDK's typed `SignupRequired`). */
+const signupRequired = (err: unknown): boolean => {
+  const kind = (Iam as Record<string, unknown>).SignupRequired
+  return (typeof kind === 'function' && err instanceof (kind as new (...args: never[]) => Error)) || (err as { name?: string } | null)?.name === 'SignupRequired'
+}
+
+/** The SDK call that makes the account with the code and the accepted versions; absent from an SDK that predates it. */
+type Creating = { createAccountWithCode: (email: string, code: string, policy: Policy) => Promise<string | void> }
+const creates = (client: unknown): client is Creating => typeof (client as Partial<Creating>).createAccountWithCode === 'function'
+
 const said = (err: unknown): string => (err instanceof Error && err.message ? err.message : 'Something went wrong. Try again.')
 
 export function SignIn({
   mode = 'login',
+  frame = true,
+  policy,
+  aupPath = '/aup',
   site = 'Hanzo',
   callbackPath = '/auth/callback',
   providers,
@@ -212,7 +242,15 @@ export function SignIn({
       void run(() => iam.loginWithPassword(address, password))
     } else if (step === 'code') {
       commit('code')
-      void run(() => iam.loginWithCode(address, code.trim()))
+      void run(async () => {
+        try {
+          return await iam.loginWithCode(address, code.trim())
+        } catch (err) {
+          // The code is good and the address has no account: ask for the terms before making one.
+          if (!signupRequired(err) || !policy || !creates(iam)) throw err
+          setStep('terms')
+        }
+      })
     } else if (step === 'create') {
       commit('email')
       void run(() => iam.signup({ email: address, password, code: code.trim(), name: name.trim() || undefined }))
@@ -227,22 +265,46 @@ export function SignIn({
   }
 
   const query = typeof window === 'undefined' ? '' : window.location.search
+  if (step === 'terms' && policy && creates(iam)) {
+    return (
+      <YStack position="fixed" t={0} l={0} r={0} b={0} z={1000} bg="$background" overflow="scroll">
+        <CreateAccount
+          site={site}
+          email={email.trim()}
+          busy={busy}
+          wrong={wrong}
+          termsPath={termsPath}
+          aupPath={aupPath}
+          onOther={back}
+          onCreate={() => {
+            commit('email')
+            track?.('terms_accepted', { method: 'email-code' })
+            void run(() => iam.createAccountWithCode(email.trim(), code.trim(), policy))
+          }}
+        />
+      </YStack>
+    )
+  }
   const title = signup ? `Create your ${site} account` : `Log in to ${site}`
   const one = busy ? 'One moment…' : null
 
   return (
-    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" minH={560} pt={112} pb={96} px="$4">
+    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" {...(frame ? { minH: 560, pt: 112, pb: 96, px: '$4' } : {})}>
       <Card width="100%" maxW={400}>
         <CardContent gap="$5">
-          <XStack items="center" gap="$2.5">
-            <HanzoMark size={20} />
-            <SizableText size="$5" fontWeight="500" color="$ink">
-              {site}
-            </SizableText>
-          </XStack>
-          <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0}>
-            {title}
-          </Heading>
+          {frame ? (
+            <>
+              <XStack items="center" gap="$2.5">
+                <HanzoMark size={20} />
+                <SizableText size="$5" fontWeight="500" color="$ink">
+                  {site}
+                </SizableText>
+              </XStack>
+              <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0}>
+                {title}
+              </Heading>
+            </>
+          ) : null}
 
           {step === 'email' ? (
             <>
@@ -326,12 +388,14 @@ export function SignIn({
           ) : null}
         </CardContent>
       </Card>
-      <Paragraph size="$2" color="$quiet" m={0}>
-        {signup ? 'Have an account? ' : `New to ${site}? `}
-        <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">
-          {signup ? 'Log in' : 'Create an account'}
-        </Anchor>
-      </Paragraph>
+      {frame ? (
+        <Paragraph size="$2" color="$quiet" m={0}>
+          {signup ? 'Have an account? ' : `New to ${site}? `}
+          <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">
+            {signup ? 'Log in' : 'Create an account'}
+          </Anchor>
+        </Paragraph>
+      ) : null}
     </YStack>
   )
 }

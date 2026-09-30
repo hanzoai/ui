@@ -53,6 +53,24 @@ describe('SignIn', () => {
   })
 })
 
+describe('SignIn frame', () => {
+  it('draws the card alone when the page brings its own brand, heading and other-mode line', () => {
+    const out = html(<SignIn frame={false} />).replace(/<style[\s\S]*?<\/style>/g, '')
+    expect(out).toContain('Continue with Google')
+    expect(out).toContain('for="hanzo-email"')
+    expect(out).not.toContain('<h1')
+    expect(out).not.toContain('Log in to Hanzo')
+    expect(out).not.toContain('New to Hanzo?')
+    expect(out).not.toMatch(/min-height|padding-top:\s*112/)
+  })
+
+  it('keeps the brand, the heading and the other-mode line by default', () => {
+    const out = html(<SignIn />)
+    expect(out).toContain('<h1')
+    expect(out).toContain('New to Hanzo?')
+  })
+})
+
 describe('session', () => {
   it('reads the bearer the SDK stored, and its expiry', () => {
     expect(bearer()).toBeNull()

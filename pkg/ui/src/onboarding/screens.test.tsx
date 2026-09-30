@@ -11,7 +11,8 @@ import config from '../gui-config'
 import { IntervalToggle, Page } from './frame'
 import { CATALOG } from './catalog.fixture'
 import { adopt } from './plans'
-import { Plans, Seats, UseCards } from './screens'
+import { CreateAccount } from './account'
+import { Plans, Pro, Seats, UseCards } from './screens'
 
 const html = (node: React.ReactNode) =>
   renderToStaticMarkup(
@@ -69,6 +70,54 @@ describe('plans', () => {
 
   it('names the interval toggle for screen readers', () => {
     expect(html(<IntervalToggle interval="monthly" onChange={noop} name="Pro" save={17} />)).toContain('aria-label="Billing interval for Pro"')
+  })
+})
+
+describe('pro', () => {
+  it('recommends one plan at the catalog price, with the way to stay free and the way to see the rest', () => {
+    const out = html(<Pro interval="monthly" setInterval={noop} onPro={noop} onFree={noop} onAll={noop} />)
+    expect(out).toContain('Recommended')
+    expect(out).toContain('Get Pro plan')
+    expect(out).toContain('Use Hanzo for free')
+    expect(out).toContain('View all plans')
+    expect(out).toContain('No commitment · Cancel anytime')
+    expect(out).toContain('$20')
+    expect(out).toContain('Yearly · Save 17%')
+    expect(out).not.toMatch(/Max|Free plan|Max 5x/)
+  })
+
+  it('prints a line ending in a colon as a heading, not a ticked feature', () => {
+    const out = html(<Pro interval="monthly" setInterval={noop} onPro={noop} onFree={noop} onAll={noop} />)
+    expect(out).toContain('Everything in Free and:')
+    expect(out.match(/Everything in Free and:/g)).toHaveLength(1)
+  })
+
+  it('shows the annual price as the catalog’s year over twelve', () => {
+    expect(html(<Pro interval="annual" setInterval={noop} onPro={noop} onFree={noop} onAll={noop} />)).toContain('$16.67')
+  })
+})
+
+describe('create account', () => {
+  const out = html(<CreateAccount email="a@b.co" onCreate={noop} onOther={noop} />)
+
+  it('asks one unticked box, names both documents and the age, and offers Create account', () => {
+    expect(out).toContain('Let’s create your account')
+    expect(out).toContain('A few things for you to review')
+    expect(out).toContain('href="/terms"')
+    expect(out).toContain('href="/aup"')
+    expect(out).toContain('at least 18 years of age')
+    expect(out).not.toMatch(/aria-checked="true"|data-state="checked"/)
+    expect(out).toContain('Create account')
+  })
+
+  it('keeps the button off until the box is ticked', () => {
+    const open = out.replace(/<style[\s\S]*?<\/style>/g, '').match(/(<button\b[^>]*>)(?:(?!<\/button>)[\s\S])*?Create account/)
+    expect(open?.[1]).toMatch(/disabled/)
+  })
+
+  it('says which address was verified and offers another', () => {
+    expect(out).toContain('Email verified as a@b.co')
+    expect(out).toContain('Use a different email')
   })
 })
 

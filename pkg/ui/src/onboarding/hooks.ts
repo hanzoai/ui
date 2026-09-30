@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { account, API, preferences, rename, saveProgress } from './api'
-import { step, type Progress, type Stored } from './state'
+import { account, acceptTerms, API, preferences, rename, saveProgress } from './api'
+import { chatStep, owesTerms, step, type Accepted, type Policy, type Progress, type Stored } from './state'
 
 export type Track = (name: string, props?: Record<string, unknown>) => void
 
@@ -13,6 +13,12 @@ export interface Session {
   trainOptIn: boolean | undefined
   /** The display name IAM holds, if any. */
   name: string
+  /** The verified address of the account. */
+  email: string
+  /** The "Let's create your account" page is owed (see `owesTerms`). */
+  owesTerms: boolean
+  /** Record the acceptance on the IAM user. */
+  accept: (policy: Policy) => Promise<Accepted>
   /** Merge a step into the stored progress (and the screen). */
   save: (patch: Progress) => Promise<void>
   setName: (name: string) => Promise<void>
@@ -28,6 +34,7 @@ export function useSession(api: string = API): Session {
   const [loading, setLoading] = useState(true)
   const [stored, setStored] = useState<Stored>({})
   const [name, setNameState] = useState('')
+  const [me, setMe] = useState<{ email: string; createdTime?: string }>({ email: '' })
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -35,8 +42,9 @@ export function useSession(api: string = API): Session {
     Promise.all([preferences(api).catch(() => ({}) as Stored), account(api).catch(() => null)]).then(([prefs, me]) => {
       if (!live) return
       setStored(prefs ?? {})
-      const a = me as { displayName?: string; name?: string } | null
+      const a = me as { displayName?: string; name?: string; email?: string; createdTime?: string } | null
       setNameState(a?.displayName?.trim() ?? '')
+      setMe({ email: a?.email ?? '', createdTime: a?.createdTime })
       setLoading(false)
     })
     return () => {
@@ -74,21 +82,40 @@ export function useSession(api: string = API): Session {
     [api],
   )
 
-  return { loading, progress: stored.onboarding ?? {}, trainOptIn: stored.train_opt_in, name, save, setName, setTrain, error }
+  const accept = useCallback(
+    async (policy: Policy) => {
+      const done = await acceptTerms(api, policy)
+      setStored((s) => ({ ...s, terms: done }))
+      return done
+    },
+    [api],
+  )
+
+  return { loading, progress: stored.onboarding ?? {}, trainOptIn: stored.train_opt_in, name, email: me.email, owesTerms: owesTerms(stored.terms, me.createdTime), accept, save, setName, setTrain, error }
 }
 
 /**
- * Whether this person still has an onboarding step to do: `null` while IAM has
- * not answered, so a gate never flashes the wrong screen. A failed read answers
- * `false` (nothing to do), because a broken read must not lock anyone out.
+ * Whether this person still has a first-run step to do, from the terms page to
+ * the role. A failed read answers `pending: false`, because a broken read must
+ * not lock anyone out.
  */
+export async function firstRun(api: string = API): Promise<{ pending: boolean; plan: string | undefined }> {
+  try {
+    const [s, me] = await Promise.all([preferences(api), account(api)])
+    const p = s?.onboarding ?? {}
+    const pending = owesTerms(s?.terms, me?.createdTime) || step(p) !== 'done' || chatStep(p, Boolean(me?.displayName?.trim())) !== 'done'
+    return { pending, plan: p.plan }
+  } catch {
+    return { pending: false, plan: undefined }
+  }
+}
+
+/** `firstRun` as a hook: `pending` is `null` while IAM has not answered, so a gate never flashes the wrong screen. */
 export function useOnboarded(api: string = API): { pending: boolean | null; plan: string | undefined } {
   const [state, setState] = useState<{ pending: boolean | null; plan: string | undefined }>({ pending: null, plan: undefined })
   useEffect(() => {
     let live = true
-    preferences(api)
-      .then((s) => live && setState({ pending: step(s?.onboarding ?? {}) !== 'done', plan: s?.onboarding?.plan }))
-      .catch(() => live && setState({ pending: false, plan: undefined }))
+    void firstRun(api).then((r) => live && setState(r))
     return () => {
       live = false
     }

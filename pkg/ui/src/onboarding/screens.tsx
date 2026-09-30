@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from 'react'
 import { Check, ChevronDown, User, Users } from '@hanzogui/lucide-icons-2'
+import { Badge } from '../backends/gui/badge'
 import { Button } from '../backends/gui/button'
 import { Card, CardContent } from '../backends/gui/card'
 import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
@@ -91,6 +92,30 @@ export function UseCards({ onPick, onAsk }: { onPick: (u: Use) => void; onAsk?: 
 
 /* ---------------------------------------------------------------- plans */
 
+/** A plan's features: a line ending in a colon is a heading for the ones under it, the rest are ticked. */
+function Features({ items }: { items: string[] }) {
+  return (
+    <YStack render="ul" p="$5" gap="$2.5" m={0}>
+      {items.map((f) =>
+        f.endsWith(':') ? (
+          <XStack key={f} render="li">
+            <SizableText size="$2" color="$ink" fontWeight="500">
+              {f}
+            </SizableText>
+          </XStack>
+        ) : (
+          <XStack key={f} render="li" items="flex-start" gap="$2.5">
+            <Check size={16} />
+            <SizableText size="$2" color="$quiet" flex={1}>
+              {f}
+            </SizableText>
+          </XStack>
+        ),
+      )}
+    </YStack>
+  )
+}
+
 function PlanCard({ id, cta, onPick, interval, setInterval, toggle, from }: { id: PlanId; cta: string; onPick: () => void; interval: Interval; setInterval: (i: Interval) => void; toggle?: boolean; from?: boolean }) {
   const o = offer(id)
   return (
@@ -122,21 +147,12 @@ function PlanCard({ id, cta, onPick, interval, setInterval, toggle, from }: { id
           </Paragraph>
         ) : null}
       </YStack>
-      <YStack render="ul" p="$5" gap="$2.5" m={0}>
-        {o.features.map((f) => (
-          <XStack key={f} render="li" items="flex-start" gap="$2.5">
-            <Check size={16} />
-            <SizableText size="$2" color="$quiet" flex={1}>
-              {f}
-            </SizableText>
-          </XStack>
-        ))}
-      </YStack>
+      <Features items={o.features} />
     </Card>
   )
 }
 
-export function Plans({ interval, setInterval, onFree, onPick }: { interval: Interval; setInterval: (i: Interval) => void; onFree: () => void; onPick: (p: PlanId) => void }) {
+export function Plans({ interval, setInterval, onFree, onPick, onTeam }: { interval: Interval; setInterval: (i: Interval) => void; onFree: () => void; onPick: (p: PlanId) => void; onTeam?: () => void }) {
   return (
     <YStack items="center" gap="$4" width="100%">
       <XStack flexWrap="wrap" justify="center" gap="$5" width="100%">
@@ -145,7 +161,57 @@ export function Plans({ interval, setInterval, onFree, onPick }: { interval: Int
         <PlanCard id="max_5x" cta="Get Max plan" onPick={() => onPick('max_5x')} interval={interval} setInterval={setInterval} from />
       </XStack>
       <Paragraph size="$1" color="$quiet" text="center" m={0}>
-        Prices are in US dollars. Usage limits apply, and plans are subject to change.
+        Prices are in US dollars. Usage limits apply. Prices and plans are subject to change at Hanzo’s discretion.
+      </Paragraph>
+      {onTeam ? (
+        <Button type="button" variant="link" size="sm" onClick={onTeam}>
+          Using Hanzo with a team?
+        </Button>
+      ) : null}
+    </YStack>
+  )
+}
+
+/** "Do more with Hanzo Pro": the one plan worth recommending, with the way to stay free and the way to see the rest. */
+export function Pro({ interval, setInterval, onPro, onFree, onAll }: { interval: Interval; setInterval: (i: Interval) => void; onPro: () => void; onFree: () => void; onAll: () => void }) {
+  const o = offer('dev')
+  return (
+    <YStack items="center" gap="$4" width="100%">
+      <IntervalToggle interval={interval} onChange={setInterval} name={o.name} save={saving('dev')} />
+      <Card aria-label={o.name} bg="$panel" width="100%" gap="$0" py={0}>
+        <YStack p="$5" gap="$3" borderBottomWidth={1} borderBottomColor="$borderColor">
+          <XStack justify="flex-end" minH={24}>
+            <Badge variant="secondary">Recommended</Badge>
+          </XStack>
+          <Heading render="h2" size="$7" fontWeight="600" color="$ink" m={0}>
+            {o.name}
+          </Heading>
+          <Paragraph size="$3" color="$quiet" m={0}>
+            {o.blurb}
+          </Paragraph>
+          <XStack items="center" gap="$2" my="$2">
+            <SizableText size="$10" fontWeight="600" color="$ink">
+              {money(unit('dev', interval))}
+            </SizableText>
+            <SizableText size="$1" color="$quiet">
+              {`USD / month\nbilled ${interval === 'annual' && yearly('dev') ? 'yearly' : 'monthly'}`}
+            </SizableText>
+          </XStack>
+          <Primary onClick={onPro}>{`Get ${o.name} plan`}</Primary>
+          <Button type="button" variant="secondary" size="lg" rounded="$10" onClick={onFree}>
+            Use Hanzo for free
+          </Button>
+          <Paragraph size="$1" color="$quiet" text="center" m={0}>
+            No commitment · Cancel anytime
+          </Paragraph>
+        </YStack>
+        <Features items={o.features} />
+      </Card>
+      <Button type="button" variant="secondary" size="lg" width="100%" onClick={onAll}>
+        View all plans
+      </Button>
+      <Paragraph size="$1" color="$quiet" text="center" m={0}>
+        Prices are in US dollars. Prices and plans are subject to change at Hanzo’s discretion.
       </Paragraph>
     </YStack>
   )

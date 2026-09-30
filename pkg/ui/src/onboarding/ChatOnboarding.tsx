@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type ComponentType, type FormEvent, type ReactNode } from 'react'
-import { Binoculars, Calendar, ChartLine, Clock, Code, Dna, FileText, Gavel, GraduationCap, LayoutGrid, Library, Lightbulb, MessageSquare, Palette, Pencil, Presentation, User } from '@hanzogui/lucide-icons-2'
+import { Binoculars, Calendar, ChartLine, Clock, Code, Dna, EyeOff, FileText, Gavel, GraduationCap, HeartHandshake, LayoutGrid, Library, Lightbulb, MessageSquare, Palette, Pencil, Presentation, User } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
 import { Field } from '../backends/gui/field'
 import { Input } from '../backends/gui/input'
@@ -80,11 +80,11 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
     return (
       <Page site={site} title="Before your first chat" lede="A few things to know, plus one setting to review" center width={512}>
         <Panel label="Before your first chat">
-          <Row icon={<Binoculars size={20} />}>
+          <Row icon={<EyeOff size={20} />}>
             <b>Ad-free chats:</b> We won’t show you ads or let advertisers influence what {site} says.
           </Row>
           {safeguards ? (
-            <Row icon={<User size={20} />}>
+            <Row icon={<HeartHandshake size={20} />}>
               <b>Built to help, not harm:</b> Automated safeguards protect your chats from violent, abusive, or deceptive content.
             </Row>
           ) : null}
