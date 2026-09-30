@@ -25,6 +25,7 @@ export {
   type AccordionTriggerProps,
   type AccordionContentProps,
 } from './accordion'
+export { Disclosure, type DisclosureProps } from './disclosure'
 export {
   AlertDialog,
   AlertDialogTrigger,

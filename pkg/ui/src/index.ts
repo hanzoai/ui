@@ -67,13 +67,13 @@ export {
   InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot,
   NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
   NavigationMenuList, NavigationMenuTrigger, Drawer, DrawerContent, DrawerHandle, DrawerTrigger,
-  Accordion, AccordionContent, AccordionItem, AccordionTrigger, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger, Disclosure, AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, HoverCard, HoverCardContent, HoverCardTrigger, RadioGroup, RadioGroupItem, ToggleGroup, ToggleGroupItem, } from './backends/gui'
 
 export type {
   AspectRatioProps, BadgeProps, BadgeVariant, ButtonProps, ButtonSize, ButtonVariant,
   CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps, SpinnerProps,
   ResizablePanelGroupProps, ResizablePanelProps,
-  AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
+  DisclosureProps, AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
   ToggleGroupSize, ToggleGroupVariant,
   CarouselApi, CarouselOptions, CarouselProps, MediaStackProps,
   NavItemsProps, StepIndicatorProps, InputOTPProps, OTPSlot,

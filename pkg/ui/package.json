@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.27.25",
+  "version": "8.27.26",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -111,6 +111,12 @@
       "default": "./dist/auth/index.js"
     },
     "./auth.css": "./dist/auth.css",
+    "./marketing": {
+      "types": "./dist/marketing/index.d.ts",
+      "import": "./dist/marketing/index.js",
+      "require": "./dist/marketing/index.cjs",
+      "default": "./dist/marketing/index.js"
+    },
     "./product": {
       "types": "./dist/product/index.d.ts",
       "import": "./dist/product/index.js",
