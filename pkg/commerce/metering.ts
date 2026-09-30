@@ -47,8 +47,8 @@
 
 import { Commerce, CommerceApiError } from './client'
 
-/** Canonical in-cluster commerce address (matches the gateway default). */
-export const DEFAULT_COMMERCE_URL = 'http://commerce.hanzo.svc.cluster.local:8001'
+/** The public API origin; a deployment inside the cluster sets COMMERCE_URL. */
+export const DEFAULT_COMMERCE_URL = 'https://api.hanzo.ai'
 
 export type MeteringConfig = {
   /**
