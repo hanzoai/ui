@@ -13,6 +13,13 @@ on:
     # same property that makes the manual dispatch below safe.
   workflow_dispatch:
 
+# One release at a time: each run publishes whatever is ahead of npmjs, so a
+# waiting run loses nothing by being replaced by a newer one, and concurrent runs
+# only slow each other's suites.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   detect-changes:
     runs-on: [linux-amd64]

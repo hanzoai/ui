@@ -21,6 +21,9 @@ export default defineConfig({
   resolve: { alias },
   test: {
     environment: 'node',
+    // The mounting suites take 7-11 s when releases share a runner; vitest's 5 s
+    // default reads that as a failure of the component rather than of the wait.
+    testTimeout: 60_000,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     setupFiles: ['./vitest.setup.ts'],
     // Aliases only reach source that vite transforms, and these deps are shipped
