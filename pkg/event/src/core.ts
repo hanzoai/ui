@@ -105,6 +105,12 @@ function normalizeError(err: unknown): Exception {
 // unload listeners RN doesn't have), while `capture()`/`flush()` — which are NOT
 // gated on this and post through plain `fetch` — still emit. So the client is
 // inert-safe under SSR/Node and live on RN, without a second transport.
+/** The screen and language a page view carries, for the readers that derive device and locale. */
+const viewport = (): Record<string, string> =>
+  isBrowser()
+    ? { screen: `${window.screen?.width ?? 0}x${window.screen?.height ?? 0}`, language: navigator.language || '' }
+    : {}
+
 const isBrowser = () => typeof window !== 'undefined' && typeof document !== 'undefined'
 
 /** serializeBatch stringifies a batch, salvaging what it can. `properties` is
@@ -186,13 +192,15 @@ class DefaultTransport implements Transport {
     // for an origin that cannot pass one. A JWT is first-party by construction, so
     // it keeps the header and the session it travels with, and so does the error
     // plane, which names its own envelope type.
-    const simple = opts.ingestKey !== undefined && opts.contentType === undefined
+    const simple = opts.ingestKey !== undefined && opts.token === undefined && opts.contentType === undefined
     const headers: Record<string, string> = {
       'Content-Type': simple ? BEACON_CONTENT_TYPE : (opts.contentType ?? 'application/json'),
     }
-    const bearer = simple ? undefined : (opts.ingestKey ?? opts.token)
+    // A signed-in page sends the key (which project) in the query AND the person's bearer
+    // (who) in the header; the bearer never replaces the key.
+    const bearer = simple ? undefined : (opts.token ?? opts.ingestKey)
     if (bearer) headers.Authorization = `Bearer ${bearer}`
-    void fetch(simple ? appendQuery(url, 'ingest_key', opts.ingestKey!) : url, {
+    void fetch(opts.ingestKey ? appendQuery(url, 'ingest_key', opts.ingestKey) : url, {
       method: 'POST',
       headers,
       body,
@@ -375,7 +383,7 @@ export class Analytics {
     const view = (p ?? '') + '\0' + (isBrowser() ? window.location.href : '')
     if (view === this.counted) return
     this.counted = view
-    this.enqueue('pageview', PAGEVIEW, { path: p, properties })
+    this.enqueue('pageview', PAGEVIEW, { path: p, properties: { ...viewport(), ...properties } })
   }
 
   /** capture records a named product event with optional properties. Commerce
@@ -441,20 +449,10 @@ export class Analytics {
     this.queue = []
     this.clearTimer()
 
-    // A publishable key and a bearer JWT are mutually exclusive credentials, and the
-    // BEARER WINS. It names a real principal and resolves to THAT person's org;
-    // a pk- names one org for everybody holding it. So the key is what attributes
-    // a visitor nobody has vouched for, and it must never displace someone who
-    // has been.
-    //
-    // The precedence used to run the other way, which was survivable only while
-    // the key had to be passed in code. Once it also resolves from the build env,
-    // key-wins means setting one variable silently blanks every signed-in user's
-    // token and re-files their events under whichever org minted the key — on a
-    // console served to several brands from one bundle, that is a cross-tenant
-    // leak introduced by an env var.
+    // Two kinds of credential, and both ride when both are held: the publishable key
+    // names the project, the bearer names the person. The bearer never replaces the key.
     const token = this.cfg.getToken?.() ?? undefined
-    const key = token ? undefined : this.cfg.ingestKey?.trim() || undefined
+    const key = this.cfg.ingestKey?.trim() || undefined
     // Only a bearer JWT blocks the beacon: sendBeacon cannot set an Authorization
     // header. A pk- rides ?ingest_key; a cookie rides credentials.
     const useBeacon = beacon && !token

@@ -69,6 +69,11 @@ export const SITE_KEY: Readonly<Record<string, string>> = Object.freeze({
   'platform.hanzo.ai': 'pk-My1RpZLEUnTj8vAdPbWKYdDUuhxZJ4dVjHcwjZN4rZ8',
   'docs.hanzo.ai': 'pk-jukhtjMT2ymoeBDAeFjINQWlBv-v9sNn1TPztiCrrwk',
   'hanzo.bot': 'pk-W5d7Mn7ZukT7igyscIy6Pqe8JpA0Ge604Yn4xNR4JCU',
+  'hanzo.chat': 'pk-ATxWeB2jNyRSxDgqnkGoDj3CCbzrmTxSktUh9zlrO-E',
+  'hanzo.id': 'pk-_GVF3KlaqprlPHDumBMRFeFU1lIGOaarQfgimNVDIo8',
+  'hanzo.industries': 'pk-Vh1wvL2HqIAv9qpVvmrznTI9uMHrTD-jyIC-vnlBsgY',
+  'hanzo.market': 'pk-DN3xQFa0H61epUVg9OkiOYLzCdteNt9hE6f-S-ednjQ',
+  'hanzo.network': 'pk-YJ2eiA_7ckLStMPte8Ar8FsmRp_ycmeIeRbpGprZYmM',
   'cloud.hanzo.ai': 'pk-RAfEGHPoNdCEU9fnA_cPd_Xo9Tci44rlYQV9xuJ1Ob0',
 })
 
@@ -105,6 +110,29 @@ function settled(): boolean {
 
 function flush(): void {
   if (settled() || leaving) held.splice(0).forEach((send) => send())
+}
+
+/**
+ * Resolves once every tag this visitor's choice loads has taken the page view, or after
+ * `limit` ms, whichever is first: the tag set has answered, gtag.js has loaded or failed,
+ * and Meta's library has replaced the stub that queued the call. A page that is about to
+ * leave waits on this so the visit is counted where it arrived. A tag the choice does not
+ * load is not waited for.
+ */
+export function ready(limit = 3000): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve()
+  const start = Date.now()
+  const meta = () => {
+    const fbq = page().fbq
+    return ![...loaded].some((k) => k.startsWith('meta:')) || typeof fbq?.callMethod === 'function'
+  }
+  return new Promise((resolve) => {
+    const tick = () => {
+      if ((configured && settled() && meta()) || Date.now() - start >= limit) return resolve()
+      setTimeout(tick, 100)
+    }
+    tick()
+  })
 }
 
 function script(src: string, onload?: () => void, onerror?: () => void): void {

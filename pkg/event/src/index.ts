@@ -29,7 +29,7 @@ export {
 } from './consent'
 export type { Choice, Region } from './consent'
 export { CLICK_IDS, capture as captureClick, touch } from './touch'
-export { start as startTags, track, mirror, reach, visit, SITE_KEY } from './tags'
+export { start as startTags, ready as tagsReady, track, mirror, reach, visit, SITE_KEY } from './tags'
 export type { BrowserTag, TagOptions } from './tags'
 export { commerceItem, worth } from './items'
 export type { CommerceItem, PlanLine } from './items'

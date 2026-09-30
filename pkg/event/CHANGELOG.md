@@ -1,5 +1,13 @@
 # @hanzo/event
 
+## 0.3.50
+
+### Patch Changes
+
+- `tagsReady(limit)` resolves once the tags the visitor's choice loads have taken the page view, for a page about to leave.
+- A page view carries `screen` and `language`.
+- The hanzo org's default ingest key is the hanzo.ai project's, so every first-party site's events reach project 1. `SITE_KEY` names hanzo.chat, hanzo.id, hanzo.industries, hanzo.market and hanzo.network, each with its own GA4 stream.
+
 ## 0.3.49
 
 ### Patch Changes

@@ -93,7 +93,7 @@ export const ORG_DOMAIN: Readonly<Record<string, readonly string[]>> = Object.fr
  * recreate a project, move BOTH.
  */
 export const ORG_KEY: Keyring = Object.freeze({
-  hanzo: 'pk-rM_CdaF2MQckGCrla113SrR1oH4zvqN8xh2I95Z9tY8',
+  hanzo: 'pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc',
   lux: 'pk-gUZp6ZVfhJzSwK-rb4oLbVkpCnMBx5uSCpxf_5yEhQk',
   zoo: 'pk-3TKpKnERV9AQSsBUERWkZejC1O1mUxc1jRzsP3MPbs4',
 })

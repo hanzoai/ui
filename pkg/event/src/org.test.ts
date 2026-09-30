@@ -127,3 +127,12 @@ describe('a surface that configures nothing', () => {
     expect((none as unknown as { cfg: { ingestKey?: string } }).cfg.ingestKey).toBeUndefined()
   })
 })
+
+describe('the hanzo org files under the hanzo.ai project', () => {
+  it('names hanzo.network, hanzo.market, hanzo.industries and hanzo.agency', () => {
+    for (const host of ['hanzo.network', 'hanzo.market', 'hanzo.industries', 'hanzo.agency']) {
+      expect(orgOf(host)).toBe('hanzo')
+      expect(keyFor(host)).toBe('pk-CmfLA2K6kvsPflrS9DSkt06H_kSoQB_21sjedt6VJdc')
+    }
+  })
+})

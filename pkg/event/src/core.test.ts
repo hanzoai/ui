@@ -396,17 +396,17 @@ describe('Analytics capture', () => {
     expect(tx.sent[0].ingestKey).toBeUndefined()
   })
 
-  it('a signed-in bearer WINS over a key from the build env', () => {
-    // The leak this closes: one console bundle is served to several brands, and a
-    // pk- names ONE org. If an env-sourced key displaced the bearer, every
-    // signed-in user's events would re-file under whichever org minted the key.
+  it('a signed-in page sends the key AND the bearer; the bearer never replaces the key', () => {
+    // The person is the bearer and the project is the key. The server files the event
+    // under the key's project only when it belongs to the bearer's own org, so a key
+    // from the build env cannot re-file a person's events under another org.
     process.env.NEXT_PUBLIC_PUBLISHABLE_KEY = 'pk-live-one-org'
     try {
       const a = mk({ getToken: () => 'jwt-of-a-real-person' })
       a.capture('x')
       a.flush()
       expect(tx.sent[0].token).toBe('jwt-of-a-real-person')
-      expect(tx.sent[0].ingestKey).toBeUndefined()
+      expect(tx.sent[0].ingestKey).toBe('pk-live-one-org')
     } finally {
       delete process.env.NEXT_PUBLIC_PUBLISHABLE_KEY
     }
