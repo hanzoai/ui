@@ -185,3 +185,21 @@ describe('one event, every tag', () => {
     expect(sent.items[0].price).toBe(0)
   })
 })
+
+describe('a paid order the server also states', () => {
+  it('fires the pixels under the order id and does not touch our stream', async () => {
+    browser('America/New_York')
+    const { startTags, track } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    const w = g.window as unknown as Record<string, unknown>
+    const fbq: unknown[][] = []
+    const captured: unknown[] = []
+    w.gtag = () => undefined
+    w.fbq = (...a: unknown[]) => fbq.push(a)
+    track({ capture: (...a: unknown[]) => captured.push(a) } as never, 'order_completed', { event_id: 'sub_1', order_id: 'sub_1', value: 19 }, 'tags')
+    await tick()
+    expect(captured).toEqual([])
+    expect(fbq.map((a) => (a[3] as { eventID: string }).eventID)).toEqual(['sub_1', 'sub_1'])
+  })
+})

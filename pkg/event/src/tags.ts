@@ -440,17 +440,30 @@ export function mirror(name: string, params: Record<string, unknown>, id: string
  * forwards on), and each browser tag that is running hears it too. A moment
  * that arrives while gtag.js is still on its way waits for it, so GA4 sees it
  * with a session; a page that is leaving sends what it holds as things stand.
+ *
+ * A paid order is stated by the SERVER on our stream (and forwarded server-side);
+ * its browser copy is `track(stream, 'order_completed', {event_id: order, order_id:
+ * order, …}, 'tags')`: the same id, the pixels only, so nothing counts twice.
  */
-export function track(stream: Analytics | undefined, name: string, params: Record<string, unknown> = {}): void {
+export function track(
+  stream: Analytics | undefined,
+  name: string,
+  params: Record<string, unknown> = {},
+  /** `'tags'` fires the browser pixels only: the server states this moment on our stream itself. */
+  only?: 'tags',
+): void {
   if (typeof window === 'undefined') return
   if (!leaving && !settled()) {
-    held.push(() => track(stream, name, params))
+    held.push(() => track(stream, name, params, only))
     return
   }
   const c = read()
-  const event_id = crypto.randomUUID()
+  // A moment the server also states (a paid order) brings its own id, the order's,
+  // so each platform sees the browser's copy and the server's as one.
+  const event_id = typeof params.event_id === 'string' && params.event_id ? params.event_id : crypto.randomUUID()
   const to = reach()
   mirror(name, params, event_id, to)
+  if (only === 'tags') return
   stream?.capture(name, {
     ...params,
     ...touch(c),

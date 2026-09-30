@@ -1,5 +1,11 @@
 # @hanzo/event
 
+## 0.3.46
+
+### Patch Changes
+
+- `track(stream, name, params, 'tags')` fires the browser pixels only, and a `params.event_id` is used as the moment's id: a paid order the server states on our stream keeps one id everywhere.
+
 ## 0.3.45
 
 ### Patch Changes
