@@ -2,6 +2,8 @@
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { GuiProvider } from '@hanzo/gui'
+import config from '../gui-config'
 import type { IAM } from '@hanzo/iam'
 
 vi.mock('@hanzo/iam/react', () => ({
@@ -20,20 +22,34 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
+const html = (node: React.ReactNode) =>
+  renderToStaticMarkup(
+    <GuiProvider config={config} defaultTheme="light">
+      {node}
+    </GuiProvider>,
+  )
+
 describe('SignIn', () => {
   it('draws the card on the host, with both providers before IAM answers', () => {
-    const html = renderToStaticMarkup(<SignIn site="Hanzo" />)
-    expect(html).toContain('Log in to Hanzo')
-    expect(html).toContain('Continue with Google')
-    expect(html).toContain('Continue with GitHub')
-    expect(html).not.toContain('hanzo.id')
+    const out = html(<SignIn site="Hanzo" />)
+    expect(out).toContain('Log in to Hanzo')
+    expect(out).toContain('Continue with Google')
+    expect(out).toContain('Continue with GitHub')
+    expect(out).not.toContain('hanzo.id')
+    expect(out).not.toMatch(/class="[^"]*\bhz-/)
+  })
+
+  it('offers an email field with a caption, and the or between it and the providers', () => {
+    const out = html(<SignIn />)
+    expect(out).toContain('for="hanzo-email"')
+    expect(out).toContain('Continue with Google')
   })
 
   it('offers sign up with the terms and a way back to log in', () => {
-    const html = renderToStaticMarkup(<SignIn mode="signup" site="Hanzo" termsPath="/legal/terms" />)
-    expect(html).toContain('Create your Hanzo account')
-    expect(html).toContain('href="/legal/terms"')
-    expect(html).toContain('href="/login"')
+    const out = html(<SignIn mode="signup" site="Hanzo" termsPath="/legal/terms" />)
+    expect(out).toContain('Create your Hanzo account')
+    expect(out).toContain('href="/legal/terms"')
+    expect(out).toContain('href="/login"')
   })
 })
 

@@ -87,6 +87,11 @@ import {
 } from './backends/gui'
 // Off the barrel — web-only, so it is imported the way a consumer imports it.
 import { Cell, Grid } from './grid'
+import { IamProvider } from '@hanzo/iam/react'
+import { SignIn } from './auth'
+import { Choice, ChoiceGroup, Stepper } from './backends/gui'
+import { Page as OnboardingPage } from './onboarding/frame'
+import { Enterprise, Plans, Seats, TeamName, UseCards } from './onboarding/screens'
 import { BookOpen, Plug } from '@hanzogui/lucide-icons-2'
 // The settings page and its section parts. Aliased where a part shares a word
 // with a primitive above (`Card`, `Field`), exactly as a consumer importing both
@@ -1055,6 +1060,40 @@ export const Gallery = () => (
       <YStack gap={8} maxW={768} ml="auto" mr="auto" overflow="hidden">
         <CardTitle>column</CardTitle>
       </YStack>
+    </Section>
+
+    {/* Sign-in and onboarding are drawn on the host's own page and rendered on
+        the server, so their rules must be in the shipped sheet like any other
+        component's. Every screen of the flow is here, in each state it has. */}
+    <Section name="onboarding">
+      <IamProvider config={{ serverUrl: 'https://hanzo.id', clientId: 'hanzo-gallery', redirectUri: 'https://hanzo.ai/auth/callback' }} autoInit={false}>
+        <SignIn />
+        <SignIn mode="signup" />
+      </IamProvider>
+      <OnboardingPage site="Hanzo" title="How are you planning to use Hanzo?" back={NOOP}>
+        <UseCards onPick={NOOP} />
+      </OnboardingPage>
+      <OnboardingPage site="Hanzo" title="Plans that grow with you" busy width={1140}>
+        <Plans interval="annual" setInterval={NOOP} onFree={NOOP} onPick={NOOP} />
+      </OnboardingPage>
+      <OnboardingPage site="Hanzo" title="Let’s create your team" center>
+        <TeamName api="" onCreated={NOOP} />
+      </OnboardingPage>
+      <OnboardingPage site="Hanzo" title="Choose your seats and plan">
+        <Seats interval="monthly" setInterval={NOOP} value={{ plan: 'team_premium', seats: 20 }} setValue={NOOP} onContinue={NOOP} onEnterprise={NOOP} />
+      </OnboardingPage>
+      <OnboardingPage site="Hanzo" title="Talk to our sales team">
+        <Enterprise api="" onSent={NOOP} />
+      </OnboardingPage>
+      <ChoiceGroup label="Billing interval">
+        <Choice selected onSelect={NOOP}>
+          Monthly
+        </Choice>
+        <Choice selected={false} onSelect={NOOP}>
+          Annually
+        </Choice>
+      </ChoiceGroup>
+      <Stepper label="Seats" value={2} min={2} max={150} onChange={NOOP} />
     </Section>
 
   </div>

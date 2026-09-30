@@ -129,6 +129,9 @@ const SelectItem = ({ children, value, ...props }: SelectItemProps) => (
     unstyled
     index={props.index ?? 0}
     items="center"
+    // Start-aligned. gui's ListItem centres its row on the main axis, which set
+    // every option's label in the middle of the list with the tick on the far edge.
+    justify="flex-start"
     gap="$2"
     minH={ROW_H}
     pl="$2"

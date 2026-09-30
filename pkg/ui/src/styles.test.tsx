@@ -200,7 +200,6 @@ describe('the utility class namespace', () => {
   const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
   const theme = readFileSync(join(SRC, 'theme.css'), 'utf8')
   const masthead = readFileSync(join(SRC, 'masthead/masthead.css'), 'utf8')
-  const auth = readFileSync(join(SRC, 'auth/auth.css'), 'utf8')
 
   it('found the classes to check — an empty scan proves nothing', () => {
     expect(ours.length).toBeGreaterThan(5)
@@ -242,10 +241,10 @@ describe('the utility class namespace', () => {
 
   it('defines a rule for each of them', () => {
     // Across every stylesheet the package ships: motion.css, theme.css
-    // (`hz-prose`), masthead.css (`hz-masthead`) and auth.css (`hz-signin`). The invariant is "a class
+    // (`hz-prose`) and masthead.css (`hz-masthead`). The invariant is "a class
     // we emit has a rule we ship", and naming one file would make it "…has a
     // rule in this file", which a correct second family fails.
-    const sheets = motion + theme + masthead + auth
+    const sheets = motion + theme + masthead
     const orphan = ours.filter((c) => c.startsWith('hz-') && !sheets.includes(`.${c}`))
     expect(orphan, `${orphan.join(', ')} is emitted with no rule in any shipped stylesheet`).toEqual([])
   })

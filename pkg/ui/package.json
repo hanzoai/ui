@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/ui",
-  "version": "8.27.28",
+  "version": "8.27.29",
   "type": "module",
   "description": "Hanzo UI — the one canonical Hanzo component library, on @hanzo/gui + @hanzo/design. ONE substrate: every component renders through @hanzo/gui primitives, so the same import works on web, native (expo) and desktop (Tauri). Self-contained (theme.css), presentational, host-agnostic, clean-room.",
   "exports": {
@@ -110,12 +110,17 @@
       "require": "./dist/auth/index.cjs",
       "default": "./dist/auth/index.js"
     },
-    "./auth.css": "./dist/auth.css",
     "./marketing": {
       "types": "./dist/marketing/index.d.ts",
       "import": "./dist/marketing/index.js",
       "require": "./dist/marketing/index.cjs",
       "default": "./dist/marketing/index.js"
+    },
+    "./onboarding": {
+      "types": "./dist/onboarding/index.d.ts",
+      "import": "./dist/onboarding/index.js",
+      "require": "./dist/onboarding/index.cjs",
+      "default": "./dist/onboarding/index.js"
     },
     "./product": {
       "types": "./dist/product/index.d.ts",
@@ -292,7 +297,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/masthead/masthead.css dist/masthead.css && cp src/auth/auth.css dist/auth.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/masthead/masthead.css dist/masthead.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
@@ -326,6 +331,8 @@
     "@hanzo/data": ">=1.2.4",
     "@hanzo/gui": "^8.3.5",
     "@hanzo/iam": ">=0.21.21",
+    "@hanzo/pay": ">=0.1.1",
+    "@hanzo/plans": ">=1.8.1",
     "@hanzo/usage": ">=0.1.13",
     "@hanzogui/animations-css": "^8.3.5",
     "@hanzogui/config": "^8.3.5",
@@ -342,6 +349,12 @@
   },
   "peerDependenciesMeta": {
     "@hanzo/iam": {
+      "optional": true
+    },
+    "@hanzo/pay": {
+      "optional": true
+    },
+    "@hanzo/plans": {
       "optional": true
     },
     "@hanzo/canvas": {
@@ -375,6 +388,8 @@
     "@hanzo/data": "catalog:",
     "@hanzo/gui": "catalog:",
     "@hanzo/iam": "catalog:",
+    "@hanzo/pay": "catalog:",
+    "@hanzo/plans": "catalog:",
     "@hanzo/usage": "catalog:",
     "@hanzogui/animations-css": "catalog:",
     "@hanzogui/config": "catalog:",

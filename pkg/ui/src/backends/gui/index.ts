@@ -140,6 +140,7 @@ export {
   type HoverCardTriggerProps,
   type HoverCardContentProps,
 } from './hover-card'
+export { Choice, ChoiceGroup, type ChoiceProps, type ChoiceGroupProps } from './choice'
 export { Input, type InputProps } from './input'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'
@@ -183,6 +184,7 @@ export {
 export { Band, type BandProps } from './band'
 export { Screen, Fill, type ScreenProps, type FillProps } from './screen'
 export { Slider } from './slider'
+export { Stepper, type StepperProps } from './stepper'
 export { Spinner, type SpinnerProps } from './spinner'
 export { Switch } from './switch'
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'

@@ -34,6 +34,8 @@ catalog:
   '@hanzo/font': '1.9.2'
   '@hanzo/gui': '8.3.5'
   '@hanzo/iam': '0.21.21'
+  '@hanzo/pay': '0.1.1'
+  '@hanzo/plans': '1.8.1'
   '@hanzo/logo': '1.0.26'
   '@hanzo/observe': '0.1.11'
   '@hanzo/products': '0.2.6'

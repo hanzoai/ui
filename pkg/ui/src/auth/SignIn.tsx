@@ -4,6 +4,13 @@ import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from 're
 import { IAM, SecondFactor, type Methods } from '@hanzo/iam'
 import { useIam } from '@hanzo/iam/react'
 import { HanzoMark } from '@hanzogui/shell'
+import { ArrowLeft } from '@hanzogui/lucide-icons-2'
+import { SiGithub, SiGoogle } from '@icons-pack/react-simple-icons'
+import { Button } from '../backends/gui/button'
+import { Card, CardContent } from '../backends/gui/card'
+import { Field, FieldError, FieldLabel, FieldSeparator } from '../backends/gui/field'
+import { Input } from '../backends/gui/input'
+import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 
 /**
  * Signing in and signing up, drawn on the host site's own page.
@@ -26,7 +33,8 @@ import { HanzoMark } from '@hanzogui/shell'
  * a second factor finishes on the issuer's page: IAM holds that ceremony in a
  * cookie on the issuer.
  *
- * Styled by `@hanzo/ui/auth.css`, which the host imports once.
+ * Drawn from @hanzo/ui components in the theme's tokens: the host mounts
+ * `<Hanzo>` (or its own GuiProvider) and imports no stylesheet.
  */
 
 export type Mode = 'login' | 'signup'
@@ -74,20 +82,6 @@ const FIRST: Methods = {
 }
 
 const said = (err: unknown): string => (err instanceof Error && err.message ? err.message : 'Something went wrong. Try again.')
-
-const GOOGLE =
-  'M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.62 2.14-5.63 2.14-4.64 0-8.26-3.74-8.26-8.38s3.62-8.38 8.26-8.38c2.5 0 4.34.99 5.69 2.26l2.31-2.31C18.96 1.28 16.46 0 12.48 0 5.72 0 .04 5.5.04 12.28s5.68 12.28 12.44 12.28c3.65 0 6.4-1.2 8.55-3.44 2.21-2.21 2.9-5.32 2.9-7.83 0-.78-.06-1.5-.18-2.1z'
-const GITHUB =
-  'M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.7-5.5 6 .4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3z'
-
-function Brand({ kind }: { kind: string }) {
-  const d = kind === 'google' ? GOOGLE : kind === 'github' ? GITHUB : null
-  return d ? (
-    <svg width={16} height={16} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d={d} />
-    </svg>
-  ) : null
-}
 
 export function SignIn({
   mode = 'login',
@@ -234,124 +228,127 @@ export function SignIn({
 
   const query = typeof window === 'undefined' ? '' : window.location.search
   const title = signup ? `Create your ${site} account` : `Log in to ${site}`
+  const one = busy ? 'One moment…' : null
 
   return (
-    <section className="hz-signin" aria-label={signup ? 'Sign up' : 'Log in'}>
-      <div className="hz-signin-card">
-        <p className="hz-signin-brand">
-          <HanzoMark size={20} />
-          {site}
-        </p>
-        <h1 className="hz-signin-title">{title}</h1>
+    <YStack render="section" aria-label={signup ? 'Sign up' : 'Log in'} items="center" gap="$5" minH={560} pt={112} pb={96} px="$4">
+      <Card width="100%" maxW={400}>
+        <CardContent gap="$5">
+          <XStack items="center" gap="$2.5">
+            <HanzoMark size={20} />
+            <SizableText size="$5" fontWeight="500" color="$ink">
+              {site}
+            </SizableText>
+          </XStack>
+          <Heading render="h1" size="$8" fontWeight="500" color="$ink" m={0}>
+            {title}
+          </Heading>
 
-        {step === 'email' ? (
-          <>
-            {methods.providers.length ? (
-              <div className="hz-signin-social">
-                {methods.providers.map((p) => (
-                  <button key={p.name} type="button" className="hz-action" onClick={() => social(p.name, p.type)} disabled={busy}>
-                    <Brand kind={p.type.toLowerCase()} />
-                    Continue with {p.type}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-            {methods.providers.length ? <p className="hz-signin-or">or</p> : null}
-            <form onSubmit={next} noValidate>
-              <Field label="Email">
-                <input
-                  type="email"
-                  name="email"
-                  autoComplete={signup ? 'email' : 'username'}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
-                  required
-                  autoFocus
-                />
-              </Field>
+          {step === 'email' ? (
+            <>
+              {methods.providers.length ? (
+                <YStack gap="$2.5">
+                  {methods.providers.map((p) => (
+                    <Button key={p.name} type="button" variant="secondary" size="lg" rounded="$10" width="100%" disabled={busy} onClick={() => social(p.name, p.type)}>
+                      <Brand kind={p.type.toLowerCase()} />
+                      {`Continue with ${p.type}`}
+                    </Button>
+                  ))}
+                </YStack>
+              ) : null}
+              {methods.providers.length ? <FieldSeparator>or</FieldSeparator> : null}
+              <YStack render={<form onSubmit={next} noValidate />} gap="$4">
+                <Field gap="$2">
+                  <FieldLabel htmlFor="hanzo-email">Email</FieldLabel>
+                  <Input id="hanzo-email" type="email" name="email" autoComplete={signup ? 'email' : 'username'} value={email} onChangeText={setEmail} placeholder="you@company.com" autoFocus />
+                </Field>
+                <Wrong text={wrong} />
+                <Go busy={busy}>{one ?? 'Continue'}</Go>
+              </YStack>
+            </>
+          ) : (
+            <YStack render={<form onSubmit={finish} noValidate />} gap="$4">
+              <XStack items="center" gap="$2" minW={0}>
+                <Button type="button" variant="ghost" size="icon" aria-label="Use another email" onClick={back}>
+                  <ArrowLeft size={16} />
+                </Button>
+                <SizableText size="$2" color="$ink" numberOfLines={1} flex={1} minW={0}>
+                  {email.trim()}
+                </SizableText>
+              </XStack>
+              {step === 'password' ? (
+                <Field gap="$2">
+                  <FieldLabel htmlFor="hanzo-password">Password</FieldLabel>
+                  <Input id="hanzo-password" type="password" name="password" autoComplete="current-password" value={password} onChangeText={setPassword} autoFocus />
+                </Field>
+              ) : (
+                <>
+                  <Paragraph size="$2" color="$quiet" m={0}>
+                    We sent a code to {email.trim()}. It is good for a few minutes.
+                  </Paragraph>
+                  <Field gap="$2">
+                    <FieldLabel htmlFor="hanzo-code">Code</FieldLabel>
+                    <Input id="hanzo-code" name="code" inputMode="numeric" autoComplete="one-time-code" value={code} onChangeText={setCode} autoFocus />
+                  </Field>
+                </>
+              )}
+              {step === 'create' ? (
+                <>
+                  <Field gap="$2">
+                    <FieldLabel htmlFor="hanzo-name">Your name</FieldLabel>
+                    <Input id="hanzo-name" name="name" autoComplete="name" value={name} onChangeText={setName} />
+                  </Field>
+                  <Field gap="$2">
+                    <FieldLabel htmlFor="hanzo-new-password">Password</FieldLabel>
+                    <Input id="hanzo-new-password" type="password" name="password" autoComplete="new-password" value={password} onChangeText={setPassword} />
+                  </Field>
+                </>
+              ) : null}
               <Wrong text={wrong} />
-              <button type="submit" className="hz-action" data-fill="" disabled={busy}>
-                {busy ? 'One moment…' : 'Continue'}
-              </button>
-            </form>
-          </>
-        ) : (
-          <form onSubmit={finish} noValidate>
-            <p className="hz-signin-who">
-              <button type="button" className="hz-more" onClick={back} aria-label="Use another email">
-                <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="m12 19-7-7 7-7M19 12H5" />
-                </svg>
-              </button>
-              <span>{email.trim()}</span>
-            </p>
-            {step === 'password' ? (
-              <Field label="Password">
-                <input type="password" name="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required autoFocus />
-              </Field>
-            ) : (
-              <>
-                <p className="hz-signin-note">We sent a code to {email.trim()}. It is good for a few minutes.</p>
-                <Field label="Code">
-                  <input name="code" inputMode="numeric" autoComplete="one-time-code" value={code} onChange={(e) => setCode(e.target.value)} required autoFocus />
-                </Field>
-              </>
-            )}
-            {step === 'create' ? (
-              <>
-                <Field label="Your name">
-                  <input name="name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
-                </Field>
-                <Field label="Password">
-                  <input type="password" name="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </Field>
-              </>
-            ) : null}
-            <Wrong text={wrong} />
-            <button type="submit" className="hz-action" data-fill="" disabled={busy}>
-              {busy ? 'One moment…' : step === 'create' ? 'Create account' : 'Continue'}
-            </button>
-            {step === 'password' && methods.code ? (
-              <button type="button" className="hz-more hz-signin-alt" onClick={() => void sendCode()} disabled={busy}>
-                Email me a code instead
-              </button>
-            ) : null}
-            {step !== 'password' ? (
-              <button type="button" className="hz-more hz-signin-alt" onClick={() => void sendCode()} disabled={busy}>
-                Send a new code
-              </button>
-            ) : null}
-          </form>
-        )}
+              <Go busy={busy}>{one ?? (step === 'create' ? 'Create account' : 'Continue')}</Go>
+              {step === 'password' && methods.code ? (
+                <Button type="button" variant="linkMuted" size="lg" disabled={busy} onClick={() => void sendCode()}>
+                  Email me a code instead
+                </Button>
+              ) : null}
+              {step !== 'password' ? (
+                <Button type="button" variant="linkMuted" size="lg" disabled={busy} onClick={() => void sendCode()}>
+                  Send a new code
+                </Button>
+              ) : null}
+            </YStack>
+          )}
 
-        {signup ? (
-          <p className="hz-signin-fine">
-            By creating an account you agree to the <a href={termsPath}>Terms</a> and the <a href={privacyPath}>Privacy Policy</a>.
-          </p>
-        ) : null}
-      </div>
-      <p className="hz-signin-else">
+          {signup ? (
+            <Paragraph size="$1" color="$quiet" m={0}>
+              By creating an account you agree to the <Anchor href={termsPath} color="$ink" textDecorationLine="underline">Terms</Anchor> and the <Anchor href={privacyPath} color="$ink" textDecorationLine="underline">Privacy Policy</Anchor>.
+            </Paragraph>
+          ) : null}
+        </CardContent>
+      </Card>
+      <Paragraph size="$2" color="$quiet" m={0}>
         {signup ? 'Have an account? ' : `New to ${site}? `}
-        <a href={`${signup ? loginPath : signupPath}${query}`}>{signup ? 'Log in' : 'Create an account'}</a>
-      </p>
-    </section>
+        <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">
+          {signup ? 'Log in' : 'Create an account'}
+        </Anchor>
+      </Paragraph>
+    </YStack>
   )
 }
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Brand({ kind }: { kind: string }) {
+  return kind === 'google' ? <SiGoogle size={16} /> : kind === 'github' ? <SiGithub size={16} /> : null
+}
+
+/** The primary action of a step: filled with the ink, full width. */
+function Go({ busy, children }: { busy: boolean; children: ReactNode }) {
   return (
-    <label className="hz-signin-field">
-      <span>{label}</span>
+    <Button type="submit" size="lg" rounded="$10" width="100%" bg="$ink" color="$background" borderColor="$ink" hoverStyle={{ opacity: 0.92 }} disabled={busy}>
       {children}
-    </label>
+    </Button>
   )
 }
 
 function Wrong({ text }: { text: string | null }) {
-  return text ? (
-    <p role="alert" className="hz-signin-wrong">
-      {text}
-    </p>
-  ) : null
+  return text ? <FieldError>{text}</FieldError> : null
 }
