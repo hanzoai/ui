@@ -36,6 +36,8 @@ import { CONSENT_EVENT, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
+import { automated } from './automated'
+import { uuidv7 } from './uid'
 
 export interface BrowserTag {
   platform: string
@@ -271,7 +273,8 @@ function apply(): void {
   if (typeof window === 'undefined' || !configured) return
   const c = read()
   capture(c)
-  const on = tags.filter((t) => allowed(t, c))
+  // A driven browser is ours: it loads no platform's pixel (automated.ts).
+  const on = automated() ? [] : tags.filter((t) => allowed(t, c))
   const ids = on.filter((t) => t.type === 'ga' || t.type === 'gads').map((t) => t.id)
   if (ids.length) {
     consentMode(c, !loaded.has('consent'))
@@ -467,7 +470,7 @@ export function track(
   const c = read()
   // A moment the server also states (a paid order) brings its own id, the order's,
   // so each platform sees the browser's copy and the server's as one.
-  const event_id = typeof params.event_id === 'string' && params.event_id ? params.event_id : crypto.randomUUID()
+  const event_id = typeof params.event_id === 'string' && params.event_id ? params.event_id : uuidv7()
   const to = reach()
   mirror(name, params, event_id, to)
   if (only === 'tags') return

@@ -89,6 +89,18 @@ describe('before consent', () => {
   })
 })
 
+describe('a driven browser', () => {
+  it('loads no platform even where the region presumes consent', async () => {
+    const b = browser('America/New_York')
+    put('navigator', { globalPrivacyControl: false, userAgent: 'UA', webdriver: true })
+    const { startTags } = await import('./index')
+    startTags({ key: 'pk-x' })
+    await tick()
+    expect(b.requests.some((u) => u.includes('/v1/project/tags'))).toBe(true)
+    expect(b.scripts).toEqual([])
+  })
+})
+
 describe('after accepting', () => {
   it('loads Google, Meta, LinkedIn, X and TikTok with no reload', async () => {
     const b = browser('Europe/Berlin')
@@ -155,7 +167,7 @@ describe('one event, every tag', () => {
 
     expect(captured).toHaveLength(1)
     const id = captured[0].props.event_id
-    expect(id).toBe('id-1')
+    expect(id).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-/)
     expect(String(captured[0].props.tags).split(',').sort()).toEqual(['ga', 'gads', 'linkedin', 'meta', 'tiktok', 'x'])
 
     const ga = gtag.find((a) => a[0] === 'event' && a[1] === 'purchase')

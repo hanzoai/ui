@@ -505,3 +505,35 @@ describe('error capture', () => {
     expect(tx.all[0].error?.message).toBe('x')
   })
 })
+
+describe('a driven browser', () => {
+  const nav = Object.getOwnPropertyDescriptor(globalThis, 'navigator')
+  const drive = (webdriver: boolean) =>
+    Object.defineProperty(globalThis, 'navigator', { value: { webdriver, userAgent: 'UA' }, configurable: true, writable: true })
+
+  it('marks every event internal, so cloud keeps it off ad platforms and out of real traffic', () => {
+    drive(true)
+    try {
+      const a = mk()
+      a.capture(EVENTS.SIGNUP_COMPLETED, { plan: 'pro' })
+      a.capture('landing_viewed')
+      a.flush()
+      expect(tx.all.map((e) => e.properties?.internal)).toEqual([true, true])
+      expect(tx.all[0].properties?.plan).toBe('pro')
+    } finally {
+      if (nav) Object.defineProperty(globalThis, 'navigator', nav)
+    }
+  })
+
+  it('leaves a person’s events unmarked', () => {
+    drive(false)
+    try {
+      const a = mk()
+      a.capture(EVENTS.SIGNUP_COMPLETED, { plan: 'pro' })
+      a.flush()
+      expect(tx.all[0].properties).toEqual({ plan: 'pro' })
+    } finally {
+      if (nav) Object.defineProperty(globalThis, 'navigator', nav)
+    }
+  })
+})
