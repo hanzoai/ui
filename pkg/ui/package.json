@@ -104,6 +104,13 @@
       "default": "./dist/masthead/nav.js"
     },
     "./masthead.css": "./dist/masthead.css",
+    "./auth": {
+      "types": "./dist/auth/index.d.ts",
+      "import": "./dist/auth/index.js",
+      "require": "./dist/auth/index.cjs",
+      "default": "./dist/auth/index.js"
+    },
+    "./auth.css": "./dist/auth.css",
     "./product": {
       "types": "./dist/product/index.d.ts",
       "import": "./dist/product/index.js",
@@ -279,7 +286,7 @@
     "NOTICE"
   ],
   "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/masthead/masthead.css dist/masthead.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
+    "build": "rm -rf dist dist-cjs && tsc -p tsconfig.build.json && tsc -p tsconfig.cjs.json --noCheck && mkdir -p dist/styles && node scripts/compose-theme.mjs && cp src/styles/motion.css dist/styles/motion.css && cp src/masthead/masthead.css dist/masthead.css && cp src/auth/auth.css dist/auth.css && cp src/next.cjs dist/next.cjs && node scripts/postbuild.mjs && node scripts/gen-css.mjs",
     "clean": "rm -rf dist dist-cjs types",
     "gen:primitives": "node scripts/gen-primitives.mjs",
     "prepack": "pnpm run build",
@@ -312,6 +319,7 @@
     "@hanzo/dashboard": ">=0.2.0",
     "@hanzo/data": ">=1.2.4",
     "@hanzo/gui": "^8.3.5",
+    "@hanzo/iam": ">=0.21.21",
     "@hanzo/usage": ">=0.1.13",
     "@hanzogui/animations-css": "^8.3.5",
     "@hanzogui/config": "^8.3.5",
@@ -327,6 +335,9 @@
     "react-hook-form": ">=7"
   },
   "peerDependenciesMeta": {
+    "@hanzo/iam": {
+      "optional": true
+    },
     "@hanzo/canvas": {
       "optional": true
     },
@@ -357,6 +368,7 @@
     "@hanzo/dashboard": "catalog:",
     "@hanzo/data": "catalog:",
     "@hanzo/gui": "catalog:",
+    "@hanzo/iam": "catalog:",
     "@hanzo/usage": "catalog:",
     "@hanzogui/animations-css": "catalog:",
     "@hanzogui/config": "catalog:",
