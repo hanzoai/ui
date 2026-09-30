@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 
-/** Choice is a radio: named, checked by attribute, and a group that says what it groups. */
+/** ChoiceCard is a radio: named, checked by attribute, and a group that says what it groups. */
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../../gui-config'
-import { Choice, ChoiceGroup } from './choice'
+import { ChoiceCard, ChoiceGroup } from './choice'
 import { Stepper } from './stepper'
 
 const html = (node: React.ReactNode) =>
@@ -20,12 +20,12 @@ describe('Choice', () => {
   it('is a radio in a named radiogroup, checked by aria-checked', () => {
     const out = html(
       <ChoiceGroup label="Billing interval">
-        <Choice selected onSelect={() => {}}>
+        <ChoiceCard selected onSelect={() => {}}>
           Monthly
-        </Choice>
-        <Choice selected={false} onSelect={() => {}}>
+        </ChoiceCard>
+        <ChoiceCard selected={false} onSelect={() => {}}>
           Annually
-        </Choice>
+        </ChoiceCard>
       </ChoiceGroup>,
     )
     expect(out).toContain('role="radiogroup"')
@@ -37,7 +37,7 @@ describe('Choice', () => {
   })
 
   it('is focusable, so the keyboard reaches it', () => {
-    expect(html(<Choice selected={false} onSelect={() => {}}>x</Choice>)).toContain('tabindex="0"')
+    expect(html(<ChoiceCard selected={false} onSelect={() => {}}>x</ChoiceCard>)).toContain('tabindex="0"')
   })
 })
 

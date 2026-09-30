@@ -140,7 +140,7 @@ export {
   type HoverCardTriggerProps,
   type HoverCardContentProps,
 } from './hover-card'
-export { Choice, ChoiceGroup, type ChoiceProps, type ChoiceGroupProps } from './choice'
+export { ChoiceCard, ChoiceGroup, type ChoiceCardProps, type ChoiceGroupProps } from './choice'
 export { Input, type InputProps } from './input'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'

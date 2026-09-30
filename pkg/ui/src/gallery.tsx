@@ -89,7 +89,7 @@ import {
 import { Cell, Grid } from './grid'
 import { IamProvider } from '@hanzo/iam/react'
 import { SignIn } from './auth'
-import { Choice, ChoiceGroup, Stepper } from './backends/gui'
+import { ChoiceCard, ChoiceGroup, Stepper } from './backends/gui'
 import { Page as OnboardingPage } from './onboarding/frame'
 import { Enterprise, Plans, Seats, TeamName, UseCards } from './onboarding/screens'
 import { BookOpen, Plug } from '@hanzogui/lucide-icons-2'
@@ -1086,12 +1086,12 @@ export const Gallery = () => (
         <Enterprise api="" onSent={NOOP} />
       </OnboardingPage>
       <ChoiceGroup label="Billing interval">
-        <Choice selected onSelect={NOOP}>
+        <ChoiceCard selected onSelect={NOOP}>
           Monthly
-        </Choice>
-        <Choice selected={false} onSelect={NOOP}>
+        </ChoiceCard>
+        <ChoiceCard selected={false} onSelect={NOOP}>
           Annually
-        </Choice>
+        </ChoiceCard>
       </ChoiceGroup>
       <Stepper label="Seats" value={2} min={2} max={150} onChange={NOOP} />
     </Section>

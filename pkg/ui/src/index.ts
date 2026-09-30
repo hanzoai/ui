@@ -130,7 +130,7 @@ export {
   Banner,
   Calendar,
   Choicebox,
-  Choice,
+  ChoiceCard,
   ChoiceGroup,
   Stepper,
   CodeBlock,

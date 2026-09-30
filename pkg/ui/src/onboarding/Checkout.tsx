@@ -200,7 +200,7 @@ export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, inte
           </Heading>
           <Field gap="$2">
             <FieldLabel htmlFor="hanzo-bill-name">Full name</FieldLabel>
-            <Input id="hanzo-bill-name" name="name" autoComplete="name" value={form.name} onChangeText={(v) => setForm((f) => ({ ...f, name: v }))} />
+            <Input id="hanzo-bill-name" name="name" autoComplete="name" value={form.name} onChangeText={(v: string) => setForm((f) => ({ ...f, name: v }))} />
           </Field>
           <Field gap="$2">
             <FieldLabel htmlFor="hanzo-bill-country">Country or region</FieldLabel>
@@ -219,11 +219,11 @@ export function Checkout({ site = 'Hanzo', api = API, org, plan, seats = 1, inte
           </Field>
           <Field gap="$2">
             <FieldLabel htmlFor="hanzo-bill-address">Address</FieldLabel>
-            <Input id="hanzo-bill-address" name="address" autoComplete="street-address" value={form.address} onChangeText={(v) => setForm((f) => ({ ...f, address: v }))} />
+            <Input id="hanzo-bill-address" name="address" autoComplete="street-address" value={form.address} onChangeText={(v: string) => setForm((f) => ({ ...f, address: v }))} />
           </Field>
           <Field gap="$2">
             <FieldLabel htmlFor="hanzo-bill-invoice">Use a different name on invoices (optional)</FieldLabel>
-            <Input id="hanzo-bill-invoice" name="invoice" value={form.invoice} onChangeText={(v) => setForm((f) => ({ ...f, invoice: v }))} />
+            <Input id="hanzo-bill-invoice" name="invoice" value={form.invoice} onChangeText={(v: string) => setForm((f) => ({ ...f, invoice: v }))} />
           </Field>
 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>

@@ -1,7 +1,7 @@
 'use client'
 
 /**
- * Choice — one option among a few, drawn as a card.
+ * ChoiceCard — one option among a few, drawn as a card.
  *
  * A `role="radio"` with `aria-checked`, Enter and Space to pick, and a heavier
  * edge when picked, so the state is a shape and a name, not a colour. Put a few
@@ -31,13 +31,13 @@ const Frame = styled(YStack, {
   } as const,
 })
 
-export type ChoiceProps = Omit<ComponentProps<typeof Frame>, 'children' | 'onPress'> & {
+export type ChoiceCardProps = Omit<ComponentProps<typeof Frame>, 'children' | 'onPress'> & {
   selected: boolean
   onSelect: () => void
   children?: ReactNode
 }
 
-export function Choice({ selected, onSelect, children, ...props }: ChoiceProps) {
+export function ChoiceCard({ selected, onSelect, children, ...props }: ChoiceCardProps) {
   return (
     <Frame
       {...slot('choice')}
