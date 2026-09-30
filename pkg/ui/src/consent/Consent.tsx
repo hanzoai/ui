@@ -191,8 +191,8 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   )
 }
 
-/** The footer link that reopens the choices. In the US it reads as the opt-out the law names. */
-const ConsentLink = ({ label = 'Do not sell or share my personal information' }: { label?: string }) => (
+/** The footer link that reopens the choices, in every footer and every region. */
+const ConsentLink = ({ label = 'Cookie settings' }: { label?: string }) => (
   <Button {...slot('consent-link')} type="button" variant="link" size="sm" px={0} minH={0} onClick={openConsent}>
     {label}
   </Button>

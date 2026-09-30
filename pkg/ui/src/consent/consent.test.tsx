@@ -17,9 +17,9 @@ describe('Consent', () => {
   it('draws nothing until the visitor is asked', () => {
     expect(html(<Consent />)).not.toMatch(/data-slot="consent"/)
   })
-  it('the footer link is a labelled control that names the opt-out', () => {
+  it('the footer link is a labelled control that opens the cookie settings', () => {
     const out = html(<ConsentLink />)
     expect(out).toMatch(/data-slot="consent-link"/)
-    expect(out).toMatch(/Do not sell or share my personal information/)
+    expect(out).toMatch(/Cookie settings/)
   })
 })
