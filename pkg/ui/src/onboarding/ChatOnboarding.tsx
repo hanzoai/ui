@@ -141,6 +141,7 @@ export function ChatOnboarding({ site = 'Hanzo', api = API, track, onDone, priva
   const pick = async (prompt?: string) => {
     if (busy || !chosen) return
     setBusy(true)
+    track?.('usage_selected', { use: session.progress.use ?? 'personal', role: chosen.role })
     await session.save({ role: chosen.role })
     onDone({ prompt, role: chosen.role })
   }
