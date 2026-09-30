@@ -9,6 +9,7 @@ import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, XStack, YStack } from '../backends/gui/layout'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../backends/gui/select'
 import { ApiError, API, call } from './api'
+import { keyFor, purchase, settle, uncharged } from './attempt'
 import { useCatalog } from './catalog'
 import { Line, Page, Panel } from './frame'
 import { IntervalChoice, Primary } from './screens'
@@ -61,7 +62,6 @@ const COUNTRIES: [string, string][] = [
   ['US', 'United States'], ['CA', 'Canada'], ['GB', 'United Kingdom'], ['AU', 'Australia'], ['DE', 'Germany'], ['FR', 'France'], ['ES', 'Spain'], ['IT', 'Italy'], ['NL', 'Netherlands'], ['SE', 'Sweden'], ['IE', 'Ireland'], ['CH', 'Switzerland'], ['JP', 'Japan'], ['SG', 'Singapore'], ['IN', 'India'], ['BR', 'Brazil'], ['MX', 'Mexico'], ['NZ', 'New Zealand'], ['ZA', 'South Africa'], ['AE', 'United Arab Emirates'],
 ]
 
-const key = (): string => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`)
 const renews = (interval: Interval): string => {
   const d = new Date()
   if (interval === 'annual') d.setFullYear(d.getFullYear() + 1)
@@ -80,6 +80,7 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
   const o = offer(plan)
   const l = useMemo(() => lines(plan, interval, seats), [plan, interval, seats])
   const scope = useMemo(() => (org ? { 'X-Org-Id': org } : undefined), [org])
+  const sale = purchase(org, SLUG[plan], interval, l.seats)
 
   const [settings, setSettings] = useState<Settings | null>(null)
   const [ready, setReady] = useState(false)
@@ -88,7 +89,6 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
   const [agree, setAgree] = useState(false)
   const [form, setForm] = useState({ name: '', country: 'US', address: '', invoice: '' })
   const card = useRef<{ tokenize: () => Promise<{ status: string; token?: string; errors?: { message?: string }[] }>; destroy: () => Promise<void> } | null>(null)
-  const attempt = useRef(key())
   const started = useRef(false)
 
   // The billing form is shown with a total: checkout has started.
@@ -180,14 +180,17 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
       track?.('payment_info_added', { plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
       const paid = await call<{ subscriptionId: string; invoiceId: string }>(api, '/v1/billing/subscribe/card', {
         method: 'POST',
-        headers: { ...scope, 'X-Idempotency-Key': attempt.current },
+        headers: { ...scope, 'X-Idempotency-Key': keyFor(sale) },
         body: JSON.stringify({ sourceId: result.token, planId: SLUG[plan], quantity: l.seats, ...(interval === 'annual' ? { interval: 'year' } : {}) }),
       })
+      settle(sale)
       track?.('order_completed', { order_id: paid.invoiceId, plan, interval, seats: l.seats, value: l.subtotal, currency: 'USD', items: [item(plan, interval, seats)] })
       onPaid({ orderId: paid.invoiceId })
     } catch (err) {
-      attempt.current = key()
-      fail('declined', err instanceof ApiError ? err.message : 'The payment did not go through. You have not been charged.')
+      // The same key is sent again until commerce says nothing was charged, so a
+      // retry after an unknown answer replays the sale rather than making a second.
+      if (err instanceof ApiError && uncharged(err.status, err.message)) settle(sale)
+      fail('declined', err instanceof ApiError ? err.message : 'We could not confirm the payment. Check Billing before you try again.')
     }
   }
 
