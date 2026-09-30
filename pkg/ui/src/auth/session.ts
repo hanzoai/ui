@@ -8,6 +8,7 @@ const PREFIX = 'hanzo_iam_'
 const ACCESS = `${PREFIX}access_token`
 const REFRESH = `${PREFIX}refresh_token`
 const EXPIRES = `${PREFIX}expires_at`
+const ID = `${PREFIX}id_token`
 
 const read = (key: string): string | null => {
   if (typeof window === 'undefined') return null
@@ -23,6 +24,9 @@ export const bearer = (): string | null => read(ACCESS)
 
 /** The refresh token, or null. */
 export const refresher = (): string | null => read(REFRESH)
+
+/** The ID token, or null: the hint IAM's end-session route names the session by. */
+export const identity = (): string | null => read(ID)
 
 /** Whether the stored access token is present and not past the expiry the SDK wrote beside it. */
 export function live(): boolean {
