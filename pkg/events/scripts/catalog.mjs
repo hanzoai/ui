@@ -7,12 +7,12 @@
  * never edited.
  */
 import { writeFileSync } from 'node:fs'
-import { SCHEMA, NAMES, RESERVED, FUNNELS, PRODUCTS } from '../dist/index.js'
+import { SCHEMA, NAMES, RESERVED, FUNNELS, PRODUCTS, PLATFORMS } from '../dist/index.js'
 
 writeFileSync(
   new URL('../dist/catalog.json', import.meta.url),
   JSON.stringify(
-    { version: 2, names: NAMES, reserved: RESERVED, schema: SCHEMA, products: PRODUCTS, funnels: FUNNELS },
+    { version: 3, names: NAMES, reserved: RESERVED, schema: SCHEMA, platforms: PLATFORMS, products: PRODUCTS, funnels: FUNNELS },
     null,
     2,
   ) + '\n',

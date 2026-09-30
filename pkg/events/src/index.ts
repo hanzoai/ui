@@ -19,6 +19,9 @@ export type { EventName } from './names.js'
 export { SCHEMA } from './schema.js'
 export type { EventSpec, PropSpec, PropType } from './schema.js'
 
+export { PLATFORMS, namesOn } from './platforms.js'
+export type { Platforms, PlatformName, StandardName } from './platforms.js'
+
 export { FUNNELS, PRODUCTS, eventsOf } from './funnels.js'
 export type { FunnelDef, FunnelStep, FunnelId, ProductId } from './funnels.js'
 

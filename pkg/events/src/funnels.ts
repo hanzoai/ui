@@ -89,6 +89,30 @@ export const FUNNELS = {
     ],
   },
 
+  /** One visitor, first page to first use: sign-up, how they will use Hanzo, the
+   *  plan, checkout, the first action. Every surface emits the same names, so it
+   *  joins per person; the plan step is `plan_selected` or `plan_skipped`, and
+   *  the funnel counts the paid path (skipped is the free branch). */
+  journey: {
+    label: 'Hanzo journey',
+    products: ['site', 'app', 'chat', 'pay', 'commerce'],
+    join: 'person',
+    steps: [
+      s(PAGEVIEW, 'Landed'),
+      s(EVENTS.SIGNUP_VIEWED, 'Saw sign-up'),
+      s(EVENTS.SIGNUP_SUBMITTED, 'Asked for an account'),
+      s(EVENTS.SIGNUP_COMPLETED, 'Account created'),
+      s(EVENTS.USAGE_SELECTED, 'Said how they will use Hanzo'),
+      s(EVENTS.PRICING_VIEWED, 'Saw plans'),
+      s(EVENTS.PLAN_CLICKED, 'Pressed a plan'),
+      s(EVENTS.PLAN_SELECTED, 'Opened checkout on a plan'),
+      s(EVENTS.CHECKOUT_STARTED, 'Saw the billing form'),
+      s(EVENTS.PAYMENT_INFO_ADDED, 'Card tokenized'),
+      s(EVENTS.ORDER_COMPLETED, 'Paid'),
+      s(EVENTS.FIRST_ACTION, 'First action'),
+    ],
+  },
+
   /** The developer activation path: an account is worth nothing until a key has
    *  made a call. `first_action{action:'api_call'}` is emitted SERVER-SIDE by
    *  Cloud on an org's first successful /v1 request — a browser cannot see it. */

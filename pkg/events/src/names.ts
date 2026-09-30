@@ -20,6 +20,7 @@ export const EVENTS = {
   /** A RETURNING user authenticated — the non-signup half of the IAM callback.
    *  Keeping it distinct is what stops returning logins from inflating signups. */
   LOGIN_COMPLETED: 'login_completed',
+  LOGOUT_COMPLETED: 'logout_completed',
   /** Activation: the first moment of real value. ONE event for every product —
    *  the product-specific moment is the `action` property (api_call, app_live,
    *  chat_reply), never a new event name. */
@@ -34,8 +35,28 @@ export const EVENTS = {
   // Upgrade-intent + purchase.
   PRICING_VIEWED: 'pricing_viewed',
   PLAN_CLICKED: 'plan_clicked',
+  PLAN_SELECTED: 'plan_selected',
+  PLAN_SKIPPED: 'plan_skipped',
+  PLAN_CHANGED: 'plan_changed',
+  UPGRADE_CLICKED: 'upgrade_clicked',
   CHECKOUT_STARTED: 'checkout_started',
+  PAYMENT_INFO_ADDED: 'payment_info_added',
+  CHECKOUT_FAILED: 'checkout_failed',
   ORDER_COMPLETED: 'order_completed',
+  SUBSCRIPTION_CHANGED: 'subscription_changed',
+  SUBSCRIPTION_CANCELED: 'subscription_canceled',
+  ORDER_REFUNDED: 'order_refunded',
+  SALES_CONTACTED: 'sales_contacted',
+
+  // Onboarding, after sign-in: how it will be used, the team, the notice, the
+  // name, the role, the first prompt.
+  USAGE_SELECTED: 'usage_selected',
+  TEAM_CREATED: 'team_created',
+  FIRST_CHAT_NOTICE_ACCEPTED: 'first_chat_notice_accepted',
+  NAME_SET: 'name_set',
+  ROLE_SELECTED: 'role_selected',
+  STARTER_PROMPT_USED: 'starter_prompt_used',
+  OWN_TOPIC_CHOSEN: 'own_topic_chosen',
 
   // Feature usage — generic + the common key surfaces across products.
   FEATURE_USED: 'feature_used',

@@ -53,3 +53,34 @@ test('an unknown name is not known — and that is a flag, not a refusal', () =>
   assert.equal(isKnown('totally_made_up'), false)
   assert.equal(specFor('totally_made_up'), undefined)
 })
+
+import { PLATFORMS, namesOn } from '../dist/index.js'
+
+test('every platform row names an event in the vocabulary', () => {
+  const known = new Set(NAMES)
+  const orphans = Object.keys(PLATFORMS).filter((n) => !known.has(n))
+  assert.deepEqual(orphans, [], `platform rows for events that do not exist: ${orphans.join(', ')}`)
+})
+
+test('every commerce step reaches Google and Meta', () => {
+  for (const n of ['pricing_viewed', 'plan_clicked', 'plan_selected', 'plan_changed', 'checkout_started',
+    'payment_info_added', 'order_completed', 'order_refunded', 'signup_completed', 'sales_contacted']) {
+    assert.ok(namesOn(n, 'ga4').length, `${n} has no GA4 name`)
+    assert.ok(namesOn(n, 'meta').length, `${n} has no Meta name`)
+  }
+})
+
+test('sign_up, begin_checkout, purchase and lead reach every ad platform', () => {
+  for (const [n, kinds] of [['signup_completed', 'sign_up'], ['checkout_started', 'begin_checkout'],
+    ['order_completed', 'purchase'], ['sales_contacted', 'lead']]) {
+    for (const p of ['linkedin', 'x']) assert.deepEqual(namesOn(n, p), [kinds], `${n} on ${p}`)
+    assert.ok(namesOn(n, 'tiktok').length, `${n} on tiktok`)
+  }
+})
+
+test('the catalog ships the platform table', async () => {
+  const { readFileSync } = await import('node:fs')
+  const c = JSON.parse(readFileSync(new URL('../dist/catalog.json', import.meta.url), 'utf8'))
+  assert.equal(c.version, 3)
+  assert.deepEqual(c.platforms, JSON.parse(JSON.stringify(PLATFORMS)))
+})
