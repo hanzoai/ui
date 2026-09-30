@@ -19,10 +19,11 @@
  * The headline is the page's one <h1>.
  */
 import { YStack } from '@hanzo/gui'
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
 import { Cta } from './Cta'
+import { useSeen } from './seen'
 import { Line } from './type'
 
 export type HeroProps = {
@@ -39,6 +40,8 @@ export type HeroProps = {
   ratioCompact?: number
   /** Called once, when the hero mounts. */
   onView?: () => void
+  /** Called once, the first time half of the media card is on screen. */
+  onMediaView?: () => void
 }
 
 const Hero = ({
@@ -51,7 +54,10 @@ const Hero = ({
   ratio = 4 / 3,
   ratioCompact = 4 / 5,
   onView,
+  onMediaView,
 }: HeroProps) => {
+  const card = useRef<HTMLDivElement>(null)
+  useSeen(card, onMediaView)
   useEffect(() => {
     onView?.()
     // The view is counted once, whatever the host's callback identity does.
@@ -124,6 +130,7 @@ const Hero = ({
       {media ? (
         <YStack
           {...slot('hero-media')}
+          ref={card as never}
           flex={7}
           flexBasis={0}
           minW={0}

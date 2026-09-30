@@ -14,6 +14,7 @@ import { YStack } from '@hanzo/gui'
 import { useEffect, useRef, useState } from 'react'
 
 import { slot } from '../backends/gui/slot'
+import { useSeen } from './seen'
 
 export type MediaProps = {
   /** Each format the video is encoded in, best first: `{ src: '/demo.webm', type: 'video/webm' }`. */
@@ -34,22 +35,7 @@ const Media = ({ sources, poster, label, ratio = 4 / 3, onPlay }: MediaProps) =>
     if (typeof matchMedia === 'function') setStill(matchMedia('(prefers-reduced-motion: reduce)').matches)
   }, [])
 
-  useEffect(() => {
-    const el = box.current
-    if (!el || !onPlay || typeof IntersectionObserver === 'undefined') return
-    const seen = new IntersectionObserver(
-      ([e]) => {
-        if (!e?.isIntersecting) return
-        onPlay()
-        seen.disconnect()
-      },
-      { threshold: 0.5 },
-    )
-    seen.observe(el)
-    return () => seen.disconnect()
-    // The callback is the host's and may be a new function each render; the view is counted once.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useSeen(box, onPlay)
 
   return (
     <YStack {...slot('media')} ref={box as never} width="100%" aspectRatio={ratio} overflow="hidden" bg="$panel">

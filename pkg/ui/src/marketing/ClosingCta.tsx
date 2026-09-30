@@ -23,7 +23,7 @@ export type ClosingCtaProps = {
 }
 
 const ClosingCta = ({
-  title = 'Build what’s next',
+  title = 'Pick a plan. Build today.',
   primary = { label: 'Choose plan', href: '/pricing' },
   secondary = { label: 'Read the docs', href: 'https://docs.hanzo.ai' },
   onCta,

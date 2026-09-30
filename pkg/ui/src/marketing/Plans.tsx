@@ -62,7 +62,7 @@ const Plans = ({
   title = 'Plans that grow with you',
   checkout,
   freeHref = '/chat',
-  freeLabel = 'Start free',
+  freeLabel = 'Use Hanzo for free',
   contactHref = '/contact-sales',
   onView,
   onChoose,

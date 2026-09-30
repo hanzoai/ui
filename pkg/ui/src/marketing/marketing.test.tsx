@@ -138,7 +138,7 @@ describe('Plans', () => {
   })
 
   it('gives Free its own button and a paid plan the checkout for that plan', () => {
-    expect(out).toMatch(/<a[^>]*href="\/chat"[^>]*>Start free/)
+    expect(out).toMatch(/<a[^>]*href="\/chat"[^>]*>Use Hanzo for free/)
     expect(out).toMatch(/<a[^>]*href="\/pay\?plan=pro&amp;interval=month"[^>]*>Get Pro/)
     expect(out).toContain('No commitment · Cancel anytime')
   })
