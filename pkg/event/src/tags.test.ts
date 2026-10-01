@@ -237,6 +237,35 @@ describe('after accepting', () => {
   })
 })
 
+describe('a moment before the visitor answers', () => {
+  const view = async (answer: 'accept' | 'reject') => {
+    browser('Europe/Berlin')
+    const { startTags, track, acceptAll, rejectAll } = await import('./index')
+    const captured: Array<Record<string, unknown>> = []
+    startTags({ key: 'pk-x' })
+    await tick()
+    track({ capture: (_: string, props: Record<string, unknown>) => captured.push(props) } as never, 'pricing_viewed', { currency: 'USD' })
+    await tick()
+    expect(captured, 'nothing goes out while the banner asks').toEqual([])
+    if (answer === 'accept') acceptAll()
+    else rejectAll()
+    await tick()
+    return captured
+  }
+
+  it('goes out on Accept, carrying the consent given', async () => {
+    const captured = await view('accept')
+    expect(captured).toHaveLength(1)
+    expect(captured[0].consent).toBe('analytics,marketing,ads')
+  })
+
+  it('goes out on Reject, carrying no consent', async () => {
+    const captured = await view('reject')
+    expect(captured).toHaveLength(1)
+    expect(captured[0].consent).toBe('')
+  })
+})
+
 describe('one event, every tag', () => {
   it('sends purchase under one id to each platform, with the names the table gives', async () => {
     browser('America/New_York')

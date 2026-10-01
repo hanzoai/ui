@@ -40,7 +40,7 @@
 // reads the same table.
 
 import { namesOn } from '@hanzo/events'
-import { CONSENT_EVENT, read, render, serve, type Choice } from './consent'
+import { asks, CONSENT_EVENT, read, render, serve, type Choice } from './consent'
 import { siteKey } from './org'
 import { capture, touch } from './touch'
 import type { Analytics } from './core'
@@ -106,8 +106,17 @@ function settled(): boolean {
   return configAnswered && google !== 'wait'
 }
 
+/**
+ * Whether a moment can go out: the tags have settled, and a visitor the region asks
+ * has answered. A moment from before the answer waits for it, so it carries the
+ * consent the visitor gave rather than the empty one they had not yet chosen.
+ */
+function due(): boolean {
+  return settled() && !asks()
+}
+
 function flush(): void {
-  if (settled() || leaving) held.splice(0).forEach((send) => send())
+  if (due() || leaving) held.splice(0).forEach((send) => send())
 }
 
 /**
@@ -508,7 +517,7 @@ export function track(
   only?: 'tags',
 ): void {
   if (typeof window === 'undefined') return
-  if (!leaving && !settled()) {
+  if (!leaving && !due()) {
     held.push(() => track(stream, name, params, only))
     return
   }
