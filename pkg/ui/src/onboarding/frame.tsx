@@ -47,7 +47,7 @@ export function Page({
   /** Left-align the title and the line under it with the column, as a form does. */
   start?: boolean
   busy?: boolean
-  /** A quiet line at the foot of the page, under everything: who the email is, a way out. */
+  /** A quiet line under the screen: who the email is, a way out. */
   foot?: ReactNode
 }) {
   const brand = useContext(Brand)
@@ -87,7 +87,7 @@ export function Page({
         </YStack>
       ) : null}
       {foot ? (
-        <YStack position="absolute" b={32} l={0} r={0} items="center" gap="$1" px="$4">
+        <YStack width="100%" maxW={width} items="center" gap="$1">
           {foot}
         </YStack>
       ) : null}

@@ -102,7 +102,6 @@ describe('create account', () => {
 
   it('asks one unticked box, names both documents and the age, and offers Create account', () => {
     expect(out).toContain('Let’s create your account')
-    expect(out).toContain('A few things for you to review')
     expect(out).toContain('href="/terms"')
     expect(out).toContain('href="/aup"')
     expect(out).toContain('at least 18 years of age')

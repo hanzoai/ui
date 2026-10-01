@@ -10,9 +10,9 @@ import { Primary } from './screens'
 
 /**
  * "Let's create your account": the one page a new account sees between proving
- * its address and having an account. One unticked box, one button that stays
- * disabled until the box is ticked, and the address it was proven for with a way
- * to use another. Nothing is created before `onCreate` runs; the host records the
+ * its address and having an account. One heading, one unticked box, one button
+ * that stays disabled until the box is ticked, and under them the address it was
+ * proven for with a way to use another — one phone screen, top to bottom. Nothing is created before `onCreate` runs; the host records the
  * acceptance (policy versions, time, method) on the IAM user.
  */
 export interface CreateAccountProps {
@@ -34,8 +34,6 @@ export function CreateAccount({ site = 'Hanzo', email, busy, wrong, termsPath = 
     <Page
       site={site}
       title="Let’s create your account"
-      lede="A few things for you to review"
-      center
       width={360}
       foot={
         <>
