@@ -22,7 +22,7 @@
  * `Consent` mounts once near the root; `ConsentLink` goes wherever a footer
  * link goes and opens the panel from anywhere.
  */
-import { Paragraph, XStack, YStack } from '@hanzo/gui'
+import { Paragraph, Span, XStack, YStack } from '@hanzo/gui'
 import { acceptAll, asks, consentPolicy, gpc, notices, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
 import { useEffect, useState } from 'react'
 
@@ -42,6 +42,34 @@ const KINDS = [
   { key: 'marketing', title: 'Marketing', body: 'Lets ad platforms measure the sign-ups and orders their ads led to.' },
   { key: 'ads', title: 'Personalized ads', body: 'Lets those platforms use your visit to show you ads elsewhere.' },
 ] as const
+
+/** Where the banner sits: fixed to the foot of the window, inset 12px, centred. */
+const frame = {
+  ...slot('consent'),
+  role: 'dialog',
+  'aria-label': 'Cookie preferences',
+  position: 'fixed',
+  b: 12,
+  l: 12,
+  r: 12,
+  mx: 'auto',
+  z: 2147483000,
+  py: '$2.5',
+  px: '$3.5',
+  rounded: '$5',
+  borderWidth: 1,
+  borderColor: '$borderColor',
+  bg: '$background',
+  shadowColor: 'rgba(0,0,0,0.25)',
+  shadowRadius: 24,
+  shadowOffset: { width: 0, height: 8 },
+} as const
+
+/** The bar is as wide as its line and buttons, up to the window less its inset. */
+const FIT = { width: 'fit-content' } as const
+
+/** A link in the banner's line: the line's own ink, underlined, never broken across lines. */
+const INLINE = { color: 'inherit', textDecoration: 'underline', whiteSpace: 'nowrap' } as const
 
 export type ConsentProps = {
   /** Where the privacy policy lives. */
@@ -89,105 +117,118 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   }
   const link = consentPolicy()?.notice ?? 'Do not sell or share my personal information'
   const small = notice && !shown
+  const optOut = done(() => saveConsent({ ...readConsent(), marketing: false, ads: false }))
 
-  return (
-    <YStack
-      {...slot('consent')}
-      role="dialog"
-      aria-label="Cookie preferences"
-      position="fixed"
-      b={16}
-      l={16}
-      r={16}
-      z={2147483000}
-      maxW={560}
-      gap="$3"
-      p="$4"
-      rounded="$5"
-      borderWidth={1}
-      borderColor="$borderColor"
-      bg="$background"
-      shadowColor="rgba(0,0,0,0.25)"
-      shadowRadius={24}
-      shadowOffset={{ width: 0, height: 8 }}
-    >
-      <Paragraph size="$3" color="$ink" m={0}>
-        {choosing
-          ? 'Choose what Hanzo may measure and share. You can change this at any time.'
-          : small
-            ? 'Hanzo uses cookies to count visits and to measure its ads. You can turn any of it off.'
-            : 'Hanzo uses cookies to count visits and to measure its ads. Nothing from an advertiser loads until you accept.'}{' '}
-        <a href={privacy} style={{ color: 'inherit', textDecoration: 'underline' }}>
-          Privacy policy
-        </a>
-      </Paragraph>
-      {choosing ? (
-        <YStack gap="$3">
-          {locked ? (
-            <Paragraph size="$2" color="$soft" m={0}>
-              Your browser sends Global Privacy Control, so marketing and personalized ads stay off.
-            </Paragraph>
-          ) : null}
-          {KINDS.map((k) => {
-            const off = locked && k.key !== 'analytics'
-            return (
-              <XStack key={k.key} gap="$3" items="center" justify="space-between">
-                <YStack flex={1}>
-                  <Paragraph size="$3" color="$ink" fontWeight="500" m={0}>
-                    {k.title}
-                  </Paragraph>
-                  <Paragraph size="$2" color="$soft" m={0}>
-                    {k.body}
-                  </Paragraph>
-                </YStack>
-                <Switch
-                  aria-label={k.title}
-                  disabled={off}
-                  checked={off ? false : draft[k.key]}
-                  onCheckedChange={(v: boolean) => setDraft({ ...draft, [k.key]: v === true })}
-                />
-              </XStack>
-            )
-          })}
-          <XStack gap="$3" justify="flex-end">
-            <Button type="button" variant="secondary" onClick={done(rejectAll)}>
-              Reject all
-            </Button>
-            <Button type="button" onClick={done(() => saveConsent(draft))}>
-              Save choices
-            </Button>
-          </XStack>
-        </YStack>
-      ) : small ? (
-        <XStack gap="$3" flexWrap="wrap" justify="flex-end">
-          <Button
-            type="button"
-            variant="link"
-            onClick={done(() => saveConsent({ ...readConsent(), marketing: false, ads: false }))}
-          >
-            {link}
-          </Button>
-          <Button type="button" variant="secondary" onClick={choose}>
-            Manage
-          </Button>
-          <Button type="button" onClick={done(() => saveConsent(readConsent()))}>
-            OK
-          </Button>
-        </XStack>
-      ) : (
-        <XStack gap="$3" flexWrap="wrap" justify="flex-end">
-          <Button type="button" variant="link" onClick={choose}>
-            Choose
-          </Button>
-          <Button type="button" variant="secondary" onClick={done(rejectAll)}>
+  if (choosing)
+    return (
+      <YStack {...frame} maxW={440} gap="$3">
+        <Paragraph size="$2" color="$ink" m={0}>
+          {'Choose what Hanzo may measure and share. You can change this at any time. '}
+          <a href={privacy} style={INLINE}>
+            Privacy policy
+          </a>
+        </Paragraph>
+        {locked ? (
+          <Paragraph size="$2" color="$soft" m={0}>
+            Your browser sends Global Privacy Control, so marketing and personalized ads stay off.
+          </Paragraph>
+        ) : null}
+        {KINDS.map((k) => {
+          const off = locked && k.key !== 'analytics'
+          return (
+            <XStack key={k.key} gap="$3" items="center" justify="space-between">
+              <YStack flex={1}>
+                <Paragraph size="$2" color="$ink" fontWeight="500" m={0}>
+                  {k.title}
+                </Paragraph>
+                <Paragraph size="$1" color="$soft" m={0}>
+                  {k.body}
+                </Paragraph>
+              </YStack>
+              <Switch
+                aria-label={k.title}
+                disabled={off}
+                checked={off ? false : draft[k.key]}
+                onCheckedChange={(v: boolean) => setDraft({ ...draft, [k.key]: v === true })}
+              />
+            </XStack>
+          )
+        })}
+        <XStack gap="$2" justify="flex-end">
+          <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
             Reject all
           </Button>
-          <Button type="button" onClick={done(acceptAll)}>
-            Accept all
+          <Button type="button" size="sm" onClick={done(() => saveConsent(draft))}>
+            Save choices
           </Button>
         </XStack>
-      )}
-    </YStack>
+      </YStack>
+    )
+
+  // One bar: the line and its links, then the buttons. They share a row where
+  // the line fits beside them and the buttons drop under it where it does not,
+  // so a phone shows the line over one row of buttons and nothing breaks mid-control.
+  return (
+    <XStack {...frame} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
+      <YStack shrink={1} minW={0}>
+        <Paragraph size="$2" color="$ink" m={0}>
+          {small ? 'Cookies measure visits and ads. ' : 'Cookies measure visits and ads once you accept. '}
+          <a href={privacy} style={INLINE}>
+            Privacy policy
+          </a>
+          {small ? (
+            <>
+              {/* A phone puts the opt-out on its own line; a wider screen keeps it on this one. */}
+              <Span display="none" $sm={{ display: 'inline' }}>
+                {' · '}
+              </Span>
+              <Span render="br" display="block" $sm={{ display: 'none' }} />
+              {/* Inline, so it reads as the link it is and no control floor stretches the line. */}
+              <a
+                href="#"
+                role="button"
+                style={INLINE}
+                onClick={(e) => {
+                  e.preventDefault()
+                  optOut()
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== ' ') return
+                  e.preventDefault()
+                  optOut()
+                }}
+              >
+                {link}
+              </a>
+            </>
+          ) : null}
+        </Paragraph>
+      </YStack>
+      <XStack gap="$2" ml="auto" items="center">
+        {small ? (
+          <>
+            <Button type="button" size="sm" variant="secondary" onClick={choose}>
+              Manage
+            </Button>
+            <Button type="button" size="sm" onClick={done(() => saveConsent(readConsent()))}>
+              OK
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button type="button" size="sm" variant="link" onClick={choose}>
+              Choose
+            </Button>
+            <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
+              Reject all
+            </Button>
+            <Button type="button" size="sm" onClick={done(acceptAll)}>
+              Accept all
+            </Button>
+          </>
+        )}
+      </XStack>
+    </XStack>
   )
 }
 
