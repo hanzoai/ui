@@ -38,6 +38,7 @@ import { useCallback, useState, type ReactNode } from 'react'
 
 import { ink } from '../backends/gui/ink'
 import { slot } from '../backends/gui/slot'
+import { useFileDrop } from '../product/useFileDrop'
 import { Composer, type ComposerProps } from './Composer'
 import { Message, type Role } from './Message'
 import { Parts, type MessagePart } from './Parts'
@@ -102,6 +103,17 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
   empty?: ReactNode
   /** The composer's own props — placeholder, hint, the send control, the field. */
   composer?: Partial<ComposerProps>
+  /**
+   * Route files dropped ANYWHERE in the window.
+   *
+   * Present, the surface lights a full-window overlay on a file drag and hands
+   * the dropped files here — the same window-level drop `@hanzo/chat` runs, off
+   * the one `useFileDrop` primitive, so a host gets "drop on any part of the
+   * interface" without writing a listener. Absent, the window is left untouched
+   * (the hook is disabled), because a drop with nowhere to go should not
+   * swallow the browser's own behaviour.
+   */
+  onFiles?: (files: File[]) => void
 }
 
 /**
@@ -135,9 +147,15 @@ export function Chat({
   body,
   empty,
   composer,
+  onFiles,
   ...thread
 }: ChatProps) {
   const [draft, setDraft] = useState('')
+
+  // The ONE window-level drop, off the shared primitive. Enabled only when a
+  // host passed `onFiles` — a surface that cannot route a file leaves the
+  // window alone rather than swallowing the drop.
+  const { active: dropping } = useFileDrop(onFiles ?? (() => {}), !!onFiles)
 
   // Clearing here rather than in an effect on `messages` is what keeps a send
   // from racing the answer: the draft is gone the moment it is sent, and a
@@ -186,6 +204,26 @@ export function Chat({
         {...(onStop ? { onStop } : {})}
         {...composer}
       />
+      {dropping ? (
+        <div
+          aria-hidden
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 50,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+            background: 'rgba(52, 211, 153, 0.08)',
+            border: '2px dashed #34d399',
+          }}
+        >
+          <span style={{ fontSize: 15, fontWeight: 600, color: '#34d399' }}>
+            Drop files to attach
+          </span>
+        </div>
+      ) : null}
     </YStack>
   )
 }
