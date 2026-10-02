@@ -67,3 +67,37 @@ describe('Button renders an element the browser can submit with', () => {
     expect(openTag(html(<Button>Add to cart</Button>))).toContain('type="button"')
   })
 })
+
+/**
+ * The destructive fill is design's, cut for its label.
+ *
+ * It drew gui's `$red9` under `$white1`, 3.9:1 — under the 4.5 text needs — so
+ * every Delete and Leave call shipped unreadable, and no host could fix it: the
+ * colour lived in this frame, not in a token a host loads. Now the frame names
+ * `--destructive` and `--destructive-foreground`, which design gates at 4.5:1 in
+ * both themes, and the hover deepens to `--destructive-hover` instead of fading.
+ */
+describe('the destructive Button wears design’s fill and label', () => {
+  const markup = html(<Button variant="destructive">Leave call</Button>)
+  // The button's OWN rules: the markup carries gui's whole theme sheet, every
+  // hue in it, so the assertion reads only the classes this control wears.
+  const own = (openTag(markup).match(/class="([^"]*)"/)?.[1] ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .flatMap((c) => [...markup.matchAll(new RegExp(`\\.${c.replace(/[$-]/g, '\\$&')}[^{]*\\{([^}]*)\\}`, 'g'))].map((m) => m[1]))
+    .join(';')
+
+  it('paints var(--destructive) under var(--destructive-foreground)', () => {
+    expect(own).toMatch(/background-color:\s*var\(--destructive\)/)
+    expect(markup).toMatch(/color:\s*var\(--destructive-foreground\)/)
+  })
+
+  it('deepens to var(--destructive-hover) under the cursor', () => {
+    expect(own).toMatch(/background-color:\s*var\(--destructive-hover\)/)
+  })
+
+  it('names no gui red', () => {
+    expect(own).not.toBe('')
+    expect(own).not.toMatch(/red\d|--c-red|--c-white/)
+  })
+})

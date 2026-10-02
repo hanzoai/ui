@@ -118,7 +118,15 @@ const Frame = styled(GuiButton.Frame, {
         borderColor: '$rim',
         hoverStyle: { bg: '$rim', borderColor: '$bound' },
       },
-      destructive: { bg: '$red9', color: '$white1', hoverStyle: { opacity: 0.9 } },
+      // design's destructive FILL and the label it is cut for, not gui's own red:
+      // white on `$red9` was 3.9:1. `--destructive` is a fill under
+      // `--destructive-foreground` at 4.6:1 or better in both themes, and its
+      // hover deepens rather than fades — design's check-tokens holds both.
+      destructive: {
+        bg: 'var(--destructive)',
+        color: 'var(--destructive-foreground)',
+        hoverStyle: { bg: 'var(--destructive-hover)' },
+      },
       outline: {
         bg: '$background',
         color: '$ink',
