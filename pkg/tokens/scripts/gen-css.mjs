@@ -22,8 +22,11 @@ import { dark, light, scale } from '../dist/theme.mjs'
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
 
 const decl = (v) => `  --${v.name}:${v.value};${v.comment ? ` /* ${v.comment} */` : ''}`
-const banner = (title) => `\n  /* ——— ${title} ——— */`
-const block = (sections) => sections.map((s) => `${banner(s.title)}\n${s.vars.map(decl).join('\n')}`).join('\n')
+const banner = (title, note) =>
+  note?.length
+    ? `\n  /* ——— ${title} ———\n${note.map((l) => `     ${l}`).join('\n')} */`
+    : `\n  /* ——— ${title} ——— */`
+const block = (sections) => sections.map((s) => `${banner(s.title, s.note)}\n${s.vars.map(decl).join('\n')}`).join('\n')
 
 /** :root{ color-scheme:dark; …dark… } .light{ color-scheme:light; …light… } */
 function sheet(header, rootSections, lightSections) {

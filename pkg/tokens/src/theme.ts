@@ -38,6 +38,8 @@ export interface TokenVar {
 export interface TokenSection {
   /** Banner emitted above the group. */
   title: string
+  /** Lines continuing the banner comment, for a group that needs its reason stated. */
+  note?: string[]
   vars: TokenVar[]
 }
 
@@ -61,6 +63,20 @@ export const dark: TokenSection[] = [
       { name: 'pure-white', value: '#FFFFFF' },
       { name: 'hanzo-black', value: '#0A0A0B' },
       { name: 'hanzo-white', value: '#FFFFFF' },
+    ],
+  },
+  {
+    title: 'art: four hues, for artwork only',
+    note: [
+      'Light, never paint. They colour hero art and the few soft glows that give a',
+      'section form; chrome, type and every control stay on the monochrome ladder',
+      'below. The same in both themes, because art is not themed.',
+    ],
+    vars: [
+      { name: 'art-tide', value: '#2F6BFF' },
+      { name: 'art-iris', value: '#8B5CF6' },
+      { name: 'art-ember', value: '#FF7A3D' },
+      { name: 'art-glow', value: '#F4F1FF' },
     ],
   },
   {
@@ -105,6 +121,7 @@ export const dark: TokenSection[] = [
       { name: 'muted', value: '#171717' },
       { name: 'muted-foreground', value: '#a3a3a3' },
       { name: 'accent', value: '#262626' },
+      { name: 'accent-hover', value: 'var(--secondary-hover)', comment: 'the accent under the cursor; a chosen accent restates it' },
       { name: 'accent-foreground', value: '#fafafa' },
       { name: 'destructive', value: 'var(--state-error)' },
       { name: 'destructive-hover', value: '#dc2626', comment: 'red-600 — deepens under the cursor' },
@@ -119,6 +136,7 @@ export const dark: TokenSection[] = [
       { name: 'border-control', value: 'var(--white-15)', comment: "a control's resting edge" },
       { name: 'border-focus', value: 'var(--white-22)', comment: 'that control, focused' },
       { name: 'border-selected', value: 'var(--white-30)', comment: 'the thing currently CHOSEN' },
+      { name: 'edge', value: 'var(--white-06)', comment: 'fainter than the hairline: an edge between chrome and page' },
       { name: 'input', value: 'var(--border-control)', comment: 'shadcn `border-input` — a control' },
       { name: 'ring', value: 'var(--white-40)', comment: 'the focus indicator — 3:1 non-text contrast' },
       { name: 'ring-halo', value: 'var(--white-10)', comment: 'the soft halo outside the ring' },
@@ -203,6 +221,7 @@ export const light: TokenSection[] = [
       { name: 'muted', value: '#ededed' },
       { name: 'muted-foreground', value: '#525252' },
       { name: 'accent', value: '#e4e4e4' },
+      { name: 'accent-hover', value: 'var(--secondary-hover)' },
       { name: 'accent-foreground', value: '#0a0a0a' },
       { name: 'destructive', value: 'var(--state-error)' },
       { name: 'destructive-hover', value: '#dc2626' },
@@ -217,6 +236,7 @@ export const light: TokenSection[] = [
       { name: 'border-control', value: 'rgb(0 0 0 / .15)' },
       { name: 'border-focus', value: 'rgb(0 0 0 / .32)', comment: 'pushed past .22: black-on-white reads fainter' },
       { name: 'border-selected', value: 'rgb(0 0 0 / .42)' },
+      { name: 'edge', value: 'rgb(0 0 0 / .06)' },
       { name: 'input', value: 'var(--border-control)' },
       { name: 'ring', value: 'rgb(0 0 0 / .5)', comment: '3.98:1 on #ffffff, 3.67:1 on #f5f5f5' },
       { name: 'ring-halo', value: 'rgb(0 0 0 / .07)' },
