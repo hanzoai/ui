@@ -701,6 +701,10 @@ One chain, one writer per step:
                    --border …); radii x --radius-scale, space x --density,
                    type -> --text-*; <Hanzo> mounts useAppearance + useScheme
 
+The workspace rooms that consume all of this ship as `@hanzo/rooms`
+(`github.com/hanzoai/rooms`), beside this repo rather than in it, the way
+`@hanzo/build` does.
+
 What a host does: `bootScript()` in `<head>`, `<Hanzo appearance={…}>` (or
 `useAppearance()` + `defaultTheme={useScheme()}` beside its own gui provider),
 and nothing else — no next-themes, no class mirror, no theme toggle of its own.
@@ -724,7 +728,6 @@ ui/
   pkg/                   every package, and the reason this repo exists
     ui/                  @hanzo/ui@8 — the core library (npm)
     appearance/          @hanzo/appearance     composer/ @hanzo/composer
-    rooms/               @hanzo/rooms — the workspace rooms (pkg/rooms/LLM.md)
     data/                @hanzo/data           hanzo/    the CLI
     event/               telemetry client — POST /v1/event
     observe/             capture engine        og/       OG image generation
