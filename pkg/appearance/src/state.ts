@@ -10,10 +10,10 @@
  * No React here on purpose. A server render, a browser extension and an embedded
  * preview all need to apply a preference, and only one of them has hooks.
  */
-import { vars, css, type Preference } from '@hanzo/design'
+import { vars, css, type Preference, type Scheme } from '@hanzo/design'
 import { resolve, type Layers, type Scope } from './scope'
 
-export type { Preference }
+export type { Preference, Scheme }
 
 /** One key, one shape. Namespaced because a surface's localStorage is shared. */
 export const KEY = 'hanzo.appearance'
@@ -81,6 +81,8 @@ export function read({ scope = 'everywhere', org, store = safeStore() }: At = {}
       ...(p.font === 'default' || p.font === 'system' || p.font === 'serif' || p.font === 'mono' ? { font: p.font } : {}),
       ...(p.width === 'narrow' || p.width === 'default' || p.width === 'wide' ? { width: p.width } : {}),
       ...(typeof p.accent === 'string' ? { accent: p.accent } : {}),
+      ...(p.theme === 'system' || p.theme === 'light' || p.theme === 'dark' ? { theme: p.theme } : {}),
+      ...(p.radius === 'sharp' || p.radius === 'default' || p.radius === 'round' ? { radius: p.radius } : {}),
     }
   } catch {
     return {}
@@ -124,8 +126,20 @@ export function write(p: Preference, { scope = 'everywhere', org, store = safeSt
  * An axis the preference does not set is REMOVED rather than written as a
  * neutral value, so the stylesheet's own default is what answers. Writing `1`
  * would look identical and would silently outrank a brand that set its own.
+ *
+ * The theme is the one axis that is a CLASS rather than a property: design's
+ * `.light` and gui's `.t_light` / `.t_dark` are what every sheet keys on, so the
+ * theme is painted as those classes (see `paint`).
+ *
+ * Applied to the document's own root, the result is also kept as what the next
+ * load paints before any script of ours can run (`bootScript`), so a reload and
+ * a navigation open in the person's colours rather than flashing the defaults.
  */
-export function apply(p: Preference, root: HTMLElement | undefined = isBrowser() ? document.documentElement : undefined): void {
+export function apply(
+  p: Preference,
+  root: HTMLElement | undefined = isBrowser() ? document.documentElement : undefined,
+  { store = safeStore() }: { store?: Storage } = {},
+): void {
   if (!root) return
   const next = vars(p)
   for (const name of KNOBS) {
@@ -133,32 +147,81 @@ export function apply(p: Preference, root: HTMLElement | undefined = isBrowser()
     if (v) root.style.setProperty(name, v)
     else root.style.removeProperty(name)
   }
+  paint(p.theme, root)
+  if (isBrowser() && root === document.documentElement) {
+    follow(p.theme)
+    try {
+      store?.setItem(PAINTED, JSON.stringify({ vars: next, ...(p.theme ? { theme: p.theme } : {}) }))
+    } catch {
+      // A full or blocked store costs the next load its head start, nothing else.
+    }
+  }
+}
+
+/** What the last `apply()` put on this device's document — the boot script's input. */
+export const PAINTED = `${KEY}.painted`
+
+/** Whether a scheme comes out dark on this device right now. */
+export const dark = (theme: Scheme): boolean =>
+  theme === 'dark' ||
+  (theme === 'system' && typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches)
+
+/**
+ * Put a theme on the document as the classes every sheet keys on.
+ *
+ * Both vocabularies at once, because both are read: @hanzo/design retunes under
+ * `.light`, and gui scopes every theme variable to `:root.t_light` / `.t_dark`.
+ * Hosts used to keep them in step with a mutation observer of their own; one
+ * writer that says both is the same answer with nothing to keep in step.
+ *
+ * `data-scheme` records that the theme was set HERE. A theme nobody chose is left
+ * to whoever else answers it (the server's markup, design's dark default) — but
+ * once one was chosen and is then cleared, it is handed back to design's dark
+ * rather than left stuck on the last choice.
+ */
+export function paint(theme: Scheme | undefined, root: HTMLElement): void {
+  if (!theme && !root.hasAttribute('data-scheme')) return
+  const night = theme ? dark(theme) : true
+  root.classList.toggle('light', !night)
+  root.classList.toggle('dark', night)
+  root.classList.toggle('t_light', !night)
+  root.classList.toggle('t_dark', night)
+  root.style.colorScheme = night ? 'dark' : 'light'
+  if (theme) root.setAttribute('data-scheme', theme)
+  else root.removeAttribute('data-scheme')
+}
+
+/**
+ * `system` keeps following the device, not only at the moment it was chosen.
+ * One listener for the document, installed while the theme is `system` and
+ * removed the moment it is not — so it cannot pile up across remounts.
+ */
+let watching: { query: MediaQueryList; on: () => void } | undefined
+function follow(theme: Scheme | undefined): void {
+  if (theme === 'system') {
+    if (watching || typeof matchMedia !== 'function') return
+    const query = matchMedia('(prefers-color-scheme: dark)')
+    const on = () => paint('system', document.documentElement)
+    query.addEventListener?.('change', on)
+    watching = { query, on }
+  } else if (watching) {
+    watching.query.removeEventListener?.('change', watching.on)
+    watching = undefined
+  }
 }
 
 /**
  * Every property `vars()` can emit — the removal list has to be exhaustive, or
  * clearing an axis would leave the last value stuck on the document.
  *
- * The display rungs are here because a modular scale REGENERATES them: turning
- * one off has to hand the ramp back to the stylesheet, and an inline property
- * that nothing removes outranks the stylesheet forever. They are derived from
- * one list rather than typed out, so a rung cannot be added to the scale and
- * forgotten here — which is the one way this list goes wrong.
+ * Asked of `vars()` itself, with every axis set, rather than typed out: the list
+ * was a copy once, and the accent's ink and hover — added to design after the
+ * copy was made — would have been written by an accent and never removed by a
+ * reset. A name design emits is a name this removes, by construction.
  */
-const DISPLAY_RUNGS = ['2xl', '3xl', '4xl', '5xl', '6xl', '7xl', '8xl', '9xl']
-
-export const KNOBS: readonly string[] = [
-  '--type-scale',
-  '--type-ratio',
-  '--density',
-  '--font-sans',
-  '--container-max',
-  '--container-prose',
-  '--container-wide',
-  '--primary',
-  '--accent',
-  ...DISPLAY_RUNGS.map((r) => `--text-${r}`),
-]
+export const KNOBS: readonly string[] = Object.keys(
+  vars({ type: 1, ratio: 1, modular: 1.25, density: 'compact', font: 'serif', width: 'wide', accent: '#000', radius: 'round' }),
+)
 
 /**
  * What this person, in this org, on this device, should actually see.
@@ -191,32 +254,28 @@ export function style(p: Preference): string {
 /**
  * A tiny script to inline in `<head>`, BEFORE the stylesheet paints.
  *
- * It reads the same key and writes the same properties this module does — it has
- * to be a string because it must run before any bundle, and it stays this small
- * for the same reason. Anything it cannot do (validation, colour checking) is
- * done again by `apply()` the moment React mounts.
+ * It REPLAYS what `apply()` last put on this device's document — every custom
+ * property and the theme — and computes nothing. That is the whole design: the
+ * script has to be a string, so anything it computed would be a second copy of
+ * `vars()`, and the copy it used to be had already fallen behind — it painted
+ * type, density, font and width and never the accent, so every load opened in
+ * the default colour and changed it when React mounted.
+ *
+ * `base` is the install's own default, painted on a device that has never
+ * applied anything. It is resolved here, at render time, through the same
+ * `vars()`, because a boot script cannot await anything.
  */
-export function bootScript({ org, base }: { org?: string; base?: Preference } = {}): string {
-  // The install's and the org's defaults are known at render time, so they are
-  // BAKED into the script rather than fetched by it — a boot script cannot await
-  // anything, and a layer that arrives after first paint is the flash this
-  // function exists to prevent.
-  const seed = JSON.stringify(base ?? {})
-  const keys = JSON.stringify(org ? [KEY, keyFor('org', org)] : [KEY])
+export function bootScript({ base }: { base?: Preference } = {}): string {
+  const seed = JSON.stringify({ vars: vars(base ?? {}), ...(base?.theme ? { theme: base.theme } : {}) })
   return (
-    `(function(){try{var p=${seed};` +
-    // Narrowest last, and axis by axis — the same rule resolve() follows, so the
-    // pre-paint answer and the post-mount one cannot disagree.
-    `${keys}.forEach(function(k){var o=JSON.parse(localStorage.getItem(k)||'{}');` +
-    `for(var a in o)if(o[a]!==undefined&&o[a]!=='')p[a]=o[a]});` +
-    `var s=document.documentElement.style;` +
-    `if(typeof p.type==='number')s.setProperty('--type-scale',String(Math.min(1.4,Math.max(0.85,p.type))));` +
-    `if(typeof p.ratio==='number')s.setProperty('--type-ratio',String(Math.min(1.5,Math.max(0.75,p.ratio))));` +
-    `var d={compact:'0.85',default:'1',comfortable:'1.15'}[p.density];if(d)s.setProperty('--density',d);` +
-    `var f={system:'ui-sans-serif, system-ui, -apple-system, sans-serif',serif:'var(--font-serif)',mono:'var(--font-mono)'}[p.font];` +
-    `if(f)s.setProperty('--font-sans',f);` +
-    `var w={narrow:['64rem','40rem','58rem'],wide:['96rem','56rem','86rem']}[p.width];` +
-    `if(w){s.setProperty('--container-max',w[0]);s.setProperty('--container-prose',w[1]);s.setProperty('--container-wide',w[2])}` +
+    `(function(){try{var d=document.documentElement,s=d.style,c=null;` +
+    `try{c=JSON.parse(localStorage.getItem(${JSON.stringify(PAINTED)})||'null')}catch(e){}` +
+    `if(!c||typeof c!=='object')c=${seed};var v=c.vars||{};` +
+    `for(var k in v)if(k.slice(0,2)==='--'&&typeof v[k]==='string')s.setProperty(k,v[k]);` +
+    `var t=c.theme;if(t==='light'||t==='dark'||t==='system'){` +
+    `var n=t==='dark'||(t==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);` +
+    `var l=d.classList;l.toggle('light',!n);l.toggle('dark',n);l.toggle('t_light',!n);l.toggle('t_dark',n);` +
+    `s.colorScheme=n?'dark':'light';d.setAttribute('data-scheme',t)}` +
     `}catch(e){}})()`
   )
 }

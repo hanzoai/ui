@@ -24,12 +24,12 @@
  * a hundred — and a step that is named can be described in support, tested, and
  * restored.
  */
-import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore, type CSSProperties, type ReactNode } from 'react'
 
 import { load, save, type Account } from './account'
 import { TYPE_MIN, TYPE_MAX } from '@hanzo/design'
 
-import type { Face, Measure } from '@hanzo/design'
+import type { Corner, Face, Measure, Scheme } from '@hanzo/design'
 
 import { DEFAULT, apply, current, read, write, type Preference } from './state'
 import { layerFor, type Layer, type Resolved, type Scope } from './scope'
@@ -93,6 +93,44 @@ const MEASURES: Array<{ label: string; value: Measure }> = [
   { label: 'Wide', value: 'wide' },
 ]
 
+/** The ground. `System` follows the device and keeps following it. */
+const SCHEMES: Array<{ label: string; value: Scheme }> = [
+  { label: 'System', value: 'system' },
+  { label: 'Light', value: 'light' },
+  { label: 'Dark', value: 'dark' },
+]
+
+/** How round the corners are — one multiplier, the pill exempt. */
+const CORNERS: Array<{ label: string; value: Corner }> = [
+  { label: 'Sharp', value: 'sharp' },
+  { label: 'Default', value: 'default' },
+  { label: 'Round', value: 'round' },
+]
+
+/** The ground the document is showing right now, read off `<html>`. */
+const shown = (): 'light' | 'dark' =>
+  document.documentElement.classList.contains('light') ? 'light' : 'dark'
+
+function watch(change: () => void): () => void {
+  const o = new MutationObserver(change)
+  o.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  return () => o.disconnect()
+}
+
+/**
+ * Light or dark, as the document shows it — for the one thing that must be told
+ * in JS rather than read from CSS: gui's provider, whose `defaultTheme` picks the
+ * theme its components resolve tokens against.
+ *
+ * It reads the CLASS, not a stored preference, so it agrees with whatever painted
+ * the page — the boot script, `apply()`, or a host's own markup — and it follows
+ * a `system` theme when the device changes, because `apply()` repaints the class.
+ * The server answers dark, design's default.
+ */
+export function useScheme(): 'light' | 'dark' {
+  return useSyncExternalStore(watch, shown, () => 'dark')
+}
+
 /** A monochrome brand spends exactly one hue, so these are starting points, not
  *  a palette — and "Default" is first because most people want the brand. */
 const ACCENTS: Array<{ label: string; value?: string }> = [
@@ -107,9 +145,10 @@ const ACCENTS: Array<{ label: string; value?: string }> = [
 /**
  * Read the stored preference and keep the document in step with it.
  *
- * Applied on mount as well as on change: the inline boot script sets type and
- * density before first paint, but it deliberately does not validate a colour, so
- * the mount is where an accent actually lands.
+ * Applied on mount as well as on change. The inline boot script replays what
+ * the last apply painted on this device; the mount is where the resolved stack —
+ * an org's layer, a choice made on another origin — reaches the document, and
+ * where it is kept for the next boot.
  */
 export function useAppearance({
   org,
@@ -353,9 +392,11 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
   const type = pref.type ?? 1
   const ratio = pref.ratio ?? 1
   const near = (a: number, b: number) => Math.abs(a - b) < 0.001
+  const ground = useScheme()
   const touched =
     type !== 1 || ratio !== 1 || pref.modular !== undefined || (pref.density ?? 'default') !== 'default' ||
-    (pref.font ?? 'default') !== 'default' || (pref.width ?? 'default') !== 'default' || !!pref.accent
+    (pref.font ?? 'default') !== 'default' || (pref.width ?? 'default') !== 'default' || !!pref.accent ||
+    !!pref.theme || (pref.radius ?? 'default') !== 'default'
   const here = orgName || org
 
   return (
@@ -373,6 +414,16 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
           </Choice>
         </Row>
       ) : null}
+
+      {/* Nobody chose yet: mark what the document is showing, which is an
+          honest answer and never a guess at the install's intent. */}
+      <Row label="Theme" by={from.theme} scope={scope} org={here}>
+        {SCHEMES.map((t) => (
+          <Choice key={t.value} on={(pref.theme ?? ground) === t.value} onSelect={() => set({ theme: t.value })}>
+            {t.label}
+          </Choice>
+        ))}
+      </Row>
 
       <Row label="Text size" by={from.type} scope={scope} org={here}>
         {TYPE_STEPS.map((s) => (
@@ -430,6 +481,14 @@ export function Appearance({ org, orgName, install, orgPref, account }: { org?: 
         {MEASURES.map((m) => (
           <Choice key={m.value} on={(pref.width ?? 'default') === m.value} onSelect={() => set({ width: m.value })}>
             {m.label}
+          </Choice>
+        ))}
+      </Row>
+
+      <Row label="Corners" by={from.radius} scope={scope} org={here}>
+        {CORNERS.map((c) => (
+          <Choice key={c.value} on={(pref.radius ?? 'default') === c.value} onSelect={() => set({ radius: c.value })}>
+            {c.label}
           </Choice>
         ))}
       </Row>

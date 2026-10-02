@@ -27,7 +27,7 @@
  *   <Appearance org="acme" orgName="Acme" orgPref={fromServer} />
  *   current({ install, org: fromServer, orgId: 'acme' })   // outside React
  */
-export { Appearance, useAppearance, TYPE_STEPS, RATIO_STEPS } from './Appearance'
-export { read, readLayers, write, apply, current, style, bootScript, keyFor, DEFAULT, KEY, type Preference, type At } from './state'
+export { Appearance, useAppearance, useScheme, TYPE_STEPS, RATIO_STEPS } from './Appearance'
+export { read, readLayers, write, apply, paint, dark, current, style, bootScript, keyFor, DEFAULT, KEY, PAINTED, type Preference, type Scheme, type At } from './state'
 export { load, save, type Account } from './account'
 export { resolve, layerFor, isInherited, LAYERS, type Layer, type Layers, type Resolved, type Scope } from './scope'

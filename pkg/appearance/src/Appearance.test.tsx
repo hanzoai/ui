@@ -68,6 +68,8 @@ const installStore = () => {
 beforeEach(() => {
   installStore()
   document.documentElement.removeAttribute('style')
+  document.documentElement.removeAttribute('class')
+  document.documentElement.removeAttribute('data-scheme')
   host = document.createElement('div')
   document.body.append(host)
   act(() => {
@@ -85,6 +87,31 @@ describe('the panel', () => {
     // A choice between one option and itself is noise.
     render(<Appearance />)
     expect(host.textContent).not.toContain('Applies to')
+  })
+
+  it('the theme is one of its rows, and lands in both vocabularies', () => {
+    render(<Appearance />)
+    press('Light')
+    expect(stored(KEY)).toEqual({ theme: 'light' })
+    const c = document.documentElement.classList
+    expect(c.contains('light') && c.contains('t_light')).toBe(true)
+    press('Dark')
+    expect(c.contains('light')).toBe(false)
+    expect(c.contains('t_dark')).toBe(true)
+  })
+
+  it('marks the theme the document shows when nobody chose one', () => {
+    document.documentElement.className = 'light'
+    render(<Appearance />)
+    const light = [...host.querySelectorAll('button')].find((b) => b.textContent === 'Light')
+    expect(light?.getAttribute('aria-pressed')).toBe('true')
+  })
+
+  it('corners are one knob', () => {
+    render(<Appearance />)
+    press('Round')
+    expect(stored(KEY)).toEqual({ radius: 'round' })
+    expect(prop('--radius-scale')).toBe('1.5')
   })
 
   it('writes to the everywhere layer by default, and puts it on the document', () => {

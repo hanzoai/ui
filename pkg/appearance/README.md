@@ -1,7 +1,7 @@
 # @hanzo/appearance
 
-The one appearance panel: text size, density and accent, stored per person and
-applied to the whole product.
+The one appearance panel: theme, text size, scale, density, face, width, corners
+and accent, stored per person and applied to the whole product.
 
 ```tsx
 import { Appearance } from '@hanzo/appearance'
@@ -18,15 +18,32 @@ import { bootScript } from '@hanzo/appearance/state'
 <script dangerouslySetInnerHTML={{ __html: bootScript() }} />
 ```
 
-## Why three knobs and not a theme
+`<Hanzo>` from `@hanzo/ui` applies the person's choice on mount and hands gui the
+theme the document shows. A host that mounts its own gui provider calls
+`useAppearance()` once at its root and passes `useScheme()` as `defaultTheme`.
 
-`@hanzo/design` publishes `--type-scale`, `--density` and `--primary`/`--accent`,
-and every ramp in `tokens/*.css` multiplies by them. So a preference sets three
-numbers rather than restating a scale, and rungs added later are covered for
-free. `@hanzo/design`'s own history is the argument: the first version kept a
-copy of the type ramp so it could recompute each rung, and the copy had already
-drifted two rungs before anyone used it.
+## Knobs, not themes
 
-Requires `@hanzo/design >= 0.4.11` (the knobs) and `@hanzo/ui >= 8.0.69` (the
-`$n` ladder resolving through `var(--text-*)`). On older versions the controls
-render and store, and move almost nothing.
+`@hanzo/design` publishes `--type-scale`, `--type-ratio`, `--density`,
+`--radius-scale` and the `--primary` / `--accent` family, and every ramp in
+`tokens/*.css` reads them. A preference sets a few numbers and one colour rather
+than restating a scale, so rungs added later are covered for free.
+
+An accent is a family: the fill, the ink that reads on it (design's black or
+white, whichever contrasts more) and the hover that deepens it, all derived from
+the one colour by `vars()`. The theme is a class, `light` / `t_light` or
+`dark` / `t_dark`, painted on `<html>` in both vocabularies.
+
+## First paint
+
+`apply()` keeps what it painted under `hanzo.appearance.painted`, and
+`bootScript()` replays exactly that before any bundle runs. It computes nothing,
+so it cannot fall behind `vars()`. `bootScript({ base })` paints an install
+default on a device that has never applied anything.
+
+## Where a choice lives
+
+Four layers, the narrowest that has an opinion winning axis by axis:
+`install < org < person (everywhere) < person (this org)`. The person's layers
+are kept in IAM (`/v1/iam/preferences`, member `appearance`) and cached on the
+device, so a choice made on one Hanzo origin reaches the others.

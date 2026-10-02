@@ -5,7 +5,7 @@
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { DEFAULT, KEY, apply, bootScript, read, style, write } from './state'
+import { DEFAULT, KEY, KNOBS, PAINTED, apply, bootScript, paint, read, style, write } from './state'
 
 /** A localStorage that behaves, and one that refuses — private mode and embedded
  *  frames both throw rather than returning null, which is the case that takes a
@@ -40,8 +40,8 @@ describe('read', () => {
 
   it('round-trips what write stored', () => {
     const s = memory()
-    write({ type: 1.15, density: 'compact', accent: '#808000' }, { store: s })
-    expect(read({ store: s })).toEqual({ type: 1.15, density: 'compact', accent: '#808000' })
+    write({ type: 1.15, density: 'compact', accent: '#808000', theme: 'light', radius: 'round' }, { store: s })
+    expect(read({ store: s })).toEqual({ type: 1.15, density: 'compact', accent: '#808000', theme: 'light', radius: 'round' })
   })
 
   it('never throws when storage is blocked — an unreadable preference is an unset one', () => {
@@ -51,10 +51,12 @@ describe('read', () => {
 
   it('drops values it does not recognise rather than passing them to CSS', () => {
     const s = memory()
-    s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', evil: '</style>' }))
+    s.setItem(KEY, JSON.stringify({ type: 'huge', density: 'roomy', theme: 'sepia', radius: 'pill', evil: '</style>' }))
     const p = read({ store: s }) as Record<string, unknown>
     expect(p.type).toBeUndefined()
     expect(p.density).toBeUndefined()
+    expect(p.theme).toBeUndefined()
+    expect(p.radius).toBeUndefined()
     expect(p.evil).toBeUndefined()
   })
 
@@ -107,6 +109,62 @@ describe('apply', () => {
     expect(Number(root.style.getPropertyValue('--type-scale'))).toBeGreaterThanOrEqual(0.85)
   })
 
+  it('an accent is a family: fill, ink and hover land and leave together', () => {
+    apply({ accent: '#f59e0b' }, root)
+    expect(root.style.getPropertyValue('--accent')).toBe('#f59e0b')
+    expect(root.style.getPropertyValue('--accent-foreground')).toBe('#0a0a0a')
+    expect(root.style.getPropertyValue('--accent-hover')).toContain('#f59e0b')
+    expect(root.style.getPropertyValue('--primary-hover')).toContain('#f59e0b')
+    apply({}, root)
+    for (const name of ['--accent', '--accent-foreground', '--accent-hover', '--primary', '--primary-foreground', '--primary-hover']) {
+      expect([name, root.style.getPropertyValue(name)]).toEqual([name, ''])
+    }
+  })
+
+  it('corners are one knob on the root', () => {
+    apply({ radius: 'sharp' }, root)
+    expect(root.style.getPropertyValue('--radius-scale')).toBe('0.5')
+    apply({}, root)
+    expect(root.style.getPropertyValue('--radius-scale')).toBe('')
+  })
+
+  it('paints a chosen theme in design\'s and gui\'s words at once', () => {
+    apply({ theme: 'light' }, root)
+    expect(root.classList.contains('light')).toBe(true)
+    expect(root.classList.contains('t_light')).toBe(true)
+    expect(root.classList.contains('t_dark')).toBe(false)
+    apply({ theme: 'dark' }, root)
+    expect(root.classList.contains('light')).toBe(false)
+    expect(root.classList.contains('t_dark')).toBe(true)
+    expect(root.style.colorScheme).toBe('dark')
+  })
+
+  it('leaves a theme nobody chose to whoever else answers it', () => {
+    root.className = 'light t_light'
+    apply({ type: 1.1 }, root)
+    expect(root.className).toBe('light t_light')
+  })
+
+  it('hands a cleared theme back to design\'s dark rather than leaving it stuck', () => {
+    apply({ theme: 'light' }, root)
+    apply({}, root)
+    expect(root.classList.contains('light')).toBe(false)
+    expect(root.classList.contains('t_dark')).toBe(true)
+    expect(root.hasAttribute('data-scheme')).toBe(false)
+  })
+
+  it('system follows the device', () => {
+    const real = globalThis.matchMedia
+    globalThis.matchMedia = ((q: string) => ({ matches: q.includes('dark') ? false : true, addEventListener() {}, removeEventListener() {} })) as unknown as typeof matchMedia
+    try {
+      paint('system', root)
+      expect(root.classList.contains('light')).toBe(true)
+      expect(root.getAttribute('data-scheme')).toBe('system')
+    } finally {
+      globalThis.matchMedia = real
+    }
+  })
+
   it('is a no-op without a document, so a server render does not crash', () => {
     expect(() => apply({ type: 1.2 }, undefined)).not.toThrow()
   })
@@ -119,42 +177,67 @@ describe('first paint', () => {
     expect(out).toContain('--type-scale:1.15')
   })
 
-  // Two implementations of one rule is how a flash becomes a permanent
-  // disagreement, so they are checked against each other rather than trusted.
-  //
-  // BOTH cases, and the empty one is the whole point: the head script has always
-  // set a property only when one is stored, while `read()` used to merge DEFAULT
-  // in, so `apply(read())` stamped `--type-scale: 1; --density: 1` on every
-  // untouched install. Checking only a stored value passed throughout.
-  it.each([
-    ['a stored value', { type: 1.15, density: 'comfortable' as const }],
-    ['NOTHING stored', {}],
-  ])('the boot script agrees with apply() on %s', (_name, stored) => {
-    const store = memory()
-    write(stored, { store })
-
-    apply(read({ store }), root)
-    const viaApply = {
-      type: root.style.getPropertyValue('--type-scale'),
-      density: root.style.getPropertyValue('--density'),
-    }
-
-    const boot = document.createElement('html')
+  // The boot script REPLAYS what apply() painted, so it cannot disagree with
+  // it — and every axis is covered, the accent and the theme included, which
+  // the computed copy it replaced never painted.
+  const boot = (store: Storage, html = document.createElement('html')) => {
     const g = globalThis as unknown as { localStorage: Storage; document: { documentElement: HTMLElement } }
     const realDoc = g.document
+    const realStore = g.localStorage
     g.localStorage = store
-    g.document = { documentElement: boot }
+    g.document = { documentElement: html }
     try {
       // eslint-disable-next-line no-eval
       ;(0, eval)(bootScript())
     } finally {
       g.document = realDoc
+      g.localStorage = realStore
     }
+    return html
+  }
 
-    expect({
-      type: boot.style.getPropertyValue('--type-scale'),
-      density: boot.style.getPropertyValue('--density'),
-    }).toEqual(viaApply)
+  it.each([
+    ['type and density', { type: 1.15, density: 'comfortable' as const }],
+    ['an accent, with its ink and hover', { accent: '#3b82f6' }],
+    ['corners', { radius: 'round' as const }],
+    ['NOTHING stored', {}],
+  ])('the boot script paints what apply() painted: %s', (_name, pref) => {
+    const store = memory()
+    apply(pref, document.documentElement, { store })
+    const html = boot(store)
+    for (const name of KNOBS) {
+      expect([name, html.style.getPropertyValue(name)]).toEqual([name, document.documentElement.style.getPropertyValue(name)])
+    }
+  })
+
+  it('the boot script paints the theme as both vocabularies, before React', () => {
+    const store = memory()
+    apply({ theme: 'light' }, document.documentElement, { store })
+    const html = boot(store)
+    expect([...html.classList].sort()).toEqual(['light', 't_light'])
+    expect(html.getAttribute('data-scheme')).toBe('light')
+    expect(html.style.colorScheme).toBe('light')
+  })
+
+  it('a device that never applied anything paints the install default', () => {
+    const store = memory()
+    const g = globalThis as unknown as { document: { documentElement: HTMLElement } }
+    const html = document.createElement('html')
+    const realDoc = g.document
+    const realStore = (globalThis as { localStorage?: Storage }).localStorage
+    ;(globalThis as { localStorage?: Storage }).localStorage = store
+    g.document = { documentElement: html }
+    try {
+      // eslint-disable-next-line no-eval
+      ;(0, eval)(bootScript({ base: { accent: '#f59e0b', theme: 'dark' } }))
+    } finally {
+      g.document = realDoc
+      ;(globalThis as { localStorage?: Storage }).localStorage = realStore
+    }
+    expect(html.style.getPropertyValue('--primary')).toBe('#f59e0b')
+    expect(html.style.getPropertyValue('--primary-foreground')).toBe('#0a0a0a')
+    expect(html.classList.contains('t_dark')).toBe(true)
+    expect(store.getItem(PAINTED)).toBeNull()
   })
 
   it('the boot script never throws on a blocked or corrupt store', () => {
