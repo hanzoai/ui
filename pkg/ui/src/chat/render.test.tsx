@@ -20,7 +20,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
 import config from '../gui-config'
-import { Code, Message, Thread } from './index'
+import { Chat, Code, Message, Thread } from './index'
 
 const html = (node: ReactNode) =>
   renderToStaticMarkup(
@@ -96,5 +96,23 @@ describe('Code', () => {
     expect(markup).toContain('typescript')
     expect(rung(markup)).toContain('quiet')
     expect(rung(markup)).not.toContain('soft')
+  })
+})
+
+describe('Chat center', () => {
+  const spaces = (markup: string) => markup.split('data-slot="chat-space"').length - 1
+  const turn = { id: '1', role: 'user' as const, content: 'hi' }
+
+  it('puts a spacer above the opening and below the composer while nothing is said', () => {
+    const markup = html(<Chat messages={[]} send={() => {}} empty={<p>opening</p>} center />)
+    expect(spaces(markup)).toBe(2)
+    expect(markup.indexOf('data-slot="chat-space"')).toBeLessThan(markup.indexOf('opening'))
+    expect(markup.lastIndexOf('data-slot="chat-space"')).toBeGreaterThan(markup.indexOf('data-slot="composer"'))
+  })
+
+  it('draws no spacer once a turn exists, without center, or with no opening', () => {
+    expect(spaces(html(<Chat messages={[turn]} send={() => {}} empty={<p>opening</p>} center />))).toBe(0)
+    expect(spaces(html(<Chat messages={[]} send={() => {}} empty={<p>opening</p>} />))).toBe(0)
+    expect(spaces(html(<Chat messages={[]} send={() => {}} center />))).toBe(0)
   })
 })

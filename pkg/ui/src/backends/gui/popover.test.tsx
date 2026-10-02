@@ -14,6 +14,8 @@
  * tested in `place.test.ts`. What is asserted HERE is the component's own half:
  * that it accepts the prop and still renders.
  */
+import { act } from 'react'
+import { createRoot } from 'react-dom/client'
 import { describe, expect, it } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
@@ -64,5 +66,50 @@ describe('Popover', () => {
       </Popover>,
     )
     expect(markup).toContain('Open')
+  })
+})
+
+/**
+ * A SOLID PANEL, and the list it opens.
+ *
+ * Mounted in a live DOM, because the content is portalled and SSR never sees
+ * it. The mark is what glass.css reads to take the frost off, so the mark is
+ * what is asserted: on the panel that asked, on a popover opened from inside
+ * it, and on no popover that did not.
+ */
+describe('PopoverContent solid', () => {
+  it('marks the panel and every popover opened inside it, and nothing else', async () => {
+    ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    await act(async () => {
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <Popover open>
+            <PopoverTrigger>Outer</PopoverTrigger>
+            <PopoverContent solid>
+              <Popover open>
+                <PopoverTrigger>Inner</PopoverTrigger>
+                <PopoverContent>List</PopoverContent>
+              </Popover>
+            </PopoverContent>
+          </Popover>
+          <Popover open>
+            <PopoverTrigger>Other</PopoverTrigger>
+            <PopoverContent>Glass</PopoverContent>
+          </Popover>
+        </GuiProvider>,
+      )
+      await new Promise((r) => setTimeout(r, 0))
+    })
+    const panels = [...document.querySelectorAll('[data-slot="popover-content"]')]
+    const solid = panels.filter((p) => p.getAttribute('data-material') === 'solid')
+    const glass = panels.filter((p) => !p.hasAttribute('data-material'))
+    expect(panels).toHaveLength(3)
+    expect(solid).toHaveLength(2)
+    expect(glass.map((p) => p.textContent)).toEqual(['Glass'])
+    await act(async () => root.unmount())
+    host.remove()
   })
 })

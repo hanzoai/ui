@@ -115,6 +115,20 @@
   }
 }
 
+/* ── Solid — the one way out of the material ─────────────────────────────────
+   A panel over something that moves (a menu over a streaming transcript) reads
+   the motion through 72% frost. `<PopoverContent solid>` marks itself, and every
+   popover opened from inside it, with `data-material="solid"`: the ground is
+   design's opaque `--popover` and nothing behind is blurred into it. The rung's
+   shadow, lit edge and prism lip stay, so it is the same surface at the same
+   height with a solid fill. Declared after the material so the later rule wins
+   between two !important declarations of equal weight. */
+[data-material="solid"] {
+  background-color: var(--popover, #0f0f0f) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 /* ── Depth — three rungs, and the lit edge is the load-bearing half ──────────
    A cast shadow is how a light page shows lift. On a near-black canvas it is
    nearly free of information: black on near-black moves no pixels, so a raised

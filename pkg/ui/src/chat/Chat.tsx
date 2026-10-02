@@ -101,6 +101,19 @@ export interface ChatProps extends Omit<ThreadProps, 'children' | 'ref'> {
   body?: (turn: Turn) => ReactNode
   /** Shown instead of the thread while nothing has been said. */
   empty?: ReactNode
+  /**
+   * While nothing has been said, `empty` and the composer sit together in the
+   * middle of the height, the free space split evenly above and below them.
+   * Once a turn exists the thread takes the height and the composer docks under
+   * it.
+   *
+   * The space is two spacers around the pair, not margins on it. With a `head`
+   * or `foot` the composer is a shell around its frame, and a margin passed in
+   * `composer` lands on the frame inside that shell, where it moves nothing.
+   * The spacers shrink to nothing when the pair is taller than the window, so
+   * the heading is never pushed above the top.
+   */
+  center?: boolean
   /** The composer's own props — placeholder, hint, the send control, the field. */
   composer?: Partial<ComposerProps>
   /**
@@ -146,6 +159,7 @@ export function Chat({
   stop: onStop,
   body,
   empty,
+  center = false,
   composer,
   onFiles,
   ...thread
@@ -168,6 +182,11 @@ export function Chat({
   }, [draft, onSend])
 
   const last = messages.length - 1
+  const opening = messages.length === 0 && Boolean(empty)
+  // The spacers hold their places in the child list whether or not they draw,
+  // so the composer keeps its position and its field keeps focus when the
+  // first turn arrives.
+  const centred = center && opening
 
   // No `minHeight: 0` on the frame: rnw's View base and gui's stack base both
   // set it already, measured on the rendered element — and gui publishes no
@@ -181,7 +200,8 @@ export function Chat({
   // as fine.
   return (
     <YStack flex={1} width="100%" {...slot('chat')}>
-      {messages.length === 0 && empty ? (
+      {centred ? <YStack {...slot('chat-space')} flex={1} /> : null}
+      {opening ? (
         empty
       ) : (
         <Thread flex={1} {...thread}>
@@ -204,6 +224,7 @@ export function Chat({
         {...(onStop ? { onStop } : {})}
         {...composer}
       />
+      {centred ? <YStack {...slot('chat-space')} flex={1} /> : null}
       {dropping ? (
         <div
           aria-hidden

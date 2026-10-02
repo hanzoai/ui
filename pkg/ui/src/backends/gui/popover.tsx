@@ -34,6 +34,10 @@ type Placed = { offset?: number; align?: Align }
 
 const Publish = /* @__PURE__ */ createContext<((p: Placed) => void) | null>(null)
 
+/** Whether the panel this one opened from is solid. A list opened inside a solid
+ *  panel stands on the same ground, so the pair reads as one surface. */
+const Solid = /* @__PURE__ */ createContext(false)
+
 export type PopoverProps = Omit<ComponentProps<typeof GuiPopover>, 'offset'> & { offset?: number }
 
 function Popover({ offset = DEFAULT_OFFSET, placement, ...props }: PopoverProps) {
@@ -57,25 +61,37 @@ const PopoverClose: typeof GuiPopover.Close = GuiPopover.Close
 export type PopoverContentProps = ComponentProps<typeof GuiPopover.Content> & {
   sideOffset?: number
   align?: Align
+  /**
+   * Stand on the opaque `--popover` ground instead of glass. For a panel over
+   * something that moves, such as a menu over a streaming transcript, where the
+   * text behind would read through the frost. It keeps the rung's shadow and
+   * lit edge, and any popover opened from inside it is solid too.
+   */
+  solid?: boolean
 }
 
-const PopoverContent = ({ sideOffset = DEFAULT_OFFSET, align, ...props }: PopoverContentProps) => {
+const PopoverContent = ({ sideOffset = DEFAULT_OFFSET, align, solid, ...props }: PopoverContentProps) => {
   const themeName = useThemeName()
   const publish = useContext(Publish)
+  const inherited = useContext(Solid)
+  const opaque = solid ?? inherited
   useEffect(() => publish?.({ offset: sideOffset, align }), [publish, sideOffset, align])
   return (
-    <PortalTheme name={themeName}>
-      <GuiPopover.Content
-        {...slot('popover-content')}
-        bg="$panel"
-        borderWidth={1}
-        borderColor="$borderColor"
-        rounded="$4"
-        p="$4"
-        width={288}
-        {...props}
-      />
-    </PortalTheme>
+    <Solid.Provider value={opaque}>
+      <PortalTheme name={themeName}>
+        <GuiPopover.Content
+          {...slot('popover-content')}
+          {...(opaque ? { 'data-material': 'solid' } : null)}
+          bg={opaque ? 'var(--popover)' : '$panel'}
+          borderWidth={1}
+          borderColor="$borderColor"
+          rounded="$4"
+          p="$4"
+          width={288}
+          {...props}
+        />
+      </PortalTheme>
+    </Solid.Provider>
   )
 }
 

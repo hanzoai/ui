@@ -252,7 +252,7 @@ describe('Every value is @hanzo/design’s, and the mirror cannot drift', () => 
    * mirrors: present so a host that imports the sheet without design's token
    * layer gets a ladder instead of a silently-dropped declaration.
    */
-  it.each(['edge-highlight', 'surface-scrim'])(
+  it.each(['edge-highlight', 'surface-scrim', 'popover'])(
     'the --%s fallback still equals what design publishes',
     (name) => {
       const found = fallbacks(`${css}\n${motion}\n${recipes}`, name)
