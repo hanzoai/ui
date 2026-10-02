@@ -261,6 +261,11 @@ function Button({
   // Button-as-link comes out as a styled <a> with valid markup.
   const host = asChild && isValidElement(children) ? children : null
   const body = host ? (host.props as { children?: ReactNode }).children : children
+  // The frame bakes `role: 'button'`. A host with an address is a link, and its
+  // own element says so; the role is unset (an explicit undefined overrides the
+  // default, as `render` below records) so it cannot say otherwise. A caller's
+  // `role` still lands, from the spread after it.
+  const link = host != null && (host.props as { href?: unknown }).href != null
   return (
     <Frame
       data-slot="button"
@@ -279,6 +284,7 @@ function Button({
       {...(host
         ? { render: createElement(host.type, { ...(host.props as object), children: undefined }) }
         : null)}
+      {...(link ? { role: undefined } : null)}
       disabled={disabled || isLoading}
       {...touch(HEIGHT[resolved], 44, 'y')}
       // Class notation is READ here, not forwarded. A caller writing

@@ -89,6 +89,15 @@ describe('gui backend renders', () => {
       expect(markup, leak).not.toContain(leak)
   })
 
+  // The frame's own role is button. An anchor with an address is a link, and a
+  // role on it would tell a screen reader it is not.
+  it('keeps a Button-as-link a link', () => {
+    const tag = (node: React.ReactNode) => html(node).match(/<a [^>]*>/)?.[0] ?? ''
+    expect(tag(<Button asChild><a href="/x">go</a></Button>)).not.toContain('role=')
+    expect(tag(<Button asChild><a>go</a></Button>)).toContain('role="button"')
+    expect(tag(<Button asChild role="tab"><a href="/x">go</a></Button>)).toContain('role="tab"')
+  })
+
   // The trap that made the Switch a 36x29 box for as long as it existed: gui's
   // `size` variants return { height, minHeight, width }, so a wrapper that sets
   // `height` and not `minHeight` overrides two of the three, and min-height —
