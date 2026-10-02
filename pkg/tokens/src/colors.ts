@@ -102,7 +102,7 @@ export const colors = {
   mutedForeground:  "#a3a3a3",
   accent:           "#262626",
   accentForeground: "#fafafa",
-  destructive:      "#ef4444",
+  destructive:      "#dc2626",
   destructiveForeground: "#fafafa",
   card:             "#0f0f0f",
   cardForeground:   "#e5e5e5",
