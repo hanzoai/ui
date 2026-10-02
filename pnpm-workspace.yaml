@@ -24,7 +24,7 @@ minimumReleaseAgeExclude:
 catalog:
   '@commitlint/cli': '^21.2.2'
   '@commitlint/config-conventional': '^21.2.2'
-  '@hanzo/appearance': '0.2.6'
+  '@hanzo/appearance': '0.2.7'
   '@hanzo/brand': '1.4.8'
   '@hanzo/dashboard': '0.2.0'
   '@hanzo/data': '1.2.4'
