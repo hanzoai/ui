@@ -8,7 +8,7 @@ describe('the account layer', () => {
   // On IAM's own host the session IS the cookie, so requiring a bearer would mean
   // inventing one to satisfy a signature. The cookie rides on credentials.
   it('asks with the cookie when there is no bearer', async () => {
-    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({ appearance: { type: 1.15 } }) }))
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({ status: 'ok', msg: '', data: { appearance: { type: 1.15 } } }) }))
     vi.stubGlobal('fetch', fetchSpy)
     expect(await load({ base })).toEqual({ type: 1.15 })
     const [, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit]
@@ -20,7 +20,7 @@ describe('the account layer', () => {
   it('reads the appearance member out of the whole preferences blob', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({
       ok: true,
-      json: async () => ({ consent: { training: 'refused' }, appearance: { type: 1.3 } }),
+      json: async () => ({ status: 'ok', msg: '', data: { consent: { training: 'refused' }, appearance: { type: 1.3 } } }),
     })))
     expect(await load({ base, token: 't' })).toEqual({ type: 1.3 })
     vi.unstubAllGlobals()
@@ -37,9 +37,9 @@ describe('the account layer', () => {
   })
 
   it('sends only its own member, so a sibling key is not clobbered', async () => {
-    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({}) }))
+    const fetchSpy = vi.fn(async () => ({ ok: true, json: async () => ({ status: 'ok', msg: '', data: {} }) }))
     vi.stubGlobal('fetch', fetchSpy)
-    await save({ density: 'compact' }, { base, token: 't' })
+    expect(await save({ density: 'compact' }, { base, token: 't' })).toBe(true)
     const [url, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit]
     expect(url).toBe('https://hanzo.id/v1/iam/preferences')
     expect(JSON.parse(init.body as string)).toEqual({ appearance: { density: 'compact' } })
@@ -61,6 +61,15 @@ describe('the account layer', () => {
   it('answers whether it stuck, because a caller promised "saved"', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, json: async () => ({}) })))
     expect(await save({ type: 1 }, { base, token: 't' })).toBe(false)
+    vi.unstubAllGlobals()
+  })
+
+  // IAM refuses with HTTP 200 and its envelope's `status: "error"` (a bearer it
+  // does not take, a user it cannot find): nothing was kept, and nothing is read.
+  it('reads a refusal in IAM\'s envelope as a refusal', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ status: 'error', msg: 'please sign in first' }) })))
+    expect(await save({ type: 1 }, { base, token: 't' })).toBe(false)
+    expect(await load({ base, token: 't' })).toBeUndefined()
     vi.unstubAllGlobals()
   })
 })

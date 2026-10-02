@@ -101,5 +101,9 @@ async function post(
     signal,
   })
   if (!res.ok) return undefined
-  return (await res.json()) as Record<string, unknown>
+  // IAM answers in its envelope, `{status, msg, data}`, and refuses with HTTP 200
+  // and `status: "error"`: the stored blob is `data`, and a refusal kept nothing.
+  const body = (await res.json()) as { status?: string; data?: Record<string, unknown> } | null
+  if (body?.status !== 'ok') return undefined
+  return body.data ?? {}
 }
