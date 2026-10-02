@@ -47,7 +47,7 @@ export {
   DropdownMenuTrigger, Em, Glass, Fill, H1, H2, H3, H4, H5, H6, Heading, Image, Input,
   Label, Popover, PopoverAnchor, PopoverClose,
   PopoverContent,
-  PopoverTrigger, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,
+  PopoverTrigger, Picker, Progress, ResizableHandle, ResizablePanel, ResizablePanelGroup, ScrollArea,
   ScrollBar, Select, SelectContent, SelectGroup, SelectItem, SelectLabel,
   SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue,
   Paragraph, Screen, ScrollView, Band, Separator, SizableText, Slider, Spacer, Span, Spinner, Strong,
@@ -71,7 +71,7 @@ export {
 
 export type {
   AspectRatioProps, BadgeProps, BadgeVariant, ButtonProps, ButtonSize, ButtonVariant,
-  CommandFilter, CommandProps, DropdownMenuProps, InputProps, ResizableHandleProps, SpinnerProps,
+  CommandFilter, CommandProps, DropdownMenuProps, FieldSize, InputProps, PickerProps, ResizableHandleProps, SpinnerProps,
   ResizablePanelGroupProps, ResizablePanelProps,
   DisclosureProps, AccordionContentProps, AccordionItemProps, AccordionProps, AccordionTriggerProps, AlertDialogContentProps, AlertDialogOverlayProps, AlertDialogProps, AlertDialogSectionProps, ContextMenuContentProps, ContextMenuItemProps, ContextMenuSubContentProps, HoverCardContentProps, HoverCardProps, HoverCardTriggerProps, RadioGroupItemProps, RadioGroupProps, ToggleGroupItemProps, ToggleGroupProps,
   ToggleGroupSize, ToggleGroupVariant,

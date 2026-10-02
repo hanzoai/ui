@@ -13,13 +13,12 @@ import { forwardRef, useState, type ComponentProps, type ReactNode } from 'react
 import { slot } from './slot'
 import { touch } from './gesture'
 import { masked } from './mask'
-import { CONTROL_H, FIELD, GUTTER } from './control'
+import { BOX, FIELD, FILL, type FieldSize } from './control'
 
-const HEIGHT = CONTROL_H
-/** Width reserved for an adornment inside the field. */
-const WELL = 36
+/** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
+const MARK = 24
 
-export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children'> & {
+export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children' | 'size'> & {
   /** Optional leading affordance (icon/text) rendered inside the field. */
   startAdornment?: ReactNode
   /** Optional trailing affordance rendered inside the field. */
@@ -34,12 +33,16 @@ export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children'> & {
    * was pressed last and neither control can say which.
    */
   reveal?: boolean
+  /** The box: `default` 36 high, `lg` 46 for a page's own form (control.ts `BOX`). */
+  size?: FieldSize
+  /** On the raised ground instead of a bare edge (control.ts `FILL`). */
+  fill?: boolean
 }
 
-const well = (side: 'l' | 'r') =>
+const well = (side: 'l' | 'r', gutter: number) =>
   ({
     position: 'absolute' as const,
-    [side]: GUTTER,
+    [side]: gutter,
     t: 0,
     b: 0,
     items: 'center' as const,
@@ -47,12 +50,14 @@ const well = (side: 'l' | 'r') =>
   })
 
 const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function Input(
-  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, ...props },
+  { startAdornment, endAdornment, reveal = true, type, secureTextEntry, size = 'default', fill = false, ...props },
   ref,
 ) {
   const [revealed, setRevealed] = useState(false)
   const isPassword = type === 'password' || secureTextEntry === true
   const toggle = isPassword && reveal
+  const box = BOX[size as FieldSize]
+  const inset = box.gutter + MARK
 
   const field = (
     <GuiInput
@@ -76,13 +81,14 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       // system saying the same thing. The floor rule is for controls that hold
       // children — Button and SelectTrigger.
       {...FIELD}
-      height={HEIGHT}
+      {...(fill ? FILL : null)}
+      height={box.h}
       width="100%"
       minW={0}
       placeholderTextColor="$soft"
       fontSize="$3"
-      pl={startAdornment ? WELL : GUTTER}
-      pr={endAdornment || toggle ? WELL : GUTTER}
+      pl={startAdornment ? inset : box.gutter}
+      pr={endAdornment || toggle ? inset : box.gutter}
       {...props}
     />
   )
@@ -92,7 +98,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
   return (
     <XStack position="relative" width="100%" items="center">
       {startAdornment ? (
-        <XStack {...well('l')} pointerEvents="none" opacity={0.6}>
+        <XStack {...well('l', box.gutter)} pointerEvents="none" opacity={0.6}>
           {startAdornment}
         </XStack>
       ) : null}
@@ -103,7 +109,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           // after the well's `absolute` put the eye in flow beside the input,
           // 4px past the field's edge instead of inside its right well.
           {...touch(20)}
-          {...well('r')}
+          {...well('r', box.gutter)}
           cursor="pointer"
           onPress={() => setRevealed((v) => !v)}
           aria-label={revealed ? 'Hide password' : 'Show password'}
@@ -111,7 +117,7 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
           {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
         </XStack>
       ) : endAdornment ? (
-        <XStack {...well('r')} opacity={0.6}>
+        <XStack {...well('r', box.gutter)} opacity={0.6}>
           {endAdornment}
         </XStack>
       ) : null}

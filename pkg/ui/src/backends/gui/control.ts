@@ -52,6 +52,36 @@ export const GUTTER = 12
 export const RISER = (CONTROL_H - 2 - 20) / 2
 
 /**
+ * A field's two sizes.
+ *
+ * `default` is the product control, 36 high beside a 36px Button. `lg` is a
+ * page's own form — a sign-in, a sales form — where the field is what the page
+ * is for and sits beside a 44px marketing `Action`: the gutter all round its
+ * line, 12 + a 20px line + 12 + 2 edges = 46, and 14 beside the text.
+ */
+export type FieldSize = 'default' | 'lg'
+
+/** Each size's box: its height, the gutter beside the text, and the riser above a stacked field's first line. */
+export const BOX: Record<FieldSize, { h: number; gutter: number; riser: number }> = {
+  default: { h: CONTROL_H, gutter: GUTTER, riser: RISER },
+  lg: { h: 46, gutter: 14, riser: (46 - 2 - 20) / 2 },
+}
+
+/** `fill`: the field on design's raised ground (`--surface-3`) instead of a bare edge. */
+export const FILL = { bg: '$raised' } as const
+
+/**
+ * The edge under the pointer and under focus — gui Input's own two states
+ * (`@hanzogui/input` defaultStyles), named here so a field gui does not draw, the
+ * native select in `Picker`, wears the same two. Read in the Input theme
+ * (`componentName="Input"`), so the tokens resolve to the Input's values.
+ */
+export const EDGE = {
+  hoverStyle: { borderColor: '$borderColorHover' },
+  focusStyle: { borderColor: '$borderColorFocus' },
+} as const
+
+/**
  * The edge, the gutter and the radius every field wears.
  *
  * Spread FIRST, so a call site can still say otherwise where it has a reason to:

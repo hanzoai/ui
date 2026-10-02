@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { TextArea } from "@hanzo/gui"
-import { FIELD, RISER } from "./control"
+import { BOX, FIELD, FILL, type FieldSize } from "./control"
 import { slot } from "./slot"
 
 /** Floor for the grown row count. */
@@ -32,11 +32,17 @@ const rowsOf = (v: unknown) =>
  * takes `onChangeText`, not a DOM `change` event, and the DOM-only spelling was
  * a type that never matched the runtime.
  */
-export type TextareaProps = Omit<React.ComponentProps<typeof TextArea>, "children"> &
-  Pick<React.ComponentProps<"textarea">, "onKeyDown" | "rows">
+export type TextareaProps = Omit<React.ComponentProps<typeof TextArea>, "children" | "size"> &
+  Pick<React.ComponentProps<"textarea">, "onKeyDown" | "rows"> & {
+    /** The gutter and riser of the Input it stands under (control.ts `BOX`). */
+    size?: FieldSize
+    /** On the raised ground instead of a bare edge (control.ts `FILL`). */
+    fill?: boolean
+  }
 
 const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  function Textarea({ rows, value, defaultValue, style, ...props }, ref) {
+  function Textarea({ rows, value, defaultValue, style, size = "default", fill = false, ...props }, ref) {
+  const box = BOX[size as FieldSize]
   const [typed, setTyped] = React.useState(() => rowsOf(defaultValue))
   const uncontrolled = value === undefined
   const invalid = props["aria-invalid"]
@@ -78,6 +84,7 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       defaultValue={defaultValue as string | undefined}
       onChangeText={uncontrolled ? (t: any) => setTyped(rowsOf(t)) : undefined}
       {...FIELD}
+      {...(fill ? FILL : null)}
       width="100%"
       minH={64}
       // The gutter has to be NAMED, both ways. Left unsaid the HORIZONTAL one
@@ -90,9 +97,10 @@ const Textarea = /* @__PURE__ */ React.forwardRef<HTMLTextAreaElement, TextareaP
       // and a textarea stacks from the top, so with no gutter the tall field's
       // first line sat 1px under the edge where its neighbours' sat at 8. In a
       // form the two are read together, and the text looked like it was falling
-      // out of the top of the box. RISER is that arithmetic.
-      pt={RISER}
-      pb={RISER}
+      // out of the top of the box. The riser is that arithmetic, per size.
+      px={box.gutter}
+      pt={box.riser}
+      pb={box.riser}
       borderColor={invalid && invalid !== "false" ? "$red7" : "$borderColor"}
       placeholderTextColor="$soft"
       fontSize="$3"

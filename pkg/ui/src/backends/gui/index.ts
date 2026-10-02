@@ -142,6 +142,7 @@ export {
 } from './hover-card'
 export { ChoiceCard, ChoiceGroup, type ChoiceCardProps, type ChoiceGroupProps } from './choice'
 export { Input, type InputProps } from './input'
+export type { FieldSize } from './control'
 export { Label } from './label'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor, PopoverClose } from './popover'
 export { Progress } from './progress'
@@ -170,6 +171,8 @@ export {
 } from './layout'
 export { ScrollArea, ScrollBar } from './scroll-area'
 export {
+  Picker,
+  type PickerProps,
   Select,
   SelectGroup,
   SelectValue,

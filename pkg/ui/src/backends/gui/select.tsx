@@ -8,11 +8,15 @@
  * sequential indices on every `SelectItem` it finds — including items nested in a
  * `SelectGroup`. An item is written `<SelectItem value="x">Label</SelectItem>`
  * and the numbering always matches render order.
+ *
+ * `Picker` is the other select: the platform's own, for a list the platform
+ * should show — every country, on a phone.
  */
 import {
   Children,
   cloneElement,
   createContext,
+  forwardRef,
   isValidElement,
   useContext,
   type ComponentProps,
@@ -21,11 +25,13 @@ import {
 import {
   Select as GuiSelect,
   SelectSeparator as GuiSelectSeparator,
+  Text,
   XStack,
+  type TextProps,
 } from "@hanzo/gui"
 import { Check, ChevronDown, ChevronUp } from "@hanzogui/lucide-icons-2"
 
-import { CONTROL_H, FIELD } from "./control"
+import { BOX, CONTROL_H, EDGE, FIELD, FILL, type FieldSize } from "./control"
 import { touch } from "./gesture"
 import { ink } from "./ink"
 import { slot } from "./slot"
@@ -234,7 +240,81 @@ const SelectSeparator = (props: SelectSeparatorProps) => (
   />
 )
 
+/** The select's own inset: Chromium pads a select's text 4px inside its box. */
+const INSET = 4
+
+/** The select's own attributes, which reach the `<select>`; its `<option>`s are its children. */
+type Native = Pick<
+  ComponentProps<"select">,
+  "id" | "name" | "value" | "defaultValue" | "onChange" | "required" | "disabled" | "autoComplete" | "children"
+>
+
+export type PickerProps = Omit<TextProps, "render" | "size" | keyof Native> &
+  Native & {
+    /** The box, as `Input`'s (control.ts `BOX`), so the two sit level in one row. */
+    size?: FieldSize
+    /** On the raised ground instead of a bare edge (control.ts `FILL`). */
+    fill?: boolean
+  }
+
+/**
+ * Picker — the platform's own select, wearing the field.
+ *
+ * `Select` draws its list itself; a picker hands the list to the platform,
+ * which is what a long one wants on a phone. It is the `Input` beside it,
+ * measured: the same box per size, its text 14px on a 20px line held in the
+ * middle by the riser rather than left to the UA, the same gutter less the
+ * select's own 4px, and the Input theme's ink, edge and two edge states (`EDGE`)
+ * — a native control gui does not draw, so it names what gui's Input carries.
+ */
+const Picker = /* @__PURE__ */ forwardRef<HTMLSelectElement, PickerProps>(function Picker(
+  { id, name, value, defaultValue, onChange, required, disabled, autoComplete, children, size = "default", fill = false, ...props },
+  ref,
+) {
+  const box = BOX[size as FieldSize]
+  return (
+    <Text
+      ref={ref as never}
+      render={
+        <select
+          id={id}
+          name={name}
+          value={value}
+          defaultValue={defaultValue}
+          onChange={onChange}
+          required={required}
+          disabled={disabled}
+          autoComplete={autoComplete}
+        />
+      }
+      {...slot("picker")}
+      componentName="Input"
+      {...FIELD}
+      {...EDGE}
+      {...(fill ? FILL : null)}
+      display="block"
+      // A floor, as the trigger's: the riser and the line make the box, and a
+      // larger font grows it rather than clipping the chosen option.
+      minH={box.h}
+      width="100%"
+      minW={0}
+      pl={box.gutter - INSET}
+      pr={box.gutter - INSET}
+      py={box.riser}
+      color="$color"
+      fontFamily="$body"
+      fontSize="$3"
+      lineHeight="$3"
+      cursor="pointer"
+      {...props}
+    >
+      {children}
+    </Text>
+  )
+})
+
 export {
+  Picker,
   Select,
   SelectGroup,
   SelectValue,
