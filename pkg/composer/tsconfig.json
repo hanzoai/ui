@@ -16,8 +16,10 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "types": [
-      "node"
-    ]
+      "node",
+      "react"
+    ],
+    "jsx": "react-jsx"
   },
   "include": [
     "src"

@@ -1,75 +1,72 @@
 # @hanzo/composer
 
-The lit ring around anything you can type into — the same material on hanzo.ai,
-hanzo.chat and hanzo.app.
+The lit ring around anything you can type into, as @hanzo/gui components. The
+same material on hanzo.ai, hanzo.chat and hanzo.app.
 
 ```bash
 pnpm add @hanzo/composer
 ```
 
-```ts
-import '@hanzo/composer/composer.css'
+```tsx
+import { Composer, Control, Field } from '@hanzo/composer'
+
+<Composer render="form" onSubmit={send} width="100%" maxW={576} mx="auto">
+  <XStack items="center" gap="$1.5" p="$1" rounded="$10">{/* your panel */}
+    <Field value={draft} onChangeText={setDraft} placeholder="Ask anything" />
+    <Control asChild>
+      <Voice voice={voice} />
+    </Control>
+    <Control type="submit" aria-label="Send" fill>
+      <ArrowUp size={15} />
+    </Control>
+  </XStack>
+</Composer>
 ```
 
-```html
-<form class="hz-composer">
-  <div><!-- your panel: field, controls, whatever this surface needs --></div>
-</form>
-```
+The host wraps the surface's own panel. This package owns the ring, the halo,
+the round controls and the field's reset; it owns nothing about what typing
+does. A host writes no CSS against it: every paint is a gui prop reading a
+@hanzo/design token.
 
-The host wraps the surface's own panel. This package owns the ring, the halo and
-the round controls; it owns nothing about what typing does — submitting is a
-navigation on one surface, a stream on another, and an edit on a third.
+## Composer
 
-## Tuning
+| prop | | |
+|---|---|---|
+| `band` | `1.5` | The ring's width, px. Also the host's padding: one number, read twice. |
+| `halo` | `6` | How far the halo reaches past the box, px. |
+| `control` | `34` | The round controls' box, px, before `--density`. |
 
-Every number is a custom property whose fallback is the published value, so
-setting none is the same as setting all of them to what they already are.
+Any gui View prop rides along (`render`, `width`, `maxW`, `mx`, …). The corner is
+`--radius-composer`, with the pill as the floor. The ring rests at `.5` and lifts
+to `.8` under a pointer; focus keeps the rest value, because the caret already
+says where focus is. The halo holds still at `.22`, blurred 16px.
 
-| | |
-|---|---|
-| `--hz-composer-radius` | `9999px`. A surface with a paragraph field overrides to a box radius; the halo stays concentric either way. |
-| `--hz-composer-band` | `1px`. The host's padding and the ring's width — one property, read twice. |
-| `--hz-composer-halo` · `--hz-composer-blur` | `5px` · `14px`. |
-| `--hz-composer-rest` · `--hz-composer-lift` | `.5` → `.8`. The ring at rest and under attention. |
-| `--hz-composer-glow` · `--hz-composer-glow-lift` | `.1` → `.16`. The halo, same pair. |
-| `--hz-composer-spin` | `10s`. |
-| `--hz-composer-control` | `30px`. The round controls' base box, before density. |
-| `--hz-composer-edge` | The flat colour the ring becomes under `prefers-contrast`. |
-| `--hz-spectrum` | The conic stops. Two alphas of white, closing on the stop they opened with. |
+## Control
 
-```css
-/* a paragraph composer with its controls in a row underneath */
-.my-composer {
-  --hz-composer-radius: 1.5rem;
-  --hz-composer-control: 36px;
-}
-```
+A circle at the size its `Composer` names, scaled by `--density` and floored at
+24px (WCAG 2.5.8 AA). `size` names its own box outside a composer. `fill` is the
+send: `--primary` on `--primary-foreground`. At rest it is `--muted` on
+`--text-secondary`, and it lifts to `--primary` under a pointer. A control another
+package draws wears the shape through `asChild`.
+
+## Field
+
+A gui `Input` with its chrome off: no border, surface, native appearance or
+outline, on `--text-base`, taking the row's spare width down to zero so a long
+prompt never pushes the controls out of the pill. Any Input prop overrides.
 
 ## What it obeys
 
-Reads `--density` and `--text-base` from [@hanzo/design], so a person's
-appearance preference retunes the composer with the rest of the product. Both
-carry fallbacks; the sheet stands alone.
+Reads `--radius-composer`, `--density`, `--text-base`, `--muted`,
+`--text-secondary`, `--primary`, `--primary-foreground`, `--foreground` and
+`--muted-foreground` from [@hanzo/design], each with a fallback.
 
-Round controls are floored at 24px (WCAG 2.5.8 AA) so no density can shrink a
-target under it. The 44px coarse-pointer floor deliberately does not apply: the
-tap target in a composer is the field, which is the width of the column, and
-these are its secondary chrome — stretching them makes a single line three lines
-tall on a phone.
-
-Four media queries answer for themselves: `prefers-reduced-motion` holds the
-sweep still, `prefers-reduced-transparency` drops the halo and solidifies the
-ring, `prefers-contrast: more` turns the ring into a flat edge, and
-`forced-colors: active` removes both decorative layers for a system-coloured
-border — a masked gradient survives a forced palette as a grey smear.
-
-## Why a package of its own
-
-Not a subpath of `@hanzo/ui`: hanzo.chat pins that library below 8.0.52 for an
-unrelated jsdom reason, so a subpath would be unreachable for one of the three
-surfaces this exists to keep identical. It also carries no dependency and no
-React peer, which is what lets it load in a browser extension and an embedded
-preview on the same terms.
+The sweep is the one stylesheet: a conic angle animates only through `@property`
+and `@keyframes`. It is hoisted once through React's `<style>`, keyed on the
+`data-slot`s `prism`, `prism-ring` and `prism-halo`, never a class. Four media
+queries answer there: `prefers-reduced-motion` holds the sweep still,
+`prefers-reduced-transparency` drops the halo and solidifies the ring,
+`prefers-contrast: more` turns the ring into a flat white edge, and
+`forced-colors: active` removes both layers for a system-coloured outline.
 
 [@hanzo/design]: https://www.npmjs.com/package/@hanzo/design
