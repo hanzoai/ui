@@ -13,8 +13,8 @@ catalogs:
       specifier: ^21.2.2
       version: 21.2.2
     '@hanzo/appearance':
-      specifier: 0.2.2
-      version: 0.2.2
+      specifier: 0.2.6
+      version: 0.2.6
     '@hanzo/brand':
       specifier: 1.4.8
       version: 1.4.8
@@ -632,7 +632,7 @@ importers:
     dependencies:
       '@hanzo/commerce':
         specifier: '>=7.9.1'
-        version: 7.9.1(@hanzo/ui@8.27.49(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)
+        version: 7.9.1(@hanzo/ui@8.27.50(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)
       lucide-react:
         specifier: '>=1'
         version: 1.33.0(react@19.2.8)
@@ -1160,7 +1160,7 @@ importers:
     dependencies:
       '@hanzo/commerce':
         specifier: '>=7.9.1'
-        version: 7.9.1(@hanzo/ui@8.27.49(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)
+        version: 7.9.1(@hanzo/ui@8.27.50(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -1206,7 +1206,7 @@ importers:
     dependencies:
       '@hanzo/appearance':
         specifier: 'catalog:'
-        version: 0.2.2(react@19.2.8)
+        version: 0.2.6(react@19.2.8)
       '@hanzo/brand':
         specifier: 'catalog:'
         version: 1.4.8(react@19.2.8)
@@ -2720,6 +2720,11 @@ packages:
     peerDependencies:
       react: 19.2.8
 
+  '@hanzo/appearance@0.2.6':
+    resolution: {integrity: sha512-Ibq8Upe+Recigbn49G4glXCi/SrfQWP54QXbvsQUucF7q1+bxxA5Wdt+M6XLu+vgQvrpy/mEDPVcXiHE3F2qNg==}
+    peerDependencies:
+      react: 19.2.8
+
   '@hanzo/brand@1.4.8':
     resolution: {integrity: sha512-ezz3JEC+5QO4LywK02o24i0CuHZ+askwT4Dmvd+BrXZsJs/Eyw3Xu/EPEZLpZY0cZ5+8sIYO07jUOaWTU3nfAw==}
     hasBin: true
@@ -2808,14 +2813,6 @@ packages:
 
   '@hanzo/event@0.3.40':
     resolution: {integrity: sha512-D/qmUHbrTZpbShD4CSvKUzeUTjjIu6LSHQHKZNZLtwfd9Fap6gMGo+JZGHX0sxKimtmRnZDMz6aG+LAmUbn3qQ==}
-    peerDependencies:
-      react: 19.2.8
-    peerDependenciesMeta:
-      react:
-        optional: true
-
-  '@hanzo/event@0.3.55':
-    resolution: {integrity: sha512-YR2QJi0T3Y4M7esiGgF08bXOpZZaULTuy4TQX5Fnl70y/PAGTLw1hycLMTNoDM1PbIotpoZSLZH4GZQb9OAjGA==}
     peerDependencies:
       react: 19.2.8
     peerDependenciesMeta:
@@ -2985,8 +2982,8 @@ packages:
       react-hook-form:
         optional: true
 
-  '@hanzo/ui@8.27.49':
-    resolution: {integrity: sha512-2l2mXxboev8tcXDMWfpPdCtdtikfT5pa9Ez/4ty4eVBNBYazf29xXQOcnwIwyagtpojvuzOGcxZXyEW02Vos0Q==}
+  '@hanzo/ui@8.27.50':
+    resolution: {integrity: sha512-LNsMgM8cppeR/zUKieDA8ZKKoKRmd+p8BWsVsfaG9Hh2j8bkDfdUNqDPzSz5hPMVM8xVGbtv1SQwmYeR1o9Tmg==}
     peerDependencies:
       '@hanzo/canvas': '>=0.2.3'
       '@hanzo/cd': '>=0.1.2'
@@ -11783,6 +11780,11 @@ snapshots:
       '@hanzo/design': 0.5.33
       react: 19.2.8
 
+  '@hanzo/appearance@0.2.6(react@19.2.8)':
+    dependencies:
+      '@hanzo/design': 0.5.33
+      react: 19.2.8
+
   '@hanzo/brand@1.4.8(react@19.2.8)':
     dependencies:
       '@hanzo/logo': 1.0.26(react@19.2.8)
@@ -11845,9 +11847,9 @@ snapshots:
       react: 19.2.8
     optional: true
 
-  '@hanzo/commerce@7.9.1(@hanzo/ui@8.27.49(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)':
+  '@hanzo/commerce@7.9.1(@hanzo/ui@8.27.50(7318eaa297eb8b4fa86779ecd1f7f5a2))(@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2))(@radix-ui/react-radio-group@1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(lucide-react@1.33.0(react@19.2.8))(mobx-react-lite@5.0.3(mobx@7.0.3)(react@19.2.8))(mobx-utils@6.1.1(mobx@7.0.3))(mobx@7.0.3)(next@16.3.3(@babel/core@7.29.7(supports-color@10.2.2))(@playwright/test@1.62.1)(@types/node@26.4.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react-dom@19.2.8(react@19.2.8))(react-hook-form@7.86.0(react@19.2.8))(react@19.2.8)(zod@4.5.2)':
     dependencies:
-      '@hanzo/ui': 8.27.49(7318eaa297eb8b4fa86779ecd1f7f5a2)
+      '@hanzo/ui': 8.27.50(7318eaa297eb8b4fa86779ecd1f7f5a2)
       '@hookform/resolvers': 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.5.2)
       '@radix-ui/react-radio-group': 1.4.7(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       ethers: 6.17.0
@@ -11913,18 +11915,11 @@ snapshots:
     optionalDependencies:
       react: 19.2.8
 
-  '@hanzo/event@0.3.55(react@19.2.8)':
-    dependencies:
-      '@hanzo/events': 0.3.1
-    optionalDependencies:
-      react: 19.2.8
-
   '@hanzo/event@0.3.56(react@19.2.8)':
     dependencies:
       '@hanzo/events': 0.3.1
     optionalDependencies:
       react: 19.2.8
-    optional: true
 
   '@hanzo/events@0.2.2': {}
 
@@ -12257,7 +12252,7 @@ snapshots:
       - encoding
       - prop-types
 
-  '@hanzo/ui@8.27.49(7318eaa297eb8b4fa86779ecd1f7f5a2)':
+  '@hanzo/ui@8.27.50(7318eaa297eb8b4fa86779ecd1f7f5a2)':
     dependencies:
       '@hanzo/appearance': 0.2.2(react@19.2.8)
       '@hanzo/brand': 1.4.8(react@19.2.8)
@@ -13653,7 +13648,7 @@ snapshots:
 
   '@hanzogui/telemetry@8.3.5(react@19.2.8)':
     dependencies:
-      '@hanzo/event': 0.3.55(react@19.2.8)
+      '@hanzo/event': 0.3.56(react@19.2.8)
       '@hanzo/observe': 0.1.11(react@19.2.8)
       react: 19.2.8
 

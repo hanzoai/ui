@@ -679,6 +679,44 @@ shared shell lives here too: `AppHeader` + `BrandMark` (@hanzo/logo) +
 surfaces use `@luxfi/web3` for wallet/login; `@hanzo/ui/wallet`+`/network` are the
 Hanzo-branded equivalents.
 
+## Appearance, end to end
+
+One chain, one writer per step:
+
+    @hanzo/tokens  src/theme.ts — the colour system (dark :root, .light)
+      -> dist/colors.css, copied by @hanzo/design's gen on every build
+    @hanzo/design  tokens/*.css — ramps that read the knobs:
+                   --type-scale --type-ratio --density --radius-scale,
+                   the --primary / --accent family
+                   vars(pref) — a preference as those properties
+    @hanzo/appearance
+                   apply(pref) — properties inline on <html>, the theme as
+                   classes (light/dark + gui's t_light/t_dark), kept under
+                   hanzo.appearance.painted; bootScript() replays it pre-paint
+                   useAppearance() — resolve install < org < person, sync IAM
+                   useScheme() — light|dark as the document shows it
+    @hanzo/ui      gui-config: every theme key that names a colour reads the
+                   design var (accentBackground -> --accent, accentColor ->
+                   --accent-foreground, accentHover -> --accent-hover, edge ->
+                   --border …); radii x --radius-scale, space x --density,
+                   type -> --text-*; <Hanzo> mounts useAppearance + useScheme
+
+What a host does: `bootScript()` in `<head>`, `<Hanzo appearance={…}>` (or
+`useAppearance()` + `defaultTheme={useScheme()}` beside its own gui provider),
+and nothing else — no next-themes, no class mirror, no theme toggle of its own.
+
+An accent is a family. `vars({ accent })` writes the fill, the ink that reads on
+it (design's `#0a0a0a` or `#fafafa`, whichever contrasts more) and a hover
+(`color-mix` toward that ink) on both `--primary-*` and `--accent-*`. A colour
+it cannot read (named colours, wide-gamut spaces) is not an accent.
+
+Measured on live hanzo.ai and hanzo.team before 0.2.6: a stored accent reached
+no page on load (the boot script skipped it and nothing applied it until the
+panel opened); theme lived in three places (next-themes, IAM `useUserTheme`,
+none in appearance), all per origin; `--radius-scale` was read by gui and
+written by nothing; the primary Button's hover and `PrimaryButton` ignored the
+person's accent; design hand-edited a colours file generated from tokens.
+
 ## Repository Structure
 
 ```
@@ -686,6 +724,7 @@ ui/
   pkg/                   every package, and the reason this repo exists
     ui/                  @hanzo/ui@8 — the core library (npm)
     appearance/          @hanzo/appearance     composer/ @hanzo/composer
+    rooms/               @hanzo/rooms — the workspace rooms (pkg/rooms/LLM.md)
     data/                @hanzo/data           hanzo/    the CLI
     event/               telemetry client — POST /v1/event
     observe/             capture engine        og/       OG image generation

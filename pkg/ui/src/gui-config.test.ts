@@ -128,6 +128,13 @@ describe('the rungs design already decided read the token', () => {
     expect(themed(theme, 'color12')).toBe(`var(--foreground, ${label})`)
   })
 
+  it.each(['dark', 'light'] as const)('%s: the loud control’s hover is design’s --accent-hover', (theme) => {
+    // design publishes the monochrome accent's hover as its secondary hover;
+    // the literal behind the var is that value, so a host with no design sheet
+    // hovers where one with it does.
+    expect(themed(theme, 'accentHover')).toBe(`var(--accent-hover, ${token('accent-hover', theme)})`)
+  })
+
   it.each(['dark', 'light'] as const)('%s: the focus ring is design’s --ring, and it CLEARS 3:1', (theme) => {
     // WCAG 2.4.11, computed rather than asserted as a string — a string check
     // passes on any grey somebody types. The ring is translucent, so it is
@@ -492,6 +499,9 @@ describe('a person and a brand can both move this', () => {
     // difference between #262626 and a white slab.
     expect(refOf('accentBackground')).toContain('var(--accent')
     expect(refOf('accentColor')).toContain('var(--accent-foreground')
+    // …and its hover, which design restates with every accent, so a blue
+    // control deepens blue under the cursor instead of turning grey.
+    expect(refOf('accentHover')).toContain('var(--accent-hover')
     expect(refOf('borderColor')).toContain('var(--border')
     expect(refOf('outlineColor')).toContain('var(--ring')
   })

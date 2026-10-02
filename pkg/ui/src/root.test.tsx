@@ -58,6 +58,8 @@ const mount = async () => {
 afterEach(() => {
   localStorage.clear()
   document.documentElement.removeAttribute('style')
+  document.documentElement.removeAttribute('class')
+  document.documentElement.removeAttribute('data-scheme')
   document.body.innerHTML = ''
 })
 
@@ -78,6 +80,19 @@ describe('<Hanzo> honours the person, with no wiring', () => {
     const s = document.documentElement.style
     expect(s.getPropertyValue('--primary')).toBe('#8b5cf6')
     expect(s.getPropertyValue('--accent')).toBe('#8b5cf6')
+    // …with the ink that reads on it and the hover that deepens it, so the loud
+    // control keeps a legible label and stays the accent under the cursor.
+    expect(s.getPropertyValue('--accent-foreground')).toBe('#0a0a0a')
+    expect(s.getPropertyValue('--accent-hover')).toContain('#8b5cf6')
+  })
+
+  it('puts a stored theme on the document, in design\'s words and gui\'s', async () => {
+    localStorage.setItem(KEY, JSON.stringify({ theme: 'light' }))
+    await mount()
+    const c = document.documentElement.classList
+    expect(c.contains('light')).toBe(true)
+    expect(c.contains('t_light')).toBe(true)
+    expect(c.contains('t_dark')).toBe(false)
   })
 
   it('writes NOTHING when nobody has set anything', async () => {

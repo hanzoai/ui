@@ -36,17 +36,34 @@
  */
 import { GuiProvider } from '@hanzo/gui'
 import { TelemetryProvider, type TelemetryConfig } from '@hanzogui/telemetry'
-import { useEffect, type ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
-import { apply, read } from '@hanzo/appearance/state'
+import { useAppearance, useScheme, type Account, type Preference } from '@hanzo/appearance'
 
-import { config } from './gui-config'
+import { config as full, type Conf } from './gui-config'
 import './styles.css'
 
 export type HanzoProps = {
   children?: ReactNode
-  /** Dark-first Hanzo identity. `light` retunes it. */
+  /**
+   * Pin the theme. Omitted, it is whatever the document shows — the person's
+   * choice through `@hanzo/appearance`, painted as the `light` / `t_light`
+   * classes before first paint — and it follows that choice when it changes.
+   */
   theme?: 'dark' | 'light'
+  /**
+   * The gui config. `@hanzo/ui/gui-config` exports two from one scale: `config`
+   * (the default) and `monochrome`, the same table without the chromatic
+   * sub-themes, for a surface that renders no hue.
+   */
+  config?: Conf
+  /**
+   * Whose appearance this is. The person's own layers come off the device and,
+   * given `account`, off IAM — so a choice made on another Hanzo origin arrives
+   * here without the settings panel ever being opened. `org` / `orgPref` are the
+   * org's layer, `install` the surface's own defaults.
+   */
+  appearance?: { org?: string; orgPref?: Preference; install?: Preference; account?: Account }
   /**
    * Interaction analytics for everything inside — OFF unless you ask.
    *
@@ -94,28 +111,27 @@ const assertStylesheet = () => {
   )
 }
 
-export const Hanzo = ({ children, theme = 'dark', analytics }: HanzoProps) => {
+export const Hanzo = ({ children, theme, analytics, config = full, appearance }: HanzoProps) => {
   if (process.env.NODE_ENV !== 'production') assertStylesheet()
-  // A person's stored type size, density and accent, put on the document.
+  // A person's appearance, put on the document and kept there.
   //
   // Unconditional, unlike `analytics`, and the difference is the whole reason
   // that one is a prop. Analytics starts a conversation with a server the app
-  // did not ask for; this reads a preference the PERSON already set on this
-  // device and honours it. An app that has to opt in is an app that forgets to,
-  // and then the setting silently does nothing on that surface — which is worse
-  // than not offering it.
+  // did not ask for; this honours a preference the PERSON already set. An app
+  // that has to opt in is an app that forgets to, and then the setting silently
+  // does nothing on that surface — measured on hanzo.ai, where a stored accent
+  // reached no page until someone opened the panel that sets it.
   //
   // Costs nothing when unused: an axis nobody set is absent rather than
   // neutral, so `apply()` removes the property instead of stamping a `1` that
-  // would outrank a brand's own scale.
+  // would outrank a brand's own scale, and leaves a theme nobody chose alone.
   //
   // This is the MOUNT half only. First paint still wants `bootScript()` in
   // <head>, because no component can run before the document exists.
-  useEffect(() => {
-    apply(read())
-  }, [])
+  useAppearance(appearance)
+  const scheme = useScheme()
   const tree = (
-    <GuiProvider config={config} defaultTheme={theme} disableInjectCSS>
+    <GuiProvider config={config} defaultTheme={theme ?? scheme} disableInjectCSS>
       {children}
     </GuiProvider>
   )

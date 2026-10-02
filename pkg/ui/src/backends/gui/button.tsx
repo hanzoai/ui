@@ -112,11 +112,14 @@ const Frame = styled(GuiButton.Frame, {
       // it instead of staying grey. Naming the rung directly is what left the
       // accent knob connected to nothing: the pair was declared in the config,
       // no component asked for it, and setting `--primary` changed zero pixels.
+      // Its hover is the ACCENT's hover, for the reason its fill is: `$rim` is
+      // a grey off the upstream ramp, so a blue control turned grey under the
+      // cursor and the accent lasted only until someone pointed at it.
       primary: {
         bg: '$accentBackground',
         color: '$accentColor',
         borderColor: '$rim',
-        hoverStyle: { bg: '$rim', borderColor: '$bound' },
+        hoverStyle: { bg: '$accentHover', borderColor: '$bound' },
       },
       // design's destructive FILL and the label it is cut for, not gui's own red:
       // white on `$red9` was 3.9:1. `--destructive` is a fill under

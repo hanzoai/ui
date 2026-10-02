@@ -354,7 +354,7 @@ const RING = { dark: 'rgb(255 255 255 / .40)', light: 'rgb(0 0 0 / .5)' } as con
 const ALIASES = [
   'sunken', 'panel', 'hover', 'edge', 'raised', 'rim',
   'bound', 'dim', 'faint', 'soft', 'quiet', 'ink',
-  'bad', 'good',
+  'bad', 'good', 'accentHover',
 ] as const
 /** The two state colours design publishes, so an error or a success is a rung. */
 const STATE = { bad: 'var(--state-error, #ef4444)', good: 'var(--state-success, #22c55e)' } as const
@@ -411,6 +411,14 @@ const SURFACE = {
  * referenced `--primary` at all.
  */
 const GROUND = { dark: '#0a0a0a', light: '#f7f7f7' } as const
+/**
+ * The loud control under the cursor. design publishes `--accent-hover` beside
+ * the pair, and `@hanzo/design`'s `vars()` restates it whenever a person or an
+ * org picks an accent — so a blue control deepens blue on hover instead of
+ * turning the grey it used to be. The literal is design's own (`--secondary-hover`,
+ * which the monochrome accent shares), for a host that mounts no token layer.
+ */
+const ACCENT_HOVER = { dark: '#333333', light: '#e0e0e0' } as const
 const MUTED = { dark: 'rgb(255 255 255 / .55)', light: 'rgb(10 10 10 / .55)' } as const
 const LOUD = { dark: '#fafafa', light: '#0a0a0a' } as const
 const LOUD_LABEL = { dark: '#0a0a0a', light: '#fafafa' } as const
@@ -549,6 +557,7 @@ const themes = Object.fromEntries(
             // the mismatch never showed: setting either name moved zero pixels.
             accentBackground: `var(--accent, ${SURFACE[s].raised})`,
             accentColor: `var(--accent-foreground, ${LABEL[s]})`,
+            accentHover: `var(--accent-hover, ${ACCENT_HOVER[s]})`,
           }
         : ringed,
     ]
@@ -783,7 +792,7 @@ type Base = ReturnType<typeof createGui<typeof defaultConfig>>
 
 type Ramp = Record<
   | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
-  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good',
+  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good' | 'accentHover',
   Base['themes']['dark']['color12']
 >
 

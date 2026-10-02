@@ -1,18 +1,19 @@
 'use client'
 
 /**
- * Primary button — the one white, high-emphasis action for the console.
+ * Primary button — the one high-emphasis action in a view (sign in, save, get
+ * started). Secondary and destructive actions use the default neutral `Button`.
  *
- * Monochrome brand: `theme="light"` flips the button to the light theme inside
- * the dark console, giving a white fill with a near-black label and icon — no
- * hue accent. Use it for the single primary action in a view (sign in, save,
- * get started). Secondary and destructive actions use the default neutral
- * `Button`.
+ * It wears design's `--primary` family: the white slab on the dark ground, the
+ * black one on the light, and — when a person or an org picks an accent — that
+ * accent, with the ink that reads on it and the hover that deepens it. All three
+ * come from `@hanzo/design`'s `vars()` through the cascade, so a person's accent
+ * (written by `@hanzo/appearance`) and an org's (written by `setOrgAccent`) both
+ * reach it with nothing to subscribe to. It used to read the org's accent from a
+ * JS store, which a person's choice never entered, so the one primary action in
+ * a view was the one control that ignored the person's accent.
  *
- * When an org enables a custom brand color, this — the console's one primary
- * action — recolors to the org accent (inline bg + the color prop the label/icon
- * inherit), reading the live accent from `useAccent()`; with no custom theme it
- * stays the default white. A caller's own `style`/`color` still win (spread last).
+ * A caller's own `style`/`color` still win (spread last).
  */
 import type { ComponentProps } from 'react'
 // gui's Button, still — and this is the one place the ladder is knowingly not
@@ -29,11 +30,9 @@ import type { ComponentProps } from 'react'
 // on the component every surface depends on, and it wants its own change.
 import { Button } from '@hanzo/gui'
 
-import { useAccent } from './accent'
 import { labelOf, useEmit } from './instrument'
 
 export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button>) {
-  const { accent, contrast } = useAccent()
   const track = useEmit()
   // DESTRUCTURE the caller's handler out first. Wrapping it while still reading it
   // off a rebound `props` makes the wrapper call ITSELF — an unbounded recursion
@@ -48,10 +47,15 @@ export function PrimaryButton({ onPress, ...rest }: ComponentProps<typeof Button
     ;(onPress as ((e: unknown) => void) | undefined)?.(e)
   }
   const handler = press as ComponentProps<typeof Button>['onPress']
-  // Accent set → a filled accent button (bg + readable text, via inline style Tamagui
-  // forwards to the DOM). No accent → the default monochrome white (theme="light").
-  if (accent) {
-    return <Button style={{ backgroundColor: accent, color: contrast, borderColor: accent }} onPress={handler} {...rest} />
-  }
-  return <Button theme="light" onPress={handler} {...rest} />
+  return (
+    <Button
+      bg="var(--primary)"
+      color="var(--primary-foreground)"
+      borderColor="var(--primary)"
+      hoverStyle={{ bg: 'var(--primary-hover)', borderColor: 'var(--primary-hover)' }}
+      pressStyle={{ bg: 'var(--primary-hover)', borderColor: 'var(--primary-hover)' }}
+      onPress={handler}
+      {...rest}
+    />
+  )
 }
