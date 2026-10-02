@@ -1,0 +1,69 @@
+{
+  "name": "@hanzo/voice",
+  "version": "0.1.11",
+  "description": "Bidirectional voice for a composer — open mic, live transcript, spoken replies, barge-in, and a talk socket. One machine and one button, shared by every Hanzo surface.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanzoai/ui.git",
+    "directory": "pkg/voice"
+  },
+  "homepage": "https://hanzo.ai",
+  "keywords": [
+    "hanzo",
+    "voice",
+    "speech",
+    "microphone",
+    "transcription",
+    "tts",
+    "stt",
+    "realtime",
+    "react"
+  ],
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/guard-publish.mjs",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && node ../ui/scripts/postbuild.mjs .",
+    "clean": "rm -rf dist",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc --noEmit",
+    "tc": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "Apache-2.0",
+  "author": "Hanzo AI Inc.",
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "happy-dom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

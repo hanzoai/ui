@@ -734,6 +734,7 @@ ui/
     commerce/  checkout/  shop/  products/     canvas/   cd/   dashboard/
     agent-ui/  annotate/  react/  replay/      sentinel/ tokens/  desk/
     events/    next/      vite/   source/      observe-native/  observe-svelte/
+    voice/               @hanzo/voice — dictation, read-aloud, talk mode, live transcript
   apps/
     cd/                  demo app for @hanzo/cd
 ```
