@@ -101,12 +101,6 @@ export {
 } from './ChannelMembers'
 
 export {
-  ThemeCustomizer,
-  type ThemeConfig,
-  type ThemeCustomizerProps,
-} from './ThemeCustomizer'
-
-export {
   ShortcutsSheet,
   type ShortcutItem,
   type ShortcutsSheetProps,
