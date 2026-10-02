@@ -8,7 +8,7 @@
  * `<cite>` in its `<footer>`, so a reader announces it as a quotation.
  *
  * Mount is the animation: each testimonial gets a fresh `key`, so a change
- * remounts the card and `hz-fade-up` (styles/motion.css) plays. The outgoing
+ * remounts the card and `data-motion="rise"` (styles/motion.css) plays. The outgoing
  * card unmounts with no exit.
  */
 import { SizableText, XStack, YStack, styled } from '@hanzo/gui'
@@ -105,7 +105,7 @@ export function AnimatedTestimonials({
   return (
     <Frame {...slot('animated-testimonials')} {...props}>
       {active && (
-        <Card key={active.id} className="hz-fade-up">
+        <Card key={active.id} data-motion="rise">
           <CardContent>
             <YStack render="blockquote" gap="$4">
               <Quote {...slot('animated-testimonials-quote')} render="p">

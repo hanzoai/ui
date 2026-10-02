@@ -146,7 +146,7 @@ export function SlideOver({
         r={0}
         b={0}
         bg="rgba(0,0,0,0.55)"
-        className="hz-fade"
+        data-motion="fade"
         style={{ opacity: open ? 1 : 0 }}
         onPress={onClose}
       />
@@ -177,7 +177,8 @@ export function SlideOver({
         // own, so it floats free exactly the way a modal does. It asked for a 4th
         // rung, which is what a ladder turns into when it is treated as a palette —
         // and the 4th was a hardcoded shadow behind a variable nothing defined.
-        className="hz-slide elevation-3"
+        data-motion="slide"
+        className="elevation-3"
         // Full-height sheet (100dvh — mobile-safe), inset for the notch (top) + home
         // indicator (bottom) so the drawer header + footer actions clear them on
         // notched devices (env insets are 0 elsewhere, so no effect there).

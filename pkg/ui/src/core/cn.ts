@@ -3,7 +3,7 @@
  *
  * There is no Tailwind conflict-resolution step, because there are no Tailwind
  * utilities left to resolve: styling lives in gui style props and the token
- * scale, and a class name here is only a stable handle (`btn`, `hz-prose`) that
+ * scale, and a class name here is only a stable handle (`btn`, `badge`) that
  * a host may select on.
  *
  * `flatten` lives here rather than in tw.ts because BOTH need it and there can

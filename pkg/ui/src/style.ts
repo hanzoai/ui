@@ -37,9 +37,6 @@ export const buttonVariants = ({
 export const badgeVariants = ({ variant }: { variant?: BadgeVariant | null } = {}) =>
   `badge badge-${variant ?? 'default'}`
 
-/** The class a navigation-menu trigger wears. Declared in motion.css. */
-export const navigationMenuTriggerStyle = () => 'hz-nav-menu-trigger'
-
 /**
  * `dim` scaled to sit inside `to`, keeping its proportions.
  *

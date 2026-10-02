@@ -56,8 +56,8 @@ describe('the measure', () => {
   it('bounds running text but not headings', () => {
     // A heading is short and the width is what gives it presence; a paragraph
     // past ~68 characters loses the reader on the line return.
-    expect(css).toMatch(/\.hz-prose > p,[\s\S]{0,80}max-width:\s*var\(--measure\)/)
-    expect(css).not.toMatch(/\.hz-prose > h1\s*\{[^}]*max-width/)
+    expect(css).toMatch(/\[data-slot='prose'\] > p,[\s\S]{0,120}max-width:\s*var\(--measure\)/)
+    expect(css).not.toMatch(/\[data-slot='prose'\] > h1\s*\{[^}]*max-width/)
   })
 
   it('declares a gutter that grows with the viewport', () => {

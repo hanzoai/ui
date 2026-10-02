@@ -16,7 +16,7 @@
  *
  * Anything `tw` does not read comes back as `className`, exactly as Box hands
  * it back. Dropping it would be worse than leaking it: a class with a real rule
- * behind it — `hz-prose`, or one of the app's own — is not something `tw` should
+ * behind it — `btn`, or one of the app's own — is not something `tw` should
  * be expected to know, and discarding it would unstyle the element with nothing
  * to show for it.
  */

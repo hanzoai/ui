@@ -291,9 +291,9 @@ describe('Pagination', () => {
  */
 describe('Skeleton', () => {
   it('renders the shimmer handle, not a bare grey box', () => {
-    // The animation lives in styles/motion.css as `.hz-skeleton`. A placeholder
-    // that misses the class is a static block nobody notices is stuck.
-    expect(els(html(<Skeleton width={120} />))).toContain('hz-skeleton')
+    // The sweep lives in styles/motion.css as `data-motion="shimmer"`. A
+    // placeholder that misses it is a static block nobody notices is stuck.
+    expect(els(html(<Skeleton width={120} />))).toContain('data-motion="shimmer"')
   })
 
   it('is hidden from a screen reader', () => {
@@ -308,7 +308,7 @@ describe('Skeleton', () => {
     // last line's width DIFFERS from the others — never the literal '60%',
     // which never reaches the markup.
     const markup = els(html(<Skeleton.Text lines={3} />))
-    expect(markup.match(/hz-skeleton/g)).toHaveLength(3)
+    expect(markup.match(/data-motion="shimmer"/g)).toHaveLength(3)
     const widths = [...markup.matchAll(/_width-\S+?(?= )/g)].map((m) => m[0])
     expect(new Set(widths.slice(-3)).size).toBeGreaterThan(1)
   })

@@ -34,6 +34,12 @@ const ours = readFileSync(join(UI, 'src/theme.css'), 'utf8')
 // different things about what glass is.
 const glass = readFileSync(join(UI, 'src/glass.css'), 'utf8')
 
+// The motion vocabulary — its own entry point too (`@hanzo/ui/styles/motion.css`)
+// and part of this sheet, for the same reason glass is: the components carry
+// `data-motion`, and a host that takes theme.css alone still gets the keyframes
+// they name. One source file, two entry points.
+const motion = readFileSync(join(UI, 'src/styles/motion.css'), 'utf8')
+
 /**
  * Drop design's @font-face blocks. FONT DELIVERY HAS ONE OWNER AND IT IS NOT US.
  *
@@ -97,7 +103,7 @@ const design = designNoFonts.replace(
 // in `hsl(...)` — the shadcn-era idiom, where tokens were bare `H S% L%` triples
 // — is invalid at computed-value time, and the browser drops the WHOLE
 // declaration without a word. One grep is cheaper than finding it on a page.
-const composed = `${design}\n${ours}\n${glass}`
+const composed = `${design}\n${ours}\n${glass}\n${motion}`
 const bad = [...composed.matchAll(/\b(hsl|rgb|oklch)a?\(\s*var\(/g)].map((m) => m[0])
 if (bad.length) {
   throw new Error(

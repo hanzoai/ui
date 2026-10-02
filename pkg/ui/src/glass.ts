@@ -123,29 +123,6 @@ const SHEET_FILL = {
 export type Edge = 'left' | 'right'
 
 /**
- * The crease — the valley where a neighbouring sheet lies over this one.
- *
- *   <YStack {...paper(sheet(0), crease('right'))}>
- *
- * The ladder's drops fall straight down (design's rule is one light, above), so
- * it has nothing to say about a VERTICAL seam — and an app shell is nothing but
- * vertical seams. Three sheets a rung apart, side by side, still read as three
- * abutting rectangles. This is the mark that makes them read as paper: the
- * ground going dark in the valley, which is what a sheet actually lays on the
- * one beside it.
- *
- * It goes on the sheet that is COVERED, on the edge the neighbour lies over —
- * a rail with a sidebar to its right takes `crease('right')`. Nothing can paint
- * outside its own box, so the receiver draws it; the caster only has to be
- * higher up the ladder.
- *
- * Spend it at a seam and nowhere else. A crease down the side of a card with
- * nothing beside it is a gradient somebody liked.
- */
-export const crease = (edge?: Edge) =>
-  ({ className: 'hz-crease', ...(edge ? { 'data-crease': edge } : {}) }) as const
-
-/**
  * Unfold — how a sheet ARRIVES: turning open about the edge it is hinged on,
  * rather than fading up as a rectangle.
  *
@@ -160,7 +137,7 @@ export const crease = (edge?: Edge) =>
  * `styles/motion.css` beside every other keyframe this package ships.
  */
 export const unfold = (hinge: Edge = 'left') =>
-  ({ className: 'hz-unfold', ...(hinge === 'right' ? { 'data-hinge': 'right' } : {}) }) as const
+  ({ 'data-motion': 'unfold', ...(hinge === 'right' ? { 'data-hinge': 'right' } : {}) }) as const
 
 interface Mark {
   className?: string
@@ -169,7 +146,7 @@ interface Mark {
 /**
  * Compose marks onto one surface, without losing a class.
  *
- *   <YStack {...paper(sheet(1), crease('left'), fold)}>
+ *   <YStack {...paper(sheet(1), unfold(), fold)}>
  *
  * SPREADING TWO RECIPES SILENTLY DROPS ONE. `{...sheet(1)} {...fold}` — the
  * composition `fold`'s own documentation shows — keeps only the last

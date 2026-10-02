@@ -15,6 +15,7 @@
  * loading, a BackendStateCard on a `/v1` failure, real empty states, and a publish
  * failure surfaced verbatim (a 503 carries the exact missing OAuth-app credentials).
  */
+import { TABULAR } from '../figures'
 import { useCallback, useEffect, useState } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { Share2, Send, Link2, Plus, RefreshCw } from '@hanzogui/lucide-icons-2'
@@ -111,7 +112,7 @@ function PostDetail({ api, post, onChanged }: { api: SocialApi; post: Post; onCh
       ) : null}
       {post.externalId ? (
         <FieldRow label="External id">
-          <Text fontSize="$3" className="hz-tnum">
+          <Text fontSize="$3" {...TABULAR}>
             {post.externalId}
           </Text>
         </FieldRow>

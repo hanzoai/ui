@@ -281,7 +281,6 @@ export {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from './navigation-menu'
 export {
   Drawer,

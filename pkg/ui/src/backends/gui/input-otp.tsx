@@ -17,6 +17,7 @@
  */
 import * as React from 'react'
 
+import { Caret } from '../../motion'
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
 
@@ -122,7 +123,7 @@ export const InputOTPSlot = ({
     {...props}
   >
     {char}
-    {hasFakeCaret && <Box className="hz-caret absolute" style={{ width: 1, height: '1em' }} />}
+    {hasFakeCaret && <Caret position="absolute" />}
   </Box>
 )
 

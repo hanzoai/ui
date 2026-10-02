@@ -16,6 +16,8 @@
  * stays the one source of order). Omit all three and the table behaves exactly as
  * before, so every existing consumer is unchanged.
  */
+import { FIGURES, TABULAR } from './figures'
+import { Skeleton } from './Skeleton'
 import type { ReactNode } from 'react'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import { ChevronDown, ChevronsUpDown, ChevronUp } from '@hanzogui/lucide-icons-2'
@@ -48,11 +50,7 @@ function SkeletonRows<T>({ columns, count = 6 }: { columns: Column<T>[]; count?:
         <XStack key={r} py="$2.5" px="$3" gap="$3" borderTopWidth={1} borderColor="$borderColor" items="center">
           {columns.map((c, i) => (
             <YStack key={c.key} width={c.width} flex={c.width ? undefined : 1} minW={c.width ? undefined : FLEX_MIN_COL_W} items={c.align === 'right' ? 'flex-end' : 'flex-start'}>
-              <div
-                className="hz-skeleton"
-                style={{ height: 12, borderRadius: 6, width: `${[62, 40, 54, 34, 48][(i + r) % 5]}%` }}
-                aria-hidden
-              />
+              <Skeleton height={12} rounded={6} width={`${[62, 40, 54, 34, 48][(i + r) % 5]}%`} />
             </YStack>
           ))}
         </XStack>
@@ -139,7 +137,7 @@ export function DataTable<T>({
                     fontWeight="500"
                     color={active ? '$ink' : '$soft'}
                     text={c.align === 'right' ? 'right' : 'left'}
-                    className={c.mono ? 'hz-tnum' : undefined}
+                    {...(c.mono ? TABULAR : null)}
                   >
                     {c.header}
                   </Text>
@@ -158,7 +156,7 @@ export function DataTable<T>({
                 return (
                 <YStack key={rowKey(row)}>
                 <XStack
-                  className="hz-row"
+                  data-slot="data-table-row"
                   py="$2.5"
                   px="$3"
                   gap="$3"
@@ -166,7 +164,9 @@ export function DataTable<T>({
                   borderColor="$borderColor"
                   items="center"
                   bg={expanded ? '$panel' : undefined}
-                  hoverStyle={onRowPress ? { bg: '$panel' } : undefined}
+                  // Every row answers a pointer; a pressable one answers louder.
+                  hoverStyle={{ bg: onRowPress ? '$panel' : 'var(--surface-card-quiet)' }}
+                  style={{ transition: 'background-color 140ms ease-out' }}
                   cursor={onRowPress ? 'pointer' : undefined}
                   onPress={
                     onRowPress
@@ -202,7 +202,7 @@ export function DataTable<T>({
                             numberOfLines={1}
                             color="$ink"
                             text={c.align === 'right' ? 'right' : 'left'}
-                            className={c.mono ? 'hz-mono' : undefined}
+                            {...(c.mono ? FIGURES : null)}
                           >
                             {cell}
                           </Text>

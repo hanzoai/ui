@@ -83,11 +83,11 @@ describe('AnimatedTooltip', () => {
     act(() => void fireEvent.mouseEnter(frame()!))
 
     const el = panel()! as HTMLElement
-    expect(el.classList).toContain('hz-fade-up')
+    expect(el.getAttribute('data-motion')).toBe('rise')
     expect(el.style.animationDelay).toBe('250ms')
   })
 
-  // `hz-fade-up` animates `transform` with fill-mode both, and an animated
+  // `data-motion="rise"` animates `transform` with fill-mode both, and an animated
   // property outranks every normal declaration, inline style included — so a
   // panel centred by translateX(-50%) lands half a width to the right and stays
   // there. Centring is layout: an anchor spans the trigger and aligns the panel.

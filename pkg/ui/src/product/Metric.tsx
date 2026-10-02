@@ -16,6 +16,7 @@
  * the house pattern (see ui/Loader, ui/HanzoMark); style props use the v5
  * shorthand set.
  */
+import { FIGURES } from './figures'
 import type { ReactElement, ReactNode } from 'react'
 import { Button, Card, Text, XStack, YStack } from '@hanzo/gui'
 
@@ -116,7 +117,7 @@ export function LegendDot({ color, label, value }: { color: string; label: strin
         </Text>
       </XStack>
       {value != null ? (
-        <Text fontSize="$2" color="$ink" fontWeight="500" className="hz-mono">
+        <Text fontSize="$2" color="$ink" fontWeight="500" {...FIGURES}>
           {value}
         </Text>
       ) : null}
@@ -163,7 +164,7 @@ export function MetricCard({
         ) : null}
       </XStack>
       <XStack items="flex-end" justify="space-between" gap="$2">
-        <Text fontSize="$8" fontWeight="500" color="$ink" numberOfLines={1} className="hz-mono">
+        <Text fontSize="$8" fontWeight="500" color="$ink" numberOfLines={1} {...FIGURES}>
           {value}
         </Text>
         {spark && spark.length >= 2 ? <Sparkline points={spark} color={sparkColor ?? SERIES[0]} /> : null}

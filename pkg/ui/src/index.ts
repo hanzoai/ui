@@ -616,7 +616,11 @@ export { Box, type BoxProps } from './box'
 export { sx } from './sx'
 export { css } from './css'
 
-export { buttonVariants, badgeVariants, navigationMenuTriggerStyle, fit } from './style'
+export { buttonVariants, badgeVariants, fit } from './style'
+
+// The live dot and the typing caret: gui Views carrying `data-motion`, whose
+// keyframes are styles/motion.css.
+export { Pulse, Caret, type PulseProps, type CaretProps } from './motion'
 
 // The config the components are styled against, for a host that lays out with
 // @hanzo/gui stacks of its own.

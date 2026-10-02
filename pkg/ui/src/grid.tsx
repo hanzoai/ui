@@ -12,30 +12,36 @@
  * Here the parent declares the tracks once and the children have no say. Equal
  * columns are structural, not arithmetic, and no child can widen its own track.
  *
- * WEB ONLY, which is why it sits at `@hanzo/ui/grid` rather than on the barrel,
- * beside `@hanzo/ui/dots`. That is a statement about this file and nothing else:
- * it renders a `div` and sets `display: grid`, and neither of those exists on
- * React Native — Yoga has grid data structures but no grid algorithm, so
- * `display: 'grid'` is not in the platform's style types at all.
+ * A gui View with `display="grid"` and the grid's own props, at `@hanzo/ui/grid`
+ * beside `@hanzo/ui/dots`. `columns` and `rows` are TRACK LISTS and `Cell`
+ * places and spans, all CSS-grid concepts rather than facts about the element,
+ * so the same call lays out wherever gui's grid props reach.
  *
- * The quarantine is a pin, not a law, and the API is named so that lifting it
- * costs nothing: `columns` and `rows` are TRACK LISTS and `Cell` places and
- * spans, all of them CSS-grid concepts rather than facts about the div. When a
- * native grid engine lands, this file changes and call sites do not.
+ * IT FLOORS ITS OWN CHILDREN. A grid item's initial `min-width` is `auto`, which
+ * floors its box at the content's min-content width: one long unbroken string —
+ * a hash, a URL, a wide <pre> — pushes the item past its track and over its
+ * neighbour. Grid gives every element child `min-width: 0` itself — a gui child
+ * has it from its own base, any other takes it as a style — so a host needs no
+ * rule for it, and a child that states its own minimum keeps it.
  *
- * Why a plain div and not a gui YStack: gui's box model is Yoga, which is
- * flexbox here — a YStack would compile its own `display:flex` atomic class and
- * fight the grid. Inline styles, not a stylesheet class, so there is no rule to
- * fail to ship: this package's own checker exists because "class with no rule"
- * has shipped here three times.
- *
- * The min-width floor every grid child needs is declared ONCE, as
- * `[data-slot='grid'] > *` in `styles/motion.css`. It is not restated inline
- * here: a grid item's `grid-column` only applies to a direct child of the grid,
- * so a `Cell` is always in range of that selector, and a second copy inline
- * would be a second place for the same invariant to be edited.
+ * A LAYOUT BOX, NOT A TYPE SCOPE. A gui View carries the body font's family,
+ * weight, tracking and leading; a grid of bare tags must read in whatever face
+ * surrounds it, as the `div` this replaced did. So those four inherit, and it
+ * shrinks in a flex row the way a `div` does.
  */
-import type { ComponentProps, CSSProperties, ReactNode } from 'react'
+import { View } from '@hanzo/gui'
+import {
+  Children,
+  cloneElement,
+  Fragment,
+  isValidElement,
+  type ComponentProps,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from 'react'
+
+type ViewProps = ComponentProps<typeof View>
 
 /**
  * A track list, in the spellings a caller actually has. Every one of these is
@@ -68,7 +74,7 @@ export interface Fit {
   max?: number
 }
 
-export interface GridProps extends Omit<ComponentProps<'div'>, 'children'> {
+export interface GridProps extends Omit<ViewProps, 'children' | 'columns' | 'rows' | 'gap'> {
   /** The column tracks. A count, a list, a raw track list, or a `Fit`. */
   columns?: Tracks | Fit
   /** The row tracks. Rows size to content unless you say otherwise. */
@@ -113,6 +119,7 @@ const track = (v: number | string): string => (typeof v === 'number' ? `${v}px` 
  * `minmax(auto, 1fr)`, and `auto` floors the track at the content's min-content
  * width — so one long unbroken string pushes its own column wider and every
  * sibling narrower. That IS the ragged row this component exists to prevent.
+ * A raw string is the caller's track list, as written.
  */
 const list = (t: Tracks): string => {
   if (typeof t === 'number') return `repeat(${t}, minmax(0, 1fr))`
@@ -148,18 +155,53 @@ const fitted = ({ min, max }: Fit, gap: string): string => {
 export const tracks = (columns: Tracks | Fit, gap = '0px'): string =>
   fit(columns) ? fitted(columns, gap) : list(columns)
 
-const Grid = ({ columns = { min: 240 }, rows, gap = '$3', style, ...props }: GridProps) => {
-  const g = space(gap, 12)
-  const grid: CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: tracks(columns, g),
-    gap: g,
-  }
-  if (rows !== undefined) grid.gridTemplateRows = list(rows)
-  return <div data-slot="grid" style={{ ...grid, ...style }} {...props} />
+/** The four type properties a gui View sets and a layout box must not. */
+const TYPE: CSSProperties = {
+  fontFamily: 'inherit',
+  fontWeight: 'inherit',
+  letterSpacing: 'inherit',
+  lineHeight: 'inherit',
 }
 
-export interface CellProps extends ComponentProps<'div'> {
+/** A gui component: its box already floors at `min-width: 0` unless it says otherwise. */
+const gui = (type: unknown): boolean =>
+  (typeof type === 'function' || typeof type === 'object') && type !== null && 'staticConfig' in type
+
+/**
+ * One child with its min-width floor. A gui child has it already and a child
+ * that names its own minimum keeps it; a fragment is left alone, since it has
+ * no box to floor.
+ */
+const floor = (child: ReactNode): ReactNode => {
+  if (!isValidElement(child) || child.type === Fragment || gui(child.type)) return child
+  const el = child as ReactElement<{ style?: unknown }>
+  const style = el.props.style
+  if (Array.isArray(style)) return cloneElement(el, { style: [{ minWidth: 0 }, ...style] })
+  if (style && typeof style === 'object' && 'minWidth' in style) return el
+  return cloneElement(el, { style: { minWidth: 0, ...(style as object) } })
+}
+
+const Grid = ({ columns = { min: 240 }, rows, gap = '$3', style, children, ...props }: GridProps) => {
+  const g = space(gap, 12)
+  return (
+    <View
+      data-slot="grid"
+      display="grid"
+      gridTemplateColumns={tracks(columns, g) as never}
+      {...(rows !== undefined ? { gridTemplateRows: list(rows) as never } : null)}
+      gap={g as never}
+      shrink={1}
+      minW={'auto' as never}
+      minH={'auto' as never}
+      style={{ ...TYPE, ...(style as object) }}
+      {...props}
+    >
+      {Children.map(children, floor)}
+    </View>
+  )
+}
+
+export interface CellProps extends Omit<ViewProps, 'col' | 'row'> {
   /**
    * Where this cell sits across the columns, as `grid-column`. A NUMBER spans
    * that many tracks (`span 2`); a string places it (`'1 / 3'`, `'2 / -1'`).
@@ -175,9 +217,13 @@ const place = (v: number | string | undefined): string | undefined =>
   v === undefined ? undefined : typeof v === 'number' ? `span ${v}` : v
 
 const Cell = ({ col, row, style, ...props }: CellProps) => (
-  <div
+  <View
     data-slot="grid-cell"
-    style={{ gridColumn: place(col), gridRow: place(row), ...style }}
+    {...(col !== undefined ? { gridColumn: place(col) as never } : null)}
+    {...(row !== undefined ? { gridRow: place(row) as never } : null)}
+    minW={0}
+    shrink={1}
+    style={{ ...TYPE, ...(style as object) }}
     {...props}
   />
 )

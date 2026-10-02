@@ -21,7 +21,8 @@ export const Skeleton = ({ className, ...props }: React.ComponentProps<typeof Bo
     // either way.
     aria-busy={true}
     aria-live="polite"
-    className={cn('hz-pulse rounded-md bg-muted', className)}
+    data-motion="pulse"
+    className={cn('rounded-md bg-muted', className)}
     {...props}
   />
 )

@@ -191,13 +191,8 @@
    src/glass.css and are inlined here by scripts/compose-theme.mjs — one home,
    two entry points (`@hanzo/ui/theme.css` and `@hanzo/ui/glass.css`), so a host
    that wants only the chrome material does not have to take the token layer
-   with it.
-
-   They used to be four `.elevation-*` rules reading `var(--hz-elevation-N, …)`.
-   Nothing in this repo, in @hanzo/design or in any consumer ever DEFINED an
-   `--hz-elevation-*` variable, so every one of those resolved to its fallback:
-   an indirection through a name that does not exist, with a hardcoded shadow
-   behind it, next to a design system that publishes real ones. */
+   with it. The ladder reads @hanzo/design's own shadows, never a private
+   variable nothing defines. */
 
 /* ── Prose ───────────────────────────────────────────────────────────────────
    What `<ApplyTypography>` turns on: running text — a heading, a byline, a
@@ -211,12 +206,13 @@
    @hanzo/design ramp, which is where every other surface already reads them —
    so prose and a Button now round to the same scale instead of two.
 
-   Scoped under `.hz-prose` and applied with `>` only one level down, so a nested
-   component keeps its own type. */
-.hz-prose {
-  /* One implicit column with a gap — a grid states the stack without also
-     having to state a direction to run in. */
-  display: grid;
+   Scoped under `[data-slot='prose']` and applied with `>` only one level down,
+   so a nested component keeps its own type. The content arrives as bare tags
+   (a CMS field, an .mdx file), which is the one case a prop cannot reach: the
+   rules have to select by tag from the container. */
+[data-slot='prose'] {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3, 0.75rem);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
@@ -224,8 +220,8 @@
   line-height: var(--leading-base, var(--leading-normal));
 }
 
-.hz-prose > h1, .hz-prose > h2, .hz-prose > h3,
-.hz-prose > h4, .hz-prose > h5, .hz-prose > h6 {
+[data-slot='prose'] > h1, [data-slot='prose'] > h2, [data-slot='prose'] > h3,
+[data-slot='prose'] > h4, [data-slot='prose'] > h5, [data-slot='prose'] > h6 {
   font-family: var(--font-display, var(--font-sans)), sans-serif;
   font-weight: 606;
   line-height: var(--leading-tight);
@@ -233,37 +229,37 @@
   margin: 0;
 }
 
-.hz-prose > h1 { font-size: var(--text-4xl) }
-.hz-prose > h2 { font-size: var(--text-3xl) }
-.hz-prose > h3 { font-size: var(--text-2xl) }
-.hz-prose > h4 { font-size: var(--text-xl) }
-.hz-prose > h5 { font-size: var(--text-lg) }
+[data-slot='prose'] > h1 { font-size: var(--text-4xl) }
+[data-slot='prose'] > h2 { font-size: var(--text-3xl) }
+[data-slot='prose'] > h3 { font-size: var(--text-2xl) }
+[data-slot='prose'] > h4 { font-size: var(--text-xl) }
+[data-slot='prose'] > h5 { font-size: var(--text-lg) }
 /* h6 is the byline rung: heading TAG, body weight and colour, because that is
    what a byline is — subordinate text that happens to sit in the heading
    stack. */
-.hz-prose > h6 {
+[data-slot='prose'] > h6 {
   font-size: var(--text-base);
   font-weight: 497;
   color: var(--muted-foreground);
 }
 
-.hz-prose > p { margin: 0 }
+[data-slot='prose'] > p { margin: 0 }
 /* The marker is RESTORED here. `base.css` takes it off every list in the
    document, because a nav and a card grid are both lists and neither wants one.
    Authored prose is the one place it belongs. Setting only the indent leaves an
    indented list with nothing at the start of the line. */
-.hz-prose > ul, .hz-prose ul ul { list-style: disc }
-.hz-prose > ol, .hz-prose ol ol { list-style: decimal }
-.hz-prose ul, .hz-prose ol { margin: 0; padding-inline-start: 1.5em }
-.hz-prose li { margin-block: 0.25em }
-.hz-prose li::marker { color: var(--muted-foreground) }
+[data-slot='prose'] > ul, [data-slot='prose'] ul ul { list-style: disc }
+[data-slot='prose'] > ol, [data-slot='prose'] ol ol { list-style: decimal }
+[data-slot='prose'] ul, [data-slot='prose'] ol { margin: 0; padding-inline-start: 1.5em }
+[data-slot='prose'] li { margin-block: 0.25em }
+[data-slot='prose'] li::marker { color: var(--muted-foreground) }
 
 /* A code block is a SURFACE, not just a change of typeface. Without the panel
    it sits directly on the page ground and reads as body text that happens to be
    monospaced — which is exactly what a reader scanning for the command must not
    have to work out. `pre` already scrolls inside itself (base.css); this gives
    it the ground to scroll on. */
-.hz-prose > pre {
+[data-slot='prose'] > pre {
   margin: 0;
   padding: var(--space-4, 1rem);
   border: 1px solid var(--border);
@@ -274,95 +270,59 @@
 }
 /* Inside a block the panel IS the surface, so the inline treatment would draw a
    second one around every line. */
-.hz-prose > pre code { background: none; padding: 0; border: 0; font-size: inherit }
-.hz-prose :not(pre) > code {
+[data-slot='prose'] > pre code { background: none; padding: 0; border: 0; font-size: inherit }
+[data-slot='prose'] :not(pre) > code {
   padding: 0.15em 0.35em;
   border-radius: calc(var(--radius, 0.5rem) / 2);
   background: var(--muted);
 }
-.hz-prose > blockquote {
+[data-slot='prose'] > blockquote {
   margin: 0;
   padding-inline-start: 1em;
   border-inline-start: 2px solid var(--border);
   color: var(--muted-foreground);
 }
-.hz-prose code {
+[data-slot='prose'] code {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 0.9em;
 }
-.hz-prose a { color: inherit; text-decoration: underline }
-.hz-prose strong { font-weight: 606 }
-.hz-prose :where(img, video) { max-width: 100%; height: auto }
+[data-slot='prose'] a { color: inherit; text-decoration: underline }
+[data-slot='prose'] strong { font-weight: 606 }
+[data-slot='prose'] :where(img, video) { max-width: 100%; height: auto }
 
 /* The named rungs. `responsive` is the default and is the only one that moves
    with the viewport — a t-shirt size is a DECISION, so it stays put. */
-.hz-prose-sm { font-size: var(--text-sm); gap: var(--space-3, 0.75rem) }
-.hz-prose-sm > h1 { font-size: var(--text-3xl) }
-.hz-prose-sm > h2 { font-size: var(--text-2xl) }
-.hz-prose-sm > h3 { font-size: var(--text-xl) }
-.hz-prose-sm > p  { font-size: var(--text-sm) }
+[data-slot='prose'][data-size='sm'] { font-size: var(--text-sm); gap: var(--space-3, 0.75rem) }
+[data-slot='prose'][data-size='sm'] > h1 { font-size: var(--text-3xl) }
+[data-slot='prose'][data-size='sm'] > h2 { font-size: var(--text-2xl) }
+[data-slot='prose'][data-size='sm'] > h3 { font-size: var(--text-xl) }
+[data-slot='prose'][data-size='sm'] > p  { font-size: var(--text-sm) }
 
-.hz-prose-lg { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
-.hz-prose-lg > h1 { font-size: var(--text-5xl) }
-.hz-prose-lg > h2 { font-size: var(--text-4xl) }
-.hz-prose-lg > h3 { font-size: var(--text-3xl) }
-.hz-prose-lg > p  { font-size: var(--text-lg) }
+[data-slot='prose'][data-size='lg'] { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
+[data-slot='prose'][data-size='lg'] > h1 { font-size: var(--text-5xl) }
+[data-slot='prose'][data-size='lg'] > h2 { font-size: var(--text-4xl) }
+[data-slot='prose'][data-size='lg'] > h3 { font-size: var(--text-3xl) }
+[data-slot='prose'][data-size='lg'] > p  { font-size: var(--text-lg) }
 
-.hz-prose-xl { font-size: var(--text-lg); gap: var(--space-6, 1.5rem) }
-.hz-prose-xl > h1 { font-size: var(--text-6xl) }
-.hz-prose-xl > h2 { font-size: var(--text-5xl) }
-.hz-prose-xl > h3 { font-size: var(--text-4xl) }
-.hz-prose-xl > p  { font-size: var(--text-lg) }
+[data-slot='prose'][data-size='xl'] { font-size: var(--text-lg); gap: var(--space-6, 1.5rem) }
+[data-slot='prose'][data-size='xl'] > h1 { font-size: var(--text-6xl) }
+[data-slot='prose'][data-size='xl'] > h2 { font-size: var(--text-5xl) }
+[data-slot='prose'][data-size='xl'] > h3 { font-size: var(--text-4xl) }
+[data-slot='prose'][data-size='xl'] > p  { font-size: var(--text-lg) }
 
 /* Responsive: start at the small rung and climb. Written as min-width so the
    phone case is the unprefixed one and needs no query at all. */
 @media (min-width: 640px) {
-  .hz-prose-responsive { gap: var(--space-4, 1rem) }
+  [data-slot='prose'][data-size='responsive'] { gap: var(--space-4, 1rem) }
 }
 @media (min-width: 1024px) {
-  .hz-prose-responsive { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
-  .hz-prose-responsive > h1 { font-size: var(--text-5xl) }
-  .hz-prose-responsive > h2 { font-size: var(--text-4xl) }
-  .hz-prose-responsive > h3 { font-size: var(--text-3xl) }
+  [data-slot='prose'][data-size='responsive'] { font-size: var(--text-lg); gap: var(--space-5, 1.25rem) }
+  [data-slot='prose'][data-size='responsive'] > h1 { font-size: var(--text-5xl) }
+  [data-slot='prose'][data-size='responsive'] > h2 { font-size: var(--text-4xl) }
+  [data-slot='prose'][data-size='responsive'] > h3 { font-size: var(--text-3xl) }
 }
 @media (min-width: 1280px) {
-  .hz-prose-responsive { gap: var(--space-6, 1.5rem) }
-  .hz-prose-responsive > h1 { font-size: var(--text-6xl) }
-  .hz-prose-responsive > h2 { font-size: var(--text-5xl) }
-}
-
-/* The two things a style PROP cannot say, because neither is a property of an
-   element: a keyframe, and a scrollbar. */
-
-/* Skeleton's pulse. Opacity only — animating a colour or a size would repaint
-   or reflow every frame for a placeholder nobody is looking at. */
-@keyframes hz-pulse {
-  50% { opacity: 0.5 }
-}
-.hz-pulse { animation: hz-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite }
-
-/* A carousel scrolls but must not show a bar: the arrows and the snap already
-   say it scrolls, and a bar that appears mid-drag shifts the slides under the
-   pointer. Firefox reads the property, WebKit the pseudo-element, and the
-   property rides on the component so only this half needs a sheet. */
-.hz-scroller::-webkit-scrollbar { display: none }
-
-/* The drawn caret in a one-time-code box. The real one is hidden, because it
-   would sit at the left edge of an invisible full-width field rather than in
-   the box the next keystroke lands in. */
-@keyframes hz-caret {
-  0%, 49% { opacity: 1 }
-  50%, 100% { opacity: 0 }
-}
-.hz-caret {
-  background: var(--foreground);
-  animation: hz-caret 1s steps(1) infinite;
-}
-
-/* Motion is a preference, and all of the above is decoration. A caret that does
-   not blink is still a caret; one that does can trigger a migraine. */
-@media (prefers-reduced-motion: reduce) {
-  .hz-pulse { animation: none }
-  .hz-caret { animation: none }
-  .hz-scroller { scroll-behavior: auto }
+  [data-slot='prose'][data-size='responsive'] { gap: var(--space-6, 1.5rem) }
+  [data-slot='prose'][data-size='responsive'] > h1 { font-size: var(--text-6xl) }
+  [data-slot='prose'][data-size='responsive'] > h2 { font-size: var(--text-5xl) }
 }

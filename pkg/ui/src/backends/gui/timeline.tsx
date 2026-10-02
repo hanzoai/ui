@@ -12,7 +12,7 @@
  * `status` — a check for `completed`, a clock for `active`, nothing (a bare
  * dot) for `pending` or unset — unless the event supplies its own `icon`.
  *
- * `animated` reveals each row with `hz-fade-up` (styles/motion.css) the first
+ * `animated` reveals each row with `data-motion="rise"` (styles/motion.css) the first
  * time it scrolls into view, via one shared `IntersectionObserver`; once
  * revealed a row stays that way. Web only — there is nothing to observe
  * scrolling into on native, so there `animated` has no effect and every row
@@ -92,7 +92,7 @@ const useReveal = (ids: string[], animated: boolean) => {
 
 type Reveal = (id: string) => {
   ref?: React.Ref<never>
-  className?: string
+  'data-motion'?: 'rise'
   style?: { opacity: 0 }
 }
 
@@ -287,7 +287,7 @@ const revealProps = (
   animated
     ? {
         ref: register as React.Ref<never>,
-        className: seen.has(id) ? 'hz-fade-up' : undefined,
+        'data-motion': seen.has(id) ? 'rise' : undefined,
         style: seen.has(id) ? undefined : { opacity: 0 },
       }
     : {}

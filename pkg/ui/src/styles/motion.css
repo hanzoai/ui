@@ -1,31 +1,25 @@
-/* @hanzo/ui motion primitives — the calm, restrained animation vocabulary the
-   Hanzo surfaces share. One place defines the easing; components apply the class.
-   `className` forwards to the underlying DOM node on web, so the browser
-   transitions the Gui-driven inline width/transform/opacity. Every animation is
-   guarded by `prefers-reduced-motion: reduce`.
+/* @hanzo/ui motion — the calm, restrained animation vocabulary the Hanzo
+   surfaces share. One place defines the easing; components carry the name.
 
    Import once at the app root:  import '@hanzo/ui/styles/motion.css'
 
-   ── EVERY CLASS HERE IS `hz-` PREFIXED, and it was not always ────────────────
-   This sheet used to claim `.row`, `.skeleton`, `.fade`, `.mono`, `.drag` and
-   `.tnum` — six of the most ordinary words in anyone's CSS — at the document
-   level, in a package an app imports once at its root. An app with its own
-   `.row` did not get a warning; it got whichever rule the cascade preferred, in
-   a stylesheet it never opened. A library's utility classes are its namespace,
-   so they carry its name.
+   ── KEYED ON `data-motion`, NEVER ON A CLASS ─────────────────────────────────
+   A component says what it does with one attribute — `data-motion="rise"` — and
+   this sheet says how. The paint (a caret's ink, a skeleton's gradient) is the
+   component's own gui props; what is left here is what no prop can say: a
+   keyframe, a transition a preference can switch off, and the preference
+   itself. Every animation is off under `prefers-reduced-motion: reduce`.
 
-   The unprefixed selectors are kept as aliases on the SAME rule so nothing
-   breaks mid-flight, and are REMOVED IN 8.2.0. Nothing in this package emits
-   them any more — they exist only for a consumer who typed
-   `className="skeleton"` against the old sheet. (The target was 8.1.0, and
-   8.1.0 went out carrying additions instead. Moving the date is the honest
-   edit: shipping the version a comment says removed something, without
-   removing it, is how a deprecation note stops being read.) Keyframe names are prefixed too
-   and have no alias: nothing outside this file ever referenced them.  */
+     rise     enter: fade up 10px over 400ms           FadeIn, Timeline, tooltips
+     fade     opacity eases 240ms                      SlideOver's scrim
+     slide    transform eases 260ms                    SlideOver's panel
+     drag     a row eases into place while one is held Reorder
+     pulse    opacity dims and returns, 2s             Pulse, StatusDot, Skeleton
+     blink    on/off, 1s                               Caret
+     shimmer  a highlight sweeps a placeholder         product Skeleton
+     unfold   a sheet turns open about its hinge       unfold()                 */
 
-/* Fade-up entrance — <FadeIn> applies the class + a per-item stagger delay.
-   ~0.4s ease-out, small upward travel (matches the hanzo.ai marketing feel). */
-@keyframes hz-fade-up {
+@keyframes rise {
   from {
     opacity: 0;
     transform: translateY(10px);
@@ -36,122 +30,37 @@
   }
 }
 
-.hz-fade-up {
-  animation: hz-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+[data-motion='rise'] {
+  animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hz-fade-up {
-    animation: none;
-  }
-}
-
-/* Shell chrome motion — sidebar collapse (width) and the Linear-style two-level
-   nav slide (transform); backdrop cross-fade behind a SlideOver / dialog. */
-.hz-collapse {
-  transition: width 220ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: width;
-}
-
-.hz-slide {
-  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-}
-
-.hz-fade {
+[data-motion='fade'] {
   transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity;
 }
 
-/* Drag-to-reorder — a pinned row while it is being dragged (pointer DnD). The
-   lifted row gets a subtle lift; siblings ease into place via `.hz-slide`. */
-.hz-drag {
+[data-motion='slide'] {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+[data-motion='drag'] {
   touch-action: none;
   transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.hz-drag[data-dragging='true'] {
-  transition: none;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-  opacity: 0.96;
-  cursor: grabbing;
-}
 
-@media (prefers-reduced-motion: reduce) {
-  .hz-collapse,
-  .hz-slide,
-  .hz-fade,
-  .hz-drag {
-    transition: none;
-  }
-}
-
-/* Living-overview motion — the "videogame-like" living dashboard. The count-up +
-   live sparkline are driven in JS (rAF, gated by prefers-reduced-motion in the
-   hooks); these are the pure-CSS bits: a loading shimmer, a live-feed pulse, and
-   a brief highlight when a freshly-arrived row lands. */
-
-/* Skeleton shimmer — an honest "loading", never fabricated content. */
-@keyframes hz-shimmer {
-  0% {
-    background-position: -160px 0;
-  }
-  100% {
-    background-position: 160px 0;
-  }
-}
-
-.hz-skeleton {
-  background-color: var(--color3, rgba(128, 128, 128, 0.14));
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color4, rgba(128, 128, 128, 0.22)) 50%,
-    transparent 100%
-  );
-  background-size: 160px 100%;
-  background-repeat: no-repeat;
-  animation: hz-shimmer 1.2s ease-in-out infinite;
-}
-
-/* Live-feed pulse — the "Live" dot on a streaming panel.
-
-   NAMED APART FROM THE SKELETON'S. Both sheets shipped a `@keyframes hz-pulse`
-   and `styles.css` concatenates them, so the later one — this one — won for
-   every consumer and `.hz-pulse` animated a placeholder by RESIZING it. That is
-   the thing theme.css's own comment forbids: "animating a colour or a size
-   would repaint or reflow every frame for a placeholder nobody is looking at".
-   Nothing referenced this keyframe by name, which is why it went unnoticed. */
-@keyframes hz-live {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.45;
-    transform: scale(0.82);
-  }
-}
-
-/* THE TWO CLASSES THE COMPONENTS STAMP, in the sheet a host imports.
-   `skeleton.js` emits `hz-pulse` and `input-otp.js` emits `hz-caret`, and their
-   rules lived only in theme.css — the sheet that inlines the whole design system
-   and which a host with its own tokens cannot take. So every host either mounted
-   110KB it did not want or wrote these two rules by hand; hanzo.ai carried them
-   for exactly that reason. A library that stamps a class owns its rule, and this
-   is the sheet it owns it in. */
-@keyframes hz-dim {
+@keyframes dim {
   50% {
     opacity: 0.5;
   }
 }
 
-.hz-pulse {
-  animation: hz-dim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+[data-motion='pulse'] {
+  animation: dim 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-@keyframes hz-blink {
+@keyframes blink {
   0%,
   49% {
     opacity: 1;
@@ -162,138 +71,32 @@
   }
 }
 
-.hz-caret {
-  background: var(--foreground);
-  animation: hz-blink 1s steps(1) infinite;
+[data-motion='blink'] {
+  animation: blink 1s steps(1) infinite;
 }
 
-/* Entrance for a freshly-arrived activity row (staggerless — one row at a time). */
-@keyframes hz-row-in {
+@keyframes shimmer {
+  0% {
+    background-position: -160px 0;
+  }
+  100% {
+    background-position: 160px 0;
+  }
+}
+
+[data-motion='shimmer'] {
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+/* Unfold — how a sheet arrives. A panel that appears by fading is a rectangle
+   switching on; a sheet of paper TURNS OPEN about the edge it is hinged on. The
+   hinge is the only knob and the angle follows it, so a turn cannot open the
+   wrong way. `perspective()` inside the transform puts the vanishing point at
+   the sheet's own centre. Seven degrees over 220ms. */
+@keyframes unfold {
   from {
     opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hz-row-in {
-  animation: hz-row-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hz-skeleton {
-    animation: none;
-  }
-  .hz-row-in {
-    animation: none;
-  }
-  .hz-pulse {
-    animation: none;
-  }
-  .hz-caret {
-    animation: none;
-  }
-}
-
-/* ── Typography + surface classes the product layer's components reference ──────
-   DataTable/Metric typeset numeric cells with `hz-mono`/`hz-tnum`; ComboBox and
-   SelectMenu paint their popovers with `hz-paper hz-menu-in`; DataTable rows use
-   `hz-row`. They travel WITH the components (this is the package's one
-   stylesheet) so any host that imports `@hanzo/ui/styles/motion.css` renders them
-   correctly. The elevation/ring variables fall back to sane values, so a host
-   that defines its own `--hz-*` theme tokens (the console does) still wins. */
-
-.hz-tnum {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-
-/* Data/numeric face — Zen Mono + tabular figures for metric values, prices, IDs
-   and counts, so numbers read as precise, column-aligned data. */
-.hz-mono {
-  font-family: var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-  letter-spacing: -0.01em;
-}
-
-/* Paper — a ringed sheet: the ladder's lit edge and drop, plus a hairline all
-   the way round. The three values are reached by their real names. They used to
-   be `--hz-ring` / `--hz-paper-highlight` / `--hz-elevation-3`, none of which is
-   defined in this repo, in @hanzo/design or in any consumer — so all three
-   resolved to hardcoded fallbacks, and the comment above promising that "a host
-   that defines its own --hz-* tokens still wins" described a hook nobody could
-   reach.
-
-   The drop is rung 2's, by the ladder's own name. It read `--shadow-lg` — a
-   t-shirt size @hanzo/brand also declares, for a white canvas, winning on load
-   order — so paper lost its drop on dark exactly the way the rungs did. The
-   fallback stays because this sheet ships on its own: a host that imports
-   motion.css without glass.css has no ladder to read. */
-.hz-paper {
-  box-shadow: var(--shadow-inset-hairline, inset 0 0 0 1px rgb(255 255 255 / .10)),
-    var(--edge-highlight, inset 0 1px 0 0 rgb(255 255 255 / .10)),
-    var(--glass-shadow-2, 0 10px 15px -3px rgb(0 0 0 / .55), 0 4px 6px -4px rgb(0 0 0 / .55));
-}
-
-@keyframes hz-menu-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.hz-menu-in {
-  animation: hz-menu-in 140ms ease-out both;
-  will-change: opacity;
-}
-
-.hz-row {
-  transition: background-color 140ms ease-out;
-}
-
-/* AND WHAT IT TRANSITIONS TO. Stating the transition without the destination
-   left every host to invent the affordance — a row that announces it responds
-   and then does not. The colour is @hanzo/design's `--surface-card-quiet`,
-   which carries a value in both themes, so this needs nothing of the host it
-   has not already mounted. */
-.hz-row:hover {
-  background-color: var(--surface-card-quiet);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hz-menu-in {
-    animation: none;
-  }
-}
-
-/* ── Unfold — how a sheet arrives ─────────────────────────────────────────────
-   A panel that appears by fading is a rectangle switching on. A sheet of paper
-   arrives by TURNING OPEN about the edge it is hinged on, so its near edge swings
-   toward the reader and its far edge stays put — which is the one motion that
-   says "this was already here, folded" rather than "this was drawn just now".
-
-   The hinge is the ONLY thing that varies, so it is the only knob: a drawer
-   coming off the left wall turns about its left edge, a pane folding in from the
-   right about its right. The angle follows the hinge — a sheet swings toward you
-   from whichever side it is held — so naming the hinge sets both, and there is no
-   way to ask for a turn that opens the wrong way.
-
-   `perspective()` inside the transform rather than on a parent: the vanishing
-   point is then the sheet's own centre, so the turn reads at any size and the
-   caller does not have to own a 3D context it did not ask for.
-
-   Seven degrees over 220ms. Enough to see the plane; short of the swinging-door
-   effect that makes a workspace feel like a slideshow. */
-@keyframes hz-unfold {
-  from {
-    opacity: 0;
-    transform: perspective(1600px) rotateY(var(--hz-turn, -7deg));
+    transform: perspective(1600px) rotateY(var(--turn, -7deg));
   }
   to {
     opacity: 1;
@@ -301,37 +104,27 @@
   }
 }
 
-.hz-unfold {
-  animation: hz-unfold 220ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+[data-motion='unfold'] {
+  animation: unfold 220ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
   transform-origin: left center;
   will-change: transform, opacity;
 }
 
-.hz-unfold[data-hinge="right"] {
+[data-motion='unfold'][data-hinge='right'] {
   transform-origin: right center;
-  --hz-turn: 7deg;
+  --turn: 7deg;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hz-unfold {
+  [data-motion] {
     animation: none;
+    transition: none;
   }
 }
 
-/* ── Layout guarantees ─────────────────────────────────────────────────────────
-   Two rules, both structural. They are attached to `data-slot` rather than to a
-   class because they are not styling a caller can opt out of — they are the
-   thing the primitive PROMISES, and a class can be overwritten by forgetting to
-   pass it on. */
-
-/* A grid item's initial `min-width` is `auto`, which floors the track at the
-   item's min-content width. One long unbroken string — a hash, a URL, a wide
-   <pre> — then pushes its own column wider and squeezes every sibling, which is
-   the ragged row Grid exists to prevent. The track sizing in grid.tsx is only
-   honoured once this floor is gone. */
-[data-slot='grid'] > * {
-  min-width: 0;
-}
+/* ── Layout guarantee ──────────────────────────────────────────────────────────
+   Structural, so attached to a data attribute: it is the thing the primitive
+   PROMISES, and a class can be lost by forgetting to pass it on. */
 
 /* Media fills the ratio box instead of setting its own size. Without this an
    <img> renders at its intrinsic pixel size and either overflows the frame or
@@ -507,28 +300,13 @@
   }
 }
 
+/* A carousel scrolls but shows no bar: the arrows and the snap already say it
+   scrolls, and a bar appearing mid-drag shifts the slides under the pointer.
+   Firefox reads `scrollbar-width`, which the component sets; WebKit reads only
+   the pseudo-element, which no prop can reach. */
+[data-slot='carousel-content']::-webkit-scrollbar { display: none; }
+
 /* The textarea's resize grip is the other platform artefact in the same family:
    a diagonal hatch drawn by the UA that matches nothing. A composer that grows
    with its content does not need one. */
 :where([data-slot='textarea'], [data-slot='composer-field']) { resize: none; }
-
-/* A top-level nav item.
- *
- * `navigationMenuTriggerStyle()` returns this name, so a trigger with no rule
- * behind it is bare text separated only by the list's gap.
- *
- * Padding rather than a wider gap: the padding is also the hit area, and a nav
- * item wants a target bigger than its glyphs. */
-.hz-nav-menu-trigger {
-  padding-inline: 0.75rem;
-  padding-block: 0.5rem;
-  border-radius: var(--radius, 0.5rem);
-  color: var(--muted-foreground);
-  transition: color 150ms, background-color 150ms;
-}
-
-.hz-nav-menu-trigger:hover,
-.hz-nav-menu-trigger[data-state='open'] {
-  color: var(--foreground);
-  background: var(--muted);
-}

@@ -130,7 +130,7 @@ export const YouTubeEmbed = ({
         </span>
         {caption && (
           <p
-            className="hz-prose"
+            data-slot="prose"
             style={{
               position: 'absolute',
               left: '50%',

@@ -115,7 +115,7 @@ describe('AnimatedTestimonials', () => {
     expect(dot).toContain('data-touch-y="18"')
   })
 
-  // The entrance is `hz-fade-up` on the card, and it only plays on mount — so
+  // The entrance is `data-motion="rise"` on the card, and it only plays on mount — so
   // the card that shows the next slide has to be a NEW element, not the old
   // one with new text.
   it('moves to the clicked slide and remounts the card so the entrance plays', () => {
@@ -123,7 +123,7 @@ describe('AnimatedTestimonials', () => {
     const before = view.card()
 
     expect(view.quote()).toContain('First quote')
-    expect(before?.classList).toContain('hz-fade-up')
+    expect(before?.getAttribute('data-motion')).toBe('rise')
 
     act(() => {
       view.dots()[2].click()
@@ -131,7 +131,7 @@ describe('AnimatedTestimonials', () => {
 
     expect(view.quote()).toContain('Third quote')
     expect(view.card()).not.toBe(before)
-    expect(view.card()?.classList).toContain('hz-fade-up')
+    expect(view.card()?.getAttribute('data-motion')).toBe('rise')
     expect(view.dots()[2].getAttribute('aria-current')).toBe('true')
     view.cleanup()
   })

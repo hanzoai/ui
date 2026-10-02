@@ -170,9 +170,9 @@ export function StatusDot({ status = 'idle' }: { status?: SessionStatus }) {
     <XStack
       {...slot('status-dot')}
       data-status={status}
-      // The pulse is a class the package's own sheet owns (styles/motion.css),
-      // opacity only — nothing reflows for a dot nobody is reading.
-      className={status === 'running' ? 'hz-pulse' : undefined}
+      // The pulse is styles/motion.css's `data-motion="pulse"`, opacity only —
+      // nothing reflows for a dot nobody is reading.
+      data-motion={status === 'running' ? 'pulse' : undefined}
       width={6}
       height={6}
       rounded={9999}

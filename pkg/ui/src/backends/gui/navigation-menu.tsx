@@ -13,6 +13,8 @@
  */
 import * as React from 'react'
 
+import { Text, XStack, styled } from '@hanzo/gui'
+
 import { Box, type BoxProps } from '../../box'
 import { cn } from '../../core/cn'
 
@@ -74,11 +76,32 @@ export const NavigationMenuItem = ({ className, children, ...props }: React.Comp
 }
 
 /**
- * A stable class handle for hosts that hook menu triggers from CSS. Styling
- * lives in the tokens; this only names the part.
+ * A top-level nav item: muted until pointed at or open. Padding rather than a
+ * wider gap between items, because the padding is also the hit area and a nav
+ * item wants a target bigger than its glyphs. Text's style table rides on the
+ * row so the item carries its own ink.
  */
-import { navigationMenuTriggerStyle } from '../../style'
-export { navigationMenuTriggerStyle }
+const Trigger = styled(
+  XStack,
+  {
+    name: 'NavigationMenuTrigger',
+    render: 'button',
+    items: 'center',
+    gap: 4,
+    px: '$3',
+    py: '$2',
+    borderWidth: 0,
+    bg: 'transparent',
+    rounded: 'var(--radius, 0.5rem)',
+    cursor: 'pointer',
+    ...({ color: 'var(--muted-foreground)' } as object),
+    hoverStyle: { bg: 'var(--muted)', ...({ color: 'var(--foreground)' } as object) },
+    variants: {
+      open: { true: { bg: 'var(--muted)', ...({ color: 'var(--foreground)' } as object) } },
+    } as const,
+  },
+  { validStyles: Text.staticConfig.validStyles },
+)
 
 export const NavigationMenuTrigger = ({
   className,
@@ -90,22 +113,24 @@ export const NavigationMenuTrigger = ({
 }: BoxProps<'button'>) => {
   const item = useItem()
   return (
-    <Box
-      tag="button"
-      type="button"
+    <Trigger
+      data-slot="navigation-menu-trigger"
+      {...({ type: 'button' } as object)}
+      open={item?.open ?? false}
       aria-haspopup="true"
       aria-expanded={item?.open ?? false}
       aria-controls={item?.id}
-      className={cn(navigationMenuTriggerStyle(), 'grid grid-flow-col auto-cols-max items-center gap-1', className)}
-      onFocus={both(() => item?.setOpen(true), onFocus)}
-      onBlur={both(() => item?.setOpen(false), onBlur)}
+      className={cn(className)}
+      style={{ transition: 'color 150ms, background-color 150ms' }}
+      onFocus={both(() => item?.setOpen(true), onFocus) as never}
+      onBlur={both(() => item?.setOpen(false), onBlur) as never}
       // Touch has no hover. Without this the panel is unreachable on a phone —
       // which is where most of these menus are actually read.
-      onClick={both(() => item?.setOpen(!item.open), onClick)}
-      {...props}
+      onClick={both(() => item?.setOpen(!item.open), onClick) as never}
+      {...(props as object)}
     >
       {children}
-    </Box>
+    </Trigger>
   )
 }
 

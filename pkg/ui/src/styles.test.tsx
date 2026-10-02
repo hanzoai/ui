@@ -193,42 +193,31 @@ const emitted = (dir: string, out = { any: new Set<string>(), box: new Set<strin
   return out
 }
 
-describe('the utility class namespace', () => {
+describe('the classes this package emits', () => {
   const scanned = emitted(SRC)
   const ours = [...scanned.any].sort()
   const onBox = [...scanned.box].sort()
   const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
+  const glass = readFileSync(join(SRC, 'glass.css'), 'utf8')
   const theme = readFileSync(join(SRC, 'theme.css'), 'utf8')
-  const masthead = readFileSync(join(SRC, 'masthead/masthead.css'), 'utf8')
 
-  it('found the classes to check — an empty scan proves nothing', () => {
-    expect(ours.length).toBeGreaterThan(5)
-  })
+  /** The material: an API value (`glass(3).className`, `fold`), drawn by glass.css. */
+  const MATERIAL = /^(glass|elevation-\d|fold)$/
 
-  it('is carried in every class this package emits', () => {
-    // `glass` and `elevation-N` are the one family still unprefixed. They are an
-    // API value (`glass(3).className`) rather than a hand-typed literal, so they
-    // move on their own change, not this one.
-    const unqualified = ours.filter((c) => !c.startsWith('hz-') && !/^(glass|elevation-\d)$/.test(c))
-    expect(unqualified, `${unqualified.join(', ')} would collide with a consumer's own CSS`).toEqual([])
+  it('emits no class of its own but the material', () => {
+    // A component styles itself through gui props and says what it is with a
+    // data attribute (`data-slot`, `data-motion`). A class it stamps is a hook a
+    // host has to know, and a namespaced one is still a name in the host's
+    // document scope.
+    const own = ours.filter((c) => !MATERIAL.test(c))
+    expect(own, `${own.join(', ')} is stamped as a class`).toEqual([])
   })
 
   it('hands Box only classes tw actually reads', () => {
-    // The same rule, asked of the element that changes the answer. `tw` is the
-    // authority and is CALLED rather than guessed at: a class it reads becomes
-    // style props and never reaches the document, so it cannot collide; one it
-    // does not read stays on the element, where it is an unqualified class name
-    // like any other and would.
-    //
-    // This is the stricter half of the pair, not an exemption. The gallery has
-    // to carry a real utility string or `gen-css` writes none of the rules Box
-    // compiles, and today the only way to say that was to say something this
-    // file forbids.
-    // A namespaced class is exempt from the OTHER half of the pair by having a
-    // rule of its own — `hz-prose` is real css in theme.css, and `tw` is not
-    // meant to know about it. It stays on the element, qualified, which is
-    // exactly what the namespace exists for.
-    const unread = onBox.filter((c) => !c.startsWith('hz-') && tw(c).rest !== '')
+    // `tw` is the authority and is CALLED rather than guessed at: a class it
+    // reads becomes style props and never reaches the document; one it does not
+    // read stays on the element, an unqualified class name like any other.
+    const unread = onBox.filter((c) => tw(c).rest !== '')
     expect(
       unread,
       `${unread.join(', ')} on <Box> — tw does not read these, so they stay on the element unqualified`,
@@ -239,32 +228,20 @@ describe('the utility class namespace', () => {
     expect(onBox.length).toBeGreaterThan(5)
   })
 
-  it('defines a rule for each of them', () => {
-    // Across every stylesheet the package ships: motion.css, theme.css
-    // (`hz-prose`) and masthead.css (`hz-masthead`). The invariant is "a class
-    // we emit has a rule we ship", and naming one file would make it "…has a
-    // rule in this file", which a correct second family fails.
-    const sheets = motion + theme + masthead
-    const orphan = ours.filter((c) => c.startsWith('hz-') && !sheets.includes(`.${c}`))
-    expect(orphan, `${orphan.join(', ')} is emitted with no rule in any shipped stylesheet`).toEqual([])
+  it('draws every material class it emits', () => {
+    const orphan = ours.filter((c) => MATERIAL.test(c) && !glass.includes(`.${c}`))
+    expect(orphan, `${orphan.join(', ')} is emitted with no rule in glass.css`).toEqual([])
   })
 
-  it('claims no unprefixed name at the document level', () => {
-    // Removed in 8.3.0. The hazard was never that a consumer typed
-    // `className="skeleton"` — nothing in this package emits these, and the scan
-    // above already fails on an unprefixed literal in `src/`. It was that a
-    // package an app imports once at its ROOT put `.row` in the document scope,
-    // so an app with its own `.row` got whichever rule the cascade preferred and
-    // no warning either way. Each bare name was a second selector on a rule the
-    // `hz-` form already carried, so this took 21 selectors and no declarations.
-    for (const bare of ['collapse', 'drag', 'fade', 'fade-up', 'menu-in', 'mono',
-                        'paper', 'row', 'row-in', 'skeleton', 'slide', 'tnum']) {
-      const claimed =
-        motion.includes(`\n.${bare} `) || motion.includes(`\n.${bare},`) || motion.includes(`.${bare}[`)
-      expect([bare, claimed]).toEqual([bare, false])
-      // The prefixed form is what carries the rule now — asserting only the
-      // absence would pass just as well on a deleted stylesheet.
-      expect([bare, motion.includes(`.hz-${bare}`)]).toEqual([bare, true])
-    }
+  it('selects no class in the motion and prose sheets', () => {
+    // Keyed on data attributes only, so nothing here can collide with a host's
+    // own `.row` or `.fade` whatever the cascade prefers. gui's theme scope
+    // (`.t_light`) is gui's name, not one this package mints.
+    const selectors = (css: string) =>
+      (css.replace(/\/\*[\s\S]*?\*\//g, '').match(/(^|[\s,}])\.[a-z][\w-]*(?=[\s{,:[>])/gm) ?? []).filter(
+        (c) => !/\.t_(light|dark)$/.test(c),
+      )
+    expect(selectors(motion)).toEqual([])
+    expect(selectors(theme.slice(theme.lastIndexOf('/*', theme.indexOf('── Prose'))))).toEqual([])
   })
 })

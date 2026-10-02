@@ -6,7 +6,7 @@
  *
  * `content` is the label, `children` the trigger, and `delay` holds the
  * entrance for that many milliseconds. The panel mounts only while visible, so
- * mounting is the animation: `hz-fade-up` from `styles/motion.css` plays on
+ * mounting is the animation: `data-motion="rise"` from `styles/motion.css` plays on
  * every appearance, its `animation-delay` carries `delay`, and the
  * reduced-motion guard lives in that stylesheet. It unmounts with no exit,
  * the same trade AnimatedTestimonials makes. The keyframe owns
@@ -95,7 +95,7 @@ export function AnimatedTooltip({
           <Panel
             {...slot('animated-tooltip-panel')}
             role="tooltip"
-            className="hz-fade-up"
+            data-motion="rise"
             style={{ animationDelay: `${delay}ms` }}
           >
             {ink(content, undefined, { size: '$1', whiteSpace: 'nowrap' })}

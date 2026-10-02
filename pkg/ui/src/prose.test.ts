@@ -1,11 +1,11 @@
 /**
- * What `base.css` takes away, `.hz-prose` must give back.
+ * What `base.css` takes away, `[data-slot='prose']` must give back.
  *
  * The two files disagree on purpose. `base.css` strips the browser's opinions
  * from every element in the document, because a nav, a card grid and a toolbar
  * are all `<ul>` and none of them wants a bullet. Authored content is the one
  * place those opinions were right — and it arrives from an .mdx file or a CMS
- * carrying no classes at all, so `.hz-prose` styling it BY TAG is the only
+ * carrying no classes at all, so `[data-slot='prose']` styling it BY TAG is the only
  * handle there is.
  *
  * The pairing is load-bearing and invisible: a reset with no matching restore
@@ -44,19 +44,19 @@ const declared = (css: string, want: (sel: string) => boolean) => {
  * the element the declarations land on.
  *
  * Substring-matching the tag instead catches every rule that merely mentions it:
- * asking for `pre` collected `.hz-prose > pre code` and `.hz-prose :not(pre) >
+ * asking for `pre` collected `[data-slot='prose'] > pre code` and `… :not(pre) >
  * code`, both of which style a `code`, and the later ones overwrote the panel
  * with the flattening that exists to undo it.
  */
 const subject = (sel: string) => sel.replace(/:not\([^)]*\)/g, '').trim().split(/[\s>+~]+/).pop() ?? ''
-const inProse = (tag: string) => (s: string) => s.startsWith('.hz-prose') && subject(s) === tag
+const inProse = (tag: string) => (s: string) => s.startsWith("[data-slot='prose']") && subject(s) === tag
 
 describe('the reset and the restore are one decision', () => {
   // The pairs, stated as what an author writing markdown would notice missing.
   it.each([
     ['ul', 'list-style'],
     ['ol', 'list-style'],
-  ])('base.css strips %s { %s } and .hz-prose puts it back', (tag, prop) => {
+  ])('base.css strips %s { %s } and prose puts it back', (tag, prop) => {
     // The reset really is there — if it stops being, this pairing is moot and
     // the test should be deleted rather than quietly passing on nothing.
     expect(declared(base, (s) => s.split(/\s+/).includes(tag)).get(prop)).toBe('none')
@@ -77,11 +77,11 @@ describe('a code block is a surface', () => {
   it('draws one surface, not two', () => {
     // The panel IS the ground inside a block, so the inline treatment must not
     // paint a second one around every line.
-    expect(declared(theme, (s) => /\.hz-prose > pre code/.test(s)).get('background')).toBe('none')
+    expect(declared(theme, (s) => /\[data-slot='prose'\] > pre code/.test(s)).get('background')).toBe('none')
   })
 
   it('gives inline code its own', () => {
-    expect(declared(theme, (s) => /\.hz-prose :not\(pre\) > code/.test(s)).get('background')).toBeTruthy()
+    expect(declared(theme, (s) => /\[data-slot='prose'\] :not\(pre\) > code/.test(s)).get('background')).toBeTruthy()
   })
 })
 
@@ -89,7 +89,7 @@ describe('prose resolves through tokens', () => {
   it('names no literal colour', () => {
     // A literal is a value that cannot follow the theme, so it is right in one
     // of the two and wrong in the other with nothing to say so.
-    const rules = [...theme.matchAll(/([^{}]*\.hz-prose[^{}]*)\{([^{}]*)\}/g)]
+    const rules = [...theme.matchAll(/([^{}]*\[data-slot='prose'\][^{}]*)\{([^{}]*)\}/g)]
     const literals = rules.flatMap(([, sel, body]) =>
       [...body.matchAll(/(?:color|background|border[\w-]*)\s*:\s*([^;]+)/g)]
         .map(([, v]) => v.trim())
@@ -100,33 +100,37 @@ describe('prose resolves through tokens', () => {
   })
 })
 
-describe('every class the components name, the sheets declare', () => {
-  it('has no name without a rule', () => {
-    // The cheapest bug in this package to write and the hardest to see. A class
-    // name is a string, so a name nothing declares compiles, renders, and styles
-    // nothing — `navigationMenuTriggerStyle()` returned `hz-nav-menu-trigger`
-    // and no sheet had ever declared it, so every nav item in the estate was
-    // bare text and the lux.network header read as one run-together string.
+describe('every motion the components name, motion.css declares', () => {
+  it('has no motion without a rule, and no hz- class anywhere', () => {
+    // The cheapest bug in this package to write and the hardest to see: a name
+    // is a string, so one nothing declares compiles, renders, and styles
+    // nothing. `navigationMenuTriggerStyle()` returned a class no sheet had ever
+    // declared, and every nav item in the estate was bare text.
     //
-    // Only the `hz-` namespace, because that is the one this package owns. A
-    // consumer's own class is not ours to account for, and gui's atomics are
-    // generated rather than written.
+    // The hook is `data-motion` now, so the question is asked of it, and a class
+    // in the old namespace is a failure on sight.
     const named = new Set<string>()
-    const withRule = new Set<string>()
+    const classes = new Set<string>()
     const walk = (dir: string) => {
       for (const e of readdirSync(dir, { withFileTypes: true })) {
         const p = join(dir, e.name)
         if (e.isDirectory()) { walk(p); continue }
-        if (/\.test\./.test(e.name)) continue
+        if (/\.test\./.test(e.name) || !/\.tsx?$/.test(e.name)) continue
         const t = readFileSync(p, 'utf8')
-        if (e.name.endsWith('.css')) {
-          for (const [ , c ] of t.matchAll(/\.(hz-[a-z0-9-]+)/g)) withRule.add(c)
-        } else if (/\.tsx?$/.test(e.name)) {
-          for (const [ , c ] of t.matchAll(/['"`](hz-[a-z0-9-]+)['"`]/g)) named.add(c)
+        // The value a line hands `data-motion`: after `=` (an attribute), `:` (an
+        // object key) or `?` (the branch of a condition), never after `===`.
+        for (const line of t.split('\n').filter((l) => l.includes('data-motion'))) {
+          const rest = line.slice(line.indexOf('data-motion') + 11)
+          const own = rest.split('data-')[0]
+          for (const [ , m ] of own.matchAll(/(?:\?\s*|(?<![=!<>])=\s*\{?|:\s*)['"]([a-z]+)['"]/g)) named.add(m)
         }
+        for (const [ , c ] of t.matchAll(/['"`](hz-[a-z0-9-]+)['"`]/g)) classes.add(c)
       }
     }
     walk(SRC)
-    expect([ ...named ].filter((c) => !withRule.has(c)).sort()).toEqual([])
+    const motion = readFileSync(join(SRC, 'styles/motion.css'), 'utf8')
+    expect(named.size).toBeGreaterThan(4)
+    expect([ ...named ].filter((m) => !motion.includes(`[data-motion='${m}']`)).sort()).toEqual([])
+    expect([ ...classes ].sort()).toEqual([])
   })
 })

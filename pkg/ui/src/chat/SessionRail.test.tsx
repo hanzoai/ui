@@ -139,8 +139,8 @@ describe('the expanded rail', () => {
     mount(rail())
     const dots = all('[data-slot="status-dot"]').map((d) => d.getAttribute('data-status'))
     expect(dots).toEqual(['running', 'done', 'error'])
-    expect(all('[data-slot="status-dot"]')[0].className).toContain('hz-pulse')
-    expect(all('[data-slot="status-dot"]')[1].className).not.toContain('hz-pulse')
+    expect(all('[data-slot="status-dot"]')[0].getAttribute('data-motion')).toBe('pulse')
+    expect(all('[data-slot="status-dot"]')[1].getAttribute('data-motion')).toBeNull()
   })
 
   it('opens a session by pointer and by keyboard', () => {

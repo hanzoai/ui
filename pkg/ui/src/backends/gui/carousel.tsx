@@ -306,12 +306,10 @@ export const CarouselContent = ({ className, ...props }: React.ComponentProps<ty
   return (
     <Box
       ref={scroller as React.Ref<any>}
-      className={cn(
-        'hz-scroller grid grid-flow-col auto-cols-[100%] overflow-x-auto overflow-y-hidden snap-x',
-        className,
-      )}
+      data-slot="carousel-content"
+      className={cn('grid grid-flow-col auto-cols-[100%] overflow-x-auto overflow-y-hidden snap-x', className)}
       // Firefox spells scrollbar suppression as a property and WebKit as a
-      // pseudo-element, so one lives here and the other in theme.css.
+      // pseudo-element, so one lives here and the other in styles/motion.css.
       style={{ scrollbarWidth: 'none' }}
       {...props}
     />

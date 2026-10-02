@@ -265,8 +265,23 @@ export function Composer({
             disabled={busy ? !onStop : !sendable}
             onPress={busy ? onStop : onSend}
             aria-label={busy ? 'Stop' : 'Send'}
+            // A circle, and the room's one primary control. The height is the
+            // size's; `aspectRatio` takes the width from it, so no second number
+            // is written down. `--primary` is the accent a reader picks, and at
+            // rest it is the ink pair Send already paints in both themes.
+            px={0}
+            aspectRatio={1}
+            rounded={'var(--radius-full, 9999px)' as never}
+            bg="var(--primary)"
+            borderWidth={0}
+            hoverStyle={{ bg: 'var(--primary)', opacity: 0.9 }}
+            pressStyle={{ bg: 'var(--primary)', opacity: 0.85 }}
           >
-            {busy ? <Square size={14} /> : <ArrowUp size={16} />}
+            {busy ? (
+              <Square size={14} color={'var(--primary-foreground)' as never} />
+            ) : (
+              <ArrowUp size={16} color={'var(--primary-foreground)' as never} />
+            )}
           </Button>
         )}
       </XStack>

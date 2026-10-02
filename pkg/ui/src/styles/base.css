@@ -42,10 +42,10 @@
    is what gives it presence — so only the elements that set paragraphs are
    capped. A max-width can never make something wider, so this is safe inside a
    card or a column that is already narrower. */
-.hz-prose > p,
-.hz-prose > ul,
-.hz-prose > ol,
-.hz-prose > blockquote {
+[data-slot='prose'] > p,
+[data-slot='prose'] > ul,
+[data-slot='prose'] > ol,
+[data-slot='prose'] > blockquote {
   max-width: var(--measure);
 }
 
@@ -122,14 +122,14 @@
 }
 
 /* ── Prose meets a control ────────────────────────────────────────────────
-   `.hz-prose a` is underlined on purpose: in running text an underline is what
+   `[data-slot='prose'] a` is underlined on purpose: in running text an underline is what
    marks a link. A link wearing a button is not running text — it already reads
    as a control from its fill and its border — so the underline is noise inside
    it. Measured on every call to action across the lux slides, each of which
    sits inside prose. */
-.hz-prose [data-slot="button"] a,
-.hz-prose a[data-slot="button"],
-.hz-prose button a {
+[data-slot='prose'] [data-slot="button"] a,
+[data-slot='prose'] a[data-slot="button"],
+[data-slot='prose'] button a {
   text-decoration: none;
 }
 
@@ -138,22 +138,22 @@
    a 52px display line and a 17px sub-head: 8px under the display line read as
    the byline touching it. `em` here is the heading's own size, so the ratio
    holds at every rung. A caller setting its own margin still wins. */
-.hz-prose > h1 { margin-block-end: .5em }
-.hz-prose > h2 { margin-block-end: .55em }
-.hz-prose > h3 { margin-block-end: .6em }
-.hz-prose > h4,
-.hz-prose > h5,
-.hz-prose > h6 { margin-block-end: .75em }
+[data-slot='prose'] > h1 { margin-block-end: .5em }
+[data-slot='prose'] > h2 { margin-block-end: .55em }
+[data-slot='prose'] > h3 { margin-block-end: .6em }
+[data-slot='prose'] > h4,
+[data-slot='prose'] > h5,
+[data-slot='prose'] > h6 { margin-block-end: .75em }
 
 /* Space ABOVE a heading is larger than the space below it — that asymmetry is
    what groups a heading with the text it introduces rather than the text it
    follows. Not applied to the first child, which has nothing to separate from. */
-.hz-prose > h1:not(:first-child) { margin-block-start: 1.1em }
-.hz-prose > h2:not(:first-child) { margin-block-start: 1.2em }
-.hz-prose > h3:not(:first-child),
-.hz-prose > h4:not(:first-child),
-.hz-prose > h5:not(:first-child),
-.hz-prose > h6:not(:first-child) { margin-block-start: 1.4em }
+[data-slot='prose'] > h1:not(:first-child) { margin-block-start: 1.1em }
+[data-slot='prose'] > h2:not(:first-child) { margin-block-start: 1.2em }
+[data-slot='prose'] > h3:not(:first-child),
+[data-slot='prose'] > h4:not(:first-child),
+[data-slot='prose'] > h5:not(:first-child),
+[data-slot='prose'] > h6:not(:first-child) { margin-block-start: 1.4em }
 
 /* ── The line-height a converted box inherits ─────────────────────────────
    gui's Stack stamps its own leading, which is right for a native view and

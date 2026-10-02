@@ -3,10 +3,10 @@
 /**
  * Skeleton — the honest "loading", never fabricated content.
  *
- * The shimmer itself has shipped in `styles/motion.css` as `.hz-skeleton` since
- * the living-overview work; what was missing was a component to reach it, so
- * every surface hand-rolled a grey `<div>` and picked its own radius. This is
- * that div, once, sized in the same `$` space as the rest of the package.
+ * The block and its highlight are gui props; the sweep is `data-motion="shimmer"`
+ * in `styles/motion.css`. Before this, every surface hand-rolled a grey `<div>`
+ * and picked its own radius. This is that div, once, sized in the same `$` space
+ * as the rest of the package.
  *
  * It renders a BLOCK, not a spinner: a placeholder the size and shape of the
  * thing that is coming keeps the layout from jumping when the data lands. Give
@@ -24,9 +24,13 @@ export type SkeletonProps = ComponentProps<typeof View>
 function Block({ height = '$1', rounded = '$2', ...props }: SkeletonProps) {
   return (
     <View
-      className="hz-skeleton"
+      data-motion="shimmer"
       height={height}
       rounded={rounded}
+      bg="var(--color3, rgba(128, 128, 128, 0.14))"
+      backgroundImage="linear-gradient(90deg, transparent 0%, var(--color4, rgba(128, 128, 128, 0.22)) 50%, transparent 100%)"
+      backgroundSize="160px 100%"
+      backgroundRepeat="no-repeat"
       // A placeholder is scenery, not content: a screen reader should hear the
       // real thing when it arrives, not "loading" in the middle of the page.
       aria-hidden

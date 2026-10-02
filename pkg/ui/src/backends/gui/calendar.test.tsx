@@ -67,7 +67,7 @@ describe('Calendar', () => {
     expect(view.days().filter((el) => el.hasAttribute('data-outside'))).toHaveLength(5)
     // The week header rides the same seven-column grid as the days.
     const grid = view.host.querySelector('[data-slot="grid"]')!
-    expect(grid.getAttribute('style')).toContain('repeat(7, minmax(0, 1fr))')
+    expect(getComputedStyle(grid).gridTemplateColumns).toBe('repeat(7, minmax(0, 1fr))')
     expect([...grid.querySelectorAll('[data-slot="grid-cell"]')].slice(0, 7).map((c) => c.textContent))
       .toEqual(['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'])
     view.cleanup()

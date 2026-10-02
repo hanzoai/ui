@@ -30,7 +30,7 @@ export function FadeIn({
 }) {
   const delay = delayMs ?? index * step
   return (
-    <div className="hz-fade-up" style={{ animationDelay: `${delay}ms`, ...style }}>
+    <div data-motion="rise" style={{ animationDelay: `${delay}ms`, ...style }}>
       {children}
     </div>
   )

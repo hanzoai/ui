@@ -5,6 +5,7 @@
  * accounts) as a row of stat cells. Pure: the counts are injected. Extracted from
  * Hanzo Social (social.hanzo.ai).
  */
+import { TABULAR } from '../figures'
 import { Text, XStack, YStack } from '@hanzo/gui'
 import type { SocialSummary } from './api'
 
@@ -31,7 +32,7 @@ export function SocialSummaryBar({ summary }: { summary: SocialSummary }) {
           <Text fontSize="$1" color="$soft">
             {c.label}
           </Text>
-          <Text fontSize="$6" fontWeight="500" className="hz-tnum">
+          <Text fontSize="$6" fontWeight="500" {...TABULAR}>
             {c.value}
           </Text>
         </YStack>
