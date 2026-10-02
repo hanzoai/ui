@@ -11,8 +11,14 @@ export { audience, charge, merged, money, saving, seats, termOf, way, type Audie
 export { Footer, type FooterColumn, type FooterLink, type FooterProps } from './Footer'
 export { Faq, type FaqItem, type FaqProps } from './Faq'
 export { ClosingCta, type ClosingCtaProps } from './ClosingCta'
-export { Cta, TextLink, type CtaProps } from './Cta'
-export { Line, type LineProps, type LineSize, type LineTone } from './type'
+export { Cta, TextLink, type CtaProps, type TextLinkProps } from './Cta'
+export { Line, Display, Title, Eyebrow, Lede, Claim, type LineProps, type LineSize, type LineTone, type RoleProps } from './type'
+export { Action, Chip, More, type ControlProps } from './controls'
+export { Leaf, Cell, Lift, Reveal, Lattice, type SurfaceProps, type LatticeProps } from './surface'
+export { Pair, type PairProps } from './pair'
+export { Pager, type PagerProps } from './pager'
+export { Document, type DocumentProps } from './document'
+export { Run, type RunProps } from './run'
 export {
   PageHeader,
   Section,

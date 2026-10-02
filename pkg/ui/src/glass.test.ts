@@ -122,8 +122,14 @@ describe('The material attaches to the slot, not to who remembered', () => {
     // its own radius instead of wearing the material, and the table cannot do
     // that: it renders nothing and reaches the page only through markup
     // somebody else wrote.
+    //
+    // A component that wears the chrome's own blur BY NAME — `var(--chrome-blur)`,
+    // @hanzo/design's one radius — picks nothing: the marketing Action is chrome
+    // glass, and the token is how it stays the same glass as every bar.
     const components = walk(SRC).filter((f) => !/[\\/]tw\.tsx?$/.test(f))
-    const offenders = components.filter((f) => /backdropFilter/.test(readFileSync(f, 'utf8')))
+    const offenders = components.filter((f) =>
+      [...readFileSync(f, 'utf8').matchAll(/backdropFilter[^\n]*/g)].some((m) => !/var\(--chrome-blur\)/.test(m[0])),
+    )
     expect(offenders.map((f) => f.replace(SRC, ''))).toEqual([])
   })
 })

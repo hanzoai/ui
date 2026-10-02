@@ -11,13 +11,15 @@
    itself. Every animation is off under `prefers-reduced-motion: reduce`.
 
      rise     enter: fade up 10px over 400ms           FadeIn, Timeline, tooltips
+              `data-beat="n"` staggers it n x 70ms
      fade     opacity eases 240ms                      SlideOver's scrim
      slide    transform eases 260ms                    SlideOver's panel
      drag     a row eases into place while one is held Reorder
      pulse    opacity dims and returns, 2s             Pulse, StatusDot, Skeleton
      blink    on/off, 1s                               Caret
      shimmer  a highlight sweeps a placeholder         product Skeleton
-     unfold   a sheet turns open about its hinge       unfold()                 */
+     unfold   a sheet turns open about its hinge       unfold()
+     run      a light sweeps a set, child by child     Run                      */
 
 @keyframes rise {
   from {
@@ -34,6 +36,17 @@
   animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: transform, opacity;
 }
+
+/* A staged entrance: `data-beat="n"` holds a rise back n beats of 70ms, so a set
+   that arrives together still reads in order. Reduced motion drops the
+   animation and the delay with it, so nothing waits hidden. */
+[data-motion='rise'][data-beat='1'] { animation-delay: 70ms; }
+[data-motion='rise'][data-beat='2'] { animation-delay: 140ms; }
+[data-motion='rise'][data-beat='3'] { animation-delay: 210ms; }
+[data-motion='rise'][data-beat='4'] { animation-delay: 280ms; }
+[data-motion='rise'][data-beat='5'] { animation-delay: 350ms; }
+[data-motion='rise'][data-beat='6'] { animation-delay: 420ms; }
+[data-motion='rise'][data-beat='7'] { animation-delay: 490ms; }
 
 [data-motion='fade'] {
   transition: opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -115,8 +128,45 @@
   --turn: 7deg;
 }
 
+/* A run: a light crosses a set of things that are all true at once (`<Run>`).
+   Each direct child is lit `data-beat` steps of `--run-step` after the first;
+   the sweep owns `color` and returns it to `--run-rest`. */
+@keyframes run {
+  0%,
+  26%,
+  100% {
+    color: var(--run-rest, var(--neutral-400));
+    border-color: var(--neutral-800);
+  }
+  8% {
+    color: var(--foreground);
+    border-color: var(--muted-foreground);
+  }
+}
+
+[data-motion='run'] > * {
+  animation: run 5.4s var(--ease-in-out) infinite;
+}
+
+[data-motion='run'] > [data-beat='1'] { animation-delay: calc(1 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='2'] { animation-delay: calc(2 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='3'] { animation-delay: calc(3 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='4'] { animation-delay: calc(4 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='5'] { animation-delay: calc(5 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='6'] { animation-delay: calc(6 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='7'] { animation-delay: calc(7 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='8'] { animation-delay: calc(8 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='9'] { animation-delay: calc(9 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='10'] { animation-delay: calc(10 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='11'] { animation-delay: calc(11 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='12'] { animation-delay: calc(12 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='13'] { animation-delay: calc(13 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='14'] { animation-delay: calc(14 * var(--run-step, 0.22s)); }
+[data-motion='run'] > [data-beat='15'] { animation-delay: calc(15 * var(--run-step, 0.22s)); }
+
 @media (prefers-reduced-motion: reduce) {
-  [data-motion] {
+  [data-motion],
+  [data-motion='run'] > * {
     animation: none;
     transition: none;
   }

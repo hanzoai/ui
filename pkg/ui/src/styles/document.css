@@ -1,0 +1,93 @@
+/* @hanzo/ui document — the body of a long document: a policy, a set of terms, an
+   explanation authored in markdown.
+
+   Import once at the app root:  import '@hanzo/ui/styles/document.css'
+
+   KEYED ON `data-slot='document'`, NEVER ON A CLASS. `<Document>` stamps the
+   slot. The content arrives as bare tags rendered from markdown, which is the
+   one case no prop can reach, so these rules select by tag from the container.
+   Everything else on a page is props.
+
+   A contents list in a <nav> is chrome, and its links do not underline. A
+   table is the one thing that can outgrow its column, and nothing wraps it, so
+   the scroll goes on the table itself. */
+
+[data-slot='document'] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--muted-foreground);
+}
+
+[data-slot='document'] a {
+  color: var(--foreground);
+  text-underline-offset: 4px;
+}
+
+[data-slot='document'] a:not(:is(nav, aside, header, [role=navigation]) a) {
+  text-decoration: underline;
+}
+
+[data-slot='document'] :is(strong, th) {
+  font-weight: var(--weight-medium);
+  color: var(--foreground);
+}
+
+[data-slot='document'] :is(h2, h3) {
+  font-weight: var(--weight-medium);
+  color: var(--foreground);
+}
+
+[data-slot='document'] h2 {
+  margin-top: var(--space-6);
+  font-size: var(--text-xl);
+}
+
+[data-slot='document'] h3 {
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+}
+
+[data-slot='document'] ul { list-style: disc; }
+[data-slot='document'] ol { list-style: decimal; }
+
+[data-slot='document'] :is(ul, ol) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+}
+
+[data-slot='document'] blockquote {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--secondary);
+}
+
+[data-slot='document'] code {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--foreground);
+}
+
+[data-slot='document'] hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+[data-slot='document'] table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+[data-slot='document'] :is(th, td) {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}

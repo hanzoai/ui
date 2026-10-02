@@ -11,7 +11,8 @@
  *
  * The 44px floor is `minH`, not padding, so a two-line label stays balanced.
  */
-import { Anchor } from '@hanzo/gui'
+import { Anchor, Text } from '@hanzo/gui'
+
 import type { ComponentProps, ReactNode } from 'react'
 
 import { slot } from '../backends/gui/slot'
@@ -51,21 +52,53 @@ const Cta = ({ href, children, quiet = false, ...p }: CtaProps) => (
 
 export { Cta }
 
+export type TextLinkProps = Omit<CtaProps, 'quiet' | 'href'> & {
+  /** Where it goes. Without one it is a button that reads as a link — "try
+   *  again", "change address" — and `onPress` is what it does. */
+  href?: string
+  disabled?: boolean
+}
+
 /**
- * TextLink — a link inside a sentence: the surrounding ink, underlined.
- * `Cta` is the control; this is the word.
+ * TextLink — a link inside a sentence: full ink and an underline, because in
+ * quiet text colour alone does not say "link", and the sentence's own face and
+ * size. `Cta` is the control; this is the word. A button inside such a sentence (no `href`) reads as one of its
+ * links: no box, and the sentence's own face, which @hanzo/design's base hands
+ * every button.
  */
-const TextLink = ({ href, children, ...p }: Omit<CtaProps, 'quiet'>) => (
-  <Anchor
-    {...slot('text-link')}
-    href={href}
-    color="$ink"
-    textDecorationLine="underline"
-    style={{ textUnderlineOffset: 3 }}
-    {...(p as object)}
-  >
-    {children}
-  </Anchor>
-)
+/** The sentence's own type, which gui's Text would otherwise replace with its
+ *  body size. */
+const WORD = { fontFamily: 'inherit', fontSize: 'inherit', fontWeight: 'inherit', lineHeight: 'inherit', letterSpacing: 'inherit' } as const
+
+const TextLink = ({ href, children, ...p }: TextLinkProps) =>
+  href !== undefined ? (
+    <Anchor
+      {...slot('text-link')}
+      href={href}
+      {...(WORD as object)}
+      color="$ink"
+      textDecorationLine="underline"
+      style={{ textUnderlineOffset: 3 }}
+      {...(p as object)}
+    >
+      {children}
+    </Anchor>
+  ) : (
+    <Text
+      {...slot('text-link')}
+      render={<button type="button" />}
+      p={0}
+      borderWidth={0}
+      bg="transparent"
+      {...(WORD as object)}
+      color="$ink"
+      textDecorationLine="underline"
+      cursor="pointer"
+      style={{ textUnderlineOffset: 3 }}
+      {...(p as object)}
+    >
+      {children}
+    </Text>
+  )
 
 export { TextLink }
