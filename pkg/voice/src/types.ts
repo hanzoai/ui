@@ -60,6 +60,18 @@ export const REFUSED: Record<"covered" | "lost", string> = {
   lost: "Hanzo speech is unavailable.",
 };
 
+/** The same, when the refusal is a visitor's free day spent (`public_allowance_spent`). */
+export const SPENT: Record<"covered" | "lost", string> = {
+  covered: "Today's free Hanzo dictation is used — this browser is standing in.",
+  lost: "Today's free Hanzo dictation is used. Sign in to keep going.",
+};
+
+/** The note a refusal wears: the spent day by name, any other refusal as such. */
+export function refused(refusal: Refusal): string {
+  const spent = (refusal.error as { code?: string }).code === "public_allowance_spent";
+  return (spent ? SPENT : REFUSED)[refusal.covered ? "covered" : "lost"];
+}
+
 /**
  * The platform's speech services, injected.
  *

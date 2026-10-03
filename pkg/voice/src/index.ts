@@ -18,7 +18,7 @@ export type { Talk, TalkConfig, Talked, TalkMachine, TalkOptions } from "./talk.
 export { transcript, useTranscript } from "./transcript.js";
 export type { Live, Transcribed, TranscriptMachine, TranscriptOptions } from "./transcript.js";
 
-export { speech } from "./transport.js";
+export { speech, SpeechError } from "./transport.js";
 export type { SpeechConfig } from "./transport.js";
 
 export { capability, blocker, streamBlocker } from "./capability.js";
@@ -30,5 +30,5 @@ export type { ListenOptions } from "./listen.js";
 export { mouth } from "./speak.js";
 export type { MouthOptions } from "./speak.js";
 
-export { REASON, REFUSED } from "./types.js";
+export { REASON, REFUSED, SPENT, refused } from "./types.js";
 export type { State, Blocker, Side, Refusal, Speech, Ear, Mouth, Heard, Said, Stream } from "./types.js";

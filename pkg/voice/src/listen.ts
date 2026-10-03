@@ -24,6 +24,11 @@ const PAUSE = 900;
 /** Silence, in ms, after which a recording nobody has spoken in starts over. */
 const LEAD = 10_000;
 
+/** The longest one recording runs, in ms, before it is sent and the next begins:
+ *  under the minute a transcription takes on the visitor's lane, and a bound on
+ *  what any one upload carries. */
+const LONGEST = 55_000;
+
 /**
  * Open the microphone.
  *
@@ -317,7 +322,10 @@ function record({ heard, speech, language, pause = PAUSE, scope, refused }: Leg)
       const level = Math.sqrt(sum / samples.length);
       heard.level?.(Math.min(1, level * 3));
       const now = Date.now();
-      if (level > 0.04) {
+      if (segment.voiced && now - segment.at > LONGEST) {
+        // Talking past the longest recording: send it, and keep listening.
+        cut();
+      } else if (level > 0.04) {
         segment.voiced = true;
         if (!loud) {
           loud = true;

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-import { REFUSED } from "./types.js";
+import { refused } from "./types.js";
 import type { Blocker, Refusal, State } from "./types.js";
 
 /** What the button draws: any of this package's machines — the dictation and
@@ -52,7 +52,7 @@ const SAY: Record<State, string> = {
  */
 export function Voice({ voice, disabled, children, says, ...rest }: VoiceProps) {
   const { state, open, blocked, reason, refusal, toggle } = voice;
-  const stood = refusal ? REFUSED[refusal.covered ? "covered" : "lost"] : null;
+  const stood = refusal ? refused(refusal) : null;
   const label = [reason ?? says?.[state] ?? SAY[state], stood].filter(Boolean).join(" ");
 
   return (

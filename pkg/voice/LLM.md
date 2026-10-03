@@ -84,3 +84,10 @@ API; this file carries only what the source cannot say for itself.
 - `<Voice/>` draws any machine with `state/open/level/blocked/reason/refusal/
   toggle` (`Machine` in `src/control.tsx`), and `says` relabels it, so a
   dictation mic, a talk button and a transcript toggle are one control.
+- **The visitor's lane is `speech({ public: true })`**: `transcribe` alone, POSTed
+  to `/v1/audio/transcriptions/public` with no credential (`credentials: "omit"`,
+  no Authorization or X-Org-Id even when a token is given). The ai plane holds it to
+  60 s of audio and a day per visitor; the recorder leg sends a recording at
+  `LONGEST` (55 s) even mid-sentence, so no upload passes the minute. A spent day
+  is `SpeechError` code `public_allowance_spent`, and `refused()` names it (`SPENT`)
+  instead of the generic `REFUSED` note.

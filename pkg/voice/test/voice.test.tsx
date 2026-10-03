@@ -660,6 +660,44 @@ describe("a spoken conversation", () => {
     expect(onUtterance).toHaveBeenCalledWith("finally");
   });
 
+  it("sends a recording at the longest it runs while somebody keeps talking, and keeps listening", async () => {
+    const transcribe = vi.fn(async () => "a long thought");
+    render(<Composer speech={{ transcribe }} onUtterance={() => {}} />);
+
+    await mic();
+    const first = Tape.live;
+    await act(async () => {
+      loudness = 200;
+      vi.advanceTimersByTime(56_000);
+      await Promise.resolve();
+    });
+    // Never a pause, and still one upload under the minute the visitor's lane takes.
+    expect(transcribe).toHaveBeenCalledTimes(1);
+    expect(Tape.live).not.toBe(first);
+    expect(Tape.live!.state).toBe("recording");
+    loudness = 128;
+  });
+
+  it("names a spent free day, and lets the browser carry on", async () => {
+    const transcribe = vi.fn(async () => {
+      throw new api.SpeechError("Transcription failed (429)", 429, "public_allowance_spent");
+    });
+    const onUtterance = vi.fn();
+    render(<Composer speech={{ transcribe }} onUtterance={onUtterance} />);
+
+    await mic();
+    await turn();
+
+    expect(screen.getByRole("button").getAttribute("aria-label")).toMatch(
+      /Today's free Hanzo dictation is used — this browser is standing in\./,
+    );
+    act(() => Fake.live!.hear("still heard", true));
+    await act(async () => {
+      vi.advanceTimersByTime(1_000);
+    });
+    expect(onUtterance).toHaveBeenCalledWith("still heard");
+  });
+
   it("listens with the browser's recogniser when the caller asks for it by name", async () => {
     const transcribe = vi.fn(async () => "never asked");
     const speech: Speech = { transcribe };

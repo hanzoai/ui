@@ -93,6 +93,13 @@ the machine at the same moment:
 voice.refusal // { service: "ear" | "mouth", error, covered } | null
 ```
 
+A page with nobody signed in passes `speech({ public: true })`: transcription on
+`POST /v1/audio/transcriptions/public`, Hanzo's own transcriber with no
+credential, a minute of audio at a time within a day per visitor. Past the day it
+refuses with `public_allowance_spent`, the browser's recogniser takes over, and the
+label says the free day is used. No reading voice or live transcript is offered
+there; replies are read by the browser.
+
 `covered` is whether the browser could stand in. `<Voice/>` wears the sentence
 in its label and marks itself `data-refusal`; a surface drawing its own button
 reads `voice.refusal` or takes `onRefusal`. Standing in quietly would make a
@@ -150,7 +157,9 @@ const live = useTranscript({ speech: speech({ token }), onSettled: (text) => not
   the machine plus `reply`.
 - `useTranscript({ speech, language?, onPartial?, onSettled? })` → a live
   transcript machine.
-- `speech({ baseUrl?, token?, ear?, voice?, fetch? })` — the platform transport.
+- `speech({ baseUrl?, token?, ear?, voice?, public?, fetch? })` — the platform transport.
+  A refusal throws `SpeechError` (`status`, `code`); `refused(refusal)` is the
+  sentence `<Voice/>` wears for it.
   `ear` defaults to `zen-scribe`; `voice` to `{ model: "zen-voice-mini", name:
   "af_heart", format: "mp3" }`. Voice names are the speech service's own ids
   (`af_heart`, `am_michael`, `bf_emma`, `bm_george`, …); `say(text, voice)`

@@ -14,6 +14,13 @@ export interface SpeechConfig {
   /** The organization to bill, when the bearer belongs to several. */
   org?: string;
   /**
+   * The visitor's lane: transcription for a page with nobody signed in, on
+   * Hanzo's own transcriber, a minute at a time within a day per visitor. No
+   * credential is sent and no speech or live transcript is offered; past the day
+   * the platform refuses and the browser's recogniser stands in.
+   */
+  public?: boolean;
+  /**
    * Speech model, the voice it reads in, and the container it answers with.
    * Defaults to `zen-voice-mini` reading in `af_heart` as mp3. `name` is the
    * speech service's own voice id; a call to `speak` may name another.
@@ -28,6 +35,18 @@ const BASE = "https://api.hanzo.ai";
 const EAR = "zen-scribe";
 const MOUTH = "zen-voice-mini";
 const VOICE = "af_heart";
+
+/** The platform said no: the status, and the code its error envelope named. */
+export class SpeechError extends Error {
+  readonly status: number;
+  readonly code?: string;
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = "SpeechError";
+    this.status = status;
+    this.code = code;
+  }
+}
 
 /**
  * The platform's speech services: `POST /v1/audio/transcriptions` and
@@ -50,28 +69,43 @@ export function speech(config: SpeechConfig = {}): Speech {
 
   const fail = async (response: Response, what: string): Promise<never> => {
     const body = await response.text().catch(() => "");
-    throw new Error(`${what} failed (${response.status})${body ? `: ${body.slice(0, 200)}` : ""}`);
+    let code: string | undefined;
+    try {
+      code = (JSON.parse(body) as { error?: { code?: string } }).error?.code;
+    } catch {
+      code = undefined;
+    }
+    throw new SpeechError(
+      `${what} failed (${response.status})${body ? `: ${body.slice(0, 200)}` : ""}`,
+      response.status,
+      code,
+    );
   };
 
+  const transcribe: Speech["transcribe"] = async (audio, { language, signal } = {}) => {
+    const form = new FormData();
+    form.append("file", audio, `turn.${extension(audio.type)}`);
+    form.append("model", config.ear ?? EAR);
+    if (language) form.append("language", language.split("-")[0] as string);
+    const headers = new Headers();
+    if (!config.public) await authorize(headers);
+    const path = config.public ? "/v1/audio/transcriptions/public" : "/v1/audio/transcriptions";
+    const response = await send(`${base}${path}`, {
+      method: "POST",
+      headers,
+      body: form,
+      credentials: config.public ? "omit" : "include",
+      signal,
+    });
+    if (!response.ok) await fail(response, "Transcription");
+    const result = (await response.json()) as { text?: string };
+    return result.text ?? "";
+  };
+
+  if (config.public) return { transcribe };
+
   return {
-    async transcribe(audio, { language, signal } = {}) {
-      const form = new FormData();
-      form.append("file", audio, `turn.${extension(audio.type)}`);
-      form.append("model", config.ear ?? EAR);
-      if (language) form.append("language", language.split("-")[0] as string);
-      const headers = new Headers();
-      await authorize(headers);
-      const response = await send(`${base}/v1/audio/transcriptions`, {
-        method: "POST",
-        headers,
-        body: form,
-        credentials: "include",
-        signal,
-      });
-      if (!response.ok) await fail(response, "Transcription");
-      const result = (await response.json()) as { text?: string };
-      return result.text ?? "";
-    },
+    transcribe,
 
     async speak(text, { signal, voice: name } = {}) {
       const headers = new Headers({ "Content-Type": "application/json" });
