@@ -14,6 +14,7 @@ import config from '../gui-config'
 import { limitsOf, type LimitAction } from './limits'
 import { LimitedBanner } from './LimitedBanner'
 import { UsageMeter } from './UsageMeter'
+import { PLAN_TERMS, PlanUsage } from './PlanUsage'
 import { forget, observe, useLimits, type UseLimits } from './useLimits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
@@ -103,6 +104,31 @@ describe('LimitedBanner', () => {
     act(() => button.click())
     expect(took.map((a) => a.kind)).toEqual(['topup'])
     unmount()
+  })
+})
+
+describe('PlanUsage', () => {
+  it('names the plan and period, says what it includes, and offers the actions', () => {
+    const text = words(html(<PlanUsage limits={limitsOf({ ...LIMITED, state: 'ok', limited: undefined })!} now={NOW} />))
+    expect(text).toContain('Max 20x plan')
+    expect(text).toContain('Current period Oct 1 – Oct 31')
+    for (const line of PLAN_TERMS) expect(text).toContain(line)
+    expect(text).toContain('Premium models')
+    expect(text).toContain('Upgrade')
+    expect(text).toContain('Add prepaid credit')
+    expect(text).not.toMatch(/\$\s?\d|\d+\s*(requests?|messages?|tokens?)\b/i)
+  })
+
+  it('leads with the pause when a class is paused', () => {
+    const m = html(
+      <PlanUsage
+        limits={limitsOf(LIMITED)!}
+        notice={{ reason: 'plan_allowance_used', classes: ['premium'], message: 'Premium models are paused until Oct 31.', actions: limitsOf(LIMITED)!.actions, resets_at: null, fallback: null }}
+        now={NOW}
+      />,
+    )
+    expect(m.indexOf('limited-banner')).toBeGreaterThan(-1)
+    expect(m.indexOf('limited-banner')).toBeLessThan(m.indexOf('usage-meter'))
   })
 })
 

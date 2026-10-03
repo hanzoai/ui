@@ -36,6 +36,7 @@ import { RepoSelect } from './product/RepoSelect'
 import { BranchSelect } from './product/BranchSelect'
 import { UsageMeter } from './product/UsageMeter'
 import { LimitedBanner } from './product/LimitedBanner'
+import { PlanUsage } from './product/PlanUsage'
 import { limitsOf } from './product/limits'
 import { ModelSelector, RESEARCH } from './models'
 import {
@@ -772,6 +773,8 @@ export const Gallery = () => (
           onAction={() => {}}
           onClose={() => {}}
         />
+        <PlanUsage limits={{ ...USAGE, state: 'ok', period_start: '2026-10-01T00:00:00Z', period_end: '2026-10-31T00:00:00Z' }} onAction={() => {}} />
+        <PlanUsage limits={{ ...USAGE, plan: '' }} onAction={() => {}} />
       </div>
     </Section>
 

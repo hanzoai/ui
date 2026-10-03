@@ -216,8 +216,10 @@ export * from './social'
 export { tokens, TAG_TONES, tagTone, type TagTone } from '@hanzo/data'
 
 // Plan usage limits — `GET /v1/ai/limits` and the served-call headers, held by
-// `useLimits`; `UsageMeter` draws a class's share, `LimitedBanner` a pause.
+// `useLimits`; `UsageMeter` draws a class's share, `LimitedBanner` a pause,
+// `PlanUsage` the plan with both and its terms in plain words.
 export * from './limits'
 export * from './useLimits'
 export * from './UsageMeter'
 export * from './LimitedBanner'
+export * from './PlanUsage'

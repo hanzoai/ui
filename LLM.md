@@ -539,6 +539,8 @@ that disagrees with the last read triggers a re-read. `UsageMeter` draws one row
 per class (bar in `$good`/`$yellow10`/`$bad`, "Resets <date>", a slim session bar
 for a short window); `LimitedBanner` is the message plus the server's actions.
 `ModelSelector`'s `paused` marks a paused class's models "Paused" and still picks.
+`PlanUsage` is the page block: plan name, period, `UsageMeter`, the plan's terms in
+plain words (`PLAN_TERMS`/`FREE_TERMS`) and the actions, led by the banner when paused.
 
 ### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
 
