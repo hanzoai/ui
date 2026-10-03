@@ -34,6 +34,9 @@ import { DialogTemplate } from './product/DialogTemplate'
 import { ChipSelect } from './product/ChipSelect'
 import { RepoSelect } from './product/RepoSelect'
 import { BranchSelect } from './product/BranchSelect'
+import { UsageMeter } from './product/UsageMeter'
+import { LimitedBanner } from './product/LimitedBanner'
+import { limitsOf } from './product/limits'
 import { ModelSelector, RESEARCH } from './models'
 import {
   Aside,
@@ -220,6 +223,20 @@ const SOURCES: Source[] = [
  * a 36px button sat halfway down beside a 320px panel with no relationship to
  * it. Most of what read as raggedness was that one word.
  */
+const USAGE = limitsOf({
+  plan: 'max-20x',
+  state: 'limited',
+  classes: {
+    premium: { percent: 100, state: 'limited', paying: 'none', resets_at: '2026-10-31T00:00:00Z' },
+    ours: { percent: 85, state: 'near', paying: 'plan', resets_at: '2026-10-31T00:00:00Z', window: { percent: 40, state: 'ok', resets_at: '2026-10-31T00:00:00Z' } },
+    free: { percent: 20, state: 'ok', paying: 'prepaid', resets_at: '2026-10-31T00:00:00Z' },
+  },
+  actions: [
+    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
+    { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/billing' },
+  ],
+})!
+
 const Section = ({ name, children }: { name: string; children: ReactNode }) => (
   <section
     data-gallery={name}
@@ -740,6 +757,22 @@ export const Gallery = () => (
           <CardTitle>body</CardTitle>
         </DialogTemplate>
       </Dialog>
+    </Section>
+
+    {/* Plan usage: every state's bar colour, a short window, every caption,
+        both sizes, and a pause with its two actions. */}
+    <Section name="usage-limits">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, width: '100%', maxWidth: 480 }}>
+        {(['md', 'sm'] as const).map((size) => (
+          <UsageMeter key={size} size={size} limits={USAGE} />
+        ))}
+        <LimitedBanner
+          message="Premium models are paused until Oct 31. You're chatting on Zen Free."
+          actions={USAGE.actions}
+          onAction={() => {}}
+          onClose={() => {}}
+        />
+      </div>
     </Section>
 
     {/* The chat shell. Variants are enumerated because gui writes a rule per

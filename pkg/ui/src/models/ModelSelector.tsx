@@ -46,6 +46,11 @@ export interface ModelSelectorProps {
   /** Open state, when the host owns it. */
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  /**
+   * Models whose class of usage is paused. Each still picks — the server
+   * refuses it or answers from a free model — and its row says "Paused".
+   */
+  paused?: (model: ModelCatalogEntry) => boolean
 }
 
 /**
@@ -54,6 +59,9 @@ export interface ModelSelectorProps {
  * Family-grouped picker in a Popover + Command combobox: grouped sections with
  * family headers, premium markers, context suffixes, keyboard navigation, and
  * type-to-filter search for large catalogs.
+ *
+ * A model `paused` names is listed and chosen like any other, with a quiet
+ * "Paused" where its context size would sit.
  *
  * A model with `access` is listed and never chosen: its row is disabled, says
  * why, and links to where a person asks for access. The link sits inside a
@@ -77,6 +85,7 @@ export function ModelSelector({
   className,
   open: openProp,
   onOpenChange,
+  paused,
 }: ModelSelectorProps) {
   const [own, setOwn] = useState(false)
   const open = openProp ?? own
@@ -138,6 +147,7 @@ export function ModelSelector({
                   const label = m.label ?? m.id
                   const ctx = fmtContext(m.context_window)
                   const locked = m.access === 'research'
+                  const resting = !locked && (paused?.(m) ?? false)
                   return (
                     <CommandItem
                       key={m.id}
@@ -148,6 +158,7 @@ export function ModelSelector({
                       // on it that works. The model inside says it is disabled.
                       aria-disabled={locked ? false : undefined}
                       data-access={m.access}
+                      data-paused={resting || undefined}
                       // The name is muted, not the row: its link has to read as a link.
                       opacity={1}
                       onSelect={() => {
@@ -175,6 +186,10 @@ export function ModelSelector({
                         {locked ? (
                           <SizableText ml="auto" shrink={0} pl="$2" size="$1" color="$color11">
                             Research preview
+                          </SizableText>
+                        ) : resting ? (
+                          <SizableText ml="auto" shrink={0} pl="$2" size="$1" color="$color11">
+                            Paused
                           </SizableText>
                         ) : ctx && (
                           <XStack ml="auto" shrink={0} pl="$2">

@@ -214,3 +214,10 @@ export * from './social'
 // @hanzo/data) — the theme this layer renders against. Design-token PRIMITIVES
 // (colors, dark/light, radii, spacing) are the runtime-free `@hanzo/ui/core`.
 export { tokens, TAG_TONES, tagTone, type TagTone } from '@hanzo/data'
+
+// Plan usage limits — `GET /v1/ai/limits` and the served-call headers, held by
+// `useLimits`; `UsageMeter` draws a class's share, `LimitedBanner` a pause.
+export * from './limits'
+export * from './useLimits'
+export * from './UsageMeter'
+export * from './LimitedBanner'

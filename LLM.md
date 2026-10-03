@@ -521,6 +521,25 @@ Rules these carry, each learned by building them:
 Every mounted suite runs `audit()` (`pkg/ui/test/axe.ts`: axe-core, WCAG 2.2 A/AA,
 contrast left to the browser) and asserts zero violations.
 
+### Plan usage limits — `useLimits`, `UsageMeter`, `LimitedBanner` (`@hanzo/ui/product`)
+
+`product/limits.ts` is the `GET /v1/ai/limits` contract (also on `/product/pure`):
+`limitsOf` checks the body, `servedOf` reads a served call's `X-Hanzo-Usage`,
+`-Usage-Class`, `-Paid-By`, `-Fallback`, `-Usage-Reason`, and `refusalOf` reads the
+`billing_error` envelope of a 402/429. `classOf(id)` sorts a model into `premium`
+(third-party), `ours` (zen/enso/kai/jev) or `free`. `noticeOf` words a pause
+("Premium models are paused until Oct 31. You're chatting on Zen Free.") or the
+server's message; `nearOf` is the one-line near note. Shares only — no copy here
+ever states an amount, a count or a cap, and `limits.test.ts` asserts it.
+
+`useLimits(read, key, name)` holds the limits: the host passes its own
+authenticated `read` (base URL, bearer, org stay the host's), and calls
+`observe(response)` in its fetch for every AI call; a served header or refusal
+that disagrees with the last read triggers a re-read. `UsageMeter` draws one row
+per class (bar in `$good`/`$yellow10`/`$bad`, "Resets <date>", a slim session bar
+for a short window); `LimitedBanner` is the message plus the server's actions.
+`ModelSelector`'s `paused` marks a paused class's models "Paused" and still picks.
+
 ### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
 
 Lifted from hanzo.build's Settings and Customize so every surface draws them the

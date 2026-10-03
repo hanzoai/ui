@@ -14,9 +14,11 @@ export type ProgressProps = ComponentProps<typeof GuiProgress> & {
    * native, where gui paints from tokens.
    */
   indicatorClassName?: string
+  /** The moving bar's colour, a theme token: a status rung where the value is a state. */
+  indicatorColor?: ComponentProps<typeof GuiProgress.Indicator>['bg']
 }
 
-const Progress = ({ value, indicatorClassName, ...props }: ProgressProps) => (
+const Progress = ({ value, indicatorClassName, indicatorColor, ...props }: ProgressProps) => (
   <GuiProgress
     {...slot('progress')}
     value={value ?? 0}
@@ -33,7 +35,7 @@ const Progress = ({ value, indicatorClassName, ...props }: ProgressProps) => (
       // a type colour stretched across a bar is a lit slab. 6.93:1 over the
       // track against WCAG 1.4.11's 3:1 — legible with room to spare, and no
       // longer competing with the text beside it for attention.
-      bg="$soft"
+      bg={indicatorColor ?? '$soft'}
       {...sx(indicatorClassName)}
     />
   </GuiProgress>

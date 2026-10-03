@@ -103,3 +103,23 @@ describe('a model nobody can call yet', () => {
     expect(found).toEqual([])
   })
 })
+
+describe('a model whose class is paused', () => {
+  const MIX: ModelCatalogEntry[] = [
+    { id: 'zen6', owned_by: 'zenlm', label: 'Zen 6' },
+    { id: 'claude-opus-4.8', owned_by: 'anthropic', label: 'Claude Opus 4.8' },
+  ]
+  const paused = (m: ModelCatalogEntry) => m.id.startsWith('claude')
+
+  it('says Paused, and still picks', () => {
+    const onChange = vi.fn()
+    mount(<ModelSelector models={MIX} onChange={onChange} paused={paused} open />)
+    const opus = row('Claude Opus 4.8')
+    expect(opus.getAttribute('data-paused')).toBe('true')
+    expect(opus.textContent).toContain('Paused')
+    expect(row('Zen 6').getAttribute('data-paused')).toBeNull()
+    expect(row('Zen 6').textContent).not.toContain('Paused')
+    act(() => opus.click())
+    expect(onChange).toHaveBeenCalledWith('claude-opus-4.8')
+  })
+})

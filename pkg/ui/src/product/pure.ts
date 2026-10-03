@@ -59,3 +59,7 @@ export {
 // command palette all ask the first one — so the general entry point is here.
 export { ready, sends, type Mods } from '../chat/send'
 export { pinned, SLACK, type Track } from '../chat/stick'
+
+// Plan usage limits — the `/v1/ai/limits` contract, the served-call headers and
+// the billing refusal, and what each tells the reader.
+export * from './limits'

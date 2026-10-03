@@ -69,27 +69,21 @@ export function seats(p: PlanRow): number {
 /** The term a card quotes: a year where one is sold and asked for, else a month. */
 export const termOf = (p: PlanRow, yearly: boolean): Interval => (yearly && charge(p, 'year') !== null ? 'year' : 'month')
 
-/** A Max tier's multiple, from its name: "Max 5x" becomes "5x". */
-const tier = (p: PlanRow) => p.name.replace(/^max\s*/i, '')
+/** A line that states how much a plan includes as a multiple of another. */
+const multiple = (line: string) => /\b\d+\s*x\b/i.test(line)
 
 /**
  * One Max card for its tiers. The catalog sells Max 5x and Max 20x as two rows;
  * a page offers one, priced from the cheaper, and the tier is chosen at
  * checkout. It takes the first tier's place, so the order still reads up.
- * `from` names the rows that stand for several.
+ * `from` names the rows that stand for several. No line on it states how much
+ * more a tier includes.
  */
 export function merged(plans: readonly PlanRow[]): { plans: PlanRow[]; from: Set<string> } {
   const max = plans.filter((p) => /^max\b/i.test(p.name))
   if (max.length < 2) return { plans: [...plans], from: new Set() }
   const low = max.reduce((a, b) => ((a.priceMonthly ?? 0) <= (b.priceMonthly ?? 0) ? a : b))
-  const f = (low.features ?? []).filter((line) => !/^\d+x Pro's/i.test(line))
-  const one: PlanRow = {
-    ...low,
-    name: 'Max',
-    features: f.some((line) => /^choose\b/i.test(line))
-      ? f
-      : [f[0], `Choose ${max.map(tier).join(' or ')} more usage than Pro`, ...f.slice(1)].filter((x): x is string => Boolean(x)),
-  }
+  const one: PlanRow = { ...low, name: 'Max', features: (low.features ?? []).filter((line) => !multiple(line)) }
   const rest = plans.filter((p) => !max.includes(p))
   rest.splice(plans.indexOf(max[0]!), 0, one)
   return { plans: rest, from: new Set([one.id]) }

@@ -175,7 +175,7 @@ describe('merged', () => {
     const { plans, from } = merged(rows)
     expect(plans.map((p) => p.name)).toEqual(['Free', 'Max'])
     expect(plans[1]!.priceMonthly).toBe(100)
-    expect(plans[1]!.features).toContain('Choose 5x or 20x more usage than Pro')
+    expect(plans[1]!.features).toEqual(['Everything in Pro'])
     expect([...from]).toEqual(['max5'])
   })
 })
