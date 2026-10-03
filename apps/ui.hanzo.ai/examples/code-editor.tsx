@@ -63,14 +63,26 @@ export function FixedLanguage() {
   )
 }
 
-/** Themed — `theme="dark"` paints the editor's own palette whatever the page is set to; `"light"` is the other, and `"auto"` follows the page. */
-export function Themed() {
+/** JSON — highlighted, checked on every keystroke, re-indented by Format; the footer names a broken line and resizes the editor. */
+export function Json() {
   return (
     <CodeEditor
-      theme="dark"
-      language="rust"
-      height={160}
-      defaultValue={`fn main() {\n    let mut cache = Cache::new(3);\n    cache.insert("key1", "value1");\n    println!("{:?}", cache);\n}`}
+      language="json"
+      showLanguageSelector={false}
+      defaultValue={`{\n  "customer": "Acme Corp",\n  "plan": "Enterprise"\n  "seats": 40\n}`}
+    />
+  )
+}
+
+/** JSON or text — `allowText` lets prose through and still holds anything that opens an object or array to JSON. */
+export function JsonOrText() {
+  return (
+    <CodeEditor
+      language="json"
+      allowText
+      showLanguageSelector={false}
+      placeholder="JSON object, array, or text"
+      defaultValue="We are receiving 502 Bad Gateway errors since 14:00 UTC."
     />
   )
 }

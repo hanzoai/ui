@@ -228,11 +228,11 @@ describe('FileTabs', () => {
     mount(<FileTabs files={FILES} value="src/app.tsx" onSelect={onSelect} onClose={() => {}} />)
     const tabs = $$('[role="tab"]')
     expect(tabs.map((t) => t.getAttribute('aria-label'))).toEqual(['src/app.tsx, unsaved', 'README.md', 'big.bin'])
-    const field = host.querySelector('textarea')!
-    expect(field.value).toBe('export const x = 1')
+    const field = host.querySelector('.cm-content')!
+    expect(field.textContent).toBe('export const x = 1')
     expect(field.getAttribute('aria-label')).toBe('src/app.tsx')
-    // No onChange: the field is read-only.
-    expect(field.readOnly).toBe(true)
+    // No onChange: the editor is read-only.
+    expect(field.getAttribute('contenteditable')).toBe('false')
     key(tabs[0]!, 'ArrowRight')
     expect(onSelect).toHaveBeenLastCalledWith('README.md')
     expect(await audit(host)).toEqual([])
@@ -252,7 +252,7 @@ describe('FileTabs', () => {
   it('hands every edit back when the host takes edits', () => {
     const onChange = vi.fn()
     mount(<FileTabs files={FILES} value="README.md" onSelect={() => {}} onChange={onChange} />)
-    expect(host.querySelector('textarea')!.readOnly).toBe(false)
+    expect(host.querySelector('.cm-content')!.getAttribute('contenteditable')).toBe('true')
   })
 })
 

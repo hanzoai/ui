@@ -580,6 +580,46 @@ page looks it up by module name. A new group is a `GROUPS` entry in `catalog.ts`
 `app/<group>/{index,[name]}.tsx`, its lines in `app/routes.d.ts`, and a header and
 footer link.
 
+### Code — `CodeEditor` is CodeMirror 6, `JsonTree` is gui, `checkJson` is the one verdict
+
+`CodeEditor` was a plain `TextArea` with a gutter — no colouring, fixed height, no
+resize. It is CodeMirror 6 now, in the same gui frame and under the same import, so
+`FileTabs` and every caller kept working. It is the package's one code editor; do not
+add a second.
+
+- **Height.** No `height` → the editor follows its text from `minHeight` to
+  `maxHeight`, then scrolls. The footer is a `role="separator"` that drags (or
+  ArrowUp/ArrowDown) to a height of the reader's own, past the cap; a double-click hands
+  it back to the text. `height="100%"` fills a sized frame (the body flexes only then).
+  CodeMirror's base `.cm-scroller { height: 100% }` resolves against an auto-height
+  editor as its MIN-height and pins a growing editor at its floor — the theme sets
+  `flex: 1 1 auto; height: auto; min-height: 0` instead. Measured, not guessed.
+- **JSON.** `language="json"` adds `@codemirror/lang-json` and a verdict field: a
+  broken document tints its line (`.cm-fault`), underlines the byte (`.cm-fault-at`)
+  and names line, column and reason in the footer. `allowText` lets prose pass and
+  still holds `{`/`[` to JSON. Format (Shift-Alt-F) re-indents. One grammar ships;
+  other languages edit as plain text, and the doc comment says so.
+- **`checkJson` (`backends/gui/json.ts`) decides, everywhere.** `JSON.parse` is the
+  arbiter; a broken document is walked again by an RFC 8259 scanner for a position and
+  a reason that read the same on every engine (V8 names a position, Firefox a line,
+  Safari nothing). A host sending what the editor shows calls the same function
+  (`@hanzo/ui/primitives/checkJson` is import-free, node-safe).
+- **Colour is a theme rung, never a design text token.** `--ink`, `--soft`, `--dim`,
+  `--edge`, `--panel`, `--raised`, `--bad` — gui emits each on the theme class, and
+  they read design (`--foreground`, `--border`, `--state-error`). `--text-primary` is
+  NOT safe: a host that mounts design's sheet without its light selector (the console)
+  keeps the dark theme's white on a light page — measured, the syntax vanished. Syntax
+  is ranked by ink and weight (Hanzo is monochrome); hue is spent only on an error.
+- **Wrapped lines hang** under their own text (a per-line padding + negative
+  text-indent of the line's indentation plus two), so a long string in nested JSON
+  still reads as its key's.
+- `JsonTree` draws any JSON value as a disclosure tree (rows are buttons with
+  `aria-expanded`), first `depth` levels open, Expand all / Collapse all / Copy. A long
+  value wraps anywhere — a hash otherwise sets the tree's min-content width and pushes
+  a phone's page sideways. Built from gui only.
+- **A View does not shrink.** RNW Views are `flex-shrink: 0`, so a toolbar's button
+  group held its width at 390px; the groups carry `shrink={1} minW={0}` + `flexWrap`.
+
 ### modularizeImports support
 
 `scripts/gen-primitives.mjs` reads the gui backend barrel and emits one

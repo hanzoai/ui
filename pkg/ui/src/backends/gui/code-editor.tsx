@@ -1,32 +1,60 @@
 'use client'
 
 /**
- * CodeEditor — a bordered, monospace editing surface: a toolbar carrying a
- * language menu and a copy-to-clipboard button, above a plain-text field with
- * a gutter of line numbers that scrolls with it.
+ * CodeEditor — a CodeMirror 6 editor in a gui frame: a toolbar with the
+ * language (a menu, or a label), Format for JSON and Copy; the editor with a
+ * line-number gutter; and a footer that reports whether JSON parses and is the
+ * handle that resizes the editor.
  *
- * The field is gui's `TextArea`, so what is edited is the text itself. Tab
- * inserts two spaces and Escape releases focus; `wordWrap` is the field's own
- * white-space; the gutter numbers lines of text, so a line that wraps keeps
- * one number; there is no syntax colouring, and `minimap` is accepted and
- * ignored because a plain field has no surface to draw one on.
+ * Height. With no `height` the editor is as tall as its text, from `minHeight`
+ * up to `maxHeight`, and scrolls past that. Dragging the footer (or ArrowUp /
+ * ArrowDown on it) sets a height of the reader's own, past the cap if they
+ * want; a double-click hands the height back to the text. A `height` fixes it,
+ * and `'100%'` fills a frame that is itself sized (a flex child).
  *
- * `theme` is the editor's own palette, independent of the surrounding gui
- * theme the way a syntax theme is: `'light'` and `'dark'` paint a fixed set of
- * literal colours, and `'auto'` (the default) takes the ambient `$background`,
- * `$color` and `$borderColor` tokens, so it follows the host page.
+ * JSON. `language="json"` colours the syntax and checks the text on every
+ * change with `checkJson`: a broken document tints the failing line, marks the
+ * failing character and names line, column and reason in the footer. With
+ * `allowText`, text that does not open an object or an array is plain text and
+ * passes. Format (or Shift-Alt-F) re-indents valid JSON by two spaces. Other
+ * languages are edited as plain text: the package carries one grammar.
+ *
+ * Colour. Every colour is a theme rung over a design token — the ink, the
+ * hairline, the selection and the error state — so the editor follows the page
+ * into light or dark with nothing to configure. Hanzo is monochrome, so the syntax is ranked
+ * by ink and weight, not by hue: property names in full ink, strings one rank
+ * down, punctuation at the rank of a hint. Hue is spent only on an error.
  */
-import { SizableText, TextArea, XStack, YStack, type YStackProps } from '@hanzo/gui'
-import { Check, Copy } from '@hanzogui/lucide-icons-2'
+import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
+import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, GripHorizontal, Type } from '@hanzogui/lucide-icons-2'
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
+import { json } from '@codemirror/lang-json'
+import { HighlightStyle, bracketMatching, indentOnInput, syntaxHighlighting } from '@codemirror/language'
+import { Annotation, Compartment, EditorState, RangeSet, RangeSetBuilder, StateField } from '@codemirror/state'
+import {
+  Decoration,
+  EditorView,
+  GutterMarker,
+  drawSelection,
+  gutterLineClass,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  keymap,
+  lineNumbers as numbering,
+  placeholder as hint,
+  ViewPlugin,
+  type DecorationSet,
+  type ViewUpdate,
+} from '@codemirror/view'
+import { tags } from '@lezer/highlight'
 import * as React from 'react'
 
 import { Button } from './button'
-import { RISER } from './control'
+import { checkJson, formatJson, type JsonCheck } from './json'
 import { Select, SelectContent, SelectItem, SelectTrigger } from './select'
 import { slot } from './slot'
 import { toast } from './toaster'
 
-export type CodeEditorTheme = 'light' | 'dark' | 'auto'
 export type CodeEditorWordWrap = 'on' | 'off' | 'wordWrapColumn' | 'bounded'
 
 /** The languages the menu offers when a caller does not narrow the list. */
@@ -84,41 +112,199 @@ const LABEL: Record<string, string> = {
   plaintext: 'Plain Text',
 }
 
-/** The two named palettes; `'auto'` paints none of this. */
-const PALETTE: Record<'light' | 'dark', { bg: string; fg: string; border: string; head: string; gutter: string }> = {
-  light: { bg: '#ffffff', fg: '#1f2328', border: '#d0d7de', head: '#f6f8fa', gutter: '#8c959f' },
-  dark: { bg: '#1e1e1e', fg: '#d4d4d4', border: '#3c3c3c', head: '#252526', gutter: '#858585' },
+/** Line height as a multiple of the font size. */
+const LEADING = 1.6
+/** How far one ArrowUp / ArrowDown on the footer moves the height. */
+const STEP = 24
+const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
+
+/**
+ * The editor's surface. Every colour is one of the theme's named rungs — gui emits
+ * each as a custom property on the theme class, so it inverts with the page — and
+ * those rungs read @hanzo/design's tokens (`--ink` is `--foreground`, `--edge` is
+ * `--border`, `--bad` is `--state-error`). The design ladder is NOT read directly:
+ * on a host that mounts design's sheet without its light selector, `--text-primary`
+ * stays the dark theme's white on a light page.
+ */
+const FRAME = /* @__PURE__ */ EditorView.theme({
+  '&': { color: 'var(--ink)', backgroundColor: 'transparent' },
+  '&.cm-focused': { outline: 'none' },
+  // The scroller fills what the editor is given and no more: grown with its text up to the
+  // editor's max-height, then scrolling; stretched to a fixed or dragged height. CodeMirror's
+  // own `height: 100%` resolves against an auto-height editor as its min-height, which pinned
+  // a growing editor at its floor.
+  '.cm-scroller': {
+    fontFamily: MONO,
+    lineHeight: String(LEADING),
+    overflow: 'auto',
+    flex: '1 1 auto',
+    height: 'auto',
+    minHeight: '0',
+  },
+  '.cm-content': { padding: '8px 0', caretColor: 'var(--ink)' },
+  '.cm-line': { padding: '0 12px' },
+  '.cm-gutters': {
+    backgroundColor: 'transparent',
+    color: 'var(--dim)',
+    border: 'none',
+    borderRight: '1px solid var(--edge)',
+  },
+  '.cm-lineNumbers .cm-gutterElement': { padding: '0 10px 0 12px', minWidth: '28px' },
+  '.cm-activeLine': { backgroundColor: 'var(--panel)' },
+  '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--quiet)' },
+  '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--ink)' },
+  '.cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, ::selection': {
+    backgroundColor: 'var(--raised)',
+  },
+  '.cm-matchingBracket, &.cm-focused .cm-matchingBracket': {
+    backgroundColor: 'var(--raised)',
+    color: 'inherit',
+    outline: 'none',
+  },
+  '.cm-nonmatchingBracket, &.cm-focused .cm-nonmatchingBracket': { backgroundColor: 'transparent' },
+  '.cm-placeholder': { color: 'var(--dim)' },
+  '.cm-fault': { backgroundColor: 'var(--state-error-bg, rgb(239 68 68 / .1))' },
+  '.cm-gutterElement.cm-fault': { color: 'var(--bad)' },
+  '.cm-fault-at': {
+    textDecoration: 'underline wavy var(--bad)',
+    textDecorationSkipInk: 'none',
+    textUnderlineOffset: '3px',
+  },
+})
+
+/** The syntax, ranked by ink: names in full ink, strings a rank down, punctuation at a hint. */
+const INK = /* @__PURE__ */ HighlightStyle.define([
+  { tag: tags.propertyName, color: 'var(--ink)', fontWeight: '500' },
+  { tag: tags.string, color: 'var(--soft)' },
+  { tag: [tags.number, tags.bool, tags.null], color: 'var(--ink)' },
+  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], color: 'var(--dim)' },
+])
+
+/** How much deeper than its line a wrapped continuation starts, in characters. */
+const HANG = 2
+
+/** A line's own indentation in characters, a tab counted as two. */
+const indentOf = (text: string) => {
+  let n = 0
+  for (const c of text) {
+    if (c === ' ') n += 1
+    else if (c === '\t') n += 2
+    else break
+  }
+  return n
 }
 
-/** What Tab inserts. */
-const INDENT = '  '
-/** Line height as a multiple of the font size. */
-const LEADING = 1.5
+const hangs = new Map<number, Decoration>()
+const hangFor = (n: number) => {
+  let d = hangs.get(n)
+  if (!d) {
+    d = Decoration.line({ attributes: { style: `padding-left: calc(${n}ch + 12px); text-indent: -${n}ch` } })
+    hangs.set(n, d)
+  }
+  return d
+}
 
-export interface CodeEditorProps extends Omit<YStackProps, 'children' | 'height' | 'theme' | 'onChange'> {
-  /** A controlled value; omit it and set `defaultValue` to let the field own its text. */
+/**
+ * Wrapped lines hang under their own text rather than restarting at the margin, so a
+ * long string inside nested JSON still reads as belonging to its key. A line's padding
+ * is its indentation plus the hang, and a negative text-indent of the same width puts
+ * its first row back where it was.
+ */
+const hang = /* @__PURE__ */ ViewPlugin.fromClass(
+  class {
+    decorations: DecorationSet
+    constructor(view: EditorView) {
+      this.decorations = this.build(view)
+    }
+    update(u: ViewUpdate) {
+      if (u.docChanged || u.viewportChanged) this.decorations = this.build(u.view)
+    }
+    build(view: EditorView) {
+      const out = new RangeSetBuilder<Decoration>()
+      for (const { from, to } of view.visibleRanges) {
+        for (let pos = from; pos <= to; ) {
+          const line = view.state.doc.lineAt(pos)
+          out.add(line.from, line.from, hangFor(indentOf(line.text) + HANG))
+          pos = line.to + 1
+        }
+      }
+      return out.finish()
+    }
+  },
+  { decorations: (v) => v.decorations },
+)
+
+/** Marks a programmatic edit, so a caller's own `value` is never echoed back to `onChange`. */
+const External = /* @__PURE__ */ Annotation.define<boolean>()
+
+class Fault extends GutterMarker {
+  override elementClass = 'cm-fault'
+}
+const FAULT_GUTTER = /* @__PURE__ */ new Fault()
+const FAULT_LINE = /* @__PURE__ */ Decoration.line({ class: 'cm-fault' })
+const FAULT_AT = /* @__PURE__ */ Decoration.mark({ class: 'cm-fault-at' })
+
+type Verdict = { check: JsonCheck; marks: DecorationSet; gutter: RangeSet<GutterMarker> }
+
+function judge(state: EditorState, text: boolean): Verdict {
+  const check = checkJson(state.doc.toString(), { text })
+  if (check.kind !== 'error') return { check, marks: Decoration.none, gutter: RangeSet.empty }
+  const at = Math.min(check.at, state.doc.length)
+  const line = state.doc.lineAt(at)
+  const end = Math.min(at + 1, line.to)
+  const ranges = [FAULT_LINE.range(line.from), ...(end > at ? [FAULT_AT.range(at, end)] : [])]
+  return { check, marks: Decoration.set(ranges, true), gutter: RangeSet.of([FAULT_GUTTER.range(line.from)]) }
+}
+
+/** The JSON verdict as editor state: recomputed on every edit, drawn as decorations. */
+const verdict = (text: boolean) =>
+  StateField.define<Verdict>({
+    create: (state) => judge(state, text),
+    update: (value, tr) => (tr.docChanged ? judge(tr.state, text) : value),
+    provide: (field) => [
+      EditorView.decorations.from(field, (v) => v.marks),
+      gutterLineClass.from(field, (v) => v.gutter),
+    ],
+  })
+
+const px = (v: string | number) => (typeof v === 'number' ? `${v}px` : v)
+
+export interface CodeEditorProps
+  extends Omit<YStackProps, 'children' | 'height' | 'minHeight' | 'maxHeight' | 'onChange'> {
+  /** A controlled value; omit it and set `defaultValue` to let the editor own its text. */
   value?: string
   defaultValue?: string
   language?: string
-  /** The height of the field; the toolbar sits above it, unsized. */
+  /** A fixed height. Omit it and the editor follows its text between `minHeight` and `maxHeight`. */
   height?: string | number
-  theme?: CodeEditorTheme
+  /** The shortest the editor gets when it follows its text, in px. */
+  minHeight?: number
+  /** The tallest it grows on its own, in px; past it the editor scrolls. */
+  maxHeight?: number
+  /** Whether the footer resizes the editor. Defaults to true unless `height` is set. */
+  resizable?: boolean
+  /** JSON only: text that does not open an object or an array is plain text, not an error. */
+  allowText?: boolean
   onChange?: (value: string) => void
-  /** Called once, after mount, with the field's `<textarea>`. */
-  onMount?: (element: HTMLTextAreaElement) => void
+  /** JSON only: the verdict on the text, after mount and after every edit. */
+  onCheck?: (check: JsonCheck) => void
+  /** Called once, after mount, with the CodeMirror view. */
+  onMount?: (view: EditorView) => void
   readOnly?: boolean
   lineNumbers?: boolean
-  /** Accepted and ignored: a plain text field has no surface to draw a minimap on. */
-  minimap?: boolean
   wordWrap?: CodeEditorWordWrap
   fontSize?: number
+  /** Shown while the editor is empty. */
+  placeholder?: string
   showCopyButton?: boolean
+  /** Defaults to true for editable JSON. */
+  showFormatButton?: boolean
   showLanguageSelector?: boolean
   availableLanguages?: readonly string[]
   /**
-   * The field's accessible name. A text field with none is announced as
-   * "edit text" with nothing to say what it holds; a file's path is the usual
-   * answer. Defaults to "Code".
+   * The editor's accessible name. An editing surface with none is announced
+   * with nothing to say what it holds; a file's path is the usual answer.
+   * Defaults to "Code".
    */
   label?: string
 }
@@ -127,61 +313,207 @@ export function CodeEditor({
   value,
   defaultValue = '',
   language = 'javascript',
-  height = '400px',
-  theme = 'auto',
+  height,
+  minHeight = 96,
+  maxHeight = 480,
+  resizable = height === undefined,
+  allowText = false,
   onChange,
+  onCheck,
   onMount,
   readOnly = false,
   lineNumbers = true,
-  minimap: _minimap,
   wordWrap = 'on',
   fontSize = 14,
+  placeholder,
   showCopyButton = true,
+  showFormatButton,
   showLanguageSelector = true,
   availableLanguages = LANGUAGES,
   label = 'Code',
   ...props
 }: CodeEditorProps) {
-  const [typed, setTyped] = React.useState(defaultValue)
-  const text = value ?? typed
   const [selected, setSelected] = React.useState(language)
+  const [text, setText] = React.useState(value ?? defaultValue)
+  const [check, setCheck] = React.useState<JsonCheck | null>(null)
   const [copied, setCopied] = React.useState(false)
-  const [scrollTop, setScrollTop] = React.useState(0)
-  const field = React.useRef<HTMLTextAreaElement | null>(null)
+  const [dragged, setDragged] = React.useState<number | null>(null)
+
+  const host = React.useRef<HTMLElement | null>(null)
+  const grip = React.useRef<HTMLElement | null>(null)
+  const view = React.useRef<EditorView | null>(null)
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const listeners = React.useRef({ onChange, onCheck })
+  listeners.current = { onChange, onCheck }
 
-  React.useEffect(() => {
-    if (field.current) onMount?.(field.current)
-    return () => clearTimeout(timer.current)
-  }, [])
-
-  // Bound directly rather than through the gui field's `onScroll` prop: native
-  // `scroll` does not bubble, and a listener attached this way fires however
-  // the offset changed — a real drag or a test stating it outright.
-  React.useEffect(() => {
-    const el = field.current
-    if (!el) return
-    const onScroll = () => setScrollTop(el.scrollTop)
-    el.addEventListener('scroll', onScroll)
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [])
-
-  const change = React.useCallback(
-    (next: string) => {
-      setTyped(next)
-      onChange?.(next)
-    },
-    [onChange],
+  const compartments = React.useMemo(
+    () => ({ language: new Compartment(), gutter: new Compartment(), wrap: new Compartment(), edit: new Compartment() }),
+    [],
   )
+  const isJson = selected === 'json'
+  const field = React.useMemo(() => verdict(allowText), [allowText])
+  const judged = React.useRef<{ field: typeof field; seen?: Verdict }>({ field })
+  judged.current.field = field
 
-  const key = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const el = e.currentTarget
-    if (e.key === 'Escape') el.blur()
-    if (e.key !== 'Tab' || e.shiftKey || readOnly) return
-    e.preventDefault()
-    el.setRangeText(INDENT, el.selectionStart ?? 0, el.selectionEnd ?? 0, 'end')
-    change(el.value)
+  const grammar = () => (isJson ? [json(), field] : [])
+  const gutter = () => (lineNumbers ? [numbering(), highlightActiveLineGutter()] : [])
+  const wrap = () => (wordWrap === 'off' ? [] : [EditorView.lineWrapping, hang])
+  const edit = () => [EditorState.readOnly.of(readOnly), EditorView.editable.of(!readOnly)]
+
+  /** Report the JSON verdict when it changed (an edit, or a new grammar). */
+  const report = (state: EditorState) => {
+    const v = state.field(judged.current.field, false)
+    if (v === judged.current.seen) return
+    judged.current.seen = v
+    setCheck(v ? v.check : null)
+    if (v) listeners.current.onCheck?.(v.check)
   }
+
+  const format = React.useCallback(() => {
+    const v = view.current
+    if (!v || v.state.readOnly) return false
+    const current = v.state.doc.toString()
+    const next = formatJson(current)
+    if (next === null || next === current) return false
+    v.dispatch({ changes: { from: 0, to: current.length, insert: next } })
+    return true
+  }, [])
+
+  React.useEffect(() => {
+    const parent = host.current
+    if (!parent) return
+    const listen = EditorView.updateListener.of((update: ViewUpdate) => {
+      if (update.docChanged && !update.transactions.some((tr) => tr.annotation(External))) {
+        const next = update.state.doc.toString()
+        setText(next)
+        listeners.current.onChange?.(next)
+      }
+      report(update.state)
+    })
+    const editor = new EditorView({
+      parent,
+      state: EditorState.create({
+        doc: value ?? defaultValue,
+        extensions: [
+          compartments.gutter.of(gutter()),
+          history(),
+          drawSelection(),
+          indentOnInput(),
+          bracketMatching(),
+          highlightActiveLine(),
+          syntaxHighlighting(INK),
+          keymap.of([
+            { key: 'Shift-Alt-f', run: format },
+            indentWithTab,
+            ...defaultKeymap,
+            ...historyKeymap,
+            {
+              key: 'Escape',
+              run: (v) => {
+                v.contentDOM.blur()
+                return true
+              },
+            },
+          ]),
+          compartments.language.of(grammar()),
+          compartments.wrap.of(wrap()),
+          compartments.edit.of(edit()),
+          placeholder ? hint(placeholder) : [],
+          EditorView.contentAttributes.of({ 'aria-label': label, 'data-slot': 'code-editor-content' }),
+          FRAME,
+          listen,
+        ],
+      }),
+    })
+    view.current = editor
+    report(editor.state)
+    onMount?.(editor)
+    return () => {
+      editor.destroy()
+      view.current = null
+      clearTimeout(timer.current)
+    }
+  }, [])
+
+  // Props that reshape the editor reach it as a reconfiguration, not a remount,
+  // so the caret, the selection and the undo history survive.
+  React.useEffect(() => {
+    view.current?.dispatch({
+      effects: [
+        compartments.language.reconfigure(grammar()),
+        compartments.gutter.reconfigure(gutter()),
+        compartments.wrap.reconfigure(wrap()),
+        compartments.edit.reconfigure(edit()),
+      ],
+    })
+  }, [isJson, field, lineNumbers, wordWrap, readOnly])
+
+  // A controlled value that moved out from under the editor replaces the text.
+  React.useEffect(() => {
+    const v = view.current
+    if (!v || value === undefined) return
+    const current = v.state.doc.toString()
+    if (value === current) return
+    v.dispatch({ changes: { from: 0, to: current.length, insert: value }, annotations: External.of(true) })
+    setText(value)
+  }, [value])
+
+  React.useEffect(() => {
+    const dom = view.current?.dom
+    if (!dom) return
+    dom.style.fontSize = `${fontSize}px`
+    const fixed = dragged !== null ? `${dragged}px` : height !== undefined ? px(height) : ''
+    dom.style.height = fixed
+    dom.style.minHeight = fixed ? '' : `${minHeight}px`
+    dom.style.maxHeight = fixed ? '' : `${maxHeight}px`
+    view.current?.requestMeasure()
+  }, [dragged, height, minHeight, maxHeight, fontSize])
+
+  React.useEffect(() => {
+    const el = grip.current
+    if (!el || !resizable) return
+    let pointer = -1
+    let startY = 0
+    let startH = 0
+    const current = () => view.current?.dom.getBoundingClientRect().height ?? minHeight
+    const down = (e: PointerEvent) => {
+      if (e.button !== 0) return
+      e.preventDefault()
+      pointer = e.pointerId
+      startY = e.clientY
+      startH = current()
+      el.setPointerCapture?.(pointer)
+    }
+    const move = (e: PointerEvent) => {
+      if (e.pointerId !== pointer) return
+      setDragged(Math.max(minHeight, Math.round(startH + e.clientY - startY)))
+    }
+    const up = (e: PointerEvent) => {
+      if (e.pointerId !== pointer) return
+      el.releasePointerCapture?.(pointer)
+      pointer = -1
+    }
+    const key = (e: KeyboardEvent) => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
+      e.preventDefault()
+      setDragged(Math.max(minHeight, Math.round(current() + (e.key === 'ArrowDown' ? STEP : -STEP))))
+    }
+    const reset = () => setDragged(null)
+    el.addEventListener('pointerdown', down)
+    el.addEventListener('pointermove', move)
+    el.addEventListener('pointerup', up)
+    el.addEventListener('pointercancel', up)
+    el.addEventListener('keydown', key)
+    el.addEventListener('dblclick', reset)
+    return () => {
+      el.removeEventListener('pointerdown', down)
+      el.removeEventListener('pointermove', move)
+      el.removeEventListener('pointerup', up)
+      el.removeEventListener('pointercancel', up)
+      el.removeEventListener('keydown', key)
+      el.removeEventListener('dblclick', reset)
+    }
+  }, [resizable, minHeight])
 
   const copy = React.useCallback(async () => {
     try {
@@ -195,10 +527,12 @@ export function CodeEditor({
     }
   }, [text])
 
-  const named = theme === 'auto' ? undefined : PALETTE[theme]
-  const lineHeight = `${fontSize * LEADING}px`
-  const wrap = wordWrap !== 'off'
-  const gutter = Array.from({ length: text.split('\n').length }, (_, i) => i + 1).join('\n')
+  // A percentage height fills a frame that is itself sized; the body has to flex for it to
+  // resolve. Any other height is the editor's own, so the body is just as tall as the editor.
+  const fills = typeof height === 'string' && height.endsWith('%')
+  const formattable = showFormatButton ?? (isJson && !readOnly)
+  const toolbar = showLanguageSelector || showCopyButton || formattable
+  const footer = resizable || (isJson && check !== null)
 
   return (
     <YStack
@@ -208,22 +542,23 @@ export function CodeEditor({
       rounded="$3"
       overflow="hidden"
       bg="$background"
-      style={named && { backgroundColor: named.bg, borderColor: named.border }}
+      focusWithinStyle={{ borderColor: '$outlineColor' }}
       {...props}
     >
-      {(showLanguageSelector || showCopyButton) && (
+      {toolbar && (
         <XStack
           {...slot('code-editor-toolbar')}
           items="center"
-          justify={showLanguageSelector ? 'space-between' : 'flex-end'}
+          justify="space-between"
+          flexWrap="wrap"
+          gap="$2"
           borderBottomWidth={1}
           borderColor="$borderColor"
           bg="$panel"
-          px="$3"
-          py="$2"
-          style={named && { backgroundColor: named.head, borderColor: named.border }}
+          px="$2"
+          py="$1"
         >
-          {showLanguageSelector && (
+          {showLanguageSelector ? (
             <Select value={selected} onValueChange={setSelected}>
               <SelectTrigger
                 {...slot('code-editor-language-trigger')}
@@ -234,7 +569,7 @@ export function CodeEditor({
                 gap="$1.5"
                 px="$2"
               >
-                <SizableText size="$1" fontFamily="$mono" style={named && { color: named.fg }}>
+                <SizableText size="$1" fontFamily="$mono">
                   {LABEL[selected] ?? selected}
                 </SizableText>
               </SelectTrigger>
@@ -246,81 +581,106 @@ export function CodeEditor({
                 ))}
               </SelectContent>
             </Select>
+          ) : (
+            <SizableText {...slot('code-editor-language')} size="$1" fontFamily="$mono" color="$soft" px="$2">
+              {LABEL[selected] ?? selected}
+            </SizableText>
           )}
-          {showCopyButton && (
-            <Button
-              {...slot('code-editor-copy-button')}
-              variant="ghost"
-              size="sm"
-              disabled={!text}
-              onClick={copy}
-            >
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-              {copied ? 'Copied!' : 'Copy'}
-            </Button>
-          )}
+          <XStack items="center" justify="flex-end" flexWrap="wrap" gap="$1" shrink={1} minW={0}>
+            {formattable && (
+              <Button
+                {...slot('code-editor-format-button')}
+                variant="ghost"
+                size="sm"
+                disabled={check?.kind !== 'json'}
+                onClick={format}
+              >
+                <AlignLeft size={14} />
+                Format
+              </Button>
+            )}
+            {showCopyButton && (
+              <Button
+                {...slot('code-editor-copy-button')}
+                variant="ghost"
+                size="sm"
+                disabled={!text}
+                onClick={copy}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? 'Copied!' : 'Copy'}
+              </Button>
+            )}
+          </XStack>
         </XStack>
       )}
-      <XStack {...slot('code-editor-body')} overflow="hidden" style={{ height }}>
-        {lineNumbers && (
-          <YStack
-            {...slot('code-editor-gutter')}
-            width={48}
-            overflow="hidden"
-            borderRightWidth={1}
-            borderColor="$borderColor"
-            bg="$panel"
-            py={RISER}
-            style={named && { backgroundColor: named.head, borderColor: named.border }}
-          >
-            <SizableText
-              size="$1"
-              fontFamily="$mono"
-              color="$soft"
-              px="$2"
-              whiteSpace="pre"
-              style={{
-                fontSize,
-                lineHeight,
-                textAlign: 'right',
-                transform: `translateY(${-scrollTop}px)`,
-                ...(named && { color: named.gutter }),
-              }}
-            >
-              {gutter}
-            </SizableText>
-          </YStack>
-        )}
-        <TextArea
-          ref={field as never}
-          {...slot('code-editor-textarea')}
-          aria-label={label}
-          value={text}
-          onChangeText={change}
-          onKeyDown={key}
-          readOnly={readOnly}
-          unstyled
-          flex={1}
-          minH={0}
-          borderWidth={0}
-          rounded={0}
-          px="$2"
-          py={RISER}
-          fontFamily="$mono"
-          color="$color"
-          bg="transparent"
-          style={{
-            fontSize,
-            lineHeight,
-            whiteSpace: wrap ? 'pre-wrap' : 'pre',
-            overflowWrap: wrap ? 'break-word' : 'normal',
-            overflow: 'auto',
-            resize: 'none',
-            height: '100%',
-            ...(named && { color: named.fg }),
-          }}
-        />
-      </XStack>
+      <YStack ref={host as never} {...slot('code-editor-body')} {...(fills && { flex: 1, minH: 0 })} />
+      {footer && (
+        <XStack
+          ref={grip as never}
+          {...slot('code-editor-footer')}
+          {...(resizable &&
+            ({
+              role: 'separator',
+              'aria-orientation': 'horizontal',
+              'aria-label': `Resize ${label}`,
+              'aria-valuemin': minHeight,
+              'aria-valuenow': dragged ?? undefined,
+              tabIndex: 0,
+            } as object))}
+          cursor={resizable ? 'row-resize' : undefined}
+          focusVisibleStyle={{ bg: '$hover' }}
+          items="center"
+          justify="space-between"
+          gap="$2"
+          minH={28}
+          px="$3"
+          py="$1"
+          borderTopWidth={1}
+          borderColor="$borderColor"
+          bg="$panel"
+          select="none"
+        >
+          <Status check={isJson ? check : null} />
+          {resizable && <GripHorizontal size={14} color="$soft" />}
+        </XStack>
+      )}
     </YStack>
+  )
+}
+
+/** The footer's JSON verdict, announced politely when it changes. */
+function Status({ check }: { check: JsonCheck | null }) {
+  const bad = check?.kind === 'error'
+  const words =
+    check === null
+      ? ''
+      : check.kind === 'error'
+        ? `Line ${check.line}, column ${check.column}: ${check.message}`
+        : check.kind === 'text'
+          ? 'Plain text'
+          : check.kind === 'empty'
+            ? 'Empty'
+            : 'Valid JSON'
+  return (
+    <XStack {...slot('code-editor-status')} aria-live="polite" items="center" gap="$1.5" flex={1} minW={0}>
+      {bad ? (
+        <CircleAlert size={14} color="$bad" />
+      ) : check?.kind === 'text' ? (
+        <Type size={14} color="$soft" />
+      ) : check?.kind === 'json' ? (
+        <CircleCheck size={14} color="$soft" />
+      ) : null}
+      <SizableText
+        {...slot('code-editor-status-text')}
+        data-kind={check?.kind}
+        size="$1"
+        fontFamily="$mono"
+        color={bad ? '$bad' : '$soft'}
+        numberOfLines={2}
+      >
+        {words}
+      </SizableText>
+    </XStack>
   )
 }
