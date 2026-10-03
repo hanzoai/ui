@@ -221,6 +221,16 @@ describe("talk", () => {
     expect(tracks[0]?.stop).toHaveBeenCalled();
   });
 
+  it("makes its audio context inside the click, before any await", async () => {
+    const { scope } = browser();
+    const { on } = ears();
+    Context.last = null;
+    const opening = talk({ baseUrl: "https://api.example", fetch: ticketing() as unknown as typeof globalThis.fetch }, on, scope).open();
+    // Safari runs only a context made in the gesture; the permission prompt ends it.
+    expect(Context.last).not.toBeNull();
+    await opening;
+  });
+
   it("names a microphone that was refused", async () => {
     const { scope } = browser({ denied: true });
     const { heard, on } = ears();

@@ -25,11 +25,25 @@ export function refusal(error: unknown): "denied" | "absent" {
   return name === "NotFoundError" || name === "OverconstrainedError" ? "absent" : "denied";
 }
 
-/** A running tap. Closing it releases the audio graph, not the stream. */
+/** A running tap. Closing it releases the audio graph and its context, not the
+ *  stream. */
 export interface Tap {
   /** The context the tap runs in, for a leg that also plays audio back. */
   context: AudioContext;
   close(): void;
+}
+
+/**
+ * An AudioContext, made NOW. Call it inside the click that opens the mic, before
+ * any await: Safari only lets a context run that was made or resumed in a user
+ * gesture, and one made after the permission prompt sits suspended, taps nothing
+ * and plays nothing. Resumed for the browsers that start it suspended anyway.
+ */
+export function audioContext(scope: unknown = globalThis): AudioContext {
+  const Context = (scope as { AudioContext?: typeof AudioContext })?.AudioContext ?? globalThis.AudioContext;
+  const made = new Context();
+  if (made.state === "suspended") void made.resume?.().catch(() => {});
+  return made;
 }
 
 // The worklet copies each render quantum out to the main thread. Inlined as a
@@ -51,14 +65,10 @@ export async function tap(
   frame: number,
   on: (pcm: Int16Array, level: number) => void,
   scope: unknown = globalThis,
+  made?: AudioContext,
 ): Promise<Tap> {
-  const g = scope as {
-    AudioContext?: typeof AudioContext;
-    AudioWorkletNode?: typeof AudioWorkletNode;
-  };
-  const Context = g.AudioContext ?? globalThis.AudioContext;
-  const Node = g.AudioWorkletNode ?? globalThis.AudioWorkletNode;
-  const context = new Context();
+  const Node = (scope as { AudioWorkletNode?: typeof AudioWorkletNode })?.AudioWorkletNode ?? globalThis.AudioWorkletNode;
+  const context = made ?? audioContext(scope);
   const url = URL.createObjectURL(new Blob([WORKLET], { type: "application/javascript" }));
   try {
     await context.audioWorklet.addModule(url);

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { capability, streamBlocker } from "./capability.js";
-import { capture, RATE, refusal, tap } from "./mic.js";
+import { audioContext, capture, RATE, refusal, tap } from "./mic.js";
 import type { Tap } from "./mic.js";
 import { REASON } from "./types.js";
 import type { Blocker, Refusal, Said, Speech, State, Stream } from "./types.js";
@@ -128,9 +128,12 @@ export function transcript(
         heard.refused(new Error("Transcript failed: this transport has no live transcript"));
         return;
       }
+      // Made before the first await, so it is made inside the click (Safari).
+      const made = audioContext(scope);
       try {
         stream = await capture(scope);
       } catch (error) {
+        void made.close();
         heard.fail(refusal(error));
         return;
       }
@@ -147,8 +150,10 @@ export function transcript(
             void drain();
           },
           scope,
+          made,
         );
       } catch (error) {
+        if (!mic) void made.close();
         fault(error);
       }
     },

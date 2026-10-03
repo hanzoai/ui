@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { capability, streamBlocker } from "./capability.js";
-import { base64, capture, RATE, refusal, samples, tap } from "./mic.js";
+import { audioContext, base64, capture, RATE, refusal, samples, tap } from "./mic.js";
 import type { Tap } from "./mic.js";
 import { REASON } from "./types.js";
 import type { Blocker, Refusal, State } from "./types.js";
@@ -148,9 +148,12 @@ export function talk(config: TalkConfig, heard: Talked, scope: unknown = globalT
   return {
     async open() {
       if (sock || closed) return;
+      // Made before the first await, so it is made inside the click (Safari).
+      const made = audioContext(scope);
       try {
         stream = await capture(scope);
       } catch (error) {
+        void made.close();
         heard.fail(refusal(error));
         return;
       }
@@ -158,11 +161,15 @@ export function talk(config: TalkConfig, heard: Talked, scope: unknown = globalT
       try {
         pass = await ticket();
       } catch (error) {
+        void made.close();
         end();
         heard.refused(error as Error);
         return;
       }
-      if (closed) return;
+      if (closed) {
+        void made.close();
+        return;
+      }
       const url = `${base.replace(/^http/, "ws")}/v1/voice?ticket=${encodeURIComponent(pass)}`;
       const socket = new Socket(url, ["realtime"]);
       sock = socket;
@@ -209,6 +216,7 @@ export function talk(config: TalkConfig, heard: Talked, scope: unknown = globalT
             }
           },
           scope,
+          made,
         ).then(
           (opened) => {
             if (closed) return opened.close();

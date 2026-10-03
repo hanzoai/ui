@@ -72,6 +72,10 @@ API; this file carries only what the source cannot say for itself.
   transcript takes `max_seconds` of audio; at five seconds short it is closed
   and the next opened, and what it settled stays in front. `settled` is text
   that will not change; `partial` is everything, tail included.
+- The streaming legs make their AudioContext (`audioContext`) at the top of
+  `open()`, before the first await, so it is made inside the click: Safari runs
+  only a context made or resumed in a gesture, and one made after the permission
+  prompt taps and plays nothing.
 - `src/mic.ts` is the one microphone: `capture` (the permission ask), `tap`
   (an inlined AudioWorklet averaging the context rate down to 16 kHz pcm16 — the
   average is the low-pass a plain decimation lacks) and the base64 codec. The
