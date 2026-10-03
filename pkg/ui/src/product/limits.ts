@@ -83,6 +83,8 @@ export interface LimitNotice {
   actions: LimitAction[]
   resets_at: string | null
   fallback: string | null
+  /** A billing refusal is part of it: the reader has been turned away, not only read as limited. */
+  refused: boolean
 }
 
 export const CLASSES: readonly LimitClass[] = ['premium', 'ours', 'free']
@@ -315,6 +317,7 @@ export function noticeOf(
     actions: limits?.actions.length ? limits.actions : (refusal?.actions ?? []),
     resets_at: resets,
     fallback,
+    refused: refusal !== null,
   }
 }
 

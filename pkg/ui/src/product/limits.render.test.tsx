@@ -97,6 +97,16 @@ describe('LimitedBanner', () => {
     expect(m).toContain('role="status"')
   })
 
+  it('offers See usage only when the host has a usage page', () => {
+    expect(words(html(<LimitedBanner message="m" actions={actions} />))).not.toContain('See usage')
+    let seen = 0
+    const { host, unmount } = mount(<LimitedBanner message="m" actions={actions} onUsage={() => seen++} />)
+    const button = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('See usage'))!
+    act(() => button.click())
+    expect(seen).toBe(1)
+    unmount()
+  })
+
   it('hands a pressed action to the host', () => {
     const took: LimitAction[] = []
     const { host, unmount } = mount(<LimitedBanner message="m" actions={actions} onAction={(a) => took.push(a)} />)
@@ -123,7 +133,7 @@ describe('PlanUsage', () => {
     const m = html(
       <PlanUsage
         limits={limitsOf(LIMITED)!}
-        notice={{ reason: 'plan_allowance_used', classes: ['premium'], message: 'Premium models are paused until Oct 31.', actions: limitsOf(LIMITED)!.actions, resets_at: null, fallback: null }}
+        notice={{ reason: 'plan_allowance_used', classes: ['premium'], message: 'Premium models are paused until Oct 31.', actions: limitsOf(LIMITED)!.actions, resets_at: null, fallback: null, refused: false }}
         now={NOW}
       />,
     )
@@ -171,6 +181,26 @@ describe('useLimits', () => {
     await flush()
     expect(got!.notice?.message).toMatch(/You're chatting on Zen Free\.$/)
     expect(read.mock.calls.length).toBeGreaterThan(calls)
+    unmount()
+  })
+
+  it('keeps a refusal once the limits read again and still say limited', async () => {
+    let got: UseLimits | null = null
+    const { unmount } = mount(<Probe read={async () => LIMITED} onRead={(u) => (got = u)} />)
+    await flush()
+    expect(got!.notice?.refused).toBe(false)
+    await act(async () => {
+      observe(
+        new Response(JSON.stringify({ error: { type: 'billing_error', code: 'plan_allowance_used', message: 'm', class: 'premium' } }), {
+          status: 402,
+          headers: { 'content-type': 'application/json' },
+        }),
+      )
+      await new Promise((r) => setTimeout(r, 0))
+    })
+    await flush()
+    await flush()
+    expect(got!.notice?.refused).toBe(true)
     unmount()
   })
 

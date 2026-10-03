@@ -1,9 +1,10 @@
 'use client'
 
 /**
- * LimitedBanner — the reader's usage is paused or refused: the server's message
- * and the ways past it (Upgrade, Add prepaid credit). Neutral chrome; the dot
- * is the one status colour.
+ * LimitedBanner — the reader's usage is paused or refused: the server's message,
+ * the ways past it (Upgrade, Add prepaid credit) and, where the host has one, a
+ * quiet "See usage" to its usage settings. One line where it fits. Neutral
+ * chrome; the dot is the one status colour.
  */
 import { Text, View, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
@@ -17,6 +18,8 @@ export interface LimitedBannerProps {
   actions?: readonly LimitAction[]
   /** Takes an action; by default the page goes to its URL. */
   onAction?: (action: LimitAction) => void
+  /** Opens the host's usage settings; draws "See usage" when given. */
+  onUsage?: () => void
   onClose?: () => void
 }
 
@@ -24,7 +27,7 @@ const go = (a: LimitAction) => {
   if (typeof window !== 'undefined') window.location.assign(a.url)
 }
 
-export function LimitedBanner({ message, actions = [], onAction = go, onClose }: LimitedBannerProps) {
+export function LimitedBanner({ message, actions = [], onAction = go, onUsage, onClose }: LimitedBannerProps) {
   return (
     <XStack
       role="status"
@@ -47,8 +50,8 @@ export function LimitedBanner({ message, actions = [], onAction = go, onClose }:
           {message}
         </Text>
       </XStack>
-      {actions.length ? (
-        <XStack gap="$2" shrink={0} flexWrap="wrap">
+      {actions.length || onUsage ? (
+        <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
           {actions.map((a) => (
             <Button
               key={`${a.kind}:${a.url}`}
@@ -60,6 +63,11 @@ export function LimitedBanner({ message, actions = [], onAction = go, onClose }:
               {a.label}
             </Button>
           ))}
+          {onUsage ? (
+            <Button size="sm" variant="ghost" data-kind="usage" onPress={onUsage}>
+              See usage
+            </Button>
+          ) : null}
         </XStack>
       ) : null}
       {onClose ? (

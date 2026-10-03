@@ -148,6 +148,8 @@ describe('noticeOf', () => {
     expect(n.message).toBe('Premium models are paused until Oct 31.')
     expect(n.classes).toEqual(['premium'])
     expect(n.actions.map((a) => a.label)).toEqual(['Upgrade', 'Add prepaid credit'])
+    expect(n.refused).toBe(false)
+    expect(n.fallback).toBeNull()
   })
 
   it('names the free model a fallback reply was answered on', () => {

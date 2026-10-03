@@ -771,6 +771,7 @@ export const Gallery = () => (
           message="Premium models are paused until Oct 31. You're chatting on Zen Free."
           actions={USAGE.actions}
           onAction={() => {}}
+          onUsage={() => {}}
           onClose={() => {}}
         />
         <PlanUsage limits={{ ...USAGE, state: 'ok', period_start: '2026-10-01T00:00:00Z', period_end: '2026-10-31T00:00:00Z' }} onAction={() => {}} />

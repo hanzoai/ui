@@ -541,6 +541,10 @@ for a short window); `LimitedBanner` is the message plus the server's actions.
 `ModelSelector`'s `paused` marks a paused class's models "Paused" and still picks.
 `PlanUsage` is the page block: plan name, period, `UsageMeter`, the plan's terms in
 plain words (`PLAN_TERMS`/`FREE_TERMS`) and the actions, led by the banner when paused.
+Placement: bars (`UsageMeter`, `PlanUsage`) render on a usage settings page only,
+never in a chat surface. A chat draws `LimitedBanner` only when the reader was
+turned away — `notice.fallback` or `notice.refused` — with `onUsage` opening its
+usage settings ("See usage"); it never draws a near note.
 
 ### Settings and catalogue pages — `@hanzo/ui/settings`, `@hanzo/ui/catalog`
 

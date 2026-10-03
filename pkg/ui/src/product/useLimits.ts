@@ -142,10 +142,10 @@ export function useLimits(
     if (drift && on) setNonce((n) => n + 1)
   }, [drift, on, heard.at])
 
-  // Once read again, a header still counts only while the limits agree the
-  // reader is limited: an upgrade or a top-up clears the notice at once.
+  // Once read again, what a served call said still counts only while the
+  // limits agree the reader is limited: an upgrade or a top-up clears it at once.
   const effective: Heard = useMemo(
-    () => (fresh ? heard : { served: limits?.state === 'limited' ? heard.served : null, refusal: null }),
+    () => (fresh || limits?.state === 'limited' ? heard : { served: null, refusal: null }),
     [fresh, heard, limits?.state],
   )
   const shown = useMemo(() => overlay(limits, effective), [limits, effective])
