@@ -29,3 +29,15 @@ if (typeof window !== 'undefined' && !window.matchMedia)
  */
 if (typeof document !== 'undefined')
   document.documentElement.style.setProperty('--hanzo-ui-styles', '1')
+
+/**
+ * jsdom's Range has no layout, so it has no `getClientRects`/`getBoundingClientRect`,
+ * and CodeMirror (`CodeEditor`) measures text through a Range on every update. It
+ * logs the TypeError rather than failing, which buried every editor suite in stack
+ * traces. An empty answer is the truthful one here: jsdom lays nothing out.
+ */
+if (typeof Range !== 'undefined' && !Range.prototype.getClientRects) {
+  const empty = { length: 0, item: () => null, [Symbol.iterator]: [][Symbol.iterator] }
+  Range.prototype.getClientRects = (() => empty) as unknown as Range['getClientRects']
+  Range.prototype.getBoundingClientRect = (() => new DOMRect()) as Range['getBoundingClientRect']
+}
