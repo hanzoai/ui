@@ -195,10 +195,19 @@ export function servedOf(headers: { get(name: string): string | null }): Served 
   }
 }
 
+/**
+ * The two limit codes the gateway sends as a 429 `rate_limit_error` rather than a
+ * `billing_error` (ai `routers/filter_balance.go` `limitReached`): they lift by
+ * themselves at a reset, so the wire calls them rate limits. They are still the
+ * plan speaking, and the reader is owed the same notice.
+ */
+const CAPS: readonly string[] = ['free_plan_cap', 'usage_cap_exceeded']
+
 /** A billing refusal's envelope, or null for any other error. */
 export function refusalOf(body: unknown, status: number, retryAfter?: string | null): Refusal | null {
   const e = record(record(body)?.error)
-  if (!e || e.type !== 'billing_error') return null
+  if (!e) return null
+  if (e.type !== 'billing_error' && !(e.type === 'rate_limit_error' && CAPS.includes(text(e.code) ?? ''))) return null
   const retry = retryAfter ? Number(retryAfter) : NaN
   return {
     status,

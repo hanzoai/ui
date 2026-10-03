@@ -121,6 +121,15 @@ describe('refusalOf', () => {
     }
   })
 
+  it('reads the two caps the gateway sends as a 429 rate_limit_error', () => {
+    for (const code of ['free_plan_cap', 'usage_cap_exceeded']) {
+      const r = refusalOf({ error: { type: 'rate_limit_error', code, message: `m-${code}`, class: 'ours' } }, 429, '600')!
+      expect(r).toMatchObject({ status: 429, code, message: `m-${code}`, class: 'ours', retry: 600 })
+    }
+    // Any other rate limit is not the plan speaking.
+    expect(refusalOf({ error: { type: 'rate_limit_error', code: 'rate_limit_exceeded', message: 'slow down' } }, 429)).toBeNull()
+  })
+
   it('is null for any other error', () => {
     expect(refusalOf({ error: { type: 'invalid_request_error', message: 'x' } }, 400)).toBeNull()
     expect(refusalOf({ message: 'x' }, 402)).toBeNull()

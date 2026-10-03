@@ -526,7 +526,9 @@ contrast left to the browser) and asserts zero violations.
 `product/limits.ts` is the `GET /v1/ai/limits` contract (also on `/product/pure`):
 `limitsOf` checks the body, `servedOf` reads a served call's `X-Hanzo-Usage`,
 `-Usage-Class`, `-Paid-By`, `-Fallback`, `-Usage-Reason`, and `refusalOf` reads the
-`billing_error` envelope of a 402/429. `classOf(id)` sorts a model into `premium`
+`billing_error` envelope of a 402/429 — and the 429 `rate_limit_error` the gateway
+sends for `free_plan_cap` and `usage_cap_exceeded` (ai `limitReached`: caps that lift
+by themselves are typed as rate limits), and no other rate limit. `classOf(id)` sorts a model into `premium`
 (third-party), `ours` (zen/enso/kai/jev) or `free`. `noticeOf` words a pause
 ("Premium models are paused until Oct 31. You're chatting on Zen Free.") or the
 server's message; `nearOf` is the one-line near note. Shares only — no copy here
