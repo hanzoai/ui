@@ -91,3 +91,4 @@ API; this file carries only what the source cannot say for itself.
   `LONGEST` (55 s) even mid-sentence, so no upload passes the minute. A spent day
   is `SpeechError` code `public_allowance_spent`, and `refused()` names it (`SPENT`)
   instead of the generic `REFUSED` note.
+- The mic that is pressed takes the conversation (`toggle` makes its composer the owner): a page composer and the shell footer bar mount together, and the words go where the click was, not to whichever mounted last.

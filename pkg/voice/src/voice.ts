@@ -240,9 +240,14 @@ export function useVoice(options: VoiceOptions): Voice {
       machine.live = false;
       close();
     } else {
+      // The mic that was pressed speaks for the page: its composer receives the
+      // turns, not whichever mounted last — a page's own composer and the shell's
+      // footer bar are both on screen, and the words belong where the click was.
+      machine.owners = [...machine.owners.filter((o) => o !== latest), latest];
+      machine.owner = latest;
       start(setBlocked);
     }
-  }, [blocked]);
+  }, [blocked, latest]);
 
   const say = useCallback(async (text: string, voice?: string) => {
     const said = text.trim();

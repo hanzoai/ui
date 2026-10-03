@@ -333,6 +333,28 @@ describe("a spoken conversation", () => {
   });
 
   
+  it("hands the turns to the composer whose mic was pressed, not the one mounted last", async () => {
+    const page = vi.fn();
+    const footer = vi.fn();
+    render(
+      <>
+        <Composer onUtterance={page} />
+        <Composer onUtterance={footer} />
+      </>,
+    );
+
+    const [mine] = screen.getAllByRole("button");
+    await act(async () => {
+      mine!.click();
+    });
+    act(() => Fake.live!.hear("into the page's field", true));
+    await act(async () => {
+      vi.advanceTimersByTime(1_000);
+    });
+    expect(page).toHaveBeenCalledWith("into the page's field");
+    expect(footer).not.toHaveBeenCalled();
+  });
+
   it("takes the microphone with it when the last composer leaves", async () => {
     // A mic with no surface to receive an utterance is an unstoppable mic.
     const view = render(<Composer onUtterance={() => {}} />);
