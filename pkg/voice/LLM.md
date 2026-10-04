@@ -79,6 +79,12 @@ API; this file carries only what the source cannot say for itself.
   reordered. 402, 403 and every other 4xx refuse at once; so does a failure
   streak, or a queue, older than `RETRY_WINDOW` (60 s, the gateway's rate
   window). Closing delivers the queue before the DELETE.
+- A 429 the client gives up on is worded as a limit, never an outage:
+  `refused()` reads "Today's Hanzo dictation limit is reached. It resets at
+  <time>", the time from `Retry-After` (or the seconds the message names, since
+  the header is only readable cross-origin where the edge exposes it), counted
+  from `SpeechError.at`. A surface draws `refused(refusal)`, never a fixed
+  `REFUSED` string, or a limit reads as "unavailable".
 - The streaming legs make their AudioContext (`audioContext`) at the top of
   `open()`, before the first await, so it is made inside the click: Safari runs
   only a context made or resumed in a gesture, and one made after the permission

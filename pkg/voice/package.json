@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/voice",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Bidirectional voice for a composer — open mic, live transcript, spoken replies, barge-in, and a talk socket. One machine and one button, shared by every Hanzo surface.",
   "type": "module",
   "main": "./dist/index.js",

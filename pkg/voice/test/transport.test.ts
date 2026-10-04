@@ -64,3 +64,43 @@ describe("the visitor's lane", () => {
     expect(refused({ service: "ear", error: other, covered: true })).toBe(REFUSED.covered);
   });
 });
+
+describe("a limit", () => {
+  const quota = (headers: Record<string, string>) =>
+    wire(() =>
+      Response.json(
+        { error: { message: "Usage limit reached for this 8h. It resets in 20440 seconds.", type: "quota_error", code: 429 } },
+        { status: 429, headers },
+      ),
+    );
+  const clock = (at: number) => new Date(at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+
+  it("is worded as the limit it is, with the moment it lifts from Retry-After", async () => {
+    const { send } = quota({ "Retry-After": "3600" });
+    const error = (await speech({ token: "t", fetch: send }).transcribe(audio(), {}).catch((e: unknown) => e)) as SpeechError;
+    expect(error.status).toBe(429);
+    expect(error.retry).toBe(3_600_000);
+    const lifts = clock(error.at + 3_600_000);
+    expect(refused({ service: "ear", error, covered: false })).toBe(`Today's Hanzo dictation limit is reached. It resets at ${lifts}.`);
+    expect(refused({ service: "ear", error, covered: true })).toBe(
+      `Today's Hanzo dictation limit is reached. It resets at ${lifts} — this browser is standing in.`,
+    );
+    expect(refused({ service: "mouth", error, covered: false })).toMatch(/^Today's Hanzo read-aloud limit is reached\./);
+  });
+
+  it("reads the moment from the message when the edge hides the header", async () => {
+    const { send } = quota({});
+    const error = (await speech({ token: "t", fetch: send }).transcribe(audio(), {}).catch((e: unknown) => e)) as SpeechError;
+    expect(error.retry).toBe(20_440_000);
+    expect(refused({ service: "ear", error, covered: false })).toBe(
+      `Today's Hanzo dictation limit is reached. It resets at ${clock(error.at + 20_440_000)}.`,
+    );
+  });
+
+  it("names no moment it was not told, and never reads as an outage", () => {
+    const error = new SpeechError("Transcript push failed (429): rate limit exceeded", 429);
+    expect(refused({ service: "ear", error, covered: false })).toBe("Today's Hanzo dictation limit is reached.");
+    expect(refused({ service: "ear", error, covered: true })).toBe("Today's Hanzo dictation limit is reached — this browser is standing in.");
+    for (const covered of [true, false]) expect(refused({ service: "ear", error, covered })).not.toMatch(/unavailable/i);
+  });
+});

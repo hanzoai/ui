@@ -66,10 +66,34 @@ export const SPENT: Record<"covered" | "lost", string> = {
   lost: "Today's free Hanzo dictation is used. Sign in to keep going.",
 };
 
-/** The note a refusal wears: the spent day by name, any other refusal as such. */
+/** What each half is called when its allowance is spent. */
+const LIMITED: Record<Refusal["service"], string> = {
+  ear: "dictation",
+  mouth: "read-aloud",
+  talk: "talk",
+};
+
+/**
+ * The note a refusal wears: the visitor's spent day by name; a 429 as the limit
+ * it is, with the moment it lifts when the platform said (`Retry-After`, else its
+ * message) — a limit is never worded as an outage; any other refusal as such.
+ */
 export function refused(refusal: Refusal): string {
-  const spent = (refusal.error as { code?: string }).code === "public_allowance_spent";
-  return (spent ? SPENT : REFUSED)[refusal.covered ? "covered" : "lost"];
+  const { code, status } = refusal.error as { code?: unknown; status?: number };
+  const side = refusal.covered ? "covered" : "lost";
+  if (code === "public_allowance_spent") return SPENT[side];
+  if (status !== 429) return REFUSED[side];
+  const at = resets(refusal.error);
+  const when = at ? ` It resets at ${at.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : "";
+  const said = `Today's Hanzo ${LIMITED[refusal.service]} limit is reached.${when}`;
+  if (refusal.covered) return `${said.replace(/\.$/, "")} — this browser is standing in.`;
+  return when ? `${said}.` : said;
+}
+
+/** When a limit lifts: the platform's `Retry-After` from the moment it answered. */
+function resets(error: Error): Date | null {
+  const { retry, at } = error as { retry?: number; at?: number };
+  return typeof retry === "number" && typeof at === "number" ? new Date(at + retry) : null;
 }
 
 /**

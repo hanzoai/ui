@@ -42,6 +42,8 @@ export class SpeechError extends Error {
   readonly status: number;
   readonly code?: string;
   readonly retry?: number;
+  /** When the platform answered, in ms since the epoch: `retry` counts from here. */
+  readonly at = Date.now();
   constructor(message: string, status: number, code?: string, retry?: number) {
     super(message);
     this.name = "SpeechError";
@@ -51,13 +53,21 @@ export class SpeechError extends Error {
   }
 }
 
-/** `Retry-After` in ms: delay-seconds or an HTTP date (RFC 9110 §10.2.3). */
-function after(header: string | null): number | undefined {
-  if (!header) return undefined;
-  const seconds = Number(header);
-  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
-  const at = Date.parse(header);
-  return Number.isNaN(at) ? undefined : Math.max(0, at - Date.now());
+/**
+ * The wait the platform asked for, in ms: `Retry-After` as delay-seconds or an
+ * HTTP date (RFC 9110 §10.2.3), else the seconds its message names ("retry after
+ * 12s", "resets in 20440 seconds") — the header is only readable cross-origin
+ * where the edge exposes it.
+ */
+function after(header: string | null, message: string): number | undefined {
+  if (header) {
+    const seconds = Number(header);
+    if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
+    const at = Date.parse(header);
+    if (!Number.isNaN(at)) return Math.max(0, at - Date.now());
+  }
+  const named = /(?:retry after|resets in) (\d+) ?s/i.exec(message);
+  return named ? Number(named[1]) * 1000 : undefined;
 }
 
 /**
@@ -82,8 +92,11 @@ export function speech(config: SpeechConfig = {}): Speech {
   const fail = async (response: Response, what: string): Promise<never> => {
     const body = await response.text().catch(() => "");
     let code: string | undefined;
+    let message = "";
     try {
-      code = (JSON.parse(body) as { error?: { code?: string } }).error?.code;
+      const error = (JSON.parse(body) as { error?: { code?: string; message?: string } }).error;
+      code = error?.code;
+      message = error?.message ?? "";
     } catch {
       code = undefined;
     }
@@ -91,7 +104,7 @@ export function speech(config: SpeechConfig = {}): Speech {
       `${what} failed (${response.status})${body ? `: ${body.slice(0, 200)}` : ""}`,
       response.status,
       code,
-      after(response.headers.get("Retry-After")),
+      after(response.headers.get("Retry-After"), message),
     );
   };
 
