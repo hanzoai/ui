@@ -36,14 +36,20 @@ afterEach(() => {
   host.remove()
 })
 
-const mount = (ui: React.ReactNode) =>
-  act(() => {
+/** Renders `ui`, and lets an open picker's menu — loaded on open — arrive. */
+const mount = async (ui: React.ReactNode) => {
+  await act(async () => {
     root.render(
       <GuiProvider config={config} defaultTheme="dark">
         {ui}
       </GuiProvider>,
     )
   })
+  await act(async () => {
+    await import('./ModelPickerMenu')
+  })
+  await act(async () => {})
+}
 
 /** 500 models: Hanzo's families and a long tail of third parties. */
 const MODELS = parseModels([
@@ -67,8 +73,8 @@ const key = (k: string) =>
   })
 
 describe('a picker over five hundred models', () => {
-  it('says how many it offers and draws only a window of them', () => {
-    mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
+  it('says how many it offers and draws only a window of them', async () => {
+    await mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
     // Every catalog model is offered, plus the research preview.
     expect(document.querySelector('[data-slot="model-picker-count"]')!.textContent).toBe('502 models')
     expect(options().length).toBeGreaterThan(5)
@@ -76,20 +82,20 @@ describe('a picker over five hundred models', () => {
     expect(options()[0]!.getAttribute('aria-setsize')).toBe('502')
   })
 
-  it("leads with Hanzo's families", () => {
-    mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
+  it("leads with Hanzo's families", async () => {
+    await mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
     const heads = [...document.querySelectorAll('[data-slot="model-picker-group"]')].map((el) => el.textContent)
     expect(heads.slice(0, 3)).toEqual(['Enso1', 'Zen2', 'Kai1'])
   })
 
-  it('narrows by search, and offers only what its scope runs', () => {
-    mount(<ModelPicker models={MODELS} onChange={() => {}} open scope="decision" />)
+  it('narrows by search, and offers only what its scope runs', async () => {
+    await mount(<ModelPicker models={MODELS} onChange={() => {}} open scope="decision" />)
     expect(options().map((o) => o.getAttribute('data-model'))).toEqual(['kai', 'typesafe/jev-1.13'])
   })
 
-  it('walks the keyboard past the window and picks with Enter', () => {
+  it('walks the keyboard past the window and picks with Enter', async () => {
     const onChange = vi.fn()
-    mount(<ModelPicker models={MODELS} onChange={onChange} open />)
+    await mount(<ModelPicker models={MODELS} onChange={onChange} open />)
     key('End')
     const last = document.getElementById(input().getAttribute('aria-activedescendant')!)
     // TypeSafe sorts after every lab: Jev is the last row.
@@ -98,9 +104,9 @@ describe('a picker over five hundred models', () => {
     expect(onChange).toHaveBeenCalledWith('typesafe/jev-1.13')
   })
 
-  it('labels a paused model and still picks it', () => {
+  it('labels a paused model and still picks it', async () => {
     const onChange = vi.fn()
-    mount(
+    await mount(
       <ModelPicker
         models={MODELS}
         onChange={onChange}
@@ -121,8 +127,8 @@ describe('a picker over five hundred models', () => {
     expect(onChange).toHaveBeenCalledWith('anthropic/claude-sonnet-4.5')
   })
 
-  it('unscoped, says what a model that does not converse does', () => {
-    mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
+  it('unscoped, says what a model that does not converse does', async () => {
+    await mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
     act(() => {
       const el = input()
       const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
@@ -133,9 +139,9 @@ describe('a picker over five hundred models', () => {
     expect(kai.textContent).toContain('50% less than Jev')
   })
 
-  it('says a router bills at the model that serves it, up to its ceiling', () => {
+  it('says a router bills at the model that serves it, up to its ceiling', async () => {
     const router = parseModels([{ id: 'typesafe/jev-router', owned_by: 'typesafe', name: 'Jev Router', class: 'premium', outputs: ['decision'], variable: true, pricing: { prompt: '0.000000042', completion: '0' } }])
-    mount(<ModelPicker models={[...MODELS, ...router]} onChange={() => {}} open />)
+    await mount(<ModelPicker models={[...MODELS, ...router]} onChange={() => {}} open />)
     act(() => {
       const el = input()
       const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
@@ -147,15 +153,31 @@ describe('a picker over five hundred models', () => {
     expect(row.textContent).not.toContain('less than')
   })
 
-  it('says the catalog could not be read, though the research preview is still listed', () => {
-    mount(<ModelPicker models={[]} onChange={() => {}} open error="The model catalog is down" />)
+  it('says the catalog could not be read, though the research preview is still listed', async () => {
+    await mount(<ModelPicker models={[]} onChange={() => {}} open error="The model catalog is down" />)
     expect(document.querySelector('[data-slot="model-picker-error"]')?.textContent).toBe('The model catalog is down')
     expect(options().map((o) => o.getAttribute('data-model'))).toEqual(['zen7'])
   })
 
-  it('never picks the research preview', () => {
+  it('draws the trigger alone until it is opened, then the list', async () => {
+    await mount(<ModelPicker models={MODELS} value="enso-auto" onChange={() => {}} />)
+    const trigger = document.querySelector<HTMLElement>('[data-slot="model-picker"]')!
+    expect(trigger.getAttribute('aria-label')).toBe('Model: Enso')
+    expect(trigger.getAttribute('aria-expanded')).toBe('false')
+    expect(options()).toHaveLength(0)
+    await act(async () => {
+      trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+    })
+    await act(async () => {
+      await import('./ModelPickerMenu')
+    })
+    await act(async () => {})
+    expect(options().length).toBeGreaterThan(5)
+  })
+
+  it('never picks the research preview', async () => {
     const onChange = vi.fn()
-    mount(<ModelPicker models={MODELS} onChange={onChange} open />)
+    await mount(<ModelPicker models={MODELS} onChange={onChange} open />)
     act(() => {
       const el = input()
       const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!

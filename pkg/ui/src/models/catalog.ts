@@ -73,28 +73,9 @@ export interface ModelCatalogEntry {
   request?: string
 }
 
-/**
- * The models that exist and cannot be called, said once for every list of
- * models: a picker draws each one disabled, a catalogue page draws it muted.
- * `/v1/models` never answers for one, so nothing can route to it.
- */
-export const RESEARCH: ModelCatalogEntry[] = [
-  {
-    id: 'zen7',
-    owned_by: 'zenlm',
-    family: 'zen',
-    name: 'Zen 7',
-    access: 'research',
-    request: 'https://hanzo.ai/research-access',
-    description: 'The next open-weight generation after Zen 6, in research preview.',
-  },
-]
-
-/** The catalog with the research models it does not already list, appended. */
-export function withResearch(models: readonly ModelCatalogEntry[]): ModelCatalogEntry[] {
-  const ids = new Set(models.map((m) => m.id))
-  return [...models, ...RESEARCH.filter((m) => !ids.has(m.id))]
-}
+// The research models live in their own module, so a page that names Zen 7
+// and nothing else carries that row and not the catalog.
+export { RESEARCH, withResearch } from './research'
 
 // ── reading the wire ─────────────────────────────────────────────────────────
 

@@ -68,7 +68,11 @@ pkg/ui/src/
   backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
   models/          ModelPicker (the one model picker: grouped, searchable,
-                   virtualised, a sheet on phones) + the catalog read from
+                   virtualised, a sheet on phones; the trigger alone until it
+                   is pointed at, focused or opened, when ModelPickerMenu —
+                   popover/sheet, search, list — loads in its own chunk;
+                   RESEARCH lives in research.ts so naming Zen 7 does not load
+                   the catalog) + the catalog read from
                    GET /v1/models fields alone (class, family, inputs,
                    outputs, supports_*, pricing). RESEARCH is the models nobody
                    can call yet; the picker appends them, disabled. A row sold
