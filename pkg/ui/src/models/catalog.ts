@@ -27,6 +27,7 @@ export type Capability =
   | 'image'
   | 'video'
   | 'audio'
+  | 'transcription'
   | 'decision'
   | 'tools'
   | 'reasoning'
@@ -309,7 +310,8 @@ export function capabilitiesOf(m: ModelCatalogEntry): Capability[] {
   if (rerank) out.push('rerank')
   if (has(m.outputs, 'image')) out.push('image')
   if (has(m.outputs, 'video')) out.push('video')
-  if (has(m.outputs, 'audio', 'transcript') || has(m.inputs, 'audio')) out.push('audio')
+  if (has(m.outputs, 'audio')) out.push('audio')
+  if (has(m.outputs, 'transcript')) out.push('transcription')
   if (decision) out.push('decision')
   if (m.supports_tools) out.push('tools')
   if (m.supports_reasoning) out.push('reasoning')
@@ -327,7 +329,8 @@ export const CAPABILITY_NAMES: Record<Capability, string> = {
   rerank: 'Rerank',
   image: 'Image',
   video: 'Video',
-  audio: 'Audio',
+  audio: 'Speech',
+  transcription: 'Transcription',
   decision: 'Decision',
   tools: 'Tools',
   reasoning: 'Reasoning',

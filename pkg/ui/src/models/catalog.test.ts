@@ -105,6 +105,9 @@ describe('what a model can do', () => {
     expect(capabilitiesOf(byId('kai'))).toEqual(['decision'])
     expect(capabilitiesOf(byId('google/gemini-3-pro-image'))).toEqual(['chat', 'image'])
     expect(capabilitiesOf(byId('zen-voice-mini'))).toEqual(['audio'])
+    expect(capabilitiesOf(parseModels([{ id: 'zen-scribe', outputs: ['transcript'] }])[0]!)).toEqual(['transcription'])
+    // A chat model that takes audio in speaks no audio out.
+    expect(capabilitiesOf(parseModels([{ id: 'g', inputs: ['text', 'audio'], outputs: ['text'] }])[0]!)).toEqual(['chat'])
   })
 })
 
