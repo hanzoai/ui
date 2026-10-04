@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { speech, SpeechError } from "../src/transport.js";
-import { backoff, RETRY_WINDOW, transcript } from "../src/transcript.js";
+import { backoff, gone, RETRY_WINDOW, transcript } from "../src/transcript.js";
 import type { Said, Speech, Stream } from "../src/types.js";
 
 class Port {
@@ -353,6 +353,88 @@ describe("a push the platform cannot take yet", () => {
     expect(delivered).toEqual([mark(1), mark(2)]);
     expect(stream.close).toHaveBeenCalledTimes(1);
     expect(got.refused).toEqual([]);
+  });
+});
+
+describe("a session the platform loses", () => {
+  const lostAt = (status: number) => new SpeechError(`Transcript push failed (${status})`, status);
+
+  /** Sessions in the order they are opened, each answering from its own script. */
+  function sessions(...scripts: (Error | Said)[][]) {
+    const made = scripts.map((script) => scripted(script));
+    let opened = 0;
+    const s: Speech = {
+      transcribe: async () => "",
+      stream: async () => {
+        const next = made[opened++];
+        if (!next) throw new SpeechError("Transcript failed (503)", 503);
+        return next.stream;
+      },
+    };
+    return { s, made, opened: () => opened };
+  }
+
+  for (const status of [404, 409]) {
+    it(`a ${status} mid-dictation opens a new session that takes the unanswered push and all after it, in order`, async () => {
+      const { s, made } = sessions(
+        [{ text: "In Paris,", pending: "the first", seconds: 0.25 }, lostAt(status)],
+        [
+          { text: "train", pending: "", seconds: 0.25 },
+          { text: "train", pending: "", seconds: 0.5 },
+        ],
+      );
+      const { got, heard } = listener();
+      const live = transcript(s, heard, { scope });
+      await live.open();
+      marked(1);
+      await settle();
+      marked(2);
+      await settle();
+      await settle();
+      marked(3);
+      await settle();
+      await settle();
+      expect(made[0]?.delivered).toEqual([mark(1)]);
+      expect(made[1]?.attempts[0]).toEqual([mark(2)]);
+      expect([...(made[1]?.delivered ?? [])]).toEqual([mark(2), mark(3)]);
+      expect(got.refused).toEqual([]);
+      expect(got.settled).toEqual(["In Paris,", "the first", "train"]);
+      expect(got.partial.at(-1)).toBe("In Paris, the first train");
+      await live.close();
+      expect(made[1]?.stream.close).toHaveBeenCalled();
+    });
+  }
+
+  it("a close answered 409 keeps what the session said rather than refusing", async () => {
+    const t = scripted([{ text: "Hello", pending: "there", seconds: 0.25 }]);
+    (t.stream.close as ReturnType<typeof vi.fn>).mockRejectedValueOnce(lostAt(409));
+    const s: Speech = { transcribe: async () => "", stream: async () => t.stream };
+    const { got, heard } = listener();
+    const live = transcript(s, heard, { scope });
+    await live.open();
+    marked(1);
+    await settle();
+    await live.close();
+    expect(got.refused).toEqual([]);
+    expect(got.settled).toEqual(["Hello", "there"]);
+  });
+
+  it("losing a session every push is the platform gone: it refuses after a few", async () => {
+    const { s, opened } = sessions(...Array.from({ length: 6 }, () => [lostAt(409)]));
+    const { got, heard } = listener();
+    const live = transcript(s, heard, { scope });
+    await live.open();
+    marked(1);
+    for (let i = 0; i < 10; i++) await settle();
+    expect(got.refused).toEqual(["Transcript push failed (409)"]);
+    expect(opened()).toBe(4);
+    expect(tracks[0]?.stop).toHaveBeenCalled();
+  });
+
+  it("402 and 403 still refuse; only a lost session reopens", () => {
+    expect(gone(lostAt(404))).toBe(true);
+    expect(gone(lostAt(409))).toBe(true);
+    for (const status of [400, 401, 402, 403, 413, 429, 503]) expect(gone(lostAt(status))).toBe(false);
   });
 });
 

@@ -44,6 +44,19 @@ export const RETRY_WINDOW = 60_000;
 const FIRST_WAIT = 500;
 const LONGEST_WAIT = 8_000;
 
+/**
+ * A session the platform no longer holds: 404 (gone, or idle past its life) or 409
+ * (opened by an instance that has since been replaced — a deploy restarts the
+ * process that holds the window). A new transcript carries on in its place.
+ */
+export function gone(error: unknown): boolean {
+  const { status } = (error ?? {}) as { status?: number };
+  return status === 404 || status === 409;
+}
+
+/** How many sessions may be lost in one `RETRY_WINDOW` before the platform is called gone. */
+const REOPENS = 3;
+
 /** A 429 that names one of these is a spent allowance, not a busy server. */
 const SPENT_CODES = ["free_plan_cap", "usage_cap_exceeded", "public_allowance_spent"];
 
@@ -82,8 +95,11 @@ export function backoff(error: unknown, attempt: number): number | null {
  * while new audio queues behind it, so nothing heard is dropped or reordered; it
  * refuses only on a final answer or after `RETRY_WINDOW` without delivering. A
  * transcript accepts a bounded length of audio, so near its end it is closed —
- * which settles its tail — and the next one opened in the same breath. Silence
- * is not billed: the speech service decodes and meters only what it hears.
+ * which settles its tail — and the next one opened in the same breath. A session
+ * the platform loses (`gone`: a deploy replaces the process that held it) is
+ * replaced the same way, its text kept and the audio it never answered for sent to
+ * the new one. Silence is not billed: the speech service decodes and meters only
+ * what it hears.
  */
 export function transcript(
   speech: Speech,
@@ -100,8 +116,11 @@ export function transcript(
   let queued = 0;
   let before = "";
   let settled = "";
+  let tail = "";
+  let lost: number[] = [];
 
   const report = (said: Said) => {
+    tail = said.pending;
     if (said.text.length > settled.length && said.text.startsWith(settled)) {
       const fresh = said.text.slice(settled.length).trim();
       if (fresh) heard.settled(fresh);
@@ -154,14 +173,43 @@ export function transcript(
 
   const begin = () => persist(() => (speech.stream as NonNullable<Speech["stream"]>)({ language: options.language }));
 
+  // What a lost session said is kept: its settled text and its last reading of
+  // the tail, which is the best decode of that audio there will be. It is settled
+  // here, in front of everything the next session hears.
+  const keep = () => {
+    const last = tail.trim();
+    if (last) heard.settled(last);
+    before = `${before} ${settled} ${last}`.replace(/\s+/g, " ").trim();
+    settled = "";
+    tail = "";
+  };
+
+  // The session is gone with the process that held it. The push it never answered
+  // goes back to the front of the queue and a new session takes it and everything
+  // heard since, in order. Losing more than REOPENS in a window is the platform
+  // gone, not a session.
+  const reopen = async (pcm: Int16Array, error: unknown) => {
+    const now = Date.now();
+    lost = lost.filter((at) => now - at < RETRY_WINDOW);
+    if (lost.length >= REOPENS) throw error;
+    lost.push(now);
+    keep();
+    waiting.unshift(pcm);
+    current = null;
+    current = await begin();
+  };
+
   // Close the full transcript and carry on in a new one. What it settled stays
   // in front of everything the next one hears.
   const roll = async () => {
     const full = current as Stream;
-    report(await persist(() => full.close(), alive(full)));
+    try {
+      report(await persist(() => full.close(), alive(full)));
+    } catch (error) {
+      if (!gone(error)) throw error;
+    }
     current = null;
-    before = `${before} ${settled}`.trim();
-    settled = "";
+    keep();
     current = await begin();
   };
 
@@ -184,7 +232,14 @@ export function transcript(
           at += part.length;
         }
         const into = current;
-        const said = await persist(() => into.push(pcm), alive(into));
+        let said: Said;
+        try {
+          said = await persist(() => into.push(pcm), alive(into));
+        } catch (error) {
+          if (!open || !gone(error)) throw error;
+          await reopen(pcm, error);
+          continue;
+        }
         if (!open) return; // refused while this push waited; that has been said
         queued -= pcm.length;
         report(said);
@@ -260,7 +315,9 @@ export function transcript(
       try {
         report(await persist(() => last.close(), alive(last)));
       } catch (error) {
-        heard.refused(error as Error);
+        // A session lost at the close still said what it said.
+        if (gone(error)) keep();
+        else heard.refused(error as Error);
       }
     },
   };

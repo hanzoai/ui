@@ -83,6 +83,11 @@ API; this file carries only what the source cannot say for itself.
   that long is dropped, so a long `Retry-After` is taken in steps, each retry
   keeping the session alive (measured: a 502 naming 60 s against a 30 s idle
   life came back to a 409, the session gone).
+- A session the platform loses is replaced, not refused (`gone`: 404, or 409
+  for an id an earlier process minted — a cloud deploy restarts the one replica
+  that holds every window). Its settled text and last tail are kept as settled,
+  the push it never answered goes to a new session first, then the queue. More
+  than three lost in `RETRY_WINDOW` is the platform gone and refuses.
 - A 429 the client gives up on is worded as a limit, never an outage:
   `refused()` reads "Today's Hanzo dictation limit is reached. It resets at
   <time>", the time from `Retry-After` (or the seconds the message names, since
