@@ -70,7 +70,8 @@ describe('Input size', () => {
   it('never hands `size` to gui, whose size variant would restate the box', () => {
     mount(<Input aria-label="a" size="lg" />)
     expect(host.querySelector('input')?.getAttribute('size')).toBeNull()
-    expect(cls('input')).not.toMatch(/_height-(?!46px)/)
+    // 46 on a pointer and, raised to the touch floor, still 46 under a thumb.
+    expect(cls('input')).not.toMatch(/_height-(?!46px|_touchable_46px)/)
   })
 })
 
