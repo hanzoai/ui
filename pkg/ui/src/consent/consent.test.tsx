@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { GuiProvider } from '@hanzo/gui'
 
@@ -26,6 +26,12 @@ describe('Consent', () => {
 
 describe('Consent, opened by the visitor', () => {
   it('stays open when the policy arrives after it was asked for', async () => {
+    // A US visitor, who is not asked until they open the choices: without this the
+    // runner's own zone decides, and a UTC runner is an opt-in region.
+    const zone = Intl.DateTimeFormat.prototype.resolvedOptions
+    const us = vi.spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions').mockImplementation(function (this: Intl.DateTimeFormat) {
+      return { ...zone.call(this), timeZone: 'America/New_York' }
+    })
     const { createRoot } = await import('react-dom/client')
     const { act } = await import('react')
     const { openConsent } = await import('./Consent')
@@ -48,5 +54,6 @@ describe('Consent, opened by the visitor', () => {
     expect(host.querySelector('[data-slot="consent"]'), 'the policy closed what the visitor opened').not.toBeNull()
     await act(async () => root.unmount())
     host.remove()
+    us.mockRestore()
   })
 })
