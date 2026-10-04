@@ -37,6 +37,9 @@ import { Sheet, SheetContent, SheetTitle } from '../backends/gui/sheet'
 import { slot } from '../backends/gui/slot'
 import { move, type Move } from '../product/chipSelect.logic'
 import {
+  CAPABILITY_NAMES,
+  can,
+  capabilitiesOf,
   formatContext,
   groupLabel,
   isPaused,
@@ -304,6 +307,9 @@ export function ModelPicker({
             const picked = m.id === value
             const ctx = formatContext(m.context_window)
             const title = modelName(m)
+            // A model that answers in something other than a conversation says
+            // what it does, so an unscoped list is honest about each row.
+            const kind = scope || can(m, 'chat') ? null : capabilitiesOf(m)[0]
             return (
               <XStack
                 key={m.id}
@@ -337,9 +343,9 @@ export function ModelPicker({
                     ✦
                   </SizableText>
                 ) : null}
-                {locked || paused || ctx ? (
+                {locked || paused || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} fontVariant={['tabular-nums']}>
-                    {locked ? 'Research preview' : paused ? 'Paused' : ctx}
+                    {locked ? 'Research preview' : paused ? 'Paused' : kind ? CAPABILITY_NAMES[kind] : ctx}
                   </SizableText>
                 ) : null}
               </XStack>

@@ -119,6 +119,18 @@ describe('a picker over five hundred models', () => {
     expect(onChange).toHaveBeenCalledWith('anthropic/claude-sonnet-4.5')
   })
 
+  it('unscoped, says what a model that does not converse does', () => {
+    mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
+    act(() => {
+      const el = input()
+      const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+      set.call(el, 'kai')
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    const kai = options().find((o) => o.getAttribute('data-model') === 'kai')!
+    expect(kai.textContent).toContain('Decision')
+  })
+
   it('never picks the research preview', () => {
     const onChange = vi.fn()
     mount(<ModelPicker models={MODELS} onChange={onChange} open />)
