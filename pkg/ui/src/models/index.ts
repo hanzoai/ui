@@ -10,10 +10,12 @@ export type { ModelPickerProps } from './ModelPicker'
 export {
   CAPABILITY_NAMES,
   CLASS_NAMES,
+  ENSO,
   FAMILIES,
   RESEARCH,
   can,
   capabilitiesOf,
+  defaultModel,
   fetchModelCatalog,
   formatContext,
   formatPrice,
@@ -43,7 +45,7 @@ export type {
 } from './catalog'
 export type { PausedModel } from '../product/limits'
 
-export { ENSO, defaultModel, pickerRows, visibleRange } from './picker.logic'
+export { pickerRows, visibleRange } from './picker.logic'
 export type { PickerRow } from './picker.logic'
 
 export type { ZenModelLike, ModelFamilyLike, ModelSpecLike, ModelPricingLike } from './types'

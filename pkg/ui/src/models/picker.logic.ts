@@ -1,11 +1,10 @@
 /**
  * ModelPicker's decisions, as pure functions over plain values: which rows are
- * drawn, which slice of them a scrolled viewport shows, and which model a new
- * conversation starts on. Tested in node.
+ * drawn, and which slice of them a scrolled viewport shows. Tested in node.
  */
 import {
   can,
-  FAMILIES,
+  ENSO,
   groupModels,
   matchesModel,
   sortModels,
@@ -13,9 +12,6 @@ import {
   type Capability,
   type ModelCatalogEntry,
 } from './catalog'
-
-/** The house router: what a conversation is answered by until a model is picked. */
-export const ENSO = 'enso-auto'
 
 /** A drawn row: a group's heading, or a model under it. */
 export type PickerRow =
@@ -80,20 +76,4 @@ export function revealTop(i: number, top: number, height: number, row: number): 
   if (y < top) return y
   if (y + row > top + height) return y + row - height
   return null
-}
-
-/**
- * The model a new conversation, run or playground tab starts on: Enso for a
- * conversation, else the first of Hanzo's own models that does what the scope
- * asks, else the first free or Hanzo model that does. Never a premium model:
- * a person picks one of those. '' when nothing qualifies.
- */
-export function defaultModel(models: readonly ModelCatalogEntry[], scope: Capability = 'chat'): string {
-  const offered = models.filter((m) => pickable(m) && m.class !== 'premium' && can(m, scope))
-  if (scope === 'chat' && offered.some((m) => m.id === ENSO)) return ENSO
-  for (const f of FAMILIES) {
-    const ours = sortModels(offered.filter((m) => m.family === f.id))
-    if (ours.length) return ours[0]!.id
-  }
-  return sortModels(offered)[0]?.id ?? ''
 }

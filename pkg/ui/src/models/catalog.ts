@@ -396,6 +396,27 @@ export function sortModels(models: readonly ModelCatalogEntry[], by: ModelSort =
   })
 }
 
+// ── where a conversation starts ──────────────────────────────────────────────
+
+/** The house router: what a conversation is answered by until a model is picked. */
+export const ENSO = 'enso-auto'
+
+/**
+ * The model a new conversation, run or playground tab starts on: Enso for a
+ * conversation, else the first of Hanzo's own models that does what the scope
+ * asks, else the first free or Hanzo model that does. Never a premium model,
+ * and never a research preview: a person picks those. '' when nothing qualifies.
+ */
+export function defaultModel(models: readonly ModelCatalogEntry[], scope: Capability = 'chat'): string {
+  const offered = models.filter((m) => m.access !== 'research' && m.class !== 'premium' && can(m, scope))
+  if (scope === 'chat' && offered.some((m) => m.id === ENSO)) return ENSO
+  for (const f of FAMILIES) {
+    const ours = sortModels(offered.filter((m) => m.family === f.id))
+    if (ours.length) return ours[0]!.id
+  }
+  return sortModels(offered)[0]?.id ?? ''
+}
+
 // ── how a figure reads ───────────────────────────────────────────────────────
 
 /** "200K", "1M", "1.5M"; "" when the catalog states no window. */

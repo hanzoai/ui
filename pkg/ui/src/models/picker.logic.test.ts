@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { parseModels, type ModelCatalogEntry } from './catalog'
-import { defaultModel, ENSO, modelCount, pickerRows, restable, revealTop, visibleRange } from './picker.logic'
+import { defaultModel, ENSO, parseModels, type ModelCatalogEntry } from './catalog'
+import { modelCount, pickerRows, restable, revealTop, visibleRange } from './picker.logic'
 
 const models = parseModels([
   { id: 'enso', owned_by: 'hanzo', family: 'enso', class: 'ours' },
