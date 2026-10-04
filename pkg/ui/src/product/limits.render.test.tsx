@@ -142,6 +142,17 @@ describe('PlanUsage', () => {
   })
 })
 
+describe('the free plan as the API names it', () => {
+  it('reads the free terms for plan "free", with its upgrade', () => {
+    const live = { plan: 'free', state: 'ok', classes: {}, actions: [{ kind: 'upgrade', label: 'Upgrade to Pro', url: 'https://hanzo.ai/pay/cart?plan=dev', plan: 'dev' }, { kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay' }], upgrade: 'dev' }
+    const text = words(html(<PlanUsage limits={limitsOf(live)!} now={NOW} />))
+    expect(text).toContain('Free plan')
+    expect(text).toContain('The free plan includes limited usage of free models.')
+    expect(text).not.toContain(PLAN_TERMS[0])
+    expect(text).toContain('Upgrade to Pro')
+  })
+})
+
 describe('the credits choice and the server actions', () => {
   const CREDITS = [
     { kind: 'credits', label: 'Continue with credits', url: '/v1/ai/limits' },

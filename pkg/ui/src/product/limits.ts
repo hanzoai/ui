@@ -136,6 +136,9 @@ const one = <T extends string>(set: readonly T[], v: unknown): T | null =>
 const record = (v: unknown): Record<string, unknown> | null =>
   v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : null
 
+/** Whether the limits name a paid plan: the free plan answers `"free"`, a caller with none `""`. */
+export const paidPlan = (l: Pick<Limits, 'plan'> | null | undefined): boolean => Boolean(l?.plan) && l?.plan !== 'free'
+
 /** The worse of two states. */
 export const worst = (a: LimitState, b: LimitState): LimitState => (RANK[b] > RANK[a] ? b : a)
 

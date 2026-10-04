@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { actionsOf, limitsOf, navigable, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
+import { actionsOf, limitsOf, navigable, paidPlan, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
 
@@ -281,5 +281,14 @@ describe('the credits contract', () => {
     const l = limitsOf({ plan: 'dev', classes: {}, paused: [{ model: 'anthropic/claude-opus*', fallback: 'zen-free' }] })
     const refusal = refusalOf({ error: { type: 'billing_error', code: 'model_cap', message: 'm' } }, 402)
     expect(noticeOf(l, { served: null, refusal }, undefined, NOW)?.message).toBe('claude-opus models are paused.')
+  })
+})
+
+describe('paidPlan', () => {
+  it('is a plan other than free', () => {
+    expect(paidPlan(limitsOf({ plan: 'max-5x' }))).toBe(true)
+    expect(paidPlan(limitsOf({ plan: 'free' }))).toBe(false)
+    expect(paidPlan(limitsOf({ plan: '' }))).toBe(false)
+    expect(paidPlan(null)).toBe(false)
   })
 })

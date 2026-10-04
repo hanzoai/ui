@@ -13,7 +13,7 @@ import { Switch } from '../backends/gui/switch'
 import { slot } from '../backends/gui/slot'
 import { LimitActions, LimitedBanner } from './LimitedBanner'
 import { UsageMeter } from './UsageMeter'
-import type { LimitAction, LimitNotice, Limits } from './limits'
+import { paidPlan, type LimitAction, type LimitNotice, type Limits } from './limits'
 
 /** What a paid plan includes, and what happens past it. */
 export const PLAN_TERMS = [
@@ -107,7 +107,7 @@ function Credits({
 }
 
 export function PlanUsage({ limits, plan, notice, onAction, onCredits, creditsHref, addCreditsHref, now }: PlanUsageProps) {
-  const free = !limits.plan
+  const free = !paidPlan(limits)
   const name = plan || (free ? 'Free' : named(limits.plan))
   const from = day(limits.period_start)
   const to = day(limits.period_end)
