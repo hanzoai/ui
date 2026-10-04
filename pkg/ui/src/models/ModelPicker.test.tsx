@@ -49,7 +49,8 @@ const mount = (ui: React.ReactNode) =>
 const MODELS = parseModels([
   { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso' },
   { id: 'zen5', owned_by: 'zenlm', family: 'zen', class: 'ours', context_window: 1_000_000 },
-  { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'] },
+  { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'], pricing: { input_per_million: 0.021 } },
+  { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev', class: 'premium', outputs: ['decision'], pricing: { input_per_million: 0.042 } },
   { id: 'anthropic/claude-sonnet-4.5', owned_by: 'anthropic', class: 'premium', name: 'Claude Sonnet 4.5' },
   ...Array.from({ length: 496 }, (_, i) => ({
     id: `lab${i % 40}/model-${String(i).padStart(3, '0')}`,
@@ -69,10 +70,10 @@ describe('a picker over five hundred models', () => {
   it('says how many it offers and draws only a window of them', () => {
     mount(<ModelPicker models={MODELS} onChange={() => {}} open />)
     // Every catalog model is offered, plus the research preview.
-    expect(document.querySelector('[data-slot="model-picker-count"]')!.textContent).toBe('501 models')
+    expect(document.querySelector('[data-slot="model-picker-count"]')!.textContent).toBe('502 models')
     expect(options().length).toBeGreaterThan(5)
     expect(options().length).toBeLessThan(60)
-    expect(options()[0]!.getAttribute('aria-setsize')).toBe('501')
+    expect(options()[0]!.getAttribute('aria-setsize')).toBe('502')
   })
 
   it("leads with Hanzo's families", () => {
@@ -83,7 +84,7 @@ describe('a picker over five hundred models', () => {
 
   it('narrows by search, and offers only what its scope runs', () => {
     mount(<ModelPicker models={MODELS} onChange={() => {}} open scope="decision" />)
-    expect(options().map((o) => o.getAttribute('data-model'))).toEqual(['kai'])
+    expect(options().map((o) => o.getAttribute('data-model'))).toEqual(['kai', 'typesafe/jev-1.13'])
   })
 
   it('walks the keyboard past the window and picks with Enter', () => {
@@ -91,9 +92,10 @@ describe('a picker over five hundred models', () => {
     mount(<ModelPicker models={MODELS} onChange={onChange} open />)
     key('End')
     const last = document.getElementById(input().getAttribute('aria-activedescendant')!)
-    expect(last?.getAttribute('data-model')).toBe('lab9/model-489')
+    // TypeSafe sorts after every lab: Jev is the last row.
+    expect(last?.getAttribute('data-model')).toBe('typesafe/jev-1.13')
     key('Enter')
-    expect(onChange).toHaveBeenCalledWith('lab9/model-489')
+    expect(onChange).toHaveBeenCalledWith('typesafe/jev-1.13')
   })
 
   it('labels a paused model and still picks it', () => {
@@ -128,7 +130,7 @@ describe('a picker over five hundred models', () => {
       el.dispatchEvent(new Event('input', { bubbles: true }))
     })
     const kai = options().find((o) => o.getAttribute('data-model') === 'kai')!
-    expect(kai.textContent).toContain('Decision')
+    expect(kai.textContent).toContain('50% less than Jev')
   })
 
   it('says the catalog could not be read, though the research preview is still listed', () => {

@@ -19,6 +19,7 @@ export {
   fetchModelCatalog,
   formatContext,
   formatPrice,
+  formatSaving,
   groupKey,
   groupLabel,
   groupModels,
@@ -30,6 +31,7 @@ export {
   modelName,
   modelOf,
   parseModels,
+  savingOf,
   sortModels,
   withResearch,
 } from './catalog'
@@ -42,6 +44,7 @@ export type {
   ModelPricing,
   ModelSort,
   PauseSource,
+  Saving,
 } from './catalog'
 export type { PausedModel } from '../product/limits'
 

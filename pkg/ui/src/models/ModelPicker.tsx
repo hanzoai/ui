@@ -5,7 +5,7 @@
  * and dev, and every playground tab in the console.
  *
  * It lists the whole catalog `GET /v1/models` answers, grouped — Hanzo's own
- * families first (Enso, Zen, Kai, Jev, Zoo), then every maker by name — with a
+ * families first (Enso, Zen, Kai, Zoo), then every maker by name — with a
  * search over id, name, maker and description. `scope` narrows it to what a
  * surface can run (an embeddings tab offers embedding models).
  *
@@ -41,10 +41,12 @@ import {
   can,
   capabilitiesOf,
   formatContext,
+  formatSaving,
   groupLabel,
   isPaused,
   modelName,
   RESEARCH,
+  savingOf,
   type Capability,
   type ModelCatalogEntry,
   type PauseSource,
@@ -318,6 +320,8 @@ export function ModelPicker({
             // A model that answers in something other than a conversation says
             // what it does, so an unscoped list is honest about each row.
             const kind = scope || can(m, 'chat') ? null : capabilitiesOf(m)[0]
+            // A model sold against another says by how much, from the two list prices.
+            const saving = savingOf(m, models)
             return (
               <XStack
                 key={m.id}
@@ -351,9 +355,17 @@ export function ModelPicker({
                     ✦
                   </SizableText>
                 ) : null}
-                {locked || paused || kind || ctx ? (
+                {locked || paused || saving || kind || ctx ? (
                   <SizableText size="$1" color="$soft" shrink={0} fontVariant={['tabular-nums']}>
-                    {locked ? 'Research preview' : paused ? 'Paused' : kind ? CAPABILITY_NAMES[kind] : ctx}
+                    {locked
+                      ? 'Research preview'
+                      : paused
+                        ? 'Paused'
+                        : saving
+                          ? formatSaving(saving)
+                          : kind
+                            ? CAPABILITY_NAMES[kind]
+                            : ctx}
                   </SizableText>
                 ) : null}
               </XStack>

@@ -4,6 +4,7 @@ import {
   capabilitiesOf,
   formatContext,
   formatPrice,
+  formatSaving,
   groupModels,
   isPaused,
   makerName,
@@ -11,6 +12,7 @@ import {
   matchesModel,
   matchesPaused,
   parseModels,
+  savingOf,
   sortModels,
   withResearch,
   type ModelCatalogEntry,
@@ -86,8 +88,8 @@ describe('reading /v1/models', () => {
 describe('groups', () => {
   it("leads with Hanzo's families in order, then makers by name", () => {
     const labels = groupModels(sortModels(models)).map((g) => g.label)
-    expect(labels.slice(0, 4)).toEqual(['Enso', 'Zen', 'Kai', 'Jev'])
-    expect(labels.slice(4)).toEqual(['Anthropic', 'Google', 'Meta Llama', 'OpenRouter'])
+    expect(labels.slice(0, 3)).toEqual(['Enso', 'Zen', 'Kai'])
+    expect(labels.slice(3)).toEqual(['Anthropic', 'Google', 'Meta Llama', 'OpenRouter', 'TypeSafe'])
   })
 
   it("files OpenRouter's ~ aliases with their maker", () => {
@@ -165,6 +167,32 @@ describe('the research preview', () => {
     expect(withResearch(all)).toHaveLength(all.length)
     const zen = groupModels(all).find((g) => g.family === 'zen')!
     expect(zen.models.some((m: ModelCatalogEntry) => m.id === 'zen7')).toBe(true)
+  })
+})
+
+describe('a price against another', () => {
+  const rows = parseModels([
+    { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'], pricing: { input_per_million: 0.021, output_per_million: 0 } },
+    { id: 'typesafe/jev-router', owned_by: 'typesafe', family: 'jev', class: 'premium', outputs: ['text'] },
+    { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev', class: 'premium', outputs: ['decision'], pricing: { input_per_million: 0.042, output_per_million: 0 } },
+  ])
+  const kai = rows[0]!
+
+  it('computes Kai against Jev from the two list prices', () => {
+    expect(savingOf(kai, rows)).toEqual({ percent: 50, against: 'Jev' })
+    expect(formatSaving(savingOf(kai, rows)!)).toBe('50% less than Jev')
+  })
+
+  it('reads compare_at when the catalog names one, and says nothing without both prices', () => {
+    const named = parseModels([{ id: 'x', compare_at: { model: 'typesafe/jev-1.13' }, pricing: { input_per_million: 0.0315 } }])[0]!
+    expect(savingOf(named, rows)).toEqual({ percent: 25, against: 'Jev' })
+    expect(savingOf(kai, [kai])).toBeNull()
+    expect(savingOf(rows[2]!, rows)).toBeNull()
+  })
+
+  it('files Jev with its maker, not among Hanzo families', () => {
+    expect(rows[1]!.family).toBeUndefined()
+    expect(groupModels(rows).map((g) => g.label)).toEqual(['Kai', 'TypeSafe'])
   })
 })
 

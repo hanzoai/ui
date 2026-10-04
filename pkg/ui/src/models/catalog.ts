@@ -15,8 +15,8 @@ import type { PausedModel } from '../product/limits'
 /** The class a model is sold in, as the usage policy reads it. */
 export type ModelClass = 'premium' | 'ours' | 'free'
 
-/** Hanzo's own families. Every other model is grouped by who made it. */
-export type ModelFamily = 'enso' | 'zen' | 'kai' | 'jev' | 'zoo'
+/** Hanzo's own families. Every other model — TypeSafe's Jev among them — is grouped by who made it. */
+export type ModelFamily = 'enso' | 'zen' | 'kai' | 'zoo'
 
 /** What a model can be asked to do, from the modalities and capabilities it publishes. */
 export type Capability =
@@ -60,6 +60,8 @@ export interface ModelCatalogEntry {
   supports_tools?: boolean
   supports_reasoning?: boolean
   pricing?: ModelPricing
+  /** The model whose list price this one is sold against (Kai against Jev). */
+  compare_at?: string
   /** Absent, anyone may call it. `research`: it exists and nobody can call it yet. */
   access?: 'research'
   /** Where a person asks for access to a model they cannot call. */
@@ -92,7 +94,7 @@ export function withResearch(models: readonly ModelCatalogEntry[]): ModelCatalog
 // ── reading the wire ─────────────────────────────────────────────────────────
 
 const CLASSES: readonly ModelClass[] = ['premium', 'ours', 'free']
-const FAMILY_IDS: readonly ModelFamily[] = ['enso', 'zen', 'kai', 'jev', 'zoo']
+const FAMILY_IDS: readonly ModelFamily[] = ['enso', 'zen', 'kai', 'zoo']
 
 const str = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v : undefined)
 const num = (v: unknown): number | undefined => (typeof v === 'number' && Number.isFinite(v) ? v : undefined)
@@ -121,6 +123,12 @@ function pricingOf(v: unknown): ModelPricing | undefined {
   }
 }
 
+/** A `compare_at` as a model id: the id itself, or `{model}`. */
+function compareOf(v: unknown): string | undefined {
+  if (typeof v === 'string') return str(v)
+  return v && typeof v === 'object' ? str((v as { model?: unknown }).model) : undefined
+}
+
 /** One row, checked field by field: it is a network response. Null without an id. */
 export function modelOf(v: unknown): ModelCatalogEntry | null {
   if (!v || typeof v !== 'object') return null
@@ -146,6 +154,7 @@ export function modelOf(v: unknown): ModelCatalogEntry | null {
   set('supports_tools', yes(r.supports_tools))
   set('supports_reasoning', yes(r.supports_reasoning))
   set('pricing', pricingOf(r.pricing))
+  set('compare_at', compareOf(r.compare_at ?? r.compareAt))
   return m
 }
 
@@ -190,7 +199,6 @@ export const FAMILIES: readonly { id: ModelFamily; label: string }[] = [
   { id: 'enso', label: 'Enso' },
   { id: 'zen', label: 'Zen' },
   { id: 'kai', label: 'Kai' },
-  { id: 'jev', label: 'Jev' },
   { id: 'zoo', label: 'Zoo' },
 ]
 
@@ -419,6 +427,40 @@ export function defaultModel(models: readonly ModelCatalogEntry[], scope: Capabi
   }
   return sortModels(offered)[0]?.id ?? ''
 }
+
+// ── a price against another ──────────────────────────────────────────────────
+
+/** How much less a model is listed at than the model it is sold against. */
+export interface Saving {
+  /** Whole percent, 1 to 99. */
+  percent: number
+  /** The model it is compared with, as the catalog names it. */
+  against: string
+}
+
+/**
+ * What a model saves against the one it is sold against, from the two list
+ * prices the catalog states — never a figure written here. The model it is
+ * compared with is its `compare_at`, or, for Kai, TypeSafe's Jev decision model
+ * the catalog lists. Null when either price is missing or nothing is saved.
+ */
+export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntry[]): Saving | null {
+  const mine = m.pricing?.input_per_million
+  if (mine === undefined) return null
+  const other = m.compare_at
+    ? models.find((x) => x.id === m.compare_at)
+    : m.family === 'kai'
+      ? models.find((x) => makerOf(x) === 'typesafe' && can(x, 'decision') && x.pricing?.input_per_million)
+      : undefined
+  const theirs = other?.pricing?.input_per_million
+  if (!other || !theirs || theirs <= mine) return null
+  const percent = Math.round((1 - mine / theirs) * 100)
+  if (percent < 1) return null
+  return { percent, against: modelName(other) }
+}
+
+/** "50% less than Jev". */
+export const formatSaving = (s: Saving): string => `${s.percent}% less than ${s.against}`
 
 // ── how a figure reads ───────────────────────────────────────────────────────
 
