@@ -49,6 +49,9 @@ export type ButtonVariant =
 
 export type ButtonSize = 'default' | 'sm' | 'lg' | 'icon' | 'icon-sm' | 'icon-lg'
 
+/** The floor every size takes under a coarse pointer: a thumb, not a cursor. */
+const TOUCH = 44
+
 const HEIGHT: Record<ButtonSize, number> = {
   default: 36,
   sm: 32,
@@ -171,12 +174,15 @@ const Frame = styled(GuiButton.Frame, {
       // a 36px sliver with a green build. Both directions are asserted in
       // consumer.spec.ts, because getting one right and the other wrong is
       // exactly what happened on the first attempt.
-      default: { height: 'auto', minHeight: HEIGHT.default, px: '$4' },
-      sm: { height: 'auto', minHeight: HEIGHT.sm, px: '$3', gap: '$1.5' },
-      lg: { height: 'auto', minHeight: HEIGHT.lg, px: '$6' },
-      icon: { height: 'auto', minHeight: HEIGHT.icon, width: 'auto', minWidth: HEIGHT.icon, px: 0 },
-      'icon-sm': { height: 'auto', minHeight: HEIGHT['icon-sm'], width: 'auto', minWidth: HEIGHT['icon-sm'], px: 0 },
-      'icon-lg': { height: 'auto', minHeight: HEIGHT['icon-lg'], width: 'auto', minWidth: HEIGHT['icon-lg'], px: 0 },
+      //
+      // A FINGER IS NOT A POINTER. Under a coarse pointer every size floors at
+      // TOUCH, the target a thumb lands on; a mouse keeps the designed sizes.
+      default: { height: 'auto', minHeight: HEIGHT.default, px: '$4', $touchable: { minHeight: TOUCH } },
+      sm: { height: 'auto', minHeight: HEIGHT.sm, px: '$3', gap: '$1.5', $touchable: { minHeight: TOUCH } },
+      lg: { height: 'auto', minHeight: HEIGHT.lg, px: '$6', $touchable: { minHeight: TOUCH } },
+      icon: { height: 'auto', minHeight: HEIGHT.icon, width: 'auto', minWidth: HEIGHT.icon, px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
+      'icon-sm': { height: 'auto', minHeight: HEIGHT['icon-sm'], width: 'auto', minWidth: HEIGHT['icon-sm'], px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
+      'icon-lg': { height: 'auto', minHeight: HEIGHT['icon-lg'], width: 'auto', minWidth: HEIGHT['icon-lg'], px: 0, $touchable: { minHeight: TOUCH, minWidth: TOUCH } },
     },
     disabled: {
       true: { opacity: 0.5, pointerEvents: 'none', cursor: 'default' },

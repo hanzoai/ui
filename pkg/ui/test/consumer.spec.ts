@@ -357,6 +357,18 @@ test.describe('layout', () => {
     expect(Math.round(h)).toBe(36)
   })
 
+  test('under a coarse pointer every Button floors at 44, and a mouse keeps 36', async ({ browser }) => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 1 })
+    const page = await ctx.newPage()
+    await load(page, 'dark')
+    const heights = await page
+      .locator('[data-gallery="button"] [data-slot="button"]')
+      .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
+    expect(heights.length, 'the gallery drew its buttons').toBeGreaterThan(0)
+    expect(Math.min(...heights), 'a Button a thumb can miss').toBeGreaterThanOrEqual(44)
+    await ctx.close()
+  })
+
   test('a Band centres a measure and keeps its gutter', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await load(page, 'dark')
