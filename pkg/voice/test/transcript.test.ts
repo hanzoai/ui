@@ -1,7 +1,7 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { speech } from "../src/transport.js";
-import { transcript } from "../src/transcript.js";
+import { speech, SpeechError } from "../src/transport.js";
+import { backoff, RETRY_WINDOW, transcript } from "../src/transcript.js";
 import type { Said, Speech, Stream } from "../src/types.js";
 
 class Port {
@@ -165,7 +165,209 @@ describe("the live transcript", () => {
   });
 });
 
+/**
+ * A transcript whose pushes answer from a script: an Error is thrown, anything
+ * else is the state. Every push is recorded as the marks of the quarters it
+ * carried, so the order audio reached the platform can be read back.
+ */
+function scripted(script: (Error | Said)[]) {
+  const attempts: number[][] = [];
+  const delivered: number[] = [];
+  let seconds = 0;
+  const stream: Stream = {
+    chunk: 250,
+    limit: 600,
+    most: 64 * 1024,
+    async push(pcm) {
+      const marks: number[] = [];
+      for (let i = 0; i < pcm.length; i += 4000) marks.push(pcm[i] as number);
+      attempts.push(marks);
+      const next = script.shift();
+      if (next instanceof Error) throw next;
+      delivered.push(...marks);
+      seconds += pcm.length / 16000;
+      return next ?? { text: "", pending: "", seconds };
+    },
+    close: vi.fn(async () => ({ text: "", pending: "", seconds })),
+  };
+  return { stream, attempts, delivered };
+}
+
+/** A quarter second whose every sample carries `k`, so it can be told apart. */
+const marked = (k: number) => Node.last?.port.onmessage?.({ data: new Float32Array(4000).fill(k / 1000) });
+const mark = (k: number) => Math.trunc((k / 1000) * 0x7fff);
+const limited = (seconds?: number) =>
+  new SpeechError("Transcript push failed (429): rate limit exceeded", 429, "rate_limit_exceeded", seconds === undefined ? undefined : seconds * 1000);
+
+describe("a push the platform cannot take yet", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+  const tick = (ms = 0) => vi.advanceTimersByTimeAsync(ms);
+
+  async function opened(script: (Error | Said)[]) {
+    const t = scripted(script);
+    const s: Speech = { transcribe: async () => "", stream: async () => t.stream };
+    const { got, heard } = listener();
+    const live = transcript(s, heard, { scope });
+    await live.open();
+    return { ...t, got, live };
+  }
+
+  it("waits out a 429's Retry-After, then sends the held audio in order with nothing lost", async () => {
+    const { attempts, delivered, got, live } = await opened([limited(2)]);
+    marked(1);
+    await tick();
+    marked(2);
+    marked(3);
+    await tick(1999);
+    expect(attempts).toEqual([[mark(1)]]);
+    expect(got.refused).toEqual([]);
+    await tick(1);
+    await tick();
+    expect(attempts).toEqual([[mark(1)], [mark(1)], [mark(2), mark(3)]]);
+    expect(delivered).toEqual([mark(1), mark(2), mark(3)]);
+    expect(got.refused).toEqual([]);
+    await live.close();
+  });
+
+  it("a single 429 with no Retry-After backs off and carries on", async () => {
+    const { delivered, got, live } = await opened([limited()]);
+    marked(1);
+    await tick();
+    marked(2);
+    await tick(500);
+    await tick();
+    expect(delivered).toEqual([mark(1), mark(2)]);
+    expect(got.refused).toEqual([]);
+    await live.close();
+  });
+
+  it("a 5xx and a dropped connection are waits too", async () => {
+    const { delivered, got, live } = await opened([
+      new SpeechError("Transcript push failed (502)", 502),
+      new TypeError("Failed to fetch"),
+    ]);
+    marked(1);
+    await tick(500);
+    await tick(1000);
+    await tick();
+    expect(delivered).toEqual([mark(1)]);
+    expect(got.refused).toEqual([]);
+    await live.close();
+  });
+
+  for (const status of [402, 403]) {
+    it(`a ${status} refuses at once and is not tried again`, async () => {
+      const { attempts, got } = await opened([new SpeechError(`Transcript push failed (${status})`, status)]);
+      marked(1);
+      await tick();
+      expect(got.refused).toEqual([`Transcript push failed (${status})`]);
+      await tick(RETRY_WINDOW);
+      expect(attempts).toHaveLength(1);
+      expect(tracks[0]?.stop).toHaveBeenCalled();
+    });
+  }
+
+  it("a 429 for a spent allowance is a refusal, not a wait", async () => {
+    const { attempts, got } = await opened([
+      new SpeechError("Transcript push failed (429): free plan", 429, "free_plan_cap"),
+    ]);
+    marked(1);
+    await tick();
+    expect(got.refused).toHaveLength(1);
+    expect(attempts).toHaveLength(1);
+  });
+
+  it("refuses once the platform has taken nothing for the whole window", async () => {
+    const { got } = await opened(Array.from({ length: 100 }, () => limited()));
+    marked(1);
+    await tick(RETRY_WINDOW / 2);
+    expect(got.refused).toEqual([]);
+    await tick(RETRY_WINDOW);
+    expect(got.refused).toEqual(["Transcript push failed (429): rate limit exceeded"]);
+  });
+
+  it("a sustained 5xx refuses at the same window", async () => {
+    const { got } = await opened(Array.from({ length: 100 }, () => new SpeechError("Transcript push failed (503)", 503)));
+    marked(1);
+    await tick(RETRY_WINDOW / 2);
+    expect(got.refused).toEqual([]);
+    await tick(RETRY_WINDOW);
+    expect(got.refused).toEqual(["Transcript push failed (503)"]);
+  });
+
+  it("a wait named past the window refuses now, not after it", async () => {
+    const { got } = await opened([limited(RETRY_WINDOW / 1000 + 1)]);
+    marked(1);
+    await tick();
+    expect(got.refused).toHaveLength(1);
+  });
+
+  it("the queue is bounded: audio held for the whole window ends the transcript", async () => {
+    // A push that never answers holds the pump; the microphone keeps hearing.
+    const t = scripted([]);
+    t.stream.push = () => new Promise<Said>(() => {});
+    const s: Speech = { transcribe: async () => "", stream: async () => t.stream };
+    const { got, heard } = listener();
+    await transcript(s, heard, { scope }).open();
+    for (let i = 0; i < (RETRY_WINDOW / 250); i++) marked(1);
+    await tick();
+    expect(got.refused).toEqual([]);
+    marked(1);
+    await tick();
+    expect(got.refused).toEqual([`Transcript failed: nothing delivered for ${RETRY_WINDOW / 1000}s`]);
+  });
+
+  it("closing during a wait delivers the held audio before settling", async () => {
+    const { delivered, stream, got, live } = await opened([limited(1)]);
+    marked(1);
+    await tick();
+    marked(2);
+    const closing = live.close();
+    await tick(1000);
+    await closing;
+    expect(delivered).toEqual([mark(1), mark(2)]);
+    expect(stream.close).toHaveBeenCalledTimes(1);
+    expect(got.refused).toEqual([]);
+  });
+});
+
+describe("backoff", () => {
+  it("says which answers are waits and how long", () => {
+    expect(backoff(new SpeechError("x", 429, undefined, 3000), 0)).toBe(3000);
+    expect(backoff(new SpeechError("x", 429), 0)).toBe(500);
+    expect(backoff(new SpeechError("x", 429), 3)).toBe(4000);
+    expect(backoff(new SpeechError("x", 503), 10)).toBe(8000);
+    expect(backoff(new TypeError("Failed to fetch"), 0)).toBe(500);
+    for (const status of [400, 401, 402, 403, 404, 409, 413]) expect(backoff(new SpeechError("x", status), 0)).toBeNull();
+    expect(backoff(new SpeechError("x", 429, "usage_cap_exceeded"), 0)).toBeNull();
+    expect(backoff(new SyntaxError("bad json"), 0)).toBeNull();
+  });
+});
+
 describe("speech().stream", () => {
+  it("a refused push carries the platform's Retry-After, in ms", async () => {
+    const fetch = vi.fn(async (url: string, init: RequestInit) => {
+      if (init.method === "POST" && url.endsWith("/v1/audio/transcript")) {
+        return new Response(JSON.stringify({ id: "ats_1", chunk_ms: 250 }), { status: 201 });
+      }
+      return new Response(JSON.stringify({ error: { message: "rate limit exceeded: retry after 7s", code: "rate_limit_exceeded" } }), {
+        status: 429,
+        headers: { "Retry-After": "7" },
+      });
+    }) as unknown as typeof globalThis.fetch;
+    const live = await (speech({ baseUrl: "https://api.example", fetch }).stream as NonNullable<Speech["stream"]>)({});
+    const error = (await live.push(new Int16Array([1])).catch((e: unknown) => e)) as SpeechError;
+    expect(error).toBeInstanceOf(SpeechError);
+    expect(error.status).toBe(429);
+    expect(error.retry).toBe(7000);
+    expect(backoff(error, 0)).toBe(7000);
+  });
+
   it("opens with the model and language, pushes raw pcm16 and closes with DELETE", async () => {
     const calls: { url: string; init: RequestInit }[] = [];
     const fetch = vi.fn(async (url: string, init: RequestInit) => {

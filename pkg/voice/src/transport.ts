@@ -36,16 +36,28 @@ const EAR = "zen-scribe";
 const MOUTH = "zen-voice-mini";
 const VOICE = "af_heart";
 
-/** The platform said no: the status, and the code its error envelope named. */
+/** The platform said no: the status, the code its error envelope named, and how
+ *  long it asked to be left alone (`Retry-After`, in ms) when it said. */
 export class SpeechError extends Error {
   readonly status: number;
   readonly code?: string;
-  constructor(message: string, status: number, code?: string) {
+  readonly retry?: number;
+  constructor(message: string, status: number, code?: string, retry?: number) {
     super(message);
     this.name = "SpeechError";
     this.status = status;
     this.code = code;
+    this.retry = retry;
   }
+}
+
+/** `Retry-After` in ms: delay-seconds or an HTTP date (RFC 9110 §10.2.3). */
+function after(header: string | null): number | undefined {
+  if (!header) return undefined;
+  const seconds = Number(header);
+  if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
+  const at = Date.parse(header);
+  return Number.isNaN(at) ? undefined : Math.max(0, at - Date.now());
 }
 
 /**
@@ -79,6 +91,7 @@ export function speech(config: SpeechConfig = {}): Speech {
       `${what} failed (${response.status})${body ? `: ${body.slice(0, 200)}` : ""}`,
       response.status,
       code,
+      after(response.headers.get("Retry-After")),
     );
   };
 

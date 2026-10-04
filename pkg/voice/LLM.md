@@ -72,6 +72,13 @@ API; this file carries only what the source cannot say for itself.
   transcript takes `max_seconds` of audio; at five seconds short it is closed
   and the next opened, and what it settled stays in front. `settled` is text
   that will not change; `partial` is everything, tail included.
+- A failed push is not a refusal (`backoff` in `src/transcript.ts`). A 429 (one
+  that names no spent allowance), a 5xx or a dropped connection is a wait: the
+  same push goes again after `Retry-After` (`SpeechError.retry`, ms) or a
+  doubling backoff, while new audio queues behind it, so nothing is dropped or
+  reordered. 402, 403 and every other 4xx refuse at once; so does a failure
+  streak, or a queue, older than `RETRY_WINDOW` (60 s, the gateway's rate
+  window). Closing delivers the queue before the DELETE.
 - The streaming legs make their AudioContext (`audioContext`) at the top of
   `open()`, before the first await, so it is made inside the click: Safari runs
   only a context made or resumed in a gesture, and one made after the permission

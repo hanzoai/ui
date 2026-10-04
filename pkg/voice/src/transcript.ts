@@ -31,11 +31,56 @@ export interface Live {
 const MARGIN = 5;
 
 /**
+ * How long, in ms, a live transcript keeps trying to deliver what it heard before
+ * it calls the platform gone. A rate limit, a server fault or a dropped connection
+ * is a wait, not a refusal: the audio stays queued and goes up in order once the
+ * platform takes it. A minute because that is the gateway's rate window, so a
+ * `Retry-After` it sends always lands inside it; a wait it names past the window
+ * ends the transcript at once rather than after a minute of hoping.
+ */
+export const RETRY_WINDOW = 60_000;
+
+/** The first wait when the platform names none, in ms; it doubles to `LONGEST_WAIT`. */
+const FIRST_WAIT = 500;
+const LONGEST_WAIT = 8_000;
+
+/** A 429 that names one of these is a spent allowance, not a busy server. */
+const SPENT_CODES = ["free_plan_cap", "usage_cap_exceeded", "public_allowance_spent"];
+
+/**
+ * How long to wait before trying a call again, or null when the answer is final.
+ * Final: 402 and 403 (no funds, no permission), every other refusal of the
+ * request itself (401, 404 and 409 for a session that is gone, 413), and a 429
+ * that names a spent allowance. Passing: any other 429, a 5xx, and a fetch that
+ * never reached the platform.
+ */
+export function backoff(error: unknown, attempt: number): number | null {
+  const { status, code, retry, name } = (error ?? {}) as {
+    status?: number;
+    code?: string;
+    retry?: number;
+    name?: string;
+  };
+  if (status === undefined) {
+    if (name !== "TypeError") return null; // fetch rejects with TypeError when the network fails
+  } else if (status === 429) {
+    if (code && SPENT_CODES.includes(code)) return null;
+  } else if (status < 500) {
+    return null;
+  }
+  if (typeof retry === "number" && retry >= 0) return retry;
+  return Math.min(LONGEST_WAIT, FIRST_WAIT * 2 ** attempt);
+}
+
+/**
  * A live transcript on `/v1/audio/transcript`: the microphone streams up as
  * 16 kHz pcm16 and the text grows as it is heard.
  *
  * The endpoint admits one push at a time, so audio heard while a push is in
  * flight waits and rides with the next one, up to the most a push may carry. A
+ * push the platform cannot take yet (`backoff`) is sent again after the wait
+ * while new audio queues behind it, so nothing heard is dropped or reordered; it
+ * refuses only on a final answer or after `RETRY_WINDOW` without delivering. A
  * transcript accepts a bounded length of audio, so near its end it is closed —
  * which settles its tail — and the next one opened in the same breath. Silence
  * is not billed: the speech service decodes and meters only what it hears.
@@ -50,8 +95,9 @@ export function transcript(
   let mic: Tap | null = null;
   let current: Stream | null = null;
   let open = false;
-  let busy = false;
+  let draining: Promise<void> | null = null;
   let waiting: Int16Array[] = [];
+  let queued = 0;
   let before = "";
   let settled = "";
 
@@ -69,6 +115,8 @@ export function transcript(
   const fault = (error: unknown) => {
     open = false;
     release();
+    waiting = [];
+    queued = 0;
     heard.refused(error as Error);
   };
 
@@ -79,20 +127,38 @@ export function transcript(
     stream = null;
   };
 
+  // One call, tried until the platform takes it, gives a final answer, or the
+  // window runs out. The window is measured from the first failure, so a wait the
+  // platform names past its end fails now instead of after it.
+  const persist = async <T>(call: () => Promise<T>): Promise<T> => {
+    let since = 0;
+    for (let attempt = 0; ; attempt++) {
+      try {
+        return await call();
+      } catch (error) {
+        const wait = backoff(error, attempt);
+        const now = Date.now();
+        since ||= now;
+        if (wait === null || now + wait - since > RETRY_WINDOW) throw error;
+        await new Promise((resume) => setTimeout(resume, wait));
+      }
+    }
+  };
+
+  const begin = () => persist(() => (speech.stream as NonNullable<Speech["stream"]>)({ language: options.language }));
+
   // Close the full transcript and carry on in a new one. What it settled stays
   // in front of everything the next one hears.
   const roll = async () => {
     const full = current as Stream;
+    report(await persist(() => full.close()));
     current = null;
-    report(await full.close());
     before = `${before} ${settled}`.trim();
     settled = "";
-    current = await (speech.stream as NonNullable<Speech["stream"]>)({ language: options.language });
+    current = await begin();
   };
 
-  const drain = async () => {
-    if (busy || !current || !waiting.length) return;
-    busy = true;
+  const pump = async () => {
     try {
       while (open && current && waiting.length) {
         const most = current.most >> 1;
@@ -110,16 +176,24 @@ export function transcript(
           pcm.set(part, at);
           at += part.length;
         }
-        const said = await current.push(pcm);
+        const into = current;
+        const said = await persist(() => into.push(pcm));
+        if (!open) return; // refused while this push waited; that has been said
+        queued -= pcm.length;
         report(said);
         if (said.seconds >= current.limit - MARGIN) await roll();
       }
     } catch (error) {
-      fault(error);
-    } finally {
-      busy = false;
+      if (open) fault(error);
     }
   };
+
+  // The one pump: a second caller joins the push in flight rather than starting
+  // another, which is what keeps the pushes one at a time and in order.
+  const drain = (): Promise<void> =>
+    (draining ??= pump().finally(() => {
+      draining = null;
+    }));
 
   return {
     async open() {
@@ -138,7 +212,7 @@ export function transcript(
         return;
       }
       try {
-        current = await speech.stream({ language: options.language });
+        current = await begin();
         open = true;
         mic = await tap(
           stream,
@@ -147,6 +221,13 @@ export function transcript(
             heard.level?.(level);
             if (!open) return;
             waiting.push(pcm);
+            queued += pcm.length;
+            // The queue is bounded by the same window as the retries: audio that
+            // has waited longer than that is audio the platform is not taking.
+            if (queued > (RATE * RETRY_WINDOW) / 1000) {
+              fault(new Error(`Transcript failed: nothing delivered for ${RETRY_WINDOW / 1000}s`));
+              return;
+            }
             void drain();
           },
           scope,
@@ -160,14 +241,17 @@ export function transcript(
 
     async close() {
       if (!open) return;
-      open = false;
+      // Stop hearing, then deliver what was heard — a push waiting out a rate
+      // limit included — before settling the tail.
       release();
-      waiting = [];
+      await drain();
+      if (!open) return; // the platform refused the rest; fault has said so
+      open = false;
       const last = current;
       current = null;
       if (!last) return;
       try {
-        report(await last.close());
+        report(await persist(() => last.close()));
       } catch (error) {
         heard.refused(error as Error);
       }
@@ -228,14 +312,21 @@ export function useTranscript(options: TranscriptOptions): TranscriptMachine {
     if (live.current) return stop();
     setRefused(null);
     setOpen(true);
+    // A sitting that was closed still delivers what it heard, so its text lands
+    // after the click that stopped it — but it no longer drives the button, and a
+    // newer sitting's text is never written over by an older one's.
+    const current = () => live.current === sitting;
+    const ours = () => current() || live.current === null;
     const sitting = transcript(
       latest.current.speech,
       {
         partial: (text) => {
-          setListening(true);
-          latest.current.onPartial?.(text);
+          if (current()) setListening(true);
+          if (ours()) latest.current.onPartial?.(text);
         },
-        settled: (text) => latest.current.onSettled?.(text),
+        settled: (text) => {
+          if (ours()) latest.current.onSettled?.(text);
+        },
         level: (value) => {
           level.current = value;
         },
@@ -244,8 +335,8 @@ export function useTranscript(options: TranscriptOptions): TranscriptMachine {
           setBlocked(reason);
         },
         refused: (error) => {
-          stop();
-          setRefused({ service: "ear", error, covered: false });
+          if (current()) stop();
+          if (ours()) setRefused({ service: "ear", error, covered: false });
         },
       },
       { language: latest.current.language },
