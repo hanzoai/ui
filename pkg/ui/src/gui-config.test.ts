@@ -369,7 +369,7 @@ describe('the type ladder defers to @hanzo/design', () => {
    * and the sum by `--type-scale`, all clamped between a floor and a ceiling:
    *
    *     --text-xs: clamp(var(--text-floor),
-   *                      calc((0.875rem - 0.1875rem * var(--type-ratio, 1))
+   *                      calc((0.875rem - 0.125rem * var(--type-ratio, 1))
    *                           * var(--type-scale, 1)),
    *                      var(--text-ceiling))
    *
@@ -403,7 +403,7 @@ describe('the type ladder defers to @hanzo/design', () => {
 
   /** Every rung that names a design token, and the px it used to be. */
   const MAPPED: Array<[number, string, number]> = [
-    [1, 'xs', 11], [2, 'sm', 13], [3, 'base', 14], [4, 'lg', 15], [5, 'lg', 15],
+    [1, 'xs', 12], [2, 'sm', 13], [3, 'base', 14], [4, 'lg', 15], [5, 'lg', 15],
     [6, 'xl', 17], [7, '2xl', 21], [8, '3xl', 26], [9, '3xl', 26],
     [10, '4xl', 32], [11, '5xl', 40], [14, '7xl', 64],
   ]

@@ -81,7 +81,7 @@ const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, 
  *  product and a person can set it for themselves. The px literal stays as the
  *  var()'s fallback, so a host that mounts no token layer still renders. */
 const FONT_SIZE = {
-  1: `var(--text-xs, 11px)`,
+  1: `var(--text-xs, 12px)`,
   2: `var(--text-sm, 13px)`,
   3: `var(--text-base, 14px)`,
   4: `var(--text-lg, 15px)`,
