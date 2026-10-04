@@ -75,6 +75,7 @@ export interface SignInProps {
   via?: string
   /** Where the login page is, for the other-mode link. */
   loginPath?: string
+  /** Where the sign-up page is. Empty for a surface nobody signs up to (an operator console): no "New to" line. */
   signupPath?: string
   termsPath?: string
   privacyPath?: string
@@ -427,7 +428,7 @@ export function SignIn({
           ) : null}
         </CardContent>
       </Card>
-      {frame ? (
+      {frame && (signup || signupPath) ? (
         <Paragraph size="$2" color="$quiet" m={0}>
           {signup ? 'Have an account? ' : `New to ${site}? `}
           <Anchor href={`${signup ? loginPath : signupPath}${query}`} color="$ink" textDecorationLine="underline">

@@ -51,6 +51,11 @@ describe('SignIn', () => {
     expect(out).toContain('href="/legal/terms"')
     expect(out).toContain('href="/login"')
   })
+
+  it('offers no sign-up line where nobody signs up', () => {
+    expect(html(<SignIn site="Hanzo" />)).toContain('New to Hanzo?')
+    expect(html(<SignIn site="Hanzo" signupPath="" />)).not.toContain('New to Hanzo?')
+  })
 })
 
 describe('SignIn order', () => {
