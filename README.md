@@ -56,7 +56,7 @@ stylesheet. There is no CSS import and no generator step.
 | `@hanzo/ui/product` | charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast |
 | `@hanzo/ui/chat` | Thread, Message, Composer, Sidebar, Header, Code, Sources |
 | `@hanzo/ui/chat/pure` | `sends`, `ready`, `pinned` — decisions with no React, loads in Node |
-| `@hanzo/ui/models` | ModelSelector, fetchModelCatalog |
+| `@hanzo/ui/models` | ModelPicker, parseModels, fetchModelCatalog, defaultModel |
 | `@hanzo/ui/data` | RecordsView, DataTable, typed field editors |
 | `@hanzo/ui/core` · `/tokens` | `cn`, font vars, the colour/theme/radii/spacing scale |
 | `@hanzo/ui/theme.css` · `/styles.css` | tokens alone, or the complete sheet |

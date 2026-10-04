@@ -67,9 +67,11 @@ pkg/ui/src/
   theme.css        SELF-CONTAINED token CSS vars + Zen / Zen Mono — the identity
   backends/gui/    THE component surface on @hanzo/gui. index.ts is its manifest.
   product/         the product/app layer (charts, PageHeader, ComboBox, …)
-  models/          the unified ModelSelector + catalog helpers; RESEARCH is the
-                   models nobody can call yet, which hosts append and the
-                   picker draws disabled with a Request access link.
+  models/          ModelPicker (the one model picker: grouped, searchable,
+                   virtualised, a sheet on phones) + the catalog read from
+                   GET /v1/models fields alone (class, family, inputs,
+                   outputs, supports_*, pricing). RESEARCH is the models nobody
+                   can call yet; the picker appends them, disabled.
                    `@hanzo/ui/models/catalog` is the pure half, which bare
                    Node and a server can load; `./models` pulls in gui
   primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)
@@ -243,7 +245,7 @@ answer it, so no claim is recorded.
 | `@hanzo/ui` | the component API: Button, Badge, Card*, Checkbox, Dialog*, DropdownMenu*, Input, Toaster, Avatar*, Tabs*, Select*, Tooltip*, Popover*, Command*, Collapsible*, Resizable*, ScrollArea, Slider, Switch, Progress, Separator, Label, Textarea, AspectRatio — + `cn` (the product layer is kept off root, at `/product`) |
 | `@hanzo/ui/components` | alias of the root surface, for hosts that shim the package through a `declare module` |
 | `@hanzo/ui/product` | the product/app layer: charts, metrics, PageHeader, StatusTag, EmptyState, ComboBox, SlideOver, Toast, Reorder, Field |
-| `@hanzo/ui/models` | ModelSelector + fetchModelCatalog + catalog helpers |
+| `@hanzo/ui/models` | ModelPicker + parseModels/fetchModelCatalog + catalog helpers + defaultModel |
 | `@hanzo/ui/core` · `/tokens` | cn, Zen font vars, the @hanzo/tokens color/theme/radii/spacing scale |
 | `@hanzo/ui/theme.css` | the design tokens alone (custom properties + Zen + touch/elevation) |
 | `@hanzo/ui/styles.css` | the COMPLETE sheet — tokens + motion + the generated gui atomic/theme CSS. `<Hanzo>` imports it, so an app never has to |
@@ -540,7 +542,8 @@ authenticated `read` (base URL, bearer, org stay the host's), and calls
 that disagrees with the last read triggers a re-read. `UsageMeter` draws one row
 per class (bar in `$good`/`$yellow10`/`$bad`, "Resets <date>", a slim session bar
 for a short window); `LimitedBanner` is the message plus the server's actions.
-`ModelSelector`'s `paused` marks a paused class's models "Paused" and still picks.
+`ModelPicker` takes `limits`: a model whose class is `limited`, or that a `paused`
+entry names (exact id or `*` glob), says "Paused" and still picks.
 `PlanUsage` is the page block: plan name, period, `UsageMeter`, the plan's terms in
 plain words (`PLAN_TERMS`/`FREE_TERMS`) and the actions, led by the banner when paused.
 Placement: bars (`UsageMeter`, `PlanUsage`) render on a usage settings page only,

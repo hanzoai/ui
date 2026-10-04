@@ -41,6 +41,14 @@ export interface Limited {
   message: string
 }
 
+/** One model paused inside a class that is not: an exact id or a `*` glob (`anthropic/claude-opus*`). */
+export interface PausedModel {
+  model: string
+  /** The model that answers in its place. */
+  fallback?: string
+  resets_at?: string | null
+}
+
 export interface Limits {
   /** The plan slug, or "" for a caller with no plan. */
   plan: string
@@ -49,6 +57,8 @@ export interface Limits {
   state: LimitState
   classes: Partial<Record<LimitClass, ClassLimit>>
   limited?: Limited
+  /** Models paused one by one, by exact id or glob. */
+  paused?: PausedModel[]
   actions: LimitAction[]
   upgrade?: string
 }
@@ -152,6 +162,17 @@ const classList = (v: unknown): LimitClass[] =>
  * is not an answer; a class without a numeric percent is left out rather than
  * drawn full or empty.
  */
+function pausedOf(v: unknown): PausedModel[] {
+  if (!Array.isArray(v)) return []
+  return v.flatMap((p): PausedModel[] => {
+    const o = record(p)
+    const model = text(o?.model)
+    if (!model) return []
+    const fallback = text(o?.fallback)
+    return [{ model, ...(fallback ? { fallback } : {}), resets_at: text(o?.resets_at) }]
+  })
+}
+
 export function limitsOf(body: unknown): Limits | null {
   const o = record(body)
   const plan = text(o?.plan)
@@ -162,6 +183,7 @@ export function limitsOf(body: unknown): Limits | null {
     const got = classOfBody(raw?.[c])
     if (got) classes[c] = got
   }
+  const paused = pausedOf(o?.paused)
   const lim = record(o?.limited)
   const limited: Limited | undefined = lim
     ? { reason: text(lim.reason) ?? '', classes: classList(lim.classes), message: text(lim.message) ?? '' }
@@ -176,6 +198,7 @@ export function limitsOf(body: unknown): Limits | null {
     state,
     classes,
     ...(limited ? { limited } : {}),
+    ...(paused.length ? { paused } : {}),
     actions: actionsOf(o?.actions),
     upgrade: text(o?.upgrade) ?? undefined,
   }
@@ -218,17 +241,6 @@ export function refusalOf(body: unknown, status: number, retryAfter?: string | n
     actions: actionsOf(e.actions),
     retry: Number.isFinite(retry) ? retry : null,
   }
-}
-
-/**
- * Which class a model id bills to. Hanzo's own families are `ours`, anything
- * naming the free lane is `free`, and every other model is `premium`.
- */
-export function classOf(id: string): LimitClass {
-  const bare = id.toLowerCase().replace(/^hanzo\//, '')
-  if (bare === 'free' || /(^|[-/:])free($|[-/:])/.test(bare)) return 'free'
-  if (/^(zen|enso|kai|jev)([-.:/0-9]|$)/.test(bare)) return 'ours'
-  return 'premium'
 }
 
 /** The headers and refusal heard since the limits were last read. */

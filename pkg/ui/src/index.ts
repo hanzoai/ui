@@ -8,7 +8,7 @@
 //   import { Button, Card, Dialog, DropdownMenu, Input, Toaster } from '@hanzo/ui'  // component API
 //   import { PageHeader, Sparkline, EmptyState } from '@hanzo/ui/product'           // product/app layer
 //   import { RecordsView, registerField } from '@hanzo/ui/data'                     // metadata record layer
-//   import { ModelSelector } from '@hanzo/ui/models'                                // unified model picker
+//   import { ModelPicker } from '@hanzo/ui/models'                                  // the one model picker
 //   import { cn, themes, colors } from '@hanzo/ui/core'                             // design core + tokens
 //   import '@hanzo/ui/theme.css'                                                    // the self-contained identity
 //

@@ -38,7 +38,7 @@ import { UsageMeter } from './product/UsageMeter'
 import { LimitedBanner } from './product/LimitedBanner'
 import { PlanUsage } from './product/PlanUsage'
 import { limitsOf } from './product/limits'
-import { ModelSelector, RESEARCH } from './models'
+import { ModelPicker } from './models'
 import {
   Aside,
   AsideToggle,
@@ -484,17 +484,18 @@ export const Gallery = () => (
       <span data-palette-selected="" />
     </Section>
 
-    {/* The model picker, OPEN, over a catalogue with a model nobody can call
-        yet: its row is drawn disabled, with its reason and its link. */}
+    {/* The model picker, OPEN, over a catalogue with a premium model, a paused
+        class and a research preview (listed, never picked). */}
     <Section name="models">
-      <ModelSelector
+      <ModelPicker
         open
         value="zen6"
         onChange={NOOP}
+        limits={{ classes: { premium: { state: 'limited' } } }}
         models={[
-          { id: 'enso', owned_by: 'hanzo', label: 'Enso', premium: true },
-          { id: 'zen6', owned_by: 'zenlm', label: 'Zen 6', context_window: 1_000_000 },
-          ...RESEARCH,
+          { id: 'enso-auto', owned_by: 'hanzo', family: 'enso', class: 'ours', name: 'Enso' },
+          { id: 'zen6', owned_by: 'zenlm', family: 'zen', class: 'ours', name: 'Zen 6', context_window: 1_000_000 },
+          { id: 'anthropic/claude-sonnet-4.5', owned_by: 'anthropic', class: 'premium', name: 'Claude Sonnet 4.5', context_window: 1_000_000 },
         ]}
       />
     </Section>

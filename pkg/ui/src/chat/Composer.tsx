@@ -5,7 +5,7 @@
  *
  * Presentational and controlled: it owns no draft, no transport and no model
  * state. `children` is the toolbar slot, which is where a surface puts its
- * `ModelSelector`, attachment control or mode chips — that keeps the shell the
+ * `ModelPicker`, attachment control or mode chips — that keeps the shell the
  * same everywhere while the affordances stay per-surface.
  *
  * The send control is the same button in both states: it submits, and while a

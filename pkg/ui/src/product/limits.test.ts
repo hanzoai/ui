@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { classOf, limitsOf, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
+import { limitsOf, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
 
@@ -42,6 +42,23 @@ describe('limitsOf', () => {
     expect(l.classes.premium).toEqual({ percent: 35, state: 'ok', paying: 'plan', resets_at: '2026-10-31T00:00:00Z' })
     expect(l.classes.ours?.window).toEqual({ percent: 5, state: 'ok', resets_at: '2026-10-03T17:00:00Z' })
     expect(l.actions).toEqual([])
+  })
+
+  it('reads the models paused one by one, globs included, and skips an entry without a model', () => {
+    const l = limitsOf({
+      plan: 'dev',
+      classes: {},
+      paused: [
+        { model: 'anthropic/claude-opus*', fallback: 'enso-auto', resets_at: '2026-10-04T00:00:00Z' },
+        { model: 'zen5' },
+        { fallback: 'enso-auto' },
+      ],
+    })!
+    expect(l.paused).toEqual([
+      { model: 'anthropic/claude-opus*', fallback: 'enso-auto', resets_at: '2026-10-04T00:00:00Z' },
+      { model: 'zen5', resets_at: null },
+    ])
+    expect(limitsOf({ plan: 'dev', classes: {} })!.paused).toBeUndefined()
   })
 
   it('is not an answer without a string plan', () => {
@@ -133,14 +150,6 @@ describe('refusalOf', () => {
   it('is null for any other error', () => {
     expect(refusalOf({ error: { type: 'invalid_request_error', message: 'x' } }, 400)).toBeNull()
     expect(refusalOf({ message: 'x' }, 402)).toBeNull()
-  })
-})
-
-describe('classOf', () => {
-  it('sorts models into the three classes', () => {
-    for (const id of ['zen-4', 'enso-auto', 'kai', 'kai-pro', 'jev-1', 'hanzo/zen3-nano', 'zen']) expect(classOf(id), id).toBe('ours')
-    for (const id of ['zen-free', 'enso-free', 'free', 'hanzo/enso-free']) expect(classOf(id), id).toBe('free')
-    for (const id of ['claude-opus-4.8', 'gpt-5', 'gemini-3-pro', 'kaiju-7b', 'zenith-1']) expect(classOf(id), id).toBe('premium')
   })
 })
 
