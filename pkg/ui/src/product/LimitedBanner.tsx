@@ -6,17 +6,22 @@
  * quiet "See usage" to its usage settings. One line where it fits. Neutral
  * chrome; the dot is the one status colour.
  */
+import type { ReactNode } from 'react'
 import { Text, View, XStack } from '@hanzo/gui'
 import { X } from '@hanzogui/lucide-icons-2'
 import { Button } from '../backends/gui/button'
 import { slot } from '../backends/gui/slot'
 import { touch } from '../backends/gui/gesture'
-import type { LimitAction } from './limits'
+import { navigable, type LimitAction } from './limits'
 
 export interface LimitedBannerProps {
   message: string
   actions?: readonly LimitAction[]
-  /** Takes an action; by default the page goes to its URL. */
+  /**
+   * Takes an action. Without one only the pages (Upgrade, Add prepaid credit)
+   * are offered, and the browser goes to their URL: Continue with credits and a
+   * model switch need the host.
+   */
   onAction?: (action: LimitAction) => void
   /** Opens the host's usage settings; draws "See usage" when given. */
   onUsage?: () => void
@@ -24,10 +29,43 @@ export interface LimitedBannerProps {
 }
 
 const go = (a: LimitAction) => {
-  if (typeof window !== 'undefined') window.location.assign(a.url)
+  if (a.url && typeof window !== 'undefined') window.location.assign(a.url)
 }
 
-export function LimitedBanner({ message, actions = [], onAction = go, onUsage, onClose }: LimitedBannerProps) {
+/**
+ * The server's actions in the order it sent them: the first is the one filled
+ * control, the rest quiet. Only pages are offered when the host takes no action.
+ */
+export function LimitActions({
+  actions,
+  onAction,
+  children,
+}: {
+  actions: readonly LimitAction[]
+  onAction?: (action: LimitAction) => void
+  children?: ReactNode
+}) {
+  const shown = onAction ? actions : actions.filter(navigable)
+  if (!shown.length && !children) return null
+  return (
+    <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
+      {shown.map((a, i) => (
+        <Button
+          key={`${a.kind}:${a.url ?? a.model ?? i}`}
+          size="sm"
+          variant={i === 0 ? 'primary' : 'default'}
+          data-kind={a.kind}
+          onPress={() => (onAction ?? go)(a)}
+        >
+          {a.label}
+        </Button>
+      ))}
+      {children}
+    </XStack>
+  )
+}
+
+export function LimitedBanner({ message, actions = [], onAction, onUsage, onClose }: LimitedBannerProps) {
   return (
     <XStack
       role="status"
@@ -50,26 +88,13 @@ export function LimitedBanner({ message, actions = [], onAction = go, onUsage, o
           {message}
         </Text>
       </XStack>
-      {actions.length || onUsage ? (
-        <XStack gap="$2" shrink={0} flexWrap="wrap" items="center">
-          {actions.map((a) => (
-            <Button
-              key={`${a.kind}:${a.url}`}
-              size="sm"
-              variant={a.kind === 'upgrade' ? 'default' : 'outline'}
-              data-kind={a.kind}
-              onPress={() => onAction(a)}
-            >
-              {a.label}
-            </Button>
-          ))}
-          {onUsage ? (
-            <Button size="sm" variant="ghost" data-kind="usage" onPress={onUsage}>
-              See usage
-            </Button>
-          ) : null}
-        </XStack>
-      ) : null}
+      <LimitActions actions={actions} onAction={onAction}>
+        {onUsage ? (
+          <Button size="sm" variant="ghost" data-kind="usage" onPress={onUsage}>
+            See usage
+          </Button>
+        ) : null}
+      </LimitActions>
       {onClose ? (
         <Button variant="ghost" size="icon" minH={24} minW={24} {...touch(24)} aria-label="Dismiss" onPress={onClose}>
           <X size={14} />

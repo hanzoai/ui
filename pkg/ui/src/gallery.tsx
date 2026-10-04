@@ -230,7 +230,7 @@ const USAGE = limitsOf({
   classes: {
     premium: { percent: 100, state: 'limited', paying: 'none', resets_at: '2026-10-31T00:00:00Z' },
     ours: { percent: 85, state: 'near', paying: 'plan', resets_at: '2026-10-31T00:00:00Z', window: { percent: 40, state: 'ok', resets_at: '2026-10-31T00:00:00Z' } },
-    free: { percent: 20, state: 'ok', paying: 'prepaid', resets_at: '2026-10-31T00:00:00Z' },
+    free: { percent: 20, state: 'ok', paying: 'credits', resets_at: '2026-10-31T00:00:00Z' },
   },
   actions: [
     { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
@@ -775,7 +775,13 @@ export const Gallery = () => (
           onUsage={() => {}}
           onClose={() => {}}
         />
-        <PlanUsage limits={{ ...USAGE, state: 'ok', period_start: '2026-10-01T00:00:00Z', period_end: '2026-10-31T00:00:00Z' }} onAction={() => {}} />
+        <PlanUsage
+          limits={{ ...USAGE, state: 'ok', period_start: '2026-10-01T00:00:00Z', period_end: '2026-10-31T00:00:00Z', creditsAfterAllowance: true }}
+          onAction={() => {}}
+          onCredits={async () => {}}
+          creditsHref="https://hanzo.ai/billing"
+          addCreditsHref="https://hanzo.ai/billing"
+        />
         <PlanUsage limits={{ ...USAGE, plan: '' }} onAction={() => {}} />
       </div>
     </Section>

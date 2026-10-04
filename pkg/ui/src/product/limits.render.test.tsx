@@ -14,7 +14,7 @@ import config from '../gui-config'
 import { limitsOf, type LimitAction } from './limits'
 import { LimitedBanner } from './LimitedBanner'
 import { UsageMeter } from './UsageMeter'
-import { PLAN_TERMS, PlanUsage } from './PlanUsage'
+import { CREDITS_TERMS, PLAN_TERMS, PlanUsage } from './PlanUsage'
 import { forget, observe, useLimits, type UseLimits } from './useLimits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
@@ -139,6 +139,43 @@ describe('PlanUsage', () => {
     )
     expect(m.indexOf('limited-banner')).toBeGreaterThan(-1)
     expect(m.indexOf('limited-banner')).toBeLessThan(m.indexOf('usage-meter'))
+  })
+})
+
+describe('the credits choice and the server actions', () => {
+  const CREDITS = [
+    { kind: 'credits', label: 'Continue with credits', url: '/v1/ai/limits' },
+    { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
+    { kind: 'switch', label: 'Try Enso', model: 'enso' },
+  ]
+
+  it('offers only the pages when the host takes no action', () => {
+    const text = words(html(<LimitedBanner message="m" actions={limitsOf({ plan: 'dev', actions: CREDITS })!.actions} />))
+    expect(text).toContain('Upgrade')
+    expect(text).not.toContain('Continue with credits')
+    expect(text).not.toContain('Try Enso')
+  })
+
+  it('draws every action in server order, the first one filled, when the host acts', () => {
+    const m = html(<LimitedBanner message="m" actions={limitsOf({ plan: 'dev', actions: CREDITS })!.actions} onAction={() => {}} />)
+    const kinds = [...m.matchAll(/data-kind="(\w+)"/g)].map((x) => x[1])
+    expect(kinds).toEqual(['credits', 'upgrade', 'switch'])
+    const variants = [...m.matchAll(/data-variant="(\w+)"/g)].map((x) => x[1])
+    expect(variants.slice(0, 3)).toEqual(['primary', 'default', 'default'])
+  })
+
+  it('shows the opt-in only when the limits carry it and the host can write it', async () => {
+    const on = limitsOf({ ...LIMITED, state: 'ok', limited: undefined, credits_after_allowance: false })!
+    expect(words(html(<PlanUsage limits={on} now={NOW} />))).not.toContain(CREDITS_TERMS)
+    expect(words(html(<PlanUsage limits={limitsOf({ ...LIMITED, state: 'ok', limited: undefined })!} onCredits={async () => {}} now={NOW} />))).not.toContain(CREDITS_TERMS)
+    const wrote: boolean[] = []
+    const { host, unmount } = mount(<PlanUsage limits={on} onCredits={async (v) => void wrote.push(v)} addCreditsHref="https://hanzo.ai/billing" now={NOW} />)
+    expect(host.textContent).toContain(CREDITS_TERMS)
+    expect(host.textContent).toContain('Add credits')
+    const toggle = host.querySelector('[aria-label="Continue with credits"]') as HTMLElement
+    await act(async () => toggle.click())
+    expect(wrote).toEqual([true])
+    unmount()
   })
 })
 

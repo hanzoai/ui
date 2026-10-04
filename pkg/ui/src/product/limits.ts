@@ -11,9 +11,11 @@
 
 export type LimitState = 'ok' | 'near' | 'limited'
 export type LimitClass = 'premium' | 'ours' | 'free'
-export type LimitPayer = 'plan' | 'prepaid' | 'credits' | 'none'
-export type PaidBy = 'plan' | 'prepaid' | 'credits' | 'free'
-export type LimitReason = 'plan_allowance_used' | 'paid_plan_required' | 'free_plan_cap' | 'insufficient_balance'
+/** Who pays for a class now: the plan, the org's credits (once it opted in), the free lane, or nobody. */
+export type LimitPayer = 'plan' | 'credits' | 'free' | 'none'
+export type PaidBy = LimitPayer
+export type LimitReason = 'plan_allowance_used' | 'paid_plan_required' | 'free_plan_cap' | 'insufficient_balance' | 'model_cap'
+export type LimitActionKind = 'upgrade' | 'topup' | 'credits' | 'switch'
 
 /** A share of one window: percent used, its state, and when it starts over. */
 export interface LimitWindow {
@@ -28,12 +30,22 @@ export interface ClassLimit extends LimitWindow {
   window?: LimitWindow
 }
 
+/**
+ * A way past a limit, in the order the server sends them. `upgrade` and
+ * `topup` are pages (`url`); `credits` is the org's opt-in to keep paying from
+ * credits (`url` is the write, `PUT /v1/ai/limits`); `switch` names a model to
+ * move the picker to.
+ */
 export interface LimitAction {
-  kind: 'upgrade' | 'topup'
+  kind: LimitActionKind
   label: string
   plan?: string
-  url: string
+  url?: string
+  model?: string
 }
+
+/** The actions that are pages a browser can simply open. */
+export const navigable = (a: LimitAction): boolean => (a.kind === 'upgrade' || a.kind === 'topup') && Boolean(a.url)
 
 export interface Limited {
   reason: string
@@ -61,6 +73,8 @@ export interface Limits {
   paused?: PausedModel[]
   actions: LimitAction[]
   upgrade?: string
+  /** The org keeps paying from credits once included usage runs out; absent when the server does not say. */
+  creditsAfterAllowance?: boolean
 }
 
 /** What a served call's headers say. */
@@ -106,8 +120,14 @@ export const CLASS_LABEL: Record<LimitClass, string> = {
 }
 
 const STATES: readonly LimitState[] = ['ok', 'near', 'limited']
-const PAYERS: readonly LimitPayer[] = ['plan', 'prepaid', 'credits', 'none']
-const PAID: readonly PaidBy[] = ['plan', 'prepaid', 'credits', 'free']
+const PAYERS: readonly LimitPayer[] = ['plan', 'credits', 'free', 'none']
+const KINDS: readonly LimitActionKind[] = ['upgrade', 'topup', 'credits', 'switch']
+const LABEL: Record<LimitActionKind, string> = {
+  upgrade: 'Upgrade',
+  topup: 'Add prepaid credit',
+  credits: 'Continue with credits',
+  switch: 'Switch model',
+}
 const RANK: Record<LimitState, number> = { ok: 0, near: 1, limited: 2 }
 
 const text = (v: unknown): string | null => (typeof v === 'string' ? v : null)
@@ -146,11 +166,15 @@ export function actionsOf(v: unknown): LimitAction[] {
   if (!Array.isArray(v)) return []
   return v.flatMap((a): LimitAction[] => {
     const o = record(a)
-    const kind = one(['upgrade', 'topup'] as const, o?.kind)
-    const url = text(o?.url)
-    if (!kind || !url) return []
-    const plan = text(o?.plan)
-    return [{ kind, label: text(o?.label) || (kind === 'upgrade' ? 'Upgrade' : 'Add prepaid credit'), url, ...(plan ? { plan } : {}) }]
+    const kind = one(KINDS, o?.kind)
+    if (!kind) return []
+    const url = text(o?.url) ?? undefined
+    const model = text(o?.model) ?? undefined
+    const plan = text(o?.plan) ?? undefined
+    // A page with no address, or a switch to no model, is not an action.
+    if ((kind === 'upgrade' || kind === 'topup') && !url) return []
+    if (kind === 'switch' && !model) return []
+    return [{ kind, label: text(o?.label) || LABEL[kind], ...(url ? { url } : {}), ...(model ? { model } : {}), ...(plan ? { plan } : {}) }]
   })
 }
 
@@ -201,6 +225,7 @@ export function limitsOf(body: unknown): Limits | null {
     ...(paused.length ? { paused } : {}),
     actions: actionsOf(o?.actions),
     upgrade: text(o?.upgrade) ?? undefined,
+    ...(typeof o?.credits_after_allowance === 'boolean' ? { creditsAfterAllowance: o.credits_after_allowance } : {}),
   }
 }
 
@@ -212,7 +237,7 @@ export function servedOf(headers: { get(name: string): string | null }): Served 
   return {
     state: usage ?? 'limited',
     class: one(CLASSES, headers.get('x-hanzo-usage-class')),
-    paidBy: one(PAID, headers.get('x-hanzo-paid-by')),
+    paidBy: one(PAYERS, headers.get('x-hanzo-paid-by')),
     fallback,
     reason: headers.get('x-hanzo-usage-reason') || null,
   }
@@ -300,8 +325,12 @@ export function when(iso: string | null | undefined, now: number = Date.now()): 
 const PLAIN: Record<string, string> = {
   paid_plan_required: 'Premium models need a paid plan.',
   free_plan_cap: "You've used the free plan's usage for now.",
-  insufficient_balance: 'Your prepaid credit has run out.',
+  insufficient_balance: 'Your credits have run out.',
 }
+
+/** A paused model as a sentence names it: a glob reads as its family ("claude-opus models"). */
+const modelWords = (model: string, name: (id: string) => string): string =>
+  model.endsWith('*') ? `${model.slice(0, -1).split('/').pop()?.replace(/[-.]$/, '')} models` : name(model)
 
 /**
  * What to tell a reader whose usage is paused or refused, or null when nothing
@@ -323,14 +352,24 @@ export function noticeOf(
   if (fallback && served?.class && served.class !== 'free') classes.add(served.class)
   if (!refusal && !fallback && !limits?.limited && limits?.state !== 'limited') return null
 
-  const list = CLASSES.filter((c) => classes.has(c))
   const reason = refusal?.code || limits?.limited?.reason || served?.reason || ''
-  const resets = earliest([...list.map((c) => resetOf(limits?.classes[c])), refusal?.resets_at ?? null])
+  // One model capped inside a class that is not: the class stays open, so it is not listed.
+  const capped =
+    reason === 'model_cap'
+      ? (limits?.paused?.find((p) => fallback !== null && p.fallback === fallback) ?? limits?.paused?.[0] ?? null)
+      : null
+  if (capped && served?.class) classes.delete(served.class)
+  const list = CLASSES.filter((c) => classes.has(c))
+  const resets = capped
+    ? (capped.resets_at ?? refusal?.resets_at ?? null)
+    : earliest([...list.map((c) => resetOf(limits?.classes[c])), refusal?.resets_at ?? null])
   const paused = reason === 'plan_allowance_used' || (!reason && list.length > 0)
   const until = when(resets, now)
-  const said = paused
-    ? `${classesLabel(list)} are paused${until ? ` until ${until}` : ''}.`
-    : refusal?.message || limits?.limited?.message || PLAIN[reason] || 'Usage is paused for now.'
+  const said = capped
+    ? `${modelWords(capped.model, name)} ${capped.model.endsWith('*') ? 'are' : 'is'} paused${until ? ` until ${until}` : ''}.`
+    : paused
+      ? `${classesLabel(list)} are paused${until ? ` until ${until}` : ''}.`
+      : refusal?.message || limits?.limited?.message || PLAIN[reason] || 'Usage is paused for now.'
   return {
     reason,
     classes: list,

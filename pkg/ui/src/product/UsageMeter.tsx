@@ -15,9 +15,8 @@ export const STATE_COLOR = { ok: '$good', near: '$yellow10', limited: '$bad' } a
 
 /** What a class row says under its bar about who pays now. */
 function caption(c: ClassLimit): string {
-  if (c.state === 'limited' && c.paying === 'none') return 'Paused'
-  if (c.paying === 'prepaid') return 'Paid from prepaid credit'
-  if (c.paying === 'credits') return 'Paid from credits'
+  if (c.paying === 'credits') return 'Paying from credits'
+  if (c.state === 'limited' && (c.paying === 'none' || c.paying === 'free')) return 'Paused'
   if (c.state === 'near') return 'Almost used'
   return ''
 }

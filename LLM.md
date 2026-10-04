@@ -546,6 +546,14 @@ for a short window); `LimitedBanner` is the message plus the server's actions.
 entry names (exact id or `*` glob), says "Paused" and still picks.
 `PlanUsage` is the page block: plan name, period, `UsageMeter`, the plan's terms in
 plain words (`PLAN_TERMS`/`FREE_TERMS`) and the actions, led by the banner when paused.
+The server's actions arrive in its order and `LimitActions` draws them so — the
+first filled (`primary`), the rest quiet. `upgrade`/`topup` are pages and open on
+their own; `credits` (the org's `PUT /v1/ai/limits {creditsAfterAllowance}`) and
+`switch` (a `model` for the picker) are drawn only when the host passes `onAction`.
+A class pays from `plan|credits|free|none`. `PlanUsage` shows the continue-with-
+credits switch only when the limits carry `creditsAfterAllowance` and the host
+passes `onCredits`. A `model_cap` names the one capped model from `limits.paused`
+and leaves its class open.
 Placement: bars (`UsageMeter`, `PlanUsage`) render on a usage settings page only,
 never in a chat surface. A chat draws `LimitedBanner` only when the reader was
 turned away — `notice.fallback` or `notice.refused` — with `onUsage` opening its

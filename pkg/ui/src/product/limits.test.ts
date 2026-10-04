@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { limitsOf, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
+import { actionsOf, limitsOf, navigable, nearOf, noticeOf, overlay, refusalOf, servedOf, when } from './limits'
 
 const NOW = Date.parse('2026-10-03T12:00:00Z')
 
@@ -234,5 +234,52 @@ describe('no figures', () => {
       nearOf(limitsOf(NEAR), NOW)!,
     ].join(' ')
     expect(said).not.toMatch(/\$\s?\d|\d+\s*(requests?|messages?|tokens?|credits?)\b/i)
+  })
+})
+
+describe('the credits contract', () => {
+  it('reads every action kind in the order the server sent them, and drops what cannot act', () => {
+    const got = actionsOf([
+      { kind: 'credits', label: 'Continue with credits', url: '/v1/ai/limits' },
+      { kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' },
+      { kind: 'switch', label: 'Try Enso', model: 'enso' },
+      { kind: 'switch', label: 'nowhere' },
+      { kind: 'topup' },
+    ])
+    expect(got.map((a) => a.kind)).toEqual(['credits', 'upgrade', 'switch'])
+    expect(got[2]).toEqual({ kind: 'switch', label: 'Try Enso', model: 'enso' })
+    expect(got.map(navigable)).toEqual([false, true, false])
+  })
+
+  it('carries the org opt-in only when the server says it', () => {
+    expect(limitsOf({ plan: 'dev', credits_after_allowance: true })?.creditsAfterAllowance).toBe(true)
+    expect(limitsOf({ plan: 'dev', credits_after_allowance: false })?.creditsAfterAllowance).toBe(false)
+    expect(limitsOf({ plan: 'dev' })).not.toHaveProperty('creditsAfterAllowance')
+  })
+
+  it('reads credits as a payer, and prepaid as nothing', () => {
+    const l = limitsOf({ plan: 'dev', classes: { premium: { percent: 100, state: 'ok', paying: 'credits' }, ours: { percent: 10, paying: 'prepaid' } } })!
+    expect(l.classes.premium?.paying).toBe('credits')
+    expect(l.classes.ours?.paying).toBe('plan')
+    expect(servedOf(headers({ 'X-Hanzo-Usage': 'ok', 'X-Hanzo-Paid-By': 'credits' }))?.paidBy).toBe('credits')
+  })
+
+  it('pauses one capped model by name, leaving its class open', () => {
+    const l = limitsOf({
+      plan: 'max-5x',
+      state: 'ok',
+      classes: { premium: { percent: 40, state: 'ok', paying: 'plan' } },
+      paused: [{ model: 'claude-opus-4.8', fallback: 'zen-free', resets_at: '2026-10-03T17:00:00Z' }],
+    })
+    const served = servedOf(headers({ 'X-Hanzo-Usage': 'limited', 'X-Hanzo-Usage-Class': 'premium', 'X-Hanzo-Fallback': 'zen-free', 'X-Hanzo-Usage-Reason': 'model_cap' }))
+    const n = noticeOf(l, { served, refusal: null }, (id) => ({ 'claude-opus-4.8': 'Claude Opus 4.8', 'zen-free': 'Zen Free' })[id] ?? id, NOW)!
+    expect(n.message).toBe(`Claude Opus 4.8 is paused until ${when('2026-10-03T17:00:00Z', NOW)}. You're chatting on Zen Free.`)
+    expect(n.classes).toEqual([])
+  })
+
+  it('names a capped family by its glob', () => {
+    const l = limitsOf({ plan: 'dev', classes: {}, paused: [{ model: 'anthropic/claude-opus*', fallback: 'zen-free' }] })
+    const refusal = refusalOf({ error: { type: 'billing_error', code: 'model_cap', message: 'm' } }, 402)
+    expect(noticeOf(l, { served: null, refusal }, undefined, NOW)?.message).toBe('claude-opus models are paused.')
   })
 })
