@@ -40,6 +40,7 @@ import {
   CAPABILITY_NAMES,
   can,
   capabilitiesOf,
+  formatCeiling,
   formatContext,
   formatSaving,
   groupLabel,
@@ -320,8 +321,10 @@ export function ModelPicker({
             // A model that answers in something other than a conversation says
             // what it does, so an unscoped list is honest about each row.
             const kind = scope || can(m, 'chat') ? null : capabilitiesOf(m)[0]
-            // A model sold against another says by how much, from the two list prices.
+            // A model sold against another says by how much, from the two list prices;
+            // a router, the ceiling it bills up to.
             const saving = savingOf(m, models)
+            const ceiling = formatCeiling(m)
             return (
               <XStack
                 key={m.id}
@@ -355,17 +358,19 @@ export function ModelPicker({
                     ✦
                   </SizableText>
                 ) : null}
-                {locked || paused || saving || kind || ctx ? (
-                  <SizableText size="$1" color="$soft" shrink={0} fontVariant={['tabular-nums']}>
+                {locked || paused || saving || ceiling || kind || ctx ? (
+                  <SizableText size="$1" color="$soft" shrink={0} maxW="60%" numberOfLines={1} fontVariant={['tabular-nums']}>
                     {locked
                       ? 'Research preview'
                       : paused
                         ? 'Paused'
                         : saving
                           ? formatSaving(saving)
-                          : kind
-                            ? CAPABILITY_NAMES[kind]
-                            : ctx}
+                          : ceiling
+                            ? ceiling
+                            : kind
+                              ? CAPABILITY_NAMES[kind]
+                              : ctx}
                   </SizableText>
                 ) : null}
               </XStack>

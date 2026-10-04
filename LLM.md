@@ -71,7 +71,12 @@ pkg/ui/src/
                    virtualised, a sheet on phones) + the catalog read from
                    GET /v1/models fields alone (class, family, inputs,
                    outputs, supports_*, pricing). RESEARCH is the models nobody
-                   can call yet; the picker appends them, disabled.
+                   can call yet; the picker appends them, disabled. A row sold
+                   against another (`compare_at`, or Kai against Jev) says
+                   `savingOf` from the two list prices; a router
+                   (`variable: true`) says `formatCeiling` — "Up to $X / 1M ·
+                   billed at the model that serves it" — and is compared with
+                   nothing. Pricing reads `input_per_million`, else `prompt`.
                    `@hanzo/ui/models/catalog` is the pure half, which bare
                    Node and a server can load; `./models` pulls in gui
   primitives/      GENERATED per-member entrypoints (scripts/gen-primitives.mjs)

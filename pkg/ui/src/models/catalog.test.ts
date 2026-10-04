@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   capabilitiesOf,
+  formatCeiling,
   formatContext,
   formatPrice,
   formatSaving,
@@ -76,6 +77,9 @@ describe('reading /v1/models', () => {
     expect(formatPrice(byId('zen5').pricing?.input_per_million)).toBe('')
     expect(formatPrice(byId('enso-auto').pricing?.input_per_million)).toBe('Free')
     expect(formatPrice(3)).toBe('$3.00')
+    expect(formatPrice(0.5)).toBe('$0.50')
+    expect(formatPrice(0.042)).toBe('$0.042')
+    expect(formatPrice(0.0000036)).toBe('$0.0000036')
   })
 
   it('drops a class or family it does not know rather than guessing one', () => {
@@ -189,6 +193,25 @@ describe('a price against another', () => {
     expect(savingOf(named, rows)).toEqual({ percent: 25, against: 'Jev 1.13' })
     expect(savingOf(kai, [kai])).toBeNull()
     expect(savingOf(rows[2]!, rows)).toBeNull()
+  })
+
+  it('reads a router as billed at the model that serves it, up to its ceiling, and compares nothing against it', () => {
+    const [router, bare, sole] = parseModels([
+      { id: 'typesafe/jev-router', owned_by: 'typesafe', class: 'premium', outputs: ['decision'], created: 1789689690, variable: true, pricing: { prompt: '0.000000042', completion: '0' } },
+      { id: 'r2', pricing: { variable: true } },
+      { id: 'r3', variable: true },
+    ])
+    expect(router!.pricing).toEqual({ input_per_million: 0.042, output_per_million: 0, variable: true })
+    expect(formatCeiling(router!)).toBe('Up to $0.042 / 1M · billed at the model that serves it')
+    expect(formatCeiling(bare!)).toBe('Billed at the model that serves it')
+    expect(formatCeiling(sole!)).toBe('Billed at the model that serves it')
+    expect(formatCeiling(kai)).toBe('')
+    // Kai is still sold against the newest Jev with a price of its own, never the router.
+    expect(savingOf(kai, [...rows, router!])).toEqual({ percent: 50, against: 'Jev' })
+    expect(savingOf(kai, [kai, router!])).toBeNull()
+    expect(savingOf(router!, rows)).toBeNull()
+    const against = parseModels([{ id: 'y', compare_at: 'typesafe/jev-router', pricing: { input_per_million: 0.021 } }])[0]!
+    expect(savingOf(against, [router!])).toBeNull()
   })
 
   it('files Jev with its maker, not among Hanzo families', () => {

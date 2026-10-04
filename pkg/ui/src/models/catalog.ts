@@ -36,6 +36,11 @@ export type Capability =
 export interface ModelPricing {
   input_per_million?: number
   output_per_million?: number
+  /**
+   * A router's price: the call is billed at the model that serves it, so the
+   * figures are its ceiling, never what a call costs.
+   */
+  variable?: true
 }
 
 /** One row of `GET /v1/models`. */
@@ -111,15 +116,23 @@ const strs = (v: unknown): string[] | undefined => {
 const oneOf = <T extends string>(set: readonly T[], v: unknown): T | undefined =>
   typeof v === 'string' && (set as readonly string[]).includes(v) ? (v as T) : undefined
 
-function pricingOf(v: unknown): ModelPricing | undefined {
-  if (!v || typeof v !== 'object') return undefined
-  const p = v as Record<string, unknown>
-  const input = num(p.input_per_million)
-  const output = num(p.output_per_million)
-  if (input === undefined && output === undefined) return undefined
+/** A per-token rate as the wire writes it, `"0.000003"` or `0.000003`, per 1M tokens. */
+const perMillion = (v: unknown): number | undefined => {
+  const n = typeof v === 'string' && v.trim() ? Number(v) : num(v)
+  return n !== undefined && Number.isFinite(n) ? +(n * 1_000_000).toPrecision(12) : undefined
+}
+
+/** `pricing`, per 1M tokens: `input_per_million`, else `prompt` (per token); `variable` from the row or its pricing. */
+function pricingOf(v: unknown, variable: unknown): ModelPricing | undefined {
+  const p = v && typeof v === 'object' ? (v as Record<string, unknown>) : {}
+  const varies = variable === true || p.variable === true ? { variable: true as const } : {}
+  const input = num(p.input_per_million) ?? perMillion(p.prompt)
+  const output = num(p.output_per_million) ?? perMillion(p.completion)
+  if (input === undefined && output === undefined) return varies.variable ? varies : undefined
   return {
     ...(input !== undefined && input >= 0 ? { input_per_million: input } : {}),
     ...(output !== undefined && output >= 0 ? { output_per_million: output } : {}),
+    ...varies,
   }
 }
 
@@ -153,7 +166,7 @@ export function modelOf(v: unknown): ModelCatalogEntry | null {
   set('supports_vision', yes(r.supports_vision))
   set('supports_tools', yes(r.supports_tools))
   set('supports_reasoning', yes(r.supports_reasoning))
-  set('pricing', pricingOf(r.pricing))
+  set('pricing', pricingOf(r.pricing, r.variable))
   set('compare_at', compareOf(r.compare_at ?? r.compareAt))
   return m
 }
@@ -446,16 +459,16 @@ export interface Saving {
  */
 export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntry[]): Saving | null {
   const mine = m.pricing?.input_per_million
-  if (mine === undefined) return null
+  if (mine === undefined || m.pricing?.variable) return null
   const other = m.compare_at
     ? models.find((x) => x.id === m.compare_at)
     : m.family === 'kai'
       ? models
-          .filter((x) => makerOf(x) === 'typesafe' && can(x, 'decision') && x.pricing?.input_per_million)
+          .filter((x) => makerOf(x) === 'typesafe' && can(x, 'decision') && x.pricing?.input_per_million && !x.pricing.variable)
           .sort((a, b) => (b.created ?? 0) - (a.created ?? 0))[0]
       : undefined
   const theirs = other?.pricing?.input_per_million
-  if (!other || !theirs || theirs <= mine) return null
+  if (!other || !theirs || other.pricing?.variable || theirs <= mine) return null
   const percent = Math.round((1 - mine / theirs) * 100)
   if (percent < 1) return null
   return { percent, against: modelName(other) }
@@ -463,6 +476,17 @@ export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntr
 
 /** "50% less than Jev". */
 export const formatSaving = (s: Saving): string => `${s.percent}% less than ${s.against}`
+
+/**
+ * A router's price in words: "Up to $0.042 / 1M · billed at the model that
+ * serves it", from its input ceiling; the clause alone when it states none.
+ * "" for a model with a price of its own.
+ */
+export function formatCeiling(m: ModelCatalogEntry): string {
+  if (!m.pricing?.variable) return ''
+  const top = m.pricing.input_per_million
+  return top ? `Up to ${formatPrice(top)} / 1M · billed at the model that serves it` : 'Billed at the model that serves it'
+}
 
 // ── how a figure reads ───────────────────────────────────────────────────────
 
@@ -474,9 +498,14 @@ export function formatContext(n: number | undefined): string {
   return String(n)
 }
 
-/** "$3.00" per 1M tokens, "Free" at zero, "" when the catalog lists no price. */
+/**
+ * "$3.00" per 1M tokens, "Free" at zero, "" when the catalog lists no price.
+ * Under a dollar, a price that is not whole cents keeps two significant digits:
+ * "$0.042", never a rounded "$0.04".
+ */
 export function formatPrice(n: number | undefined): string {
   if (n === undefined) return ''
   if (n === 0) return 'Free'
-  return n < 0.01 ? `$${+n.toPrecision(2)}` : `$${n.toFixed(2)}`
+  const cents = n * 100
+  return n >= 1 || Math.abs(cents - Math.round(cents)) < 1e-9 ? `$${n.toFixed(2)}` : `$${+n.toPrecision(2)}`
 }

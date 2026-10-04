@@ -17,6 +17,7 @@ export {
   capabilitiesOf,
   defaultModel,
   fetchModelCatalog,
+  formatCeiling,
   formatContext,
   formatPrice,
   formatSaving,

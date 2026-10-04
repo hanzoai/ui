@@ -133,6 +133,20 @@ describe('a picker over five hundred models', () => {
     expect(kai.textContent).toContain('50% less than Jev')
   })
 
+  it('says a router bills at the model that serves it, up to its ceiling', () => {
+    const router = parseModels([{ id: 'typesafe/jev-router', owned_by: 'typesafe', name: 'Jev Router', class: 'premium', outputs: ['decision'], variable: true, pricing: { prompt: '0.000000042', completion: '0' } }])
+    mount(<ModelPicker models={[...MODELS, ...router]} onChange={() => {}} open />)
+    act(() => {
+      const el = input()
+      const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+      set.call(el, 'jev router')
+      el.dispatchEvent(new Event('input', { bubbles: true }))
+    })
+    const row = options().find((o) => o.getAttribute('data-model') === 'typesafe/jev-router')!
+    expect(row.textContent).toContain('Up to $0.042 / 1M · billed at the model that serves it')
+    expect(row.textContent).not.toContain('less than')
+  })
+
   it('says the catalog could not be read, though the research preview is still listed', () => {
     mount(<ModelPicker models={[]} onChange={() => {}} open error="The model catalog is down" />)
     expect(document.querySelector('[data-slot="model-picker-error"]')?.textContent).toBe('The model catalog is down')
