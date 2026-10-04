@@ -102,6 +102,23 @@ describe('CodeEditor', () => {
     ui.cleanup()
   })
 
+  it('never writes back a value it reported itself, however late the parent hands it back', () => {
+    let view: EditorView | undefined
+    const onChange = vi.fn()
+    const ui = mount(<CodeEditor value="a" onChange={onChange} onMount={(v) => (view = v)} />)
+    act(() => view?.dispatch({ changes: { from: 1, insert: 'b' } }))
+    act(() => view?.dispatch({ changes: { from: 2, insert: 'c' } }))
+    expect(onChange.mock.calls.map((c) => c[0])).toEqual(['ab', 'abc'])
+
+    // A parent one keystroke behind renders 'ab' after the editor already holds 'abc'.
+    ui.render(<CodeEditor value="ab" onChange={onChange} onMount={(v) => (view = v)} />)
+    expect(ui.content()?.textContent).toBe('abc')
+    // A value the editor never reported is the parent's own, and it wins.
+    ui.render(<CodeEditor value="reset" onChange={onChange} onMount={(v) => (view = v)} />)
+    expect(ui.content()?.textContent).toBe('reset')
+    ui.cleanup()
+  })
+
   it('reports an edit to onChange, and hands the view to onMount once', () => {
     const onChange = vi.fn()
     let view: EditorView | undefined
@@ -170,18 +187,24 @@ describe('CodeEditor', () => {
   })
 
   it('resizes from the footer by keyboard, past the cap, and hands the height back on a double-click', () => {
-    const ui = mount(<CodeEditor defaultValue="x" minHeight={80} maxHeight={120} />)
+    const ui = mount(<CodeEditor language="json" defaultValue="{}" minHeight={80} maxHeight={120} />)
     const footer = ui.slot('code-editor-footer')
-    expect(footer?.getAttribute('role')).toBe('separator')
+    const grip = ui.slot('code-editor-resize')
+    expect(grip?.getAttribute('role')).toBe('separator')
+    expect(grip?.getAttribute('aria-valuetext')).toBe('Fits its text')
+    // The status is read, not swallowed by the separator.
+    expect(grip?.contains(ui.slot('code-editor-status'))).toBe(false)
+    expect(footer?.getAttribute('style')).toMatch(/touch-action:\s*none/)
 
     // jsdom measures every box at 0, so the first step lands on the floor.
-    press(footer, { key: 'ArrowDown' })
+    press(grip, { key: 'ArrowDown' })
     expect(ui.editor()?.style.height).toBe('80px')
     expect(ui.editor()?.style.maxHeight).toBe('')
 
     vi.spyOn(ui.editor()!, 'getBoundingClientRect').mockReturnValue({ height: 140 } as DOMRect)
-    press(footer, { key: 'ArrowDown' })
+    press(grip, { key: 'ArrowDown' })
     expect(ui.editor()?.style.height).toBe('164px')
+    expect(grip?.getAttribute('aria-valuenow')).toBe('164')
 
     act(() => {
       footer?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))

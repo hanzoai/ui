@@ -116,6 +116,8 @@ const LABEL: Record<string, string> = {
 const LEADING = 1.6
 /** How far one ArrowUp / ArrowDown on the footer moves the height. */
 const STEP = 24
+/** The separator's stated maximum, in px: the drag itself has none. */
+const RESIZE_CEILING = 4096
 const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
 
 /**
@@ -183,12 +185,12 @@ const INK = /* @__PURE__ */ HighlightStyle.define([
 /** How much deeper than its line a wrapped continuation starts, in characters. */
 const HANG = 2
 
-/** A line's own indentation in characters, a tab counted as two. */
-const indentOf = (text: string) => {
+/** A line's own indentation in characters, a tab counted at the editor's tab width. */
+const indentOf = (text: string, tab: number) => {
   let n = 0
   for (const c of text) {
     if (c === ' ') n += 1
-    else if (c === '\t') n += 2
+    else if (c === '\t') n += tab - (n % tab)
     else break
   }
   return n
@@ -224,7 +226,7 @@ const hang = /* @__PURE__ */ ViewPlugin.fromClass(
       for (const { from, to } of view.visibleRanges) {
         for (let pos = from; pos <= to; ) {
           const line = view.state.doc.lineAt(pos)
-          out.add(line.from, line.from, hangFor(indentOf(line.text) + HANG))
+          out.add(line.from, line.from, hangFor(indentOf(line.text, view.state.tabSize) + HANG))
           pos = line.to + 1
         }
       }
@@ -249,7 +251,7 @@ type Verdict = { check: JsonCheck; marks: DecorationSet; gutter: RangeSet<Gutter
 function judge(state: EditorState, text: boolean): Verdict {
   const check = checkJson(state.doc.toString(), { text })
   if (check.kind !== 'error') return { check, marks: Decoration.none, gutter: RangeSet.empty }
-  const at = Math.min(check.at, state.doc.length)
+  const at = Number.isFinite(check.at) ? Math.min(check.at, state.doc.length) : 0
   const line = state.doc.lineAt(at)
   const end = Math.min(at + 1, line.to)
   const ranges = [FAULT_LINE.range(line.from), ...(end > at ? [FAULT_AT.range(at, end)] : [])]
@@ -341,6 +343,9 @@ export function CodeEditor({
 
   const host = React.useRef<HTMLElement | null>(null)
   const grip = React.useRef<HTMLElement | null>(null)
+  const knob = React.useRef<HTMLElement | null>(null)
+  /** Every text reported to `onChange` and not yet seen back as `value`. */
+  const sent = React.useRef<string[]>([])
   const view = React.useRef<EditorView | null>(null)
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const listeners = React.useRef({ onChange, onCheck })
@@ -386,6 +391,7 @@ export function CodeEditor({
       if (update.docChanged && !update.transactions.some((tr) => tr.annotation(External))) {
         const next = update.state.doc.toString()
         setText(next)
+        if (listeners.current.onChange) sent.current = [...sent.current.slice(-31), next]
         listeners.current.onChange?.(next)
       }
       report(update.state)
@@ -448,10 +454,19 @@ export function CodeEditor({
     })
   }, [isJson, field, lineNumbers, wordWrap, readOnly])
 
-  // A controlled value that moved out from under the editor replaces the text.
+  // A controlled value that moved out from under the editor replaces the text. A
+  // value the editor itself reported is an echo, however late it arrives: a parent
+  // that renders one keystroke behind hands back the text before the last key, and
+  // writing that in would drop the key and move the caret.
   React.useEffect(() => {
     const v = view.current
     if (!v || value === undefined) return
+    const echo = sent.current.indexOf(value)
+    if (echo !== -1) {
+      sent.current = sent.current.slice(echo + 1)
+      return
+    }
+    sent.current = []
     const current = v.state.doc.toString()
     if (value === current) return
     v.dispatch({ changes: { from: 0, to: current.length, insert: value }, annotations: External.of(true) })
@@ -471,7 +486,8 @@ export function CodeEditor({
 
   React.useEffect(() => {
     const el = grip.current
-    if (!el || !resizable) return
+    const handle = knob.current
+    if (!el || !handle || !resizable) return
     let pointer = -1
     let startY = 0
     let startH = 0
@@ -503,15 +519,15 @@ export function CodeEditor({
     el.addEventListener('pointermove', move)
     el.addEventListener('pointerup', up)
     el.addEventListener('pointercancel', up)
-    el.addEventListener('keydown', key)
     el.addEventListener('dblclick', reset)
+    handle.addEventListener('keydown', key)
     return () => {
       el.removeEventListener('pointerdown', down)
       el.removeEventListener('pointermove', move)
       el.removeEventListener('pointerup', up)
       el.removeEventListener('pointercancel', up)
-      el.removeEventListener('keydown', key)
       el.removeEventListener('dblclick', reset)
+      handle.removeEventListener('keydown', key)
     }
   }, [resizable, minHeight])
 
@@ -616,20 +632,13 @@ export function CodeEditor({
       )}
       <YStack ref={host as never} {...slot('code-editor-body')} {...(fills && { flex: 1, minH: 0 })} />
       {footer && (
+        // The whole footer is the drag target; the grip is the separator a keyboard
+        // and a screen reader find. The status stays outside the separator, whose
+        // children assistive tech treats as presentational.
         <XStack
           ref={grip as never}
           {...slot('code-editor-footer')}
-          {...(resizable &&
-            ({
-              role: 'separator',
-              'aria-orientation': 'horizontal',
-              'aria-label': `Resize ${label}`,
-              'aria-valuemin': minHeight,
-              'aria-valuenow': dragged ?? undefined,
-              tabIndex: 0,
-            } as object))}
           cursor={resizable ? 'row-resize' : undefined}
-          focusVisibleStyle={{ bg: '$hover' }}
           items="center"
           justify="space-between"
           gap="$2"
@@ -640,9 +649,32 @@ export function CodeEditor({
           borderColor="$borderColor"
           bg="$panel"
           select="none"
+          // A touch drag would otherwise scroll the page and cancel the pointer.
+          style={resizable ? { touchAction: 'none' } : undefined}
         >
           <Status check={isJson ? check : null} />
-          {resizable && <GripHorizontal size={14} color="$soft" />}
+          {resizable && (
+            <XStack
+              ref={knob as never}
+              {...slot('code-editor-resize')}
+              {...({
+                role: 'separator',
+                'aria-orientation': 'horizontal',
+                'aria-label': `Resize ${label}`,
+                'aria-valuemin': minHeight,
+                // A drag has no ceiling; this stands in for "as tall as you like".
+                'aria-valuemax': RESIZE_CEILING,
+                'aria-valuenow': dragged ?? minHeight,
+                'aria-valuetext': dragged === null ? 'Fits its text' : `${dragged} pixels`,
+                tabIndex: 0,
+              } as object)}
+              rounded="$2"
+              p="$1"
+              focusVisibleStyle={{ bg: '$hover' }}
+            >
+              <GripHorizontal size={14} color="$soft" />
+            </XStack>
+          )}
         </XStack>
       )}
     </YStack>

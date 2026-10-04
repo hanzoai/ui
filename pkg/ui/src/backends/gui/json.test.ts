@@ -37,6 +37,24 @@ describe('checkJson', () => {
     expect(fault('[1, 2', true).kind).toBe('error')
   })
 
+  it('holds a log line that opens with a bracket as text, and a real array to JSON', () => {
+    expect(checkJson('[INFO] user exported 50000 rows', { text: true }).kind).toBe('text')
+    expect(checkJson('[WARN]: disk 91%', { text: true }).kind).toBe('text')
+    expect(checkJson('["a", 1', { text: true }).kind).toBe('error')
+    expect(checkJson('[ {"a": 1}', { text: true }).kind).toBe('error')
+    expect(checkJson('[', { text: true }).kind).toBe('error')
+  })
+
+  it('walks any depth without exhausting the stack, and names where it ends', () => {
+    const open = '['.repeat(20000)
+    expect(checkJson(open)).toMatchObject({ kind: 'error', at: 20000, message: 'Unexpected end of input' })
+    expect(checkJson(`${open}${']'.repeat(20000)}`).kind).toBe('json')
+    expect(checkJson(`${'{"a":'.repeat(5000)}1${'}'.repeat(4999)}`)).toMatchObject({
+      kind: 'error',
+      message: "Expected ',' or '}' after property value, found end of input",
+    })
+  })
+
   it('points at a missing comma', () => {
     const c = fault('{\n  "a": 1\n  "b": 2\n}')
     expect(c).toMatchObject({ line: 3, column: 3, message: "Expected ',' or '}' after property value, found character '\"'" })

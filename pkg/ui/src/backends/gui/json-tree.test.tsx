@@ -104,6 +104,15 @@ describe('JsonTree', () => {
     ui.cleanup()
   })
 
+  it('keeps a dotted key and a nested key apart', () => {
+    const ui = mount(<JsonTree data={{ 'a.b': { x: 1 }, a: { b: { y: 2 } } }} depth={1} />)
+    act(() => ui.row('a.b')?.click())
+    expect(ui.row('a.b')?.getAttribute('aria-expanded')).toBe('true')
+    act(() => ui.row('a')?.click())
+    expect(ui.row('b')?.getAttribute('aria-expanded')).toBe('false')
+    ui.cleanup()
+  })
+
   it('copies the whole value, indented', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.assign(navigator, { clipboard: { writeText } })

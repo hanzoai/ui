@@ -38,12 +38,15 @@ const count = (b: Branch) =>
     ? `[${b.entries.length} ${b.entries.length === 1 ? 'item' : 'items'}]`
     : `{${b.entries.length} ${b.entries.length === 1 ? 'key' : 'keys'}}`
 
+/** A child's path: each key escaped, so a key `a.b` and a nested `a` → `b` stay two paths. */
+const child = (path: string, key: string) => `${path}/${encodeURIComponent(key)}`
+
 /** Every path at or above `depth`, for the open set a tree starts with. */
 function paths(v: unknown, depth: number, at = '$', level = 0, out = new Set<string>()): Set<string> {
   const b = branch(v)
   if (!b || level >= depth) return out
   out.add(at)
-  for (const [k, x] of b.entries) paths(x, depth, `${at}.${k}`, level + 1, out)
+  for (const [k, x] of b.entries) paths(x, depth, child(at, k), level + 1, out)
   return out
 }
 
@@ -258,7 +261,7 @@ function Node({
               key={k}
               name={k}
               value={v}
-              path={`${path}.${k}`}
+              path={child(path, k)}
               level={level + 1}
               open={open}
               toggle={toggle}

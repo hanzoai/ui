@@ -21,8 +21,9 @@ export type JsonCheck =
 export interface JsonCheckOptions {
   /**
    * Text that does not open an object or an array passes as plain text instead
-   * of failing — for a field that takes either. A document that opens with `{`
-   * or `[` is still held to JSON, because that is what its author meant.
+   * of failing — for a field that takes either. A document that opens with `{`,
+   * or with `[` and a JSON value, is still held to JSON, because that is what its
+   * author meant; `[INFO] …` is a log line, not a broken array.
    */
   text?: boolean
 }
@@ -33,6 +34,12 @@ const SPACE = ' \t\n\r'
 const ESCAPE = '"\\/bfnrt'
 const NUMBER = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y
 const HEX = /[0-9a-fA-F]{4}/y
+/**
+ * Text that means to be JSON: an object, or an array whose first element looks
+ * like a JSON value. A log line such as `[INFO] export started` opens with a
+ * bracket and is prose, so it is not held to JSON.
+ */
+const STRUCTURED = /^(\{|\[\s*([[{"\]\-\d]|true\b|false\b|null\b|$))/
 
 const shown = (c: string | undefined) =>
   c === undefined ? 'end of input' : c === '\n' ? 'line break' : `character '${c}'`
@@ -80,81 +87,76 @@ function scan(s: string): Fault | null {
     i += m![0].length
   }
 
-  const object = () => {
+  /** A property name and its colon, where one must be. */
+  const key = (afterComma: boolean) => {
+    space()
+    if (s[i] !== '"') {
+      fail(afterComma && s[i] === '}' ? "Trailing comma before '}'" : `Expected a double-quoted property name, found ${shown(s[i])}`)
+    }
+    string()
+    space()
+    if (s[i] !== ':') fail(`Expected ':' after property name, found ${shown(s[i])}`)
     i++
-    space()
-    if (s[i] === '}') {
-      i++
-      return
-    }
-    for (;;) {
-      space()
-      if (s[i] !== '"') {
-        fail(s[i] === '}' ? "Trailing comma before '}'" : `Expected a double-quoted property name, found ${shown(s[i])}`)
-      }
-      string()
-      space()
-      if (s[i] !== ':') fail(`Expected ':' after property name, found ${shown(s[i])}`)
-      i++
-      value()
-      space()
-      if (s[i] === ',') {
-        i++
-        continue
-      }
-      if (s[i] === '}') {
-        i++
-        return
-      }
-      fail(`Expected ',' or '}' after property value, found ${shown(s[i])}`)
-    }
   }
 
-  const array = () => {
-    i++
-    space()
-    if (s[i] === ']') {
-      i++
-      return
-    }
-    for (;;) {
-      space()
-      if (s[i] === ']') fail("Trailing comma before ']'")
-      value()
-      space()
-      if (s[i] === ',') {
-        i++
-        continue
-      }
-      if (s[i] === ']') {
-        i++
-        return
-      }
-      fail(`Expected ',' or ']' after array element, found ${shown(s[i])}`)
-    }
-  }
-
-  const value = (): void => {
-    space()
-    const c = s[i]
-    if (c === '{') return object()
-    if (c === '[') return array()
-    if (c === '"') return string()
-    if (c === '-' || (c !== undefined && c >= '0' && c <= '9')) return number()
-    for (const word of ['true', 'false', 'null']) {
-      if (s.startsWith(word, i)) {
-        i += word.length
-        return
-      }
-    }
-    fail(`Unexpected ${shown(c)}`)
-  }
-
+  // A loop over an explicit stack of the containers still open, not a call per
+  // level: a few thousand unclosed brackets would otherwise exhaust the call stack,
+  // and `JSON.parse` (which does not recurse) accepts the same depth when closed.
+  const open: ('{' | '[')[] = []
+  let wantValue = true
   try {
-    value()
-    space()
-    if (i < s.length) fail(`Unexpected ${shown(s[i])} after the JSON value`)
-    return null
+    for (;;) {
+      space()
+      if (wantValue) {
+        const c = s[i]
+        if (c === '{' || c === '[') {
+          i++
+          space()
+          if (s[i] === (c === '{' ? '}' : ']')) {
+            i++
+            wantValue = false
+            continue
+          }
+          open.push(c)
+          if (c === '{') key(false)
+          continue
+        }
+        if (c === '"') string()
+        else if (c === '-' || (c !== undefined && c >= '0' && c <= '9')) number()
+        else {
+          const word = ['true', 'false', 'null'].find((w) => s.startsWith(w, i))
+          if (!word) fail(`Unexpected ${shown(c)}`)
+          i += word!.length
+        }
+        wantValue = false
+        continue
+      }
+      const top = open.at(-1)
+      if (!top) {
+        if (i < s.length) fail(`Unexpected ${shown(s[i])} after the JSON value`)
+        return null
+      }
+      if (s[i] === ',') {
+        i++
+        if (top === '{') key(true)
+        else {
+          space()
+          if (s[i] === ']') fail("Trailing comma before ']'")
+        }
+        wantValue = true
+        continue
+      }
+      if (s[i] === (top === '{' ? '}' : ']')) {
+        i++
+        open.pop()
+        continue
+      }
+      fail(
+        top === '{'
+          ? `Expected ',' or '}' after property value, found ${shown(s[i])}`
+          : `Expected ',' or ']' after array element, found ${shown(s[i])}`,
+      )
+    }
   } catch (e) {
     return e as Fault
   }
@@ -180,7 +182,7 @@ export function checkJson(text: string, options: JsonCheckOptions = {}): JsonChe
   try {
     return { kind: 'json', value: JSON.parse(text) }
   } catch (e) {
-    if (options.text && body[0] !== '{' && body[0] !== '[') return { kind: 'text', value: text }
+    if (options.text && !STRUCTURED.test(body)) return { kind: 'text', value: text }
     const fault = scan(text) ?? { at: 0, message: e instanceof Error ? e.message : String(e) }
     return { kind: 'error', message: fault.message, at: fault.at, ...place(text, fault.at) }
   }

@@ -612,6 +612,16 @@ add a second.
   NOT safe: a host that mounts design's sheet without its light selector (the console)
   keeps the dark theme's white on a light page — measured, the syntax vanished. Syntax
   is ranked by ink and weight (Hanzo is monochrome); hue is spent only on an error.
+- **The scanner is a loop over an explicit stack**, not a call per nesting level:
+  `'['.repeat(20000)` exhausted the call stack and handed the editor a NaN position.
+  Under `allowText`, `[` only means JSON when a JSON value follows it, so a log line
+  (`[INFO] …`) is text.
+- **A controlled value the editor reported is an echo**, however late it comes back
+  (`sent` holds every text given to `onChange` and not yet seen as `value`); writing a
+  parent's one-keystroke-stale value back in dropped the key and moved the caret.
+- **The footer is the drag target, the grip is the separator** (keyboard, aria
+  value/valuetext); the status sits outside it so it is still read, and the footer
+  takes `touch-action: none` so a finger drag resizes instead of scrolling.
 - **Wrapped lines hang** under their own text (a per-line padding + negative
   text-indent of the line's indentation plus two), so a long string in nested JSON
   still reads as its key's.
