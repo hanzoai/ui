@@ -111,6 +111,13 @@ describe('servedOf', () => {
     expect(s).toEqual({ state: 'limited', class: 'premium', paidBy: 'free', fallback: 'zen-free', reason: 'plan_allowance_used' })
   })
 
+  it('names the model that answered when the fallback header names only the lane', () => {
+    const s = servedOf(
+      headers({ 'X-Hanzo-Usage': 'limited', 'X-Hanzo-Fallback': 'free', 'X-Hanzo-Served': 'enso-free', 'X-Hanzo-Usage-Reason': 'paid_plan_required' }),
+    )
+    expect(s).toEqual({ state: 'limited', class: null, paidBy: null, fallback: 'enso-free', reason: 'paid_plan_required' })
+  })
+
   it('is null for a call with no usage headers', () => {
     expect(servedOf(headers({ 'content-type': 'application/json' }))).toBeNull()
   })
@@ -177,6 +184,17 @@ describe('noticeOf', () => {
     const n = noticeOf(limitsOf(LIMITED), { served, refusal: null }, (id) => (id === 'zen-free' ? 'Zen Free' : id), NOW)!
     expect(n.message).toBe("Premium models are paused until Oct 31. You're chatting on Zen Free.")
     expect(n.fallback).toBe('zen-free')
+  })
+
+  it('says a model needs a paid plan when a free plan is answered on the free model', () => {
+    const FREE = { plan: 'free', state: 'ok', classes: {}, actions: LIMITED.actions }
+    const served = servedOf(
+      headers({ 'X-Hanzo-Usage': 'limited', 'X-Hanzo-Fallback': 'free', 'X-Hanzo-Served': 'enso-free', 'X-Hanzo-Usage-Reason': 'paid_plan_required' }),
+    )
+    const n = noticeOf(limitsOf(FREE), { served, refusal: null }, (id) => (id === 'enso-free' ? 'Enso Free' : id), NOW)!
+    expect(n.message).toBe("This model needs a paid plan. You're chatting on Enso Free.")
+    expect(n.actions.map((a) => a.label)).toEqual(['Upgrade', 'Add prepaid credit'])
+    expect(n.fallback).toBe('enso-free')
   })
 
   it('carries a refusal with no limits read', () => {

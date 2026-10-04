@@ -82,7 +82,7 @@ export interface Served {
   state: LimitState
   class: LimitClass | null
   paidBy: PaidBy | null
-  /** The free model that answered in place of the one asked for. */
+  /** The model that answered in place of the one asked for: the one `X-Hanzo-Served` names, else `X-Hanzo-Fallback`'s. */
   fallback: string | null
   reason: string | null
 }
@@ -235,7 +235,9 @@ export function limitsOf(body: unknown): Limits | null {
 /** The usage headers on a served call, or null when it carries none. */
 export function servedOf(headers: { get(name: string): string | null }): Served | null {
   const usage = one(STATES, headers.get('x-hanzo-usage'))
-  const fallback = headers.get('x-hanzo-fallback') || null
+  // X-Hanzo-Fallback may name only the lane ("free"); X-Hanzo-Served names the model that answered.
+  const lane = headers.get('x-hanzo-fallback') || null
+  const fallback = lane && (headers.get('x-hanzo-served') || lane)
   if (!usage && !fallback) return null
   return {
     state: usage ?? 'limited',
@@ -326,7 +328,7 @@ export function when(iso: string | null | undefined, now: number = Date.now()): 
 }
 
 const PLAIN: Record<string, string> = {
-  paid_plan_required: 'Premium models need a paid plan.',
+  paid_plan_required: 'This model needs a paid plan.',
   free_plan_cap: "You've used the free plan's usage for now.",
   insufficient_balance: 'Your credits have run out.',
 }
@@ -372,7 +374,10 @@ export function noticeOf(
     ? `${modelWords(capped.model, name)} ${capped.model.endsWith('*') ? 'are' : 'is'} paused${until ? ` until ${until}` : ''}.`
     : paused
       ? `${classesLabel(list)} are paused${until ? ` until ${until}` : ''}.`
-      : refusal?.message || limits?.limited?.message || PLAIN[reason] || 'Usage is paused for now.'
+      : refusal?.message ||
+        limits?.limited?.message ||
+        (reason === 'paid_plan_required' && list.length ? `${classesLabel(list)} need a paid plan.` : PLAIN[reason]) ||
+        'Usage is paused for now.'
   return {
     reason,
     classes: list,

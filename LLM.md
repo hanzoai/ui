@@ -559,6 +559,11 @@ A class pays from `plan|credits|free|none`. `PlanUsage` shows the continue-with-
 credits switch only when the limits carry `creditsAfterAllowance` and the host
 passes `onCredits`. A `model_cap` names the one capped model from `limits.paused`
 and leaves its class open.
+A fallback reply carries `X-Hanzo-Fallback` (it may name only the lane, `free`) and
+`X-Hanzo-Served` (the model that answered); `servedOf` takes the served one. After the
+re-read a `plan_allowance_used` fallback counts only while the limits say `limited`;
+a `paid_plan_required` or `model_cap` fallback, like a refusal, stands until an answer
+comes back without one — a free plan's limits have no class to say it in.
 Placement: bars (`UsageMeter`, `PlanUsage`) render on a usage settings page only,
 never in a chat surface. A chat draws `LimitedBanner` only when the reader was
 turned away — `notice.fallback` or `notice.refused` — with `onUsage` opening its

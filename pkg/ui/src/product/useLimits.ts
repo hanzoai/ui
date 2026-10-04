@@ -143,14 +143,17 @@ export function useLimits(
     if (drift && on) setNonce((n) => n + 1)
   }, [drift, on, heard.at])
 
-  // Once read again, a fallback still counts only while the limits agree the
-  // reader is limited, so an upgrade or a top-up clears it at once. A refusal
-  // stands until an answer comes back: a paid plan required or a spent balance
-  // is not something the limits read can unsay.
-  const effective: Heard = useMemo(
-    () => (fresh ? heard : { served: limits?.state === 'limited' ? heard.served : null, refusal: heard.refusal }),
-    [fresh, heard, limits?.state],
-  )
+  // Once read again, the limits speak for the plan: a served state is theirs to
+  // say, and a fallback for a spent allowance counts only while they still say
+  // limited, so an upgrade or a top-up clears it at once. A fallback for a model
+  // that needs a paid plan or is capped, like a refusal, stands until an answer
+  // comes back without one: the limits read cannot unsay either.
+  const effective: Heard = useMemo(() => {
+    if (fresh) return heard
+    const s = heard.served
+    const stands = s !== null && ((s.fallback !== null && s.reason !== 'plan_allowance_used') || limits?.state === 'limited')
+    return { served: stands ? s : null, refusal: heard.refusal }
+  }, [fresh, heard, limits?.state])
   const shown = useMemo(() => overlay(limits, effective), [limits, effective])
   const nameRef = useRef(name)
   nameRef.current = name

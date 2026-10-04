@@ -276,6 +276,33 @@ describe('useLimits', () => {
     unmount()
   })
 
+  it('keeps a paid-plan fallback the limits cannot unsay, until an answer comes back without one', async () => {
+    const FREE = { plan: 'free', state: 'ok', classes: {}, actions: LIMITED.actions }
+    const read = vi.fn(async () => FREE)
+    let got: UseLimits | null = null
+    const { unmount } = mount(<Probe read={read} onRead={(u) => (got = u)} />)
+    await flush()
+    expect(got!.notice).toBeNull()
+    const calls = read.mock.calls.length
+    await act(async () => {
+      observe(
+        new Response('{}', {
+          status: 200,
+          headers: { 'X-Hanzo-Usage': 'limited', 'X-Hanzo-Fallback': 'free', 'X-Hanzo-Served': 'zen-free', 'X-Hanzo-Usage-Reason': 'paid_plan_required' },
+        }),
+      )
+    })
+    await flush()
+    await flush()
+    // Read again, and the limits still say ok: the free plan has no class to say it in.
+    expect(read.mock.calls.length).toBeGreaterThan(calls)
+    expect(got!.notice?.message).toBe("This model needs a paid plan. You're chatting on Zen Free.")
+    await act(async () => observe(new Response('{}', { status: 200, headers: { 'X-Hanzo-Served': 'enso' } })))
+    await flush()
+    expect(got!.notice).toBeNull()
+    unmount()
+  })
+
   it('takes a refusal even when the limits could not be read', async () => {
     let got: UseLimits | null = null
     const { unmount } = mount(<Probe read={async () => Promise.reject(new Error('503'))} onRead={(u) => (got = u)} />)
