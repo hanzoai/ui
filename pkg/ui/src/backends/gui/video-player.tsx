@@ -147,6 +147,8 @@ export function MediaPlayer({
   const videoRef = React.useRef<HTMLVideoElement>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const hideTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  // A player that goes away takes its pending hide with it.
+  React.useEffect(() => () => clearTimeout(hideTimer.current), [])
 
   const [isPlaying, setIsPlaying] = React.useState(false)
   const [currentTime, setCurrentTime] = React.useState(0)
