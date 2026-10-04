@@ -131,6 +131,12 @@ describe('a picker over five hundred models', () => {
     expect(kai.textContent).toContain('Decision')
   })
 
+  it('says the catalog could not be read, though the research preview is still listed', () => {
+    mount(<ModelPicker models={[]} onChange={() => {}} open error="The model catalog is down" />)
+    expect(document.querySelector('[data-slot="model-picker-error"]')?.textContent).toBe('The model catalog is down')
+    expect(options().map((o) => o.getAttribute('data-model'))).toEqual(['zen7'])
+  })
+
   it('never picks the research preview', () => {
     const onChange = vi.fn()
     mount(<ModelPicker models={MODELS} onChange={onChange} open />)

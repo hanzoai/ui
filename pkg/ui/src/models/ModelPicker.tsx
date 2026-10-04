@@ -264,6 +264,14 @@ export function ModelPicker({
         </SizableText>
       </XStack>
 
+      {error ? (
+        <XStack {...slot('model-picker-error')} px="$2" py="$1.5" role="alert">
+          <SizableText size="$2" color="$bad">
+            {error}
+          </SizableText>
+        </XStack>
+      ) : null}
+
       <ScrollView
         ref={list as never}
         height={sheet ? undefined : Math.min(LIST_H, Math.max(row * 3, rows.length * row))}
@@ -352,10 +360,10 @@ export function ModelPicker({
             )
           })}
         </YStack>
-        {rows.length === 0 ? (
+        {rows.length === 0 && !error ? (
           <XStack {...slot('model-picker-empty')} px="$2" py="$2" role="status">
-            <SizableText size="$2" color={error ? '$bad' : '$soft'}>
-              {error ?? (loading ? 'Loading models…' : q ? `No models match “${q}”.` : 'No models to choose from.')}
+            <SizableText size="$2" color="$soft">
+              {loading ? 'Loading models…' : q ? `No models match “${q}”.` : 'No models to choose from.'}
             </SizableText>
           </XStack>
         ) : null}
