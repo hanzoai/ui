@@ -74,7 +74,7 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       width="100%"
       items="center"
       flexWrap="wrap"
-      gap="$3"
+      gap="$2"
       px="$3"
       py="$2.5"
       rounded="$4"
@@ -82,15 +82,15 @@ export function LimitedBanner({ message, actions = [], onAction, onUsage, onClos
       borderColor="$edge"
       bg="$panel"
     >
-      <XStack flex={1} minW={200} items="center" gap="$2.5">
+      <XStack flex={1} minW={200} items="center" gap="$2">
         <View width={8} height={8} rounded={4} bg="$bad" shrink={0} aria-hidden />
-        <Text fontSize="$2" color="$ink" {...slot('limited-banner-message')}>
+        <Text fontSize="$1" color="$ink" {...slot('limited-banner-message')}>
           {message}
         </Text>
       </XStack>
       <LimitActions actions={actions} onAction={onAction}>
         {onUsage ? (
-          <Button size="sm" variant="ghost" data-kind="usage" onPress={onUsage}>
+          <Button size="sm" variant="link" px="$1.5" data-kind="usage" onPress={onUsage}>
             See usage
           </Button>
         ) : null}

@@ -377,7 +377,8 @@ export function noticeOf(
     reason,
     classes: list,
     message: fallback ? `${said} You're chatting on ${name(fallback)}.` : said,
-    actions: limits?.actions.length ? limits.actions : (refusal?.actions ?? []),
+    // A refusal names what is possible for the call it refused; the limits name the general case.
+    actions: refusal?.actions.length ? refusal.actions : (limits?.actions ?? []),
     resets_at: resets,
     fallback,
     refused: refusal !== null,

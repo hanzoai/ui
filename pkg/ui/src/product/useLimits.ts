@@ -54,7 +54,8 @@ const server = () => EMPTY
 export function observe(res: Response): void {
   const served = servedOf(res.headers)
   if (res.ok) {
-    if (served) tell({ served, refusal: null, at: Date.now() })
+    // An answer, with or without headers it may read, ends the last refusal.
+    if (served || held.served || held.refusal) tell({ served, refusal: null, at: Date.now() })
     return
   }
   if (res.status !== 402 && res.status !== 429) return
@@ -142,10 +143,12 @@ export function useLimits(
     if (drift && on) setNonce((n) => n + 1)
   }, [drift, on, heard.at])
 
-  // Once read again, what a served call said still counts only while the
-  // limits agree the reader is limited: an upgrade or a top-up clears it at once.
+  // Once read again, a fallback still counts only while the limits agree the
+  // reader is limited, so an upgrade or a top-up clears it at once. A refusal
+  // stands until an answer comes back: a paid plan required or a spent balance
+  // is not something the limits read can unsay.
   const effective: Heard = useMemo(
-    () => (fresh || limits?.state === 'limited' ? heard : { served: null, refusal: null }),
+    () => (fresh ? heard : { served: limits?.state === 'limited' ? heard.served : null, refusal: heard.refusal }),
     [fresh, heard, limits?.state],
   )
   const shown = useMemo(() => overlay(limits, effective), [limits, effective])

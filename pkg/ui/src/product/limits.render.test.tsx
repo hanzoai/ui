@@ -252,6 +252,30 @@ describe('useLimits', () => {
     unmount()
   })
 
+  it('keeps a refusal the limits cannot unsay, until an answer comes back', async () => {
+    const OK = { plan: 'max-5x', state: 'ok', classes: { premium: { percent: 10, state: 'ok', paying: 'plan' } }, actions: [] }
+    let got: UseLimits | null = null
+    const { unmount } = mount(<Probe read={async () => OK} onRead={(u) => (got = u)} />)
+    await flush()
+    await act(async () => {
+      observe(
+        new Response(JSON.stringify({ error: { type: 'billing_error', code: 'paid_plan_required', message: 'Premium models need a paid plan.', class: 'premium' } }), {
+          status: 402,
+          headers: { 'content-type': 'application/json' },
+        }),
+      )
+      await new Promise((r) => setTimeout(r, 0))
+    })
+    await flush()
+    await flush()
+    expect(got!.notice?.message).toBe('Premium models need a paid plan.')
+    // An answer with no usage header it may read still ends the refusal.
+    await act(async () => observe(new Response('{}', { status: 200 })))
+    await flush()
+    expect(got!.notice).toBeNull()
+    unmount()
+  })
+
   it('takes a refusal even when the limits could not be read', async () => {
     let got: UseLimits | null = null
     const { unmount } = mount(<Probe read={async () => Promise.reject(new Error('503'))} onRead={(u) => (got = u)} />)

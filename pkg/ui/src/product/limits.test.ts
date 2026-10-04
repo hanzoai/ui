@@ -292,3 +292,11 @@ describe('paidPlan', () => {
     expect(paidPlan(null)).toBe(false)
   })
 })
+
+describe('a refusal names its own way past', () => {
+  it('prefers the refusal actions over the limits ones', () => {
+    const refusal = refusalOf({ error: { type: 'billing_error', code: 'free_plan_cap', message: 'm', actions: [{ kind: 'topup', label: 'Add prepaid credit', url: 'https://hanzo.ai/pay' }] } }, 429)
+    const n = noticeOf(limitsOf({ plan: 'free', actions: [{ kind: 'upgrade', label: 'Upgrade', url: 'https://hanzo.ai/pricing' }] }), { served: null, refusal }, undefined, NOW)!
+    expect(n.actions.map((a) => a.kind)).toEqual(['topup'])
+  })
+})
