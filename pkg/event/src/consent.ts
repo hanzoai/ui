@@ -143,11 +143,6 @@ export function asks(): boolean {
   return typeof document !== 'undefined' && region() === 'opt-in' && !stored()
 }
 
-/** Whether a small notice must be shown: an opt-out visitor who has not yet seen it. */
-export function notices(): boolean {
-  return typeof document !== 'undefined' && region() === 'opt-out' && !stored()
-}
-
 /** The choice as the `consent` property and the cookie spell it. */
 export function render(c: Choice): string {
   return (['analytics', 'marketing', 'ads'] as const).filter((k) => c[k]).join(',')

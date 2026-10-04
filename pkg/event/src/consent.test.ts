@@ -1,7 +1,7 @@
 // Consent: opt-in outside the US, opt-out inside it, GPC always wins.
 
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { CONSENT_COOKIE, CONSENT_VERSION_COOKIE, acceptAll, asks, notices, read, region, rejectAll, save, serve } from './consent'
+import { CONSENT_COOKIE, CONSENT_VERSION_COOKIE, acceptAll, asks, read, region, rejectAll, save, serve } from './consent'
 import { touch, capture } from './touch'
 
 const g = globalThis as Record<string, unknown>
@@ -161,7 +161,6 @@ describe('the rule cloud serves', () => {
     browser('Europe/Berlin')
     serve(rule('opt-out'))
     expect(asks()).toBe(false)
-    expect(notices()).toBe(true)
     expect(read()).toEqual({ analytics: true, marketing: true, ads: true })
   })
 
