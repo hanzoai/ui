@@ -188,6 +188,14 @@ describe('a price against another', () => {
     expect(formatSaving(savingOf(kai, rows)!)).toBe('50% less than Jev')
   })
 
+  it('names Jev plainly when its versions share a release', () => {
+    const same = parseModels([
+      { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev 1.13', outputs: ['decision'], created: 1791105125, pricing: { input_per_million: 0.042 } },
+      { id: '~typesafe/jev-latest', owned_by: 'typesafe', name: 'Jev', outputs: ['decision'], created: 1791105125, pricing: { input_per_million: 0.042 } },
+    ])
+    expect(savingOf(kai, [kai, ...same])).toEqual({ percent: 50, against: 'Jev' })
+  })
+
   it('reads compare_at when the catalog names one, and says nothing without both prices', () => {
     const named = parseModels([{ id: 'x', compare_at: { model: 'typesafe/jev-1.13' }, pricing: { input_per_million: 0.0315 } }])[0]!
     expect(savingOf(named, rows)).toEqual({ percent: 25, against: 'Jev 1.13' })
