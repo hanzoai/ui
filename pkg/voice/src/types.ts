@@ -131,6 +131,8 @@ export interface Stream {
   limit: number;
   /** The most one push may carry, in bytes. */
   most: number;
+  /** Seconds the transcript survives without a call before the platform drops it. */
+  idle: number;
   push(pcm: Int16Array): Promise<Said>;
   close(): Promise<Said>;
 }

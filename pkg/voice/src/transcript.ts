@@ -129,8 +129,12 @@ export function transcript(
 
   // One call, tried until the platform takes it, gives a final answer, or the
   // window runs out. The window is measured from the first failure, so a wait the
-  // platform names past its end fails now instead of after it.
-  const persist = async <T>(call: () => Promise<T>): Promise<T> => {
+  // platform names past its end fails now instead of after it. Inside a
+  // transcript no single wait outlasts the transcript's idle life (`within`): a
+  // session left untouched longer than that is dropped, and the wait would lose
+  // the very audio it was protecting — so a long wait is taken in steps, each
+  // retry keeping the session alive.
+  const persist = async <T>(call: () => Promise<T>, within = Infinity): Promise<T> => {
     let since = 0;
     for (let attempt = 0; ; attempt++) {
       try {
@@ -140,10 +144,13 @@ export function transcript(
         const now = Date.now();
         since ||= now;
         if (wait === null || now + wait - since > RETRY_WINDOW) throw error;
-        await new Promise((resume) => setTimeout(resume, wait));
+        await new Promise((resume) => setTimeout(resume, Math.min(wait, within)));
       }
     }
   };
+
+  /** The longest one wait may be inside a transcript, in ms. */
+  const alive = (session: Stream) => Math.max(1, session.idle - MARGIN) * 1000;
 
   const begin = () => persist(() => (speech.stream as NonNullable<Speech["stream"]>)({ language: options.language }));
 
@@ -151,7 +158,7 @@ export function transcript(
   // in front of everything the next one hears.
   const roll = async () => {
     const full = current as Stream;
-    report(await persist(() => full.close()));
+    report(await persist(() => full.close(), alive(full)));
     current = null;
     before = `${before} ${settled}`.trim();
     settled = "";
@@ -177,7 +184,7 @@ export function transcript(
           at += part.length;
         }
         const into = current;
-        const said = await persist(() => into.push(pcm));
+        const said = await persist(() => into.push(pcm), alive(into));
         if (!open) return; // refused while this push waited; that has been said
         queued -= pcm.length;
         report(said);
@@ -251,7 +258,7 @@ export function transcript(
       current = null;
       if (!last) return;
       try {
-        report(await persist(() => last.close()));
+        report(await persist(() => last.close(), alive(last)));
       } catch (error) {
         heard.refused(error as Error);
       }

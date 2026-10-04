@@ -173,6 +173,7 @@ export function speech(config: SpeechConfig = {}): Speech {
         chunk_ms?: number;
         max_seconds?: number;
         max_bytes?: number;
+        idle_seconds?: number;
       };
       const at = `${base}/v1/audio/transcript/${encodeURIComponent(session.id)}`;
       const said = async (response: Response, what: string): Promise<Said> => {
@@ -184,6 +185,7 @@ export function speech(config: SpeechConfig = {}): Speech {
         chunk: session.chunk_ms ?? 250,
         limit: session.max_seconds ?? 600,
         most: session.max_bytes ?? 64 * 1024,
+        idle: session.idle_seconds ?? 30,
         async push(pcm) {
           const headers = new Headers({ "Content-Type": "application/octet-stream" });
           await authorize(headers);

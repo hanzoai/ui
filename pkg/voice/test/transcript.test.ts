@@ -44,6 +44,7 @@ function growing(answers: Said[], limit = 600) {
     chunk: 250,
     limit,
     most: 64 * 1024,
+    idle: 30,
     async push(pcm) {
       pushes.push(pcm.length);
       if (gate === null) return answers.shift() as Said;
@@ -178,6 +179,7 @@ function scripted(script: (Error | Said)[]) {
     chunk: 250,
     limit: 600,
     most: 64 * 1024,
+    idle: 30,
     async push(pcm) {
       const marks: number[] = [];
       for (let i = 0; i < pcm.length; i += 4000) marks.push(pcm[i] as number);
@@ -300,6 +302,24 @@ describe("a push the platform cannot take yet", () => {
     expect(got.refused).toEqual(["Transcript push failed (503)"]);
   });
 
+  it("a long wait is taken in steps the transcript survives, so the session is not lost to it", async () => {
+    // A 502 that names a minute: the session lives 30 s untouched, so the retry
+    // comes at 25 s rather than at 60, when the session would already be gone.
+    const named = new SpeechError("Transcript push failed (502)", 502, undefined, 60_000);
+    const { attempts, delivered, got, live } = await opened([named]);
+    marked(1);
+    await tick();
+    expect(attempts).toHaveLength(1);
+    await tick(24_999);
+    expect(attempts).toHaveLength(1);
+    await tick(1);
+    await tick();
+    expect(attempts).toHaveLength(2);
+    expect(delivered).toEqual([mark(1)]);
+    expect(got.refused).toEqual([]);
+    await live.close();
+  });
+
   it("a wait named past the window refuses now, not after it", async () => {
     const { got } = await opened([limited(RETRY_WINDOW / 1000 + 1)]);
     marked(1);
@@ -373,7 +393,7 @@ describe("speech().stream", () => {
     const fetch = vi.fn(async (url: string, init: RequestInit) => {
       calls.push({ url, init });
       if (init.method === "POST" && url.endsWith("/v1/audio/transcript")) {
-        return new Response(JSON.stringify({ id: "ats_1", chunk_ms: 250, max_seconds: 600, max_bytes: 65536 }), { status: 201 });
+        return new Response(JSON.stringify({ id: "ats_1", chunk_ms: 250, max_seconds: 600, max_bytes: 65536, idle_seconds: 20 }), { status: 201 });
       }
       return new Response(JSON.stringify({ text: "hi", pending: "", seconds: 0.25 }), { status: 200 });
     }) as unknown as typeof globalThis.fetch;
@@ -382,6 +402,7 @@ describe("speech().stream", () => {
     expect(JSON.parse(calls[0]?.init.body as string)).toEqual({ model: "zen-scribe", language: "en" });
     expect(new Headers(calls[0]?.init.headers).get("X-Org-Id")).toBe("acme");
     expect(live.chunk).toBe(250);
+    expect(live.idle).toBe(20);
 
     const said = await live.push(new Int16Array([1, -1]));
     expect(said.text).toBe("hi");

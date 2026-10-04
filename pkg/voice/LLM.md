@@ -78,7 +78,11 @@ API; this file carries only what the source cannot say for itself.
   doubling backoff, while new audio queues behind it, so nothing is dropped or
   reordered. 402, 403 and every other 4xx refuse at once; so does a failure
   streak, or a queue, older than `RETRY_WINDOW` (60 s, the gateway's rate
-  window). Closing delivers the queue before the DELETE.
+  window). Closing delivers the queue before the DELETE. No single wait
+  outlasts the session's `idle_seconds` (less five): a transcript untouched
+  that long is dropped, so a long `Retry-After` is taken in steps, each retry
+  keeping the session alive (measured: a 502 naming 60 s against a 30 s idle
+  life came back to a 409, the session gone).
 - A 429 the client gives up on is worded as a limit, never an outage:
   `refused()` reads "Today's Hanzo dictation limit is reached. It resets at
   <time>", the time from `Retry-After` (or the seconds the message names, since
