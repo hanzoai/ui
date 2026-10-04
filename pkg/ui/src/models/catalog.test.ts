@@ -174,7 +174,8 @@ describe('a price against another', () => {
   const rows = parseModels([
     { id: 'kai', owned_by: 'hanzo', family: 'kai', class: 'ours', outputs: ['decision'], pricing: { input_per_million: 0.021, output_per_million: 0 } },
     { id: 'typesafe/jev-router', owned_by: 'typesafe', family: 'jev', class: 'premium', outputs: ['text'] },
-    { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev', class: 'premium', outputs: ['decision'], pricing: { input_per_million: 0.042, output_per_million: 0 } },
+    { id: 'typesafe/jev-1.13', owned_by: 'typesafe', name: 'Jev 1.13', class: 'premium', outputs: ['decision'], created: 1789689684, pricing: { input_per_million: 0.042, output_per_million: 0 } },
+    { id: '~typesafe/jev-latest', owned_by: '~typesafe', name: 'Jev', class: 'premium', outputs: ['decision'], created: 1789689685, pricing: { input_per_million: 0.042, output_per_million: 0 } },
   ])
   const kai = rows[0]!
 
@@ -185,7 +186,7 @@ describe('a price against another', () => {
 
   it('reads compare_at when the catalog names one, and says nothing without both prices', () => {
     const named = parseModels([{ id: 'x', compare_at: { model: 'typesafe/jev-1.13' }, pricing: { input_per_million: 0.0315 } }])[0]!
-    expect(savingOf(named, rows)).toEqual({ percent: 25, against: 'Jev' })
+    expect(savingOf(named, rows)).toEqual({ percent: 25, against: 'Jev 1.13' })
     expect(savingOf(kai, [kai])).toBeNull()
     expect(savingOf(rows[2]!, rows)).toBeNull()
   })

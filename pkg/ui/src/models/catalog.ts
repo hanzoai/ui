@@ -441,8 +441,8 @@ export interface Saving {
 /**
  * What a model saves against the one it is sold against, from the two list
  * prices the catalog states — never a figure written here. The model it is
- * compared with is its `compare_at`, or, for Kai, TypeSafe's Jev decision model
- * the catalog lists. Null when either price is missing or nothing is saved.
+ * compared with is its `compare_at`, or, for Kai, the newest of TypeSafe's Jev
+ * decision models the catalog lists. Null when either price is missing or nothing is saved.
  */
 export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntry[]): Saving | null {
   const mine = m.pricing?.input_per_million
@@ -450,7 +450,9 @@ export function savingOf(m: ModelCatalogEntry, models: readonly ModelCatalogEntr
   const other = m.compare_at
     ? models.find((x) => x.id === m.compare_at)
     : m.family === 'kai'
-      ? models.find((x) => makerOf(x) === 'typesafe' && can(x, 'decision') && x.pricing?.input_per_million)
+      ? models
+          .filter((x) => makerOf(x) === 'typesafe' && can(x, 'decision') && x.pricing?.input_per_million)
+          .sort((a, b) => (b.created ?? 0) - (a.created ?? 0))[0]
       : undefined
   const theirs = other?.pricing?.input_per_million
   if (!other || !theirs || theirs <= mine) return null
