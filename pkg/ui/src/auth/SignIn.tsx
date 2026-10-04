@@ -13,7 +13,6 @@ import { Field, FieldError, FieldLabel, FieldSeparator } from '../backends/gui/f
 import { Input } from '../backends/gui/input'
 import { Anchor, Heading, Paragraph, SizableText, XStack, YStack } from '../backends/gui/layout'
 import { CreateAccount } from '../onboarding/account'
-import { live } from './session'
 import type { Policy } from '../onboarding/state'
 
 /**
@@ -66,14 +65,6 @@ export interface SignInProps {
    */
   policy?: Policy
   aupPath?: string
-  /**
-   * Offer Google One Tap to a visitor with no session who is signed in to Google:
-   * the Google Identity Services script is loaded after first paint, the client id
-   * comes from IAM's auth/methods, and the credential goes to IAM
-   * (`loginWithGoogleCredential`). Drawn only when IAM advertises a Google client id
-   * and the SDK has that call; otherwise nothing is loaded. Default false.
-   */
-  oneTap?: boolean
   /** The product's name on the card: `Hanzo`. */
   site?: string
   /** Where IAM sends the browser with the code. Default `/auth/callback`. */
@@ -127,10 +118,9 @@ const rank = (p: Provider): number => {
 }
 export const inOrder = (providers: Provider[]): Provider[] => [...providers].sort((a, b) => rank(a) - rank(b))
 
-/** What IAM's auth/methods says beyond the SDK's own reading: a phone sign-in, and Google's client id for One Tap. */
+/** What IAM's auth/methods says beyond the SDK's own reading: a phone sign-in. */
 interface Extras {
   phone: boolean
-  google?: { clientId: string; nonce?: string }
 }
 
 async function readMethods(serverUrl: string, clientId: string): Promise<{ methods: Methods; extras: Extras }> {
@@ -142,57 +132,11 @@ async function readMethods(serverUrl: string, clientId: string): Promise<{ metho
   const data = (body.status ? body.data : body) ?? {}
   const oauth = (Array.isArray(data.oauth) ? data.oauth : []) as Record<string, unknown>[]
   const named = oauth.filter((p) => typeof p.name === 'string' && typeof p.type === 'string')
-  const google = named.find((p) => p.name === 'provider-google')
-  const id = google?.clientId ?? google?.client_id
   return {
     methods: { password: data.password === true, code: data.code === true, signup: data.signup === true, providers: named.map((p) => ({ name: p.name as string, type: p.type as string })) },
-    extras: { phone: data.phone === true || data.sms === true, google: typeof id === 'string' && id ? { clientId: id, nonce: typeof google?.nonce === 'string' ? google.nonce : undefined } : undefined },
+    extras: { phone: data.phone === true || data.sms === true },
   }
 }
-
-/** The SDK call that signs in with Google's One Tap credential; absent from an SDK that predates it. */
-type Tapping = { loginWithGoogleCredential: (credential: string, nonce: string) => Promise<string> }
-const taps = (client: unknown): client is Tapping => typeof (client as Partial<Tapping>).loginWithGoogleCredential === 'function'
-
-interface Gsi {
-  accounts: { id: { initialize: (o: Record<string, unknown>) => void; prompt: () => void; cancel: () => void } }
-}
-const GSI = 'https://accounts.google.com/gsi/client'
-
-/** Load Google Identity Services once, after the page has painted and is idle. */
-function loadGsi(): Promise<Gsi> {
-  const w = window as unknown as { google?: Gsi }
-  if (w.google?.accounts?.id) return Promise.resolve(w.google)
-  return new Promise((resolve, reject) => {
-    const tag = document.createElement('script')
-    tag.src = GSI
-    tag.async = true
-    tag.onload = () => (w.google?.accounts?.id ? resolve(w.google) : reject(new Error('Google Identity Services did not load')))
-    tag.onerror = () => reject(new Error('Google Identity Services did not load'))
-    document.head.appendChild(tag)
-  })
-}
-
-const whenIdle = (run: () => void): (() => void) => {
-  let done = false
-  const go = () => {
-    if (!done) run()
-  }
-  const arm = () => {
-    const ric = (window as unknown as { requestIdleCallback?: (f: () => void) => void }).requestIdleCallback
-    if (ric) ric(go)
-    else window.setTimeout(go, 1200)
-  }
-  if (document.readyState === 'complete') arm()
-  else window.addEventListener('load', arm, { once: true })
-  return () => {
-    done = true
-    window.removeEventListener('load', arm)
-  }
-}
-
-/** A nonce for one One Tap prompt: IAM's when it sends one, else sixteen random bytes. */
-const nonceFor = (given?: string): string => given ?? Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('')
 
 const PHONE = /^\+?[\d\s().-]{7,}$/
 
@@ -201,7 +145,6 @@ export function SignIn({
   frame = true,
   policy,
   aupPath = '/aup',
-  oneTap = false,
   site = 'Hanzo',
   callbackPath = '/auth/callback',
   providers,
@@ -256,38 +199,6 @@ export function SignIn({
   }, [])
 
   const signup = mode === 'signup'
-
-  // Google One Tap, for a visitor with no session, once IAM has named the client and the SDK can take the credential.
-  const client = extras.google
-  useEffect(() => {
-    if (!oneTap || !client || !taps(iam) || live()) return
-    const nonce = nonceFor(client.nonce)
-    const stop = whenIdle(() => {
-      loadGsi()
-        .then((g) => {
-          g.accounts.id.initialize({
-            client_id: client.clientId,
-            nonce,
-            auto_select: false,
-            cancel_on_tap_outside: true,
-            callback: (r: { credential?: string }) => {
-              if (!r.credential) return
-              onMethod?.('google_one_tap', mode)
-              track?.('signin_clicked', { method: 'google_one_tap' })
-              void run(() => iam.loginWithGoogleCredential(r.credential as string, nonce))
-            },
-          })
-          g.accounts.id.prompt()
-        })
-        .catch(() => {})
-    })
-    return () => {
-      stop()
-      ;(window as unknown as { google?: Gsi }).google?.accounts?.id?.cancel()
-    }
-    // One prompt per card and client.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [oneTap, client?.clientId, iam])
 
   function commit(method: string) {
     onMethod?.(method, mode)

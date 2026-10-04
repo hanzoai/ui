@@ -10,9 +10,10 @@
  *  - opt-in regions (EU/EEA, UK, CH, Quebec, Brazil, China, and anywhere cloud
  *    cannot place the visitor): a banner with Accept all, Reject all and Choose,
  *    until the visitor has chosen. Nothing from an advertiser loads first.
- *  - everywhere else (US, rest of Canada, Australia, Japan, ...): everything is
- *    on, and a small notice says so with Manage and "Do not sell or share my
- *    personal information"; `ConsentLink` in the footer opens the same choices.
+ *  - everywhere else (US, rest of Canada, Australia, Japan, ...): nothing is
+ *    drawn. The region's defaults apply, and `ConsentLink` in the footer opens
+ *    the same choices, "Do not sell or share my personal information" among
+ *    them. A notice there is no law asking for is a popup.
  *  - cloud resolves the region from where the request came from and serves it
  *    with the site's tag config. The banner redraws when the answer arrives, and
  *    asks again when the policy version changes.
@@ -22,8 +23,8 @@
  * `Consent` mounts once near the root; `ConsentLink` goes wherever a footer
  * link goes and opens the panel from anywhere.
  */
-import { Paragraph, Span, XStack, YStack } from '@hanzo/gui'
-import { acceptAll, asks, consentPolicy, gpc, notices, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
+import { Paragraph, XStack, YStack } from '@hanzo/gui'
+import { acceptAll, asks, gpc, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
 import { useEffect, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
@@ -78,16 +79,12 @@ export type ConsentProps = {
 
 const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   const [shown, setShown] = useState(false)
-  const [notice, setNotice] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
   const locked = typeof window !== 'undefined' && gpc()
 
   useEffect(() => {
-    const sync = () => {
-      setShown(asks())
-      setNotice(notices())
-    }
+    const sync = () => setShown(asks())
     sync()
     const open = () => {
       setDraft(readConsent())
@@ -102,12 +99,11 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
     }
   }, [])
 
-  if (!shown && !notice) return null
+  if (!shown) return null
 
   const done = (fn: () => void) => () => {
     fn()
     setShown(false)
-    setNotice(false)
     setChoosing(false)
   }
   const choose = () => {
@@ -115,9 +111,6 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
     setChoosing(true)
     setShown(true)
   }
-  const link = consentPolicy()?.notice ?? 'Do not sell or share my personal information'
-  const small = notice && !shown
-  const optOut = done(() => saveConsent({ ...readConsent(), marketing: false, ads: false }))
 
   if (choosing)
     return (
@@ -165,68 +158,29 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
       </YStack>
     )
 
-  // One bar: the line and its links, then the buttons. They share a row where
+  // One bar: the line and its link, then the buttons. They share a row where
   // the line fits beside them and the buttons drop under it where it does not,
   // so a phone shows the line over one row of buttons and nothing breaks mid-control.
   return (
     <XStack {...frame} style={FIT} maxW={960} flexWrap="wrap" items="center" columnGap="$4" rowGap="$2">
       <YStack shrink={1} minW={0}>
         <Paragraph size="$2" color="$ink" m={0}>
-          {small ? 'Cookies measure visits and ads. ' : 'Cookies measure visits and ads once you accept. '}
+          {'Cookies measure visits and ads once you accept. '}
           <a href={privacy} style={INLINE}>
             Privacy policy
           </a>
-          {small ? (
-            <>
-              {/* A phone puts the opt-out on its own line; a wider screen keeps it on this one. */}
-              <Span display="none" $sm={{ display: 'inline' }}>
-                {' · '}
-              </Span>
-              <Span render="br" display="block" $sm={{ display: 'none' }} />
-              {/* Inline, so it reads as the link it is and no control floor stretches the line. */}
-              <a
-                href="#"
-                role="button"
-                style={INLINE}
-                onClick={(e) => {
-                  e.preventDefault()
-                  optOut()
-                }}
-                onKeyDown={(e) => {
-                  if (e.key !== ' ') return
-                  e.preventDefault()
-                  optOut()
-                }}
-              >
-                {link}
-              </a>
-            </>
-          ) : null}
         </Paragraph>
       </YStack>
       <XStack gap="$2" ml="auto" items="center">
-        {small ? (
-          <>
-            <Button type="button" size="sm" variant="secondary" onClick={choose}>
-              Manage
-            </Button>
-            <Button type="button" size="sm" onClick={done(() => saveConsent(readConsent()))}>
-              OK
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button type="button" size="sm" variant="link" onClick={choose}>
-              Choose
-            </Button>
-            <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
-              Reject all
-            </Button>
-            <Button type="button" size="sm" onClick={done(acceptAll)}>
-              Accept all
-            </Button>
-          </>
-        )}
+        <Button type="button" size="sm" variant="link" onClick={choose}>
+          Choose
+        </Button>
+        <Button type="button" size="sm" variant="secondary" onClick={done(rejectAll)}>
+          Reject all
+        </Button>
+        <Button type="button" size="sm" onClick={done(acceptAll)}>
+          Accept all
+        </Button>
       </XStack>
     </XStack>
   )
