@@ -25,7 +25,7 @@
  */
 import { Paragraph, XStack, YStack } from '@hanzo/gui'
 import { acceptAll, asks, gpc, POLICY_EVENT, readConsent, rejectAll, saveConsent, type Choice } from '@hanzo/event'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Button } from '../backends/gui/button'
 import { Switch } from '../backends/gui/switch'
@@ -81,12 +81,17 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
   const [shown, setShown] = useState(false)
   const [choosing, setChoosing] = useState(false)
   const [draft, setDraft] = useState<Choice>({ analytics: false, marketing: false, ads: false })
+  // The choices are open because the visitor asked for them. A policy that
+  // arrives after (cloud answers ~150ms into a page opened at #choices) redraws
+  // the banner's question, and must not close what was asked for.
+  const asked = useRef(false)
   const locked = typeof window !== 'undefined' && gpc()
 
   useEffect(() => {
-    const sync = () => setShown(asks())
+    const sync = () => setShown(asks() || asked.current)
     sync()
     const open = () => {
+      asked.current = true
       setDraft(readConsent())
       setChoosing(true)
       setShown(true)
@@ -103,10 +108,12 @@ const Consent = ({ privacy = 'https://hanzo.ai/privacy' }: ConsentProps) => {
 
   const done = (fn: () => void) => () => {
     fn()
+    asked.current = false
     setShown(false)
     setChoosing(false)
   }
   const choose = () => {
+    asked.current = true
     setDraft(readConsent())
     setChoosing(true)
     setShown(true)

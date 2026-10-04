@@ -23,3 +23,30 @@ describe('Consent', () => {
     expect(out).toMatch(/Cookie settings/)
   })
 })
+
+describe('Consent, opened by the visitor', () => {
+  it('stays open when the policy arrives after it was asked for', async () => {
+    const { createRoot } = await import('react-dom/client')
+    const { act } = await import('react')
+    const { openConsent } = await import('./Consent')
+    ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const root = createRoot(host)
+    await act(async () => {
+      root.render(
+        <GuiProvider config={config} defaultTheme="dark">
+          <Consent />
+        </GuiProvider>,
+      )
+    })
+    expect(host.querySelector('[data-slot="consent"]')).toBeNull()
+    await act(async () => openConsent())
+    expect(host.querySelector('[data-slot="consent"]')).not.toBeNull()
+    // cloud's rule lands after the panel opened (a page opened at #choices)
+    await act(async () => window.dispatchEvent(new Event('hzpolicy')))
+    expect(host.querySelector('[data-slot="consent"]'), 'the policy closed what the visitor opened').not.toBeNull()
+    await act(async () => root.unmount())
+    host.remove()
+  })
+})
