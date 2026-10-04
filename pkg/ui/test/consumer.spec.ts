@@ -357,7 +357,7 @@ test.describe('layout', () => {
     expect(Math.round(h)).toBe(36)
   })
 
-  test('under a coarse pointer every Button floors at 44, and a mouse keeps 36', async ({ browser }) => {
+  test('under a coarse pointer every Button and field floors at 44, and a mouse keeps 36', async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, deviceScaleFactor: 1 })
     const page = await ctx.newPage()
     await load(page, 'dark')
@@ -366,6 +366,8 @@ test.describe('layout', () => {
       .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
     expect(heights.length, 'the gallery drew its buttons').toBeGreaterThan(0)
     expect(Math.min(...heights), 'a Button a thumb can miss').toBeGreaterThanOrEqual(44)
+    const fields = await page.locator('input[data-slot="input"]').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)))
+    expect(Math.min(...fields), 'a field a thumb can miss').toBeGreaterThanOrEqual(44)
     await ctx.close()
   })
 

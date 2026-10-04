@@ -18,6 +18,9 @@ import { BOX, FIELD, FILL, type FieldSize } from './control'
 /** What an adornment takes past the gutter: its 16px mark and 8 beside it. */
 const MARK = 24
 
+/** The height a field takes under a coarse pointer: a thumb, not a cursor (Button's floor). */
+const TOUCH = 44
+
 export type InputProps = Omit<ComponentProps<typeof GuiInput>, 'children' | 'size'> & {
   /** Optional leading affordance (icon/text) rendered inside the field. */
   startAdornment?: ReactNode
@@ -83,6 +86,8 @@ const Input = /* @__PURE__ */ forwardRef<HTMLInputElement, InputProps>(function 
       {...FIELD}
       {...(fill ? FILL : null)}
       height={box.h}
+      // Raised, never lowered: a caller that states its own height keeps it.
+      {...('height' in props ? null : { $touchable: { height: Math.max(box.h, TOUCH) } })}
       width="100%"
       minW={0}
       placeholderTextColor="$soft"
