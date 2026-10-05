@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ApiError, API, call } from './api'
 import { keyFor, purchase, settle, uncharged } from './attempt'
 import { useCatalog } from './catalog'
-import { Line, Page, Panel } from './frame'
+import { IntervalToggle, Line, Page, Panel } from './frame'
 import { IntervalChoice, Primary } from './screens'
 import type { Track } from './hooks'
 import { ChoiceCard, ChoiceGroup } from '../backends/gui/choice'
@@ -202,37 +202,54 @@ function CheckoutForm({ site = 'Hanzo', api = API, org, plan, seats = 1, interva
       <XStack render={<form onSubmit={submit} noValidate />} flexWrap="wrap" gap="$7" items="flex-start" width="100%">
         <YStack flex={1} flexBasis={360} minW={0} gap="$4">
           {setPlan && plan.startsWith('max') ? (
-            <ChoiceGroup label="Plan" flexWrap="wrap">
-              {(['max_5x', 'max_20x'] as const).map((t) => (
-                <ChoiceCard
-                  key={t}
-                  selected={plan === t}
-                  onSelect={() => {
-                    track?.('plan_changed', { from: plan, to: t, field: 'plan' })
-                    setPlan(t)
+            <YStack gap="$3" width="100%">
+              <XStack justify="space-between" items="center" width="100%">
+                <Heading render="h2" size="$4" fontWeight="600" color="$ink" m={0}>
+                  Plan
+                </Heading>
+                <IntervalToggle
+                  interval={interval}
+                  onChange={(i) => {
+                    track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
+                    setInterval(i)
                   }}
-                  flex={1}
-                  flexBasis={200}
-                >
-                  <SizableText size="$3" fontWeight="600" color="$ink">
-                    {offer(t).name}
-                  </SizableText>
-                  <SizableText size="$2" color="$ink">
-                    {`${money(offer(t).monthly)}/month`}
-                  </SizableText>
-                </ChoiceCard>
-              ))}
-            </ChoiceGroup>
-          ) : null}
-          <IntervalChoice
-            save={saving(plan)}
-            interval={interval}
-            setInterval={(i) => {
-              track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
-              setInterval(i)
-            }}
-            price={(i) => `${o.name} ${i === 'annual' ? 'annual' : 'monthly'} · USD ${usd(lines(plan, i, seats).subtotal)} · billed ${i === 'annual' ? 'yearly' : 'monthly'}`}
-          />
+                  name={o.name}
+                  save={saving(plan)}
+                />
+              </XStack>
+              <ChoiceGroup label="Plan" flexWrap="wrap">
+                {(['max_5x', 'max_20x'] as const).map((t) => (
+                  <ChoiceCard
+                    key={t}
+                    selected={plan === t}
+                    onSelect={() => {
+                      track?.('plan_changed', { from: plan, to: t, field: 'plan' })
+                      setPlan(t)
+                    }}
+                    flex={1}
+                    flexBasis={200}
+                  >
+                    <SizableText size="$3" fontWeight="600" color="$ink">
+                      {offer(t).name}
+                    </SizableText>
+                    <SizableText size="$2" color="$ink">
+                      {`${money(unit(t, interval))}/month${interval === 'annual' ? ' · billed yearly' : ''}`}
+                    </SizableText>
+                  </ChoiceCard>
+                ))}
+              </ChoiceGroup>
+            </YStack>
+          ) : (
+            <IntervalChoice
+              save={saving(plan)}
+              interval={interval}
+              setInterval={(i) => {
+                track?.('plan_changed', { from: interval, to: i, field: 'interval', plan })
+                setInterval(i)
+              }}
+              price={(i) => `${usd(lines(plan, i, seats).subtotal)} / ${i === 'annual' ? 'year' : 'month'}${i === 'annual' ? ' · billed yearly' : ''}`}
+            />
+          )}
 
           <Heading render="h2" size="$4" fontWeight="600" color="$ink" mt="$4" m={0}>
             Billing information
