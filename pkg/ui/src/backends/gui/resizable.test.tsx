@@ -60,4 +60,18 @@ describe('ResizablePanelGroup', () => {
     expect(again.handle.getAttribute('aria-valuenow')).toBe('60')
     again.cleanup()
   })
+
+  it('draws focus on its line, with no outline around the handle', () => {
+    const ui = mount()
+    const line = () => ui.handle.querySelector('.is_Separator')!
+    const idle = [...line().classList].join(' ')
+    expect(ui.handle.className).toMatch(/_outlineWidth-0px/)
+    act(() => ui.handle.focus())
+    expect(ui.handle.getAttribute('data-focused')).toBe('true')
+    expect([...line().classList].join(' ')).not.toBe(idle)
+    expect([...line().classList].join(' ')).toMatch(/_btc-outlineColo/)
+    act(() => ui.handle.blur())
+    expect([...line().classList].join(' ')).toBe(idle)
+    ui.cleanup()
+  })
 })

@@ -282,6 +282,7 @@ export function ResizableHandle({
   const group = useContext(GroupContext)
   const boundary = useContext(SlotContext)
   const [state, setState] = useState<"idle" | "hover" | "drag">("idle")
+  const [focused, setFocused] = useState(false)
   const start = useRef<{ pos: number; sizes: number[] } | null>(null)
 
   const axis = group?.direction !== "vertical"
@@ -390,11 +391,20 @@ export function ResizableHandle({
       onDoubleClick={reset}
       onMouseEnter={() => hover(true)}
       onMouseLeave={() => hover(false)}
+      // Focus is drawn on the line, not around the box: an outline around a 4px
+      // handle is a second pair of lines beside the divider.
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
+      outlineWidth={0}
+      focusVisibleStyle={{ outlineWidth: 0 }}
+      data-focused={focused || undefined}
       {...rest}
     >
       <Separator
         vertical={axis}
-        borderColor={state === "idle" ? "$borderColor" : "$dim"}
+        borderColor={
+          focused ? "$outlineColor" : state === "idle" ? "$borderColor" : "$dim"
+        }
       />
       {withHandle && (
         <XStack
@@ -406,7 +416,7 @@ export function ResizableHandle({
           rounded="$2"
           bg="$raised"
           borderWidth={1}
-          borderColor="$borderColor"
+          borderColor={focused ? "$outlineColor" : "$borderColor"}
           rotate={axis ? "0deg" : "90deg"}
         >
           <GripVertical size={10} />
