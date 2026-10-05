@@ -14,7 +14,9 @@
  *
  * JSON. `language="json"` colours the syntax and checks the text on every
  * change with `checkJson`: a broken document tints the failing line, marks the
- * failing character and names line, column and reason in the footer. With
+ * failing character and names line, column and reason in the footer. Every
+ * object and array that spans lines folds from a marker in the gutter, and a
+ * folded one reads `{…}` or `[…]` with how many keys or items it hides. With
  * `allowText`, text that does not open an object or an array is plain text and
  * passes. Format (or Shift-Alt-F) re-indents valid JSON by two spaces. Other
  * languages are edited as plain text: the package carries one grammar.
@@ -26,10 +28,21 @@
  * configure.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
-import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, GripHorizontal, Type } from '@hanzogui/lucide-icons-2'
+import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, Type } from '@hanzogui/lucide-icons-2'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import { json } from '@codemirror/lang-json'
-import { HighlightStyle, bracketMatching, indentOnInput, syntaxHighlighting } from '@codemirror/language'
+import { jsonLanguage } from '@codemirror/lang-json'
+import {
+  HighlightStyle,
+  LanguageSupport,
+  bracketMatching,
+  codeFolding,
+  foldGutter,
+  foldKeymap,
+  foldNodeProp,
+  indentOnInput,
+  syntaxHighlighting,
+  syntaxTree,
+} from '@codemirror/language'
 import { Annotation, Compartment, EditorState, RangeSet, RangeSetBuilder, StateField } from '@codemirror/state'
 import {
   Decoration,
@@ -50,6 +63,7 @@ import { tags } from '@lezer/highlight'
 import * as React from 'react'
 
 import { Button } from './button'
+import { Grip, useGrip } from './grip'
 import { checkJson, formatJson, type JsonCheck } from './json'
 import { Select, SelectContent, SelectItem, SelectTrigger } from './select'
 import { slot } from './slot'
@@ -114,10 +128,6 @@ const LABEL: Record<string, string> = {
 
 /** Line height as a multiple of the font size. */
 const LEADING = 1.6
-/** How far one ArrowUp / ArrowDown on the footer moves the height. */
-const STEP = 24
-/** The separator's stated maximum, in px: the drag itself has none. */
-const RESIZE_CEILING = 4096
 const MONO = "var(--font-mono, 'Zen Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace)"
 
 /**
@@ -165,6 +175,18 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
   },
   '.cm-nonmatchingBracket, &.cm-focused .cm-nonmatchingBracket': { backgroundColor: 'transparent' },
   '.cm-placeholder': { color: 'var(--dim)' },
+  '.cm-foldGutter .cm-gutterElement': { padding: '0 4px', color: 'var(--dim)', cursor: 'pointer' },
+  '.cm-foldGutter .cm-gutterElement:hover': { color: 'var(--ink)' },
+  '.cm-foldPlaceholder': {
+    backgroundColor: 'var(--raised)',
+    border: '1px solid var(--edge)',
+    borderRadius: '4px',
+    color: 'var(--codePunctuation)',
+    padding: '0 4px',
+    margin: '0 2px',
+    cursor: 'pointer',
+  },
+  '.cm-foldCount': { color: 'var(--codeComment)' },
   '.cm-fault': { backgroundColor: 'var(--state-error-bg, rgb(239 68 68 / .1))' },
   '.cm-gutterElement.cm-fault': { color: 'var(--bad)' },
   '.cm-fault-at': {
@@ -185,6 +207,46 @@ const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
   { tag: tags.comment, color: 'var(--codeComment)' },
   { tag: tags.keyword, color: 'var(--codeKeyword)' },
 ])
+
+/**
+ * JSON folds from its opening bracket through its closing one, so a folded block
+ * is drawn whole as `{…}` or `[…]` and has room to say what it holds. lang-json
+ * folds inside the brackets, which leaves them standing around an ellipsis.
+ */
+const JSON_GRAMMAR = /* @__PURE__ */ new LanguageSupport(
+  jsonLanguage.configure({
+    props: [foldNodeProp.add({ 'Object Array': (node) => ({ from: node.from, to: node.to }) })],
+  }),
+)
+
+const words = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`
+
+/** What a folded range holds: its brackets and how many keys or items sit inside. */
+function measureFold(state: EditorState, range: { from: number; to: number }) {
+  let node = syntaxTree(state).resolveInner(range.from, 1)
+  while (node.parent && node.name !== 'Object' && node.name !== 'Array') node = node.parent
+  if (node.name === 'Object') return { open: '{', close: '}', count: words(node.getChildren('Property').length, 'key') }
+  let n = 0
+  for (let c = node.firstChild; c; c = c.nextSibling) if (!/^[[\],]$/.test(c.name) && !c.type.isError) n += 1
+  return { open: '[', close: ']', count: words(n, 'item') }
+}
+
+const FOLDING = /* @__PURE__ */ codeFolding({
+  preparePlaceholder: measureFold,
+  placeholderDOM: (_view, onclick, fold: ReturnType<typeof measureFold>) => {
+    const el = document.createElement('span')
+    el.className = 'cm-foldPlaceholder'
+    el.title = 'Unfold'
+    el.setAttribute('aria-label', `Folded, ${fold.count}`)
+    el.textContent = `${fold.open}…${fold.close}`
+    const count = document.createElement('span')
+    count.className = 'cm-foldCount'
+    count.textContent = ` ${fold.count}`
+    el.append(count)
+    el.onclick = onclick
+    return el
+  },
+})
 
 /** How much deeper than its line a wrapped continuation starts, in characters. */
 const HANG = 2
@@ -343,14 +405,17 @@ export function CodeEditor({
   const [text, setText] = React.useState(value ?? defaultValue)
   const [check, setCheck] = React.useState<JsonCheck | null>(null)
   const [copied, setCopied] = React.useState(false)
-  const [dragged, setDragged] = React.useState<number | null>(null)
 
   const host = React.useRef<HTMLElement | null>(null)
-  const grip = React.useRef<HTMLElement | null>(null)
-  const knob = React.useRef<HTMLElement | null>(null)
   /** Every text reported to `onChange` and not yet seen back as `value`. */
   const sent = React.useRef<string[]>([])
   const view = React.useRef<EditorView | null>(null)
+  const sized = useGrip({
+    enabled: resizable,
+    min: minHeight,
+    measure: () => view.current?.dom.getBoundingClientRect().height ?? minHeight,
+  })
+  const dragged = sized.height
   const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const listeners = React.useRef({ onChange, onCheck })
   listeners.current = { onChange, onCheck }
@@ -364,7 +429,7 @@ export function CodeEditor({
   const judged = React.useRef<{ field: typeof field; seen?: Verdict }>({ field })
   judged.current.field = field
 
-  const grammar = () => (isJson ? [json(), field] : [])
+  const grammar = () => (isJson ? [JSON_GRAMMAR, field, FOLDING, foldGutter()] : [])
   const gutter = () => (lineNumbers ? [numbering(), highlightActiveLineGutter()] : [])
   const wrap = () => (wordWrap === 'off' ? [] : [EditorView.lineWrapping, hang])
   const edit = () => [EditorState.readOnly.of(readOnly), EditorView.editable.of(!readOnly)]
@@ -415,6 +480,7 @@ export function CodeEditor({
           keymap.of([
             { key: 'Shift-Alt-f', run: format },
             indentWithTab,
+            ...foldKeymap,
             ...defaultKeymap,
             ...historyKeymap,
             {
@@ -487,53 +553,6 @@ export function CodeEditor({
     dom.style.maxHeight = fixed ? '' : `${maxHeight}px`
     view.current?.requestMeasure()
   }, [dragged, height, minHeight, maxHeight, fontSize])
-
-  React.useEffect(() => {
-    const el = grip.current
-    const handle = knob.current
-    if (!el || !handle || !resizable) return
-    let pointer = -1
-    let startY = 0
-    let startH = 0
-    const current = () => view.current?.dom.getBoundingClientRect().height ?? minHeight
-    const down = (e: PointerEvent) => {
-      if (e.button !== 0) return
-      e.preventDefault()
-      pointer = e.pointerId
-      startY = e.clientY
-      startH = current()
-      el.setPointerCapture?.(pointer)
-    }
-    const move = (e: PointerEvent) => {
-      if (e.pointerId !== pointer) return
-      setDragged(Math.max(minHeight, Math.round(startH + e.clientY - startY)))
-    }
-    const up = (e: PointerEvent) => {
-      if (e.pointerId !== pointer) return
-      el.releasePointerCapture?.(pointer)
-      pointer = -1
-    }
-    const key = (e: KeyboardEvent) => {
-      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
-      e.preventDefault()
-      setDragged(Math.max(minHeight, Math.round(current() + (e.key === 'ArrowDown' ? STEP : -STEP))))
-    }
-    const reset = () => setDragged(null)
-    el.addEventListener('pointerdown', down)
-    el.addEventListener('pointermove', move)
-    el.addEventListener('pointerup', up)
-    el.addEventListener('pointercancel', up)
-    el.addEventListener('dblclick', reset)
-    handle.addEventListener('keydown', key)
-    return () => {
-      el.removeEventListener('pointerdown', down)
-      el.removeEventListener('pointermove', move)
-      el.removeEventListener('pointerup', up)
-      el.removeEventListener('pointercancel', up)
-      el.removeEventListener('dblclick', reset)
-      handle.removeEventListener('keydown', key)
-    }
-  }, [resizable, minHeight])
 
   const copy = React.useCallback(async () => {
     try {
@@ -640,7 +659,7 @@ export function CodeEditor({
         // and a screen reader find. The status stays outside the separator, whose
         // children assistive tech treats as presentational.
         <XStack
-          ref={grip as never}
+          ref={sized.grip as never}
           {...slot('code-editor-footer')}
           cursor={resizable ? 'row-resize' : undefined}
           items="center"
@@ -658,26 +677,7 @@ export function CodeEditor({
         >
           <Status check={isJson ? check : null} />
           {resizable && (
-            <XStack
-              ref={knob as never}
-              {...slot('code-editor-resize')}
-              {...({
-                role: 'separator',
-                'aria-orientation': 'horizontal',
-                'aria-label': `Resize ${label}`,
-                'aria-valuemin': minHeight,
-                // A drag has no ceiling; this stands in for "as tall as you like".
-                'aria-valuemax': RESIZE_CEILING,
-                'aria-valuenow': dragged ?? minHeight,
-                'aria-valuetext': dragged === null ? 'Fits its text' : `${dragged} pixels`,
-                tabIndex: 0,
-              } as object)}
-              rounded="$2"
-              p="$1"
-              focusVisibleStyle={{ bg: '$hover' }}
-            >
-              <GripHorizontal size={14} color="$soft" />
-            </XStack>
+            <Grip knob={sized.knob} name="code-editor-resize" label={label} min={minHeight} height={dragged} />
           )}
         </XStack>
       )}

@@ -21,8 +21,10 @@
  * + pointer capture and native with the responder system. Both prop sets are
  * typed on gui's stacks, and pointer capture is feature-detected, so nothing
  * here reaches for the DOM on expo. Keyboard resize is arrow keys (Shift for a
- * fine step). The grab area comes from `touch()`, so it is 44px on web and
- * native alike while the visual divider stays 4px.
+ * fine step); a double-click on a handle hands the group back its default
+ * layout, and the handle states the share before it as `aria-valuenow`. The
+ * grab area comes from `touch()`, so it is 44px on web and native alike while
+ * the visual divider stays 4px.
  */
 import {
   Children,
@@ -350,6 +352,10 @@ export function ResizableHandle({
     [axis, boundary, group, off]
   )
 
+  const reset = useCallback(() => {
+    if (!off && group) group.setLayout(defaultLayout(group.specs))
+  }, [group, off])
+
   const hover = useCallback(
     (on: boolean) =>
       setState((s) => (s === "drag" ? s : on ? "hover" : "idle")),
@@ -365,17 +371,23 @@ export function ResizableHandle({
       items="center"
       justify="center"
       shrink={0}
-      width={axis ? THICKNESS : "100%"}
-      height={axis ? "100%" : THICKNESS}
+      // Stretched across the group rather than `100%` of it: a percentage of a group
+      // that is as tall as its content resolves to nothing, and the handle drew no line.
+      self="stretch"
+      {...(axis ? { width: THICKNESS } : { height: THICKNESS })}
       {...touch(THICKNESS, 44, axis ? "x" : "y")}
       cursor={off ? "default" : axis ? "col-resize" : "row-resize"}
       tabIndex={off ? -1 : 0}
       role="separator"
       aria-orientation={axis ? "vertical" : "horizontal"}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={off || !group ? undefined : Math.round(group.sizes[boundary])}
       data-panel-group-direction={group?.direction}
       data-resize-handle-state={state}
       {...gesture}
       onKeyDown={nudge}
+      onDoubleClick={reset}
       onMouseEnter={() => hover(true)}
       onMouseLeave={() => hover(false)}
       {...rest}

@@ -166,6 +166,32 @@ describe('CodeEditor', () => {
     ui.cleanup()
   })
 
+  it('folds every multi-line object and array from the gutter, drawn as its brackets and a count', () => {
+    const doc = JSON.stringify({ a: { b: 1, c: 2 }, list: [1, 2, 3] }, null, 2)
+    const ui = mount(<CodeEditor language="json" value={doc} />)
+    // CodeMirror sizes a gutter with a hidden spacer element; the markers are the rest.
+    const markers = () =>
+      [...ui.host.querySelectorAll<HTMLElement>('.cm-foldGutter .cm-gutterElement')].filter(
+        (m) => m.style.visibility !== 'hidden' && m.textContent?.trim(),
+      )
+    // One marker per line that opens a block: the root, `a` and `list`.
+    expect(markers()).toHaveLength(3)
+
+    const open = markers()[1]
+    act(() => {
+      open.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+      open.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+    const folded = ui.host.querySelector('.cm-foldPlaceholder')
+    expect(folded?.textContent).toBe('{…} 2 keys')
+    expect(ui.host.textContent).not.toContain('"b"')
+
+    act(() => (folded as HTMLElement).click())
+    expect(ui.host.querySelector('.cm-foldPlaceholder')).toBeNull()
+    expect(ui.host.textContent).toContain('"b"')
+    ui.cleanup()
+  })
+
   it('passes plain text when allowText says it may, and still holds an object to JSON', () => {
     const ui = mount(<CodeEditor language="json" allowText value="customer says hi" />)
     expect(ui.status()).toBe('Plain text')
@@ -209,7 +235,7 @@ describe('CodeEditor', () => {
     const footer = ui.slot('code-editor-footer')
     const grip = ui.slot('code-editor-resize')
     expect(grip?.getAttribute('role')).toBe('separator')
-    expect(grip?.getAttribute('aria-valuetext')).toBe('Fits its text')
+    expect(grip?.getAttribute('aria-valuetext')).toBe('Fits its content')
     // The status is read, not swallowed by the separator.
     expect(grip?.contains(ui.slot('code-editor-status'))).toBe(false)
     expect(footer?.getAttribute('style')).toMatch(/touch-action:\s*none/)

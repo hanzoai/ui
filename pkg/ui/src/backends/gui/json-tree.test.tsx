@@ -111,6 +111,10 @@ describe('JsonTree', () => {
   it('expands and collapses every level from the header', () => {
     const ui = mount(<JsonTree data={DATA} depth={1} title="Raw response" />)
     expect(ui.slot('json-tree-header')?.textContent).toContain('Raw response')
+    // The actions are icons, and each names itself.
+    expect(ui.slot('json-tree-expand')?.getAttribute('aria-label')).toBe('Expand all')
+    expect(ui.slot('json-tree-collapse')?.getAttribute('aria-label')).toBe('Collapse all')
+    expect(ui.slot('json-tree-copy')?.getAttribute('aria-label')).toBe('Copy Raw response')
 
     act(() => ui.slot('json-tree-expand')?.click())
     expect(ui.keys()).toContain('payments:')
@@ -128,6 +132,63 @@ describe('JsonTree', () => {
     act(() => ui.row('a')?.click())
     expect(ui.row('b')?.getAttribute('aria-expanded')).toBe('false')
     ui.cleanup()
+  })
+
+  it('filters by key, by dotted path and by value, opening each match and its ancestors', () => {
+    const ui = mount(<JsonTree data={DATA} depth={1} />)
+    const type = (q: string) =>
+      act(() => {
+        const input = ui.slot('json-tree-filter') as HTMLInputElement
+        const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+        set.call(input, q)
+        input.dispatchEvent(new Event('input', { bubbles: true }))
+      })
+
+    type('probabilities')
+    expect(ui.keys()).toEqual(['answers:', 'team:', 'probabilities:', 'payments:', 'product:'])
+
+    type('answers.team.choice')
+    expect(ui.keys()).toEqual(['answers:', 'team:', 'choice:'])
+
+    type('payments')
+    // The value "payments" under `choice`, and the key `payments` under probabilities.
+    expect(ui.keys()).toEqual(['answers:', 'team:', 'choice:', 'probabilities:', 'payments:'])
+
+    type('zzz')
+    expect(ui.keys()).toEqual([])
+    expect(ui.slot('json-tree-empty')?.textContent).toContain('zzz')
+
+    type('')
+    expect(ui.keys()).toEqual(['id:', 'answers:', 'tags:', 'ok:', 'none:'])
+    expect(ui.row('answers')?.getAttribute('aria-expanded')).toBe('false')
+    ui.cleanup()
+  })
+
+  it('resizes from a footer grip by keyboard, reports each height, and hands it back on a double-click', () => {
+    const heights: (number | null)[] = []
+    const ui = mount(<JsonTree data={DATA} resizable minHeight={80} maxHeight={200} onResize={(h) => heights.push(h)} />)
+    const body = ui.slot('json-tree-body')!
+    const grip = ui.slot('json-tree-resize')!
+    expect(grip.getAttribute('role')).toBe('separator')
+    expect(ui.slot('json-tree-footer')?.getAttribute('style')).toMatch(/touch-action:\s*none/)
+
+    vi.spyOn(body, 'getBoundingClientRect').mockReturnValue({ height: 150 } as DOMRect)
+    act(() => {
+      grip.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }))
+    })
+    expect(heights).toEqual([174])
+    expect(grip.getAttribute('aria-valuenow')).toBe('174')
+
+    act(() => {
+      ui.slot('json-tree-footer')?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }))
+    })
+    expect(heights).toEqual([174, null])
+    expect(grip.getAttribute('aria-valuetext')).toBe('Fits its content')
+    ui.cleanup()
+
+    const again = mount(<JsonTree data={DATA} resizable defaultHeight={240} />)
+    expect(again.slot('json-tree-resize')?.getAttribute('aria-valuenow')).toBe('240')
+    again.cleanup()
   })
 
   it('copies the whole value, indented', async () => {

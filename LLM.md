@@ -654,14 +654,29 @@ add a second.
   parent's one-keystroke-stale value back in dropped the key and moved the caret.
 - **The footer is the drag target, the grip is the separator** (keyboard, aria
   value/valuetext); the status sits outside it so it is still read, and the footer
-  takes `touch-action: none` so a finger drag resizes instead of scrolling.
+  takes `touch-action: none` so a finger drag resizes instead of scrolling. The
+  behaviour is `grip.tsx` (`useGrip` + `Grip`), shared with JsonTree.
+- **Folding.** JSON gets a fold gutter on every multi-line object and array. The fold
+  runs from `{` through `}` (lang-json folds inside the brackets) so the placeholder can
+  draw `{…} 3 keys` / `[…] 2 items`; the count is read off the syntax tree.
 - **Wrapped lines hang** under their own text (a per-line padding + negative
   text-indent of the line's indentation plus two), so a long string in nested JSON
   still reads as its key's.
 - `JsonTree` draws any JSON value as a disclosure tree (rows are buttons with
   `aria-expanded`), first `depth` levels open, Expand all / Collapse all / Copy. A long
   value wraps anywhere — a hash otherwise sets the tree's min-content width and pushes
-  a phone's page sideways. Built from gui only.
+  a phone's page sideways. Built from gui only. The header's filter (`search`, default
+  on; not `filter`, which is gui's CSS prop) keeps rows whose key, dotted path or value
+  contains the text, plus their ancestors, opened (`sift`); a matching branch keeps its
+  whole subtree, and clearing restores the open set from before. `maxHeight` scrolls,
+  `resizable` adds the grip, `defaultHeight`/`onResize` let a host remember the height.
+- `ResizableHandle`: arrows move it, a double-click restores `defaultLayout`, and it
+  states `aria-valuenow` (the share before it); `autoSaveId` persists to localStorage.
+  It stretches across the group (`self="stretch"`), not `100%` of it: in a group as tall
+  as its content a percentage resolves to nothing and the handle drew no line.
+- JsonTree's header is one row (title, filter, three icon actions); the filter and the
+  actions wrap as one group under the title on a narrow pane. The filter has no
+  adornment: Input's adornment wrapper holds the field at its intrinsic width.
 - **A View does not shrink.** RNW Views are `flex-shrink: 0`, so a toolbar's button
   group held its width at 390px; the groups carry `shrink={1} minW={0}` + `flexWrap`.
 
