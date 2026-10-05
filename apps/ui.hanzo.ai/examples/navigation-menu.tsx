@@ -6,7 +6,6 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@hanzo/ui"
 
 /** Default — a trigger opens a panel of links; a plain link sits beside it. */
@@ -34,7 +33,7 @@ export function Default() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuLink href="/" className={navigationMenuTriggerStyle()}>
+          <NavigationMenuLink href="/">
             Docs
           </NavigationMenuLink>
         </NavigationMenuItem>

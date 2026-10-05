@@ -14,9 +14,9 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { codeToHTML } from '@hanzogui/code-to-html'
 
 import { brand, house } from './brand'
+import { highlighter } from './code'
 import type { Item, Section } from './features/docs'
 
 const root = join(process.cwd(), '..', '..')
@@ -220,20 +220,21 @@ export function overview(group: Group) {
 export type Overview = ReturnType<typeof overview>
 
 /** One module of a group: its examples rendered to HTML beside their source, and its types. */
-export function page(group: Group, name: string) {
+export async function page(group: Group, name: string) {
   const entry = entries(group).find((e) => e.name === name)
   if (!entry) throw new Error(`no ${group} module named ${name}`)
   const { source, examples } = GROUPS[group]
+  const highlight = await highlighter()
   return {
     ...entry,
     from: from(group),
     sections: sections(),
-    types: typesOf(source, name).map((t) => codeToHTML(sample(t), 'tsx')),
-    examples: examplesOf(examples, name).map(({ source, ...x }) => ({ ...x, html: codeToHTML(sample(source), 'tsx') })),
+    types: typesOf(source, name).map((t) => highlight(sample(t), 'tsx')),
+    examples: examplesOf(examples, name).map(({ source, ...x }) => ({ ...x, html: highlight(sample(source), 'tsx') })),
   }
 }
 
-export type Doc = ReturnType<typeof page>
+export type Doc = Awaited<ReturnType<typeof page>>
 
 /** The end of the statement that starts at `start`: the first newline at depth zero
  *  that the next line does not continue with `|` or `&`. */

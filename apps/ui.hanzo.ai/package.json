@@ -14,7 +14,6 @@
     "@hanzo/font": "catalog:",
     "@hanzo/gui": "catalog:",
     "@hanzo/ui": "workspace:*",
-    "@hanzogui/code-to-html": "catalog:",
     "@hanzogui/config": "catalog:",
     "@hanzogui/lucide-icons-2": "catalog:",
     "@vxrn/color-scheme": "1.25.13",
@@ -24,6 +23,7 @@
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
     "react-native-web": "catalog:",
+    "shiki": "catalog:",
     "vite": "catalog:"
   },
   "devDependencies": {

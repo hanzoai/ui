@@ -76,4 +76,5 @@ export function Module({ doc, examples }: { doc: Doc; examples: Record<string, C
   )
 }
 
-const Code = ({ html }: { html: string }) => <pre className="code" dangerouslySetInnerHTML={{ __html: html }} />
+/** A highlighted source, the `pre.code` the highlighter wrote (code.ts). */
+const Code = ({ html }: { html: string }) => <div dangerouslySetInnerHTML={{ __html: html }} />

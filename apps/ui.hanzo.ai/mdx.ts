@@ -8,10 +8,10 @@
  */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { codeToHTML } from '@hanzogui/code-to-html'
 import { getHeadings, getMDX } from '@vxrn/mdx-rust'
 
 import { docsDir, sample, sections } from './catalog'
+import { highlighter } from './code'
 import type { Heading, Section } from './features/docs'
 
 export type Doc = {
@@ -27,23 +27,12 @@ export type Doc = {
 /** A fence's `title="…"` — the file the sample belongs in. */
 const TITLE = /\btitle="([^"]*)"/
 
-const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
-/** The tokens the module pages draw, for a grammar the highlighter knows; the text as it is otherwise. */
-const highlight = (text: string, lang: string): string => {
-  try {
-    return codeToHTML(text, lang)
-  } catch {
-    return escape(text)
-  }
-}
-
 /**
  * Code fences. The compiled tree keeps `pre > code`, and the `code` element
  * carries the highlighted markup as `html` and the fence's title as `title`;
  * its text moves out, so nothing is drawn twice. Inline code carries neither.
  */
-const fence = {
+const fence = (highlight: (text: string, lang: string) => string) => ({
   name: 'fence',
   element: {
     filter: ['code'],
@@ -63,7 +52,7 @@ const fence = {
       })
     },
   },
-}
+})
 
 /**
  * The page's h2 and h3, with the ids the compiled headings carry. Fences are
@@ -76,7 +65,8 @@ const outline = (source: string): Heading[] =>
 
 export async function doc(slug: string): Promise<Doc> {
   const source = sample(readFileSync(join(docsDir, `${slug}.mdx`), 'utf8'))
-  const { frontmatter, code } = await getMDX(source, { expressiveCode: false, hastPlugins: [fence] })
+  const highlight = await highlighter()
+  const { frontmatter, code } = await getMDX(source, { expressiveCode: false, hastPlugins: [fence(highlight)] })
   return {
     slug,
     title: frontmatter.title,

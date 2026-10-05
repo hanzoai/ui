@@ -606,6 +606,11 @@ named EXACTLY after its module (`examples/product/ChipSelect.tsx`), because the
 page looks it up by module name. A new group is a `GROUPS` entry in `catalog.ts`,
 `app/<group>/{index,[name]}.tsx`, its lines in `app/routes.d.ts`, and a header and
 footer link.
+Its code — fences in `data/docs`, each example's source, each module's types — is
+highlighted at build by `code.ts`: shiki in `codeTheme` (`@hanzo/ui/core`), every
+token and the block's ground written as `light-dark()`, so the scheme on `<html>`
+picks Dracula or GitHub Light and no stylesheet carries a palette. No highlighter
+ships to the browser.
 
 ### Code — `CodeEditor` is CodeMirror 6, `JsonTree` is gui, `checkJson` is the one verdict
 

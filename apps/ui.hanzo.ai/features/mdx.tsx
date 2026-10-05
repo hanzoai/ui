@@ -36,7 +36,7 @@ import { Blocks as ProseBlocks } from '~/examples/prose'
  */
 export const render = (code: string) => getMDXComponent(`const { brand } = arguments[0];${code}`, { brand })
 
-/** A block of code: the fence's title above the highlighted source. */
+/** A block of code: the fence's title above the highlighted source, a `pre.code` the highlighter wrote (code.ts). */
 const Code = ({ html, title }: { html: string; title?: string }) => (
   <YStack gap="$1">
     {title ? (
@@ -44,7 +44,7 @@ const Code = ({ html, title }: { html: string; title?: string }) => (
         {title}
       </Text>
     ) : null}
-    <pre className="code" dangerouslySetInnerHTML={{ __html: html }} />
+    <div dangerouslySetInnerHTML={{ __html: html }} />
   </YStack>
 )
 
