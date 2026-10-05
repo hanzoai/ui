@@ -19,11 +19,11 @@
  * passes. Format (or Shift-Alt-F) re-indents valid JSON by two spaces. Other
  * languages are edited as plain text: the package carries one grammar.
  *
- * Colour. Every colour is a theme rung over a design token — the ink, the
- * hairline, the selection and the error state — so the editor follows the page
- * into light or dark with nothing to configure. Hanzo is monochrome, so the syntax is ranked
- * by ink and weight, not by hue: property names in full ink, strings one rank
- * down, punctuation at the rank of a hint. Hue is spent only on an error.
+ * Colour. The frame's colours are theme rungs over design tokens — the ink, the
+ * hairline, the selection and the error state — and the syntax is the code
+ * theme (`code-theme.ts`: Dracula on dark, GitHub Light on light), each token a
+ * theme key of its own. Both follow the page into light or dark with nothing to
+ * configure.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { AlignLeft, Check, CircleAlert, CircleCheck, Copy, GripHorizontal, Type } from '@hanzogui/lucide-icons-2'
@@ -174,12 +174,16 @@ const FRAME = /* @__PURE__ */ EditorView.theme({
   },
 })
 
-/** The syntax, ranked by ink: names in full ink, strings a rank down, punctuation at a hint. */
-const INK = /* @__PURE__ */ HighlightStyle.define([
-  { tag: tags.propertyName, color: 'var(--ink)', fontWeight: '500' },
-  { tag: tags.string, color: 'var(--soft)' },
-  { tag: [tags.number, tags.bool, tags.null], color: 'var(--ink)' },
-  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], color: 'var(--dim)' },
+/** The syntax in the code theme's colours: one theme key per kind of token, from `code-theme.ts`. */
+const SYNTAX = /* @__PURE__ */ HighlightStyle.define([
+  { tag: tags.propertyName, color: 'var(--codeKey)' },
+  { tag: tags.string, color: 'var(--codeString)' },
+  { tag: tags.number, color: 'var(--codeNumber)' },
+  { tag: tags.bool, color: 'var(--codeBoolean)' },
+  { tag: tags.null, color: 'var(--codeNull)' },
+  { tag: [tags.punctuation, tags.separator, tags.brace, tags.squareBracket], color: 'var(--codePunctuation)' },
+  { tag: tags.comment, color: 'var(--codeComment)' },
+  { tag: tags.keyword, color: 'var(--codeKeyword)' },
 ])
 
 /** How much deeper than its line a wrapped continuation starts, in characters. */
@@ -407,7 +411,7 @@ export function CodeEditor({
           indentOnInput(),
           bracketMatching(),
           highlightActiveLine(),
-          syntaxHighlighting(INK),
+          syntaxHighlighting(SYNTAX),
           keymap.of([
             { key: 'Shift-Alt-f', run: format },
             indentWithTab,

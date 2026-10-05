@@ -7,11 +7,11 @@
  *
  * The first `depth` levels open on first paint. A row is a button (Enter and
  * Space toggle it, `aria-expanded` says which way), so the tree reads with a
- * keyboard and a screen reader as well as a pointer. Values are ranked by ink
- * the way `CodeEditor` ranks syntax: keys in full ink, strings one rank down,
- * counts and punctuation at the rank of a hint. A long value wraps anywhere, so
- * a hash never widens the page. Built from gui primitives
- * only, so it renders wherever gui does.
+ * keyboard and a screen reader as well as a pointer. Keys and values take the
+ * code theme's colours (`code-theme.ts`), the same theme keys `CodeEditor`
+ * paints with, and a count reads as a comment. A long value wraps anywhere, so
+ * a hash never widens the page. Built from gui primitives only, so it renders
+ * wherever gui does.
  */
 import { SizableText, XStack, YStack, type YStackProps } from '@hanzo/gui'
 import { Check, ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Copy } from '@hanzogui/lucide-icons-2'
@@ -154,15 +154,24 @@ export function JsonTree({ data, depth = 2, title, showCopyButton = true, ...pro
   )
 }
 
+/** A leaf's colour: the code theme's key for its JSON type. */
+const INK = {
+  string: '$codeString',
+  number: '$codeNumber',
+  boolean: '$codeBoolean',
+  null: '$codeNull',
+} as const
+
 function Leaf({ value }: { value: unknown }) {
   const text = typeof value === 'string' ? JSON.stringify(value) : value === undefined ? 'undefined' : String(value)
+  const type = value === null ? 'null' : typeof value
   return (
     <SizableText
       {...slot('json-tree-value')}
-      data-type={value === null ? 'null' : typeof value}
+      data-type={type}
       size="$2"
       fontFamily="$mono"
-      color={typeof value === 'string' ? '$soft' : '$ink'}
+      color={INK[type as keyof typeof INK] ?? '$codePunctuation'}
       shrink={1}
       minW={0}
       // A hash or a URL is one unbreakable word; without this it sets the tree's
@@ -193,9 +202,9 @@ function Node({
   const expanded = b !== null && open.has(path)
   const key =
     name === null ? null : (
-      <SizableText {...slot('json-tree-key')} size="$2" fontFamily="$mono" color="$ink" fontWeight="500">
+      <SizableText {...slot('json-tree-key')} size="$2" fontFamily="$mono" color="$codeKey">
         {name}
-        <SizableText size="$2" fontFamily="$mono" color="$dim">
+        <SizableText size="$2" fontFamily="$mono" color="$codePunctuation">
           :
         </SizableText>
       </SizableText>
@@ -250,7 +259,7 @@ function Node({
           <ChevronRight size={14} color="$soft" />
         )}
         {key}
-        <SizableText {...slot('json-tree-count')} size="$2" fontFamily="$mono" color="$dim">
+        <SizableText {...slot('json-tree-count')} size="$2" fontFamily="$mono" color="$codeComment">
           {empty ? (b.kind === 'array' ? '[]' : '{}') : count(b)}
         </SizableText>
       </XStack>

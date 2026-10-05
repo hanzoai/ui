@@ -148,6 +148,24 @@ describe('CodeEditor', () => {
     ui.cleanup()
   })
 
+  it('colours JSON from the code theme: key, string, number, boolean and null each their own key', () => {
+    const ui = mount(<CodeEditor language="json" value={'{"k": "v", "n": 1, "b": true, "z": null}'} />)
+    // CodeMirror styles a token through a generated class whose rule it mounts in
+    // the document; follow each token's class to the colour that rule sets.
+    const rules = [...document.querySelectorAll('style')].map((el) => el.textContent ?? '').join('\n')
+    const colour = (text: string) => {
+      const span = [...ui.host.querySelectorAll('.cm-line span')].find((el) => el.textContent === text)
+      const cls = span?.className.split(/\s+/).find(Boolean)
+      return cls ? rules.match(new RegExp(`\\.${cls}\\s*\\{\\s*color:\\s*([^;}]+)`))?.[1].trim() : undefined
+    }
+    expect(colour('"k"')).toBe('var(--codeKey)')
+    expect(colour('"v"')).toBe('var(--codeString)')
+    expect(colour('1')).toBe('var(--codeNumber)')
+    expect(colour('true')).toBe('var(--codeBoolean)')
+    expect(colour('null')).toBe('var(--codeNull)')
+    ui.cleanup()
+  })
+
   it('passes plain text when allowText says it may, and still holds an object to JSON', () => {
     const ui = mount(<CodeEditor language="json" allowText value="customer says hi" />)
     expect(ui.status()).toBe('Plain text')

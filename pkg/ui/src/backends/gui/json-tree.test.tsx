@@ -78,6 +78,23 @@ describe('JsonTree', () => {
     ui.cleanup()
   })
 
+  it('paints keys and each JSON type with its own code-theme key', () => {
+    const ui = mount(<JsonTree data={{ s: 'x', n: 1, b: true, z: null }} />)
+    const colour = (el: Element) => [...el.classList].find((c) => c.startsWith('_col-'))
+    const values = [...ui.host.querySelectorAll('[data-slot="json-tree-value"]')].map((v) => [
+      v.getAttribute('data-type'),
+      colour(v),
+    ])
+    expect(values).toEqual([
+      ['string', '_col-codeString'],
+      ['number', '_col-codeNumber'],
+      ['boolean', '_col-codeBoolean'],
+      ['null', '_col-codeNull'],
+    ])
+    expect(colour(ui.slot('json-tree-key')!)).toBe('_col-codeKey')
+    ui.cleanup()
+  })
+
   it('toggles a branch on press and on Enter', () => {
     const ui = mount(<JsonTree data={DATA} depth={2} />)
     act(() => ui.row('team')?.click())

@@ -635,8 +635,16 @@ add a second.
   `--edge`, `--panel`, `--raised`, `--bad` — gui emits each on the theme class, and
   they read design (`--foreground`, `--border`, `--state-error`). `--text-primary` is
   NOT safe: a host that mounts design's sheet without its light selector (the console)
-  keeps the dark theme's white on a light page — measured, the syntax vanished. Syntax
-  is ranked by ink and weight (Hanzo is monochrome); hue is spent only on an error.
+  keeps the dark theme's white on a light page — measured, the syntax vanished.
+- **Syntax is the code theme** (`src/code-theme.ts`, 8.27.83): `codeTheme` is shiki's
+  names (`dracula` dark, `github-light` light) and `syntax` the eight colours (key,
+  string, number, boolean, null, punctuation, comment, keyword). gui-config publishes
+  each as a theme key (`$codeKey`, `var(--codeKey)` …), so it follows the nearest
+  theme. Shiki paints number, boolean and null alike (and GitHub Light paints a key the
+  same), so those take other colours from the same theme. It was monochrome on purpose
+  before: keys, numbers, booleans and null were all `--ink`, strings `--soft`. Server
+  code (a shiki block in an RSC) imports it from `@hanzo/ui/core`; the root barrel is a
+  client boundary.
 - **The scanner is a loop over an explicit stack**, not a call per nesting level:
   `'['.repeat(20000)` exhausted the call stack and handed the editor a NaN position.
   Under `allowText`, `[` only means JSON when a JSON value follows it, so a log line

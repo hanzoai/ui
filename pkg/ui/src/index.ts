@@ -630,3 +630,9 @@ export { Pulse, Caret, type PulseProps, type CaretProps } from './motion'
 // The config the components are styled against, for a host that lays out with
 // @hanzo/gui stacks of its own.
 export { config, type Conf } from './gui-config'
+
+// The code theme: shiki's names for it (`codeTheme`) and the colours CodeEditor
+// and JsonTree paint with (`syntax`). A server module (a shiki block rendered in
+// an RSC or at build time) reads the same two from `@hanzo/ui/core`, which is not
+// a client boundary.
+export { codeTheme, syntax, type CodeToken } from './code-theme'

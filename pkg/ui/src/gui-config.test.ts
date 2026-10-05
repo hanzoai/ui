@@ -18,6 +18,7 @@ import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { describe, expect, it } from 'vitest'
 
+import { codeTheme, syntax } from './code-theme'
 import { config, css, monochrome } from './gui-config'
 
 const require = createRequire(import.meta.url)
@@ -617,5 +618,42 @@ describe('the type ladder', () => {
     const rungs = Object.keys(sizes).filter((k) => k !== 'true')
     expect(rungs.length).toBe(16)
     for (const r of rungs) expect(String(sizes[r])).toMatch(/var\(--text-/)
+  })
+})
+
+describe('the code theme', () => {
+  it('names shiki\'s Dracula for dark and GitHub Light for light, and nothing else', () => {
+    // A shiki caller passes this object as `themes`, so a third key would be read
+    // as a third theme.
+    expect(codeTheme).toEqual({ dark: 'dracula', light: 'github-light' })
+  })
+
+  it.each(['dark', 'light'] as const)('%s: keys, strings, numbers, booleans and null are five colours', (theme) => {
+    const { key, string, number, boolean, null: none } = syntax[theme]
+    expect(new Set([key, string, number, boolean, none].map((c) => c.toLowerCase())).size).toBe(5)
+  })
+
+  it.each(['dark', 'light'] as const)('%s: every token reads on the page ground', (theme) => {
+    const ground = token('background', theme)
+    for (const [name, colour] of Object.entries(syntax[theme]))
+      expect(contrast(colour, ground), `${theme} ${name} ${colour} on ${ground}`).toBeGreaterThanOrEqual(4)
+  })
+
+  it.each(['dark', 'light'] as const)('%s: each token is a theme key, so it follows the nearest theme', (theme) => {
+    for (const [name, colour] of Object.entries(syntax[theme]))
+      expect(themed(theme, `code${name[0].toUpperCase()}${name.slice(1)}`)).toBe(colour)
+  })
+
+  it('the keys reach the emitted sheet on both root themes', () => {
+    // gui emits `--codeString:var(--tN)` on the theme block and `--tN:<hex>` once.
+    const out = css()
+    for (const theme of ['dark', 'light'] as const) {
+      const block = [...out.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find((m) =>
+        m[1].split(',').some((sel) => sel.trim() === `:root.t_${theme}`),
+      )
+      const ref = block?.[2].match(/--codeString:var\(--(t\d+)\)/)?.[1]
+      expect(ref, `${theme} root block declares --codeString`).toBeTruthy()
+      expect(out.toLowerCase()).toContain(`--${ref}:${syntax[theme].string}`)
+    }
   })
 })

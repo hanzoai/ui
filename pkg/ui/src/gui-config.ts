@@ -3,6 +3,8 @@ import { defaultConfig } from '@hanzogui/config/v5'
 import { createAnimations } from '@hanzogui/animations-css'
 import { createGui, type CreateGuiProps } from '@hanzo/gui'
 
+import { syntax, type CodeToken } from './code-theme'
+
 // ─────────────────────────────────────────────────────────────────────────────
 // THE ONE SCALE — shared, because a second app that copied it would fork it.
 //
@@ -361,6 +363,19 @@ const STATE = { bad: 'var(--state-error, #ef4444)', good: 'var(--state-success, 
 
 type Alias = Record<(typeof ALIASES)[number], string>
 
+/**
+ * The code palette (`code-theme.ts`) as theme keys: `syntax.dark.key` is
+ * `$codeKey` on the dark theme. A key on a root theme reaches every sub-theme
+ * and a nested theme declares its own, so a highlighted token follows the
+ * nearest theme the way `$ink` does. The `code` prefix keeps the eight off
+ * design's custom properties and off gui's own props.
+ */
+type Code = Record<`code${Capitalize<CodeToken>}`, string>
+const code = (s: 'dark' | 'light') =>
+  Object.fromEntries(
+    Object.entries(syntax[s]).map(([k, v]) => [`code${k[0].toUpperCase()}${k.slice(1)}`, v]),
+  ) as Code
+
 const SURFACE = {
   dark: { base: 'rgb(255 255 255 / .03)', hover: 'rgb(255 255 255 / .06)', raised: 'rgb(255 255 255 / .12)' },
   light: { base: 'rgb(0 0 0 / .03)', hover: 'rgb(0 0 0 / .06)', raised: 'rgb(0 0 0 / .12)' },
@@ -558,6 +573,7 @@ const themes = Object.fromEntries(
             accentBackground: `var(--accent, ${SURFACE[s].raised})`,
             accentColor: `var(--accent-foreground, ${LABEL[s]})`,
             accentHover: `var(--accent-hover, ${ACCENT_HOVER[s]})`,
+            ...code(s),
           }
         : ringed,
     ]
@@ -571,7 +587,7 @@ const themes = Object.fromEntries(
   // built. Intersecting the alias record is what makes the runtime fact a typed
   // one; `Alias` is derived from ALIASES so a new name cannot be added in one
   // place and missed in the other.
-) as { [K in keyof typeof defaultConfig.themes]: (typeof defaultConfig.themes)[K] & Alias }
+) as { [K in keyof typeof defaultConfig.themes]: (typeof defaultConfig.themes)[K] & Alias & Code }
 
 // Everything except the theme table, which is the one thing the two configs
 // below disagree about. Stated once so they cannot drift on radius or fonts.
@@ -792,7 +808,8 @@ type Base = ReturnType<typeof createGui<typeof defaultConfig>>
 
 type Ramp = Record<
   | 'sunken' | 'panel' | 'hover' | 'edge' | 'raised' | 'rim'
-  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good' | 'accentHover',
+  | 'bound' | 'dim' | 'faint' | 'soft' | 'quiet' | 'ink' | 'bad' | 'good' | 'accentHover'
+  | `code${Capitalize<CodeToken>}`,
   Base['themes']['dark']['color12']
 >
 
